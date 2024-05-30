@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -194,7 +194,11 @@ const confirmedReceivablesUpdate = async function(field, receivables, participan
   let current = 0;
   const statistics = {};
   for (const key of receivablesStatisticsKeys) {
-    statistics[key] = 0;
+    if (key === 'amounts') {
+      statistics[key] = {};
+    } else {
+      statistics[key] = 0;
+    }
   }
   statistics.cancel = false;
   for (const receivable of receivables) {
@@ -232,7 +236,13 @@ const confirmedReceivablesUpdate = async function(field, receivables, participan
           }).promise();
         console.info(data);
         for (const key of receivablesStatisticsKeys) {
-          statistics[key] += data[key];
+          if (key === 'amounts') {
+            for (const [id, value] of Object.entries(data[key])) {
+              statistics[key][id] = (statistics[key][id] || 0.0) + parseFloat(value);
+            }
+          } else {
+            statistics[key] += data[key];
+          }
         }
         ++current;
         const currentPercentage = current / totals * 100.0;
