@@ -42,6 +42,8 @@ class ProjectParticipantEntityListener
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  private const ID_SEP = ':';
+
   /** @var EntityManager */
   protected $entityManager;
 
@@ -79,11 +81,8 @@ class ProjectParticipantEntityListener
         )
       );
 
-      $entityId = $entity->getId();
-      $this->preUpdateValues[$entityId] = array_merge(
-        $this->preUpdateValues[$entityId] ?? [],
-        [ $field => $oldValue, ],
-      );
+      $key = self::entityId($entity, $field);
+      $this->preUpdateValues[$key] = $oldValue;
     }
   }
 
@@ -92,16 +91,33 @@ class ProjectParticipantEntityListener
    */
   public function postUpdate(Entity $entity, ORMEvent\PostUpdateEventArgs $eventArgs)
   {
-    $entityId = $entity->getId();
     $field = 'registration';
-    if (array_key_exists($field, $this->preUpdateValues[$entityId] ?? [])) {
+    $key = self::entityId($entity, $field);
+    if (array_key_exists($key, $this->preUpdateValues)) {
       $this->entityManager->dispatchEvent(
         new Events\PostChangeRegistrationConfirmation(
           $entity,
-          !empty($this->preUpdateValues[$entityId][$field]),
+          !empty($this->preUpdateValues[$key]),
         )
       );
-      unset($this->preUpdateValues[$entityId][$field]);
+      unset($this->preUpdateValues[$key]);
     }
+  }
+
+  /**
+   * Generate a flattened id for the purpose of indexing PHP arrays.
+   *
+   * @param string|Entity $entity
+   *
+   * @param null|string $suffix Additional string to append.
+   *
+   * @return string
+   */
+  private static function entityId(string|Entity $entity, ?string $suffix):string
+  {
+    return (is_string($entity)
+            ? $entity
+            : ($entity->getProject()->getId() . self::ID_SEP . $entity->getMusician()->getId()))
+            . ($suffix ? self::ID_SEP . $suffix : '');
   }
 }
