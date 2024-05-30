@@ -31,7 +31,6 @@ $projectId = $renderer->getProjectId();
 $nav = '';
 $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('project-participants', $projectName, $projectId);
-$nav .= $pageNavigation->pageControlElement('project-participants', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('project-participant-fields', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('instrument-insurance');
 $nav .= $pageNavigation->pageControlElement('insurance-rates');
