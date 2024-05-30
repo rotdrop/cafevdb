@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Listener;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
 use Psr\Log\LoggerInterface as ILogger;
-use OCAP\IL10N;
+use OCP\IL10N;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress as Entity;
 use OCA\CAFEVDB\Database\EntityManager;
