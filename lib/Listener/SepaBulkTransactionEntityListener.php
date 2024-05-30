@@ -31,6 +31,7 @@ use Psr\Log\LoggerInterface as ILogger;
 use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction as Entity;
 use OCA\CAFEVDB\Storage\Database\BankTransactionsStorage;
