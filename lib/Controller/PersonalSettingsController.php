@@ -232,7 +232,7 @@ class PersonalSettingsController extends Controller
           return self::grumble($this->exceptionChainData($t));
         }
         return self::response($this->l->t('Encryption key stored.'));
-      case 'email-draft-auto-save':
+      case 'emailDraftAutoSave':
         $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 0]);
         if ($realValue === false) {
           $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
