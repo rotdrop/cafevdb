@@ -3198,8 +3198,8 @@ Störung.';
     }
 
     if (!empty($this->bulkTransaction)) {
-      $sentEmail->setSepaBulkTransaction($this->sepaBulkTransaction);
-      $this->sepaBulkTransaction->addPreNotificationEmail($sentEmail);
+      $sentEmail->setSepaBulkTransaction($this->bulkTransaction);
+      $this->bulkTransaction->addPreNotificationEmail($sentEmail);
     }
 
     return $sentEmail;
