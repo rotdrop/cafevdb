@@ -635,7 +635,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   const formData = form.find('fieldset.form-data');
   const $projectId = formData.find('input[name="projectId"]');
   const $projectName = formData.find('input[name="projectName"]');
-  const $bulkTransactionId = formData.find('input[name="bulkTransactionid"]');
+  const $bulkTransactionId = formData.find('input[name="bulkTransactionId"]');
   const projectId = function(value) {
     if (value === undefined) {
       return +$projectId.val();
