@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use OCP\IL10N;
+
 /**
  * Member status enum for musicians.
  *
@@ -42,6 +44,14 @@ class EnumMemberStatus extends AbstractEnumType
   public const SOLOIST = 'soloist';
   public const CONDUCTOR = 'conductor';
   public const TEMPORARY = 'temporary';
+
+  /** {@inheritdoc} */
+  public static function getL10NValues(IL10N $l): array
+  {
+    $values = parent::getL10NValues($l);
+    $values[self::TEMPORARY] = $l->t('temporary help');
+    return $values;
+  }
 
   /**
    * Just here in order to inject the enum values into the l10n framework.
