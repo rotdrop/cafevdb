@@ -759,6 +759,7 @@ OC.L10N.register(
     "No pending recryption-request for user \"%s\"." : "Es sind keine Neuverschlüsselungsanfragen für die Person \"%s\" anhängig.",
     "Unable to decrypt private key for owner \"%s\"." : "Kann den privaten Schlüssel für \"%s\" nicht entsperren.",
     "Key-storage mismatch: %1$s / %2$s" : "Schlüssel-Speicher passen nicht: %1$s / %2$s",
+    "temporary help" : "Aushilfe",
     "Foreign keys as principle keys cannot be composite" : "Fremde Schlüssel as Primärschlüssel können nicht zusammengesetzt sein",
     "Missing value and no generator for identifier field: %s::%s" : "Fehlender Wert und es gibt keinen Wert-Generator für das Id-Feld: %s::%s",
     "Type conversion for field \"%s\" failed." : "Typen-Konvertierung für das Feld \"%s\" ist fehlgeschlagen.",

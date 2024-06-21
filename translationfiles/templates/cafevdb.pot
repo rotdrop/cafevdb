@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2024-05-28 12:09+0200\n"
+"POT-Creation-Date: 2024-06-21 11:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1071,8 +1071,8 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1578
 #: lib/PageRenderer/ProjectPayments.php:699
 #: lib/PageRenderer/ProjectPayments.php:720
-#: lib/PageRenderer/SepaBulkTransactions.php:517
-#: lib/PageRenderer/SepaBulkTransactions.php:612
+#: lib/PageRenderer/SepaBulkTransactions.php:518
+#: lib/PageRenderer/SepaBulkTransactions.php:613
 #: templates/emailform/part.emailform.composer.php:196
 msgid "Subject"
 msgstr ""
@@ -4092,6 +4092,10 @@ msgstr ""
 msgid "Key-storage mismatch: %1$s / %2$s"
 msgstr ""
 
+#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:52
+msgid "temporary help"
+msgstr ""
+
 #: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:318
 #: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:382
 #: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:603
@@ -4912,7 +4916,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipants.php:1612
 #: lib/PageRenderer/ProjectPayments.php:483
 #: lib/PageRenderer/SepaBankAccounts.php:1138
-#: lib/PageRenderer/SepaBulkTransactions.php:277
+#: lib/PageRenderer/SepaBulkTransactions.php:278
 #: lib/Service/InstrumentationService.php:206
 msgid "Display all columns"
 msgstr ""
@@ -4922,7 +4926,7 @@ msgstr ""
 #: lib/PageRenderer/InstrumentInsurances.php:275
 #: lib/PageRenderer/ProjectPayments.php:603
 #: lib/PageRenderer/SepaBankAccounts.php:556
-#: lib/PageRenderer/SepaBulkTransactions.php:399
+#: lib/PageRenderer/SepaBulkTransactions.php:400
 msgid "Musician"
 msgstr ""
 
@@ -4943,7 +4947,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:2007
 #: lib/PageRenderer/ProjectPayments.php:652
 #: lib/PageRenderer/SepaBankAccounts.php:1092
-#: lib/PageRenderer/SepaBulkTransactions.php:391
+#: lib/PageRenderer/SepaBulkTransactions.php:392
 msgid "Amount"
 msgstr ""
 
@@ -4964,7 +4968,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:182
 #: lib/PageRenderer/ProjectParticipantFields.php:322
 #: lib/PageRenderer/ProjectPayments.php:559
-#: lib/PageRenderer/SepaBulkTransactions.php:370
+#: lib/PageRenderer/SepaBulkTransactions.php:371
 #: specialVueFakeDummyForL10nScript.js:186
 msgid "Project"
 msgstr ""
@@ -5081,7 +5085,7 @@ msgstr ""
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:547
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1548
-#: lib/PageRenderer/SepaBulkTransactions.php:613
+#: lib/PageRenderer/SepaBulkTransactions.php:614
 msgid "Date"
 msgstr ""
 
@@ -5287,7 +5291,7 @@ msgid "File"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1577
-#: lib/PageRenderer/SepaBulkTransactions.php:659
+#: lib/PageRenderer/SepaBulkTransactions.php:660
 msgid "Actions"
 msgstr ""
 
@@ -5377,8 +5381,8 @@ msgstr ""
 #: lib/PageRenderer/ProjectPayments.php:1325
 #: lib/PageRenderer/SepaBankAccounts.php:632
 #: lib/PageRenderer/SepaBankAccounts.php:710
-#: lib/PageRenderer/SepaBulkTransactions.php:451
-#: lib/PageRenderer/SepaBulkTransactions.php:471
+#: lib/PageRenderer/SepaBulkTransactions.php:452
+#: lib/PageRenderer/SepaBulkTransactions.php:472
 msgid "Fetching decrypted values in the background."
 msgstr ""
 
@@ -5386,8 +5390,8 @@ msgstr ""
 #: lib/PageRenderer/ProjectPayments.php:1327
 #: lib/PageRenderer/SepaBankAccounts.php:634
 #: lib/PageRenderer/SepaBankAccounts.php:712
-#: lib/PageRenderer/SepaBulkTransactions.php:453
-#: lib/PageRenderer/SepaBulkTransactions.php:473
+#: lib/PageRenderer/SepaBulkTransactions.php:454
+#: lib/PageRenderer/SepaBulkTransactions.php:474
 msgid "please wait"
 msgstr ""
 
@@ -6334,7 +6338,7 @@ msgid "Parts Project Balances"
 msgstr ""
 
 #: lib/PageRenderer/ProjectPayments.php:1277
-#: lib/PageRenderer/SepaBulkTransactions.php:268
+#: lib/PageRenderer/SepaBulkTransactions.php:269
 msgid "Bulk Transaction"
 msgstr ""
 
@@ -6343,13 +6347,13 @@ msgid "Filing Date"
 msgstr ""
 
 #: lib/PageRenderer/ProjectPayments.php:1306
-#: lib/PageRenderer/SepaBulkTransactions.php:429
+#: lib/PageRenderer/SepaBulkTransactions.php:430
 msgid "IBAN"
 msgstr ""
 
 #: lib/PageRenderer/ProjectPayments.php:1368
 #: lib/PageRenderer/SepaBankAccounts.php:817
-#: lib/PageRenderer/SepaBulkTransactions.php:491
+#: lib/PageRenderer/SepaBulkTransactions.php:492
 msgid "Mandate Reference"
 msgstr ""
 
@@ -6648,69 +6652,69 @@ msgid ""
 "IBAN \"%3$s\"."
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:196
+#: lib/PageRenderer/SepaBulkTransactions.php:197
 #, php-format
 msgid "Bulk-transactions for project \"%s\""
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:269
+#: lib/PageRenderer/SepaBulkTransactions.php:270
 msgid "Transaction"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:272
+#: lib/PageRenderer/SepaBulkTransactions.php:273
 msgid "Booking Entries"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:273
+#: lib/PageRenderer/SepaBulkTransactions.php:274
 msgid "Bookings"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:341
+#: lib/PageRenderer/SepaBulkTransactions.php:342
 msgid "Id"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:539
+#: lib/PageRenderer/SepaBulkTransactions.php:540
 msgid "Time Created"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:549
+#: lib/PageRenderer/SepaBulkTransactions.php:550
 msgid "Submission Deadline"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:560
+#: lib/PageRenderer/SepaBulkTransactions.php:561
 msgid "Date of Submission"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:592
-#: lib/PageRenderer/SepaBulkTransactions.php:631
+#: lib/PageRenderer/SepaBulkTransactions.php:593
+#: lib/PageRenderer/SepaBulkTransactions.php:632
 msgid "Pre-Notification"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:94
-#: lib/PageRenderer/SepaBulkTransactions.php:611
+#: lib/PageRenderer/SepaBulkTransactions.php:612
 #: specialVueFakeDummyForL10nScript.js:174
 #: templates/emailform/form.php:36
 #: templates/emailform/part.emailform.composer.php:125
 msgid "Recipients"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:614
+#: lib/PageRenderer/SepaBulkTransactions.php:615
 #: lib/PageRenderer/TaxExemptionNotices.php:183
 #: templates/legacy/calendar/part.showevent.php:65
 msgid "From"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:676
+#: lib/PageRenderer/SepaBulkTransactions.php:677
 #: templates/fragments/participant-fields/attachment-file-upload-menu.php:110
 #: templates/fragments/participant-fields/attachment-file-upload-menu.php:120
 msgid "download"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:681
+#: lib/PageRenderer/SepaBulkTransactions.php:682
 msgid "announce"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:768
+#: lib/PageRenderer/SepaBulkTransactions.php:769
 #: lib/Service/Finance/SepaBulkTransactionService.php:699
 #, php-format
 msgid ""
@@ -6718,7 +6722,7 @@ msgid ""
 "bank, it cannot be deleted."
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:785
+#: lib/PageRenderer/SepaBulkTransactions.php:786
 #, php-format
 msgid "Data inconsistency in bulk-transaction payments: %d / %d"
 msgstr ""
@@ -11819,7 +11823,7 @@ msgstr ""
 #: src/app/email.js:90
 #: src/app/email.js:827
 #: src/app/email.js:953
-#: src/app/project-participant-fields.js:248
+#: src/app/project-participant-fields.js:258
 #: src/app/settings.js:1347
 #: src/app/settings.js:1360
 #: src/legacy/calendar/calendar.js:340
@@ -12500,15 +12504,15 @@ msgstr ""
 msgid "Cancelled by User"
 msgstr ""
 
-#: src/app/project-participant-fields.js:218
+#: src/app/project-participant-fields.js:222
 msgid "Updating receivables for {fieldName}, {receivableLabel}, {musicianName}"
 msgstr ""
 
-#: src/app/project-participant-fields.js:242
+#: src/app/project-participant-fields.js:252
 msgid "{musicianName}, {receivableLabel}: \"{message}\"."
 msgstr ""
 
-#: src/app/project-participant-fields.js:502
+#: src/app/project-participant-fields.js:512
 msgid ""
 "This field already is filled out for some participants. Changing the "
 "multiplicity is still possible in some cases, but generally irrevertible. "
@@ -12519,11 +12523,11 @@ msgid ""
 "or \"HTML-text\"."
 msgstr ""
 
-#: src/app/project-participant-fields.js:503
+#: src/app/project-participant-fields.js:513
 msgid "Really allow changing the multiplicity?"
 msgstr ""
 
-#: src/app/project-participant-fields.js:524
+#: src/app/project-participant-fields.js:534
 msgid ""
 "This field already is filled out for some participants. Changing the data-"
 "type is still possible in some cases, but does not always make sense. The "
@@ -12531,7 +12535,7 @@ msgid ""
 "prepared that the results might look unexpected."
 msgstr ""
 
-#: src/app/project-participant-fields.js:525
+#: src/app/project-participant-fields.js:535
 msgid "Really allow changing the data-type?"
 msgstr ""
 
@@ -13806,14 +13810,14 @@ msgstr ""
 msgid "Project Posters and related Marketing Media"
 msgstr ""
 
-#: templates/instrument-insurance.php:60
+#: templates/instrument-insurance.php:59
 #: templates/project-payments.php:64
 #: templates/sepa-bank-accounts.php:64
 #: templates/sepa-bulk-transactions.php:62
 msgid "treasurer"
 msgstr ""
 
-#: templates/instrument-insurance.php:59
+#: templates/instrument-insurance.php:58
 #: templates/project-payments.php:63
 #: templates/sepa-bank-accounts.php:64
 #: templates/sepa-bulk-transactions.php:62
@@ -15679,7 +15683,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY = 'temporary';
 #: lib/PageRenderer/PMETableViewBase.php:230
-#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:57
+#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:67
 #: lib/Database/Doctrine/DBAL/Types/EnumProjectTemporalType.php:47
 #, php-format
 msgid "temporary"
@@ -16304,28 +16308,28 @@ msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::REGULAR = 'regular';
-#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:53
+#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:63
 #, php-format
 msgid "regular"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::PASSIVE = 'passive';
-#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:54
+#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:64
 #, php-format
 msgid "passive"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::SOLOIST = 'soloist';
-#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:55
+#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:65
 #, php-format
 msgid "soloist"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::CONDUCTOR = 'conductor';
-#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:56
+#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:66
 #, php-format
 msgid "conductor"
 msgstr ""
