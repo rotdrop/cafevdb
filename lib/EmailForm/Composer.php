@@ -575,7 +575,8 @@ Störung.';
     $this->draftId = $this->cgiValue('messageDraftId', 0);
 
     $this->inReplyToId = $this->cgiValue('inReplyTo', '');
-    $this->referencing = $this->cgiValue('referencing', []);
+    $this->referencing = array_unique($this->cgiValue('referencing', []));
+    sort($this->referencing);
 
     $this->progressToken = $this->cgiValue('progressToken');
 
@@ -4305,6 +4306,8 @@ Störung.';
     foreach ($referencedBy as $referrer) {
       $this->referencing[] = $referrer ->getMessageId();
     }
+    $this->referencing = array_unique($this->referencing);
+    sort($this->referencing);
     $this->cgiData['referencing'] = $this->referencing;
 
     $this->draftId = 0; // avoid accidental overwriting
@@ -5215,12 +5218,16 @@ Störung.';
       }
       $this->logInfo('CHECK HREF ' . $href);
       $text = $item->nodeValue;
+      $originalUserAgent = ini_get('user_agent');
+      ini_set('user_agent', 'Orgacloud/1.0');
       try {
         $headers = get_headers($href);
       } catch (\Throwable $t) {
         $headers = null;
       }
+      ini_set('user_agent', $originalUserAgent);
       if ($headers && count($headers) > 0) {
+	$this->logInfo('STATUS HEADER ' . $headers[0]);
         $code = (int)substr($headers[0], 9, 3);
         if ($code >= 200 && $code < 400) {
           $thisLinkGood = true;
