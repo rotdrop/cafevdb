@@ -120,6 +120,8 @@ class EncryptionService
   /** @var Crypto\AsymmetricCryptorInterface */
   private $userAsymmetricCryptor;
 
+  private $l;
+
   /** {@inheritdoc} */
   public function __construct(
     private string $appName,
