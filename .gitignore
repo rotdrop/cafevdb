@@ -8,9 +8,10 @@ lib/Toolkit/[A-Z]*
 lib/tooltips.php.new
 \#*\#
 .#*
-vendor*
+vendor
+vendor-wrapped
 composer*.lock
-composer.json
+/composer.json
 stamp*
 ajax
 build
@@ -35,3 +36,5 @@ secrets.csv
 *-build-hash
 build-flavour
 .phpunit.result.cache
+/vendor-bin/**/vendor/
+/vendor-bin/**/composer.lock
