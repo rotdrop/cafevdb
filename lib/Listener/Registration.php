@@ -69,6 +69,7 @@ class Registration
     self::registerListener($context, SepaBulkTransactionAnnouncedListener::class);
     self::registerListener($context, GroupMembershipListener::class);
     self::registerListener($context, LoadAdditionalScriptsEventListener::class);
+    self::registerListener($context, BeforeTemplateRenderedListener::class);
   }
 
   /**

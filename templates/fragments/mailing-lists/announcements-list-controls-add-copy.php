@@ -49,7 +49,7 @@ use OCA\CAFEVDB\Controller\MailingListsController;
 <input class="radio"
        type="radio"
        id="mailing-list-action-noop"
-       value="subscribe"
+       value="noop"
        name="<?php echo $mailingListActionName; ?>"
 />
 <label for="mailing-list-action-noop"><?php p($l->t('no action')); ?></label>

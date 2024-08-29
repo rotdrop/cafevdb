@@ -156,24 +156,6 @@ class Application extends App implements IBootstrap
     $context->injectFn(function(
       $userId,
       AuthorizationService $authorizationService,
-      IURLGenerator $urlGenerator,
-      INavigationManager $navigationManager,
-    ) {
-      if ($authorizationService->authorized($userId, AuthorizationService::PERMISSION_FRONTEND)) {
-        $navigationManager->add([
-          'id' => $this->appName,
-          'name' => 'CAFeVDB',
-          'href' => $urlGenerator->linkToRoute(implode('.', [ $this->appName, 'page', 'index' ])),
-          'icon' => $urlGenerator->imagePath($this->appName, 'app.svg'),
-          'type' => 'link',
-          'order' => 1,
-        ]);
-      }
-    });
-
-    $context->injectFn(function(
-      $userId,
-      AuthorizationService $authorizationService,
       ISettingsManager $settingsManager,
     ) {
       if ($authorizationService->authorized($userId, AuthorizationService::PERMISSION_FRONTEND)) {
