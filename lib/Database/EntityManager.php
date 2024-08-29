@@ -230,7 +230,7 @@ class EntityManager extends EntityManagerDecorator
     $this->postCommitActions = clone $this->appContainer->get(UndoableRunQueue::class);
 
     $this->transactionNestingLevel = 0;
-    $this->reopenAterRollback = true;
+    $this->reopenAfterRollback = true;
 
     $deprecationLogger = clone $deprecationLogger;
     $deprecationLogger->setLogLevel(\OCP\ILogger::DEBUG);

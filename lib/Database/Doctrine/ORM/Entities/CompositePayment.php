@@ -49,7 +49,7 @@ use OCA\CAFEVDB\Common\Util;
  * @ORM\Table(
  *    name="CompositePayments",
  *    uniqueConstraints={
- *      @ORM\UniqueConstraint(columns={"notification_message_id"})
+ *      @ORM\UniqueConstraint(columns={"pre_notification_message_id"})
  *    }
  * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\CompositePaymentsRepository")
