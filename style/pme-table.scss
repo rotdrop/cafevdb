@@ -544,7 +544,9 @@ form.pme-form {
 } /* form.pme-form */
 
 .pme-form tr,.pme-form tr:hover,.pme-form tr:active {
-  background-color:inherit;
+  &, &:not(.group-header) {
+    background-color:inherit;
+  }
 }
 
 a.pme-cell:link {
