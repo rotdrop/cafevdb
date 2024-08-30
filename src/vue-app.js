@@ -39,7 +39,7 @@ const pinia = createPinia();
 __webpack_nonce__ = btoa(getRequestToken());
 
 // eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', 'js/');
+__webpack_public_path__ = generateFilePath(appName, '', '');
 
 Vue.mixin({ data() { return { appId: appName }; }, methods: { t, n } });
 

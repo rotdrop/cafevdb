@@ -23,13 +23,13 @@ import { appName } from '../app/app-info.js';
 
 const routes = [
   {
-    path: '/vue-app',
+    path: '/',
     props: router => ({
       rootTitle: t(appName, 'Home'),
     }),
   },
   {
-    path: '/vue-app/f/projects',
+    path: '/f/projects',
     component: () => import('../views/Projects.vue'),
     name: 'projects',
     props: router => ({
@@ -37,7 +37,7 @@ const routes = [
     }),
   },
   {
-    path: '/vue-app/f/musicians',
+    path: '/f/musicians',
     component: () => import('../views/Musicians.vue'),
     name: 'musicians',
     props: router => ({

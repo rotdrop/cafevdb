@@ -34,7 +34,7 @@ const router = new Router({
   mode: 'history',
   base,
   linkActiveClass: 'active',
-  appRoutes,
+  routes: appRoutes,
 });
 
 export default router;

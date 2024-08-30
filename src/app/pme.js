@@ -1844,6 +1844,8 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
 
   // Disable page-rows and goto submits, just not necessary
   container.find('input.' + pmePageRows).on('click', function(event) {
+    const $pageSelect = $(this).parent().find('select.' + pmePageRows);
+    $pageSelect.trigger('chosen:open');
     event.stopImmediatePropagation();
     return false;
   });
