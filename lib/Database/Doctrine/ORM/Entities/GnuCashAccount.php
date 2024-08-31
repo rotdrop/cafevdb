@@ -82,9 +82,9 @@ class GnuCashAccount implements \ArrayAccess
    * @var null|GnuCashCommodity
    *
    * @ORM\ManyToOne(targetEntity="GnuCashCommodity", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="commodity_guid", referencedColumnName="guid", nullable=true)
-   * )
+   * })
    */
   private ?GnuCashCommodity $commodity;
 
@@ -106,9 +106,9 @@ class GnuCashAccount implements \ArrayAccess
    * @var GnuCashAccount
    *
    * @ORM\ManyToOne(targetEntity="GnuCashAccount", inversedBy="children", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="parent_guid", referencedColumnName="guid", nullable=true)
-   * )
+   * })
    */
   private ?GnuCashAccount $parent;
 

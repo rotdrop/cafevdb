@@ -70,10 +70,10 @@ class GeoCountry implements \ArrayAccess
 
   /**
    * @ORM\ManyToOne(targetEntity="GeoContinent", inversedBy="countries", fetch="EAGER")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="continent_code", referencedColumnName="code"),
    *   @ORM\JoinColumn(name="target", referencedColumnName="target")
-   * )
+   * })
    */
   private $continent;
 

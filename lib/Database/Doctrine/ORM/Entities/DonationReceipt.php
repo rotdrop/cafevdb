@@ -90,9 +90,9 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    * The associated payment.
    *
    * @ORM\OneToOne(targetEntity="CompositePayment", inversedBy="donationReceipt")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="donation_id", referencedColumnName="id", nullable=false),
-   * )
+   * })
    */
   private CompositePayment $donation;
 
@@ -133,9 +133,9 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    * about the sending out of the donation receipt.
    *
    * @ORM\OneToOne(targetEntity="SentEmail", inversedBy="donationReceipt")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="notification_message_id", referencedColumnName="message_id", nullable=true),
-   * )
+   * })
    */
   private SentEmail $notificationMessage;
 

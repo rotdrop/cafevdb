@@ -125,9 +125,9 @@ class Invoice implements JsonSerializable, ArrayAccess
    * The email communicating the invoice to the debitor.
    *
    * @ORM\OneToOne(targetEntity="SentEmail")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="notification_message_id", referencedColumnName="message_id", nullable=true),
-   * )
+   * })
    */
   private SentEmail $notificationMessage;
 

@@ -83,12 +83,12 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    * Each project payment must be backed by a "receivable".
    *
    * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDatum", inversedBy="payments")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id", nullable=false),
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
    *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id", nullable=false),
    *   @ORM\JoinColumn(name="receivable_key", referencedColumnName="option_key", nullable=false)
-   * )
+   * })
    */
   private $receivable;
 
@@ -96,10 +96,10 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    * @var ProjectParticipantFieldDataOption
    *
    * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDataOption", inversedBy="payments")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id", nullable=false),
    *   @ORM\JoinColumn(name="receivable_key", referencedColumnName="key", nullable=false)
-   * )
+   * })
    */
   private $receivableOption;
 
@@ -109,9 +109,9 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    * Composite payments group several payments together.
    *
    * @ORM\ManyToOne(targetEntity="CompositePayment", inversedBy="projectPayments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(nullable=false)
-   * )
+   * })
    *
    * Promote any changes to the parent.
    * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
@@ -134,10 +134,10 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="payments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false)
-   * )
+   * })
    */
   private $projectParticipant;
 

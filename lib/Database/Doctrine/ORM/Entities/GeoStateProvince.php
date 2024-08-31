@@ -80,10 +80,10 @@ class GeoStateProvince implements \ArrayAccess
    * @var GeoCountry
    *
    * @ORM\ManyToOne(targetEntity="GeoCountry", inversedBy="statesProvinces", fetch="EAGER")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="country_iso", referencedColumnName="iso"),
    *   @ORM\JoinColumn(name="target", referencedColumnName="target")
-   * )
+   * })
    */
   private $country;
 

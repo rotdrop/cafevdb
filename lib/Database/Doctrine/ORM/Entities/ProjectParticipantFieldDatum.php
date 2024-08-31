@@ -120,10 +120,10 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * @var ProjectParticipantFieldDataOption
    *
    * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDataOption", inversedBy="fieldData", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id"),
    *   @ORM\JoinColumn(name="option_key", referencedColumnName="key")
-   * )
+   * })
    */
   private $dataOption;
 
@@ -131,10 +131,10 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * @var ProjectParticipant
    *
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="participantFieldsData", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
    *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id")
-   * )
+   * })
    */
   private $projectParticipant;
 

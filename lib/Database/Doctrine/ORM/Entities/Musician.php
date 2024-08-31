@@ -298,9 +298,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * @var LegalPerson
    *
    * @ORM\OneToOne(targetEntity="LegalPerson", mappedBy="musician", cascade={"remove"}, orphanRemoval=true)
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="legal_person_id",referencedColumnName="id", nullable=true),
-   * )
+   * })
    */
   private $legalPerson;
 

@@ -60,9 +60,9 @@ class GnuCashTransaction implements \ArrayAccess
    * @var GnuCashCommodity
    *
    * @ORM\ManyToOne(targetEntity="GnuCashCommodity", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="currency_guid", referencedColumnName="guid", nullable=false)
-   * )
+   * })
    */
   private GnuCashCommodity $currency;
 

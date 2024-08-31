@@ -74,9 +74,9 @@ class GnuCashSplit implements \ArrayAccess
    * @var string
    *
    * @ORM\ManyToOne(targetEntity="GnuCashTransaction", inversedBy="splits", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="tx_guid", referencedColumnName="guid", nullable=false)
-   * )
+   * })
    */
   private GnuCashTransaction $transaction;
 
@@ -84,9 +84,9 @@ class GnuCashSplit implements \ArrayAccess
    * @var string
    *
    * @ORM\ManyToOne(targetEntity="GnuCashAccount", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="account_guid", referencedColumnName="guid", nullable=false)
-   * )
+   * })
    */
   private GnuCashAccount $account;
 

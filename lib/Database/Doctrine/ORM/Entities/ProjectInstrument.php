@@ -89,29 +89,29 @@ class ProjectInstrument implements \ArrayAccess
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", onDelete="cascade"),
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", onDelete="cascade")
-   * )
+   * })
    */
   private $projectParticipant;
 
   /**
    * @ORM\ManyToOne(targetEntity="MusicianInstrument", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id"),
    *   @ORM\JoinColumn(name="instrument_id",referencedColumnName="instrument_id")
-   * )
+   * })
    */
   private $musicianInstrument;
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectInstrumentationNumber", inversedBy="instruments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
    *   @ORM\JoinColumn(name="instrument_id", referencedColumnName="instrument_id"),
    *   @ORM\JoinColumn(name="voice", referencedColumnName="voice")
-   * )
+   * })
    */
   private $instrumentationNumber;
 

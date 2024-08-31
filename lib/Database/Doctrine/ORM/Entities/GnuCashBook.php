@@ -59,9 +59,9 @@ class GnuCashBook implements \ArrayAccess
    * @var GnuCashAccount
    *
    * @ORM\OneToOne(targetEntity="GnuCashAccount", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="root_account_guid", referencedColumnName="guid", nullable=false)
-   * )
+   * })
    */
   private string $rootAccount;
 
@@ -69,9 +69,9 @@ class GnuCashBook implements \ArrayAccess
    * @var GnuCashAccount
    *
    * @ORM\OneToOne(targetEntity="GnuCashAccount", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="root_template_guid", referencedColumnName="guid", nullable=false)
-   * )
+   * })
    */
   private string $rootTemplate;
 

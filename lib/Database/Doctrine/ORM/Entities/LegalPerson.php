@@ -84,9 +84,9 @@ class LegalPerson implements JsonSerializable, ArrayAccess
    * @var Musician
    *
    * @ORM\OneToOne(targetEntity="Musician", inversedBy="legalPerson")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="musician_id", referencedColumnName="id", nullable=true),
-   * )
+   * })
    */
   private ?Musician $musician;
 

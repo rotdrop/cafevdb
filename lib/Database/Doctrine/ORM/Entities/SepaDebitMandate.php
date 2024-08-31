@@ -91,10 +91,10 @@ class SepaDebitMandate implements \ArrayAccess
    * same bank-account.
    *
    * @ORM\ManyToOne(targetEntity="SepaBankAccount", inversedBy="sepaDebitMandates")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id", nullable=false),
    *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=false)
-   * )
+   * })
    */
   private $sepaBankAccount;
 
@@ -110,9 +110,9 @@ class SepaDebitMandate implements \ArrayAccess
    * project.
    *
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
-   * )
+   * })
    */
   private $project;
 

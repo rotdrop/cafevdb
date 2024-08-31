@@ -132,10 +132,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * The bank account used for this payment.
    *
    * @ORM\ManyToOne(targetEntity="SepaBankAccount", inversedBy="payments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
    *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=true)
-   * )
+   * })
    */
   private $sepaBankAccount;
 
@@ -147,10 +147,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * @ORM\ManyToOne(targetEntity="SepaDebitMandate",
    *                inversedBy="payments",
    *                fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
    *   @ORM\JoinColumn(name="debit_mandate_sequence", referencedColumnName="sequence", nullable=true)
-   * )
+   * })
    */
   private $sepaDebitMandate;
 
@@ -175,9 +175,9 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * Pre notification email sent out to the recipients.
    *
    * @ORM\OneToOne(targetEntity="SentEmail", inversedBy="compositePayment")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="pre_notification_message_id", referencedColumnName="message_id", nullable=true),
-   * )
+   * })
    */
   private $preNotificationEmail;
 
@@ -199,10 +199,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
 
   /**
    * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="payments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false)
-   * )
+   * })
    */
   private $projectParticipant;
 

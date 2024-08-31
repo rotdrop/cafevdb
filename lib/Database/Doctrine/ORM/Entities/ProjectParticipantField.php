@@ -149,10 +149,10 @@ class ProjectParticipantField implements \ArrayAccess
    * @var null|ProjectParticipantFieldDataOption
    *
    * @ORM\OneToOne(targetEntity="ProjectParticipantFieldDataOption", cascade={"persist"})
-   * @ORM\JoinColumns(
+   * @ORM\JoinColumns({
    *   @ORM\JoinColumn(name="id", referencedColumnName="field_id"),
    *   @ORM\JoinColumn(name="default_value", referencedColumnName="key", nullable=true)
-   * )
+   * })
    */
   private $defaultValue = null;
 
