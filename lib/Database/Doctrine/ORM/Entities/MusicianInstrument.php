@@ -38,15 +38,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  * instruments and musicians) but for the "ranking" column which codes
  * a loose ranking like "primary instrument", i.e. the preference of
  * instruments of the given musician.
- *
- * @ORM\Table(name="MusicianInstruments", options={"comment":"Join-table Musicians -> Instruments"})
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
  */
+#[ORM\Table(name: 'MusicianInstruments', options: ['comment' => 'Join-table Musicians -> Instruments'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
 class MusicianInstrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -57,28 +53,28 @@ class MusicianInstrument implements \ArrayAccess
 
   /**
    * @var Musician
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="instruments", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'instruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $musician;
 
   /**
    * @var Instrument
-   * @ORM\ManyToOne(targetEntity="Instrument", inversedBy="musicianInstruments", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'musicianInstruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $instrument;
 
   /**
    * @var Collection
-   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="musicianInstrument")
    */
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'musicianInstrument')]
   private $projectInstruments;
 
   /**
    * @var int
-   * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Ranking of the instrument w.r.t. to the given musician (lower is better)"})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '1', 'comment' => 'Ranking of the instrument w.r.t. to the given musician (lower is better)'])]
   private $ranking = 1;
 
   /** {@inheritdoc} */

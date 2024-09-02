@@ -33,11 +33,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Changelog
- *
- * @ORM\Table(name="ChangeLog")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'ChangeLog')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class ChangeLog
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -45,74 +44,64 @@ class ChangeLog
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var \DateTime
-   *
-   * @ORM\Column(type="datetime_immutable")
    */
+  #[ORM\Column(type: 'datetime_immutable')]
   private $updated;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=255, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $user;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=255, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $host;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=255, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $operation;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=255, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $tab;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=255, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $rowkey;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=255, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $col;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="blob", length=65535, nullable=true)
    */
+  #[ORM\Column(type: 'blob', length: 65535, nullable: true)]
   private $oldval;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="blob", length=65535, nullable=true)
    */
+  #[ORM\Column(type: 'blob', length: 65535, nullable: true)]
   private $newval;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

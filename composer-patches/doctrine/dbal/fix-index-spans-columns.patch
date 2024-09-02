@@ -1,0 +1,14 @@
+--- doctrine/dbal/src/Schema/Index.php.orig	2024-09-02 14:14:33.520408045 +0200
++++ doctrine/dbal/src/Schema/Index.php	2024-09-02 14:15:33.646774965 +0200
+@@ -169,6 +169,11 @@
+     {
+         $columns         = $this->getColumns();
+         $numberOfColumns = count($columns);
++
++        if ($numberOfColumns != count($columnNames)) {
++            return false;
++        }
++
+         $sameColumns     = true;
+ 
+         for ($i = 0; $i < $numberOfColumns; $i++) {

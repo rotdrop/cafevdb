@@ -41,9 +41,6 @@ use OCA\CAFEVDB\Constants;
 /**
  * File-node entry for a database-backed file.
  *
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFilesRepository")
- * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\DatabaseStorageFileEntityListener"})
- * @ORM\HasLifecycleCallbacks
  *
  * @method File setSize(int $size)
  * @method int getSize()
@@ -54,6 +51,9 @@ use OCA\CAFEVDB\Constants;
  * @method string getMimeType()
  * @method int getNumberOfLinks()
  */
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFilesRepository::class)]
+#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\DatabaseStorageFileEntityListener'])]
+#[ORM\HasLifecycleCallbacks]
 class DatabaseStorageFile extends DatabaseStorageDirEntry
 {
   /** @var string */
@@ -73,10 +73,9 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
 
   /**
    * @var EncryptedFile
-   *
-   * @ORM\ManyToOne(targetEntity="EncryptedFile", inversedBy="databaseStorageDirEntries", cascade={"persist"})
-   * @ORM\JoinColumn(nullable="false")
    */
+  #[ORM\JoinColumn(nullable: 'false')]
+  #[ORM\ManyToOne(targetEntity: EncryptedFile::class, inversedBy: 'databaseStorageDirEntries', cascade: ['persist'])]
   protected $file;
 
   /** {@inheritdoc} */
@@ -192,10 +191,9 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
    *
    * Update the inverse side of the file-association and mark the file as
    * orphan when it is no longer owned by other directory entries.
-   *
-   * @ORM\PreRemove
    */
-  public function preRemove(Event\LifecycleEventArgs $event)
+  #[ORM\PreRemove]
+  public function preRemove(Event  $event)
   {
     if (empty($this->file)) {
       return;
@@ -210,12 +208,11 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
    * {@inheritdoc}
    *
    * Remove the associated file from the orphans list. May not be necessary ...
-   *
-   * @ORM\PostLoad
-   * @ORM\PostPersist
-   * @ORM\PostUpdate
    */
-  public function cleanupOrphans(Event\LifecycleEventArgs $event)
+  #[ORM\PostLoad]
+  #[ORM\PostPersist]
+  #[ORM\PostUpdate]
+  public function cleanupOrphans(Event\PostLoadEventArgs|Event\PostPersistEventArgs|Event\PostUpdateEventArgs $event)
   {
     if (empty($this->file)) {
       return;

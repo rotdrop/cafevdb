@@ -36,15 +36,12 @@ use Psr\Log\LoggerInterface as ILogger;
  * TranslationKey
  *
  * Table to store the original phrase of source-code translations.
- *
- * @ORM\Table(
- *   name="TranslationKeys",
- *   uniqueConstraints={@ORM\UniqueConstraint(columns={"phrase_hash"})}
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationKeysRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\Loggable(enabled=false)
  */
+#[ORM\Table(name: 'TranslationKeys')]
+#[ORM\UniqueConstraint(columns: ['phrase_hash'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationKeysRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\Loggable(enabled: false)]
 class TranslationKey implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -52,41 +49,29 @@ class TranslationKey implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="text", nullable=false,
-   *   options={
-   *     "comment":"Keyword to be translated. Normally the untranslated text in locale en_US, but could be any unique tag"
-   *   })
    */
+  #[ORM\Column(type: 'text', nullable: false, options: ['comment' => 'Keyword to be translated. Normally the untranslated text in locale en_US, but could be any unique tag'])]
   private $phrase;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=true, options={"fixed"=true})
-   * @Gedmo\Slug(fields={"phrase"}, updatable=true, unique=true, handlers={
-   *   @Gedmo\SlugHandler(class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler"),
-   * })
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['fixed' => true])]
+  #[Gedmo\Slug(fields: ['phrase'], updatable: true, unique: true, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler')])]
   private $phraseHash;
 
-  /**
-   * @ORM\OneToMany(targetEntity="Translation", mappedBy="translationKey", cascade={"all"}, fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: Translation::class, mappedBy: 'translationKey', cascade: ['all'], fetch: 'EXTRA_LAZY')]
   private $translations;
 
-  /**
-   * @ORM\OneToMany(targetEntity="TranslationLocation", mappedBy="translationKey", cascade={"all"})
-   */
+  #[ORM\OneToMany(targetEntity: TranslationLocation::class, mappedBy: 'translationKey', cascade: ['all'])]
   private $locations;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

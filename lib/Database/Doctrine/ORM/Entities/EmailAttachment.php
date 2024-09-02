@@ -30,11 +30,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * EmailAttachments
- *
- * @ORM\Table(name="EmailAttachments")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'EmailAttachments')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class EmailAttachment implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -44,16 +43,16 @@ class EmailAttachment implements \ArrayAccess
 
   /**
    * @var string
-   * @ORM\Column(type="string", length=512, nullable=false)
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 512, nullable: false)]
+  #[ORM\Id]
   private $fileName;
 
   /**
    * @var EmailDraft
-   * @ORM\ManyToOne(targetEntity="EmailDraft", inversedBy="fileAttachments")
-   * @ORM\JoinColumn(onDelete="CASCADE")
    */
+  #[ORM\JoinColumn(onDelete: 'CASCADE')]
+  #[ORM\ManyToOne(targetEntity: EmailDraft::class, inversedBy: 'fileAttachments')]
   private $draft;
 
   /**

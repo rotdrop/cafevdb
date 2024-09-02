@@ -69,7 +69,7 @@
   "prefer-stable": true,
   "extra": {
     "bamarni-bin": {
-      "bin-links": false,
+      "bin-links": true,
       "target-directory": "vendor-bin",
       "forward-command": true
     }

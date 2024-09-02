@@ -35,21 +35,12 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\MappedSuperclass\AbstractTrans
  * Table to store translations of certain other database table fields
  * (in contrast to storing source-code translations, @see
  * TranslationKey entity).
- *
- * @ORM\Table(name="TableFieldTranslations",
- *   options={"row_format":"DYNAMIC"},
- *   indexes={
- *     @ORM\Index(name="translations_lookup_idx", columns={
- *       "locale", "object_class", "foreign_key"
- *   })},
- *   uniqueConstraints={
- *     @ORM\UniqueConstraint(name="lookup_unique_idx", columns={
- *       "locale", "object_class", "field", "foreign_key"
- *   })}
- * )
- * @ORM\Entity(repositoryClass="OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\Repository\TranslationRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'TableFieldTranslations', options: ['row_format' => 'DYNAMIC'])]
+#[ORM\Index(name: 'translations_lookup_idx', columns: ['locale', 'object_class', 'foreign_key'])]
+#[ORM\UniqueConstraint(name: 'lookup_unique_idx', columns: ['locale', 'object_class', 'field', 'foreign_key'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\Repository\TranslationRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class TableFieldTranslation extends AbstractTranslation implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;

@@ -48,22 +48,14 @@ use OCA\CAFEVDB\Database\EntityManager;
 
 /**
  * ProjectParticipantFieldsDataOptions
- *
- * @ORM\Table(
- *   name="ProjectParticipantFieldsDataOptions",
- *   indexes={
- *     @ORM\Index(columns={"key"}),
- *    }
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\TranslationEntity(class="TableFieldTranslation", idToString={"key"="BIN2UUID(%s)"})
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
- * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\ProjectParticipantFieldDataOptionEntityListener"})
  */
+#[ORM\Table(name: 'ProjectParticipantFieldsDataOptions')]
+#[ORM\Index(columns: ['key'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\TranslationEntity(class: 'TableFieldTranslation', idToString: ['key' => 'BIN2UUID(%s)'])]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\ProjectParticipantFieldDataOptionEntityListener'])]
 class ProjectParticipantFieldDataOption implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -80,26 +72,23 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * @var ProjectParticipantField
    *
    * Link back to ProjectParticipantField
-   *
-   * @ORM\ManyToOne(targetEntity="ProjectParticipantField", inversedBy="dataOptions")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'dataOptions')]
+  #[ORM\Id]
   private $field;
 
   /**
    * @var \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface
-   *
-   * @ORM\Column(type="uuid_binary")
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'uuid_binary')]
+  #[ORM\Id]
   private $key;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable(untranslated="untranslatedLabel")
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[Gedmo\Translatable(untranslated: 'untranslatedLabel')]
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $label;
 
   /**
@@ -115,17 +104,15 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * name of the generator class.
    *
    * @var string
-   *
-   * @ORM\Column(type="string", length=1024, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: true)]
   private $data;
 
   /**
    * @var float
    * Optional value of a deposit for monetary options.
-   *
-   * @ORM\Column(type="float", nullable=true)
    */
+  #[ORM\Column(type: 'float', nullable: true)]
   private $deposit;
 
   /**
@@ -133,30 +120,25 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * FieldMultiplicity::GROUPSOFPEOPLE, FieldMultiplicity::GROUPOFPEOPLE
    * fields. Misused as starting date for recurring receivables
    * generators.
-   *
-   * @ORM\Column(type="bigint", nullable=true)
    */
+  #[ORM\Column(type: 'bigint', nullable: true)]
   private $limit;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable
-   * @ORM\Column(type="string", length=4096, nullable=true)
    */
+  #[Gedmo\Translatable]
+  #[ORM\Column(type: 'string', length: 4096, nullable: true)]
   private $tooltip;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="dataOption", indexBy="musician_id", cascade={"persist"}, orphanRemoval=true, fetch="EXTRA_LAZY")
-   * @Gedmo\SoftDeleteableCascade(delete=false, undelete=true)
-   */
+  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'dataOption', indexBy: 'musician_id', cascade: ['persist'], orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+  #[Gedmo\SoftDeleteableCascade(delete: false, undelete: true)]
   private $fieldData;
 
   /**
    * @var ProjectPayment
-   *
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="receivableOption")
    */
+  #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'receivableOption')]
   private $payments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

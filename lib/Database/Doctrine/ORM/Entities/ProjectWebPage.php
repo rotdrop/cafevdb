@@ -31,49 +31,43 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ProjectWebPage
- *
- * @ORM\Table(name="ProjectWebPages", uniqueConstraints={@ORM\UniqueConstraint(columns={"project_id", "article_id"})})
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectWebPagesRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'ProjectWebPages')]
+#[ORM\UniqueConstraint(columns: ['project_id', 'article_id'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectWebPagesRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ProjectWebPage implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="webPages", fetch="EXTRA_LAZY"))
-   * @ORM\Id
-   * @todo this should cascade deletes
-   */
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'webPages', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $project;
 
   /**
    * @var int
-   * @ORM\Column(type="integer", nullable=false, options={"default"="-1"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '-1'])]
+  #[ORM\Id]
   private $articleId = '-1';
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=false, options={"default"=""})
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: false, options: ['default' => ''])]
   private $articleName = '';
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"="-1"})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '-1'])]
   private $categoryId = '-1';
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"="-1"})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '-1'])]
   private $priority = '-1';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

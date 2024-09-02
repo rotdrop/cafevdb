@@ -39,11 +39,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
  * key. When the user logs in it can decrypt the token and get access to
  * selected data of the musician matching the associated id when in addition
  * the user-id matches also.
- *
- * @ORM\Table(name="MusicianRowAccessTokens")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'MusicianRowAccessTokens')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class MusicianRowAccessToken implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -53,16 +52,15 @@ class MusicianRowAccessToken implements \ArrayAccess
 
   /**
    * @var Musician
-   * @ORM\OneToOne(targetEntity="Musician", inversedBy="rowAccessToken", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\OneToOne(targetEntity: Musician::class, inversedBy: 'rowAccessToken', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $musician;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, unique=true, nullable=true, options={"collation"="ascii_bin"})
    */
+  #[ORM\Column(type: 'string', length: 256, unique: true, nullable: true, options: ['collation' => 'ascii_bin'])]
   private $userId;
 
   /**
@@ -72,9 +70,8 @@ class MusicianRowAccessToken implements \ArrayAccess
    * un-hashed token from its encrypted config-space, the user-token is
    * hashed, if the hashes and the user-id match then the user gets access to
    * its data. Storage is a hex-string
-   *
-   * @ORM\Column(type="string", length=128, unique=true, options={"fixed"=true,"collation"="ascii_bin"})
    */
+  #[ORM\Column(type: 'string', length: 128, unique: true, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
   private $accessTokenHash;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

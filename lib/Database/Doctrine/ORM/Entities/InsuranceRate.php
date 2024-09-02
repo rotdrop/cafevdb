@@ -37,59 +37,51 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * InsuranceRate
- *
- * @ORM\Table(name="InsuranceRates")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'InsuranceRates')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class InsuranceRate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="insuranceRates", cascade={"persist", "merge"}, fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="short_name")
-   * @ORM\Id
-   * @CJH\ForeignKey(targetEntity="InsuranceBroker", referencedColumnName="short_name", onUpdate="cascade")
-   */
+  #[CJH\ForeignKey(targetEntity: 'InsuranceBroker', referencedColumnName: 'short_name', onUpdate: 'cascade')]
+  #[ORM\JoinColumn(referencedColumnName: 'short_name')]
+  #[ORM\ManyToOne(targetEntity: InsuranceBroker::class, inversedBy: 'insuranceRates', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $broker;
 
   /**
    * @var Types\EnumGeographicalScope
-   *
-   * @ORM\Column(type="EnumGeographicalScope", nullable=false, options={"default"="Germany"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'EnumGeographicalScope', nullable: false, options: ['default' => 'Germany'])]
+  #[ORM\Id]
   private $geographicalScope;
 
   /**
    * @var float
-   *
-   * @ORM\Column(type="float", precision=10, scale=0, nullable=false, options={"comment"="fraction, not percentage, excluding taxes"})
    */
+  #[ORM\Column(type: 'float', precision: 10, scale: 0, nullable: false, options: ['comment' => 'fraction, not percentage, excluding taxes'])]
   private $rate;
 
   /**
    * @var \DateTimeImmutable
-   *
-   * @ORM\Column(type="date_immutable", nullable=true, options={"comment"="start of the yearly insurance period"})
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'start of the yearly insurance period'])]
   private $dueDate;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=255, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $policyNumber;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="insuranceRate", fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: InstrumentInsurance::class, mappedBy: 'insuranceRate', fetch: 'EXTRA_LAZY')]
   private $instrumentInsurances;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

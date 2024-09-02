@@ -33,15 +33,14 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  * FileData
  *
  * Simple data table for image blobs.
- *
- * @ORM\Table(name="FileData")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type", type="EnumFileType")
- * @ORM\DiscriminatorMap({"identity"="FileData", "image"="ImageFileData", "encrypted"="EncryptedFileData"})
- * @ORM\Entity
- * @Gedmo\Loggable(enabled=false)
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'FileData')]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'EnumFileType')]
+#[ORM\DiscriminatorMap(['identity' => 'FileData', 'image' => 'ImageFileData', 'encrypted' => 'EncryptedFileData'])]
+#[ORM\Entity]
+#[Gedmo\Loggable(enabled: false)]
+#[ORM\HasLifecycleCallbacks]
 class FileData implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -65,32 +64,22 @@ class FileData implements \ArrayAccess
    * As ORM still does not support lazy one-to-one associations from the
    * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
    * association in between.
-   *
-   * @ORM\Id
-   * @ORM\ManyToOne(targetEntity="File", inversedBy="fileData", cascade={"all"})
    */
+  #[ORM\Id]
+  #[ORM\ManyToOne(targetEntity: File::class, inversedBy: 'fileData', cascade: ['all'])]
   protected $file;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true})
-   * @Gedmo\Slug(fields={"data"}, updatable=true, unique=false, handlers={
-   *   @Gedmo\SlugHandler(class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler"),
-   *   @Gedmo\SlugHandler(
-   *     class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\AssociationSlugHandler",
-   *     options={
-   *       @Gedmo\SlugHandlerOption(name="associationSlug", value="file.dataHash")
-   *     })
-   * })
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true])]
+  #[Gedmo\Slug(fields: ['data'], updatable: true, unique: false, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler'), new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\AssociationSlugHandler', options: [new Gedmo\SlugHandlerOption(name: 'associationSlug', value: 'file.dataHash')])])]
   protected $dataHash;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="blob", nullable=false)
    */
+  #[ORM\Column(type: 'blob', nullable: false)]
   protected $data;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

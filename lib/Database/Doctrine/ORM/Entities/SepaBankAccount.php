@@ -34,8 +34,7 @@ use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping as MediaMonks;
 // types
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PreFlushEventArgs;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
 /**
  * SepaBankAccount.
@@ -48,15 +47,12 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PreFlushEventArgs;
  * Note that a unique constraint is not possible as long as we store
  * the personal data encrypted in the data base.
  *
- * @ORM\Table(name="SepaBankAccounts")
  *
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBankAccountsRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
  */
+#[ORM\Table(name: 'SepaBankAccounts')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBankAccountsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
 class SepaBankAccount implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -68,10 +64,9 @@ class SepaBankAccount implements \ArrayAccess
 
   /**
    * @var Musician
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaBankAccounts", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'sepaBankAccounts', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $musician;
 
   /**
@@ -80,13 +75,10 @@ class SepaBankAccount implements \ArrayAccess
    * This is a POSITIVE per-musician sequence count. It currently is
    * incremented using
    * \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\PerMusicianSequenceTrait
-   *
-   * @ORM\Column(type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="NONE")
-   * _AT_ORM\GeneratedValue(strategy="CUSTOM")
-   * _AT_ORM\CustomIdGenerator(class="OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\PerMusicianSequenceGenerator")
    */
+  #[ORM\Column(type: 'integer')]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'NONE')] // _AT_ORM\GeneratedValue(strategy="CUSTOM")
   private $sequence;
 
   /**
@@ -98,34 +90,30 @@ class SepaBankAccount implements \ArrayAccess
    * 256 bytes for each multi-user seal. Using 2k of data should be plenty
    * given that we probably only need two users: the management board with a
    * shared encryption key and the respective orchestra member with its own key.
-   *
-   * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
+  #[MediaMonks\Transformable(name: 'encrypt', context: 'encryptionContext')]
+  #[ORM\Column(type: 'string', length: 2048, nullable: false, options: ['collation' => 'ascii_bin'])]
   private $iban;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
+  #[MediaMonks\Transformable(name: 'encrypt', context: 'encryptionContext')]
+  #[ORM\Column(type: 'string', length: 2048, nullable: false, options: ['collation' => 'ascii_bin'])]
   private $bic;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
+  #[MediaMonks\Transformable(name: 'encrypt', context: 'encryptionContext')]
+  #[ORM\Column(type: 'string', length: 2048, nullable: false, options: ['collation' => 'ascii_bin'])]
   private $blz;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext")
    */
+  #[MediaMonks\Transformable(name: 'encrypt', context: 'encryptionContext')]
+  #[ORM\Column(type: 'string', length: 2048, nullable: false, options: ['collation' => 'ascii_bin'])]
   private $bankAccountOwner;
 
   /**
@@ -141,20 +129,14 @@ class SepaBankAccount implements \ArrayAccess
    *
    * Link to the attached debit mandates. Can be more than one at a
    * given time, even more than one active.
-   *
-   * @ORM\OneToMany(targetEntity="SepaDebitMandate",
-   *                mappedBy="sepaBankAccount",
-   *                fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: SepaDebitMandate::class, mappedBy: 'sepaBankAccount', fetch: 'EXTRA_LAZY')]
   private $sepaDebitMandates;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="CompositePayment",
-   *                mappedBy="sepaBankAccount",
-   *                fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'sepaBankAccount', fetch: 'EXTRA_LAZY')]
   private $payments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
@@ -423,12 +405,10 @@ class SepaBankAccount implements \ArrayAccess
 
   /**
    * {@inheritdoc}
-   *
-   * @ORM\PostLoad
-   * @ORM\PrePersist
-   * _AT_ORM\PreUpdate
    */
-  public function handleLifeCycleEvent(LifecycleEventArgs $eventArgs)
+  #[ORM\PostLoad]
+  #[ORM\PrePersist] // _AT_ORM\PreUpdate
+  public function handleLifecycleEvent(Event\PostLoadEventArgs|Event\PrepersistEventArgs $eventArgs)
   {
     $this->sanitizeEncryptionContext();
   }

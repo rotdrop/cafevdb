@@ -42,16 +42,12 @@ use OCA\CAFEVDB\Database\EntityManager;
 
 /**
  * Entity for project participants.
- *
- * @ORM\Table(name="ProjectParticipants")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantsRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
- * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener"})
  */
+#[ORM\Table(name: 'ProjectParticipants')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener'])]
 class ProjectParticipant implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -63,52 +59,46 @@ class ProjectParticipant implements \ArrayAccess
 
   /**
    * @var Project
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="participants", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participants', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $project;
 
   /**
    * @var Musician
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectParticipation", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectParticipation', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $musician;
 
   /**
    * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"="0", "comment"="Participant has confirmed the registration."})
    */
+  #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => '0', 'comment' => 'Participant has confirmed the registration.'])]
   private $registration = '0';
 
   /**
    * @var Collection
    *
    * Link to payments
-   *
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="projectParticipant")
    */
+  #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'projectParticipant')]
   private $payments;
 
   /**
    * @var Collection
    *
    * Link to extra fields data
-   *
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", indexBy="option_key", mappedBy="projectParticipant", cascade={"persist"}, fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, indexBy: 'option_key', mappedBy: 'projectParticipant', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   private $participantFieldsData;
 
   /**
    * @var Collection
    *
    * Link in the project instruments, may be more than one per participant.
-   *
-   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="projectParticipant", cascade={"all"})
    */
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'projectParticipant', cascade: ['all'])]
   private $projectInstruments;
 
   /**
@@ -117,9 +107,8 @@ class ProjectParticipant implements \ArrayAccess
    * The root-directory entry for the potentially encrypted participant
    * storage. This would also be available through the DatabaseStorages table,
    * but we keep it here for convenient access.
-   *
-   * @ORM\OneToOne(targetEntity="DatabaseStorage", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true)
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorage::class, fetch: 'EXTRA_LAZY', cascade: ['all'], orphanRemoval: true)]
   private $databaseDocuments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

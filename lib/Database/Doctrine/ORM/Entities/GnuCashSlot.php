@@ -32,16 +32,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Link to the Gnucash accounts table.
- *
- * @ORM\Table(
- *   name="GnuCashSlots",
- *   indexes={
- *     @ORM\Index(name="slots_guid_index", columns={"obj_guid"})
- *   }
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'GnuCashSlots')]
+#[ORM\Index(name: 'slots_guid_index', columns: ['obj_guid'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class GnuCashSlot implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -49,86 +44,76 @@ class GnuCashSlot implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private int $id;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private string $objGuid;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=4096, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 4096, nullable: false)]
   private string $name;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
   private int $slotType;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", length=20, nullable=true, name="int64_val")
    */
+  #[ORM\Column(type: 'integer', length: 20, nullable: true, name: 'int64_val')]
   private int $int64Val;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=4096, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 4096, nullable: true)]
   private string $stringVal;
 
   /**
    * @var double
-   *
-   * @ORM\Column(type="float", nullable=true)
    */
+  #[ORM\Column(type: 'float', nullable: true)]
   private $doubleVal;
 
   /**
    * @var \DateTimeImmutable
-   * @ORM\Column(type="datetime_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
   private $timespecVal;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=true, options={"fixed": true, "collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private string $guidVal;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", length=20, nullable=true)
    */
+  #[ORM\Column(type: 'integer', length: 20, nullable: true)]
   private int $numericValNum;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", length=20, nullable=true)
    */
+  #[ORM\Column(type: 'integer', length: 20, nullable: true)]
   private int $numericValDenom;
 
   /**
    * @var \DateTimeImmutable
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $gdateVal;
 
 // CREATE TABLE `slots` (

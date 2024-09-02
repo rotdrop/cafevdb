@@ -31,22 +31,33 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Loggable;
 
 /**
  * OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntity
- *
- * @ORM\Table(
- *     name="ExtLogEntries",
- *     options={"row_format":"DYNAMIC"},
- *  indexes={
- *      @ORM\Index(name="log_class_lookup_idx", columns={"object_class"}),
- *      @ORM\Index(name="log_date_lookup_idx", columns={"logged_at"}),
- *      @ORM\Index(name="log_user_lookup_idx", columns={"username"}),
- *      @ORM\Index(name="log_version_lookup_idx", columns={"object_id", "object_class", "version"}),
- *      @ORM\Index(name="log_action_lookup_idx", columns={"action", "object_class"}),
- *      @ORM\Index(name="log_action_class_lookup_idx", columns={"action"})
- *  }
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\LogEntriesRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'ExtLogEntries', options: ['row_format' => 'DYNAMIC'])]
+#[ORM\Index(name: 'log_class_lookup_idx', columns: ['object_class'])]
+#[ORM\Index(name: 'log_date_lookup_idx', columns: ['logged_at'])]
+#[ORM\Index(name: 'log_user_lookup_idx', columns: ['username'])]
+#[ORM\Index(name: 'log_version_lookup_idx', columns: ['object_id', 'object_class', 'version'])]
+#[ORM\Index(name: 'log_action_lookup_idx', columns: ['action', 'object_class'])]
+#[ORM\Index(name: 'log_action_class_lookup_idx', columns: ['action'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\LogEntriesRepository::class)]
+/**
+ * The key size for MariaDB with decent settings is 3072 / 4 = 768 bytes.
+ *
+ * We have object_id = X, object_class = 191 (why?), version = 4.
+ *
+ * So 768 - 4(version) - 191(object_class) = 573 should do.
+ */
+#[ORM\AttributeOverrides([
+  new ORM\AttributeOverride(
+    name: 'objectId',
+    column: new ORM\Column(
+     name: 'object_id',
+      type: 'string',
+      length: 573
+    )
+  ),
+])]
+#[ORM\HasLifecycleCallbacks]
 class LogEntry extends Loggable\Entity\MappedSuperclass\AbstractLogEntry
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -55,25 +66,15 @@ class LogEntry extends Loggable\Entity\MappedSuperclass\AbstractLogEntry
   /*
    * All required columns are mapped through inherited superclass
    */
-
   /**
    * @var string
-   *
-   * May key size for MariaDB with decent settings is 3072 / 4 = 768 bytes.
-   *
-   * We have object_id = X, object_class = 191 (why?), version = 4.
-   *
-   * So 768 - 4(version) - 191(object_class) = 573 should do.
-   *
-   * @ORM\Column(name="object_id", length=573, nullable=true)
    */
   protected $objectId;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=45, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 45, nullable: true)]
   private $remoteAddress;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

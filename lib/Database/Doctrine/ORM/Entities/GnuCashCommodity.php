@@ -32,11 +32,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Link to the GnuCash commodities table.
- *
- * @ORM\Table(name="GnuCashCommodities")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'GnuCashCommodities')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class GnuCashCommodity implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -52,69 +51,59 @@ class GnuCashCommodity implements \ArrayAccess
   //   `quote_source` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   //   `quote_tz` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
   // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
   private string $guid;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2024, nullable=false, options={"collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 2024, nullable: false, options: ['collation' => 'ascii_general_ci'])]
   private string $namespace;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2028, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 2028, nullable: false)]
   private string $mnemonic;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2028)
    */
+  #[ORM\Column(type: 'string', length: 2028)]
   private string $fullname;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2028)
    */
+  #[ORM\Column(type: 'string', length: 2028)]
   private string $cusip;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
   private int $fraction;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="boolean", nullable=false)
    */
+  #[ORM\Column(type: 'boolean', nullable: false)]
   private bool $quoteFlag;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2028, nullable=false, options={"collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 2028, nullable: false, options: ['collation' => 'ascii_general_ci'])]
   private string $quoteSource;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2028, nullable=false, options={"collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 2028, nullable: false, options: ['collation' => 'ascii_general_ci'])]
   private string $quoteTz;
 
   /** {@inheritdoc} */

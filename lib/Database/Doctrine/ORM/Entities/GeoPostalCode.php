@@ -33,15 +33,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * GeoPostalCode
- *
- * @ORM\Table(
- *    name="GeoPostalCodes",
- *    uniqueConstraints={
- *      @ORM\UniqueConstraint(columns={"country", "postal_code", "name"})
- *    })
- * @ORM\Entity
- * @Gedmo\Loggable(enabled=false)
  */
+#[ORM\Table(name: 'GeoPostalCodes')]
+#[ORM\UniqueConstraint(columns: ['country', 'postal_code', 'name'])]
+#[ORM\Entity]
+#[Gedmo\Loggable(enabled: false)]
 class GeoPostalCode implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -50,58 +46,49 @@ class GeoPostalCode implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed" = true, "collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private $country;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=3, nullable=true, options={"fixed" = true, "collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 3, nullable: true, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private $stateProvince;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: false)]
   private $postalCode;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=650, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 650, nullable: false)]
   private $name;
 
   /**
    * @var double
-   *
-   * @ORM\Column(type="float", nullable=false)
    */
+  #[ORM\Column(type: 'float', nullable: false)]
   private $latitude;
 
   /**
    * @var double
-   *
-   * @ORM\Column(type="float", nullable=false)
    */
+  #[ORM\Column(type: 'float', nullable: false)]
   private $longitude;
 
-  /**
-   * @ORM\OneToMany(targetEntity="GeoPostalCodeTranslation", mappedBy="geoPostalCode", cascade={"all"})
-   */
+  #[ORM\OneToMany(targetEntity: GeoPostalCodeTranslation::class, mappedBy: 'geoPostalCode', cascade: ['all'])]
   private $translations;
 
   /** {@inheritdoc} */

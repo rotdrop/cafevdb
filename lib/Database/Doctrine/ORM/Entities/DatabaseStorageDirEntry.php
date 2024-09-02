@@ -35,19 +35,14 @@ use OCA\CAFEVDB\Constants;
 
 /**
  * Generic directory entry for a database-backed file.
- *
- * @ORM\Table(
- *   name="DatabaseStorageDirEntries",
- *   uniqueConstraints={
- *     @ORM\UniqueConstraint(columns={"parent_id", "name"})
- *   },
- * )
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type", type="EnumDirEntryType")
- * @ORM\DiscriminatorMap({"generic"="DatabaseStorageDirEntry", "file"="DatabaseStorageFile", "folder"="DatabaseStorageFolder"})
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageDirEntriesRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'DatabaseStorageDirEntries')]
+#[ORM\UniqueConstraint(columns: ['parent_id', 'name'])]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'EnumDirEntryType')]
+#[ORM\DiscriminatorMap(['generic' => 'DatabaseStorageDirEntry', 'file' => 'DatabaseStorageFile', 'folder' => 'DatabaseStorageFolder'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageDirEntriesRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class DatabaseStorageDirEntry implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -59,26 +54,23 @@ class DatabaseStorageDirEntry implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   protected $id;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256)
    */
+  #[ORM\Column(type: 'string', length: 256)]
   protected $name;
 
   /**
    * @var DatabaseStorageFolder
-   *
-   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", inversedBy="directoryEntries", cascade={"persist"})
-   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
+  #[ORM\ManyToOne(targetEntity: DatabaseStorageFolder::class, inversedBy: 'directoryEntries', cascade: ['persist'])]
+  #[Gedmo\Timestampable(on: ['update', 'create', 'delete'], timestampField: 'updated')]
   protected $parent;
 
   /** {@inheritdoc} */

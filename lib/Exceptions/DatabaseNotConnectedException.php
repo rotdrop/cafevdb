@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,17 +22,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+namespace OCA\CAFEVDB\Exceptions;
 
 /**
- * Ordinary bank transfer to destination account. This actually models
- * a scheduled bank transfer although the backend may choose to
- * generate just a simple transfer in order to relax missed submission
- * dead-lines.
+ * Thrown when EntityManager::getConnection() is called when there is no
+ * connection.
  */
-#[ORM\Entity]
-class SepaBankTransfer extends SepaBulkTransaction
+class DatabaseNotConnectedException extends DatabaseException
 {
 }

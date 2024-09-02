@@ -36,48 +36,40 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
  * This is almost only a pivot table (i.e. a join table between
  * instruments and projects) but for the "Quantity" column which
  * states how many instruments are needed.
- *
- * @ORM\Table(name="ProjectInstrumentationNumbers")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectInstrumentationNumbersRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'ProjectInstrumentationNumbers')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectInstrumentationNumbersRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ProjectInstrumentationNumber implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="instrumentationNumbers", fetch="EXTRA_LAZY")
-   * @ORM\Id
-   */
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'instrumentationNumbers', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $project;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="Instrument", inversedBy="projectInstrumentationNumbers", fetch="EXTRA_LAZY")
-   * @ORM\Id
-   */
+  #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'projectInstrumentationNumbers', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $instrument;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", options={"default"="0","comment"="Voice specification if applicable, set to 0 if separation by voice is not needed"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'integer', options: ['default' => '0', 'comment' => 'Voice specification if applicable, set to 0 if separation by voice is not needed'])]
+  #[ORM\Id]
   private $voice = ProjectInstrument::UNVOICED;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"="1","comment"="Number of required musicians for this instrument"})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '1', 'comment' => 'Number of required musicians for this instrument'])]
   private $quantity = '1';
 
   /**
    * @var ProjectInstrument This is a list of registered instances.
-   *
-   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="instrumentationNumber", fetch="EXTRA_LAZY", indexBy="musician_id")
    */
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'instrumentationNumber', fetch: 'EXTRA_LAZY', indexBy: 'musician_id')]
   private $instruments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

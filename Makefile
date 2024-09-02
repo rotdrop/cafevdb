@@ -121,7 +121,7 @@ stamp.composer-core-versions: composer.lock
 	date > stamp.composer-core-versions
 
 composer.lock: DRY:=
-composer.lock: composer.json composer.json.in
+composer.lock: composer.json composer.json.in vendor-bin/*/composer.json
 	rm -f composer.lock
 	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
 	env DRY=$(DRY) dev-scripts/tweak-composer-json.sh || {\
@@ -534,7 +534,7 @@ appstore: $(BUILDDIR)/core-exclude
 
 .PHONY: verifydb
 verifydb: $(ABSSRCDIR)/vendor-wrapped
-	$(ORM_CLI) orm:validate-schema || $(ORM_CLI) orm:schema-tool:update --complete --dump-sql
+	$(ORM_CLI) orm:validate-schema || $(ORM_CLI) orm:schema-tool:update --dump-sql
 
 .PHONY: updatesql
 updatesql: $(ABSSRCDIR)/vendor-wrapped

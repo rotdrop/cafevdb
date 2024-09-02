@@ -20,10 +20,12 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\QuoteStrategy;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Internal\SQLResultCasing as SQLResultCasingTrait;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Internal\SQLResultCasing as SQLResultCasingTrait;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\JoinColumnMapping;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ManyToManyOwningSideMapping;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\QuoteStrategy;
 
 /**
  * A set of rules for determining the physical column, alias and table quotes
@@ -59,7 +61,7 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
     /**
      * {@inheritdoc}
      */
-    public function getColumnName($fieldName, ClassMetadata $class, AbstractPlatform $platform)
+    public function getColumnName(string $fieldName, ClassMetadata $class, AbstractPlatform $platform):string
     {
         return $this->getQuotedName(
             $platform,
@@ -73,7 +75,7 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
      *
      * @todo Table names should be computed in DBAL depending on the platform
      */
-    public function getTableName(ClassMetadata $class, AbstractPlatform $platform)
+    public function getTableName(ClassMetadata $class, AbstractPlatform $platform):string
     {
         $tableName = $class->table['name'];
 
@@ -95,7 +97,7 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
     /**
      * {@inheritdoc}
      */
-    public function getSequenceName(array $definition, ClassMetadata $class, AbstractPlatform $platform)
+    public function getSequenceName(array $definition, ClassMetadata $class, AbstractPlatform $platform):string
     {
         return $this->getQuotedName(
             $platform,
@@ -107,7 +109,7 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
     /**
      * {@inheritdoc}
      */
-    public function getJoinColumnName(array $joinColumn, ClassMetadata $class, AbstractPlatform $platform)
+    public function getJoinColumnName(JoinColumnMapping $joinColumn, ClassMetadata $class, AbstractPlatform $platform):string
     {
         return $this->getQuotedName(
             $platform,
@@ -119,7 +121,7 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
     /**
      * {@inheritdoc}
      */
-    public function getReferencedJoinColumnName(array $joinColumn, ClassMetadata $class, AbstractPlatform $platform)
+    public function getReferencedJoinColumnName(JoinColumnMapping $joinColumn, ClassMetadata $class, AbstractPlatform $platform):string
     {
         return $this->getQuotedName(
             $platform,
@@ -131,7 +133,7 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
     /**
      * {@inheritdoc}
      */
-    public function getJoinTableName(array $association, ClassMetadata $class, AbstractPlatform $platform)
+    public function getJoinTableName(ManyToManyOwningSideMapping $association, ClassMetadata $class, AbstractPlatform $platform):string
     {
         $schema = '';
 
@@ -153,7 +155,7 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
     /**
      * {@inheritdoc}
      */
-    public function getIdentifierColumnNames(ClassMetadata $class, AbstractPlatform $platform)
+    public function getIdentifierColumnNames(ClassMetadata $class, AbstractPlatform $platform):array
     {
         $quotedColumnNames = array();
 
@@ -188,7 +190,7 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
     /**
      * {@inheritdoc}
      */
-    public function getColumnAlias($columnName, $counter, AbstractPlatform $platform, ClassMetadata $class = null)
+    public function getColumnAlias(string $columnName, int $counter, AbstractPlatform $platform, ClassMetadata $class = null):string
     {
         // 1 ) Concatenate column name and counter
         // 2 ) Trim the column alias to the maximum identifier length of the platform.
