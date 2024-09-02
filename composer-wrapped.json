@@ -21,12 +21,12 @@
     "cjh/doctrine-on-update-extension": "dev-master",
     "doctrine/annotations": "*",
     "doctrine/dbal": "^3.2",
-    "doctrine/orm": "dev-production/2.20.x/cafevdb",
-    "gedmo/doctrine-extensions": "3.15.x-dev",
+    "doctrine/orm": "dev-production/3.2.x/cafevdb",
+    "gedmo/doctrine-extensions": "3.x-dev",
     "mediamonks/doctrine-extensions": "0.1.x-dev",
     "myclabs/php-enum": "^1.8",
     "nesbot/carbon": "^2.46",
-    "oro/doctrine-extensions": "3.0-alpha3",
+    "oro/doctrine-extensions": "*",
     "ramsey/uuid": "^4",
     "ramsey/uuid-doctrine": "^1.6",
     "symfony/cache": "^6"
@@ -75,7 +75,8 @@
         "Add an optional progress callback to the Horde IMAP Client": "../composer-patches/bytestream/horde-imap-client/write-progress-callback.patch"
       },
       "doctrine/dbal": {
-        "Handle collation changes in recent MariaDB versions": "../composer-patches/doctrine/dbal/mariadb-short-collation-names.patch"
+        "Handle collation changes in recent MariaDB versions": "../composer-patches/doctrine/dbal/mariadb-short-collation-names.patch",
+        "Fix Index::spansColumns() to also check the number of columns": "../composer-patches/doctrine/dbal/fix-index-spans-columns.patch"
       }
     }
   }

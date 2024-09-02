@@ -44,15 +44,14 @@ use OCA\CAFEVDB\Database\EntityManager;
  * SepaBulkTransaction
  *
  * This actually models a batch collection
- *
- * @ORM\Table(name="SepaBulkTransactions")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="sepa_transaction", type="EnumSepaTransaction")
- * @ORM\DiscriminatorMap({null="SepaBulkTransaction","debit_note"="SepaDebitNote", "bank_transfer"="SepaBankTransfer"})
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository")
- * @ORM\HasLifecycleCallbacks
- * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\SepaBulkTransactionEntityListener"})
  */
+#[ORM\Table(name: 'SepaBulkTransactions')]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'sepa_transaction', type: 'EnumSepaTransaction')]
+#[ORM\DiscriminatorMap([null => 'SepaBulkTransaction', 'debit_note' => 'SepaDebitNote', 'bank_transfer' => 'SepaBankTransfer'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\SepaBulkTransactionEntityListener'])]
 class SepaBulkTransaction implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -62,29 +61,18 @@ class SepaBulkTransaction implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var Collection
-   *
-   * @ORM\ManyToMany(targetEntity="DatabaseStorageFile", fetch="EXTRA_LAZY", cascade={"persist"}, orphanRemoval=true)
-   * @ORM\JoinTable(
-   *   name="SepaBulkTransactionData",
-   *   inverseJoinColumns={
-   *     @ORM\JoinColumn(unique=true)
-   *   }
-   * )
-   *
-   * Export sets for submission to the bank. There may be more than one export
-   * set for a given transaction, but each export set can only belong to one
-   * transaction. Export-data is generated on-the-fly by issuing the download
-   * and tagged immutable once the transaction has been submitted to the bank.
    */
+  #[ORM\JoinTable(name: 'SepaBulkTransactionData')]
+  #[ORM\InverseJoinColumn(unique: true)]
+  #[ORM\ManyToMany(targetEntity: DatabaseStorageFile::class, fetch: 'EXTRA_LAZY', cascade: ['persist'], orphanRemoval: true)]
   private $sepaTransactionData;
 
   /**
@@ -92,81 +80,70 @@ class SepaBulkTransaction implements \ArrayAccess
    *
    * Latest date before which the debit notes have to be submitted to
    * the bank in order to match the $dueDate.
-   *
-   * @ORM\Column(type="date_immutable", nullable=false)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: false)]
   private $submissionDeadline;
 
   /**
    * @var \DateTime|null
    * The date when the bulk-transfer data actually was submitted to the bank.
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $submitDate;
 
   /**
    * @var \DateTimeImmutable
    * The date when the money should arrive.
-   *
-   * @ORM\Column(type="date_immutable", nullable=false)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: false)]
   private $dueDate;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object URI"})
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object URI'])]
   private $submissionEventUri;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object UID"})
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object UID'])]
   private $submissionEventUid;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object URI"})
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object URI'])]
   private $submissionTaskUri;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object UID"})
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object UID'])]
   private $submissionTaskUid;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object URI"})
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object URI'])]
   private $dueEventUri;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object UID"})
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object UID'])]
   private $dueEventUid;
 
   /**
    * @var ArrayCollection
-   *
-   * @ORM\OneToMany(targetEntity="CompositePayment", indexBy="musician_id", mappedBy="sepaTransaction", orphanRemoval=true, cascade={"all"}, fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: CompositePayment::class, indexBy: 'musician_id', mappedBy: 'sepaTransaction', orphanRemoval: true, cascade: ['all'], fetch: 'EXTRA_LAZY')]
   private $payments;
 
   /**
    * @var SentEamil
-   *
-   * @ORM\OneToMany(targetEntity="SentEmail", indexBy="messageId", mappedBy="sepaBulkTransaction")
    */
+  #[ORM\OneToMany(targetEntity: SentEmail::class, indexBy: 'messageId', mappedBy: 'sepaBulkTransaction')]
   private $preNotificationEmails;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

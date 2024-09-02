@@ -40,9 +40,8 @@ trait UuidTrait
 {
   /**
    * @var \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface
-   *
-   * @ORM\Column(type="uuid_binary", unique=true)
    */
+  #[ORM\Column(type: 'uuid_binary', unique: true)]
   private $uuid;
 
   /**
@@ -77,9 +76,8 @@ trait UuidTrait
 
   /**
    * {@inheritdoc}
-   *
-   * @ORM\PrePersist
    */
+  #[ORM\PrePersist]
   public function prePersistUuid():void
   {
     $this->ensureUuid();
@@ -87,9 +85,8 @@ trait UuidTrait
 
   /**
    * {@inheritdoc}
-   *
-   * @ORM\PreUpdate
    */
+  #[ORM\PreUpdate]
   public function preUpdateUuid():void
   {
     $this->ensureUuid();

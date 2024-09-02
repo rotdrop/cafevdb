@@ -32,11 +32,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Link to the Gnucash accounts table.
- *
- * @ORM\Table(name="GnuCashBooks")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'GnuCashBooks')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class GnuCashBook implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -46,33 +45,25 @@ class GnuCashBook implements \ArrayAccess
   //   `root_account_guid` varchar(32) NOT NULL,
   //   `root_template_guid` varchar(32) NOT NULL
   // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
   private string $guid;
 
   /**
    * @var GnuCashAccount
-   *
-   * @ORM\OneToOne(targetEntity="GnuCashAccount", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="root_account_guid", referencedColumnName="guid", nullable=false)
-   * )
    */
+  #[ORM\JoinColumn(name: 'root_account_guid', referencedColumnName: 'guid', nullable: false)]
+  #[ORM\OneToOne(targetEntity: GnuCashAccount::class, fetch: 'EXTRA_LAZY')]
   private string $rootAccount;
 
   /**
    * @var GnuCashAccount
-   *
-   * @ORM\OneToOne(targetEntity="GnuCashAccount", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="root_template_guid", referencedColumnName="guid", nullable=false)
-   * )
    */
+  #[ORM\JoinColumn(name: 'root_template_guid', referencedColumnName: 'guid', nullable: false)]
+  #[ORM\OneToOne(targetEntity: GnuCashAccount::class, fetch: 'EXTRA_LAZY')]
   private string $rootTemplate;
 
   /** {@inheritdoc} */

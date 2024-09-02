@@ -38,20 +38,12 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 /**
  * Record notices of tax exemption from the corporate income tax (or other
  * taxes).
- *
- * @ORM\Table(
- *   name="TaxExemptionNotices",
- *   uniqueConstraints={
- *     @ORM\UniqueConstraint(columns={"tax_type", "assessment_period_start", "assessment_period_end"})
- *   }
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TaxExemptionNoticesRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\NeverHardDelete"
- * )
  */
+#[ORM\Table(name: 'TaxExemptionNotices')]
+#[ORM\UniqueConstraint(columns: ['tax_type', 'assessment_period_start', 'assessment_period_end'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TaxExemptionNoticesRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\NeverHardDelete')]
 class TaxExemptionNotice implements JsonSerializable, ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -60,63 +52,54 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private ?int $id = null;
 
   /**
    * @var Types\EnumTaxType
-   *
-   * @ORM\Column(type="EnumTaxType", nullable=false, options={"default"="corporate income tax"})
    */
+  #[ORM\Column(type: 'EnumTaxType', nullable: false, options: ['default' => 'corporate income tax'])]
   private ?Types\EnumTaxType $taxType;
 
   /**
    * @var int
    *
    * First year of assessment period.
-   *
-   * @ORM\Column(type="integer", nullable=false)
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
   private ?int $assessmentPeriodStart;
 
   /**
    * @var int
    *
    * Last year of assessment period.
-   *
-   * @ORM\Column(type="integer", nullable=false)
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
   private ?int $assessmentPeriodEnd;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=false)
-   *
-   * The tax office which issued the the notice of excemption.
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: false)] // The tax office which issued the the notice of excemption.
   private ?string $taxOffice;
 
   /**
    * @var string
    *
    * The tax identification number used by $taxOffice.
-   *
-   * @ORM\Column(type="string", length=256, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: false)]
   private ?string $taxNumber;
 
   /**
    * @var DateTimeInterface
    *
    * The date at of the notice of exemption
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private ?DateTimeInterface $dateIssued;
 
   /**
@@ -124,36 +107,32 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
    *
    * The purpose which led to the notice of exemption as noted on that very
    * notice.
-   *
-   * @ORM\Column(type="string", length=4096, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 4096, nullable: false)]
   private string $beneficiaryPurpose;
 
   /**
    * @var bool
    *
    * Whether the orchester is allowed to treat membership fees as donations.
-   *
-   * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
    */
+  #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => '0'])]
   private bool $membershipFeesAreDonations = false;
 
   /**
    * @var DatabaseStorageFile
    *
    * Virtul "hard copy" of the letter the tax offic
-   *
-   * @ORM\OneToOne(targetEntity="DatabaseStorageFile", cascade={"all"}, orphanRemoval=true)
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
   private $writtenNotice;
 
   /**
    * @var Collection
    *
    * The collection of donation receipts assiated to this notice of tax exemption.
-   *
-   * @ORM\OneToMany(targetEntity="DonationReceipt", mappedBy="taxExemptionNotice")
    */
+  #[ORM\OneToMany(targetEntity: DonationReceipt::class, mappedBy: 'taxExemptionNotice')]
   private $donationReceipts;
 
   /** {@inheritdoc} */

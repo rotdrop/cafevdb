@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,31 +38,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
 class SepaDebitMandatesRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\PerMusicianSequenceTrait;
-
-  /**
-   * Find a SEPA-mandate by either its primary key or its mandate
-   * reference; no-op if $idOrReference already is a SEPA-mandate
-   * entity.
-   *
-   * @param string|array|Entities\SepaDebitMandate $idOrReference
-   * Mandate-reference or primary key or entity instance.
-   *
-   * @param array $orderBy
-   *
-   * @return  mixed
-   */
-  public function findOneBy($idOrReference, array $orderBy = null)
-  {
-    if ($idOrReference instanceof Entities\SepaDebitMandate) {
-      return $idOrReference;
-    } elseif (is_string($idOrReference)) {
-      return parent::findOneBy([ 'mandateReference' => $idOrReference ], null);
-    } elseif (is_array($idOrReference)) {
-      return parent::findOneBy($idOrReference, $orderBy);
-    } else {
-      return null;
-    }
-  }
 
   /**
    * Try to persist the given bank-account by first fetching the

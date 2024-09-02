@@ -31,11 +31,10 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ProjectPayments
- *
- * @ORM\Table(name="ProjectPayments")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectPaymentsRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'ProjectPayments')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectPaymentsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ProjectPayment implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -43,11 +42,10 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
@@ -55,9 +53,8 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * Project payments are actually also expenses in which case the sign of the
    * payment is negative. Receptions are positive.
-   *
-   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
    */
+  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: false, options: ['default' => '0.00'])]
   private $amount = '0.00';
 
   /**
@@ -65,80 +62,61 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * Flags the payment as a donation. The supporting document of the
    * corresponding receivable will be the corresponding certificate.
-   *
-   * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
    */
+  #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => '0'])]
   private $isDonation;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=1024, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $subject;
 
   /**
    * @var ProjectParticipantFieldDatum
    *
    * Each project payment must be backed by a "receivable".
-   *
-   * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDatum", inversedBy="payments")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id", nullable=false),
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
-   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id", nullable=false),
-   *   @ORM\JoinColumn(name="receivable_key", referencedColumnName="option_key", nullable=false)
-   * )
    */
+  #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'receivable_key', referencedColumnName: 'option_key', nullable: false)]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDatum::class, inversedBy: 'payments')]
   private $receivable;
 
   /**
    * @var ProjectParticipantFieldDataOption
-   *
-   * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDataOption", inversedBy="payments")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id", nullable=false),
-   *   @ORM\JoinColumn(name="receivable_key", referencedColumnName="key", nullable=false)
-   * )
    */
+  #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'receivable_key', referencedColumnName: 'key', nullable: false)]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDataOption::class, inversedBy: 'payments')]
   private $receivableOption;
 
   /**
    * @var CompositePayment
    *
    * Composite payments group several payments together.
-   *
-   * @ORM\ManyToOne(targetEntity="CompositePayment", inversedBy="projectPayments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(nullable=false)
-   * )
-   *
-   * Promote any changes to the parent.
-   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
+  #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(targetEntity: CompositePayment::class, inversedBy: 'projectPayments', fetch: 'EXTRA_LAZY')]
+  #[Gedmo\Timestampable(on: ['update', 'create', 'delete'], timestampField: 'updated')]
   private $compositePayment;
 
   /**
    * @var Project
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="payments", cascade={"persist"}, fetch="EXTRA_LAZY")
    */
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'payments', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   private $project;
 
   /**
    * @var Musician
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payments", fetch="EXTRA_LAZY")
    */
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $musician;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="payments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
-   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false)
-   * )
-   */
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
   /**
@@ -146,9 +124,8 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * Project payments may be supported by documents below the project balance,
    * or by individual supporting documents which are tied to the receivables.
-   *
-   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", fetch="EXTRA_LAZY")
    */
+  #[ORM\ManyToOne(targetEntity: DatabaseStorageFolder::class, fetch: 'EXTRA_LAZY')]
   private $balanceDocumentsFolder;
 
   /** {@inheritdoc} */

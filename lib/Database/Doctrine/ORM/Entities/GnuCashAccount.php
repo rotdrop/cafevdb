@@ -33,118 +33,100 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Link to the Gnucash accounts table.
- *
- * @ORM\Table(name="GnuCashAccounts")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'GnuCashAccounts')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class GnuCashAccount implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
 
 //   CREATE TABLE `accounts` (
-//   `guid` varchar(32) NOT NULL,
-//   `name` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-//   `account_type` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-//   `commodity_guid` varchar(32) DEFAULT NULL,
-//   `commodity_scu` int(11) NOT NULL,
-//   `non_std_scu` int(11) NOT NULL,
-//   `parent_guid` varchar(32) DEFAULT NULL,
-//   `code` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-//   `description` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-//   `hidden` int(11) DEFAULT NULL,
-//   `placeholder` int(11) DEFAULT NULL
-// ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+  //   `guid` varchar(32) NOT NULL,
+  //   `name` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  //   `account_type` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  //   `commodity_guid` varchar(32) DEFAULT NULL,
+  //   `commodity_scu` int(11) NOT NULL,
+  //   `non_std_scu` int(11) NOT NULL,
+  //   `parent_guid` varchar(32) DEFAULT NULL,
+  //   `code` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  //   `description` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  //   `hidden` int(11) DEFAULT NULL,
+  //   `placeholder` int(11) DEFAULT NULL
+  // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
   private string $guid;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2028, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 2028, nullable: false)]
   private string $name;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2028, nullable=false, options={"collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 2028, nullable: false, options: ['collation' => 'ascii_general_ci'])]
   private string $accountType;
 
   /**
    * @var null|GnuCashCommodity
-   *
-   * @ORM\ManyToOne(targetEntity="GnuCashCommodity", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="commodity_guid", referencedColumnName="guid", nullable=true)
-   * )
    */
+  #[ORM\JoinColumn(name: 'commodity_guid', referencedColumnName: 'guid', nullable: true)]
+  #[ORM\ManyToOne(targetEntity: GnuCashCommodity::class, fetch: 'EXTRA_LAZY')]
   private ?GnuCashCommodity $commodity;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
   private int $commodityScu;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
   private int $nonStdScu;
 
   /**
    * @var GnuCashAccount
-   *
-   * @ORM\ManyToOne(targetEntity="GnuCashAccount", inversedBy="children", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="parent_guid", referencedColumnName="guid", nullable=true)
-   * )
    */
+  #[ORM\JoinColumn(name: 'parent_guid', referencedColumnName: 'guid', nullable: true)]
+  #[ORM\ManyToOne(targetEntity: GnuCashAccount::class, inversedBy: 'children', fetch: 'EXTRA_LAZY')]
   private ?GnuCashAccount $parent;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="GnuCashAccount", mappedBy="parent", fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: GnuCashAccount::class, mappedBy: 'parent', fetch: 'EXTRA_LAZY')]
   private string $children;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2028, nullable=false, options={"collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 2028, nullable: false, options: ['collation' => 'ascii_general_ci'])]
   private string $code;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2028, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 2028, nullable: false)]
   private string $description;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="boolean", nullable=false)
    */
+  #[ORM\Column(type: 'boolean', nullable: false)]
   private bool $hidden;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="boolean", nullable=false)
    */
+  #[ORM\Column(type: 'boolean', nullable: false)]
   private bool $placeholder;
 
   /** {@inheritdoc} */

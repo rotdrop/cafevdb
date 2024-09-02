@@ -32,11 +32,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * InsuranceBroker
- *
- * @ORM\Table(name="InsuranceBrokers")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'InsuranceBrokers')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class InsuranceBroker implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -44,31 +43,27 @@ class InsuranceBroker implements \ArrayAccess
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=40, nullable=false)
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 40, nullable: false)]
+  #[ORM\Id]
   private $shortName;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=512, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 512, nullable: false)]
   private $longName;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=512, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 512, nullable: false)]
   private $address;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="InsuranceRate", mappedBy="broker", fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: InsuranceRate::class, mappedBy: 'broker', fetch: 'EXTRA_LAZY')]
   private $insuranceRates;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

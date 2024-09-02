@@ -29,6 +29,7 @@ use ZipStream\ZipStream;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
@@ -49,13 +50,13 @@ class DatabaseStorageUtil
    *
    * @param ILogger $logger Cloud-logger.
    *
-   * @param IL10N $l10n Guess what.
+   * @param IL10N $l Guess what.
    */
   public function __construct(
     protected string $appName,
     protected EntityManager $entityManager,
     protected ILogger $logger,
-    protected IL10N $l10n,
+    protected IL10N $l,
   ) {
   }
 
@@ -74,7 +75,7 @@ class DatabaseStorageUtil
     try {
       return $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($entityOrId);
     } catch (\Throwable $t) {
-      // nothing
+      $this->logException($t);
     }
     return null;
   }
@@ -101,7 +102,11 @@ class DatabaseStorageUtil
     if (is_array($fileIdentifier)) {
       $items = [];
       foreach ($fileIdentifier as $identifier) {
-        $items[] = $this->get($identifier)->getId();
+        $dirEntry = $this->get($identifier);
+        if ($dirEntry === null) {
+          throw new Exceptions\DatabaseEntityNotFoundException($this->l->t('No dir-entry found for id "%s"', $identifier));
+        }
+        $items[] = $dirEntry->getId();
       }
 
       $filesUrl = $urlGenerator->linkToRoute(
@@ -161,8 +166,3 @@ class DatabaseStorageUtil
     return $data;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

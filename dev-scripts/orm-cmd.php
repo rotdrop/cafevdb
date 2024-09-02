@@ -38,7 +38,6 @@ use OC\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-
 define('OC_CONSOLE', 1);
 
 /**
@@ -232,28 +231,28 @@ $encryptionService->bind($cafevDbUser, $cafevDbPassword);
  *
  *****************************************************************************/
 
-require_once __DIR__ . "/../vendor/autoload.php";
-require_once __DIR__ . "/../vendor-wrapped/autoload.php";
+use Composer\InstalledVersions;
+use OCA\CAFEVDB\Wrapped\Composer\InstalledVersions as WrappedInstalledVersions;
 
-// otherwise Redaxo4Embedded's InstalledVersions is pulled in by autoload
 $installedVersions = [
-  __DIR__ . "/../vendor-wrapped/composer/InstalledVersions.php",
-  __DIR__ . "/../vendor/composer/InstalledVersions.php",
+  WrappedInstalledVersions::class => __DIR__ . "/../vendor-wrapped/composer/InstalledVersions.php",
+  InstalledVersions::class => __DIR__ . "/../vendor/composer/InstalledVersions.php",
 ];
-foreach ($installedVersions as $file) {
-  if (file_exists($file)) {
-    require_once $file;
+foreach ($installedVersions as $class => $file) {
+  if (!class_exists($class, false) && file_exists($file)) {
+    include_once $file;
   }
 }
 
+require_once __DIR__ . "/../vendor/autoload.php";
+require_once __DIR__ . "/../vendor-wrapped/autoload.php";
+
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Console\ConsoleRunner;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 use OCA\CAFEVDB\Database\EntityManager;
 
 /** @var EntityManager */
 $entityManager = \OC::$server->query(EntityManager::class);
 $entityManager->decorateClassMetadata(false);
 
-$commands = [];
-$helperSet = ConsoleRunner::createHelperSet($entityManager);
-
-ConsoleRunner::run($helperSet, $commands);
+ConsoleRunner::run(new SingleManagerProvider($entityManager));

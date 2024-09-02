@@ -34,28 +34,22 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 
 /**
  * "Join table" which connects storage names to their root directory entry.
- *
- * @ORM\Table(
- *  name="DatabaseStorages",
- *  uniqueConstraints={
- *     @ORM\UniqueConstraint(columns={"storage_id"}),
- *     @ORM\UniqueConstraint(columns={"root_id"})
- *   }
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStoragesRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'DatabaseStorages')]
+#[ORM\UniqueConstraint(columns: ['storage_id'])]
+#[ORM\UniqueConstraint(columns: ['root_id'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStoragesRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class DatabaseStorage implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   protected $id;
 
   /**
@@ -66,16 +60,14 @@ class DatabaseStorage implements \ArrayAccess
    *
    * @see OCA\CAFEVDB\Storage\Database\Storage
    * @see OCA\CAFEVDB\Storage\Database\MountProvider
-   *
-   * @ORM\Column(type="string", length=512, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 512, nullable: false)]
   protected $storageId;
 
   /**
    * @var DatabaseStorageFolder The root-node of the directory tree.
-   *
-   * @ORM\OneToOne(targetEntity="DatabaseStorageFolder", inversedBy="storage")
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFolder::class, inversedBy: 'storage')]
   protected $root;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

@@ -34,12 +34,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 /**
  * GeoStatesProvinces, localized first-level administrative regions, states,
  * provinces etc.
- *
- * @ORM\Table(name="GeoStatesProvinces")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\Loggable(enabled=false)
  */
+#[ORM\Table(name: 'GeoStatesProvinces')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\Loggable(enabled: false)]
 class GeoStateProvince implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -47,44 +46,38 @@ class GeoStateProvince implements \ArrayAccess
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
   private $countryIso;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=3, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 3, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
   private $code;
 
   /**
    * @var string
-   * @ORM\Id
    *
-   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
    */
+  #[ORM\Id]
+  #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private $target;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=1024, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $l10nName;
 
   /**
    * @var GeoCountry
-   *
-   * @ORM\ManyToOne(targetEntity="GeoCountry", inversedBy="statesProvinces", fetch="EAGER")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="country_iso", referencedColumnName="iso"),
-   *   @ORM\JoinColumn(name="target", referencedColumnName="target")
-   * )
    */
+  #[ORM\JoinColumn(name: 'country_iso', referencedColumnName: 'iso')]
+  #[ORM\JoinColumn(name: 'target', referencedColumnName: 'target')]
+  #[ORM\ManyToOne(targetEntity: GeoCountry::class, inversedBy: 'statesProvinces', fetch: 'EAGER')]
   private $country;
 
   /** {@inheritdoc} */

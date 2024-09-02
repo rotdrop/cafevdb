@@ -49,22 +49,14 @@ use OCA\CAFEVDB\Database\EntityManager;
 
 /**
  * ProjectParticipantFields
- *
- * @ORM\Table(
- *   name="ProjectParticipantFields",
- *   indexes={
- *     @ORM\Index(fields={"id", "project"}),
- *   }
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldsRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\TranslationEntity(class="TableFieldTranslation")
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
- * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\ProjectParticipantFieldEntityListener"})
  */
+#[ORM\Table(name: 'ProjectParticipantFields')]
+#[ORM\Index(fields: ['id', 'project'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\TranslationEntity(class: 'TableFieldTranslation')]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\ProjectParticipantFieldEntityListener'])]
 class ProjectParticipantField implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -77,27 +69,24 @@ class ProjectParticipantField implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue
    */
+  #[ORM\Column(type: 'integer')]
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
   private $id;
 
   /**
    * @var Project
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="participantFields", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(nullable=false)
    */
+  #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantFields', fetch: 'EXTRA_LAZY')]
   private $project;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable(untranslated="untranslatedName")
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[Gedmo\Translatable(untranslated: 'untranslatedName')]
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private $name;
 
   /**
@@ -110,66 +99,56 @@ class ProjectParticipantField implements \ArrayAccess
 
   /**
    * @var Types\EnumParticipantFieldMultiplicity
-   *
-   * @ORM\Column(type="EnumParticipantFieldMultiplicity", nullable=false)
    */
+  #[ORM\Column(type: 'EnumParticipantFieldMultiplicity', nullable: false)]
   private $multiplicity;
 
   /**
    * @var EnumParticipantFieldDataType
-   *
-   * @ORM\Column(type="EnumParticipantFieldDataType", nullable=false, options={"default"="text"})
    */
+  #[ORM\Column(type: 'EnumParticipantFieldDataType', nullable: false, options: ['default' => 'text'])]
   private $dataType = 'text';
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist"}, orphanRemoval=true)
-   * @ORM\OrderBy({"label" = "ASC", "key" = "ASC"})
-   * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
    */
+  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDataOption::class, mappedBy: 'field', indexBy: 'key', cascade: ['persist'], orphanRemoval: true)]
+  #[ORM\OrderBy(['label' => 'ASC', 'key' => 'ASC'])]
+  #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
   private $dataOptions;
 
   /**
    * @var \DateTimeImmutable
-   *
-   * @ORM\Column(type="date_immutable", nullable=true, options={"comment"="Due-date for financial fields."})
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'Due-date for financial fields.'])]
   private $dueDate = null;
 
   /**
    * @var \DateTimeImmutable
-   *
-   * @ORM\Column(type="date_immutable", nullable=true, options={"comment"="Due-date of deposit for financial fields."})
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'Due-date of deposit for financial fields.'])]
   private $depositDueDate = null;
 
   /**
    * @var null|ProjectParticipantFieldDataOption
-   *
-   * @ORM\OneToOne(targetEntity="ProjectParticipantFieldDataOption", cascade={"persist"})
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="id", referencedColumnName="field_id"),
-   *   @ORM\JoinColumn(name="default_value", referencedColumnName="key", nullable=true)
-   * )
    */
+  #[ORM\JoinColumn(name: 'id', referencedColumnName: 'field_id')]
+  #[ORM\JoinColumn(name: 'default_value', referencedColumnName: 'key', nullable: true)]
+  #[ORM\OneToOne(targetEntity: ProjectParticipantFieldDataOption::class, cascade: ['persist'])]
   private $defaultValue = null;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable
-   * @ORM\Column(type="string", length=4096, nullable=true)
    */
+  #[Gedmo\Translatable]
+  #[ORM\Column(type: 'string', length: 4096, nullable: true)]
   private $tooltip = null;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable(untranslated="untranslatedTab")
-   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Tab to display the field in. If empty, then the project tab is used."})
    */
+  #[Gedmo\Translatable(untranslated: 'untranslatedTab')]
+  #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Tab to display the field in. If empty, then the project tab is used.'])]
   private $tab = null;
 
   /**
@@ -182,16 +161,14 @@ class ProjectParticipantField implements \ArrayAccess
 
   /**
    * @var int|null
-   *
-   * @ORM\Column(type="integer", nullable=true)
    */
+  #[ORM\Column(type: 'integer', nullable: true)]
   private $displayOrder = null;
 
   /**
    * @var bool|null
-   *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"="0"})
    */
+  #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => '0'])]
   private $encrypted = false;
 
   /**
@@ -199,23 +176,20 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * A bit-field which determines whether this field is exported to the
    * corresponding participant for use in the cafevdbmembers-app.
-   *
-   * @ORM\Column(type="EnumAccessPermission", nullable="false", options={"default"="none"})
    */
+  #[ORM\Column(type: 'EnumAccessPermission', nullable: false, options: ['default' => 'none'])]
   private $participantAccess;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="field", fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'field', fetch: 'EXTRA_LAZY')]
   private $fieldData;
 
   /**
    * @var null|ProjectEvent
-   *
-   * @ORM\OneToOne(targetEntity="ProjectEvent", mappedBy="absenceField")
    */
+  #[ORM\OneToOne(targetEntity: ProjectEvent::class, mappedBy: 'absenceField')]
   private $projectEvent;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

@@ -34,24 +34,14 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * SepaDebitMandate
- *
- * @ORM\Table(
- *   name="SepaDebitMandates",
- *   uniqueConstraints={
- *     @ORM\UniqueConstraint(columns={"mandate_reference"}),
- *     @ORM\UniqueConstraint(columns={"musician_id", "sequence", "project_id"})
- *   },
- *   indexes={
- *     @ORM\Index(columns={"musician_id", "bank_account_sequence", "project_id"}),
- *   },
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaDebitMandatesRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
  */
+#[ORM\Table(name: 'SepaDebitMandates')]
+#[ORM\Index(columns: ['musician_id', 'bank_account_sequence', 'project_id'])]
+#[ORM\UniqueConstraint(columns: ['mandate_reference'])]
+#[ORM\UniqueConstraint(columns: ['musician_id', 'sequence', 'project_id'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaDebitMandatesRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
 class SepaDebitMandate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -63,10 +53,9 @@ class SepaDebitMandate implements \ArrayAccess
 
   /**
    * @var Musician
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'sepaDebitMandates', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $musician;
 
   /**
@@ -75,13 +64,10 @@ class SepaDebitMandate implements \ArrayAccess
    * This is a POSITIVE per-musician sequence count. It currently is
    * incremented using
    * \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\PerMusicianSequenceTrait
-   *
-   * @ORM\Column(type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="NONE")
-   * _AT_ORM\GeneratedValue(strategy="CUSTOM")
-   * _AT_ORM\CustomIdGenerator(class="OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\PerMusicianSequenceGenerator")
    */
+  #[ORM\Column(type: 'integer')]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'NONE')] // _AT_ORM\GeneratedValue(strategy="CUSTOM")
   private $sequence;
 
   /**
@@ -89,13 +75,10 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * Debit-mandates can expire, so many debit-mandates may refer the
    * same bank-account.
-   *
-   * @ORM\ManyToOne(targetEntity="SepaBankAccount", inversedBy="sepaDebitMandates")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id", nullable=false),
-   *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=false)
-   * )
    */
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'bank_account_sequence', referencedColumnName: 'sequence', nullable: false)]
+  #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'sepaDebitMandates')]
   private $sepaBankAccount;
 
   /**
@@ -108,33 +91,27 @@ class SepaDebitMandate implements \ArrayAccess
    * The ProjectPayment entity, e.g., has to reference either a
    * mandate for its own project or a mandate from the member's
    * project.
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
-   * )
    */
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false)]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'sepaDebitMandates', fetch: 'EXTRA_LAZY')]
   private $project;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=35, options={"collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 35, options: ['collation' => 'ascii_general_ci'])]
   private $mandateReference;
 
   /**
    * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=false)
    */
+  #[ORM\Column(type: 'boolean', nullable: false)]
   private $nonRecurring;
 
   /**
    * @var \DateTimeImmutable
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $mandateDate;
 
   /**
@@ -142,43 +119,36 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * Pre-notification dead-line in calendar days. Normally 14, may be
    * shorter, e.g. 7 calendar days but at least 5 business days.
-   *
-   * @ORM\Column(type="integer", options={"default"="14"})
    */
+  #[ORM\Column(type: 'integer', options: ['default' => '14'])]
   private $preNotificationCalendarDays = 7;
 
   /**
    * @var int
    *
    * Pre-notification dead-line in TARGET2 days. Normally unset.
-   *
-   * @ORM\Column(type="integer", nullable=true)
    */
+  #[ORM\Column(type: 'integer', nullable: true)]
   private $preNotificationBusinessDays = 5;
 
   /**
    * @var \DateTimeImmutable|null
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $lastUsedDate;
 
   /**
    * @var DatabaseStorageFile
-   *
-   * @ORM\OneToOne(targetEntity="DatabaseStorageFile", cascade={"all"}, orphanRemoval=true)
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
   private $writtenMandate;
 
   /**
    * @var ProjectPayment
    *
    * Linke to the payments table.
-   *
-   * @ORM\OneToMany(targetEntity="CompositePayment",
-   *                mappedBy="sepaDebitMandate",
-   *                fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'sepaDebitMandate', fetch: 'EXTRA_LAZY')]
   private $payments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
@@ -498,11 +468,10 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @todo The DB structure probably should be cleaned up s.t. this is not
    * necessary.
-   *
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   * @ORM\PreFlush
    */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
+  #[ORM\PreFlush]
   public function adjustMandateReference():void
   {
     if ($this->sequence !== null && $this->mandateReference !== null) {

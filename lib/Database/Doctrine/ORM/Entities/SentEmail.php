@@ -34,12 +34,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * SentEmail
- *
- * @ORM\Table(name="SentEmails")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SentEmailsRepository")
- * @ORM\HasLifecycleCallbacks
- * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\SentEmailEntityListener"})
  */
+#[ORM\Table(name: 'SentEmails')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SentEmailsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\SentEmailEntityListener'])]
 class SentEmail
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -48,150 +47,105 @@ class SentEmail
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=false, options={"collation"="ascii_bin"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: false, options: ['collation' => 'ascii_bin'])]
+  #[ORM\Id]
   private $messageId;
 
   /**
    * @var Project
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="sentEmail", fetch="EXTRA_LAZY")
    */
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'sentEmail', fetch: 'EXTRA_LAZY')]
   private $project;
 
   /**
    * @var string
-   * @Gedmo\Blameable(on="create")
-   * @ORM\Column(nullable=true)
    */
+  #[Gedmo\Blameable(on: 'create')]
+  #[ORM\Column(nullable: true)]
   protected $createdBy;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="text", length=0, nullable=false)
    */
+  #[ORM\Column(type: 'text', length: 0, nullable: false)]
   private $bulkRecipients;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true, "collation"="ascii_bin"})
-   * @Gedmo\Slug(
-   *   fields={"bulkRecipients"},
-   *   updatable=true,
-   *   unique=false,
-   *   handlers={
-   *     @Gedmo\SlugHandler(
-   *       class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler",
-   *       options={@Gedmo\SlugHandlerOption(name="algorithm", value="md5")}
-   *     )
-   *   }
-   * )
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
+  #[Gedmo\Slug(fields: ['bulkRecipients'], updatable: true, unique: false, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler', options: [new Gedmo\SlugHandlerOption(name: 'algorithm', value: 'md5')])])]
   private $bulkRecipientsHash;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="text", nullable=true)
    */
+  #[ORM\Column(type: 'text', nullable: true)]
   private $cc;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="text", nullable=true)
    */
+  #[ORM\Column(type: 'text', nullable: true)]
   private $bcc;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="text", nullable=false)
    */
+  #[ORM\Column(type: 'text', nullable: false)]
   private $subject;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true, "collation"="ascii_bin"})
-   * @Gedmo\Slug(
-   *   fields={"subject"},
-   *   updatable=true,
-   *   unique=false,
-   *   handlers={
-   *     @Gedmo\SlugHandler(
-   *       class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler",
-   *       options={@Gedmo\SlugHandlerOption(name="algorithm", value="md5")}
-   *     )
-   *   }
-   * )
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
+  #[Gedmo\Slug(fields: ['subject'], updatable: true, unique: false, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler', options: [new Gedmo\SlugHandlerOption(name: 'algorithm', value: 'md5')])])]
   private $subjectHash;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="text", length=0, nullable=false)
    */
+  #[ORM\Column(type: 'text', length: 0, nullable: false)]
   private $htmlBody;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true, "collation"="ascii_bin"})
-   * @Gedmo\Slug(
-   *   fields={"htmlBody"},
-   *   updatable=true,
-   *   unique=false,
-   *   handlers={
-   *     @Gedmo\SlugHandler(
-   *       class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler",
-   *       options={@Gedmo\SlugHandlerOption(name="algorithm", value="md5")}
-   *     )
-   *   }
-   * )
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
+  #[Gedmo\Slug(fields: ['htmlBody'], updatable: true, unique: false, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler', options: [new Gedmo\SlugHandlerOption(name: 'algorithm', value: 'md5')])])]
   private $htmlBodyHash;
 
   /**
    * @var SentEmail
-   *
-   * @ORM\ManyToOne(targetEntity="SentEmail", inversedBy="referencedBy", cascade={"persist"}, fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(name="reference_id", referencedColumnName="message_id")
    */
+  #[ORM\JoinColumn(name: 'reference_id', referencedColumnName: 'message_id')]
+  #[ORM\ManyToOne(targetEntity: SentEmail::class, inversedBy: 'referencedBy', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   private $referencing;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="SentEmail", mappedBy="referencing", indexBy="messageId", cascade={"persist"}, fetch="EXTRA_LAZY")
-   * @ORM\OrderBy({"bulkRecipients" = "ASC"})
    */
+  #[ORM\OneToMany(targetEntity: SentEmail::class, mappedBy: 'referencing', indexBy: 'messageId', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+  #[ORM\OrderBy(['bulkRecipients' => 'ASC'])]
   private $referencedBy;
 
   /**
    * @var SepaBulkTransaction
-   *
-   * @ORM\ManyToOne(targetEntity="SepaBulkTransaction", inversedBy="preNotificationEmails")
    */
+  #[ORM\ManyToOne(targetEntity: SepaBulkTransaction::class, inversedBy: 'preNotificationEmails')]
   private $sepaBulkTransaction;
 
   /**
    * @var ProjectPayment
-   *
-   * @ORM\OneToOne(targetEntity="CompositePayment", mappedBy="preNotificationEmail")
    */
+  #[ORM\OneToOne(targetEntity: CompositePayment::class, mappedBy: 'preNotificationEmail')]
   private $compositePayment;
 
   /**
    * @var DonationReceipt
-   *
-   * @ORM\OneToOne(targetEntity="DonationReceipt", mappedBy="notificationMessage")
    */
+  #[ORM\OneToOne(targetEntity: DonationReceipt::class, mappedBy: 'notificationMessage')]
   private $donationReceipt;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

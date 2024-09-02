@@ -35,10 +35,9 @@ trait SoftDeleteableEntity
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
   /**
-   * @ORM\Column(type="datetime_immutable", nullable=true)
-   *
    * @var DateTimeImmutable|null
    */
+  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
   protected $deleted;
 
   /**
