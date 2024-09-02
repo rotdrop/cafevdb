@@ -37,40 +37,32 @@ use Psr\Log\LoggerInterface as ILogger;
  *
  * Table to store translated phrases of the keys found in the
  * TranslationKey entities.
- *
- * @ORM\Table(name="Translations")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationsRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\Loggable(enabled=false)
  */
+#[ORM\Table(name: 'Translations')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\Loggable(enabled: false)]
 class Translation implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="TranslationKey", inversedBy="translations")
-   * @ORM\JoinColumn(onDelete="CASCADE")
-   * @ORM\Id
-   */
+  #[ORM\JoinColumn(onDelete: 'CASCADE')]
+  #[ORM\ManyToOne(targetEntity: TranslationKey::class, inversedBy: 'translations')]
+  #[ORM\Id]
   private $translationKey;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=5, nullable=false, options={
-   *   "fixed":true,
-   *   "comment":"Locale for translation, .e.g. en_US"
-   * })
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 5, nullable: false, options: ['fixed' => true, 'comment' => 'Locale for translation, .e.g. en_US'])]
+  #[ORM\Id]
   private $locale;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=1024, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $translation;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

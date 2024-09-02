@@ -31,36 +31,31 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * GeoPostalCodeTranslation
- *
- * @ORM\Table(name="GeoPostalCodeTranslations")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @Gedmo\Loggable(enabled=false)
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'GeoPostalCodeTranslations')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[Gedmo\Loggable(enabled: false)]
+#[ORM\HasLifecycleCallbacks]
 class GeoPostalCodeTranslation implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="GeoPostalCode", inversedBy="translations")
-   * @ORM\Id
-   */
+  #[ORM\ManyToOne(targetEntity: GeoPostalCode::class, inversedBy: 'translations')]
+  #[ORM\Id]
   private $geoPostalCode;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2, options={"fixed" = true, "collation"="ascii_general_ci"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 2, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
   private $target;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=1024, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $translation;
 
   /** {@inheritdoc} */

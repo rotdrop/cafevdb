@@ -37,9 +37,8 @@ use OCA\CAFEVDB\Constants;
 
 /**
  * Folder entry for a database-backed file.
- *
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFoldersRepository")
  */
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFoldersRepository::class)]
 class DatabaseStorageFolder extends DatabaseStorageDirEntry
 {
   /** @var string */
@@ -47,16 +46,14 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
 
   /**
    * @var MusicianRowAccessToken
-   *
-   * @ORM\OneToOne(targetEntity="DatabaseStorage", mappedBy="root")
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorage::class, mappedBy: 'root')]
   protected $storage;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="DatabaseStorageDirEntry", cascade={"all"}, mappedBy="parent")
    */
+  #[ORM\OneToMany(targetEntity: DatabaseStorageDirEntry::class, cascade: ['all'], mappedBy: 'parent')]
   protected $directoryEntries;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

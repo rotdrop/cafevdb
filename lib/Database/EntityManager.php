@@ -34,13 +34,14 @@ use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\Event;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Setup;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\ORMSetup;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager as ORMEntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\ConnectionEventArgs;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners as DBALEventListeners;
@@ -52,8 +53,6 @@ use OCA\CAFEVDB\Wrapped\Symfony\Component\Cache\Adapter\ArrayAdapter;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\ArrayCache;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\Psr6\CacheAdapter;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\Psr6\DoctrineProvider;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\AnnotationReader;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\PsrCachedReader;
 use OCA\CAFEVDB\Wrapped\Doctrine as Doctrine;
 use OCA\CAFEVDB\Wrapped\Gedmo;
 
@@ -169,8 +168,8 @@ class EntityManager extends EntityManagerDecorator
   /** @var bool */
   private $decorateClassMetadata = true;
 
-  /** @var AnnotationReader */
-  private $annotationReader;
+  /** @var Gedmo\Mapping\Driver\AttributeReader */
+  private $attributeReader;
 
   /** @var Transformable\Transformer\TransformerPool */
   private $transformerPool;
@@ -317,10 +316,10 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /** {@inheritdoc} */
-  public function getConnection():?DatabaseConnection
+  public function getConnection():DatabaseConnection
   {
     if (empty($this->entityManager)) {
-      return null;
+      throw new Exceptions\DatabaseNotConnectedException($this->l->t('There is no entity-manager initialized yet'));
     }
     return $this->entityManager->getConnection();
   }
@@ -398,8 +397,10 @@ class EntityManager extends EntityManagerDecorator
    */
   public function connected():bool
   {
-    $connection = $this->getConnection();
-    if (empty($connection)) {
+    try {
+      $connection = $this->getConnection();
+    } catch (Exceptions\DatabaseNotConnectedException $e) {
+      $this->logException($e);
       return false;
     }
     $params = $connection->getParams();
@@ -532,9 +533,9 @@ class EntityManager extends EntityManagerDecorator
     $conParams = $this->connectionParameters($params);
 
     list($config, $eventManager) = $this->createSimpleConfiguration();
-    list($config, $eventManager, $annotationReader) = $this->createGedmoConfiguration($config, $eventManager);
+    list($config, $eventManager, $attributeReader) = $this->createGedmoConfiguration($config, $eventManager);
 
-    $this->annotationReader = $annotationReader;
+    $this->attributeReader = $attributeReader;
 
     // mysql set names UTF-8 if required
     // $eventManager->addEventSubscriber(new DBALEventListeners\MysqlSessionInit($conParams['charset'], $conParams['collate']));
@@ -572,7 +573,8 @@ class EntityManager extends EntityManagerDecorator
     $config->setSQLLogger($this->sqlLogger);
 
     // obtaining the entity manager
-    $entityManager = ORMEntityManager::create($conParams, $config, $eventManager);
+    $connection = DBAL\DriverManager::getConnection($conParams, $config, $eventManager);
+    $entityManager = new ORMEntityManager($connection, $config);
 
     if (!$this->showSoftDeleted) {
       $entityManager->getFilters()->enable(self::SOFT_DELETEABLE_FILTER);
@@ -605,8 +607,7 @@ class EntityManager extends EntityManagerDecorator
   private function createSimpleConfiguration():array
   {
     $cache = null;
-    $useSimpleAnnotationReader = false;
-    $config = Setup::createAnnotationMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache, $useSimpleAnnotationReader);
+    $config = ORMSetup::createAttributeMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache);
     $config->setEntityListenerResolver(new class($this->appContainer) extends ORM\Mapping\DefaultEntityListenerResolver {
       /** {@inheritdoc} */
       public function __construct(
@@ -615,7 +616,7 @@ class EntityManager extends EntityManagerDecorator
       }
 
       /** {@inheritdoc} */
-      public function resolve($className)
+      public function resolve(string $className):object
       {
         try {
           return parent::resolve($className);
@@ -638,11 +639,6 @@ class EntityManager extends EntityManagerDecorator
    */
   private function createGedmoConfiguration(Configuration $config, Doctrine\Common\EventManager $evm):array
   {
-    // standard annotation reader
-    $annotationReader = new AnnotationReader;
-    $cache = new ArrayAdapter();
-    $cachedAnnotationReader = new PsrCachedReader($annotationReader, $cache);
-
     // create a driver chain for metadata reading
     $driverChain = new Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 
@@ -650,7 +646,6 @@ class EntityManager extends EntityManagerDecorator
     // also registers Gedmo annotations.NOTE: you can personalize it
     \OCA\CAFEVDB\Wrapped\Gedmo\DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(
       $driverChain, // our metadata driver chain, to hook into
-      $cachedAnnotationReader // our cached annotation reader
     );
     //<<< Further annotations can go here
     \OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\DoctrineExtensions::registerAnnotations();
@@ -659,14 +654,13 @@ class EntityManager extends EntityManagerDecorator
 
     // now we want to register our application entities,
     // for that we need another metadata driver used for Entity namespace
-    $annotationDriver = new ORM\Mapping\Driver\AnnotationDriver(
-      $cachedAnnotationReader, // our cached annotation reader
+    $attributeDriver = new ORM\Mapping\Driver\AttributeDriver(
       self::ENTITY_PATHS, // paths to look in
     );
 
     // NOTE: driver for application Entity can be different, Yaml, Xml or whatever
     // register annotation driver for our application Entity namespace
-    $driverChain->addDriver($annotationDriver, 'OCA\CAFEVDB\Database\Doctrine\ORM\Entities');
+    $driverChain->addDriver($attributeDriver, 'OCA\CAFEVDB\Database\Doctrine\ORM\Entities');
 
     // general ORM configuration
     //$config = new \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
@@ -677,44 +671,41 @@ class EntityManager extends EntityManagerDecorator
     // register metadata driver
     $config->setMetadataDriverImpl($driverChain);
 
-    // use our already initialized cache driver
-    $config->setMetadataCache($cache);
-    $config->setQueryCacheImpl(DoctrineProvider::wrap($cache));
-
     // gedmo extension listeners
+    $attributeReader = new Gedmo\Mapping\Driver\AttributeReader();
 
     // loggable
     //$loggableListener = new Gedmo\Loggable\LoggableListener;
     $remoteAddress = $this->request->getRemoteAddress();
     $loggableListener = new Listeners\GedmoLoggableListener($this->userId, $remoteAddress);
-    $loggableListener->setAnnotationReader($cachedAnnotationReader);
+    $loggableListener->setAnnotationReader($attributeReader);
     $evm->addEventSubscriber($loggableListener);
 
     // timestampable
     $timestampableListener = new Gedmo\Timestampable\TimestampableListener();
-    $timestampableListener->setAnnotationReader($cachedAnnotationReader);
+    $timestampableListener->setAnnotationReader($attributeReader);
     $evm->addEventSubscriber($timestampableListener);
 
     // soft deletable
     $softDeletableListener = new Gedmo\SoftDeleteable\SoftDeleteableListener();
-    $softDeletableListener->setAnnotationReader($cachedAnnotationReader);
+    $softDeletableListener->setAnnotationReader($attributeReader);
     $evm->addEventSubscriber($softDeletableListener);
     $config->addFilter(self::SOFT_DELETEABLE_FILTER, \OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
 
     // blameable
     $blameableListener = new Gedmo\Blameable\BlameableListener();
-    $blameableListener->setAnnotationReader($cachedAnnotationReader);
+    $blameableListener->setAnnotationReader($attributeReader);
     $blameableListener->setUserValue($this->userId);
     $evm->addEventSubscriber($blameableListener);
 
     // sluggable
     $sluggableListener =  $this->appContainer->get(Listeners\GedmoSluggableListener::class);
-    $sluggableListener->setAnnotationReader($cachedAnnotationReader);
+    $sluggableListener->setAnnotationReader($attributeReader);
     $evm->addEventSubscriber($sluggableListener);
 
     // sortable
     // $sortableListener = new Gedmo\Sortable\SortableListener;
-    // $sortableListener->setAnnotationReader($cachedAnnotationReader);
+    // $sortableListener->setAnnotationReader($attributeReader);
     // $evm->addEventSubscriber($sortableListener);
 
     // encryption
@@ -728,7 +719,7 @@ class EntityManager extends EntityManagerDecorator
     ]);
     $this->transformerPool = $transformerPool;
     $transformableListener = new Transformable\TransformableSubscriber($transformerPool);
-    $transformableListener->setAnnotationReader($cachedAnnotationReader);
+    $transformableListener->setAnnotationReader($attributeReader);
     $evm->addEventSubscriber($transformableListener);
 
     // translatable
@@ -743,7 +734,7 @@ class EntityManager extends EntityManagerDecorator
     $translatableListener->setDefaultLocale(ConfigService::DEFAULT_LOCALE);
     $translatableListener->setTranslationFallback(true);
     $translatableListener->setPersistDefaultLocaleTranslation(true);
-    $translatableListener->setAnnotationReader($cachedAnnotationReader);
+    $translatableListener->setAnnotationReader($attributeReader);
     $evm->addEventSubscriber($translatableListener);
 
     $config->setDefaultQueryHint(
@@ -761,10 +752,10 @@ class EntityManager extends EntityManagerDecorator
 
     // handle extra foreign key constraints
     $foreignKeyListener = new CJH\ForeignKey\Listener($this);
-    $foreignKeyListener->setAnnotationReader($cachedAnnotationReader);
+    $foreignKeyListener->setAnnotationReader($attributeReader);
     $evm->addEventSubscriber($foreignKeyListener);
 
-    return [ $config, $evm, $annotationReader ];
+    return [ $config, $evm, $attributeReader ];
   }
 
   /** {@inheritdoc} */
@@ -777,11 +768,11 @@ class EntityManager extends EntityManagerDecorator
   /**
    * Call ENTITY::__wakeup() if it exists.
    *
-   * @param ORM\Event\LifecycleEventArgs $eventArgs TBD.
+   * @param ORM\Event\PostLoadEventArgs $eventArgs TBD.
    *
    * @return void
    */
-  public function postLoad(ORM\Event\LifecycleEventArgs $eventArgs)
+  public function postLoad(ORM\Event\PostLoadEventArgs $eventArgs)
   {
     $entity = $eventArgs->getObject();
     if (\method_exists($entity, '__wakeup')) {
@@ -1090,7 +1081,7 @@ class EntityManager extends EntityManagerDecorator
    *
    * @return void
    */
-  public function beginTransaction()
+  public function beginTransaction():void
   {
     parent::beginTransaction();
     $level = $this->transactionNestingLevel++;
@@ -1110,8 +1101,7 @@ class EntityManager extends EntityManagerDecorator
    * - if this was the outer-most transaction, then the post-commit actions
    *   are executed
    *
-   * @return bool The execution status of the post-commit run-queue if
-   * that has been executed, otherwise \true.
+   * @return void
    *
    * @see EntityManager::getTransactionNestingLevel()
    * @see EntityManager::registerPreFlushAction()
@@ -1121,7 +1111,7 @@ class EntityManager extends EntityManagerDecorator
    * @throws Exceptions\UndoableRunQueueException
    * @throws ConnectionException
    */
-  public function commit():bool
+  public function commit():void
   {
     // execute all remaining pre-flush action
     $this->executePreFlushActions();
@@ -1131,9 +1121,8 @@ class EntityManager extends EntityManagerDecorator
     --$this->transactionNestingLevel;
     if (!$this->isTransactionActive()) {
       // execute non-undoable actions after the final commit succeeded.
-      return $this->executePostCommitActions();
+      $this->executePostCommitActions();
     }
-    return true;
   }
 
   /**
@@ -1148,7 +1137,7 @@ class EntityManager extends EntityManagerDecorator
    *
    * @throws ConnectionException
    */
-  public function rollback()
+  public function rollback():void
   {
     // @todo we probably have to check if there is something to roll-back.
     parent::rollback();
@@ -1162,7 +1151,7 @@ class EntityManager extends EntityManagerDecorator
     if (!$this->isTransactionActive() && $this->reopenAfterRollback) {
       try {
         $this->entityManager->close();
-        $this->entityManager->reopen();
+        $this->reopen();
       } catch (\Throable $t) {
         $this->logException($t, 'Unable to reopen after rollback');
       }
@@ -1222,7 +1211,7 @@ class EntityManager extends EntityManagerDecorator
    * @todo Get rid of this function, the meta-data class is rather an
    * internal data structure of Doctrine\ORM.
    */
-  public function getClassMetadata($className)
+  public function getClassMetadata(string $className):ClassMetadata
   {
     if ($this->decorateClassMetadata) {
       return new ClassMetadataDecorator(
@@ -1288,7 +1277,7 @@ class EntityManager extends EntityManagerDecorator
     $this->annotationEntites[$annotationClass] = [];
     $classNames = $this->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
     foreach ($classNames as $className) {
-      $annotation = $this->annotationReader->getClassAnnotation($className, $annotationClass);
+      $annotation = $this->attributeReader->getClassAnnotation($className, $annotationClass);
       if (!empty($annotation)) {
         $this->annotationEntities[$annotationClass][$className] = $annotation;
       }
@@ -1315,7 +1304,7 @@ class EntityManager extends EntityManagerDecorator
       $reflClass = $classMetaData->getReflectionClass();
       $properties = [];
       foreach ($reflClass->getProperties() as $property) {
-        $annotation = $this->annotationReader->getPropertyAnnotation($property, $annotationClass);
+        $annotation = $this->attributeReader->getPropertyAnnotation($property, $annotationClass);
         if (!empty($annotation)) {
           $properties[$property->getName()] = $annotation;
         }

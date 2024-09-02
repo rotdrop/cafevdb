@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 
+use \Stringable;
 use \Exception;
 use \RuntimeException;
 
@@ -43,7 +44,7 @@ use OCA\CAFEVDB\Exceptions\DatabaseException;
 use OCA\CAFEVDB\Database\EntityManager;
 
 /** Counter part to the decorated entity manager. */
-class ClassMetadataDecorator implements ClassMetadataInterface
+class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
@@ -185,6 +186,14 @@ class ClassMetadataDecorator implements ClassMetadataInterface
     return $this->metaData->getIdentifierValues($object);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function __toString(): string
+  {
+    return $this->metaData->__toString();
+  }
+
   /** {@inheritdoc} */
   public function __call($method, $args)
   {
@@ -305,8 +314,8 @@ class ClassMetadataDecorator implements ClassMetadataInterface
           throw new Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
         $joinInfo = $association['joinColumns'][0];
-        $columnName = $joinInfo['name'];
-        $targetColumn = $joinInfo['referencedColumnName'];
+        $columnName = $joinInfo->name;
+        $targetColumn = $joinInfo->referencedColumnName;
         $targetField = $targetMeta->fieldNames[$targetColumn];
         if ($value instanceof $targetEntity) {
           $columnValues[$columnName] = $targetMeta->getFieldValue($value, $targetField);
@@ -368,9 +377,9 @@ class ClassMetadataDecorator implements ClassMetadataInterface
         if (count($this->metaData->associationMappings[$field]['joinColumns']) != 1) {
           throw new Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
-        $columnName = $this->metaData->associationMappings[$field]['joinColumns'][0]['name'];
+        $columnName = $this->metaData->associationMappings[$field]['joinColumns'][0]->name;
       } else {
-        $columnName = $this->metaData->fieldMappings[$field]['columnName'];
+        $columnName = $this->metaData->fieldMappings[$field]->columnName;
         if (!isset($columnValues[$columnName])) {
           // possibly an attempt to extract from non-existing field.
           if ($ignoreMissing || $this->metaData->usesIdGenerator()) {
@@ -379,7 +388,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
           throw new Exception(
             $this->l->t('Missing value and no generator for identifier field: %s::%s', [ $this->getName(), $field ]));
         }
-        $dbalType = Type::getType($this->metaData->fieldMappings[$field]['type']);
+        $dbalType = Type::getType($this->metaData->fieldMappings[$field]->type);
       }
       $value = $columnValues[$columnName];
       if (!empty($dbalType) && is_string($value)) {
@@ -404,7 +413,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
       $fields = [];
       foreach ($meta->associationMappings as $field => $mapping) {
         foreach (($mapping['joinColumns'] ?? []) as $joinColumn) {
-          $fields[$joinColumn['name']][$joinColumn['referencedColumnName']] = $field;
+          $fields[$joinColumn->name][$joinColumn->referencedColumnName] = $field;
         }
       }
       $this->columnAssociationsCache = $fields;
@@ -490,8 +499,8 @@ class ClassMetadataDecorator implements ClassMetadataInterface
       $targetMeta = $this->entityManager->getClassMetadata($targetEntity);
       $referencedColumnId = [];
       foreach ($associationMapping['joinColumns'] as $joinInfo) {
-        $joinColumnName = $joinInfo['name'];
-        $targetColumn = $joinInfo['referencedColumnName'];
+        $joinColumnName = $joinInfo->name;
+        $targetColumn = $joinInfo->referencedColumnName;
         if ($joinColumnName == $column) {
           $fieldValue = $meta->getFieldValue($entity, $field);
           if (!empty($fieldValue) &&
@@ -589,7 +598,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface
         if (count($meta->associationMappings[$field]['joinColumns']) != 1) {
           throw new Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
-        $columnName = $meta->associationMappings[$field]['joinColumns'][0]['name'];
+        $columnName = $meta->associationMappings[$field]['joinColumns'][0]->name;
       } else {
         $columnName = $meta->fieldMappings[$field]['columnName'];
       }
@@ -598,8 +607,3 @@ class ClassMetadataDecorator implements ClassMetadataInterface
     return $entityId;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

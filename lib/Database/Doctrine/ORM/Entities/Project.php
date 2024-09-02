@@ -39,16 +39,14 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Projects
  *
- * @ORM\Table(name="Projects", uniqueConstraints={@ORM\UniqueConstraint(columns={"name"})})
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository")
- * @ORM\HasLifecycleCallbacks
- * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\ProjectEntityListener"})
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
  * @SuppressWarnings(PHPMD.LongVariable)
  */
+#[ORM\Table(name: 'Projects')]
+#[ORM\UniqueConstraint(columns: ['name'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\ProjectEntityListener'])]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
 class Project implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -62,41 +60,36 @@ class Project implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"unsigned"=true})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
   private $year;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=64, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 64, nullable: false)]
   private $name;
 
   /**
    * @var Types\EnumProjectTemporalType
-   *
-   * @ORM\Column(type="EnumProjectTemporalType", nullable=false, options={"default"="temporary"})
    */
+  #[ORM\Column(type: 'EnumProjectTemporalType', nullable: false, options: ['default' => 'temporary'])]
   private $type = Types\EnumProjectTemporalType::TEMPORARY;
 
   /**
    * @var string
    *
    * The list-id of the mailing list for the members
-   *
-   * @ORM\Column(type="string", nullable=true, length="128", options={"collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', nullable: true, length: '128', options: ['collation' => 'ascii_general_ci'])]
   private $mailingListId;
 
   /**
@@ -104,9 +97,8 @@ class Project implements \ArrayAccess
    *
    * Optional registration start date. If not set then the online registration
    * is NOT available.
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $registrationStartDate;
 
   /**
@@ -115,76 +107,57 @@ class Project implements \ArrayAccess
    * Optional registration deadline. If null then the date one day before the
    * first rehearsal is used, if set. Otherwise no registration dead-line is
    * imposed.
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $registrationDeadline;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: ProjectInstrumentationNumber::class, mappedBy: 'project', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private $instrumentationNumbers;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectWebPage", mappedBy="project", cascade={"persist"}, fetch="EXTRA_LAZY")
    * @todo this should cascade deletes
    */
+  #[ORM\OneToMany(targetEntity: ProjectWebPage::class, mappedBy: 'project', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   private $webPages;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantField", mappedBy="project", indexBy="id")
    * @todo This does not work well with _AT_Gedmo\Translatable
-   * @ORM\OrderBy({"displayOrder" = "DESC"})
    */
+  #[ORM\OneToMany(targetEntity: ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id')]
+  #[ORM\OrderBy(['displayOrder' => 'DESC'])]
   private $participantFields;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="project", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'project', fetch: 'EXTRA_LAZY')]
   private $participantFieldsData;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project", indexBy="musician_id")
-   */
+  #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'project', indexBy: 'musician_id')]
   private $participants;
 
-  /**
-   * @ORM\OneToMany(targetEntity="SepaDebitMandate", mappedBy="project")
-   */
+  #[ORM\OneToMany(targetEntity: SepaDebitMandate::class, mappedBy: 'project')]
   private $sepaDebitMandates;
 
-  /**
-   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="project")
-   */
+  #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'project')]
   private $compositePayments;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="project")
-   */
+  #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'project')]
   private $payments;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="project")
-   */
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'project')]
   private $participantInstruments;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectEvent", mappedBy="project")
-   */
+  #[ORM\OneToMany(targetEntity: ProjectEvent::class, mappedBy: 'project')]
   private $calendarEvents;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="SentEmail", mappedBy="project")
    */
+  #[ORM\OneToMany(targetEntity: SentEmail::class, mappedBy: 'project')]
   private $sentEmail;
 
   /**
    * @var DatabaseStorage
-   *
-   * @ORM\OneToOne(targetEntity="DatabaseStorage", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true)
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorage::class, fetch: 'EXTRA_LAZY', cascade: ['all'], orphanRemoval: true)]
   private $financialBalanceDocumentsStorage;
 
   /** {@inheritdoc} */

@@ -31,12 +31,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * EmailTemplate
- *
- * @ORM\Table(name="EmailTemplates")
- * @Gedmo\TranslationEntity(class="TableFieldTranslation")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EmailTemplatesRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'EmailTemplates')]
+#[Gedmo\TranslationEntity(class: 'TableFieldTranslation')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EmailTemplatesRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class EmailTemplate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -47,19 +46,17 @@ class EmailTemplate implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable(untranslated="untranslatedTag")
-   * @ORM\Column(type="string", length=128, unique=true, nullable=false)
    */
+  #[Gedmo\Translatable(untranslated: 'untranslatedTag')]
+  #[ORM\Column(type: 'string', length: 128, unique: true, nullable: false)]
   private $tag;
 
   /**
@@ -69,16 +66,14 @@ class EmailTemplate implements \ArrayAccess
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=1024, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $subject;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="text", length=0, nullable=true)
    */
+  #[ORM\Column(type: 'text', length: 0, nullable: true)]
   private $contents;
 
   /**

@@ -43,21 +43,12 @@ use OCA\CAFEVDB\Common\Uuid;
 /**
  * Although a donation in principle is just a payment there is some meta-data
  * to take care of. This is maintained here.
- *
- * @ORM\Table(
- *   name="DonationReceipts",
- *   uniqueConstraints={
- *     @ORM\UniqueConstraint(name="donation_receipt_unique", columns={
- *       "donation_id", "deleted",
- *   })}
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'DonationReceipts')]
+#[ORM\UniqueConstraint(name: 'donation_receipt_unique', columns: ['donation_id', 'deleted'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[ORM\HasLifecycleCallbacks]
 class DonationReceipt implements JsonSerializable, ArrayAccess
 {
   use CAFEVDB\Traits\UnusedTrait;
@@ -77,23 +68,19 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private ?int $id = null;
 
   /**
    * @var CompositePayment
    *
    * The associated payment.
-   *
-   * @ORM\OneToOne(targetEntity="CompositePayment", inversedBy="donationReceipt")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="donation_id", referencedColumnName="id", nullable=false),
-   * })
    */
+  #[ORM\JoinColumn(name: 'donation_id', referencedColumnName: 'id', nullable: false)]
+  #[ORM\OneToOne(targetEntity: CompositePayment::class, inversedBy: 'donationReceipt')]
   private CompositePayment $donation;
 
   /**
@@ -101,18 +88,16 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    *
    * The associated notice of tax exemption with legalizes this donation
    * receipt.
-   *
-   * @ORM\ManyToOne(targetEntity="TaxExemptionNotice", inversedBy="donationReceipts")
    */
+  #[ORM\ManyToOne(targetEntity: TaxExemptionNotice::class, inversedBy: 'donationReceipts')]
   private TaxExemptionNotice $taxExemptionNotice;
 
   /**
    * @var DatabaseStorageFile
    *
    * An electronic copy of the probably hand-signed original.
-   *
-   * @ORM\OneToOne(targetEntity="DatabaseStorageFile", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true)
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, fetch: 'EXTRA_LAZY', cascade: ['all'], orphanRemoval: true)]
   private $supportingDocument;
 
   /**
@@ -120,9 +105,8 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    *
    * Date when this donation receipt has been sent out to the donator. If non
    * null the donation receipt must not be deleted.
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $mailingDate;
 
   /**
@@ -131,12 +115,9 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    * Sending out donation receipts by email may not be allowed, but even if
    * not there may be an additional email to the donator notifying him or her
    * about the sending out of the donation receipt.
-   *
-   * @ORM\OneToOne(targetEntity="SentEmail", inversedBy="donationReceipt")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="notification_message_id", referencedColumnName="message_id", nullable=true),
-   * })
    */
+  #[ORM\JoinColumn(name: 'notification_message_id', referencedColumnName: 'message_id', nullable: true)]
+  #[ORM\OneToOne(targetEntity: SentEmail::class, inversedBy: 'donationReceipt')]
   private SentEmail $notificationMessage;
 
   /** {@inheritdoc} */

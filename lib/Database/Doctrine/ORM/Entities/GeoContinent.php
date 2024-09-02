@@ -33,12 +33,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * GeoContinents
- *
- * @ORM\Table(name="GeoContinents")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\Loggable(enabled=false)
  */
+#[ORM\Table(name: 'GeoContinents')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\Loggable(enabled: false)]
 class GeoContinent implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -46,31 +45,26 @@ class GeoContinent implements \ArrayAccess
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
   private $code;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
   private $target;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=1024, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $l10nName;
 
-  /**
-   * @ORM\OneToMany(targetEntity="GeoCountry", mappedBy="continent", indexBy="iso", fetch="EXTRA_LAZY")
-   * @ORM\OrderBy({"l10nName" = "ASC"})
-   */
+  #[ORM\OneToMany(targetEntity: GeoCountry::class, mappedBy: 'continent', indexBy: 'iso', fetch: 'EXTRA_LAZY')]
+  #[ORM\OrderBy(['l10nName' => 'ASC'])]
   private $countries;
 
   /** {@inheritdoc} */

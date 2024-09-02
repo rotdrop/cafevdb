@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,9 +34,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  * Image -- Meta data for images stored in the data-base.
  *
  * The actual image data is stored in FileData for performance reasons.
- *
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ImagesRepository")
  */
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ImagesRepository::class)]
 class Image extends File
 {
   use CAFEVDB\Traits\FactoryTrait;
@@ -45,23 +44,19 @@ class Image extends File
    * @var FileData
    *
    * {@inheritdoc}
-   *
-   * @ORM\OneToMany(targetEntity="ImageFileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   protected $fileData;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => -1])]
   private $width;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => -1])]
   private $height;
 
   /**

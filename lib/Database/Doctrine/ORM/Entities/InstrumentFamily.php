@@ -33,16 +33,12 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Instrumente
- *
- * @ORM\Table(name="InstrumentFamilies")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentFamiliesRepository")
- * @Gedmo\TranslationEntity(class="TableFieldTranslation")
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'InstrumentFamilies')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentFamiliesRepository::class)]
+#[Gedmo\TranslationEntity(class: 'TableFieldTranslation')]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[ORM\HasLifecycleCallbacks]
 class InstrumentFamily implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -53,19 +49,17 @@ class InstrumentFamily implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private ?int $id = null;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable(untranslated="untranslatedFamily")
-   * @ORM\Column(type="string", length=255, nullable=false, unique=true)
    */
+  #[Gedmo\Translatable(untranslated: 'untranslatedFamily')]
+  #[ORM\Column(type: 'string', length: 255, nullable: false, unique: true)]
   private string $family;
 
   /**
@@ -73,9 +67,7 @@ class InstrumentFamily implements \ArrayAccess
    */
   private string $untranslatedFamily;
 
-  /**
-   * @ORM\ManyToMany(targetEntity="Instrument", mappedBy="families", orphanRemoval=true, fetch="EXTRA_LAZY")
-   */
+  #[ORM\ManyToMany(targetEntity: Instrument::class, mappedBy: 'families', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private $instruments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

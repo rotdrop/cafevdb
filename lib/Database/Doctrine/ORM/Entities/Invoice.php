@@ -36,20 +36,12 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 /**
  * Record notices of tax exemption from the corporate income tax (or other
  * taxes).
- *
- * @ORM\Table(
- *   name="Invoices",
- *   uniqueConstraints={
- *     @ORM\UniqueConstraint(columns={"notification_message_id"})
- *   }
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InvoicesRepository")
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'Invoices')]
+#[ORM\UniqueConstraint(columns: ['notification_message_id'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InvoicesRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[ORM\HasLifecycleCallbacks]
 class Invoice implements JsonSerializable, ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -59,20 +51,18 @@ class Invoice implements JsonSerializable, ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="string", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="NONE")
    */
+  #[ORM\Column(type: 'string', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'NONE')]
   private string $id;
 
   /**
    * @var LegalPerson
    *
    * The victim of the invoice issued.
-   *
-   * @ORM\ManyToOne(targetEntity="LegalPerson", inversedBy="invoices")
    */
+  #[ORM\ManyToOne(targetEntity: LegalPerson::class, inversedBy: 'invoices')]
   private LegalPerson $debitor;
 
   /**
@@ -81,25 +71,22 @@ class Invoice implements JsonSerializable, ArrayAccess
    * This will -- must be -- a member of the executive borad. But the plan is
    * to tie address-fields to convenience methods of the LegalPerson entity,
    * so better use it here.
-   *
-   * @ORM\ManyToOne(targetEntity="LegalPerson", inversedBy="originatedInvoices")
    */
+  #[ORM\ManyToOne(targetEntity: LegalPerson::class, inversedBy: 'originatedInvoices')]
   private LegalPerson $originator;
 
   /**
    * @var \DateTimeImmutable
-   *
-   * @ORM\Column(type="date_immutable")
    */
+  #[ORM\Column(type: 'date_immutable')]
   private DateTimeInterface $dueDate;
 
   /**
    * @var float
    *
    * The total amount invoiced.
-   *
-   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false)
    */
+  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: false)]
   private string $amount;
 
   /**
@@ -107,28 +94,23 @@ class Invoice implements JsonSerializable, ArrayAccess
    *
    * Purpose of the invoice. A polite text for the notification of the
    * debitor.
-   *
-   * @ORM\Column(type="string", length=4096, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 4096, nullable: false)]
   private string $purpose;
 
   /**
    * @var DatabaseStorageFile
-   *
-   * @ORM\OneToOne(targetEntity="DatabaseStorageFile", cascade={"all"}, orphanRemoval=true)
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
   private DatabaseStorageFile $writtenInvoice;
 
   /**
    * @var string
    *
    * The email communicating the invoice to the debitor.
-   *
-   * @ORM\OneToOne(targetEntity="SentEmail")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="notification_message_id", referencedColumnName="message_id", nullable=true),
-   * })
    */
+  #[ORM\JoinColumn(name: 'notification_message_id', referencedColumnName: 'message_id', nullable: true)]
+  #[ORM\OneToOne(targetEntity: SentEmail::class)]
   private SentEmail $notificationMessage;
 
   /** {@inheritdoc} */

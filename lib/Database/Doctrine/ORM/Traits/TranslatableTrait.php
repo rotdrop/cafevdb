@@ -29,11 +29,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 /** Helper for Gedmo "translatable" entities. */
 trait TranslatableTrait
 {
-  /**
-   * @Gedmo\Locale(initialize=true)
-   * Used locale to override Translation listener`s locale
-   * this is not a mapped field of entity metadata, just a simple property
-   */
+  #[Gedmo\Locale(initialize: true)] // Used locale to override Translation listener`s locale
   private $locale;
 
   /**

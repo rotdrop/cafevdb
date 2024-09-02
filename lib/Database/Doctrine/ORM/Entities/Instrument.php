@@ -33,16 +33,12 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Instrumente
- *
- * @ORM\Table(name="Instruments")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository")
- * @Gedmo\TranslationEntity(class="TableFieldTranslation")
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'Instruments')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository::class)]
+#[Gedmo\TranslationEntity(class: 'TableFieldTranslation')]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[ORM\HasLifecycleCallbacks]
 class Instrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -53,19 +49,17 @@ class Instrument implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private ?int $id = null;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable(untranslated="untranslatedName")
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[Gedmo\Translatable(untranslated: 'untranslatedName')]
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private string $name;
 
   /**
@@ -75,33 +69,23 @@ class Instrument implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"comment"="Orchestral Ordering"})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['comment' => 'Orchestral Ordering'])]
   private int $sortOrder;
 
-  /**
-   * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments", fetch="EXTRA_LAZY")
-   * @ORM\JoinTable(
-   *   joinColumns={@ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")},
-   *   inverseJoinColumns={@ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")}
-   * )
-   */
+  #[ORM\JoinTable]
+  #[ORM\JoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
+  #[ORM\InverseJoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
+  #[ORM\ManyToMany(targetEntity: InstrumentFamily::class, inversedBy: 'instruments', fetch: 'EXTRA_LAZY')]
   private $families;
 
-  /**
-   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="instrument", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
   private $musicianInstruments;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="instrument", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
   private $projectInstruments;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="instrument", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: ProjectInstrumentationNumber::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
   private $projectInstrumentationNumbers;
 
   /** {@inheritdoc} */

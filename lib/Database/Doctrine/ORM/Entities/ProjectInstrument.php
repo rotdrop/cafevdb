@@ -42,11 +42,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  * Of course: the generic case is that a layman just plays one
  * instrument. Still we need to handle the more fabular cases for fun
  * -- and otherwise they imply ugly kludges and conventions in the frontend usage.
- *
- * @ORM\Table(name="ProjectInstruments")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'ProjectInstruments')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ProjectInstrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -54,65 +53,45 @@ class ProjectInstrument implements \ArrayAccess
 
   const UNVOICED = 0;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="participantInstruments", fetch="EXTRA_LAZY")
-   * @ORM\Id
-   */
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantInstruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $project;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
-   * @ORM\Id
-   */
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $musician;
 
-  /**
-   * @ORM\ManytoOne(targetEntity="Instrument", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
-   * @ORM\Id
-   */
+  #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $instrument;
 
   /**
    * @var int|null
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"="0","comment"="Voice specification if applicable, set to 0 if separation by voice is not needed"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '0', 'comment' => 'Voice specification if applicable, set to 0 if separation by voice is not needed'])]
+  #[ORM\Id]
   private $voice = self::UNVOICED;
 
   /**
    * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
    */
+  #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => '0'])]
   private $sectionLeader = false;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", onDelete="cascade"),
-   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", onDelete="cascade")
-   * })
-   */
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', onDelete: 'cascade')]
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', onDelete: 'cascade')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="MusicianInstrument", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id"),
-   *   @ORM\JoinColumn(name="instrument_id",referencedColumnName="instrument_id")
-   * })
-   */
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id')]
+  #[ORM\JoinColumn(name: 'instrument_id', referencedColumnName: 'instrument_id')]
+  #[ORM\ManyToOne(targetEntity: MusicianInstrument::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
   private $musicianInstrument;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="ProjectInstrumentationNumber", inversedBy="instruments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
-   *   @ORM\JoinColumn(name="instrument_id", referencedColumnName="instrument_id"),
-   *   @ORM\JoinColumn(name="voice", referencedColumnName="voice")
-   * })
-   */
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id')]
+  #[ORM\JoinColumn(name: 'instrument_id', referencedColumnName: 'instrument_id')]
+  #[ORM\JoinColumn(name: 'voice', referencedColumnName: 'voice')]
+  #[ORM\ManyToOne(targetEntity: ProjectInstrumentationNumber::class, inversedBy: 'instruments', fetch: 'EXTRA_LAZY')]
   private $instrumentationNumber;
 
   /** {@inheritdoc} */

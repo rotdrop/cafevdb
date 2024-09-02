@@ -45,17 +45,12 @@ use OCA\CAFEVDB\Common\Util;
  * Musician. In GnuCash this would be a "split transactions". The transaction
  * parts are ProjectPayment entities. Composite-payments may contain payments
  * for different projects.
- *
- * @ORM\Table(
- *    name="CompositePayments",
- *    uniqueConstraints={
- *      @ORM\UniqueConstraint(columns={"pre_notification_message_id"})
- *    }
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\CompositePaymentsRepository")
- * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\CompositePaymentEntityListener"})
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'CompositePayments')]
+#[ORM\UniqueConstraint(columns: ['pre_notification_message_id'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\CompositePaymentsRepository::class)]
+#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\CompositePaymentEntityListener'])]
+#[ORM\HasLifecycleCallbacks]
 class CompositePayment implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -74,11 +69,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
@@ -89,69 +83,54 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @todo If this is always the sum and thus can be computed, why then this
    * field?
-   *
-   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
    */
+  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: false, options: ['default' => '0.00'])]
   private $amount = '0.00';
 
   /**
    * @var \DateTimeImmutable|null
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $dateOfReceipt;
 
   /**
    * @var string
    * Subject of the bank transaction.
-   *
-   * @ORM\Column(type="string", length=1024, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $subject;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="compositePayment", cascade={"persist","remove"}, fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'compositePayment', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
   private $projectPayments;
 
   /**
    * @var SepaBulkTransaction
-   *
-   * @ORM\ManyToOne(targetEntity="SepaBulkTransaction", inversedBy="payments", fetch="EXTRA_LAZY")
-   *
-   * Promote any changes to the sepa transaction.
-   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
+  #[ORM\ManyToOne(targetEntity: SepaBulkTransaction::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')] // Promote any changes to the sepa transaction.
+  #[Gedmo\Timestampable(on: ['update', 'create', 'delete'], timestampField: 'updated')]
   private $sepaTransaction = null;
 
   /**
    * @var SepaBankAccount
    *
    * The bank account used for this payment.
-   *
-   * @ORM\ManyToOne(targetEntity="SepaBankAccount", inversedBy="payments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
-   *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=true)
-   * })
    */
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'bank_account_sequence', referencedColumnName: 'sequence', nullable: true)]
+  #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $sepaBankAccount;
 
   /**
    * @var SepaDebitMandate
    *
    * The debit-mandate used for this payment, if any.
-   *
-   * @ORM\ManyToOne(targetEntity="SepaDebitMandate",
-   *                inversedBy="payments",
-   *                fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
-   *   @ORM\JoinColumn(name="debit_mandate_sequence", referencedColumnName="sequence", nullable=true)
-   * })
    */
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'debit_mandate_sequence', referencedColumnName: 'sequence', nullable: true)]
+  #[ORM\ManyToOne(targetEntity: SepaDebitMandate::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $sepaDebitMandate;
 
   /**
@@ -163,47 +142,38 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * message ids as is and add a new association which is filled with the
    * existing entities in a migration step.
    *
-   * @ORM\Column(type="string", length=512, nullable=true)
    *
    * @todo Check why this is not a relation to the SentEmail entity.
    */
+  #[ORM\Column(type: 'string', length: 512, nullable: true)]
   private $notificationMessageId;
 
   /**
    * @var SentEmail
    *
    * Pre notification email sent out to the recipients.
-   *
-   * @ORM\OneToOne(targetEntity="SentEmail", inversedBy="compositePayment")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="pre_notification_message_id", referencedColumnName="message_id", nullable=true),
-   * })
    */
+  #[ORM\JoinColumn(name: 'pre_notification_message_id', referencedColumnName: 'message_id', nullable: true)]
+  #[ORM\OneToOne(targetEntity: SentEmail::class, inversedBy: 'compositePayment')]
   private $preNotificationEmail;
 
   /**
    * @var Project
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="compositePayments", cascade={"persist"}, fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(nullable=false)
    */
+  #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'compositePayments', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   private $project;
 
   /**
    * @var Musician
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(nullable=false)
    */
+  #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $musician;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="payments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
-   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false)
-   * })
-   */
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
   /**
@@ -212,24 +182,22 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * Optional. In case an additional overview document needs to be added in
    * addition to the individual supporting documents of the project payments.
    *
-   * @ORM\OneToOne(targetEntity="DatabaseStorageFile", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true)
    *
    * @todo Support more than one supporting document.
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, fetch: 'EXTRA_LAZY', cascade: ['all'], orphanRemoval: true)]
   private $supportingDocument;
 
   /**
    * @var DatabaseStorageFolder
-   *
-   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", fetch="EXTRA_LAZY")
    */
+  #[ORM\ManyToOne(targetEntity: DatabaseStorageFolder::class, fetch: 'EXTRA_LAZY')]
   private $balanceDocumentsFolder;
 
   /**
    * @var DonationReceipt
-   *
-   * @ORM\OneToOne(targetEntity="DonationReceipt", mappedBy="donation")
    */
+  #[ORM\OneToOne(targetEntity: DonationReceipt::class, mappedBy: 'donation')]
   private $donationReceipt;
 
   /** {@inheritdoc} */

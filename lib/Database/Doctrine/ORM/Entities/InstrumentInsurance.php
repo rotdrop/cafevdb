@@ -35,12 +35,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
 /**
  * InstrumentInsurance
- *
- * @ORM\Table(name="InstrumentInsurances")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentInsurancesRepository")
- * @Gedmo\SoftDeleteable(fieldName="deleted")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'InstrumentInsurances')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentInsurancesRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted')]
+#[ORM\HasLifecycleCallbacks]
 class InstrumentInsurance implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -51,19 +50,17 @@ class InstrumentInsurance implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var Musician
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="instrumentInsurances", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(nullable=false)
    */
+  #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'instrumentInsurances', fetch: 'EXTRA_LAZY')]
   private $instrumentHolder;
 
   /**
@@ -71,9 +68,8 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * A possibly different person which is the owner of the instrument. If NULL
    * we assume that the instrument holder is also the instrument owner.
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", fetch="EXTRA_LAZY")
    */
+  #[ORM\ManyToOne(targetEntity: Musician::class, fetch: 'EXTRA_LAZY')]
   private $instrumentOwner;
 
   /**
@@ -81,63 +77,53 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * A possibly different person which is responsible for paying the
    * insurance fees.
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payableInsurances", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(nullable=false)
    */
+  #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'payableInsurances', fetch: 'EXTRA_LAZY')]
   private $billToParty;
 
   /**
    * @var InsuranceRate
-   *
-   * @ORM\ManyToOne(targetEntity="InsuranceRate", inversedBy="instrumentInsurances", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="broker_id", referencedColumnName="broker_id", nullable=false),
-   *   @ORM\JoinColumn(name="geographical_scope", referencedColumnName="geographical_scope", nullable=false)
-   * })
    */
+  #[ORM\JoinColumn(name: 'broker_id', referencedColumnName: 'broker_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'geographical_scope', referencedColumnName: 'geographical_scope', nullable: false)]
+  #[ORM\ManyToOne(targetEntity: InsuranceRate::class, inversedBy: 'instrumentInsurances', fetch: 'EXTRA_LAZY')]
   private $insuranceRate;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private $object;
 
   /**
    * @var array
-   *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"=false})
    */
+  #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => false])]
   private $accessory = false;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private $manufacturer;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=64, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 64, nullable: false)]
   private $yearOfConstruction;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
   private $insuranceAmount;
 
   /**
    * @var \DateTime
-   *
-   * @ORM\Column(type="date_immutable", nullable=false)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: false)]
   private $startOfInsurance;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
@@ -388,11 +374,10 @@ class InstrumentInsurance implements \ArrayAccess
    * Internal helper, ensure that bill-to is non-empty.
    *
    * @return void
-   *
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   * @ORM\PreFlush
    */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
+  #[ORM\PreFlush]
   public function ensureBillToParty():void
   {
     if (empty($this->billToParty) && !empty($this->instrumentHolder)) {

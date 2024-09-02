@@ -31,11 +31,10 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Projects
- *
- * @ORM\Table(name="Migrations")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'Migrations')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Migration implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -46,18 +45,16 @@ class Migration implements \ArrayAccess
    * @var string
    *
    * Unique sortable migration string in the format YYYYMMDDHHMMSS
-   *
-   * @ORM\Column(type="string", length=14, options={"fixed"=true, "collation"="ascii_general_ci"})
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="NONE")
    */
+  #[ORM\Column(type: 'string', length: 14, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'NONE')]
   private $version;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=512)
    */
+  #[ORM\Column(type: 'string', length: 512)]
   private $migrationClassName;
 
   /**
@@ -65,9 +62,8 @@ class Migration implements \ArrayAccess
    *
    * Run-count for tracking multiple invocations for fun. The table only
    * contains migrations which have been executed, so the default is 1.
-   *
-   * @ORM\Column(type="integer", options={"default"="1"})
    */
+  #[ORM\Column(type: 'integer', options: ['default' => '1'])]
   private $runCount = 1;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

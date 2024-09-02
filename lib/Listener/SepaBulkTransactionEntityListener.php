@@ -139,7 +139,7 @@ class SepaBulkTransactionEntityListener
   /**
    * {@inheritdoc}
    */
-  public function prePersist(Entity $entity, ORMEvent\LifecycleEventArgs $eventArgs)
+  public function prePersist(Entity $entity, ORMEvent\PrePersistEventArgs $eventArgs)
   {
     if ($entity->getSubmitDate() != null) {
       // we should not change transactions which already have been submitted
@@ -156,7 +156,7 @@ class SepaBulkTransactionEntityListener
   /**
    * {@inheritdoc}
    */
-  public function preRemove(Entity $entity, ORMEvent\LifecycleEventArgs $eventArgs)
+  public function preRemove(Entity $entity, ORMEvent\PreRemoveEventArgs $eventArgs)
   {
     if (!$this->lockEntity($entity)) {
       return;

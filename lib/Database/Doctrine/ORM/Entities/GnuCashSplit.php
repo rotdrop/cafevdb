@@ -32,17 +32,12 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Link to the Gnucash accounts table.
- *
- * @ORM\Table(
- *   name="GnuCashSplits",
- *   indexes={
- *     @ORM\Index(name="splits_tx_guid_index", columns={"tx_guid"}),
- *     @ORM\Index(name="splits_account_guid_index", columns={"account_guid"})
- *   }
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'GnuCashSplits')]
+#[ORM\Index(name: 'splits_tx_guid_index', columns: ['tx_guid'])]
+#[ORM\Index(name: 'splits_account_guid_index', columns: ['account_guid'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class GnuCashSplit implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -61,95 +56,79 @@ class GnuCashSplit implements \ArrayAccess
   //   `quantity_denom` bigint(20) NOT NULL,
   //   `lot_guid` varchar(32) DEFAULT NULL
   // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
   private string $guid;
 
   /**
    * @var string
-   *
-   * @ORM\ManyToOne(targetEntity="GnuCashTransaction", inversedBy="splits", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="tx_guid", referencedColumnName="guid", nullable=false)
-   * })
    */
+  #[ORM\JoinColumn(name: 'tx_guid', referencedColumnName: 'guid', nullable: false)]
+  #[ORM\ManyToOne(targetEntity: GnuCashTransaction::class, inversedBy: 'splits', fetch: 'EXTRA_LAZY')]
   private GnuCashTransaction $transaction;
 
   /**
    * @var string
-   *
-   * @ORM\ManyToOne(targetEntity="GnuCashAccount", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="account_guid", referencedColumnName="guid", nullable=false)
-   * })
    */
+  #[ORM\JoinColumn(name: 'account_guid', referencedColumnName: 'guid', nullable: false)]
+  #[ORM\ManyToOne(targetEntity: GnuCashAccount::class, fetch: 'EXTRA_LAZY')]
   private GnuCashAccount $account;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2028, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 2028, nullable: false)]
   private string $memo;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2028, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 2028, nullable: false)]
   private string $action;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=1, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 1, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private string $reconcileState;
 
   /**
    * @var \DateTimeImmutable
-   * @ORM\Column(type="datetime_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
   protected $reconcileDate;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", length=20, nullable=false)
    */
+  #[ORM\Column(type: 'integer', length: 20, nullable: false)]
   private int $valueNum;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", length=20, nullable=false)
    */
+  #[ORM\Column(type: 'integer', length: 20, nullable: false)]
   private int $valueDenom;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", length=20, nullable=false)
    */
+  #[ORM\Column(type: 'integer', length: 20, nullable: false)]
   private int $quantityNum;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", length=20, nullable=false)
    */
+  #[ORM\Column(type: 'integer', length: 20, nullable: false)]
   private int $quantityDenom;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=true, options={"default": null, "fixed": true, "collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['default' => null, 'fixed' => true, 'collation' => 'ascii_general_ci'])]
   private string $lotGuid;
 
   /** {@inheritdoc} */

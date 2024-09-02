@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,38 +34,27 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EncryptedFilesRepository")
- */
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EncryptedFilesRepository::class)]
 class EncryptedFile extends File
 {
   /**
    * @var Collection
    *
    * {@inheritdoc}
-   *
-   * @ORM\OneToMany(targetEntity="EncryptedFileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   protected $fileData;
 
   /**
    * @var Collection
-   *
-   * @ORM\ManyToMany(targetEntity="Musician", mappedBy="encryptedFiles", indexBy="id", fetch="EXTRA_LAZY")
-   *
-   * The list of owners which in addition to the members of the management
-   * group may have access to this file. This is in particular important for
-   * encrypted files where the list of owners determines the encryption keys
-   * which are used to seal the data.
    */
+  #[ORM\ManyToMany(targetEntity: Musician::class, mappedBy: 'encryptedFiles', indexBy: 'id', fetch: 'EXTRA_LAZY')] // The list of owners which in addition to the members of the management
   private $owners;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="DatabaseStorageFile", mappedBy="file", cascade={"persist"})
-   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
+  #[ORM\OneToMany(targetEntity: DatabaseStorageFile::class, mappedBy: 'file', cascade: ['persist'])]
+  #[Gedmo\Timestampable(on: ['update', 'create', 'delete'], timestampField: 'updated')]
   private $databaseStorageDirEntries;
 
   /** {@inheritdoc} */

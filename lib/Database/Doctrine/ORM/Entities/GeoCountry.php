@@ -33,13 +33,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * GeoCountries
- *
- * @ORM\Table(name="GeoCountries")
- * @ORM\Entity
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @Gedmo\Loggable(enabled=false)
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'GeoCountries')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[Gedmo\Loggable(enabled: false)]
+#[ORM\HasLifecycleCallbacks]
 class GeoCountry implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -47,40 +45,32 @@ class GeoCountry implements \ArrayAccess
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
   private $iso;
 
   /**
    * @var string
-   * @ORM\Id
    *
-   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
    */
+  #[ORM\Id]
+  #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private $target;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=1024, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $l10nName;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="GeoContinent", inversedBy="countries", fetch="EAGER")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="continent_code", referencedColumnName="code"),
-   *   @ORM\JoinColumn(name="target", referencedColumnName="target")
-   * })
-   */
+  #[ORM\JoinColumn(name: 'continent_code', referencedColumnName: 'code')]
+  #[ORM\JoinColumn(name: 'target', referencedColumnName: 'target')]
+  #[ORM\ManyToOne(targetEntity: GeoContinent::class, inversedBy: 'countries', fetch: 'EAGER')]
   private $continent;
 
-  /**
-   * @ORM\OneToMany(targetEntity="GeoStateProvince", mappedBy="country", indexBy="code", fetch="EXTRA_LAZY")
-   * @ORM\OrderBy({"l10nName" = "ASC"})
-   */
+  #[ORM\OneToMany(targetEntity: GeoStateProvince::class, mappedBy: 'country', indexBy: 'code', fetch: 'EXTRA_LAZY')]
+  #[ORM\OrderBy(['l10nName' => 'ASC'])]
   private $statesProvinces;
 
   /** {@inheritdoc} */

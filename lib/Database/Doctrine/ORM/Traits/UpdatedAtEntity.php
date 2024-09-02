@@ -43,8 +43,8 @@ trait UpdatedAtEntity
 
   /**
    * @var \DateTimeImmutable
-   * @Gedmo\Timestampable(on="update")
-   * @ORM\Column(type="datetime_immutable", nullable=true)
    */
+  #[Gedmo\Timestampable(on: 'update')]
+  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
   protected $updated;
 }

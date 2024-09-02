@@ -49,22 +49,15 @@ use OCA\CAFEVDB\Common\Uuid;
  * one could also just use addressbook entries. However, doing it this way
  * should be more robust.
  *
- * @ORM\Table(
- *   name="LegalPersons",
- *   uniqueConstraints={
- *     @ORM\UniqueConstraint(columns={"musician_id", "contact_uuid"})
- *   }
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
- * @ORM\HasLifecycleCallbacks
  *
  * @todo Eventually there should be convenience functions which expose name
  * and address for the purpose of performing mail-merge operations.
  */
+#[ORM\Table(name: 'LegalPersons')]
+#[ORM\UniqueConstraint(columns: ['musician_id', 'contact_uuid'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[ORM\HasLifecycleCallbacks]
 class LegalPerson implements JsonSerializable, ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -73,21 +66,17 @@ class LegalPerson implements JsonSerializable, ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private ?int $id = null;
 
   /**
    * @var Musician
-   *
-   * @ORM\OneToOne(targetEntity="Musician", inversedBy="legalPerson")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="id", nullable=true),
-   * })
    */
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'id', nullable: true)]
+  #[ORM\OneToOne(targetEntity: Musician::class, inversedBy: 'legalPerson')]
   private ?Musician $musician;
 
   /**
@@ -95,27 +84,24 @@ class LegalPerson implements JsonSerializable, ArrayAccess
    *
    * The link to the addressbook. If $musician is also set then this is at the
    * same time equal to the uuid entry of the musican.
-   *
-   * @ORM\Column(type="uuid_binary", nullable=false)
    */
+  #[ORM\Column(type: 'uuid_binary', nullable: false)]
   private ?UuidInterface $contactUuid;
 
   /**
    * @var Collection
    *
    * Collection of invoices issued to -- i.e. payable by -- this person.
-   *
-   * @ORM\OneToMany(targetEntity="Invoice", mappedBy="debitor")
    */
+  #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'debitor')]
   private Collection $invoices;
 
   /**
    * @var Collection
    *
    * Collection of invoices issued by this person.
-   *
-   * @ORM\OneToMany(targetEntity="Invoice", mappedBy="originator")
    */
+  #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'originator')]
   private Collection $originatedInvoices;
 
   /**

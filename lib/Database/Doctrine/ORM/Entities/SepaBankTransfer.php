@@ -31,9 +31,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  * a scheduled bank transfer although the backend may choose to
  * generate just a simple transfer in order to relax missed submission
  * dead-lines.
- *
- * @ORM\Entity
  */
+#[ORM\Entity]
 class SepaBankTransfer extends SepaBulkTransaction
 {
 }

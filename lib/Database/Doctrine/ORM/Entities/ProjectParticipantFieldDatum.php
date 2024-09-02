@@ -41,23 +41,12 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * ProjectParticipantFieldsData
- *
- * @ORM\Table(
- *   name="ProjectParticipantFieldsData",
- *   indexes={
- *     @ORM\Index(fields={"field", "project"}),
- *   }
- * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldDataRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
- *
- * Soft deletion is necessary in case the ProjectPayments table
- * already contains entries.
  */
+#[ORM\Table(name: 'ProjectParticipantFieldsData')]
+#[ORM\Index(fields: ['field', 'project'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldDataRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')] // Soft deletion is necessary in case the ProjectPayments table
 class ProjectParticipantFieldDatum implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -70,88 +59,74 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
 
   /**
    * @var ProjectParticipantField
-   *
-   * @ORM\ManyToOne(targetEntity="ProjectParticipantField", inversedBy="fieldData", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $field;
 
   /**
    * @var Project
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="participantFieldsData", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $project;
 
   /**
    * @var Musician
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectParticipantFieldsData", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectParticipantFieldsData', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $musician;
 
   /**
    * @var \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface
-   *
-   * @ORM\Column(type="uuid_binary")
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'uuid_binary')]
+  #[ORM\Id]
   private $optionKey;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="text", length=16777215, nullable=true, options={"default"=null})
    */
+  #[ORM\Column(type: 'text', length: 16777215, nullable: true, options: ['default' => null])]
   private $optionValue = null;
 
   /**
    * @var float
    * Optional value of a deposit for monetary options. This is unused if
    * the deposit is fixed by single- or multi-select options.
-   *
-   * @ORM\Column(type="float", nullable=true)
    */
+  #[ORM\Column(type: 'float', nullable: true)]
   private $deposit;
 
   /**
    * @var ProjectParticipantFieldDataOption
-   *
-   * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDataOption", inversedBy="fieldData", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id"),
-   *   @ORM\JoinColumn(name="option_key", referencedColumnName="key")
-   * })
    */
+  #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id')]
+  #[ORM\JoinColumn(name: 'option_key', referencedColumnName: 'key')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDataOption::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
   private $dataOption;
 
   /**
    * @var ProjectParticipant
-   *
-   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="participantFieldsData", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
-   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id")
-   * })
    */
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id')]
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
   /**
    * @var ProjectPayment
-   *
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="receivable")
    */
+  #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'receivable')]
   private $payments;
 
   /**
    * @var DatabaseStorageFile
    *
    * Optional. ATM only used for particular auto-generated monetary fields.
-   *
-   * @ORM\OneToOne(targetEntity="DatabaseStorageFile", cascade={"all"}, fetch="EXTRA_LAZY", orphanRemoval=true)
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
   private $supportingDocument;
 
   /** TBD. */

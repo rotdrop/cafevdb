@@ -35,12 +35,11 @@ use OCA\CAFEVDB\Database\EntityManager;
 
 /**
  * InstrumentInsurance
- *
- * @ORM\Table(name="MusicianEmailAddresses")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener"})
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'MusicianEmailAddresses')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener'])]
+#[ORM\HasLifecycleCallbacks]
 class MusicianEmailAddress implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -48,19 +47,17 @@ class MusicianEmailAddress implements \ArrayAccess
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=254, nullable=false, options={"collation"="ascii_general_ci"})
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="NONE")
    */
+  #[ORM\Column(type: 'string', length: 254, nullable: false, options: ['collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'NONE')]
   private $address;
 
   /**
    * @var Musician
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="emailAddresses", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'emailAddresses', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $musician;
 
   /**

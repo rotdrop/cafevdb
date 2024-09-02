@@ -38,7 +38,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
-
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -47,17 +46,14 @@ use OCA\CAFEVDB\Database\EntityManager;
 /**
  * Musician
  *
- * @ORM\Table(name="Musicians")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository")
- * @Gedmo\SoftDeleteable(
- *   fieldName="deleted",
- *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
- * )
- * @ORM\HasLifecycleCallbacks
- * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\MusicianEntityListener"})
  *
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
+#[ORM\Table(name: 'Musicians')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\MusicianEntityListener'])]
 class Musician implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -72,47 +68,42 @@ class Musician implements \ArrayAccess, \JsonSerializable
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private $surName;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private $firstName;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $nickName;
 
   /**
    * Display name, replaces default "$surName, $firstName"
    *
    * @var string
-   * @ORM\Column(type="string", length=256, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true)]
   private $displayName;
 
   /**
    * @var Types\EnumGender|null
-   *
-   * @ORM\Column(type="EnumGender", nullable=true)
    */
+  #[ORM\Column(type: 'EnumGender', nullable: true)]
   private $gender;
 
   /**
@@ -124,20 +115,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * We use the semi-official nickName.surName, e.g. katha.puff. This
    * is achieved by passing the firstName as well as the nickName to
    * the slug generator. It will just remove empty fields.
-   *
-   * @ORM\Column(type="string", length=256, unique=true, nullable=true, options={"collation"="ascii_bin"})
-   * @Gedmo\Slug(
-   *   fields={"firstName", "nickName", "surName"},
-   *   separator=".", unique=true, updatable=true,
-   *   handlers={
-   *     @Gedmo\SlugHandler(
-   *       class="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler",
-   *       options={
-   *         @Gedmo\SlugHandlerOption(name="separator", value="-"),
-   *         @Gedmo\SlugHandlerOption(name="preferred", value={1,2})
-   *       })
-   *   })
    */
+  #[ORM\Column(type: 'string', length: 256, unique: true, nullable: true, options: ['collation' => 'ascii_bin'])]
+  #[Gedmo\Slug(fields: ['firstName', 'nickName', 'surName'], separator: '.', unique: true, updatable: true, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler', options: [new Gedmo\SlugHandlerOption(name: 'separator', value: '-'), new Gedmo\SlugHandlerOption(name: 'preferred', value: [1, 2])])])]
   private $userIdSlug;
 
   /**
@@ -145,122 +125,102 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * Meant for per-user authentication which might be used for future
    * extensions.
-   *
-   * @ORM\Column(type="string", length=256, unique=false, nullable=true, options={"collation"="ascii_bin"})
    */
+  #[ORM\Column(type: 'string', length: 256, unique: false, nullable: true, options: ['collation' => 'ascii_bin'])]
   private $userPassphrase;
 
   /**
    * @var MusicianRowAccessToken
-   *
-   * @ORM\OneToOne(targetEntity="MusicianRowAccessToken", mappedBy="musician", cascade={"all"}, orphanRemoval=true)
    */
+  #[ORM\OneToOne(targetEntity: MusicianRowAccessToken::class, mappedBy: 'musician', cascade: ['all'], orphanRemoval: true)]
   private $rowAccessToken;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $city;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $street;
 
   /**
    * @var string
    *
    * The street-number. I may actually be alpha-numeric like "2a" or something, so it is a string.
-   *
-   * @ORM\Column(type="string", length=32, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: true)]
   private $streetNumber;
 
   /**
    * @var string
    *
    * Additional address information, like "Appartment 200" or c/o.
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $addressSupplement;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2, nullable=true, options={"fixed" = true, "collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 2, nullable: true, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private $country;
 
   /**
    * @var int|null
-   *
-   * @ORM\Column(type="string", length=32, nullable=true, options={"collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['collation' => 'ascii_general_ci'])]
   private $postalCode;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=5, nullable=true, options={"fixed" = true, "collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 5, nullable: true, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private $language;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $mobilePhone;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $fixedLinePhone;
 
   /**
    * @var \DateTime|null
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $birthday;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=254, nullable=true, options={"collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 254, nullable: true, options: ['collation' => 'ascii_general_ci'])]
   private $email;
 
   /**
    * @var Collection All email addresses.
-   *
-   * @ORM\OneToMany(targetEntity="MusicianEmailAddress", mappedBy="musician", cascade={"remove","persist"}, orphanRemoval=true, indexBy="address")
    */
+  #[ORM\OneToMany(targetEntity: MusicianEmailAddress::class, mappedBy: 'musician', cascade: ['remove', 'persist'], orphanRemoval: true, indexBy: 'address')]
   private $emailAddresses;
 
   /**
    * @var Types\EnumMemberStatus|null
-   *
-   * @ORM\Column(
-   *   type="EnumMemberStatus",
-   *   nullable=false,
-   *   options={"default"="regular"}
-   * )
    */
+  #[ORM\Column(type: 'EnumMemberStatus', nullable: false, options: ['default' => 'regular'])]
   private $memberStatus;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=1024, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: true)]
   private $remarks;
 
   /**
@@ -275,9 +235,8 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * This only affects the cloud-account of DB-musicians. It can be set by
    * admins and group-admins through the cloud admin UI.
-   *
-   * @ORM\Column(type="boolean", nullable=true)
    */
+  #[ORM\Column(type: 'boolean', nullable: true)]
   private $cloudAccountDeactivated;
 
   /**
@@ -289,85 +248,57 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * the "...Deactivated" flag can be changed by the cloud administrator.
    *
    * Not that deleted users are also not exported to the cloud.
-   *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"=1})
    */
+  #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => 1])]
   private $cloudAccountDisabled;
 
   /**
    * @var LegalPerson
-   *
-   * @ORM\OneToOne(targetEntity="LegalPerson", mappedBy="musician", cascade={"remove"}, orphanRemoval=true)
-   * @ORM\JoinColumns({
-   *   @ORM\JoinColumn(name="legal_person_id",referencedColumnName="id", nullable=true),
-   * })
    */
+  // #[ORM\JoinColumn(name: 'legal_person_id', referencedColumnName: 'id', nullable: true)]
+  #[ORM\OneToOne(targetEntity: LegalPerson::class, mappedBy: 'musician', cascade: ['remove'], orphanRemoval: true)]
   private $legalPerson;
 
-  /**
-   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="musician", cascade={"remove"}, orphanRemoval=true)
-   * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
-   */
+  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'musician', cascade: ['remove'], orphanRemoval: true)]
+  #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
   private $instruments;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician", indexBy="project_id", orphanRemoval=true, fetch="EXTRA_LAZY")
-   * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
-   */
+  #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'musician', indexBy: 'project_id', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+  #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
   private $projectParticipation;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'musician', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private $projectInstruments;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="musician", indexBy="option_key", orphanRemoval=true, fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'musician', indexBy: 'option_key', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private $projectParticipantFieldsData;
 
-  /**
-   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="instrumentHolder", orphanRemoval=true, fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: InstrumentInsurance::class, mappedBy: 'instrumentHolder', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private $instrumentInsurances;
 
-  /**
-   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="billToParty", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: InstrumentInsurance::class, mappedBy: 'billToParty', fetch: 'EXTRA_LAZY')]
   private $payableInsurances;
 
-  /**
-   * @ORM\OneToMany(targetEntity="SepaBankAccount", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: SepaBankAccount::class, mappedBy: 'musician', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private $sepaBankAccounts;
 
-  /**
-   * @ORM\OneToMany(targetEntity="SepaDebitMandate", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: SepaDebitMandate::class, mappedBy: 'musician', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private $sepaDebitMandates;
 
-  /**
-   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'musician', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private $payments;
 
   /**
    * @var Collection
-   *
-   * @ORM\ManyToMany(targetEntity="EncryptedFile", inversedBy="owners", indexBy="id", fetch="EXTRA_LAZY")
-   * @ORM\JoinTable(name="EncryptedFileOwners")
-   *
-   * The list of files owned by this musician. This is in particular important for
-   * encrypted files where the list of owners determines the encryption keys
-   * which are used to seal the data.
    */
+  #[ORM\JoinTable(name: 'EncryptedFileOwners')]
+  #[ORM\ManyToMany(targetEntity: EncryptedFile::class, inversedBy: 'owners', indexBy: 'id', fetch: 'EXTRA_LAZY')]
   private $encryptedFiles;
 
   /**
    * @var \DateTimeImmutable
-   *
-   * @ORM\Column(type="datetime_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
   protected $updated;
 
   /** {@inheritdoc} */
@@ -1534,11 +1465,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * {@inheritdoc}
    *
-   * @ORM\PrePersist
    *
    * @todo This should no longer be necessary.
    */
-  public function prePersist(Event\LifecycleEventArgs $event)
+  #[ORM\PrePersist]
+  public function prePersist(Event\PrePersistEventArgs $event)
   {
     $this->email = strtolower($this->email);
     $this->prePersistUuid();

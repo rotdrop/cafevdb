@@ -37,30 +37,26 @@ use Psr\Log\LoggerInterface as ILogger;
  *
  * Table to store source-code locations where the phrases stored in
  * the TranslationKey entities are found.
- *
- * @ORM\Table(name="MissingTranslations")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\Loggable(enabled=false)
  */
+#[ORM\Table(name: 'MissingTranslations')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\Loggable(enabled: false)]
 class MissingTranslation implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="TranslationKey")
-   * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")
-   * @ORM\Id
-   */
+  #[ORM\JoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
+  #[ORM\ManyToOne(targetEntity: TranslationKey::class)]
+  #[ORM\Id]
   private $translationKey;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=5, nullable=false)
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 5, nullable: false)]
+  #[ORM\Id]
   private $locale;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

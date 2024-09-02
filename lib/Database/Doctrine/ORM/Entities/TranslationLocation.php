@@ -37,38 +37,33 @@ use Psr\Log\LoggerInterface as ILogger;
  *
  * Table to store source-code locations where the phrases stored in
  * the TranslationKey entities are found.
- *
- * @ORM\Table(name="TranslationLocations")
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationLocationsRepository")
- * @ORM\HasLifecycleCallbacks
- * @Gedmo\Loggable(enabled=false)
  */
+#[ORM\Table(name: 'TranslationLocations')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationLocationsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\Loggable(enabled: false)]
 class TranslationLocation implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="TranslationKey", inversedBy="locations")
-   * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")
-   * @ORM\Id
-   */
+  #[ORM\JoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
+  #[ORM\ManyToOne(targetEntity: TranslationKey::class, inversedBy: 'locations')]
+  #[ORM\Id]
   private $translationKey;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=766, nullable=false)
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 766, nullable: false)]
+  #[ORM\Id]
   private $file;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", length=11, nullable=false)
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'integer', length: 11, nullable: false)]
+  #[ORM\Id]
   private $line;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
