@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -106,8 +106,8 @@ foreach ($eventMatrix as $key => $eventGroup) {
     $location = htmlspecialchars(stripslashes($event['location']));
     $description = nl2br(htmlspecialchars(stripslashes($event['description'])));
 
-    $dateString = $eventsService->briefEventDate($event, $timezone, $locale);
-    $longDate = $eventsService->longEventDate($event, $timezone, $locale);
+    $dateString = $eventsService->briefEventDate($event, $timezone, $localeSymbol);
+    $longDate = $eventsService->longEventDate($event, $timezone, $localeSymbol);
 
     $description = $longDate
       . (!empty($brief) ? '<br/>' . $brief  : '')
