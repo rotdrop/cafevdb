@@ -597,10 +597,11 @@ class ProjectParticipantFields extends PMETableViewBase
         'sql' => '$main_table.id',
         'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($multiplicityVariant) {
           // allowed values from virtual JSON aggregator field
-          $dataOptions = $row[$this->queryField('data_options')]??[];
-          $multiplicity = $row[$this->queryField('multiplicity')]??null;
-          $dataType = $row[$this->queryField('data_type')]??null;
-          return $this->showAllowedSingleValue($dataOptions, $op, $pme->fdd[$field]['tooltip'], $multiplicity, $dataType, $multiplicityVariant);
+          $deleted = $row[$this->queryField('deleted')] ?? null;
+          $dataOptions = $row[$this->queryField('data_options')] ?? [];
+          $multiplicity = $row[$this->queryField('multiplicity')] ?? null;
+          $dataType = $row[$this->queryField('data_type')] ?? null;
+          return $this->showAllowedSingleValue($dataOptions, $op, $pme->fdd[$field]['tooltip'], $multiplicity, $dataType, $multiplicityVariant, !empty($deleted));
         },
         'input' => 'SR',
         'options' => 'ACP', // but not in list/view/delete-view
@@ -625,10 +626,11 @@ class ProjectParticipantFields extends PMETableViewBase
         'sql' => '$main_table.id',
         'php' => function($dummy, $op, $pmeField, $row, $recordId, $pme) use ($multiplicityVariant) {
           // allowed values from virtual JSON aggregator field
+          $deleted = $row[$this->queryField('deleted')] ?? null;
           $dataOptions = $row[$this->queryField('data_options')]??[];
           $multiplicity = $row[$this->queryField('multiplicity')]??null;
           $dataType = $row[$this->queryField('data_type')]??null;
-          list($entry,) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
+          list($entry,) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType, !empty($deleted));
           $key = $entry['key'];
           $name  = $this->pme->cgiDataName('data_options_' . $multiplicityVariant);
           $field = 'deposit';
@@ -1269,7 +1271,7 @@ __EOT__;
       $newValues['default_value'] = $first;
       if ($op != PHPMyEdit::SQL_QUERY_INSERT && empty(Uuid::asUuid($first))) {
         throw new RuntimeException(
-          $this->l->t('Simple field-option key is not an UUID: "%s".', $key));
+          $this->l->t('Simple field-option key is not an UUID: "%s".', $first));
       }
     }
     self::unsetRequestValue($tag, $oldValues, $changed, $newValues);
@@ -1797,14 +1799,20 @@ __EOT__;
    *
    * @param null|string $dataType May be null in add mode.
    *
+   * @param bool $allowDeleted Ignore deleted state of options.
+   *
    * @return array
    */
-  private function getAllowedSingleValue(mixed $dataOptions, ?string $multiplicity, ?string $dataType):array
-  {
+  private function getAllowedSingleValue(
+    mixed $dataOptions,
+    ?string $multiplicity,
+    ?string $dataType,
+    bool $allowDeleted = false,
+  ):array {
     $allowed = $this->participantFieldsService->explodeDataOptions($dataOptions, false);
     $entry = null;
     foreach ($allowed as $option) {
-      if (!empty($option['deleted'])) {
+      if (!$allowDeleted && !empty($option['deleted'])) {
         continue;
       }
       if ($option['key'] == Uuid::NIL && $multiplicity == Multiplicity::GROUPOFPEOPLE) {
@@ -1835,6 +1843,8 @@ __EOT__;
    *
    * @param string $multiplicityVariant The multiplicity-variant this is emitted for.
    *
+   * @param bool $allowDeleted Ignore deleted state of options.
+   *
    * @return string HTML fragment.
    */
   private function showAllowedSingleValue(
@@ -1844,8 +1854,9 @@ __EOT__;
     ?string $multiplicity,
     ?string $dataType,
     string $multiplicityVariant,
+    bool $allowDeleted = false,
   ):string {
-    list($entry, $allowed) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
+    list($entry, $allowed) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType, $allowDeleted);
     $value = $entry['data'];
     if ($op === PHPMyEdit::OPERATION_DISPLAY) {
       return $this->currencyValue($value);
