@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlat
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners as DBALEventListeners;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
@@ -1211,7 +1212,7 @@ class EntityManager extends EntityManagerDecorator
    * @todo Get rid of this function, the meta-data class is rather an
    * internal data structure of Doctrine\ORM.
    */
-  public function getClassMetadata(string $className):ClassMetadata
+  public function getClassMetadata(string $className):ClassMetadataInterface
   {
     if ($this->decorateClassMetadata) {
       return new ClassMetadataDecorator(
