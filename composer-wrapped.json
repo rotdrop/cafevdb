@@ -21,7 +21,7 @@
     "cjh/doctrine-on-update-extension": "dev-master",
     "doctrine/annotations": "*",
     "doctrine/dbal": "^3.2",
-    "doctrine/orm": "dev-production/3.2.x/cafevdb",
+    "doctrine/orm": "dev-production/3.4.x/cafevdb",
     "gedmo/doctrine-extensions": "3.x-dev",
     "mediamonks/doctrine-extensions": "0.1.x-dev",
     "myclabs/php-enum": "^1.8",
