@@ -38,6 +38,7 @@ use OCP\IDateTimeZone;
 use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
+use OCA\CAFEVDB\PageRenderer\Blog as BlogRenderer;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
@@ -60,6 +61,7 @@ class BlogController extends Controller
     private RequestParameterService $parameterService,
     private ToolTipsService $toolTipsService,
     private BlogMapper $blogMapper,
+    private BlogRenderer $blogRenderer,
     private ?string $userId,
     protected IL10N $l,
     private IDateTimeZone $timeZone,
@@ -232,7 +234,7 @@ class BlogController extends Controller
         'localeSymbol' => $this->getLocale(), // locale itself should already have been provided by NC core
         'user' => $this->userId,
         'urlGenerator' => $this->urlGenerator,
-        'renderer' => $this->blogMapper,
+        'renderer' => $this->blogRenderer,
         'toolTips' => $this->toolTipsService,
       ];
       $tmpl = $this->templateResponse(

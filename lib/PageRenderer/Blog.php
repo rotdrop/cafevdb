@@ -48,16 +48,6 @@ class Blog extends Renderer
   }
 
   /**
-   * Determine if a new notification is pending.
-   *
-   * @return true
-   */
-  public function notificationsPending():bool
-  {
-    return $this->blogMapper->notificationPending($this->userId);
-  }
-
-  /**
    * Show the underlying template page. This is supposed to echo html
    * code to stdout. This is the default do-nothing implementation.
    *
@@ -74,5 +64,25 @@ class Blog extends Renderer
   public function cssClass():string
   {
     return 'blog-page';
+  }
+
+  /**
+   * Determine if a new notification is pending, forward to BlogMapper::notificationsPending().
+   *
+   * @return true
+   */
+  public function notificationsPending():bool
+  {
+    return $this->blogMapper->notificationPending($this->userId);
+  }
+
+  /**
+   * Forward to BlogMapper::findThreadDisplay().
+   *
+   * @return array
+   */
+  public function findThreadDisplay():array
+  {
+    return $this->blogMapper->findThreadDisplay();
   }
 }
