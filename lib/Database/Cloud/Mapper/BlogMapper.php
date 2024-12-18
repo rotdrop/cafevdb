@@ -71,7 +71,7 @@ class BlogMapper extends Mapper
    *            has clicked away the alert box.
    *            as a one-time popup.
    *
-   * @return bool @c true on success.
+   * @return BlogEntry|null The generated blog entity.
    */
   public function createNote(
     string $author,
@@ -79,7 +79,7 @@ class BlogMapper extends Mapper
     string $content,
     int $priority = 0,
     bool $popup = false,
-  ) {
+  ):?BlogEntry {
     $priority = ($inReply ?? 0) <= 0 ? intval($priority) % 256 : 0;
 
     $note = new BlogEntry();
@@ -110,7 +110,7 @@ class BlogMapper extends Mapper
    * @param mixed $reader Comma separated list of users for which the note is marked
    *            as read. If false, nothing changes. If < 0 remove all readers.
    *
-   * @return bool @c true on success.
+   * @return BlogEntry|null The modified blog entity.
    */
   public function modifyNote(
     string $author,
@@ -119,7 +119,7 @@ class BlogMapper extends Mapper
     mixed $priority = false,
     ?bool $popup = null,
     mixed $reader = false,
-  ) {
+  ):?BlogEntry {
     if ($reader < 0) {
       $reader = '';
       $note = new BlogEntry();
@@ -171,9 +171,9 @@ class BlogMapper extends Mapper
    * @param bool $drop If @c true then really delete the message,
    * otherwise just mark them as deleted.
    *
-   * @return bool @c true on success.
+   * @return BlogEntry|null The deleted blog entity.
    */
-  public function deleteNote(int $blogId, bool $drop = false)
+  public function deleteNote(int $blogId, bool $drop = false):?BlogEntry
   {
     $note = new BlogEntry();
     $children = $this->findThread($blogId);
@@ -184,7 +184,7 @@ class BlogMapper extends Mapper
 
     $note->setId($blogId);
     if (!$drop) {
-      $note->setDeleted(true);
+      $note->setDeleted(time());
       $note->setModified(time());
       return $this->update($note);
     } else {
@@ -199,7 +199,7 @@ class BlogMapper extends Mapper
    *
    * @return array
    */
-  private function findThread(int $id)
+  private function findThread(int $id):array
   {
     $qb = $this->db->getQueryBuilder();
     $qb->select('*')
@@ -217,7 +217,7 @@ class BlogMapper extends Mapper
    *
    * @return array
    */
-  private function findThreadHeads()
+  private function findThreadHeads():array
   {
     /** @var IQueryBuilder $qb */
     $qb = $this->db->getQueryBuilder();
@@ -239,7 +239,7 @@ class BlogMapper extends Mapper
    *
    * @return array
    */
-  private function findThreadTree(array $parent)
+  private function findThreadTree(array $parent):array
   {
     $children = $this->findThread($parent['head']->getId());
     $parent['children'] = [];
@@ -275,9 +275,9 @@ class BlogMapper extends Mapper
    * @return array Tree-like nested array structure modelling the message
    * threads.
    */
-  public function findThreadDisplay()
+  public function findThreadDisplay():array
   {
-    $data   = [];
+    $data = [];
     try {
       $heads = $this->findThreadHeads();
       foreach ($heads as $entity) {
@@ -288,7 +288,6 @@ class BlogMapper extends Mapper
       $this->logger->logException($t);
       throw new Exception("Cannot create blog thread display", $t->getCode(), $t);
     }
-    $this->notificationPending('claus');
     return $data;
   }
 
@@ -299,12 +298,18 @@ class BlogMapper extends Mapper
    *
    * @return bool
    */
-  public function notificationPending(string $userId)
+  public function notificationPending(string $userId):bool
   {
     $qb = $this->db->getQueryBuilder();
     $qb->select('b.reader')
-       ->from($this->tableName, 'b')
-       ->where($qb->expr()->eq('popup', $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT)));
+      ->from($this->tableName, 'b')
+      ->where($qb->expr()->eq('popup', $qb->createNamedParameter(1, IQueryBuilder::PARAM_INT)))
+      ->andWhere(
+        $qb->expr()->orX(
+          $qb->expr()->isNull('deleted'),
+          $qb->expr()->eq('deleted', $qb->createNamedParameter(0, IQueryBuilder::PARAM_INT))
+        )
+      );
     $cursor = $qb->execute();
     $userPendingNotifications = false;
     while ($row = $cursor->fetch()) {

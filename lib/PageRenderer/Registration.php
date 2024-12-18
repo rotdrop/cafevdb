@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\PageRenderer;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 
 use OCA\CAFEVDB\Database\Legacy\PME\IOptions as IPMEOptions;
-use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\Service\FontService;
 
 /** Register template-names as dependency injection tags. */
@@ -72,7 +71,7 @@ class Registration
     $context->registerServiceAlias(self::TEMPLATE_PREFIX . InsuranceRates::TEMPLATE, InsuranceRates::class);
     $context->registerServiceAlias(self::TEMPLATE_PREFIX . TaxExemptionNotices::TEMPLATE, TaxExemptionNotices::class);
     $context->registerServiceAlias(self::TEMPLATE_PREFIX . DonationReceipts::TEMPLATE, DonationReceipts::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . Blog::TEMPLATE, BlogMapper::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . Blog::TEMPLATE, Blog::class);
 
     // @todo find a cleaner way for the following
 
