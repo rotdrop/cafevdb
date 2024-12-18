@@ -45,6 +45,8 @@ class MusicianCardBackend implements ICardBackend
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  private ?Repositories\MusiciansRepository $musiciansRepository = null;
+
   /** {@inheritdoc} */
   public function __construct(
     protected ConfigService $configService,
@@ -97,6 +99,10 @@ class MusicianCardBackend implements ICardBackend
   public function searchCards(string $pattern, array $properties): array
   {
     $this->logDebug('PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
+
+    if (!$this->entityManager->connected()) {
+      return [];
+    }
 
     if (empty($pattern)) {
       $musicians = $this->musiciansRepository->findAll();
