@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -23,6 +23,12 @@
   <NcContent :app-name="appId">
     <NcAppNavigation>
       <template #list>
+        <NcAppNavigationItem :to="{ name: '/' }"
+                             :name="t(appId, 'Home')"
+                             icon="icon-home"
+                             exact
+                             @click="showSidebar = false"
+        />
         <NcAppNavigationItem :to="{ name: 'projects' }"
                              :name="t(appId, 'All Projects')"
                              icon="icon-home"
