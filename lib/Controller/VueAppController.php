@@ -58,6 +58,7 @@ class VueAppController extends Controller
   public function index():TemplateResponse
   {
     Util::addScript($this->appName, $this->assetService->getJSAsset('vue-app')['asset']);
+    Util::addStyle($this->appName, $this->assetService->getCSSAsset('vue-app')['asset']);
 
     $this->initialState->provideInitialState('config', [
       'orchestraName' => 'blah',
