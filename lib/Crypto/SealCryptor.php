@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,16 +25,21 @@
 namespace OCA\CAFEVDB\Crypto;
 
 use OCA\CAFEVDB\Exceptions;
+use Psr\Log\LoggerInterface as ILogger;
+use Psr\Log\LogLevel;
 
 /** Use the encryption service provided by the ambient cloud software. */
 class SealCryptor implements ICryptor
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+
   /** @var array */
   private $sealCryptors = [];
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     private SealService $sealService,
+    protected ILogger $logger,
   ) {
   }
   // phpcs:enable
@@ -99,7 +104,7 @@ class SealCryptor implements ICryptor
   /** {@inheritdoc} */
   public function decrypt(?string $data):?string
   {
-    if (!$this->sealService->isSealedData($data)) {
+    if (!SealService::isSealedData($data)) {
       return $data;
     }
     $sealData = $this->sealService->parseSeal($data);
@@ -108,8 +113,14 @@ class SealCryptor implements ICryptor
     if (empty($candidates)) {
       throw new Exceptions\DecryptionFailedException('Unable to unseal, no valid candidates');
     }
-    $id = array_shift($candidates);
-    return $this->sealService->unseal($data, $id, $this->sealCryptors[$id]);
+    foreach ($candidates as $id) {
+      try {
+        return $this->sealService->unseal($data, $id, $this->sealCryptors[$id]);
+      } catch (Exceptions\EncryptionException $e) {
+        $this->logException($e, level: LogLevel::INFO);
+      }
+    }
+    throw new Exceptions\EncryptionFailedException('Unable to decrypt sealed data, all candidates have failed: ' . implode(', ', $candidates));
   }
 
   /** {@inheritdoc} */
@@ -138,7 +149,7 @@ class SealCryptor implements ICryptor
   /** {@inheritdoc} */
   public static function isEncrypted(?string $data):?bool
   {
-    return $this->sealService->isSealedData($data);
+    return SealService::isSealedData($data);
   }
 
   /** @return SealService The used SealService instance. */

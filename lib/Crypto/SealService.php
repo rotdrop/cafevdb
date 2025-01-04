@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,10 @@
 
 namespace OCA\CAFEVDB\Crypto;
 
+use Throwable;
+
 use Psr\Log\LoggerInterface as ILogger;
+use OCA\CAFEVDB\Exceptions;
 
 /** Utility routines for the SealCryptor. */
 class SealService
@@ -87,7 +90,7 @@ class SealService
    *
    * @return bool
    */
-  public function isSealedData(?string $data):bool
+  public static function isSealedData(?string $data):bool
   {
     if (strlen($data??'') < 10) {
       return false;
@@ -150,9 +153,24 @@ class SealService
     if (empty($sealedKey)) {
       return null;
     }
-    $key = $keyCryptor->decrypt($sealedKey);
+    try {
+      $key = $keyCryptor->decrypt($sealedKey);
+    } catch (Throwable $t) {
+      throw new Exceptions\EncryptionFailedException(
+        'Unable to decrypt seal key for id "' . $userId . '".',
+        0,
+        $t);
+    }
 
     $this->dataCryptor->setEncryptionKey($key);
-    return $this->dataCryptor->decrypt($seal['data']);
+    try {
+      return $this->dataCryptor->decrypt($seal['data']);
+    } catch (Throwable $t) {
+      throw new Exceptions\EncryptionFailedException(
+        'Unable to decrypt seal data with key of id "' . $userId . '".',
+        0,
+        $t,
+      );
+    }
   }
 }
