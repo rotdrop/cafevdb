@@ -89,6 +89,7 @@
 
 <script>
 import { appName as appId } from './app/app-info.js'
+import appInfo from './mixins/app-info.js'
 import {
   NcContent,
   NcAppContent,
@@ -120,6 +121,9 @@ export default {
   //   const memberData = useMemberDataStore()
   //   return { memberData }
   // },
+  mixins: [
+    appInfo,
+  ],
   data() {
     return {
       orchestraName: initialState?.orchestraName || t(appId, '[UNKNOWN]'),
