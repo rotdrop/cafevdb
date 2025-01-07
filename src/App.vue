@@ -104,7 +104,7 @@ import Icon from '../img/cafevdb.svg'
 
 import { getInitialState } from './toolkit/services/InitialStateService.js'
 
-const initialState = getInitialState()
+const initialState = getInitialState('CAFEVDB')
 
 export default {
   name: 'App',
