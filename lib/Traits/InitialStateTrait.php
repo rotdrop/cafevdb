@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ use OCP\IL10N;
 use OCP\IUser;
 use OCP\IConfig;
 
-use OCA\CAFEVDB\Common\Config;
+use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
@@ -50,6 +50,9 @@ trait InitialStateTrait
 
   /** @var HistoryService */
   protected HistoryService $historyService;
+
+  /** @var ConfigService */
+  protected ConfigService $configService;
 
   /**
    * @param string $userId
@@ -84,6 +87,7 @@ trait InitialStateTrait
       'CAFEVDB',
       [
         'appName' => $this->appName,
+        'orchestra' => $this->getConfigValue('orchestra', $this->l->t('unconfigured')),
         'toolTipsEnabled' => ($tooltips == 'off' ? false : true),
         'wysiwygEditor' => $editor,
         'language' => $languageShort,
