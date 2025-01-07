@@ -67,6 +67,12 @@ onRequestTokenUpdate(function(token) {
   console.debug('NEW REQUEST TOKEN', token, OC.requestToken);
 });
 
+const appContainerSelector = [
+  '#content.app-' + appName,
+  // '#content-vue.content.app-' + appName + ' ' + '#app-content-vue',
+  '#content-vue.content.app-' + appName,
+].join(',');
+
 export {
   globalState,
   appName,
@@ -78,4 +84,5 @@ export {
   cloudUser,
   appPrefix,
   appNameTag,
+  appContainerSelector,
 };

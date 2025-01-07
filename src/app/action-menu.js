@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { $, appName } from './globals.js';
+import { $, appContainerSelector } from './globals.js';
 
 function markDialog($dropDownContainer) {
   const $dialog = $dropDownContainer.closest('.ui-dialog.pme-table-dialog');
@@ -70,7 +70,7 @@ const enforceVisibility = function($element) {
 };
 
 const installActionMenuHandlers = function($container) {
-  $container = $container || $('#content.app-' + appName);
+  $container = $container || $(appContainerSelector);
 
   $container.on('click', '.dropdown-container.dropdown-no-hover', function(event) {
     if ($(event.target).closest('li.dropdown-item.dropdown-no-close, li.dropdown-item.disabled').length > 0) {

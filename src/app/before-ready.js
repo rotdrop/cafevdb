@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, $, appName, appPrefix } from './globals.js';
+import { globalState, $, appName, appPrefix, appContainerSelector } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 // import * as Dialogs from './dialogs.js';
 import * as Page from './page.js';
@@ -74,7 +74,7 @@ const documentReady = function() {
    * insert another div-container inside #app-content.
    *
    */
-  const content = $('#content.app-' + appName);
+  const content = $(appContainerSelector);
   // const appInnerContent = $('#app-inner-content');
 
   actionMenuHandlers(content);
