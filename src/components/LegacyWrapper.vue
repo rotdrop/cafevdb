@@ -28,10 +28,12 @@
   />
 </template>
 <script>
+import { nextTick } from 'vue'
 import appInfo from '../mixins/app-info.js'
 import consoleOutput from '../mixins/console.js'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
+import * as CAFEVDB from '../app/cafevdb.js'
 
 export default {
   name: 'LegacyWrapper',
@@ -59,6 +61,8 @@ export default {
       newContent.innerHTML = response.data
       const newAppContent = newContent.querySelector('#' + this.appGeneralId)
       this.html = newAppContent.innerHTML
+      await nextTick()
+      CAFEVDB.runReadyCallbacks()
       this.loading = false
     } catch (e) {
       this.error('ERROR', e)
