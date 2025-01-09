@@ -50,7 +50,7 @@
         </NcAppNavigationSettings>
       </template>
     </NcAppNavigation>
-    <NcAppContent :class="{ 'icon-loading': loading }" @show-sidebar="showSidebar = true">
+    <NcAppContent :class="{ 'icon-loading': loading }">
       <router-view v-show="!loading && !error" :loading.sync="loading" @view-details="handleDetailsRequest" />
       <NcEmptyContent v-if="isRoot || error" class="emp-content">
         {{ t(appId, '{orchestraName} Orchestra Portal', { orchestraName, }) }}
@@ -90,6 +90,7 @@
 <script>
 import { appName as appId } from './app/app-info.js'
 import appInfo from './mixins/app-info.js'
+import { emit } from '@nextcloud/event-bus'
 import {
   NcContent,
   NcAppContent,
@@ -147,6 +148,12 @@ export default {
   },
   async created() {
     this.loading = false
+  },
+  mounted() {
+    // works only after mounting
+    emit('toggle-navigation', {
+      open: false,
+    })
   },
   methods: {
     closeSidebar() {
