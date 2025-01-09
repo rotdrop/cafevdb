@@ -145,6 +145,12 @@ $routes = [
     ],
     [
       'name' => 'vueApp#index',
+      'url' => '/vue-app/',
+      'verb' => 'GET',
+      'postfix' => 'slash',
+    ],
+    [
+      'name' => 'vueApp#index',
       'url' => '/vue-app/f/{path}',
       'verb' => 'GET',
       'requirements' => [ 'path' => '.+' ],
