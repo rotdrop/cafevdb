@@ -105,6 +105,7 @@ trait InitialStateTrait
         ],
         'sharedFolder' => $this->getSharedFolderPath(),
         'projectsFolder' => $this->getProjectsFolderPath(),
+        'wikiNamespace' => $this->getAppValue('wikinamespace'),
       ]);
 
     $this->initialStateService->provideInitialState(

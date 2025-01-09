@@ -35,6 +35,7 @@ import {
   getMarkCount,
   setMarkCount,
 } from './jquery-cafevdb-tooltips.js';
+import { emit, subscribe } from '@nextcloud/event-bus';
 
 require('cafevdb.scss');
 
@@ -242,6 +243,9 @@ const applyToolTips = function(selector, options, container) {
 };
 
 const toolTipsOnOff = function(onOff) {
+  emit(appName + ':toggle-tooltips', {
+    enabled: globalState.toolTipsEnabled,
+  });
   globalState.toolTipsEnabled = !!onOff;
   if (globalState.toolTipsEnabled) {
     $.fn.cafevTooltip.enable();
@@ -250,6 +254,14 @@ const toolTipsOnOff = function(onOff) {
     $.fn.cafevTooltip.remove(); // remove any left-over items.
   }
 };
+
+subscribe(appName + ':toggle-tooltips', (event) => {
+  console.info('EVENT', event);
+  // avoid  ping-pong
+  if (event.enabled !== globalState.toolTipsEnabled) {
+    toolTipsOnOff(event.enabled);
+  }
+});
 
 /**
  * @returns {boolean}
