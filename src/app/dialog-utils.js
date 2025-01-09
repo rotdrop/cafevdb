@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,8 +45,8 @@ function dialogToBackButton(dialogHolder) {
   const toBackButton = $('<button class="toBackButton customDialogHeaderButton" title="' + toBackButtonTitle + '"></button>');
   toBackButton.button({
     label: '_',
-    icons: { primary: 'ui-icon-minusthick', secondary: null },
-    text: false,
+    icon: 'ui-icon-minusthick',
+    showLabel: false,
   });
   dialogWidget.find('.ui-dialog-titlebar').append(toBackButton);
   toBackButton.cafevTooltip({ placement: 'auto' });
@@ -151,8 +151,8 @@ function dialogCustomCloseButton(dialogHolder, callback) {
   const customCloseButton = $('<button class="customCloseButton customDialogHeaderButton" title="' + customCloseButtonTitle + '"></button>');
   customCloseButton.button({
     label: 'x',
-    icons: { primary: 'ui-icon-closethick', secondary: null },
-    text: false,
+    icon: 'ui-icon-closethick',
+    showLabel: false,
   });
   dialogWidget.find('.ui-dialog-titlebar').append(customCloseButton);
   customCloseButton.cafevTooltip({ placement: 'auto' });

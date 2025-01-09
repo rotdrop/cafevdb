@@ -61,12 +61,17 @@ $.fn.cafevDialog = function(argument) {
     const options = {
       appendTo: '#' + appPrefix('general'),
       // appendTop: 'body',
+      classes: {
+        'ui-dialog': [
+          'ui-corner-all',
+          appNameTag,
+        ].join(' '),
+      },
     };
-    argument = $.extend({}, options, argument);
+    argument = $.extend(true, {}, options, argument);
+    // dialogClass is gone ...
     if (argument.dialogClass) {
-      argument.dialogClass += ' ' + appNameTag;
-    } else {
-      argument.dialogClass = appNameTag;
+      argument.classes['ui-dialog'] += ' ' + argument.dialogClass;
     }
     if ($('#appsettings_popup').length === 0) {
       CAFEVDB.snapperClose();
