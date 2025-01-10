@@ -43,8 +43,18 @@ export default Vue.extend({
     NcActionButton,
     NcActions,
   },
+  props: {
+    projectId: {
+      type: Number,
+      required: true,
+    },
+    projectName: {
+      type: String,
+      default: null,
+    },
+  },
   mounted() {
-    console.info('mounted')
+    console.info('mounted', this.projectId, this.projectName)
   },
 })
 

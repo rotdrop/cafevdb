@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -133,7 +133,11 @@ const init = function(htmlContent, textStatus, request, afterInit) {
       const eventForm = $dialogHolder.find('#eventlistform');
       const eventMenu = eventForm.find('.new-event-dropdown');
 
-      const testMenu = new VueTestMenu();
+      const testMenu = new VueTestMenu({
+        propsData: {
+          testProp: 'Hello World!',
+        },
+      });
       testMenu.$mount(document.getElementById('vue-test-menu'));
 
       DialogUtils.toBackButton($(this));

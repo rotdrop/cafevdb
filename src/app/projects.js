@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,6 +47,7 @@ import * as SelectUtils from './select-utils.js';
 import wikiPopup from './wiki-popup.js';
 import setBusyIndicators from './busy-indicators.js';
 import iFrameResize from './iframe-resize.js';
+import VueProjectMenu from '../components/ProjectActionsMenu.vue';
 
 // eslint-disable-next-line no-unused-vars
 // import iFrameResize from 'iframe-resizer';
@@ -293,10 +294,26 @@ const actionMenu = function(containerSel) {
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
 
-  $container.find('.project-actions.dropdown-container .project-action').on('click', function(event) {
-    handleProjectActions($(this), containerSel);
-    return false;
-  });
+  if (globalState.vueMode) {
+    $container.find('.project-actions.dropdown-container').each(function() {
+      const $this = $(this);
+      console.info('ACTION MENU DATA', $this.data());
+      const projectId = $this.data('projectId');
+      const projectName = $this.data('projectName');
+      const vueMenu = new VueProjectMenu({
+        propsData: {
+          projectId,
+          projectName,
+        },
+      });
+      vueMenu.$mount(this);
+    });
+  } else {
+    $container.find('.project-actions.dropdown-container .project-action').on('click', function(event) {
+      handleProjectActions($(this), containerSel);
+      return false;
+    });
+  }
 
   $container
     .off('pme:contextmenu', 'tr.' + pmeToken('row'))
@@ -1048,6 +1065,8 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
     return;
   }
 
+  console.info('CAFEVDB VUE MODE', globalState.vueMode);
+
   const container = PHPMyEdit.container(selector);
   actionMenu(selector);
   pmeFormInit(selector);
@@ -1277,6 +1296,7 @@ const documentReady = function() {
   });
 
   CAFEVDB.addReadyCallback(function() {
+    console.info('CAFEVDB VUE MODE', globalState.vueMode);
     const container = PHPMyEdit.container();
     if (!container.hasClass('projects')) {
       return;
