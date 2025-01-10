@@ -132,6 +132,10 @@ export default {
       type: String,
       required: true,
     },
+    templateParameters: {
+      type: Object,
+      default: () => {},
+    },
     navButtonSize: {
       type: String,
       default: 'large',
@@ -170,7 +174,11 @@ export default {
     })
     try {
       this.loading = true
-      const response = await axios.post(generateAppUrl('page/remember/blank'), { template: this.template })
+      const post = {
+        template: this.template,
+        ...this.templateParameters,
+      }
+      const response = await axios.post(generateAppUrl('page/remember/blank'), post)
       const newContent = document.createElement('div')
       newContent.innerHTML = response.data
       const newAppContent = newContent.querySelector('#' + this.appGeneralId)

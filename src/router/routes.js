@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -25,23 +25,33 @@ const routes = [
   {
     path: '/',
     props: router => ({
-      rootTitle: t(appName, 'Home'),
+      routeTitle: t(appName, 'Home'),
     }),
   },
   {
     path: '/f/projects',
     component: () => import('../views/Projects.vue'),
     name: 'projects',
-    props: router => ({
-      rootTitle: t(appName, 'Projects'),
+    props: route => ({
+      routeTitle: t(appName, 'Projects'),
     }),
   },
   {
     path: '/f/musicians',
     component: () => import('../views/Musicians.vue'),
     name: 'musicians',
-    props: router => ({
-      rootTitle: t(appName, 'Musicians'),
+    props: route => ({
+      routeTitle: t(appName, 'Musicians'),
+    }),
+  },
+  {
+    path: '/f/project-participants',
+    component: () => import('../views/ProjectParticipants.vue'),
+    name: 'project-participants',
+    props: route => ({
+      routeTitle: t(appName, 'Projects Participants'),
+      projectId: route.query?.projectId || -1,
+      projectName: route.query?.projectName || '',
     }),
   },
 ];

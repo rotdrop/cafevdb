@@ -41,6 +41,12 @@
                              exact
                              @click="showSidebar = false"
         />
+        <NcAppNavigationItem :to="{ name: 'project-participants' }"
+                             :name="t(appId, 'Project Participants')"
+                             icon="icon-home"
+                             exact
+                             @click="showSidebar = false"
+        />
       </template>
       <template #footer>
         <NcAppNavigationSettings>
