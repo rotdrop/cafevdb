@@ -109,7 +109,7 @@ export default Vue.extend({
   },
   watch: {
     open(state, oldState) {
-      this.info('WATCHER', state, oldState)
+      this.info('WATCHER s/os/p/op', state, oldState, this.positioned, this.open)
       if (!state && this.positioned) {
         // this.info('WATCHER CLOSE MENU')
         // this.closeMenu()
@@ -123,8 +123,9 @@ export default Vue.extend({
       const newOpenState = event?.open
       if (!newOpenState
           && this.open
-          && projectId !== -this.projectId
-          && (!projectId || projectId === this.projectId)) {
+          && +projectId !== -this.projectId
+          && (+projectId <= 0 || +projectId === +this.projectId)) {
+        this.info('CLOSE MENU IN EVENT HANDLER')
         this.closeMenu()
       } else if (newOpenState && projectId === this.projectId) {
         this.openMenu(event?.x || undefined, event?.y || undefined)
@@ -162,7 +163,10 @@ export default Vue.extend({
         this.open = false
         await this.$nextTick()
       }
-      await this.nextFrame()
+      for (let i = 0; i < 2; ++i) {
+        await this.nextFrame()
+        await this.$nextTick()
+      }
       this.setPosition()
     },
     nextFrame() {
