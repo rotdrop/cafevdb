@@ -48,6 +48,7 @@ import wikiPopup from './wiki-popup.js';
 import setBusyIndicators from './busy-indicators.js';
 import iFrameResize from './iframe-resize.js';
 import VueProjectMenu from '../components/ProjectActionsMenu.vue';
+import { emit, subscribe } from '@nextcloud/event-bus';
 
 // eslint-disable-next-line no-unused-vars
 // import iFrameResize from 'iframe-resizer';
@@ -55,6 +56,14 @@ import VueProjectMenu from '../components/ProjectActionsMenu.vue';
 // import iFrameContentScript from '!!raw-loader!iframe-resizer/js/iframeResizer.contentWindow.js';
 
 require('projects.scss');
+
+// listen to requests from the Vue wrapper application, the idea is
+// not to have to load all the code twice, or not to have to change
+// anything at once.
+subscribe(appName + ':project-popup', (event) => {
+  console.info('EVENT', event);
+  projectViewPopup(PHPMyEdit.selector(), event);
+});
 
 /**
  * Generate a popup-dialog for the events-listing for the given
@@ -291,67 +300,104 @@ const handleProjectActions = function($menuItem, containerSel) {
 };
 
 const actionMenu = function(containerSel) {
+  console.info('PROJECT CONTAINER SELECTOR', containerSel);
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
 
   if (globalState.vueMode) {
     $container.find('.project-actions.dropdown-container').each(function() {
       const $this = $(this);
-      console.info('ACTION MENU DATA', $this.data());
       const projectId = $this.data('projectId');
       const projectName = $this.data('projectName');
       const vueMenu = new VueProjectMenu({
         propsData: {
           projectId,
           projectName,
+          enableOverviewItem: $container.find(pmeFormSelector).hasClass(pmeToken('list')),
         },
       });
-      vueMenu.$mount(this);
+      $this.data('vueMenu', vueMenu);
+      $this.removeClass('dropdown-container').empty().html('<div></div>');
+      vueMenu.$mount($this.children(':first')[0]);
     });
+
+    $container
+      .off('pme:contextmenu', 'tr.' + pmeToken('row'))
+      .on('pme:contextmenu', 'tr.' + pmeToken('row'), function(event, originalEvent, databaseIdentifier) {
+        console.info('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
+
+        const $row = $(this);
+        const $form = $row.closest(pmeFormSelector);
+        const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
+        const $actionMenu = $actionMenuContainer.find('.project-actions').first();
+
+        if ($actionMenu.length === 0) {
+          return;
+        }
+
+        const vueMenu = $actionMenu.data('vueMenu');
+        const projectId = $actionMenu.data('projectId');
+
+        if (vueMenu.open) {
+          vueMenu.closeMenu();
+        } else {
+          emit(appName + ':project-actions', {
+            open: false,
+            projectId: -projectId,
+          });
+          vueMenu.openMenu(
+            originalEvent.originalEvent.clientX,
+            originalEvent.originalEvent.clientY,
+          );
+        }
+
+        originalEvent.preventDefault();
+        originalEvent.stopImmediatePropagation();
+      });
   } else {
     $container.find('.project-actions.dropdown-container .project-action').on('click', function(event) {
       handleProjectActions($(this), containerSel);
       return false;
     });
-  }
 
-  $container
-    .off('pme:contextmenu', 'tr.' + pmeToken('row'))
-    .on('pme:contextmenu', 'tr.' + pmeToken('row'), function(event, originalEvent, databaseIdentifier) {
-      console.info('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
+    $container
+      .off('pme:contextmenu', 'tr.' + pmeToken('row'))
+      .on('pme:contextmenu', 'tr.' + pmeToken('row'), function(event, originalEvent, databaseIdentifier) {
+        console.info('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
 
-      const $contentTarget = $(originalEvent.target).closest('.dropdown-content');
-      console.info('TARGET', $contentTarget);
-      if ($contentTarget.length > 0) {
-        // use standard context menu inside dropdown
-        return;
-      }
+        const $contentTarget = $(originalEvent.target).closest('.dropdown-content');
+        console.info('TARGET', $contentTarget);
+        if ($contentTarget.length > 0) {
+          // use standard context menu inside dropdown
+          return;
+        }
 
-      const $row = $(this);
-      const $form = $row.closest(pmeFormSelector);
-      const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
-      const $actionMenu = $actionMenuContainer.find('.project-actions.dropdown-container').first();
+        const $row = $(this);
+        const $form = $row.closest(pmeFormSelector);
+        const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
+        const $actionMenu = $actionMenuContainer.find('.project-actions.dropdown-container').first();
 
-      if ($actionMenu.length === 0) {
-        return;
-      }
+        if ($actionMenu.length === 0) {
+          return;
+        }
 
-      const $actionMenuToggle = $actionMenu.find('.action-menu-toggle');
-      const $actionMenuContent = $actionMenu.find('.dropdown-content');
+        const $actionMenuToggle = $actionMenu.find('.action-menu-toggle');
+        const $actionMenuContent = $actionMenu.find('.dropdown-content');
 
-      originalEvent.preventDefault();
-      originalEvent.stopImmediatePropagation();
+        originalEvent.preventDefault();
+        originalEvent.stopImmediatePropagation();
 
-      $actionMenuContent.css({
-        position: 'fixed',
-        left: originalEvent.originalEvent.clientX,
-        top: originalEvent.originalEvent.clientY,
+        $actionMenuContent.css({
+          position: 'fixed',
+          left: originalEvent.originalEvent.clientX,
+          top: originalEvent.originalEvent.clientY,
+        });
+        $actionMenu.addClass('context-menu');
+        $actionMenuToggle.trigger('click');
+
+        return false;
       });
-      $actionMenu.addClass('context-menu');
-      $actionMenuToggle.trigger('click');
-
-      return false;
-    });
+  }
 };
 
 const pmeFormInit = function(containerSel) {

@@ -21,28 +21,58 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <NcActions>
-    <NcActionButton>
-      One
-    </NcActionButton>
-    <NcActionButton>
-      Two
-    </NcActionButton>
-  </NcActions>
+  <div class="container">
+    <NcActions v-if="positioned"
+               :force-menu="true"
+               :manual-open="true"
+               @click="moveToAnchor"
+    >
+      <NcActionSeparator v-show="false" />
+    </NcActions>
+    <NcActions ref="actions"
+               :class="{ positioned }"
+               :force-menu="true"
+               :open.sync="open"
+               @closed="closeMenu"
+    >
+      <NcActionCaption v-if="showProjectName && projectName"
+                       :name="projectName"
+      />
+      <NcActionSeparator v-if="showProjectName && projectName" />
+      <NcActionButton v-if="enableOverviewItem" @click="openProjectOverview">
+        <template #icon>
+          <ProjectInfoIcon />
+        </template>
+        {{ t(appName, 'Project Overview') }}
+      </NcActionButton>
+      <NcActionButton>
+        Two
+      </NcActionButton>
+    </NcActions>
+  </div>
 </template>
 <script>
 import {
   NcActions,
   NcActionButton,
+  NcActionCaption,
+  NcActionSeparator,
 } from '@nextcloud/vue'
 import Vue from 'vue'
+import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
+import { emit, subscribe } from '@nextcloud/event-bus'
+import mixins from '../mixins/app-mixins.js'
 
 export default Vue.extend({
   name: 'ProjectActionsMenu',
   components: {
     NcActionButton,
+    NcActionCaption,
+    NcActionSeparator,
     NcActions,
+    ProjectInfoIcon,
   },
+  mixins,
   props: {
     projectId: {
       type: Number,
@@ -52,10 +82,129 @@ export default Vue.extend({
       type: String,
       default: null,
     },
+    forceProjectName: {
+      type: Boolean,
+      default: false,
+    },
+    enableOverviewItem: {
+      type: Boolean,
+      default: true,
+    },
+    testOpen: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  data() {
+    return {
+      open: false,
+      referenceElement: null,
+      positioned: false,
+    }
+  },
+  computed: {
+    showProjectName() {
+      return this.forceProjectName || this.positioned
+    },
+  },
+  watch: {
+    open(state, oldState) {
+      this.info('WATCHER', state, oldState)
+      if (!state && this.positioned) {
+        // this.info('WATCHER CLOSE MENU')
+        // this.closeMenu()
+      }
+    },
   },
   mounted() {
-    console.info('mounted', this.projectId, this.projectName)
+    this.referenceElement = this.$refs.actions.$refs.popover.$refs.popover.$refs.reference
+    subscribe(this.appName + ':project-actions', (event) => {
+      const projectId = event?.projectId
+      const newOpenState = event?.open
+      if (!newOpenState
+          && this.open
+          && projectId !== -this.projectId
+          && (!projectId || projectId === this.projectId)) {
+        this.closeMenu()
+      } else if (newOpenState && projectId === this.projectId) {
+        this.openMenu(event?.x || undefined, event?.y || undefined)
+      }
+    })
+  },
+  methods: {
+    openProjectOverview() {
+      this.open = false
+      emit(this.appName + ':project-popup', {
+        projectId: this.projectId,
+        projectName: this.projectName,
+      })
+    },
+    setPosition(x, y) {
+      if (x !== undefined && y !== undefined) {
+        this.info('SET POSITION')
+        this.referenceElement.style.position = 'fixed'
+        this.referenceElement.style.left = x + 'px'
+        this.referenceElement.style.top = y + 'px'
+
+        this.positioned = true
+      } else if (this.positioned) {
+        this.info('UNSET POSITION')
+        this.referenceElement.style.position = ''
+        this.referenceElement.style.left = ''
+        this.referenceElement.style.top = ''
+
+        this.positioned = false
+      }
+    },
+    async closeMenu() {
+      await this.$nextTick()
+      if (this.open) {
+        this.open = false
+        await this.$nextTick()
+      }
+      await this.nextFrame()
+      this.setPosition()
+    },
+    nextFrame() {
+      return new Promise(resolve => requestAnimationFrame(() => {
+        requestAnimationFrame(resolve)
+      }))
+    },
+    openMenu(x, y) {
+      this.info('OPEN MENU')
+      this.setPosition(x, y)
+      this.open = true
+    },
+    toggleMenu(x, y) {
+      if (this.open) {
+        this.closeMenu()
+      } else {
+        this.openMenu(x, y)
+      }
+    },
+    async moveToAnchor() {
+      if (!this.open || !this.positioned) {
+        return
+      }
+      this.info('MOVE TO ANCHOR')
+      this.openMenu()
+    },
   },
 })
-
 </script>
+<style lang="scss" scoped>
+.container {
+  display: flex;
+}
+.action-item.action-item--open.positioned {
+  &, ::v-deep * {
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden;
+  }
+}
+</style>
