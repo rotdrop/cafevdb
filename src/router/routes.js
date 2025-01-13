@@ -45,14 +45,14 @@ const routes = [
     }),
   },
   {
-    path: '/f/project-participants',
+    path: '/f/project-participants/:projectId/:projectName?',
     component: () => import('../views/ProjectParticipants.vue'),
     name: 'project-participants',
-    props: route => ({
+    props: route => {
       routeTitle: t(appName, 'Projects Participants'),
-      projectId: route.query?.projectId || -1,
-      projectName: route.query?.projectName || '',
-    }),
+      projectId: +route.params?.projectId || -1,
+      projectName: route.params?.projectName || '',
+    },
   },
 ];
 
