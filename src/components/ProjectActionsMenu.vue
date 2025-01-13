@@ -125,7 +125,7 @@ export default globalState.vue.Vue.extend({
     },
   },
   watch: {
-    open(state, oldState) {
+    open(state/*, oldState */) {
       if (!state && this.positioned) {
         // this.info('WATCHER CLOSE MENU')
         // this.closeMenu()
