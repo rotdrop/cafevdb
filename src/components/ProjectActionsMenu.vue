@@ -32,6 +32,7 @@
     <NcActions ref="actions"
                :class="{ positioned }"
                :force-menu="true"
+               force-semantic-type="menu"
                :open.sync="open"
                @closed="closeMenu"
     >
@@ -45,6 +46,15 @@
         </template>
         {{ t(appName, 'Project Overview') }}
       </NcActionButton>
+      <NcActionRouter :to="{ name: 'project-participants', params: { projectId, projectName } }"
+                      :name="t(appId, 'Project Participants')"
+                      exact
+                      @click="closeMenu"
+      >
+        <template #icon>
+          <ProjectParticipantsIcon />
+        </template>
+      </NcActionRouter>
       <NcActionButton>
         Two
       </NcActionButton>
@@ -56,22 +66,29 @@ import {
   NcActions,
   NcActionButton,
   NcActionCaption,
+  NcActionRouter,
   NcActionSeparator,
 } from '@nextcloud/vue'
-import Vue from 'vue'
+import globalState from '../app/globalstate.js'
+// import Vue from 'vue'
+// import /* vueInstance, */ { Vue, router } from '../vue-app.js'
 import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
+import ProjectParticipantsIcon from 'vue-material-design-icons/Group.vue'
 import { emit, subscribe } from '@nextcloud/event-bus'
 import mixins from '../mixins/app-mixins.js'
 
-export default Vue.extend({
+export default globalState.vue.Vue.extend({
   name: 'ProjectActionsMenu',
   components: {
     NcActionButton,
     NcActionCaption,
+    NcActionRouter,
     NcActionSeparator,
     NcActions,
     ProjectInfoIcon,
+    ProjectParticipantsIcon,
   },
+  router: globalState.vue.router,
   mixins,
   props: {
     projectId: {
@@ -109,12 +126,14 @@ export default Vue.extend({
   },
   watch: {
     open(state, oldState) {
-      this.info('WATCHER s/os/p/op', state, oldState, this.positioned, this.open)
       if (!state && this.positioned) {
         // this.info('WATCHER CLOSE MENU')
         // this.closeMenu()
       }
     },
+  },
+  created() {
+    this.$parent = globalState.vue.app
   },
   mounted() {
     this.referenceElement = this.$refs.actions.$refs.popover.$refs.popover.$refs.reference
@@ -125,7 +144,6 @@ export default Vue.extend({
           && this.open
           && +projectId !== -this.projectId
           && (+projectId <= 0 || +projectId === +this.projectId)) {
-        this.info('CLOSE MENU IN EVENT HANDLER')
         this.closeMenu()
       } else if (newOpenState && projectId === this.projectId) {
         this.openMenu(event?.x || undefined, event?.y || undefined)
@@ -142,14 +160,12 @@ export default Vue.extend({
     },
     setPosition(x, y) {
       if (x !== undefined && y !== undefined) {
-        this.info('SET POSITION')
         this.referenceElement.style.position = 'fixed'
         this.referenceElement.style.left = x + 'px'
         this.referenceElement.style.top = y + 'px'
 
         this.positioned = true
       } else if (this.positioned) {
-        this.info('UNSET POSITION')
         this.referenceElement.style.position = ''
         this.referenceElement.style.left = ''
         this.referenceElement.style.top = ''
@@ -158,10 +174,10 @@ export default Vue.extend({
       }
     },
     async closeMenu() {
-      await this.$nextTick()
+      // await this.$nextTick()
       if (this.open) {
         this.open = false
-        await this.$nextTick()
+        // await this.$nextTick()
       }
       for (let i = 0; i < 2; ++i) {
         await this.nextFrame()
@@ -175,7 +191,6 @@ export default Vue.extend({
       }))
     },
     openMenu(x, y) {
-      this.info('OPEN MENU')
       this.setPosition(x, y)
       this.open = true
     },
@@ -190,7 +205,6 @@ export default Vue.extend({
       if (!this.open || !this.positioned) {
         return
       }
-      this.info('MOVE TO ANCHOR')
       this.openMenu()
     },
   },

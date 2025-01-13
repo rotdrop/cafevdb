@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@
  */
 
 import { appName } from './app/app-info.js';
+import globalState from './app/globalstate.js';
 import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
 // import { sync } from 'vuex-router-sync'
@@ -43,10 +44,18 @@ __webpack_public_path__ = generateFilePath(appName, '', '');
 
 Vue.mixin({ data() { return { appId: appName }; }, methods: { t, n } });
 
-export default new Vue({
+const vueApp = new Vue({
   el: '#content',
   name: appName,
   router,
   pinia,
   render: h => h(App),
 });
+
+globalState.vue = {
+  app: vueApp,
+  Vue,
+  router,
+};
+
+export default vueApp;
