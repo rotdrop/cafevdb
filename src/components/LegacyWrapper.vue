@@ -142,7 +142,6 @@ export default {
     },
   },
   data() {
-    this.info('INITIAL STATE', { ...initialState })
     return {
       html: '',
       loading: true,
@@ -169,7 +168,6 @@ export default {
   },
   async created() {
     subscribe(this.appName + ':toggle-tooltips', (event) => {
-      this.info('EVENT', event)
       this.tooltips = event.enabled
     })
     try {
@@ -206,7 +204,6 @@ export default {
       })
     },
     async onTooltipsChange() {
-      this.info('EMIT TOOTLTIPS TOGGLE EVENT', this.tooltips)
       emit(this.appName + ':toggle-tooltips', {
         enabled: this.tooltips,
       })
