@@ -25,7 +25,25 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName, appPrefix } from './app-info.js';
+
+function manageDialogToBackButtons() {
+  // disable button if there are not enough dialogs
+  const overlay = $('.ui-widget-overlay.ui-front').last();
+  let overlayIndex = 99; // starting index of jq-ui dialogs is 100
+  if (overlay.length > 0) {
+    overlayIndex = parseInt(overlay.css('z-index'));
+  }
+  console.info('OVERLAY Z-INDEX', overlayIndex);
+  const relevantDialogs = $('.ui-dialog.ui-widget')
+    .not('.' + appPrefix('modalizer'))
+    .elements().filter(([index, element]) => parseInt(getComputedStyle(element)?.getPropertyValue('z-index')) > overlayIndex);
+  console.info('RELEVANT DIALOGS', relevantDialogs);
+  const disabledState = relevantDialogs.length < 2;
+  for (const [, element] of relevantDialogs) {
+    $(element).find('.toBackButton').button('option', 'disabled', disabledState);
+  }
+}
 
 /**
  * Add a to-back-button to the titlebar of a jQuery-UI dialog. The
@@ -51,29 +69,38 @@ function dialogToBackButton(dialogHolder) {
   dialogWidget.find('.ui-dialog-titlebar').append(toBackButton);
   toBackButton.cafevTooltip({ placement: 'auto' });
 
-  toBackButton.off('click');
-  toBackButton.on('click', function() {
-    const overlay = $('.ui-widget-overlay.ui-front').last();
-    let overlayIndex = 100; // OwnCloud header resides at 50.
-    if (overlay.length > 0) {
-      overlayIndex = parseInt(overlay.css('z-index'));
-    }
-    // will be only few, so what
-    let needShuffle = false;
-    $('.ui-dialog.ui-widget').not('.cafevdb-modalizer').each(function(index) {
-      const thisIndex = parseInt($(this).css('z-index'));
-      if (thisIndex === overlayIndex + 1) {
-        needShuffle = true;
+  manageDialogToBackButtons();
+  dialogHolder.on('dialogclose', manageDialogToBackButtons);
+
+  toBackButton
+    .off('click')
+    .on('click', function() {
+      const overlay = $('.ui-widget-overlay.ui-front').last();
+      let overlayIndex = 99; // starting index of jq-ui dialogs is 100
+      if (overlay.length > 0) {
+        overlayIndex = parseInt(overlay.css('z-index'));
       }
-    }).each(function(index) {
+      // will be only few, so what
+      let needShuffle = false;
+      const dialogs = $('.ui-dialog.ui-widget').not('.' + appPrefix('modalizer')).elements();
+      for (const [, element] of dialogs) {
+        const thisIndex = parseInt(getComputedStyle(element)?.getPropertyValue('z-index'));
+        if (thisIndex === overlayIndex + 1) {
+          needShuffle = true;
+          break;
+        }
+      }
       if (needShuffle) {
-        const thisIndex = parseInt($(this).css('z-index'));
-        $(this).css('z-index', thisIndex + 1);
+        // shift all dialogs one level up and set the z-index of the
+        // current dialog s.t. that it is just above the modalizer.
+        for (const [, element] of dialogs) {
+          const zIndex = parseInt(getComputedStyle(element).getPropertyValue('z-index'));
+          element.style['z-index'] = zIndex + 1;
+        }
       }
+      dialogWidget.css('z-index', overlayIndex + 1);
+      return false;
     });
-    dialogWidget.css('z-index', overlayIndex + 1);
-    return false;
-  });
 }
 
 /**
