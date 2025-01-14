@@ -29,11 +29,14 @@ const cssTag = appPrefix('modalizer');
  * Open one invisible modal dialog in order to have a persistent
  * overlay for a group of dialogs. Note that the overlay blocking the
  * rest of the UI is the standard modal overlay of jquery-ui. This
- * dialog just has zero width and is just an anchor.
+ * dialog just has zero width and height and simply triggers the
+ * presence of the jquery widget overlay element.
  *
  * @param {boolean} open TBD.
  *
  * @returns {boolean|jQuery}
+ *
+ * @todo Is this still needed, and why?
  */
 const modalizer = function(open) {
   const modalizer = $('#' + cssTag);
