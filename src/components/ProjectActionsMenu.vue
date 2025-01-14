@@ -25,6 +25,7 @@
     <NcActions v-if="positioned"
                :force-menu="true"
                :manual-open="true"
+               :close-after-click="true"
                @click="moveToAnchor"
     >
       <NcActionSeparator v-show="false" />
@@ -46,15 +47,39 @@
         </template>
         {{ t(appName, 'Project Overview') }}
       </NcActionButton>
+      <NcActionSeparator v-if="enableOverviewItem" />
       <NcActionRouter :to="{ name: 'project-participants', params: { projectId, projectName } }"
-                      :name="t(appId, 'Project Participants')"
+                      :name="t(appId, 'Participants')"
                       exact
-                      @click="closeMenu"
+                      @click="/* closeMenu */"
       >
         <template #icon>
           <ProjectParticipantsIcon />
         </template>
       </NcActionRouter>
+      <!-- <NcActionRouter :to="{ name: 'project-instrumentation-numbers', params: { projectId, projectName } }"
+                      :name="t(appId, 'Instrumentation Numbers')"
+                      exact
+                      @click="openInstrumentationNumbers"
+      >
+        <template #icon>
+          <InstrumentationNumbersIcon />
+        </template>
+           </NcActionRouter> -->
+      <!-- <NcActionText :name="t(appId, 'Instrumentation Numbers')">
+        <template #icon>
+          <InstrumentationNumbersIcon />
+          {{ getRouteHref({ name: 'project-instrumentation-numbers', params: { projectId, projectName } }) }}
+        </template>
+           </NcActionText> -->
+      <NcActionLink :name="t(appId, 'Instrumentation Numbers')"
+                    :href="getRouteHref({ name: 'project-instrumentation-numbers', params: { projectId, projectName } })"
+                    @click="openInstrumentationNumbers"
+      >
+        <template #icon>
+          <InstrumentationNumbersIcon />
+        </template>
+      </NcActionLink>
       <NcActionButton>
         Two
       </NcActionButton>
@@ -66,24 +91,30 @@ import {
   NcActions,
   NcActionButton,
   NcActionCaption,
+  NcActionLink,
   NcActionRouter,
+  NcActionText,
   NcActionSeparator,
 } from '@nextcloud/vue'
 import globalState from '../app/globalstate.js'
-// import Vue from 'vue'
-// import /* vueInstance, */ { Vue, router } from '../vue-app.js'
 import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
-import ProjectParticipantsIcon from 'vue-material-design-icons/Group.vue'
+import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
+import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
 import { emit, subscribe } from '@nextcloud/event-bus'
 import mixins from '../mixins/app-mixins.js'
 
+// The "consumer" has to take care that globalState.vue.Vue is already
+// defined.
 export default globalState.vue.Vue.extend({
   name: 'ProjectActionsMenu',
   components: {
+    InstrumentationNumbersIcon,
     NcActionButton,
     NcActionCaption,
+    NcActionLink,
     NcActionRouter,
     NcActionSeparator,
+    NcActionText,
     NcActions,
     ProjectInfoIcon,
     ProjectParticipantsIcon,
@@ -152,8 +183,16 @@ export default globalState.vue.Vue.extend({
   },
   methods: {
     openProjectOverview() {
-      this.open = false
+      // this.open = false
       emit(this.appName + ':project-popup', {
+        projectId: this.projectId,
+        projectName: this.projectName,
+      })
+    },
+    openInstrumentationNumbers(event) {
+      event.preventDefault()
+      this.open = false
+      emit(this.appName + ':instrumentation-numbers-popup', {
         projectId: this.projectId,
         projectName: this.projectName,
       })
@@ -206,6 +245,11 @@ export default globalState.vue.Vue.extend({
         return
       }
       this.openMenu()
+    },
+    getRouteHref(route) {
+      const routeProps = this.$router.resolve(route)
+      this.info('ROUTE PROPS', routeProps)
+      return routeProps?.href
     },
   },
 })

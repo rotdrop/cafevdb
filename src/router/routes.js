@@ -49,7 +49,17 @@ const routes = [
     component: () => import('../views/ProjectParticipants.vue'),
     name: 'project-participants',
     props: route => ({
-      routeTitle: t(appName, 'Projects Participants'),
+      routeTitle: t(appName, 'Project Participants'),
+      projectId: +route.params?.projectId || -1,
+      projectName: route.params?.projectName || '',
+    }),
+  },
+  {
+    path: '/f/project-instrumentation-numbers/:projectId/:projectName?',
+    component: () => import('../views/ProjectInstrumentationNumbers.vue'),
+    name: 'project-instrumentation-numbers',
+    props: route => ({
+      routeTitle: t(appName, 'Instrumentation Numbers'),
       projectId: +route.params?.projectId || -1,
       projectName: route.params?.projectName || '',
     }),

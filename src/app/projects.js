@@ -47,7 +47,6 @@ import * as SelectUtils from './select-utils.js';
 import wikiPopup from './wiki-popup.js';
 import setBusyIndicators from './busy-indicators.js';
 import iFrameResize from './iframe-resize.js';
-import VueProjectMenu from '../components/ProjectActionsMenu.vue';
 import { emit, subscribe } from '@nextcloud/event-bus';
 
 // eslint-disable-next-line no-unused-vars
@@ -63,6 +62,11 @@ require('projects.scss');
 subscribe(appName + ':project-popup', (event) => {
   console.info('EVENT', event);
   projectViewPopup(PHPMyEdit.selector(), event);
+});
+
+subscribe(appName + ':instrumentation-numbers-popup', (event) => {
+  console.info('EVENT', event);
+  instrumentationNumbersPopup(PHPMyEdit.selector(), event);
 });
 
 /**
@@ -299,12 +303,18 @@ const handleProjectActions = function($menuItem, containerSel) {
   CAFEVDB.snapperClose();
 };
 
-const actionMenu = function(containerSel) {
+let VueProjectMenu = null;
+
+const actionMenu = async function(containerSel) {
   console.info('PROJECT CONTAINER SELECTOR', containerSel);
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
 
   if (globalState.vueMode) {
+    if (!VueProjectMenu) {
+      VueProjectMenu = (await import(/* webpackChunkName: 'project-actions-menu' */ '../components/ProjectActionsMenu.vue')).default;
+      console.info('VUE PROJECT MENU', VueProjectMenu);
+    }
     $container.find('.project-actions.dropdown-container').each(function() {
       const $this = $(this);
       const projectId = $this.data('projectId');
@@ -1110,8 +1120,6 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
     }
     return;
   }
-
-  console.info('CAFEVDB VUE MODE', globalState.vueMode);
 
   const container = PHPMyEdit.container(selector);
   actionMenu(selector);
