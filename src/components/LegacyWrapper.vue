@@ -181,7 +181,6 @@ export default {
       newContent.innerHTML = response.data
       const newAppContent = newContent.querySelector('#' + this.appGeneralId)
       this.html = newAppContent.innerHTML
-      this.globalState.vueMode = true
       await nextTick()
       CAFEVDB.runReadyCallbacks()
       const titleProvider = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-short-title')

@@ -52,6 +52,7 @@ const vueApp = new Vue({
   render: h => h(App),
 });
 
+globalState.vueMode = true;
 globalState.vue = {
   app: vueApp,
   Vue,
