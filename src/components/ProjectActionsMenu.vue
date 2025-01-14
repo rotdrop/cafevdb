@@ -147,6 +147,7 @@ export default globalState.vue.Vue.extend({
     return {
       open: false,
       referenceElement: null,
+      triggerButton: null,
       positioned: false,
     }
   },
@@ -167,7 +168,10 @@ export default globalState.vue.Vue.extend({
     this.$parent = globalState.vue.app
   },
   mounted() {
+    const origCloseMenu = this.$refs.actions.closeMenu
+    this.$refs.actions.closeMenu = (returnFocus) => origCloseMenu(this.positioned ? false : returnFocus)
     this.referenceElement = this.$refs.actions.$refs.popover.$refs.popover.$refs.reference
+    this.triggerButton = this.$refs.actions.$refs.triggerButton
     subscribe(this.appName + ':project-actions', (event) => {
       const projectId = event?.projectId
       const newOpenState = event?.open
@@ -213,10 +217,14 @@ export default globalState.vue.Vue.extend({
       }
     },
     async closeMenu() {
-      // await this.$nextTick()
       if (this.open) {
         this.open = false
-        // await this.$nextTick()
+        await this.$nextTick()
+      }
+      if (this.positioned) {
+        // the open trigger was a context menu click, so there is not
+        // point to return the focus to the menu button.
+        this.triggerButton?.$el.blur()
       }
       for (let i = 0; i < 2; ++i) {
         await this.nextFrame()
@@ -229,9 +237,13 @@ export default globalState.vue.Vue.extend({
         requestAnimationFrame(resolve)
       }))
     },
-    openMenu(x, y) {
+    async openMenu(x, y) {
       this.setPosition(x, y)
       this.open = true
+      if (this.positioned) {
+        await this.$nextTick()
+        this.triggerButton?.$el.blur()
+      }
     },
     toggleMenu(x, y) {
       if (this.open) {
@@ -248,7 +260,6 @@ export default globalState.vue.Vue.extend({
     },
     getRouteHref(route) {
       const routeProps = this.$router.resolve(route)
-      this.info('ROUTE PROPS', routeProps)
       return routeProps?.href
     },
   },
