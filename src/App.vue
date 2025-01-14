@@ -41,7 +41,7 @@
                              exact
                              @click="showSidebar = false"
         />
-        <NcAppNavigationItem :to="{ name: 'project-participants', params: { projectId: -1, projectName: '' } }"
+        <NcAppNavigationItem :to="{ name: 'project-participants', params: { projectId: -1 } }"
                              :name="t(appId, 'Project Participants')"
                              icon="icon-home"
                              exact
@@ -168,6 +168,10 @@ export default {
     handleDetailsRequest(data) {
       this.showSidebar = true
       this.sidebarTitle = data.title
+    },
+    getRouteHref(route) {
+      const routeProps = this.$router.resolve(route)
+      return routeProps?.href
     },
   },
 }
