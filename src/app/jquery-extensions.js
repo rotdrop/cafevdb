@@ -48,6 +48,10 @@ $.widget('ui.dialog', $.ui.dialog, {
   },
 });
 
+$.fn.elements = function() {
+  return Object.entries(this).filter(([key, value]) => !isNaN(key));
+};
+
 /**
  * Special dialog version which attaches the dialog to the
  * #content-wrapper div.
