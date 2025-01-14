@@ -64,9 +64,14 @@ subscribe(appName + ':project-popup', (event) => {
   projectViewPopup(PHPMyEdit.selector(), event);
 });
 
-subscribe(appName + ':instrumentation-numbers-popup', (event) => {
+subscribe(appName + ':project-instrumentation-numbers-popup', (event) => {
   console.info('EVENT', event);
   instrumentationNumbersPopup(PHPMyEdit.selector(), event);
+});
+
+subscribe(appName + ':project-participant-fields-popup', (event) => {
+  console.info('EVENT', event);
+  participantFieldsPopup(PHPMyEdit.selector(), event);
 });
 
 /**

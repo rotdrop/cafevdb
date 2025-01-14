@@ -57,27 +57,20 @@
           <ProjectParticipantsIcon />
         </template>
       </NcActionRouter>
-      <!-- <NcActionRouter :to="{ name: 'project-instrumentation-numbers', params: { projectId, projectName } }"
-                      :name="t(appId, 'Instrumentation Numbers')"
-                      exact
-                      @click="openInstrumentationNumbers"
-      >
-        <template #icon>
-          <InstrumentationNumbersIcon />
-        </template>
-           </NcActionRouter> -->
-      <!-- <NcActionText :name="t(appId, 'Instrumentation Numbers')">
-        <template #icon>
-          <InstrumentationNumbersIcon />
-          {{ getRouteHref({ name: 'project-instrumentation-numbers', params: { projectId, projectName } }) }}
-        </template>
-           </NcActionText> -->
       <NcActionLink :name="t(appId, 'Instrumentation Numbers')"
                     :href="getRouteHref({ name: 'project-instrumentation-numbers', params: { projectId, projectName } })"
                     @click="openInstrumentationNumbers"
       >
         <template #icon>
           <InstrumentationNumbersIcon />
+        </template>
+      </NcActionLink>
+      <NcActionLink :name="t(appId, 'Participant Fields')"
+                    :href="getRouteHref({ name: 'project-participant-fields', params: { projectId, projectName } })"
+                    @click="openParticipantFields"
+      >
+        <template #icon>
+          <ParticipantFieldsIcon />
         </template>
       </NcActionLink>
       <NcActionButton>
@@ -100,6 +93,7 @@ import globalState from '../app/globalstate.js'
 import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
+import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import { emit, subscribe } from '@nextcloud/event-bus'
 import mixins from '../mixins/app-mixins.js'
 
@@ -116,6 +110,7 @@ export default globalState.vue.Vue.extend({
     NcActionSeparator,
     NcActionText,
     NcActions,
+    ParticipantFieldsIcon,
     ProjectInfoIcon,
     ProjectParticipantsIcon,
   },
@@ -196,7 +191,15 @@ export default globalState.vue.Vue.extend({
     openInstrumentationNumbers(event) {
       event.preventDefault()
       this.open = false
-      emit(this.appName + ':instrumentation-numbers-popup', {
+      emit(this.appName + ':project-instrumentation-numbers-popup', {
+        projectId: this.projectId,
+        projectName: this.projectName,
+      })
+    },
+    openParticipantFields(event) {
+      event.preventDefault()
+      this.open = false
+      emit(this.appName + ':project-participant-fields-popup', {
         projectId: this.projectId,
         projectName: this.projectName,
       })
