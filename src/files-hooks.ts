@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,9 @@ import logoSvg from '../img/cafevdb.svg?raw';
 
 declare global {
   interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OCA: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OCP: any;
   }
   // var __webpack_public_path__: string;
@@ -142,7 +144,7 @@ const enableTemplateActions = function(node: Node) {
 
 registerFileAction(new FileAction({
   id: appName + '-mailmerge',
-  displayName(/*nodes: Node[], view: View*/) {
+  displayName(/* nodes: Node[], view: View */) {
     return '';
   },
   title(/* files: Node[], view: View */) {
@@ -173,8 +175,8 @@ type createFolderResponse = {
 }
 
 const createNewFolder = async (root: Folder, name: string): Promise<createFolderResponse> => {
-  const source = root.source + '/' + name
-  const encodedSource = root.encodedSource + '/' + encodeURIComponent(name)
+  const source = root.source + '/' + name;
+  const encodedSource = root.encodedSource + '/' + encodeURIComponent(name);
 
   const response = await axios({
     method: 'MKCOL',
@@ -182,15 +184,15 @@ const createNewFolder = async (root: Folder, name: string): Promise<createFolder
     headers: {
       Overwrite: 'F',
     },
-  })
+  });
   return {
     fileid: parseInt(response.headers['oc-fileid']),
     source,
-  }
-}
+  };
+};
 
-class SupportingDocumentEntry implements Entry
-{
+class SupportingDocumentEntry implements Entry {
+
   private projectName: string|null = null;
   private projectYear: string|null = null;
   private isTopFolder: boolean = false;
@@ -203,7 +205,8 @@ class SupportingDocumentEntry implements Entry
   public constructor(appName: string) {
     this.id = appName + '-project-supporting-document-folder';
     this.displayName = t(appName, 'New Supporting Document');
-  };
+  }
+
   public enabled(folder: Folder) {
     const projectName = getProjectNameFromProjectBalancesFolders(folder);
     const projectYear = getProjectYearFromProjectName(projectName);
@@ -228,14 +231,16 @@ class SupportingDocumentEntry implements Entry
     }
 
     return true;
-  };
+  }
+
   public async handler(folder: Folder, content: Node[]) {
     if (!this.projectYear && this.isTopFolder) {
       await this.yearFolderHandler(folder, content);
     } else {
       await this.supportingDocumentHandler(folder, content);
     }
-  };
+  }
+
   private async yearFolderHandler(folder: Folder, content: Node[]) {
     const year = '' + new Date().getFullYear();
     let dirName = '' + year;
@@ -256,12 +261,13 @@ class SupportingDocumentEntry implements Entry
       owner: null,
       permissions: Permission.ALL,
       root: folder?.root || 'this must not happen',
-    })
+    });
 
-    showSuccess(t('files', 'Created new folder "{name}"', { name: basename(source) }))
-    emit('files:node:created', newFolder)
-    emit('files:node:rename', newFolder)
-  };
+    showSuccess(t('files', 'Created new folder "{name}"', { name: basename(source) }));
+    emit('files:node:created', newFolder);
+    emit('files:node:rename', newFolder);
+  }
+
   private async supportingDocumentHandler(folder: Folder, content: Node[]) {
     const folderPrefix = this.projectYear ? this.projectName : this.projectName + '-' + folder.basename;
     const nameRegExp = new RegExp('^(?:' + folderPrefix + '-?)?' + '\\d{3}$');
@@ -276,6 +282,7 @@ class SupportingDocumentEntry implements Entry
         if (current - previous !== 1) {
           break;
         }
+        previous = current;
       }
       sequence = previous + 1;
     } else {
@@ -294,13 +301,14 @@ class SupportingDocumentEntry implements Entry
       owner: null,
       permissions: Permission.ALL,
       root: folder?.root || 'this must not happen',
-    })
+    });
 
-    showSuccess(t('files', 'Created new folder "{name}"', { name: basename(source) }))
-    emit('files:node:created', newFolder)
-    emit('files:node:rename', newFolder)
-  };
-};
+    showSuccess(t('files', 'Created new folder "{name}"', { name: basename(source) }));
+    emit('files:node:created', newFolder);
+    emit('files:node:rename', newFolder);
+  }
+
+}
 
 const supportingDocumentsEntry = new SupportingDocumentEntry(appName);
 
