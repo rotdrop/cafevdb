@@ -41,11 +41,13 @@
                        :name="projectName"
       />
       <NcActionSeparator v-if="showProjectName && projectName" />
-      <NcActionButton v-if="enableOverviewItem" @click="openProjectOverview">
+      <NcActionButton v-if="enableOverviewItem"
+                      :name="t(appName, 'Project Overview')"
+                      @click="openProjectOverview"
+      >
         <template #icon>
           <ProjectInfoIcon />
         </template>
-        {{ t(appName, 'Project Overview') }}
       </NcActionButton>
       <NcActionSeparator v-if="enableOverviewItem" />
       <NcActionRouter :to="{ name: 'project-participants', params: { projectId, projectName } }"
@@ -73,6 +75,7 @@
           <ParticipantFieldsIcon />
         </template>
       </NcActionLink>
+      <NcActionSeparator />
       <NcActionButton>
         Two
       </NcActionButton>
@@ -304,5 +307,14 @@ export default globalState.vue.Vue.extend({
     max-height: 0 !important;
     overflow: hidden;
   }
+}
+.app-navigation-caption {
+  font-weight: bold;
+  color: blue;
+  font-style: italic;
+  text-align: center;
+  display: inline-block;
+  margin: auto;
+  width: 100%;
 }
 </style>
