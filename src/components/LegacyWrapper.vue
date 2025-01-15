@@ -23,19 +23,19 @@
 <template>
   <div :id="appPrefix('legacy-wrapper')">
     <div :id="appPrefix('top-navigation')" class="flex-container flex-align-center">
-      <NcButton :class="appPrefix('top-nav-button')">
+      <NcButton :class="appPrefix('top-nav-button')" :disabled="busyState">
         <template #icon>
           <HistoryBackIcon />
         </template>
       </NcButton>
       <div class="spacer" />
-      <NcButton>
+      <NcButton :class="{ [appPrefix('top-nav-button')]: true, loading: busyState }">
         <template #icon>
           <ReloadIcon />
         </template>
       </NcButton>
       <div class="spacer" />
-      <NcButton>
+      <NcButton :class="appPrefix('top-nav-button')" :disabled="busyState">
         <template #icon>
           <HistoryForwardIcon />
         </template>
@@ -102,6 +102,8 @@ import md5 from 'blueimp-md5'
 import { emit, subscribe } from '@nextcloud/event-bus'
 import { setPersonalUrl } from '../app/settings-urls.js'
 import wikiPopup from '../app/wiki-popup.js'
+import useAppDataStore from '../stores/app-data.js'
+import { mapWritableState, mapActions, mapState } from 'pinia'
 
 const initialState = getInitialState('CAFEVDB')
 
@@ -121,6 +123,16 @@ export default {
     ReloadIcon,
   },
   mixins,
+  beforeRouteEnter(to, from, next) {
+    next(self => {
+      self.info('BEFORE ROUTE ENTER')
+      self.onRouteChange(to, from, next)
+    })
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.info('BEFORE ROUTE UPDATE')
+    this.onRouteChange(to, from, next)
+  },
   props: {
     template: {
       type: String,
@@ -159,34 +171,26 @@ export default {
     wikiManualUrlTarget() {
       return md5(this.wikiManualSection)
     },
+    ...mapState(useAppDataStore, ['busyState']),
+    ...mapWritableState(useAppDataStore, ['currentProjectId']),
+  },
+  watch: {
+    currentProjectId(/* newValue, oldValue */) {
+      this.loadLegacy()
+    },
+    template() {
+      this.loadLegacy()
+    },
   },
   async created() {
     subscribe(this.appName + ':toggle-tooltips', (event) => {
       this.tooltips = event.enabled
     })
-    try {
-      this.loading = true
-      const post = {
-        template: this.template,
-        ...this.templateParameters,
-      }
-      const response = await axios.post(generateAppUrl('page/remember/blank'), post)
-      const newContent = document.createElement('div')
-      newContent.innerHTML = response.data
-      const newAppContent = newContent.querySelector('#' + this.appGeneralId)
-      this.html = newAppContent.innerHTML
-      await nextTick()
-      CAFEVDB.runReadyCallbacks()
-      const titleProvider = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-short-title')
-      if (titleProvider) {
-        this.shortTitle = titleProvider.textContent
-      }
-      this.loading = false
-    } catch (e) {
-      this.error('ERROR', generateAppUrl('page/remember/blank'), post, e)
-    }
+    this.info('TOOLTIPS STATE', this.tooltips, initialState.toolTipsEnabled)
+    this.loadLegacy()
   },
   methods: {
+    ...mapActions(useAppDataStore, ['pushBusyState', 'popBusyState']),
     md5(input) {
       return md5(input)
     },
@@ -206,6 +210,42 @@ export default {
       } catch (e) {
         this.error('set tooltips ERROR', e)
       }
+    },
+    async loadLegacy() {
+      emit('toggle-navigation', {
+        open: false,
+      })
+      this.currentProjectId = this.templateParameters?.projectId || -1
+      this.loading = true
+      this.pushBusyState()
+      try {
+        const post = {
+          template: this.template,
+          ...this.templateParameters,
+        }
+        const response = await axios.post(generateAppUrl('page/remember/blank'), post)
+        const newContent = document.createElement('div')
+        newContent.innerHTML = response.data
+        const newAppContent = newContent.querySelector('#' + this.appGeneralId)
+        this.html = newAppContent.innerHTML
+        await nextTick()
+        CAFEVDB.runReadyCallbacks()
+        const titleProvider = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-short-title')
+        if (titleProvider) {
+          this.shortTitle = titleProvider.textContent
+        }
+      } catch (e) {
+        this.error('ERROR', generateAppUrl('page/remember/blank'), post, e)
+        this.appError = true
+      }
+      this.popBusyState()
+      this.loading = false
+    },
+    onRouteChange(/* to, from, next */) {
+      emit('toggle-navigation', {
+        open: false,
+      })
+      this.currentProjectId = this.templateParameters?.projectId || -1
     },
   },
 }

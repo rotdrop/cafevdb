@@ -59,19 +59,26 @@ require('projects.scss');
 // listen to requests from the Vue wrapper application, the idea is
 // not to have to load all the code twice, or not to have to change
 // anything at once.
-subscribe(appName + ':project-popup', (event) => {
+subscribe(appName + ':project-popup', async (event) => {
   console.info('EVENT', event);
-  projectViewPopup(PHPMyEdit.selector(), event);
+  emit(appName + ':push-busy-state');
+  await projectViewPopup(PHPMyEdit.selector(), event);
+  emit(appName + ':pop-busy-state');
 });
 
-subscribe(appName + ':project-instrumentation-numbers-popup', (event) => {
+subscribe(appName + ':project-instrumentation-numbers-popup', async (event) => {
   console.info('EVENT', event);
-  instrumentationNumbersPopup(PHPMyEdit.selector(), event);
+  emit(appName + ':push-busy-state');
+  await instrumentationNumbersPopup(PHPMyEdit.selector(), event);
+  emit(appName + ':pop-busy-state');
 });
 
-subscribe(appName + ':project-participant-fields-popup', (event) => {
+subscribe(appName + ':project-participant-fields-popup', async (event) => {
   console.info('EVENT', event);
-  participantFieldsPopup(PHPMyEdit.selector(), event);
+  emit(appName + ':push-busy-state');
+  await participantFieldsPopup(PHPMyEdit.selector(), event);
+  emit(appName + ':pop-busy-state');
+  emit(appName + ':pop-busy-state');
 });
 
 /**
@@ -146,7 +153,7 @@ const emailPopup = function(post, reopen) {
  * @param {object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  */
-const instrumentationNumbersPopup = function(containerSel, post) {
+const instrumentationNumbersPopup = async function(containerSel, post) {
   // Prepare the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
@@ -172,7 +179,7 @@ const instrumentationNumbersPopup = function(containerSel, post) {
     modalDialog: false,
     modified: false,
   };
-  PHPMyEdit.tableDialogOpen(tableOptions);
+  await PHPMyEdit.tableDialogOpen(tableOptions);
 };
 
 /**
@@ -185,7 +192,7 @@ const instrumentationNumbersPopup = function(containerSel, post) {
  * @param {object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  */
-const participantFieldsPopup = function(containerSel, post) {
+const participantFieldsPopup = async function(containerSel, post) {
   // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
@@ -209,7 +216,7 @@ const participantFieldsPopup = function(containerSel, post) {
     modalDialog: false,
     modified: false,
   };
-  PHPMyEdit.tableDialogOpen(tableOptions);
+  await PHPMyEdit.tableDialogOpen(tableOptions);
 };
 
 /**
@@ -222,7 +229,7 @@ const participantFieldsPopup = function(containerSel, post) {
  * @param {object} post Arguments object:
  * { projectName: 'NAME', projectId: XX }
  */
-const projectViewPopup = function(containerSel, post) {
+const projectViewPopup = async function(containerSel, post) {
   // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
@@ -244,7 +251,7 @@ const projectViewPopup = function(containerSel, post) {
     modalDialog: true,
     modified: false,
   };
-  PHPMyEdit.tableDialogOpen(tableOptions);
+  await PHPMyEdit.tableDialogOpen(tableOptions);
 };
 
 /**

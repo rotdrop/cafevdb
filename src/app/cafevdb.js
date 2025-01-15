@@ -243,10 +243,14 @@ const applyToolTips = function(selector, options, container) {
 };
 
 const toolTipsOnOff = function(onOff) {
+  onOff = !!onOff;
+  if (onOff === globalState.toolTipsEnabled) {
+    return;
+  }
+  globalState.toolTipsEnabled = onOff;
   emit(appName + ':toggle-tooltips', {
     enabled: globalState.toolTipsEnabled,
   });
-  globalState.toolTipsEnabled = !!onOff;
   if (globalState.toolTipsEnabled) {
     $.fn.cafevTooltip.enable();
   } else {
@@ -411,20 +415,24 @@ const toolTipsInit = function(containerSel) {
   //   }
   // });
 
-  if (globalState.toolTipsEnabled) {
-    $.fn.cafevTooltip.enable();
-  } else {
-    $.fn.cafevTooltip.disable();
-  }
-
   toolTipsBackgroundPromise
     .done((maxJobs) => {
       console.timeEnd('TOOLTIP PROMISE');
       console.info('TOOLTIP JOBS HANDLED', maxJobs);
+      if (globalState.toolTipsEnabled) {
+        $.fn.cafevTooltip.enable();
+      } else {
+        $.fn.cafevTooltip.disable();
+      }
     })
     .fail((maxJobs) => {
       console.timeEnd('TOOLTIP PROMISE');
-      console.info('RECOMPUTE TOOLTIPS, TOOLTIPS HANDLED SO FAR', maxJobs);
+      console.info('FAIL RECOMPUTE TOOLTIPS, TOOLTIPS HANDLED SO FAR', maxJobs);
+      if (globalState.toolTipsEnabled) {
+        $.fn.cafevTooltip.enable();
+      } else {
+        $.fn.cafevTooltip.disable();
+      }
     });
 
   console.timeEnd('TOOLTIPS');

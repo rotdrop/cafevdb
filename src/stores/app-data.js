@@ -22,37 +22,19 @@
  */
 
 import { defineStore } from 'pinia';
-import { set as vueSet /* , del as vueDelete */ } from 'vue';
+import { set as vueSet /* , del as vueDelete */, ref, computed } from 'vue';
+import { computedAsync } from '@vueuse/core';
 import axios from '@nextcloud/axios';
 import generateAppUrl from '../toolkit/util/generate-url.js';
 
 const storeId = 'app-data';
+const abortController = new AbortController();
 
-export const useAppDataStore = defineStore(storeId, {
+const usePrivateState = defineStore(storeId + '-private', {
   state: () => ({
     projects: {},
-    currentProjectId: -1,
-    errorHandler: null,
     loadingPromise: Promise.resolve(true),
   }),
-  getters: {
-    projectMode(state) {
-      return state.projectId > 0;
-    },
-    currentProject(state) {
-      if (!this.projectMode) {
-        return null;
-      }
-      return this.getProject(state.projectId, state.errorHandler);
-    },
-    currentProjectName(state) {
-      if (!this.projectMode) {
-        return null;
-      }
-      const project = this.currentProject(state);
-      return project?.entity?.name;
-    },
-  },
   actions: {
     debug(...args) {
       console.debug(storeId, ...args);
@@ -72,32 +54,30 @@ export const useAppDataStore = defineStore(storeId, {
         errorHandler(error, context);
       }
     },
-    setErrorHandler(errorHandler) {
-      const old = this.errorHandler;
-      this.errorHandler = errorHandler;
-      return old;
+    abort() {
+      abortController.abort();
     },
-    async getProject(id, errorHandler) {
+    async getProject(projectId, errorHandler) {
       let promise;
       do {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
 
-      if (!this.projects[id]) {
-        await (this.loadingPromise = this.findProject(id, errorHandler));
+      if (!this.projects[projectId]) {
+        await (this.loadingPromise = this.findProject(projectId, errorHandler));
       }
-      return this.projects[id];
+      return this.projects?.[projectId];
     },
     async findProject(projectId, errorHandler) {
       let url = generateAppUrl('projects/{projectId}', { projectId });
       try {
-        const response = await axios.get(url);
+        const response = await axios.get(url, { signal: abortController.signal });
         this.info('FIND PROJECT RESPONSE', response);
         this.projects[projectId] = {};
-        vueSet(this.projects[projectId], 'entity', response.data);
+        vueSet(this.projects, projectId, response.data);
         url = generateAppUrl('projects/{projectId}/folder/all', { projectId });
         try {
-          const response = await axios.get(url);
+          const response = await axios.get(url, { signal: abortController.signal });
           this.info('FETCH PROJECT FOLDERS RESPONSE', response);
           vueSet(this.projects[projectId], 'folders', response.data);
         } catch (e) {
@@ -108,4 +88,57 @@ export const useAppDataStore = defineStore(storeId, {
       }
     },
   },
+});
+
+export default defineStore(storeId, () => {
+  const state = usePrivateState();
+
+  const debugMode = ref(0);
+  const appError = ref(false);
+  const busyCount = ref(0);
+  const busyState = computed(() => busyCount.value > 0);
+  const pushBusyState = () => ++busyCount.value;
+  const popBusyState = () => --busyCount.value;
+  const currentProjectId = ref(-1);
+  const errorHandler = ref(null);
+  const evaluating = ref(false);
+  const projectMode = computed(() => currentProjectId.value > 0);
+  const currentProject = computedAsync(
+    async (onCancel) => {
+      if (!projectMode.value) {
+        return null;
+      }
+      // onCancel(() => state.abort());
+      const project = await state.getProject(currentProjectId.value, errorHandler.value);
+      state.info('CURRENT PROJECT', project);
+      return project;
+    },
+    null,
+    { lazy: true, evaluating },
+  );
+  const currentProjectName = computed(() => {
+    if (!projectMode.value) {
+      return null;
+    }
+    const project = currentProject.value;
+    const name = project?.name;
+
+    state.info('CURRENT PROJECT NAME', name, currentProject);
+
+    return name;
+  });
+
+  return {
+    debugMode,
+    appError,
+    busyCount,
+    busyState,
+    pushBusyState,
+    popBusyState,
+    currentProject,
+    currentProjectId,
+    currentProjectName,
+    projectMode,
+    errorHandler,
+  };
 });

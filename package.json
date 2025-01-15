@@ -49,6 +49,7 @@
     "@rotdrop/nextcloud-app-dokuwiki": "github:rotdrop/nextcloud-app-dokuwiki",
     "@rotdrop/nextcloud-vue-components": "file:3rdparty/rotdrop/nextcloud-vue-components",
     "@vue/tsconfig": "^0.4.0",
+    "@vueuse/core": "^11.0.0",
     "babel-jest": "^29.6.4",
     "babel-loader": "^9.1.0",
     "babel-loader-exclude-node-modules-except": "^1.2.1",

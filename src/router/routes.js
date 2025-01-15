@@ -30,38 +30,59 @@ const routes = [
   },
   {
     path: '/f/projects',
-    component: () => import('../views/Projects.vue'),
+    component: () => import('../components/LegacyWrapper.vue'),
     name: 'projects',
     props: route => ({
       routeTitle: t(appName, 'Projects'),
+      template: route.name,
     }),
   },
   {
     path: '/f/musicians',
-    component: () => import('../views/Musicians.vue'),
-    name: 'musicians',
+    component: () => import('../components/LegacyWrapper.vue'),
+    name: 'all-musicians',
     props: route => ({
       routeTitle: t(appName, 'Musicians'),
+      template: route.name,
     }),
   },
   {
     path: '/f/project-participants/:projectId/:projectName?',
-    component: () => import('../views/ProjectParticipants.vue'),
+    component: () => import('../components/LegacyWrapper.vue'),
     name: 'project-participants',
     props: route => ({
       routeTitle: t(appName, 'Project Participants'),
-      projectId: +route.params?.projectId || -1,
-      projectName: route.params?.projectName || '',
+      template: route.name,
+      templateParameters: {
+        projectId: +route.params?.projectId || -1,
+        projectName: route.params?.projectName || '',
+      },
     }),
   },
   {
     path: '/f/project-instrumentation-numbers/:projectId/:projectName?',
-    component: () => import('../views/ProjectInstrumentationNumbers.vue'),
+    component: () => import('../components/LegacyWrapper.vue'),
     name: 'project-instrumentation-numbers',
     props: route => ({
       routeTitle: t(appName, 'Instrumentation Numbers'),
-      projectId: +route.params?.projectId || -1,
-      projectName: route.params?.projectName || '',
+      template: route.name,
+      templateParameters: {
+        projectId: +route.params?.projectId || -1,
+        projectName: route.params?.projectName || '',
+      },
+    }),
+  },
+  {
+    path: '/f/project-participant-fields/:projectId/:projectName?',
+    component: () => import('../components/LegacyWrapper.vue'),
+    name: 'project-participant-fields',
+    props: route => ({
+      routeTitle: t(appName, 'Extra Fields'),
+      template: route.name,
+      templateParameters: {
+        projectId: +route.params?.projectId || -1,
+        projectName: route.params?.projectName || '',
+      },
     }),
   },
 ];

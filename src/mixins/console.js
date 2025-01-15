@@ -21,10 +21,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
+const mixin = {
   methods: {
-    info(...args) {
-      console.info(this.$options.name, ...args);
+    trace(...args) {
+      console.trace(this.$options.name, ...args);
     },
     error(...args) {
       console.error(this.$options.name, ...args);
@@ -32,8 +32,13 @@ export default {
     warn(...args) {
       console.warn(this.$options.name, ...args);
     },
+    info(...args) {
+      console.info(this.$options.name, ...args);
+    },
     debug(...args) {
       console.debug(this.$options.name, ...args);
     },
   },
 };
+
+export default mixin;

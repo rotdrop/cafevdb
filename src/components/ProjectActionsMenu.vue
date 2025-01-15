@@ -25,7 +25,6 @@
     <NcActions v-if="positioned"
                :force-menu="true"
                :manual-open="true"
-               :close-after-click="true"
                @click="moveToAnchor"
     >
       <NcActionSeparator v-show="false" />
@@ -35,6 +34,7 @@
                :force-menu="true"
                force-semantic-type="menu"
                :open.sync="open"
+               :close-after-click="true"
                @closed="closeMenu"
     >
       <NcActionCaption v-if="showProjectName && projectName"
@@ -51,7 +51,7 @@
       <NcActionRouter :to="{ name: 'project-participants', params: { projectId, projectName } }"
                       :name="t(appId, 'Participants')"
                       exact
-                      @click="/* closeMenu */"
+                      @click="closeMenu"
       >
         <template #icon>
           <ProjectParticipantsIcon />
@@ -96,6 +96,8 @@ import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.v
 import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import { emit, subscribe } from '@nextcloud/event-bus'
 import mixins from '../mixins/app-mixins.js'
+import useAppDataStore from '../stores/app-data.js'
+import { mapActions } from 'pinia'
 
 // The "consumer" has to take care that globalState.vue.Vue is already
 // defined.
@@ -152,11 +154,12 @@ export default globalState.vue.Vue.extend({
     },
   },
   watch: {
-    open(state/*, oldState */) {
+    open(state, oldState) {
       if (!state && this.positioned) {
         // this.info('WATCHER CLOSE MENU')
         // this.closeMenu()
       }
+      this.info('OPEN CHANGED', state, oldState)
     },
   },
   created() {
@@ -181,8 +184,12 @@ export default globalState.vue.Vue.extend({
     })
   },
   methods: {
+    ...mapActions(useAppDataStore, ['pushBusyState', 'popBusyState']),
     openProjectOverview() {
-      // this.open = false
+      this.open = false
+      emit('toggle-navigation', {
+        open: false,
+      })
       emit(this.appName + ':project-popup', {
         projectId: this.projectId,
         projectName: this.projectName,
@@ -191,6 +198,9 @@ export default globalState.vue.Vue.extend({
     openInstrumentationNumbers(event) {
       event.preventDefault()
       this.open = false
+      emit('toggle-navigation', {
+        open: false,
+      })
       emit(this.appName + ':project-instrumentation-numbers-popup', {
         projectId: this.projectId,
         projectName: this.projectName,
@@ -199,6 +209,9 @@ export default globalState.vue.Vue.extend({
     openParticipantFields(event) {
       event.preventDefault()
       this.open = false
+      emit('toggle-navigation', {
+        open: false,
+      })
       emit(this.appName + ':project-participant-fields-popup', {
         projectId: this.projectId,
         projectName: this.projectName,
@@ -220,6 +233,7 @@ export default globalState.vue.Vue.extend({
       }
     },
     async closeMenu() {
+      this.info('-> closeMenu()')
       if (this.open) {
         this.open = false
         await this.$nextTick()
@@ -234,6 +248,7 @@ export default globalState.vue.Vue.extend({
         await this.$nextTick()
       }
       this.setPosition()
+      this.info('<- closeMenu()')
     },
     nextFrame() {
       return new Promise(resolve => requestAnimationFrame(() => {
@@ -241,12 +256,14 @@ export default globalState.vue.Vue.extend({
       }))
     },
     async openMenu(x, y) {
+      this.info('-> openMenu()')
       this.setPosition(x, y)
       this.open = true
       if (this.positioned) {
         await this.$nextTick()
         this.triggerButton?.$el.blur()
       }
+      this.info('<- openMenu()')
     },
     toggleMenu(x, y) {
       if (this.open) {
@@ -255,11 +272,16 @@ export default globalState.vue.Vue.extend({
         this.openMenu(x, y)
       }
     },
-    async moveToAnchor() {
+    async moveToAnchor(event) {
       if (!this.open || !this.positioned) {
         return
       }
+      this.info('-> moveToAnchor()')
+      event?.preventDefault()
+      await this.closeMenu()
+      await this.$nextTick()
       this.openMenu()
+      this.info('<- moveToAnchor()')
     },
     getRouteHref(route) {
       const routeProps = this.$router.resolve(route)

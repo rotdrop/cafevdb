@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import modalizer from './modalizer.js';
 import * as qs from 'qs';
+import { emit } from '@nextcloud/event-bus';
 
 globalState.Page = globalState.Page || { historyPosition: 0, historySize: 1 };
 
@@ -37,11 +38,13 @@ $.extend(globalState.Page, initialState.CAFEVDB.Page);
 
 const busyIcon = function(on) {
   if (on) {
+    emit(appName + ':push-busy-state');
     $('#reloadbutton img.number-0').hide();
     $('#reloadbutton img.number-1').show();
   } else {
     $('#reloadbutton img.number-1').hide();
     $('#reloadbutton img.number-0').show();
+    emit(appName + ':pop-busy-state');
   }
 };
 

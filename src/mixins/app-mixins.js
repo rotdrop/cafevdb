@@ -22,13 +22,11 @@
  */
 
 import appInfo from './app-info.js';
-import l10n from './l10n.js';
 import consoleMixin from './console.js';
 import globalState from './global-state.js';
 
 export default [
   appInfo,
-  l10n,
   consoleMixin,
   globalState,
 ];

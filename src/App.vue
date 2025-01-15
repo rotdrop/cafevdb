@@ -29,20 +29,61 @@
                              exact
                              @click="showSidebar = false"
         />
+        <NcAppNavigationItem v-if="projectMode"
+                             :name="t(appId, 'Overview {currentProjectName}', { currentProjectName })"
+                             @click="openProjectOverview"
+        >
+          <template #icon>
+            <ProjectInfoIcon />
+          </template>
+        </NcAppNavigationItem>
+        <NcAppNavigationItem v-if="projectMode"
+                             :to="{ name: 'project-participants', params: {
+                               projectId: currentProjectId,
+                               projectName: currentProjectName,
+                             }}"
+                             :name="t(appId, 'Participants')"
+                             exact
+                             @click="showSidebar = false"
+        >
+          <template #icon>
+            <ProjectParticipantsIcon />
+          </template>
+        </NcAppNavigationItem>
+        <NcAppNavigationItem v-if="projectMode"
+                             :to="{ name: 'project-instrumentation-numbers', params: {
+                               projectId: currentProjectId,
+                               projectName: currentProjectName,
+                             }}"
+                             :name="t(appId, 'Instrumentation Numbers')"
+                             exact
+                             @click="showSidebar = false"
+        >
+          <template #icon>
+            <InstrumentationNumbersIcon />
+          </template>
+        </NcAppNavigationItem>
+        <NcAppNavigationItem v-if="projectMode"
+                             :to="{ name: 'project-participant-fields', params: {
+                               projectId: currentProjectId,
+                               projectName: currentProjectName,
+                             }}"
+                             :name="t(appId, 'Extra Fields')"
+                             exact
+                             @click="showSidebar = false"
+        >
+          <template #icon>
+            <ParticipantFieldsIcon />
+          </template>
+        </NcAppNavigationItem>
         <NcAppNavigationItem :to="{ name: 'projects' }"
                              :name="t(appId, 'All Projects')"
                              icon="icon-home"
                              exact
                              @click="showSidebar = false"
         />
-        <NcAppNavigationItem :to="{ name: 'musicians' }"
+        <NcAppNavigationItem :to="{ name: 'all-musicians' }"
                              :name="t(appId, 'All Musicians')"
-                             icon="icon-home"
-                             exact
-                             @click="showSidebar = false"
-        />
-        <NcAppNavigationItem :to="{ name: 'project-participants', params: { projectId: -1 } }"
-                             :name="t(appId, 'Project Participants')"
                              icon="icon-home"
                              exact
                              @click="showSidebar = false"
@@ -50,15 +91,15 @@
       </template>
       <template #footer>
         <NcAppNavigationSettings>
-          <NcCheckboxRadioSwitch :checked.sync="debug">
+          <NcCheckboxRadioSwitch :checked.sync="debugToggle">
             {{ t(appId, 'Fixme, add settings') }}
           </NcCheckboxRadioSwitch>
         </NcAppNavigationSettings>
       </template>
     </NcAppNavigation>
     <NcAppContent :class="{ 'icon-loading': loading }">
-      <router-view v-show="!loading && !error" :loading.sync="loading" @view-details="handleDetailsRequest" />
-      <NcEmptyContent v-if="isRoot || error" class="emp-content">
+      <router-view v-show="!loading && !appError" :loading.sync="loading" @view-details="handleDetailsRequest" />
+      <NcEmptyContent v-if="isRoot || appError" class="emp-content">
         {{ t(appId, '{orchestraName} Orchestra Portal', { orchestraName, }) }}
         <template #icon>
           <img :src="icon">
@@ -95,8 +136,8 @@
 
 <script>
 import { appName as appId } from './app/app-info.js'
-import appInfo from './mixins/app-info.js'
-import { emit } from '@nextcloud/event-bus'
+import mixins from './mixins/app-mixins.js'
+import { emit, subscribe } from '@nextcloud/event-bus'
 import {
   NcContent,
   NcAppContent,
@@ -106,6 +147,12 @@ import {
   NcCheckboxRadioSwitch,
   NcEmptyContent,
 } from '@nextcloud/vue'
+import useAppDataStore from './stores/app-data.js'
+import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
+import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
+import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
+import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
+import { mapWritableState, mapActions, mapState } from 'pinia'
 
 import Icon from '../img/cafevdb.svg'
 
@@ -116,6 +163,7 @@ const initialState = getInitialState('CAFEVDB')
 export default {
   name: 'App',
   components: {
+    InstrumentationNumbersIcon,
     NcAppContent,
     NcAppNavigation,
     NcAppNavigationItem,
@@ -123,37 +171,43 @@ export default {
     NcCheckboxRadioSwitch,
     NcContent,
     NcEmptyContent,
+    ParticipantFieldsIcon,
+    ProjectInfoIcon,
+    ProjectParticipantsIcon,
   },
-  // setup() {
-  //   const memberData = useMemberDataStore()
-  //   return { memberData }
-  // },
-  mixins: [
-    appInfo,
-  ],
+  mixins,
   data() {
     return {
       orchestraName: initialState?.orchestraName || t(appId, '[UNKNOWN]'),
       icon: Icon,
       loading: true,
-      error: false,
-      debug: false,
+      debugToggle: false,
     }
   },
   computed: {
     isRoot() {
       return this.$route.path === '/'
     },
-    // memberDataError() {
-    // return this.memberData.initialized.error
-    // },
-    // ...mapWritableState(useAppDataStore, ['debug']),
-    // ...mapWritableState(useMemberDataStore, ['memberData']),
+    ...mapState(useAppDataStore, ['busyState']),
+    ...mapWritableState(
+      useAppDataStore, [
+        'debugMode',
+        'appError',
+        'currentProjectId',
+        'currentProjectName',
+        'projectMode',
+      ],
+    ),
   },
   watch: {
+    debugToggle(value) {
+      this.debugMode = value ? 1 : 0
+    },
   },
   async created() {
     this.loading = false
+    subscribe(this.appName + ':push-busy-state', () => this.pushBusyState())
+    subscribe(this.appName + ':pop-busy-state', () => this.popBusyState())
   },
   mounted() {
     // works only after mounting
@@ -162,6 +216,7 @@ export default {
     })
   },
   methods: {
+    ...mapActions(useAppDataStore, ['pushBusyState', 'popBusyState']),
     closeSidebar() {
       this.showSidebar = false
     },
@@ -172,6 +227,16 @@ export default {
     getRouteHref(route) {
       const routeProps = this.$router.resolve(route)
       return routeProps?.href
+    },
+    openProjectOverview() {
+      this.open = false
+      emit('toggle-navigation', {
+        open: false,
+      })
+      emit(this.appName + ':project-popup', {
+        projectId: this.currentProjectId,
+        projectName: this.currentProjectName,
+      })
     },
   },
 }

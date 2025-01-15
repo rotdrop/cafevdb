@@ -57,6 +57,7 @@ globalState.vue = {
   app: vueApp,
   Vue,
   router,
+  store: pinia,
 };
 
 export default vueApp;
