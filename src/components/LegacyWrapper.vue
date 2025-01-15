@@ -92,9 +92,7 @@ import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
 import InfoOffIcon from 'vue-material-design-icons/InformationOffOutline.vue'
 import HistoryBackIcon from 'vue-material-design-icons/ArrowULeftTop.vue'
 import HistoryForwardIcon from 'vue-material-design-icons/ArrowURightTop.vue'
-import appInfo from '../mixins/app-info.js'
-import globalState from '../mixins/global-state.js'
-import consoleOutput from '../mixins/console.js'
+import mixins from '../mixins/app-mixins.js'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
 import * as CAFEVDB from '../app/cafevdb.js'
@@ -122,11 +120,7 @@ export default {
     NcButton,
     ReloadIcon,
   },
-  mixins: [
-    appInfo,
-    consoleOutput,
-    globalState,
-  ],
+  mixins,
   props: {
     template: {
       type: String,
@@ -189,7 +183,7 @@ export default {
       }
       this.loading = false
     } catch (e) {
-      this.error('ERROR', e)
+      this.error('ERROR', generateAppUrl('page/remember/blank'), post, e)
     }
   },
   methods: {
