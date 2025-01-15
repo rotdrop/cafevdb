@@ -810,9 +810,9 @@ const tableDialog = function(form, element, containerSel) {
  * is also possible to store all values in tableOptions, as this is
  * added to the query-string in any case.
  *
- * @returns {boolean}
+ * @returns {Promise}
  */
-const pmeTableDialogOpen = function(tableOptions, post) {
+const pmeTableDialogOpen = async function(tableOptions, post) {
 
   const containerCSSId = tableOptions.dialogHolderCSSId;
 
@@ -838,198 +838,203 @@ const pmeTableDialogOpen = function(tableOptions, post) {
     post += '&' + $.param({ [tableOptions.initialName]: tableOptions.initialValue });
   }
 
-  pmePost(post)
-    .fail(function(xhr, status, errorThrown) {
-      Page.busyIcon(false);
-      pmeOpenDialogs[containerCSSId] = false;
-    })
-    .done(function(htmlContent, historyAction, post) {
-      const containerSel = '#' + containerCSSId;
-      const dialogHolder = $('<div id="' + containerCSSId + '" class="' + containerCSSId + ' resize-target"></div>');
-      dialogHolder.html(htmlContent);
-      dialogHolder.find('iframe').on('load', function(event) {
-        const $this = $(this);
-        const data = $this.data();
-        const dataKey = appName + 'LoadEvent';
-        data[dataKey] = (data[dataKey] || 0) + 1;
-        console.info('IFRAME LOAD', $this.attr('class'), data[dataKey]);
-      });
+  // eslint-disable-next-line promise/param-names
+  await new Promise((resolveOpenDialog, rejectOpenDialog) =>
+    pmePost(post)
+      .fail(function(xhr, status, errorThrown) {
+        Page.busyIcon(false);
+        pmeOpenDialogs[containerCSSId] = false;
+        rejectOpenDialog(new Error(errorThrown));
+      })
+      .done(function(htmlContent, historyAction, post) {
+        const containerSel = '#' + containerCSSId;
+        const dialogHolder = $('<div id="' + containerCSSId + '" class="' + containerCSSId + ' resize-target"></div>');
+        dialogHolder.html(htmlContent);
+        dialogHolder.find('iframe').on('load', function(event) {
+          const $this = $(this);
+          const data = $this.data();
+          const dataKey = appName + 'LoadEvent';
+          data[dataKey] = (data[dataKey] || 0) + 1;
+          console.info('IFRAME LOAD', $this.attr('class'), data[dataKey]);
+        });
 
-      dialogHolder.data('ambientContainer', tableOptions.ambientContainerSelector);
+        dialogHolder.data('ambientContainer', tableOptions.ambientContainerSelector);
 
-      tableDialogLoadIndicator(dialogHolder, true);
+        tableDialogLoadIndicator(dialogHolder, true);
 
-      if (tableOptions.modalDialog) {
-        modalizer(true);
-      }
-      dialogHolder.cafevDialog({
-        title: dialogHolder.find(pmeClassSelector('span', 'short-title')).html(),
-        position: popupPosition,
-        width: 'auto',
-        height: 'auto',
-        modal: false, // tableOptions.modalDialog,
-        closeOnEscape: false,
-        dialogClass: pmeToken('table-dialog') + ' custom-close resize-target ' + template,
-        resizable: false,
-        dragStart(event) {
-          const self = $(this);
-          const widget = self.dialog('widget');
-          const cssWidth = widget.prop('style').width;
-          if (cssWidth === 'auto') {
-            self.data('drag-width-tweak', true);
-            widget.width(widget.width() + 1); // cope with jquery-ui + ff drag bug
-          }
-        },
-        resize() {
-          console.info('jq resize');
-        },
-        open() {
-
-          const dialogHolder = $(this);
-          const dialogWidget = dialogHolder.dialog('widget');
-
-          DialogUtils.toBackButton(dialogHolder);
-          DialogUtils.customCloseButton(dialogHolder, function(event, container) {
-            const cancelButton = container.find(pmeClassSelector('input', 'cancel')).first();
-            if (cancelButton.length > 0) {
-              event.stopImmediatePropagation();
-              cancelButton.trigger('click');
-            } else {
-              dialogHolder.dialog('close');
+        if (tableOptions.modalDialog) {
+          modalizer(true);
+        }
+        dialogHolder.cafevDialog({
+          title: dialogHolder.find(pmeClassSelector('span', 'short-title')).html(),
+          position: popupPosition,
+          width: 'auto',
+          height: 'auto',
+          modal: false, // tableOptions.modalDialog,
+          closeOnEscape: false,
+          dialogClass: pmeToken('table-dialog') + ' custom-close resize-target ' + template,
+          resizable: false,
+          dragStart(event) {
+            const self = $(this);
+            const widget = self.dialog('widget');
+            const cssWidth = widget.prop('style').width;
+            if (cssWidth === 'auto') {
+              self.data('drag-width-tweak', true);
+              widget.width(widget.width() + 1); // cope with jquery-ui + ff drag bug
             }
-            return false;
-          });
+          },
+          resize() {
+            console.info('jq resize');
+          },
+          open() {
 
-          blockTableDialog(dialogHolder);
+            const dialogHolder = $(this);
+            const dialogWidget = dialogHolder.dialog('widget');
 
-          const $staticReloadRequest = dialogHolder.find('input[name="' + pmeSys('reloadOuterForm') + '"]');
-          console.info('STATIC RELOAD REQUEST', $staticReloadRequest);
-          if ($staticReloadRequest.val()) {
-            // reload outer form
-            $(tableOptions.ambientContainerSelector).trigger('pmedialog:changed');
-            pmeSubmitOuterForm(tableOptions.ambientContainerSelector);
-            $staticReloadRequest.val('');
-          }
+            DialogUtils.toBackButton(dialogHolder);
+            DialogUtils.customCloseButton(dialogHolder, function(event, container) {
+              const cancelButton = container.find(pmeClassSelector('input', 'cancel')).first();
+              if (cancelButton.length > 0) {
+                event.stopImmediatePropagation();
+                cancelButton.trigger('click');
+              } else {
+                dialogHolder.dialog('close');
+              }
+              return false;
+            });
 
-          // general styling, avoid :submit handlers in dialog mode
-          pmeInit(containerSel, true);
+            blockTableDialog(dialogHolder);
 
-          const resizeHandler = function(parameters) {
-            dialogHolder.dialog('option', 'height', 'auto');
-            dialogHolder.dialog('option', 'width', 'auto');
-            let newHeight = dialogWidget.height()
+            const $staticReloadRequest = dialogHolder.find('input[name="' + pmeSys('reloadOuterForm') + '"]');
+            console.info('STATIC RELOAD REQUEST', $staticReloadRequest);
+            if ($staticReloadRequest.val()) {
+              // reload outer form
+              $(tableOptions.ambientContainerSelector).trigger('pmedialog:changed');
+              pmeSubmitOuterForm(tableOptions.ambientContainerSelector);
+              $staticReloadRequest.val('');
+            }
+
+            // general styling, avoid :submit handlers in dialog mode
+            pmeInit(containerSel, true);
+
+            const resizeHandler = function(parameters) {
+              dialogHolder.dialog('option', 'height', 'auto');
+              dialogHolder.dialog('option', 'width', 'auto');
+              let newHeight = dialogWidget.height()
                 - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
-            newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
-            dialogHolder.height(newHeight);
-            const form = dialogHolder.find('form.pme-form')[0];
-            const html = $('html')[0];
-            const dialog = dialogWidget[0];
-            const scrollDelta = form.scrollWidth - form.clientWidth;
-            if (scrollDelta > 0 && dialog.offsetWidth + scrollDelta < html.clientWidth) {
-              console.debug('Compensating dialog width for pme-form vertical scrollbar');
-              dialogWidget.css('width', (dialog.offsetWidth + scrollDelta) + 'px');
-            }
-          };
-
-          tableDialogHandlers(tableOptions, function(parameters) {
-            const defaultParameters = {
-              reason: 'unknown',
-              triggerData: {
-                postOpen(dialogDiv) {
-                  dialogDiv.dialog('moveToTop');
-                },
-              },
-              tableOptions,
+              newHeight -= dialogHolder.outerHeight(true) - dialogHolder.height();
+              dialogHolder.height(newHeight);
+              const form = dialogHolder.find('form.pme-form')[0];
+              const html = $('html')[0];
+              const dialog = dialogWidget[0];
+              const scrollDelta = form.scrollWidth - form.clientWidth;
+              if (scrollDelta > 0 && dialog.offsetWidth + scrollDelta < html.clientWidth) {
+                console.debug('Compensating dialog width for pme-form vertical scrollbar');
+                dialogWidget.css('width', (dialog.offsetWidth + scrollDelta) + 'px');
+              }
             };
-            parameters = $.extend({}, defaultParameters, parameters);
-            if (parameters.reason === 'unknown') {
-              console.trace();
-            }
-            dialogHolder.css('height', 'auto');
-            switch (parameters.reason) {
-            case 'dialogClose':
-              tableLoadCallback(template, containerSel, parameters, function(arg) {});
-              break;
-            case 'dialogOpen':
-              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'/* :enabled' */), function() {
-                transposeReady(containerSel);
-                pmeQueryLogMenu(containerSel);
-                tableLoadCallback(template, containerSel, parameters, function(arg) {
-                  const keepLocked = arg === true;
-                  // console.trace();
-                  // installInputChosen(containerSel);
-                  resizeHandler(parameters);
-                  parameters.triggerData.postOpen(dialogHolder);
-                  CAFEVDB.toolTipsInit(containerSel);
-                  if (!keepLocked) {
-                    unblockTableDialog(dialogHolder);
-                    Page.busyIcon(false);
-                    tableDialogLoadIndicator(dialogHolder, false);
-                  }
+
+            tableDialogHandlers(tableOptions, function(parameters) {
+              const defaultParameters = {
+                reason: 'unknown',
+                triggerData: {
+                  postOpen(dialogDiv) {
+                    dialogDiv.dialog('moveToTop');
+                  },
+                },
+                tableOptions,
+              };
+              parameters = $.extend({}, defaultParameters, parameters);
+              if (parameters.reason === 'unknown') {
+                console.trace();
+              }
+              dialogHolder.css('height', 'auto');
+              switch (parameters.reason) {
+              case 'dialogClose':
+                tableLoadCallback(template, containerSel, parameters, function(arg) {});
+                break;
+              case 'dialogOpen':
+                WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'/* :enabled' */), function() {
+                  transposeReady(containerSel);
+                  pmeQueryLogMenu(containerSel);
+                  tableLoadCallback(template, containerSel, parameters, function(arg) {
+                    const keepLocked = arg === true;
+                    // console.trace();
+                    // installInputChosen(containerSel);
+                    resizeHandler(parameters);
+                    parameters.triggerData.postOpen(dialogHolder);
+                    CAFEVDB.toolTipsInit(containerSel);
+                    if (!keepLocked) {
+                      unblockTableDialog(dialogHolder);
+                      Page.busyIcon(false);
+                      tableDialogLoadIndicator(dialogHolder, false);
+                    }
+                    console.info('RESOLVING PME TABLE DIALOG PROMISE');
+                    resolveOpenDialog(true);
+                  });
+                  pmeTweaks(dialogHolder);
+                  $.fn.cafevTooltip.remove();
                 });
-                pmeTweaks(dialogHolder);
-                $.fn.cafevTooltip.remove();
-              });
-              break;
-            case 'tabChange':
-              installInputChosen(containerSel, 'chosen-invisible');
-              resizeHandler(parameters);
-              break;
-            case 'layoutChange':
-              resizeHandler(parameters);
-              break;
+                break;
+              case 'tabChange':
+                installInputChosen(containerSel, 'chosen-invisible');
+                resizeHandler(parameters);
+                break;
+              case 'layoutChange':
+                resizeHandler(parameters);
+                break;
+              }
+            });
+
+            // install delegate handlers on the widget s.t. we
+            // can call .off() on the container
+            dialogWidget.on('resize', containerSel, function(event) {
+              resizeHandler(event);
+            });
+            dialogWidget.on('pmedialog:changed', containerSel, function(event) {
+              tableOptions.modified = true;
+            });
+          },
+          close(event) {
+            $.fn.cafevTooltip.remove();
+            const dialogHolder = $(this);
+
+            // remove data/time widgets and other stuff
+            pmeUnTweak(dialogHolder);
+            // remove the WYSIWYG editor, if any is attached
+            WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
+
+            dialogHolder.find('iframe').removeAttr('src');
+
+            if (tableOptions.modified === true) {
+              // reload outer form
+              $(tableOptions.ambientContainerSelector).trigger('pmedialog:changed');
+              pmeSubmitOuterForm(tableOptions.ambientContainerSelector);
             }
-          });
 
-          // install delegate handlers on the widget s.t. we
-          // can call .off() on the container
-          dialogWidget.on('resize', containerSel, function(event) {
-            resizeHandler(event);
-          });
-          dialogWidget.on('pmedialog:changed', containerSel, function(event) {
-            tableOptions.modified = true;
-          });
-        },
-        close(event) {
-          $.fn.cafevTooltip.remove();
-          const dialogHolder = $(this);
+            dialogHolder.dialog('destroy');
 
-          // remove data/time widgets and other stuff
-          pmeUnTweak(dialogHolder);
-          // remove the WYSIWYG editor, if any is attached
-          WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
+            // At least konq. has the bug that removing a form
+            // with submit inputs will submit the form. Very strange.
+            dialogHolder.find('form input[type="submit"]').remove();
+            dialogHolder.remove();
 
-          dialogHolder.find('iframe').removeAttr('src');
+            pmeOpenDialogs[containerCSSId] = false;
 
-          if (tableOptions.modified === true) {
-            // reload outer form
-            $(tableOptions.ambientContainerSelector).trigger('pmedialog:changed');
-            pmeSubmitOuterForm(tableOptions.ambientContainerSelector);
-          }
+            CAFEVDB.unfocus();
 
-          dialogHolder.dialog('destroy');
+            if (!tableOptions.modified) {
+              // Remove modal plane if appropriate
+              modalizer(false);
+            }
 
-          // At least konq. has the bug that removing a form
-          // with submit inputs will submit the form. Very strange.
-          dialogHolder.find('form input[type="submit"]').remove();
-          dialogHolder.remove();
+            Notification.hide();
 
-          pmeOpenDialogs[containerCSSId] = false;
-
-          CAFEVDB.unfocus();
-
-          if (!tableOptions.modified) {
-            // Remove modal plane if appropriate
-            modalizer(false);
-          }
-
-          Notification.hide();
-
-          return false;
-        },
-      });
-    });
-  return true;
+            return false;
+          },
+        });
+      }),
+  ); // promise ctor
 };
 
 /**
