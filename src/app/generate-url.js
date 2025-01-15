@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,48 +21,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './app-info.js';
-import * as ncRouter from '@nextcloud/router';
-
-/**
- * Generate an absolute URL for this app.
- *
- * @param {string} url The locate URL without app-prefix.
- *
- * @param {object} urlParams Object holding url-parameters if url
- * contains parameters. "Excess" parameters will be appended as query
- * parameters to the URL.
- *
- * @param {object} urlOptions Object with processing options
- * ```
- * {
- *   escape: BOOL,
- *   noRewrite: BOOL,
- * }
- * ```
- *
- * @returns {string}
- */
-const generateUrl = function(url, urlParams, urlOptions) {
-  // const str = '/image/{joinTable}/{ownerId}';
-  let generated = ncRouter.generateUrl('/apps/' + appName + '/' + url, urlParams, urlOptions);
-  const queryParams = { ...urlParams };
-  for (const urlParam of url.matchAll(/{([^{}]*)}/g)) {
-    delete queryParams[urlParam[1]];
-  }
-  const queryArray = [];
-  for (const [key, value] of Object.entries(queryParams)) {
-    queryArray.push(key + '=' + encodeURIComponent(value.toString()));
-  }
-  if (queryArray.length > 0) {
-    generated += '?' + queryArray.join('&');
-  }
-  return generated;
-};
+import generateUrl from '../toolkit/util/generate-url.js';
 
 export default generateUrl;
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
