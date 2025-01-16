@@ -76,6 +76,15 @@
         </template>
       </NcActionLink>
       <NcActionSeparator />
+      <NcActionLink :name="t(appId, 'Project Files')"
+                    :href="projectFolderLink"
+                    :target="projectFolderLinkTarget"
+                    @click="closeMenu"
+      >
+        <template #icon>
+          <ParticipantFieldsIcon />
+        </template>
+      </NcActionLink>
       <NcActionButton>
         Two
       </NcActionButton>
@@ -100,7 +109,8 @@ import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import { emit, subscribe } from '@nextcloud/event-bus'
 import mixins from '../mixins/app-mixins.js'
 import useAppDataStore from '../stores/app-data.js'
-import { mapActions } from 'pinia'
+import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
+import md5 from 'blueimp-md5'
 
 // The "consumer" has to take care that globalState.vue.Vue is already
 // defined.
@@ -143,12 +153,19 @@ export default globalState.vue.Vue.extend({
       default: true,
     },
   },
+  setup() {
+    const appData = useAppDataStore(globalState.vue.store)
+
+    return { appData }
+  },
   data() {
     return {
       open: false,
       referenceElement: null,
       triggerButton: null,
       positioned: false,
+      projectFolderLink: '#',
+      projectFolderLinkTarget: '',
     }
   },
   computed: {
@@ -164,9 +181,14 @@ export default globalState.vue.Vue.extend({
       }
       this.info('OPEN CHANGED', state, oldState)
     },
+    async projectId(newValue/*, oldValue */) {
+      await this.updateProjectData(newValue)
+    },
   },
-  created() {
+  async created() {
     this.$parent = globalState.vue.app
+    await this.updateProjectData(this.projectId)
+    this.info('ACTIONS MENU OBJECT', this)
   },
   mounted() {
     const origCloseMenu = this.$refs.actions.closeMenu
@@ -187,7 +209,13 @@ export default globalState.vue.Vue.extend({
     })
   },
   methods: {
-    ...mapActions(useAppDataStore, ['pushBusyState', 'popBusyState']),
+    async updateProjectData(projectId) {
+      const project = await this.appData.getProject(projectId, this.appData.errorHandler)
+      this.info('PROJECT', project)
+      this.projectFolderLink = nextcloudGenerateUrl('/apps/files/?dir=' + project.folders.projectsfolder)
+      this.projectFolderLinkTarget = md5(this.projectFolderLink)
+      console.info('FOLDER', this.projectFolderLink, this.projectFolderLinkTarget)
+    },
     openProjectOverview() {
       this.open = false
       emit('toggle-navigation', {
