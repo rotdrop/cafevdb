@@ -21,16 +21,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import appInfo from './app-info.js';
-import consoleMixin from './console.js';
-import globalState from './global-state.js';
-import dokuWiki from './doku-wiki.js';
-import md5 from './md5.js';
+import md5 from 'blueimp-md5';
 
-export default [
-  appInfo,
-  consoleMixin,
-  globalState,
-  dokuWiki,
-  md5,
-];
+export default {
+  methods: {
+    md5(data) {
+      return md5(data);
+    },
+  },
+};

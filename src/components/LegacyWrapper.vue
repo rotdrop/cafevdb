@@ -96,9 +96,7 @@ import mixins from '../mixins/app-mixins.js'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
 import * as CAFEVDB from '../app/cafevdb.js'
-import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import { getInitialState } from '../toolkit/services/InitialStateService.js'
-import md5 from 'blueimp-md5'
 import { emit, subscribe } from '@nextcloud/event-bus'
 import { setPersonalUrl } from '../app/settings-urls.js'
 import wikiPopup from '../app/wiki-popup.js'
@@ -157,19 +155,18 @@ export default {
   },
   computed: {
     wikiManualSection() {
-      return [
-        initialState.wikiNamespace,
+      return this.dokuWikiSection([
         this.appName,
         'documentation',
         'user-manual',
         this.template,
-      ].join(':')
+      ])
     },
     wikiManualUrl() {
-      return nextcloudGenerateUrl('/apps/dokuwiki/page/index?wikiPage=' + this.wikiManualSection)
+      return this.dokuWikiUrl(this.wikiManualSection)
     },
     wikiManualUrlTarget() {
-      return md5(this.wikiManualSection)
+      return this.dokuWikiUrlTarget(this.wikiManualSection)
     },
     ...mapState(useAppDataStore, ['busyState']),
     ...mapWritableState(useAppDataStore, ['currentProjectId']),
@@ -191,9 +188,6 @@ export default {
   },
   methods: {
     ...mapActions(useAppDataStore, ['pushBusyState', 'popBusyState']),
-    md5(input) {
-      return md5(input)
-    },
     onUserManualPopup() {
       wikiPopup({
         wikiPage: this.wikiManualSection,

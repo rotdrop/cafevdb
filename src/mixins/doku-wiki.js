@@ -21,16 +21,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import appInfo from './app-info.js';
-import consoleMixin from './console.js';
-import globalState from './global-state.js';
-import dokuWiki from './doku-wiki.js';
-import md5 from './md5.js';
+import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router';
+import md5 from 'blueimp-md5';
 
-export default [
-  appInfo,
-  consoleMixin,
-  globalState,
-  dokuWiki,
-  md5,
-];
+const mixin = {
+  methods: {
+    dokuWikiSection(path) {
+      return [this.globalState.wikiNamespace, ...path].join(':');
+    },
+    dokuWikiUrl(path) {
+      const wikiPage = Array.isArray(path) ? this.dokuWikiSection(path) : path;
+      return nextcloudGenerateUrl('/apps/dokuwiki/page/index?wikiPage=' + wikiPage);
+    },
+    dokuWikiUrlTarget(path) {
+      const wikiPage = Array.isArray(path) ? this.dokuWikiSection(path) : path;
+      return md5(wikiPage);
+    },
+  },
+};
+
+export default mixin;
