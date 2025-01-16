@@ -327,10 +327,9 @@ const actionMenu = async function(containerSel) {
       VueProjectMenu = (await import(/* webpackChunkName: 'project-actions-menu' */ '../components/ProjectActionsMenu.vue')).default;
       console.info('VUE PROJECT MENU', VueProjectMenu);
     }
-    $container.find('.project-actions.dropdown-container').each(function() {
-      const $this = $(this);
-      const projectId = $this.data('projectId');
-      const projectName = $this.data('projectName');
+    const generateVueMenu = async ($actionMenu) => {
+      const projectId = $actionMenu.data('projectId');
+      const projectName = $actionMenu.data('projectName');
       const vueMenu = new VueProjectMenu({
         propsData: {
           projectId,
@@ -338,14 +337,15 @@ const actionMenu = async function(containerSel) {
           enableOverviewItem: $container.find(pmeFormSelector).hasClass(pmeToken('list')),
         },
       });
-      $this.data('vueMenu', vueMenu);
-      $this.removeClass('dropdown-container').empty().html('<div></div>');
-      vueMenu.$mount($this.children(':first')[0]);
-    });
+      $actionMenu.data('vueMenu', vueMenu);
+      $actionMenu.removeClass('dropdown-container').empty().html('<div></div>');
+      return await vueMenu.$mount($actionMenu.children(':first')[0]);
+    };
+    // $container.find('.project-actions.dropdown-container').each(function() { generateVueMenu($(this); });
 
     $container
       .off('pme:contextmenu', 'tr.' + pmeToken('row'))
-      .on('pme:contextmenu', 'tr.' + pmeToken('row'), function(event, originalEvent, databaseIdentifier) {
+      .on('pme:contextmenu', 'tr.' + pmeToken('row'), async function(event, originalEvent, databaseIdentifier) {
         console.info('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
 
         const $row = $(this);
@@ -357,7 +357,7 @@ const actionMenu = async function(containerSel) {
           return;
         }
 
-        const vueMenu = $actionMenu.data('vueMenu');
+        const vueMenu = $actionMenu.data('vueMenu') || await generateVueMenu($actionMenu);
         const projectId = $actionMenu.data('projectId');
 
         if (vueMenu.open) {
