@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -100,7 +100,8 @@ try {
     \OC::$server->get(\OCP\EventDispatcher\IEventDispatcher::class),
     \OC::$server->getRequest(),
     \OC::$server->get(\Psr\Log\LoggerInterface::class),
-    \OC::$server->query(\OC\MemoryInfo::class)
+    \OC::$server->query(\OC\MemoryInfo::class),
+    \OC::$server->query(\OCP\App\IAppManager::class),
   );
   // $application->loadCommands(new ArgvInput(), new ConsoleOutput());
   // $application->run();
@@ -115,16 +116,15 @@ try {
 require_once __DIR__ . "/../vendor/autoload.php";
 require_once __DIR__ . "/../vendor-wrapped/autoload.php";
 
-// otherwise Redaxo4Embedded's InstalledVersions is pulled in by autoload
-$installedVersions = [
-  __DIR__ . "/../vendor-wrapped/composer/InstalledVersions.php",
-  __DIR__ . "/../vendor/composer/InstalledVersions.php",
-];
-foreach ($installedVersions as $file) {
-  if (file_exists($file)) {
-    require_once $file;
-  }
-}
+// $installedVersions = [
+//   __DIR__ . "/../vendor-wrapped/composer/InstalledVersions.php",
+//   __DIR__ . "/../vendor/composer/InstalledVersions.php",
+// ];
+// foreach ($installedVersions as $file) {
+//   if (file_exists($file)) {
+//     require_once $file;
+//   }
+// }
 
 $reflectionClass = new ReflectionClass($argv[1]);
 
