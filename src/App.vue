@@ -204,7 +204,7 @@ export default {
       this.debugMode = value ? 1 : 0
     },
   },
-  async created() {
+  created() {
     this.loading = false
     subscribe(this.appName + ':push-busy-state', () => this.pushBusyState())
     subscribe(this.appName + ':pop-busy-state', () => this.popBusyState())
