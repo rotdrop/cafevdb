@@ -22,7 +22,7 @@
  */
 
 import { defineStore } from 'pinia';
-import { set as vueSet /* , del as vueDelete */, ref, computed } from 'vue';
+import { set as vueSet, del as vueDelete, ref, computed } from 'vue';
 import { computedAsync } from '@vueuse/core';
 import axios from '@nextcloud/axios';
 import generateAppUrl from '../toolkit/util/generate-url.js';
@@ -73,7 +73,6 @@ const usePrivateState = defineStore(storeId + '-private', {
       try {
         const response = await axios.get(url, { signal: abortController.signal });
         this.info('FIND PROJECT RESPONSE', response);
-        this.projects[projectId] = {};
         vueSet(this.projects, projectId, response.data);
         url = generateAppUrl('projects/{projectId}/folder/all', { projectId });
         try {
@@ -87,8 +86,13 @@ const usePrivateState = defineStore(storeId + '-private', {
         this.handleError(e, { action: 'findProject', projectId, url }, errorHandler);
       }
     },
+    deleteProject(projectId) {
+      vueDelete(this.projects, projectId);
+    },
   },
 });
+
+export class ReadOnlyProxyWriteError extends Error {}
 
 export default defineStore(storeId, () => {
   const state = usePrivateState();
@@ -97,36 +101,68 @@ export default defineStore(storeId, () => {
   const appError = ref(false);
   const busyCount = ref(0);
   const busyState = computed(() => busyCount.value > 0);
-  const pushBusyState = () => ++busyCount.value;
-  const popBusyState = () => --busyCount.value;
+  const pushBusyState = () => { ++busyCount.value; state.debug('BUSY STATE PUSH', busyCount.value); return busyCount.value; };
+  const popBusyState = () => { --busyCount.value; state.debug('BUSY STATE POP', busyCount.value); return busyCount.value; };
   const currentProjectId = ref(-1);
   const errorHandler = ref(null);
   const evaluating = ref(false);
   const projectMode = computed(() => currentProjectId.value > 0);
   const currentProject = computedAsync(
-    async (onCancel) => {
+    async (/* onCancel */) => {
       if (!projectMode.value) {
         return null;
       }
       // onCancel(() => state.abort());
       const project = await state.getProject(currentProjectId.value, errorHandler.value);
-      state.info('CURRENT PROJECT', project);
+      state.debug('CURRENT PROJECT', project);
       return project;
     },
     null,
     { lazy: true, evaluating },
   );
-  const currentProjectName = computed(() => {
-    if (!projectMode.value) {
-      return null;
-    }
-    const project = currentProject.value;
-    const name = project?.name;
+  const currentProjectName = computedAsync(
+    async (/* onCancel */) => {
+      if (!projectMode.value) {
+        return null;
+      }
+      // onCancel(() => state.abort());
+      await currentProject.value;
+      state.debug('CURRENT PROJECT', currentProject.value);
 
-    state.info('CURRENT PROJECT NAME', name, currentProject);
+      return currentProject.value?.name || null;
+    },
+    null,
+    { lazy: true, evaluating },
+  );
 
-    return name;
-  });
+  async function getProject(projectId) { return await state.getProject(projectId, errorHandler.value); }
+
+  const projects = ref(new Proxy(state.projects, {
+    async get(target, name, receiver) {
+      state.debug('PROXY GET', target, name, receiver);
+      if (!Reflect.has(target, name)) {
+        try {
+          name = '' + name;
+        } catch (e) {
+          state.error('Property is not stringable', name);
+          return undefined;
+        }
+        if (parseInt(name) !== +name) {
+          return undefined;
+        }
+        state.debug('Fetching project with id ', name);
+        const project = await state.getProject(name);
+        return Reflect.set(target, name, project, receiver);
+      }
+      return Reflect.get(target, name, receiver);
+    },
+    set: (target, key) => {
+      throw new ReadOnlyProxyWriteError('"projects" property is read-only.');
+    },
+    deleteProperty: (target, key) => {
+      state.deleteProject(key);
+    },
+  }));
 
   return {
     debugMode,
@@ -140,5 +176,7 @@ export default defineStore(storeId, () => {
     currentProjectName,
     projectMode,
     errorHandler,
+    getProject,
+    projects,
   };
 });
