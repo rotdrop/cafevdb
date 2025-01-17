@@ -32,6 +32,7 @@ use OCP\IConfig;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 
 /** Provide an "initial state" for JavaScript. */
@@ -76,7 +77,9 @@ trait InitialStateTrait
     $financeMode = $this->getUserValue('financeMode');
     $financeMode = filter_var($financeMode, FILTER_VALIDATE_BOOLEAN);
 
-    $adminContact = \OC::$server->query(OrganizationalRolesService::class)->cloudAdminContact(implode: true);
+    $adminContact = $this->appContainer()->get(OrganizationalRolesService::class)->cloudAdminContact(implode: true);
+
+    $authorizationService = $this->appContainer()->get(AuthorizationService::class);
 
     $languageComplete = $l->getLanguageCode();
     list($languageShort,) = explode('_', $languageComplete);
@@ -99,6 +102,8 @@ trait InitialStateTrait
         'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get from request
         'expertMode' => $expertMode,
         'financeMode' => $financeMode,
+        'userPermissions' => $authorizationService->getUserPermissions($this->userId()),
+        'isGroupAdmin' => $authorizationService->isAdmin($this->userId()),
         'Page' => [
           'historySize' => $this->historyService->size(),
           'historyPosition' => $this->historyService->position(),
