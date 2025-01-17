@@ -21,18 +21,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import appInfo from './app-info.js';
-import consoleMixin from './console.js';
-import globalState from './global-state.js';
-import dokuWiki from './doku-wiki.js';
-import md5 from './md5.js';
-import toasts from './toasts.js';
+import { showError, showInfo, TOAST_DEFAULT_TIMEOUT/*, TOAST_PERMANENT_TIMEOUT */ } from '@nextcloud/dialogs';
 
-export default [
-  appInfo,
-  consoleMixin,
-  globalState,
-  dokuWiki,
-  md5,
-  toasts,
-];
+const mixin = {
+  methods: {
+    showErrorToast(message, timeout, isHTML) {
+      showError(message, { timeout: timeout || TOAST_DEFAULT_TIMEOUT }, isHTML);
+    },
+    showInfoToast(message, timeout, isHTML) {
+      showInfo(message, { timeout: timeout || TOAST_DEFAULT_TIMEOUT }, isHTML);
+    },
+  },
+};
+
+export default mixin;
