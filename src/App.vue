@@ -94,6 +94,11 @@
           <NcCheckboxRadioSwitch :checked.sync="debugToggle">
             {{ t(appId, 'Fixme, add settings') }}
           </NcCheckboxRadioSwitch>
+          <NcCheckboxRadioSwitch v-if="financeAllowed"
+                                 :checked.sync="globalState.financeMode"
+          >
+            {{ t(appId, 'Finance Mode') }}
+          </NcCheckboxRadioSwitch>
         </NcAppNavigationSettings>
       </template>
     </NcAppNavigation>
@@ -153,6 +158,7 @@ import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.v
 import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
 import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import { mapWritableState, mapActions, mapState } from 'pinia'
+import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 
 import Icon from '../img/cafevdb.svg'
 
@@ -198,6 +204,9 @@ export default {
         'projectMode',
       ],
     ),
+    financeAllowed() {
+      return authorized(PERMISSION_FINANCE, this.globalState.userPermissions)
+    },
   },
   watch: {
     debugToggle(value) {
