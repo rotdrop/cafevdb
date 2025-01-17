@@ -90,7 +90,11 @@
         />
       </template>
       <template #footer>
-        <NcAppNavigationSettings>
+        <NcAppNavigationSettings :exclude-click-outside-selectors="[
+          '#appsettings_popup *',
+          '.vs__dropdown-menu',
+        ]"
+        >
           <NcCheckboxRadioSwitch :checked.sync="debugToggle">
             {{ t(appId, 'Fixme, add settings') }}
           </NcCheckboxRadioSwitch>
