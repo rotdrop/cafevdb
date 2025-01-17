@@ -78,6 +78,12 @@ subscribe(appName + ':project-participant-fields-popup', async (event) => {
   emit(appName + ':push-busy-state');
   await participantFieldsPopup(PHPMyEdit.selector(), event);
   emit(appName + ':pop-busy-state');
+});
+
+subscribe(appName + ':project-events-popup', async (event) => {
+  console.info('EVENT', event);
+  emit(appName + ':push-busy-state');
+  await eventsPopup(event);
   emit(appName + ':pop-busy-state');
 });
 

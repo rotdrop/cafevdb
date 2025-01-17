@@ -82,10 +82,26 @@
                     @click="closeMenu"
       >
         <template #icon>
-          <ParticipantFieldsIcon />
+          <ProjectFolderIcon />
         </template>
       </NcActionLink>
-      <NcActionButton>
+      <NcActionLink :name="t(appName, 'Project Notes')"
+                    :href="projectNotesLink"
+                    @click="openProjectNotes"
+      >
+        <template #icon>
+          <ProjectNotesIcon />
+        </template>
+      </NcActionLink>
+      <NcActionLink :name="t(appName, 'Events')"
+                    :href="projectEventsLink"
+                    @click="openProjectEvents"
+      >
+        <template #icon>
+          <ProjectEventsIcon />
+        </template>
+      </NcActionLink>
+      <NcActionButton v-if="financeMode">
         Two
       </NcActionButton>
     </NcActions>
@@ -106,11 +122,17 @@ import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
 import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
+import ProjectFolderIcon from 'vue-material-design-icons/Folder.vue'
+import ProjectNotesIcon from 'vue-material-design-icons/MessageBulleted.vue'
+import ProjectEventsIcon from 'vue-material-design-icons/Calendar.vue'
 import { emit, subscribe } from '@nextcloud/event-bus'
 import mixins from '../mixins/app-mixins.js'
 import useAppDataStore from '../stores/app-data.js'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
+import wikiPopup from '../app/wiki-popup.js'
 import md5 from 'blueimp-md5'
+// import { set as vueSet } from 'vue'
+import * as Authorization from '../authorization.ts'
 
 // The "consumer" has to take care that globalState.vue.Vue is already
 // defined.
@@ -126,7 +148,10 @@ export default globalState.vue.Vue.extend({
     NcActionText,
     NcActions,
     ParticipantFieldsIcon,
+    ProjectEventsIcon,
+    ProjectFolderIcon,
     ProjectInfoIcon,
+    ProjectNotesIcon,
     ProjectParticipantsIcon,
   },
   router: globalState.vue.router,
@@ -164,13 +189,33 @@ export default globalState.vue.Vue.extend({
       referenceElement: null,
       triggerButton: null,
       positioned: false,
-      projectFolderLink: '#',
-      projectFolderLinkTarget: '',
+      project: null,
     }
   },
   computed: {
     showProjectName() {
       return this.forceProjectName || this.positioned
+    },
+    projectFolder() {
+      return this.project?.folders?.projectsfolder || null
+    },
+    projectFolderLink() {
+      return nextcloudGenerateUrl('/apps/files/?dir=' + this.projectFolder)
+    },
+    projectFolderLinkTarget() {
+      return md5(this.projectFolderLink)
+    },
+    wikiPage() {
+      return this.project?.wikiPage || ''
+    },
+    projectNotesLink() {
+      return nextcloudGenerateUrl('/apps/dokuwiki?wikiPage=' + this.wikiPage)
+    },
+    projectEventsLink() {
+      return nextcloudGenerateUrl('/apps/calendar')
+    },
+    financeMode() {
+      return ((this.globalState?.userPermissions || 0) & Authorization.PERMISSION_FINANCE) && this.globalState?.financeMode
     },
   },
   watch: {
@@ -182,12 +227,12 @@ export default globalState.vue.Vue.extend({
       this.info('OPEN CHANGED', state, oldState)
     },
     async projectId(newValue/*, oldValue */) {
-      await this.updateProjectData(newValue)
+      this.syncProjectData(newValue)
     },
   },
   async created() {
     this.$parent = globalState.vue.app
-    await this.updateProjectData(this.projectId)
+    this.syncProjectData(this.projectId)
     this.info('ACTIONS MENU OBJECT', this)
   },
   mounted() {
@@ -209,12 +254,9 @@ export default globalState.vue.Vue.extend({
     })
   },
   methods: {
-    async updateProjectData(projectId) {
-      const project = await this.appData.getProject(projectId, this.appData.errorHandler)
-      this.info('PROJECT', project)
-      this.projectFolderLink = nextcloudGenerateUrl('/apps/files/?dir=' + project.folders.projectsfolder)
-      this.projectFolderLinkTarget = md5(this.projectFolderLink)
-      console.info('FOLDER', this.projectFolderLink, this.projectFolderLinkTarget)
+    async syncProjectData(projectId) {
+      this.project = await this.appData.getProject(projectId, this.appData.errorHandler)
+      // vueSet(this.project, 'folders', this.project.folders)
     },
     openProjectOverview() {
       this.open = false
@@ -244,6 +286,29 @@ export default globalState.vue.Vue.extend({
         open: false,
       })
       emit(this.appName + ':project-participant-fields-popup', {
+        projectId: this.projectId,
+        projectName: this.projectName,
+      })
+    },
+    openProjectNotes(event) {
+      event.preventDefault()
+      this.open = false
+      emit('toggle-navigation', {
+        open: false,
+      })
+      wikiPopup({
+        wikiPage: this.project.wikiPage,
+        popupTitle: t(this.appName, 'Project Wiki for {projectName}', { projectName: this.projectName }),
+
+      })
+    },
+    openProjectEvents(event) {
+      event.preventDefault()
+      this.open = false
+      emit('toggle-navigation', {
+        open: false,
+      })
+      emit(this.appName + ':project-events-popup', {
         projectId: this.projectId,
         projectName: this.projectName,
       })
@@ -316,7 +381,7 @@ export default globalState.vue.Vue.extend({
     },
     getRouteHref(route) {
       const routeProps = this.$router.resolve(route)
-      return routeProps?.href
+      return routeProps?.href || '#'
     },
   },
 })
