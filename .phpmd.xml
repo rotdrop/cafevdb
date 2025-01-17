@@ -32,12 +32,6 @@
     <exclude name="CouplingBetweenObjects"/>
   </rule>
 
-  <rule ref="rulesets/naming.xml">
-    <exclude name="ShortVariable"/>
-    <exclude name="LongVariable"/>
-    <exclude name="LongClassName"/>
-    <exclude name="BooleanGetMethodName"/>
-  </rule>
   <rule ref="rulesets/naming.xml/ShortVariable">
     <properties>
       <property name="exceptions" value="a,b,c,cc,d,db,e,f,fp,g,kd,km,i,id,j,k,l,n,op,qb,r,s,tz,x"/>
@@ -45,7 +39,13 @@
   </rule>
   <rule ref="rulesets/naming.xml/ShortMethodName">
     <properties>
-      <property name="exceptions" value="di"/>
+      <property name="minimum" value="2" />
+      <property name="exceptions" value="di" />
+      <property name="exceptions">
+        <value>
+          di
+        </value>
+      </property>
     </properties>
   </rule>
   <rule ref="rulesets/naming.xml/LongVariable">
@@ -60,6 +60,13 @@
       <property name="maximum" value="64"/>
     </properties>
   </rule>
+
+  <!-- rule ref="rulesets/naming.xml">
+    <exclude name="ShortVariable"/>
+    <exclude name="LongVariable"/>
+    <exclude name="LongClassName"/>
+    <exclude name="BooleanGetMethodName"/>
+  </rule -->
 
   <rule ref="rulesets/unusedcode.xml">
     <exclude name="UnusedFormalParameter"/>
