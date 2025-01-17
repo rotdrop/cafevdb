@@ -27,10 +27,13 @@ import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
 // import { sync } from 'vuex-router-sync'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
-import Vue from 'vue';
+import Vue, { set as vueSet } from 'vue';
 import App from './App.vue';
 import router from './router/app-router.js';
 import { createPinia, PiniaVuePlugin } from 'pinia';
+import { subscribe } from '@nextcloud/event-bus';
+
+console.trace('CAFEVDB APP DEF');
 
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
@@ -43,6 +46,14 @@ __webpack_nonce__ = btoa(getRequestToken());
 __webpack_public_path__ = generateFilePath(appName, '', '');
 
 Vue.mixin({ data() { return { appId: appName }; }, methods: { t, n } });
+
+// make the components of the global state object reactive
+subscribe(appName + ':global-state', (event) => {
+  for (const [key, value] of Object.entries(event.state)) {
+    Vue.delete(globalState, key);
+    vueSet(globalState, key, value);
+  }
+});
 
 const vueApp = new Vue({
   el: '#content',

@@ -53,8 +53,17 @@ $.extend(
     creditsTimer: -1,
     adminContact: t(appName, 'unknown'),
     phpUserAgent: t(appName, 'unknown'),
+    subscribe: {},
+    emit: {},
   }, globalState),
 );
+
+if (!globalState.emit['global-state']) {
+  globalState.emit['global-state'] = true;
+  emit(appName + ':global-state', {
+    state: globalState,
+  });
+}
 
 /**
  * Register callbacks which are run after partial page reload in
@@ -259,13 +268,16 @@ const toolTipsOnOff = function(onOff) {
   }
 };
 
-subscribe(appName + ':toggle-tooltips', (event) => {
-  console.info('EVENT', event);
-  // avoid  ping-pong
-  if (event.enabled !== globalState.toolTipsEnabled) {
-    toolTipsOnOff(event.enabled);
-  }
-});
+if (!globalState.subscribe['toggle-tooltips']) {
+  globalState.subscribe['toggle-tooltips'] = true;
+  subscribe(appName + ':toggle-tooltips', (event) => {
+    console.info('EVENT', event);
+    // avoid  ping-pong
+    if (event.enabled !== globalState.toolTipsEnabled) {
+      toolTipsOnOff(event.enabled);
+    }
+  });
+}
 
 /**
  * @returns {boolean}
