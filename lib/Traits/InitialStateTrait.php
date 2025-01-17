@@ -68,6 +68,7 @@ trait InitialStateTrait
 
     $tooltips   = $this->getUserValue('tooltips', '');
     $directChg  = $this->getUserValue('directchange', '');
+    $showDisabled = $this->getUserValue('showdisabled', '');
     $deselectInvisible = $this->getUserValue('deselectInvisibleMiscRecs', '');
     $editor     = $this->getUserValue('wysiwygEditor', 'tinymce');
 
@@ -102,6 +103,7 @@ trait InitialStateTrait
         'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get from request
         'expertMode' => $expertMode,
         'financeMode' => $financeMode,
+        'debugModes' => $this->getConfigValue('debugmode', 0),
         'userPermissions' => $authorizationService->getUserPermissions($this->userId()),
         'isGroupAdmin' => $authorizationService->isAdmin($this->userId()),
         'Page' => [
@@ -117,7 +119,8 @@ trait InitialStateTrait
       $this->appName,
       'PHPMyEdit',
       [
-        'directChange' => ($directChg == "on" ? true : false),
+        'directChange' => ($directChg == 'on' ? true : false),
+        'showDisabled' => ($showDisabled == 'on' ? true : false),
         'deselectInvisibleMiscRecs' => ($deselectInvisible == 'on' ? true : false),
         'selectChosen' => true,
         'filterSelectPlaceholder' => $l->t("Select a filter option."),
