@@ -1,0 +1,79 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013, 2020, 2021, 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#appsettings_popup {
+  div.personalblock.admin {
+    min-width:46em;
+    min-height:30em;
+  }
+  &.popup.bottomleft {
+    bottom:1em;
+    left:300px;
+    margin-left:1em;
+    position: absolute;
+    z-index: 1050;
+    height: auto;
+  }
+  .popup-title {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: #fff;
+    padding-top: 1em;
+  }
+
+  &.popup {
+    background-color: #fff;
+    border-radius: 3px;
+    box-shadow: 0 0 10px #aaa;
+    color: #333;
+    /* padding: 10px; */
+    position: absolute;
+    z-index: 100;
+    & > div:first-child {
+      /* top right bottom left */
+      margin: 0 0 0.5em 1em;
+      padding: 0;
+      border:0;
+      max-height: calc(100vh - 50px - 1.5em); /* header - top and bottom */
+      height: 100%;
+      overflow: auto;
+    }
+    .close {
+      position: absolute;
+      top: 0.2em;
+      right: 0.2em;
+      height: 20px;
+      width: 20px;
+      background: url('../../../core/img/actions/close.svg') no-repeat center;
+    }
+  }
+
+  div.personalblock.#{$appNameTag}.about {
+    max-width:46em;
+    width:46em;
+  }
+
+  @import 'personal-settings';
+}

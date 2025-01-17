@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ require('jquery-ui/themes/base/autocomplete.css');
 require('jquery-ui/ui/widgets/accordion');
 require('jquery-ui/ui/widgets/tabs');
 
-require('settings.scss');
+require('personal-settings.scss');
 require('about.scss');
 
 /**

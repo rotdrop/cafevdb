@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,16 +21,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, $, appName, appPrefix, appNameTag } from './globals.js';
+import globalState from './globalstate.js';
+import $ from './jquery.js';
+import { appName, appNameTag } from './app-info.js';
 import { setPersonalUrl } from './settings-urls.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
-import * as PHPMyEdit from './pme-selectors.js';
 import * as Notification from './notification.js';
 import { chosenActive, selected as selectedValues } from './select-utils.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
+import setFinanceMode from './finance-mode.js';
+import setExpertMode from './expert-mode.js';
+import setShowDisabled from './show-disabled.js';
+import setDebugModes from './debug-modes.js';
 
-// console.info('JQUERY ', $.fn.jquery);
+require('nav-area-settings.scss');
 
 const documentReady = function() {
 
@@ -215,96 +220,21 @@ const documentReady = function() {
   container.on('change', '.showdisabled', function(event) {
     const self = $(this);
     const checked = self.prop('checked');
-    $.post(setPersonalUrl('showdisabled'), { value: checked })
-      .done(function(data) {
-        showMessage(data.message);
-        console.log(data);
-        if (globalState.PHPMyEdit !== undefined) {
-          const pmeForm = $('#content ' + PHPMyEdit.formSelector + '.show-hide-disabled');
-          console.log('form', pmeForm);
-          pmeForm.each(function(index) {
-            const form = $(this);
-            const reload = form.find(PHPMyEdit.classSelector('input', 'reload')).first();
-            if (reload.length > 0) {
-              form.append('<input type="hidden"'
-                          + ' name="' + PHPMyEdit.sys('sw') + '"'
-                          + ' value="Clear"/>');
-              reload.trigger('click');
-            }
-            if (checked) {
-              form.addClass('show-disabled').removeClass('hide-disabled');
-            } else {
-              form.removeClass('show-disabled').addClass('hide-disabled');
-            }
-          });
-        }
-        return false;
-      })
-      .fail(function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        // console.error(data);
-      });
-    if (globalState.PHPMyEdit !== undefined) {
-      globalState.PHPMyEdit.showdisabled = checked;
-    }
-    $('.personal-settings input[type="checkbox"].showdisabled').prop('checked', checked);
+    setShowDisabled(checked);
     return false;
   });
 
   container.on('change', '.expert-mode', function(event) {
     const self = $(this);
     const checked = self.prop('checked');
-    $.post(setPersonalUrl('expert-mode'), { value: checked })
-      .done(function(data) {
-        showMessage(data.message);
-        console.log(data);
-        if (globalState.PHPMyEdit !== undefined) {
-          const pmeForm = $('#content ' + PHPMyEdit.formSelector);
-          pmeForm.each(function(index) {
-            const reload = $(this).find(PHPMyEdit.classSelector('input', 'reload')).first();
-            reload.trigger('click');
-          });
-        }
-      })
-      .fail(function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        // console.error(data);
-      });
-
-    $('.expert-mode-container').toggleClass('hidden', !checked);
-    $('body').toggleClass(appPrefix('expert-mode'), checked);
-    $('.personal-settings input[type="checkbox"].expert-mode').prop('checked', checked);
-    $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');
-    $.fn.cafevTooltip.remove(); // remove any left-over items.
-    globalState.expertMode = checked;
+    setExpertMode(checked, showMessage);
     return false;
   });
 
   container.on('change', '.finance-mode', function(event) {
-    const self = $(this);
-    const checked = self.prop('checked');
-    $.post(setPersonalUrl('finance-mode'), { value: checked })
-      .done(function(data) {
-        showMessage(data.message);
-        console.log(data);
-        if (globalState.PHPMyEdit !== undefined) {
-          const pmeForm = $('#content ' + PHPMyEdit.formSelector);
-          pmeForm.each(function(index) {
-            const reload = $(this).find(PHPMyEdit.classSelector('input', 'reload')).first();
-            reload.trigger('click');
-          });
-        }
-      })
-      .fail(function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        // console.error(data);
-      });
-    $('.finance-mode-container').toggleClass('hidden', !checked);
-    $('body').toggleClass(appPrefix('finance-mode'), checked);
-    $('.personal-settings input[type="checkbox"].finance-mode').prop('checked', checked);
-    $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');
-    $.fn.cafevTooltip.remove(); // remove any left-over items.
-    globalState.financeMode = checked;
+    const $self = $(this);
+    const checked = $self.prop('checked');
+    setFinanceMode(checked, showMessage);
     return false;
   });
 
@@ -329,30 +259,15 @@ const documentReady = function() {
   });
 
   container.on('change', '.debugmode', function(event) {
-    const $self = $(this);
-    const post = $self.serializeArray();
-    console.log(post);
-    $.post(setPersonalUrl('debugmode'), { value: post })
-      .done(function(data) {
-        showMessage(data.message);
-        console.log(data);
-        globalState.debugModes = data.value;
-      })
-      .fail(function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        // console.error(data);
-      });
-    $('.personal-settings select.debugmode').each(function(index) {
-      if (this !== $self[0]) {
-        selectedValues($(this), selectedValues($self));
-      }
-    });
+    const $this = $(this);
+    const post = $this.serializeArray();
+    setDebugModes(post, showMessage, $this);
     return false;
   });
 
   container.on('change', '.wysiwyg-editor', function(event) {
-    const $self = $(this);
-    const value = $self.val();
+    const $this = $(this);
+    const value = $this.val();
     $.post(setPersonalUrl('wysiwygEditor'), { value })
       .done(function(data) {
         showMessage(data.message);
@@ -364,8 +279,8 @@ const documentReady = function() {
         // console.error(data);
       });
     $('.personal-settings select.wysiwyg-editor').each(function(index) {
-      if (this !== $self[0]) {
-        selectedValues($(this), selectedValues($self));
+      if (this !== $this[0]) {
+        selectedValues($(this), selectedValues($this));
       }
     });
     return false;
