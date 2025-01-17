@@ -1,6 +1,6 @@
 <!--
  - @author Claus-Justus Heine
- - @copyright 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -194,6 +194,7 @@ export default {
       active: false,
       id: this._uid,
       ncSelect: undefined,
+      appName: APP_NAME,
     }
   },
   computed: {
