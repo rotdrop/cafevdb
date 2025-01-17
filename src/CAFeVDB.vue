@@ -99,6 +99,40 @@
           >
             {{ t(appId, 'Finance Mode') }}
           </NcCheckboxRadioSwitch>
+          <NcCheckboxRadioSwitch :checked.sync="globalState.expertMode">
+            {{ t(appId, 'Expert Mode') }}
+          </NcCheckboxRadioSwitch>
+          <NcCheckboxRadioSwitch :checked.sync="globalState.PHPMyEdit.showDisabled">
+            {{ t(appId, 'Show Disabled Data-Sets') }}
+          </NcCheckboxRadioSwitch>
+          <SelectWithSubmitButton v-model="debugModes"
+                                  input-id="debug-modes-select"
+                                  :input-label="t(appId, 'Debug')"
+                                  :hint="'REPLACE ME TOOLTIPS'"
+                                  :required="false"
+                                  :clearable="true"
+                                  :options="debugOptions"
+                                  :multiple="true"
+                                  :loading="false"
+                                  :disabled="false"
+                                  :submit-button="false"
+                                  @input="(...args) => info('INPUT', ...args)"
+                                  @update="(...args) => info('UPDATZE', ...args)"
+                                  @error="error"
+          />
+          <NcActions :force-name="true" :inline="1" :class="{ loading: appSettingsLoading }">
+            <NcActionLink :class="{ loading: appSettingsLoading }"
+                          :name="t(appId, 'Further Settings')"
+                          :href="personalSettingsUrl"
+                          :target="md5(personalSettingsUrl)"
+                          @click="openSettingsPopup"
+            >
+              <template #icon>
+                <AppSettingsIcon />
+              </template>
+              {{ t(appId, 'Further Settings') }}
+            </NcActionLink>
+          </NcActions>
         </NcAppNavigationSettings>
       </template>
     </NcAppNavigation>
@@ -136,14 +170,17 @@
       </NcAppSidebarTab>
     </NcAppSidebar>
     -->
+    <div id="appsettings_popup" class="personal-settings app-admin-settings popup bottomleft hidden" />
   </NcContent>
 </template>
 
 <script>
 import { appName as appId } from './app/app-info.js'
 import mixins from './mixins/app-mixins.js'
-import { emit, subscribe } from '@nextcloud/event-bus'
+import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import {
+  NcActions,
+  NcActionLink,
   NcContent,
   NcAppContent,
   NcAppNavigation,
@@ -157,8 +194,13 @@ import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
 import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
+import AppSettingsIcon from 'vue-material-design-icons/Cogs.vue'
+import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
+import { debugOptions } from './debug-modes.ts'
+import { emit, subscribe } from '@nextcloud/event-bus'
+import * as BusEvents from './event-bus.ts'
 
 import Icon from '../img/cafevdb.svg'
 
@@ -169,7 +211,10 @@ const initialState = getInitialState('CAFEVDB')
 export default {
   name: 'CAFeVDB',
   components: {
+    AppSettingsIcon,
     InstrumentationNumbersIcon,
+    NcActions,
+    NcActionLink,
     NcAppContent,
     NcAppNavigation,
     NcAppNavigationItem,
@@ -180,6 +225,7 @@ export default {
     ParticipantFieldsIcon,
     ProjectInfoIcon,
     ProjectParticipantsIcon,
+    SelectWithSubmitButton,
   },
   mixins,
   data() {
@@ -188,6 +234,10 @@ export default {
       icon: Icon,
       loading: true,
       debugToggle: false,
+      isMounted: false,
+      debugModes: [],
+      settingsLocked: false,
+      appSettingsLoading: false,
     }
   },
   computed: {
@@ -207,22 +257,87 @@ export default {
     financeAllowed() {
       return authorized(PERMISSION_FINANCE, this.globalState.userPermissions)
     },
+    debugOptions() {
+      const options = []
+      for (const [value, label] of Object.entries(debugOptions)) {
+        options.push({ value, label })
+      }
+      return options
+    },
+    personalSettingsUrl() {
+      return nextcloudGenerateUrl('settings/user/' + this.appName)
+    },
   },
   watch: {
     debugToggle(value) {
       this.debugMode = value ? 1 : 0
     },
+    'globalState.financeMode'(value, oldValue) {
+      this.info('FINANCE MODE CHANGED', value, oldValue, this.isMounted)
+      if (!this.isMounted || oldValue === undefined) {
+        return
+      }
+      emit(BusEvents.SET_FINANCE_MODE, { value })
+    },
+    'globalState.expertMode'(value, oldValue) {
+      this.info('EXPERT MODE CHANGED', value, oldValue, this.isMounted)
+      if (!this.isMounted || oldValue === undefined) {
+        return
+      }
+      emit(BusEvents.SET_EXPERT_MODE, { value })
+    },
+    'globalState.PHPMyEdit.showDisabled'(value, oldValue) {
+      this.info('SHOW DISABLED MODE CHANGED', value, oldValue, this.isMounted)
+      if (!this.isMounted || oldValue === undefined) {
+        return
+      }
+      emit(BusEvents.SET_SHOW_DISABLED, { value })
+    },
+    async 'globalState.debugModes'(newValue, oldValue) {
+      this.info('DEBUG MODES CHANGED', newValue, oldValue, this.isMounted, this.settingsLocked)
+      if (this.settingsLocked) {
+        return
+      }
+      const newSelection = []
+      for (const option of this.debugOptions) {
+        const flag = +option.value
+        if ((newValue & flag)) {
+          newSelection.push(option)
+        }
+      }
+      this.settingsLocked = true
+      this.debugModes.splice(0, Infinity, ...newSelection)
+      await this.$nextTick()
+      this.settingsLocked = false
+    },
+    async debugModes(newValue, oldValue) {
+      this.info('DEBUG MODES SELECTION CHANGED', newValue, oldValue, this.isMounted, this.settingsLocked)
+      if (!this.isMounted || oldValue === undefined || this.settingsLocked) {
+        return
+      }
+      this.settingsLocked = true
+      emit(BusEvents.SET_DEBUG_MODES, {
+        value: newValue,
+        callbacks: {
+          always: async () => {
+            await this.$nextTick()
+            this.settingsLocked = false
+          },
+        },
+      })
+    },
   },
   created() {
     this.loading = false
-    subscribe(this.appName + ':push-busy-state', () => this.pushBusyState())
-    subscribe(this.appName + ':pop-busy-state', () => this.popBusyState())
+    subscribe(BusEvents.PUSH_BUSY_STATE, () => this.pushBusyState())
+    subscribe(BusEvents.POP_BUSY_STATE, () => this.popBusyState())
   },
   mounted() {
     // works only after mounting
-    emit('toggle-navigation', {
+    emit(BusEvents.TOGGLE_NAVIGATION, {
       open: false,
     })
+    this.isMounted = true
   },
   methods: {
     ...mapActions(useAppDataStore, ['pushBusyState', 'popBusyState']),
@@ -238,13 +353,21 @@ export default {
       return routeProps?.href
     },
     openProjectOverview() {
-      this.open = false
-      emit('toggle-navigation', {
+      emit(BusEvents.TOGGLE_NAVIGATION, {
         open: false,
       })
-      emit(this.appName + ':project-popup', {
+      emit(BusEvents.PROJECT_POPUP, {
         projectId: this.currentProjectId,
         projectName: this.currentProjectName,
+      })
+    },
+    async openSettingsPopup(event) {
+      event.preventDefault()
+      this.appSettingsLoading = true
+      emit(BusEvents.APP_SETTINGS_POPUP, {
+        done() {},
+        fail() {},
+        always: () => { this.appSettingsLoading = false },
       })
     },
   },

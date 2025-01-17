@@ -102,6 +102,7 @@ import { setPersonalUrl } from '../app/settings-urls.js'
 import wikiPopup from '../app/wiki-popup.js'
 import useAppDataStore from '../stores/app-data.js'
 import { mapWritableState, mapActions, mapState } from 'pinia'
+import * as BusEvents from '../event-bus.ts'
 
 const initialState = getInitialState('CAFEVDB')
 
@@ -195,7 +196,7 @@ export default {
       })
     },
     async onTooltipsChange() {
-      emit(this.appName + ':toggle-tooltips', {
+      emit(this.BusEvents.TOGGLE_TOOLTIPS, {
         enabled: this.tooltips,
       })
       try {
@@ -206,7 +207,7 @@ export default {
       }
     },
     async loadLegacy() {
-      emit('toggle-navigation', {
+      emit(BusEvents.TOGGLE_NAVIGATION, {
         open: false,
       })
       this.currentProjectId = this.templateParameters?.projectId || -1
@@ -236,7 +237,7 @@ export default {
       this.loading = false
     },
     onRouteChange(/* to, from, next */) {
-      emit('toggle-navigation', {
+      emit(BusEvents.TOGGLE_NAVIGATION, {
         open: false,
       })
       this.currentProjectId = this.templateParameters?.projectId || -1

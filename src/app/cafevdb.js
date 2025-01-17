@@ -36,6 +36,7 @@ import {
   setMarkCount,
 } from './jquery-cafevdb-tooltips.js';
 import { emit, subscribe } from '@nextcloud/event-bus';
+import * as BusEvents from '../event-bus.ts';
 
 require('cafevdb.scss');
 
@@ -60,7 +61,7 @@ $.extend(
 
 if (!globalState.emit['global-state']) {
   globalState.emit['global-state'] = true;
-  emit(appName + ':global-state', {
+  emit(BusEvents.GLOBAL_STATE, {
     state: globalState,
   });
 }
@@ -257,7 +258,7 @@ const toolTipsOnOff = function(onOff) {
     return;
   }
   globalState.toolTipsEnabled = onOff;
-  emit(appName + ':toggle-tooltips', {
+  emit(BusEvents.TOGGLE_TOOLTIPS, {
     enabled: globalState.toolTipsEnabled,
   });
   if (globalState.toolTipsEnabled) {
@@ -270,7 +271,7 @@ const toolTipsOnOff = function(onOff) {
 
 if (!globalState.subscribe['toggle-tooltips']) {
   globalState.subscribe['toggle-tooltips'] = true;
-  subscribe(appName + ':toggle-tooltips', (event) => {
+  subscribe(BusEvents.TOGGLE_TOOLTIPS, (event) => {
     console.info('EVENT', event);
     // avoid  ping-pong
     if (event.enabled !== globalState.toolTipsEnabled) {

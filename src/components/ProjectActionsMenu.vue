@@ -133,6 +133,7 @@ import wikiPopup from '../app/wiki-popup.js'
 import md5 from 'blueimp-md5'
 // import { set as vueSet } from 'vue'
 import * as Authorization from '../authorization.ts'
+import * as BusEvents from '../event-bus.ts'
 
 // The "consumer" has to take care that globalState.vue.Vue is already
 // defined.
@@ -260,10 +261,10 @@ export default globalState.vue.Vue.extend({
     },
     openProjectOverview() {
       this.open = false
-      emit('toggle-navigation', {
+      emit(BusEvents.TOGGLE_NAVIGATION, {
         open: false,
       })
-      emit(this.appName + ':project-popup', {
+      emit(BusEvents.PROJECT_POPUP, {
         projectId: this.projectId,
         projectName: this.projectName,
       })
@@ -271,10 +272,10 @@ export default globalState.vue.Vue.extend({
     openInstrumentationNumbers(event) {
       event.preventDefault()
       this.open = false
-      emit('toggle-navigation', {
+      emit(BusEvents.TOGGLE_NAVIGATION, {
         open: false,
       })
-      emit(this.appName + ':project-instrumentation-numbers-popup', {
+      emit(BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP, {
         projectId: this.projectId,
         projectName: this.projectName,
       })
@@ -282,10 +283,10 @@ export default globalState.vue.Vue.extend({
     openParticipantFields(event) {
       event.preventDefault()
       this.open = false
-      emit('toggle-navigation', {
+      emit(BusEvents.TOGGLE_NAVIGATION, {
         open: false,
       })
-      emit(this.appName + ':project-participant-fields-popup', {
+      emit(BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP, {
         projectId: this.projectId,
         projectName: this.projectName,
       })
@@ -293,7 +294,7 @@ export default globalState.vue.Vue.extend({
     openProjectNotes(event) {
       event.preventDefault()
       this.open = false
-      emit('toggle-navigation', {
+      emit(BusEvents.TOGGLE_NAVIGATION, {
         open: false,
       })
       wikiPopup({
@@ -305,10 +306,10 @@ export default globalState.vue.Vue.extend({
     openProjectEvents(event) {
       event.preventDefault()
       this.open = false
-      emit('toggle-navigation', {
+      emit(BusEvents.TOGGLE_NAVIGATION, {
         open: false,
       })
-      emit(this.appName + ':project-events-popup', {
+      emit(BusEvents.PROJECT_EVENTS_POPUP, {
         projectId: this.projectId,
         projectName: this.projectName,
       })

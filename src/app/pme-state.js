@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,8 +26,10 @@
  * General PME table stuff, popup-handling.
  */
 
-import { globalState, $ } from './globals.js';
+import globalState from './globalstate.js';
 import { initialState, appName } from './config.js';
+import { emit } from '@nextcloud/event-bus';
+import * as BusEvents from '../event-bus.ts';
 
 const PHPMyEdit = {
   directChange: false,
@@ -57,6 +59,8 @@ const PHPMyEdit = {
     compKeySep: '-',
     joinFieldNameSeparator: ':',
   },
+
+  emit: false,
 };
 
 PHPMyEdit.dialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
@@ -67,7 +71,13 @@ PHPMyEdit.dialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
  *
  */
 
-globalState.PHPMyEdit = $.extend(PHPMyEdit, initialState.PHPMyEdit);
+globalState.PHPMyEdit = globalState.PHPMyEdit || Object.assign(PHPMyEdit, initialState.PHPMyEdit);
+if (!PHPMyEdit.emit) {
+  PHPMyEdit.emit = true;
+  emit(BusEvents.PME_STATE, {
+    state: globalState.PHPMyEdit,
+  });
+}
 
 const pmeDefaultSelector = PHPMyEdit.defaultSelector;
 const pmePrefix = PHPMyEdit.pmePrefix;

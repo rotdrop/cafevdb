@@ -48,6 +48,7 @@ import wikiPopup from './wiki-popup.js';
 import setBusyIndicators from './busy-indicators.js';
 import iFrameResize from './iframe-resize.js';
 import { emit, subscribe } from '@nextcloud/event-bus';
+import * as BusEvents from '../event-bus.ts';
 
 // eslint-disable-next-line no-unused-vars
 // import iFrameResize from 'iframe-resizer';
@@ -59,32 +60,32 @@ require('projects.scss');
 // listen to requests from the Vue wrapper application, the idea is
 // not to have to load all the code twice, or not to have to change
 // anything at once.
-subscribe(appName + ':project-popup', async (event) => {
+subscribe(BusEvents.PROJECT_POPUP, async (event) => {
   console.info('EVENT', event);
-  emit(appName + ':push-busy-state');
+  emit(BusEvents.PUSH_BUSY_STATE);
   await projectViewPopup(PHPMyEdit.selector(), event);
-  emit(appName + ':pop-busy-state');
+  emit(BusEvents.POP_BUSY_STATE);
 });
 
-subscribe(appName + ':project-instrumentation-numbers-popup', async (event) => {
+subscribe(BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP, async (event) => {
   console.info('EVENT', event);
-  emit(appName + ':push-busy-state');
+  emit(BusEvents.PUSH_BUSY_STATE);
   await instrumentationNumbersPopup(PHPMyEdit.selector(), event);
-  emit(appName + ':pop-busy-state');
+  emit(BusEvents.POP_BUSY_STATE);
 });
 
-subscribe(appName + ':project-participant-fields-popup', async (event) => {
+subscribe(BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP, async (event) => {
   console.info('EVENT', event);
-  emit(appName + ':push-busy-state');
+  emit(BusEvents.PUSH_BUSY_STATE);
   await participantFieldsPopup(PHPMyEdit.selector(), event);
-  emit(appName + ':pop-busy-state');
+  emit(BusEvents.POP_BUSY_STATE);
 });
 
-subscribe(appName + ':project-events-popup', async (event) => {
+subscribe(BusEvents.PROJECT_EVENTS_POPUP, async (event) => {
   console.info('EVENT', event);
-  emit(appName + ':push-busy-state');
+  emit(BusEvents.PUSH_BUSY_STATE);
   await eventsPopup(event);
-  emit(appName + ':pop-busy-state');
+  emit(BusEvents.POP_BUSY_STATE);
 });
 
 /**
