@@ -167,7 +167,7 @@ import { getInitialState } from './toolkit/services/InitialStateService.js'
 const initialState = getInitialState('CAFEVDB')
 
 export default {
-  name: 'App',
+  name: 'CAFeVDB',
   components: {
     InstrumentationNumbersIcon,
     NcAppContent,

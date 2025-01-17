@@ -28,7 +28,7 @@ import { getRequestToken } from '@nextcloud/auth';
 // import { sync } from 'vuex-router-sync'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import Vue, { set as vueSet } from 'vue';
-import App from './App.vue';
+import CAFeVDB from './CAFeVDB.vue';
 import router from './router/app-router.js';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 import { subscribe } from '@nextcloud/event-bus';
@@ -60,7 +60,7 @@ const vueApp = new Vue({
   name: appName,
   router,
   pinia,
-  render: h => h(App),
+  render: h => h(CAFeVDB),
 });
 
 globalState.vueMode = true;
