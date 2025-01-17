@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -424,7 +424,9 @@ class ProjectsController extends Controller
     }
     switch ($topic) {
       case '':
-        return self::dataResponse($this->flattenProject($project));
+        $data = $this->flattenProject($project);
+        $data['wikiPage'] = $projectService->projectWikiLink($project->getName());
+        return self::dataResponse($data);
       case self::GET_PARTICIPANT_FIELDS:
         $multiplicity = $this->parameterService->getParam('multiplicity');
         $type = $this->parameterService->getParam('type');
