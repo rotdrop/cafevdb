@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,56 +25,79 @@ import $ from './jquery.js';
 import { appName } from './app-info.js';
 import { unfocus } from './cafevdb.js';
 import generateUrl from './generate-url.js';
+import { subscribe, emit } from '@nextcloud/event-bus';
+
+require('../legacy/nextcloud/jquery/requesttoken.js');
+require('personal-settings-popup.scss');
+
+subscribe(appName + ':app-settings-popup', async (event) => {
+  console.info('EVENT', event);
+  emit(appName + ':push-busy-state');
+  await appSettingsPopup(event);
+  emit(appName + ':pop-busy-state');
+});
 
 /**
  * A variant of the old fashioned appsettings with a callback
  * instead of script loading
  *
- * @param {string} route TBD.
+ * @param {object} callbacks Object with done(), fail(), always() properties.
  *
- * @param {object} callbacks TBD.
+ * @returns {Promise}
  */
-const appSettings = function(route, callbacks) {
+export const appSettingsPopup = async function(callbacks) {
   const defaultCallbacks = {
     done() {},
     fail() {},
     always() {},
   };
-  callbacks = $.extend({}, defaultCallbacks, callbacks);
+  callbacks = Object.assign({}, defaultCallbacks, callbacks);
   const $popup = $('#appsettings_popup');
-  if ($popup.is(':visible')) {
-    $popup.addClass('hidden').html('');
-    // $popup.hide().html('');
-  } else {
-    // const arrowclass = $popup.hasClass('topright') ? 'up' : 'left';
-    $.get(generateUrl(route))
-      .done(function(data) {
-        $popup
-          .html(data)
-          .ready(function() {
-            // assume the first element is a container div
-            if ($popup.find('.popup-title').length > 0) {
-              $popup.find('.popup-title').append('<a class="close"></a>');
-              // $popup.find(">:first-child").prepend('<a class="close"></a>').show();
-            } else {
-              $popup.find('>:first-child').prepend('<div class="popup-title"><h2>' + t('core', 'Settings') + '</h2><a class="close"></a></div>');
-            }
-            $popup.find('.close').bind('click', function() {
-              $popup.addClass('hidden').html('');
+
+  console.info('POPUP ELEMENT', $popup);
+
+  await new Promise((resolve, reject) => {
+    if ($popup.is(':visible')) {
+      $popup.addClass('hidden').html('');
+      callbacks.always();
+      console.info('RESOLVE SETTINGS PROMISE false');
+      resolve(false);
+    } else {
+      // const arrowclass = $popup.hasClass('topright') ? 'up' : 'left';
+      const route = 'settings/personal/form';
+      $.get(generateUrl(route))
+        .done(function(data) {
+          $popup
+            .html(data)
+            .ready(function(...args) {
+              // assume the first element is a container div
+              if ($popup.find('.popup-title').length > 0) {
+                $popup.find('.popup-title').append('<a class="close"></a>');
+                // $popup.find(">:first-child").prepend('<a class="close"></a>').show();
+              } else {
+                $popup.find('>:first-child').prepend('<div class="popup-title"><h2>' + t('core', 'Settings') + '</h2><a class="close"></a></div>');
+              }
+              $popup.find('.close').bind('click', function() {
+                $popup.addClass('hidden').html('');
+              });
+              $popup.trigger(appName + ':content-update'); // trigger jq ui initialization etc.
+              callbacks.done.apply($popup.get(0), ...args);
+              $popup.find('>:first-child').removeClass('hidden');
+              $popup.removeClass('hidden');
+              console.info('RESOLVE SETTINGS PROMISE true');
+              resolve(true);
             });
-            callbacks.done.apply($popup.get(0), arguments);
-            $popup.find('>:first-child').removeClass('hidden');
-            $popup.removeClass('hidden');
-          });
-      })
-      .fail(function() {
-        console.log(arguments);
-        callbacks.fail.apply($popup.get(0), arguments);
-      })
-      .always(function() {
-        callbacks.always.apply($popup.get(0), arguments);
-      });
-  }
+        })
+        .fail(function(xhr, status, errorThrown, ...rest) {
+          console.log(arguments);
+          callbacks.fail.apply($popup.get(0), xhr, status, errorThrown, ...rest);
+          reject(new Error(errorThrown));
+        })
+        .always(function() {
+          callbacks.always.apply($popup.get(0), arguments);
+        });
+    }
+  });
 };
 
 const documentReady = function() {
@@ -95,16 +118,13 @@ const documentReady = function() {
   appNav.on('click', '#app-settings-further-settings', function(event) {
     const $self = $(this);
     $self.addClass('loading');
-    appSettings(
-      'settings/personal/form', {
-        done() {
-          const $popup = $(this);
-          $popup.trigger(appName + ':content-update'); // perhaps remove this
-        },
-        always() {
-          $self.removeClass('loading');
-        },
-      });
+    appSettingsPopup({
+      done() {
+      },
+      always() {
+        $self.removeClass('loading');
+      },
+    });
 
     return false;
   });
