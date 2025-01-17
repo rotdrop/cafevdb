@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ import setBusyIndicators from './busy-indicators.js';
  */
 function documentReady() {
 
-  const $container = $('#app-content');
+  const $container = $('#app-content, #app-content-vue');
 
   $container.on('click', '#configrecheck', function(event) {
     console.info('Hello recheck');

@@ -108,7 +108,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
     position: {
       my: 'center top',
       at: 'center top+50',
-      of: '#app-content',
+      of: '#app-content, #app-content-vue',
     },
     width: 'auto', // 510,
     height: 'auto',

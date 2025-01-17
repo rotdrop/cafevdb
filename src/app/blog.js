@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,7 +45,7 @@ globalState.Blog = {
 const popupPosition = {
   my: 'center top+5%',
   at: 'center top',
-  of: '#app-content',
+  of: '#app-content, #app-content-vue',
   offset: '0 0',
 };
 
