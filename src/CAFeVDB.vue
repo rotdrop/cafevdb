@@ -95,16 +95,16 @@
           '.vs__dropdown-menu',
         ]"
         >
-          <NcCheckboxRadioSwitch :checked.sync="debugToggle">
-            {{ t(appId, 'Fixme, add settings') }}
+          <NcCheckboxRadioSwitch :checked.sync="globalState.toolTipsEnabled">
+            {{ t(appId, 'Tool-Tips') }}
           </NcCheckboxRadioSwitch>
           <NcCheckboxRadioSwitch v-if="financeAllowed"
                                  :checked.sync="globalState.financeMode"
           >
-            {{ t(appId, 'Finance Mode') }}
+            {{ t(appId, 'Finance-Mode') }}
           </NcCheckboxRadioSwitch>
           <NcCheckboxRadioSwitch :checked.sync="globalState.expertMode">
-            {{ t(appId, 'Expert Mode') }}
+            {{ t(appId, 'Expert-Mode') }}
           </NcCheckboxRadioSwitch>
           <NcCheckboxRadioSwitch :checked.sync="globalState.PHPMyEdit.showDisabled">
             {{ t(appId, 'Show Disabled Data-Sets') }}
@@ -275,6 +275,13 @@ export default {
   watch: {
     debugToggle(value) {
       this.debugMode = value ? 1 : 0
+    },
+    'globalState.toolTipsEnabled'(value, oldValue) {
+      this.info('TOOLTIPS MODE CHANGED', value, oldValue, this.isMounted)
+      if (!this.isMounted || oldValue === undefined) {
+        return
+      }
+      emit(BusEvents.SET_TOOLTIPS_MODE, { value })
     },
     'globalState.financeMode'(value, oldValue) {
       this.info('FINANCE MODE CHANGED', value, oldValue, this.isMounted)
