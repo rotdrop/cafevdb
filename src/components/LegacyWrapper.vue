@@ -96,14 +96,11 @@ import mixins from '../mixins/app-mixins.js'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
 import * as CAFEVDB from '../app/cafevdb.js'
-import { getInitialState } from '../toolkit/services/InitialStateService.js'
-import { emit, subscribe } from '@nextcloud/event-bus'
+import { emit } from '@nextcloud/event-bus'
 import wikiPopup from '../app/wiki-popup.js'
 import useAppDataStore from '../stores/app-data.js'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import * as BusEvents from '../event-bus.ts'
-
-const initialState = getInitialState('CAFEVDB')
 
 export default {
   name: 'LegacyWrapper',
@@ -149,7 +146,6 @@ export default {
     return {
       html: '',
       loading: true,
-      tooltips: initialState?.toolTipsEnabled,
       stortTitle: this.template,
     }
   },
@@ -183,11 +179,6 @@ export default {
     },
   },
   async created() {
-    subscribe(BusEvents.TOGGLE_TOOLTIPS, (event) => {
-      this.info('TOOLTIPS CHANGE', event)
-      this.tooltips = event.enabled
-    })
-    this.info('TOOLTIPS STATE', this.tooltips, initialState.toolTipsEnabled)
     this.loadLegacy()
   },
   methods: {
