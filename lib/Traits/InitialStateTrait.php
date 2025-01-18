@@ -71,6 +71,7 @@ trait InitialStateTrait
     $showDisabled = $this->getUserValue('showdisabled', '');
     $deselectInvisible = $this->getUserValue('deselectInvisibleMiscRecs', '');
     $editor     = $this->getUserValue('wysiwygEditor', 'tinymce');
+    $pageRows   = $this->getUserValue('pagerows', 20);
 
     $expertMode = $this->getUserValue('expertMode');
     $expertMode = filter_var($expertMode, FILTER_VALIDATE_BOOLEAN);
@@ -122,6 +123,7 @@ trait InitialStateTrait
         'directChange' => ($directChg == 'on' ? true : false),
         'showDisabled' => ($showDisabled == 'on' ? true : false),
         'deselectInvisibleMiscRecs' => ($deselectInvisible == 'on' ? true : false),
+        'pageRowsDefault' => $pageRows,
         'selectChosen' => true,
         'filterSelectPlaceholder' => $l->t("Select a filter option."),
         'filterSelectNoResult' => $l->t("No values match."),
