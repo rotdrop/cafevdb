@@ -25,6 +25,7 @@
  */
 
 import $ from './jquery.js';
+import './jquery-extensions.js';
 import { appName, appPrefix } from './app-info.js';
 
 function manageDialogToBackButtons() {
