@@ -36,6 +36,7 @@ import setShowDisabled from './settings/show-disabled.js';
 import setDebugModes from './settings/debug-modes.js';
 import setTooltipsMode from './settings/tooltips.js';
 import setPageRows from './settings/pagerows.js';
+import setDeselectInvisible from './settings/deselect-invisible.js';
 
 require('nav-area-settings.scss');
 
@@ -185,21 +186,8 @@ const documentReady = function() {
   });
 
   container.on('change', '.deselect-invisible-misc-recs', function(event) {
-    const self = $(this);
-    const checked = self.prop('checked');
-    $.post(setPersonalUrl('deselectInvisibleMiscRecs'), { value: checked })
-      .done(function(data) {
-        showMessage(data.message);
-        console.log(data);
-      })
-      .fail(function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        // console.error(data);
-      });
-    if (globalState.PHPMyEdit !== undefined) {
-      globalState.PHPMyEdit.deselectInvisibleMiscRecs = checked;
-    }
-    $('.personal-settings input[type="checkbox"].deselect-invisible-misc-recs').prop('checked', checked);
+    const checked = $(this).prop('checked');
+    setDeselectInvisible(checked, showMessage);
     return false;
   });
 

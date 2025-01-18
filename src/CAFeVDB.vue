@@ -98,6 +98,21 @@
           <NcCheckboxRadioSwitch :checked.sync="globalState.toolTipsEnabled">
             {{ t(appId, 'Tool-Tips') }}
           </NcCheckboxRadioSwitch>
+          <NcCheckboxRadioSwitch :checked.sync="globalState.PHPMyEdit.deselectInvisibleMiscRecs">
+            {{ t(appId, 'Deselect Invisible') }}
+          </NcCheckboxRadioSwitch>
+          <SelectWithSubmitButton v-model="globalState.PHPMyEdit.pageRowsDefault"
+                                  input-id="page-rows-select"
+                                  :input-label="t(appId, '#Rows/Page in Tables')"
+                                  :hint="'REPLACE ME TOOLTIPS'"
+                                  :required="true"
+                                  :clearable="false"
+                                  :options="pageRowsOptions"
+                                  :multiple="false"
+                                  :loading="false"
+                                  :disabled="false"
+                                  :submit-button="false"
+          />
           <NcCheckboxRadioSwitch v-if="financeAllowed"
                                  :checked.sync="globalState.financeMode"
           >
@@ -120,9 +135,6 @@
                                   :loading="false"
                                   :disabled="false"
                                   :submit-button="false"
-                                  @input="(...args) => info('INPUT', ...args)"
-                                  @update="(...args) => info('UPDATZE', ...args)"
-                                  @error="error"
           />
           <NcActions :force-name="true" :inline="1" :class="{ loading: appSettingsLoading }">
             <NcActionLink :class="{ loading: appSettingsLoading }"
@@ -268,6 +280,18 @@ export default {
       }
       return options
     },
+    pageRowsOptions() {
+      const options = [
+        {
+          label: '∞',
+          value: -1,
+        },
+      ]
+      for (let i = 10; i <= 100; i += 10) {
+        options.push({ label: '' + i, value: i })
+      }
+      return options
+    },
     personalSettingsUrl() {
       return nextcloudGenerateUrl('settings/user/' + this.appName)
     },
@@ -321,14 +345,46 @@ export default {
       await this.$nextTick()
       this.settingsLocked = false
     },
-    async debugModes(newValue, oldValue) {
-      this.info('DEBUG MODES SELECTION CHANGED', newValue, oldValue, this.isMounted, this.settingsLocked)
+    async debugModes(value, oldValue) {
+      this.info('DEBUG MODES SELECTION CHANGED', value, oldValue, this.isMounted, this.settingsLocked)
       if (!this.isMounted || oldValue === undefined || this.settingsLocked) {
         return
       }
       this.settingsLocked = true
       emit(BusEvents.SET_DEBUG_MODES, {
-        value: newValue,
+        value,
+        callbacks: {
+          always: async () => {
+            await this.$nextTick()
+            this.settingsLocked = false
+          },
+        },
+      })
+    },
+    'globalState.PHPMyEdit.pageRowsDefault'(value, oldValue) {
+      this.info('DEFAULT PAGE ROWS CHANGED', value, oldValue, this.isMounted, this.settingsLocked)
+      if (!this.isMounted || oldValue === undefined || this.settingsLocked) {
+        return
+      }
+      this.settingsLocked = true
+      emit(BusEvents.SET_PAGE_ROWS, {
+        value,
+        callbacks: {
+          always: async () => {
+            await this.$nextTick()
+            this.settingsLocked = false
+          },
+        },
+      })
+    },
+    'globalState.PHPMyEdit.deselectInvisibleMiscRecs'(value, oldValue) {
+      this.info('DESELECT INVISIBLE CHANGED', value, oldValue, this.isMounted, this.settingsLocked)
+      if (!this.isMounted || oldValue === undefined || this.settingsLocked) {
+        return
+      }
+      this.settingsLocked = true
+      emit(BusEvents.SET_DESELECT_INVISIBLE, {
+        value,
         callbacks: {
           always: async () => {
             await this.$nextTick()
