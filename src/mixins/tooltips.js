@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,15 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../app/app-info.js';
 import axios from '@nextcloud/axios';
-import { generateUrl } from '@nextcloud/router';
+import generateAppUrl from '../toolkit/util/generate-url.js';
 
 export default {
   methods: {
     async tooltip(key) {
       try {
-        const response = await axios.get(generateUrl('apps/' + appName + '/tooltips/{key}', { key }), { params: { unescaped: true } });
+        const response = await axios.get(generateAppUrl('tooltips/{key}', { key }), { params: { unescaped: true } });
         console.debug('GOT TOOLTIP', response.data.tooltip || '');
         return response.data.tooltip;
       } catch (e) {
@@ -39,7 +38,7 @@ export default {
     },
     async tooltips(keys) {
       try {
-        const response = await axios.get(generateUrl('apps/' + appName + '/tooltips'), {
+        const response = await axios.get(generateAppUrl('tooltips'), {
           params: {
             unescaped: true,
             keys,

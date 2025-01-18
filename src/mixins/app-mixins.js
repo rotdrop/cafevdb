@@ -27,6 +27,7 @@ import globalState from './global-state.js';
 import dokuWiki from './doku-wiki.js';
 import md5 from './md5.js';
 import toasts from './toasts.js';
+import tooltips from './tooltips.js';
 
 export default [
   appInfo,
@@ -35,4 +36,5 @@ export default [
   dokuWiki,
   md5,
   toasts,
+  tooltips,
 ];
