@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,8 @@
  */
 
 import * as ncAuth from '@nextcloud/auth';
-import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
+import { getRootUrl as getCloudRootUrl, getAppRootUrl } from '@nextcloud/router';
+import appInitialState from '../toolkit/services/InitialStateService.js';
 import { appName, appVersion, appInfo, appPrefix, appNameTag } from './app-info.js';
 
 const initialState = {
@@ -31,7 +32,7 @@ const initialState = {
 };
 
 try {
-  const state = OCP.InitialState.loadState(appName, 'CAFEVDB');
+  const state = appInitialState('CAFEVDB');
   initialState.CAFEVDB = state;
   console.debug('CAFEVDB INITIAL STATE', initialState.CAFEVDB);
   if (appName !== initialState.CAFEVDB.appName) {
@@ -41,7 +42,7 @@ try {
   console.error('Failed to load initial state for CAFEVDB', error);
 }
 try {
-  const state = OCP.InitialState.loadState(appName, 'PHPMyEdit');
+  const state = appInitialState('PHPMyEdit');
   initialState.PHPMyEdit = state;
   console.debug('PHPMyEdit INITIAL STATE', initialState.PHPMyEdit);
 } catch (error) {
@@ -50,8 +51,8 @@ try {
 
 const PHPMyEdit = initialState.PHPMyEdit;
 const CAFEVDB = initialState.CAFEFDB;
-const webRoot = OC.appswebroots[appName] + '/';
 const cloudWebRoot = getCloudRootUrl();
+const webRoot = getAppRootUrl(appName) + '/';
 const cloudUser = ncAuth.getCurrentUser();
 
 export {
