@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import globalState from '../app/globalstate.js';
+import { globalState } from '../app/pme-state.js';
 
 export default {
   data() {
