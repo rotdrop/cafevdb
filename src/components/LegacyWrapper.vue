@@ -53,13 +53,13 @@
            </template>
            </NcButton> -->
       <NcActions>
-        <template v-if="tooltips" #icon>
+        <template v-if="globalState.toolTipsEnabled" #icon>
           <InfoIcon />
         </template>
         <template v-else #icon>
           <InfoOffIcon />
         </template>
-        <NcActionCheckbox v-model="tooltips" :model-value="tooltips" @change="onTooltipsChange">
+        <NcActionCheckbox v-model="globalState.toolTipsEnabled" :model-value="globalState.toolTipsEnabled">
           {{ t(appName, 'Tooltips') }}
         </NcActionCheckbox>
         <NcActionLink :href="wikiManualUrl" :target="wikiManualUrlTarget">
@@ -98,7 +98,6 @@ import generateAppUrl from '../toolkit/util/generate-url.js'
 import * as CAFEVDB from '../app/cafevdb.js'
 import { getInitialState } from '../toolkit/services/InitialStateService.js'
 import { emit, subscribe } from '@nextcloud/event-bus'
-import { setPersonalUrl } from '../app/settings-urls.js'
 import wikiPopup from '../app/wiki-popup.js'
 import useAppDataStore from '../stores/app-data.js'
 import { mapWritableState, mapActions, mapState } from 'pinia'
@@ -179,9 +178,13 @@ export default {
     template() {
       this.loadLegacy()
     },
+    'globalState.toolTipsEnabled'(value, oldValue) {
+      this.info('TOOLTIPS MODE CHANGED', value, oldValue)
+    },
   },
   async created() {
-    subscribe(this.appName + ':toggle-tooltips', (event) => {
+    subscribe(BusEvents.TOGGLE_TOOLTIPS, (event) => {
+      this.info('TOOLTIPS CHANGE', event)
       this.tooltips = event.enabled
     })
     this.info('TOOLTIPS STATE', this.tooltips, initialState.toolTipsEnabled)
@@ -194,17 +197,6 @@ export default {
         wikiPage: this.wikiManualSection,
         popupTitle: t(this.appName, 'User Manual: {section}', { section: this.shortTitle }, 0, { escape: false }),
       })
-    },
-    async onTooltipsChange() {
-      emit(this.BusEvents.TOGGLE_TOOLTIPS, {
-        enabled: this.tooltips,
-      })
-      try {
-        const response = await axios.post(setPersonalUrl('tooltips'), { value: this.tooltips })
-        this.info('set tooltips response', response)
-      } catch (e) {
-        this.error('set tooltips ERROR', e)
-      }
     },
     async loadLegacy() {
       emit(BusEvents.TOGGLE_NAVIGATION, {
