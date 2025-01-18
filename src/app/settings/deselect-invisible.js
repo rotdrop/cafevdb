@@ -32,7 +32,7 @@ import { SET_DESELECT_INVISIBLE } from '../../event-bus.ts';
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
 subscribe(SET_DESELECT_INVISIBLE, (event) => {
-  setter(event?.value, event?.showMessage, event?.$select, event?.callbacks);
+  setter(event?.value, event?.showMessage, event?.$control, event?.callbacks);
 });
 
 /**
@@ -41,14 +41,13 @@ subscribe(SET_DESELECT_INVISIBLE, (event) => {
  * @param {Function} showMessage Custom function for displaying
  * feedback from the controller, defaults to a standard toast popup.
  *
- * @param {jQuery} $select Originating select, may be undefined.
+ * @param {jQuery} $control Originating select, may be undefined.
  *
  * @param {object} callbacks Object with done(), fail(), always() properties.
  *
  * @returns {Promise}
  */
-
-const setter = (value, showMessage, callbacks) => {
+const setter = (value, showMessage, $control, callbacks) => {
   showMessage = showMessage || ((messages) => Notification.messages(messages));
   $('.personal-settings input[type="checkbox"].deselect-invisible-misc-recs').prop('checked', value);
   globalState.PHPMyEdit.deselectInvisibleMiscRecs = value;

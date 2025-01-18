@@ -37,6 +37,9 @@ import setDebugModes from './settings/debug-modes.js';
 import setTooltipsMode from './settings/tooltips.js';
 import setPageRows from './settings/pagerows.js';
 import setDeselectInvisible from './settings/deselect-invisible.js';
+import setDirectChange from './settings/direct-change.js';
+import setInitialFilterVisibility from './settings/initial-filter-visibility.js';
+import setRestoreHistory from './settings/restore-history.js';
 
 require('nav-area-settings.scss');
 
@@ -130,82 +133,51 @@ const documentReady = function() {
   });
 
   container.on('change', '.restorehistory', function(event) {
-    const self = $(this);
-    const checked = self.prop('checked');
-    $.post(setPersonalUrl('restorehistory'), { value: checked })
-      .done(function(data) {
-        showMessage(data.message);
-        console.log(data);
-      })
-      .fail(function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        // console.error(data);
-      });
-    $('.personal-settings input[type="checkbox"].restorehistory').prop('checked', checked);
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    setRestoreHistory(checked, showMessage, $this);
     return false;
   });
 
   container.on('change', '.filtervisibility', function(event) {
-    const self = $(this);
-    const checked = self.prop('checked');
-    $.post(setPersonalUrl('filtervisibility'), { value: checked })
-      .done(function(data) {
-        showMessage(data.message);
-        console.log(data);
-      })
-      .fail(function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        // console.error(data);
-      });
-    if (checked) {
-      $('input.pme-search').trigger('click');
-    } else {
-      $('input.pme-hide').trigger('click');
-    }
-    $('.personal-settings input[type="checkbox"].filtervisibility').prop('checked', checked);
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    setInitialFilterVisibility(checked, showMessage, $this);
     return false;
   });
 
   container.on('change', '.directchange', function(event) {
-    const self = $(this);
-    const checked = self.prop('checked');
-    $.post(setPersonalUrl('directchange'), { value: checked })
-      .done(function(data) {
-        showMessage(data.message);
-        console.log(data);
-      })
-      .fail(function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        // console.error(data);
-      });
-    if (globalState.PHPMyEdit !== undefined) {
-      globalState.PHPMyEdit.directChange = checked;
-    }
-    $('.personal-settings input[type="checkbox"].directchange').prop('checked', checked);
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    setDirectChange(checked, showMessage, $this);
     return false;
   });
 
   container.on('change', '.deselect-invisible-misc-recs', function(event) {
-    const checked = $(this).prop('checked');
-    setDeselectInvisible(checked, showMessage);
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    setDeselectInvisible(checked, showMessage, $this);
     return false;
   });
 
   container.on('change', '.showdisabled', function(event) {
-    const checked = $(this).prop('checked');
-    setShowDisabled(checked);
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    setShowDisabled(checked, showMessage, $this);
     return false;
   });
 
   container.on('change', '.expert-mode', function(event) {
-    const checked = $(this).prop('checked');
-    setExpertMode(checked, showMessage);
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    setExpertMode(checked, showMessage, $this);
     return false;
   });
 
   container.on('change', '.finance-mode', function(event) {
-    const checked = $(this).prop('checked');
-    setFinanceMode(checked, showMessage);
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    setFinanceMode(checked, showMessage, $this);
     return false;
   });
 

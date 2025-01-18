@@ -35,34 +35,59 @@ import { SET_EXPERT_MODE } from '../../event-bus.ts';
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
 subscribe(SET_EXPERT_MODE, (event) => {
-  setter(event?.value, event?.showMessage);
+  setter(event?.value, event?.showMessage, event?.$control, event?.callbacks);
 });
 
-const setter = (checked, showMessage) => {
+/**
+ * @param {boolean} value Value to set.
+ *
+ * @param {Function} showMessage Custom function for displaying
+ * feedback from the controller, defaults to a standard toast popup.
+ *
+ * @param {jQuery} $control Originating select, may be undefined.
+ *
+ * @param {object} callbacks Object with done(), fail(), always() properties.
+ *
+ * @returns {Promise}
+ */
+const setter = (value, showMessage, $control, callbacks) => {
   showMessage = showMessage || ((messages) => Notification.messages(messages));
-  $.post(setPersonalUrl('expert-mode'), { value: checked })
-    .done(function(data) {
-      showMessage(data.message);
-      console.log(data);
-      if (globalState.PHPMyEdit !== undefined) {
-        const pmeForm = $('#content ' + PHPMyEdit.formSelector);
-        pmeForm.each(function(index) {
-          const reload = $(this).find(PHPMyEdit.classSelector('input', 'reload')).first();
-          reload.trigger('click');
-        });
-      }
-    })
-    .fail(function(xhr, status, errorThrown) {
-      showMessage(Ajax.failMessage(xhr, status, errorThrown));
-      // console.error(data);
-    });
-
-  $('.expert-mode-container').toggleClass('hidden', !checked);
-  $('body').toggleClass(appPrefix('expert-mode'), checked);
-  $('.personal-settings input[type="checkbox"].expert-mode').prop('checked', checked);
+  $('.expert-mode-container').toggleClass('hidden', !value);
+  $('body').toggleClass(appPrefix('expert-mode'), value);
+  $('.personal-settings input[type="checkbox"].expert-mode').prop('checked', value);
   $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');
   $.fn.cafevTooltip.remove(); // remove any left-over items.
-  globalState.expertMode = checked;
+  globalState.expertMode = value;
+  return new Promise((resolve, reject) =>
+    $.post(setPersonalUrl('expert-mode'), { value })
+      .done(async function(data, ...rest) {
+        showMessage(data.message);
+        if (globalState.PHPMyEdit !== undefined) {
+          const pmeForm = $('#content ' + PHPMyEdit.formSelector);
+          pmeForm.each(function(index) {
+            const reload = $(this).find(PHPMyEdit.classSelector('input', 'reload')).first();
+            reload.trigger('click');
+          });
+        }
+        if (typeof callbacks?.done === 'function') {
+          await callbacks.done(data, ...rest);
+        }
+        if (typeof callbacks?.always === 'function') {
+          await callbacks.always(data, ...rest);
+        }
+        resolve(data);
+      })
+      .fail(async function(xhr, status, errorThrown, ...rest) {
+        showMessage(Ajax.failMessage(xhr, status, errorThrown, ...rest));
+        if (typeof callbacks?.fail === 'function') {
+          await callbacks.fail(xhr, status, errorThrown, ...rest);
+        }
+        if (typeof callbacks?.always === 'function') {
+          await callbacks.always(xhr, status, errorThrown, ...rest);
+        }
+        reject(errorThrown);
+      }),
+  );
 };
 
 export default setter;

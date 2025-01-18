@@ -66,13 +66,15 @@ trait InitialStateTrait
   {
     $l = $this->l10N();
 
-    $tooltips   = $this->getUserValue('tooltips', '');
-    $directChg  = $this->getUserValue('directchange', '');
-    $showDisabled = $this->getUserValue('showdisabled', '');
-    $deselectInvisible = $this->getUserValue('deselectInvisibleMiscRecs', '');
+    $tooltips   = filter_var($this->getUserValue('tooltips', 'on'), FILTER_VALIDATE_BOOLEAN);
+    $directChg  = filter_var($this->getUserValue('directchange', 'off'), FILTER_VALIDATE_BOOLEAN);
+    $showDisabled = filter_var($this->getUserValue('showdisabled', 'off'), FILTER_VALIDATE_BOOLEAN);
+    $deselectInvisible = filter_var($this->getUserValue('deselectInvisibleMiscRecs', 'off'), FILTER_VALIDATE_BOOLEAN);
+    $initialFilterVisibility = filter_var($this->getUserValue('filtervisibility', 'on'), FILTER_VALIDATE_BOOLEAN);
     $editor     = $this->getUserValue('wysiwygEditor', 'tinymce');
     $pageRows   = $this->getUserValue('pagerows', 20);
 
+    $restoreHistory = filter_var($this->getUserValue('restorehistory', 'off'), FILTER_VALIDATE_BOOLEAN);
     $expertMode = $this->getUserValue('expertMode');
     $expertMode = filter_var($expertMode, FILTER_VALIDATE_BOOLEAN);
 
@@ -93,7 +95,7 @@ trait InitialStateTrait
       [
         'appName' => $this->appName,
         'orchestra' => $this->getConfigValue('orchestra', $this->l->t('unconfigured')),
-        'toolTipsEnabled' => ($tooltips == 'off' ? false : true),
+        'toolTipsEnabled' => $tooltips,
         'wysiwygEditor' => $editor,
         'language' => $languageShort,
         'cloudLanguage' => $languageComplete,
@@ -105,6 +107,7 @@ trait InitialStateTrait
         'expertMode' => $expertMode,
         'financeMode' => $financeMode,
         'debugModes' => $this->getConfigValue('debugmode', 0),
+        'restoreHistory' => $restoreHistory,
         'userPermissions' => $authorizationService->getUserPermissions($this->userId()),
         'isGroupAdmin' => $authorizationService->isAdmin($this->userId()),
         'Page' => [
@@ -120,9 +123,10 @@ trait InitialStateTrait
       $this->appName,
       'PHPMyEdit',
       [
-        'directChange' => ($directChg == 'on' ? true : false),
-        'showDisabled' => ($showDisabled == 'on' ? true : false),
-        'deselectInvisibleMiscRecs' => ($deselectInvisible == 'on' ? true : false),
+        'directChange' => $directChg,
+        'showDisabled' => $showDisabled,
+        'deselectInvisibleMiscRecs' => $deselectInvisible,
+        'initialFilterVisibility' => $initialFilterVisibility,
         'pageRowsDefault' => $pageRows,
         'selectChosen' => true,
         'filterSelectPlaceholder' => $l->t("Select a filter option."),

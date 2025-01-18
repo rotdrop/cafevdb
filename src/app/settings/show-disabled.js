@@ -33,16 +33,29 @@ import { SET_SHOW_DISABLED } from '../../event-bus.ts';
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
 subscribe(SET_SHOW_DISABLED, (event) => {
-  setter(event?.value, event?.showMessage);
+  setter(event?.value, event?.showMessage, event?.$control, event?.callbacks);
 });
 
-const setter = (checked, showMessage) => {
+/**
+ * @param {boolean} value Value to set.
+ *
+ * @param {Function} showMessage Custom function for displaying
+ * feedback from the controller, defaults to a standard toast popup.
+ *
+ * @param {jQuery} $control Originating select, may be undefined.
+ *
+ * @param {object} callbacks Object with done(), fail(), always() properties.
+ *
+ * @returns {Promise}
+ */
+const setter = (value, showMessage, $control, callbacks) => {
   showMessage = showMessage || ((messages) => Notification.messages(messages));
-  $.post(setPersonalUrl('showdisabled'), { value: checked })
-    .done(function(data) {
-      showMessage(data.message);
-      console.log(data);
-      if (globalState.PHPMyEdit !== undefined) {
+  globalState.PHPMyEdit.showDisabled = value;
+  $('.personal-settings input[type="checkbox"].showdisabled').prop('checked', value);
+  return new Promise((resolve, reject) =>
+    $.post(setPersonalUrl('showdisabled'), { value })
+      .done(async function(data, ...rest) {
+        showMessage(data.message);
         const $content = $('#content, #content-vue');
         const $pmeForm = $content.find(PHPMyEdit.formSelector + '.show-hide-disabled');
         console.log('form', $pmeForm);
@@ -55,21 +68,31 @@ const setter = (checked, showMessage) => {
               + ' value="Clear"/>');
             $reload.trigger('click');
           }
-          if (checked) {
+          if (value) {
             $form.addClass('show-disabled').removeClass('hide-disabled');
           } else {
             $form.removeClass('show-disabled').addClass('hide-disabled');
           }
         });
-      }
-      return false;
-    })
-    .fail(function(xhr, status, errorThrown) {
-      showMessage(Ajax.failMessage(xhr, status, errorThrown));
-      // console.error(data);
-    });
-  globalState.PHPMyEdit.showDisabled = checked;
-  $('.personal-settings input[type="checkbox"].showdisabled').prop('checked', checked);
+        if (typeof callbacks?.done === 'function') {
+          await callbacks.done(data, ...rest);
+        }
+        if (typeof callbacks?.always === 'function') {
+          await callbacks.always(data, ...rest);
+        }
+        resolve(data);
+      })
+      .fail(async function(xhr, status, errorThrown, ...rest) {
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
+        if (typeof callbacks?.fail === 'function') {
+          await callbacks.fail(xhr, status, errorThrown, ...rest);
+        }
+        if (typeof callbacks?.always === 'function') {
+          await callbacks.always(xhr, status, errorThrown, ...rest);
+        }
+        reject(errorThrown);
+      }),
+  );
 };
 
 export default setter;

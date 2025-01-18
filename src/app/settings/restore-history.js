@@ -26,18 +26,17 @@ import $ from './../jquery.js';
 import { setPersonalUrl } from './../settings-urls.js';
 import * as Ajax from './../ajax.js';
 import * as Notification from './../notification.js';
-import { selected as selectedValues } from './../select-utils.js';
 import { subscribe } from '@nextcloud/event-bus';
-import { SET_PAGE_ROWS } from '../../event-bus.ts';
+import { SET_RESTORE_HISTORY as EVENT } from '../../event-bus.ts';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
-subscribe(SET_PAGE_ROWS, (event) => {
+subscribe(EVENT, (event) => {
   setter(event?.value, event?.showMessage, event?.$control, event?.callbacks);
 });
 
 /**
- * @param {object} value Value to store and propagate to all selects.
+ * @param {boolean} value Value to set.
  *
  * @param {Function} showMessage Custom function for displaying
  * feedback from the controller, defaults to a standard toast popup.
@@ -50,17 +49,12 @@ subscribe(SET_PAGE_ROWS, (event) => {
  */
 const setter = (value, showMessage, $control, callbacks) => {
   showMessage = showMessage || ((messages) => Notification.messages(messages));
-  $('.personal-settings select.pagerows').each(function(index) {
-    if (this !== $control?.[0]) {
-      selectedValues($(this), value);
-    }
-  });
-  globalState.PHPMyEdit.pageRowsDefault = value;
+  globalState.PHPMyEdit.restoreHistory = value;
+  $('.personal-settings input[type="checkbox"].restorehistory').prop('checked', value);
   return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('pagerows'), { value })
+    $.post(setPersonalUrl('restorehistory'), { value })
       .done(async function(data, ...rest) {
         showMessage(data.message);
-        console.log(data);
         if (typeof callbacks?.done === 'function') {
           await callbacks.done(data, ...rest);
         }
@@ -71,7 +65,6 @@ const setter = (value, showMessage, $control, callbacks) => {
       })
       .fail(async function(xhr, status, errorThrown, ...rest) {
         showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        // console.error(data);
         if (typeof callbacks?.fail === 'function') {
           await callbacks.fail(xhr, status, errorThrown, ...rest);
         }
