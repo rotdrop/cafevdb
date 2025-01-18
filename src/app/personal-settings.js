@@ -30,12 +30,12 @@ import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import { chosenActive, selected as selectedValues } from './select-utils.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
-import setFinanceMode from './finance-mode.js';
-import setExpertMode from './expert-mode.js';
-import setShowDisabled from './show-disabled.js';
-import setDebugModes from './debug-modes.js';
-import setTooltipsMode from './tooltips.js';
-import setPageRows from './pagerows.js';
+import setFinanceMode from './settings/finance-mode.js';
+import setExpertMode from './settings/expert-mode.js';
+import setShowDisabled from './settings/show-disabled.js';
+import setDebugModes from './settings/debug-modes.js';
+import setTooltipsMode from './settings/tooltips.js';
+import setPageRows from './settings/pagerows.js';
 
 require('nav-area-settings.scss');
 

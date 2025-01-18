@@ -21,16 +21,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import globalState from './globalstate.js';
-import $ from './jquery.js';
-import { setPersonalUrl } from './settings-urls.js';
-import * as Ajax from './ajax.js';
-import { selected as selectedValues } from './select-utils.js';
-import * as Notification from './notification.js';
+import globalState from './../globalstate.js';
+import $ from './../jquery.js';
+import { setPersonalUrl } from './../settings-urls.js';
+import * as Ajax from './../ajax.js';
+import { selected as selectedValues } from './../select-utils.js';
+import * as Notification from './../notification.js';
 import { subscribe } from '@nextcloud/event-bus';
-import { SET_DEBUG_MODES } from '../event-bus.ts';
+import { SET_DEBUG_MODES } from '../../event-bus.ts';
 
-require('../legacy/nextcloud/jquery/requesttoken.js');
+require('../../legacy/nextcloud/jquery/requesttoken.js');
 
 subscribe(SET_DEBUG_MODES, (event) => {
   setter(event?.value, event?.showMessage, event?.$select, event?.callbacks);
@@ -72,9 +72,9 @@ const setter = (selection, showMessage, $select, callbacks) => {
         callbacks.fail(xhr, status, errorThrown, ...rest);
       }
     })
-    .always(function() {
+    .always(function(...rest) {
       if (typeof callbacks?.always === 'function') {
-        callbacks.always();
+        callbacks.always(...rest);
       }
     });
 };

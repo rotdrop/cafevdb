@@ -21,38 +21,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './pme-state.js';
-import $ from './jquery.js';
-import { setPersonalUrl } from './settings-urls.js';
-import * as Ajax from './ajax.js';
-import * as Notification from './notification.js';
-import { selected as selectedValues } from './select-utils.js';
+import globalState from './../globalstate.js';
+import $ from './../jquery.js';
+import { toolTipsOnOff } from './../cafevdb.js';
+import { setPersonalUrl } from './../settings-urls.js';
+import * as Ajax from './../ajax.js';
+import * as Notification from './../notification.js';
 import { subscribe } from '@nextcloud/event-bus';
-import { SET_PAGE_ROWS } from '../event-bus.ts';
+import { SET_TOOLTIPS_MODE } from '../../event-bus.ts';
 
-require('../legacy/nextcloud/jquery/requesttoken.js');
+require('../../legacy/nextcloud/jquery/requesttoken.js');
 
-subscribe(SET_PAGE_ROWS, (event) => {
-  setter(event?.value, event?.showMessage, event?.$select);
+subscribe(SET_TOOLTIPS_MODE, (event) => {
+  setter(event?.value, event?.showMessage, event?.$control);
 });
 
-const setter = (value, showMessage, $select) => {
+const setter = (checked, showMessage, $control) => {
   showMessage = showMessage || ((messages) => Notification.messages(messages));
-  $.post(setPersonalUrl('pagerows'), { value })
+  toolTipsOnOff(checked);
+  $.post(setPersonalUrl('tooltips'), { value: globalState.toolTipsEnabled })
     .done(function(data) {
-      showMessage(data.message);
+      if (!$control?.is('#tooltipbutton-checkbox')) { // don't annoy with feedback
+        showMessage(data.message);
+      }
       console.log(data);
     })
     .fail(function(xhr, status, errorThrown) {
       showMessage(Ajax.failMessage(xhr, status, errorThrown));
       // console.error(data);
     });
-  $('.personal-settings select.pagerows').each(function(index) {
-    if (this !== $select?.[0]) {
-      selectedValues($(this), value);
-    }
-  });
-  globalState.PHPMyEdit.pageRowsDefault = value;
+  $('.personal-settings input[type="checkbox"].tooltips').prop('checked', globalState.toolTipsEnabled);
+  if (globalState.toolTipsEnabled) {
+    $('#tooltipbutton').removeClass('tooltips-disabled').addClass('tooltips-enabled');
+  } else {
+    $('#tooltipbutton').removeClass('tooltips-enabled').addClass('tooltips-disabled');
+  }
 };
 
 export default setter;

@@ -21,18 +21,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import globalState from './globalstate.js';
-import $ from './jquery.js';
-import './jquery-cafevdb-tooltips.js';
-import { appPrefix } from '../config.js';
-import { setPersonalUrl } from './settings-urls.js';
-import * as Ajax from './ajax.js';
-import * as PHPMyEdit from './pme-selectors.js';
-import * as Notification from './notification.js';
+import globalState from './../globalstate.js';
+import $ from './../jquery.js';
+import './../jquery-cafevdb-tooltips.js';
+import { appPrefix } from '../../config.js';
+import { setPersonalUrl } from './../settings-urls.js';
+import * as Ajax from './../ajax.js';
+import * as PHPMyEdit from './../pme-selectors.js';
+import * as Notification from './../notification.js';
 import { subscribe } from '@nextcloud/event-bus';
-import { SET_EXPERT_MODE } from '../event-bus.ts';
+import { SET_EXPERT_MODE } from '../../event-bus.ts';
 
-require('../legacy/nextcloud/jquery/requesttoken.js');
+require('../../legacy/nextcloud/jquery/requesttoken.js');
 
 subscribe(SET_EXPERT_MODE, (event) => {
   setter(event?.value, event?.showMessage);

@@ -21,16 +21,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './pme-state.js';
-import $ from './jquery.js';
-import { setPersonalUrl } from './settings-urls.js';
-import * as Ajax from './ajax.js';
-import * as PHPMyEdit from './pme-selectors.js';
-import * as Notification from './notification.js';
+import { globalState } from './../pme-state.js';
+import $ from './../jquery.js';
+import { setPersonalUrl } from './../settings-urls.js';
+import * as Ajax from './../ajax.js';
+import * as PHPMyEdit from './../pme-selectors.js';
+import * as Notification from './../notification.js';
 import { subscribe } from '@nextcloud/event-bus';
-import { SET_SHOW_DISABLED } from '../event-bus.ts';
+import { SET_SHOW_DISABLED } from '../../event-bus.ts';
 
-require('../legacy/nextcloud/jquery/requesttoken.js');
+require('../../legacy/nextcloud/jquery/requesttoken.js');
 
 subscribe(SET_SHOW_DISABLED, (event) => {
   setter(event?.value, event?.showMessage);
