@@ -95,16 +95,35 @@
           '.vs__dropdown-menu',
         ]"
         >
-          <NcCheckboxRadioSwitch :checked.sync="globalState.toolTipsEnabled">
+          <NcCheckboxRadioSwitch v-tooltip="hints['show-tool-tips']"
+                                 :checked.sync="globalState.toolTipsEnabled"
+          >
             {{ t(appId, 'Tool-Tips') }}
           </NcCheckboxRadioSwitch>
-          <NcCheckboxRadioSwitch :checked.sync="globalState.PHPMyEdit.deselectInvisibleMiscRecs">
+          <NcCheckboxRadioSwitch v-tooltip="hints['restore-history']"
+                                 :checked.sync="globalState.restoreHistory"
+          >
+            {{ t(appId, 'Restore Last View') }}
+          </NcCheckboxRadioSwitch>
+          <NcCheckboxRadioSwitch v-tooltip="hints['filter-visibility']"
+                                 :checked.sync="globalState.PHPMyEdit.initialFilterVisibility"
+          >
+            {{ t(appId, 'Filter-Controls') }}
+          </NcCheckboxRadioSwitch>
+          <NcCheckboxRadioSwitch v-tooltip="hints['direct-change']"
+                                 :checked.sync="globalState.PHPMyEdit.directChange"
+          >
+            {{ t(appId, 'Quick Change-Dialog') }}
+          </NcCheckboxRadioSwitch>
+          <NcCheckboxRadioSwitch v-tooltip="hints['deslect-invisible-misc-recs']"
+                                 :checked.sync="globalState.PHPMyEdit.deselectInvisibleMiscRecs"
+          >
             {{ t(appId, 'Deselect Invisible') }}
           </NcCheckboxRadioSwitch>
           <SelectWithSubmitButton v-model="globalState.PHPMyEdit.pageRowsDefault"
                                   input-id="page-rows-select"
                                   :input-label="t(appId, '#Rows/Page in Tables')"
-                                  :hint="'REPLACE ME TOOLTIPS'"
+                                  :tooltip="hints['table-rows-per-page']"
                                   :required="true"
                                   :clearable="false"
                                   :options="pageRowsOptions"
@@ -112,22 +131,34 @@
                                   :loading="false"
                                   :disabled="false"
                                   :submit-button="false"
-          />
+          >
+            <template #option="option">
+              <NcEllipsisedOption :name="+option.label === -1 ? '∞' : '' + option.label" />
+            </template>
+            <template #selected-option="option">
+              <NcEllipsisedOption :name="+option.label === -1 ? '∞' : '' + option.label" />
+            </template>
+          </SelectWithSubmitButton>
           <NcCheckboxRadioSwitch v-if="financeAllowed"
+                                 v-tooltip="hints['finance-mode']"
                                  :checked.sync="globalState.financeMode"
           >
             {{ t(appId, 'Finance-Mode') }}
           </NcCheckboxRadioSwitch>
-          <NcCheckboxRadioSwitch :checked.sync="globalState.expertMode">
+          <NcCheckboxRadioSwitch v-tooltip="hints['expert-mode']"
+                                 :checked.sync="globalState.expertMode"
+          >
             {{ t(appId, 'Expert-Mode') }}
           </NcCheckboxRadioSwitch>
-          <NcCheckboxRadioSwitch :checked.sync="globalState.PHPMyEdit.showDisabled">
+          <NcCheckboxRadioSwitch v-tooltip="hints['show-disabled']"
+                                 :checked.sync="globalState.PHPMyEdit.showDisabled"
+          >
             {{ t(appId, 'Show Disabled Data-Sets') }}
           </NcCheckboxRadioSwitch>
           <SelectWithSubmitButton v-model="debugModes"
                                   input-id="debug-modes-select"
                                   :input-label="t(appId, 'Debug')"
-                                  :hint="'REPLACE ME TOOLTIPS'"
+                                  :tooltip="hints['debug-mode']"
                                   :required="false"
                                   :clearable="true"
                                   :options="debugOptions"
@@ -137,7 +168,8 @@
                                   :submit-button="false"
           />
           <NcActions :force-name="true" :inline="1" :class="{ loading: appSettingsLoading }">
-            <NcActionLink :class="{ loading: appSettingsLoading }"
+            <NcActionLink v-tooltip="hints['further-settings']"
+                          :class="{ loading: appSettingsLoading }"
                           :name="t(appId, 'Further Settings')"
                           :href="personalSettingsUrl"
                           :target="md5(personalSettingsUrl)"
@@ -203,6 +235,7 @@ import {
   NcAppNavigationItem,
   NcAppNavigationSettings,
   NcCheckboxRadioSwitch,
+  NcEllipsisedOption,
   NcEmptyContent,
 } from '@nextcloud/vue'
 import useAppDataStore from './stores/app-data.js'
@@ -237,6 +270,7 @@ export default {
     NcAppNavigationSettings,
     NcCheckboxRadioSwitch,
     NcContent,
+    NcEllipsisedOption,
     NcEmptyContent,
     ParticipantFieldsIcon,
     ProjectInfoIcon,
@@ -249,11 +283,23 @@ export default {
       orchestraName: initialState?.orchestraName || t(appId, '[UNKNOWN]'),
       icon: Icon,
       loading: true,
-      debugToggle: false,
       isMounted: false,
       debugModes: [],
       settingsLocked: false,
       appSettingsLoading: false,
+      hints: {
+        'debug-mode': '',
+        'deselect-invisible-misc-recs': '',
+        'direct-change': '',
+        'expert-mode': '',
+        'finance-mode': '',
+        'filter-visibility': '',
+        'further-settings': '',
+        'table-rows-per-page': '',
+        'restore-history': '',
+        'show-disabled': '',
+        'show-tool-tips': '',
+      },
     }
   },
   computed: {
@@ -281,52 +327,33 @@ export default {
       return options
     },
     pageRowsOptions() {
-      const options = [
-        {
-          label: '∞',
-          value: -1,
-        },
-      ]
-      for (let i = 10; i <= 100; i += 10) {
-        options.push({ label: '' + i, value: i })
-      }
-      return options
+      // const options = [
+      //   {
+      //     label: '∞',
+      //     value: -1,
+      //   },
+      // ]
+      // for (let i = 10; i <= 100; i += 10) {
+      //   options.push({ label: '' + i, value: i })
+      // }
+      return [-1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     },
     personalSettingsUrl() {
       return nextcloudGenerateUrl('settings/user/' + this.appName)
     },
   },
   watch: {
-    debugToggle(value) {
-      this.debugMode = value ? 1 : 0
-    },
     'globalState.toolTipsEnabled'(value, oldValue) {
-      this.info('TOOLTIPS MODE CHANGED', value, oldValue, this.isMounted)
-      if (!this.isMounted || oldValue === undefined) {
-        return
-      }
-      emit(BusEvents.SET_TOOLTIPS_MODE, { value })
+      this.updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue)
     },
     'globalState.financeMode'(value, oldValue) {
-      this.info('FINANCE MODE CHANGED', value, oldValue, this.isMounted)
-      if (!this.isMounted || oldValue === undefined) {
-        return
-      }
-      emit(BusEvents.SET_FINANCE_MODE, { value })
+      this.updatePersonalSettings(BusEvents.SET_FINANCE_MODE, value, oldValue)
     },
     'globalState.expertMode'(value, oldValue) {
-      this.info('EXPERT MODE CHANGED', value, oldValue, this.isMounted)
-      if (!this.isMounted || oldValue === undefined) {
-        return
-      }
-      emit(BusEvents.SET_EXPERT_MODE, { value })
+      this.updatePersonalSettings(BusEvents.SET_EXPERT_MODE, value, oldValue)
     },
     'globalState.PHPMyEdit.showDisabled'(value, oldValue) {
-      this.info('SHOW DISABLED MODE CHANGED', value, oldValue, this.isMounted)
-      if (!this.isMounted || oldValue === undefined) {
-        return
-      }
-      emit(BusEvents.SET_SHOW_DISABLED, { value })
+      this.updatePersonalSettings(BusEvents.SET_SHOW_DISABLED, value, oldValue)
     },
     async 'globalState.debugModes'(newValue, oldValue) {
       this.info('DEBUG MODES CHANGED', newValue, oldValue, this.isMounted, this.settingsLocked)
@@ -345,57 +372,28 @@ export default {
       await this.$nextTick()
       this.settingsLocked = false
     },
-    async debugModes(value, oldValue) {
-      this.info('DEBUG MODES SELECTION CHANGED', value, oldValue, this.isMounted, this.settingsLocked)
-      if (!this.isMounted || oldValue === undefined || this.settingsLocked) {
-        return
-      }
-      this.settingsLocked = true
-      emit(BusEvents.SET_DEBUG_MODES, {
-        value,
-        callbacks: {
-          always: async () => {
-            await this.$nextTick()
-            this.settingsLocked = false
-          },
-        },
-      })
+    debugModes(value, oldValue) {
+      this.updatePersonalSettings(BusEvents.SET_DEBUG_MODES, value, oldValue)
     },
     'globalState.PHPMyEdit.pageRowsDefault'(value, oldValue) {
-      this.info('DEFAULT PAGE ROWS CHANGED', value, oldValue, this.isMounted, this.settingsLocked)
-      if (!this.isMounted || oldValue === undefined || this.settingsLocked) {
-        return
-      }
-      this.settingsLocked = true
-      emit(BusEvents.SET_PAGE_ROWS, {
-        value,
-        callbacks: {
-          always: async () => {
-            await this.$nextTick()
-            this.settingsLocked = false
-          },
-        },
-      })
+      this.updatePersonalSettings(BusEvents.SET_PAGE_ROWS, value, oldValue)
     },
     'globalState.PHPMyEdit.deselectInvisibleMiscRecs'(value, oldValue) {
-      this.info('DESELECT INVISIBLE CHANGED', value, oldValue, this.isMounted, this.settingsLocked)
-      if (!this.isMounted || oldValue === undefined || this.settingsLocked) {
-        return
-      }
-      this.settingsLocked = true
-      emit(BusEvents.SET_DESELECT_INVISIBLE, {
-        value,
-        callbacks: {
-          always: async () => {
-            await this.$nextTick()
-            this.settingsLocked = false
-          },
-        },
-      })
+      this.updatePersonalSettings(BusEvents.SET_DESELECT_INVISIBLE, value, oldValue)
+    },
+    'globalState.PHPMyEdit.directChange'(value, oldValue) {
+      this.updatePersonalSettings(BusEvents.SET_DIRECT_CHANGE, value, oldValue)
+    },
+    'globalState.PHPMyEdit.initialFilterVisibility'(value, oldValue) {
+      this.updatePersonalSettings(BusEvents.SET_INITIAL_FILTER_VISIBILITY, value, oldValue)
+    },
+    'globalState.restoreHistory'(value, oldValue) {
+      this.updatePersonalSettings(BusEvents.SET_RESTORE_HISTORY, value, oldValue)
     },
   },
-  created() {
+  async created() {
     this.loading = false
+    this.hints = await this.tooltips(Object.keys(this.hints))
     subscribe(BusEvents.PUSH_BUSY_STATE, () => this.pushBusyState())
     subscribe(BusEvents.POP_BUSY_STATE, () => this.popBusyState())
   },
@@ -437,10 +435,40 @@ export default {
         always: () => { this.appSettingsLoading = false },
       })
     },
+    updatePersonalSettings(event, value, oldValue) {
+      this.info('UPDATE PERSONAL SETTING', {
+        event,
+        value,
+        oldValue,
+        isMounted: this.isMounted,
+        settingsLocked: this.settingsLocked,
+      })
+      if (!this.isMounted || oldValue === undefined || this.settingsLocked) {
+        return
+      }
+      this.settingsLocked = true
+      emit(event, {
+        value,
+        callbacks: {
+          always: async () => {
+            await this.$nextTick()
+            this.settingsLocked = false
+          },
+        },
+      })
+
+    },
   },
 }
 </script>
 <style lang="scss" scoped>
+#app-settings::v-deep {
+  max-height: 60%;
+  flex-shrink: 10;
+  #app-settings__content {
+    max-height: 100%;
+  }
+}
 .app-navigation-entry.disabled::v-deep {
   opacity: 0.5;
   &, & * {
@@ -448,7 +476,6 @@ export default {
     pointer-events: none;
   }
 }
-
 .empty-content::v-deep {
   h2 ~ p {
     text-align: center;
