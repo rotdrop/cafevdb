@@ -39,6 +39,8 @@ export const SET_FINANCE_MODE = appName + ':finance-mode';
 export const SET_EXPERT_MODE = appName + ':expert-mode';
 export const SET_SHOW_DISABLED = appName + ':show-disabled';
 export const SET_DEBUG_MODES = appName + ':debug-modes';
+export const SET_TOOLTIPS_MODE = appName + ':tooltips-mode';
+export const SET_PAGE_ROWS = appName + ':page-rows';
 
 // global events
 export const TOGGLE_NAVIGATION = 'toggle-navigation';
