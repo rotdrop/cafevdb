@@ -25,51 +25,34 @@ import { globalState } from './pme-state.js';
 import $ from './jquery.js';
 import { setPersonalUrl } from './settings-urls.js';
 import * as Ajax from './ajax.js';
-import * as PHPMyEdit from './pme-selectors.js';
 import * as Notification from './notification.js';
+import { selected as selectedValues } from './select-utils.js';
 import { subscribe } from '@nextcloud/event-bus';
-import { SET_SHOW_DISABLED } from '../event-bus.ts';
+import { SET_PAGE_ROWS } from '../event-bus.ts';
 
 require('../legacy/nextcloud/jquery/requesttoken.js');
 
-subscribe(SET_SHOW_DISABLED, (event) => {
-  setter(event?.value, event?.showMessage);
+subscribe(SET_PAGE_ROWS, (event) => {
+  setter(event?.value, event?.showMessage, event?.$select);
 });
 
-const setter = (checked, showMessage) => {
+const setter = (value, showMessage, $select) => {
   showMessage = showMessage || ((messages) => Notification.messages(messages));
-  $.post(setPersonalUrl('showdisabled'), { value: checked })
+  $.post(setPersonalUrl('pagerows'), { value })
     .done(function(data) {
       showMessage(data.message);
       console.log(data);
-      if (globalState.PHPMyEdit !== undefined) {
-        const $content = $('#content, #content-vue');
-        const $pmeForm = $content.find(PHPMyEdit.formSelector + '.show-hide-disabled');
-        console.log('form', $pmeForm);
-        $pmeForm.each(function(index) {
-          const $form = $(this);
-          const $reload = $form.find(PHPMyEdit.classSelector('input', 'reload')).first();
-          if ($reload.length > 0) {
-            $form.append('<input type="hidden"'
-              + ' name="' + PHPMyEdit.sys('sw') + '"'
-              + ' value="Clear"/>');
-            $reload.trigger('click');
-          }
-          if (checked) {
-            $form.addClass('show-disabled').removeClass('hide-disabled');
-          } else {
-            $form.removeClass('show-disabled').addClass('hide-disabled');
-          }
-        });
-      }
-      return false;
     })
     .fail(function(xhr, status, errorThrown) {
       showMessage(Ajax.failMessage(xhr, status, errorThrown));
       // console.error(data);
     });
-  globalState.PHPMyEdit.showDisabled = checked;
-  $('.personal-settings input[type="checkbox"].showdisabled').prop('checked', checked);
+  $('.personal-settings select.pagerows').each(function(index) {
+    if (this !== $select?.[0]) {
+      selectedValues($(this), value);
+    }
+  });
+  globalState.PHPMyEdit.pageRowsDefault = value;
 };
 
 export default setter;

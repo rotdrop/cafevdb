@@ -21,55 +21,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './pme-state.js';
+import globalState from './globalstate.js';
 import $ from './jquery.js';
+import { toolTipsOnOff } from './cafevdb.js';
 import { setPersonalUrl } from './settings-urls.js';
 import * as Ajax from './ajax.js';
-import * as PHPMyEdit from './pme-selectors.js';
 import * as Notification from './notification.js';
 import { subscribe } from '@nextcloud/event-bus';
-import { SET_SHOW_DISABLED } from '../event-bus.ts';
+import { SET_TOOLTIPS_MODE } from '../event-bus.ts';
 
 require('../legacy/nextcloud/jquery/requesttoken.js');
 
-subscribe(SET_SHOW_DISABLED, (event) => {
-  setter(event?.value, event?.showMessage);
+subscribe(SET_TOOLTIPS_MODE, (event) => {
+  setter(event?.value, event?.showMessage, event?.$control);
 });
 
-const setter = (checked, showMessage) => {
+const setter = (checked, showMessage, $control) => {
   showMessage = showMessage || ((messages) => Notification.messages(messages));
-  $.post(setPersonalUrl('showdisabled'), { value: checked })
+  toolTipsOnOff(checked);
+  $.post(setPersonalUrl('tooltips'), { value: globalState.toolTipsEnabled })
     .done(function(data) {
-      showMessage(data.message);
-      console.log(data);
-      if (globalState.PHPMyEdit !== undefined) {
-        const $content = $('#content, #content-vue');
-        const $pmeForm = $content.find(PHPMyEdit.formSelector + '.show-hide-disabled');
-        console.log('form', $pmeForm);
-        $pmeForm.each(function(index) {
-          const $form = $(this);
-          const $reload = $form.find(PHPMyEdit.classSelector('input', 'reload')).first();
-          if ($reload.length > 0) {
-            $form.append('<input type="hidden"'
-              + ' name="' + PHPMyEdit.sys('sw') + '"'
-              + ' value="Clear"/>');
-            $reload.trigger('click');
-          }
-          if (checked) {
-            $form.addClass('show-disabled').removeClass('hide-disabled');
-          } else {
-            $form.removeClass('show-disabled').addClass('hide-disabled');
-          }
-        });
+      if (!$control?.is('#tooltipbutton-checkbox')) { // don't annoy with feedback
+        showMessage(data.message);
       }
-      return false;
+      console.log(data);
     })
     .fail(function(xhr, status, errorThrown) {
       showMessage(Ajax.failMessage(xhr, status, errorThrown));
       // console.error(data);
     });
-  globalState.PHPMyEdit.showDisabled = checked;
-  $('.personal-settings input[type="checkbox"].showdisabled').prop('checked', checked);
+  $('.personal-settings input[type="checkbox"].tooltips').prop('checked', globalState.toolTipsEnabled);
+  if (globalState.toolTipsEnabled) {
+    $('#tooltipbutton').removeClass('tooltips-disabled').addClass('tooltips-enabled');
+  } else {
+    $('#tooltipbutton').removeClass('tooltips-enabled').addClass('tooltips-disabled');
+  }
 };
 
 export default setter;

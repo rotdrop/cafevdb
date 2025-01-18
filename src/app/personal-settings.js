@@ -34,6 +34,8 @@ import setFinanceMode from './finance-mode.js';
 import setExpertMode from './expert-mode.js';
 import setShowDisabled from './show-disabled.js';
 import setDebugModes from './debug-modes.js';
+import setTooltipsMode from './tooltips.js';
+import setPageRows from './pagerows.js';
 
 require('nav-area-settings.scss');
 
@@ -120,25 +122,9 @@ const documentReady = function() {
 
   // tool-tips toggle
   container.on('change', '.tooltips', function(event) {
-    const self = $(this);
-    CAFEVDB.toolTipsOnOff(self.prop('checked'));
-    $.post(setPersonalUrl('tooltips'), { value: globalState.toolTipsEnabled })
-      .done(function(data) {
-        if (!self.is('#tooltipbutton-checkbox')) { // don't annoy with feedback
-          showMessage(data.message);
-        }
-        console.log(data);
-      })
-      .fail(function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        // console.error(data);
-      });
-    $('.personal-settings input[type="checkbox"].tooltips').prop('checked', globalState.toolTipsEnabled);
-    if (globalState.toolTipsEnabled) {
-      $('#tooltipbutton').removeClass('tooltips-disabled').addClass('tooltips-enabled');
-    } else {
-      $('#tooltipbutton').removeClass('tooltips-enabled').addClass('tooltips-disabled');
-    }
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    setTooltipsMode(checked, showMessage, $this);
     return false;
   });
 
@@ -218,43 +204,27 @@ const documentReady = function() {
   });
 
   container.on('change', '.showdisabled', function(event) {
-    const self = $(this);
-    const checked = self.prop('checked');
+    const checked = $(this).prop('checked');
     setShowDisabled(checked);
     return false;
   });
 
   container.on('change', '.expert-mode', function(event) {
-    const self = $(this);
-    const checked = self.prop('checked');
+    const checked = $(this).prop('checked');
     setExpertMode(checked, showMessage);
     return false;
   });
 
   container.on('change', '.finance-mode', function(event) {
-    const $self = $(this);
-    const checked = $self.prop('checked');
+    const checked = $(this).prop('checked');
     setFinanceMode(checked, showMessage);
     return false;
   });
 
   container.on('change', '.pagerows', function(event) {
-    const $self = $(this);
-    const value = $self.val();
-    $.post(setPersonalUrl('pagerows'), { value })
-      .done(function(data) {
-        showMessage(data.message);
-        console.log(data);
-      })
-      .fail(function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        // console.error(data);
-      });
-    $('.personal-settings select.pagerows').each(function(index) {
-      if (this !== $self[0]) {
-        selectedValues($(this), selectedValues($self));
-      }
-    });
+    const $this = $(this);
+    const value = $this.val();
+    setPageRows(value, showMessage, $this);
     return false;
   });
 
