@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -427,6 +427,8 @@ you can also simply double-click inside the boxed filter-region in order to acti
 invited to have a look, but please do not change anything unless you know what your are doing. Thanks!'),
 
       'expert-operations' => self::t('For those who know what they are doing, which essentially means: don\'t.'),
+
+      'finance-mode' => self::t('Display additional tables and action for financial management purposes.'),
 
       'instrument-insurance' => [
         'not-a-club-member' => self::t('The bill-to-party of an instrument-insurance must be a club-member. This seems not to be the case.'),
