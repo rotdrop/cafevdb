@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,10 +32,12 @@ import { globalState } from './cafevdb.js';
  * @param {Function} initCallback TBD.
  */
 const addEditor = function(selector, initCallback) {
+  console.info('ADD EDITOR');
   const $editorElements = $(selector);
   console.debug('WysiwygEditor.addEditor', $editorElements.length);
   initCallback = (typeof initCallback === 'function') ? initCallback : () => {};
   if (!$editorElements.length) {
+    console.info('ADD EDITOR: NO ELEMENTS, INVOKING SUCCESS CALLBACK');
     initCallback();
     return;
   }
@@ -76,6 +78,7 @@ const addEditor = function(selector, initCallback) {
       });
     break;
   case 'tinymce': {
+    console.debug('attach tinymce');
     // This is a Gurkerei
     $(document).on('focusin', function(e) {
       // e.stopImmediatePropagaion();

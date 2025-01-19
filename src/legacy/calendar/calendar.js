@@ -1,6 +1,6 @@
 /**
  * Original copyright below, slight changes for cafevdb by
- * Copyright (c) 2013-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2013-2016, 2020, 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * Copyright (c) 2012 Georg Ehrke <ownclouddev at georgswebsite dot de>
  * Copyright (c) 2011 Bart Visscher <bartv@thisnet.nl>
@@ -14,7 +14,7 @@ import { appName } from '../../app/app-info.js';
 import * as Ajax from '../../app/ajax.js';
 import * as Dialogs from '../../app/dialogs.js';
 import * as Events from '../../app/events.js';
-import { busyIcon as pageBusyIcon } from '../../app/page.js';
+import pageBusyIcon from '../../app/busy-icon.js';
 import { toBackButton as dialogToBackButton } from '../../app/dialog-utils.js';
 import { toolTipsInit } from '../../app/cafevdb.js';
 

@@ -101,8 +101,8 @@ export default defineStore(storeId, () => {
   const appError = ref(false);
   const busyCount = ref(0);
   const busyState = computed(() => busyCount.value > 0);
-  const pushBusyState = () => { ++busyCount.value; state.debug('BUSY STATE PUSH', busyCount.value); return busyCount.value; };
-  const popBusyState = () => { --busyCount.value; state.debug('BUSY STATE POP', busyCount.value); return busyCount.value; };
+  const pushBusyState = () => { ++busyCount.value; state.trace('BUSY STATE PUSH', busyCount.value); return busyCount.value; };
+  const popBusyState = () => { --busyCount.value; state.info('BUSY STATE POP', busyCount.value); return busyCount.value; };
   const currentProjectId = ref(-1);
   const errorHandler = ref(null);
   const evaluating = ref(false);

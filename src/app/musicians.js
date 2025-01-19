@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ import {
   valueSelector as pmeValueSelector,
   classSelector as pmeClassSelector,
 } from './pme-selectors.js';
-import { busyIcon as pageBusyIcon } from './page.js';
+import pageBusyIcon from './busy-icon.js';
 import {
   lazyDecrypt,
   reject as rejectDecryptionPromise,

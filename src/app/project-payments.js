@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
-import * as Page from './page.js';
+import { templateRenderer } from './template-renderer.js';
 import * as Dialogs from './dialogs.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import ajaxDownload from './file-download.js';
@@ -86,7 +86,7 @@ const projectPaymentPopup = function(containerSel, post) {
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: template + '-dialog',
     template,
-    templateRenderer: Page.templateRenderer(template),
+    templateRenderer: templateRenderer(template),
     Table: 'CompositePayments',
     projectId: post.projectId,
     projectName: post.projectName,

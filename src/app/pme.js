@@ -30,7 +30,13 @@ import jQuery from './jquery.js';
 import * as PMEState from './pme-state.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
-import * as Page from './page.js';
+import { templateFromRenderer } from './template-renderer.js';
+import pageBusyIcon from './busy-icon.js';
+import {
+  pushHistory as pushBrowserHistory,
+  replaceHistory as replaceBrowserHistory,
+  updateHistoryControls as updateBrowserHistoryControls,
+} from './brower-history.js';
 import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
@@ -334,10 +340,12 @@ const pmePost = function(post) {
   return $.post(generateUrl('page/pme/load'), post)
     .then(
       function(htmlContent, textStatus, request) {
+        console.info('RESOLVE IN PME POST');
         const historyAction = request.getResponseHeader('X-' + appName + '-history-action');
         return $.Deferred().resolve(htmlContent, historyAction, post).promise();
       },
       function(xhr, status, errorThrown) {
+        console.info('REJECT IN PME POST');
         Ajax.handleError(xhr, status, errorThrown);
         return $.Deferred().reject(xhr, status, errorThrown).promise();
       });
@@ -417,7 +425,7 @@ const tableDialogReload = function(options, callback, triggerData) {
 
     pmePost(post)
       .fail(function(xhr, status, errorThrown) {
-        Page.busyIcon(false);
+        pageBusyIcon(false);
         unblockTableDialog(container);
         tableDialogLoadIndicator(container, false);
         container.data(pmeToken('reloading'), false);
@@ -608,11 +616,11 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
 
       $.fn.cafevTooltip.remove();
       tableDialogLoadIndicator(container, true);
-      Page.busyIcon(true);
+      pageBusyIcon(true);
 
       const cleanup = () => {
         tableDialogLoadIndicator(container, false);
-        Page.busyIcon(false);
+        pageBusyIcon(false);
         allButtons.prop('disabled', false);
         container.data(pmeToken('saving'), false);
       };
@@ -697,11 +705,11 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
                 if (!options.modified) {
                   // otherwise the close() method will reload the
                   // form which in turn will update the icon state.
-                  Page.busyIcon(false);
+                  pageBusyIcon(false);
                 }
               } else {
                 tableDialogLoadIndicator(container, false);
-                Page.busyIcon(false);
+                pageBusyIcon(false);
               }
             }
             allButtons.prop('disabled', false);
@@ -816,7 +824,7 @@ const pmeTableDialogOpen = async function(tableOptions, post) {
 
   const containerCSSId = tableOptions.dialogHolderCSSId;
 
-  const template = Page.templateFromRenderer(
+  const template = templateFromRenderer(
     tableOptions.templateRenderer);
 
   if (pmeOpenDialogs[containerCSSId]) {
@@ -824,7 +832,7 @@ const pmeTableDialogOpen = async function(tableOptions, post) {
   }
   pmeOpenDialogs[containerCSSId] = true;
 
-  Page.busyIcon(true);
+  pageBusyIcon(true);
 
   if (typeof tableOptions.modalDialog === 'undefined') {
     tableOptions.modalDialog = true;
@@ -842,7 +850,7 @@ const pmeTableDialogOpen = async function(tableOptions, post) {
   await new Promise((resolveOpenDialog, rejectOpenDialog) =>
     pmePost(post)
       .fail(function(xhr, status, errorThrown) {
-        Page.busyIcon(false);
+        pageBusyIcon(false);
         pmeOpenDialogs[containerCSSId] = false;
         rejectOpenDialog(new Error(errorThrown));
       })
@@ -966,7 +974,7 @@ const pmeTableDialogOpen = async function(tableOptions, post) {
                     CAFEVDB.toolTipsInit(containerSel);
                     if (!keepLocked) {
                       unblockTableDialog(dialogHolder);
-                      Page.busyIcon(false);
+                      pageBusyIcon(false);
                       tableDialogLoadIndicator(dialogHolder, false);
                     }
                     console.info('RESOLVING PME TABLE DIALOG PROMISE');
@@ -1115,28 +1123,32 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
   }
 
   if (!submitOptions.keepBusy) {
-    Page.busyIcon(true);
+    pageBusyIcon(true);
   }
   if (!submitOptions.keepLocked) {
     modalizer(true);
   }
 
   templateRenderer = templateRenderer.val();
-  const template = Page.templateFromRenderer(templateRenderer);
+  const template = templateFromRenderer(templateRenderer);
 
   pseudoSubmitPost(form, element, resetFilter)
     .fail(function(xhr, status, errorThrown) {
-      Page.busyIcon(false);
+      pageBusyIcon(false);
       modalizer(false);
     })
     .done(function(htmlContent, historyAction, post) {
 
+      console.info('DONE AFTER PSEUDO SUBMIT', historyAction);
+
       if (historyAction === 'push') {
-        Page.pushHistory(qs.parse(post, { allowSparse: true }));
+        console.info('HISTORY PUSH');
+        pushBrowserHistory(qs.parse(post, { allowSparse: true }));
       } else {
-        Page.replaceHistory(qs.parse(post, { allowSparse: true }));
+        console.info('HISTORY REPLACE');
+        replaceBrowserHistory(qs.parse(post, { allowSparse: true }));
       }
-      Page.updateHistoryControls();
+      updateBrowserHistoryControls();
 
       $.fn.cafevTooltip.remove();
 
@@ -1153,6 +1165,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
       });
 
       pmeInit(selector);
+      console.info('AFTER PME INIT');
       WysiwygEditor.addEditor(container.find('textarea.wysiwyg-editor'), function() {
         transposeReady(selector);
         pmeQueryLogMenu(selector);
@@ -1162,7 +1175,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
 
         // kill the busy indicators and modalizer if appropriate
         if (!submitOptions.keepBusy) {
-          Page.busyIcon(false);
+          pageBusyIcon(false);
         }
         if (!submitOptions.keepLocked) {
           modalizer(false);

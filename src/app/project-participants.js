@@ -26,6 +26,7 @@ import { appName, appPrefix } from './config.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
+import { templateRenderer } from './template-renderer.js';
 import * as Musicians from './musicians.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
@@ -119,14 +120,14 @@ const myPersonalRecordDialog = function(record, options) {
   if (tableOptions.table === 'Musicians') {
     const projectMode = options.projectId > 0;
     tableOptions.template = projectMode ? 'add-musicians' : 'all-musicians';
-    tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
+    tableOptions.templateRenderer = templateRenderer(tableOptions.template);
 
     // the proper record id is an object { id: ID }.
     record = { id: record.musicianId };
   } else if (options.projectId > 0) {
     tableOptions.table = 'ProjectParticipants';
     tableOptions.template = 'project-participants';
-    tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
+    tableOptions.templateRenderer = templateRenderer(tableOptions.template);
 
     // the proper record id is an object { project_id, musician_id }.
     // eslint-disable-next-line camelcase
@@ -134,7 +135,7 @@ const myPersonalRecordDialog = function(record, options) {
   } else {
     tableOptions.table = 'Musicians';
     tableOptions.template = 'all-musicians';
-    tableOptions.templateRenderer = Page.templateRenderer(tableOptions.template);
+    tableOptions.templateRenderer = templateRenderer(tableOptions.template);
     // the proper record id is an object { id: ID }.
     record = { id: record.musicianId };
   }
@@ -295,7 +296,7 @@ const myLoadMusicians = function(form, ids, projectMode, afterLoadCallback) {
   const template = projectMode ? 'add-musicians' : 'all-musicians';
   const inputTweak = {
     template,
-    templateRenderer: Page.templateRenderer(template),
+    templateRenderer: templateRenderer(template),
   };
   if (projectMode) {
     inputTweak[pmeSys('fl')] = 1;
@@ -338,7 +339,7 @@ const myLoadProjectParticipants = function(form, musicians, afterLoadCallback) {
   const template = 'project-participants';
   const inputTweak = {
     template,
-    templateRenderer: Page.templateRenderer(template),
+    templateRenderer: templateRenderer(template),
   };
 
   let ids = [-1];

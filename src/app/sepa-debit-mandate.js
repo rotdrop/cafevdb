@@ -26,7 +26,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as DialogUtils from './dialog-utils.js';
-import * as Page from './page.js';
+import pageBusyIcon from './busy-icon.js';
 // import * as Email from './email.js';
 import { showError } from '@nextcloud/dialogs';
 import * as Notification from './notification.js';
@@ -1260,11 +1260,11 @@ const mandateExportHandler = function(event) {
   event.stopImmediatePropagation(); // why?
 
   modalizer(true);
-  Page.busyIcon(true);
+  pageBusyIcon(true);
 
   const clearBusyState = function() {
     modalizer(false);
-    Page.busyIcon(false);
+    pageBusyIcon(false);
     console.log('after init');
     return true;
   };
@@ -1439,10 +1439,10 @@ const mandateReady = function(selector, parameters, resizeCB) {
       (async function() {
         const projectId = $this.data('projectId');
         const cleanup = () => {
-          Page.busyIcon(false);
+          pageBusyIcon(false);
           $this.removeClass('busy');
         };
-        Page.busyIcon(true);
+        pageBusyIcon(true);
         $this.addClass('busy');
         const updateStrategy = $recurringReceivablesUpdateStrategy.filter(':checked').val();
         const participants = await getProjectParticipants(projectId);

@@ -27,6 +27,8 @@ import textareaResize from './textarea-resize.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
+import { templateRenderer } from './template-renderer.js';
+import pageBusyIcon from './busy-icon.js';
 import * as Dialogs from './dialogs.js';
 import * as Notification from './notification.js';
 import { showError, /* showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
@@ -99,8 +101,8 @@ subscribe(BusEvents.PROJECT_EVENTS_POPUP, async (event) => {
  * (the default). If false, only raise an existing dialog to top.
  */
 const eventsPopup = function(post, reopen) {
-  Page.busyIcon(true);
-  const afterInit = () => Page.busyIcon(false);
+  pageBusyIcon(true);
+  const afterInit = () => pageBusyIcon(false);
   if (typeof reopen === 'undefined') {
     reopen = false;
   }
@@ -146,8 +148,8 @@ const emailPopup = function(post, reopen) {
     }
     emailDlg.dialog('close').remove();
   }
-  Page.busyIcon(true);
-  Email.emailFormPopup(post, false, undefined, () => Page.busyIcon(false));
+  pageBusyIcon(true);
+  Email.emailFormPopup(post, false, undefined, () => pageBusyIcon(false));
 };
 
 /**
@@ -170,7 +172,7 @@ const instrumentationNumbersPopup = async function(containerSel, post) {
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: template + '-dialog',
     template,
-    templateRenderer: Page.templateRenderer(template),
+    templateRenderer: templateRenderer(template),
     Table: 'BesetzungsZahlen',
     Transpose: 'transposed',
     InhibitTranspose: 'true',
@@ -209,7 +211,7 @@ const participantFieldsPopup = async function(containerSel, post) {
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: template + '-dialog',
     template,
-    templateRenderer: Page.templateRenderer(template),
+    templateRenderer: templateRenderer(template),
     Table: 'ProjectParticipantFields',
     projectId: post.projectId,
     projectName: post.projectName,
@@ -246,7 +248,7 @@ const projectViewPopup = async function(containerSel, post) {
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: 'project-overview',
     template,
-    templateRenderer: Page.templateRenderer(template),
+    templateRenderer: templateRenderer(template),
     // Now special options for the dialog popup
     initialViewOperation: true,
     initialName: pmeSys('operation'),
@@ -1130,7 +1132,7 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
   if (parameters.reason === 'dialogClose') {
     if (parameters.closedBy !== undefined && parameters.closedBy === pmeSys('savedelete')) {
       const templateRenderer = $(parameters.tableOptions.ambientContainerSelector).find('input[name="templateRenderer"]').val();
-      if (templateRenderer !== 'template:projects') {
+      if (templateRenderer !== templateRenderer('projects')) {
         // we have to reload the default page as the underlying page
         // most likely depends on the now deleted project
         window.location.replace(generateUrl('') + '?history=discard');

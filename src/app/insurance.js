@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013, 2016, 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2016, 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Notification from './notification.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
+import { templateRenderer } from './template-renderer.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
@@ -398,8 +399,8 @@ const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
     const renderer = $(PHPMyEdit.defaultSelector).find(pmeFormSelector + ' input[name="templateRenderer"]').val();
-    if (renderer === Page.templateRenderer('instrument-insurance')
-        || renderer === Page.templateRenderer('insurance-rates')) {
+    if (renderer === templateRenderer('instrument-insurance')
+        || renderer === templateRenderer('insurance-rates')) {
       pmeFormInit(PHPMyEdit.defaultSelector);
     }
   });

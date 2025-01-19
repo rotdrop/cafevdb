@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,27 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import pageBusyIcon from './busy-icon.js';
-import { tableDialogLoadIndicator } from './pme.js';
-import modalizer from './modalizer.js';
+// silly support function for stripping template: from a string
 
-const setBusyIndicators = function(state, $pmeContainer, modal) {
-  if (modal === undefined) {
-    modal = true;
-  }
-  if (state) {
-    if (modal) {
-      modalizer(true);
-    }
-    $pmeContainer && tableDialogLoadIndicator($pmeContainer, true);
-    pageBusyIcon(true);
-  } else {
-    pageBusyIcon(false);
-    $pmeContainer && tableDialogLoadIndicator($pmeContainer, false);
-    if (modal) {
-      modalizer(false);
-    }
-  }
+export const RENDERER_TAG = 'template:';
+
+export const templateRenderer = function(template) {
+  return RENDERER_TAG + template;
 };
 
-export default setBusyIndicators;
+export const templateFromRenderer = function(templateRenderer) {
+  return templateRenderer.replace(RENDERER_TAG, '');
+};

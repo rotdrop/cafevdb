@@ -21,84 +21,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initialState, appName } from './config.js';
-import { globalState, $ } from './globals.js';
+import { appName } from '../config.js';
+import globalState from './globalstate.js';
+import $ from './jquery.js';
+import './jquery-cafevdb-tooltips.js';
 import generateUrl from './generate-url.js';
 import * as Notification from './notification.js';
-import * as CAFEVDB from './cafevdb.js';
+import { snapperClose, addReadyCallback, runReadyCallbacks } from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import modalizer from './modalizer.js';
 import * as qs from 'qs';
-import { emit } from '@nextcloud/event-bus';
-import { PUSH_BUSY_STATE, POP_BUSY_STATE } from '../event-bus.ts';
-
-globalState.Page = globalState.Page || { historyPosition: 0, historySize: 1 };
-
-// overrides from PHP, see config.js
-$.extend(globalState.Page, initialState.CAFEVDB.Page);
-
-const busyIcon = function(on) {
-  if (on) {
-    console.debug('INCREASE BUSY STATE');
-    emit(PUSH_BUSY_STATE, {});
-    $('#reloadbutton img.number-0').hide();
-    $('#reloadbutton img.number-1').show();
-  } else {
-    $('#reloadbutton img.number-1').hide();
-    $('#reloadbutton img.number-0').show();
-    emit(POP_BUSY_STATE, {});
-    console.debug('DECREASE BUSY STATE');
-  }
-};
-
-const generateQueryObject = function(post) {
-  const searchObject = {};
-  const searchFields = ['template', 'projectId'];
-  for (const field of searchFields) {
-    if (post[field]) {
-      searchObject[field] = post[field];
-    }
-  }
-  return searchObject;
-};
-
-const generateQueryString = function(post) {
-  const searchObject = generateQueryObject(post);
-  const queryString = qs.stringify(searchObject);
-  return queryString === '' ? '' : '?' + queryString;
-};
-
-const provideHistoryState = function(post) {
-  if (!post) {
-    post = qs.parse(window.location.search, { ignoreQueryPrefix: true });
-  }
-  const state = history.state || {};
-  state[appName] = Object.assign({}, { post, prevState: false, nextState: false, length: history.length }, state);
-  history.replaceState(state, '', generateQueryString(post));
-
-  return history.state;
-};
-
-const pushHistory = function(post) {
-  const state = history.state || provideHistoryState();
-  const newState = {
-    post,
-    nextState: false, // pushState deletes all following entries.
-    prevState: true,
-    length: history.length + 1,
-  };
-  state[appName].nextState = true;
-  history.replaceState(state, '', generateQueryString(state?.[appName]?.post));
-  state[appName] = newState;
-  history.pushState(state, '', generateQueryString(post));
-};
-
-const replaceHistory = function(post) {
-  const state = history.state || provideHistoryState();
-  state[appName].post = post;
-  state[appName].length = history.length;
-  history.replaceState(state, '', generateQueryString(post));
-};
+import { provideHistoryState, pushHistory, updateHistoryControls } from './brower-history.js';
+import pageBusyIcon from './busy-icon.js';
 
 /**
  * Load a page through the history-aware AJAX page loader.
@@ -111,9 +45,13 @@ const replaceHistory = function(post) {
  *
  */
 const loadPage = function(post, afterLoadCallback, keepHistory) {
+  if (globalState.vueMode) {
+    console.trace('*** ERROR ***: loadPage() called in vue-mode.');
+    return;
+  }
   $('body').removeClass('dialog-titlebar-clicked');
   modalizer(true);
-  busyIcon(true);
+  pageBusyIcon(true);
   let postObject;
   if (typeof post === 'string') {
     postObject = qs.parse(post, { allowSparse: true });
@@ -128,7 +66,7 @@ const loadPage = function(post, afterLoadCallback, keepHistory) {
       // reset the history
       updateHistoryControls();
       modalizer(false);
-      busyIcon(false);
+      pageBusyIcon(false);
     })
     .done(function(htmlContent, textStatus, request) {
 
@@ -160,11 +98,11 @@ const loadPage = function(post, afterLoadCallback, keepHistory) {
       $('#app-navigation').empty().prepend(newAppNavigation);
       $('#' + appGeneralId).empty().prepend(newAppContent);
 
-      CAFEVDB.snapperClose();
+      snapperClose();
       modalizer(false);
-      busyIcon(false);
+      pageBusyIcon(false);
 
-      CAFEVDB.runReadyCallbacks();
+      runReadyCallbacks();
       if (typeof afterLoadCallback === 'function') {
         afterLoadCallback();
       }
@@ -173,17 +111,12 @@ const loadPage = function(post, afterLoadCallback, keepHistory) {
     });
 };
 
-const updateHistoryControls = function(stateArg) {
-  const redo = $('#personalsettings .navigation.redo');
-  const undo = $('#personalsettings .navigation.undo');
-
-  const state = stateArg || history.state;
-
-  undo.prop('disabled', !state?.[appName]?.prevState);
-  redo.prop('disabled', !state?.[appName]?.nextState);
-};
-
 addEventListener('popstate', (event) => {
+  console.info('HISTORY POP STATE', event);
+  if (globalState.vueMode) {
+    console.info('*** WARNING *** disable popstate listener in vue-mode');
+    return;
+  }
   const state = event.state;
   if (state?.[appName]?.post) {
     loadPage(state[appName].post, undefined /* callback */, true /* keep history */);
@@ -191,21 +124,13 @@ addEventListener('popstate', (event) => {
 });
 
 addEventListener('load', (event) => {
+  console.info('HISTORY LOAD NEW', event);
+  if (globalState.vueMode) {
+    console.info('*** WARNING *** disable load listener in vue-mode');
+    return;
+  }
   provideHistoryState();
 });
-
-/**
- * Optain the service-key for querying the app-container for the
- * renderer class for the given template.
- */
-const renderTag = 'template:';
-const templateRenderer = function(template) {
-  return renderTag + template;
-};
-
-const templateFromRenderer = function(templateRenderer) {
-  return templateRenderer.replace(renderTag, '');
-};
 
 const documentReady = function() {
 
@@ -254,7 +179,7 @@ const documentReady = function() {
       return false;
     });
 
-  CAFEVDB.addReadyCallback(function() {
+  addReadyCallback(function() {
     // content.find('form.pme-form input.pme-reload').hide();
     $('#app-navigation-toggle')
       .attr('title', t(appName, 'Display the application menu and settings side-bar'))
@@ -268,17 +193,6 @@ const documentReady = function() {
 };
 
 export {
-  busyIcon,
   loadPage,
-  pushHistory,
-  replaceHistory,
-  updateHistoryControls,
-  templateRenderer,
-  templateFromRenderer,
   documentReady,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -31,7 +31,7 @@ import * as Email from './email.js';
 import * as DialogUtils from './dialog-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
 import { revertRows as revertTableRows } from './table-utils.js';
-import { busyIcon as pageBusyIcon } from './page.js';
+import pageBusyIcon from './busy-icon.js';
 import modalizer from './modalizer.js';
 import { close as closeActionMenus } from './action-menu.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
