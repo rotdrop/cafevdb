@@ -110,10 +110,6 @@ trait InitialStateTrait
         'restoreHistory' => $restoreHistory,
         'userPermissions' => $authorizationService->getUserPermissions($this->userId()),
         'isGroupAdmin' => $authorizationService->isAdmin($this->userId()),
-        'Page' => [
-          'historySize' => $this->historyService->size(),
-          'historyPosition' => $this->historyService->position(),
-        ],
         'sharedFolder' => $this->getSharedFolderPath(),
         'projectsFolder' => $this->getProjectsFolderPath(),
         'wikiNamespace' => $this->getAppValue('wikinamespace'),

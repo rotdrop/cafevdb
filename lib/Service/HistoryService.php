@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2014-2024 Claus-Justus Heine
+ * @copyright 2014-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,18 +49,10 @@ class HistoryService
   protected $debug = false;
 
   /**
-   * The data-contents. A "cooked" array structure with the
-   * following components:
-   * ```
-   * [ 'size' => NUMBER_OF_HISTORY_RECORDS,
-   *   'position' => CURRENT_POSITION_INTO_HISTORY_RECORDS,
-   *   'records' => array(# => clone of $_POST),
-   * ]
-   * ```
+   * @var array|null Clone of the most recent request. The purpose is to
+   * restore the previous view acros browser reload/close, change of user agents.
    */
-  private $historyRecords;
-  private $historyPosition;
-  private $historySize;
+  private ?array $historyRecord;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -79,10 +71,10 @@ class HistoryService
    */
   private function default():void
   {
-    $this->historySize = 1;
-    $this->historyPosition = 0;
-    $this->historyRecords = [ [ 'md5' => md5(serialize([])),
-                                'data' => [] ] ];
+    $this->historyRecord = [
+      'md5' => md5(serialize([])),
+      'data' => []
+    ];
   }
 
   /**
@@ -92,24 +84,16 @@ class HistoryService
    *
    * @return void
    */
-  public function push(array $data):void
+  public function save(array $data):void
   {
     ksort($data);
     $md5 = md5(serialize($data));
-    $historyData = $this->historyRecords[$this->historyPosition];
-    if ($historyData['md5'] != $md5) {
+    if ($this->historyRecord['md5'] != $md5) {
       // add the new record if it appears to be new
-      array_splice($this->historyRecords, 0, $this->historyPosition);
-      array_unshift($this->historyRecords, [ 'md5' => $md5,
-                                             'data' => $data ]);
-      $this->historyPosition = 0;
-      $this->historySize = count($this->historyRecords);
-      while ($this->historySize > self::MAX_HISTORY_SIZE) {
-        array_pop($this->historyRecords);
-        --$this->historySize;
-      }
+      $this->historyRecord['md5'] = $md5;
+      $this->historyRecord['data'] = $data;
       if ($this->debug) {
-        $this->printRecords();
+        $this->printRecord();
       }
     }
   }
@@ -119,84 +103,30 @@ class HistoryService
    *
    * @return void
    */
-  private function printRecords():void
+  private function printRecord():void
   {
-    $message = 'Position/Size: ' . $this->historyPosition . ' / ' . $this->historySize;
-    $printRecords = [];
     $printKeys = [ 'projectId', 'template' ];
-    $count = 0;
-    $max = $this->historyPosition + 2;
-    foreach ($this->historyRecords as $record) {
-      $printRecord = [];
-      foreach ($printKeys as $key) {
-        $printRecord[$key] = $record['data'][$key] ?? 'undefined';
-      }
-      $printRecords[] = $printRecord;
-      if ($count++ > $max) {
-        break;
-      }
+    $printRecord = [];
+    foreach ($printKeys as $key) {
+      $printRecord[$key] = $this->historyRecord['data'][$key] ?? 'undefined';
     }
-    $message .= ', '. print_r($printRecords, true);
+    $message .= ', '. print_r($printRecord, true);
     $this->logInfo($message, [], 2, true);
   }
 
   /**
-   * Fetch the history record at $offset. The function will throw
-   * an exception if offset is out of bounds.
-   *
-   * @param int $offset
+   * Fetch the history record.
    *
    * @return array
    */
-  public function fetch(int $offset):array
+  public function fetch():array
   {
-    $newPosition = $this->historyPosition + $offset;
-    if ($newPosition >= $this->historySize || $newPosition < 0) {
-      throw new OutOfBoundsException(
-        $this->l->t(
-          'Invalid history position %d requested, history size is %d, current position is %d',
-          [ $newPosition, $this->historySize, $this->historyPosition ])
-      );
-    }
-
-    $this->historyPosition = $newPosition;
-
     if ($this->debug) {
-      $this->printRecords();
+      $this->printRecord();
     }
 
     // Could check for valid data here, but so what
-    return $this->historyRecords[$this->historyPosition]['data'];
-  }
-
-  /**
-   * Return the current position into the history.
-   *
-   * @return int
-   */
-  public function position():int
-  {
-    return $this->historyPosition;
-  }
-
-  /**
-   * Return the current position into the history.
-   *
-   * @return int
-   */
-  public function size():int
-  {
-    return $this->historySize;
-  }
-
-  /**
-   * Return true if the recorded history is essentially empty.
-   *
-   * @return bool
-   */
-  public function empty():bool
-  {
-    return $this->historySize <= 1 && count($this->historyRecords[0]['data']) == 0;
+    return $this->historyRecord['data'];
   }
 
   /**
@@ -207,10 +137,7 @@ class HistoryService
    */
   public function store():void
   {
-    $storageValue = [ 'size' => $this->historySize,
-                      'position' => $this->historyPosition,
-                      'records' => $this->historyRecords ];
-    $this->sessionStoreValue(self::SESSION_HISTORY_KEY, $storageValue);
+    $this->sessionStoreValue(self::SESSION_HISTORY_KEY, $this->historyRecord);
   }
 
   /**
@@ -226,62 +153,24 @@ class HistoryService
       $this->default();
       return false;
     }
-    $this->historySize = $loadValue['size'];
-    $this->historyPosition = $loadValue['position'];
-    $this->historyRecords = $loadValue['records'];
+    $this->historyRecord = $loadValue;
     return true;
   }
 
   /**
-   * Validate the given history records, return false on error.
+   * Validate the given history record, return false on error.
    *
-   * @param null|array $history
-   *
-   * @return bool
-   */
-  private function validate(?array $history):bool
-  {
-    if (!is_array($history) ||
-        !isset($history['size']) ||
-        !isset($history['position']) ||
-        !isset($history['records']) ||
-        !$this->validateRecords($history)) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * Validate one history entry.
-   *
-   * @param array $record
+   * @param null|array $record
    *
    * @return bool
    */
-  private function validateRecord(array $record):bool
+  private function validate(?array $record):bool
   {
     if (!is_array($record)) {
       return false;
     }
     if (!isset($record['md5']) || $record['md5'] != md5(serialize($record['data']))) {
       return false;
-    }
-    return true;
-  }
-
-  /**
-   * Validate all history records.
-   *
-   * @param array $history
-   *
-   * @return bool
-   */
-  private function validateRecords(array $history):bool
-  {
-    foreach ($history['records'] as $record) {
-      if (!$this->validateRecord($record)) {
-        return false;
-      }
     }
     return true;
   }

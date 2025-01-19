@@ -30,6 +30,7 @@ import * as Ajax from './ajax.js';
 import modalizer from './modalizer.js';
 import * as qs from 'qs';
 import { emit } from '@nextcloud/event-bus';
+import { PUSH_BUSY_STATE, POP_BUSY_STATE } from '../event-bus.ts';
 
 globalState.Page = globalState.Page || { historyPosition: 0, historySize: 1 };
 
@@ -38,13 +39,15 @@ $.extend(globalState.Page, initialState.CAFEVDB.Page);
 
 const busyIcon = function(on) {
   if (on) {
-    emit(appName + ':push-busy-state');
+    console.debug('INCREASE BUSY STATE');
+    emit(PUSH_BUSY_STATE, {});
     $('#reloadbutton img.number-0').hide();
     $('#reloadbutton img.number-1').show();
   } else {
     $('#reloadbutton img.number-1').hide();
     $('#reloadbutton img.number-0').show();
-    emit(appName + ':pop-busy-state');
+    emit(POP_BUSY_STATE, {});
+    console.debug('DECREASE BUSY STATE');
   }
 };
 
@@ -65,70 +68,58 @@ const generateQueryString = function(post) {
   return queryString === '' ? '' : '?' + queryString;
 };
 
-const generatePageTitle = function(post) {
-  const searchObject = generateQueryObject(post);
-  const searchTitle = Object.values(searchObject).join('@');
-  let title = document.title;
-  if (searchTitle !== '') {
-    title += ' -- ' + searchTitle;
-  }
-  return title;
-};
-
 const provideHistoryState = function(post) {
   if (!post) {
     post = qs.parse(window.location.search, { ignoreQueryPrefix: true });
   }
   const state = history.state || {};
-  Object.assign(state, { post: {}, prevState: null, nextState: null }, state);
-  Object.assign(state.post, post);
-  history.replaceState(state, generatePageTitle(state.post), generateQueryString(state.post));
+  state[appName] = Object.assign({}, { post, prevState: false, nextState: false, length: history.length }, state);
+  history.replaceState(state, '', generateQueryString(post));
 
   return history.state;
 };
 
 const pushHistory = function(post) {
-  const oldState = history.state || provideHistoryState();
+  const state = history.state || provideHistoryState();
   const newState = {
     post,
-    nextState: null, // pushState deletes all following entries.
-    prevState: oldState,
+    nextState: false, // pushState deletes all following entries.
+    prevState: true,
+    length: history.length + 1,
   };
-  oldState.nextState = newState;
-  history.replaceState(oldState, generatePageTitle(oldState.post), generateQueryString(oldState.post));
-  history.pushState(newState, generatePageTitle(post), generateQueryString(post));
+  state[appName].nextState = true;
+  history.replaceState(state, '', generateQueryString(state?.[appName]?.post));
+  state[appName] = newState;
+  history.pushState(state, '', generateQueryString(post));
 };
 
 const replaceHistory = function(post) {
   const state = history.state || provideHistoryState();
-  state.post = post;
-  history.replaceState(state, generatePageTitle(post), generateQueryString(post));
+  state[appName].post = post;
+  state[appName].length = history.length;
+  history.replaceState(state, '', generateQueryString(post));
 };
 
 /**
  * Load a page through the history-aware AJAX page loader.
  *
- * @param {object} post TBD.
+ * @param {object} post Post data.
  *
- * @param {Function} afterLoadCallback TBD.
+ * @param {Function} afterLoadCallback Called after completeion  let action;
+ *
+ * @param {boolean} keepHistory Leave the history data as is.
  *
  */
-const loadPage = function(post, afterLoadCallback) {
+const loadPage = function(post, afterLoadCallback, keepHistory) {
   $('body').removeClass('dialog-titlebar-clicked');
   modalizer(true);
   busyIcon(true);
-  let action;
   let postObject;
   if (typeof post === 'string') {
     postObject = qs.parse(post, { allowSparse: true });
   } else {
     postObject = post;
     post = qs.stringify(postObject);
-  }
-  if (postObject.historyOffset !== undefined) {
-    action = 'loader';
-  } else {
-    action = 'remember';
   }
   $.post(generateUrl('page/remember/blank'), post)
     .fail(function(xhr, status, errorThrown) {
@@ -144,7 +135,7 @@ const loadPage = function(post, afterLoadCallback) {
       // Remove pending dialog when moving away from the page
       $('.ui-dialog-content').dialog('destroy').remove();
 
-      if (action === 'remember') {
+      if (!keepHistory) {
         pushHistory(postObject);
       }
       updateHistoryControls();
@@ -182,20 +173,20 @@ const loadPage = function(post, afterLoadCallback) {
     });
 };
 
-const updateHistoryControls = function(state) {
+const updateHistoryControls = function(stateArg) {
   const redo = $('#personalsettings .navigation.redo');
   const undo = $('#personalsettings .navigation.undo');
 
-  state = state || history.state;
+  const state = stateArg || history.state;
 
-  undo.prop('disabled', !state || !state.prevState);
-  redo.prop('disabled', !state || !state.nextState);
+  undo.prop('disabled', !state?.[appName]?.prevState);
+  redo.prop('disabled', !state?.[appName]?.nextState);
 };
 
 addEventListener('popstate', (event) => {
   const state = event.state;
-  if (state && state.post) {
-    loadPage(Object.assign({}, history.state.post, { historyOffset: 0 }));
+  if (state?.[appName]?.post) {
+    loadPage(state[appName].post, undefined /* callback */, true /* keep history */);
   }
 });
 
@@ -242,7 +233,7 @@ const documentReady = function() {
         pmeReload.trigger('click');
         $('body').removeClass('dialog-titlebar-clicked');
       } else {
-        loadPage(Object.assign({}, history.state.post, { historyOffset: 0 }));
+        loadPage(history.state?.[appName]?.post, undefined /* callback */, true /* keep history */);
       }
       return false;
     });

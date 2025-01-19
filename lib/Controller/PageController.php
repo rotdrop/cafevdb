@@ -112,12 +112,12 @@ class PageController extends Controller
   public function index():Http\Response
   {
     if ($this->parameterService->getParam('history', '') == 'discard') {
-      $this->historyService->push([]);
+      $this->historyService->save([]);
       $this->historyService->store();
       return new Http\RedirectResponse($this->urlGenerator->linkTo($this->appName, ''));
     }
     if ($this->shouldLoadHistory()) {
-      return $this->history(0, self::RENDER_AS_USER);
+      return $this->restore(self::RENDER_AS_USER);
     } else {
       return $this->remember(self::RENDER_AS_USER);
     }
@@ -128,7 +128,7 @@ class PageController extends Controller
    *
    * @return bool
    */
-  private function shouldLoadHistory(int $level = 0):bool
+  private function shouldLoadHistory():bool
   {
     if ($this->getUserValue('restorehistory') !== 'on') {
       return false;
@@ -141,7 +141,7 @@ class PageController extends Controller
       return true;
     }
     $get = $this->request->get;
-    $historyData = $this->historyService->fetch($level);
+    $historyData = $this->historyService->fetch();
     foreach ($get as $key => $value) {
       if ($key == '_route') {
         continue;
@@ -191,28 +191,18 @@ class PageController extends Controller
    * Load a page at the specified offset from the history. Returns an
    * error if the entry cannot be found in the history.
    *
-   * @param int $level
-   *
    * @param string $renderAs
    *
    * @return Http\Response
    *
    * @NoAdminRequired
    */
-  public function history(int $level = 0, string $renderAs = 'blank'):Http\Response
+  private function restore(string $renderAs = 'blank'):Http\Response
   {
-    try {
-      $originalParams = $this->parameterService->getParams();
-      $this->parameterService->setParams($this->historyService->fetch($level));
-      $this->parameterService['originalRequestParameters'] = $originalParams;
-      $this->parameterService->setParam('renderAs', $renderAs);
-    } catch (OutOfBoundsException $e) {
-      return new DataResponse(
-        ['message' => $e->getMessage(),
-         'history' => ['size' => $this->historyService->size(),
-                       'position' => $this->historyService->position()] ],
-        Http::STATUS_NOT_FOUND);
-    }
+    $originalParams = $this->parameterService->getParams();
+    $this->parameterService->setParams($this->historyService->fetch());
+    $this->parameterService['originalRequestParameters'] = $originalParams;
+    $this->parameterService->setParam('renderAs', $renderAs);
     return $this->loader(
       $renderAs,
       $this->parameterService['template'],
@@ -234,7 +224,7 @@ class PageController extends Controller
    */
   public function remember(string $renderAs = self::RENDER_AS_USER):Http\Response
   {
-    $this->historyService->push($this->parameterService->getParams());
+    $this->historyService->save($this->parameterService->getParams());
     return $this->loader(
       $this->parameterService->getParam('renderAs', self::RENDER_AS_USER),
       $this->parameterService['template'],
@@ -290,6 +280,9 @@ class PageController extends Controller
     mixed $musicianId = null,
     string $historyAction = self::HISTORY_ACTION_PUSH,
   ) {
+    if ($historyAction != self::HISTORY_ACTION_PUSH) {
+      $this->logInfo('HISTORY ACTION ' . $historyAction);
+    }
 
     // Initial state injecton for JS
     $this->publishInitialStateForUser($this->userId());
