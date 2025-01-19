@@ -29,7 +29,9 @@
         </template>
       </NcButton>
       <div class="spacer" />
-      <NcButton :class="{ [appPrefix('top-nav-button')]: true, loading: busyState }">
+      <NcButton :class="{ [appPrefix('top-nav-button')]: true, loading: busyState }"
+                @click="reloadPage"
+      >
         <template #icon>
           <ReloadIcon />
         </template>
@@ -101,6 +103,7 @@ import wikiPopup from '../app/wiki-popup.js'
 import useAppDataStore from '../stores/app-data.js'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import * as BusEvents from '../event-bus.ts'
+import * as LegacyNotification from '../app/notification.js'
 
 export default {
   name: 'LegacyWrapper',
@@ -166,6 +169,12 @@ export default {
     },
     ...mapState(useAppDataStore, ['busyState']),
     ...mapWritableState(useAppDataStore, ['currentProjectId']),
+    pmePrefix() {
+      return this.globalState.PHPMyEdit.pmePrefix
+    },
+    pmeForm() {
+      return this.pmeSelector('form', 'form')
+    },
   },
   watch: {
     currentProjectId(/* newValue, oldValue */) {
@@ -224,6 +233,25 @@ export default {
         open: false,
       })
       this.currentProjectId = this.templateParameters?.projectId || -1
+    },
+    pmeSelector(token, element) {
+      return (element || '') + '.' + this.pmePrefix + '-' + token
+    },
+    reloadPage() {
+      // @todo: tweak an maintain history
+      const pmeContainer = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-table-container')
+      if (pmeContainer) {
+        const reloadButton = pmeContainer.querySelector(this.pmeForm + ' ' + this.pmeSelector('reload', 'input'))
+        if (reloadButton) {
+          this.info('TRIGGER CLICK ON PME RELOAD BUTTON')
+          LegacyNotification.hide()
+          reloadButton.click()
+          document.querySelector('body').classList.remove('dialog-titlebar-clicked') // ???
+          return
+        }
+      }
+      this.info('NO PME RELOAD BUTTON FOUND, RELOAD ENTIRE LEGACY CONTENT')
+      this.loadLegacy() // try reload entire page if no reload button has been found
     },
   },
 }
