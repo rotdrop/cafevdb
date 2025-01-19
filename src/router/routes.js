@@ -24,66 +24,26 @@ import { appName } from '../app/app-info.js';
 const routes = [
   {
     path: '/',
+    name: 'home',
     props: router => ({
       routeTitle: t(appName, 'Home'),
     }),
   },
   {
-    path: '/f/projects',
-    component: () => import('../components/LegacyWrapper.vue'),
-    name: 'projects',
-    props: route => ({
-      routeTitle: t(appName, 'Projects'),
-      template: route.name,
-    }),
-  },
-  {
-    path: '/f/musicians',
-    component: () => import('../components/LegacyWrapper.vue'),
-    name: 'all-musicians',
-    props: route => ({
-      routeTitle: t(appName, 'Musicians'),
-      template: route.name,
-    }),
-  },
-  {
-    path: '/f/project-participants/:projectId/:projectName?',
-    component: () => import('../components/LegacyWrapper.vue'),
-    name: 'project-participants',
-    props: route => ({
-      routeTitle: t(appName, 'Project Participants'),
-      template: route.name,
-      templateParameters: {
-        projectId: +route.params?.projectId || -1,
-        projectName: route.params?.projectName || '',
-      },
-    }),
-  },
-  {
-    path: '/f/project-instrumentation-numbers/:projectId/:projectName?',
-    component: () => import('../components/LegacyWrapper.vue'),
-    name: 'project-instrumentation-numbers',
-    props: route => ({
-      routeTitle: t(appName, 'Instrumentation Numbers'),
-      template: route.name,
-      templateParameters: {
-        projectId: +route.params?.projectId || -1,
-        projectName: route.params?.projectName || '',
-      },
-    }),
-  },
-  {
-    path: '/f/project-participant-fields/:projectId/:projectName?',
-    component: () => import('../components/LegacyWrapper.vue'),
-    name: 'project-participant-fields',
-    props: route => ({
-      routeTitle: t(appName, 'Extra Fields'),
-      template: route.name,
-      templateParameters: {
-        projectId: +route.params?.projectId || -1,
-        projectName: route.params?.projectName || '',
-      },
-    }),
+    path: '/p/:template/:projectId(\\d+)?/:projectName?',
+    component: () => import('../components/LegacyWrapperRouterReactivity.vue'),
+    name: 'legacy-page',
+    props: true,
+    // route => {
+    //   console.trace('ROUTE PROPS', route);
+    //   return {
+    //     template: route.params?.template,
+    //     templateParameters: {
+    //       projectId: +route.params?.projectId || null,
+    //       projectName: route.params?.projectName || null,
+    //     },
+    //   };
+    // },
   },
 ];
 

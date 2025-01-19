@@ -151,10 +151,14 @@ $routes = [
     ],
     [
       'name' => 'vueApp#index',
-      'url' => '/vue-app/f/{path}',
+      'url' => '/vue-app/p/{template}/{projectId}/{projectName}',
       'verb' => 'GET',
-      'requirements' => [ 'path' => '.+' ],
+      'requirements' => [ 'template' => '.+' ],
       'postfix' => 'front',
+      'defaults' => [
+        'projectId' => null,
+        'projectName' => null,
+      ],
     ],
     [
       'name' => 'page#index',

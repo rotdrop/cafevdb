@@ -121,20 +121,10 @@ export default {
     ReloadIcon,
   },
   mixins,
-  beforeRouteEnter(to, from, next) {
-    next(self => {
-      self.info('BEFORE ROUTE ENTER')
-      self.onRouteChange(to, from, next)
-    })
-  },
-  beforeRouteUpdate(to, from, next) {
-    this.info('BEFORE ROUTE UPDATE')
-    this.onRouteChange(to, from, next)
-  },
   props: {
     template: {
       type: String,
-      required: true,
+      default: null,
     },
     templateParameters: {
       type: Object,
@@ -150,6 +140,7 @@ export default {
       html: '',
       loading: true,
       stortTitle: this.template,
+      loadingPromise: Promise.resolve(true),
     }
   },
   computed: {
@@ -177,18 +168,21 @@ export default {
     },
   },
   watch: {
-    currentProjectId(/* newValue, oldValue */) {
-      this.loadLegacy()
+    async 'templateParameters.projectId'(value, ...rest) {
+      this.info('PROJECT ID CHANGED', value, ...rest)
+      this.currentProjectId = value
+      await this.loadLegacy()
     },
-    template() {
-      this.loadLegacy()
+    async template(...args) {
+      this.info('TEMPLATE CHANGE', ...args)
+      await this.loadLegacy()
     },
     'globalState.toolTipsEnabled'(value, oldValue) {
       this.info('TOOLTIPS MODE CHANGED', value, oldValue)
     },
   },
   async created() {
-    this.loadLegacy()
+    await this.loadLegacy()
   },
   methods: {
     ...mapActions(useAppDataStore, ['pushBusyState', 'popBusyState']),
@@ -199,17 +193,28 @@ export default {
       })
     },
     async loadLegacy() {
+      this.info('VUE APP LOAD PAGE LOADING')
+      let promise
+      do {
+        await (promise = this.loadingPromise)
+      } while (promise !== this.loadingPromise)
+      await (this.loadingPromise = this.doLoadLegacy())
+    },
+    async doLoadLegacy() {
+      if (!this.template) {
+        return
+      }
       emit(BusEvents.TOGGLE_NAVIGATION, {
         open: false,
       })
       this.currentProjectId = this.templateParameters?.projectId || -1
       this.loading = true
       this.pushBusyState()
+      const post = {
+        template: this.template,
+        ...this.templateParameters,
+      }
       try {
-        const post = {
-          template: this.template,
-          ...this.templateParameters,
-        }
         const response = await axios.post(generateAppUrl('page/remember/blank'), post)
         const newContent = document.createElement('div')
         newContent.innerHTML = response.data
@@ -227,18 +232,13 @@ export default {
       }
       this.popBusyState()
       this.loading = false
-    },
-    onRouteChange(/* to, from, next */) {
-      emit(BusEvents.TOGGLE_NAVIGATION, {
-        open: false,
-      })
-      this.currentProjectId = this.templateParameters?.projectId || -1
+      this.requestPageLoad = false
     },
     pmeSelector(token, element) {
       return (element || '') + '.' + this.pmePrefix + '-' + token
     },
-    reloadPage() {
-      // @todo: tweak an maintain history
+    async reloadPage() {
+      // @todo: tweak and maintain history
       const pmeContainer = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-table-container')
       if (pmeContainer) {
         const reloadButton = pmeContainer.querySelector(this.pmeForm + ' ' + this.pmeSelector('reload', 'input'))
@@ -251,7 +251,7 @@ export default {
         }
       }
       this.info('NO PME RELOAD BUTTON FOUND, RELOAD ENTIRE LEGACY CONTENT')
-      this.loadLegacy() // try reload entire page if no reload button has been found
+      await this.loadLegacy()
     },
   },
 }

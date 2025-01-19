@@ -50,7 +50,7 @@
         </template>
       </NcActionButton>
       <NcActionSeparator v-if="enableOverviewItem" />
-      <NcActionRouter :to="{ name: 'project-participants', params: { projectId, projectName } }"
+      <NcActionRouter :to="toProjectRouteData('project-participants')"
                       :name="t(appId, 'Participants')"
                       exact
                       @click="closeMenu"
@@ -60,7 +60,7 @@
         </template>
       </NcActionRouter>
       <NcActionLink :name="t(appId, 'Instrumentation Numbers')"
-                    :href="getRouteHref({ name: 'project-instrumentation-numbers', params: { projectId, projectName } })"
+                    :href="getRouteHref(toProjectRouteData('project-instrumentation-numbers'))"
                     @click="openInstrumentationNumbers"
       >
         <template #icon>
@@ -68,7 +68,7 @@
         </template>
       </NcActionLink>
       <NcActionLink :name="t(appId, 'Participant Fields')"
-                    :href="getRouteHref({ name: 'project-participant-fields', params: { projectId, projectName } })"
+                    :href="getRouteHref(toProjectRouteData('project-participant-fields'))"
                     @click="openParticipantFields"
       >
         <template #icon>
@@ -107,7 +107,7 @@
     </NcActions>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {
   NcActions,
   NcActionButton,
@@ -255,6 +255,16 @@ export default globalState.vue.Vue.extend({
     })
   },
   methods: {
+    toProjectRouteData(template: string) {
+      return {
+        name: 'legacy-page',
+        params: {
+          template,
+          projectId: this.projectId,
+          projectName: this.projectName,
+        },
+      }
+    },
     async syncProjectData(projectId) {
       this.project = await this.appData.getProject(projectId, this.appData.errorHandler)
       // vueSet(this.project, 'folders', this.project.folders)

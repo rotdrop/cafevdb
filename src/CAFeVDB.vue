@@ -23,7 +23,7 @@
   <NcContent :app-name="appId">
     <NcAppNavigation>
       <template #list>
-        <NcAppNavigationItem :to="{ name: '/' }"
+        <NcAppNavigationItem :to="{ name: 'home' }"
                              :name="t(appId, 'Home')"
                              icon="icon-home"
                              exact
@@ -38,10 +38,14 @@
           </template>
         </NcAppNavigationItem>
         <NcAppNavigationItem v-if="projectMode"
-                             :to="{ name: 'project-participants', params: {
-                               projectId: currentProjectId,
-                               projectName: currentProjectName,
-                             }}"
+                             :to="{
+                               name: 'legacy-page',
+                               params: {
+                                 template: 'project-participants',
+                                 projectId: currentProjectId,
+                                 projectName: currentProjectName,
+                               },
+                             }"
                              :name="t(appId, 'Participants')"
                              exact
                              @click="showSidebar = false"
@@ -51,10 +55,14 @@
           </template>
         </NcAppNavigationItem>
         <NcAppNavigationItem v-if="projectMode"
-                             :to="{ name: 'project-instrumentation-numbers', params: {
-                               projectId: currentProjectId,
-                               projectName: currentProjectName,
-                             }}"
+                             :to="{
+                               name: 'legacy-page',
+                               params: {
+                                 template: 'project-instrumentation-numbers',
+                                 projectId: currentProjectId,
+                                 projectName: currentProjectName,
+                               },
+                             }"
                              :name="t(appId, 'Instrumentation Numbers')"
                              exact
                              @click="showSidebar = false"
@@ -64,10 +72,14 @@
           </template>
         </NcAppNavigationItem>
         <NcAppNavigationItem v-if="projectMode"
-                             :to="{ name: 'project-participant-fields', params: {
-                               projectId: currentProjectId,
-                               projectName: currentProjectName,
-                             }}"
+                             :to="{
+                               name: 'legacy-page',
+                               params: {
+                                 template: 'project-participant-fields',
+                                 projectId: currentProjectId,
+                                 projectName: currentProjectName,
+                               },
+                             }"
                              :name="t(appId, 'Extra Fields')"
                              exact
                              @click="showSidebar = false"
@@ -76,13 +88,13 @@
             <ParticipantFieldsIcon />
           </template>
         </NcAppNavigationItem>
-        <NcAppNavigationItem :to="{ name: 'projects' }"
+        <NcAppNavigationItem :to="{name: 'legacy-page', params: { template: 'projects' }}"
                              :name="t(appId, 'All Projects')"
                              icon="icon-home"
                              exact
                              @click="showSidebar = false"
         />
-        <NcAppNavigationItem :to="{ name: 'all-musicians' }"
+        <NcAppNavigationItem :to="{ name: 'legacy-page', params: { template: 'all-musicians' }}"
                              :name="t(appId, 'All Musicians')"
                              icon="icon-home"
                              exact
@@ -185,7 +197,10 @@
       </template>
     </NcAppNavigation>
     <NcAppContent :class="{ 'icon-loading': loading }">
-      <router-view v-show="!loading && !appError" :loading.sync="loading" @view-details="handleDetailsRequest" />
+      <RouterView v-show="!loading && !appError"
+                  :loading.sync="loading"
+                  @view-details="handleDetailsRequest"
+      />
       <NcEmptyContent v-if="isRoot || appError" class="emp-content">
         {{ t(appId, '{orchestraName} Orchestra Portal', { orchestraName, }) }}
         <template #icon>
