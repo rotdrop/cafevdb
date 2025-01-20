@@ -88,7 +88,8 @@
             <ParticipantFieldsIcon />
           </template>
         </NcAppNavigationItem>
-        <NcAppNavigationItem :to="{name: 'legacy-page', params: { template: 'projects' }}"
+        <NcAppNavigationItem ref="projectView"
+                             :to="{name: 'legacy-page', params: { template: 'projects' }}"
                              :name="t(appId, 'All Projects')"
                              icon="icon-home"
                              exact
@@ -234,6 +235,22 @@
     </NcAppSidebar>
     -->
     <div id="appsettings_popup" class="personal-settings app-admin-settings popup bottomleft hidden" />
+    <div id="fullcalendar">
+      <!-- used by legacy calendar stuff -->
+    </div>
+    <div id="dialog_holder" class="popup topleft hidden">
+      <!-- used by legacy calendar, blog, legacy events -->
+    </div>
+    <div id="appsettings_popup" class="personal-settings app-admin-settings popup bottomleft hidden">
+      <!-- used by app-settings popup opened by the left side-bar -->
+    </div>
+    <form class="focusstealer">
+      <!-- defeat auto-focus attempts -->
+      <input id="focusstealer" type="checkbox" class="focusstealer">
+    </form>
+    <ImageUploadTemplate :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
+    <FileUploadTemplate :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
+    <CloudFileSystemOperations :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
   </NcContent>
 </template>
 
@@ -260,9 +277,13 @@ import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.v
 import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import AppSettingsIcon from 'vue-material-design-icons/Cogs.vue'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
+import ImageUploadTemplate from './components/oc-template/ImageUploadTemplate.vue'
+import FileUploadTemplate from './components/oc-template/FileUploadTemplate.vue'
+import CloudFileSystemOperations from './components/oc-template/CloudFileSystemOperations.vue'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 import { debugOptions } from './debug-modes.ts'
+import { formatFileSize } from '@nextcloud/files'
 import { emit, subscribe } from '@nextcloud/event-bus'
 import * as BusEvents from './event-bus.ts'
 
@@ -276,9 +297,12 @@ export default {
   name: 'CAFeVDB',
   components: {
     AppSettingsIcon,
+    CloudFileSystemOperations,
+    FileUploadTemplate,
+    ImageUploadTemplate,
     InstrumentationNumbersIcon,
-    NcActions,
     NcActionLink,
+    NcActions,
     NcAppContent,
     NcAppNavigation,
     NcAppNavigationItem,
@@ -356,8 +380,31 @@ export default {
     personalSettingsUrl() {
       return nextcloudGenerateUrl('settings/user/' + this.appName)
     },
+    // why is there no this.$router??????
+    router() {
+      // return this?.$router
+      return this?.globalState?.vue?.router
+    },
+    routerHistory() {
+      return this?.router?.history
+    },
+    currentRoute() {
+      return this?.routerHistory?.current
+    },
+    uploadMaxFileSize() {
+      return this.globalState?.uploadMaxFileSize || 0
+    },
+    uploadMaxHumanFileSize() {
+      return formatFileSize(this.uploadMaxFileSize)
+    },
   },
   watch: {
+    router(...args) {
+      this.info('ROUTER WATCHER', ...args)
+    },
+    currentRoute(...args) {
+      this.info('CURRENT ROUTE WATCHER', ...args)
+    },
     'globalState.toolTipsEnabled'(value, oldValue) {
       this.updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue)
     },

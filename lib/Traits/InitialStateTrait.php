@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
+use OCA\CAFEVDB\Common\Util;
 
 /** Provide an "initial state" for JavaScript. */
 trait InitialStateTrait
@@ -113,6 +114,7 @@ trait InitialStateTrait
         'sharedFolder' => $this->getSharedFolderPath(),
         'projectsFolder' => $this->getProjectsFolderPath(),
         'wikiNamespace' => $this->getAppValue('wikinamespace'),
+        'uploadMaxFileSize' => Util::maxUploadSize(),
       ]);
 
     $this->initialStateService->provideInitialState(

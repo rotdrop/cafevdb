@@ -73,10 +73,18 @@
       </NcActions>
     </div>
     <!-- eslint-disable vue/no-v-html  -->
-    <div :id="appPrefix('general')"
-         :class="{ 'page-container': true, loading, }"
-         v-html="html"
-    />
+    <div :id="appPrefix('general')" :class="{ 'page-container': true, loading, }">
+      <!-- /* used to eliminate the pixel-size of the control bar -->
+      <div :id="pagePrefix + 'header-box'" :class="[pagePrefix + 'header-box', legacyCssClass]">
+        <div :id="pagePrefix + 'header'" :class="[pagePrefix + 'header', legacyCssClass]" v-html="legacyHeaderHtml" />
+      </div>
+      <div :id="pagePrefix + 'container'" :class="[pagePrefix + 'container', legacyCssClass]">
+        <!-- used to have something with 100% height for scrollbars -->
+        <div :id="pagePrefix + 'body'" :class="[pagePrefix + 'body', legacyCssClass]">
+          <div :id="pagePrefix + 'body-inner'" :class="[pagePrefix + 'body-inner', legacyCssClass]" v-html="legacyBodyHtml" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -137,7 +145,10 @@ export default {
   },
   data() {
     return {
-      html: '',
+      legacyHeaderHtml: '',
+      legacyBodyHtml: '',
+      legacyCssPrefix: this.appName,
+      legacyCssClass: '',
       loading: true,
       stortTitle: this.template,
       loadingPromise: Promise.resolve(true),
@@ -165,6 +176,12 @@ export default {
     },
     pmeForm() {
       return this.pmeSelector('form', 'form')
+    },
+    appPrefixGeneral() {
+      return this.appPrefix('general')
+    },
+    pagePrefix() {
+      return this.legacyCssPrefix + '-'
     },
   },
   watch: {
@@ -215,11 +232,12 @@ export default {
         ...this.templateParameters,
       }
       try {
-        const response = await axios.post(generateAppUrl('page/remember/blank'), post)
-        const newContent = document.createElement('div')
-        newContent.innerHTML = response.data
-        const newAppContent = newContent.querySelector('#' + this.appGeneralId)
-        this.html = newAppContent.innerHTML
+        const response = await axios.post(generateAppUrl('page/remember/parts'), post)
+        const data = response.data // todo: validate
+        this.legacyBodyHtml = data.bodyHtml
+        this.legacyHeaderHtml = data.headerHtml
+        this.legacyCssPrefix = data.cssPrefix
+        this.legacyCssClass = data.cssClass
         await nextTick()
         CAFEVDB.runReadyCallbacks()
         const titleProvider = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-short-title')

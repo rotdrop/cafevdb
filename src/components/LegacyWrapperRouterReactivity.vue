@@ -30,6 +30,7 @@
   <LegacyWrapper :template="template" :template-parameters="templateParameters" />
 </template>
 <script>
+// import globalState from '../app/globalstate.js'
 import LegacyWrapper from './LegacyWrapper.vue'
 import mixins from '../mixins/app-mixins.js'
 
@@ -41,13 +42,18 @@ export default {
   mixins,
   beforeRouteEnter(to, from, next) {
     next(self => {
-      self.info('BEFORE ROUTE ENTER', to, from)
-      self.onRouteChange(to)
+      self.info('BEFORE ROUTE ENTER', to, from, self.globalState.vue.router, self)
+      self.onRouteChange(to, false)
     })
   },
-  beforeRouteUpdate(to, from) {
-    this.info('BEFORE ROUTE UPDATE', to, from)
-    this.onRouteChange(to)
+  beforeRouteUpdate(to, from, next) {
+    this.info('BEFORE ROUTE UPDATE', to, from, this.globalState.vue.router, this)
+    this.onRouteChange(to, true)
+    next()
+  },
+  beforeRouteLeave(to, from, next) {
+    this.info('BEFORE ROUTE LEAVE', to, from, this.globalState.vue.router, this)
+    next()
   },
   data() {
     return {
@@ -55,12 +61,36 @@ export default {
       templateParameters: {},
     }
   },
+  computed: {
+    // why is there no this.$router??????
+    router() {
+      return this?.globalState?.vue?.router
+    },
+  },
+  watch: {
+    'globalState.vue.router.history.current'(...args) {
+      this.info('ROUTER CURRENT CHANGE', ...args)
+    },
+    '$router'(...args) {
+      this.info('ROUTER CHANGE', ...args)
+    },
+  },
   methods: {
-    onRouteChange(to) {
+    onRouteChange(to, push) {
+      this.info('onRouteChange()')
+      // const url = to.path
+      const state = history.state
+      if (push) {
+        this.info('SHOULD PUSH HISTORY STATE', state)
+        // history.pushState(state, '', fullUrl)
+        // history.replaceState(state, '')
+      } else {
+        this.info('SHOULD REPLACE HISTORY STATE', state)
+        // history.replaceState(state, '')
+      }
       this.template = to?.params?.template
       this.templateParameters.projectId = to?.params?.projectId
       this.templateParameters.projectName = to?.params?.projectName
-      this.info('THIS', this.template, this.templateParameters, this)
     },
   },
 }
