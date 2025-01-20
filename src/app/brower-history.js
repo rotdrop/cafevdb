@@ -22,6 +22,7 @@
  */
 
 import { appName } from '../config.js';
+import globalState from './globalstate.js';
 import * as qs from 'qs';
 
 const generateQueryObject = function(post) {
@@ -45,11 +46,16 @@ const provideHistoryState = function(post) {
   if (!post) {
     post = qs.parse(window.location.search, { ignoreQueryPrefix: true });
   }
+  const appData = getHistoryState();
+  Object.assign(appData.post, post || {});
   const state = history.state || {};
-  state[appName] = Object.assign({}, { post, prevState: false, nextState: false, length: history.length }, state);
-  history.replaceState(state, '', generateQueryString(post));
-
-  return history.state;
+  state[appName] = appData;
+  if (globalState.vueMode) {
+    return state;
+  } else {
+    history.replaceState(state, '', generateQueryString(post));
+    return history.state;
+  }
 };
 
 const pushHistory = function(post) {
@@ -64,7 +70,12 @@ const pushHistory = function(post) {
   state[appName].nextState = true;
   history.replaceState(state, '', generateQueryString(state?.[appName]?.post));
   state[appName] = newState;
-  history.pushState(state, '', generateQueryString(post));
+  if (globalState.vueMode) {
+    return state;
+  } else {
+    history.pushState(state, '', generateQueryString(post));
+    return history.state;
+  }
 };
 
 const replaceHistory = function(post) {
@@ -74,9 +85,17 @@ const replaceHistory = function(post) {
     const state = history.state;
     state[appName].post = post;
     state[appName].length = history.length;
-    history.replaceState(state, '', generateQueryString(post));
+    if (globalState.vueMode) {
+      return state;
+    } else {
+      history.replaceState(state, '', generateQueryString(post));
+      return history.state;
+    }
   }
-  console.info('REPLACE HISTORY', post, { ...history.state });
+};
+
+const getHistoryState = function() {
+  return history?.state?.[appName] || { post: {}, prevState: false, nextState: false, length: history?.length || 0 };
 };
 
 const updateHistoryControls = function(stateArg) {
@@ -95,6 +114,7 @@ const updateHistoryControls = function(stateArg) {
 
 export {
   provideHistoryState,
+  getHistoryState,
   pushHistory,
   replaceHistory,
   updateHistoryControls,
