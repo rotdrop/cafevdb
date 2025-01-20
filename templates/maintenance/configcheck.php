@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,8 +26,9 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
-$css_pfx = 'cafevdb-page';
-$css_class = 'config-check';
+$css_pfx = $renderer->cssPrefix();
+$css_class = $renderer->cssClass();
+unset($this->vars['css-class']);
 
 //style($appName, 'config-check');
 //script($appName, 'events-test');
@@ -40,17 +41,7 @@ $nav .= $pageNavigation->pageControlElement('project-participant-fields');
 $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers');
 $nav .= $pageNavigation->pageControlElement('blog');
 
-$header = ''
-  .'<div class="'.$css_pfx.'-config-check" id="'.$css_pfx.'-config-check-header">
-  '.$l->t('It may be that you simply have to log-off and log-in again because your login-session has timed out. Otherwise:')
-   .'<p>'
-   .$l->t('Several basic configuraton options are missing. Please follow the
-instructions below. If this is a new installation then you will
-probably also have to adjust several other app-settings. The settings
-can be accessed through the configuration menu in the top-right corner.
-You need to have the role of a group-administrator to do.')
-  .'</div>
-';
+$header = $renderer->headerText();
 
 echo $this->inc('part.common.header', [
   'css-prefix' => $css_pfx,

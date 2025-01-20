@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024 Claus-Justus Heine
+ * @copyright 2011-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,12 +45,10 @@ class Registration
     $context->registerService(IPMEOptions::class, function($c) {
       return $c->query(PME\Config::class);
     });
-    $context->registerService(self::TEMPLATE_PREFIX . 'maintenance/configcheck', function($c) {
-      return new class extends Renderer {}; // do nothing
-    });
     $context->registerService(self::TEMPLATE_PREFIX . 'maintenance/debug', function($c) {
       return new class extends Renderer {}; // do nothing
     });
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . ConfigCheck::TEMPLATE, ConfigCheck::class);
     $context->registerServiceAlias(self::TEMPLATE_PREFIX.'all-musicians', Musicians::class);
     $context->registerService(self::TEMPLATE_PREFIX.'add-musicians', function($c) {
       $musicians = $c->query(self::TEMPLATE_PREFIX.'all-musicians');

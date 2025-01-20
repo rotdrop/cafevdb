@@ -25,10 +25,9 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use OCP\IL10N;
-use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 
-/** Blog renderer class, rendering is done through legacy templates.*/
-class Blog extends Renderer implements IPageRenderer
+/** Dummy config-check renderer */
+class ConfigCheck extends Renderer implements IPageRenderer
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
@@ -37,32 +36,26 @@ class Blog extends Renderer implements IPageRenderer
    *
    * The legacy template to load.
    */
-  public const TEMPLATE = 'blog/blog';
+  public const TEMPLATE = 'maintenance/configcheck';
 
   /**
    * @param IL10N $l
-   *
-   * @param string $userId
-   *
-   * @param BlogMapper $blogMapper
    */
   public function __construct(
     protected IL10N $l,
-    private string $userId,
-    private BlogMapper $blogMapper,
   ) {
   }
 
   /** {@inheritdoc} */
   public function shortTitle()
   {
-    return 'blog';
+    return 'config-check';
   }
 
   /** {@inheritdoc} */
   public function headerText()
   {
-    return self::templateResponse('fragments/header-texts/blog', [ 'cssPrefix' => $this->cssPrefix() ], self::RENDER_AS_BLANK)->render();
+    return self::templateResponse('fragments/header-texts/configcheck', [ 'cssPrefix' => $this->cssPrefix() ], self::RENDER_AS_BLANK)->render();
   }
 
   /**
@@ -91,7 +84,7 @@ class Blog extends Renderer implements IPageRenderer
   /** {@inheritdoc} */
   public function cssClass():string
   {
-    return 'blog-page';
+    return 'config-check';
   }
 
   /**

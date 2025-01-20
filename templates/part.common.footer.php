@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,10 @@
  */
 
 namespace OCA\CAFEVDB;
+
+if ($omitEnvelope) {
+  return '';
+}
 
 $css_pfx = $_['css-prefix'];
 
@@ -45,18 +49,6 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
 <!-- defeat auto-focus attempts -->
 <form class="focusstealer"><input type="checkbox" id="focusstealer" class="focusstealer"/></form>
 
-<!-- iframes to trigger proper download action in web browser -->
-<iframe name="pmeformdownloadframe"
-        class="pmeformdownloadframe"
-        id="pmeformdownloadframe"
-        style="display:none;"
-        src="about:blank"></iframe>
-<iframe name="pmeformdownloadframetwo"
-        class="pmeformdownloadframe"
-        id="pmeformdownloadframetwo"
-        style="display:none;"
-        src="about:blank"></iframe>
-
 <!-- image file upload support with drag'n drop -->
 <script id="imageUploadTemplate" type="text/template">
   <form id="{formId}" class="float hidden" enctype="multipart/form-data">
@@ -68,30 +60,6 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
     <input type="hidden"  class="max_upload" name="MAX_FILE_SIZE" value="<?php echo $uploadMaxFilesize; ?>"/>
     <input type="hidden" class="max_human_file_size max_upload_human" value="<?php echo $uploadMaxHumanFilesize; ?>""/>
     <input class="file_upload_start" type="file" accept="image/*" name="<?php echo $uploadName; ?>" />
-  </form>
-</script>
-
-<!-- image crop form template -->
-<script id="cropBoxTemplate" type="text/template">
-  <form class="cropform coords"
-        method="post"
-        enctype="multipart/form-data"
-        target="crop_target"
-        action="<?php print_unescaped($urlGenerator->linkToRoute($appName.'.images.post', ['operation' => 'save'])); ?>">
-    <input type="hidden" id="<?php p($appName); ?>-owner-id" name="ownerId" value="{ownerId}" />
-    <input type="hidden" id="<?php p($appName); ?>-image-id" name="imageId" value="{imageId}" />
-    <input type="hidden" id="<?php p($appName); ?>-join-table" name="joinTable" value="{joinTable}" />
-    <input type="hidden" id="<?php p($appName); ?>-image-size" name="imageSize" value="{imageSize}" />
-    <input type="hidden" id="<?php p($appName); ?>-tmp-key" name="tmpKey" value="{tmpKey}" />
-    <input type="hidden" id="<?php p($appName); ?>-file-name" name="fileName" value="{fileName}" />
-    <fieldset id="coords">
-      <input type="hidden" id="x1" name="x1" value="" />
-      <input type="hidden" id="y1" name="y1" value="" />
-      <input type="hidden" id="x2" name="x2" value="" />
-      <input type="hidden" id="y2" name="y2" value="" />
-      <input type="hidden" id="w" name="w" value="" />
-      <input type="hidden" id="h" name="h" value="" />
-    </fieldset>
   </form>
 </script>
 
@@ -152,6 +120,7 @@ $uploadName = Controller\ImagesController::UPLOAD_NAME;
    </div>
  </div>
 </script>
+
 <!-- musician address display, fed by a "flattened musican" object -->
 <script id="musicianAddressViewTemplate" type="text/template">
   <div class="musician-address-view" data-id="{id}">

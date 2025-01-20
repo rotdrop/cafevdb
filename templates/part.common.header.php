@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,10 @@
  */
 
 namespace OCA\CAFEVDB;
+
+if ($omitEnvelope) {
+  return '';
+}
 
 use OCA\CAFEVDB\Service\ConfigService;
 
@@ -132,11 +136,7 @@ $settingsControls = '
   </nav>
 </div>';
 
-if (!isset($_['headerblock']) && isset($_['header'])) {
-    $header = $_['header'];
-} else {
-    $header = '';
-}
+$header = $_['header'] ?? '';
 
 ?>
 
@@ -164,14 +164,11 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
       <?php echo $settingsControls; ?>
     </form>
     <div class="cafevdb-general" data-snap-ignore="true" id="cafevdb-general"><!-- /* used to eliminate the pixel-size of the control bar -->
-      <?php echo isset($_['headerblock']) ? '<!-- ' : ''; ?>
       <div id="<?php echo $css_pfx; ?>-header-box" class="<?php echo $css_pfx; ?>-header-box <?php echo $css_class; ?>">
         <div id="<?php echo $css_pfx; ?>-header" class="<?php echo $css_pfx; ?>-header <?php echo $css_class; ?>">
           <?php echo $header; ?>
         </div>
       </div>
-      <?php echo isset($_['headerblock']) ? ' -->' : ''; ?>
-      <?php echo isset($_['headerblock']) ? $_['headerblock'] : ''; ?>
       <div id="<?php echo $css_pfx; ?>-container" class="<?php echo $css_pfx; ?>-container <?php echo $css_class; ?>"> <!-- used to have something with 100% height for scrollbars -->
         <div id="<?php echo $css_pfx; ?>-body" class="<?php echo $css_pfx; ?>-body <?php echo $css_class; ?>">
           <div id="<?php echo $css_pfx; ?>-body-inner" class="<?php echo $css_pfx; ?>-body-inner <?php echo $css_class; ?>">

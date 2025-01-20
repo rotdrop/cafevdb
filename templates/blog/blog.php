@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,18 +38,7 @@ if ($expertMode) {
   $nav .= $pageNavigation->pageControlElement('config-check');
 }
 
-$header = ''
-  . '<div class="'.$css_pfx.'-blog" id="'.$css_pfx.'-blog-header">
-'
-  . $l->t(
-    'Camerata DB start page - the data-base operations can be accessed
-through the menu-button %s (left top). Please click on the login-name
-(top right) for logout and configuration options. Click right of the
-cloud-icon (top left) to reach the app-menu.',
-    [ '<div class="icon-menu inline"></div>'  ]
-  )
-        . '</div>
-';
+$header = $renderer->headerText();
 
 echo $this->inc(
   'part.common.header',

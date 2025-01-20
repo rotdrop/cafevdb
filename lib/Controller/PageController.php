@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2024
+ * @copyright Claus-Justus Heine 2014-2025
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -60,6 +60,8 @@ class PageController extends Controller
 {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+
+  const RENDER_AS_PARTS = 'parts'; // silly name
 
   const DEFAULT_TEMPLATE = 'projects';
   const HOME_TEMPLATE = 'home';
@@ -268,6 +270,8 @@ class PageController extends Controller
    *
    * @param string $historyAction
    *
+   * @param bool $omitEnvelope
+   *
    * @return Http\Response
    *
    * @NoAdminRequired
@@ -383,21 +387,35 @@ class PageController extends Controller
       'pagerows' => $pageRows,
     ];
 
-    // renderAs = admin, user, blank
-    // $renderAs = self::RENDER_AS_USER;
-    $response = $this->templateResponse(
-      $template,
-      $templateParameters,
-      $renderAs,
-    );
+    if ($renderAs == self::RENDER_AS_PARTS) {
+      $templateParameters['omitEnvelope'] = true;
+      $pageHtml = $this->templateResponse(
+        $template,
+        $templateParameters,
+        self::RENDER_AS_BLANK,
+      )->render();
+      return self::dataResponse([
+        'headerHtml' => $renderer->headerText(), // actually html
+        'bodyHtml' => $pageHtml,
+        'cssPrefix' => $renderer->cssPrefix(),
+        'cssClass' => $renderer->cssClass(),
+        'historyAction' => $historyAction,
+      ]);
+    } else {
+      $response = $this->templateResponse(
+        $template,
+        $templateParameters,
+        $renderAs,
+      );
 
-    // @todo: we need this only for some site like DokuWiki and CMS
-    $policy = new ContentSecurityPolicy();
-    $policy->addAllowedChildSrcDomain('*');
-    $policy->addAllowedFrameDomain('*');
-    $response->setContentSecurityPolicy($policy);
+      // @todo: we need this only for some site like DokuWiki and CMS
+      $policy = new ContentSecurityPolicy();
+      $policy->addAllowedChildSrcDomain('*');
+      $policy->addAllowedFrameDomain('*');
+      $response->setContentSecurityPolicy($policy);
 
-    $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
+      $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
+    }
 
     try {
       $this->historyService->store();
