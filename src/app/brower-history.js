@@ -80,7 +80,7 @@ const pushHistory = function(post) {
 
 const replaceHistory = function(post) {
   if (!history?.state?.[appName]) {
-    provideHistoryState(post);
+    return provideHistoryState(post);
   } else {
     const state = history.state;
     state[appName].post = post;
