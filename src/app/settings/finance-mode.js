@@ -30,7 +30,7 @@ import * as Ajax from './../ajax.js';
 import * as PHPMyEdit from './../pme-selectors.js';
 import * as Notification from './../notification.js';
 import { subscribe } from '@nextcloud/event-bus';
-import { SET_FINANCE_MODE } from '../../event-bus.ts';
+import { SET_FINANCE_MODE } from '../../event-bus-events.js';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 

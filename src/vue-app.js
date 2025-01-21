@@ -33,7 +33,7 @@ import router from './router/app-router.js';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 import { Tooltip } from '@nextcloud/vue';
 import { subscribe } from '@nextcloud/event-bus';
-import * as BusEvents from './event-bus.ts';
+import * as BusEvents from './event-bus-events.js';
 
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();

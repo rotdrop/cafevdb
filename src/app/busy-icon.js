@@ -23,7 +23,7 @@
 
 import './jquery-cafevdb-tooltips.js';
 import { emit } from '@nextcloud/event-bus';
-import { PUSH_BUSY_STATE, POP_BUSY_STATE } from '../event-bus.ts';
+import { PUSH_BUSY_STATE, POP_BUSY_STATE } from '../event-bus-events.js';
 
 const busyIcon = function(on) {
   const reloadButton = document.getElementById('reloadbutton');

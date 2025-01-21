@@ -29,7 +29,7 @@
 import globalState from './globalstate.js';
 import { initialState, appName } from './config.js';
 import { emit } from '@nextcloud/event-bus';
-import * as BusEvents from '../event-bus.ts';
+import * as BusEvents from '../event-bus-events.js';
 
 const PHPMyEdit = {
   directChange: false,

@@ -23,7 +23,7 @@
 
 import { appName } from './config.js';
 
-export const appEventName = (tag: string) => appName + '::' + tag;
+export const appEventName = (tag) => appName + '::' + tag;
 
 // app events
 export const APP_SETTINGS_POPUP = appEventName('app-settings-popup');
@@ -47,6 +47,8 @@ export const SET_DESELECT_INVISIBLE = appEventName('set-deselect-invsible');
 export const SET_DIRECT_CHANGE = appEventName('set-direct-change');
 export const SET_INITIAL_FILTER_VISIBILITY = appEventName('set-initial-filter-visibility');
 export const SET_RESTORE_HISTORY = appEventName('set-restore-history');
+
+export const LEGACY_PAGE_LOAD = appEventName('legacy-page-load');
 
 // global events
 export const TOGGLE_NAVIGATION = 'toggle-navigation';

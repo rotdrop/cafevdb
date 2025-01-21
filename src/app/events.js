@@ -35,7 +35,7 @@ import pageBusyIcon from './busy-icon.js';
 import modalizer from './modalizer.js';
 import { close as closeActionMenus } from './action-menu.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
-import VueTestMenu from '../components/TestMenu.vue';
+// import VueTestMenu from '../components/TestMenu.vue';
 
 require('jquery-ui/ui/widgets/accordion');
 
@@ -133,12 +133,12 @@ const init = function(htmlContent, textStatus, request, afterInit) {
       const eventForm = $dialogHolder.find('#eventlistform');
       const eventMenu = eventForm.find('.new-event-dropdown');
 
-      const testMenu = new VueTestMenu({
-        propsData: {
-          testProp: 'Hello World!',
-        },
-      });
-      testMenu.$mount(document.getElementById('vue-test-menu'));
+      // const testMenu = new VueTestMenu({
+      //   propsData: {
+      //     testProp: 'Hello World!',
+      //   },
+      // });
+      // testMenu.$mount(document.getElementById('vue-test-menu'));
 
       DialogUtils.toBackButton($(this));
 

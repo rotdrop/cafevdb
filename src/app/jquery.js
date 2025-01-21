@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,8 +25,23 @@
 
 const jQuery = require('jquery');
 
-window.$ = jQuery;
-window.jQuery = jQuery;
+for (const property of [/* '$', 'jQuery' */]) {
+  try {
+    Object.defineProperty(window, property, {
+      set(value) { throw Error('Trying to set global jQuery property on window'); },
+      get: () => jQuery,
+      configurable: false,
+    });
+    console.info('Defined global "' + property + '" property on window.');
+  } catch (e) {
+    console.trace('Unable to set global "' + property + '" property on window.', e, window[property].fn.jquery, jQuery.fn.jquery);
+  }
+}
+
+// jQuery still installs itself ...
+console.debug('JQUERY INSTANCES window / self', window.jQuery.fn.jquery, jQuery.fn.jquery);
+// window.$ = jQuery;
+// window.jQuery = jQuery;
 
 export default jQuery;
 
