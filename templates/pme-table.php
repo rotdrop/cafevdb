@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,34 +47,10 @@ use Throwable;
 $css = $template;
 $css .= ' ' . $renderer->cssClass();
 
-if ($outputBufferWorkAround??false) {
-  // This is here because otherwise PHP leaks content to stdout (and
-  // thus to the client) on fatal errors.
-  try {
-    ob_start(fn() => '');
-    $renderer->render();
-    $pmeTable = ob_get_contents();
-    ob_end_clean();
-  } catch (Throwable $t) {
-    ob_end_clean();
-    throw new \Exception($l->t('Renderer failed: %s', $t->getMessage()), $t->getCode(), $t);
-  }
-} else {
-  $pmeTable = null;
-}
-
 ?>
-
 <div id="pme-table-container" class="pme-table-container <?php p($css); ?>">
-<?php
-if (empty($pmeTable)) {
-  $renderer->render();
-} else {
-  echo $pmeTable;
-}
-?>
+  <?php $renderer->render(); ?>
 </div>
-
 <?php
 $operation = $renderer->operation();
 if (!empty($operation)) {
@@ -86,7 +62,6 @@ if (!empty($operation)) {
   }
 }
 ?>
-
 <span id="pme-short-title" class="pme-short-title" style="display:none;">
   <?php echo $operation . $renderer->shortTitle(); ?>
 </span>
