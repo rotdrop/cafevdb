@@ -23,7 +23,7 @@
 <template>
   <div :id="appPrefix('legacy-wrapper')">
     <div :id="appPrefix('top-navigation')" class="flex-container flex-align-center">
-      <NcButton :class="appPrefix('top-nav-button')" :disabled="busyState">
+      <NcButton :class="appPrefix('top-nav-button')" :disabled="busyState || !prevHistoryIndex">
         <template #icon>
           <HistoryBackIcon />
         </template>
@@ -37,7 +37,7 @@
         </template>
       </NcButton>
       <div class="spacer" />
-      <NcButton :class="appPrefix('top-nav-button')" :disabled="busyState">
+      <NcButton :class="appPrefix('top-nav-button')" :disabled="busyState || !nextHistoryIndex">
         <template #icon>
           <HistoryForwardIcon />
         </template>
@@ -87,7 +87,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { nextTick } from 'vue'
 import {
   NcActionButton,
@@ -110,8 +110,9 @@ import { emit } from '@nextcloud/event-bus'
 import wikiPopup from '../app/wiki-popup.js'
 import useAppDataStore from '../stores/app-data.js'
 import { mapWritableState, mapActions, mapState } from 'pinia'
-import * as BusEvents from '../event-bus.ts'
+import { TOGGLE_NAVIGATION, LEGACY_PAGE_LOAD } from '../event-bus-events.js'
 import * as LegacyNotification from '../app/notification.js'
+import objectHash from 'object-hash'
 
 export default {
   name: 'LegacyWrapper',
@@ -138,6 +139,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    hash: {
+      type: String,
+      default: '',
+    },
     navButtonSize: {
       type: String,
       default: 'large',
@@ -152,6 +157,7 @@ export default {
       loading: true,
       stortTitle: this.template,
       loadingPromise: Promise.resolve(true),
+      pageLoadTrigger: false,
     }
   },
   computed: {
@@ -169,8 +175,19 @@ export default {
     wikiManualUrlTarget() {
       return this.dokuWikiUrlTarget(this.wikiManualSection)
     },
-    ...mapState(useAppDataStore, ['busyState']),
-    ...mapWritableState(useAppDataStore, ['currentProjectId']),
+    ...mapState(
+      useAppDataStore, [
+        'busyState',
+        'currentHistoryState',
+        'prevHistoryIndex',
+        'nextHistoryIndex',
+      ],
+    ),
+    ...mapWritableState(
+      useAppDataStore, [
+        'currentProjectId',
+      ],
+    ),
     pmePrefix() {
       return this.globalState.PHPMyEdit.pmePrefix
     },
@@ -185,24 +202,44 @@ export default {
     },
   },
   watch: {
-    async 'templateParameters.projectId'(value, ...rest) {
+    'templateParameters.projectId'(value, ...rest) {
       this.info('PROJECT ID CHANGED', value, ...rest)
       this.currentProjectId = value
-      await this.loadLegacy()
+      this.pageLoadTrigger = true
+      // await this.loadLegacy()
     },
-    async template(...args) {
+    template(...args) {
       this.info('TEMPLATE CHANGE', ...args)
-      await this.loadLegacy()
+      this.pageLoadTrigger = true
+      // await this.loadLegacy()
+    },
+    hash(...args) {
+      this.info('POST DATA HASH CHANGE', ...args)
+      this.pageLoadTrigger = true
+      // await this.loadLegacy()
+    },
+    async pageLoadTrigger(...args) {
+      this.info('PAGE LOAD TRIGGER CHANGE', ...args)
+      if (this.pageLoadTrigger) {
+        this.pageLoadTrigger = false
+        await this.loadLegacy()
+      }
     },
     'globalState.toolTipsEnabled'(value, oldValue) {
       this.info('TOOLTIPS MODE CHANGED', value, oldValue)
     },
   },
   async created() {
-    await this.loadLegacy()
+    this.info('WATCHED PROPS AT CREATION TIME', this.template, this.templateParameters, this.postDataHash)
+    this.pageLoadTrigger = true
   },
   methods: {
-    ...mapActions(useAppDataStore, ['pushBusyState', 'popBusyState']),
+    ...mapActions(
+      useAppDataStore, [
+        'pushBusyState',
+        'popBusyState',
+      ],
+    ),
     onUserManualPopup() {
       wikiPopup({
         wikiPage: this.wikiManualSection,
@@ -210,18 +247,21 @@ export default {
       })
     },
     async loadLegacy() {
-      this.info('VUE APP LOAD PAGE LOADING')
+      this.info('VUE APP LOAD PAGE LOADING', this.template, this.templateParameters, this.postDataHash)
       let promise
       do {
         await (promise = this.loadingPromise)
+        this.info('AFTER AWAIT PROMISE IN LOOP', this.template, this.templateParameters, this.postDataHash)
       } while (promise !== this.loadingPromise)
       await (this.loadingPromise = this.doLoadLegacy())
+      this.info('AFTER AWAIT PAGE LOAD', this.template, this.templateParameters, this.postDataHash)
     },
     async doLoadLegacy() {
       if (!this.template) {
+        this.error('*** TEMPLATE MISSING, CANNOT LOAD PAGE ***')
         return
       }
-      emit(BusEvents.TOGGLE_NAVIGATION, {
+      emit(TOGGLE_NAVIGATION, {
         open: false,
       })
       this.currentProjectId = this.templateParameters?.projectId || -1
@@ -231,6 +271,11 @@ export default {
         template: this.template,
         ...this.templateParameters,
       }
+      this.info('HISTORY STATE AT ENTRY', this.currentHistoryState)
+      const historyAppData = this.currentHistoryState.post
+      Object.assign(post, historyAppData, post)
+      Object.assign(historyAppData, post)
+      this.info('POST including history state', post, this.currentHistoryState)
       try {
         const response = await axios.post(generateAppUrl('page/remember/parts'), post)
         const data = response.data // todo: validate
@@ -270,6 +315,31 @@ export default {
       }
       this.info('NO PME RELOAD BUTTON FOUND, RELOAD ENTIRE LEGACY CONTENT')
       await this.loadLegacy()
+    },
+    pageLoadSubscriber() {
+      subscribe(LEGACY_PAGE_LOAD, async (eventData: LEGACY_PAGE_LOAD) => {
+        this.trace('LEGACY PAGE LOAD CALLED', eventData)
+        const params = {
+          template: eventData.template,
+          projectId: eventData?.projectId,
+          projectName: eventData?.projectName,
+        }
+        const post = Object.assign({}, eventData.post, params)
+        const target: RouteRecord = {
+          name: 'legacy-page',
+          params,
+          query: {
+            hash: objectHash(post),
+          },
+        }
+        if (eventData.keepHistory) {
+          this.scheduleHistoryReplace(post)
+          this.$router.replace(target, () => {})
+        } else {
+          this.scheduleHistoryPush(post)
+          this.$router.push(target, () => {})
+        }
+      })
     },
   },
 }

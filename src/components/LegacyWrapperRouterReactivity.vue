@@ -27,12 +27,15 @@
  - params as properties.
  -->
 <template>
-  <LegacyWrapper :template="template" :template-parameters="templateParameters" />
+  <LegacyWrapper :template="template" :template-parameters="templateParameters" :hash="postDataHash" />
 </template>
-<script>
+<script lang="ts">
 // import globalState from '../app/globalstate.js'
 import LegacyWrapper from './LegacyWrapper.vue'
 import mixins from '../mixins/app-mixins.js'
+import useAppDataStore from '../stores/app-data.js'
+import { mapActions } from 'pinia'
+import objectHash from 'object-hash'
 
 export default {
   name: 'LegacyWrapperRouterReactivity',
@@ -42,55 +45,37 @@ export default {
   mixins,
   beforeRouteEnter(to, from, next) {
     next(self => {
-      self.info('BEFORE ROUTE ENTER', to, from, self.globalState.vue.router, self)
-      self.onRouteChange(to, false)
+      self.info('BEFORE ROUTE ENTER', to, from, window?.history?.state)
+      self.onRouteChange(to)
     })
   },
   beforeRouteUpdate(to, from, next) {
-    this.info('BEFORE ROUTE UPDATE', to, from, this.globalState.vue.router, this)
-    this.onRouteChange(to, true)
+    this.info('BEFORE ROUTE UPDATE', to, from, window?.history?.state)
+    this.onRouteChange(to)
     next()
   },
   beforeRouteLeave(to, from, next) {
-    this.info('BEFORE ROUTE LEAVE', to, from, this.globalState.vue.router, this)
+    this.info('BEFORE ROUTE LEAVE', to, from, window?.history?.state)
     next()
   },
   data() {
     return {
       template: null,
       templateParameters: {},
+      postDataHash: null,
     }
   },
-  computed: {
-    // why is there no this.$router??????
-    router() {
-      return this?.globalState?.vue?.router
-    },
-  },
-  watch: {
-    'globalState.vue.router.history.current'(...args) {
-      this.info('ROUTER CURRENT CHANGE', ...args)
-    },
-    '$router'(...args) {
-      this.info('ROUTER CHANGE', ...args)
-    },
-  },
   methods: {
-    onRouteChange(to, push) {
-      this.info('onRouteChange()')
-      // const url = to.path
-      const state = history.state
-      if (push) {
-        this.info('SHOULD PUSH HISTORY STATE', state)
-        // history.pushState(state, '', fullUrl)
-        // history.replaceState(state, '')
-      } else {
-        this.info('SHOULD REPLACE HISTORY STATE', state)
-        // history.replaceState(state, '')
-      }
+    ...mapActions(useAppDataStore, ['scheduleHistoryPush', 'scheduleHistoryReplace']),
+    onRouteChange(to) {
+      this.info('onRouteChange()', to)
       this.template = to?.params?.template
       this.templateParameters.projectId = to?.params?.projectId
       this.templateParameters.projectName = to?.params?.projectName
+      this.postDataHash = to?.query?.hash
+      if (!this.postDataHash) {
+        this.postDataHash = objectHash(to?.params || {})
+      }
     },
   },
 }

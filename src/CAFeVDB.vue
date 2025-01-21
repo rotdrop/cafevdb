@@ -285,7 +285,7 @@ import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 import { debugOptions } from './debug-modes.ts'
 import { formatFileSize } from '@nextcloud/files'
 import { emit, subscribe } from '@nextcloud/event-bus'
-import * as BusEvents from './event-bus.ts'
+import * as BusEvents from './event-bus-events.js'
 
 import Icon from '../img/cafevdb.svg'
 
@@ -317,6 +317,10 @@ export default {
     SelectWithSubmitButton,
   },
   mixins,
+  setup() {
+    const appData = useAppDataStore()
+    return { appData }
+  },
   data() {
     return {
       orchestraName: initialState?.orchestraName || t(appId, '[UNKNOWN]'),
@@ -345,7 +349,10 @@ export default {
     isRoot() {
       return this.$route.path === '/'
     },
-    ...mapState(useAppDataStore, ['busyState']),
+    ...mapState(useAppDataStore, [
+      'busyState',
+      'routerHistory',
+    ]),
     ...mapWritableState(
       useAppDataStore, [
         'debugMode',
@@ -380,17 +387,6 @@ export default {
     personalSettingsUrl() {
       return nextcloudGenerateUrl('settings/user/' + this.appName)
     },
-    // why is there no this.$router??????
-    router() {
-      // return this?.$router
-      return this?.globalState?.vue?.router
-    },
-    routerHistory() {
-      return this?.router?.history
-    },
-    currentRoute() {
-      return this?.routerHistory?.current
-    },
     uploadMaxFileSize() {
       return this.globalState?.uploadMaxFileSize || 0
     },
@@ -399,12 +395,6 @@ export default {
     },
   },
   watch: {
-    router(...args) {
-      this.info('ROUTER WATCHER', ...args)
-    },
-    currentRoute(...args) {
-      this.info('CURRENT ROUTE WATCHER', ...args)
-    },
     'globalState.toolTipsEnabled'(value, oldValue) {
       this.updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue)
     },
@@ -458,6 +448,27 @@ export default {
     this.hints = await this.tooltips(Object.keys(this.hints))
     subscribe(BusEvents.PUSH_BUSY_STATE, () => this.pushBusyState())
     subscribe(BusEvents.POP_BUSY_STATE, () => this.popBusyState())
+    this.$router.beforeEach((to, from, next) => {
+      this.info('GLOBAL BEFORE EACH ROUTE CHANGE', to, from, window?.history?.state)
+      next()
+    })
+    this.$router.afterEach((to, from) => {
+      this.info('GLOBAL AFTER EACH ROUTE CHANGE', to, from, window?.history?.state)
+      this.finishHistoryAction()
+    })
+    this.$router.onReady((...args) => {
+      this.info('ROUTER ON READY HOOK', ...args, window?.history?.state)
+    })
+    this.$router.onError((...args) => {
+      this.info('ROUTER ON ERROR HOOK', ...args, window?.history?.state)
+      this.cancelHistoryAction()
+    })
+    window.setTimeout(() => {
+      emit(BusEvents.LEGACY_PAGE_LOAD, {
+        template: 'projects',
+        keepHistory: true,
+      })
+    }, 5000)
   },
   mounted() {
     // works only after mounting
@@ -467,7 +478,15 @@ export default {
     this.isMounted = true
   },
   methods: {
-    ...mapActions(useAppDataStore, ['pushBusyState', 'popBusyState']),
+    ...mapActions(
+      useAppDataStore, [
+        'pushBusyState',
+        'popBusyState',
+        'scheduleHistoryPush',
+        'cancelHistoryAction',
+        'finishHistoryAction',
+      ],
+    ),
     closeSidebar() {
       this.showSidebar = false
     },
@@ -498,7 +517,7 @@ export default {
       })
     },
     updatePersonalSettings(event, value, oldValue) {
-      this.info('UPDATE PERSONAL SETTING', {
+      this.debug('UPDATE PERSONAL SETTING', {
         event,
         value,
         oldValue,

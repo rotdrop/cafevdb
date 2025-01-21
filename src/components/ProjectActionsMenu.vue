@@ -53,7 +53,7 @@
       <NcActionRouter :to="toProjectRouteData('project-participants')"
                       :name="t(appId, 'Participants')"
                       exact
-                      @click="closeMenu"
+                      @click="(...args) => { info('CLICK', ...args); closeMenu(); }"
       >
         <template #icon>
           <ProjectParticipantsIcon />
@@ -128,12 +128,13 @@ import ProjectEventsIcon from 'vue-material-design-icons/Calendar.vue'
 import { emit, subscribe } from '@nextcloud/event-bus'
 import mixins from '../mixins/app-mixins.js'
 import useAppDataStore from '../stores/app-data.js'
+import { mapActions } from 'pinia'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import wikiPopup from '../app/wiki-popup.js'
 import md5 from 'blueimp-md5'
 // import { set as vueSet } from 'vue'
 import * as Authorization from '../authorization.ts'
-import * as BusEvents from '../event-bus.ts'
+import * as BusEvents from '../event-bus-events.js'
 
 // The "consumer" has to take care that globalState.vue.Vue is already
 // defined.
@@ -255,6 +256,7 @@ export default globalState.vue.Vue.extend({
     })
   },
   methods: {
+    ...mapActions(useAppDataStore, ['scheduleHistoryPush']),
     toProjectRouteData(template: string) {
       return {
         name: 'legacy-page',
