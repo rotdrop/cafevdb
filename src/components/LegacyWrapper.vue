@@ -23,7 +23,10 @@
 <template>
   <div :id="appPrefix('legacy-wrapper')">
     <div :id="appPrefix('top-navigation')" class="flex-container flex-align-center">
-      <NcButton :class="appPrefix('top-nav-button')" :disabled="busyState || !prevHistoryIndex">
+      <NcButton :class="appPrefix('top-nav-button')"
+                :disabled="busyState || !prevHistoryIndex"
+                @click="navigateBack"
+      >
         <template #icon>
           <HistoryBackIcon />
         </template>
@@ -37,7 +40,10 @@
         </template>
       </NcButton>
       <div class="spacer" />
-      <NcButton :class="appPrefix('top-nav-button')" :disabled="busyState || !nextHistoryIndex">
+      <NcButton :class="appPrefix('top-nav-button')"
+                :disabled="busyState || !nextHistoryIndex"
+                @click="navigateForward"
+      >
         <template #icon>
           <HistoryForwardIcon />
         </template>
@@ -301,20 +307,24 @@ export default {
       return (element || '') + '.' + this.pmePrefix + '-' + token
     },
     async reloadPage() {
-      // @todo: tweak and maintain history
       const pmeContainer = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-table-container')
       if (pmeContainer) {
         const reloadButton = pmeContainer.querySelector(this.pmeForm + ' ' + this.pmeSelector('reload', 'input'))
         if (reloadButton) {
-          this.info('TRIGGER CLICK ON PME RELOAD BUTTON')
+          this.debug('TRIGGER CLICK ON PME RELOAD BUTTON')
           LegacyNotification.hide()
           reloadButton.click()
           document.querySelector('body').classList.remove('dialog-titlebar-clicked') // ???
           return
         }
       }
-      this.info('NO PME RELOAD BUTTON FOUND, RELOAD ENTIRE LEGACY CONTENT')
       await this.loadLegacy()
+    },
+    navigateBack() {
+      this.$router.back()
+    },
+    navigateForward() {
+      this.$router.forward()
     },
     pageLoadSubscriber() {
       subscribe(LEGACY_PAGE_LOAD, async (eventData: LEGACY_PAGE_LOAD) => {
