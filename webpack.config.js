@@ -1,4 +1,4 @@
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
@@ -87,12 +87,12 @@ module.exports = {
     ],
   },
   plugins: [
-    // new BundleAnalyzerPlugin({
-    //   analyzerPort: 11111,
-    //   analyzerMode: 'static',
-    //   openAnalyzer: false,
-    //   reportFilename: './statistics/bundle-analyzer.html',
-    // }),
+    new BundleAnalyzerPlugin({
+      analyzerPort: 11111,
+      analyzerMode: 'static',
+      openAnalyzer: false,
+      reportFilename: './statistics/bundle-analyzer.html',
+    }),
     // new Visualizer({
     //   filename: './statistics/visualizer-stats.html',
     // }),
