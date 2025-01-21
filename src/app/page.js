@@ -33,6 +33,8 @@ import modalizer from './modalizer.js';
 import * as qs from 'qs';
 import { provideHistoryState, pushHistory, updateHistoryControls } from './brower-history.js';
 import pageBusyIcon from './busy-icon.js';
+import { emit } from '@nextcloud/event-bus';
+import { LEGACY_PAGE_LOAD } from '../event-bus-events.js';
 
 /**
  * Load a page through the history-aware AJAX page loader.
@@ -44,10 +46,11 @@ import pageBusyIcon from './busy-icon.js';
  * @param {boolean} keepHistory Leave the history data as is.
  *
  */
-const loadPage = function(post, afterLoadCallback, keepHistory) {
+const loadPage = async function(post, afterLoadCallback, keepHistory) {
   if (globalState.vueMode) {
-    console.trace('*** ERROR ***: loadPage() called in vue-mode.');
-    return;
+    const eventData = { post, afterLoadCallback, keepHistory };
+    console.debug('LEGACY LOAD PAGE IN VUE MODE', eventData);
+    return emit(LEGACY_PAGE_LOAD, eventData);
   }
   $('body').removeClass('dialog-titlebar-clicked');
   modalizer(true);
@@ -59,7 +62,7 @@ const loadPage = function(post, afterLoadCallback, keepHistory) {
     postObject = post;
     post = qs.stringify(postObject);
   }
-  $.post(generateUrl('page/remember/blank'), post)
+  return $.post(generateUrl('page/remember/blank'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
       // If the error response contains history data, use it. Othewise
@@ -111,10 +114,11 @@ const loadPage = function(post, afterLoadCallback, keepHistory) {
     });
 };
 
+console.debug('INSTALL ON POPSTATE LISTENER');
 addEventListener('popstate', (event) => {
-  console.info('HISTORY POP STATE', event);
+  console.debug('HISTORY POP STATE', event);
   if (globalState.vueMode) {
-    console.info('*** WARNING *** disable popstate listener in vue-mode');
+    console.debug('*** WARNING *** disable popstate listener in vue-mode');
     return;
   }
   const state = event.state;
@@ -123,10 +127,11 @@ addEventListener('popstate', (event) => {
   }
 });
 
+console.debug('INSTALL ON LOAD LISTENER');
 addEventListener('load', (event) => {
-  console.info('HISTORY LOAD NEW', event);
+  console.debug('HISTORY LOAD NEW', event);
   if (globalState.vueMode) {
-    console.info('*** WARNING *** disable load listener in vue-mode');
+    console.debug('*** WARNING *** disable load listener in vue-mode');
     return;
   }
   provideHistoryState();
