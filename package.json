@@ -48,6 +48,7 @@
     "@nextcloud/vue": "^8.10.0",
     "@rotdrop/nextcloud-app-dokuwiki": "github:rotdrop/nextcloud-app-dokuwiki",
     "@rotdrop/nextcloud-vue-components": "file:3rdparty/rotdrop/nextcloud-vue-components",
+    "@rotdrop/async-nextcloud-event-bus": "github:rotdrop/async-nextcloud-event-bus#feature/async-emit",
     "@vue/tsconfig": "^0.4.0",
     "@vueuse/core": "^11.0.0",
     "babel-jest": "^29.6.4",
@@ -126,6 +127,6 @@
     "xml2js": "*"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=12.9.0"
   }
 }
