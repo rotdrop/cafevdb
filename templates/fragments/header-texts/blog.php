@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Templates;
 
 ?>
-<div  id="<?php p($cssPrefix)_?>-blog-header" class="<?php p($cssPrefix) ?>-blog">
+<div id="<?php p($cssPrefix) ?>-blog-header" class="<?php p($cssPrefix) ?>-blog">
   <?php echo t('Camerata DB start page - the data-base operations can be accessed
 hrough the menu-button %s (left top). Please click on the login-name
 (top right) for logout and configuration options. Click right of the
