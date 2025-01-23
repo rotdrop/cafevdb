@@ -312,6 +312,11 @@ export default {
       Object.assign(post, historyAppData, post)
       Object.assign(historyAppData, post)
       this.info('POST including history state', post, this.currentHistoryState)
+      this.previousHash = objectHash(post)
+      if (this.hash !== this.previousHash) {
+        this.scheduleHistoryReplace(post)
+        this.synchronizeHistoryState(this.previousHash)
+      }
       try {
         const response = await axios.post(generateAppUrl('page/remember/parts'), post)
         const data = response.data // todo: validate
@@ -324,11 +329,6 @@ export default {
         const titleProvider = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-short-title')
         if (titleProvider) {
           this.shortTitle = titleProvider.textContent
-        }
-        this.previousHash = objectHash(post)
-        if (this.hash !== this.previousHash) {
-          this.scheduleHistoryReplace(post)
-          await this.synchronizeHistoryState(this.previousHash)
         }
       } catch (e) {
         this.error('ERROR', generateAppUrl('page/remember/parts'), post, e)
