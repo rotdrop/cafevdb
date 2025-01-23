@@ -100,9 +100,11 @@ export default defineStore(storeId, () => {
   const debugMode = ref(0);
   const appError = ref(false);
   const busyCount = ref(0);
-  const busyState = computed(() => busyCount.value > 0);
+  const busyFlag = ref(false);
+  const busyState = computed(() => busyCount.value > 0 || busyFlag.value > 0);
+  const setBusyFlag = (value) => { const oldValue = busyFlag.value; busyFlag.value = value; return oldValue; };
   const pushBusyState = () => { ++busyCount.value; state.info('BUSY STATE PUSH', busyCount.value); return busyCount.value; };
-  const popBusyState = () => { --busyCount.value; state.info('BUSY STATE POP', busyCount.value); return busyCount.value; };
+  const popBusyState = () => { --busyCount.value; state[(busyCount.value < 0) ? 'trace' : 'info']('BUSY STATE POP', busyCount.value); return busyCount.value; };
   const currentProjectId = ref(0);
   const errorHandler = ref(null);
   const evaluating = ref(false);
@@ -176,6 +178,7 @@ export default defineStore(storeId, () => {
   const currentHistoryIndex = ref('initial');
   const pendingHistoryData = ref(null);
   const pendingHistoryAction = ref(null);
+  const pendingHistoryKey = ref('initial');
   const currentHistoryState = computed(() => routerHistory.value?.[currentHistoryIndex.value] || null);
   const prevHistoryIndex = computed(() => currentHistoryState.value.prev);
   const nextHistoryIndex = computed(() => currentHistoryState.value.next);
@@ -195,9 +198,21 @@ export default defineStore(storeId, () => {
    * @param {object|undefined} post TBD
    */
   function scheduleHistoryAction(action, post) {
+    const key = window?.history?.state?.key || 'initial';
     pendingHistoryAction.value = action;
     pendingHistoryData.value = post || {};
-    state.trace('scheduleHistoryAction()', action, post, routerHistory.value);
+    pendingHistoryKey.value = key;
+    state.info('scheduleHistoryAction()', {
+      action,
+      key,
+      currentHistoryIndex: currentHistoryIndex.value,
+      pendingHistoryKey: pendingHistoryKey.value,
+      post,
+      routerHistory: routerHistory.value,
+    });
+    if (currentHistoryIndex.value !== 'initial' && pendingHistoryKey.value !== currentHistoryIndex.value) {
+      state.trace('SCHEDULE HISTORY KEY MISTMATCH', pendingHistoryKey.value, currentHistoryIndex.value);
+    }
   }
 
   function scheduleHistoryPush(post) {
@@ -211,6 +226,7 @@ export default defineStore(storeId, () => {
   function cancelHistoryAction() {
     pendingHistoryAction.value = null;
     pendingHistoryData.value = null;
+    pendingHistoryKey.value = null;
     state.info('cancelHistoryAction()', routerHistory.value);
   }
 
@@ -228,15 +244,35 @@ export default defineStore(storeId, () => {
   function finishHistoryAction() {
     const key = window?.history?.state?.key || 'initial';
     const history = routerHistory.value;
-    state.info('ON FINISH', key, typeof key, { ...history }, history?.['' + key], [...Object.keys(history)]);
+    state.info('ON HISTORY FINISH', {
+      key,
+      keyType: typeof key,
+      currentHistoryIndex: currentHistoryIndex.value,
+      pendingHistoryKey: pendingHistoryKey.value,
+      currentHistoryState: { ...currentHistoryState.value },
+      history: { ...history },
+      historyOfKey: history?.['' + key],
+      historyKeys: [...Object.keys(history)],
+    });
 
     // Guard against router-links as their replace/push calls are not
     // interceptable. The following check will fail if the first
     // navigation is initiated by a router-link in replace mode as
     // unfortunately history.state.key is undefined until after the
     // first navigation.
+    if (pendingHistoryAction.value === 'replace' && key !== currentHistoryIndex.value && currentHistoryIndex.value !== 'initial') {
+      state.trace('EXPLICIT HISTORY REPLACE REQUESTED, BUT CURRENT HISTORY IS GONE', {
+        key,
+        pendingHistoryKey: pendingHistoryKey.value,
+        currentHistoryIndex: currentHistoryIndex.value,
+        history: { ...history },
+      });
+      pendingHistoryAction.value = null;
+      pendingHistoryData.value = null;
+      pendingHistoryKey.value = null;
+    }
     if (!pendingHistoryAction.value) {
-      if (key === currentHistoryIndex.value) {
+      if (key === pendingHistoryKey.value) {
         // replace action from RouterLink
         pendingHistoryAction.value = 'replace';
       } else if (history[key]) {
@@ -246,7 +282,14 @@ export default defineStore(storeId, () => {
         // assume 'push'
         pendingHistoryAction.value = 'push';
       }
-      state.info('TWEAKED HISTORY ACTION IS', pendingHistoryAction.value, key, history?.[key], { ...history });
+      state.info('TWEAKED HISTORY ACTION IS', {
+        pendingHistoryAction: pendingHistoryAction.value,
+        key,
+        pendingHistoryKey: pendingHistoryKey.value,
+        currentHistoryIndex: currentHistoryIndex.value,
+        historyAtKey: history?.[key],
+        history: { ...history },
+      });
     }
 
     if (pendingHistoryAction.value === 'push') {
@@ -262,8 +305,11 @@ export default defineStore(storeId, () => {
       currentHistoryIndex.value = key;
     } else if (pendingHistoryAction.value === 'replace') {
       if (key !== currentHistoryIndex.value) {
+        state.info('BEFORE ADJUST KEYS', key, currentHistoryIndex.value, { ...history[currentHistoryIndex.value] }, history?.[key]);
         history[key] = history[currentHistoryIndex.value];
+        console.info('CURRENT STATE 0', { ...history[key] });
         delete history[currentHistoryIndex.value];
+        console.info('CURRENT STATE 1', { ...history[key] });
         currentHistoryIndex.value = key;
         history[key].key = key;
         const prev = history[key].prev;
@@ -274,17 +320,34 @@ export default defineStore(storeId, () => {
         if (history[next]) {
           history[next].prev = key;
         }
+        state.info('AFTER ADJUST KEYS', history);
       }
       history[key].post = pendingHistoryData.value || {};
     } else {
       currentHistoryIndex.value = window.history?.state?.key || 'initial';
     }
+    for (const [key, record] of Object.entries(routerHistory.value)) {
+      if (key !== record.key) {
+        state.trace('SELF INCONSISTENCY', key, record, routerHistory.value);
+      }
+      if ((record.next || record.prev)
+        && (record.next === record.prev || record.next === record.key || record.prev === record.key)) {
+        state.trace('EQUAL KEYS', key, { ...record }, { ...routerHistory.value });
+      }
+    }
     pendingHistoryData.value = null;
     pendingHistoryAction.value = null;
-    state.info('finishHistoryAction()', currentHistoryIndex.value, currentHistoryState.value, { ...routerHistory.value }, window?.history?.state);
+    state.info('finishHistoryAction()', {
+      currentHistoryIndex: currentHistoryIndex.value,
+      currentHistoryState: { ...currentHistoryState.value },
+      routerHistory: { ...routerHistory.value },
+      windowHistoryState: window?.history?.state,
+    });
   }
 
   return {
+    busyFlag,
+    setBusyFlag,
     routerHistory,
     currentHistoryIndex,
     currentHistoryState,
