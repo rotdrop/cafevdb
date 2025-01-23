@@ -37,4 +37,4 @@ export const PERMISSION_ALL = PERMISSION_FRONTEND
   | PERMISSION_MANAGEMENT
   | PERMISSION_EMAIL;
 
-export const authorized = (requestedPermissions, availablePermissions) => requestedPermissions === (requestedPermissions & availablePermissions);
+export const authorized = (requestedPermissions: number, availablePermissions: number) => (requestedPermissions === (requestedPermissions & availablePermissions));
