@@ -25,16 +25,16 @@ import $ from './jquery.js';
 import { appName } from './app-info.js';
 import { unfocus } from './cafevdb.js';
 import generateUrl from './generate-url.js';
-import { subscribe, emit } from '@nextcloud/event-bus';
+import { subscribe, emit } from '@rotdrop/async-nextcloud-event-bus';
+import { APP_SETTINGS_POPUP, PUSH_BUSY_STATE, POP_BUSY_STATE } from '../event-bus-events.js';
 
 require('../legacy/nextcloud/jquery/requesttoken.js');
 require('personal-settings-popup.scss');
 
-subscribe(appName + ':app-settings-popup', async (event) => {
+subscribe(APP_SETTINGS_POPUP, async (event) => {
   console.info('EVENT', event);
-  emit(appName + ':push-busy-state');
-  await appSettingsPopup(event);
-  emit(appName + ':pop-busy-state');
+  emit(PUSH_BUSY_STATE);
+  await appSettingsPopup(event).finally(() => emit(POP_BUSY_STATE));
 });
 
 /**

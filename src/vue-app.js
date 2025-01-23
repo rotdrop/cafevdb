@@ -32,7 +32,7 @@ import CAFeVDB from './CAFeVDB.vue';
 import router from './router/app-router.js';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 import { Tooltip } from '@nextcloud/vue';
-import { subscribe } from '@nextcloud/event-bus';
+import { asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import * as BusEvents from './event-bus-events.js';
 
 Vue.use(PiniaVuePlugin);
@@ -49,13 +49,13 @@ Vue.directive('tooltip', Tooltip);
 Vue.mixin({ data() { return { appId: appName }; }, methods: { t, n } });
 
 // make the components of the global state object reactive
-subscribe(BusEvents.GLOBAL_STATE, (event) => {
+asyncSubscribe(BusEvents.GLOBAL_STATE, (event) => {
   for (const [key, value] of Object.entries(event.state)) {
     Vue.delete(globalState, key);
     vueSet(globalState, key, value);
   }
 });
-subscribe(BusEvents.PME_STATE, (event) => {
+asyncSubscribe(BusEvents.PME_STATE, (event) => {
   Vue.delete(globalState, 'PHPMyEdit');
   vueSet(globalState, 'PHPMyEdit', event.state);
   for (const [key, value] of Object.entries(event.state)) {

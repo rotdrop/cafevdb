@@ -27,7 +27,7 @@ import { setPersonalUrl } from './../settings-urls.js';
 import * as Ajax from './../ajax.js';
 import * as PHPMyEdit from './../pme-selectors.js';
 import * as Notification from './../notification.js';
-import { subscribe } from '@nextcloud/event-bus';
+import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { SET_SHOW_DISABLED } from '../../event-bus-events.js';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');

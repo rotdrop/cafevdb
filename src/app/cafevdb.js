@@ -35,7 +35,7 @@ import {
   getMarkCount,
   setMarkCount,
 } from './jquery-cafevdb-tooltips.js';
-import { emit, subscribe } from '@nextcloud/event-bus';
+import { emit, subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import * as BusEvents from '../event-bus-events.js';
 
 require('cafevdb.scss');

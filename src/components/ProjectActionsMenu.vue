@@ -125,7 +125,8 @@ import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import ProjectFolderIcon from 'vue-material-design-icons/Folder.vue'
 import ProjectNotesIcon from 'vue-material-design-icons/MessageBulleted.vue'
 import ProjectEventsIcon from 'vue-material-design-icons/Calendar.vue'
-import { emit, subscribe } from '@nextcloud/event-bus'
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus'
+import { closeNavigation } from '../services/navigation.js'
 import mixins from '../mixins/app-mixins.js'
 import useAppDataStore from '../stores/app-data.js'
 import { mapActions } from 'pinia'
@@ -242,7 +243,7 @@ export default globalState.vue.Vue.extend({
     this.$refs.actions.closeMenu = (returnFocus) => origCloseMenu(this.positioned ? false : returnFocus)
     this.referenceElement = this.$refs.actions.$refs.popover.$refs.popover.$refs.reference
     this.triggerButton = this.$refs.actions.$refs.triggerButton
-    subscribe(this.appName + ':project-actions', (event) => {
+    asyncSubscribe(this.appName + ':project-actions', (event) => {
       const projectId = event?.projectId
       const newOpenState = event?.open
       if (!newOpenState
@@ -273,10 +274,8 @@ export default globalState.vue.Vue.extend({
     },
     openProjectOverview() {
       this.open = false
-      emit(BusEvents.TOGGLE_NAVIGATION, {
-        open: false,
-      })
-      emit(BusEvents.PROJECT_POPUP, {
+      closeNavigation()
+      asyncEmit(BusEvents.PROJECT_POPUP, {
         projectId: this.projectId,
         projectName: this.projectName,
       })
@@ -284,10 +283,8 @@ export default globalState.vue.Vue.extend({
     openInstrumentationNumbers(event) {
       event.preventDefault()
       this.open = false
-      emit(BusEvents.TOGGLE_NAVIGATION, {
-        open: false,
-      })
-      emit(BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP, {
+      closeNavigation()
+      asyncEmit(BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP, {
         projectId: this.projectId,
         projectName: this.projectName,
       })
@@ -295,10 +292,8 @@ export default globalState.vue.Vue.extend({
     openParticipantFields(event) {
       event.preventDefault()
       this.open = false
-      emit(BusEvents.TOGGLE_NAVIGATION, {
-        open: false,
-      })
-      emit(BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP, {
+      closeNavigation()
+      asyncEmit(BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP, {
         projectId: this.projectId,
         projectName: this.projectName,
       })
@@ -306,9 +301,7 @@ export default globalState.vue.Vue.extend({
     openProjectNotes(event) {
       event.preventDefault()
       this.open = false
-      emit(BusEvents.TOGGLE_NAVIGATION, {
-        open: false,
-      })
+      closeNavigation()
       wikiPopup({
         wikiPage: this.project.wikiPage,
         popupTitle: t(this.appName, 'Project Wiki for {projectName}', { projectName: this.projectName }),
@@ -318,10 +311,8 @@ export default globalState.vue.Vue.extend({
     openProjectEvents(event) {
       event.preventDefault()
       this.open = false
-      emit(BusEvents.TOGGLE_NAVIGATION, {
-        open: false,
-      })
-      emit(BusEvents.PROJECT_EVENTS_POPUP, {
+      closeNavigation()
+      asyncEmit(BusEvents.PROJECT_EVENTS_POPUP, {
         projectId: this.projectId,
         projectName: this.projectName,
       })
