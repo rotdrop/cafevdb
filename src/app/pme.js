@@ -27,6 +27,7 @@
  */
 
 import jQuery from './jquery.js';
+import globalState from './globalstate.js';
 import * as PMEState from './pme-state.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
@@ -79,6 +80,8 @@ import 'jquery-ui/ui/effects/effect-highlight.js';
 import 'jquery-ui/ui/widgets/sortable.js';
 import 'selectize/dist/css/selectize.bootstrap4.css';
 import mergician from 'mergician';
+import { LEGACY_PME_HISTORY_UPDATE } from '../event-bus-events.js';
+import { emit } from '@rotdrop/async-nextcloud-event-bus';
 // import 'selectize/dist/css/selectize.css';
 require('cafevdb-selectize.scss');
 
@@ -192,6 +195,9 @@ const tableLoadCallback = function(template, selector, parameters, resizeReadyCB
  * @param {boolean} options.keepBusy Do not reset the busy indicators.
  */
 const pmeSubmitOuterForm = function(outerSelector, options) {
+
+  console.warn('SUBMIT OUTER FORM, NEEDS MORE WORK WITH VUE');
+
   outerSelector = pmeSelector(outerSelector);
   options = $.extend({}, { keepLocked: false, keepBusy: false, discard: false }, options);
 
@@ -217,10 +223,12 @@ const pmeSubmitOuterForm = function(outerSelector, options) {
 
   const button = $outerForm.find(pmeSysNameSelectors('input', submitNames)).first();
   if (button.length > 0) {
+    console.warn('TRIGGER APPLY BUTTON CLICK', button);
     button.trigger('click');
   } else {
     // submit the outer form
     // $outerForm.submit();
+    console.warn('PSEUDO SUBMIT ON', $outerForm, outerSelector);
     pseudoSubmit($outerForm, $(), outerSelector, 'pme');
   }
 };
@@ -331,6 +339,7 @@ const pmeIsHalted = function() {
 };
 
 const pmePost = function(post) {
+  console.debug('PME POST', post);
   if (pmeIsHalted()) {
     // just return a promise which is never resolved.
     console.info('PME is halted, returning never-resolved promise.');
@@ -1118,6 +1127,8 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
           + 'name="' + name + '" '
           + 'value="' + value + '"/>');
     }
+
+    console.warn('PSEUDO SUBMIT VIA FORM SUBMIT');
     form.submit();
     return false;
   }
@@ -1137,24 +1148,37 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
       pageBusyIcon(false);
       modalizer(false);
     })
-    .done(function(htmlContent, historyAction, post) {
+    .done(async function(htmlContent, historyAction, postData) {
 
-      console.info('DONE AFTER PSEUDO SUBMIT', historyAction);
+      console.info('DONE AFTER PSEUDO SUBMIT', historyAction, postData);
 
+      const post = qs.parse(postData, { allowSparse: true });
       if (historyAction === 'push') {
-        console.info('HISTORY PUSH');
-        pushBrowserHistory(qs.parse(post, { allowSparse: true }));
+        pushBrowserHistory(post);
+        await emit(LEGACY_PME_HISTORY_UPDATE, {
+          post,
+          htmlBody: htmlContent,
+          action: 'push',
+        });
       } else {
-        console.info('HISTORY REPLACE');
-        replaceBrowserHistory(qs.parse(post, { allowSparse: true }));
+        replaceBrowserHistory(post);
+        await emit(LEGACY_PME_HISTORY_UPDATE, {
+          post,
+          html: htmlContent,
+          action: 'replace',
+        });
       }
-      updateBrowserHistoryControls();
 
       $.fn.cafevTooltip.remove();
 
       pmeUnTweak(container);
       WysiwygEditor.removeEditor(container.find('textarea.wysiwyg-editor'));
-      pmeInner(container).html(htmlContent);
+      console.info('PME INNER / CONTAINER', pmeInner(container), container);
+
+      if (!globalState.vueMode) {
+        updateBrowserHistoryControls();
+        pmeInner(container).html(htmlContent);
+      }
 
       container.find('iframe').on('load', function(event) {
         const $this = $(this);
@@ -1757,21 +1781,24 @@ const pmeOpenRowDialog = function(element, event, container) {
   // @TODO The following is a real ugly kludge
   // "element" does not necessarily has a form attribute
   const formSel = 'form.' + pmeToken('form');
-  const form = container.find(formSel);
+  const $form = container.find(formSel);
   let recordEl;
+  console.info('DIRECT CHANGE PROBS', globalState.PHPMyEdit, PHPMyEdit, $row, $form);
   if ($row.hasClass(pmeToken('change-enabled'))
-      && (form.hasClass(pmeToken('direct-change')) || PHPMyEdit.directChange)) {
+      && ($form.hasClass(pmeToken('direct-change')) || PHPMyEdit.directChange)) {
     recordEl = '<input type="hidden" class="' + pmeToken('change-navigation') + '"'
       + ' value="Change?' + recordQuery + '"'
       + ' name="' + pmeSys('operation') + '" />';
+    console.info('DIRECT CHANGE SHOULD BE ENABLED');
   } else if ($row.hasClass(pmeToken('view-enabled'))) {
     recordEl = '<input type="hidden" class="' + pmeToken('view-navigation') + '"'
       + ' value="View?' + recordQuery + '"'
       + ' name="' + pmeSys('operation') + '" />';
+    console.info('DIRECT CHANGE SHOULD BE DISABLED');
   }
 
   if (recordEl) {
-    tableDialog(form, $(recordEl), container);
+    tableDialog($form, $(recordEl), container);
   }
 };
 

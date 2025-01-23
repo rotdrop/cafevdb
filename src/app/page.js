@@ -33,28 +33,35 @@ import modalizer from './modalizer.js';
 import * as qs from 'qs';
 import { provideHistoryState, pushHistory, updateHistoryControls } from './brower-history.js';
 import pageBusyIcon from './busy-icon.js';
-import { emit } from '@nextcloud/event-bus';
-import { LEGACY_PAGE_LOAD } from '../event-bus-events.js';
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { LEGACY_PAGE_LOAD, LEGACY_PAGE_CLEANUP } from '../event-bus-events.js';
+
+const pageCleanup = () => {
+  // Remove pending dialog when moving away from the page
+  $('.ui-dialog-content').dialog('destroy').remove();
+
+  $('body').removeClass('dialog-titlebar-clicked');
+
+  // remove left-over notifications
+  Notification.hide();
+
+  // remove left-over tool-tips
+  $.fn.cafevTooltip.remove();
+};
+
+asyncSubscribe(LEGACY_PAGE_CLEANUP, pageCleanup);
 
 /**
  * Load a page through the history-aware AJAX page loader.
  *
  * @param {object} post Post data.
  *
- * @param {Function} afterLoadCallback Called after completeion  let action;
- *
  * @param {boolean} keepHistory Leave the history data as is.
- *
  */
-const loadPage = async function(post, afterLoadCallback, keepHistory) {
-  if (globalState.vueMode) {
-    const eventData = { post, afterLoadCallback, keepHistory };
-    console.debug('LEGACY LOAD PAGE IN VUE MODE', eventData);
-    return emit(LEGACY_PAGE_LOAD, eventData);
-  }
-  $('body').removeClass('dialog-titlebar-clicked');
-  modalizer(true);
-  pageBusyIcon(true);
+const loadPage = async function(post, keepHistory) {
+
+  pageCleanup();
+
   let postObject;
   if (typeof post === 'string') {
     postObject = qs.parse(post, { allowSparse: true });
@@ -62,6 +69,20 @@ const loadPage = async function(post, afterLoadCallback, keepHistory) {
     postObject = post;
     post = qs.stringify(postObject);
   }
+
+  modalizer(true);
+  pageBusyIcon(true);
+
+  if (globalState.vueMode) {
+    const eventData = { post, keepHistory };
+    console.debug('LEGACY LOAD PAGE IN VUE MODE', eventData);
+    return asyncEmit(LEGACY_PAGE_LOAD, eventData)
+      .finally(() => {
+        modalizer(false);
+        pageBusyIcon(false);
+      });
+  }
+
   return $.post(generateUrl('page/remember/blank'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
@@ -73,19 +94,10 @@ const loadPage = async function(post, afterLoadCallback, keepHistory) {
     })
     .done(function(htmlContent, textStatus, request) {
 
-      // Remove pending dialog when moving away from the page
-      $('.ui-dialog-content').dialog('destroy').remove();
-
       if (!keepHistory) {
         pushHistory(postObject);
       }
       updateHistoryControls();
-
-      // remove left-over notifications
-      Notification.hide();
-
-      // remove left-over tool-tips
-      $.fn.cafevTooltip.remove();
 
       // This is a "complete" page reload, so inject the
       // contents into #contents.
@@ -106,11 +118,6 @@ const loadPage = async function(post, afterLoadCallback, keepHistory) {
       pageBusyIcon(false);
 
       runReadyCallbacks();
-      if (typeof afterLoadCallback === 'function') {
-        afterLoadCallback();
-      }
-
-      return false;
     });
 };
 
@@ -139,9 +146,9 @@ addEventListener('load', (event) => {
 
 const documentReady = function() {
 
-  const appInnerContent = $('#app-inner-content');
+  const $main = $('main');
 
-  appInnerContent.on('click', '.ui-dialog-titlebar', function(event) {
+  $main.on('click', '.ui-dialog-titlebar', function(event) {
     $('body').toggleClass('dialog-titlebar-clicked');
     return false;
   });
@@ -151,12 +158,12 @@ const documentReady = function() {
     $(this).cafevTooltip('hide');
   });
 
-  appInnerContent.on(
+  $main.on(
     'click keydown',
     '#personalsettings .navigation.reload',
     function(event) {
       event.stopImmediatePropagation();
-      const pmeReload = appInnerContent.find('form.pme-form input.pme-reload').first();
+      const pmeReload = $main.find('form.pme-form input.pme-reload').first();
       if (pmeReload.length > 0) {
         // remove left-over notifications
         Notification.hide();
@@ -168,7 +175,7 @@ const documentReady = function() {
       return false;
     });
 
-  appInnerContent.on(
+  $main.on(
     'click keydown',
     '#personalsettings .navigation.undo',
     function(event) {
@@ -176,7 +183,7 @@ const documentReady = function() {
       return false;
     });
 
-  appInnerContent.on(
+  $main.on(
     'click keydown',
     '#personalsettings .navigation.redo',
     function(event) {

@@ -27,14 +27,16 @@
  - params as properties.
  -->
 <template>
-  <LegacyWrapper :template="template" :template-parameters="templateParameters" :hash="postDataHash" />
+  <LegacyWrapper :template="template"
+                 :template-parameters="templateParameters"
+                 :hash="postDataHash"
+                 :no-legacy-reload="noLegacyReload"
+  />
 </template>
 <script lang="ts">
 // import globalState from '../app/globalstate.js'
 import LegacyWrapper from './LegacyWrapper.vue'
 import mixins from '../mixins/app-mixins.js'
-import useAppDataStore from '../stores/app-data.js'
-import { mapActions } from 'pinia'
 import objectHash from 'object-hash'
 
 export default {
@@ -45,17 +47,17 @@ export default {
   mixins,
   beforeRouteEnter(to, from, next) {
     next(self => {
-      self.info('BEFORE ROUTE ENTER', to, from, window?.history?.state)
+      self.debug('BEFORE ROUTE ENTER', to, from, window?.history?.state)
       self.onRouteChange(to)
     })
   },
   beforeRouteUpdate(to, from, next) {
-    this.info('BEFORE ROUTE UPDATE', to, from, window?.history?.state)
+    this.debug('BEFORE ROUTE UPDATE', to, from, window?.history?.state)
     this.onRouteChange(to)
     next()
   },
   beforeRouteLeave(to, from, next) {
-    this.info('BEFORE ROUTE LEAVE', to, from, window?.history?.state)
+    this.debug('BEFORE ROUTE LEAVE', to, from, window?.history?.state)
     next()
   },
   data() {
@@ -63,16 +65,17 @@ export default {
       template: null,
       templateParameters: {},
       postDataHash: null,
+      noLegacyReload: false,
     }
   },
   methods: {
-    ...mapActions(useAppDataStore, ['scheduleHistoryPush', 'scheduleHistoryReplace']),
     onRouteChange(to) {
       this.info('onRouteChange()', to)
       this.template = to?.params?.template
       this.templateParameters.projectId = to?.params?.projectId
       this.templateParameters.projectName = to?.params?.projectName
       this.postDataHash = to?.query?.hash
+      this.noLegacyReload = +to?.query?.['no-reload'] === 1
       if (!this.postDataHash) {
         this.postDataHash = objectHash(to?.params || {})
       }

@@ -22,33 +22,30 @@
  */
 
 import './jquery-cafevdb-tooltips.js';
-import { emit } from '@nextcloud/event-bus';
-import { PUSH_BUSY_STATE, POP_BUSY_STATE } from '../event-bus-events.js';
+import globalState from './globalstate.js';
+import { emit } from '@rotdrop/async-nextcloud-event-bus';
+import { SET_BUSY_FLAG } from '../event-bus-events.js';
 
 const busyIcon = function(on) {
-  const reloadButton = document.getElementById('reloadbutton');
-  const images = [
-    reloadButton?.querySelector('img.number-0'),
-    reloadButton?.querySelector('img.number-1'),
-  ];
-  if (!images[0] || !images[1]) {
-    return;
+  if (!globalState.vueMode) {
+    const reloadButton = document.getElementById('reloadbutton');
+    const images = [
+      reloadButton?.querySelector('img.number-0'),
+      reloadButton?.querySelector('img.number-1'),
+    ];
+    if (!images[0] || !images[1]) {
+      return;
+    }
+    if (on) {
+      images[0].style.display = 'none';
+      images[1].style.display = 'block';
+    } else {
+      images[0].style.display = 'block';
+      images[1].style.display = 'none';
+    }
   }
-  if (on) {
-    console.debug('INCREASE BUSY STATE');
-    emit(PUSH_BUSY_STATE, {});
-    images[0].style.display = 'none';
-    images[1].style.display = 'block';
-    // $('#reloadbutton img.number-0').hide();
-    // $('#reloadbutton img.number-1').show();
-  } else {
-    images[0].style.display = 'block';
-    images[1].style.display = 'none';
-    // $('#reloadbutton img.number-1').hide();
-    // $('#reloadbutton img.number-0').show();
-    emit(POP_BUSY_STATE, {});
-    console.debug('DECREASE BUSY STATE');
-  }
+  console.debug('SET BUSY FLAG TO', !!on);
+  emit(SET_BUSY_FLAG, { value: !!on });
 };
 
 export default busyIcon;

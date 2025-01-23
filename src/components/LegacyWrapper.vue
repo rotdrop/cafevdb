@@ -112,11 +112,16 @@ import mixins from '../mixins/app-mixins.js'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
 import * as CAFEVDB from '../app/cafevdb.js'
-import { emit } from '@nextcloud/event-bus'
+import { closeNavigation } from '../services/navigation.js'
 import wikiPopup from '../app/wiki-popup.js'
 import useAppDataStore from '../stores/app-data.js'
 import { mapWritableState, mapActions, mapState } from 'pinia'
-import { TOGGLE_NAVIGATION, LEGACY_PAGE_LOAD } from '../event-bus-events.js'
+import { subscribe as asyncSubscribe, emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
+import {
+  LEGACY_PAGE_LOAD,
+  LEGACY_PME_HISTORY_UPDATE,
+  LEGACY_PAGE_CLEANUP,
+} from '../event-bus-events.js'
 import * as LegacyNotification from '../app/notification.js'
 import objectHash from 'object-hash'
 
@@ -149,6 +154,10 @@ export default {
       type: String,
       default: '',
     },
+    noLegacyReload: {
+      type: Boolean,
+      default: false,
+    },
     navButtonSize: {
       type: String,
       default: 'large',
@@ -164,6 +173,7 @@ export default {
       stortTitle: this.template,
       loadingPromise: Promise.resolve(true),
       pageLoadTrigger: false,
+      previousHash: null,
     }
   },
   computed: {
@@ -211,24 +221,41 @@ export default {
     'templateParameters.projectId'(value, ...rest) {
       this.info('PROJECT ID CHANGED', value, ...rest)
       this.currentProjectId = value
+      this.info('TRIGGER PAGE LOAD')
       this.pageLoadTrigger = true
-      // await this.loadLegacy()
     },
     template(...args) {
       this.info('TEMPLATE CHANGE', ...args)
+      this.info('TRIGGER PAGE LOAD')
       this.pageLoadTrigger = true
-      // await this.loadLegacy()
     },
-    hash(...args) {
-      this.info('POST DATA HASH CHANGE', ...args)
-      this.pageLoadTrigger = true
-      // await this.loadLegacy()
+    hash(value, oldValue) {
+      this.info('POST DATA HASH CHANGE', value, oldValue, this.previousHash)
+      if (value !== this.previousHash) {
+        this.previousHash = value
+        this.info('TRIGGER PAGE LOAD')
+        this.pageLoadTrigger = true
+      } else {
+        this.info('NEW HASH EQUAL TO PREVIOUS AFTER LOAD HASH, DO NOT TRIGGER PAGE LOAD')
+      }
+    },
+    async noLegacyReload(value, oldValue) {
+      this.info('NO LEGACY RELOAD CHANGE', value, oldValue, this.pageLoadTrigger)
     },
     async pageLoadTrigger(...args) {
       this.info('PAGE LOAD TRIGGER CHANGE', ...args)
       if (this.pageLoadTrigger) {
         this.pageLoadTrigger = false
-        await this.loadLegacy()
+        if (!this.noLegacyReload) {
+          await this.loadLegacy()
+        } else {
+          this.info('NO LOAD FLAG ACTIVE, SKIPPING PAGE LOAD')
+          // keep current post data, this is just for updating the hash value in window.location
+          this.scheduleHistoryReplace(this.currentHistoryState.post)
+          // remove no-load from the display URL
+          await this.synchronizeHistoryState(this.hash)
+          this.info('SYNCHRONIZED BROWSER HISTORY STATE WITH COMPONENT STATE', window.location, this.hash, this.noLegacyReload)
+        }
       }
     },
     'globalState.toolTipsEnabled'(value, oldValue) {
@@ -237,6 +264,8 @@ export default {
   },
   async created() {
     this.info('WATCHED PROPS AT CREATION TIME', this.template, this.templateParameters, this.postDataHash)
+    this.pageLoadSubscriber()
+    this.info('TRIGGER PAGE LOAD')
     this.pageLoadTrigger = true
   },
   methods: {
@@ -244,6 +273,8 @@ export default {
       useAppDataStore, [
         'pushBusyState',
         'popBusyState',
+        'scheduleHistoryPush',
+        'scheduleHistoryReplace',
       ],
     ),
     onUserManualPopup() {
@@ -267,18 +298,17 @@ export default {
         this.error('*** TEMPLATE MISSING, CANNOT LOAD PAGE ***')
         return
       }
-      emit(TOGGLE_NAVIGATION, {
-        open: false,
-      })
       this.currentProjectId = this.templateParameters?.projectId || -1
       this.loading = true
       this.pushBusyState()
+      closeNavigation()
+      asyncEmit(LEGACY_PAGE_CLEANUP)
+      this.info('HISTORY STATE AT ENTRY', this.currentHistoryState)
+      const historyAppData = this.currentHistoryState.post
       const post = {
         template: this.template,
         ...this.templateParameters,
       }
-      this.info('HISTORY STATE AT ENTRY', this.currentHistoryState)
-      const historyAppData = this.currentHistoryState.post
       Object.assign(post, historyAppData, post)
       Object.assign(historyAppData, post)
       this.info('POST including history state', post, this.currentHistoryState)
@@ -295,13 +325,17 @@ export default {
         if (titleProvider) {
           this.shortTitle = titleProvider.textContent
         }
+        this.previousHash = objectHash(post)
+        if (this.hash !== this.previousHash) {
+          this.scheduleHistoryReplace(post)
+          await this.synchronizeHistoryState(this.previousHash)
+        }
       } catch (e) {
-        this.error('ERROR', generateAppUrl('page/remember/blank'), post, e)
+        this.error('ERROR', generateAppUrl('page/remember/parts'), post, e)
         this.appError = true
       }
       this.popBusyState()
       this.loading = false
-      this.requestPageLoad = false
     },
     pmeSelector(token, element) {
       return (element || '') + '.' + this.pmePrefix + '-' + token
@@ -314,7 +348,7 @@ export default {
           this.debug('TRIGGER CLICK ON PME RELOAD BUTTON')
           LegacyNotification.hide()
           reloadButton.click()
-          document.querySelector('body').classList.remove('dialog-titlebar-clicked') // ???
+          document.querySelector('body').classList.remove('dialog-titlebar-clicked') // need for "mobile" css
           return
         }
       }
@@ -326,13 +360,28 @@ export default {
     navigateForward() {
       this.$router.forward()
     },
+    // make sure the URL reflects the given hash and remove the no-reload query
+    synchronizeHistoryState(hash) {
+      this.info('REPLACE ROUTE TO SYNC BROWSER HISTORY', hash)
+      const params = {
+        template: this.template,
+        projectId: this.templateParameters?.projectId,
+        projectName: this.templateParameters?.projectName,
+      }
+      const target: RouteRecord = {
+        name: 'legacy-page',
+        params,
+        query: { hash },
+      }
+      return this.$router.replace(target)
+    },
     pageLoadSubscriber() {
-      subscribe(LEGACY_PAGE_LOAD, async (eventData: LEGACY_PAGE_LOAD) => {
-        this.trace('LEGACY PAGE LOAD CALLED', eventData)
+      asyncSubscribe(LEGACY_PAGE_LOAD, (eventData: LEGACY_PAGE_LOAD) => {
+        this.info('LEGACY PAGE LOAD CALLED', eventData)
         const params = {
-          template: eventData.template,
-          projectId: eventData?.projectId,
-          projectName: eventData?.projectName,
+          template: eventData?.template || eventData.post.template,
+          projectId: eventData?.projectId || eventData.post?.projectId,
+          projectName: eventData?.projectName || eventData.post?.projectName,
         }
         const post = Object.assign({}, eventData.post, params)
         const target: RouteRecord = {
@@ -344,10 +393,36 @@ export default {
         }
         if (eventData.keepHistory) {
           this.scheduleHistoryReplace(post)
-          this.$router.replace(target, () => {})
+          return this.$router.replace(target)
         } else {
           this.scheduleHistoryPush(post)
-          this.$router.push(target, () => {})
+          return this.$router.push(target)
+        }
+      })
+      asyncSubscribe(LEGACY_PME_HISTORY_UPDATE, (eventData: LEGACY_PME_HISTORY_UPDATE) => {
+        this.info('LEGACY PME HISTORY UPDATE', eventData)
+        const post = eventData.post
+        const params = {
+          template: post.template,
+          projectId: post?.projectId,
+          projectName: post?.projectName,
+        }
+        const target: RouteRecord = {
+          name: 'legacy-page',
+          params,
+          query: {
+            hash: objectHash(post),
+            'no-reload': 1,
+          },
+        }
+        this.info('INSTALL NEW HTML')
+        this.legacyBodyHtml = eventData.html
+        if (eventData?.action === 'push') {
+          this.scheduleHistoryPush(post)
+          return this.$router.push(target)
+        } else {
+          this.scheduleHistoryReplace(post)
+          return this.$router.replace(target)
         }
       })
     },
@@ -419,3 +494,4 @@ export default {
   }
 }
 </style>
+Y

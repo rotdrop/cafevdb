@@ -492,26 +492,14 @@ const contactValidation = function(container) {
 
   const fetchPlaceAutocompletion = function() {
 
-    const submitDefer = PHPMyEdit.deferReload(container);
-
     const post = $form.serialize();
 
     if (autocompletePlaceRequest) {
+      console.info('TRY CANCEL AUTOCOMPLETE PLACE');
       autocompletePlaceRequest.abort('cancelled');
     }
 
-    pageBusyIcon(true);
-
-    const cleanup = function() {
-      submitDefer.resolve();
-      autocompletePlaceRequest = null;
-      if (!autocompleteStreetRequest) {
-        pageBusyIcon(false);
-      } else {
-        $.when(autocompleteStreetRequest).then(() => pageBusyIcon(false));
-      }
-    };
-
+    console.info('INITIATE PLACE AUTOCOMPLETE');
     autocompletePlaceRequest = $.post(
       generateUrl('validate/musicians/autocomplete/place'),
       post)
@@ -521,12 +509,10 @@ const contactValidation = function(container) {
         } else {
           console.error('Auto-complete update cancelled');
         }
-        cleanup();
       })
       .done(function(data) {
         if (!data || !data.cities || !data.countries || !data.postalCodes) {
           console.error('Auto-complete request does not contain the requested data.', data);
-          cleanup();
           return;
         }
 
@@ -557,43 +543,30 @@ const contactValidation = function(container) {
         lockCountry = false;
 
         Notification.messages(data.message);
-
-        cleanup();
-
       });
+
+    console.info('PLACE AUTOCOMPLETE PROMISE', autocompletePlaceRequest);
 
     return autocompletePlaceRequest;
   };
 
   const fetchStreetAutocompletion = function() {
-
-    // const submitDefer = PHPMyEdit.deferReload(container);
+    console.info('ENTER STREET AUTOCOMPLETE');
 
     const post = $form.serialize();
 
     if (autocompleteStreetRequest) {
+      console.info('TRY CANCEL AUTOCOMPLETE STREET');
       autocompleteStreetRequest.abort('cancelled');
     }
 
-    pageBusyIcon(true);
-
-    const cleanup = function() {
-      // submitDefer.resolve();
-      autocompleteStreetRequest = null;
-      if (!autocompletePlaceRequest) {
-        pageBusyIcon(false);
-      } else {
-        $.when(autocompletePlaceRequest).then(() => pageBusyIcon(false));
-      }
-    };
-
+    console.info('INITIATE STREET AUTOCOMPLETE');
     autocompleteStreetRequest = $.post(
       generateUrl('validate/musicians/autocomplete/street'),
       post)
       .fail(function(xhr, status, errorThrown) {
         if (status !== 'cancelled') {
           console.error('Auto-complete update failed', xhr, status, errorThrown);
-          cleanup();
         } else {
           console.error('Auto-complete update cancelled');
         }
@@ -601,7 +574,6 @@ const contactValidation = function(container) {
       .done(function(data) {
         if (!data || !data.streets) {
           console.error('Auto-complete request does not contain the requested data.', data);
-          cleanup();
           return;
         }
 
@@ -614,12 +586,11 @@ const contactValidation = function(container) {
 
           Notification.messages(data.message);
         }
-
-        cleanup();
-
       });
 
     PHPMyEdit.pushCancellable(container, autocompleteStreetRequest);
+
+    console.info('STREET AUTOCOMPLETE PROMISE', autocompleteStreetRequest);
 
     return autocompleteStreetRequest;
   };
@@ -647,8 +618,17 @@ const contactValidation = function(container) {
       return false;
     }
 
-    fetchPlaceAutocompletion();
-    fetchStreetAutocompletion();
+    const submitDefer = PHPMyEdit.deferReload(container);
+    pageBusyIcon(true);
+
+    Promise.allSettled([
+      new Promise((resolve, reject) => fetchPlaceAutocompletion().done(resolve()).fail(reject(new Error()))),
+      new Promise((resolve, reject) => fetchStreetAutocompletion().done(resolve()).fail(reject(new Error()))),
+    ])
+      .finally(() => {
+        pageBusyIcon(false);
+        submitDefer.resolve();
+      });
 
     return false;
   });
