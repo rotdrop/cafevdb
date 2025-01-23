@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2022 Claus-Justus Heine
+ * @copyright 2020, 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
-use Psr\Log\LoggerInterface as ILogger;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use OCP\ILogger;
 
 /** Debugging helper providing access to the cloud logger. */
 trait LogTrait
@@ -32,7 +34,7 @@ trait LogTrait
   /**
    * @param string $message
    *
-   * @param int $level
+   * @param mixed $level
    *
    * @param int $shift
    *
@@ -49,6 +51,6 @@ trait LogTrait
     $method = $caller['function'];
 
     $prefix = $file.':'.$line.': '.$class.'::'.$method.': ';
-    \OC::$server->query(ILogger::class)->log($level, $prefix.$message);
+    \OC::$server->query(LoggerInterface::class)->log($level, $prefix.$message);
   }
 }
