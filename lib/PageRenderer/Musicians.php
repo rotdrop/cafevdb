@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Controller\MailingListsController;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Controller\ImagesController;
@@ -238,6 +239,47 @@ make sure that the musicians are also automatically added to the
     }
 
     return '<div class="'.$this->cssPrefix().'-header-text" title="'.$title.'">'.$header.'</div>';
+  }
+
+  /*** {@inheritdoc} */
+  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
+  {
+    return ($projectId > 0)
+      ? [
+        'template' => self::ADD_TEMPLATE,
+          'name' => 'templates:navigation:name:' . self::ADD_TEMPLATE,
+          'tooltip' => 'templates:navigation:name:' . self::ADD_TEMPLATE,
+          'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
+          'permissions' => AuthorizationService::PERMISSION_FRONTEND,
+        ]
+      : [
+          'template' => self::ALL_TEMPLATE,
+          'name' => 'templates:navigation:name:' . self::ALL_TEMPLATE,
+          'tooltip' => 'templates:navigation:name:' . self::ALL_TEMPLATE,
+          'templateParameters' => [],
+          'permissions' => AuthorizationService::PERMISSION_FRONTEND,
+      ];
+  }
+
+  /** {@inheritdoc} */
+  public function navigationItems():array
+  {
+    return ($this->projectMode)
+      ? [
+        Projects::navigationItem(),
+        ProjectParticipants::navigationItem($this->projectId),
+        ProjectInstrumentationNumbers::navigationItem($this->projectId),
+        Instruments::navigationItem(),
+      ] : [
+        self::navigationItem(),
+        Projects::navigationItem(),
+        Instruments::navigationItem(),
+        InstrumentInsurances::navigationItem(),
+        SepaBankAccounts::navigationItem(),
+        Instruments::navigationItem(),
+        InstrumentFamilies::navigationItem(),
+        Blog::navigationItem(),
+      ];
   }
 
   /** {@inheritdoc} */

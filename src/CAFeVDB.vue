@@ -25,19 +25,37 @@
       <template #list>
         <NcAppNavigationItem :to="{ name: 'home' }"
                              :name="t(appId, 'Home')"
-                             icon="icon-home"
                              exact
                              @click="showSidebar = false"
-        />
+        >
+          <template #icon>
+            <PageTemplateIcon page-template="home" />
+          </template>
+        </NcAppNavigationItem>
         <NcAppNavigationItem v-if="projectMode"
                              :name="t(appId, 'Overview {currentProjectName}', { currentProjectName })"
                              @click="openProjectOverview"
         >
           <template #icon>
-            <ProjectInfoIcon />
+            <PageTemplateIcon page-template="project-overview" />
           </template>
         </NcAppNavigationItem>
-        <NcAppNavigationItem v-if="projectMode"
+        <NcAppNavigationItem v-for="item in authorizedNavigationItems"
+                             v-show="true"
+                             :key="item.template"
+                             :to="{
+                               name: 'legacy-page',
+                               params: { template: item.template, ...item.templateParameters }
+                             }"
+                             :name="item.name"
+                             exact
+                             @click="showSidebar = false"
+        >
+          <template #icon>
+            <PageTemplateIcon :page-template="item.template" />
+          </template>
+        </NcAppNavigationItem>
+        <!-- <NcAppNavigationItem v-if="projectMode"
                              :to="{
                                name: 'legacy-page',
                                params: {
@@ -100,7 +118,7 @@
                              icon="icon-home"
                              exact
                              @click="showSidebar = false"
-        />
+        /> -->
       </template>
       <template #footer>
         <NcAppNavigationSettings :exclude-click-outside-selectors="[
@@ -254,7 +272,7 @@
   </NcContent>
 </template>
 
-<script>
+<script lang="ts">
 import { appName as appId } from './app/app-info.js'
 import mixins from './mixins/app-mixins.js'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
@@ -271,15 +289,18 @@ import {
   NcEmptyContent,
 } from '@nextcloud/vue'
 import useAppDataStore from './stores/app-data.js'
-import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
-import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
-import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
-import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
+// import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
+// import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
+// import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
+// import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import AppSettingsIcon from 'vue-material-design-icons/Cogs.vue'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import ImageUploadTemplate from './components/oc-template/ImageUploadTemplate.vue'
 import FileUploadTemplate from './components/oc-template/FileUploadTemplate.vue'
 import CloudFileSystemOperations from './components/oc-template/CloudFileSystemOperations.vue'
+import PageTemplateIcon from './components/PageTemplateIcon.vue'
+import axios from '@nextcloud/axios'
+import generateAppUrl from './toolkit/util/generate-url.js'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 import { debugOptions } from './debug-modes.ts'
@@ -301,7 +322,7 @@ export default {
     CloudFileSystemOperations,
     FileUploadTemplate,
     ImageUploadTemplate,
-    InstrumentationNumbersIcon,
+    // InstrumentationNumbersIcon,
     NcActionLink,
     NcActions,
     NcAppContent,
@@ -312,9 +333,10 @@ export default {
     NcContent,
     NcEllipsisedOption,
     NcEmptyContent,
-    ParticipantFieldsIcon,
-    ProjectInfoIcon,
-    ProjectParticipantsIcon,
+    // ParticipantFieldsIcon,
+    PageTemplateIcon,
+    // ProjectInfoIcon,
+    // ProjectParticipantsIcon,
     SelectWithSubmitButton,
   },
   mixins,
@@ -331,6 +353,8 @@ export default {
       debugModes: [],
       settingsLocked: false,
       appSettingsLoading: false,
+      pageTemplate: null,
+      navigationItems: [],
       hints: {
         'debug-mode': '',
         'deselect-invisible-misc-recs': '',
@@ -344,6 +368,7 @@ export default {
         'show-disabled': '',
         'show-tool-tips': '',
       },
+      triggerNavigationUpdate: false,
     }
   },
   computed: {
@@ -392,6 +417,16 @@ export default {
     },
     uploadMaxHumanFileSize() {
       return formatFileSize(this.uploadMaxFileSize)
+    },
+    authorizedNavigationItems() {
+      const items = this.navigationItems.filter(
+        item => (
+          (item.permissions === (item.permissions & this.globalState.userPermissions))
+          && (!this.globalState.financeMode || !(item.permissions & PERMISSION_FINANCE))
+        ),
+      )
+      this.info('FILTERED NAVIGATION ITEMS', items)
+      return items
     },
   },
   watch: {
@@ -442,6 +477,26 @@ export default {
     'globalState.restoreHistory'(value, oldValue) {
       this.updatePersonalSettings(BusEvents.SET_RESTORE_HISTORY, value, oldValue)
     },
+    'globalState.userPermissions'(...args) {
+      this.info('USER APP PERMISSIONS CHANGED', ...args)
+      this.triggerNavigationUpdate = true
+    },
+    pageTemplate(...args) {
+      this.info('CURRENT TEMPLATE CHANGED', ...args)
+      this.triggerNavigationUpdate = true
+    },
+    currentProjectId(...args) {
+      this.info('CURRENT PROJECT ID CHANGED', ...args)
+      this.triggerNavigationUpdate = true
+    },
+    async triggerNavigationUpdate(value) {
+      if (value) {
+        this.triggerNavigationUpdate = false
+        if (this.pageTemplate) {
+          await this.updateNavigationItems()
+        }
+      }
+    },
   },
   async created() {
     this.loading = false
@@ -455,6 +510,7 @@ export default {
     // })
     this.$router.afterEach((to, from) => {
       this.info('GLOBAL AFTER EACH ROUTE CHANGE', to, from, window?.history?.state)
+      this.pageTemplate = to.params?.template || 'home'
       this.finishHistoryAction()
     })
     // this.$router.onReady((...args) => {
@@ -516,6 +572,9 @@ export default {
         'scheduleHistoryReplace',
       ],
     ),
+    authorized(requestedPermissions: number):boolean {
+      return authorized(requestedPermissions, this.globalState.userPermissions)
+    },
     closeSidebar() {
       this.showSidebar = false
     },
@@ -564,7 +623,27 @@ export default {
           },
         },
       })
-
+    },
+    async updateNavigationItems() {
+      const url = generateAppUrl('vue-app/n/{pageTemplate}', { pageTemplate: this.pageTemplate })
+      this.info('URL', url, this.pageTemplate, { pageTemplate: this.pageTemplate })
+      try {
+        const response = await axios.post(
+          url, {
+            projectId: this.currentProjectId,
+            projectName: this.currentProjectName,
+          },
+        )
+        const navigationItems = response.data?.navigation
+        if (!navigationItems) {
+          // TODO: notify user etc.
+        }
+        // this.navigationItems.splice(0, this.navigationItems.length, ...navigationItems)
+        this.navigationItems = navigationItems
+      } catch (error) {
+        // TODO: notify user etc.
+        this.error('Unable to update navigation items', url, error)
+      }
     },
   },
 }

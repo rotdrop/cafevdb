@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2020, 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,43 +24,36 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use OCP\IL10N;
+use OCA\CAFEVDB\Service\AuthorizationService;
 
-/** Dummy config-check renderer */
-class ConfigCheck extends AbstractPageRenderer
+/** Abstract page-renderer base class. */
+abstract class AbstractPageRenderer extends Renderer implements IPageRenderer
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-
-  /**
-   * @var string
-   *
-   * The legacy template to load.
-   */
-  public const TEMPLATE = 'maintenance/configcheck';
-
-  /**
-   * @param IL10N $l
-   */
-  public function __construct(
-    protected IL10N $l,
-  ) {
+  /*** {@inheritdoc} */
+  public function navigation(bool $enable):void
+  {
   }
 
-  /** {@inheritdoc} */
-  public function shortTitle()
+  /*** {@inheritdoc} */
+  public function navigationItems():array
   {
-    return 'config-check';
+    return [];
   }
 
-  /** {@inheritdoc} */
-  public function headerText()
+  /*** {@inheritdoc} */
+  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
   {
-    return self::templateResponse('fragments/header-texts/configcheck', [ 'cssPrefix' => $this->cssPrefix() ], self::RENDER_AS_BLANK)->render();
+    return [
+      'template' => static::TEMPLATE,
+      'name' => 'templates:navigation:name:' . static::TEMPLATE,
+      'tooltip' => 'templates:navigation:name:' . static::TEMPLATE,
+      'templateParameters' => [],
+      'permissions' => AuthorizationService::PERMISSION_FRONTEND,
+    ];
   }
 
-  /** {@inheritdoc} */
-  public function cssClass():string
+  /*** {@inheritdoc} */
+  public function execute(array $options = []):void
   {
-    return 'config-check';
   }
 }

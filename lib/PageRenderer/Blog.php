@@ -28,7 +28,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 
 /** Blog renderer class, rendering is done through legacy templates.*/
-class Blog extends Renderer implements IPageRenderer
+class Blog extends AbstractPageRenderer
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
@@ -63,29 +63,6 @@ class Blog extends Renderer implements IPageRenderer
   public function headerText()
   {
     return self::templateResponse('fragments/header-texts/blog', [ 'cssPrefix' => $this->cssPrefix() ], self::RENDER_AS_BLANK)->render();
-  }
-
-  /**
-   * Show the underlying template page. This is supposed to echo html
-   * code to stdout. This is the default do-nothing implementation.
-   *
-   * @param bool $execute Kind of dry-run if set to false.
-   *
-   * @return void
-   */
-  public function render(bool $execute = true):void
-  {
-    echo '';
-  }
-
-  /** {@inheritdoc} */
-  public function navigation(bool $enable):void
-  {
-  }
-
-  /** {@inheritdoc} */
-  public function execute(array $options = []):void
-  {
   }
 
   /** {@inheritdoc} */

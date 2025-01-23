@@ -1456,6 +1456,16 @@ tables. The actual number of rows per page can also changed later in
 the individual table views.'),
 
       'templates' => [
+        'navigation' => [
+          'name' => [
+            'projects' => self::t('All Projects'),
+            'all-musicians' => self::t('Display all Musicians'),
+          ],
+          'tooltips' => [
+            'projects' => self::t('Overview over all known projects (start-page).'),
+            'all-musicians' => self::t('Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.'),
+          ],
+        ],
         'logo' => self::t('An image file with the orchestra logo -- preferably in SVG format. The logo is substituted into document templates using the "[LOGO]" placeholder.'),
         'projectDebitNoteMandateForm' => self::t('A fillable PDF form for debit-mandates bound to special projects. The app is able to auto-fill form-fields with the names "projectName", "bankAccountOwner", "projectParticipant", "bankAccountIBAN", "bankAccountBIC", "bank". The fields in the PDF-form are identified by these names. Auto-filled mandates can be downloaed from the musician and project-participant views.'),
 

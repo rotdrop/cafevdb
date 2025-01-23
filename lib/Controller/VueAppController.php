@@ -25,9 +25,13 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\AppFramework\IAppContainer;
 use OCP\IInitialStateService;
 use OCP\IRequest;
 use OCP\Util;
@@ -35,11 +39,14 @@ use OCP\Util;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\PageRenderer;
 
 /** AJAX endpoint for generating the main page of the app. */
 class VueAppController extends Controller
 {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   /** @var array
    *
@@ -51,11 +58,14 @@ class VueAppController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
+    protected ?string $userId,
     protected AssetService $assetService,
     protected ConfigService $configService,
     protected HistoryService $historyService,
+    protected AuthorizationService $authorizationService,
     protected IInitialState $initialState,
     protected IInitialStateService $initialStateService,
+    protected IAppContainer $appContainer,
   ) {
     parent::__construct($appName, $request);
 
@@ -90,7 +100,36 @@ class VueAppController extends Controller
       $this->assetService->getJSAsset('iframe-content-script'),
     );
 
-
     return new TemplateResponse($this->appName, 'vue-app');
+  }
+
+  /**
+   * Fetch navigation Items for current page
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
+   * _AT_NoCSRFRequired
+   */
+  public function navigation(string $template, ?int $projectId = null, ?string $projectName = null)
+  {
+    if ($template == 'home') {
+      $navigationItems = [
+        PageRenderer\Projects::navigationItem(),
+        PageRenderer\Musicians::navigationItem(),
+      ];
+    } else {
+      try {
+        /** @var $renderer PageRenderer\IPageRenderer */
+        $renderer = $this->appContainer->query(PageRenderer\Registration::TEMPLATE_PREFIX . $template);
+      } catch (Throwable $t) {
+        return $this->exceptionResponse($t, self::RENDER_AS_BLANK);
+      }
+      $navigationItems = $renderer->navigationItems();
+    }
+    $userPermissions = $this->authorizationService->getUserPermissions();
+    return self::dataResponse([
+      'navigation' => array_filter($navigationItems, fn($item) => ($item['permissions'] === ($item['permissions'] & $userPermissions))),
+    ]);
   }
 }

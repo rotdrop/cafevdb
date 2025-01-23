@@ -50,8 +50,8 @@ class Registration
     });
     $context->registerServiceAlias(self::TEMPLATE_PREFIX . ConfigCheck::TEMPLATE, ConfigCheck::class);
     $context->registerServiceAlias(self::TEMPLATE_PREFIX.'all-musicians', Musicians::class);
-    $context->registerService(self::TEMPLATE_PREFIX.'add-musicians', function($c) {
-      $musicians = $c->query(self::TEMPLATE_PREFIX.'all-musicians');
+    $context->registerService(self::TEMPLATE_PREFIX . Musicians::ADD_TEMPLATE, function($c) {
+      $musicians = $c->query(self::TEMPLATE_PREFIX . Musicians::ALL_TEMPLATE);
       $musicians->enableProjectMode();
       return $musicians;
     });

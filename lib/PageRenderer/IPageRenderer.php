@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2020, 2022 Claus-Justus Heine
+ * @copyright 2011-2020, 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,6 +49,30 @@ interface IPageRenderer extends IRenderer
    * @return void
    */
   public function navigation(bool $enable):void;
+
+  /**
+   * Return a list of navigation items:
+   * ```
+   * [ NAV_ITEM0, NAV_ITEM1, ... ]
+   * ```
+   *
+   * @return array
+   */
+  public function navigationItems():array;
+
+  /**
+   * Return the navigation item for this renderer.
+   *
+   * [
+   *   'template' => TEMPLATE,
+   *   'tooltip' => TOOLTIP,
+   *   'templateParameters' => [ PARAM => VALUE ],
+   *   'permissions' => PERMISSION_MASK,
+   * ]
+   *
+   * @return array
+   */
+  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array;
 
   /**
    * Run underlying table-manager (phpMyEdit for now).

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-, 20252025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -147,6 +147,19 @@ class Projects extends PMETableViewBase
     } else {
       return $this->l->t("%s Projects", [ ucfirst($this->getConfigValue('orchestra')) ]);
     }
+  }
+
+  /** {@inheritdoc} */
+  public function navigationItems():array
+  {
+    return [
+      Musicians::navigationItem(),
+      self::navigationItem(),
+      Instruments::navigationItem(),
+      ProjectParticipantFields::navigationItem(),
+      ProjectInstrumentationNumbers::navigationItem(),
+      Blog::navigationItem(),
+    ];
   }
 
   /** {@inheritdoc} */

@@ -161,6 +161,12 @@ $routes = [
       ],
     ],
     [
+      'name' => 'vueApp#navigation',
+      'url' => '/vue-app/n/{template}',
+      'verb' => 'POST',
+      'requirements' => [ 'template' => '.+' ],
+    ],
+    [
       'name' => 'page#index',
       'url' => '/',
       'verb' => 'GET',
