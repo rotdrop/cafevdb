@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -197,11 +197,8 @@ const validateInstrumentChoices = function(options) {
  * };
  *
  * The form is submitted with an empty pseudo-submit button.
- *
- * @param {Function} afterLoadCallback Optional. A function called after the
- * table-view has been loaded.
  */
-const loadPMETable = function(form, formData, afterLoadCallback) {
+const loadPMETable = function(form, formData) {
   const pmeSys = PHPMyEdit.sys('');
   form.find('input').not('[name^="' + pmeSys + '"]').each(function(idx) {
     const $self = $(this);
@@ -212,7 +209,7 @@ const loadPMETable = function(form, formData, afterLoadCallback) {
       }
     }
   });
-  Page.loadPage(formData, afterLoadCallback);
+  return Page.loadPage(formData);
 };
 
 /**
@@ -236,11 +233,8 @@ const loadPMETable = function(form, formData, afterLoadCallback) {
  * @param {Array} ids An array containing the ids that will be
  * displayed. If ids is empty or contains an entry @c -1 then no filtering will
  * take place.
- *
- * @param {Function} afterLoadCallback Optional. A function called after the
- * table-view has been loaded.
  */
-const loadPMETableFiltered = function(form, formData, ids, afterLoadCallback) {
+const loadPMETableFiltered = function(form, formData, ids) {
   if (typeof ids === 'undefined' || !ids) {
     ids = [];
   }
@@ -263,7 +257,7 @@ const loadPMETableFiltered = function(form, formData, ids, afterLoadCallback) {
   }
   $.extend(formData, filterData);
 
-  loadPMETable(form, formData, afterLoadCallback);
+  return loadPMETable(form, formData);
 };
 
 /**
@@ -281,11 +275,8 @@ const loadPMETableFiltered = function(form, formData, ids, afterLoadCallback) {
  * If @c null or not present, then @a form will be searched for an input element with
  * name @c ProjectId, if present and its value is positive, the main musisians table is
  * loaded in project mode, allowing for adding new participants to the respective project.
- *
- * @param {Function} afterLoadCallback Optional. A function called after the
- * table-view has been loaded.
  */
-const myLoadMusicians = function(form, ids, projectMode, afterLoadCallback) {
+const myLoadMusicians = function(form, ids, projectMode) {
   if (typeof projectMode === 'undefined' || projectMode === null) {
     // Check whether form contains an input element for a
     // ProjectId. If its value is positive, switch to project mode,
@@ -302,7 +293,7 @@ const myLoadMusicians = function(form, ids, projectMode, afterLoadCallback) {
     inputTweak[pmeSys('fl')] = 1;
   }
 
-  loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
+  return loadPMETableFiltered(form, inputTweak, ids);
 };
 
 /**
@@ -332,7 +323,7 @@ const myLoadAddMusicians = function(form, afterLoadCallback) {
  * @param {Function} afterLoadCallback An optional callback executed after
  * the PME table has been loaded.
  */
-const myLoadProjectParticipants = function(form, musicians, afterLoadCallback) {
+const myLoadProjectParticipants = async function(form, musicians, afterLoadCallback) {
   // const projectName = form.find('input[name="projectName"]').val();
   // const projectId = form.find('input[name="projectId"]').val();
 
@@ -347,7 +338,10 @@ const myLoadProjectParticipants = function(form, musicians, afterLoadCallback) {
     ids = musicians.map(function(musician) { return { /* '0': projectId, */ 1: musician }; });
   }
 
-  loadPMETableFiltered(form, inputTweak, ids, afterLoadCallback);
+  await loadPMETableFiltered(form, inputTweak, ids);
+  if (typeof afterLoadCallback === 'function') {
+    afterLoadCallback();
+  }
 };
 
 const myReady = function(selector, dialogParameters, resizeCB) {
