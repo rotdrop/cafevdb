@@ -284,7 +284,8 @@ import { mapWritableState, mapActions, mapState } from 'pinia'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 import { debugOptions } from './debug-modes.ts'
 import { formatFileSize } from '@nextcloud/files'
-import { emit, subscribe } from '@nextcloud/event-bus'
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus'
+import { closeNavigation } from './services/navigation.js'
 import * as BusEvents from './event-bus-events.js'
 
 import Icon from '../img/cafevdb.svg'
@@ -350,7 +351,6 @@ export default {
       return this.$route.path === '/'
     },
     ...mapState(useAppDataStore, [
-      'busyState',
       'routerHistory',
     ]),
     ...mapWritableState(
@@ -446,45 +446,74 @@ export default {
   async created() {
     this.loading = false
     this.hints = await this.tooltips(Object.keys(this.hints))
-    subscribe(BusEvents.PUSH_BUSY_STATE, () => this.pushBusyState())
-    subscribe(BusEvents.POP_BUSY_STATE, () => this.popBusyState())
-    this.$router.beforeEach((to, from, next) => {
-      this.info('GLOBAL BEFORE EACH ROUTE CHANGE', to, from, window?.history?.state)
-      next()
-    })
+    asyncSubscribe(BusEvents.SET_BUSY_FLAG, ({ value }) => this.setBusyFlag(value))
+    asyncSubscribe(BusEvents.PUSH_BUSY_STATE, () => this.pushBusyState())
+    asyncSubscribe(BusEvents.POP_BUSY_STATE, () => this.popBusyState())
+    // this.$router.beforeEach((to, from, next) => {
+    //   this.info('GLOBAL BEFORE EACH ROUTE CHANGE', to, from, window?.history?.state)
+    //   next()
+    // })
     this.$router.afterEach((to, from) => {
       this.info('GLOBAL AFTER EACH ROUTE CHANGE', to, from, window?.history?.state)
       this.finishHistoryAction()
     })
-    this.$router.onReady((...args) => {
-      this.info('ROUTER ON READY HOOK', ...args, window?.history?.state)
-    })
+    // this.$router.onReady((...args) => {
+    //   this.info('ROUTER ON READY HOOK', ...args, window?.history?.state)
+    // })
     this.$router.onError((...args) => {
       this.info('ROUTER ON ERROR HOOK', ...args, window?.history?.state)
       this.cancelHistoryAction()
     })
-    window.setTimeout(() => {
-      emit(BusEvents.LEGACY_PAGE_LOAD, {
-        template: 'projects',
-        keepHistory: true,
+    // window.setTimeout(() => {
+    //   asyncEmit(BusEvents.LEGACY_PAGE_LOAD, {
+    //     template: 'projects',
+    //     keepHistory: true,
+    //   })
+    // }, 10000)
+
+    // The following silly construct enforces a history state with
+    // value vue-router key for the initial route. Quite stupid, but should work ...
+    if (!window.history?.state?.key || this.appData.currentHistoryIndex === 'initial') {
+      this.info('CURRENT HISTORY', this.$router.currentRoute, window.history?.state)
+      const route = {
+        name: this.$router.currentRoute.name,
+        params: { ...this.$router.currentRoute.params },
+        query: { ...this.$router.currentRoute.query },
+      }
+      route.query.force = window.performance.now().toFixed(3)
+      this.scheduleHistoryReplace({})
+      await this.$router.replace(route)
+      delete route.query.force
+      this.scheduleHistoryReplace({})
+      await this.$router.replace(route)
+      this.info('CURRENT HISTORY AFTER', {
+        currentRoute: { ...this.$router.currentRoute },
+        windowHistoryState: { ...window.history?.state },
+        history: { ...this.appData.routerHistory },
       })
-    }, 5000)
+    } else {
+      this.info('INITIAL HISTORY', {
+        currentRoute: { ...this.$router.currentRoute },
+        windowHistoryState: { ...window.history?.state },
+        history: { ...this.appData.routerHistory },
+      })
+    }
   },
   mounted() {
     // works only after mounting
-    emit(BusEvents.TOGGLE_NAVIGATION, {
-      open: false,
-    })
+    closeNavigation()
     this.isMounted = true
   },
   methods: {
     ...mapActions(
       useAppDataStore, [
+        'setBusyFlag',
         'pushBusyState',
         'popBusyState',
         'scheduleHistoryPush',
         'cancelHistoryAction',
         'finishHistoryAction',
+        'scheduleHistoryReplace',
       ],
     ),
     closeSidebar() {
@@ -499,10 +528,8 @@ export default {
       return routeProps?.href
     },
     openProjectOverview() {
-      emit(BusEvents.TOGGLE_NAVIGATION, {
-        open: false,
-      })
-      emit(BusEvents.PROJECT_POPUP, {
+      closeNavigation()
+      asyncEmit(BusEvents.PROJECT_POPUP, {
         projectId: this.currentProjectId,
         projectName: this.currentProjectName,
       })
@@ -510,7 +537,7 @@ export default {
     async openSettingsPopup(event) {
       event.preventDefault()
       this.appSettingsLoading = true
-      emit(BusEvents.APP_SETTINGS_POPUP, {
+      asyncEmit(BusEvents.APP_SETTINGS_POPUP, {
         done() {},
         fail() {},
         always: () => { this.appSettingsLoading = false },
@@ -528,7 +555,7 @@ export default {
         return
       }
       this.settingsLocked = true
-      emit(event, {
+      asyncEmit(event, {
         value,
         callbacks: {
           always: async () => {
