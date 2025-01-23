@@ -28,10 +28,10 @@
 
 import globalState from './globalstate.js';
 import { initialState, appName } from './config.js';
-import { emit } from '@nextcloud/event-bus';
+import { emit } from '@rotdrop/async-nextcloud-event-bus';
 import * as BusEvents from '../event-bus-events.js';
 
-const PHPMyEdit = {
+const PHPMyEditDefault = {
   directChange: false,
   filterSelectPlaceholder: 'Select a filter Option',
   filterSelectNoResult: 'No values match',
@@ -63,21 +63,21 @@ const PHPMyEdit = {
   emit: false,
 };
 
-PHPMyEdit.dialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
-
 /****************************************************************************
  *
  * Mix-in PHP setup parameters.
  *
  */
 
-globalState.PHPMyEdit = globalState.PHPMyEdit || Object.assign(PHPMyEdit, initialState.PHPMyEdit);
+const PHPMyEdit = globalState.PHPMyEdit = globalState.PHPMyEdit || Object.assign(PHPMyEditDefault, initialState.PHPMyEdit);
+PHPMyEdit.dialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
 if (!PHPMyEdit.emit) {
   PHPMyEdit.emit = true;
   emit(BusEvents.PME_STATE, {
-    state: globalState.PHPMyEdit,
+    state: PHPMyEdit,
   });
 }
+console.info('PHPMyEdit Initial State', { ...globalState.PHPMyEdit }, { ...initialState.PHPMyEdit });
 
 const pmeDefaultSelector = PHPMyEdit.defaultSelector;
 const pmePrefix = PHPMyEdit.pmePrefix;
@@ -95,8 +95,3 @@ export {
   pmeOpenDialogs as openDialogs,
   pmePageRenderer as pageRenderer,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
