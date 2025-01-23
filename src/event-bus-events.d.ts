@@ -23,14 +23,17 @@
 
 import {
   LEGACY_PAGE_LOAD,
+  LEGACY_PME_HISTORY_UPDATE,
 } from './event-bus-events.js';
 
 declare module '@nextcloud/event-bus' {
   export interface NextcloudEvents {
     // mapping of 'event name' => 'event type'
-    LEGACY_PAGE_LOAD: { template: string, projectId: number|null, projectName: string|undefined }
+    LEGACY_PAGE_LOAD: { post: object, template: string|null, projectId: number|null, projectName: string|undefined, keepHistory: boolean }
+    LEGACY_PME_HISTORY_UPDATE: { post: object, html: string, action: string }
   }
 }
 export {
   LEGACY_PAGE_LOAD,
+  LEGACY_PME_HISTORY_UPDATE,
 };

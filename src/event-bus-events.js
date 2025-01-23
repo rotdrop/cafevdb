@@ -34,6 +34,7 @@ export const PROJECT_PARTICIPANT_FIELDS_POPUP = appEventName('project-participan
 export const PROJECT_EVENTS_POPUP = appEventName('project-events-popup');
 export const PUSH_BUSY_STATE = appEventName('push-busy-state');
 export const POP_BUSY_STATE = appEventName('pop-busy-state');
+export const SET_BUSY_FLAG = appEventName('set-busy-flag');
 export const GLOBAL_STATE = appEventName('global-state');
 export const PME_STATE = appEventName('pme-state');
 
@@ -49,6 +50,8 @@ export const SET_INITIAL_FILTER_VISIBILITY = appEventName('set-initial-filter-vi
 export const SET_RESTORE_HISTORY = appEventName('set-restore-history');
 
 export const LEGACY_PAGE_LOAD = appEventName('legacy-page-load');
+export const LEGACY_PME_HISTORY_UPDATE = appEventName('legacy-pme-history-update');
+export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
 
 // global events
 export const TOGGLE_NAVIGATION = 'toggle-navigation';
