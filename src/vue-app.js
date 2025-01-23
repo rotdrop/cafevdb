@@ -32,7 +32,7 @@ import CAFeVDB from './CAFeVDB.vue';
 import router from './router/app-router.js';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 import { Tooltip } from '@nextcloud/vue';
-import { asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import * as BusEvents from './event-bus-events.js';
 
 Vue.use(PiniaVuePlugin);
