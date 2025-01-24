@@ -31,7 +31,14 @@
 <script lang="ts">
 import DefaultIcon from 'vue-material-design-icons/Table.vue'
 import HomeIcon from 'vue-material-design-icons/Home.vue'
+import ProjectsIcon from 'vue-material-design-icons/ListBox.vue'
 import ProjectOverviewIcon from 'vue-material-design-icons/InformationOutline.vue'
+import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
+import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
+import InstrumentsIcon from 'vue-material-design-icons/Trumpet.vue'
+import AllMusiciansIcon from 'vue-material-design-icons/Human.vue'
+import ProjectParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
+import BlogIcon from 'vue-material-design-icons/MessageBadge.vue'
 
 export default {
   name: 'PageTemplateIcon',
@@ -47,8 +54,22 @@ export default {
       switch (this.pageTemplate) {
       case 'home':
         return HomeIcon
+      case 'projects':
+        return ProjectsIcon
       case 'project-overview':
         return ProjectOverviewIcon
+      case 'project-participant-fields':
+        return ProjectParticipantFieldsIcon
+      case 'project-participants':
+        return ProjectParticipantsIcon
+      case 'project-instrumentation-numbers':
+        return InstrumentationNumbersIcon
+      case 'instruments':
+        return InstrumentsIcon
+      case 'all-musicians':
+        return AllMusiciansIcon
+      case 'blog/blog':
+        return BlogIcon
       default:
         return DefaultIcon
       }
