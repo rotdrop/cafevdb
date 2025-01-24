@@ -124,7 +124,7 @@ class VueAppController extends Controller
     if ($template == 'home') {
       $navigationItems = [
         PageRenderer\Projects::navigationItem(),
-        PageRenderer\Musicians::navigationItem(),
+        PageRenderer\AllMusicians::navigationItem(),
       ];
     } else {
       try {

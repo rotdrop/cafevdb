@@ -129,10 +129,17 @@ composer.lock: composer.json composer.json.in vendor-bin/*/composer.json
  $(COMPOSER_TOOL) install $(COMPOSER_OPTIONS);\
 }
 
-pre-build: php-scoper-install app-toolkit
+pre-build: php-scoper-install app-toolkit ts-app-config
 #	git submodule update --init
 	$(OCC) maintenance:mode --on
 .PHONY: pre-build
+
+ts-app-config: $(BUILDDIR)/ts-types/app-config.ts
+.PHONY: ts-app-config
+
+$(BUILDDIR)/ts-types/app-config.ts: Makefile $(APP_INFO) $(ABSSRCDIR)/app-config.ts.in
+	mkdir -p $$(dirname $@)
+	sed 's/@@APP_NAME@@/$(APP_NAME)/g' $(ABSSRCDIR)/app-config.ts.in > $@
 
 post-build:
 	$(OCC) maintenance:mode --off

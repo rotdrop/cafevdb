@@ -153,8 +153,8 @@ class Projects extends PMETableViewBase
   public function navigationItems():array
   {
     return [
-      Musicians::navigationItem(),
-      self::navigationItem(),
+      AllMusicians::navigationItem(),
+      Projects::navigationItem(),
       Instruments::navigationItem(),
       ProjectParticipantFields::navigationItem(),
       ProjectInstrumentationNumbers::navigationItem(),

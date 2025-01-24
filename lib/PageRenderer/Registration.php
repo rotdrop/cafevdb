@@ -49,12 +49,8 @@ class Registration
       return new class extends Renderer {}; // do nothing
     });
     $context->registerServiceAlias(self::TEMPLATE_PREFIX . ConfigCheck::TEMPLATE, ConfigCheck::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'all-musicians', Musicians::class);
-    $context->registerService(self::TEMPLATE_PREFIX . Musicians::ADD_TEMPLATE, function($c) {
-      $musicians = $c->query(self::TEMPLATE_PREFIX . Musicians::ALL_TEMPLATE);
-      $musicians->enableProjectMode();
-      return $musicians;
-    });
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . AllMusicians::TEMPLATE, AllMusicians::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . AddMusicians::TEMPLATE, AddMusicians::class);
     $context->registerServiceAlias(self::TEMPLATE_PREFIX . Projects::TEMPLATE, Projects::class);
     $context->registerServiceAlias(self::TEMPLATE_PREFIX . ProjectParticipants::TEMPLATE, ProjectParticipants::class);
     $context->registerServiceAlias(self::TEMPLATE_PREFIX . ProjectInstrumentationNumbers::TEMPLATE, ProjectInstrumentationNumbers::class);
@@ -73,25 +69,25 @@ class Registration
 
     // @todo find a cleaner way for the following
 
-    $context->registerService('export:'.'all-musicians', function($c) {
-      $renderer = $c->query(self::TEMPLATE_PREFIX.'all-musicians');
+    $context->registerService('export:' . AllMusicians::TEMPLATE, function($c) {
+      $renderer = $c->query(self::TEMPLATE_PREFIX . AllMusicians::TEMPLATE);
       $fontService = $c->query(FontService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService);
     });
 
-    $context->registerService('export:'.'project-participants', function($c) {
-      $renderer = $c->query(self::TEMPLATE_PREFIX.'project-participants');
+    $context->registerService('export:' . ProjectParticipants::TEMPLATE, function($c) {
+      $renderer = $c->query(self::TEMPLATE_PREFIX . ProjectParticipants::TEMPLATE);
       $fontService = $c->query(FontService::class);
       $projectService = $c->query(\OCA\CAFEVDB\Service\ProjectService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService, $projectService);
     });
 
-    $context->registerService('export:'.'sepa-bank-accounts', function($c) {
-      $renderer = $c->query(self::TEMPLATE_PREFIX.'sepa-bank-accounts');
+    $context->registerService('export:' . SepaBankAccounts::TEMPLATE, function($c) {
+      $renderer = $c->query(self::TEMPLATE_PREFIX . SepaBankAccounts::TEMPLATE);
       $fontService = $c->query(FontService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService);
     });
 
-    $context->registerServiceAlias('export:'.'instrument-insurance', Export\InsuranceSpreadsheetExporter::class);
+    $context->registerServiceAlias('export:' . InstrumentInsurances::TEMPLATE, Export\InsuranceSpreadsheetExporter::class);
   }
 }

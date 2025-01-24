@@ -65,17 +65,11 @@ class Musicians extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
 
-  const ALL_TEMPLATE = 'all-musicians';
-  const ADD_TEMPLATE = 'add-musicians';
+  protected const ALL_TEMPLATE = 'all-musicians';
+  protected const ADD_TEMPLATE = 'add-musicians';
   const CSS_CLASS = 'musicians';
   const TABLE = self::MUSICIANS_TABLE;
   const ALL_EMAILS_TABLE = self::MUSICIAN_EMAILS_TABLE . self::VALUES_TABLE_SEP . 'all';
-
-  /**
-   * @var bool Called with project-id in order to add musicians to an
-   * existing project
-   */
-  private bool $projectMode;
 
   /**
    * Join table structure. All update are handled in
@@ -134,11 +128,9 @@ class Musicians extends PMETableViewBase
     ],
   ];
 
-  /** @var Entities\Project */
-  private ?Entities\Project $project;
-
   /** {@inheritdoc} */
   public function __construct(
+    string $template,
     ConfigService $configService,
     RequestParameterService $requestParameters,
     EntityManager $entityManager,
@@ -152,12 +144,20 @@ class Musicians extends PMETableViewBase
     private MusicianService $musicianService,
     private MailingListsService $listsService,
   ) {
-    parent::__construct(self::ALL_TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->projectMode = false;
+    parent::__construct(
+      $template,
+      $configService,
+      $requestParameters,
+      $entityManager,
+      $phpMyEdit,
+      $toolTipsService,
+      $pageNavigation,
+    );
 
     if (empty($this->musicianId)) {
       $this->musicianId = $this->pmeRecordId['id']??null;
     }
+
 
     if ($this->listOperation()) {
       $this->pme->overrideLabel('Add', $this->l->t('New Musician'));
@@ -171,43 +171,11 @@ class Musicians extends PMETableViewBase
   }
 
   /**
-   * Enable the project-mode which is used to add new participants to a
-   * project. In effect, all persons are shown except those already
-   * participating in the project and some additional controls are geneated in
-   * order to select new participants.
+   * To be used by the child classes to compose the shortTitle() method.
    *
-   * @return void
+   * @return null|string Common short title or null.
    */
-  public function enableProjectMode():void
-  {
-    $this->projectMode = true;
-    $this->setTemplate(self::ADD_TEMPLATE);
-    if (empty($this->projectId)) {
-      $this->logInfo('NO PROJECT ID ?????');
-    }
-    if (empty($this->project)) {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-      if (empty($this->projectName)) {
-        $this->projectName = $this->project->getName();
-      }
-    }
-  }
-
-  /**
-   * Disable project mode.
-   *
-   * @see enableProjectMode()
-   *
-   * @return void
-   */
-  public function disableProjectMode():void
-  {
-    $this->projectMode = false;
-    $this->setTemplate(self::ALL_TEMPLATE);
-  }
-
-  /** {@inheritdoc} */
-  public function shortTitle()
+  protected function commonShortTitle():?string
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Remove all data of the displayed musician?');
@@ -219,75 +187,30 @@ class Musicians extends PMETableViewBase
       return $this->l->t('Edit the personal data of the displayed musician.');
     } elseif ($this->addOperation()) {
       return $this->l->t('Add a new musician to the data-base.');
-    } elseif (!$this->projectMode) {
-      return $this->l->t('Overview over all registered musicians');
-    } else {
-      return $this->l->t("Add musicians to the project `%s'", [ $this->projectName ]);
     }
-  }
-
-  /** {@inheritdoc} */
-  public function headerText()
-  {
-    $header = $this->shortTitle();
-    if ($this->projectMode) {
-      $title = $this->l->t("This page is the only way to add musicians to projects in order to
-make sure that the musicians are also automatically added to the
-`global' musicians data-base (and not only to the project).");
-    } else {
-      $title = '';
-    }
-
-    return '<div class="'.$this->cssPrefix().'-header-text" title="'.$title.'">'.$header.'</div>';
+    return null;
   }
 
   /*** {@inheritdoc} */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
+  public function headerText()
   {
-    return ($projectId > 0)
-      ? [
-        'template' => self::ADD_TEMPLATE,
-          'name' => 'templates:navigation:name:' . self::ADD_TEMPLATE,
-          'tooltip' => 'templates:navigation:tooltips:' . self::ADD_TEMPLATE,
-          'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
-          'permissions' => AuthorizationService::PERMISSION_FRONTEND,
-        ]
-      : [
-          'template' => self::ALL_TEMPLATE,
-          'name' => 'templates:navigation:name:' . self::ALL_TEMPLATE,
-          'tooltip' => 'templates:navigation:tooltips:' . self::ALL_TEMPLATE,
-          'templateParameters' => [],
-          'permissions' => AuthorizationService::PERMISSION_FRONTEND,
-      ];
+    $title = $this->toolTipsService['page-renderer:' . $this->template . ':header-text'];
+    return '<div class="' . $this->cssPrefix() . '-header-text"'
+      . ($title ? ' title="' . $title . '"' : '')
+      . '>'
+      . $this->shortTitle()
+      . '</div>';
   }
 
-  /** {@inheritdoc} */
-  public function navigationItems():array
-  {
-    return ($this->projectMode)
-      ? [
-        Projects::navigationItem(),
-        ProjectParticipants::navigationItem($this->projectId),
-        ProjectInstrumentationNumbers::navigationItem($this->projectId),
-        Instruments::navigationItem(),
-      ] : [
-        self::navigationItem(),
-        Projects::navigationItem(),
-        Instruments::navigationItem(),
-        InstrumentInsurances::navigationItem(),
-        SepaBankAccounts::navigationItem(),
-        Instruments::navigationItem(),
-        InstrumentFamilies::navigationItem(),
-        Blog::navigationItem(),
-      ];
-  }
-
-  /** {@inheritdoc} */
-  public function render(bool $execute = true):void
+  /**
+   * Generate the $opts array for the PHPMyEdit machinery. Used by the child
+   * classes in order to implement their render() method.
+   *
+   * @return array ```[ 'opts' => PME_OPTIONS, 'jointTables' => JOIN_TABLE_DEFS ]```
+   */
+  protected function generatePMEOptions():array
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
-    $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
 
@@ -351,11 +274,6 @@ make sure that the musicians are also automatically added to the
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '5';
 
-    if (!$this->projectMode) {
-      $export = $this->pageNavigation->tableExportButton();
-      $opts['buttons'] = $this->pageNavigation->prependTableButton($export, true);
-    }
-
     // Display special page elements
     $opts['display'] =  [
       'form'  => true,
@@ -365,19 +283,19 @@ make sure that the musicians are also automatically added to the
       'tabs'  => [
         [ 'id' => 'orchestra',
           'default' => true,
-          'tooltip' => $this->toolTipsService['page-render:musicians:tab:orchestra'],
+          'tooltip' => $this->toolTipsService['page-renderer:musicians:tab:orchestra'],
           'name' => $this->l->t('Instruments and Status') ],
         [ 'id' => 'contact',
-          'tooltip' => $this->toolTipsService['page-render:musicians:tab:contact'],
+          'tooltip' => $this->toolTipsService['page-renderer:musicians:tab:contact'],
           'name' => $this->l->t('Contact Information') ],
         [ 'id' => 'finance',
-          'tooltip' => $this->toolTipsService['page-render:musicians:tab:finance'],
+          'tooltip' => $this->toolTipsService['page-renderer:musicians:tab:finance'],
           'name' => $this->l->t('Financial Topics') ],
         [ 'id' => 'miscinfo',
-          'tooltip' => $this->toolTipsService['page-render:musicians:tab:miscinfo'],
+          'tooltip' => $this->toolTipsService['page-renderer:musicians:tab:miscinfo'],
           'name' => $this->l->t('Miscellaneous Data') ],
         [ 'id' => 'tab-all',
-          'tooltip' => $this->toolTipsService['page-renderer:pme:tab:showall'],
+          'tooltip' => $this->toolTipsService['page-rendererer:pme:tab:showall'],
           'name' => $this->l->t('Display all columns')
         ],
       ],
@@ -442,33 +360,6 @@ make sure that the musicians are also automatically added to the
     });
 
     $joinTables = $this->defineJoinStructure($opts);
-
-    $bval = strval($this->l->t('Add to %s', [ $projectName ]));
-    $tip  = strval($this->toolTipsService['page-renderer:musicians:register']);
-    if ($this->projectMode) {
-      $opts['fdd']['add_musicians'] = [
-        'tab' => [ 'id' => 'tab-all' ],
-        'name' => $this->l->t('Add Musicians'),
-        'css' => [ 'postfix' => [ 'register-musician', ], ],
-        'select' => 'T',
-        'options' => 'VCLR',
-        'input' => 'V',
-        'sql' => '$main_table.id',
-        'php' => function($musicianId, $action, $k, $row, $recordId, $pme) use ($bval, $tip) {
-            return '<div class="register-musician">'
-              .'  <input type="button"'
-              .'         value="'.$bval.'"'
-              .'         data-musician-id="'.$musicianId.'"'
-              .'         title="'.$tip.'"'
-              .'         name="registerMusician"'
-              .'         class="register-musician" />'
-              .'</div>';
-        },
-        'escape' => false,
-        'nowrap' => true,
-        'sort' =>false,
-      ];
-    }
 
     $opts['fdd']['sur_name'] = [
       'tab'      => [ 'id' => 'contact' ],
@@ -998,7 +889,8 @@ make sure that the musicians are also automatically added to the
           ];
           $link = '<div class="pme-cell-wrapper restrict-height musician-instrument-insurance">
   <a href="' . $this->urlGenerator()->linkToRoute($this->appName() . '.page.index', $urlParameters) . '"
-     class="musician-instrument-insurance">' . $bval . '</a>
+     class="musician-instrument-insurance"
+     title="' . $tip . '">' . $bval . '</a>
 </div>';
           return $link;
         }
@@ -1075,15 +967,6 @@ make sure that the musicians are also automatically added to the
         ]
       );
 
-    if ($this->projectMode) {
-      //$key = PHPMyEdit::QUERY_FIELD . $projectsIdx;
-      $projectsJoin = $joinTables[self::PROJECT_PARTICIPANTS_TABLE];
-      $projectIds = "GROUP_CONCAT(DISTINCT {$projectsJoin}.project_id)";
-      $opts[PHPMyEdit::OPT_HAVING]['AND'] = "($projectIds IS NULL OR NOT FIND_IN_SET('$projectId', $projectIds))";
-      $opts['misc']['css']['minor'] = [ 'bulkcommit', 'tooltip-right' ];
-      $opts['labels']['Misc'] = strval($this->l->t('Add all to %s', [$projectName]));
-    }
-
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'ensureUserIdSlug' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'extractInstrumentRanking' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateDoUpdateAll' ];
@@ -1159,13 +1042,7 @@ make sure that the musicians are also automatically added to the
     $opts['cgi']['persist']['memberStatusFddIndex'] = $memberStatusFddIndex;
     $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
 
-    $opts = $this->mergeDefaultOptions($opts);
-
-    if ($execute) {
-      $this->execute($opts);
-    } else {
-      $this->pme->setOptions($opts);
-    }
+    return [ 'opts' => $opts, 'joinTables' => $joinTables ];
   }
 
   /**

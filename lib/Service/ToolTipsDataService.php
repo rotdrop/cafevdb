@@ -466,6 +466,11 @@ to zero (but don\'t) in order to have a donation which is a waiving of reimburse
 amount. In this case this donation is a waiving of reimbursement'),
         ],
 
+        'add-musicians' => [
+          'header-text' => self::t('This page is the only way to add musicians to projects in order to
+make sure that the musicians are also automatically added to the
+`global' musicians data-base (and not only to the project).'),
+        ],
         'musicians' => [
           'tab' => [
             'orchestra' => self::t('Display name, pre-name, instruments, status, general remarks.'),
