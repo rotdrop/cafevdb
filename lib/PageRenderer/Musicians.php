@@ -51,8 +51,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 
-/**Table generator for Musicians table. */
-class Musicians extends PMETableViewBase
+/** Abstract table generator for Musicians table. */
+abstract class Musicians extends PMETableViewBase
 {
   use FieldTraits\AllProjectsTrait;
   use FieldTraits\MailingListsTrait;
