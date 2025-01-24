@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\PageRenderer;
 
 /** AJAX endpoint for generating the main page of the app. */
@@ -63,6 +64,7 @@ class VueAppController extends Controller
     protected ConfigService $configService,
     protected HistoryService $historyService,
     protected AuthorizationService $authorizationService,
+    protected ToolTipsService $toolTipsService,
     protected IInitialState $initialState,
     protected IInitialStateService $initialStateService,
     protected IAppContainer $appContainer,
@@ -106,6 +108,12 @@ class VueAppController extends Controller
   /**
    * Fetch navigation Items for current page
    *
+   * @param string $template
+   *
+   * @param null|int $projectId
+   *
+   * @param null|string $projectName
+   *
    * @return DataResponse
    *
    * @NoAdminRequired
@@ -128,8 +136,13 @@ class VueAppController extends Controller
       $navigationItems = $renderer->navigationItems();
     }
     $userPermissions = $this->authorizationService->getUserPermissions();
+    $navigationItems = array_filter($navigationItems, fn($item) => ($item['permissions'] === ($item['permissions'] & $userPermissions)));
+    foreach ($navigationItems as &$item) {
+      $item['name'] = $this->toolTipsService[$item['name']];
+      $item['tooltip'] = $this->toolTipsService[$item['tooltip']];
+    }
     return self::dataResponse([
-      'navigation' => array_filter($navigationItems, fn($item) => ($item['permissions'] === ($item['permissions'] & $userPermissions))),
+      'navigation' => $navigationItems,
     ]);
   }
 }

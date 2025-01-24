@@ -28,6 +28,7 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\PageRenderer;
 
 /**
  * Data provider for the ToolTipsService in order to make loading of
@@ -1460,10 +1461,19 @@ the individual table views.'),
           'name' => [
             'projects' => self::t('All Projects'),
             'all-musicians' => self::t('Display all Musicians'),
+            'instruments' => self::t('Musical Instruments'),
+            PageRenderer\ProjectParticipantFields::TEMPLATE => self::t('Project Participant-Fields'),
+            PageRenderer\ProjectInstrumentationNumbers::TEMPLATE => self::t('Instrumentation Numbers'),
+            PageRenderer\Blog::TEMPLATE => self::t('Frontpage Blog'),
           ],
           'tooltips' => [
             'projects' => self::t('Overview over all known projects (start-page).'),
             'all-musicians' => self::t('Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.'),
+            'instruments' => self::t('Display the list of instruments known by the data-base, possibly add new ones as needed.'),
+            PageRenderer\ProjectParticipantFields::TEMPLATE => self::t('Add additional data-fields to the instrumenation table for the project.'),
+            PageRenderer\ProjectInstrumentationNumbers::TEMPLATE => self::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.'),
+            PageRenderer\Blog::TEMPLATE => self::t('Simplistic blog page with follow apps, used primarily to display hints
+if something has changed in the orchestra app.'),
           ],
         ],
         'logo' => self::t('An image file with the orchestra logo -- preferably in SVG format. The logo is substituted into document templates using the "[LOGO]" placeholder.'),

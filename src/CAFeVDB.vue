@@ -43,6 +43,7 @@
         <NcAppNavigationItem v-for="item in authorizedNavigationItems"
                              v-show="true"
                              :key="item.template"
+                             v-tooltip="item.tooltip"
                              :to="{
                                name: 'legacy-page',
                                params: { template: item.template, ...item.templateParameters }
