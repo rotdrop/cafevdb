@@ -248,14 +248,14 @@ make sure that the musicians are also automatically added to the
       ? [
         'template' => self::ADD_TEMPLATE,
           'name' => 'templates:navigation:name:' . self::ADD_TEMPLATE,
-          'tooltip' => 'templates:navigation:name:' . self::ADD_TEMPLATE,
+          'tooltip' => 'templates:navigation:tooltips:' . self::ADD_TEMPLATE,
           'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
           'permissions' => AuthorizationService::PERMISSION_FRONTEND,
         ]
       : [
           'template' => self::ALL_TEMPLATE,
           'name' => 'templates:navigation:name:' . self::ALL_TEMPLATE,
-          'tooltip' => 'templates:navigation:name:' . self::ALL_TEMPLATE,
+          'tooltip' => 'templates:navigation:tooltips:' . self::ALL_TEMPLATE,
           'templateParameters' => [],
           'permissions' => AuthorizationService::PERMISSION_FRONTEND,
       ];

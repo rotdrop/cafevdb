@@ -46,7 +46,7 @@ abstract class AbstractPageRenderer extends Renderer implements IPageRenderer
     return [
       'template' => static::TEMPLATE,
       'name' => 'templates:navigation:name:' . static::TEMPLATE,
-      'tooltip' => 'templates:navigation:name:' . static::TEMPLATE,
+      'tooltip' => 'templates:navigation:tooltips:' . static::TEMPLATE,
       'templateParameters' => [],
       'permissions' => AuthorizationService::PERMISSION_FRONTEND,
     ];
