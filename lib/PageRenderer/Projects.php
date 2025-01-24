@@ -120,10 +120,10 @@ class Projects extends PMETableViewBase
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
 
-    if (empty($this->projectId)) {
+    if (!($this->projectId > 0)) {
       $this->projectId = $this->pmeRecordId['id']??null;
     }
-    if (!empty($this->projectId)) {
+    if ($this->projectId > 0) {
       $this->project = $this->projectService->findById($this->projectId);
       $this->projectName = $this->project->getName();
     }
