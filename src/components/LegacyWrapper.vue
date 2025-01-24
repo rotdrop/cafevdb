@@ -298,7 +298,7 @@ export default {
         this.error('*** TEMPLATE MISSING, CANNOT LOAD PAGE ***')
         return
       }
-      this.currentProjectId = this.templateParameters?.projectId || -1
+      this.currentProjectId = this.templateParameters?.projectId || 0
       this.loading = true
       this.pushBusyState()
       closeNavigation()
