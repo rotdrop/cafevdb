@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as AppInfo from '../app/app-info.js';
+import * as AppInfo from '../app/config.js';
 
 export default {
   data() {

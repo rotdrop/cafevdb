@@ -19,7 +19,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../app/app-info.js';
+import { appName } from '../config.ts';
 
 const routes = [
   {

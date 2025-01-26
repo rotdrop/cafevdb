@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.js';
+import { appName } from '../config.ts';
 import globalState from './globalstate.js';
 import $ from './jquery.js';
 import './jquery-cafevdb-tooltips.js';
@@ -34,7 +34,7 @@ import * as qs from 'qs';
 import { provideHistoryState, pushHistory, updateHistoryControls } from './brower-history.js';
 import pageBusyIcon from './busy-icon.js';
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
-import { LEGACY_PAGE_LOAD, LEGACY_PAGE_CLEANUP } from '../event-bus-events.js';
+import { LEGACY_PAGE_LOAD, LEGACY_PAGE_CLEANUP } from '../event-bus-events.ts';
 
 const pageCleanup = () => {
   // Remove pending dialog when moving away from the page

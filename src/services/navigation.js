@@ -22,7 +22,7 @@
  */
 
 import { emit as coreEmit } from '@nextcloud/event-bus';
-import { TOGGLE_NAVIGATION } from '../event-bus-events.js';
+import { TOGGLE_NAVIGATION } from '../event-bus-events.ts';
 
 export const toggleNavigation = (open) => coreEmit(TOGGLE_NAVIGATION, { open });
 export const closeNavigation = () => toggleNavigation(false);

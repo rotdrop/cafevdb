@@ -21,9 +21,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './config.js';
+import { appPrefix } from './config.ts';
 
-export const appEventName = (tag) => appName + '::' + tag;
+export const appEventName = <T extends string>(tag: T) => appPrefix(tag, '::');
 
 // app events
 export const APP_SETTINGS_POPUP = appEventName('app-settings-popup');

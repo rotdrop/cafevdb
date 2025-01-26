@@ -29,7 +29,7 @@
 import globalState from './globalstate.js';
 import { initialState, appName } from './config.js';
 import { emit } from '@rotdrop/async-nextcloud-event-bus';
-import * as BusEvents from '../event-bus-events.js';
+import * as BusEvents from '../event-bus-events.ts';
 
 const PHPMyEditDefault = {
   directChange: false,

@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName, appPrefix } from './app-info.js';
+import { appName, appPrefix } from '../config.ts';
 import { wikiPopup as dokuWikiPopup } from '@rotdrop/nextcloud-app-dokuwiki/src/doku-wiki-popup.js';
 import { toBackButton as dialogToBackButton } from './dialog-utils.js';
 import modalizer from './modalizer.js';

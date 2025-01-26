@@ -23,7 +23,7 @@
 import * as ncAuth from '@nextcloud/auth';
 import { getRootUrl as getCloudRootUrl, getAppRootUrl } from '@nextcloud/router';
 import appInitialState from '../toolkit/services/InitialStateService.js';
-import { appName, appVersion, appInfo, appPrefix, appNameTag } from './app-info.js';
+import { appName, appPrefix, appNameTag } from '../config.ts';
 
 const initialState = {
   appName,
@@ -60,8 +60,6 @@ export {
   CAFEVDB,
   PHPMyEdit,
   appName,
-  appVersion,
-  appInfo,
   webRoot,
   cloudWebRoot,
   cloudUser,

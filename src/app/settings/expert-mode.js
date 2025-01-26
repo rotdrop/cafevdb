@@ -24,13 +24,13 @@
 import globalState from './../globalstate.js';
 import $ from './../jquery.js';
 import './../jquery-cafevdb-tooltips.js';
-import { appPrefix } from '../../config.js';
+import { appPrefix } from '../../config.ts';
 import { setPersonalUrl } from './../settings-urls.js';
 import * as Ajax from './../ajax.js';
 import * as PHPMyEdit from './../pme-selectors.js';
 import * as Notification from './../notification.js';
 import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
-import { SET_EXPERT_MODE } from '../../event-bus-events.js';
+import { SET_EXPERT_MODE } from '../../event-bus-events.ts';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 

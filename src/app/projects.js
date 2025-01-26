@@ -50,7 +50,7 @@ import wikiPopup from './wiki-popup.js';
 import setBusyIndicators from './busy-indicators.js';
 import iFrameResize from './iframe-resize.js';
 import { emit, subscribe } from '@rotdrop/async-nextcloud-event-bus';
-import * as BusEvents from '../event-bus-events.js';
+import * as BusEvents from '../event-bus-events.ts';
 
 // eslint-disable-next-line no-unused-vars
 // import iFrameResize from 'iframe-resizer';

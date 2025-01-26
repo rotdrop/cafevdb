@@ -121,7 +121,7 @@ import {
   LEGACY_PAGE_LOAD,
   LEGACY_PME_HISTORY_UPDATE,
   LEGACY_PAGE_CLEANUP,
-} from '../event-bus-events.js'
+} from '../event-bus-events.ts'
 import * as LegacyNotification from '../app/notification.js'
 import objectHash from 'object-hash'
 

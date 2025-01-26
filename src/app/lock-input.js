@@ -27,7 +27,7 @@
  *
  */
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName } from '../config.ts';
 import generateId from './generate-id.js';
 
 $('body').on('change', 'input[type="checkbox"].' + appName + '-lock-input-widget', function(event) {

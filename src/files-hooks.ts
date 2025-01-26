@@ -22,7 +22,7 @@
  */
 
 import Vue from 'vue';
-import { appName } from './app/app-info.js';
+import { appName } from './config.ts';
 import { getInitialState } from './services/initial-state-service.js';
 import { basename } from 'path';
 import { generateFilePath } from '@nextcloud/router';

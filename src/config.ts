@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,13 +21,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
-import { loadState } from '@nextcloud/initial-state';
+import type { AppName } from '../build/ts-types/app-config.ts';
+import { appName } from '../build/ts-types/app-config.ts';
+import type { JoinLiterals } from './util/string-literals.ts';
+import { joinLiterals } from './util/string-literals.ts';
 
-export const getInitialState = () => {
-  try {
-    return loadState(appName, 'files');
-  } catch (err) {
-    console.error('error in loadState: ', err);
-  }
+function appPrefix<T extends string>(id: T): JoinLiterals<[AppName, T], '-'>;
+function appPrefix<T1 extends string, T2 extends string>(id: T1, join: T2): JoinLiterals<[AppName, T1], T2>;
+function appPrefix<T extends string>(id: T, join = '-') {
+  return joinLiterals(join)(appName, id);
+}
+
+const appNameTag = joinLiterals('-')('app', appName);
+
+export type {
+  AppName,
+}
+
+export {
+  appName,
+  appPrefix,
+  appNameTag,
 };

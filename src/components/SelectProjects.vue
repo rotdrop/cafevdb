@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2022, 2023, 2024, 2025, 2025, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -40,9 +40,8 @@
                           @search="(query) => findProjects(query)"
   />
 </template>
-
-<script>
-import { appName } from '../app/app-info.js'
+<script lang="ts">
+import { appName } from '../config.ts'
 import { set as vueSet } from 'vue'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'

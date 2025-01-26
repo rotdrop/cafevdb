@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -19,7 +19,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../app/app-info.js';
+import { appName } from '../config.ts';
 import Vue from 'vue';
 import Router from 'vue-router';
 import { generateUrl } from '@nextcloud/router';

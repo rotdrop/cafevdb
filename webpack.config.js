@@ -30,12 +30,12 @@ const productionMode = process.env.NODE_ENV === 'production';
 module.exports = {
   entry: Object.entries({
     app: './src/app.js',
-    'vue-app': './src/vue-app.js',
-    'admin-settings': './src/admin-settings.js',
+    'vue-app': './src/vue-app.ts',
+    'admin-settings': './src/admin-settings.ts',
     settings: './src/settings.js',
     'background-jobs': './src/background-jobs.js',
     'files-hooks': './src/files-hooks.ts',
-    'files-sidebar-hooks': './src/files-sidebar-hooks.js',
+    'files-sidebar-hooks': './src/files-sidebar-hooks.ts',
     'iframe-content-script': './src/iframe-content-script.js',
   })
     .filter(([name, entry]) => !process.env.ONLY || process.env.ONLY === name)

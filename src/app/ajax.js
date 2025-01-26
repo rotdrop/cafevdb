@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName } from '../config.ts';
 import globalState from './globalstate.js';
 import print_r from './print-r.js';
 import * as Dialogs from './dialogs.js';

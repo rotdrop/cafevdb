@@ -80,7 +80,7 @@ import 'jquery-ui/ui/effects/effect-highlight.js';
 import 'jquery-ui/ui/widgets/sortable.js';
 import 'selectize/dist/css/selectize.bootstrap4.css';
 import mergician from 'mergician';
-import { LEGACY_PME_HISTORY_UPDATE } from '../event-bus-events.js';
+import { LEGACY_PME_HISTORY_UPDATE } from '../event-bus-events.ts';
 import { emit } from '@rotdrop/async-nextcloud-event-bus';
 // import 'selectize/dist/css/selectize.css';
 require('cafevdb-selectize.scss');

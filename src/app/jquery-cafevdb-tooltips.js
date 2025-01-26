@@ -28,7 +28,7 @@
  */
 
 import jQuery from './jquery.js';
-import { appName } from './app-info.js';
+import { appName } from '../config.ts';
 import 'bootstrap/js/dist/tooltip.js';
 
 require('tooltips.scss');

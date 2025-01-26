@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName } from '../config.ts';
 import generateUrl from './generate-url.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';

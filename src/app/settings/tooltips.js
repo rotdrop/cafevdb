@@ -28,7 +28,7 @@ import { setPersonalUrl } from './../settings-urls.js';
 import * as Ajax from './../ajax.js';
 import * as Notification from './../notification.js';
 import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
-import { SET_TOOLTIPS_MODE } from '../../event-bus-events.js';
+import { SET_TOOLTIPS_MODE } from '../../event-bus-events.ts';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 

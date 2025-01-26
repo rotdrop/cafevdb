@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,13 +21,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
-import { loadState } from '@nextcloud/initial-state';
+import { appName } from './config.ts';
+import { generateFilePath } from '@nextcloud/router';
+import Vue from 'vue';
+import AdminSettings from './components/AdminSettings.vue';
+import { createPinia, PiniaVuePlugin } from 'pinia';
+import { Tooltip } from '@nextcloud/vue';
+import { mixin as globalMixin } from './mixins/global-mixin.ts';
 
-export const getInitialState = () => {
-  try {
-    return loadState(appName, 'files');
-  } catch (err) {
-    console.error('error in loadState: ', err);
-  }
-};
+Vue.directive('tooltip', Tooltip);
+
+Vue.use(PiniaVuePlugin);
+const pinia = createPinia();
+
+// eslint-disable-next-line
+__webpack_public_path__ = generateFilePath(appName, '', 'js');
+
+Vue.mixin(globalMixin);
+
+const vueAnchorId = 'admin-settings-vue';
+
+export default new Vue({
+  el: '#' + vueAnchorId,
+  render: h => h(AdminSettings),
+  pinia,
+});

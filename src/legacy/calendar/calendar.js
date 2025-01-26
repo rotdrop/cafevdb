@@ -10,7 +10,7 @@
  */
 
 import $ from '../../app/jquery.js';
-import { appName } from '../../app/app-info.js';
+import { appName } from '../../config.ts';
 import * as Ajax from '../../app/ajax.js';
 import * as Dialogs from '../../app/dialogs.js';
 import * as Events from '../../app/events.js';

@@ -28,7 +28,7 @@ import * as Ajax from './../ajax.js';
 import { selected as selectedValues } from './../select-utils.js';
 import * as Notification from './../notification.js';
 import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
-import { SET_DEBUG_MODES } from '../../event-bus-events.js';
+import { SET_DEBUG_MODES } from '../../event-bus-events.ts';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 

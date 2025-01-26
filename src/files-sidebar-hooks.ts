@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './app/app-info.js';
+import { appName } from './config.ts';
 import { getInitialState } from './services/initial-state-service.js';
 import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
@@ -30,15 +30,23 @@ import { translate as t } from '@nextcloud/l10n';
 import logoSvg from '../img/cafevdb.svg?raw';
 
 // eslint-disable-next-line camelcase
-__webpack_nonce__ = btoa(getRequestToken());
+__webpack_nonce__ = btoa(getRequestToken() || '');
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', '');
 
+interface LegacyFileInfo {
+  mimetype: string,
+  path: string,
+  isDirectory(): boolean,
+}
+
+let OCA = window.OCA;
+
 let TabInstance = null;
 
-if (!window.OCA.CAFEVDB) {
-  window.OCA.CAFEVDB = {};
+if (!OCA.CAFEVDB) {
+  OCA.CAFEVDB = {};
 }
 
 const initialState = getInitialState();
@@ -48,15 +56,15 @@ const supportedMimeTypes = [
   'application/vnd.oasis.opendocument.text',
 ];
 
-const acceptableMimeType = function(mimeType) {
+const acceptableMimeType = function<T extends string>(mimeType: T) {
   return supportedMimeTypes.indexOf(mimeType) >= 0;
 };
 
-const validTemplatePath = function(path) {
+const validTemplatePath = function<T extends string>(path: T) {
   return path.startsWith(initialState.sharing.files.folders.templates);
 };
 
-const enableTemplateActions = function(fileInfo) {
+const enableTemplateActions = function(fileInfo: LegacyFileInfo) {
 
   if (fileInfo && fileInfo.isDirectory()) {
     return false;
@@ -70,7 +78,7 @@ const enableTemplateActions = function(fileInfo) {
     return false;
   }
 
-  window.OCA.CAFEVDB.fileInfo = fileInfo;
+  OCA.CAFEVDB.fileInfo = fileInfo;
 
   return true; // TODO depend on subdir etc.
 };
@@ -87,7 +95,7 @@ window.addEventListener('DOMContentLoaded', () => {
       iconSvg: logoSvg,
       enabled: enableTemplateActions,
 
-      async mount(el, fileInfo, context) {
+      async mount(el, fileInfo: LegacyFileInfo, context) {
         const FilesTabAsset = (await import('./views/FilesTab.vue'));
         const Vue = FilesTabAsset.Vue;
         const pinia = FilesTabAsset.pinia;

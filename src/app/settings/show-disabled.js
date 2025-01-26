@@ -28,7 +28,7 @@ import * as Ajax from './../ajax.js';
 import * as PHPMyEdit from './../pme-selectors.js';
 import * as Notification from './../notification.js';
 import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
-import { SET_SHOW_DISABLED } from '../../event-bus-events.js';
+import { SET_SHOW_DISABLED } from '../../event-bus-events.ts';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 

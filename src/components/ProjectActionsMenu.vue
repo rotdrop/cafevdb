@@ -135,7 +135,7 @@ import wikiPopup from '../app/wiki-popup.js'
 import md5 from 'blueimp-md5'
 // import { set as vueSet } from 'vue'
 import * as Authorization from '../authorization.ts'
-import * as BusEvents from '../event-bus-events.js'
+import * as BusEvents from '../event-bus-events.ts'
 
 // The "consumer" has to take care that globalState.vue.Vue is already
 // defined.

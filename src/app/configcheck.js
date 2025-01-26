@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName } from '../config.ts';
 import * as Page from './page.js';
 import * as ProgressStatus from './progress-status.js';
 import * as Ajax from './ajax.js';

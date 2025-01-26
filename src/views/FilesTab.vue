@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -174,8 +174,8 @@
     </ul>
   </div>
 </template>
-<script>
-import { appName } from '../app/app-info.js'
+<script lang="ts">
+import { appName } from '../config.ts'
 import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
 import Vue from 'vue'
 import {
@@ -186,6 +186,7 @@ import {
   // NcAppSidebarTab as AppSidebarTab,
   Tooltip,
 } from '@nextcloud/vue'
+import { createPinia, PiniaVuePlugin } from 'pinia'
 // import ActionRadio from '../components/action-radio/NcActionRadio'
 import CloudUploadIcon from 'vue-material-design-icons/CloudUpload.vue'
 import CodeJsonIcon from 'vue-material-design-icons/CodeJson.vue'
@@ -238,7 +239,7 @@ export default {
     return {
       cloudVersionClasses,
       sender: '',
-      project: '',
+      project: null,
       recipients: [],
       allAddressBooks: {},
       onlyAddressBooks: [],
@@ -470,7 +471,7 @@ export default {
     resetState() {
       this.sender = ''
       this.recipients = []
-      this.project = ''
+      this.project = null
       if (this.initialState.personal.musicianId > 0) {
         this.sender = { id: this.initialState.personal.musicianId }
       }

@@ -23,7 +23,7 @@
 
 import globalState from './globalstate.js';
 import $ from './jquery.js';
-import { appName, appNameTag } from './app-info.js';
+import { appName, appNameTag } from '../config.ts';
 import { setPersonalUrl } from './settings-urls.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';

@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName, appPrefix } from './app-info.js';
+import { appName, appPrefix } from '../config.ts';
 import * as ncRouter from '@nextcloud/router';
 import wikiPopup from './wiki-popup.js';
 

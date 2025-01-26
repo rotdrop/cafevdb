@@ -27,7 +27,7 @@
  */
 
 import $ from './jquery.js';
-import { appName, appPrefix } from './app-info.js';
+import { appName, appPrefix } from '../config.ts';
 import fileDownload from './file-download.js';
 import * as SelectUtils from './select-utils.js';
 

@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './app-info.js';
+import { appName } from '../config.ts';
 import $ from './jquery.js';
 import { loadState } from '@nextcloud/initial-state';
 import generateUrl from './generate-url.js';

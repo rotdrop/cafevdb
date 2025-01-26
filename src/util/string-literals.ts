@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,13 +21,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
-import { loadState } from '@nextcloud/initial-state';
+export type JoinLiterals<T extends string[], S extends string> =
+  T extends []
+     ? ''
+     : T extends [string]
+       ? `${T[0]}`
+       : T extends [string, ...infer U extends string[]]
+         ? `${T[0]}${S}${JoinLiterals<U, S>}`
+         : string;
 
-export const getInitialState = () => {
-  try {
-    return loadState(appName, 'files');
-  } catch (err) {
-    console.error('error in loadState: ', err);
+
+function joinLiterals(): <T extends string[]>(...strings: T) => JoinLiterals<T, ''>;
+function joinLiterals<Separator extends string>(separator: Separator): <T extends string[]>(...strings: T) => JoinLiterals<T, Separator>;
+function joinLiterals(separator = '') {
+  return function<T extends string[]>(...strings: T): JoinLiterals<T, typeof separator> {
+    return strings.join(separator) as JoinLiterals<T, typeof separator>;
   }
-};
+}
+
+
+export {
+  joinLiterals,
+}

@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName, appPrefix } from './app-info.js';
+import { appName, appPrefix } from '../config.ts';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Page from './page.js';

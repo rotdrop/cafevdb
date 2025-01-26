@@ -26,7 +26,7 @@
 
 import $ from './jquery.js';
 import './jquery-extensions.js';
-import { appName, appPrefix } from './app-info.js';
+import { appName, appPrefix } from '../config.ts';
 
 function manageDialogToBackButtons() {
   // disable button if there are not enough dialogs

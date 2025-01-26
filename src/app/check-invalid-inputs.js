@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName } from '../config.ts';
 import * as CAFEVDB from './cafevdb.js';
 import * as Dialogs from './dialogs.js';
 import { widget as selectWidget } from './select-utils.js';

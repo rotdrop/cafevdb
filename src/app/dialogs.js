@@ -26,7 +26,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName } from '../config.ts';
 
 require('dialogs.scss');
 

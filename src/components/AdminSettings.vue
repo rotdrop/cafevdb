@@ -337,7 +337,7 @@ import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import { showError, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 
-import { appName } from '../app/app-info.js'
+import { appName } from '../config.ts'
 import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
 
 import SelectMusicians from './SelectMusicians.vue'

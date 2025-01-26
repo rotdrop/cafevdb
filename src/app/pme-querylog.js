@@ -27,7 +27,7 @@
  */
 
 import $ from './jquery.js';
-import { appName, appPrefix } from './app-info.js';
+import { appName, appPrefix } from '../config.ts';
 import { selectedOptions, deselectAll as selectDeselectAll, makePlaceholder as selectPlaceholder } from './select-utils.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';

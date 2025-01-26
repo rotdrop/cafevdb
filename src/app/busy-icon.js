@@ -24,7 +24,7 @@
 import './jquery-cafevdb-tooltips.js';
 import globalState from './globalstate.js';
 import { emit } from '@rotdrop/async-nextcloud-event-bus';
-import { SET_BUSY_FLAG } from '../event-bus-events.js';
+import { SET_BUSY_FLAG } from '../event-bus-events.ts';
 
 const busyIcon = function(on) {
   if (!globalState.vueMode) {

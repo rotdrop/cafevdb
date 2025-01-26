@@ -22,18 +22,28 @@
  */
 
 import {
+  GLOBAL_STATE,
+  PME_STATE,
   LEGACY_PAGE_LOAD,
   LEGACY_PME_HISTORY_UPDATE,
-} from './event-bus-events.js';
+  SET_BUSY_FLAG,
+  PUSH_BUSY_STATE,
+  POP_BUSY_STATE,
+} from './event-bus-events.ts';
 
-declare module '@nextcloud/event-bus' {
+declare module '@rotdrop/async-nextcloud-event-bus' {
+
   export interface NextcloudEvents {
     // mapping of 'event name' => 'event type'
-    LEGACY_PAGE_LOAD: { post: object, template: string|null, projectId: number|null, projectName: string|undefined, keepHistory: boolean }
-    LEGACY_PME_HISTORY_UPDATE: { post: object, html: string, action: string }
+    'foobar': { state: object, },
+    [GLOBAL_STATE]: { state: object, },
+    [PME_STATE]: { state: object, },
+    [LEGACY_PAGE_LOAD]: { post: object, template: string|null, projectId: number|null, projectName: string|undefined, keepHistory: boolean, },
+    [LEGACY_PME_HISTORY_UPDATE]: { post: object, html: string, action: string, },
+    [SET_BUSY_FLAG]: { value: boolean },
+    [PUSH_BUSY_STATE]: undefined,
+    [POP_BUSY_STATE]: undefined,
   }
 }
-export {
-  LEGACY_PAGE_LOAD,
-  LEGACY_PME_HISTORY_UPDATE,
-};
+
+export {}

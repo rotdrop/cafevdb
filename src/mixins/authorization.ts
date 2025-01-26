@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,28 +21,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './app/app-info.js';
-import { generateFilePath } from '@nextcloud/router';
+import * as Authorization from '../authorization.ts'
 
-import Vue from 'vue';
-import AdminSettings from './components/AdminSettings.vue';
-import { createPinia, PiniaVuePlugin } from 'pinia';
-import { Tooltip } from '@nextcloud/vue';
-
-Vue.directive('tooltip', Tooltip);
-
-Vue.use(PiniaVuePlugin);
-const pinia = createPinia();
-
-// eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', 'js');
-
-Vue.mixin({ data() { return { appName }; }, methods: { t, n } });
-
-const vueAnchorId = 'admin-settings-vue';
-
-export default new Vue({
-  el: '#' + vueAnchorId,
-  render: h => h(AdminSettings),
-  pinia,
-});
+export default {
+  inject:[...Object.keys(Authorization).filter((key) => key.startsWith('PERMISSIONS_'))],
+  methods: {
+    authorized: Authorization.authorized,
+  },
+};

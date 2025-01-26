@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName } from '../config.ts';
 import * as CAFEVDB from './cafevdb.js';
 import pageBusyIcon from './busy-icon.js';
 import * as Email from './email.js';

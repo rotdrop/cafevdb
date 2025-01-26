@@ -13,7 +13,7 @@
  - This program is distributed in the hope that it will be useful,
  - but WITHOUT ANY WARRANTY; without even the implied warranty of
  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- - GNU Affero General Public License for more details.
+ - GNU Affero General Public License for more detail.s
  -
  - You should have received a copy of the GNU Affero General Public License
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
@@ -41,7 +41,7 @@
           </template>
         </NcAppNavigationItem>
         <NcAppNavigationItem v-for="item in authorizedNavigationItems"
-                             v-show="true"
+                             v-show="globalState.financeMode || !(item.permissions & PERMISSION_FINANCE)"
                              :key="item.template"
                              v-tooltip="item.tooltip"
                              :to="{
@@ -227,7 +227,7 @@
           <img :src="icon">
         </template>
         <template #description>
-          {{ t(appId, 'Description') }}
+          {{ t(appId, 'Description' + foobar) }}
         </template>
       </NcEmptyContent>
     </NcAppContent>
@@ -272,10 +272,11 @@
     <CloudFileSystemOperations :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
   </NcContent>
 </template>
-
 <script lang="ts">
-import { appName as appId } from './app/app-info.js'
+import { appName as appId } from './config.ts'
 import mixins from './mixins/app-mixins.js'
+// import type { Mixins } from './mixins/app-mixins'
+import authorization from './mixins/authorization.ts'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import {
   NcActions,
@@ -291,7 +292,7 @@ import {
 } from '@nextcloud/vue'
 import useAppDataStore from './stores/app-data.js'
 // import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
-// import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
+// import ProjectPartici<pantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 // import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
 // import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import AppSettingsIcon from 'vue-material-design-icons/Cogs.vue'
@@ -308,13 +309,34 @@ import { debugOptions } from './debug-modes.ts'
 import { formatFileSize } from '@nextcloud/files'
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus'
 import { closeNavigation } from './services/navigation.js'
-import * as BusEvents from './event-bus-events.js'
+import * as BusEvents from './event-bus-events.ts'
 
 import Icon from '../img/cafevdb.svg'
 
 import { getInitialState } from './toolkit/services/InitialStateService.js'
+// import type VueRouter from 'vue-router'
 
 const initialState = getInitialState('CAFEVDB')
+
+type NavigationItem = {
+  template: string,
+  name: string,
+  tooltip: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  templateParameters: any[],
+  permissions: number,
+}
+
+type DebugOption = {
+  value: number,
+  label: string,
+}
+
+// interface CAFeVDB extends Mixins {
+//   $router: VueRouter,
+//   loading: boolean,
+//   hints: Record<string, string>,
+// }
 
 export default {
   name: 'CAFeVDB',
@@ -340,14 +362,14 @@ export default {
     // ProjectParticipantsIcon,
     SelectWithSubmitButton,
   },
-  mixins,
+  mixins: [...mixins, authorization],
   setup() {
     const appData = useAppDataStore()
     return { appData }
   },
   data() {
     return {
-      orchestraName: initialState?.orchestraName || t(appId, '[UNKNOWN]'),
+      orchestraName: initialState?.orchestraName || this.t(appId, '[UNKNOWN]'),
       icon: Icon,
       loading: true,
       isMounted: false,
@@ -355,7 +377,7 @@ export default {
       settingsLocked: false,
       appSettingsLoading: false,
       pageTemplate: null,
-      navigationItems: [],
+      navigationItems: [] as NavigationItem[],
       hints: {
         'debug-mode': '',
         'deselect-invisible-misc-recs': '',
@@ -391,10 +413,10 @@ export default {
     financeAllowed() {
       return authorized(PERMISSION_FINANCE, this.globalState.userPermissions)
     },
-    debugOptions() {
-      const options = []
+    debugOptions(): DebugOption[] {
+      const options: DebugOption[] = []
       for (const [value, label] of Object.entries(debugOptions)) {
-        options.push({ value, label })
+        options.push({ value: +value, label })
       }
       return options
     },
@@ -421,10 +443,7 @@ export default {
     },
     authorizedNavigationItems() {
       const items = this.navigationItems.filter(
-        item => (
-          (item.permissions === (item.permissions & this.globalState.userPermissions))
-          && (!this.globalState.financeMode || !(item.permissions & PERMISSION_FINANCE))
-        ),
+        (item: NavigationItem) => (item.permissions === (item.permissions & this.globalState.userPermissions)),
       )
       this.info('FILTERED NAVIGATION ITEMS', items)
       return items
@@ -448,7 +467,7 @@ export default {
       if (this.settingsLocked) {
         return
       }
-      const newSelection = []
+      const newSelection: DebugOption[] = []
       for (const option of this.debugOptions) {
         const flag = +option.value
         if ((newValue & flag)) {
@@ -482,8 +501,12 @@ export default {
       this.info('USER APP PERMISSIONS CHANGED', ...args)
       this.triggerNavigationUpdate = true
     },
-    pageTemplate(...args) {
-      this.info('CURRENT TEMPLATE CHANGED', ...args)
+    pageTemplate(value, oldValue) {
+      this.info('CURRENT TEMPLATE CHANGED', value, oldValue)
+      if (value === 'home') {
+        this.currentProjectId = 0
+        this.currentProjectName = null
+      }
       this.triggerNavigationUpdate = true
     },
     currentProjectId(...args) {

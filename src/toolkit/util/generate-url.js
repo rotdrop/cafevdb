@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2024, 2025, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -20,7 +20,7 @@
  *
  */
 
-import { appName } from '../../config.js';
+import { appName } from '../../config.ts';
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router';
 
 /**

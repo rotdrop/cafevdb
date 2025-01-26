@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName } from '../config.ts';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as FileUpload from './file-upload.js';

@@ -21,41 +21,47 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './app/app-info.js';
+import { appName } from './config.ts';
 import globalState from './app/globalstate.js';
 import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
 // import { sync } from 'vuex-router-sync'
-import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import Vue, { set as vueSet } from 'vue';
 import CAFeVDB from './CAFeVDB.vue';
 import router from './router/app-router.js';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 import { Tooltip } from '@nextcloud/vue';
+import { mixin as globalMixin } from './mixins/global-mixin.ts';
+import { GLOBAL_STATE, PME_STATE } from './event-bus-events.ts';
 import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
-import * as BusEvents from './event-bus-events.js';
 
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
 
 // CSP config for webpack dynamic chunk loading
 // eslint-disable-next-line
-__webpack_nonce__ = btoa(getRequestToken());
+__webpack_nonce__ = btoa(getRequestToken() || '');
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', '');
 
 Vue.directive('tooltip', Tooltip);
-Vue.mixin({ data() { return { appId: appName }; }, methods: { t, n } });
+Vue.mixin(globalMixin);
 
 // make the components of the global state object reactive
-asyncSubscribe(BusEvents.GLOBAL_STATE, (event) => {
+asyncSubscribe('foobar', (event) => {
   for (const [key, value] of Object.entries(event.state)) {
     Vue.delete(globalState, key);
     vueSet(globalState, key, value);
   }
 });
-asyncSubscribe(BusEvents.PME_STATE, (event) => {
+asyncSubscribe(GLOBAL_STATE, (event) => {
+  for (const [key, value] of Object.entries(event.state)) {
+    Vue.delete(globalState, key);
+    vueSet(globalState, key, value);
+  }
+});
+asyncSubscribe(PME_STATE, (event) => {
   Vue.delete(globalState, 'PHPMyEdit');
   vueSet(globalState, 'PHPMyEdit', event.state);
   for (const [key, value] of Object.entries(event.state)) {
