@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -69,6 +69,7 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\ParticipantTotalFeesTrait;
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
+  use FieldTraits\ProjectModeNavigationItemTrait;
 
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
@@ -236,6 +237,32 @@ class ProjectParticipants extends PMETableViewBase
       return $this->l->t('Edit the data of the displayed musician.');
     }
     return $this->l->t('Instrumentation for Project "%s"', [ $this->projectName ]);
+  }
+
+  /** {@inheritdoc} */
+  public function navigationItems():array
+  {
+    return array_merge(
+      [
+        ProjectParticipants::navigationItem(),
+        ProjectParticipantFields::navigationItem($this->projectId),
+        ProjectInstrumentationNumbers::navigationItem($this->projectId),
+        ProjectPayments::navigationItem($this->projectId),
+        SepaBankAccounts::navigationItem($this->projectId),
+        SepaBulkTransactions::navigationItem($this->projectId),
+      ],
+      ($this->projectId == $this->getConfigValue(ConfigService::CLUB_MEMBER_PROJECT_ID_KEY, 0)
+       ? [ InstrumentInsurances::navigationItem() ]
+       : []),
+      ($this->projectId == $this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0)
+       ? [TaxExemptionNotices::navigationItem()]
+       : []),
+      [
+        Projects::navigationItem(),
+        AllMusicians::navigationItem(),
+        Instruments::navigationItem(),
+      ],
+    );
   }
 
   /** {@inheritdoc} */

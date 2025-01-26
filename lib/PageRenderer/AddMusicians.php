@@ -29,6 +29,7 @@ use InvalidArgumentException;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
@@ -96,13 +97,10 @@ class AddMusicians extends Musicians
   /*** {@inheritdoc} */
   public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
   {
-    return [
-      'template' => self::TEMPLATE,
-      'name' => 'templates:navigation:name:' . self::TEMPLATE,
-      'tooltip' => 'templates:navigation:tooltips:' . self::TEMPLATE,
-      'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
-      'permissions' => AuthorizationService::PERMISSION_FRONTEND,
-    ];
+    return array_merge(
+      parent::navigationItem($projectId, $projectName), [
+        'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
+      ]);
   }
 
   /** {@inheritdoc} */

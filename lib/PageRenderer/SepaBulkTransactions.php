@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
@@ -187,6 +188,16 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   public function shortTitle()
   {
     return $this->l->t('Bulk-transactions for project "%s"', array($this->projectName));
+  }
+
+  /*** {@inheritdoc} */
+  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
+  {
+    return array_merge(
+      parent::navigationItem($projectId, $projectName), [
+        'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
+        'permissions' => AuthorizationService::PERMISSION_FRONTEND|AuthorizationService::PERMISSION_FINANCE,
+      ]);
   }
 
   /** {@inheritdoc} */

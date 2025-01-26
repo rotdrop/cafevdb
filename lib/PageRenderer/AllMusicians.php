@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
@@ -78,18 +79,6 @@ class AllMusicians extends Musicians
   public function shortTitle()
   {
     return parent::commonShortTitle() ?? $this->l->t("Add musicians to the project `%s'", [ $this->projectName ]);
-  }
-
-  /*** {@inheritdoc} */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
-  {
-    return [
-      'template' => self::TEMPLATE,
-      'name' => 'templates:navigation:name:' . self::TEMPLATE,
-      'tooltip' => 'templates:navigation:tooltips:' . self::TEMPLATE,
-      'templateParameters' => [],
-      'permissions' => AuthorizationService::PERMISSION_FRONTEND,
-    ];
   }
 
   /** {@inheritdoc} */
