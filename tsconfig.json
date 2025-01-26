@@ -1,6 +1,7 @@
 {
   "extends": "@vue/tsconfig/tsconfig.json",
   "include": [
+    "./src/*-shim.d.ts",
     "./src/*.ts",
     "./src/**/*.ts",
     "./src/*.vue",
@@ -8,7 +9,10 @@
     "./node_modules/webpack/**.ts",
     "./node_modules/axios/**.ts",
     "./node_modules/@nextcloud/**.ts",
-    "../../custom.d.ts"
+    "./node_modules/vue/**.ts",
+    "./node_modules/vue-router/**.ts",
+    "../../custom.d.ts",
+    "./build/ts-types/app-config.d.ts"
   ],
   "compilerOptions": {
     "types": ["jest", "node", "vue", "vue-router"],
