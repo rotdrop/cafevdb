@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,8 +47,9 @@ use OCA\CAFEVDB\Common\Util;
 /** Render the instrument insurances of the club-members. */
 class InstrumentInsurances extends PMETableViewBase
 {
-  use FieldTraits\QueryFieldTrait;
+  use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
   const TEMPLATE = 'instrument-insurance';

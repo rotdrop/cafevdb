@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,8 +44,9 @@ use OCA\CAFEVDB\Common\Util;
 /** Table generator TaxExemptionNotice. */
 class TaxExemptionNotices extends PMETableViewBase
 {
-  use FieldTraits\QueryFieldTrait;
+  use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\ParticipantFileFieldsTrait;
+  use FieldTraits\QueryFieldTrait;
 
   const TEMPLATE = 'tax-exemption-notices';
   const TABLE = 'TaxExemptionNotices';
@@ -83,6 +84,11 @@ class TaxExemptionNotices extends PMETableViewBase
     foreach ($taxTypes as $tag) {
       $this->taxTypeNames[$tag] = $this->l->t($tag);
     }
+
+    if (empty($this->projectId)) {
+      $this->projectId = (int)$this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0);
+      $this->projectName = $this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_KEY, '');
+    }
   }
   // phpcs:enable
 
@@ -99,7 +105,6 @@ class TaxExemptionNotices extends PMETableViewBase
     $recordsPerPage  = $this->recordsPerPage;
 
     $opts            = [];
-
 
     $opts['css']['postfix'] = [
       self::TEMPLATE,

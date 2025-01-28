@@ -24,12 +24,17 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\PageRenderer;
+
 /**
  * Provide a navigationItem() method for page-renderers which need a current
  * project.
  */
 trait ProjectModeNavigationItemTrait
 {
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+
   /*** {@inheritdoc} */
   public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
   {
@@ -37,5 +42,47 @@ trait ProjectModeNavigationItemTrait
       parent::navigationItem($projectId, $projectName), [
         'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
       ]);
+  }
+
+  /** {@inheritdoc} */
+  public function navigationItems():array
+  {
+    $items = ($this->projectId > 0)
+      ? array_merge(
+        [
+          PageRenderer\ProjectParticipants::navigationItem($this->projectId),
+          PageRenderer\ProjectParticipantFields::navigationItem($this->projectId),
+          PageRenderer\ProjectInstrumentationNumbers::navigationItem($this->projectId),
+          PageRenderer\ProjectPayments::navigationItem($this->projectId),
+          PageRenderer\SepaBankAccounts::navigationItem($this->projectId),
+          PageRenderer\SepaBulkTransactions::navigationItem($this->projectId),
+        ],
+        ($this->projectId == $this->getConfigValue(ConfigService::CLUB_MEMBER_PROJECT_ID_KEY, 0)
+         ? [
+           PageRenderer\InstrumentInsurances::navigationItem(),
+           PageRenderer\InsuranceRates::navigationItem(),
+           PageRenderer\InsuranceBrokers::navigationItem(),
+         ]
+         : []),
+        ($this->projectId == $this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0)
+         ? [
+           PageRenderer\TaxExemptionNotices::navigationItem(),
+           PageRenderer\DonationReceipts::navigationItem($this->projectId)
+         ]
+         : []),
+        [
+          PageRenderer\Projects::navigationItem(),
+          PageRenderer\AllMusicians::navigationItem(),
+          PageRenderer\Instruments::navigationItem(),
+        ],
+      )
+      : [
+        PageRenderer\Projects::navigationItem(),
+        PageRenderer\AllMusicians::navigationItem(),
+        PageRenderer\Instruments::navigationItem(),
+        PageRenderer\ProjectParticipantFields::navigationItem(),
+        PageRenderer\ProjectInstrumentationNumbers::navigationItem(),
+      ];
+    return array_filter($items, fn($item) => $item['template'] != self::TEMPLATE);
   }
 }

@@ -55,11 +55,12 @@ use OCA\CAFEVDB\Controller\DownloadsController;
 /** Table generator for Instruments table. */
 class ProjectPayments extends PMETableViewBase
 {
-  use FieldTraits\QueryFieldTrait;
   use FieldTraits\CryptoTrait;
+  use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ParticipantFileFieldsTrait;
+  use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
 
@@ -95,7 +96,10 @@ class ProjectPayments extends PMETableViewBase
   ) AS receivable_keys,
   GROUP_CONCAT(
     DISTINCT
-    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::JOIN_KEY_SEP . '", CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)), COALESCE(__t2.option_value, __t3.data, "undefined")))
+    IF(__t4.id IS NULL,
+       NULL,
+       CONCAT_WS("' . self::JOIN_KEY_SEP . '", CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)), COALESCE(__t2.option_value, __t3.data, "undefined"))
+    )
     ORDER BY __t2.project_id ASC, __t4.id ASC
   ) AS receivable_values,
   GROUP_CONCAT(

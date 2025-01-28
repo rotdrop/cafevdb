@@ -44,7 +44,9 @@ use OCA\CAFEVDB\Exceptions;
 /** TBD. */
 class SepaBulkTransactions extends PMETableViewBase
 {
+
   use FieldTraits\CryptoTrait;
+  use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\QueryFieldTrait;
@@ -188,16 +190,6 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   public function shortTitle()
   {
     return $this->l->t('Bulk-transactions for project "%s"', array($this->projectName));
-  }
-
-  /*** {@inheritdoc} */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
-  {
-    return array_merge(
-      parent::navigationItem($projectId, $projectName), [
-        'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
-        'permissions' => AuthorizationService::PERMISSION_FRONTEND|AuthorizationService::PERMISSION_FINANCE,
-      ]);
   }
 
   /** {@inheritdoc} */

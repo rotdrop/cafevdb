@@ -50,13 +50,14 @@ use OCA\CAFEVDB\Exceptions;
 /** TBD. */
 class SepaBankAccounts extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
   use FieldTraits\CryptoTrait;
+  use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
   use FieldTraits\QueryFieldTrait;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
   const AMOUNT_TAB_ID = 'amount';
 
@@ -227,16 +228,6 @@ class SepaBankAccounts extends PMETableViewBase
     } else {
       return $this->l->t('Overview over all SEPA Bank Accounts');
     }
-  }
-
-  /*** {@inheritdoc} */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
-  {
-    return array_merge(
-      parent::navigationItem($projectId, $projectName), [
-        'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
-        'permissions' => AuthorizationService::PERMISSION_FRONTEND|AuthorizationService::PERMISSION_FINANCE,
-      ]);
   }
 
   /** {@inheritdoc} */

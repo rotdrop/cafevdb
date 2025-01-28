@@ -56,7 +56,6 @@ use OCA\CAFEVDB\Common\Functions;
 /**Table generator for Instruments table. */
 class ProjectParticipants extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use FieldTraits\AllProjectsTrait;
   use FieldTraits\MailingListsTrait;
   use FieldTraits\MusicianAvatarTrait;
@@ -67,9 +66,10 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
+  use FieldTraits\ProjectModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
-  use FieldTraits\ProjectModeNavigationItemTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
@@ -237,32 +237,6 @@ class ProjectParticipants extends PMETableViewBase
       return $this->l->t('Edit the data of the displayed musician.');
     }
     return $this->l->t('Instrumentation for Project "%s"', [ $this->projectName ]);
-  }
-
-  /** {@inheritdoc} */
-  public function navigationItems():array
-  {
-    return array_merge(
-      [
-        ProjectParticipants::navigationItem(),
-        ProjectParticipantFields::navigationItem($this->projectId),
-        ProjectInstrumentationNumbers::navigationItem($this->projectId),
-        ProjectPayments::navigationItem($this->projectId),
-        SepaBankAccounts::navigationItem($this->projectId),
-        SepaBulkTransactions::navigationItem($this->projectId),
-      ],
-      ($this->projectId == $this->getConfigValue(ConfigService::CLUB_MEMBER_PROJECT_ID_KEY, 0)
-       ? [ InstrumentInsurances::navigationItem() ]
-       : []),
-      ($this->projectId == $this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0)
-       ? [TaxExemptionNotices::navigationItem()]
-       : []),
-      [
-        Projects::navigationItem(),
-        AllMusicians::navigationItem(),
-        Instruments::navigationItem(),
-      ],
-    );
   }
 
   /** {@inheritdoc} */
