@@ -38,7 +38,7 @@ import modalizer from './modalizer.js';
  * @param {boolean} reopen If true, close any already dialog and re-open it
  * (the default). If false, only raise an existing dialog to top.
  */
-const wikiPopup = function(post, reopen) {
+const wikiPopup = function(post, reopen = undefined) {
   if (typeof reopen === 'undefined') {
     reopen = false;
   }

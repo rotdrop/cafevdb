@@ -26,7 +26,7 @@
                           v-model="inputValObjects"
                           label="label"
                           :options="contactsArray"
-                          :selectable="(option) => !isSelectAllSelected || option.id === 0"
+                          :selectable="isSelectable"
                           :options-limit="100"
                           :placeholder="placeholder || label"
                           :input-label="label"
@@ -38,7 +38,7 @@
                           :reset-action="resetAction"
                           :searchable="true"
                           v-on="$listeners"
-                          @search="(query) => findContacts(query)"
+                          @search="findContacts"
   >
     <template #option="option">
       <NcEllipsisedOption v-tooltip="contactAddressPopup(option)"
@@ -54,15 +54,21 @@
     </template>
   </SelectWithSubmitButton>
 </template>
-<script>
+<script lang="ts">
 import { set as vueSet } from 'vue'
+import type { PropType } from 'vue'
 import { appName } from '../config.ts'
 import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
+import type { AxiosResponse } from 'axios'
+import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.js'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
+import { translate as t } from '@nextcloud/l10n'
 import qs from 'qs'
-import addressPopup from '../mixins/address-popup.js'
+import addressPopup from '../mixins/address-popup.ts'
+import consoleMixin from '../mixins/console.ts'
+import l10nMixin from '../mixins/l10n.ts'
+import type { AddressBook, Contact } from './types/address-book.d.ts'
 
 export default {
   name: 'SelectContacts',
@@ -72,6 +78,8 @@ export default {
   },
   mixins: [
     addressPopup,
+    l10nMixin,
+    consoleMixin,
   ],
   inheritAttrs: false,
   props: {
@@ -96,7 +104,7 @@ export default {
       default: undefined,
     },
     onlyAddressBooks: {
-      type: Array,
+      type: Array as PropType<AddressBook[]>,
       default: undefined,
     },
     tooltip: {
@@ -122,12 +130,14 @@ export default {
   },
   data() {
     return {
-      inputValObjects: [],
-      contacts: {},
+      inputValObjects: undefined as undefined|Contact|Contact[],
+      contacts: {} as Record<string|number, Contact>,
       ajaxLoading: true,
-      ncSelect: undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ncSelect: null as any,
       id: null,
-      ajaxPromise: Promise.resolve(true),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ajaxPromise: Promise.resolve(true) as Promise<any>,
     }
   },
   computed: {
@@ -141,14 +151,18 @@ export default {
       return this.selectAllOption === undefined ? this.multiple : this.selectAllOption
     },
     isSelectAllSelected() {
-      return this.provideSelectAll && this.inputValObjects.length === 1 && this.inputValObjects[0].id === 0
+      return this.provideSelectAll
+        && Array.isArray(this.inputValObjects)
+        && this.inputValObjects.length === 1
+        && this.inputValObjects[0].key === 0
     },
   },
   watch: {
-    async value(newValue) {
+    async value(newValue: Contact|Contact[]) {
       this.ajaxLoading = true
-      if (newValue.length > 1 && newValue.findIndex((object) => object.id === 0) !== -1) {
-        this.inputValObjects.splice(0, this.inputValObjects.length, this.contacts[0])
+      if (Array.isArray(newValue) && newValue.findIndex((object: Contact) => object.key === 0) !== -1) {
+        const array = this.inputValObjects as Contact[]
+        array.splice(0, array.length, this.contacts[0])
       }
       this.ajaxLoading = false
     },
@@ -169,24 +183,25 @@ export default {
     this.resetContacts()
     this.ajaxPromise = this.findContacts('', this.getValueKeys())
     await this.ajaxPromise
-    this.inputValObjects = this.getValueObject()
+    this.inputValObjects = this.getValueObject(false)
     this.ajaxLoading = false
   },
   mounted() {
-    this.ncSelect = this.$refs.select.ncSelect
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.ncSelect = (this.$refs!.select! as any).ncSelect
     this.id = this._uid
   },
   methods: {
-    info(...args) {
-      console.info(this.$options.name, ...args)
+    isSelectable(option: Contact) {
+      return !this.isSelectAllSelected || option.key === 0
     },
     resetContacts() {
       this.contacts = {}
       if (this.provideSelectAll) {
-        vueSet(this.contacts, 0, { key: 0, uid: 0, label: t(appName, '** everybody **') })
+        vueSet(this.contacts, 0, { key: 0, UID: 0, label: t(appName, '** everybody **') })
       }
     },
-    getValueObject(noUndefined) {
+    getValueObject(noUndefined: boolean) {
       const value = Array.isArray(this.value) ? this.value : (this.value || this.value === 0 ? [this.value] : [])
       let everybody = false
       let result = value.filter((contact) => contact !== '' && typeof contact !== 'undefined').map(
@@ -196,7 +211,7 @@ export default {
             everybody = true
           }
           if (typeof this.contacts[key] === 'undefined') {
-            return noUndefined ? null : { key, uid: key, label: key }
+            return noUndefined ? null : { key, UID: key, label: key }
           }
           return this.contacts[key]
         },
@@ -206,7 +221,7 @@ export default {
           result = [this.contacts[0]]
         }
         for (const [contactKey, contact] of Object.entries(this.contacts)) {
-          if (contactKey !== 0 && contactKey !== '0') {
+          if (contactKey !== '0') {
             contact.$isDisabled = everybody
           }
         }
@@ -215,19 +230,20 @@ export default {
     },
     getValueKeys() {
       const value = Array.isArray(this.value) ? this.value : [this.value]
-      const result = value.filter((contact) => contact !== '' && typeof contact !== 'undefined').map(
-        (contact) => {
-          return contact.key !== undefined ? contact.key : (contact.UID || contact.URI || contact)
+      const result = value.filter((contact: Contact) => contact).map(
+        (contact: Contact) => {
+          return (contact.key || contact.UID || contact.URI) + ''
         },
       )
       return result
     },
-    async findContacts(query, contactUids) {
+    async findContacts(query: string, contactUids: string[]) {
       query = typeof query === 'string' ? encodeURI(query) : ''
       if (query !== '') {
         query = '/' + query
       }
-      const params = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const params: any = {
         limit: 10,
       }
       if (this.onlyAddressBooks.length > 0) {
@@ -243,7 +259,7 @@ export default {
         params.contactUids = contactUids
       }
       try {
-        const response = await axios.get(generateUrl(`/apps/${appName}/contacts/search${query}`), {
+        const response: AxiosResponse<Contact[]> = await axios.get(generateAppUrl(`contacts/search${query}`), {
           params,
           paramsSerializer: params => {
             return qs.stringify(params, { arrayFormat: 'brackets' })
@@ -258,10 +274,8 @@ export default {
                 contact.name = contact.FN
               } else {
                 if (Array.isArray(contact.EMAIL) && contact.EMAIL.length > 0) {
-                  contact.name = contact.EMAIL[0]
-                  if (contact.name.value) {
-                    contact.name = contact.name.value
-                  }
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  contact.name = (contact.EMAIL[0] as any)?.value || contact.EMAIL[0]
                 } else {
                   contact.name = contact.key
                 }

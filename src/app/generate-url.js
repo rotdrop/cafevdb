@@ -21,6 +21,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import generateUrl from '../toolkit/util/generate-url.js';
+import { generateUrl } from '../toolkit/util/generate-url.js';
 
 export default generateUrl;

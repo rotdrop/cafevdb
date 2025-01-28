@@ -11,6 +11,8 @@
     "./node_modules/@nextcloud/**.ts",
     "./node_modules/vue/**.ts",
     "./node_modules/vue-router/**.ts",
+    "./node_modules/pinia/**.ts",
+    "./node_modules/@types/**.ts",
     "../../custom.d.ts",
     "./build/ts-types/app-config.d.ts"
   ],

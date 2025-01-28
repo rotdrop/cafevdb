@@ -53,7 +53,7 @@
       <NcActionRouter :to="toProjectRouteData('project-participants')"
                       :name="t(appId, 'Participants')"
                       exact
-                      @click="(...args) => { info('CLICK', ...args); closeMenu(); }"
+                      @click="closeMenu"
       >
         <template #icon>
           <ProjectParticipantsIcon />
@@ -114,7 +114,6 @@ import {
   NcActionCaption,
   NcActionLink,
   NcActionRouter,
-  NcActionText,
   NcActionSeparator,
 } from '@nextcloud/vue'
 import globalState from '../app/globalstate.js'
@@ -126,20 +125,33 @@ import ProjectFolderIcon from 'vue-material-design-icons/Folder.vue'
 import ProjectNotesIcon from 'vue-material-design-icons/MessageBulleted.vue'
 import ProjectEventsIcon from 'vue-material-design-icons/Calendar.vue'
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus'
+import { PROJECT_ACTIONS } from '../event-bus-events.ts'
 import { closeNavigation } from '../services/navigation.js'
-import mixins from '../mixins/app-mixins.js'
-import useAppDataStore from '../stores/app-data.js'
-import { mapActions } from 'pinia'
+import mixins from '../mixins/app-mixins.ts'
+import useAppDataStore from '../stores/app-data.ts'
+import type { Project } from '../stores/app-data.ts'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import wikiPopup from '../app/wiki-popup.js'
 import md5 from 'blueimp-md5'
 // import { set as vueSet } from 'vue'
 import * as Authorization from '../authorization.ts'
 import * as BusEvents from '../event-bus-events.ts'
+import type { Location as RouterLocation } from 'vue-router'
 
-// The "consumer" has to take care that globalState.vue.Vue is already
-// defined.
-export default globalState.vue.Vue.extend({
+type NcButtonType = {
+  ref?: string,
+  $el: HTMLElement,
+}
+type NcActionsType = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  closeMenu(returnFocus?: boolean):Promise<any>,
+  $refs: {
+    popover: { $refs: { popover: { $refs: { reference: HTMLElement, } } } },
+    triggerButton: NcButtonType,
+  },
+}
+
+export default {
   name: 'ProjectActionsMenu',
   components: {
     InstrumentationNumbersIcon,
@@ -148,7 +160,6 @@ export default globalState.vue.Vue.extend({
     NcActionLink,
     NcActionRouter,
     NcActionSeparator,
-    NcActionText,
     NcActions,
     ParticipantFieldsIcon,
     ProjectEventsIcon,
@@ -157,7 +168,7 @@ export default globalState.vue.Vue.extend({
     ProjectNotesIcon,
     ProjectParticipantsIcon,
   },
-  router: globalState.vue.router,
+  router: globalState.vue!.router,
   mixins,
   props: {
     projectId: {
@@ -165,8 +176,8 @@ export default globalState.vue.Vue.extend({
       required: true,
     },
     projectName: {
-      type: String,
       default: null,
+      type: String,
     },
     forceProjectName: {
       type: Boolean,
@@ -182,17 +193,17 @@ export default globalState.vue.Vue.extend({
     },
   },
   setup() {
-    const appData = useAppDataStore(globalState.vue.store)
+    const appData = useAppDataStore(globalState.vue!.store)
 
     return { appData }
   },
   data() {
     return {
       open: false,
-      referenceElement: null,
-      triggerButton: null,
+      referenceElement: null as null|HTMLElement,
+      triggerButton: null as null|NcButtonType,
       positioned: false,
-      project: null,
+      project: null as null|Project,
     }
   },
   computed: {
@@ -234,16 +245,18 @@ export default globalState.vue.Vue.extend({
     },
   },
   async created() {
-    this.$parent = globalState.vue.app
+    // @ts-expect-error $parent is readonly
+    this.$parent = globalState.vue!.app
     this.syncProjectData(this.projectId)
     this.info('ACTIONS MENU OBJECT', this)
   },
   mounted() {
-    const origCloseMenu = this.$refs.actions.closeMenu
-    this.$refs.actions.closeMenu = (returnFocus) => origCloseMenu(this.positioned ? false : returnFocus)
-    this.referenceElement = this.$refs.actions.$refs.popover.$refs.popover.$refs.reference
-    this.triggerButton = this.$refs.actions.$refs.triggerButton
-    asyncSubscribe(this.appName + ':project-actions', (event) => {
+    const actions = (this!.$refs!.actions! as object as NcActionsType)
+    const origCloseMenu = actions.closeMenu
+    actions.closeMenu = (returnFocus) => origCloseMenu(this.positioned ? false : returnFocus)
+    this.referenceElement = actions.$refs.popover.$refs.popover.$refs.reference
+    this.triggerButton = actions.$refs.triggerButton
+    asyncSubscribe(PROJECT_ACTIONS, (event) => {
       const projectId = event?.projectId
       const newOpenState = event?.open
       if (!newOpenState
@@ -257,19 +270,18 @@ export default globalState.vue.Vue.extend({
     })
   },
   methods: {
-    ...mapActions(useAppDataStore, ['scheduleHistoryPush']),
-    toProjectRouteData(template: string) {
+    toProjectRouteData(template: string):RouterLocation {
       return {
         name: 'legacy-page',
         params: {
           template,
-          projectId: this.projectId,
+          projectId: '' + this.projectId,
           projectName: this.projectName,
         },
       }
     },
-    async syncProjectData(projectId) {
-      this.project = await this.appData.getProject(projectId, this.appData.errorHandler)
+    async syncProjectData(projectId: number) {
+      this.project = await this.appData.getProject(projectId)
       // vueSet(this.project, 'folders', this.project.folders)
     },
     openProjectOverview() {
@@ -280,7 +292,7 @@ export default globalState.vue.Vue.extend({
         projectName: this.projectName,
       })
     },
-    openInstrumentationNumbers(event) {
+    openInstrumentationNumbers(event: MouseEvent) {
       event.preventDefault()
       this.open = false
       closeNavigation()
@@ -289,7 +301,7 @@ export default globalState.vue.Vue.extend({
         projectName: this.projectName,
       })
     },
-    openParticipantFields(event) {
+    openParticipantFields(event: MouseEvent) {
       event.preventDefault()
       this.open = false
       closeNavigation()
@@ -298,17 +310,16 @@ export default globalState.vue.Vue.extend({
         projectName: this.projectName,
       })
     },
-    openProjectNotes(event) {
+    openProjectNotes(event: MouseEvent) {
       event.preventDefault()
       this.open = false
       closeNavigation()
       wikiPopup({
-        wikiPage: this.project.wikiPage,
-        popupTitle: t(this.appName, 'Project Wiki for {projectName}', { projectName: this.projectName }),
-
+        wikiPage: this.project!.wikiPage,
+        popupTitle: this.t(this.appName, 'Project Wiki for {projectName}', { projectName: this.projectName }),
       })
     },
-    openProjectEvents(event) {
+    openProjectEvents(event: MouseEvent) {
       event.preventDefault()
       this.open = false
       closeNavigation()
@@ -317,17 +328,17 @@ export default globalState.vue.Vue.extend({
         projectName: this.projectName,
       })
     },
-    setPosition(x, y) {
+    setPosition(x?: number, y?: number) {
       if (x !== undefined && y !== undefined) {
-        this.referenceElement.style.position = 'fixed'
-        this.referenceElement.style.left = x + 'px'
-        this.referenceElement.style.top = y + 'px'
+        this.referenceElement!.style.position = 'fixed'
+        this.referenceElement!.style.left = x + 'px'
+        this.referenceElement!.style.top = y + 'px'
 
         this.positioned = true
       } else if (this.positioned) {
-        this.referenceElement.style.position = ''
-        this.referenceElement.style.left = ''
-        this.referenceElement.style.top = ''
+        this.referenceElement!.style.position = ''
+        this.referenceElement!.style.left = ''
+        this.referenceElement!.style.top = ''
 
         this.positioned = false
       }
@@ -355,7 +366,7 @@ export default globalState.vue.Vue.extend({
         requestAnimationFrame(resolve)
       }))
     },
-    async openMenu(x, y) {
+    async openMenu(x?: number, y?: number) {
       this.info('-> openMenu()')
       this.setPosition(x, y)
       this.open = true
@@ -365,14 +376,14 @@ export default globalState.vue.Vue.extend({
       }
       this.info('<- openMenu()')
     },
-    toggleMenu(x, y) {
+    toggleMenu(x?: number, y?: number) {
       if (this.open) {
         this.closeMenu()
       } else {
         this.openMenu(x, y)
       }
     },
-    async moveToAnchor(event) {
+    async moveToAnchor(event?: MouseEvent) {
       if (!this.open || !this.positioned) {
         return
       }
@@ -383,12 +394,12 @@ export default globalState.vue.Vue.extend({
       this.openMenu()
       this.info('<- moveToAnchor()')
     },
-    getRouteHref(route) {
+    getRouteHref(route: RouterLocation) {
       const routeProps = this.$router.resolve(route)
       return routeProps?.href || '#'
     },
   },
-})
+}
 </script>
 <style lang="scss" scoped>
 .container {

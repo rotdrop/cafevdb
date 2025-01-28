@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@
   <SelectWithSubmitButton ref="select"
                           v-bind="$attrs"
                           v-model="inputValObjects"
-                          :reduce="(user) => user.id"
+                          :reduce="reduceUser"
                           label="displayname"
                           :options="usersArray"
                           :options-limit="100"
@@ -46,7 +46,7 @@
                           :disabled="disabled"
                           :user-select="true"
                           v-on="$listeners"
-                          @search="(query) => findUsers(query)"
+                          @search="findUsers"
   >
     <!-- Unfortunately, the stock NcSelect seems to be somewhat borken and does not set the "user" property. -->
     <template #option="option">
@@ -70,12 +70,17 @@
   </SelectWithSubmitButton>
 </template>
 
-<script>
+<script lang="ts">
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import { NcListItemIcon } from '@nextcloud/vue'
-import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.js'
-import { mapWritableState } from 'pinia'
-import userInfoPopup from '../mixins/user-info-popup.js'
+import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
+import userInfoPopup from '../mixins/user-info-popup.ts'
+import consoleMixin from '../mixins/console.ts'
+import l10nMixin from '../mixins/l10n.ts'
+import type { PropType } from 'vue'
+import type { CloudUser } from '../stores/cloud-users-groups.ts'
+
+type ValueObject = CloudUser | { id: string, displayname: string }
 
 export default {
   name: 'SettingsSelectUsers',
@@ -85,6 +90,8 @@ export default {
   },
   mixins: [
     userInfoPopup,
+    consoleMixin,
+    l10nMixin,
   ],
   inheritAttrs: false,
   props: {
@@ -93,7 +100,7 @@ export default {
       required: true,
     },
     value: {
-      type: Array,
+      type: Array as PropType<string[]>,
       default: () => [],
     },
     disabled: {
@@ -111,17 +118,17 @@ export default {
   },
   setup() {
     const store = useCloudUsersGroupsStore()
-    return { store }
+    return { store, users: store.users }
   },
   data() {
     return {
-      inputValObjects: [],
+      inputValObjects: [] as string[],
       ajaxLoading: false,
-      ncSelect: undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ncSelect: null as any,
     }
   },
   computed: {
-    ...mapWritableState(useCloudUsersGroupsStore, ['users']),
     isLoading() {
       return (this.loading || this.ajaxLoading) && this.loadingIndicator
     },
@@ -149,14 +156,13 @@ export default {
     },
   },
   mounted() {
-    this.ncSelect = this.$refs.select.ncSelect
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.ncSelect = (this.$refs!.select! as any).ncSelect
   },
   methods: {
-    info(...args) {
-      console.info(this.$options.name, ...args)
-    },
-    getUserObject(userId) {
-      return this.getUser(userId) || { id: userId, displayname: userId }
+    reduceUser: (user: ValueObject) => user.id,
+    async getUserObject(userId: string): Promise<ValueObject> {
+      return (await this.getUser(userId)) || { id: userId, displayname: userId }
     },
     /**
      * Take the current value, fetch the users and again return the
@@ -165,21 +171,21 @@ export default {
      * display in the UI, including meta-info.
      */
     async getValueObjects() {
-      const validValues = this.value.filter((userId) => userId !== '' && typeof userId !== 'undefined')
-      const result = []
+      const validValues: string[] = this.value.filter((userId) => userId !== '' && typeof userId !== 'undefined')
+      const result: ValueObject[] = []
       for (const userId of validValues) {
         result.push(await this.getUserObject(userId))
       }
       return result.map((user) => user.id)
     },
-    getUser(userId) {
+    getUser(userId: string) {
       return this.store.getUser(userId, this.errorHandler)
     },
-    findUsers(query) {
-      const result = this.store.findUsers(query, this.errorHandler)
-      return result
+    findUsers(query: string) {
+      return this.store.findUsers(query, this.errorHandler)
     },
-    errorHandler(error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    errorHandler<T extends Error>(error: T | any) {
       this.$emit('error', error)
     },
   },

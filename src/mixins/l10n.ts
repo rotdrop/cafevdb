@@ -21,12 +21,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import md5 from 'blueimp-md5';
+import { appName } from '../config.ts';
+import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 
-export default {
-  methods: {
-    md5(data) {
-      return md5(data);
-    },
-  },
+const mixin = {
+  inject: { appId: { default: appName, from: 'appId' } },
+  methods: { t, n },
 };
+
+export default mixin;

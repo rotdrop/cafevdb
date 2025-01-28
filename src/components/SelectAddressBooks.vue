@@ -39,19 +39,31 @@
                           v-on="$listeners"
   />
 </template>
-<script>
+<script lang="ts">
 import { set as vueSet } from 'vue'
-import { appName } from '../config.ts'
 import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
-import { getInitialState } from '../services/initial-state-service.js'
+import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.js'
+import { getInitialState } from '../services/initial-state-service.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
+import consoleMixin from '../mixins/console.ts'
+import l10nMixin from '../mixins/l10n.ts'
+import type { AddressBook } from './types/address-book.d.ts'
+
+interface InitialState {
+  contacts: {
+    addressBooks: Record<string|number, AddressBook>,
+  },
+}
 
 export default {
   name: 'SelectAddressBooks',
   components: {
     SelectWithSubmitButton,
   },
+  mixins: [
+    consoleMixin,
+    l10nMixin,
+  ],
   inheritAttrs: false,
   props: {
     multiple: {
@@ -94,15 +106,20 @@ export default {
       type: Boolean,
       default: false,
     },
+    noUndefined: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
-      inputValObjects: undefined, // [],
-      initialValObjects: [],
-      addressBooks: {},
+      inputValObjects: undefined as undefined|AddressBook|AddressBook[],
+      initialValObjects: [] as AddressBook|AddressBook[],
+      addressBooks: {} as Record<string|number, AddressBook>,
       ajaxLoading: true,
       active: false,
-      ncSelect: undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ncSelect: null as any,
       id: null,
     }
   },
@@ -115,7 +132,7 @@ export default {
     },
   },
   async created() {
-    const initialState = getInitialState()
+    const initialState: InitialState = getInitialState()
     if (initialState.contacts && initialState.contacts.addressBooks) {
       this.addressBooks = initialState.contacts.addressBooks
       // console.info('ADDRESSBOOKS FROM STATE', this.addressBooks)
@@ -131,64 +148,60 @@ export default {
       // when it is changed through user interaction (in general)
       this.emitInput(this.inputValObjects)
     } else {
-      this.inputValObjects = this.getValueObject()
+      this.inputValObjects = this.getValueObject(this.noUndefined)
     }
     if (this.resetAction) {
-      this.initialValObjects = this.inputValObjects
+      this.initialValObjects = this.inputValObjects || []
     }
     this.ajaxLoading = false
   },
   mounted() {
-    this.ncSelect = this.$refs.select.ncSelect
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.ncSelect = (this.$refs!.select! as any).ncSelect
     this.id = this._uid
   },
   methods: {
-    info(...args) {
-      console.info(this.$options.name, ...args)
-    },
-    emitInput(value) {
+    emitInput(value: undefined|AddressBook|AddressBook[]) {
       this.info('EMIT INPUT', value)
       this.$emit('input', value)
     },
-    getValueObject(noUndefined) {
+    getValueObject(noUndefined: boolean) {
       const value = Array.isArray(this.value) ? this.value : (this.value || this.value === 0 ? [this.value] : [])
       let everybody = false
-      let result = value.filter((contact) => contact !== '' && typeof contact !== 'undefined').map(
-        (contact) => {
-          const key = contact.key !== undefined ? contact.key : (contact.UID || contact.URI || contact)
+      let result = value.filter((addressBook) => addressBook !== '' && typeof addressBook !== 'undefined').map(
+        (addressBook) => {
+          const key: string|number = addressBook.key !== undefined ? addressBook.key : (addressBook.UID || addressBook.URI || addressBook)
           if (key === 0) {
             everybody = true
           }
           if (typeof this.addressBooks[key] === 'undefined') {
-            return noUndefined ? null : { key, uid: key, FN: key }
+            return noUndefined ? null : { key, uid: key as string, displayName: key as string }
           }
           return this.addressBooks[key]
         },
-      ).filter((contact) => contact !== null && contact !== undefined)
+      ).filter((addressBook) => addressBook !== null && addressBook !== undefined)
       if (this.multiple) {
         if (everybody) {
           result = [this.addressBooks[0]]
         }
-        for (const [contactKey, contact] of Object.entries(this.addressBooks)) {
-          if (contactKey !== 0 && contactKey !== '0') {
-            contact.$isDisabled = everybody
+        for (const [addressBookKey, addressBook] of Object.entries(this.addressBooks)) {
+          if (addressBookKey !== '0') {
+            addressBook.$isDisabled = everybody
           }
         }
       }
       return this.multiple ? result : (result.length > 0) ? result[0] : undefined
     },
-    provideAddressBooks() {
-      return axios
-        .get(generateUrl(`/apps/${appName}/contacts/address-books`))
-        .then((response) => {
-          for (const [key, book] of Object.entries(response.data)) {
-            vueSet(this.addressBooks, key, book)
-          }
-          // console.info('ADDRESSBOOKS', this.addressBooks)
-          return true
-        }).catch((error) => {
-          this.$emit('error', error)
-        })
+    async provideAddressBooks() {
+      try {
+        const response = await axios.get(generateAppUrl('contacts/address-books'))
+        for (const [key, book] of Object.entries(response.data)) {
+          vueSet(this.addressBooks, key, book)
+        }
+        // console.info('ADDRESSBOOKS', this.addressBooks)
+      } catch (error) {
+        this.$emit('error', error)
+      }
     },
   },
 }

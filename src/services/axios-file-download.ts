@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,13 +30,13 @@ import { parse as parseContentDisposition } from 'content-disposition';
 /**
  * Download from ajax link.
  *
- * @param {string} url TBD.
+ * @param url Url target.
  *
- * @param {object} data TBD.
+ * @param data Request payload.
  *
- * @param {string} method TBD.
+ * @param method HTTP methods, defaults to 'post'.
  */
-export default async function(url, data, method) {
+export default async function(url: string, data: any, method = 'post') {
   method = method || 'post';
   url = (url.startsWith(ncRouter.generateUrl(''))
          || url.startsWith(ncRouter.generateRemoteUrl('')))

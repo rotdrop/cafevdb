@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,10 +21,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineStore } from 'pinia';
-
-export const usePersistentDataStore = defineStore('parsistent-data', {
-  state: () => {
-    return {};
+const mixin = {
+  methods: {
+    trace(...args: any[]) {
+      // @ts-expect-error Type of this unknown
+      console.trace(this.$options.name, ...args);
+    },
+    error(...args: any[]) {
+      // @ts-expect-error Type of this unknown
+      console.error(this.$options.name, ...args);
+    },
+    warn(...args: any[]) {
+      // @ts-expect-error Type of this unknown
+      console.warn(this.$options.name, ...args);
+    },
+    info(...args: any[]) {
+      // @ts-expect-error Type of this unknown
+      console.info(this.$options.name, ...args);
+    },
+    debug(...args: any[]) {
+      // @ts-expect-error Type of this unknown
+      console.debug(this.$options.name, ...args);
+    },
   },
-});
+};
+
+export default mixin;

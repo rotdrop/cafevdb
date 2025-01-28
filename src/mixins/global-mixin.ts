@@ -26,7 +26,7 @@ import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 
 export const mixin = {
   data() {
-    return { appId: appName, appName };
+    return { appId: appName, };
   },
   methods: { t, n },
 };

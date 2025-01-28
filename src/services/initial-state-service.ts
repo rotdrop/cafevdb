@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +21,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as Authorization from '../authorization.ts'
+import { appName } from '../config.ts';
+import { loadState } from '@nextcloud/initial-state';
 
-export default {
-  inject:[...Object.keys(Authorization).filter((key) => key.startsWith('PERMISSION_'))],
-  methods: {
-    authorized: Authorization.authorized,
-  },
+export const getInitialState = (): any => {
+  try {
+    return loadState(appName, 'files');
+  } catch (err) {
+    console.error('error in loadState: ', err);
+  }
 };

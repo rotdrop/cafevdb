@@ -22,13 +22,15 @@
  */
 
 import { appName } from '../config.ts';
+import { translate as t } from '@nextcloud/l10n';
+import type { Contact, Musician } from '../components/types/address-book';
 
 export default {
   methods: {
-    addressItemUnknownLabel(item) {
+    addressItemUnknownLabel(item: string) {
       return t(appName, '{item}: unknown', { item: t(appName, item) });
     },
-    musicianAddressPopup(option) {
+    musicianAddressPopup(option: Musician) {
       if (option.id === 0) {
         return this.addressPopup(t(appName, 'selects all musicians'));
       }
@@ -50,32 +52,33 @@ export default {
       const content = `<h4>${name}${userId}</h4>` + additionalInfo.join('<br/>');
       return this.addressPopup(content);
     },
-    contactNameFromContact(option) {
-      let name = option.name.value || option.name;
+    contactNameFromContact(option: Contact) {
+      const nameValue = option?.name as any;
+      let name = nameValue?.value || nameValue;
       if (typeof name !== 'string') {
         name = t(appName, '[empty name]');
       }
       return name;
     },
-    contactAddressPopup(option) {
+    contactAddressPopup(option: Contact) {
       const name = this.contactNameFromContact(option);
-      const additionalInfo = [];
-      let emails = [];
+      const additionalInfo: string[] = [];
+      let emails: string[] = [];
       if (option.EMAIL) {
-        for (const email of option.EMAIL) {
-          const emailValue = email.value || email;
+        for (const email of option.EMAIL as any[]) {
+          const emailValue = (email.value || email) as string;
           if (typeof emailValue === 'string') {
             emails.push(`${emailValue}`);
           }
         }
       }
-      emails = emails.join('<br/>');
-      if (emails) {
-        additionalInfo.push(emails);
+      if (emails.length > 0) {
+        additionalInfo.push(emails.join('<br/>'));
       }
-      let address = [];
+      let address: string[] = [];
       if (option.ADR && option.ADR.length > 0) {
-        address = (option.ADR[0].value || option.ADR[0]).split(';');
+        const  adrValue = option.ADR[0] as any;
+        address = (adrValue.value || adrValue).split(';');
       }
       const street = address[2] || this.addressItemUnknownLabel('street');
       const postalCode = (address[5] + ' ') || '';
@@ -90,7 +93,7 @@ export default {
             + additionalInfo.join('<br/>');
       return this.addressPopup(content);
     },
-    addressPopup(content) {
+    addressPopup(content: string) {
       return {
         content,
         // placement: 'bottom',

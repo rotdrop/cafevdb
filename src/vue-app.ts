@@ -34,27 +34,22 @@ import { Tooltip } from '@nextcloud/vue';
 import { mixin as globalMixin } from './mixins/global-mixin.ts';
 import { GLOBAL_STATE, PME_STATE } from './event-bus-events.ts';
 import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
+import * as Authorization from './authorization.ts';
 
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
 
+declare global {
+  var __webpack_nonce__: string;
+  var __webpack_public_path: string;
+}
 // CSP config for webpack dynamic chunk loading
-// eslint-disable-next-line
 __webpack_nonce__ = btoa(getRequestToken() || '');
-
-// eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', '');
 
 Vue.directive('tooltip', Tooltip);
 Vue.mixin(globalMixin);
 
-// make the components of the global state object reactive
-asyncSubscribe('foobar', (event) => {
-  for (const [key, value] of Object.entries(event.state)) {
-    Vue.delete(globalState, key);
-    vueSet(globalState, key, value);
-  }
-});
 asyncSubscribe(GLOBAL_STATE, (event) => {
   for (const [key, value] of Object.entries(event.state)) {
     Vue.delete(globalState, key);
@@ -70,12 +65,21 @@ asyncSubscribe(PME_STATE, (event) => {
   }
 });
 
+const provide = Object.assign(
+  {},
+  { appId: appName },
+  Object.fromEntries(
+    Object.entries(Authorization).filter(([key,]) => key.startsWith('PERMISSION_'))
+  ),
+);
+
 const vueApp = new Vue({
   el: '#content',
   name: appName,
   router,
   pinia,
   render: h => h(CAFeVDB),
+  provide,
 });
 
 globalState.vueMode = true;

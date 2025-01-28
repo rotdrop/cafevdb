@@ -21,17 +21,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { showError, showInfo, TOAST_DEFAULT_TIMEOUT/*, TOAST_PERMANENT_TIMEOUT */ } from '@nextcloud/dialogs';
+import md5 from 'blueimp-md5';
 
-const mixin = {
+export default {
   methods: {
-    showErrorToast(message, timeout, isHTML) {
-      showError(message, { timeout: timeout || TOAST_DEFAULT_TIMEOUT }, isHTML);
-    },
-    showInfoToast(message, timeout, isHTML) {
-      showInfo(message, { timeout: timeout || TOAST_DEFAULT_TIMEOUT }, isHTML);
+    md5(data: string) {
+      return md5(data);
     },
   },
 };
-
-export default mixin;

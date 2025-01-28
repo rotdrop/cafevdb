@@ -40,11 +40,9 @@ const PHPMyEditDefault = {
   inputSelectPlaceholder: 'Select an option',
   inputSelectNoResult: 'No values match',
   inputSelectChosenTitle: 'Select from the pull-down menu.',
-  chosenPixelWidth: [],
   pmePrefix: 'pme',
   singleDeselectOffset: 18,
   defaultSelector: '#' + appName + '-page-body', // for delegate handlers, survives pseudo-submit
-  defaultInnerSelector: 'inner', // to override delegate handlers, survices pseudo-submit
 
   /* actual volatile state variables */
   tableLoadCallbacks: [],

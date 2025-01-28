@@ -21,11 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as Authorization from '../authorization.ts'
+import { globalState } from '../app/pme-state.js';
 
-export default {
-  inject:[...Object.keys(Authorization).filter((key) => key.startsWith('PERMISSION_'))],
-  methods: {
-    authorized: Authorization.authorized,
+const mixin = {
+  data() {
+    return {
+      globalState,
+    };
   },
 };
+
+export default mixin;

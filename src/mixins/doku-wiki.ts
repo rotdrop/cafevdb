@@ -21,22 +21,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router';
+import md5 from 'blueimp-md5';
+
 const mixin = {
   methods: {
-    trace(...args) {
-      console.trace(this.$options.name, ...args);
+    dokuWikiSection(path: string[]) {
+      // @ts-expect-error globalStaten not defined
+      return [this.globalState.wikiNamespace, ...path].join(':');
     },
-    error(...args) {
-      console.error(this.$options.name, ...args);
+    dokuWikiUrl(path: string|string[]) {
+      const wikiPage = Array.isArray(path) ? this.dokuWikiSection(path) : path;
+      return nextcloudGenerateUrl('/apps/dokuwiki/page/index?wikiPage=' + wikiPage);
     },
-    warn(...args) {
-      console.warn(this.$options.name, ...args);
-    },
-    info(...args) {
-      console.info(this.$options.name, ...args);
-    },
-    debug(...args) {
-      console.debug(this.$options.name, ...args);
+    dokuWikiUrlTarget(path: string|string[]) {
+      const wikiPage = Array.isArray(path) ? this.dokuWikiSection(path) : path;
+      return md5(wikiPage);
     },
   },
 };

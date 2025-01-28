@@ -49,7 +49,7 @@ import * as SelectUtils from './select-utils.js';
 import wikiPopup from './wiki-popup.js';
 import setBusyIndicators from './busy-indicators.js';
 import iFrameResize from './iframe-resize.js';
-import { emit, subscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import * as BusEvents from '../event-bus-events.ts';
 
 // eslint-disable-next-line no-unused-vars
@@ -62,32 +62,32 @@ require('projects.scss');
 // listen to requests from the Vue wrapper application, the idea is
 // not to have to load all the code twice, or not to have to change
 // anything at once.
-subscribe(BusEvents.PROJECT_POPUP, async (event) => {
+asyncSubscribe(BusEvents.PROJECT_POPUP, async (event) => {
   console.info('EVENT', event);
-  emit(BusEvents.PUSH_BUSY_STATE);
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
   await projectViewPopup(PHPMyEdit.selector(), event);
-  emit(BusEvents.POP_BUSY_STATE);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
 });
 
-subscribe(BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP, async (event) => {
+asyncSubscribe(BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP, async (event) => {
   console.info('EVENT', event);
-  emit(BusEvents.PUSH_BUSY_STATE);
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
   await instrumentationNumbersPopup(PHPMyEdit.selector(), event);
-  emit(BusEvents.POP_BUSY_STATE);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
 });
 
-subscribe(BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP, async (event) => {
+asyncSubscribe(BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP, async (event) => {
   console.info('EVENT', event);
-  emit(BusEvents.PUSH_BUSY_STATE);
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
   await participantFieldsPopup(PHPMyEdit.selector(), event);
-  emit(BusEvents.POP_BUSY_STATE);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
 });
 
-subscribe(BusEvents.PROJECT_EVENTS_POPUP, async (event) => {
+asyncSubscribe(BusEvents.PROJECT_EVENTS_POPUP, async (event) => {
   console.info('EVENT', event);
-  emit(BusEvents.PUSH_BUSY_STATE);
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
   await eventsPopup(event);
-  emit(BusEvents.POP_BUSY_STATE);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
 });
 
 /**
@@ -334,6 +334,7 @@ const actionMenu = async function(containerSel) {
   if (globalState.vueMode) {
     if (!VueProjectMenu) {
       VueProjectMenu = (await import(/* webpackChunkName: 'project-actions-menu' */ '../components/ProjectActionsMenu.vue')).default;
+      VueProjectMenu = globalState.vue.Vue.extend(VueProjectMenu);
       console.info('VUE PROJECT MENU', VueProjectMenu);
     }
     const generateVueMenu = async ($actionMenu) => {
@@ -372,7 +373,7 @@ const actionMenu = async function(containerSel) {
         if (vueMenu.open) {
           vueMenu.closeMenu();
         } else {
-          emit(appName + ':project-actions', {
+          asyncEmit(BusEvents.PROJECT_ACTIONS, {
             open: false,
             projectId: -projectId,
           });

@@ -22,7 +22,7 @@
  */
 
 import { appName } from './config.ts';
-import { getInitialState } from './services/initial-state-service.js';
+import { getInitialState } from './services/initial-state-service.ts';
 import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
 import { translate as t } from '@nextcloud/l10n';

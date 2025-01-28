@@ -68,13 +68,13 @@
           <InfoOffIcon />
         </template>
         <NcActionCheckbox v-model="globalState.toolTipsEnabled" :model-value="globalState.toolTipsEnabled">
-          {{ t(appName, 'Tooltips') }}
+          {{ t(appId, 'Tooltips') }}
         </NcActionCheckbox>
         <NcActionLink :href="wikiManualUrl" :target="wikiManualUrlTarget">
-          {{ t(appName, 'Manual (other tab or window)') }}
+          {{ t(appId, 'Manual (other tab or window)') }}
         </NcActionLink>
         <NcActionButton @click="onUserManualPopup">
-          {{ t(appName, 'Manual (popup)') }}
+          {{ t(appId, 'Manual (popup)') }}
         </NcActionButton>
       </NcActions>
     </div>
@@ -108,13 +108,13 @@ import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
 import InfoOffIcon from 'vue-material-design-icons/InformationOffOutline.vue'
 import HistoryBackIcon from 'vue-material-design-icons/ArrowULeftTop.vue'
 import HistoryForwardIcon from 'vue-material-design-icons/ArrowURightTop.vue'
-import mixins from '../mixins/app-mixins.js'
+import mixins from '../mixins/app-mixins.ts'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
 import * as CAFEVDB from '../app/cafevdb.js'
 import { closeNavigation } from '../services/navigation.js'
 import wikiPopup from '../app/wiki-popup.js'
-import useAppDataStore from '../stores/app-data.js'
+import useAppDataStore from '../stores/app-data.ts'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import { subscribe as asyncSubscribe, emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
 import {
@@ -144,7 +144,7 @@ export default {
   props: {
     template: {
       type: String,
-      default: null,
+      required: true,
     },
     templateParameters: {
       type: Object,
@@ -167,13 +167,14 @@ export default {
     return {
       legacyHeaderHtml: '',
       legacyBodyHtml: '',
-      legacyCssPrefix: this.appName,
+      legacyCssPrefix: this.appId as string,
       legacyCssClass: '',
       loading: true,
-      stortTitle: this.template,
-      loadingPromise: Promise.resolve(true),
+      shortTitle: this.template,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      loadingPromise: Promise.resolve(true) as Promise<any>,
       pageLoadTrigger: false,
-      previousHash: null,
+      previousHash: null as null|string,
     }
   },
   computed: {
@@ -280,12 +281,13 @@ export default {
     onUserManualPopup() {
       wikiPopup({
         wikiPage: this.wikiManualSection,
-        popupTitle: t(this.appName, 'User Manual: {section}', { section: this.shortTitle }, 0, { escape: false }),
+        popupTitle: this.t(this.appName, 'User Manual: {section}', { section: this.shortTitle }, 0, { escape: false }),
       })
     },
     async loadLegacy() {
       this.info('VUE APP LOAD PAGE LOADING', this.template, this.templateParameters, this.postDataHash)
-      let promise
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let promise: Promise<any>
       do {
         await (promise = this.loadingPromise)
         this.info('AFTER AWAIT PROMISE IN LOOP', this.template, this.templateParameters, this.postDataHash)
@@ -328,7 +330,7 @@ export default {
         CAFEVDB.runReadyCallbacks()
         const titleProvider = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-short-title')
         if (titleProvider) {
-          this.shortTitle = titleProvider.textContent
+          this.shortTitle = titleProvider.textContent || ''
         }
       } catch (e) {
         this.error('ERROR', generateAppUrl('page/remember/parts'), post, e)
@@ -337,18 +339,18 @@ export default {
       this.popBusyState()
       this.loading = false
     },
-    pmeSelector(token, element) {
+    pmeSelector(token: string, element: string) {
       return (element || '') + '.' + this.pmePrefix + '-' + token
     },
     async reloadPage() {
       const pmeContainer = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-table-container')
       if (pmeContainer) {
-        const reloadButton = pmeContainer.querySelector(this.pmeForm + ' ' + this.pmeSelector('reload', 'input'))
+        const reloadButton = pmeContainer.querySelector(this.pmeForm + ' ' + this.pmeSelector('reload', 'input')) as HTMLElement
         if (reloadButton) {
           this.debug('TRIGGER CLICK ON PME RELOAD BUTTON')
           LegacyNotification.hide()
           reloadButton.click()
-          document.querySelector('body').classList.remove('dialog-titlebar-clicked') // need for "mobile" css
+          document.querySelector('body')!.classList.remove('dialog-titlebar-clicked') // need for "mobile" css
           return
         }
       }
@@ -361,14 +363,14 @@ export default {
       this.$router.forward()
     },
     // make sure the URL reflects the given hash and remove the no-reload query
-    synchronizeHistoryState(hash) {
+    synchronizeHistoryState(hash: string) {
       this.info('REPLACE ROUTE TO SYNC BROWSER HISTORY', hash)
       const params = {
         template: this.template,
         projectId: this.templateParameters?.projectId,
         projectName: this.templateParameters?.projectName,
       }
-      const target: RouteRecord = {
+      const target = {
         name: 'legacy-page',
         params,
         query: { hash },
@@ -376,20 +378,20 @@ export default {
       return this.$router.replace(target)
     },
     pageLoadSubscriber() {
-      asyncSubscribe(LEGACY_PAGE_LOAD, (eventData: LEGACY_PAGE_LOAD) => {
+      asyncSubscribe(LEGACY_PAGE_LOAD, (eventData) => {
         this.info('LEGACY PAGE LOAD CALLED', eventData)
         const params = {
           template: eventData?.template || eventData.post.template,
-          projectId: eventData?.projectId || eventData.post?.projectId,
-          projectName: eventData?.projectName || eventData.post?.projectName,
         }
+        const projectId = eventData?.projectId || eventData.post?.projectId
+        const projectName = eventData?.projectName || eventData.post?.projectName
+        projectId && Object.assign(params, { projectId })
+        projectName && Object.assign(params, { projectName })
         const post = Object.assign({}, eventData.post, params)
-        const target: RouteRecord = {
+        const target = {
           name: 'legacy-page',
           params,
-          query: {
-            hash: objectHash(post),
-          },
+          hash: objectHash(post),
         }
         if (eventData.keepHistory) {
           this.scheduleHistoryReplace(post)
@@ -399,20 +401,22 @@ export default {
           return this.$router.push(target)
         }
       })
-      asyncSubscribe(LEGACY_PME_HISTORY_UPDATE, (eventData: LEGACY_PME_HISTORY_UPDATE) => {
+      asyncSubscribe(LEGACY_PME_HISTORY_UPDATE, (eventData) => {
         this.info('LEGACY PME HISTORY UPDATE', eventData)
         const post = eventData.post
         const params = {
           template: post.template,
-          projectId: post?.projectId,
-          projectName: post?.projectName,
         }
-        const target: RouteRecord = {
+        const projectId = post?.projectId
+        const projectName = post?.projectName
+        projectId && Object.assign(params, { projectId })
+        projectName && Object.assign(params, { projectName })
+        const target = {
           name: 'legacy-page',
           params,
           query: {
             hash: objectHash(post),
-            'no-reload': 1,
+            'no-reload': '1',
           },
         }
         this.info('INSTALL NEW HTML')
@@ -494,4 +498,3 @@ export default {
   }
 }
 </style>
-Y

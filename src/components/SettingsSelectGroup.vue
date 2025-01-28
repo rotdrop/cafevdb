@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@
                           v-bind="$attrs"
                           v-model="inputValObject"
                           label="displayname"
-                          :reduce="(group) => group.id"
+                          :reduce="reduceGroup"
                           :options="groupsArray"
                           :options-limit="100"
                           :placeholder="label"
@@ -40,28 +40,32 @@
                           :disabled="disabled"
                           :clearable="clearable"
                           v-on="$listeners"
-                          @search="(query) => findGroups(query)"
+                          @search="findGroups"
   >
     <template #option="option">
       <NcEllipsisedOption v-tooltip="groupInfoPopup(option)"
-                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appName, 'undefined')"
-                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
+                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appId, 'undefined')"
+                          :search="ncSelect ? ncSelect.search : t(appId, 'undefined')"
       />
     </template>
     <template #selected-option="option">
       <NcEllipsisedOption v-tooltip="groupInfoPopup(option)"
-                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appName, 'undefined')"
-                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
+                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appId, 'undefined')"
+                          :search="ncSelect ? ncSelect.search : t(appId, 'undefined')"
       />
     </template>
   </SelectWithSubmitButton>
 </template>
-<script>
+<script lang="ts">
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
-import groupInfoPopup from '../mixins/user-info-popup.js'
-import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.js'
-import { mapWritableState } from 'pinia'
+import groupInfoPopup from '../mixins/user-info-popup.ts'
+import consoleMixin from '../mixins/console.ts'
+import l10nMixin from '../mixins/l10n.ts'
+import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
+import type { CloudGroup } from '../stores/cloud-users-groups.ts'
+
+type ValueObject = CloudGroup | { id: string, displayname: string }
 
 export default {
   name: 'SettingsSelectGroup',
@@ -71,6 +75,8 @@ export default {
   },
   mixins: [
     groupInfoPopup,
+    consoleMixin,
+    l10nMixin,
   ],
   inheritAttrs: false,
   props: {
@@ -111,17 +117,17 @@ export default {
   },
   setup() {
     const store = useCloudUsersGroupsStore()
-    return { store }
+    return { store, groups: store.groups }
   },
   data() {
     return {
-      inputValObject: null,
+      inputValObject: null as null|ValueObject,
       ajaxLoading: false,
-      ncSelect: undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ncSelect: null as any,
     }
   },
   computed: {
-    ...mapWritableState(useCloudUsersGroupsStore, ['groups']),
     isLoading() {
       return (this.loading || this.ajaxLoading) && this.loadingIndicator
     },
@@ -129,10 +135,7 @@ export default {
       return Object.values(this.groups)
     },
     groupId() {
-      return this.empty ? '' : this.inputValObject.id
-    },
-    empty() {
-      return !this.inputValObject || !this.inputValObject.id
+      return this.inputValObject?.id || ''
     },
   },
   watch: {
@@ -140,7 +143,7 @@ export default {
      * This watcher catches changed property values and promotes the
      * changed value to the wrapped select.
      *
-     * @param {string} newValue New GID set from outside
+     * @param newValue New GID set from outside
      */
     async value(newValue) {
       if (this.ajaxLoading) {
@@ -156,25 +159,22 @@ export default {
     },
   },
   mounted() {
-    this.ncSelect = this.$refs.select.ncSelect
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.ncSelect = (this.$refs!.select! as any).ncSelect
   },
   methods: {
-    info(...args) {
-      console.info(this.$options.name, ...args)
+    reduceGroup: (group: ValueObject) => group.id,
+    async getGroupObject(id: string) {
+      return (await this.getGroup(id)) || { id, displayname: id }
     },
-    select() {
-      return this.$refs?.select?.$refs?.ncSelect
-    },
-    getGroupObject(gid) {
-      return this.getGroup(gid) || { id: gid, displayname: gid }
-    },
-    getGroup(groupId) {
+    getGroup(groupId: string) {
       return this.store.getGroup(groupId, this.errorHandler)
     },
-    findGroups(query) {
+    findGroups(query: string) {
       return this.store.findGroups(query, this.errorHandler)
     },
-    errorHandler(error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    errorHandler<T extends Error>(error: T | any) {
       this.$emit('error', error)
     },
   },

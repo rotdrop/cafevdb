@@ -22,13 +22,13 @@
  */
 
 export const PERMISSION_NONE = 0;
-export const PERMISSION_FRONTEND = (1 << 0);
-export const PERMISSION_ADDRESSBOOK = (1 << 1);
-export const PERMISSION_FILESYSTEM = (1 << 2);
-export const PERMISSION_CALENDAR = (1 << 3);
-export const PERMISSION_FINANCE = (1 << 4);
-export const PERMISSION_MANAGEMENT = (1 << 5);
-export const PERMISSION_EMAIL = (1 << 6);
+export const PERMISSION_FRONTEND = 0x01;
+export const PERMISSION_ADDRESSBOOK = 0x02;
+export const PERMISSION_FILESYSTEM = 0x04;
+export const PERMISSION_CALENDAR = 0x08;
+export const PERMISSION_FINANCE = 0x10;
+export const PERMISSION_MANAGEMENT = 0x20;
+export const PERMISSION_EMAIL = 0x40;
 export const PERMISSION_ALL = PERMISSION_FRONTEND
   | PERMISSION_ADDRESSBOOK
   | PERMISSION_FILESYSTEM

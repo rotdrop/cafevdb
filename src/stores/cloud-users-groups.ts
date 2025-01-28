@@ -26,40 +26,70 @@ import axios from '@nextcloud/axios';
 import { generateOcsUrl } from '@nextcloud/router';
 import { confirmPassword } from '@nextcloud/password-confirmation';
 import { set as vueSet /* , del as vueDelete */ } from 'vue';
-// import '@nextcloud/password-confirmation/style.css' // Required for dialog styles
+import type { AxiosResponse } from 'axios'
+import type { OCSResponse } from '@nextcloud/typings/ocs';
 
 const storeId = 'cloud-user-groups';
+
+type ErrorHandler = <E extends Error>(error: E|any) => void;
+
+export type CloudUser = {
+  id: string,
+  enabled: boolean,
+  displayname: string,
+  backend: string,
+  lastLogin: number,
+  groups: string[],
+  // ... and more but we don't need more ...
+}
+
+export type CloudGroup = {
+  id: string,
+  displayname: string,
+  usercount: number,
+  disabled: boolean,
+  canAdd: boolean,
+  canRemove: boolean,
+  backends: string[],
+  users: string[],
+  usersDetails: Record<string, CloudUser>,
+  getUsers: (errorHandler: null|ErrorHandler) => Promise<any>,
+  getUsersDetails: (errorHandler: null|ErrorHandler) => Promise<any>,
+}
+
+type GroupUsersDetailsResponse = AxiosResponse<OCSResponse<{ users: Record<string, CloudUser> }> >
+type GroupDetailsResponse = AxiosResponse<OCSResponse<{ groups: CloudGroup[] }> >
 
 export const useCloudUsersGroupsStore = defineStore(storeId, {
   state: () => {
     return {
-      groups: {},
-      users: {},
-      loadingPromise: Promise.resolve(true),
+      groups: {} as Record<string, CloudGroup>,
+      users: {} as Record<string, CloudUser>,
+      loadingPromise: Promise.resolve(true) as Promise<any>,
     };
   },
   actions: {
-    debug(...args) {
+    debug(...args: any[]) {
       console.debug(storeId, ...args);
     },
-    info(...args) {
+    info(...args: any[]) {
       console.info(storeId, ...args);
     },
-    error(...args) {
+    error(...args: any[]) {
       console.error(storeId, ...args);
     },
-    trace(...args) {
+    trace(...args: any[]) {
       console.trace(storeId, ...args);
     },
-    handleError(error, errorHandler) {
+    handleError<E extends Error>(error: E|any, errorHandler: null|ErrorHandler) {
       this.error('findUsers', error);
       if (typeof errorHandler === 'function') {
         errorHandler(error);
       }
     },
-    async getUser(uid, errorHandler) {
+    async getUser(uid: string, errorHandler: null|ErrorHandler): Promise<CloudUser|undefined> {
 
-      let promise;
+      let promise: Promise<any>;
       do {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
@@ -67,11 +97,11 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
       if (!this.users[uid]) {
         await (this.loadingPromise = this.findUsers(uid, errorHandler));
       }
-      return this.users[uid];
+      return this.users[uid] || undefined;
     },
-    async getGroup(gid, errorHandler) {
+    async getGroup(gid: string, errorHandler: null|ErrorHandler): Promise<CloudGroup|undefined> {
 
-      let promise;
+      let promise: Promise<any>;
       do {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
@@ -79,32 +109,33 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
       if (!this.groups[gid]) {
         await (this.loadingPromise = this.findGroups(gid, errorHandler));
       }
-      return this.groups[gid];
+      return this.groups[gid] || undefined;
     },
-    async createGroup(gid, displayName, errorHandler) {
-      const group = await this.getGroup(gid);
+    async createGroup(gid: string, displayName: string, errorHandler: null|ErrorHandler): Promise<CloudGroup|null|undefined> {
+      const group = await this.getGroup(gid, errorHandler);
       if (group) {
         return group;
       }
       try {
-        await (this.loadingPromise = axios.post(generateOcsUrl('cloud/groups', 2), { groupid: gid, displayname: displayName }));
-        return this.getGroup(gid);
-      } catch (error) {
-        if (error?.response?.data?.ocs?.meta?.statuscode === 403) {
+        await (this.loadingPromise = axios.post(generateOcsUrl('cloud/groups'), { groupid: gid, displayname: displayName }));
+        return await this.getGroup(gid, errorHandler);
+      } catch (error: any) {
+        const data: null|OCSResponse = error?.response?.data || null;
+        if (data && data.ocs.meta.statuscode === 403) {
           try {
             await confirmPassword();
           } catch (error) {
             this.handleError(error, errorHandler);
             return;
           }
-          return this.createGroup(gid, displayName, errorHandler);
+          return await this.createGroup(gid, displayName, errorHandler);
         }
         this.handleError(error, errorHandler);
       }
     },
-    async getGroupUsers(gid, errorHandler) {
+    async getGroupUsers(gid: string, errorHandler: null|ErrorHandler) {
 
-      let promise;
+      let promise: Promise<any>;
       do {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
@@ -113,8 +144,8 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
         return this.groups[gid].users;
       }
       try {
-        const response = await (this.loadingPromise = axios.get(generateOcsUrl(`cloud/groups/${gid}/users`, 2 /* API version */)));
-        const uids = response?.data?.ocs?.data?.users;
+        const response = await (this.loadingPromise = axios.get(generateOcsUrl(`cloud/groups/${gid}/users`)));
+        const uids: null|string[] = response?.data?.ocs?.data?.users;
         if (Array.isArray(uids) && this.groups[gid]) {
           this.groups[gid].users = uids;
         }
@@ -123,9 +154,9 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
         this.handleError(error, errorHandler);
       }
     },
-    async getGroupUsersDetails(gid, errorHandler) {
+    async getGroupUsersDetails(gid: string, errorHandler: null|ErrorHandler) {
 
-      let promise;
+      let promise: Promise<any>;
       do {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
@@ -134,7 +165,7 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
         if (this.groups[gid].usersDetails) {
           return this.groups[gid].usersDetails;
         } else if (this.groups[gid].users) {
-          const usersDetails = {};
+          const usersDetails = {} as Record<string, CloudUser> ;
           for (const uid of this.groups[gid].users) {
             if (this.users[uid]) {
               usersDetails[uid] = this.users[uid];
@@ -142,14 +173,14 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
               break;
             }
           }
-          if (Object.values(usersDetails).length === this.groups[gid].users) {
+          if (Object.values(usersDetails).length === this.groups[gid].users.length) {
             this.groups[gid].usersDetails = usersDetails;
             return usersDetails;
           }
         }
       }
       try {
-        const response = await (this.loadingPromise = axios.get(generateOcsUrl(`cloud/groups/${gid}/users/details`, 2 /* API version */)));
+        const response: GroupUsersDetailsResponse = await (this.loadingPromise = axios.get(generateOcsUrl(`cloud/groups/${gid}/users/details`)));
         const usersDetails = response?.data?.ocs?.data?.users;
         if (usersDetails) {
           for (const [uid, user] of Object.entries(usersDetails)) {
@@ -164,14 +195,14 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
         this.handleError(error, errorHandler);
       }
     },
-    async findGroups(query, errorHandler) {
+    async findGroups(query: null|string, errorHandler: null|ErrorHandler) {
       query = typeof query === 'string' ? encodeURI(query) : '';
       try {
         const limit = 10;
         let count = 0;
         let offset = 0;
         while (count < limit) {
-          const response = await (this.loadingPromise = axios.get(generateOcsUrl(`cloud/groups/details?search=${query}&limit=${limit}&offset=${offset}`, 2 /* API version */)));
+          const response: GroupDetailsResponse = await (this.loadingPromise = axios.get(generateOcsUrl(`cloud/groups/details?search=${query}&limit=${limit}&offset=${offset}`)));
 
           for (const group of response.data.ocs.data.groups) {
             if (!group.id) {
@@ -182,8 +213,8 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
             const gid = group.id;
             const oldGroup = this.groups[gid];
             if (!oldGroup) {
-              group.getUsers = (errorHandler) => this.getGroupUsers(group.id, errorHandler);
-              group.getUsersDetails = (errorHandler) => this.getGroupUsersDetails(group.id, errorHandler);
+              group.getUsers = (errorHandler: null|ErrorHandler) => this.getGroupUsers(group.id, errorHandler);
+              group.getUsersDetails = (errorHandler: null|ErrorHandler) => this.getGroupUsersDetails(group.id, errorHandler);
               // this.groups[gid] = group;
               vueSet(this.groups, gid, group);
             } else if (JSON.stringify(this.groups[gid]) !== JSON.stringify(group)) {
@@ -209,16 +240,16 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
         this.handleError(error, errorHandler);
       }
     },
-    async findUsers(query, errorHandler) {
+    async findUsers(query: null|string, errorHandler: null|ErrorHandler) {
       query = typeof query === 'string' ? encodeURI(query) : '';
       try {
         const limit = 10;
         let count = 0;
         let offset = 0;
         while (count < limit) {
-          const response = await (this.loadingPromise = axios.get(generateOcsUrl(`cloud/users/details?search=${query}&limit=${limit}&offset=${offset}`, 2 /* API version */)));
+          const response = await (this.loadingPromise = axios.get(generateOcsUrl(`cloud/users/details?search=${query}&limit=${limit}&offset=${offset}`)));
 
-          for (const [uid, user] of Object.entries(response.data.ocs.data.users)) {
+          for (const [uid, user] of (Object.entries(response.data.ocs.data.users) as [string, any][])) {
             ++count;
             const oldUser = this.users[uid];
             if (!oldUser) {
@@ -226,7 +257,7 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
               // this.users[uid] = user;
             } else if (JSON.stringify(oldUser) !== JSON.stringify(user)) {
               // replace in order to keep the references from groups to user-details
-              for (const [key, value] of Object.entries(user)) {
+              for (const [key, value] of Object.entries(user as object)) {
                 if (oldUser?.[key] !== value) {
                   oldUser[key] = value;
                 }

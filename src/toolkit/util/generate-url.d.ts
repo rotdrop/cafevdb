@@ -1,10 +1,8 @@
 /**
- * Orchestra member, musicion and project management application.
+ * @copyright Copyright (c) 2022, 2023, 2024, 2025, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
- * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,13 +17,10 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import * as Authorization from '../authorization.ts'
+export function generateUrl<T extends string>(url: T, urlParams?: Record<string, string|number|null>, urlOptions?: Record<string, string>):string;
+export function generateOcsUrl<T extends string>(url: T, urlParams?: Record<string, string|number|null>, urlOptions?: Record<stgring, string>):string;
 
-export default {
-  inject:[...Object.keys(Authorization).filter((key) => key.startsWith('PERMISSION_'))],
-  methods: {
-    authorized: Authorization.authorized,
-  },
-};
+export default generateUrl;

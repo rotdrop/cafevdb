@@ -21,5 +21,5 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 declare module 'blueimp-md5' {
-  function md5<T extends string>(input: T): string;
+  export default function md5<T extends string>(input: T): string;
 }

@@ -21,11 +21,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as Authorization from '../authorization.ts'
+import appInfo from './app-info.ts';
+import consoleMixin from './console.ts';
+import globalState from './global-state.ts';
+import dokuWiki from './doku-wiki.ts';
+import md5 from './md5.ts';
+import toasts from './toasts.ts';
+import tooltips from './tooltips.ts';
+import l10n from './l10n.ts';
 
-export default {
-  inject:[...Object.keys(Authorization).filter((key) => key.startsWith('PERMISSION_'))],
-  methods: {
-    authorized: Authorization.authorized,
-  },
-};
+export default [
+  appInfo,
+  l10n,
+  consoleMixin,
+  globalState,
+  dokuWiki,
+  md5,
+  toasts,
+  tooltips,
+];

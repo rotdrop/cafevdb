@@ -24,59 +24,59 @@
   <div :class="['files-tab', ...cloudVersionClasses]">
     <ul>
       <li class="files-tab-entry flex clickable"
-          @click="handleToggleMenu($refs.mailMergeOperations, ...arguments)"
+          @click="(event) => handleToggleMenu($refs.mailMergeOperations, event)"
       >
         <div class="files-tab-entry__avatar icon-play-white" />
         <div class="files-tab-entry__desc">
-          {{ t(appName, 'Mail merge operations') }}
+          {{ t(appId, 'Mail merge operations') }}
         </div>
-        <Actions ref="mailMergeOperations"
-                 :class="[{ merging: merging, loading: merging }]"
+        <NcActions ref="mailMergeOperations"
+                   :class="[{ merging: merging, loading: merging }]"
         >
-          <ActionButton v-tooltip="hints['templates:cloud:integration:download']"
-                        icon="icon-download"
-                        :disabled="senderId <= 0"
-                        :close-after-click="true"
-                        :title="t(appName, 'Download Merged Document')"
-                        @click="handleMailMergeRequest('download', ...arguments)"
+          <NcActionButton v-tooltip="hints['templates:cloud:integration:download']"
+                          icon="icon-download"
+                          :disabled="senderId <= 0"
+                          :close-after-click="true"
+                          :title="t(appId, 'Download Merged Document')"
+                          @click="(event) => handleMailMergeRequest('download', event)"
           >
-            {{ t(appName, 'download locally') }}
-          </ActionButton>
-          <ActionButton v-tooltip="hints['templates:cloud:integration:cloudstore']"
-                        :close-after-click="true"
-                        :disabled="senderId <= 0"
-                        :title="t(appName, 'Merge Document into Cloud')"
-                        @click="handleMailMergeRequest('cloud', ...arguments)"
+            {{ t(appId, 'download locally') }}
+          </NcActionButton>
+          <NcActionButton v-tooltip="hints['templates:cloud:integration:cloudstore']"
+                          :close-after-click="true"
+                          :disabled="senderId <= 0"
+                          :title="t(appId, 'Merge Document into Cloud')"
+                          @click="(event) => handleMailMergeRequest('cloud', event)"
           >
             <template #icon>
               <CloudUploadIcon />
             </template>
-            {{ t(appName, 'save to cloud') }}
-          </ActionButton>
-          <ActionButton v-tooltip="hints['templates:cloud:integration:dataset']"
-                        :close-after-click="true"
-                        :disabled="senderId <= 0"
-                        :title="t(appName, 'Download Replacement Data')"
-                        @click="handleMailMergeRequest('dataset', ...arguments)"
+            {{ t(appId, 'save to cloud') }}
+          </NcActionButton>
+          <NcActionButton v-tooltip="hints['templates:cloud:integration:dataset']"
+                          :close-after-click="true"
+                          :disabled="senderId <= 0"
+                          :title="t(appId, 'Download Replacement Data')"
+                          @click="(event) => handleMailMergeRequest('dataset', event)"
           >
             <template #icon>
               <CodeJsonIcon />
             </template>
-            {{ t(appName, 'download data') }}
-          </ActionButton>
-        </Actions>
+            {{ t(appId, 'download data') }}
+          </NcActionButton>
+        </NcActions>
       </li>
       <li class="files-tab-entry flex">
         <div class="files-tab-entry__avatar icon-user-white" />
         <div class="files-tab-entry__desc">
-          <h5>{{ t(appName, 'Sender') }}</h5>
+          <h5>{{ t(appId, 'Sender') }}</h5>
         </div>
       </li>
       <li class="files-tab-entry">
         <SelectMusicians v-model="sender"
                          :tooltip="{ content: senderTooltip, html: true }"
                          :class="[{ empty: senderId <= 0 }]"
-                         :placeholder="t(appName, 'e.g. John Doe')"
+                         :placeholder="t(appId, 'e.g. John Doe')"
                          :multiple="false"
                          :reset-action="true"
                          :clear-action="false"
@@ -86,50 +86,50 @@
         />
       </li>
       <li class="files-tab-entry flex clickable"
-          @click="handleToggleMenu($refs.recipientsSource, ...arguments)"
+          @click="(event) => handleToggleMenu($refs.recipientsSource, event)"
       >
         <div class="files-tab-entry__avatar icon-group-white" />
         <div class="files-tab-entry__desc">
-          <h5>{{ t(appName, 'Recipients') }}</h5>
+          <h5>{{ t(appId, 'Recipients') }}</h5>
         </div>
-        <Actions id="files-tabs-entry__recipients-base"
-                 ref="recipientsSource"
+        <NcActions id="files-tabs-entry__recipients-base"
+                   ref="recipientsSource"
         >
-          <ActionRadio ref="radioDatabase"
-                       name="recipientsSource"
-                       value="database"
-                       :checked="recipientsSource === 'database'"
-                       :disabled="senderId <= 0"
-                       @change="toggleRecipientsSource"
+          <NcActionRadio ref="radioDatabase"
+                         name="recipientsSource"
+                         value="database"
+                         :checked="recipientsSource === 'database'"
+                         :disabled="senderId <= 0"
+                         @change="toggleRecipientsSource"
           >
-            {{ t(appName, 'Musician\'s Datebase') }}
-          </ActionRadio>
-          <ActionRadio ref="radioContacts"
-                       name="recipientsSource"
-                       value="contacts"
-                       :checked="recipientsSource === 'contacts'"
-                       :disabled="senderId <= 0"
-                       @change="toggleRecipientsSource"
+            {{ t(appId, 'Musician\'s Datebase') }}
+          </NcActionRadio>
+          <NcActionRadio ref="radioContacts"
+                         name="recipientsSource"
+                         value="contacts"
+                         :checked="recipientsSource === 'contacts'"
+                         :disabled="senderId <= 0"
+                         @change="toggleRecipientsSource"
           >
-            {{ t(appName, 'Addressbooks') }}
-          </ActionRadio>
-          <ActionRadio v-if="false"
-                       ref="givenContact"
-                       name="recipientsSource"
-                       value="input"
-                       :checked="recipientsSource === 'input'"
-                       :disabled="true || senderId <= 0"
-                       @change="toggleRecipientsSource"
+            {{ t(appId, 'Addressbooks') }}
+          </NcActionRadio>
+          <NcActionRadio v-if="false"
+                         ref="givenContact"
+                         name="recipientsSource"
+                         value="input"
+                         :checked="recipientsSource === 'input'"
+                         :disabled="true || senderId <= 0"
+                         @change="toggleRecipientsSource"
           >
-            {{ t(appName, 'Enter Address') }}
-          </ActionRadio>
-        </Actions>
+            {{ t(appId, 'Enter Address') }}
+          </NcActionRadio>
+        </NcActions>
       </li>
       <li v-show="showDatabaseRecipients" class="files-tab-entry recipients__database">
         <SelectMusicians v-model="recipients"
                          :tooltip="recipients.length ? false : hints['templates:cloud:integration:recipients:musicians']"
-                         :label="t(appName, 'Musicians')"
-                         :placeholder="t(appName, 'e.g. Jane Doe')"
+                         :label="t(appId, 'Musicians')"
+                         :placeholder="t(appId, 'e.g. Jane Doe')"
                          :multiple="true"
                          :submit-button="false"
                          :clear-action="true"
@@ -139,8 +139,8 @@
         />
         <SelectProjects v-model="project"
                         :tooltip="hints['templates:cloud:integration:project']"
-                        :label="t(appName, 'Project')"
-                        :placeholder="t(appName, 'e.g. Auvergne2019')"
+                        :label="t(appId, 'Project')"
+                        :placeholder="t(appId, 'e.g. Auvergne2019')"
                         :multiple="false"
                         :submit-button="false"
                         :clear-action="false"
@@ -149,9 +149,9 @@
       </li>
       <li v-show="showAddressBookRecipients" class="files-tab-entry recipients__addressbooks">
         <SelectContacts v-model="contacts"
-                        :tooltip="contacts.length ? false : hints['templates:cloud:integration:recipients:contacts']"
-                        :label="t(appName, 'Contacts')"
-                        :placeholder="t(appName, 'e.g. Bilbo Baggins')"
+                        :tooltip="contacts.length ? undefined : hints['templates:cloud:integration:recipients:contacts']"
+                        :label="t(appId, 'Contacts')"
+                        :placeholder="t(appId, 'e.g. Bilbo Baggins')"
                         :multiple="true"
                         :clear-action="true"
                         :only-address-books="onlyAddressBooks"
@@ -163,7 +163,7 @@
         />
         <SelectAddressBooks v-model="onlyAddressBooks"
                             :tooltip="hints['templates:cloud:integration:address-books']"
-                            :label="t(appName, 'Address-Books')"
+                            :label="t(appId, 'Address-Books')"
                             :multiple="true"
                             :reset-button="true"
                             :clear-button="false"
@@ -179,15 +179,12 @@ import { appName } from '../config.ts'
 import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
 import Vue from 'vue'
 import {
-  NcActions as Actions,
-  NcActionButton as ActionButton,
-  NcActionRadio as ActionRadio,
-  // NcAppSidebar as AppSidebar,
-  // NcAppSidebarTab as AppSidebarTab,
+  NcActions,
+  NcActionButton,
+  NcActionRadio,
   Tooltip,
 } from '@nextcloud/vue'
 import { createPinia, PiniaVuePlugin } from 'pinia'
-// import ActionRadio from '../components/action-radio/NcActionRadio'
 import CloudUploadIcon from 'vue-material-design-icons/CloudUpload.vue'
 import CodeJsonIcon from 'vue-material-design-icons/CodeJson.vue'
 // import DatabaseIcon from 'vue-material-design-icons/Database.vue'
@@ -195,15 +192,21 @@ import CodeJsonIcon from 'vue-material-design-icons/CodeJson.vue'
 import axios from '@nextcloud/axios'
 import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
+import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.js'
 import { generateUrl } from '@nextcloud/router'
-import { getInitialState } from '../services/initial-state-service.js'
+import { getInitialState } from '../services/initial-state-service.ts'
 import SelectContacts from '../components/SelectContacts.vue'
 import SelectAddressBooks from '../components/SelectAddressBooks.vue'
 import SelectMusicians from '../components/SelectMusicians.vue'
 import SelectProjects from '../components/SelectProjects.vue'
-import fileDownload from '../services/axios-file-download.js'
-import tooltip from '../mixins/tooltips.js'
+import fileDownload from '../services/axios-file-download.ts'
+import tooltips from '../mixins/tooltips.ts'
+import consoleMixin from '../mixins/console.ts'
+import l10nMixin from '../mixins/l10n.ts'
 import md5 from 'blueimp-md5'
+import type { LegacyFileInfo } from '@nextcloud/files'
+import type { Project } from '../stores/app-data.ts'
+import type { Contact, AddressBook, Musician } from '../components/types/address-book.d.ts'
 
 Vue.mixin({ data() { return { appName } }, methods: { t, n } })
 Vue.directive('tooltip', Tooltip)
@@ -215,35 +218,84 @@ export {
   pinia,
 }
 
+interface InitialState {
+  personal: {
+    userId: string,
+    musicianId: number,
+  },
+}
+
+type MusicianModel = {
+  id: number
+}
+
+const MailMergeDataset = 'dataset'
+const MailMergeDownload = 'downlaod'
+const MailMergeCloud = 'cloud'
+type MailMergeOperations = typeof MailMergeDataset
+  | typeof MailMergeDownload
+  | typeof MailMergeCloud
+
+type ContactKeys = {
+  key: string|number,
+  uri: string|undefined,
+  uid: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  book: any,
+}
+
+type MailMergePayload = {
+  fileId: number,
+  fileName: string,
+  senderId: number,
+  projectId: number,
+  recipientIds: (number|string)[],
+  addressBooksUris: Record<string, string>,
+  contactKeys: ContactKeys[],
+  operation: MailMergeOperations,
+  limit?: number,
+}
+
+interface RadioInputEvent extends Event {
+  target: HTMLInputElement,
+}
+
+interface TargetedMouseEvent extends MouseEvent {
+  target: HTMLInputElement,
+}
+
 export default {
   name: 'FilesTab',
   components: {
     // AppSidebar,
     // AppSidebarTab,
-    SelectContacts,
-    SelectAddressBooks,
-    SelectMusicians,
-    SelectProjects,
-    Actions,
-    ActionButton,
-    ActionRadio,
+    // ContactsIcon,
+    // DatabaseIcon,
     CloudUploadIcon,
     CodeJsonIcon,
-    // DatabaseIcon,
-    // ContactsIcon,
+    NcActionButton,
+    NcActionRadio,
+    NcActions,
+    SelectAddressBooks,
+    SelectContacts,
+    SelectMusicians,
+    SelectProjects,
   },
   mixins: [
-    tooltip,
+    tooltips,
+    consoleMixin,
+    l10nMixin,
   ],
   data() {
     return {
       cloudVersionClasses,
-      sender: '',
-      project: null,
-      recipients: [],
+      fileInfo: null as null|LegacyFileInfo,
+      sender: null as null|MusicianModel,
+      project: null as null|Project,
+      recipients: [] as Musician[],
       allAddressBooks: {},
-      onlyAddressBooks: [],
-      contacts: [],
+      onlyAddressBooks: [] as AddressBook[],
+      contacts: [] as Contact[],
       hints: {
         'templates:cloud:integration:sender': '',
         'templates:cloud:integration:recipients:musicians': '',
@@ -254,15 +306,18 @@ export default {
         'templates:cloud:integration:cloudstore': '',
         'templates:cloud:integration:dataset': '',
       },
-      initialState: {},
+      initialState: {} as InitialState,
       merging: false,
-      recipientsSource: null,
+      recipientsSource: null as null|string,
     }
   },
   computed: {
+    appId() {
+      return appName
+    },
     projectId() {
       try {
-        return this.project.id
+        return this.project!.id
       } catch (ignoreMe) {
         return 0
       }
@@ -281,7 +336,7 @@ export default {
         return []
       }
     },
-    contactKeys() {
+    contactKeys(): ContactKeys[] {
       try {
         return this
           .contacts
@@ -361,15 +416,12 @@ export default {
     this.info('SENDER ID', this.senderId)
   },
   methods: {
-    info(...args) {
-      console.info(this.$options.name, ...args)
-    },
     /**
      * Update current fileInfo and fetch new data.
      *
      * @param {object} fileInfo Fhe current file FileInfo.
      */
-    async update(fileInfo) {
+    async update(fileInfo: LegacyFileInfo) {
       this.fileInfo = fileInfo
       this.resetState()
     },
@@ -385,7 +437,7 @@ export default {
       this.info('SENDER', this.sender)
       this.hints = await this.tooltips(Object.keys(this.hints))
     },
-    handleToggleMenu(menu, event) {
+    handleToggleMenu(menu: typeof NcActions, event: TargetedMouseEvent) {
       if (event.target.closest('.action-item')) {
         return
       }
@@ -395,39 +447,41 @@ export default {
         menu.openMenu()
       }
     },
-    toggleRecipientsSource(event) {
-      this.info('EVENT', event)
-      this.recipientsSource = event.target.value
+    toggleRecipientsSource(event: RadioInputEvent) {
       this.info('RECIPIENTS', this.recipientsSource)
-      this.$refs.recipientsSource.closeMenu()
+      this.info('EVENT', event)
+      this.recipientsSource = event!.target.value
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const blah = this.$refs!.recipientsSource as any
+      blah.closeMenu()
     },
-    async handleMailMergeRequest(operation, ...args) {
-      this.info('MAIL MERGE', operation, ...args)
+    async handleMailMergeRequest(operation: MailMergeOperations, event: TargetedMouseEvent) {
+      this.info('MAIL MERGE', operation, event)
       this.info('FILE', this.fileInfo)
 
       this.merging = true
 
-      const postData = {
-        fileId: this.fileInfo.id,
-        fileName: this.fileInfo.path + '/' + this.fileInfo.name,
-        senderId: this.sender.id,
+      const postData: MailMergePayload = {
+        fileId: this.fileInfo!.id,
+        fileName: this.fileInfo!.path + '/' + this.fileInfo!.name,
+        senderId: this.sender!.id,
         projectId: this.projectId,
         recipientIds: this.recipientIds,
         addressBooksUris: this.addressBookUris,
         contactKeys: this.contactKeys,
         operation,
       }
-      const ajaxUrl = generateUrl('/apps/' + appName + '/documents/mail-merge')
+      const ajaxUrl = generateAppUrl('documents/mail-merge')
 
       try {
         switch (operation) {
-        case 'dataset':
+        case MailMergeDataset:
           postData.limit = 1 // maybe ...
           // fallthrough
-        case 'download':
+        case MailMergeDownload:
           await fileDownload(ajaxUrl, postData)
           break
-        case 'cloud': {
+        case MailMergeCloud: {
           const response = await axios.post(ajaxUrl, postData)
           const cloudFolder = response.data.cloudFolder
           const message = response.data.message
@@ -437,10 +491,12 @@ export default {
           break
         }
         }
-      } catch (e) {
-        console.error('ERROR', e)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        this.error('ERROR', e)
         let message = t(appName, 'reason unknown')
-        let errorData = {}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let errorData: any = {}
         if (e.response) {
           errorData = e.response.data || {}
           if (
@@ -458,7 +514,7 @@ export default {
         } else if (e.request) {
           message = t(appName, 'no response received from {ajaxUrl}', { ajaxUrl })
         }
-        console.error('ERROR DATA', errorData)
+        this.error('ERROR DATA', errorData)
         message = errorData.message || message
         showError(t(appName, 'Could not perform mail-merge: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
       }
@@ -469,7 +525,7 @@ export default {
      * Reset the current view to its default state
      */
     resetState() {
-      this.sender = ''
+      this.sender = null
       this.recipients = []
       this.project = null
       if (this.initialState.personal.musicianId > 0) {

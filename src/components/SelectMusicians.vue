@@ -26,7 +26,7 @@
                           v-bind="$attrs"
                           label="formalDisplayName"
                           :options="musiciansArray"
-                          :selectable="(option) => !isSelectAllSelected || option.id === 0"
+                          :selectable="isSelectable"
                           :options-limit="100"
                           :placeholder="placeholder || label"
                           :input-label="label"
@@ -38,32 +38,48 @@
                           :reset-state="initialValObjects"
                           :searchable="searchable"
                           v-on="$listeners"
-                          @search="(query) => findMusicians(query)"
+                          @search="findMusicians"
   >
     <template #option="option">
       <NcEllipsisedOption v-tooltip="musicianAddressPopup(option)"
-                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appName, 'undefined')"
-                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
+                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appId, 'undefined')"
+                          :search="ncSelect ? ncSelect.search : t(appId, 'undefined')"
       />
     </template>
     <template #selected-option="option">
       <NcEllipsisedOption v-tooltip="musicianAddressPopup(option)"
-                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appName, 'undefined')"
-                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
+                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appId, 'undefined')"
+                          :search="ncSelect ? ncSelect.search : t(appId, 'undefined')"
       />
     </template>
   </SelectWithSubmitButton>
 </template>
-<script>
-
+<script lang="ts">
 import { set as vueSet } from 'vue'
 import { appName } from '../config.ts'
+import { translate as t } from '@nextcloud/l10n'
 import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
-import musicianAddressPopup from '../mixins/address-popup.js'
-import { usePersistentDataStore } from '../stores/persistentData.js'
+import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.js'
+import musicianAddressPopup from '../mixins/address-popup.ts'
+import consoleMixin from '../mixins/console.ts'
+import l10nMixin from '../mixins/l10n.ts'
+import { usePersistentDataStore } from '../stores/persistent-data.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
+import type { AxiosResponse } from 'axios'
+import type { Musician } from './types/address-book.d.ts'
+import type { PropType } from 'vue'
+
+type SearchParameters = {
+  limit: null|number,
+  scope: string,
+  projectId?: number,
+  ids?: number[],
+}
+
+interface MusicianIdObject {
+  id: number,
+}
 
 export default {
   name: 'SelectMusicians',
@@ -73,6 +89,8 @@ export default {
   },
   mixins: [
     musicianAddressPopup,
+    consoleMixin,
+    l10nMixin,
   ],
   inheritAttrs: false,
   props: {
@@ -93,8 +111,8 @@ export default {
       default: undefined,
     },
     value: {
-      type: [Array, String, Object, Number],
-      default: () => [],
+      type: [Array, Object] as PropType<null|Musician|Musician[]|MusicianIdObject|MusicianIdObject[]>,
+      default: undefined,
     },
     clearable: {
       type: Boolean,
@@ -135,11 +153,12 @@ export default {
   },
   data() {
     return {
-      inputValObjects: [],
-      initialValObjects: [],
-      musicians: {},
+      inputValObjects: [] as undefined|Musician|Musician[],
+      initialValObjects: [] as Musician|Musician[],
+      musicians: {} as Record<number, Musician>,
       ajaxLoading: false,
-      ncSelect: undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ncSelect: undefined as any,
       id: null,
     }
   },
@@ -154,7 +173,10 @@ export default {
       return this.selectAllOption === undefined ? this.multiple : this.selectAllOption
     },
     isSelectAllSelected() {
-      return this.provideSelectAll && this.inputValObjects.length === 1 && this.inputValObjects[0].id === 0
+      return this.provideSelectAll
+        && Array.isArray(this.inputValObjects)
+        && this.inputValObjects.length === 1
+        && this.inputValObjects[0].id === 0
     },
   },
   watch: {
@@ -173,20 +195,26 @@ export default {
         newValue = [newValue]
       }
       this.ajaxLoading = true
-      for (const musician of newValue) {
+      for (const musician of newValue as Musician[]) {
         const musicianId = musician.id
         if (musicianId !== 0 && !this.musicians[musicianId]) {
           await this.findMusicians('', [musicianId])
           if (this.musicians[musician.id]) {
-            const index = this.inputValObjects.findIndex((object) => object.id === musicianId)
-            if (index >= 0) {
-              this.inputValObjects.splice(index, 1, this.musicians[musicianId])
+            if (this.multiple) {
+              const array = (this.inputValObjects || []) as Musician[]
+              const index = array.findIndex((object) => object.id === musicianId)
+              if (index >= 0) {
+                array.splice(index, 1, this.musicians[musicianId])
+              }
+            } else {
+              this.inputValObjects = this.musicians[musicianId]
             }
           }
         }
       }
-      if (newValue.length > 1 && newValue.findIndex((object) => object.id === 0) !== -1) {
-        this.inputValObjects.splice(0, this.inputValObjects.length, this.musicians[0])
+      if (newValue.findIndex((object: Musician) => object.id === 0) !== -1) {
+        const array = this.inputValObjects as Musician[]
+        array.splice(0, array.length, this.musicians[0])
       }
       this.ajaxLoading = false
     },
@@ -199,12 +227,13 @@ export default {
     await this.getData()
   },
   mounted() {
-    this.ncSelect = this.$refs.select.ncSelect
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.ncSelect = (this.$refs!.select! as any).ncSelect
     this.id = this._uid
   },
   methods: {
-    info(...args) {
-      console.info(this.$options.name, ...args)
+    isSelectable(option: Musician) {
+      return !this.isSelectAllSelected || option.id === 0
     },
     async getData() {
       if (this.ajaxLoading) {
@@ -215,9 +244,9 @@ export default {
       if (!this.searchable) {
         try {
           this.musicians = this.persistentData.selectMusicians[this.searchScope][this.projectId] || {}
-          this.inputValObjects = this.getValueObjects()
+          this.inputValObjects = this.getValueObjects(false)
           if (this.resetButton) {
-            this.initialValObjects = this.inputValObjects
+            this.initialValObjects = this.inputValObjects || []
           }
           this.ajaxLoading = false
           return
@@ -227,7 +256,7 @@ export default {
       await this.findMusicians('', this.getValueIds())
       this.inputValObjects = this.getValueObjects(true)
       if (this.resetButton) {
-        this.initialValObjects = this.inputValObjects
+        this.initialValObjects = this.inputValObjects || []
       }
       if (!this.searchable) {
         this.persistentData.selectMusicians = {
@@ -244,7 +273,7 @@ export default {
         vueSet(this.musicians, 0, { id: 0, formalDisplayName: t(appName, '** everybody **') })
       }
     },
-    getValueObjects(noUndefined) {
+    getValueObjects(noUndefined: boolean) {
       const value = Array.isArray(this.value) ? this.value : (this.value || this.value === 0 ? [this.value] : [])
       let everybody = false
       let result = value.filter((musician) => musician !== '' && typeof musician !== 'undefined').map(
@@ -265,20 +294,16 @@ export default {
     },
     getValueIds() {
       const value = Array.isArray(this.value) ? this.value : [this.value]
-      const result = value.filter((musician) => musician !== '' && typeof musician !== 'undefined').map(
-        (musician) => {
-          return musician.id !== undefined ? musician.id : musician
-        },
-      )
+      const result = value.filter((musician: Musician) => musician?.id).map((musician: Musician) => musician.id)
       // console.info('GET VALUE IDS', result)
       return result
     },
-    async findMusicians(query, musicianIds) {
+    async findMusicians(query: string, musicianIds: number[]) {
       query = typeof query === 'string' ? encodeURI(query) : ''
       if (query !== '') {
         query = '/' + query
       }
-      const params = {
+      const params: SearchParameters = {
         limit: this.searchable ? 10 : null,
         scope: this.searchScope,
       }
@@ -289,7 +314,7 @@ export default {
         params.ids = musicianIds
       }
       try {
-        const response = await axios.get(generateUrl(`/apps/${appName}/musicians/search${query}`), { params })
+        const response: AxiosResponse<Musician[]> = await axios.get(generateAppUrl(`musicians/search${query}`), { params })
         if (response.data.length > 0) {
           for (const musician of response.data) {
             vueSet(this.musicians, musician.id, musician)

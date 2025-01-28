@@ -21,21 +21,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router';
-import md5 from 'blueimp-md5';
+import { appName } from '../config.ts';
+import { translate as t } from '@nextcloud/l10n';
+import { getDialogBuilder } from '@nextcloud/dialogs';
 
 const mixin = {
   methods: {
-    dokuWikiSection(path) {
-      return [this.globalState.wikiNamespace, ...path].join(':');
-    },
-    dokuWikiUrl(path) {
-      const wikiPage = Array.isArray(path) ? this.dokuWikiSection(path) : path;
-      return nextcloudGenerateUrl('/apps/dokuwiki/page/index?wikiPage=' + wikiPage);
-    },
-    dokuWikiUrlTarget(path) {
-      const wikiPage = Array.isArray(path) ? this.dokuWikiSection(path) : path;
-      return md5(wikiPage);
+    dialogConfirm(title: string, body: string, callback: (answer: boolean) => void) {
+      return getDialogBuilder(title)
+        .addButton({
+          label: t(appName, 'No'),
+          callback: () => callback(false),
+          type: 'primary',
+        })
+        .addButton({
+          label: t(appName, 'Yes'),
+          callback: () => callback(true),
+          type: 'secondary',
+        })
+        .setText(body)
+        .build()
+        .show();
     },
   },
 };

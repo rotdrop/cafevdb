@@ -26,29 +26,54 @@ import { set as vueSet, del as vueDelete, ref, computed } from 'vue';
 import { computedAsync } from '@vueuse/core';
 import axios from '@nextcloud/axios';
 import generateAppUrl from '../toolkit/util/generate-url.js';
+import type { AxiosResponse } from 'axios';
 
 const storeId = 'app-data';
 const abortController = new AbortController();
 
+export class ReadOnlyProxyWriteError extends Error {}
+type ErrorHandler = <E extends Error>(error: E|any, context: object) => void;
+
+export const HistoryActionPush = 'push';
+export const HistoryActionPop = 'pop';
+export const HistoryActionReplace = 'replace';
+export type HistoryAction = typeof HistoryActionPop|typeof HistoryActionPush|typeof HistoryActionReplace;
+
+export type ProjectTypeTemporary = 'temporary';
+export type ProjectTypePermanent = 'permanent';
+export type ProjectTypeTemplate = 'template';
+export type ProjectTemporalType = ProjectTypeTemporary|ProjectTypePermanent|ProjectTypeTemplate;
+
+export interface Project {
+  id: number,
+  name: string,
+  year: number,
+  folders?: {
+    projectsfolder: string,
+  },
+  wikiPage: string,
+  type: ProjectTemporalType,
+}
+
 const usePrivateState = defineStore(storeId + '-private', {
   state: () => ({
-    projects: {},
-    loadingPromise: Promise.resolve(true),
+    projects: {} as Record<number, Project>,
+    loadingPromise: Promise.resolve(true) as Promise<any>,
   }),
   actions: {
-    debug(...args) {
+    debug(...args: any[]) {
       console.debug(storeId, ...args);
     },
-    info(...args) {
+    info(...args: any[]) {
       console.info(storeId, ...args);
     },
-    error(...args) {
+    error(...args: any[]) {
       console.error(storeId, ...args);
     },
-    trace(...args) {
+    trace(...args: any[]) {
       console.trace(storeId, ...args);
     },
-    handleError(error, context, errorHandler) {
+    handleError<E extends Error>(error: E|any, context: object, errorHandler: ErrorHandler|null) {
       this.error(context, error);
       if (typeof errorHandler === 'function') {
         errorHandler(error, context);
@@ -57,42 +82,78 @@ const usePrivateState = defineStore(storeId + '-private', {
     abort() {
       abortController.abort();
     },
-    async getProject(projectId, errorHandler) {
-      let promise;
+    async awaitLoadingPromise() {
+      let promise: Promise<any>;
       do {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
-
+    },
+    async getProject(projectId: number, errorHandler: ErrorHandler|null): Promise<undefined|Project> {
+      await this.awaitLoadingPromise();
       if (!this.projects[projectId]) {
         await (this.loadingPromise = this.findProject(projectId, errorHandler));
       }
-      return this.projects?.[projectId];
+      return this.projects?.[projectId] || undefined;
     },
-    async findProject(projectId, errorHandler) {
+    async putProject(project: Project, errorHandler: ErrorHandler|null) {
+      const projectId = project.id;
+      if (this.projects[projectId]) {
+        return this.projects[projectId];
+      }
+      const url = generateAppUrl('projects/{projectId}/folder/all', { projectId });
+      vueSet(this.projects, projectId, project);
+      try {
+        const response = await axios.get(url, { signal: abortController.signal });
+        this.info('FETCH PROJECT FOLDERS RESPONSE', response);
+        vueSet(this.projects[projectId], 'folders', response.data);
+        return this.projects[projectId];
+      } catch (e) {
+        this.deleteProject(projectId);
+        this.handleError(e, { action: 'findProject', projectId, url }, errorHandler);
+        return undefined;
+      }
+    },
+    async findProject(projectId: number, errorHandler: ErrorHandler|null) {
       let url = generateAppUrl('projects/{projectId}', { projectId });
       try {
         const response = await axios.get(url, { signal: abortController.signal });
         this.info('FIND PROJECT RESPONSE', response);
-        vueSet(this.projects, projectId, response.data);
-        url = generateAppUrl('projects/{projectId}/folder/all', { projectId });
-        try {
-          const response = await axios.get(url, { signal: abortController.signal });
-          this.info('FETCH PROJECT FOLDERS RESPONSE', response);
-          vueSet(this.projects[projectId], 'folders', response.data);
-        } catch (e) {
-          this.handleError(e, { action: 'findProject', projectId, url }, errorHandler);
-        }
+        const project = await this.putProject(response.data, errorHandler);
+        return project;
       } catch (e) {
         this.handleError(e, { action: 'findProject', projectId, url }, errorHandler);
+        return undefined;
       }
     },
-    deleteProject(projectId) {
+    async searchProjects(query: string, errorHandler: ErrorHandler|null) {
+      query = encodeURI(query);
+      if (query !== '') {
+        query = '/' + query;
+      }
+      let promise: Promise<any>;
+      do {
+        await (promise = this.loadingPromise);
+      } while (promise !== this.loadingPromise);
+      try {
+        const response: AxiosResponse<Project[]> = await axios.get(generateAppUrl(`projects/search${query}`), {
+          params: { limit: 10 },
+        })
+        if (response.data.length > 0) {
+          const promises = [] as Promise<undefined|Project>[];
+          for (const project of response.data) {
+            promises.push(this.putProject(project, errorHandler));
+          }
+          await Promise.allSettled(promises);
+        }
+      } catch (e) {
+        this.handleError(e, { action: 'searchProjects', query }, errorHandler);
+      }
+    },
+    deleteProject(projectId: number) {
       vueDelete(this.projects, projectId);
     },
   },
 });
-
-export class ReadOnlyProxyWriteError extends Error {}
 
 export default defineStore(storeId, () => {
   const state = usePrivateState();
@@ -101,8 +162,8 @@ export default defineStore(storeId, () => {
   const appError = ref(false);
   const busyCount = ref(0);
   const busyFlag = ref(false);
-  const busyState = computed(() => busyCount.value > 0 || busyFlag.value > 0);
-  const setBusyFlag = (value) => { const oldValue = busyFlag.value; busyFlag.value = value; return oldValue; };
+  const busyState = computed(() => busyCount.value > 0 || busyFlag.value);
+  const setBusyFlag = (value: boolean) => { const oldValue = busyFlag.value; busyFlag.value = value; return oldValue; };
   const pushBusyState = () => { ++busyCount.value; state.info('BUSY STATE PUSH', busyCount.value); return busyCount.value; };
   const popBusyState = () => { --busyCount.value; state[(busyCount.value < 0) ? 'trace' : 'info']('BUSY STATE POP', busyCount.value); return busyCount.value; };
   const currentProjectId = ref(0);
@@ -122,47 +183,56 @@ export default defineStore(storeId, () => {
     null,
     { lazy: true, evaluating },
   );
-  const currentProjectName = computedAsync(
-    async (/* onCancel */) => {
-      if (!projectMode.value) {
-        return null;
-      }
-      // onCancel(() => state.abort());
-      await currentProject.value;
-      state.debug('CURRENT PROJECT', currentProject.value);
+  const currentProjectName = computed(() => currentProject.value?.name);
 
-      return currentProject.value?.name || null;
-    },
-    null,
-    { lazy: true, evaluating },
-  );
+  async function getProject(projectId: number, handler?: ErrorHandler) {
+    return await state.getProject(projectId, handler || errorHandler.value);
+  }
+  async function searchProjects(query: string, handler?: ErrorHandler) {
+    return await state.searchProjects(query, handler || errorHandler.value);
+  }
 
-  async function getProject(projectId) { return await state.getProject(projectId, errorHandler.value); }
+  function validateProjectId(name: PropertyKey) {
+    try {
+      name = '' + (name as string);
+    } catch (e) {
+      state.error('Property is not stringable', name);
+      return undefined;
+    }
+    const projectId = parseInt(name);
+    if (projectId !== +name) {
+      return undefined;
+    }
+    return projectId;
+  };
 
   const projects = ref(new Proxy(state.projects, {
-    async get(target, name, receiver) {
+    async get(target, name: PropertyKey, receiver) {
       state.debug('PROXY GET', target, name, receiver);
       if (!Reflect.has(target, name)) {
-        try {
-          name = '' + name;
-        } catch (e) {
-          state.error('Property is not stringable', name);
-          return undefined;
-        }
-        if (parseInt(name) !== +name) {
+        const projectId = validateProjectId(name);
+        if (!projectId) {
           return undefined;
         }
         state.debug('Fetching project with id ', name);
-        const project = await state.getProject(name);
+        const project = await state.getProject(projectId, errorHandler.value);
         return Reflect.set(target, name, project, receiver);
       }
       return Reflect.get(target, name, receiver);
     },
-    set: (target, key) => {
-      throw new ReadOnlyProxyWriteError('"projects" property is read-only.');
+    set(_target, key: PropertyKey) {
+      throw new ReadOnlyProxyWriteError('"projects" property is read-only, cannot assign to "' + key.toString() + '".');
     },
-    deleteProperty: (target, key) => {
-      state.deleteProject(key);
+    deleteProperty(target, name) {
+      if (!Reflect.has(target, name)) {
+        return true;
+      }
+      const projectId = validateProjectId(name);
+      if (!projectId) {
+        return false;
+      }
+      state.deleteProject(projectId);
+      return true;
     },
   }));
 
@@ -176,9 +246,9 @@ export default defineStore(storeId, () => {
     },
   });
   const currentHistoryIndex = ref('initial');
-  const pendingHistoryData = ref(null);
-  const pendingHistoryAction = ref(null);
-  const pendingHistoryKey = ref('initial');
+  const pendingHistoryData = ref<null|object>(null);
+  const pendingHistoryAction = ref<null|HistoryAction>(null);
+  const pendingHistoryKey = ref<null|string|number>('initial');
   const currentHistoryState = computed(() => routerHistory.value?.[currentHistoryIndex.value] || null);
   const prevHistoryIndex = computed(() => currentHistoryState.value.prev);
   const nextHistoryIndex = computed(() => currentHistoryState.value.next);
@@ -191,13 +261,13 @@ export default defineStore(storeId, () => {
    * provided data will be install at the proper position in the
    * history stack.
    *
-   * @param {string} action One of 'push', 'replace', 'pop'. 'pop'
+   * @param action One of 'push', 'replace', 'pop'. 'pop'
      will leave the 'post' property untouched, replace will replace
      the 'post' property.
    *
-   * @param {object|undefined} post TBD
+   * @param post TBD
    */
-  function scheduleHistoryAction(action, post) {
+  function scheduleHistoryAction(action: HistoryAction, post: object) {
     const key = window?.history?.state?.key || 'initial';
     pendingHistoryAction.value = action;
     pendingHistoryData.value = post || {};
@@ -215,11 +285,11 @@ export default defineStore(storeId, () => {
     }
   }
 
-  function scheduleHistoryPush(post) {
+  function scheduleHistoryPush(post: object) {
     scheduleHistoryAction('push', post);
   }
 
-  function scheduleHistoryReplace(post) {
+  function scheduleHistoryReplace(post: object) {
     scheduleHistoryAction('replace', post);
   }
 
@@ -372,6 +442,7 @@ export default defineStore(storeId, () => {
     projectMode,
     errorHandler,
     getProject,
+    searchProjects,
     projects,
   };
 });

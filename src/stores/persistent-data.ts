@@ -21,35 +21,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import axios from '@nextcloud/axios';
-import generateAppUrl from '../toolkit/util/generate-url.js';
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
 
-export default {
-  methods: {
-    async tooltip(key) {
-      try {
-        const response = await axios.get(generateAppUrl('tooltips/{key}', { key }), { params: { unescaped: true } });
-        console.debug('GOT TOOLTIP', response.data.tooltip || '');
-        return response.data.tooltip;
-      } catch (e) {
-        console.error('ERROR FETCHING TOOLTIP ' + key, e);
-        return '';
-      }
-    },
-    async tooltips(keys) {
-      try {
-        const response = await axios.get(generateAppUrl('tooltips'), {
-          params: {
-            unescaped: true,
-            keys,
-          },
-        });
-        console.debug('GOT TOOLTIPS', response.data);
-        return response.data;
-      } catch (e) {
-        console.error('ERROR FETCHING TOOLTIPS', e, keys);
-        return {};
-      }
-    },
-  },
-};
+export const usePersistentDataStore = defineStore('parsistent-data', () => {
+
+  // set of already loaded selectable musicians
+  const selectMusicians = ref({});
+
+  return { selectMusicians };
+});

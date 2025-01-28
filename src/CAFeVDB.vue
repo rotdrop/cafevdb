@@ -224,10 +224,11 @@
       <NcEmptyContent v-if="isRoot || appError" class="emp-content">
         {{ t(appId, '{orchestraName} Orchestra Portal', { orchestraName, }) }}
         <template #icon>
-          <img :src="icon">
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span class="app-icon" v-html="icon" />
         </template>
         <template #description>
-          {{ t(appId, 'Description' + foobar) }}
+          {{ t(appId, 'Description') }}
         </template>
       </NcEmptyContent>
     </NcAppContent>
@@ -273,8 +274,8 @@
   </NcContent>
 </template>
 <script lang="ts">
-import { appName as appId } from './config.ts'
-import mixins from './mixins/app-mixins.js'
+// import { appName as appId } from './config.ts'
+import mixins from './mixins/app-mixins.ts'
 // import type { Mixins } from './mixins/app-mixins'
 import authorization from './mixins/authorization.ts'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
@@ -290,7 +291,7 @@ import {
   NcEllipsisedOption,
   NcEmptyContent,
 } from '@nextcloud/vue'
-import useAppDataStore from './stores/app-data.js'
+import useAppDataStore from './stores/app-data.ts'
 // import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 // import ProjectPartici<pantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 // import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
@@ -303,17 +304,17 @@ import CloudFileSystemOperations from './components/oc-template/CloudFileSystemO
 import PageTemplateIcon from './components/PageTemplateIcon.vue'
 import axios from '@nextcloud/axios'
 import generateAppUrl from './toolkit/util/generate-url.js'
-import { mapWritableState, mapActions, mapState } from 'pinia'
+import { mapWritableState, mapState } from 'pinia'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 import { debugOptions } from './debug-modes.ts'
 import { formatFileSize } from '@nextcloud/files'
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus'
+// import type { NextcloudEvents } from '@rotdrop/async-nextcloud-event-bus'
 import { closeNavigation } from './services/navigation.js'
 import * as BusEvents from './event-bus-events.ts'
-
-import Icon from '../img/cafevdb.svg'
-
+import appIcon from '../img/cafevdb.svg?raw'
 import { getInitialState } from './toolkit/services/InitialStateService.js'
+import type { RawLocation, Location as RouterLocation } from 'vue-router'
 // import type VueRouter from 'vue-router'
 
 const initialState = getInitialState('CAFEVDB')
@@ -365,18 +366,27 @@ export default {
   mixins: [...mixins, authorization],
   setup() {
     const appData = useAppDataStore()
-    return { appData }
+    return {
+      appData,
+      setBusyFlag: appData.setBusyFlag,
+      pushBusyState: appData.pushBusyState,
+      popBusyState: appData.popBusyState,
+      scheduleHistoryPush: appData.scheduleHistoryReplace,
+      cancelHistoryAction: appData.cancelHistoryAction,
+      finishHistoryAction: appData.finishHistoryAction,
+      scheduleHistoryReplace: appData.scheduleHistoryReplace,
+    }
   },
   data() {
     return {
-      orchestraName: initialState?.orchestraName || this.t(appId, '[UNKNOWN]'),
-      icon: Icon,
+      orchestraName: initialState?.orchestraName || this.t(this.appId, '[UNKNOWN]'),
+      icon: appIcon,
       loading: true,
       isMounted: false,
-      debugModes: [],
+      debugModes: [] as DebugOption[],
       settingsLocked: false,
       appSettingsLoading: false,
-      pageTemplate: null,
+      pageTemplate: null as string|null,
       navigationItems: [] as NavigationItem[],
       hints: {
         'debug-mode': '',
@@ -392,6 +402,8 @@ export default {
         'show-tool-tips': '',
       },
       triggerNavigationUpdate: false,
+      showSidebar: false,
+      sidebarTitle: '',
     }
   },
   computed: {
@@ -400,6 +412,7 @@ export default {
     },
     ...mapState(useAppDataStore, [
       'routerHistory',
+      'projectMode',
     ]),
     ...mapWritableState(
       useAppDataStore, [
@@ -407,7 +420,6 @@ export default {
         'appError',
         'currentProjectId',
         'currentProjectName',
-        'projectMode',
       ],
     ),
     financeAllowed() {
@@ -433,7 +445,7 @@ export default {
       return [-1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     },
     personalSettingsUrl() {
-      return nextcloudGenerateUrl('settings/user/' + this.appName)
+      return nextcloudGenerateUrl('settings/user/' + this.appId)
     },
     uploadMaxFileSize() {
       return this.globalState?.uploadMaxFileSize || 0
@@ -505,7 +517,6 @@ export default {
       this.info('CURRENT TEMPLATE CHANGED', value, oldValue)
       if (value === 'home') {
         this.currentProjectId = 0
-        this.currentProjectName = null
       }
       this.triggerNavigationUpdate = true
     },
@@ -513,7 +524,8 @@ export default {
       this.info('CURRENT PROJECT ID CHANGED', ...args)
       this.triggerNavigationUpdate = true
     },
-    async triggerNavigationUpdate(value) {
+    async triggerNavigationUpdate(value: boolean, oldValue: boolean) {
+      this.info('TRIGGER NAVIGATION UPDATE CHANGED', value, oldValue)
       if (value) {
         this.triggerNavigationUpdate = false
         if (this.pageTemplate) {
@@ -555,12 +567,12 @@ export default {
     // value vue-router key for the initial route. Quite stupid, but should work ...
     if (!window.history?.state?.key || this.appData.currentHistoryIndex === 'initial') {
       this.info('CURRENT HISTORY', this.$router.currentRoute, window.history?.state)
-      const route = {
-        name: this.$router.currentRoute.name,
+      const route: RouterLocation = {
+        name: this.$router.currentRoute.name as string,
         params: { ...this.$router.currentRoute.params },
         query: { ...this.$router.currentRoute.query },
       }
-      route.query.force = window.performance.now().toFixed(3)
+      route.query = { ...(route.query || {}), ...{ force: window.performance.now().toFixed(3) } }
       this.scheduleHistoryReplace({})
       await this.$router.replace(route)
       delete route.query.force
@@ -585,28 +597,14 @@ export default {
     this.isMounted = true
   },
   methods: {
-    ...mapActions(
-      useAppDataStore, [
-        'setBusyFlag',
-        'pushBusyState',
-        'popBusyState',
-        'scheduleHistoryPush',
-        'cancelHistoryAction',
-        'finishHistoryAction',
-        'scheduleHistoryReplace',
-      ],
-    ),
-    authorized(requestedPermissions: number):boolean {
-      return authorized(requestedPermissions, this.globalState.userPermissions)
-    },
     closeSidebar() {
       this.showSidebar = false
     },
-    handleDetailsRequest(data) {
+    handleDetailsRequest(data: { viewName: string, title: string, props: object }) {
       this.showSidebar = true
       this.sidebarTitle = data.title
     },
-    getRouteHref(route) {
+    getRouteHref(route: RawLocation) {
       const routeProps = this.$router.resolve(route)
       return routeProps?.href
     },
@@ -617,7 +615,7 @@ export default {
         projectName: this.currentProjectName,
       })
     },
-    async openSettingsPopup(event) {
+    async openSettingsPopup(event: MouseEvent) {
       event.preventDefault()
       this.appSettingsLoading = true
       asyncEmit(BusEvents.APP_SETTINGS_POPUP, {
@@ -626,8 +624,8 @@ export default {
         always: () => { this.appSettingsLoading = false },
       })
     },
-    updatePersonalSettings(event, value, oldValue) {
-      this.debug('UPDATE PERSONAL SETTING', {
+    updatePersonalSettings(event: string, value: boolean, oldValue: boolean) {
+      this.debug('UPDATE PERSONAL SETTING', this.updatePersonalSettings, {
         event,
         value,
         oldValue,
@@ -650,7 +648,7 @@ export default {
     },
     async updateNavigationItems() {
       const url = generateAppUrl('vue-app/n/{pageTemplate}', { pageTemplate: this.pageTemplate })
-      this.info('URL', url, this.pageTemplate, { pageTemplate: this.pageTemplate })
+      this.info('URL', this.pageTemplate, { pageTemplate: this.pageTemplate })
       try {
         const response = await axios.post(
           url, {

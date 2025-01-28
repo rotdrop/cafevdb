@@ -36,8 +36,9 @@
 <script lang="ts">
 // import globalState from '../app/globalstate.js'
 import LegacyWrapper from './LegacyWrapper.vue'
-import mixins from '../mixins/app-mixins.js'
+import mixins from '../mixins/app-mixins.ts'
 import objectHash from 'object-hash'
+import type { Route } from 'vue-router'
 
 export default {
   name: 'LegacyWrapperRouterReactivity',
@@ -46,7 +47,8 @@ export default {
   },
   mixins,
   beforeRouteEnter(to, from, next) {
-    next(self => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    next((self: any) => {
       self.debug('BEFORE ROUTE ENTER', to, from, window?.history?.state)
       self.onRouteChange(to)
     })
@@ -62,19 +64,20 @@ export default {
   },
   data() {
     return {
-      template: null,
-      templateParameters: {},
-      postDataHash: null,
+      template: '',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      templateParameters: {} as any,
+      postDataHash: undefined as undefined|string,
       noLegacyReload: false,
     }
   },
   methods: {
-    onRouteChange(to) {
+    onRouteChange(to: Route) {
       this.info('onRouteChange()', to)
       this.template = to?.params?.template
       this.templateParameters.projectId = to?.params?.projectId
       this.templateParameters.projectName = to?.params?.projectName
-      this.postDataHash = to?.query?.hash
+      this.postDataHash = (to?.query?.hash as string) || undefined
       this.noLegacyReload = +to?.query?.['no-reload'] === 1
       if (!this.postDataHash) {
         this.postDataHash = objectHash(to?.params || {})

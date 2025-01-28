@@ -26,7 +26,7 @@
                           v-bind="$attrs"
                           :input-id="id + '-projects-select-input'"
                           :options="projectsArray"
-                          :selectable="(option) => option.id > 0"
+                          :selectable="isSelectable"
                           :uid="id + '-projects-select'"
                           :group-select="false"
                           :options-limit="100"
@@ -42,10 +42,14 @@
 </template>
 <script lang="ts">
 import { appName } from '../config.ts'
-import { set as vueSet } from 'vue'
-import axios from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
+import { translate as t } from '@nextcloud/l10n'
+import consoleMixin from '../mixins/console.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
+import useAppDataStore from '../stores/app-data.ts'
+import type { Project } from '../stores/app-data.ts'
+import type { PropType } from 'vue'
+
+type InputObject = Project | { id: number, name: string, year: number, type: string }
 
 /**
  * Select multiple or a single project. The provided value is always an array of project ids.
@@ -55,6 +59,9 @@ export default {
   components: {
     SelectWithSubmitButton,
   },
+  mixins: [
+    consoleMixin,
+  ],
   inheritAttrs: false,
   props: {
     multiple: {
@@ -62,8 +69,8 @@ export default {
       default: true,
     },
     value: {
-      type: [Array, Object, String, Number],
-      default: () => [],
+      type: [Array, Object] as PropType<Project[], Project>,
+      default: undefined,
     },
     clearable: {
       type: Boolean,
@@ -91,13 +98,20 @@ export default {
       default: true,
     },
   },
+  setup() {
+    const appData = useAppDataStore()
+    return {
+      appData,
+      projects: appData.projects,
+    }
+  },
   data() {
     return {
-      inputValObjects: [],
-      projects: {},
+      inputValObjects: [] as undefined|Project|Project[],
       ajaxLoading: false,
-      ncSelect: undefined,
-      id: null,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ncSelect: undefined as any,
+      id: null as null|string,
     }
   },
   computed: {
@@ -118,10 +132,12 @@ export default {
       //   }
       // }
       // return Object.values(groupedValues).sort((p1, p2) => -(p1.year - p2.year))
-      const projects = Object.values(this.projects).sort((p1, p2) => {
+      const projects: InputObject[] = Object.values(this.projects).sort((a, b) => {
+        const p1 = a as Project
+        const p2 = b as Project
         const p1year = p1?.year || -1
         const p2year = p2?.year || -1
-        return p1year === p2year ? (p1.name > p2.name) - (p1.name < p2.name) : -(p1year - p2year)
+        return p1year === p2year ? p1.name.localeCompare(p2.name) : -(p1year - p2year)
       })
       if (projects.length === 0) {
         return []
@@ -129,9 +145,10 @@ export default {
       let index = 0
       let fakeId = -1
       while (index < projects.length) {
-        const year = projects[index].year
-        const yearName = year < 0 || year < 2000 ? t(appName, 'Permanent') : '' + year
-        projects.splice(index, 0, { id: fakeId--, name: yearName, year })
+        const project = projects[index]
+        const year = project.year
+        const yearName = project.type === 'permanent' ? t(appName, 'Permanent') : '' + year
+        projects.splice(index, 0, { id: fakeId--, name: yearName, year, type: '' })
         ++index
         while (++index < projects.length && projects[index].year === year) { /* nothing */ }
       }
@@ -150,7 +167,7 @@ export default {
         }
       } else {
         if (!newValue) {
-          this.inputValObjects = null
+          this.inputValObjects = undefined
           return
         }
         newValue = [newValue]
@@ -166,45 +183,31 @@ export default {
     },
   },
   mounted() {
-    this.ncSelect = this.$refs.select.ncSelect
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.ncSelect = (this.$refs!.select! as any).ncSelect
     this.id = this._uid
   },
   methods: {
-    info(...args) {
-      console.info(this.$options.name, ...args)
+    isSelectable(option: Project) {
+      return option.id > 0
     },
-    getProjectObject(id) {
-      return this.projects[id] || { id, name: id, year: -1 }
+    getProjectObject(id: number) {
+      return this.projects[id] || { id, name: id, year: -1, type: '' }
     },
     getValueObjects() {
       const value = Array.isArray(this.value) ? this.value : (this.value || this.value === 0 ? [this.value] : [])
-      const result = value.filter((project) => project !== '' && typeof project !== 'undefined').map(
+      const result = value.filter((project) => project?.id).map(
         (project) => {
           // project can be a simple project id if multiple == false
-          return this.getProjectObject(project?.id || project)
+          return this.getProjectObject(project.id)
         },
       )
       return this.multiple ? result : (result.length > 0) ? result[0] : undefined
     },
-    async findProjects(query) {
-      query = typeof query === 'string' ? encodeURI(query) : ''
-      if (query !== '') {
-        query = '/' + query
-      }
-      try {
-        const response = await axios.get(generateUrl(`/apps/${appName}/projects/search${query}`), {
-          params: { limit: 10 },
-        })
-        if (response.data.length > 0) {
-          for (const project of response.data) {
-            vueSet(this.projects, project.id, project)
-          }
-          return true
-        }
-      } catch (error) {
-        this.$emit('error', error)
-      }
-      return false
+    async findProjects(query: string) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await this.appData.searchProjects(query, (error: any, context: object) => this.$emit('error', { error, context }))
+      return true
     },
   },
 }

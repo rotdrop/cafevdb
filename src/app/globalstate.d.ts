@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+/** @file just provide the globalState object */
 
-import * as Authorization from '../authorization.ts'
+import type { CombinedVueInstance, VueConstructor } from 'vue';
+import type VueRouter from 'vue-router';
+import type { PHPMyEditState } from './pme-state.js';
 
-export default {
-  inject:[...Object.keys(Authorization).filter((key) => key.startsWith('PERMISSION_'))],
-  methods: {
-    authorized: Authorization.authorized,
+export interface GlobalState {
+  PHPMyEdit: PHPMyEditState,
+  vueMode?: boolean,
+  vue?: {
+    app: CombinedVueInstance,
+    Vue: VueConstructor,
+    router: VueRouter,
+    store: Pinia,
   },
-};
+  userPermissions: int,
+  financeMode: boolean,
+  wikiNamespace: string,
+  toolTipsEnabled: boolean,
+}
+
+declare global {
+  var CAFEVDB: GlobalState;
+}
+
+declare const globalState: GlobalState;
+
+export default globalState;

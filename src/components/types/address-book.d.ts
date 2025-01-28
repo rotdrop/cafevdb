@@ -21,12 +21,40 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from '../app/pme-state.js';
+export interface AddressBook {
+  key: string|number,
+  uid: string,
+  uri?: string,
+  FN?: string,
+  displayName: string,
+  isSystemAddressBook?: boolean,
+  $isDisabled?: boolean,
+}
 
-export default {
-  data() {
-    return {
-      globalState,
-    };
-  },
-};
+export interface Contact {
+  key: number|string,
+  name?: string|{ value: string },
+  label: string,
+  addressBookName?: string,
+  $isDisabled?: boolean,
+  UID: string,
+  URI?: string,
+  FN?: string
+  EMAIL?: string[] | { value: string }[],
+  informalDisplayName?: string,
+  ADR?: string[] | { value: string }[],
+}
+
+export interface Musician {
+  id: number,
+  formalDisplayName: string,
+  informalDisplayName?: string,
+  userIdSlug?: string,
+  email?: string,
+  street?: string,
+  city?: string,
+  streetNumber?: string,
+  postalCode?: string,
+  countryName?: string,
+  country?: string,
+}

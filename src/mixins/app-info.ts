@@ -21,20 +21,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import appInfo from './app-info.js';
-import consoleMixin from './console.js';
-import globalState from './global-state.js';
-import dokuWiki from './doku-wiki.js';
-import md5 from './md5.js';
-import toasts from './toasts.js';
-import tooltips from './tooltips.js';
+import { appName, appPrefix, appNameTag } from '../config.ts';
+import {
+  initialState,
+  CAFEVDB,
+  PHPMyEdit,
+  webRoot,
+  cloudWebRoot,
+  cloudUser,
+} from '../app/config.js';
 
-export default [
-  appInfo,
-  consoleMixin,
-  globalState,
-  dokuWiki,
-  md5,
-  toasts,
-  tooltips,
-];
+const mixin = {
+  inject: { appId: { default: appName, from: 'appId' } },
+  data() {
+    return {
+      appNameTag,
+      initialState,
+      CAFEVDB,
+      PHPMyEdit,
+      webRoot,
+      cloudWebRoot,
+      cloudUser,
+    };
+  },
+  methods: {
+    appPrefix,
+  },
+};
+
+export default mixin;

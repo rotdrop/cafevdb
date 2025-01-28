@@ -22,9 +22,7 @@
  -->
 <template>
   <div :class="['templateroot', ...cloudVersionClasses]">
-    <NcSettingsSection :class="['major']"
-                       :name="t(appName, 'Camerata DB')"
-    >
+    <NcSettingsSection :class="['major']" :name="t(appId, 'Camerata DB')">
       <div v-if="config.isAdmin">
         <!-- eslint-disable-next-line vue/no-v-html -->
         <p class="info" v-html="forword" />
@@ -33,7 +31,7 @@
       <div>
         <SelectWithSubmitButton v-model="settings.userAndGroupBackend"
                                 input-id="user-and-group-backend-select"
-                                :input-label="t(appName, 'User and group backend')"
+                                :input-label="t(appId, 'User and group backend')"
                                 :hint="hints['settings:admin:user-and-group-backend']"
                                 :required="true"
                                 :clearable="false"
@@ -49,30 +47,30 @@
                             icon="icon-play"
                             @click="synchronizeUserBackends"
             >
-              {{ t(appName, 'Sychronize User Backends') }}
+              {{ t(appId, 'Sychronize User Backends') }}
             </NcActionButton>
           </template>(
         </SelectWithSubmitButton>
       </div>
       <div v-if="config.isSubAdmin || config.isAdmin">
         <SettingsSelectGroup v-model="settings.orchestraUserGroup"
-                             :label="t(appName, 'User Group')"
+                             :label="t(appId, 'User Group')"
                              :hint="hints['settings:admin:user-group']"
                              :multiple="false"
                              :required="true"
                              :loading="loading.settings"
                              :disabled="loading.general || !config.isAdmin"
-                             @update="saveSetting('orchestraUserGroup', ...arguments)"
+                             @update="saveSetting('orchestraUserGroup')"
                              @error="showErrorToast"
         />
         <SettingsSelectUsers v-model="settings.orchestraUserGroupAdmins"
-                             :label="t(appName, 'User Group Admins')"
+                             :label="t(appId, 'User Group Admins')"
                              :hint="hints['settings:admin:user-group:admins']"
                              :loading="loading.settings"
                              :disabled="loading.general || groupAdminsDisabled"
                              :required="true"
-                             @input="info(...arguments)"
-                             @update="saveSetting('orchestraUserGroupAdmins', ...arguments)"
+                             @input="(...args) => info(...args)"
+                             @update="saveSetting('orchestraUserGroupAdmins')"
                              @error="showErrorToast"
         />
       </div>
@@ -96,14 +94,17 @@
             <template #indicator>
               <CheckboxBlankCircle v-if="group.status === 'inaccessible'" :size="16" fill-color="red" />
               <CheckboxBlankCircle v-else-if="group.disabled" :size="16" fill-color="yellow" />
-              <CheckboxBlankCircle v-else-if="group.backends.indexOf(settings.userAndGroupBackend) == -1" :size="16" fill-color="purple" />
+              <CheckboxBlankCircle v-else-if="group.backends.indexOf(settings.userAndGroupBackend) == -1"
+                                   :size="16"
+                                   fill-color="purple"
+              />
               <CheckboxBlankCircle v-else :size="16" fill-color="green" />
             </template>
             <template #actions>
               <NcActionButton :disabled="group.status !== 'inaccessible' || group.backends.length > 0"
                               @click="createGroup(group.id)"
               >
-                Create Group
+                {{ t(appId, 'Create Group') }}
               </NcActionButton>
               <NcActionButton>
                 Button two
@@ -116,21 +117,19 @@
         </ul>
       </div>
       <label for="wiki-name-space">
-        {{ t(appName, 'Wiki Name-Space') }}
+        {{ t(appId, 'Wiki Name-Space') }}
       </label>
       <!-- Note: v-model does not work here -->
       <TextField v-if="config.isSubAdmin || config.isAdmin"
                  id="wiki-name-space"
                  :value.sync="settings.wikiNameSpace"
                  type="text"
-                 :label="t(appName, 'Wiki Name-Space')"
+                 :label="t(appId, 'Wiki Name-Space')"
                  :hint="hints['settings:admin:wiki-name-space']"
                  @submit="saveSetting('wikiNameSpace', settings.wikiNameSpace)"
       />
     </NcSettingsSection>
-    <NcSettingsSection v-if="config.isSubAdmin"
-                       :name="t(appName, 'Configure User Backend')"
-    >
+    <NcSettingsSection v-if="config.isSubAdmin" :name="t(appId, 'Configure User Backend')">
       <div>
         <button type="button"
                 name="cloudUserBackendConfig"
@@ -138,7 +137,7 @@
                 :disabled="!config.cloudUserBackendConfig"
                 @click="saveSetting('cloudUserBackendConfig')"
         >
-          {{ t(appName, 'Autoconfigure "{cloudUserBackend}" app', { cloudUserBackend: config.cloudUserBackend }) }}
+          {{ t(appId, 'Autoconfigure "{cloudUserBackend}" app', { cloudUserBackend: config.cloudUserBackend }) }}
         </button>
         <p class="hint">
           {{ hints['settings:admin:cloud-user-backend-conf'] }}
@@ -147,29 +146,31 @@
     </NcSettingsSection>
     <NcSettingsSection v-if="config.isSubAdmin"
                        :class="['sub-admin', { 'icon-loading': loading.recryption }]"
-                       :name="t(appName, 'Recryption Requests')"
+                       :name="t(appId, 'Recryption Requests')"
     >
       <div v-for="(request, userId) in recryption.requests" :key="request.id" class="recryption-request-container">
         <input :id="['mark',userId].join('-')"
                v-model="recryption.requests[userId].marked"
                type="checkbox"
                class="checkbox request-mark"
-               @change="markRecryptionRequest(userId, ...arguments)"
+               @change="markRecryptionRequest"
         >
         <label :for="['mark', userId].join('-')" />
         <NcActions>
-          <NcActionButton icon="icon-confirm" @click="handleRecryptionRequest(userId, ...arguments)">
-            {{ t(appName, 'recrypt') }}
+          <NcActionButton icon="icon-confirm" @click="handleRecryptionRequest(userId)">
+            {{ t(appId, 'recrypt') }}
           </NcActionButton>
-          <NcActionButton icon="icon-delete" @click="deleteRecryptionRequest(userId, ...arguments)">
-            {{ t(appName, 'reject') }}
+          <NcActionButton icon="icon-delete" @click="deleteRecryptionRequest(userId)">
+            {{ t(appId, 'reject') }}
           </NcActionButton>
         </NcActions>
         <div :class="['recryption-request-data', { marked: request.marked }, 'flex-container', 'flex-justify-left', 'flex-align-center']">
           <span class="first visible display-name" :title="userId">{{ request.displayName }}</span>
           <span class="following visible time-stamp">{{ formatDate(request.timeStamp, 'LLL') }}</span>
-          <span :class="['following', 'user-tag', 'organizer', { visible: request.isOrganizer, invisible: !request.isOrganizer }]">{{ t(appName, 'organizer') }}</span>
-          <span :class="['following', 'user-tag', 'group-admin', { visible: request.isGroupAdmin, invisible: !request.isGroupadmin }]">{{ t(appName, 'group-admin') }}</span>
+          <span :class="['following', 'user-tag', 'organizer', { visible: request.isOrganizer, invisible: !request.isOrganizer }]">{{
+            t(appId, 'organizer') }}</span>
+          <span :class="['following', 'user-tag', 'group-admin', { visible: request.isGroupAdmin, invisible: !request.isGroupAdmin }]">{{
+            t(appId, 'group-admin') }}</span>
         </div>
       </div>
       <div v-if="Object.keys(recryption.requests).length > 0" class="bulk-operations flex-container flex-align-center">
@@ -177,31 +178,33 @@
                v-model="recryption.allRequestsMarked"
                type="checkbox"
                class="checkbox request-mark"
-               @change="markAllRecryptionRequests(...arguments)"
+               @change="markAllRecryptionRequests"
         >
-        <label class="bulk-operation-mark" for="mark-all">{{ t(appName, 'mark/unmark all.') }}</label>
-        <span class="bulk-operation-title">{{ t(appName, 'With the marked requests perform the following action:') }}</span>
+        <label class="bulk-operation-mark" for="mark-all">{{ t(appId, 'mark/unmark all.') }}</label>
+        <span class="bulk-operation-title">
+          {{ t(appId, 'With the marked requests perform the following action:') }}
+        </span>
         <NcActions>
           <NcActionButton icon="icon-confirm" @click="handleMarkedRecrytpionRequests">
-            {{ t(appName, 'recrypt') }}
+            {{ t(appId, 'recrypt') }}
           </NcActionButton>
           <NcActionButton icon="icon-delete" @click="deleteMarkedRecryptionRequests">
-            {{ t(appName, 'reject') }}
+            {{ t(appId, 'reject') }}
           </NcActionButton>
         </NcActions>
       </div>
       <div v-else>
-        <span class="hint">{{ t(appName, 'No recryption requests are pending.') }}</span>
+        <span class="hint">{{ t(appId, 'No recryption requests are pending.') }}</span>
       </div>
     </NcSettingsSection>
     <NcSettingsSection v-if="config.isSubAdmin"
                        class="sub-admin"
-                       :name="t(appName, 'Access Control')"
+                       :name="t(appId, 'Access Control')"
     >
       <SelectMusicians v-model="access.musicians"
                        :tooltip="access.musicians.length ? false : hints['settings:admin:access-control:musicians']"
-                       :label="t(appName, 'Musicians')"
-                       :placeholder="t(appName, 'e.g. Jane Doe')"
+                       :label="t(appId, 'Musicians')"
+                       :placeholder="t(appId, 'e.g. Jane Doe')"
                        :multiple="true"
                        :deselect-from-dropdown="true"
                        :close-on-select="false"
@@ -212,11 +215,11 @@
       />
       <SelectProjects v-model="access.project"
                       :tooltip="hints['settings:admin:access-control:project-restriction']"
-                      :label="t(appName, 'Restrict User Selection to Project')"
-                      :placeholder="t(appName, 'e.g. Auvergne2019')"
+                      :label="t(appId, 'Restrict User Selection to Project')"
+                      :placeholder="t(appId, 'e.g. Auvergne2019')"
                       :multiple="false"
                       :submit-button="false"
-                      @update="info('Projects Update', ...arguments)"
+                      @update="(...rest) => info('Projects Update', ...rest)"
       />
       <input id="include-disabled"
              v-model="access.includeDeactivated"
@@ -225,7 +228,7 @@
              :disabled="!applyAccessToAll"
       >
       <label for="include-disabled" class="access-flags checkbox-label">
-        {{ t(appName, 'include disabled accounts') }}
+        {{ t(appId, 'include disabled accounts') }}
       </label>
       <input id="include-deactivated"
              v-model="access.includeDisabled"
@@ -234,44 +237,43 @@
              :disabled="!applyAccessToAll"
       >
       <label for="include-deactivated" class="access-flags checkbox-label">
-        {{ t(appName, 'include deactivated accounts') }}
+        {{ t(appId, 'include deactivated accounts') }}
       </label>
       <span v-if="showAccessActionProgress">
         <div class="access-action-status">
           <span class="access-action-text">{{ accessActionLabel }}</span>
           <button v-if="accessActionFinished"
                   class="button primary access-action-clear"
-                  :title="t(appName, 'Remove the status feedback from the last action.')"
+                  :title="t(appId, 'Remove the status feedback from the last action.')"
                   @click="hideAccessActionFeedback()"
           >
-            {{ t(appName, 'Ok') }}
+            {{ t(appId, 'Ok') }}
           </button>
           <span class="flex-spacer" />
           <span class="access-action-counter">{{ accessActionCounter }}</span>
         </div>
-        <NcProgressBar :value="accessActionPercentage"
-                       :error="accessActionError"
-                       size="medium"
-        />
+        <NcProgressBar :value="accessActionPercentage" :error="accessActionError" size="medium" />
       </span>
       <span v-else class="flex-container flex-align-center flex-justify-start">
-        <span class="bulk-operation-title">{{ t(appName, 'With the selected musicians perform the following action:') }}</span>
+        <span class="bulk-operation-title">
+          {{ t(appId, 'With the selected musicians perform the following action:') }}
+        </span>
         <NcActions>
           <NcActionButton icon="icon-disabled-user" @click="handleAccessAction('deny')">
-            {{ t(appName, 'deny access') }}
+            {{ t(appId, 'deny access') }}
           </NcActionButton>
           <NcActionButton icon="icon-confirm" @click="handleAccessAction('grant')">
-            {{ t(appName, 'grant access') }}
+            {{ t(appId, 'grant access') }}
           </NcActionButton>
         </NcActions>
       </span>
     </NcSettingsSection>
     <NcSettingsSection v-if="config.isSubAdmin"
                        :class="['sub-admin', 'fonts-container']"
-                       :name="t(appName, 'Configure Office Fonts for Office Exports')"
+                       :name="t(appId, 'Configure Office Fonts for Office Exports')"
     >
       <div>
-        <span class="file-name-label">{{ t(appName, 'Font Data Folder') }}</span>
+        <span class="file-name-label">{{ t(appId, 'Font Data Folder') }}</span>
         <span class="file-name">{{ humanOfficeFontsFolder }}</span>
       </div>
       <SelectWithSubmitButton v-model="defaultOfficeFont"
@@ -292,33 +294,26 @@
       >
         <template #alignedBefore>
           <label for="default-font" class="default-font">
-            {{ t(appName, 'Default Font') }}
+            {{ t(appId, 'Default Font') }}
           </label>
         </template>
         <template #actions>
-          <NcActionButton icon="icon-add"
-                          @click="updateFontData"
-          >
-            {{ t(appName, 'Update Font Data') }}
+          <NcActionButton icon="icon-add" @click="updateFontData">
+            {{ t(appId, 'Update Font Data') }}
           </NcActionButton>
-          <NcActionButton icon="icon-play"
-                          @click="rescanFontData"
-          >
-            {{ t(appName, 'Rescan Font Data') }}
+          <NcActionButton icon="icon-play" @click="rescanFontData">
+            {{ t(appId, 'Rescan Font Data') }}
           </NcActionButton>
-          <NcActionButton icon="icon-delete"
-                          @click="purgeFontData"
-          >
-            {{ t(appName, 'Purge Font Data') }}
+          <NcActionButton icon="icon-delete" @click="purgeFontData">
+            {{ t(appId, 'Purge Font Data') }}
           </NcActionButton>
         </template>
       </SelectWithSubmitButton>
     </NcSettingsSection>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { set as vueSet, del as vueDelete, nextTick as vueNextTick } from 'vue'
-
 import {
   NcActions,
   NcActionButton,
@@ -333,7 +328,8 @@ import CheckboxBlankCircle from 'vue-material-design-icons/CheckboxBlankCircle.v
 import GroupIcon from 'vue-material-design-icons/AccountGroup.vue'
 
 import axios from '@nextcloud/axios'
-import { generateUrl, generateOcsUrl } from '@nextcloud/router'
+import { generateOcsUrl } from '@nextcloud/router'
+import { generateUrl as generateAppUrl, generateOcsUrl as generateAppOcsUrl } from '../toolkit/util/generate-url.js'
 import { loadState } from '@nextcloud/initial-state'
 import { showError, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 
@@ -346,12 +342,101 @@ import SelectProjects from './SelectProjects.vue'
 
 import SettingsSelectGroup from './SettingsSelectGroup.vue'
 import SettingsSelectUsers from './SettingsSelectUsers.vue'
-import tooltip from '../mixins/tooltips.js'
+import l10nMixin from '../mixins/l10n.ts'
+import tooltipMixin from '../mixins/tooltips.ts'
 import formatDate from '../mixins/formatDate.js'
+import consoleMixin from '../mixins/console.ts'
+import toasts from '../mixins/toasts.ts'
+import dialogs from '../mixins/dialogs.ts'
+import type { AxiosResponse } from 'axios'
+// eslint-disable-next-line n/no-missing-import
+import type { OCSResponse } from '@nextcloud/typings/ocs'
+import type { CloudUser, CloudGroup } from '../stores/cloud-users-groups.ts'
+import { translate as t } from '@nextcloud/l10n'
 
-import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.js'
+import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
 
-const initialState = loadState(appName, 'adminConfig')
+type Project = {
+  id: number,
+}
+
+type Musician = {
+  id: number,
+  userIdSlug: string,
+  status?: string,
+}
+
+type FontFiles = {
+  x?: string,
+  xb?: string,
+  xi?: string,
+  xbi?: string,
+}
+
+type InitialState = {
+  authorizationGroupSuffixes: string[],
+  isAdmin: boolean,
+  isSubAdmin: boolean,
+  officeFonts: Record<string, FontFiles>
+  officeFontsFolder: string,
+  personalAppSettingsLink: string,
+  userAndGroupBackends: string[],
+  cloudUserBackendConfig: boolean,
+  cloudUserBackend: string,
+}
+
+type AppAdminSettings = {
+  userAndGroupBackend: string,
+  orchestraUserGroup: string,
+  orchestraUserGroupAdmins: string[],
+  wikiNameSpace: string,
+  cloudUserBackendConfig: string,
+  defaultOfficeFont: string,
+}
+
+interface SettingsCloudGroup extends CloudGroup {
+  status: string,
+  l10nStatus: string,
+}
+type CloudUserGetResponse = AxiosResponse<OCSResponse<CloudUser> >
+type RecryptionGetResponse = AxiosResponse<OCSResponse<{ requests: Record<string, number>}> >
+
+type BulkRecryptionCountResponse = AxiosResponse<OCSResponse<{ count: number }> >
+type RecryptionStatus = 'granted' | 'revoked' | 'failure'
+type BulkRecryptionResponse = AxiosResponse<OCSResponse<{ userId: string, status: RecryptionStatus}[]> >
+
+type AdminSettingPostResponse = AxiosResponse<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value?: any,
+  messages?: {
+    transient?: string[],
+    permanent?: string[],
+  }
+  status?: string,
+  feedback?: string,
+}>
+
+type RecryptionRequest = {
+  id: string,
+  timeStamp: number,
+  displayName: string,
+  groups: string[],
+  enabled: boolean,
+  isOrganizer: boolean,
+  isGroupAdmin: boolean,
+  marked: boolean,
+}
+
+type AccessActionGrant = 'grant'
+type AccessActionDeny = 'deny'
+type AccessActions = AccessActionGrant | AccessActionDeny
+
+type FontCacheOperationUpdate = 'update'
+type FontCacheOperationRescan = 'rescan'
+type FontCacheOperationPurge = 'purge'
+type FontCacheOperations = FontCacheOperationPurge | FontCacheOperationRescan | FontCacheOperationUpdate
+
+const initialState: InitialState = loadState(appName, 'adminConfig')
 
 export default {
   name: 'AdminSettings',
@@ -371,8 +456,13 @@ export default {
     GroupIcon,
   },
   mixins: [
-    tooltip,
+    appInfo,
+    l10nMixin,
+    tooltipMixin,
     formatDate,
+    consoleMixin,
+    toasts,
+    dialogs,
   ],
   setup() {
     const store = useCloudUsersGroupsStore()
@@ -381,7 +471,7 @@ export default {
   data() {
     return {
       cloudVersionClasses,
-      defaultOfficeFont: null,
+      defaultOfficeFont: null as null|FontFiles,
       loading: {
         general: true,
         recryption: true,
@@ -397,9 +487,9 @@ export default {
         wikiNameSpace: '',
         cloudUserBackendConfig: '',
         defaultOfficeFont: '',
-      },
-      settingsBackup: {},
-      orchestraGroups: {},
+      } as AppAdminSettings,
+      settingsBackup: {} as AppAdminSettings,
+      orchestraGroups: {} as Record<string, SettingsCloudGroup>,
       config: initialState,
       hints: {
         'settings:admin:cloud-user-backend-conf': '',
@@ -413,14 +503,14 @@ export default {
       },
       forword: '',
       recryption: {
-        requests: {},
-        allRequestsMarked: '',
+        requests: {} as Record<string, RecryptionRequest>,
+        allRequestsMarked: false,
       },
-      recryptionPollTimer: null,
+      recryptionPollTimer: null as null|ReturnType<typeof setTimeout>,
       recryptionPollTimeout: 10 * 1000,
       access: {
-        musicians: [],
-        project: '',
+        musicians: [] as Musician[],
+        project: undefined as Project|undefined,
         includeDeactivated: false,
         includeDisabled: false,
         action: {
@@ -444,7 +534,7 @@ export default {
       return this.settings.orchestraUserGroup === '' || !this.config.isAdmin
     },
     projectId() {
-      try { return this.access.project.id } catch (ignoreMe) { return 0 }
+      try { return this.access.project!.id } catch (ignoreMe) { return 0 }
     },
     applyAccessToAll() {
       return this.access.musicians.length === 1 && this.access.musicians[0].id <= 0
@@ -493,20 +583,14 @@ export default {
       vueSet(this.settings, 'defaultOfficeFont', newValue?.family)
     },
   },
-  created() {
-    this.getData()
+  async created() {
+    await this.getData()
   },
   beforeDestroy() {
     this.clearTimeout(this.recryptionPollTimer)
     this.recryptionPollTimer = null
   },
   methods: {
-    info(...args) {
-      console.info(this.$options.name, ...args)
-    },
-    showErrorToast(message) {
-      showError(message, { timeout: TOAST_DEFAULT_TIMEOUT })
-    },
     async getData() {
       this.loading.general = true
       this.loading.recryption = true
@@ -570,10 +654,10 @@ export default {
       this.loading.settings = true
       const requests = {}
       for (const key of Object.keys(this.settings)) {
-        requests[key] = axios.get(generateUrl('apps/' + appName + '/settings/admin/{key}', { key }))
+        requests[key] = axios.get(generateAppUrl('settings/admin/{key}', { key }))
       }
       for (const [key, request] of Object.entries(requests)) {
-        const response = await request
+        const response = (await request) as AxiosResponse<{ value: string }>
         vueSet(this.settings, key, response.data.value)
       }
       this.settingsBackup = { ...this.settings }
@@ -598,8 +682,8 @@ export default {
      */
     async updateRecryptionRequests() {
       try {
-        const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt')
-        const response = await axios.get(url + '?format=json')
+        const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt')
+        const response = (await axios.get(url + '?format=json')) as RecryptionGetResponse
         const recryptionRequests = response.data.ocs.data.requests
         // remove requests which are no longer there
         for (const userId of Object.keys(this.recryption.requests)) {
@@ -610,7 +694,7 @@ export default {
         // update existing requests (time-stamp changed) and add new
         // ones. Initiate the AJAX calls in parallel, then serialize
         // later
-        const cloudUserPromises = []
+        const cloudUserPromises = [] as { userId: string, timeStamp: number, promise: Promise<CloudUserGetResponse> }[]
         for (const [userId, timeStamp] of Object.entries(recryptionRequests)) {
           if (!this.recryption.requests[userId] || this.recryption.requests[userId].timeStamp !== timeStamp) {
             cloudUserPromises.push({
@@ -635,40 +719,57 @@ export default {
               enabled: user.enabled,
               isOrganizer,
               isGroupAdmin,
-              marked: '',
+              marked: false,
             })
-          } catch (e) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (e: any) {
             console.error('Unable to fetch data for user ' + userId, e)
           }
         }
-      } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
         // admin is maybe not authorized
         console.error('Unable to fetch recryption entries', e)
       }
       this.loading.recryption = false
     },
-    async saveSetting(settingsKey, value) {
+    async saveSetting(settingsKey: string, value?: string) {
       try {
         if (value === undefined) {
           value = this.settings[settingsKey]
         } else {
           this.info('VALUE vs VMODEL', value, this.settings[settingsKey])
         }
-        const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/{settingsKey}', { settingsKey }), { value })
+        const response: AdminSettingPostResponse = await axios.post(generateAppUrl('settings/admin/{settingsKey}', { settingsKey }), { value })
         const responseData = response.data
         if (responseData.status === 'unconfirmed') {
-          OC.dialogs.confirm(
-            responseData.feedback,
-            t(appName, 'Confirmation Required'),
-            (answer) => {
-              if (answer) {
-                this.saveSetting(settingsKey, value, true)
-              } else {
-                showInfo(t(appName, 'Unconfirmed, reverting to old value.'))
-                this.getSettingsData()
-              }
-            },
-            true)
+          await new Promise(resolve => {
+            this.dialogConfirm(
+              t(appName, 'Confirmation Required'),
+              responseData.feedback as string,
+              (answer) => {
+                if (answer) {
+                  this.saveSetting(settingsKey, value, true)
+                } else {
+                  showInfo(t(appName, 'Unconfirmed, reverting to old value.'))
+                  this.getSettingsData()
+                }
+                resolve(answer)
+              },
+            )
+          })
+          // OC.dialogs.confirm(
+          //   responseData.feedback,
+          //   t(appName, 'Confirmation Required'),
+          //   (answer) => {
+          //     if (answer) {
+          //       this.saveSetting(settingsKey, value, true)
+          //     } else {
+          //       showInfo(t(appName, 'Unconfirmed, reverting to old value.'))
+          //       this.getSettingsData()
+          //     }
+          //   },
+          //   true)
         } else {
           const messages = responseData.messages || {}
           const transient = messages.transient || []
@@ -694,7 +795,8 @@ export default {
           }
           this.settingsBackup[settingsKey] = value
         }
-      } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
         let message = t(appName, 'reason unknown')
         if (e.response && e.response.data && e.response.data.message) {
           message = e.response.data.message
@@ -729,17 +831,8 @@ export default {
         this.recryption.allRequestsMarked = false
       }
     },
-    /**
-     * @param {string} userId TBD.
-     *
-     * @param {boolean} silent TBD.
-     *
-     * @param {boolean} allowFailure TBD.
-     *
-     * @returns {Promise}
-     */
-    async doHandleRecryptionRequest(userId, silent, allowFailure) {
-      const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
+    doHandleRecryptionRequest(userId: string, silent = false, allowFailure = false) {
+      const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt/{userId}', {
         userId,
       })
       return axios.post(url + '?format=json', {
@@ -747,15 +840,17 @@ export default {
         allowFailure,
       })
     },
-    async handleRecryptionRequest(userId, silent) {
+    async handleRecryptionRequest(userId: string, silent = false) {
       this.awaitRecryptionRequestPromise(userId, this.doHandleRecryptionRequest(userId, silent))
     },
-    async awaitRecryptionRequestPromise(userId, promise) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async awaitRecryptionRequestPromise(userId: string, promise: Promise<any>) {
       try {
         await promise
         showInfo(t(appName, 'Successfully handled recryption request for {userId}.', { userId }))
         vueDelete(this.recryption.requests, userId)
-      } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
         if (e.response) {
           console.error('RESPONSE', e.response)
         }
@@ -771,15 +866,16 @@ export default {
         this.getRecryptionRequests()
       }
     },
-    async deleteRecryptionRequest(userId) {
+    async deleteRecryptionRequest(userId: string) {
       try {
-        const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
+        const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt/{userId}', {
           userId,
         })
         await axios.delete(url + '?format=json')
         showInfo(t(appName, 'Successfully deleted recryption request for {userId}.', { userId }))
         vueDelete(this.recryption.requests, userId)
-      } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
         if (e.response) {
           console.error('RESPONSE', e.response)
         }
@@ -795,9 +891,9 @@ export default {
         this.getRecryptionRequests()
       }
     },
-    async doRevokeCloudAccess(userId/*, allowFailure */) {
-      const url = generateOcsUrl(
-        'apps/cafevdb/api/v1/maintenance/encryption/revoke/{userId}', {
+    async doRevokeCloudAccess(userId: string/*, allowFailure */) {
+      const url = generateAppOcsUrl(
+        'api/v1/maintenance/encryption/revoke/{userId}', {
           userId,
         },
       )
@@ -822,7 +918,7 @@ export default {
         this.deleteRecryptionRequest(request.id)
       }
     },
-    async handleAccessAction(action) {
+    async handleAccessAction(action: AccessActions) {
       if (this.access.musicians.length === 0) {
         showError(t(appName, 'No musicians selected, doing nothing.'), { timeout: TOAST_DEFAULT_TIMEOUT })
       }
@@ -840,14 +936,15 @@ export default {
             : await this.doRevokeCloudAccess(musician.userIdSlug, true)
           const ocsData = response.data.ocs.data
           const lastUser = ocsData.userId
-          failedUsers += ocsData.status === 'failure'
+          ocsData.status === 'failure' && ++failedUsers
           this.access.action.done++
           this.access.action.label = t(appName, 'Processed user-id {userId}.', { userId: lastUser })
           if (failedUsers > 0) {
             this.access.action.label += ' ' + t(appName, '{failedUsers} users have failed.', { failedUsers })
           }
         }
-      } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
         this.info('ERROR', e)
         let message = t(appName, 'reason unknown')
         if (e.response && e.response.data) {
@@ -877,12 +974,12 @@ export default {
         }
       }
     },
-    async handleBulkAccessAction(action) {
+    async handleBulkAccessAction(action: AccessActions) {
       this.access.action.active = true
       let failedUsers = 0
       try {
-        const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/bulk-recryption?format=json')
-        const response = await axios.post(url, {
+        const url = generateAppOcsUrl('api/v1/maintenance/encryption/bulk-recryption?format=json')
+        const response: BulkRecryptionCountResponse = await axios.post(url, {
           grantAccess: action === 'grant',
           includeDisabled: this.access.includeDisabled,
           includeDeactivated: this.access.includeDeactivated,
@@ -893,10 +990,10 @@ export default {
         this.access.action.totals = response.data.ocs.data.count
         const limit = this.access.action.totals > 100 ? this.access.action.totals / 100 : 1
         let count = 0
-        let lastUser
+        let lastUser: string
         do {
-          const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/bulk-recryption')
-          const response = await axios.post(url + '?format=json', {
+          const url = generateAppOcsUrl('api/v1/maintenance/encryption/bulk-recryption?format=json')
+          const response: BulkRecryptionResponse = await axios.post(url, {
             grantAccess: action === 'grant',
             includeDisabled: this.access.includeDisabled,
             includeDeactivated: this.access.includeDeactivated,
@@ -905,8 +1002,8 @@ export default {
             limit,
           })
           const musicians = response.data.ocs.data
-          failedUsers = musicians.reduce((failedUsers, musician) => failedUsers + (musician.status === 'failure'), failedUsers)
-          lastUser = musicians.slice(-1).userId
+          failedUsers = musicians.reduce((failedUsers, musician) => failedUsers + (musician.status === 'failure' ? 1 : 0), failedUsers)
+          lastUser = musicians.slice(-1)[0].userId
           count = musicians.length
           this.access.action.done += count
           this.access.action.label = t(appName, 'Processed user-id {userId}.', { userId: lastUser })
@@ -915,7 +1012,8 @@ export default {
           }
           this.access.action.label += '.'
         } while (count > 0 && this.access.action.done < this.access.action.totals)
-      } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
         this.info('ERROR', e)
         let message = t(appName, 'reason unknown')
         if (e.response && e.response.data) {
@@ -960,10 +1058,10 @@ export default {
     async purgeFontData() {
       return this.fontCacheOperaton('purge')
     },
-    async fontCacheOperaton(operation) {
+    async fontCacheOperaton(operation: FontCacheOperations) {
       this.loading.fonts = true
       try {
-        const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/font-cache'), { operation })
+        const response = await axios.post(generateAppUrl('settings/admin/font-cache'), { operation })
         const responseData = response.data
         if (responseData.message) {
           showInfo(responseData.message)
@@ -975,7 +1073,8 @@ export default {
         this.defaultOfficeFont = this.config.officeFonts[this.settings.defaultOfficeFont]
         this.disableUnavailableFontOptions()
         this.info('FONT DATA', responseData)
-      } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
         this.info('ERROR', e)
         let message = t(appName, 'reason unknown')
         if (e.response && e.response.data && e.response.data.message) {
@@ -997,12 +1096,10 @@ export default {
         }
       }
     },
-    async getGroup(gid) {
-      const result = await this.store.getGroup(gid, this.errorHandler)
-
-      return result
+    getGroup(gid: string) {
+      return this.store.getGroup(gid, this.errorHandler)
     },
-    async createGroup(gid) {
+    async createGroup(gid: string) {
       const result = await this.store.createGroup(gid, gid, this.errorHandler)
 
       if (result && this.orchestraGroups[gid]) {
@@ -1014,7 +1111,8 @@ export default {
 
       return result
     },
-    errorHandler(error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    errorHandler<T extends Error>(error: T|any) {
       this.$emit('error', error)
     },
   },
