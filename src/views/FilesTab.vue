@@ -38,7 +38,7 @@
                           :disabled="senderId <= 0"
                           :close-after-click="true"
                           :title="t(appId, 'Download Merged Document')"
-                          @click="(event) => handleMailMergeRequest('download', event)"
+                          @click="mailMergeHandlerHelper(MailMergeDownload)"
           >
             {{ t(appId, 'download locally') }}
           </NcActionButton>
@@ -46,7 +46,7 @@
                           :close-after-click="true"
                           :disabled="senderId <= 0"
                           :title="t(appId, 'Merge Document into Cloud')"
-                          @click="(event) => handleMailMergeRequest('cloud', event)"
+                          @click="mailMergeHandlerHelper(MailMergeCloud)"
           >
             <template #icon>
               <CloudUploadIcon />
@@ -57,7 +57,7 @@
                           :close-after-click="true"
                           :disabled="senderId <= 0"
                           :title="t(appId, 'Download Replacement Data')"
-                          @click="(event) => handleMailMergeRequest('dataset', event)"
+                          @click="mailMergeHandlerHelper(MailMergeDataset)"
           >
             <template #icon>
               <CodeJsonIcon />
@@ -286,6 +286,7 @@ export default {
     consoleMixin,
     l10nMixin,
   ],
+  props: {},
   data() {
     return {
       cloudVersionClasses,
@@ -437,8 +438,8 @@ export default {
       this.info('SENDER', this.sender)
       this.hints = await this.tooltips(Object.keys(this.hints))
     },
-    handleToggleMenu(menu: typeof NcActions, event: TargetedMouseEvent) {
-      if (event.target.closest('.action-item')) {
+    handleToggleMenu(menu: typeof NcActions, event: MouseEvent) {
+      if ((event as TargetedMouseEvent).target.closest('.action-item')) {
         return
       }
       if (menu.opened) {
@@ -454,6 +455,9 @@ export default {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const blah = this.$refs!.recipientsSource as any
       blah.closeMenu()
+    },
+    mailMergeHandlerHelper(operation: MailMergeOperations) {
+      return (event: MouseEvent) => this.handleMailMergeRequest(operation, event as TargetedMouseEvent);
     },
     async handleMailMergeRequest(operation: MailMergeOperations, event: TargetedMouseEvent) {
       this.info('MAIL MERGE', operation, event)
