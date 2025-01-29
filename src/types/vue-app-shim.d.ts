@@ -21,17 +21,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare module '@nextcloud/vue/dist/Directives/*.js' {
-  import type { DirectiveOptions } from 'vue';
+import Vue from 'vue'
+import type { AppName } from './config.ts';
+import { translate, translatePlural } from '@nextcloud/l10n';
 
-  const DirectiveVue: DirectiveOptions<>;
+// needs to go to a separate file. Why?
 
-  export default DirectiveVue;
+declare module 'vue/types/vue' {
+  interface Vue {
+    appId: AppName,
+    t: typeof translate,
+    n: typeof translatePlural,
+  }
 }
 
-declare module '@nextcloud/vue/dist/Components/*.js' {
-  import Vue from 'vue';
-  export default Vue;
+declare module '@nextcloud/vue' {
+  const NcActions: Vue;
+  export {
+    NcActions,
+  }
 }
-
-declare module '@nextcloud/vue';
