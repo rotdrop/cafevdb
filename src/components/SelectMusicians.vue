@@ -94,6 +94,10 @@ export default {
   ],
   inheritAttrs: false,
   props: {
+    value: {
+      type: [Array, Object] as PropType<null|Musician|Musician[]|MusicianIdObject|MusicianIdObject[]>,
+      default: undefined,
+    },
     searchable: {
       type: Boolean,
       default: true,
@@ -108,10 +112,6 @@ export default {
     },
     label: {
       type: String,
-      default: undefined,
-    },
-    value: {
-      type: [Array, Object] as PropType<null|Musician|Musician[]|MusicianIdObject|MusicianIdObject[]>,
       default: undefined,
     },
     clearable: {
@@ -276,9 +276,9 @@ export default {
     getValueObjects(noUndefined: boolean) {
       const value = Array.isArray(this.value) ? this.value : (this.value || this.value === 0 ? [this.value] : [])
       let everybody = false
-      let result = value.filter((musician) => musician !== '' && typeof musician !== 'undefined').map(
+      let result = value.filter((musician) => musician?.id).map(
         (musician) => {
-          const id = musician.id !== undefined ? musician.id : musician
+          const id = musician.id
           if (id === 0) {
             everybody = true
           }
@@ -294,7 +294,7 @@ export default {
     },
     getValueIds() {
       const value = Array.isArray(this.value) ? this.value : [this.value]
-      const result = value.filter((musician: Musician) => musician?.id).map((musician: Musician) => musician.id)
+      const result = value.filter((musician) => musician?.id).map((musician) => +musician!.id)
       // console.info('GET VALUE IDS', result)
       return result
     },

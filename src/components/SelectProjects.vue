@@ -69,7 +69,7 @@ export default {
       default: true,
     },
     value: {
-      type: [Array, Object] as PropType<Project[], Project>,
+      type: [Array, Object] as PropType<Project[]|Project>,
       default: undefined,
     },
     clearable: {
