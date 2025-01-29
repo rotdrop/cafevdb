@@ -24,7 +24,7 @@
   <div :class="['files-tab', ...cloudVersionClasses]">
     <ul>
       <li class="files-tab-entry flex clickable"
-          @click="(event) => handleToggleMenu($refs.mailMergeOperations, event)"
+          @click="toggleMenuHandlerHelper($refs.mailMergeOperations)"
       >
         <div class="files-tab-entry__avatar icon-play-white" />
         <div class="files-tab-entry__desc">
@@ -86,7 +86,7 @@
         />
       </li>
       <li class="files-tab-entry flex clickable"
-          @click="(event) => handleToggleMenu($refs.recipientsSource, event)"
+          @click="toggleMenuHandlerHelper($refs.recipientsSource)"
       >
         <div class="files-tab-entry__avatar icon-group-white" />
         <div class="files-tab-entry__desc">
@@ -206,7 +206,7 @@ import l10nMixin from '../mixins/l10n.ts'
 import md5 from 'blueimp-md5'
 import type { LegacyFileInfo } from '@nextcloud/files'
 import type { Project } from '../stores/app-data.ts'
-import type { Contact, AddressBook, Musician } from '../components/types/address-book.d.ts'
+import type { Contact, AddressBook, Musician } from '../types/address-book.d.ts'
 
 Vue.mixin({ data() { return { appName } }, methods: { t, n } })
 Vue.directive('tooltip', Tooltip)
@@ -264,6 +264,8 @@ interface TargetedMouseEvent extends MouseEvent {
   target: HTMLInputElement,
 }
 
+type NcActionsType = typeof NcActions
+
 export default {
   name: 'FilesTab',
   components: {
@@ -292,7 +294,7 @@ export default {
       cloudVersionClasses,
       fileInfo: null as null|LegacyFileInfo,
       sender: null as null|MusicianModel,
-      project: null as null|Project,
+      project: undefined as undefined|Project,
       recipients: [] as Musician[],
       allAddressBooks: {},
       onlyAddressBooks: [] as AddressBook[],
@@ -438,8 +440,11 @@ export default {
       this.info('SENDER', this.sender)
       this.hints = await this.tooltips(Object.keys(this.hints))
     },
-    handleToggleMenu(menu: typeof NcActions, event: MouseEvent) {
-      if ((event as TargetedMouseEvent).target.closest('.action-item')) {
+    toggleMenuHandlerHelper(element: unknown) {
+      return (event: MouseEvent) => this.handleToggleMenu(element as NcActionsType, event as TargetedMouseEvent)
+    },
+    handleToggleMenu(menu: unknown|typeof NcActions, event: TargetedMouseEvent) {
+      if (event.target.closest('.action-item')) {
         return
       }
       if (menu.opened) {
@@ -457,7 +462,7 @@ export default {
       blah.closeMenu()
     },
     mailMergeHandlerHelper(operation: MailMergeOperations) {
-      return (event: MouseEvent) => this.handleMailMergeRequest(operation, event as TargetedMouseEvent);
+      return (event: MouseEvent) => this.handleMailMergeRequest(operation, event as TargetedMouseEvent)
     },
     async handleMailMergeRequest(operation: MailMergeOperations, event: TargetedMouseEvent) {
       this.info('MAIL MERGE', operation, event)
@@ -531,7 +536,7 @@ export default {
     resetState() {
       this.sender = null
       this.recipients = []
-      this.project = null
+      this.project = undefined
       if (this.initialState.personal.musicianId > 0) {
         this.sender = { id: this.initialState.personal.musicianId }
       }

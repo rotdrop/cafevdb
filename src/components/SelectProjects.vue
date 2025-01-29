@@ -46,10 +46,17 @@ import { translate as t } from '@nextcloud/l10n'
 import consoleMixin from '../mixins/console.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import useAppDataStore from '../stores/app-data.ts'
-import type { Project } from '../stores/app-data.ts'
 import type { PropType } from 'vue'
+import type { Project, ProjectTemporalType } from '../stores/app-data.ts'
 
-type InputObject = Project | { id: number, name: string, year: number, type: string }
+type OnlyIdType = { id: number }
+type ProjectItemType = Project | (OnlyIdType & { name: string, year: number, type: ProjectTemporalType })
+type IdType = OnlyIdType | ProjectItemType
+type InputObjectType = IdType | number
+type ValueType = InputObjectType[]|InputObjectType|undefined
+
+const isIdType = (arg: ValueType): arg is IdType => !!arg && !Array.isArray(arg) && (typeof arg !== 'number')
+const isIdTypeArray = (arg: ValueType): arg is IdType[] => !!arg && Array.isArray(arg) && (arg.length === 0 || (typeof arg[0] !== 'number'))
 
 /**
  * Select multiple or a single project. The provided value is always an array of project ids.
@@ -69,7 +76,7 @@ export default {
       default: true,
     },
     value: {
-      type: [Array, Object] as PropType<Project[]|Project>,
+      type: [Array, Object, Number] as PropType<ValueType>,
       default: undefined,
     },
     clearable: {
@@ -102,7 +109,7 @@ export default {
     const appData = useAppDataStore()
     return {
       appData,
-      projects: appData.projects,
+      projects: appData.projects as ProjectItemType,
     }
   },
   data() {
@@ -132,7 +139,7 @@ export default {
       //   }
       // }
       // return Object.values(groupedValues).sort((p1, p2) => -(p1.year - p2.year))
-      const projects: InputObject[] = Object.values(this.projects).sort((a, b) => {
+      const projects = Object.values(this.projects).sort((a, b) => {
         const p1 = a as Project
         const p2 = b as Project
         const p1year = p1?.year || -1
@@ -154,28 +161,30 @@ export default {
       }
       return projects
     },
+    valueIds() {
+      if (!this.value || (Array.isArray(this.value) && this.value.length === 0)) {
+        return []
+      }
+      const value = this.value
+      if (!Array.isArray(value)) {
+        return [isIdType(value) ? value.id : value]
+      }
+      if (isIdTypeArray(value)) {
+        return value.map((project) => project?.id).filter(id => !!id)
+      } else {
+        return (value as number[] /* TS fails to detect this */).filter(id => !!id)
+      }
+    },
   },
   watch: {
-    async value(newValue) {
+    async value() {
       if (this.ajaxLoading) {
         return
       }
-      if (this.multiple) {
-        if (newValue.length === 0) {
-          this.inputValObjects = []
-          return
-        }
-      } else {
-        if (!newValue) {
-          this.inputValObjects = undefined
-          return
-        }
-        newValue = [newValue]
-      }
       this.ajaxLoading = true
-      for (const projectId of newValue) {
+      for (const projectId of this.valueIds) {
         if (!this.projects[projectId]) {
-          await this.findProjects(projectId)
+          await this.findProjects('' + projectId)
         }
       }
       this.inputValObjects = this.getValueObjects()
@@ -195,13 +204,7 @@ export default {
       return this.projects[id] || { id, name: id, year: -1, type: '' }
     },
     getValueObjects() {
-      const value = Array.isArray(this.value) ? this.value : (this.value || this.value === 0 ? [this.value] : [])
-      const result = value.filter((project) => project?.id).map(
-        (project) => {
-          // project can be a simple project id if multiple == false
-          return this.getProjectObject(project.id)
-        },
-      )
+      const result = this.valueIds.map((projectId) => this.getProjectObject(projectId))
       return this.multiple ? result : (result.length > 0) ? result[0] : undefined
     },
     async findProjects(query: string) {

@@ -67,7 +67,7 @@ import { usePersistentDataStore } from '../stores/persistent-data.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
 import type { AxiosResponse } from 'axios'
-import type { Musician } from './types/address-book.d.ts'
+import type { Musician } from '../types/address-book.d.ts'
 import type { PropType } from 'vue'
 
 type SearchParameters = {

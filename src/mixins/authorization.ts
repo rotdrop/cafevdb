@@ -23,9 +23,11 @@
 
 import * as Authorization from '../authorization.ts'
 
-export default {
+const mixin = {
   inject:[...Object.keys(Authorization).filter((key) => key.startsWith('PERMISSION_'))],
   methods: {
     authorized: Authorization.authorized,
   },
 };
+
+export default mixin;

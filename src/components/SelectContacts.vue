@@ -68,7 +68,7 @@ import qs from 'qs'
 import addressPopup from '../mixins/address-popup.ts'
 import consoleMixin from '../mixins/console.ts'
 import l10nMixin from '../mixins/l10n.ts'
-import type { AddressBook, Contact } from './types/address-book.d.ts'
+import type { AddressBook, Contact } from '../types/address-book.d.ts'
 
 export default {
   name: 'SelectContacts',

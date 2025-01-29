@@ -69,7 +69,7 @@
                              :loading="loading.settings"
                              :disabled="loading.general || groupAdminsDisabled"
                              :required="true"
-                             @input="(...args) => info(...args)"
+                             @input="info"
                              @update="saveSetting('orchestraUserGroupAdmins')"
                              @error="showErrorToast"
         />
@@ -89,7 +89,7 @@
               <GroupIcon :size="24" />
             </template>
             <template #subname>
-              {{ group.users.join(', ') }}
+              {{ group?.users?.join(', ') || '' }}
             </template>
             <template #indicator>
               <CheckboxBlankCircle v-if="group.status === 'inaccessible'" :size="16" fill-color="red" />
@@ -333,7 +333,7 @@ import { generateUrl as generateAppUrl, generateOcsUrl as generateAppOcsUrl } fr
 import { loadState } from '@nextcloud/initial-state'
 import { showError, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 
-import { appName } from '../config.ts'
+import { appName as appId } from '../config.ts'
 import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
 
 import SelectMusicians from './SelectMusicians.vue'
@@ -394,16 +394,19 @@ type AppAdminSettings = {
   defaultOfficeFont: string,
 }
 
-interface SettingsCloudGroup extends CloudGroup {
-  status: string,
-  l10nStatus: string,
-}
 type CloudUserGetResponse = AxiosResponse<OCSResponse<CloudUser> >
 type RecryptionGetResponse = AxiosResponse<OCSResponse<{ requests: Record<string, number>}> >
 
 type BulkRecryptionCountResponse = AxiosResponse<OCSResponse<{ count: number }> >
 type RecryptionStatus = 'granted' | 'revoked' | 'failure'
 type BulkRecryptionResponse = AxiosResponse<OCSResponse<{ userId: string, status: RecryptionStatus}[]> >
+
+type UserRecryptionResponse = AxiosResponse<OCSResponse<{
+  keyStatus: string,
+  userId: string,
+  status: 'granted' | 'failure',
+  message?: string,
+}> >
 
 type AdminSettingPostResponse = AxiosResponse<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -436,27 +439,31 @@ type FontCacheOperationRescan = 'rescan'
 type FontCacheOperationPurge = 'purge'
 type FontCacheOperations = FontCacheOperationPurge | FontCacheOperationRescan | FontCacheOperationUpdate
 
-const initialState: InitialState = loadState(appName, 'adminConfig')
+type GroupType = (CloudGroup|Pick<CloudGroup, 'id'|'displayname'|'backends'|'users'|'usercount'|'disabled'>) & {
+  l10nStatus?: string,
+  status?: string,
+}
+
+const initialState: InitialState = loadState(appId, 'adminConfig')
 
 export default {
   name: 'AdminSettings',
   components: {
-    NcActions,
+    CheckboxBlankCircle,
+    GroupIcon,
     NcActionButton,
+    NcActions,
+    NcListItem,
     NcProgressBar,
+    NcSettingsSection,
     SelectMusicians,
     SelectProjects,
     SelectWithSubmitButton,
-    NcSettingsSection,
     SettingsSelectGroup,
     SettingsSelectUsers,
     TextField,
-    NcListItem,
-    CheckboxBlankCircle,
-    GroupIcon,
   },
   mixins: [
-    appInfo,
     l10nMixin,
     tooltipMixin,
     formatDate,
@@ -464,6 +471,12 @@ export default {
     toasts,
     dialogs,
   ],
+  props: {
+    recryptionPollTimeout: {
+      type: Number,
+      default: 10 * 1000,
+    },
+  },
   setup() {
     const store = useCloudUsersGroupsStore()
     return { store }
@@ -489,7 +502,7 @@ export default {
         defaultOfficeFont: '',
       } as AppAdminSettings,
       settingsBackup: {} as AppAdminSettings,
-      orchestraGroups: {} as Record<string, SettingsCloudGroup>,
+      orchestraGroups: {} as Record<string, GroupType>,
       config: initialState,
       hints: {
         'settings:admin:cloud-user-backend-conf': '',
@@ -506,8 +519,7 @@ export default {
         requests: {} as Record<string, RecryptionRequest>,
         allRequestsMarked: false,
       },
-      recryptionPollTimer: null as null|ReturnType<typeof setTimeout>,
-      recryptionPollTimeout: 10 * 1000,
+      recryptionPollTimer: undefined as undefined|NodeJS.Timeout,
       access: {
         musicians: [] as Musician[],
         project: undefined as Project|undefined,
@@ -561,7 +573,7 @@ export default {
     accessActionCounter() {
       const totals = this.access.action.totals
       const current = this.access.action.done
-      return t(appName, '{current} of {totals}', { current, totals })
+      return t(appId, '{current} of {totals}', { current, totals })
     },
     accessActionError() {
       return this.access.action.failure
@@ -587,8 +599,8 @@ export default {
     await this.getData()
   },
   beforeDestroy() {
-    this.clearTimeout(this.recryptionPollTimer)
-    this.recryptionPollTimer = null
+    clearTimeout(this.recryptionPollTimer)
+    this.recryptionPollTimer = undefined
   },
   methods: {
     async getData() {
@@ -621,18 +633,22 @@ export default {
       this.loading.groups = true
       const gids = Object.values(this.config.authorizationGroupSuffixes).map((suffix) => this.orchestraUserGroup + suffix).sort()
       for (const id of gids) {
-        const group = await this.getGroup(id) || {}
-        if (group.id) {
-          group.l10nStatus = t(appName, group.status = 'accessible')
+        let group = (await this.getGroup(id)) as GroupType | undefined
+        if (group) {
           if (!group.users) {
-            await group.getUsers(this.errorHandler)
+            await (group as CloudGroup).getUsers(this.errorHandler)
           }
+          group.l10nStatus = t(appId, group.status = 'accessible')
         } else {
-          group.id =
-            group.displayname = id
-          group.l10nStatus = t(appName, group.status = 'inaccessible')
-          group.users = []
-          group.backends = []
+          group = {
+            id,
+            displayname: id,
+            backends: [],
+            status: 'inaccessible',
+            usercount: 0,
+            disabled: false,
+            l10nStatus: t(appId, 'inaccessible'),
+          }
           console.info('GROUP INACCESSIBLE', group)
         }
         vueSet(this.orchestraGroups, id, group)
@@ -641,9 +657,9 @@ export default {
     },
     async loadTooltips() {
       this.loading.tooltips = true
-      const personalSettingsLink = '<a class="external settings" href="' + this.config.personalAppSettingsLink + '">' + appName + '</a>'
+      const personalSettingsLink = '<a class="external settings" href="' + this.config.personalAppSettingsLink + '">' + appId + '</a>'
       this.forword = t(
-        appName,
+        appId,
         'Further detailed configurations are necessary after configuring the user-group. Please configure a dedicated group-admin for the user-group and then log-in as this group-admin and head over to the {personalSettingsLink} settings.', {
           personalSettingsLink,
         }, undefined, { escape: false })
@@ -745,13 +761,13 @@ export default {
         if (responseData.status === 'unconfirmed') {
           await new Promise(resolve => {
             this.dialogConfirm(
-              t(appName, 'Confirmation Required'),
+              t(appId, 'Confirmation Required'),
               responseData.feedback as string,
               (answer) => {
                 if (answer) {
-                  this.saveSetting(settingsKey, value, true)
+                  this.saveSetting(settingsKey, value)
                 } else {
-                  showInfo(t(appName, 'Unconfirmed, reverting to old value.'))
+                  showInfo(t(appId, 'Unconfirmed, reverting to old value.'))
                   this.getSettingsData()
                 }
                 resolve(answer)
@@ -760,12 +776,12 @@ export default {
           })
           // OC.dialogs.confirm(
           //   responseData.feedback,
-          //   t(appName, 'Confirmation Required'),
+          //   t(appId, 'Confirmation Required'),
           //   (answer) => {
           //     if (answer) {
           //       this.saveSetting(settingsKey, value, true)
           //     } else {
-          //       showInfo(t(appName, 'Unconfirmed, reverting to old value.'))
+          //       showInfo(t(appId, 'Unconfirmed, reverting to old value.'))
           //       this.getSettingsData()
           //     }
           //   },
@@ -782,9 +798,9 @@ export default {
               value = value.join(', ')
             }
             if (value) {
-              transient.push(t(appName, 'Successfully set value for "{settingsKey}" to "{value}".', { settingsKey, value }))
+              transient.push(t(appId, 'Successfully set value for "{settingsKey}" to "{value}".', { settingsKey, value }))
             } else {
-              transient.push(t(appName, 'Value for "{settingsKey}" has been erased.', { settingsKey }))
+              transient.push(t(appId, 'Value for "{settingsKey}" has been erased.', { settingsKey }))
             }
           }
           for (const message of transient) {
@@ -797,7 +813,7 @@ export default {
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
-        let message = t(appName, 'reason unknown')
+        let message = t(appId, 'reason unknown')
         if (e.response && e.response.data && e.response.data.message) {
           message = e.response.data.message
           console.error('RESPONSE', e.response)
@@ -806,15 +822,15 @@ export default {
           if (Array.isArray(value)) {
             value = value.join(', ')
           }
-          showError(t(appName, 'Could not set "{settingsKey}" to "{value}": {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+          showError(t(appId, 'Could not set "{settingsKey}" to "{value}": {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
         } else {
-          showError(t(appName, 'Could not set "{settingsKey}": {message}', { settingsKey, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+          showError(t(appId, 'Could not set "{settingsKey}": {message}', { settingsKey, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
         }
         this.getSettingsData()
       }
     },
     synchronizeUserBackends() {
-      showError(t(appName, 'Synchronizing user backends not yet implemented.'), { timeout: TOAST_PERMANENT_TIMEOUT })
+      showError(t(appId, 'Synchronizing user backends not yet implemented.'), { timeout: TOAST_PERMANENT_TIMEOUT })
     },
     markAllRecryptionRequests(/* event */) {
       const value = !!this.recryption.allRequestsMarked
@@ -838,23 +854,22 @@ export default {
       return axios.post(url + '?format=json', {
         notifyUser: silent !== true,
         allowFailure,
-      })
+      }) as Promise<UserRecryptionResponse>
     },
     async handleRecryptionRequest(userId: string, silent = false) {
       this.awaitRecryptionRequestPromise(userId, this.doHandleRecryptionRequest(userId, silent))
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async awaitRecryptionRequestPromise(userId: string, promise: Promise<any>) {
+    async awaitRecryptionRequestPromise(userId: string, promise: Promise<UserRecryptionResponse>) {
       try {
         await promise
-        showInfo(t(appName, 'Successfully handled recryption request for {userId}.', { userId }))
+        showInfo(t(appId, 'Successfully handled recryption request for {userId}.', { userId }))
         vueDelete(this.recryption.requests, userId)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         if (e.response) {
           console.error('RESPONSE', e.response)
         }
-        let message = t(appName, 'reason unknown')
+        let message = t(appId, 'reason unknown')
         if (e.response && e.response.data && e.response.data.ocs) {
           message = e.response.data.ocs.meta.message
                   + ' ('
@@ -862,7 +877,7 @@ export default {
                   + ', ' + e.response.data.ocs.meta.status
                   + ')'
         }
-        showError(t(appName, 'Could not resolve the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        showError(t(appId, 'Could not resolve the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
         this.getRecryptionRequests()
       }
     },
@@ -872,14 +887,14 @@ export default {
           userId,
         })
         await axios.delete(url + '?format=json')
-        showInfo(t(appName, 'Successfully deleted recryption request for {userId}.', { userId }))
+        showInfo(t(appId, 'Successfully deleted recryption request for {userId}.', { userId }))
         vueDelete(this.recryption.requests, userId)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         if (e.response) {
           console.error('RESPONSE', e.response)
         }
-        let message = t(appName, 'reason unknown')
+        let message = t(appId, 'reason unknown')
         if (e.response && e.response.data && e.response.data.ocs) {
           message = e.response.data.ocs.meta.message
                   + ' ('
@@ -887,7 +902,7 @@ export default {
                   + ', ' + e.response.data.ocs.meta.status
                   + ')'
         }
-        showError(t(appName, 'Could not delete the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        showError(t(appId, 'Could not delete the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
         this.getRecryptionRequests()
       }
     },
@@ -902,7 +917,7 @@ export default {
     async handleMarkedRecrytpionRequests() {
       const allRequests = Object.values(this.recryption.requests)
       const marked = allRequests.filter(request => request.marked)
-      const recryptionPromises = {}
+      const recryptionPromises: Record<string, Promise<UserRecryptionResponse> > = {}
       for (const request of marked) {
         const userId = request.id
         recryptionPromises[userId] = this.doHandleRecryptionRequest(userId)
@@ -920,7 +935,7 @@ export default {
     },
     async handleAccessAction(action: AccessActions) {
       if (this.access.musicians.length === 0) {
-        showError(t(appName, 'No musicians selected, doing nothing.'), { timeout: TOAST_DEFAULT_TIMEOUT })
+        showError(t(appId, 'No musicians selected, doing nothing.'), { timeout: TOAST_DEFAULT_TIMEOUT })
       }
       if (this.access.musicians.length === 1 && this.access.musicians[0].id <= 0) {
         this.handleBulkAccessAction(action)
@@ -933,20 +948,20 @@ export default {
         for (const musician of this.access.musicians) {
           const response = action === 'grant'
             ? await this.doHandleRecryptionRequest(musician.userIdSlug, true, true)
-            : await this.doRevokeCloudAccess(musician.userIdSlug, true)
+            : await this.doRevokeCloudAccess(musician.userIdSlug)
           const ocsData = response.data.ocs.data
           const lastUser = ocsData.userId
           ocsData.status === 'failure' && ++failedUsers
           this.access.action.done++
-          this.access.action.label = t(appName, 'Processed user-id {userId}.', { userId: lastUser })
+          this.access.action.label = t(appId, 'Processed user-id {userId}.', { userId: lastUser })
           if (failedUsers > 0) {
-            this.access.action.label += ' ' + t(appName, '{failedUsers} users have failed.', { failedUsers })
+            this.access.action.label += ' ' + t(appId, '{failedUsers} users have failed.', { failedUsers })
           }
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         this.info('ERROR', e)
-        let message = t(appName, 'reason unknown')
+        let message = t(appId, 'reason unknown')
         if (e.response && e.response.data) {
           const data = e.response.data
           if (data.message) {
@@ -955,22 +970,22 @@ export default {
             message = data.ocs.meta.message
           }
         }
-        showError(t(appName, 'Unable to handle access action: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        showError(t(appId, 'Unable to handle access action: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
         this.access.action.failure = true
       }
       const numUsers = this.access.action.done - failedUsers
       const remainingUsers = this.access.action.totals - this.access.action.done
 
       if (this.access.action.failure) {
-        this.access.action.label = t(appName, 'Failed after {numUsers} users have been processed successfully.', { numUsers })
+        this.access.action.label = t(appId, 'Failed after {numUsers} users have been processed successfully.', { numUsers })
         if (failedUsers > 0) {
-          this.access.action.label += ' ' + t(appName, '{failedUsers} were processed unsuccessfully.', { failedUsers })
+          this.access.action.label += ' ' + t(appId, '{failedUsers} were processed unsuccessfully.', { failedUsers })
         }
-        this.access.action.label += ' ' + t(appName, '{remainingUsers} remain unprocessed.', { remainingUsers })
+        this.access.action.label += ' ' + t(appId, '{remainingUsers} remain unprocessed.', { remainingUsers })
       } else {
-        this.access.action.label = t(appName, '{numUsers} users have been processed successfully.', { numUsers })
+        this.access.action.label = t(appId, '{numUsers} users have been processed successfully.', { numUsers })
         if (failedUsers > 0) {
-          this.access.action.label += ' ' + t(appName, '{failedUsers} were processed unsuccessfully.', { failedUsers })
+          this.access.action.label += ' ' + t(appId, '{failedUsers} were processed unsuccessfully.', { failedUsers })
         }
       }
     },
@@ -1006,16 +1021,16 @@ export default {
           lastUser = musicians.slice(-1)[0].userId
           count = musicians.length
           this.access.action.done += count
-          this.access.action.label = t(appName, 'Processed user-id {userId}.', { userId: lastUser })
+          this.access.action.label = t(appId, 'Processed user-id {userId}.', { userId: lastUser })
           if (failedUsers > 0) {
-            this.access.action.label += ' ' + t(appName, '{failedUsers} users have failed.', { failedUsers })
+            this.access.action.label += ' ' + t(appId, '{failedUsers} users have failed.', { failedUsers })
           }
           this.access.action.label += '.'
         } while (count > 0 && this.access.action.done < this.access.action.totals)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         this.info('ERROR', e)
-        let message = t(appName, 'reason unknown')
+        let message = t(appId, 'reason unknown')
         if (e.response && e.response.data) {
           const data = e.response.data
           if (data.message) {
@@ -1024,22 +1039,22 @@ export default {
             message = data.ocs.meta.message
           }
         }
-        showError(t(appName, 'Unable to handle access action: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        showError(t(appId, 'Unable to handle access action: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
         this.access.action.failure = true
       }
       const numUsers = this.access.action.done - failedUsers
       const remainingUsers = this.access.action.totals - this.access.action.done
 
       if (this.access.action.failure) {
-        this.access.action.label = t(appName, 'Failed after {numUsers} users have been processed successfully.', { numUsers })
+        this.access.action.label = t(appId, 'Failed after {numUsers} users have been processed successfully.', { numUsers })
         if (failedUsers > 0) {
-          this.access.action.label += ' ' + t(appName, '{failedUsers} were processed unsuccessfully.', { failedUsers })
+          this.access.action.label += ' ' + t(appId, '{failedUsers} were processed unsuccessfully.', { failedUsers })
         }
-        this.access.action.label += ' ' + t(appName, '{remainingUsers} remain unprocessed.', { remainingUsers })
+        this.access.action.label += ' ' + t(appId, '{remainingUsers} remain unprocessed.', { remainingUsers })
       } else {
-        this.access.action.label = t(appName, '{numUsers} users have been processed successfully.', { numUsers })
+        this.access.action.label = t(appId, '{numUsers} users have been processed successfully.', { numUsers })
         if (failedUsers > 0) {
-          this.access.action.label += ' ' + t(appName, '{failedUsers} were processed unsuccessfully.', { failedUsers })
+          this.access.action.label += ' ' + t(appId, '{failedUsers} were processed unsuccessfully.', { failedUsers })
         }
       }
     },
@@ -1066,7 +1081,7 @@ export default {
         if (responseData.message) {
           showInfo(responseData.message)
         } else {
-          showInfo(t(appName, 'Font cache operation {operation} completed successfully.', { operation }))
+          showInfo(t(appId, 'Font cache operation {operation} completed successfully.', { operation }))
         }
         this.config.officeFonts = responseData.fonts
         this.settings.defaultOfficeFont = responseData.default
@@ -1076,12 +1091,12 @@ export default {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         this.info('ERROR', e)
-        let message = t(appName, 'reason unknown')
+        let message = t(appId, 'reason unknown')
         if (e.response && e.response.data && e.response.data.message) {
           message = e.response.data.message
           console.error('RESPONSE', e.response)
         }
-        showError(t(appName, 'Could not perform the requested font-cache operation "{operation}": {message}', { operation, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        showError(t(appId, 'Could not perform the requested font-cache operation "{operation}": {message}', { operation, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
       }
       this.loading.fonts = false
     },

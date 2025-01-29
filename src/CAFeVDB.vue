@@ -275,8 +275,7 @@
 </template>
 <script lang="ts">
 // import { appName as appId } from './config.ts'
-import mixins from './mixins/app-mixins.ts'
-// import type { Mixins } from './mixins/app-mixins'
+import appMixins from './mixins/app-mixins.ts'
 import authorization from './mixins/authorization.ts'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import {
@@ -315,7 +314,7 @@ import * as BusEvents from './event-bus-events.ts'
 import appIcon from '../img/cafevdb.svg?raw'
 import { getInitialState } from './toolkit/services/InitialStateService.js'
 import type { RawLocation, Location as RouterLocation } from 'vue-router'
-// import type VueRouter from 'vue-router'
+// import type { PropType } from 'vue'
 
 const initialState = getInitialState('CAFEVDB')
 
@@ -332,12 +331,6 @@ type DebugOption = {
   value: number,
   label: string,
 }
-
-// interface CAFeVDB extends Mixins {
-//   $router: VueRouter,
-//   loading: boolean,
-//   hints: Record<string, string>,
-// }
 
 export default {
   name: 'CAFeVDB',
@@ -363,7 +356,8 @@ export default {
     // ProjectParticipantsIcon,
     SelectWithSubmitButton,
   },
-  mixins: [...mixins, authorization],
+  mixins: [...appMixins, authorization],
+  props: {}, // make the vue language server happy, otherwise methods: will be ignored.
   setup() {
     const appData = useAppDataStore()
     return {
@@ -595,6 +589,7 @@ export default {
     // works only after mounting
     closeNavigation()
     this.isMounted = true
+    this.info(this.appId, this.appIdProp)
   },
   methods: {
     closeSidebar() {

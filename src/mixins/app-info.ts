@@ -21,6 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { PropType } from 'vue';
 import { appName, appPrefix, appNameTag } from '../config.ts';
 import {
   initialState,
@@ -31,10 +32,13 @@ import {
   cloudUser,
 } from '../app/config.js';
 
+type AppName = typeof appName;
+
 const mixin = {
   inject: { appId: { default: appName, from: 'appId' } },
   data() {
     return {
+      appId: appName,
       appNameTag,
       initialState,
       CAFEVDB,

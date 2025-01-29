@@ -22,7 +22,7 @@
     </div>
   </component>
 </template>
-<script setup>
+<script lang="ts" setup>
 defineProps({
   uploadMaxFileSize: {
     type: Number,

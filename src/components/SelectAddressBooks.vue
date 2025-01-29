@@ -47,7 +47,7 @@ import { getInitialState } from '../services/initial-state-service.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import consoleMixin from '../mixins/console.ts'
 import l10nMixin from '../mixins/l10n.ts'
-import type { AddressBook } from './types/address-book.d.ts'
+import type { AddressBook } from '../types/address-book.d.ts'
 
 interface InitialState {
   contacts: {

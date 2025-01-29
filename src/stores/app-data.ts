@@ -42,7 +42,8 @@ export type HistoryAction = typeof HistoryActionPop|typeof HistoryActionPush|typ
 export type ProjectTypeTemporary = 'temporary';
 export type ProjectTypePermanent = 'permanent';
 export type ProjectTypeTemplate = 'template';
-export type ProjectTemporalType = ProjectTypeTemporary|ProjectTypePermanent|ProjectTypeTemplate;
+export type ProjectTypeInvalid = ''|null|undefined;
+export type ProjectTemporalType = ProjectTypeTemporary|ProjectTypePermanent|ProjectTypeTemplate|ProjectTypeInvalid;
 
 export interface Project {
   id: number,
@@ -183,7 +184,7 @@ export default defineStore(storeId, () => {
     null,
     { lazy: true, evaluating },
   );
-  const currentProjectName = computed(() => currentProject.value?.name);
+  const currentProjectName = computed(() => currentProject.value?.name || '');
 
   async function getProject(projectId: number, handler?: ErrorHandler) {
     return await state.getProject(projectId, handler || errorHandler.value);

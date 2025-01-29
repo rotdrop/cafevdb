@@ -42,7 +42,7 @@
       />
       <NcActionSeparator v-if="showProjectName && projectName" />
       <NcActionButton v-if="enableOverviewItem"
-                      :name="t(appName, 'Project Overview')"
+                      :name="t(appId, 'Project Overview')"
                       @click="openProjectOverview"
       >
         <template #icon>
@@ -85,7 +85,7 @@
           <ProjectFolderIcon />
         </template>
       </NcActionLink>
-      <NcActionLink :name="t(appName, 'Project Notes')"
+      <NcActionLink :name="t(appId, 'Project Notes')"
                     :href="projectNotesLink"
                     @click="openProjectNotes"
       >
@@ -93,7 +93,7 @@
           <ProjectNotesIcon />
         </template>
       </NcActionLink>
-      <NcActionLink :name="t(appName, 'Events')"
+      <NcActionLink :name="t(appId, 'Events')"
                     :href="projectEventsLink"
                     @click="openProjectEvents"
       >
@@ -117,6 +117,8 @@ import {
   NcActionSeparator,
 } from '@nextcloud/vue'
 import globalState from '../app/globalstate.js'
+import { appName as appId } from '../config.ts'
+import { translate as t } from '@nextcloud/l10n'
 import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
@@ -281,7 +283,7 @@ export default {
       }
     },
     async syncProjectData(projectId: number) {
-      this.project = await this.appData.getProject(projectId)
+      this.project = await this.appData.getProject(projectId) || null
       // vueSet(this.project, 'folders', this.project.folders)
     },
     openProjectOverview() {
@@ -316,7 +318,7 @@ export default {
       closeNavigation()
       wikiPopup({
         wikiPage: this.project!.wikiPage,
-        popupTitle: this.t(this.appName, 'Project Wiki for {projectName}', { projectName: this.projectName }),
+        popupTitle: t(appId, 'Project Wiki for {projectName}', { projectName: this.projectName }),
       })
     },
     openProjectEvents(event: MouseEvent) {

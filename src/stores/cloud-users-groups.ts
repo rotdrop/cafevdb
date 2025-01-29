@@ -51,7 +51,7 @@ export type CloudGroup = {
   canAdd: boolean,
   canRemove: boolean,
   backends: string[],
-  users: string[],
+  users?: string[],
   usersDetails: Record<string, CloudUser>,
   getUsers: (errorHandler: null|ErrorHandler) => Promise<any>,
   getUsersDetails: (errorHandler: null|ErrorHandler) => Promise<any>,

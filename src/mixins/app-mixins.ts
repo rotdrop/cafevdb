@@ -30,7 +30,7 @@ import toasts from './toasts.ts';
 import tooltips from './tooltips.ts';
 import l10n from './l10n.ts';
 
-export default [
+const mixins = [
   appInfo,
   l10n,
   consoleMixin,
@@ -40,3 +40,5 @@ export default [
   toasts,
   tooltips,
 ];
+
+export default mixins;
