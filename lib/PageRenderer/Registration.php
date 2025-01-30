@@ -28,11 +28,34 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 
 use OCA\CAFEVDB\Database\Legacy\PME\IOptions as IPMEOptions;
 use OCA\CAFEVDB\Service\FontService;
+use OCA\CAFEVDB\Constants;
 
 /** Register template-names as dependency injection tags. */
 class Registration
 {
   public const TEMPLATE_PREFIX = 'template:';
+
+  private const LEGACY_TEMPLATES = [
+    ConfigCheck::TEMPLATE => ConfigCheck::class,
+    AllMusicians::TEMPLATE => AllMusicians::class,
+    AddMusicians::TEMPLATE => AddMusicians::class,
+    Projects::TEMPLATE => Projects::class,
+    ProjectParticipants::TEMPLATE => ProjectParticipants::class,
+    ProjectInstrumentationNumbers::TEMPLATE => ProjectInstrumentationNumbers::class,
+    ProjectPayments::TEMPLATE => ProjectPayments::class,
+    SepaBankAccounts::TEMPLATE => SepaBankAccounts::class,
+    SepaBulkTransactions::TEMPLATE => SepaBulkTransactions::class,
+    InstrumentInsurances::TEMPLATE => InstrumentInsurances::class,
+    ProjectParticipantFields::TEMPLATE => ProjectParticipantFields::class,
+    Instruments::TEMPLATE => Instruments::class,
+    InstrumentFamilies::TEMPLATE => InstrumentFamilies::class,
+    InsuranceBrokers::TEMPLATE => InsuranceBrokers::class,
+    InsuranceRates::TEMPLATE => InsuranceRates::class,
+    TaxExemptionNotices::TEMPLATE => TaxExemptionNotices::class,
+    DonationReceipts::TEMPLATE => DonationReceipts::class,
+    Blog::TEMPLATE => Blog::class,
+  ];
+
   /**
    * @param IRegistrationContext $context
    *
@@ -48,24 +71,18 @@ class Registration
     $context->registerService(self::TEMPLATE_PREFIX . 'maintenance/debug', function($c) {
       return new class extends Renderer {}; // do nothing
     });
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . ConfigCheck::TEMPLATE, ConfigCheck::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . AllMusicians::TEMPLATE, AllMusicians::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . AddMusicians::TEMPLATE, AddMusicians::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . Projects::TEMPLATE, Projects::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . ProjectParticipants::TEMPLATE, ProjectParticipants::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . ProjectInstrumentationNumbers::TEMPLATE, ProjectInstrumentationNumbers::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . ProjectPayments::TEMPLATE, ProjectPayments::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . SepaBankAccounts::TEMPLATE, SepaBankAccounts::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . SepaBulkTransactions::TEMPLATE, SepaBulkTransactions::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . InstrumentInsurances::TEMPLATE, InstrumentInsurances::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . ProjectParticipantFields::TEMPLATE, ProjectParticipantFields::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . Instruments::TEMPLATE, Instruments::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . InstrumentFamilies::TEMPLATE, InstrumentFamilies::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . InsuranceBrokers::TEMPLATE, InsuranceBrokers::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . InsuranceRates::TEMPLATE, InsuranceRates::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . TaxExemptionNotices::TEMPLATE, TaxExemptionNotices::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . DonationReceipts::TEMPLATE, DonationReceipts::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . Blog::TEMPLATE, Blog::class);
+
+    foreach (self::LEGACY_TEMPLATES as $template => $class) {
+      $context->registerServiceAlias(self::TEMPLATE_PREFIX . $template, $class);
+      // There are subtle difficulties with special characters in url
+      // parameteres. Sometime double encoding is neccessary, sometimes
+      // not. Not clear, what causes the problem. As our templates at most
+      // contain / path separators simply work around by replacing the path
+      // separator by something "normal".
+      if (str_contains($template, Constants::PATH_SEP)) {
+        $context->registerServiceAlias(self::TEMPLATE_PREFIX . str_replace(Constants::PATH_SEP, ':', $template), $class);
+      }
+    }
 
     // @todo find a cleaner way for the following
 

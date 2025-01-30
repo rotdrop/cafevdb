@@ -29,6 +29,7 @@ use Throwable;
 use OutOfBoundsException;
 
 use OCP\IRequest;
+use OC\AppFramework\Utility\QueryNotFoundException;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\DataResponse;
@@ -54,6 +55,7 @@ use OCA\CAFEVDB\PageRenderer\Registration as RendererRegistration;
 use OCA\CAFEVDB\PageRenderer\Blog as BlogRenderer;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
+use OCA\CAFEVDB\Constants;
 
 /** Main UI entry point providing the front pages. */
 class PageController extends Controller
@@ -336,7 +338,15 @@ class PageController extends Controller
           Http::INTERNAL_SERVER_ERROR);
       }
     } catch (\Throwable $t) {
-      return $this->exceptionResponse($t, $renderAs, __METHOD__);
+      switch (get_class($t)) {
+        case QueryNotFoundException::class:
+          $status = Http::STATUS_NOT_FOUND;
+          break;
+        default:
+          $status = Http::STATUS_BAD_REQUEST;
+          break;
+      }
+      return $this->exceptionResponse($t, $renderAs == self::RENDER_AS_PARTS ? self::RENDER_AS_BLANK : $renderAs, __METHOD__, $status);
     }
 
     $templateParameters = [
@@ -436,6 +446,11 @@ class PageController extends Controller
    */
   private function getTemplate(?string $template, string $renderAs):string
   {
+    // Replace colons back to path separators. All our template parameters are
+    // alpha-numeric with the exception that they man contain path separators
+    // (i.e. '/') which optionally are replaced by colons (i.e. ':') in order
+    // to avoid url en-/decoding. Here we need to convert back to path
+    // separators.
     if ($template != 'maintenance/debug' && !$this->configCheck['summary']) {
       return 'maintenance/configcheck';
     }
@@ -449,6 +464,7 @@ class PageController extends Controller
         $template = BlogRenderer::TEMPLATE;
       }
     }
+    $template = str_replace(':', Constants::PATH_SEP, $template);
     return $template;
   }
 

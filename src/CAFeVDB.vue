@@ -314,6 +314,7 @@ import * as BusEvents from './event-bus-events.ts'
 import appIcon from '../img/cafevdb.svg?raw'
 import { getInitialState } from './toolkit/services/InitialStateService.js'
 import type { RawLocation, Location as RouterLocation } from 'vue-router'
+import type { AxiosResponse } from 'axios'
 // import type { PropType } from 'vue'
 
 const initialState = getInitialState('CAFEVDB')
@@ -642,10 +643,13 @@ export default {
       })
     },
     async updateNavigationItems() {
+      if (!this.pageTemplate) {
+        return
+      }
       const url = generateAppUrl('vue-app/n/{pageTemplate}', { pageTemplate: this.pageTemplate })
       this.info('URL', this.pageTemplate, { pageTemplate: this.pageTemplate })
       try {
-        const response = await axios.post(
+        const response: AxiosResponse<{ navigation: NavigationItem[] }> = await axios.post(
           url, {
             projectId: this.currentProjectId,
             projectName: this.currentProjectName,
@@ -654,7 +658,21 @@ export default {
         const navigationItems = response.data?.navigation
         if (!navigationItems) {
           // TODO: notify user etc.
+        } else {
+          // naturally legacy templates refere to file-system objects
+          // and may contain path-separators. This is problematic as
+          // some parts -- not sure if it is my mistake -- of the
+          // request handling may or may not require double
+          // url-encoding. So better do not inject special characters
+          // into the url params at all. Here we are on the safe side:
+          // at worst the template contains path separators and
+          // otherwise only lowercase alphabetics. So just replace the
+          // slashes by a colon.
+          for (const item of navigationItems) {
+            item.template = item.template.replace('/', ':')
+          }
         }
+        this.trace('NAVIGATION ITEMS TO INSTALL', navigationItems)
         // this.navigationItems.splice(0, this.navigationItems.length, ...navigationItems)
         this.navigationItems = navigationItems
       } catch (error) {
