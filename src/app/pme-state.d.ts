@@ -52,7 +52,7 @@ export interface PHPMyEditState {
 
   pageRenderer: {
     masterFieldSuffix: string,
-    valuesTableSep: string,,
+    valuesTableSep: string,
     joinKeySep: string,
     compKeySep: string,
     joinFieldNameSeparator: sting,
