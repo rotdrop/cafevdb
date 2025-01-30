@@ -40,6 +40,8 @@ class Blog extends AbstractPageRenderer
   public const TEMPLATE = 'blog/blog';
 
   /**
+   * @param $appName
+   *
    * @param IL10N $l
    *
    * @param string $userId
@@ -47,6 +49,7 @@ class Blog extends AbstractPageRenderer
    * @param BlogMapper $blogMapper
    */
   public function __construct(
+    protected $appName,
     protected IL10N $l,
     private string $userId,
     private BlogMapper $blogMapper,
@@ -63,6 +66,18 @@ class Blog extends AbstractPageRenderer
   public function headerText()
   {
     return self::templateResponse('fragments/header-texts/blog', [ 'cssPrefix' => $this->cssPrefix() ], self::RENDER_AS_BLANK)->render();
+  }
+
+  /** {@inheritdoc} */
+  public function navigationItems():array
+  {
+    return [
+      Projects::navigationItem(),
+      AllMusicians::navigationItem(),
+      Instruments::navigationItem(),
+      ProjectParticipantFields::navigationItem(),
+      ProjectInstrumentationNumbers::navigationItem(),
+    ];
   }
 
   /** {@inheritdoc} */
