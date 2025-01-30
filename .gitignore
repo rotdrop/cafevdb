@@ -13,7 +13,6 @@ vendor-wrapped
 composer*.lock
 /composer.json
 stamp*
-ajax
 build
 .clipassword
 doc/db-app/phpdoc/[!.]*
