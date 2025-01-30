@@ -80,7 +80,7 @@ trait ProjectModeNavigationItemTrait
         PageRenderer\Projects::navigationItem(),
         PageRenderer\AllMusicians::navigationItem(),
         PageRenderer\Instruments::navigationItem(),
-        InstrumentFamilies::navigationItem(),
+        PageRenderer\InstrumentFamilies::navigationItem(),
         PageRenderer\ProjectParticipantFields::navigationItem(),
         PageRenderer\ProjectInstrumentationNumbers::navigationItem(),
       ];
