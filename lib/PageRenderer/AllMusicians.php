@@ -78,7 +78,7 @@ class AllMusicians extends Musicians
   /** {@inheritdoc} */
   public function shortTitle()
   {
-    return parent::commonShortTitle() ?? $this->l->t("Add musicians to the project `%s'", [ $this->projectName ]);
+    return parent::commonShortTitle() ?? $this->l->t('Overview over all registered musicians');
   }
 
   /** {@inheritdoc} */
@@ -87,7 +87,6 @@ class AllMusicians extends Musicians
     return [
       AllMusicians::navigationItem(),
       Projects::navigationItem(),
-      Instruments::navigationItem(),
       InstrumentInsurances::navigationItem(),
       SepaBankAccounts::navigationItem(),
       Instruments::navigationItem(),
