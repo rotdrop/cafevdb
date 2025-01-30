@@ -178,6 +178,7 @@ trait ResponseTrait
     $previous = $throwable->getPrevious();
     $shortException = (new ReflectionClass($throwable))->getShortName();
     return [
+      'type' => 'PHPExceptionData',
       'message' => ($top
                     ? $this->l->t('Error, caught an exception.')
                     : $this->l->t('Caused by previous exception')),
