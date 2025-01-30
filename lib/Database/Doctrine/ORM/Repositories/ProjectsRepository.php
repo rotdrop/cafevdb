@@ -166,4 +166,20 @@ class ProjectsRepository extends EntityRepository
 
     return $query->getResult('COLUMN_HYDRATOR');
   }
+
+  /**
+   * Return all project ids
+   *
+   * @return array<int, int>
+   */
+  public function findProjectIds()
+  {
+    $projectIds = $this->createQueryBuilder('p')
+      ->select('p.id')
+      ->orderBy('p.year', 'DESC')
+      ->addOrderBy('p.name', 'ASC')
+      ->getQuery()
+      ->getResult('COLUMN_HYDRATOR');
+    return $projectIds;
+  }
 }

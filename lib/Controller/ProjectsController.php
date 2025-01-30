@@ -402,6 +402,23 @@ class ProjectsController extends Controller
    */
   const GET_PARTICIPANT_FIELDS = 'participant-fields';
 
+
+  /**
+   * Return all project indices as flat array.
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
+   */
+  public function getIndices()
+  {
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+    /** @var Entities\Project $project */
+    $projectIds = $projectService->findProjectIds();
+    return self::dataResponse($projectIds);
+  }
+
   /**
    * @param int $projectId Entity id.
    *

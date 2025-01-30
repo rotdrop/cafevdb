@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -338,6 +338,16 @@ class ProjectService
       }
     }
     return $balance;
+  }
+
+  /**
+   * Find all project ids and return them as flat array.
+   *
+   * @return array<int, int>
+   */
+  public function findProjectIds()
+  {
+    return $this->repository->findProjectIds();
   }
 
   /**

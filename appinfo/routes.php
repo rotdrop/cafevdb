@@ -734,6 +734,11 @@ $routes = [
       ],
     ],
     [
+      'name' => 'projects#getIndices',
+      'verb' => 'GET',
+      'url' => '/projects',
+    ],
+    [
       'name' => 'projects#post',
       'verb' => 'POST',
       'url' => '/projects/{projectId}/{topic}/{subTopic}',
