@@ -74,6 +74,8 @@ trait ProjectModeNavigationItemTrait
           PageRenderer\Projects::navigationItem(),
           PageRenderer\AllMusicians::navigationItem(),
           PageRenderer\Instruments::navigationItem(),
+          PageRenderer\InstrumentFamilies::navigationItem(),
+          PageRenderer\Blog::navigationItem(),
         ],
       )
       : [
@@ -83,7 +85,15 @@ trait ProjectModeNavigationItemTrait
         PageRenderer\InstrumentFamilies::navigationItem(),
         PageRenderer\ProjectParticipantFields::navigationItem(),
         PageRenderer\ProjectInstrumentationNumbers::navigationItem(),
+        PageRenderer\Blog::navigationItem(),
       ];
-    return array_values(array_filter($items, fn($item) => $item['template'] != self::TEMPLATE));
+    return array_values(
+      array_filter(
+        $items,
+        fn($item) => ($item['template'] != self::TEMPLATE
+                      && ($item['template'] != PageRenderer\InstrumentFamilies::TEMPLATE
+                          || self::TEMPLATE == PageRenderer\Instruments::TEMPLATE)),
+      )
+    );
   }
 }
