@@ -14,7 +14,7 @@
     "./node_modules/pinia/**.ts",
     "./node_modules/@types/**.ts",
     "../../custom.d.ts",
-    "./build/ts-types/app-config.d.ts"
+    "./build/ts-types/app-config.ts"
   ],
   "compilerOptions": {
     "types": ["jest", "node", "vue", "vue-router"],
