@@ -121,10 +121,12 @@ class VueAppController extends Controller
    */
   public function navigation(string $template, ?int $projectId = null, ?string $projectName = null)
   {
+    $template = urldecode($template);
     if ($template == 'home') {
       $navigationItems = [
         PageRenderer\Projects::navigationItem(),
         PageRenderer\AllMusicians::navigationItem(),
+        PageRenderer\Blog::navigationItem(),
       ];
     } else {
       try {
@@ -138,7 +140,9 @@ class VueAppController extends Controller
     $userPermissions = $this->authorizationService->getUserPermissions();
     $navigationItems = array_filter($navigationItems, fn($item) => ($item['permissions'] === ($item['permissions'] & $userPermissions)));
     foreach ($navigationItems as &$item) {
+      $item['nameKey'] = $item['name'];
       $item['name'] = $this->toolTipsService[$item['name']] ?: $item['name'];
+      $item['tooltipKey'] = $item['tooltip'];
       $item['tooltip'] = $this->toolTipsService[$item['tooltip']] ?: $item['tooltip'];
     }
     return self::dataResponse([
