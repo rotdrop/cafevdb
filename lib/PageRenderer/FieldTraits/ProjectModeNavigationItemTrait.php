@@ -80,9 +80,10 @@ trait ProjectModeNavigationItemTrait
         PageRenderer\Projects::navigationItem(),
         PageRenderer\AllMusicians::navigationItem(),
         PageRenderer\Instruments::navigationItem(),
+        InstrumentFamilies::navigationItem(),
         PageRenderer\ProjectParticipantFields::navigationItem(),
         PageRenderer\ProjectInstrumentationNumbers::navigationItem(),
       ];
-    return array_filter($items, fn($item) => $item['template'] != self::TEMPLATE);
+    return array_values(array_filter($items, fn($item) => $item['template'] != self::TEMPLATE));
   }
 }
