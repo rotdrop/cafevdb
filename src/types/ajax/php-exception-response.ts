@@ -21,7 +21,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { AxiosError } from 'axios';
+import { isAxiosError } from './axios-type-guards.ts';
+import ResponseTypes from './response-types.ts';
+
 export interface PHPExceptionData {
+  type: ResponseTypes.PHPExceptionData,
   message: string, // heading, deprecated
   brief: string, // brief summary, deprecated
   exception: { // the data from the exception itself
@@ -34,3 +39,9 @@ export interface PHPExceptionData {
   },
   previous: null|PHPExceptionData,
 }
+
+export const isPHPExceptionData = (data: any): data is PHPExceptionData =>
+  !!data && typeof data === 'object' && data?.type === ResponseTypes.PHPExceptionData
+
+export const isPHPExceptionResponse = <D = any>(error: any): error is AxiosError<PHPExceptionData, D> =>
+  isAxiosError(error) && !!error.response && isPHPExceptionData(error.response.data)

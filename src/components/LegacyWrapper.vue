@@ -79,7 +79,10 @@
       </NcActions>
     </div>
     <!-- eslint-disable vue/no-v-html  -->
-    <div :id="appPrefix('general')" :class="{ 'page-container': true, loading, }">
+    <div v-if="!ajaxError"
+         :id="appPrefix('general')"
+         :class="{ 'page-container': true, loading, }"
+    >
       <!-- /* used to eliminate the pixel-size of the control bar -->
       <div :id="pagePrefix + 'header-box'" :class="[pagePrefix + 'header-box', legacyCssClass]">
         <div :id="pagePrefix + 'header'" :class="[pagePrefix + 'header', legacyCssClass]" v-html="legacyHeaderHtml" />
@@ -91,6 +94,7 @@
         </div>
       </div>
     </div>
+    <AjaxErrorPage v-else :error="ajaxError" />
   </div>
 </template>
 <script lang="ts">
@@ -108,6 +112,7 @@ import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
 import InfoOffIcon from 'vue-material-design-icons/InformationOffOutline.vue'
 import HistoryBackIcon from 'vue-material-design-icons/ArrowULeftTop.vue'
 import HistoryForwardIcon from 'vue-material-design-icons/ArrowURightTop.vue'
+import AjaxErrorPage from './AjaxErrorPage.vue'
 import mixins from '../mixins/app-mixins.ts'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
@@ -128,6 +133,7 @@ import objectHash from 'object-hash'
 export default {
   name: 'LegacyWrapper',
   components: {
+    AjaxErrorPage,
     HistoryBackIcon,
     HistoryForwardIcon,
     HomeIcon,
@@ -175,6 +181,8 @@ export default {
       loadingPromise: Promise.resolve(true) as Promise<any>,
       pageLoadTrigger: false,
       previousHash: null as null|string,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ajaxError: null as any, // any cannot be avoided here
     }
   },
   computed: {
@@ -247,6 +255,7 @@ export default {
       this.info('PAGE LOAD TRIGGER CHANGE', ...args)
       if (this.pageLoadTrigger) {
         this.pageLoadTrigger = false
+        this.ajaxError = null
         if (!this.noLegacyReload) {
           await this.loadLegacy()
         } else {
@@ -332,9 +341,10 @@ export default {
         if (titleProvider) {
           this.shortTitle = titleProvider.textContent || ''
         }
-      } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
         this.error('ERROR', generateAppUrl('page/remember/parts'), post, e)
-        this.appError = true
+        this.ajaxError = e
       }
       this.popBusyState()
       this.loading = false
@@ -380,6 +390,7 @@ export default {
     pageLoadSubscriber() {
       asyncSubscribe(LEGACY_PAGE_LOAD, (eventData) => {
         this.info('LEGACY PAGE LOAD CALLED', eventData)
+        this.ajaxError = null
         const params = {
           template: eventData?.template || eventData.post.template,
         }
@@ -403,6 +414,7 @@ export default {
       })
       asyncSubscribe(LEGACY_PME_HISTORY_UPDATE, (eventData) => {
         this.info('LEGACY PME HISTORY UPDATE', eventData)
+        this.ajaxError = null
         const post = eventData.post
         const params = {
           template: post.template,
