@@ -20,12 +20,14 @@
  */
 
 import { appName } from '../config.ts';
+import { translate as t } from '@nextcloud/l10n';
+import type { RouteConfig } from 'vue-router';
 
-const routes = [
+const routes: RouteConfig[] = [
   {
     path: '/',
     name: 'home',
-    props: router => ({
+    props: (/* router */) => ({
       routeTitle: t(appName, 'Home'),
     }),
   },

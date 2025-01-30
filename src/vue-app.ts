@@ -28,7 +28,7 @@ import { getRequestToken } from '@nextcloud/auth';
 // import { sync } from 'vuex-router-sync'
 import Vue, { set as vueSet } from 'vue';
 import CAFeVDB from './CAFeVDB.vue';
-import router from './router/app-router.js';
+import router from './router/app-router.ts';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 import { Tooltip } from '@nextcloud/vue';
 import { mixin as globalMixin } from './mixins/global-mixin.ts';
