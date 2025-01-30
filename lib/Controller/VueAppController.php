@@ -138,8 +138,8 @@ class VueAppController extends Controller
     $userPermissions = $this->authorizationService->getUserPermissions();
     $navigationItems = array_filter($navigationItems, fn($item) => ($item['permissions'] === ($item['permissions'] & $userPermissions)));
     foreach ($navigationItems as &$item) {
-      $item['name'] = $this->toolTipsService[$item['name']];
-      $item['tooltip'] = $this->toolTipsService[$item['tooltip']];
+      $item['name'] = $this->toolTipsService[$item['name']] ?: $item['name'];
+      $item['tooltip'] = $this->toolTipsService[$item['tooltip']] ?: $item['tooltip'];
     }
     return self::dataResponse([
       'navigation' => $navigationItems,
