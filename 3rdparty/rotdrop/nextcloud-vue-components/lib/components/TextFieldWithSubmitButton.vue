@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2019, 2022, 2023, 2024 Julius Härtl <jus@bitgrid.net>
+ - @copyright Copyright (c) 2019, 2022, 2023, 2024, 2025 Julius Härtl <jus@bitgrid.net>
  - @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Julius Härtl <jus@bitgrid.net>
@@ -27,13 +27,12 @@
                  :show-trailing-button="true"
                  trailing-button-icon="arrowRight"
                  v-on="$listeners"
-                 @trailing-button-click="$emit('submit', $refs.ncTextField.value)"
+                 @trailing-button-click="$emit('submit', ncTextField.value)"
     >
       <!-- pass through scoped slots -->
       <template v-for="(_, scopedSlotName) in $scopedSlots" #[scopedSlotName]="slotData">
         <slot :name="scopedSlotName" v-bind="slotData" />
       </template>
-
       <!-- pass through normal slots -->
       <template v-for="(_, slotName) in $slots" #[slotName]>
         <slot :name="slotName" />
@@ -45,7 +44,7 @@
     </p>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { NcTextField } from '@nextcloud/vue'
 
 export default {
@@ -62,6 +61,11 @@ export default {
       type: [String, Number],
       default: null,
       validator: (p) => p === null || (p !== undefined && ['string', 'number'].includes(typeof p))
+    },
+  },
+  computed: {
+    ncTextField() {
+      return (this.$refs.ncTextField as typeof NcTextField)
     },
   },
 }
