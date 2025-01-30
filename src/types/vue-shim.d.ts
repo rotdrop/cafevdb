@@ -69,6 +69,15 @@ declare module '@nextcloud/vue' {
   const NcActionCheckbox: Vue;
   const Tooltip: typeof VTooltip;
 
+  const NcContent: Vue;
+  const NcAppContent: Vue;
+  const NcAppNavigation: Vue;
+  const NcAppNavigationItem: Vue;
+  const NcAppNavigationSettings: Vue;
+  const NcCheckboxRadioSwitch: Vue;
+  const NcEllipsisedOption: Vue;
+  const NcEmptyContent: Vue;
+
   export {
     NcActionButton,
     NcActionCaption,
@@ -78,9 +87,17 @@ declare module '@nextcloud/vue' {
     NcActionRouter,
     NcActionSeparator,
     NcActions,
+    NcAppContent,
+    NcAppNavigation,
+    NcAppNavigationItem,
+    NcAppNavigationSettings,
     NcButton,
+    NcCheckboxRadioSwitch,
     NcColorPicker,
+    NcContent,
     NcCounterBubble,
+    NcEllipsisedOption,
+    NcEmptyContent,
     NcListItem,
     NcListItemIcon,
     NcProgressBar,
