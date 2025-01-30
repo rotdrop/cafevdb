@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './config.js';
+import { appName } from './config.ts';
 import { translate as t } from '@nextcloud/l10n';
 
 export const DEBUG_GENERAL = (1 << 0);
