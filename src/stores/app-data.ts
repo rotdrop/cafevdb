@@ -22,7 +22,7 @@
  */
 
 import { defineStore } from 'pinia';
-import { set as vueSet, del as vueDelete, ref, computed } from 'vue';
+import { set as vueSet, del as vueDelete, ref, computed, watch } from 'vue';
 import { computedAsync } from '@vueuse/core';
 import axios from '@nextcloud/axios';
 import generateAppUrl from '../toolkit/util/generate-url.js';
@@ -45,13 +45,19 @@ export type ProjectTypeTemplate = 'template';
 export type ProjectTypeInvalid = ''|null|undefined;
 export type ProjectTemporalType = ProjectTypeTemporary|ProjectTypePermanent|ProjectTypeTemplate|ProjectTypeInvalid;
 
+interface ProjectFolders {
+  projectsfolder: string,
+  projectparticipantsfolder: string,
+  projectpostersfolder: string,
+  projectpublicdownloadsfolder: string,
+  balancesfolder: string,
+}
+
 export interface Project {
   id: number,
   name: string,
   year: number,
-  folders?: {
-    projectsfolder: string,
-  },
+  folders?: ProjectFolders,
   wikiPage: string,
   type: ProjectTemporalType,
 }
@@ -104,7 +110,7 @@ const usePrivateState = defineStore(storeId + '-private', {
       const url = generateAppUrl('projects/{projectId}/folder/all', { projectId });
       vueSet(this.projects, projectId, project);
       try {
-        const response = await axios.get(url, { signal: abortController.signal });
+        const response: AxiosResponse<ProjectFolders> = await axios.get(url, { signal: abortController.signal });
         this.info('FETCH PROJECT FOLDERS RESPONSE', response);
         vueSet(this.projects[projectId], 'folders', response.data);
         return this.projects[projectId];
@@ -117,12 +123,23 @@ const usePrivateState = defineStore(storeId + '-private', {
     async findProject(projectId: number, errorHandler: ErrorHandler|null) {
       let url = generateAppUrl('projects/{projectId}', { projectId });
       try {
-        const response = await axios.get(url, { signal: abortController.signal });
+        const response: AxiosResponse<Project> = await axios.get(url, { signal: abortController.signal });
         this.info('FIND PROJECT RESPONSE', response);
         const project = await this.putProject(response.data, errorHandler);
         return project;
       } catch (e) {
         this.handleError(e, { action: 'findProject', projectId, url }, errorHandler);
+        return undefined;
+      }
+    },
+    async findProjectIds(errorHandler: ErrorHandler|null) {
+      let url = generateAppUrl('projects');
+      try {
+        const response: AxiosResponse<number[]> = await axios.get(url, { signal: abortController.signal });
+        this.info('FIND PROJECT IDS RESPONSE', response);
+        return response.data;
+      } catch (e) {
+        this.handleError(e, { action: 'findProjectIds', url }, errorHandler);
         return undefined;
       }
     },
@@ -144,8 +161,10 @@ const usePrivateState = defineStore(storeId + '-private', {
           for (const project of response.data) {
             promises.push(this.putProject(project, errorHandler));
           }
-          await Promise.allSettled(promises);
+          const projects = await Promise.allSettled(promises);
+          return projects.filter(result => result.status === 'fulfilled').map(result => result.value as Project);
         }
+        return response.data;
       } catch (e) {
         this.handleError(e, { action: 'searchProjects', query }, errorHandler);
       }
@@ -186,56 +205,29 @@ export default defineStore(storeId, () => {
   );
   const currentProjectName = computed(() => currentProject.value?.name || '');
 
+  const projectIds = ref<number[]>([]);
+  state.findProjectIds(errorHandler.value)
+    .then((value) => { if (value) { projectIds.value = value; } })
+    .catch((error) => { projectIds.value = []; state.error('Fetching the project ids failed', error); });
+  const projects = computed(() => state.projects);
+  watch(projects, (value, oldValue) => state.info('PROJECTS WATCHER', value, oldValue));
+
   async function getProject(projectId: number, handler?: ErrorHandler) {
-    return await state.getProject(projectId, handler || errorHandler.value);
+    const result = await state.getProject(projectId, handler || errorHandler.value);
+    if (result && !(projectId in projectIds.value)) {
+      projectIds.value!.push(projectId);
+    }
+    return result;
   }
+
   async function searchProjects(query: string, handler?: ErrorHandler) {
-    return await state.searchProjects(query, handler || errorHandler.value);
+    const result = await state.searchProjects(query, handler || errorHandler.value) || [];
+    for (const project of result) {
+      if (!(project.id in projectIds.value)) {
+        projectIds.value!.push(project.id);
+      }
+    }
   }
-
-  function validateProjectId(name: PropertyKey) {
-    try {
-      name = '' + (name as string);
-    } catch (e) {
-      state.error('Property is not stringable', name);
-      return undefined;
-    }
-    const projectId = parseInt(name);
-    if (projectId !== +name) {
-      return undefined;
-    }
-    return projectId;
-  };
-
-  const projects = ref(new Proxy(state.projects, {
-    async get(target, name: PropertyKey, receiver) {
-      state.debug('PROXY GET', target, name, receiver);
-      if (!Reflect.has(target, name)) {
-        const projectId = validateProjectId(name);
-        if (!projectId) {
-          return undefined;
-        }
-        state.debug('Fetching project with id ', name);
-        const project = await state.getProject(projectId, errorHandler.value);
-        return Reflect.set(target, name, project, receiver);
-      }
-      return Reflect.get(target, name, receiver);
-    },
-    set(_target, key: PropertyKey) {
-      throw new ReadOnlyProxyWriteError('"projects" property is read-only, cannot assign to "' + key.toString() + '".');
-    },
-    deleteProperty(target, name) {
-      if (!Reflect.has(target, name)) {
-        return true;
-      }
-      const projectId = validateProjectId(name);
-      if (!projectId) {
-        return false;
-      }
-      state.deleteProject(projectId);
-      return true;
-    },
-  }));
 
   const routerHistory = ref({
     initial: {

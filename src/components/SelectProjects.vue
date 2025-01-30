@@ -109,7 +109,7 @@ export default {
     const appData = useAppDataStore()
     return {
       appData,
-      projects: appData.projects as ProjectItemType,
+      projects: appData.projects as ProjectItemType[],
     }
   },
   data() {
@@ -126,6 +126,7 @@ export default {
       return (this.loading || this.ajaxLoading) && this.loadingIndicator
     },
     projectsArray() {
+      this.info('RECOMPUTE PROJECTS ARRAY')
       // const groupedValues = {}
       // for (const project of Object.values(this.projects)) {
       //   const year = project.year
@@ -139,6 +140,7 @@ export default {
       //   }
       // }
       // return Object.values(groupedValues).sort((p1, p2) => -(p1.year - p2.year))
+      this.info('PROJECTS', this.projects)
       const projects = Object.values(this.projects).sort((a, b) => {
         const p1 = a as Project
         const p2 = b as Project
