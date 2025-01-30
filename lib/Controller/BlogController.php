@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,6 +39,7 @@ use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\PageRenderer\Blog as BlogRenderer;
+use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
@@ -50,8 +51,8 @@ use OCA\CAFEVDB\Service\ToolTipsService;
  */
 class BlogController extends Controller
 {
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -59,7 +60,8 @@ class BlogController extends Controller
     IRequest $request,
     private IURLGenerator $urlGenerator,
     private RequestParameterService $parameterService,
-    private ToolTipsService $toolTipsService,
+    protected ToolTipsService $toolTipsService,
+    protected ConfigService $configService,
     private BlogMapper $blogMapper,
     private BlogRenderer $blogRenderer,
     private ?string $userId,
