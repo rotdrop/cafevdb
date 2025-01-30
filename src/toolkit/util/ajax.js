@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
@@ -301,12 +301,12 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
     autoReport = '';
     let exceptionData = failData;
     if (exceptionData.exception !== undefined) {
-      info += '<div class="exception error name"><pre>' + exceptionData.exception + '</pre></div>'
-        + '<div class="exception error trace"><pre>' + exceptionData.trace + '</pre></div>';
+      info += '<div class="exception error name"><pre>' + exceptionData.brief + '</pre></div>'
+        + '<div class="exception error trace"><pre>' + exceptionData.exception.trace + '</pre></div>';
       while ((exceptionData = exceptionData.previous) != null) {
         info += '<div class="bold error toastify">' + exceptionData.message + '</div>';
-        info += '<div class="exception error name"><pre>' + exceptionData.exception + '</pre></div>'
-          + '<div class="exception error trace"><pre>' + exceptionData.trace + '</pre></div>';
+        info += '<div class="exception error name"><pre>' + exceptionData.brief + '</pre></div>'
+          + '<div class="exception error trace"><pre>' + exceptionData.exception.trace + '</pre></div>';
       }
     }
     if (failData.info) {

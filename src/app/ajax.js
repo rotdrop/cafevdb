@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 - 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 - 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -224,12 +224,12 @@ Error Data: ${print_r(failData, true)}
     autoReport = '';
     let exceptionData = failData;
     if (exceptionData.exception !== undefined) {
-      info += '<div class="exception error name"><pre>' + exceptionData.exception + '</pre></div>'
-        + '<div class="exception error trace"><pre>' + exceptionData.trace + '</pre></div>';
+      info += '<div class="exception error name"><pre>' + exceptionData.brief + '</pre></div>'
+        + '<div class="exception error trace"><pre>' + exceptionData.exception.trace + '</pre></div>';
       while ((exceptionData = exceptionData.previous) != null) {
         info += '<div class="bold error toastify">' + exceptionData.message + '</div>';
-        info += '<div class="exception error name"><pre>' + exceptionData.exception + '</pre></div>'
-          + '<div class="exception error trace"><pre>' + exceptionData.trace + '</pre></div>';
+        info += '<div class="exception error name"><pre>' + exceptionData.brief + '</pre></div>'
+          + '<div class="exception error trace"><pre>' + exceptionData.exception.trace + '</pre></div>';
       }
     }
     if (failData.info) {

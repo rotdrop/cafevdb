@@ -151,7 +151,9 @@ trait ResponseTrait
 
     $templateParameters = [
       'error' => 'exception',
+      'class' => get_class($throwable),
       'exception' => $throwable->getMessage(),
+      'message' => $throwable->getMessage(),
       'code' => $throwable->getCode(),
       'trace' => $this->exceptionChainData($throwable),
       'debug' => true,
@@ -179,9 +181,15 @@ trait ResponseTrait
       'message' => ($top
                     ? $this->l->t('Error, caught an exception.')
                     : $this->l->t('Caused by previous exception')),
-      'exception' => $throwable->getFile().':'.$throwable->getLine().' '.$shortException.': '.$throwable->getMessage(),
-      'code' => $throwable->getCode(),
-      'trace' => $throwable->getTraceAsString(),
+      'brief' => $throwable->getFile() . ':' . $throwable->getLine() . ' '.$shortException . ': ' . $throwable->getMessage(),
+      'exception' => [
+        'class' => get_class($throwable),
+        'message' => $throwable->getMessage(),
+        'file' => $throwable->getFile(),
+        'line' => $throwable->getLine(),
+        'code' => $throwable->getCode(),
+        'trace' => $throwable->getTraceAsString(),
+      ],
       'previous' => empty($previous) ? null : $this->exceptionChainData($previous, false),
     ];
   }
