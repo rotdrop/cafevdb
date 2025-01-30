@@ -35,12 +35,37 @@ declare module '@nextcloud/vue' {
     opened: boolean,
     closeMenu(returnFocus?: boolean):void,
     openMenu(event?: Event):void,
+    $refs: Record<string, Vue> & {
+      menuButton: Vue,
+    },
   };
   const NcActionCheckbox: Vue;
+  const NcButton: Vue;
+
+  export declare class Color {
+    constructor(r: number, g: number, b: number, name?: string);
+    declare ['constructor']: typeof Color;
+    r: number;
+    g: number;
+    b: number;
+    name?: string;
+    readonly color: string;
+  }
+  const NcColorPicker: Vue & {
+    palette: Color[],
+  }
+
+  const NcCounterBubble: Vue;
+
   const NcListItem: Vue;
   const NcListItemIcon: Vue;
   const NcProgressBar: Vue;
   const NcSettingsSection: Vue;
+
+  const NcTextField: Vue & {
+    value: string|number;
+  };
+
   const NcActionCheckbox: Vue;
   const Tooltip: typeof VTooltip;
 
@@ -54,10 +79,13 @@ declare module '@nextcloud/vue' {
     NcActionSeparator,
     NcActions,
     NcButton,
+    NcColorPicker,
+    NcCounterBubble,
     NcListItem,
     NcListItemIcon,
     NcProgressBar,
     NcSettingsSection,
+    NcTextField,
     Tooltip,
   }
 }
