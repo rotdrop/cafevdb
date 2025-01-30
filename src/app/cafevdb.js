@@ -35,7 +35,7 @@ import {
   getMarkCount,
   setMarkCount,
 } from './jquery-cafevdb-tooltips.js';
-import { emit, subscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import * as BusEvents from '../event-bus-events.ts';
 
 require('cafevdb.scss');
@@ -61,7 +61,7 @@ $.extend(
 
 if (!globalState.emit['global-state']) {
   globalState.emit['global-state'] = true;
-  emit(BusEvents.GLOBAL_STATE, {
+  asyncEmit(BusEvents.GLOBAL_STATE, {
     state: globalState,
   });
 }
@@ -83,15 +83,18 @@ const addReadyCallback = function(callBack) {
  *
  * @returns {boolean} TBD.
  */
-const runReadyCallbacks = function() {
-  for (let idx = 0; idx < globalState.readyCallbacks.length; ++idx) {
-    const callback = globalState.readyCallbacks[idx];
-    if (typeof callback === 'function') {
-      callback();
-    }
-  }
-  return false;
+const runReadyCallbacks = async function() {
+  const promises = globalState
+    .readyCallbacks
+    .filter((callback) => typeof callback === 'function')
+    .map(async (callback) => await callback());
+  return await Promise.allSettled(promises);
 };
+
+asyncSubscribe(BusEvents.LEGACY_PAGE_FINALIZE, async () => {
+  const result = await runReadyCallbacks();
+  return result;
+});
 
 /**
  * Steal the focus by moving it to a hidden element. Is there a
@@ -258,7 +261,7 @@ const toolTipsOnOff = function(onOff) {
     return;
   }
   globalState.toolTipsEnabled = onOff;
-  emit(BusEvents.TOGGLE_TOOLTIPS, {
+  asyncEmit(BusEvents.TOGGLE_TOOLTIPS, {
     enabled: globalState.toolTipsEnabled,
   });
   if (globalState.toolTipsEnabled) {
@@ -271,7 +274,7 @@ const toolTipsOnOff = function(onOff) {
 
 if (!globalState.subscribe['toggle-tooltips']) {
   globalState.subscribe['toggle-tooltips'] = true;
-  subscribe(BusEvents.TOGGLE_TOOLTIPS, (event) => {
+  asyncSubscribe(BusEvents.TOGGLE_TOOLTIPS, (event) => {
     console.info('EVENT', event);
     // avoid  ping-pong
     if (event.enabled !== globalState.toolTipsEnabled) {

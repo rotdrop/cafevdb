@@ -111,7 +111,6 @@ import HistoryForwardIcon from 'vue-material-design-icons/ArrowURightTop.vue'
 import mixins from '../mixins/app-mixins.ts'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
-import * as CAFEVDB from '../app/cafevdb.js'
 import { closeNavigation } from '../services/navigation.js'
 import wikiPopup from '../app/wiki-popup.js'
 import useAppDataStore from '../stores/app-data.ts'
@@ -121,6 +120,7 @@ import {
   LEGACY_PAGE_LOAD,
   LEGACY_PME_HISTORY_UPDATE,
   LEGACY_PAGE_CLEANUP,
+  LEGACY_PAGE_FINALIZE,
 } from '../event-bus-events.ts'
 import * as LegacyNotification from '../app/notification.js'
 import objectHash from 'object-hash'
@@ -327,7 +327,7 @@ export default {
         this.legacyCssPrefix = data.cssPrefix
         this.legacyCssClass = data.cssClass
         await nextTick()
-        CAFEVDB.runReadyCallbacks()
+        await asyncEmit(LEGACY_PAGE_FINALIZE)
         const titleProvider = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-short-title')
         if (titleProvider) {
           this.shortTitle = titleProvider.textContent || ''

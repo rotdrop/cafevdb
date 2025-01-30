@@ -107,7 +107,7 @@ const documentReady = function() {
     $('input.alertdata.' + appPrefix('page')).each(function(index) {
       const title = $(this).attr('name');
       const text = $(this).attr('value');
-      Dialogs.alert(text, title, undefined, true, true);
+      return Promise(resolve => Dialogs.alert(text, title, resolve, true, true));
     });
 
   });

@@ -51,6 +51,7 @@ export const SET_INITIAL_FILTER_VISIBILITY = appEventName('set-initial-filter-vi
 export const SET_RESTORE_HISTORY = appEventName('set-restore-history');
 
 export const LEGACY_PAGE_LOAD = appEventName('legacy-page-load');
+export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');
 export const LEGACY_PME_HISTORY_UPDATE = appEventName('legacy-pme-history-update');
 export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
 

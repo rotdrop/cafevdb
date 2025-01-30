@@ -92,7 +92,7 @@ const loadPage = async function(post, keepHistory) {
       modalizer(false);
       pageBusyIcon(false);
     })
-    .done(function(htmlContent, textStatus, request) {
+    .done(async function(htmlContent, textStatus, request) {
 
       if (!keepHistory) {
         pushHistory(postObject);
@@ -111,13 +111,18 @@ const loadPage = async function(post, keepHistory) {
       const newAppNavigation = newContent.find('#app-navigation').children();
 
       $('#app-navigation').empty().prepend(newAppNavigation);
-      $('#' + appGeneralId).empty().prepend(newAppContent);
+      const $contentContainer = $('#' + appGeneralId);
+      $contentContainer.on('load.' + appName, (event) => {
+        console.info('CONTENT LOAD EVENT', event);
+        $contentContainer.off('load.' + appName);
+      });
+      $contentContainer.empty().prepend(newAppContent);
+
+      await runReadyCallbacks();
 
       snapperClose();
       modalizer(false);
       pageBusyIcon(false);
-
-      runReadyCallbacks();
     });
 };
 
