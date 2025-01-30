@@ -32,7 +32,7 @@ import {
   PROJECT_ACTIONS,
   PUSH_BUSY_STATE,
   SET_BUSY_FLAG,
-} from './event-bus-events.ts';
+} from '../event-bus-events.ts';
 
 declare module '@rotdrop/async-nextcloud-event-bus' {
 
