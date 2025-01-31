@@ -89,13 +89,12 @@ const editWindow = function(data) {
         return false;
       });
 
-      const resizeHandler = function(parameters) {
+      const resizeHandler = function() {
         dialogHolder.dialog('option', 'height', 'auto');
         dialogHolder.dialog('option', 'width', 'auto');
         let newHeight = dialogWidget.height()
             - dialogWidget.find('.ui-dialog-titlebar').outerHeight();
         newHeight -= dialogHolder.outerHeight(false) - dialogHolder.height();
-        // alert('Setting height to ' + newHeight);
         dialogHolder.height(newHeight);
       };
 
@@ -120,7 +119,7 @@ const editWindow = function(data) {
         $(self).dialog('option', 'position', popupPosition);
       });
 
-      dialogHolder.on('resize', resizeHandler);
+      dialogHolder.on('resize. ' + appName, resizeHandler);
     },
     close(event, ui) {
       // $('#blogtextarea').tinymce().remove();

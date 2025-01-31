@@ -43,29 +43,6 @@ const documentReady = function() {
 
   Dialogs.attachDialogHandlers();
 
-  // @TODO move to global state context
-  window.oldWidth = -1;
-  window.oldHeight = -1;
-  $(window).on('resize', function(event) {
-    const win = this;
-    if (!win.resizeTimeout) {
-      const delay = 50;
-      const width = (win.innerWidth > 0) ? win.innerWidth : screen.width;
-      const height = (win.innerHeight > 0) ? win.innerHeight : screen.height;
-      if (win.oldWidth !== width || win.oldHeight !== height) {
-        console.debug(appName + ' size change', width, win.oldWidth, height, win.oldHeight);
-        win.resizeTimeout = setTimeout(
-          function() {
-            win.resizeTimeout = null;
-            $('.resize-target, .ui-dialog-content').trigger('resize');
-          }, delay);
-        win.oldHeight = height;
-        win.oldWidth = width;
-      }
-    }
-    return false;
-  });
-
   /****************************************************************************
    *
    * Add handlers as delegates. Note however that the snapper is

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -81,29 +81,35 @@ const myConfig = {
     const mceWindow = inst.getWin();
     const $mceContainer = $(inst.getContainer());
     console.debug($mceContainer);
-    const ambientContainer = $mceContainer.closest('.resize-target, .ui-dialog-content');
-    mceWindow.oldWidth = [-1, -1];
-    mceWindow.oldHeight = [-1, -1];
-    mceWindow.onresize = function(e) {
-      const win = this;
-      if (!win.resizeTimeout) {
-        const width = (win.innerWidth > 0) ? win.innerWidth : win.width;
-        const height = (win.innerHeight > 0) ? win.innerHeight : win.height;
-        if ((win.oldWidth[0] !== width && win.oldWidth[1] !== width)
-            || (win.oldHeight[0] !== height && win.oldHeight[1] !== height)) {
-          console.log('tinymce size change', width, win.oldWidth, height, win.oldHeight);
-          win.resizeTimeout = setTimeout(
+    const $ambientContainer = $mceContainer.closest('.resize-target, .ui-dialog-content');
+    console.info('TINY AMBIENT CONTAINER', $ambientContainer);
+    mceWindow.globalState = {
+      oldWidth: [-1, -1],
+      oldHeight: [-1, -1],
+    };
+    mceWindow.addEventListener('resize', (event) => {
+      if (mceWindow.innerHeight === 0) {
+        console.trace('MCE WINDOW RESIZE HEIGHT 0');
+      }
+      const myGlobalState = mceWindow.globalState;
+      if (!myGlobalState.resizeTimeout) {
+        const width = mceWindow.innerWidth;
+        const height = mceWindow.innerHeight;
+        if ((myGlobalState.oldWidth[0] !== width && myGlobalState.oldWidth[1] !== width)
+            || (myGlobalState.oldHeight[0] !== height && myGlobalState.oldHeight[1] !== height)) {
+          console.debug('tinymce size change', width, myGlobalState.oldWidth, height, myGlobalState.oldHeight);
+          myGlobalState.resizeTimeout = setTimeout(
             function() {
-              win.resizeTimeout = null;
-              ambientContainer.trigger('resize');
+              myGlobalState.resizeTimeout = null;
+              $ambientContainer.trigger('resize.' + appName);
             }, 50);
-          win.oldWidth[1] = win.oldWidth[0];
-          win.oldHeight[1] = win.oldHeight[0];
-          win.oldWidth[0] = width;
-          win.oldHeight[0] = height;
+          myGlobalState.oldWidth[1] = myGlobalState.oldWidth[0];
+          myGlobalState.oldHeight[1] = myGlobalState.oldHeight[0];
+          myGlobalState.oldWidth[0] = width;
+          myGlobalState.oldHeight[0] = height;
         }
       }
-    };
+    });
 
     inst.on('blur', function(event) {
       // FIXME: how the heck get the element the editor is attached to????

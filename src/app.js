@@ -45,6 +45,7 @@ import { documentReady as taxExemptionNoticesReady } from './app/tax-exemption-n
 import { documentReady as donationReceiptsReady } from './app/donation-receipts.js';
 import beforeReady from './app/before-ready.js';
 import './app/jquery-extensions.js';
+import attachWindowResizeHandler from './app/window-resize.js';
 
 require('jquery-ui');
 
@@ -56,6 +57,7 @@ __webpack_public_path__ = webRoot;
 __webpack_nonce__ = nonce;
 
 $(function() {
+  attachWindowResizeHandler();
   configCheckDocumentReady();
   blogDocumentReady();
   emailDocumentReady();
