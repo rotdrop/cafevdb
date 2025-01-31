@@ -90,7 +90,11 @@
       <div :id="pagePrefix + 'container'" :class="[pagePrefix + 'container', legacyCssClass]">
         <!-- used to have something with 100% height for scrollbars -->
         <div :id="pagePrefix + 'body'" :class="[pagePrefix + 'body', legacyCssClass]">
-          <div :id="pagePrefix + 'body-inner'" :class="[pagePrefix + 'body-inner', legacyCssClass]" v-html="legacyBodyHtml" />
+          <div :id="pagePrefix + 'body-inner'"
+               ref="legacyHtmlContainer"
+               :class="[pagePrefix + 'body-inner', legacyCssClass]"
+               v-html="legacyBodyHtml"
+          />
         </div>
       </div>
     </div>
@@ -99,6 +103,7 @@
 </template>
 <script lang="ts">
 import { nextTick } from 'vue'
+import { useMutationObserver } from '@vueuse/core'
 import {
   NcActionButton,
   NcActionCheckbox,
@@ -118,6 +123,7 @@ import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
 import { closeNavigation } from '../services/navigation.js'
 import useAppDataStore from '../stores/app-data.ts'
+import useHistoryStore from '../stores/history.ts'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import { subscribe as asyncSubscribe, emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
 import {
@@ -169,6 +175,22 @@ export default {
       default: 'large',
     },
   },
+  // setup() {
+  //   const legacyHtmlContainer = ref(null)
+  //   const legacyHtmlLoaded = ref(false)
+  //   const mutationObserver = useMutationObserver(legacyHtmlContainer, (mutations) => {
+  //     console.info('MUTATION OBSERVER', mutations)
+  //     legacyHtmlLoaded.value = true
+  //   }, {
+  //     childList: true,
+  //   })
+  //   watch (legacyHtmlLoaded, (value, oldValue) => {})
+  //   return {
+  //     legacyHtmlContainer,
+  //     legacyHtmlLoaded,
+  //     observerSupported: mutationObserver.isSupported,
+  //   }
+  // },
   data() {
     return {
       legacyHeaderHtml: '',
@@ -183,9 +205,13 @@ export default {
       previousHash: null as null|string,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ajaxError: null as any, // any cannot be avoided here
+      legacyHtmlLoaded: false,
     }
   },
   computed: {
+    legacyHtmlContainer() {
+      return this.$refs.legacyHtmlContainer
+    },
     wikiManualSection() {
       return this.dokuWikiSection([
         this.appName,
@@ -203,14 +229,18 @@ export default {
     ...mapState(
       useAppDataStore, [
         'busyState',
-        'currentHistoryState',
-        'prevHistoryIndex',
-        'nextHistoryIndex',
       ],
     ),
     ...mapWritableState(
       useAppDataStore, [
         'currentProjectId',
+      ],
+    ),
+    ...mapState(
+      useHistoryStore, [
+        'currentHistoryState',
+        'prevHistoryIndex',
+        'nextHistoryIndex',
       ],
     ),
     pmePrefix() {
@@ -227,6 +257,12 @@ export default {
     },
   },
   watch: {
+    legacyHtmlLoaded(value, oldValue) {
+      this.info('Legacy HTML Loaded Watcher', value, oldValue)
+      if (value) {
+        this.legacyHtmlLoaded = false
+      }
+    },
     'templateParameters.projectId'(value, ...rest) {
       this.info('PROJECT ID CHANGED', value, ...rest)
       this.currentProjectId = value
@@ -273,16 +309,30 @@ export default {
     },
   },
   async created() {
-    this.info('WATCHED PROPS AT CREATION TIME', this.template, this.templateParameters, this.postDataHash)
     this.pageLoadSubscriber()
     this.info('TRIGGER PAGE LOAD')
     this.pageLoadTrigger = true
+  },
+  mounted() {
+    const observer = useMutationObserver(this.legacyHtmlContainer, (mutations) => {
+      this.info('MUTATION OBSERVER', mutations)
+      this.info('LEGACY HTML LOADED', this.legacyHtmlLoaded)
+      this.legacyHtmlLoaded = true
+      this.info('LEGACY HTML LOADED', this.legacyHtmlLoaded, this)
+    }, {
+      childList: true,
+    })
+    this.info('MUTATION OBSERVER ETC', observer.isSupported, this.legacyHtmlContainer)
   },
   methods: {
     ...mapActions(
       useAppDataStore, [
         'pushBusyState',
         'popBusyState',
+      ],
+    ),
+    ...mapActions(
+      useHistoryStore, [
         'scheduleHistoryPush',
         'scheduleHistoryReplace',
       ],
@@ -336,7 +386,7 @@ export default {
         this.legacyCssPrefix = data.cssPrefix
         this.legacyCssClass = data.cssClass
         await nextTick()
-        this.info('RUN READY CALLBACKS')
+        this.info('RUN READY CALLBACKS', this.legacyHtmlContainer)
         await asyncEmit(LEGACY_PAGE_FINALIZE)
         this.info('AFTER RUN READY CALLBACKS')
         const titleProvider = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-short-title')
@@ -359,7 +409,7 @@ export default {
       if (pmeContainer) {
         const reloadButton = pmeContainer.querySelector(this.pmeForm + ' ' + this.pmeSelector('reload', 'input')) as HTMLElement
         if (reloadButton) {
-          this.debug('TRIGGER CLICK ON PME RELOAD BUTTON')
+          this.debug('TRIGGER CLICK ON PME RELOAD BUTTON', reloadButton, window?.history?.state)
           LegacyNotification.hide()
           reloadButton.click()
           document.querySelector('body')!.classList.remove('dialog-titlebar-clicked') // need for "mobile" css

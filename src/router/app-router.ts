@@ -35,9 +35,14 @@ const router = new Router({
   base,
   linkActiveClass: 'active',
   routes: appRoutes,
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(to, _from, savedPosition) {
     if (savedPosition) {
       return { behavior: 'smooth', ...savedPosition };
+    } else if (to.hash) {
+      return {
+        selector: to.hash,
+        behavior: 'smooth',
+      }
     }
   },
 });

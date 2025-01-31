@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     onRouteChange(to: Route) {
-      this.info('onRouteChange()', to)
+      this.info('onRouteChange()', to, window?.history?.state)
       this.template = to?.params?.template
       this.templateParameters.projectId = to?.params?.projectId
       this.templateParameters.projectName = to?.params?.projectName

@@ -27,17 +27,29 @@ import { computedAsync } from '@vueuse/core';
 import axios from '@nextcloud/axios';
 import generateAppUrl from '../toolkit/util/generate-url.js';
 import type { AxiosResponse } from 'axios';
+import Console from '../util/console.ts';
 
 const storeId = 'app-data';
+const console = new Console(storeId);
+
 const abortController = new AbortController();
 
-export class ReadOnlyProxyWriteError extends Error {}
+export class HistorySetupError extends Error {}
+
 type ErrorHandler = <E extends Error>(error: E|any, context: object) => void;
 
 export const HistoryActionPush = 'push';
 export const HistoryActionPop = 'pop';
 export const HistoryActionReplace = 'replace';
 export type HistoryAction = typeof HistoryActionPop|typeof HistoryActionPush|typeof HistoryActionReplace;
+
+export interface RouterHistoryState {
+  next: string|null,
+  prev: string|null,
+  key: string,
+  post: Record<string, any>,
+  position: number|null,
+}
 
 export type ProjectTypeTemporary = 'temporary';
 export type ProjectTypePermanent = 'permanent';
@@ -68,20 +80,8 @@ const usePrivateState = defineStore(storeId + '-private', {
     loadingPromise: Promise.resolve(true) as Promise<any>,
   }),
   actions: {
-    debug(...args: any[]) {
-      console.debug(storeId, ...args);
-    },
-    info(...args: any[]) {
-      console.info(storeId, ...args);
-    },
-    error(...args: any[]) {
-      console.error(storeId, ...args);
-    },
-    trace(...args: any[]) {
-      console.trace(storeId, ...args);
-    },
     handleError<E extends Error>(error: E|any, context: object, errorHandler: ErrorHandler|null) {
-      this.error(context, error);
+      console.error(context, error);
       if (typeof errorHandler === 'function') {
         errorHandler(error, context);
       }
@@ -111,7 +111,7 @@ const usePrivateState = defineStore(storeId + '-private', {
       vueSet(this.projects, projectId, project);
       try {
         const response: AxiosResponse<ProjectFolders> = await axios.get(url, { signal: abortController.signal });
-        this.info('FETCH PROJECT FOLDERS RESPONSE', response);
+        console.info('FETCH PROJECT FOLDERS RESPONSE', response);
         vueSet(this.projects[projectId], 'folders', response.data);
         return this.projects[projectId];
       } catch (e) {
@@ -124,7 +124,7 @@ const usePrivateState = defineStore(storeId + '-private', {
       let url = generateAppUrl('projects/{projectId}', { projectId });
       try {
         const response: AxiosResponse<Project> = await axios.get(url, { signal: abortController.signal });
-        this.info('FIND PROJECT RESPONSE', response);
+        console.info('FIND PROJECT RESPONSE', response);
         const project = await this.putProject(response.data, errorHandler);
         return project;
       } catch (e) {
@@ -136,7 +136,7 @@ const usePrivateState = defineStore(storeId + '-private', {
       let url = generateAppUrl('projects');
       try {
         const response: AxiosResponse<number[]> = await axios.get(url, { signal: abortController.signal });
-        this.info('FIND PROJECT IDS RESPONSE', response);
+        console.info('FIND PROJECT IDS RESPONSE', response);
         return response.data;
       } catch (e) {
         this.handleError(e, { action: 'findProjectIds', url }, errorHandler);
@@ -184,8 +184,8 @@ export default defineStore(storeId, () => {
   const busyFlag = ref(false);
   const busyState = computed(() => busyCount.value > 0 || busyFlag.value);
   const setBusyFlag = (value: boolean) => { const oldValue = busyFlag.value; busyFlag.value = value; return oldValue; };
-  const pushBusyState = () => { ++busyCount.value; state.info('BUSY STATE PUSH', busyCount.value); return busyCount.value; };
-  const popBusyState = () => { --busyCount.value; state[(busyCount.value < 0) ? 'trace' : 'info']('BUSY STATE POP', busyCount.value); return busyCount.value; };
+  const pushBusyState = () => { ++busyCount.value; console.info('BUSY STATE PUSH', busyCount.value); return busyCount.value; };
+  const popBusyState = () => { --busyCount.value; console[(busyCount.value < 0) ? 'trace' : 'info']('BUSY STATE POP', busyCount.value); return busyCount.value; };
   const currentProjectId = ref(0);
   const errorHandler = ref(null);
   const evaluating = ref(false);
@@ -197,7 +197,7 @@ export default defineStore(storeId, () => {
       }
       // onCancel(() => state.abort());
       const project = await state.getProject(currentProjectId.value, errorHandler.value);
-      state.debug('CURRENT PROJECT', project);
+      console.debug('CURRENT PROJECT', project);
       return project;
     },
     null,
@@ -208,9 +208,9 @@ export default defineStore(storeId, () => {
   const projectIds = ref<number[]>([]);
   state.findProjectIds(errorHandler.value)
     .then((value) => { if (value) { projectIds.value = value; } })
-    .catch((error) => { projectIds.value = []; state.error('Fetching the project ids failed', error); });
+    .catch((error) => { projectIds.value = []; console.error('Fetching the project ids failed', error); });
   const projects = computed(() => state.projects);
-  watch(projects, (value, oldValue) => state.info('PROJECTS WATCHER', value, oldValue));
+  watch(projects, (value, oldValue) => console.info('PROJECTS WATCHER', value, oldValue));
 
   async function getProject(projectId: number, handler?: ErrorHandler) {
     const result = await state.getProject(projectId, handler || errorHandler.value);
@@ -229,200 +229,9 @@ export default defineStore(storeId, () => {
     }
   }
 
-  const routerHistory = ref({
-    initial: {
-      prev: null,
-      next: null,
-      post: {},
-      key: 'initial',
-      position: window?.history?.length,
-    },
-  });
-  const currentHistoryIndex = ref('initial');
-  const pendingHistoryData = ref<null|object>(null);
-  const pendingHistoryAction = ref<null|HistoryAction>(null);
-  const pendingHistoryKey = ref<null|string|number>('initial');
-  const currentHistoryState = computed(() => routerHistory.value?.[currentHistoryIndex.value] || null);
-  const prevHistoryIndex = computed(() => currentHistoryState.value.prev);
-  const nextHistoryIndex = computed(() => currentHistoryState.value.next);
-  const prevHistoryState = computed(() => routerHistory.value?.[prevHistoryIndex.value] || null);
-  const nextHistoryState = computed(() => routerHistory.value?.[nextHistoryIndex.value] || null);
-
-  /**
-   * This is called before routing in order to record that a
-   * history-state action will be initiated. After completion the
-   * provided data will be install at the proper position in the
-   * history stack.
-   *
-   * @param action One of 'push', 'replace', 'pop'. 'pop'
-     will leave the 'post' property untouched, replace will replace
-     the 'post' property.
-   *
-   * @param post TBD
-   */
-  function scheduleHistoryAction(action: HistoryAction, post: object) {
-    const key = window?.history?.state?.key || 'initial';
-    pendingHistoryAction.value = action;
-    pendingHistoryData.value = post || {};
-    pendingHistoryKey.value = key;
-    state.info('scheduleHistoryAction()', {
-      action,
-      key,
-      currentHistoryIndex: currentHistoryIndex.value,
-      pendingHistoryKey: pendingHistoryKey.value,
-      post,
-      routerHistory: routerHistory.value,
-    });
-    if (currentHistoryIndex.value !== 'initial' && pendingHistoryKey.value !== currentHistoryIndex.value) {
-      state.trace('SCHEDULE HISTORY KEY MISTMATCH', pendingHistoryKey.value, currentHistoryIndex.value);
-    }
-  }
-
-  function scheduleHistoryPush(post: object) {
-    scheduleHistoryAction('push', post);
-  }
-
-  function scheduleHistoryReplace(post: object) {
-    scheduleHistoryAction('replace', post);
-  }
-
-  function cancelHistoryAction() {
-    pendingHistoryAction.value = null;
-    pendingHistoryData.value = null;
-    pendingHistoryKey.value = null;
-    state.info('cancelHistoryAction()', routerHistory.value);
-  }
-
-  /**
-   * Called after route completion. Unfortunately the RouterLink Vue
-   * component does not provide means to propagate the kind of
-   * history-state action -- push or replace -- to the available
-   * callback handlers. Hence the logic is:
-   *
-   * - if pendingHistoryAction is defined, use its value else look at
-   * - window.history.state.key,if defined and equal to the current *
-   *   (i.e. previous) key, then assume that the history state has
-   *   been replaced, otherwise assume a push.
-   */
-  function finishHistoryAction() {
-    const key = window?.history?.state?.key || 'initial';
-    const history = routerHistory.value;
-    state.info('ON HISTORY FINISH', {
-      key,
-      keyType: typeof key,
-      currentHistoryIndex: currentHistoryIndex.value,
-      pendingHistoryKey: pendingHistoryKey.value,
-      currentHistoryState: { ...currentHistoryState.value },
-      history: { ...history },
-      historyOfKey: history?.['' + key],
-      historyKeys: [...Object.keys(history)],
-    });
-
-    // Guard against router-links as their replace/push calls are not
-    // interceptable. The following check will fail if the first
-    // navigation is initiated by a router-link in replace mode as
-    // unfortunately history.state.key is undefined until after the
-    // first navigation.
-    if (pendingHistoryAction.value === 'replace' && key !== currentHistoryIndex.value && currentHistoryIndex.value !== 'initial') {
-      state.trace('EXPLICIT HISTORY REPLACE REQUESTED, BUT CURRENT HISTORY IS GONE', {
-        key,
-        pendingHistoryKey: pendingHistoryKey.value,
-        currentHistoryIndex: currentHistoryIndex.value,
-        history: { ...history },
-      });
-      pendingHistoryAction.value = null;
-      pendingHistoryData.value = null;
-      pendingHistoryKey.value = null;
-    }
-    if (!pendingHistoryAction.value) {
-      if (key === pendingHistoryKey.value) {
-        // replace action from RouterLink
-        pendingHistoryAction.value = 'replace';
-      } else if (history[key]) {
-        // 'pop' action, back or forward
-        pendingHistoryAction.value = 'pop';
-      } else {
-        // assume 'push'
-        pendingHistoryAction.value = 'push';
-      }
-      state.info('TWEAKED HISTORY ACTION IS', {
-        pendingHistoryAction: pendingHistoryAction.value,
-        key,
-        pendingHistoryKey: pendingHistoryKey.value,
-        currentHistoryIndex: currentHistoryIndex.value,
-        historyAtKey: history?.[key],
-        history: { ...history },
-      });
-    }
-
-    if (pendingHistoryAction.value === 'push') {
-      const key = window.history.state.key;
-      history[key] = {
-        prev: currentHistoryIndex.value,
-        next: null,
-        post: pendingHistoryData.value || {},
-        key,
-        position: window.history.length,
-      };
-      history[currentHistoryIndex.value].next = key;
-      currentHistoryIndex.value = key;
-    } else if (pendingHistoryAction.value === 'replace') {
-      if (key !== currentHistoryIndex.value) {
-        state.info('BEFORE ADJUST KEYS', key, currentHistoryIndex.value, { ...history[currentHistoryIndex.value] }, history?.[key]);
-        history[key] = history[currentHistoryIndex.value];
-        console.info('CURRENT STATE 0', { ...history[key] });
-        delete history[currentHistoryIndex.value];
-        console.info('CURRENT STATE 1', { ...history[key] });
-        currentHistoryIndex.value = key;
-        history[key].key = key;
-        const prev = history[key].prev;
-        const next = history[key].next;
-        if (history[prev]) {
-          history[prev].next = key;
-        }
-        if (history[next]) {
-          history[next].prev = key;
-        }
-        state.info('AFTER ADJUST KEYS', history);
-      }
-      history[key].post = pendingHistoryData.value || {};
-    } else {
-      currentHistoryIndex.value = window.history?.state?.key || 'initial';
-    }
-    for (const [key, record] of Object.entries(routerHistory.value)) {
-      if (key !== record.key) {
-        state.trace('SELF INCONSISTENCY', key, record, routerHistory.value);
-      }
-      if ((record.next || record.prev)
-        && (record.next === record.prev || record.next === record.key || record.prev === record.key)) {
-        state.trace('EQUAL KEYS', key, { ...record }, { ...routerHistory.value });
-      }
-    }
-    pendingHistoryData.value = null;
-    pendingHistoryAction.value = null;
-    state.info('finishHistoryAction()', {
-      currentHistoryIndex: currentHistoryIndex.value,
-      currentHistoryState: { ...currentHistoryState.value },
-      routerHistory: { ...routerHistory.value },
-      windowHistoryState: window?.history?.state,
-    });
-  }
-
   return {
     busyFlag,
     setBusyFlag,
-    routerHistory,
-    currentHistoryIndex,
-    currentHistoryState,
-    pendingHistoryAction,
-    prevHistoryIndex,
-    prevHistoryState,
-    nextHistoryIndex,
-    nextHistoryState,
-    scheduleHistoryPush,
-    scheduleHistoryReplace,
-    cancelHistoryAction,
-    finishHistoryAction,
     debugMode,
     appError,
     busyCount,

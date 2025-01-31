@@ -291,6 +291,7 @@ import {
   NcEmptyContent,
 } from '@nextcloud/vue'
 import useAppDataStore from './stores/app-data.ts'
+import useHistoryStore from './stores/history.ts'
 // import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 // import ProjectPartici<pantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 // import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
@@ -313,7 +314,7 @@ import { closeNavigation } from './services/navigation.js'
 import * as BusEvents from './event-bus-events.ts'
 import appIcon from '../img/cafevdb.svg?raw'
 import { getInitialState } from './toolkit/services/InitialStateService.js'
-import type { RawLocation, Location as RouterLocation } from 'vue-router'
+import type { RawLocation } from 'vue-router'
 import type { AxiosResponse } from 'axios'
 // import type { PropType } from 'vue'
 
@@ -361,15 +362,17 @@ export default {
   props: {}, // make the vue language server happy, otherwise methods: will be ignored.
   setup() {
     const appData = useAppDataStore()
+    const history = useHistoryStore()
     return {
       appData,
       setBusyFlag: appData.setBusyFlag,
       pushBusyState: appData.pushBusyState,
       popBusyState: appData.popBusyState,
-      scheduleHistoryPush: appData.scheduleHistoryReplace,
-      cancelHistoryAction: appData.cancelHistoryAction,
-      finishHistoryAction: appData.finishHistoryAction,
-      scheduleHistoryReplace: appData.scheduleHistoryReplace,
+      scheduleHistoryPush: history.scheduleHistoryReplace,
+      cancelHistoryAction: history.cancelHistoryAction,
+      finishHistoryAction: history.finishHistoryAction,
+      scheduleHistoryReplace: history.scheduleHistoryReplace,
+      routerHistory: history.routerHistory,
     }
   },
   data() {
@@ -551,40 +554,12 @@ export default {
       this.info('ROUTER ON ERROR HOOK', ...args, window?.history?.state)
       this.cancelHistoryAction()
     })
-    // window.setTimeout(() => {
-    //   asyncEmit(BusEvents.LEGACY_PAGE_LOAD, {
-    //     template: 'projects',
-    //     keepHistory: true,
-    //   })
-    // }, 10000)
 
-    // The following silly construct enforces a history state with
-    // value vue-router key for the initial route. Quite stupid, but should work ...
-    if (!window.history?.state?.key || this.appData.currentHistoryIndex === 'initial') {
-      this.info('CURRENT HISTORY', this.$router.currentRoute, window.history?.state)
-      const route: RouterLocation = {
-        name: this.$router.currentRoute.name as string,
-        params: { ...this.$router.currentRoute.params },
-        query: { ...this.$router.currentRoute.query },
-      }
-      route.query = { ...(route.query || {}), ...{ force: window.performance.now().toFixed(3) } }
-      this.scheduleHistoryReplace({})
-      await this.$router.replace(route)
-      delete route.query.force
-      this.scheduleHistoryReplace({})
-      await this.$router.replace(route)
-      this.info('CURRENT HISTORY AFTER', {
-        currentRoute: { ...this.$router.currentRoute },
-        windowHistoryState: { ...window.history?.state },
-        history: { ...this.appData.routerHistory },
-      })
-    } else {
-      this.info('INITIAL HISTORY', {
-        currentRoute: { ...this.$router.currentRoute },
-        windowHistoryState: { ...window.history?.state },
-        history: { ...this.appData.routerHistory },
-      })
-    }
+    this.debug('INITIAL HISTORY', {
+      currentRoute: { ...this.$router.currentRoute },
+      windowHistoryState: { ...window.history?.state },
+      history: { ...this.routerHistory },
+    })
   },
   mounted() {
     // works only after mounting
