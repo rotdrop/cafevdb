@@ -1164,7 +1164,7 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
         replaceBrowserHistory(post);
         await emit(LEGACY_PME_HISTORY_UPDATE, {
           post,
-          html: htmlContent,
+          htmlBody: htmlContent,
           action: 'replace',
         });
       }
