@@ -95,7 +95,7 @@ class BlogController extends Controller
       return self::grumble($this->l->t('Refusing to create blog entry without author identity.'));
     }
 
-    if (!empty($blogId) && empty($inReplyTo) && $content == '') {
+    if (!empty($blogId) && !($inReplyTo > 0) && $content == '') {
       // This is an edit attempt.
       try {
         $entry = $this->blogMapper->find($blogId);
