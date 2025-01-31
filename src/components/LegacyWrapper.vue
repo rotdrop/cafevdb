@@ -431,8 +431,8 @@ export default {
             'no-reload': '1',
           },
         }
-        this.info('INSTALL NEW HTML')
-        this.legacyBodyHtml = eventData.html
+        this.info('INSTALL NEW HTML', eventData)
+        this.legacyBodyHtml = eventData.htmlBody
         if (eventData?.action === 'push') {
           this.scheduleHistoryPush(post)
           return this.$router.push(target)
