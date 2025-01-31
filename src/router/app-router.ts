@@ -35,6 +35,11 @@ const router = new Router({
   base,
   linkActiveClass: 'active',
   routes: appRoutes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return { behavior: 'smooth', ...savedPosition };
+    }
+  },
 });
 
 export default router;
