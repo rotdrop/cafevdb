@@ -61,6 +61,9 @@ const provideHistoryState = function(post) {
 const pushHistory = function(post) {
   console.info('PUSH HISTORY', post);
   const state = history.state || provideHistoryState();
+  if (globalState.vueMode) {
+    return state;
+  }
   const newState = {
     post,
     nextState: false, // pushState deletes all following entries.
