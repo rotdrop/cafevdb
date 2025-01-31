@@ -133,7 +133,6 @@ import mixins from '../mixins/app-mixins.ts'
 import useAppDataStore from '../stores/app-data.ts'
 import type { Project } from '../stores/app-data.ts'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
-import wikiPopup from '../app/wiki-popup.js'
 import md5 from 'blueimp-md5'
 // import { set as vueSet } from 'vue'
 import * as Authorization from '../authorization.ts'
@@ -316,7 +315,7 @@ export default {
       event.preventDefault()
       this.open = false
       closeNavigation()
-      wikiPopup({
+      asyncEmit(BusEvents.WIKI_POPUP, {
         wikiPage: this.project!.wikiPage,
         popupTitle: t(appId, 'Project Wiki for {projectName}', { projectName: this.projectName }),
       })

@@ -117,7 +117,6 @@ import mixins from '../mixins/app-mixins.ts'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
 import { closeNavigation } from '../services/navigation.js'
-import wikiPopup from '../app/wiki-popup.js'
 import useAppDataStore from '../stores/app-data.ts'
 import { mapWritableState, mapActions, mapState } from 'pinia'
 import { subscribe as asyncSubscribe, emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
@@ -126,6 +125,7 @@ import {
   LEGACY_PME_HISTORY_UPDATE,
   LEGACY_PAGE_CLEANUP,
   LEGACY_PAGE_FINALIZE,
+  WIKI_POPUP,
 } from '../event-bus-events.ts'
 import * as LegacyNotification from '../app/notification.js'
 import objectHash from 'object-hash'
@@ -288,7 +288,7 @@ export default {
       ],
     ),
     onUserManualPopup() {
-      wikiPopup({
+      return asyncEmit(WIKI_POPUP, {
         wikiPage: this.wikiManualSection,
         popupTitle: this.t(this.appName, 'User Manual: {section}', { section: this.shortTitle }, 0, { escape: false }),
       })
@@ -336,7 +336,9 @@ export default {
         this.legacyCssPrefix = data.cssPrefix
         this.legacyCssClass = data.cssClass
         await nextTick()
+        this.info('RUN READY CALLBACKS')
         await asyncEmit(LEGACY_PAGE_FINALIZE)
+        this.info('AFTER RUN READY CALLBACKS')
         const titleProvider = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-short-title')
         if (titleProvider) {
           this.shortTitle = titleProvider.textContent || ''

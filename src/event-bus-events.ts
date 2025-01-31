@@ -29,6 +29,7 @@ export const appEventName = <T extends string>(tag: T) => appPrefix(tag, '::');
 export const APP_SETTINGS_POPUP = appEventName('app-settings-popup');
 export const TOGGLE_TOOLTIPS = appEventName('toggle-tooltips');
 export const PROJECT_POPUP = appEventName('project-popup');
+export const WIKI_POPUP = appEventName('wiki-popup');
 export const PROJECT_INSTRUMENTATION_NUMBERS_POPUP = appEventName('project-instrumentation-numbers-popup');
 export const PROJECT_PARTICIPANT_FIELDS_POPUP = appEventName('project-participant-fields-popup');
 export const PROJECT_EVENTS_POPUP = appEventName('project-events-popup');

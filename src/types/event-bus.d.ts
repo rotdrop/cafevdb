@@ -33,6 +33,7 @@ import {
   PROJECT_ACTIONS,
   PUSH_BUSY_STATE,
   SET_BUSY_FLAG,
+  WIKI_POPUP,
 } from '../event-bus-events.ts';
 
 declare module '@rotdrop/async-nextcloud-event-bus' {
@@ -50,12 +51,13 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [LEGACY_PAGE_CLEANUP]: undefined,
     [LEGACY_PAGE_FINALIZE]: undefined,
     [LEGACY_PAGE_LOAD]: { post: TemplatePostData, template: string|null, projectId: number|null, projectName: string|undefined, keepHistory: boolean, },
-    [LEGACY_PME_HISTORY_UPDATE]: { post: TemplatePostData, html: string, action: string, },
+    [LEGACY_PME_HISTORY_UPDATE]: { post: TemplatePostData, htmlBody: string, action: string, },
     [PME_STATE]: { state: object, },
     [POP_BUSY_STATE]: undefined,
     [PROJECT_ACTIONS]: { projectId: number, open: boolean, x?: number, y?: number },
     [PUSH_BUSY_STATE]: undefined,
     [SET_BUSY_FLAG]: { value: boolean },
+    [WIKI_POPUP]: { wikiPage: string, popupTitle: string },
   }
 }
 

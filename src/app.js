@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { nonce, webRoot, $ } from './app/globals.js';
+import { globalState, nonce, webRoot, $ } from './app/globals.js';
 import { runReadyCallbacks } from './app/cafevdb.js';
 import settings from './app/settings.js';
 import appSettings from './app/app-settings.js';
@@ -77,5 +77,9 @@ $(function() {
   appSettings();
   personalSettings();
   beforeReady();
-  runReadyCallbacks();
+  if (globalState.vueMode) {
+    console.debug('DO NOT INITIALLY CALL READY CALLBACKS IN VUE MODE');
+  } else {
+    runReadyCallbacks();
+  }
 });

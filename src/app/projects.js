@@ -62,6 +62,10 @@ require('projects.scss');
 // listen to requests from the Vue wrapper application, the idea is
 // not to have to load all the code twice, or not to have to change
 // anything at once.
+asyncSubscribe(BusEvents.WIKI_POPUP, async (event) => {
+  wikiPopup(event);
+});
+
 asyncSubscribe(BusEvents.PROJECT_POPUP, async (event) => {
   console.info('EVENT', event);
   asyncEmit(BusEvents.PUSH_BUSY_STATE);
