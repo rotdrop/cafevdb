@@ -106,6 +106,7 @@
     "sass": "~1.64.0",
     "sass-loader": "^10.1.1",
     "selectize": "file:3rdparty/selectize",
+    "stacktrace-js": "^2.0.2",
     "stream-browserify": "*",
     "stream-http": "*",
     "style-loader": "^2.0.0",
