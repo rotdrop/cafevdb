@@ -672,7 +672,7 @@ export default {
             item.template = item.template.replace('/', ':')
           }
         }
-        this.trace('NAVIGATION ITEMS TO INSTALL', navigationItems)
+        this.debug('NAVIGATION ITEMS TO INSTALL', navigationItems)
         // this.navigationItems.splice(0, this.navigationItems.length, ...navigationItems)
         this.navigationItems = navigationItems
       } catch (error) {
