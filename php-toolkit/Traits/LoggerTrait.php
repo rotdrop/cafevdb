@@ -3,7 +3,7 @@
  * A collection of reusable traits classes for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,11 @@ use Throwable;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ILogger;
+use OCP\AppFramework\IAppContainer;
+
+use OCA\RotDrop\Toolkit\Listener\BeforeMessageLoggedEventListener;
 
 /**
  * Utitily trait to simplifiy logging somewhat.
@@ -37,6 +41,9 @@ trait LoggerTrait
   /** @var LoggerInterface */
   protected LoggerInterface $logger;
 
+  /** @var IAppContainer */
+  protected IAppContainer $appContainer;
+
   /**
    * Return the stored logger class
    *
@@ -45,6 +52,16 @@ trait LoggerTrait
   public function logger():LoggerInterface
   {
     return $this->logger;
+  }
+
+  /**
+   * Return the stored appConmtainer instance.
+   *
+   * @return IAppContainer
+   */
+  protected function appContainer():IAppContainer
+  {
+    return $this->appContainer;
   }
 
   /**
@@ -90,11 +107,18 @@ trait LoggerTrait
    * @param array $context
    * @param int $shift
    * @param bool $showTrace
+   * @param bool $returnLogEntry
    *
-   * @return void
+   * @return null|array
    */
-  public function log(mixed $level, string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
-  {
+  public function log(
+    mixed $level,
+    string $message,
+    array $context = [],
+    int $shift = 0,
+    bool $showTrace = false,
+    bool $returnLogEntry = false,
+  ):?array {
     $level = $this->mapLogLevels($level);
     $trace = debug_backtrace();
     $prefix = '';
@@ -102,53 +126,66 @@ trait LoggerTrait
 
     do {
       $caller = $trace[$shift];
-      $file = $caller['file']??'unknown';
-      $line = $caller['line']??'unknown';
-      $caller = $trace[$shift+1]??'unknown';
-      $class = $caller['class']??'unknown';
+      $file = $caller['file'] ?? 'unknown';
+      $line = $caller['line'] ?? 'unknown';
+      $caller = $trace[$shift + 1] ?? 'unknown';
+      $class = $caller['class'] ?? 'unknown';
       $method = $caller['function'];
 
-      $prefix .= $file.':'.$line.': '.$class.'::'.$method.'(): ';
+      $prefix .= $file . ':' . $line . ': ' . $class . '::' . $method . '(): ';
     } while ($showTrace && --$shift > 0);
 
-    $this->logger()->log($level, $prefix.$message, $context);
+    $logEntry = null;
+    if ($returnLogEntry) {
+      /** @var IEventDispatcher $eventDispatcher */
+      $eventDispatcher = $this->appContainer()->get(IEventDispatcher::class);
+      /** @var BeforeMessageLoggedEventListener $listener */
+      $listener = $this->appContainer()->get(BeforeMessageLoggedEventListener::class);
+      $appName = $this->appContainer()->get('AppName');
+      $eventDispatcher->addListener(
+        BeforeMessageLoggedEventListener::EVENT,
+        [$listener, 'handle'],
+      );
+      $context = [
+        ...$context,
+        $appName => [
+          'callback' => function(array $logData) use (&$logEntry) {
+            $logEntry = $logData;
+          },
+        ],
+      ];
+    }
+    $this->logger()->log($level, $prefix . $message, $context);
+
+    return $logEntry;
   }
 
   /**
-   * @param \Throwable $exception
-   *
+   * @param Throwable $exception
    * @param string $message
-   *
    * @param int $shift
-   *
-   * @param bool $showTrace
-   *
    * @param mixed $level
+   * @param array $context
+   * @param bool $returnLogEntry
    *
-   * @return void
-   *
-   * @todo Remove the unused $shift and $showTrace parameters.
+   * @return null|array
    */
   public function logException(
     Throwable $exception,
     string $message = null,
     int $shift = 0,
-    bool $showTrace = false,
     mixed $level = LogLevel::ERROR,
-  ):void {
-    $level = $this->mapLogLevels($level);
-    $trace = debug_backtrace();
-    $caller = $trace[$shift];
-    $file = $caller['file']??'unknown';
-    $line = $caller['line']??0;
-    $caller = $trace[$shift+1];
-    $class = $caller['class'];
-    $method = $caller['function'];
-
-    $prefix = $file.':'.$line.': '.$class.'::'.$method.': ';
-
-    empty($message) && ($message = "Caught an Exception");
-    $this->logger()->log($level, $prefix . $message, [ 'exception' => $exception ]);
+    array $context = [],
+    bool $returnLogEntry = false,
+  ):?array {
+    return $this->log(
+      $level,
+      $message ?? 'Caught an Exception',
+      context: [ 'exception' => $exception, ...$context ],
+      shift: $shift + 1,
+      showTrace: false, // does not make sense
+      returnLogEntry: $returnLogEntry,
+    );
   }
 
   /**
@@ -158,12 +195,18 @@ trait LoggerTrait
    * @param array $context
    * @param int $shift
    * @param bool $showTrace
+   * @param bool $returnLogEntry
    *
-   * @return void
+   * @return null|array
    */
-  public function logError(string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
-  {
-    $this->log(LogLevel::ERROR, $message, $context, $shift + 1, $showTrace);
+  public function logError(
+    string $message,
+    array $context = [],
+    int $shift = 0,
+    bool $showTrace = false,
+    bool $returnLogEntry = false,
+  ):?array {
+    return $this->log(LogLevel::ERROR, $message, $context, $shift + 1, $showTrace, $returnLogEntry);
   }
 
   /**
@@ -173,12 +216,19 @@ trait LoggerTrait
    * @param array $context
    * @param int $shift
    * @param bool $showTrace
+   * @param bool $returnLogEntry
    *
-   * @return void
+   * @return null|array
    */
-  public function logDebug(string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
+  public function logDebug(
+    string $message,
+    array $context = [],
+    int $shift = 0,
+    bool $showTrace = false,
+    bool $returnLogEntry = false,
+  ):?array
   {
-    $this->log(LogLevel::DEBUG, $message, $context, $shift + 1, $showTrace);
+    return $this->log(LogLevel::DEBUG, $message, $context, $shift + 1, $showTrace, $returnLogEntry);
   }
 
   /**
@@ -188,12 +238,18 @@ trait LoggerTrait
    * @param array $context
    * @param int $shift
    * @param bool $showTrace
+   * @param bool $returnLogEntry
    *
-   * @return void
+   * @return null|array
    */
-  public function logInfo(string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
-  {
-    $this->log(LogLevel::INFO, $message, $context, $shift + 1, $showTrace);
+  public function logInfo(
+    string $message,
+    array $context = [],
+    int $shift = 0,
+    bool $showTrace = false,
+    bool $returnLogEntry = false,
+  ):?array {
+    return $this->log(LogLevel::INFO, $message, $context, $shift + 1, $showTrace, $returnLogEntry);
   }
 
   /**
@@ -203,12 +259,18 @@ trait LoggerTrait
    * @param array $context
    * @param int $shift
    * @param bool $showTrace
+   * @param bool $returnLogEntry
    *
-   * @return void
+   * @return null|array
    */
-  public function logWarn(string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
-  {
-    $this->log(LogLevel::WARNING, $message, $context, $shift + 1, $showTrace);
+  public function logWarn(
+    string $message,
+    array $context = [],
+    int $shift = 0,
+    bool $showTrace = false,
+    bool $returnLogEntry = false,
+  ):?array {
+    return $this->log(LogLevel::WARNING, $message, $context, $shift + 1, $showTrace, $returnLogEntry);
   }
 
   /**
@@ -218,11 +280,17 @@ trait LoggerTrait
    * @param array $context
    * @param int $shift
    * @param bool $showTrace
+   * @param bool $returnLogEntry
    *
-   * @return void
+   * @return null|array
    */
-  public function logFatal(string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
-  {
-    $this->log(LogLevel::EMERGENCY, $message, $context, $shift + 1, $showTrace);
+  public function logFatal(
+    string $message,
+    array $context = [],
+    int $shift = 0,
+    bool $showTrace = false,
+    bool $returnLogEntry = false,
+  ):?array {
+    return $this->log(LogLevel::EMERGENCY, $message, $context, $shift + 1, $showTrace, $returnLogEntry);
   }
 }
