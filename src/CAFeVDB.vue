@@ -399,7 +399,7 @@ export default {
         'show-disabled': '',
         'show-tool-tips': '',
       },
-      triggerNavigationUpdate: false,
+      triggerNavigationUpdate: undefined as undefined|boolean,
       showSidebar: false,
       sidebarTitle: '',
     }
@@ -409,7 +409,6 @@ export default {
       return this.$route.path === '/'
     },
     ...mapState(useAppDataStore, [
-      'routerHistory',
       'projectMode',
     ]),
     ...mapWritableState(
@@ -566,6 +565,12 @@ export default {
     closeNavigation()
     this.isMounted = true
     this.info(this.appId, this.appIdProp)
+    if (this.triggerNavigationUpdate === undefined) {
+      this.triggerNavigationUpdate = true
+    }
+    if (!this.pageTemplate) {
+      this.pageTemplate = 'home'
+    }
   },
   methods: {
     closeSidebar() {
