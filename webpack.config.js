@@ -48,6 +48,9 @@ const svgoOptions = {
 };
 
 module.exports = {
+  infrastructureLogging: {
+    level: 'verbose',
+  },
   entry: Object.entries({
     app: './src/app.js',
     'vue-app': './src/vue-app.ts',
@@ -265,6 +268,7 @@ module.exports = {
           'emoji-mart-vue-fast',
           '@rotdrop/nextcloud-vue-components',
           '@nextcloud/vue',
+          '@nextcloud/app-logreader/src',
         ]),
       },
       {
@@ -279,7 +283,9 @@ module.exports = {
             },
           },
         ],
-        exclude: BabelLoaderExcludeNodeModulesExcept([]),
+        exclude: BabelLoaderExcludeNodeModulesExcept([
+          '@nextcloud/app-logreader/src',
+        ]),
       },
       {
         test: /\.js$/,
