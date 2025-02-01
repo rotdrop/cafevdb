@@ -21,10 +21,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { AxiosError } from 'axios';
-import { isAxiosError } from './axios-type-guards.ts';
+import { isAxiosErrorResponse, type AxiosErrorResponse } from './axios-type-guards.ts';
 import ResponseTypes from './response-types.ts';
+import type {
+  ILogEntry as NextcloudLogEntry,
+  IException as NextcloudException,
+} from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts'
 
+export interface NextcloudExceptionLogEntry extends Omit<NextcloudLogEntry, 'exception'> {
+  exception: NextcloudException,
+}
+
+// Our own exception format
 export interface PHPExceptionData {
   type: ResponseTypes.PHPExceptionData,
   message: string, // heading, deprecated
@@ -40,8 +48,17 @@ export interface PHPExceptionData {
   previous: null|PHPExceptionData,
 }
 
+export const isNextcloudLogEntry = (data: any): data is NextcloudLogEntry =>
+  !!data && typeof data === 'object' && data.reqId && data.app
+
+export const isNextcloudExceptionLogEntry = (data: any): data is NextcloudExceptionLogEntry =>
+  isNextcloudLogEntry(data) && !!data.exception
+
+export const isNextcloudExceptionResponse = (data: any): data is AxiosErrorResponse<NextcloudExceptionLogEntry> =>
+  isAxiosErrorResponse(data) && isNextcloudExceptionLogEntry(data.response.data)
+
 export const isPHPExceptionData = (data: any): data is PHPExceptionData =>
   !!data && typeof data === 'object' && data?.type === ResponseTypes.PHPExceptionData
 
-export const isPHPExceptionResponse = <D = any>(error: any): error is AxiosError<PHPExceptionData, D> =>
-  isAxiosError(error) && !!error.response && isPHPExceptionData(error.response.data)
+export const isPHPExceptionResponse = <D = any>(error: any): error is AxiosErrorResponse<PHPExceptionData, D> =>
+  isAxiosErrorResponse(error) && isPHPExceptionData(error.response.data)

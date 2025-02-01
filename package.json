@@ -33,6 +33,7 @@
     "@ckeditor/ckeditor5-build-classic": "^35.1.0",
     "@csstools/normalize.css": "^11.0.1",
     "@fortawesome/fontawesome-free": "^5.15.3",
+    "@nextcloud/app-logreader": "github:nextcloud/logreader#stable30",
     "@nextcloud/auth": "^2.1.0",
     "@nextcloud/axios": "^2.4.0",
     "@nextcloud/browserslist-config": "^3.0.0",

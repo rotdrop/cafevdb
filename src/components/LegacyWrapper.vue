@@ -81,7 +81,7 @@
     <!-- eslint-disable vue/no-v-html  -->
     <div v-if="!ajaxError"
          :id="appPrefix('general')"
-         :class="{ 'page-container': true, loading, }"
+         :class="{ [appPrefix('page-container')]: true, loading, }"
     >
       <!-- /* used to eliminate the pixel-size of the control bar -->
       <div :id="pagePrefix + 'header-box'" :class="[pagePrefix + 'header-box', legacyCssClass]">
@@ -98,7 +98,12 @@
         </div>
       </div>
     </div>
-    <AjaxErrorPage v-else :error="ajaxError" />
+    <div v-else class="flex-container flex-justify-center">
+      <AjaxErrorPage :id="appPrefix('error')"
+                     :class="{ [appPrefix('page-container')]: true, loading, }"
+                     :error="ajaxError"
+      />
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -135,6 +140,9 @@ import {
 } from '../event-bus-events.ts'
 import * as LegacyNotification from '../app/notification.js'
 import objectHash from 'object-hash'
+import type { AxiosResponse } from 'axios'
+import type { LoadPartsData } from '../types/ajax/page-load-response.ts'
+import { loadTranslations } from '@nextcloud/l10n'
 
 export default {
   name: 'LegacyWrapper',
@@ -379,7 +387,7 @@ export default {
         this.synchronizeHistoryState(this.previousHash)
       }
       try {
-        const response = await axios.post(generateAppUrl('page/remember/parts'), post)
+        const response: AxiosResponse<LoadPartsData> = await axios.post(generateAppUrl('page/remember/parts'), post)
         const data = response.data // todo: validate
         this.legacyBodyHtml = data.bodyHtml
         this.legacyHeaderHtml = data.headerHtml
@@ -396,6 +404,7 @@ export default {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         this.error('ERROR', generateAppUrl('page/remember/parts'), post, e)
+        await loadTranslations('logreader', () => this.info('LOGREADER L10N'))
         this.ajaxError = e
       }
       this.popBusyState()
@@ -523,7 +532,7 @@ export default {
     width: 2px;
   }
 }
-##{$appName}-general {
+.#{$appName}-page-container {
   position: relative;
   padding-top: var(--#{$appName}-top-padding);
   height: 100%;
@@ -536,6 +545,9 @@ export default {
       display:none;
     }
   }
+}
+##{$appName}-error {
+  max-width: 90%;
 }
 .flex-container {
   display: flex;

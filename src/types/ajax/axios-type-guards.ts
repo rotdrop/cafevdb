@@ -23,5 +23,13 @@
 
 import axios from 'axios';
 import { AxiosError } from 'axios';
+import type { AxiosResponse } from 'axios';
+
+export interface AxiosErrorResponse<T = any, D = any> extends Omit<AxiosError<T, D>, 'response'> {
+  response: AxiosResponse<T, D>,
+}
 
 export const isAxiosError = (error: any): error is AxiosError => axios.isAxiosError(error);
+
+export const isAxiosErrorResponse = (error: any): error is AxiosErrorResponse =>
+  isAxiosError(error) && !!error.response

@@ -20,58 +20,64 @@
  - You should have received a copy of the GNU Affero General Public License
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -
- - @file
- - Wrap an NcSelect into a coponent with submit button.
  -->
+<template>
+  <div class="container">
+    <NextcloudLogException v-if="isPHPException"
+                           :exception="exception"
+                           :is-expanded="true"
+    />
+    <div v-else-if="isAxiosErrorResponse">
+      {{ t(appName, 'AXIOS ERROR WITH RESPONSE DATA') }}
+    </div>
+    <div v-else-if="isAxiosError">
+      {{ t(appName, 'AXIOS ERROR WITHOUT RESPONSE DATA') }}
+    </div>
+    <div v-else>
+      {{ t(appName, 'UNKNOWN ERROR') }}
+    </div>
+  </div>
+</template>
 <script setup lang="ts">
-import { isPHPExceptionResponse } from '../types/ajax/php-exception-response.ts'
-import type { PHPExceptionData } from '../types/ajax/php-exception-response.ts'
+import { isNextcloudExceptionResponse } from '../types/ajax/php-exception-response.ts'
+import type { NextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts'
 import type { AxiosError } from 'axios'
-import { isAxiosError as isAxiosErrorGuard } from '../types/ajax/axios-type-guards.ts'
+import {
+  isAxiosErrorResponse as isAxiosErrorResponseGuard,
+  isAxiosError as isAxiosErrorGuard,
+} from '../types/ajax/axios-type-guards.ts'
 import { computed } from 'vue'
 import type { PropType } from 'vue'
 import { appName } from '../config.ts'
-import { translate as t } from '@nextcloud/l10n'
+import { translate as t, loadTranslations } from '@nextcloud/l10n'
+import NextcloudLogException from '@nextcloud/app-logreader/src/components/exception/LogException.vue'
+
+loadTranslations('logreader', () => console.info('LOGREADER TRANSLATION HAVE BEEN LOADED'))
+  .then((...args) => console.info('LOGREADER LOAD PROMISE', ...args))
+  .catch((...args) => console.error('LOGREADER TRANSLATIONS NOT LOADED', ...args))
+
+// unfortunately, the Logger app forgets to flags the isExpanded and
+// isPrevious props as optional, though it does specify default values
+// "false".
+
+// @ts-expect-error The Logger app forgets to flags this property as optional though it provides a default.
+NextcloudLogException.props.isExpanded.required = false
+// @ts-expect-error The Logger app forgets to flags this property as optional though it provides a default.
+NextcloudLogException.props.isPrevious.required = false
 
 const props = defineProps({
   // The error resulting from a try-catch. Hence no type information is available
   error: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    type: Object as PropType<any | AxiosError | AxiosError<PHPExceptionData>>,
+    type: Object as PropType<any | AxiosError | AxiosError<NextcloudExceptionLogEntry> >,
     required: true,
   },
 })
 
 const isAxiosError = computed(() => isAxiosErrorGuard(props.error))
-const isPHPException = computed(() => isPHPExceptionResponse(props.error))
+const isAxiosErrorResponse = computed(() => isAxiosErrorResponseGuard(props.error))
+const isPHPException = computed(() => isNextcloudExceptionResponse(props.error))
+const logEntry = computed(() => isPHPException.value ? props.error.response.data : null)
+const exception = computed(() => isPHPException.value ? logEntry.value.exception : null)
 
-const exceptionChainData = !isPHPExceptionResponse(props.error)
-  ? null
-  : props.error.response!.data
-
-// for use with v-for, generate a flat array of preceding exceptions
-const previousExceptions = computed(() => {
-  let exception = exceptionChainData?.previous || null
-  if (!exception) {
-    return []
-  }
-  const value: PHPExceptionData[] = []
-  while (exception) {
-    value.push(exception)
-    exception = exception.previous
-  }
-  return value
-})
 </script>
-<template>
-  <!-- dummy -->
-  <div v-if="isPHPException">
-    {{ t(appName, 'PHP Exception with {count} previous exceptions.', {count: previousExceptions.length}) }}
-  </div>
-  <div v-else-if="isAxiosError">
-    {{ t(appName, 'AXIOS ERROR') }}
-  </div>
-  <div v-else>
-    {{ t(appName, 'UNKNOWN ERROR') }}
-  </div>
-</template>
