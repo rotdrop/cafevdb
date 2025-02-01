@@ -416,6 +416,7 @@ class PageController extends Controller
         self::RENDER_AS_BLANK,
       )->render();
       return self::dataResponse([
+        'template' => $template,
         'headerHtml' => $renderer->headerText(), // actually html
         'bodyHtml' => $pageHtml,
         'cssPrefix' => $renderer->cssPrefix(),
