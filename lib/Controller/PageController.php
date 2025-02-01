@@ -28,34 +28,38 @@ namespace OCA\CAFEVDB\Controller;
 use Throwable;
 use OutOfBoundsException;
 
-use OCP\IRequest;
-use OC\AppFramework\Utility\QueryNotFoundException;
-use OCP\AppFramework\Http\ContentSecurityPolicy;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http;
+use Psr\Log\LoggerInterface;
+
 use OCP\AppFramework\Controller;
-use OCP\IL10N;
-use OCP\IInitialStateService;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\ContentSecurityPolicy;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\IAppContainer;
+use OCP\IInitialStateService;
+use OCP\IL10N;
+use OCP\IRequest;
+use OCP\IURLGenerator;
+use OC\AppFramework\Utility\QueryNotFoundException;
 
 use OCA\CAFEVDB\Common\Util;
-
-use OCA\CAFEVDB\Service\HistoryService;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ConfigCheckService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\Service\AuthorizationService;
-use OCA\CAFEVDB\Service\MigrationsService;
-use OCA\CAFEVDB\Service\AssetService;
-use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\PageRenderer\Registration as RendererRegistration;
-use OCA\CAFEVDB\PageRenderer\Blog as BlogRenderer;
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\PageRenderer\IPageRenderer;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\Blog as BlogRenderer;
+use OCA\CAFEVDB\PageRenderer\IPageRenderer;
+use OCA\CAFEVDB\PageRenderer\Registration as RendererRegistration;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\AssetService;
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\ConfigCheckService;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\HistoryService;
+use OCA\CAFEVDB\Service\MigrationsService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Listener\BeforeMessageLoggedEventListener;
 
 /** Main UI entry point providing the front pages. */
 class PageController extends Controller
@@ -81,7 +85,7 @@ class PageController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    private IAppContainer $appContainer,
+    protected IAppContainer $appContainer,
     private AssetService $assetService,
     protected ConfigService $configService,
     protected HistoryService $historyService,
@@ -92,7 +96,8 @@ class PageController extends Controller
     private PageNavigation $pageNavigation,
     protected IInitialStateService $initialStateService,
     private ConfigCheckService $configCheckService,
-    private \OCP\IURLGenerator $urlGenerator,
+    private IURLGenerator $urlGenerator,
+    protected LoggerInterface $logger,
   ) {
 
     parent::__construct($appName, $request);
@@ -331,13 +336,19 @@ class PageController extends Controller
     $this->logDebug("Try load template ".$template);
     try {
       /** @var IRenderer $renderer */
-      $renderer = $this->appContainer->get(RendererRegistration::TEMPLATE_PREFIX . $template);
+      $renderer = $this->appContainer->get('foobar' . RendererRegistration::TEMPLATE_PREFIX . $template);
       if (empty($renderer)) {
         return self::response(
           $this->l->t("Template-renderer for template `%s' is empty.", [$template]),
           Http::INTERNAL_SERVER_ERROR);
       }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
+      $logEntry = $this->logException(
+        new Exceptions\EnduserNotificationException(
+          $this->l->t('Unable to load template "%s".', $template), 0, $t
+        ),
+        returnLogEntry: true,
+      );
       switch (get_class($t)) {
         case QueryNotFoundException::class:
           $status = Http::STATUS_NOT_FOUND;
@@ -346,7 +357,7 @@ class PageController extends Controller
           $status = Http::STATUS_BAD_REQUEST;
           break;
       }
-      return $this->exceptionResponse($t, $renderAs == self::RENDER_AS_PARTS ? self::RENDER_AS_BLANK : $renderAs, __METHOD__, $status);
+      return self::dataResponse($logEntry, $status);
     }
 
     $templateParameters = [

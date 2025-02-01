@@ -98,7 +98,7 @@ class PersonalSettingsController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    private IAppContainer $appContainer,
+    protected IAppContainer $appContainer,
     private RequestParameterService $parameterService,
     protected ConfigService $configService,
     private Personal $personalSettings,

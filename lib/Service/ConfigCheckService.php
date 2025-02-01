@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -534,7 +534,7 @@ class ConfigCheckService
         $postfix = '';
       }
     }
-    $this->logInfo('POSTFIX ' . $postfix);
+    // $this->logInfo('POSTFIX ' . $postfix);
 
     $sharedFolder == '' && $sharedFolder = $this->getConfigValue('sharedfolder', '');
 
@@ -561,7 +561,7 @@ class ConfigCheckService
       }
     }
 
-    $this->logInfo('FOLDER INFO ' . print_r($folderInfo, true));
+    // $this->logInfo('FOLDER INFO ' . print_r($folderInfo, true));
     foreach ($shareGroupIds as $groupId) {
       if (empty($folderInfo['groups'][$groupId])) {
         return false;
@@ -669,11 +669,11 @@ class ConfigCheckService
         $postfix = '';
       }
     }
-    $this->logInfo('POSTFIX ' . $postfix);
+    // $this->logInfo('POSTFIX ' . $postfix);
 
     $sharedFolder .= $postfix;
 
-    $this->logInfo('TRY CREATE ' . $sharedFolder);
+    // $this->logInfo('TRY CREATE ' . $sharedFolder);
 
     $adminGroupId = $this->subAdminGroupId();
     if (empty($adminGroupId)) {

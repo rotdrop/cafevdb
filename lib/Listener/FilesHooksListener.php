@@ -90,7 +90,7 @@ class FilesHooksListener implements IEventListener
    * small CTOR footprint.
    */
   public function __construct(
-    private IAppContainer $appContainer,
+    protected IAppContainer $appContainer,
   ) {
   }
 

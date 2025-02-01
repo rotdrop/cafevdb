@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -170,7 +170,7 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     private string $appName,
-    private IAppContainer $appContainer,
+    protected IAppContainer $appContainer,
     protected ILogger $logger,
     private IL10N $l,
     private IConfig $cloudConfig,

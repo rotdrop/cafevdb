@@ -48,7 +48,7 @@ class SepaBulkTransactionAnnouncedListener implements IEventListener
    * @param IAppContainer $appContainer App-container in order to have a leight-weight constructor.
    */
   public function __construct(
-    private IAppContainer $appContainer,
+    protected IAppContainer $appContainer,
   ) {
   }
 

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -358,6 +358,7 @@ class PersonalForm
                 $templateParameters[$documentTemplate . 'DownloadLink'] = $this->userStorage->getDownloadLink($folder . $subFolderName . $fileName);
               } catch (\Throwable $t) {
                 $this->logException($t);
+                $templateParameters[$documentTemplate . 'DownloadLink'] = null;
               }
             } else {
               $templateParameters[$documentTemplate . 'DownloadLink'] = null;

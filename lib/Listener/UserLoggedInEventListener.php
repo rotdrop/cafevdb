@@ -52,7 +52,7 @@ class UserLoggedInEventListener implements IEventListener
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    private IAppContainer $appContainer,
+    protected IAppContainer $appContainer,
   ) {
   }
   // phpcs:enable

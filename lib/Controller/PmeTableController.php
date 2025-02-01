@@ -68,7 +68,7 @@ class PmeTableController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    private IAppContainer $appContainer,
+    protected IAppContainer $appContainer,
     protected ConfigService $configService,
     private HistoryService $historyService,
     private RequestParameterService $parameterService,
