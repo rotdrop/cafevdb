@@ -23,6 +23,10 @@ import { appName } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
 import type { RouteConfig } from 'vue-router';
 
+export type HomeRouteName = 'home';
+export type LegayPageRouteName = 'legacy-page';
+export type RouteNames = HomeRouteName|LegayPageRouteName;
+
 const routes: RouteConfig[] = [
   {
     path: '/',
