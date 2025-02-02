@@ -21,14 +21,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { dokuWikiSection, dokuWikiUrl, dokuWikiUrlTarget } from '../util/doku-wiki.ts';
+import globalState from '../app/globalstate.js';
+import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router';
+import md5 from 'blueimp-md5';
 
-const mixin = {
-  methods: {
-    dokuWikiSection,
-    dokuWikiUrl,
-    dokuWikiUrlTarget,
-  },
-};
-
-export default mixin;
+export function dokuWikiSection(path: string[]) {
+  // @ts-expect-error globalStaten not defined
+  return [globalState.wikiNamespace, ...path].join(':');
+}
+export function dokuWikiUrl(path: string|string[]) {
+  const wikiPage = Array.isArray(path) ? dokuWikiSection(path) : path;
+  return nextcloudGenerateUrl('/apps/dokuwiki/page/index?wikiPage=' + wikiPage);
+}
+export function dokuWikiUrlTarget(path: string|string[]) {
+  const wikiPage = Array.isArray(path) ? dokuWikiSection(path) : path;
+  return md5(wikiPage);
+}
