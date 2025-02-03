@@ -21,10 +21,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { tooltip, tooltips } from '../util/tooltips.ts';
+import axios from '@nextcloud/axios';
+import generateAppUrl from '../toolkit/util/generate-url.js';
+import Console from './console.js';
 
-const mixin = {
-  methods: { tooltip, tooltips },
+export const logger = new Console('TOOLTIPS');
+
+export const tooltip = async (key: string) => {
+  try {
+    const response = await axios.get(generateAppUrl('tooltips/{key}', { key }), { params: { unescaped: true } });
+    logger.debug('GOT TOOLTIP', response.data.tooltip || '');
+    return response.data.tooltip;
+  } catch (e) {
+    logger.error('ERROR FETCHING TOOLTIP ' + key, e);
+    return '';
+  }
 };
 
-export default mixin;
+export const tooltips =  async (keys: string[]) => {
+  try {
+    const response = await axios.get(generateAppUrl('tooltips'), {
+      params: {
+        unescaped: true,
+        keys,
+      },
+    });
+    logger.debug('GOT TOOLTIPS', response.data);
+    return response.data;
+  } catch (e) {
+    logger.error('ERROR FETCHING TOOLTIPS', e, keys);
+    return {};
+  }
+};

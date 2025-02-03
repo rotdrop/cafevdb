@@ -1,10 +1,10 @@
-/**
+ /**
  * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,36 +21,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CombinedVueInstance, VueConstructor, Ref } from 'vue';
-import type VueRouter from 'vue-router';
-import type { PHPMyEditState } from './pme-state.js';
+export type HistoryActionLoad = 'load';
+export type HistoryActionPush = 'push';
+export type HistoryActions = HistoryActionLoad|HistoryActionPush;
 
-export interface GlobalState {
-  PHPMyEdit: PHPMyEditState,
-  vueMode?: boolean,
-  vue?: {
-    app: CombinedVueInstance,
-    Vue: VueConstructor,
-    router: VueRouter,
-    store: Pinia,
-  },
-  userPermissions: int,
-  financeMode: boolean,
-  wikiNamespace: string,
-  toolTipsEnabled: boolean,
-  userPermissions: number,
-  uploadMaxFileSize?: number,
-  debugModes: number,
-  expertMode: boolean,
-  restoreHistory: boolean,
-
-  initialized?: boolean,
+export interface LoadPartsData {
+  template: string,
+  headerHtml: string,
+  bodyHtml: string,
+  cssPrefix: string,
+  cssClass: string,
+  historyAction: HistoryActions,
 }
-
-declare global {
-  var CAFEVDB: GlobalState;
-}
-
-declare const globalState: GlobalState;
-
-export default globalState;

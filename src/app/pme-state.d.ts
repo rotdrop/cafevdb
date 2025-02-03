@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type GlobalState from './globalstate.js';
+import type { GlobalState } from './globalstate.d.ts';
 
 export const globalState: GlobalState;
 
@@ -57,6 +57,13 @@ export interface PHPMyEditState {
     compKeySep: string,
     joinFieldNameSeparator: sting,
   },
+
+  pageRowsDefault: number,
+  deselectInvisibleMiscRecs: boolean,
+  showDisabled: boolean,
+  initialFilterVisibility: boolean,
+
+  initialized?: boolean,
 
   emit: boolean,
 };

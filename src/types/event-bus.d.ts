@@ -21,18 +21,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { NextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
+
 import {
   APP_SETTINGS_POPUP,
-  GLOBAL_STATE,
   LEGACY_PAGE_CLEANUP,
   LEGACY_PAGE_FINALIZE,
   LEGACY_PAGE_LOAD,
   LEGACY_PME_HISTORY_UPDATE,
-  PME_STATE,
   POP_BUSY_STATE,
   PROJECT_ACTIONS,
   PUSH_BUSY_STATE,
   SET_BUSY_FLAG,
+  SET_DEBUG_MODES,
+  SET_DESELECT_INVISIBLE,
+  SET_DIRECT_CHANGE,
+  SET_EXPERT_MODE,
+  SET_FINANCE_MODE,
+  SET_INITIAL_FILTER_VISIBILITY,
+  SET_PAGE_ROWS,
+  SET_RESTORE_HISTORY,
+  SET_SHOW_DISABLED,
+  SET_TOOLTIPS_MODE,
   WIKI_POPUP,
 } from '../event-bus-events.ts';
 
@@ -44,21 +54,56 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     projectName?: string,
   }
 
-  export interface NextcloudEvents {
+  type Callbacks = {
+    done?(): unknown,
+    fail?(): unknown,
+    always?(): unknown,
+  };
+  type SetterArgs<T = any> = {
+    value: T,
+    callbacks: Callbacks,
+    showMessage?: (messages: string|string[]) => void,
+    $control?: jQuery,
+  };
+  type BoolSetterArgs = SetterArgs<boolean>
+
+  export interface AsyncNextcloudEvents {
     // mapping of 'event name' => 'event type'
-    [APP_SETTINGS_POPUP]: { done(): void, fail(): void, always(): void },
-    [GLOBAL_STATE]: { state: object, },
+    [APP_SETTINGS_POPUP]: Callbacks,
     [LEGACY_PAGE_CLEANUP]: undefined,
     [LEGACY_PAGE_FINALIZE]: undefined,
     [LEGACY_PAGE_LOAD]: { post: TemplatePostData, template: string|null, projectId: number|null, projectName: string|undefined, keepHistory: boolean, },
     [LEGACY_PME_HISTORY_UPDATE]: { post: TemplatePostData, htmlBody: string, action: string, },
-    [PME_STATE]: { state: object, },
     [POP_BUSY_STATE]: undefined,
     [PROJECT_ACTIONS]: { projectId: number, open: boolean, x?: number, y?: number },
     [PUSH_BUSY_STATE]: undefined,
     [SET_BUSY_FLAG]: { value: boolean },
     [WIKI_POPUP]: { wikiPage: string, popupTitle: string },
+
+    [SET_DEBUG_MODES]: SetterArgs<{ value: number }[]>,
+    [SET_DESELECT_INVISIBLE]: BoolSetterArgs,
+    [SET_DIRECT_CHANGE]: BoolSetterArgs,
+    [SET_EXPERT_MODE]: BoolSetterArgs,
+    [SET_FINANCE_MODE]: BoolSetterArgs,
+    [SET_INITIAL_FILTER_VISIBILITY]: BoolSetterArgs,
+    [SET_PAGE_ROWS]: SetterArgs<number>,
+    [SET_RESTORE_HISTORY]: BoolSetterArgs,
+    [SET_SHOW_DISABLED]: BoolSetterArgs,
+    [SET_TOOLTIPS_MODE]: BoolSetterArgs,
+  }
+
+  type KeysOfValue<T, TCondition> = {
+    [K in keyof T]: T[K] extends TCondition
+    ? K
+    : never;
+  }[keyof T]
+
+  export type SetterEventKeys = KeysOfValue<AsyncNextcloudEvents, SetterArgs>;
+  export type SetterEvents = Pick<AsyncNextcloudEvents, SetterEventKeys>;
+  export type SetterEventValue<EventName extends SetterEventKeys> = SetterEvents[EventName]['value'];
+
+  export interface NextcloudEvents extends AsyncNextcloudEvents {
   }
 }
 
-export {}
+// export {}

@@ -27,10 +27,12 @@ import { computedAsync } from '@vueuse/core';
 import axios from '@nextcloud/axios';
 import generateAppUrl from '../toolkit/util/generate-url.js';
 import type { AxiosResponse } from 'axios';
+import { PUSH_BUSY_STATE, POP_BUSY_STATE, SET_BUSY_FLAG } from '../event-bus-events.ts';
+import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus'
 import Console from '../util/console.ts';
 
 const storeId = 'app-data';
-const console = new Console(storeId);
+const logger = new Console(storeId);
 
 const abortController = new AbortController();
 
@@ -81,7 +83,7 @@ const usePrivateState = defineStore(storeId + '-private', {
   }),
   actions: {
     handleError<E extends Error>(error: E|any, context: object, errorHandler: ErrorHandler|null) {
-      console.error(context, error);
+      logger.error(context, error);
       if (typeof errorHandler === 'function') {
         errorHandler(error, context);
       }
@@ -111,7 +113,7 @@ const usePrivateState = defineStore(storeId + '-private', {
       vueSet(this.projects, projectId, project);
       try {
         const response: AxiosResponse<ProjectFolders> = await axios.get(url, { signal: abortController.signal });
-        console.info('FETCH PROJECT FOLDERS RESPONSE', response);
+        logger.info('FETCH PROJECT FOLDERS RESPONSE', response);
         vueSet(this.projects[projectId], 'folders', response.data);
         return this.projects[projectId];
       } catch (e) {
@@ -124,7 +126,7 @@ const usePrivateState = defineStore(storeId + '-private', {
       let url = generateAppUrl('projects/{projectId}', { projectId });
       try {
         const response: AxiosResponse<Project> = await axios.get(url, { signal: abortController.signal });
-        console.info('FIND PROJECT RESPONSE', response);
+        logger.info('FIND PROJECT RESPONSE', response);
         const project = await this.putProject(response.data, errorHandler);
         return project;
       } catch (e) {
@@ -136,7 +138,7 @@ const usePrivateState = defineStore(storeId + '-private', {
       let url = generateAppUrl('projects');
       try {
         const response: AxiosResponse<number[]> = await axios.get(url, { signal: abortController.signal });
-        console.info('FIND PROJECT IDS RESPONSE', response);
+        logger.info('FIND PROJECT IDS RESPONSE', response);
         return response.data;
       } catch (e) {
         this.handleError(e, { action: 'findProjectIds', url }, errorHandler);
@@ -183,9 +185,16 @@ export default defineStore(storeId, () => {
   const busyCount = ref(0);
   const busyFlag = ref(false);
   const busyState = computed(() => busyCount.value > 0 || busyFlag.value);
+
   const setBusyFlag = (value: boolean) => { const oldValue = busyFlag.value; busyFlag.value = value; return oldValue; };
-  const pushBusyState = () => { ++busyCount.value; console.info('BUSY STATE PUSH', busyCount.value); return busyCount.value; };
-  const popBusyState = () => { --busyCount.value; console[(busyCount.value < 0) ? 'trace' : 'info']('BUSY STATE POP', busyCount.value); return busyCount.value; };
+  const pushBusyState = () => { ++busyCount.value; logger.info('BUSY STATE PUSH', busyCount.value); return busyCount.value; };
+  const popBusyState = () => { --busyCount.value; logger[(busyCount.value < 0) ? 'trace' : 'info']('BUSY STATE POP', busyCount.value); return busyCount.value; };
+
+  // receive updates from the legacy code.
+  asyncSubscribe(SET_BUSY_FLAG, ({ value }) => setBusyFlag(value))
+  asyncSubscribe(PUSH_BUSY_STATE, () => pushBusyState())
+  asyncSubscribe(POP_BUSY_STATE, () => popBusyState())
+
   const currentProjectId = ref(0);
   const errorHandler = ref(null);
   const evaluating = ref(false);
@@ -197,7 +206,7 @@ export default defineStore(storeId, () => {
       }
       // onCancel(() => state.abort());
       const project = await state.getProject(currentProjectId.value, errorHandler.value);
-      console.debug('CURRENT PROJECT', project);
+      logger.debug('CURRENT PROJECT', project);
       return project;
     },
     null,
@@ -208,9 +217,9 @@ export default defineStore(storeId, () => {
   const projectIds = ref<number[]>([]);
   state.findProjectIds(errorHandler.value)
     .then((value) => { if (value) { projectIds.value = value; } })
-    .catch((error) => { projectIds.value = []; console.error('Fetching the project ids failed', error); });
+    .catch((error) => { projectIds.value = []; logger.error('Fetching the project ids failed', error); });
   const projects = computed(() => state.projects);
-  watch(projects, (value, oldValue) => console.info('PROJECTS WATCHER', value, oldValue));
+  watch(projects, (value, oldValue) => logger.info('PROJECTS WATCHER', value, oldValue));
 
   async function getProject(projectId: number, handler?: ErrorHandler) {
     const result = await state.getProject(projectId, handler || errorHandler.value);

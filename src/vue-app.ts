@@ -32,7 +32,6 @@ import router from './router/app-router.ts';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 import { Tooltip } from '@nextcloud/vue';
 import { mixin as globalMixin } from './mixins/global-mixin.ts';
-import { GLOBAL_STATE, PME_STATE } from './event-bus-events.ts';
 import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import * as Authorization from './authorization.ts';
 
@@ -49,21 +48,6 @@ __webpack_public_path__ = generateFilePath(appName, '', '');
 
 Vue.directive('tooltip', Tooltip);
 Vue.mixin(globalMixin);
-
-asyncSubscribe(GLOBAL_STATE, (event) => {
-  for (const [key, value] of Object.entries(event.state)) {
-    Vue.delete(globalState, key);
-    vueSet(globalState, key, value);
-  }
-});
-asyncSubscribe(PME_STATE, (event) => {
-  Vue.delete(globalState, 'PHPMyEdit');
-  vueSet(globalState, 'PHPMyEdit', event.state);
-  for (const [key, value] of Object.entries(event.state)) {
-    Vue.delete(globalState.PHPMyEdit, key);
-    vueSet(globalState.PHPMyEdit, key, value);
-  }
-});
 
 const provide = Object.assign(
   {},

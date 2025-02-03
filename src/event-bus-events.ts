@@ -37,8 +37,6 @@ export const PROJECT_ACTIONS = appEventName('project-actions');
 export const PUSH_BUSY_STATE = appEventName('push-busy-state');
 export const POP_BUSY_STATE = appEventName('pop-busy-state');
 export const SET_BUSY_FLAG = appEventName('set-busy-flag');
-export const GLOBAL_STATE = appEventName('global-state');
-export const PME_STATE = appEventName('pme-state');
 
 export const SET_FINANCE_MODE = appEventName('set-finance-mode');
 export const SET_EXPERT_MODE = appEventName('set-expert-mode');

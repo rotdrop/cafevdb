@@ -55,16 +55,9 @@ $.extend(
     adminContact: t(appName, 'unknown'),
     phpUserAgent: t(appName, 'unknown'),
     subscribe: {},
-    emit: {},
+    initialized: true,
   }, globalState),
 );
-
-if (!globalState.emit['global-state']) {
-  globalState.emit['global-state'] = true;
-  asyncEmit(BusEvents.GLOBAL_STATE, {
-    state: globalState,
-  });
-}
 
 /**
  * Register callbacks which are run after partial page reload in

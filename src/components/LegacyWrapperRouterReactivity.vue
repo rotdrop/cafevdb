@@ -33,56 +33,59 @@
                  :no-legacy-reload="noLegacyReload"
   />
 </template>
-<script lang="ts">
+<script setup lang="ts">
 // import globalState from '../app/globalstate.js'
+import { ref, onBeforeMount } from 'vue'
 import LegacyWrapper from './LegacyWrapper.vue'
-import mixins from '../mixins/app-mixins.ts'
 import objectHash from 'object-hash'
+import {
+  onBeforeRouteLeave,
+  onBeforeRouteUpdate,
+  useRoute,
+} from 'vue-router/composables'
 import type { Route } from 'vue-router'
+import Console from '../util/console.ts'
 
-export default {
-  name: 'LegacyWrapperRouterReactivity',
-  components: {
-    LegacyWrapper,
-  },
-  mixins,
-  beforeRouteEnter(to, from, next) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    next((self: any) => {
-      self.debug('BEFORE ROUTE ENTER', to, from, window?.history?.state)
-      self.onRouteChange(to)
-    })
-  },
-  beforeRouteUpdate(to, from, next) {
-    this.debug('BEFORE ROUTE UPDATE', to, from, window?.history?.state)
-    this.onRouteChange(to)
-    next()
-  },
-  beforeRouteLeave(to, from, next) {
-    this.debug('BEFORE ROUTE LEAVE', to, from, window?.history?.state)
-    next()
-  },
-  data() {
-    return {
-      template: '',
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      templateParameters: {} as any,
-      postDataHash: undefined as undefined|string,
-      noLegacyReload: false,
-    }
-  },
-  methods: {
-    onRouteChange(to: Route) {
-      this.info('onRouteChange()', to, window?.history?.state)
-      this.template = to?.params?.template
-      this.templateParameters.projectId = to?.params?.projectId
-      this.templateParameters.projectName = to?.params?.projectName
-      this.postDataHash = (to?.query?.hash as string) || undefined
-      this.noLegacyReload = +to?.query?.['no-reload'] === 1
-      if (!this.postDataHash) {
-        this.postDataHash = objectHash(to?.params || {})
-      }
-    },
-  },
+const COMPONENT_NAME = 'LegacyWrapperRouterReactivity'
+const logger = new Console(COMPONENT_NAME)
+
+const template = ref('')
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const templateParameters = ref<Record<string, any> >({})
+const postDataHash = ref<undefined|string>(undefined)
+const noLegacyReload = ref(false)
+
+const onRouteChange = (to: Route) => {
+  logger.info('onRouteChange()', to, window?.history?.state)
+  template.value = to?.params?.template
+  templateParameters.value.projectId = to?.params?.projectId
+  templateParameters.value.projectName = to?.params?.projectName
+  postDataHash.value = (to?.query?.hash as string) || undefined
+  noLegacyReload.value = +to?.query?.['no-reload'] === 1
+  if (!postDataHash.value) {
+    postDataHash.value = objectHash(to?.params || {})
+  }
 }
+
+// onBeroreRouteEnter cannot exist, however, if we only want to react
+// to the current route on component creation time then we can simply
+// access it vie useRoute()
+const initialRoute = useRoute()
+
+logger.debug('BEFORE ROUTE ENTER', { ...initialRoute }, { ...window?.history?.state })
+onBeforeMount(() => {
+  logger.debug('ON BEFORE MOUNT', { ...initialRoute }, { ...window?.history?.state })
+  onRouteChange(initialRoute)
+})
+
+onBeforeRouteUpdate((to, from, next) => {
+  logger.debug('ON BEFORE ROUTE UPDATE', to, from, window?.history?.state)
+  onRouteChange(to)
+  next()
+})
+
+onBeforeRouteLeave((to, from, next) => {
+  logger.debug('ON BEFORE ROUTE LEAVE', to, from, window?.history?.state)
+  next()
+})
 </script>

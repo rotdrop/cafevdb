@@ -28,8 +28,6 @@
 
 import globalState from './globalstate.js';
 import { initialState, appName } from './config.js';
-import { emit } from '@rotdrop/async-nextcloud-event-bus';
-import * as BusEvents from '../event-bus-events.ts';
 
 const PHPMyEditDefault = {
   directChange: false,
@@ -58,7 +56,7 @@ const PHPMyEditDefault = {
     joinFieldNameSeparator: ':',
   },
 
-  emit: false,
+  initialized: true,
 };
 
 /****************************************************************************
@@ -67,15 +65,9 @@ const PHPMyEditDefault = {
  *
  */
 
-const PHPMyEdit = globalState.PHPMyEdit = globalState.PHPMyEdit || Object.assign(PHPMyEditDefault, initialState.PHPMyEdit);
+const PHPMyEdit = Object.assign(globalState.PHPMyEdit, PHPMyEditDefault, initialState.PHPMyEdit);
+
 PHPMyEdit.dialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
-if (!PHPMyEdit.emit) {
-  PHPMyEdit.emit = true;
-  emit(BusEvents.PME_STATE, {
-    state: PHPMyEdit,
-  });
-}
-console.info('PHPMyEdit Initial State', { ...globalState.PHPMyEdit }, { ...initialState.PHPMyEdit });
 
 const pmeDefaultSelector = PHPMyEdit.defaultSelector;
 const pmePrefix = PHPMyEdit.pmePrefix;

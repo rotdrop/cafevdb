@@ -35,9 +35,9 @@ declare module 'vue/types/vue' {
   }
 }
 
-declare module '@nextcloud/vue' {
-  const NcActions: Vue;
-  export {
-    NcActions,
-  }
-}
+// declare module '@nextcloud/vue' {
+//   const NcActions: Vue;
+//   export {
+//     NcActions,
+//   }
+// }

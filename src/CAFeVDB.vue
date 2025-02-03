@@ -273,10 +273,9 @@
     <CloudFileSystemOperations :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
   </NcContent>
 </template>
-<script lang="ts">
-// import { appName as appId } from './config.ts'
-import appMixins from './mixins/app-mixins.ts'
-import authorization from './mixins/authorization.ts'
+<script setup lang="ts">
+import { appName as appId } from './config.ts'
+import globalState from './app/globalstate.js'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import {
   NcActions,
@@ -290,6 +289,7 @@ import {
   NcEllipsisedOption,
   NcEmptyContent,
 } from '@nextcloud/vue'
+import { translate as t } from '@nextcloud/l10n'
 import useAppDataStore from './stores/app-data.ts'
 import useHistoryStore from './stores/history.ts'
 // import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
@@ -304,19 +304,33 @@ import CloudFileSystemOperations from './components/oc-template/CloudFileSystemO
 import PageTemplateIcon from './components/PageTemplateIcon.vue'
 import axios from '@nextcloud/axios'
 import generateAppUrl from './toolkit/util/generate-url.js'
-import { mapWritableState, mapState } from 'pinia'
+import { storeToRefs } from 'pinia'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
-import { debugOptions } from './debug-modes.ts'
+import allDebugOptions from './debug-modes.ts'
 import { formatFileSize } from '@nextcloud/files'
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus'
-// import type { NextcloudEvents } from '@rotdrop/async-nextcloud-event-bus'
+import { emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
+import type { SetterEvents, SetterEventValue } from '@rotdrop/async-nextcloud-event-bus'
 import { closeNavigation } from './services/navigation.js'
 import * as BusEvents from './event-bus-events.ts'
 import appIcon from '../img/cafevdb.svg?raw'
 import { getInitialState } from './toolkit/services/InitialStateService.js'
-import type { RawLocation } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router/composables'
 import type { AxiosResponse } from 'axios'
-// import type { PropType } from 'vue'
+import {
+  ref,
+  computed,
+  watch,
+  nextTick,
+  onMounted,
+  reactive,
+} from 'vue'
+import { asyncComputed } from '@vueuse/core'
+import { tooltips } from './util/tooltips.ts'
+import Console from './util/console.ts'
+import md5 from 'blueimp-md5'
+
+const COMPONENT_NAME = 'CAFeVDB'
+const logger = new Console(COMPONENT_NAME)
 
 const initialState = getInitialState('CAFEVDB')
 
@@ -334,334 +348,332 @@ type DebugOption = {
   label: string,
 }
 
-export default {
-  name: 'CAFeVDB',
-  components: {
-    AppSettingsIcon,
-    CloudFileSystemOperations,
-    FileUploadTemplate,
-    ImageUploadTemplate,
-    // InstrumentationNumbersIcon,
-    NcActionLink,
-    NcActions,
-    NcAppContent,
-    NcAppNavigation,
-    NcAppNavigationItem,
-    NcAppNavigationSettings,
-    NcCheckboxRadioSwitch,
-    NcContent,
-    NcEllipsisedOption,
-    NcEmptyContent,
-    // ParticipantFieldsIcon,
-    PageTemplateIcon,
-    // ProjectInfoIcon,
-    // ProjectParticipantsIcon,
-    SelectWithSubmitButton,
-  },
-  mixins: [...appMixins, authorization],
-  props: {}, // make the vue language server happy, otherwise methods: will be ignored.
-  setup() {
-    const appData = useAppDataStore()
-    const history = useHistoryStore()
-    return {
-      appData,
-      setBusyFlag: appData.setBusyFlag,
-      pushBusyState: appData.pushBusyState,
-      popBusyState: appData.popBusyState,
-      scheduleHistoryPush: history.scheduleHistoryReplace,
-      cancelHistoryAction: history.cancelHistoryAction,
-      finishHistoryAction: history.finishHistoryAction,
-      scheduleHistoryReplace: history.scheduleHistoryReplace,
-      routerHistory: history.routerHistory,
-    }
-  },
-  data() {
-    return {
-      orchestraName: initialState?.orchestraName || this.t(this.appId, '[UNKNOWN]'),
-      icon: appIcon,
-      loading: true,
-      isMounted: false,
-      debugModes: [] as DebugOption[],
-      settingsLocked: false,
-      appSettingsLoading: false,
-      pageTemplate: null as string|null,
-      navigationItems: [] as NavigationItem[],
-      hints: {
-        'debug-mode': '',
-        'deselect-invisible-misc-recs': '',
-        'direct-change': '',
-        'expert-mode': '',
-        'finance-mode': '',
-        'filter-visibility': '',
-        'further-settings': '',
-        'table-rows-per-page': '',
-        'restore-history': '',
-        'show-disabled': '',
-        'show-tool-tips': '',
+const appData = useAppDataStore()
+const history = useHistoryStore()
+
+const {
+  appError,
+  currentProjectId,
+  currentProjectName,
+} = storeToRefs(appData)
+
+const routerHistory = history.routerHistory
+
+const orchestraName = ref(initialState?.orchestraName || t(appId, '[UNKNOWN]'))
+const icon = ref(appIcon)
+const loading = ref(true)
+const isMounted = ref(false)
+const debugModes = ref<DebugOption[]>([])
+const settingsLocked = ref(false)
+const appSettingsLoading = ref(false)
+const pageTemplate = ref<string|null>(null)
+const navigationItems = ref<NavigationItem[]>([])
+
+const tooltipKeys = [
+  'debug-mode',
+  'deselect-invisible-misc-recs',
+  'direct-change',
+  'expert-mode',
+  'finance-mode',
+  'filter-visibility',
+  'further-settings',
+  'table-rows-per-page',
+  'restore-history',
+  'show-disabled',
+  'show-tool-tips',
+]
+const initialTooltips = Object.fromEntries(tooltipKeys.map(key => { return [key, ''] as [string, string] }))
+
+const hints = asyncComputed(
+  (/* onCancel */) => tooltips(tooltipKeys),
+  initialTooltips,
+  { lazy: true },
+)
+
+const triggerNavigationUpdate = ref<undefined | boolean>(undefined)
+const showSidebar = ref(false)
+const sidebarTitle = ref('')
+
+const router = useRouter()
+const route = useRoute()
+
+const isRoot = computed(() => {
+  return route.path === '/'
+})
+
+const projectMode = computed(() => appData.projectMode)
+const financeAllowed = computed(() => authorized(PERMISSION_FINANCE, globalState.userPermissions))
+const debugOptions = computed(() => {
+  const options: DebugOption[] = []
+  for (const [value, label] of Object.entries(allDebugOptions)) {
+    options.push({ value: +value, label })
+  }
+  return options
+})
+const pageRowsOptions = computed(() => [-1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
+const personalSettingsUrl = computed(() => nextcloudGenerateUrl('settings/user/' + appId))
+const uploadMaxFileSize = computed(() => globalState.uploadMaxFileSize || 0)
+const uploadMaxHumanFileSize = computed(() => formatFileSize(uploadMaxFileSize.value))
+const authorizedNavigationItems = computed(() => {
+  const items = navigationItems.value.filter(
+    (item: NavigationItem) => (item.permissions === (item.permissions & globalState.userPermissions)),
+  )
+  logger.info('FILTERED NAVIGATION ITEMS', items)
+  return items
+})
+
+// methods
+
+// const closeSidebar = () => { showSidebar.value = false }
+
+const handleDetailsRequest = (data: { viewName: string, title: string, props: object }) => {
+  showSidebar.value = true
+  sidebarTitle.value = data.title
+}
+
+const openProjectOverview = () => {
+  closeNavigation()
+  asyncEmit(BusEvents.PROJECT_POPUP, {
+    projectId: currentProjectId.value,
+    projectName: currentProjectName.value,
+  })
+}
+
+const openSettingsPopup = (event: MouseEvent) => {
+  event.preventDefault()
+  appSettingsLoading.value = true
+  return asyncEmit(BusEvents.APP_SETTINGS_POPUP, {
+    done() {},
+    fail() {},
+    always: () => { appSettingsLoading.value = false },
+  })
+}
+
+const updatePersonalSettings = (
+  event: keyof SetterEvents,
+  value: SetterEventValue<typeof event>,
+  oldValue: SetterEventValue<typeof event>|undefined,
+) => {
+  logger.debug('UPDATE PERSONAL SETTING', {
+    event,
+    value,
+    oldValue,
+    isMounted: isMounted.value,
+    settingsLocked: settingsLocked.value,
+  })
+  if (!isMounted.value || oldValue === undefined || settingsLocked.value) {
+    return
+  }
+  settingsLocked.value = true
+  asyncEmit(event, {
+    value,
+    callbacks: {
+      always: async () => {
+        await nextTick()
+        settingsLocked.value = false
       },
-      triggerNavigationUpdate: undefined as undefined|boolean,
-      showSidebar: false,
-      sidebarTitle: '',
-    }
-  },
-  computed: {
-    isRoot() {
-      return this.$route.path === '/'
     },
-    ...mapState(useAppDataStore, [
-      'projectMode',
-    ]),
-    ...mapWritableState(
-      useAppDataStore, [
-        'debugMode',
-        'appError',
-        'currentProjectId',
-        'currentProjectName',
-      ],
-    ),
-    financeAllowed() {
-      return authorized(PERMISSION_FINANCE, this.globalState.userPermissions)
-    },
-    debugOptions(): DebugOption[] {
-      const options: DebugOption[] = []
-      for (const [value, label] of Object.entries(debugOptions)) {
-        options.push({ value: +value, label })
+  })
+}
+
+const updateNavigationItems = async () => {
+  if (!pageTemplate.value) {
+    return
+  }
+  const url = generateAppUrl('vue-app/n/{pageTemplate}', { pageTemplate: pageTemplate.value })
+  logger.info('URL', url)
+  try {
+    const response: AxiosResponse<{ navigation: NavigationItem[] }> = await axios.post(
+      url, {
+        projectId: currentProjectId.value,
+        projectName: currentProjectName.value,
+      },
+    )
+    const newNavigationItems = response.data?.navigation
+    if (!newNavigationItems) {
+      // TODO: notify user etc.
+    } else {
+      // naturally legacy templates refere to file-system objects
+      // and may contain path-separators. This is problematic as
+      // some parts -- not sure if it is my mistake -- of the
+      // request handling may or may not require double
+      // url-encoding. So better do not inject special characters
+      // into the url params at all. Here we are on the safe side:
+      // at worst the template contains path separators and
+      // otherwise only lowercase alphabetics. So just replace the
+      // slashes by a colon.
+      for (const item of newNavigationItems) {
+        item.template = item.template.replace('/', ':')
       }
-      return options
-    },
-    pageRowsOptions() {
-      // const options = [
-      //   {
-      //     label: '∞',
-      //     value: -1,
-      //   },
-      // ]
-      // for (let i = 10; i <= 100; i += 10) {
-      //   options.push({ label: '' + i, value: i })
-      // }
-      return [-1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-    },
-    personalSettingsUrl() {
-      return nextcloudGenerateUrl('settings/user/' + this.appId)
-    },
-    uploadMaxFileSize() {
-      return this.globalState?.uploadMaxFileSize || 0
-    },
-    uploadMaxHumanFileSize() {
-      return formatFileSize(this.uploadMaxFileSize)
-    },
-    authorizedNavigationItems() {
-      const items = this.navigationItems.filter(
-        (item: NavigationItem) => (item.permissions === (item.permissions & this.globalState.userPermissions)),
-      )
-      this.info('FILTERED NAVIGATION ITEMS', items)
-      return items
-    },
-  },
-  watch: {
-    'globalState.toolTipsEnabled'(value, oldValue) {
-      this.updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue)
-    },
-    'globalState.financeMode'(value, oldValue) {
-      this.updatePersonalSettings(BusEvents.SET_FINANCE_MODE, value, oldValue)
-    },
-    'globalState.expertMode'(value, oldValue) {
-      this.updatePersonalSettings(BusEvents.SET_EXPERT_MODE, value, oldValue)
-    },
-    'globalState.PHPMyEdit.showDisabled'(value, oldValue) {
-      this.updatePersonalSettings(BusEvents.SET_SHOW_DISABLED, value, oldValue)
-    },
-    async 'globalState.debugModes'(newValue, oldValue) {
-      this.info('DEBUG MODES CHANGED', newValue, oldValue, this.isMounted, this.settingsLocked)
-      if (this.settingsLocked) {
+    }
+    logger.debug('NAVIGATION ITEMS TO INSTALL', newNavigationItems)
+    navigationItems.value = newNavigationItems
+  } catch (error) {
+    // TODO: notify user etc.
+    logger.error('Unable to update navigation items', url, error)
+  }
+}
+
+// watchers
+const reactifyGlobalState = function() {
+  logger.info('BEFORE REACTIFY GLOBAL STATE', globalState)
+  reactive(globalState)
+  // for (const [key, value] of Object.entries(globalState)) {
+  //   Vue.delete(globalState, key)
+  //   vueSet(globalState, key, value)
+  // }
+  logger.info('AFTER REACTIFY GLOBAL STATE', globalState)
+  watch(
+    () => globalState.toolTipsEnabled,
+    (value, oldValue) => updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue),
+  )
+  watch(
+    () => globalState.financeMode,
+    (value, oldValue) => updatePersonalSettings(BusEvents.SET_FINANCE_MODE, value, oldValue),
+  )
+  watch(
+    () => globalState.expertMode,
+    (value, oldValue) => updatePersonalSettings(BusEvents.SET_EXPERT_MODE, value, oldValue),
+  )
+  watch(
+    () => globalState.debugModes,
+    async (newValue, oldValue) => {
+      logger.info('DEBUG MODES CHANGED', newValue, oldValue, isMounted.value, settingsLocked.value)
+      if (settingsLocked.value) {
         return
       }
       const newSelection: DebugOption[] = []
-      for (const option of this.debugOptions) {
+      for (const option of debugOptions.value) {
         const flag = +option.value
         if ((newValue & flag)) {
           newSelection.push(option)
         }
       }
-      this.settingsLocked = true
-      this.debugModes.splice(0, Infinity, ...newSelection)
-      await this.$nextTick()
-      this.settingsLocked = false
+      settingsLocked.value = true
+      debugModes.value.splice(0, Infinity, ...newSelection)
+      await nextTick()
+      settingsLocked.value = false
     },
-    debugModes(value, oldValue) {
-      this.updatePersonalSettings(BusEvents.SET_DEBUG_MODES, value, oldValue)
+  )
+  watch(
+    () => globalState.restoreHistory,
+    (value, oldValue) => updatePersonalSettings(BusEvents.SET_RESTORE_HISTORY, value, oldValue),
+  )
+  watch(
+    () => globalState.userPermissions,
+    (...args) => {
+      logger.info('USER APP PERMISSIONS CHANGED', ...args)
+      triggerNavigationUpdate.value = true
     },
-    'globalState.PHPMyEdit.pageRowsDefault'(value, oldValue) {
-      this.updatePersonalSettings(BusEvents.SET_PAGE_ROWS, value, oldValue)
-    },
-    'globalState.PHPMyEdit.deselectInvisibleMiscRecs'(value, oldValue) {
-      this.updatePersonalSettings(BusEvents.SET_DESELECT_INVISIBLE, value, oldValue)
-    },
-    'globalState.PHPMyEdit.directChange'(value, oldValue) {
-      this.updatePersonalSettings(BusEvents.SET_DIRECT_CHANGE, value, oldValue)
-    },
-    'globalState.PHPMyEdit.initialFilterVisibility'(value, oldValue) {
-      this.updatePersonalSettings(BusEvents.SET_INITIAL_FILTER_VISIBILITY, value, oldValue)
-    },
-    'globalState.restoreHistory'(value, oldValue) {
-      this.updatePersonalSettings(BusEvents.SET_RESTORE_HISTORY, value, oldValue)
-    },
-    'globalState.userPermissions'(...args) {
-      this.info('USER APP PERMISSIONS CHANGED', ...args)
-      this.triggerNavigationUpdate = true
-    },
-    pageTemplate(value, oldValue) {
-      this.info('CURRENT TEMPLATE CHANGED', value, oldValue)
-      if (value === 'home') {
-        this.currentProjectId = 0
-      }
-      this.triggerNavigationUpdate = true
-    },
-    currentProjectId(...args) {
-      this.info('CURRENT PROJECT ID CHANGED', ...args)
-      this.triggerNavigationUpdate = true
-    },
-    async triggerNavigationUpdate(value: boolean, oldValue: boolean) {
-      this.info('TRIGGER NAVIGATION UPDATE CHANGED', value, oldValue)
-      if (value) {
-        this.triggerNavigationUpdate = false
-        if (this.pageTemplate) {
-          await this.updateNavigationItems()
-        }
-      }
-    },
-  },
-  async created() {
-    this.loading = false
-    this.hints = await this.tooltips(Object.keys(this.hints))
-    asyncSubscribe(BusEvents.SET_BUSY_FLAG, ({ value }) => this.setBusyFlag(value))
-    asyncSubscribe(BusEvents.PUSH_BUSY_STATE, () => this.pushBusyState())
-    asyncSubscribe(BusEvents.POP_BUSY_STATE, () => this.popBusyState())
-    // this.$router.beforeEach((to, from, next) => {
-    //   this.info('GLOBAL BEFORE EACH ROUTE CHANGE', to, from, window?.history?.state)
-    //   next()
-    // })
-    this.$router.afterEach((to, from) => {
-      this.info('GLOBAL AFTER EACH ROUTE CHANGE', to, from, window?.history?.state)
-      this.pageTemplate = to.params?.template || 'home'
-      this.finishHistoryAction()
-    })
-    // this.$router.onReady((...args) => {
-    //   this.info('ROUTER ON READY HOOK', ...args, window?.history?.state)
-    // })
-    this.$router.onError((...args) => {
-      this.info('ROUTER ON ERROR HOOK', ...args, window?.history?.state)
-      this.cancelHistoryAction()
-    })
-
-    this.debug('INITIAL HISTORY', {
-      currentRoute: { ...this.$router.currentRoute },
-      windowHistoryState: { ...window.history?.state },
-      history: { ...this.routerHistory },
-    })
-  },
-  mounted() {
-    // works only after mounting
-    closeNavigation()
-    this.isMounted = true
-    this.info(this.appId, this.appIdProp)
-    if (this.triggerNavigationUpdate === undefined) {
-      this.triggerNavigationUpdate = true
-    }
-    if (!this.pageTemplate) {
-      this.pageTemplate = 'home'
-    }
-  },
-  methods: {
-    closeSidebar() {
-      this.showSidebar = false
-    },
-    handleDetailsRequest(data: { viewName: string, title: string, props: object }) {
-      this.showSidebar = true
-      this.sidebarTitle = data.title
-    },
-    getRouteHref(route: RawLocation) {
-      const routeProps = this.$router.resolve(route)
-      return routeProps?.href
-    },
-    openProjectOverview() {
-      closeNavigation()
-      asyncEmit(BusEvents.PROJECT_POPUP, {
-        projectId: this.currentProjectId,
-        projectName: this.currentProjectName,
-      })
-    },
-    async openSettingsPopup(event: MouseEvent) {
-      event.preventDefault()
-      this.appSettingsLoading = true
-      asyncEmit(BusEvents.APP_SETTINGS_POPUP, {
-        done() {},
-        fail() {},
-        always: () => { this.appSettingsLoading = false },
-      })
-    },
-    updatePersonalSettings(event: string, value: boolean, oldValue: boolean) {
-      this.debug('UPDATE PERSONAL SETTING', this.updatePersonalSettings, {
-        event,
-        value,
-        oldValue,
-        isMounted: this.isMounted,
-        settingsLocked: this.settingsLocked,
-      })
-      if (!this.isMounted || oldValue === undefined || this.settingsLocked) {
-        return
-      }
-      this.settingsLocked = true
-      asyncEmit(event, {
-        value,
-        callbacks: {
-          always: async () => {
-            await this.$nextTick()
-            this.settingsLocked = false
-          },
-        },
-      })
-    },
-    async updateNavigationItems() {
-      if (!this.pageTemplate) {
-        return
-      }
-      const url = generateAppUrl('vue-app/n/{pageTemplate}', { pageTemplate: this.pageTemplate })
-      this.info('URL', this.pageTemplate, { pageTemplate: this.pageTemplate })
-      try {
-        const response: AxiosResponse<{ navigation: NavigationItem[] }> = await axios.post(
-          url, {
-            projectId: this.currentProjectId,
-            projectName: this.currentProjectName,
-          },
-        )
-        const navigationItems = response.data?.navigation
-        if (!navigationItems) {
-          // TODO: notify user etc.
-        } else {
-          // naturally legacy templates refere to file-system objects
-          // and may contain path-separators. This is problematic as
-          // some parts -- not sure if it is my mistake -- of the
-          // request handling may or may not require double
-          // url-encoding. So better do not inject special characters
-          // into the url params at all. Here we are on the safe side:
-          // at worst the template contains path separators and
-          // otherwise only lowercase alphabetics. So just replace the
-          // slashes by a colon.
-          for (const item of navigationItems) {
-            item.template = item.template.replace('/', ':')
-          }
-        }
-        this.debug('NAVIGATION ITEMS TO INSTALL', navigationItems)
-        // this.navigationItems.splice(0, this.navigationItems.length, ...navigationItems)
-        this.navigationItems = navigationItems
-      } catch (error) {
-        // TODO: notify user etc.
-        this.error('Unable to update navigation items', url, error)
-      }
-    },
-  },
+  )
+  watch(
+    () => globalState.PHPMyEdit.showDisabled,
+    (value, oldValue) => updatePersonalSettings(BusEvents.SET_SHOW_DISABLED, value, oldValue),
+  )
+  watch(
+    () => globalState.PHPMyEdit.pageRowsDefault,
+    (value, oldValue) => updatePersonalSettings(BusEvents.SET_PAGE_ROWS, value, oldValue),
+  )
+  watch(
+    () => globalState.PHPMyEdit.deselectInvisibleMiscRecs,
+    (value, oldValue) => updatePersonalSettings(BusEvents.SET_DESELECT_INVISIBLE, value, oldValue),
+  )
+  watch(
+    () => globalState.PHPMyEdit.directChange,
+    (value, oldValue) => updatePersonalSettings(BusEvents.SET_DIRECT_CHANGE, value, oldValue),
+  )
+  watch(
+    () => globalState.PHPMyEdit.initialFilterVisibility,
+    (value, oldValue) => updatePersonalSettings(BusEvents.SET_INITIAL_FILTER_VISIBILITY, value, oldValue),
+  )
 }
+
+if (!(globalState.initialized && globalState.PHPMyEdit.initialized)) {
+  globalState.initialized = globalState.initialized || false
+  globalState.PHPMyEdit.initialized = globalState.PHPMyEdit.initialized || false
+  reactive(globalState)
+  const stop = watch(
+    () => globalState.initialized && globalState.PHPMyEdit.initialized,
+    () => {
+      reactifyGlobalState()
+      console.info('AFTER GLOBAL STATE REACTIFY IN WATCHER', globalState)
+      stop()
+    },
+  )
+} else {
+  reactifyGlobalState()
+  console.info('GLOBAL STATE ALREADY INITIALIZED; MADE REACTIVE', globalState)
+}
+
+watch(
+  debugModes,
+  (value, oldValue) => updatePersonalSettings(BusEvents.SET_DEBUG_MODES, value, oldValue),
+)
+watch(
+  pageTemplate,
+  (value, oldValue) => {
+    logger.info('CURRENT TEMPLATE CHANGED', value, oldValue)
+    if (value === 'home') {
+      currentProjectId.value = 0
+    }
+    triggerNavigationUpdate.value = true
+  })
+watch(
+  currentProjectId,
+  (...args) => {
+    logger.info('CURRENT PROJECT ID CHANGED', ...args)
+    triggerNavigationUpdate.value = true
+  })
+watch(
+  triggerNavigationUpdate,
+  async (value, oldValue) => {
+    logger.info('TRIGGER NAVIGATION UPDATE CHANGED', value, oldValue)
+    if (value) {
+      triggerNavigationUpdate.value = false
+      if (pageTemplate.value) {
+        await updateNavigationItems()
+      }
+    }
+  })
+
+// the following was created() in options api ...
+
+// router.beforeEach((to, from, next) => {
+//   logger.info('GLOBAL BEFORE EACH ROUTE CHANGE', to, from, window?.history?.state)
+//   next()
+// })
+router.afterEach((to, from) => {
+  logger.info('GLOBAL AFTER EACH ROUTE CHANGE', to, from, window?.history?.state)
+  pageTemplate.value = to.params?.template || 'home'
+  history.finishHistoryAction()
+})
+// router.onReady((...args) => {
+//   logger.info('ROUTER ON READY HOOK', ...args, window?.history?.state)
+// })
+router.onError((...args) => {
+  logger.info('ROUTER ON ERROR HOOK', ...args, window?.history?.state)
+  history.cancelHistoryAction()
+})
+
+onMounted(() => {
+  logger.debug('INITIAL HISTORY', {
+    currentRoute: { ...router.currentRoute },
+    windowHistoryState: { ...window.history?.state },
+    history: { ...routerHistory },
+  })
+
+  // works only after mounting
+  closeNavigation()
+  isMounted.value = true
+  if (triggerNavigationUpdate.value === undefined) {
+    triggerNavigationUpdate.value = true
+  }
+  if (!pageTemplate.value) {
+    pageTemplate.value = 'home'
+  }
+
+  loading.value = false
+})
 </script>
 <style lang="scss" scoped>
 #app-settings::v-deep {

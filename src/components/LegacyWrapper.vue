@@ -81,7 +81,7 @@
     <!-- eslint-disable vue/no-v-html  -->
     <div v-if="!ajaxError"
          :id="appPrefix('general')"
-         :class="{ [appPrefix('page-container')]: true, loading, }"
+         :class="{ [appPrefix('general')]: true, loading, }"
     >
       <!-- /* used to eliminate the pixel-size of the control bar -->
       <div :id="pagePrefix + 'header-box'" :class="[pagePrefix + 'header-box', legacyCssClass]">
@@ -100,15 +100,16 @@
     </div>
     <div v-else class="flex-container flex-justify-center">
       <AjaxErrorPage :id="appPrefix('error')"
-                     :class="{ [appPrefix('page-container')]: true, loading, }"
+                     :class="{ [appPrefix('general')]: true, loading, }"
                      :error="ajaxError"
       />
     </div>
   </div>
 </template>
-<script lang="ts">
-import { nextTick } from 'vue'
-import { useMutationObserver } from '@vueuse/core'
+<script setup lang="ts">
+import { appName, appPrefix } from '../config.ts'
+import { globalState } from '../app/pme-state.js'
+import { nextTick, ref, computed, watch } from 'vue'
 import {
   NcActionButton,
   NcActionCheckbox,
@@ -123,13 +124,11 @@ import InfoOffIcon from 'vue-material-design-icons/InformationOffOutline.vue'
 import HistoryBackIcon from 'vue-material-design-icons/ArrowULeftTop.vue'
 import HistoryForwardIcon from 'vue-material-design-icons/ArrowURightTop.vue'
 import AjaxErrorPage from './AjaxErrorPage.vue'
-import mixins from '../mixins/app-mixins.ts'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
 import { closeNavigation } from '../services/navigation.js'
 import useAppDataStore from '../stores/app-data.ts'
 import useHistoryStore from '../stores/history.ts'
-import { mapWritableState, mapActions, mapState } from 'pinia'
 import { subscribe as asyncSubscribe, emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
 import {
   LEGACY_PAGE_LOAD,
@@ -142,369 +141,314 @@ import * as LegacyNotification from '../app/notification.js'
 import objectHash from 'object-hash'
 import type { AxiosResponse } from 'axios'
 import type { LoadPartsData } from '../types/ajax/page-load-response.ts'
-import { loadTranslations } from '@nextcloud/l10n'
+import { loadTranslations, translate as t } from '@nextcloud/l10n'
+import { useRouter } from 'vue-router/composables'
+import { dokuWikiSection, dokuWikiUrl, dokuWikiUrlTarget } from '../util/doku-wiki.ts'
+import Console from '../util/console.ts'
 
-export default {
-  name: 'LegacyWrapper',
-  components: {
-    AjaxErrorPage,
-    HistoryBackIcon,
-    HistoryForwardIcon,
-    HomeIcon,
-    InfoIcon,
-    InfoOffIcon,
-    NcActions,
-    NcActionButton,
-    NcActionCheckbox,
-    NcActionLink,
-    NcButton,
-    ReloadIcon,
+const COMPONENT_NAME = 'LegacyWrapper'
+const logger = new Console(COMPONENT_NAME)
+
+const router = useRouter()
+
+const props = withDefaults(defineProps<{
+  template: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  templateParameters?: Record<string, any>,
+  hash?: string,
+  noLegacyReload?: boolean,
+  navButtonSize?: string,
+}>(), {
+  templateParameters: () => { return {} },
+  hash: '',
+  noLegacyReload: false,
+  navButtonSize: 'large',
+})
+
+logger.info('PROPS AT START', props)
+
+// *** app-data store, formerly accessed through "map..."
+const appData = useAppDataStore()
+const browserHistory = useHistoryStore()
+
+// *** former data properties
+
+const legacyHeaderHtml = ref('')
+const legacyBodyHtml = ref('')
+const legacyCssPrefix = ref<string>(appName)
+const legacyCssClass = ref('')
+const loading = ref(true)
+const shortTitle = ref(props.template)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let loadingPromise = Promise.resolve(true) as Promise<any> // reactivity not needed
+const pageLoadTrigger = ref(false)
+let previousHash = null as null|string // reactivity not needed
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ajaxError = ref<any>(null) // any cannot be avoided here
+const legacyHtmlLoaded = ref(false)
+
+// *** former computed properties
+
+// Pre-vue3 useTemplateRef()
+const legacyHtmlContainer = ref(null)
+const wikiManualSection = computed(() => dokuWikiSection([
+  appName,
+  'documentation',
+  'user-manual',
+  props.template,
+]))
+const wikiManualUrl = computed(() => dokuWikiUrl(wikiManualSection.value))
+const wikiManualUrlTarget = computed(() => dokuWikiUrlTarget(wikiManualSection.value))
+const busyState = computed(() => appData.busyState)
+// let currentProjectId = appData.currentProjectId
+const currentHistoryState = computed(() => browserHistory.currentHistoryState)
+const prevHistoryIndex = computed(() => browserHistory.prevHistoryIndex)
+const nextHistoryIndex = computed(() => browserHistory.nextHistoryIndex)
+const pmePrefix = computed(() => globalState.PHPMyEdit.pmePrefix)
+const pmeSelector = (token: string, element: string) =>
+  (element || '') + '.' + pmePrefix.value + '-' + token
+const pmeForm = computed(() => pmeSelector('form', 'form'))
+// const appPrefixGeneral = computed(() => appPrefix('general'))
+const pagePrefix = computed(() => legacyCssPrefix.value + '-')
+
+// *** seems like methods should naturally defined before defining
+// watchers ...
+
+const pushBusyState = appData.pushBusyState
+const popBusyState = appData.popBusyState
+
+const scheduleHistoryPush = browserHistory.scheduleHistoryPush
+const scheduleHistoryReplace = browserHistory.scheduleHistoryReplace
+
+const navigateBack = () => router.back()
+const navigateForward = () => router.forward()
+const reloadPage = async () => {
+  const pmeContainer = document.getElementById(globalState.PHPMyEdit.pmePrefix + '-table-container')
+  if (pmeContainer) {
+    const reloadButton = pmeContainer.querySelector(pmeForm.value + ' ' + pmeSelector('reload', 'input')) as HTMLElement
+    if (reloadButton) {
+      logger.debug('TRIGGER CLICK ON PME RELOAD BUTTON', reloadButton, window?.history?.state)
+      LegacyNotification.hide()
+      reloadButton.click()
+      document.querySelector('body')!.classList.remove('dialog-titlebar-clicked') // need for "mobile" css
+      return
+    }
+  }
+  await loadLegacy()
+}
+
+const onUserManualPopup = () => {
+  return asyncEmit(WIKI_POPUP, {
+    wikiPage: wikiManualSection.value,
+    popupTitle: t(appName, 'User Manual: {section}', { section: shortTitle.value }, 0, { escape: false }),
+  })
+}
+
+// make sure the URL reflects the given hash and remove the no-reload query
+const synchronizeHistoryState = (hash: string) => {
+  logger.info('REPLACE ROUTE TO SYNC BROWSER HISTORY', hash)
+  const params = {
+    template: props.template,
+    projectId: props.templateParameters?.projectId,
+    projectName: props.templateParameters?.projectName,
+  }
+  const target = {
+    name: 'legacy-page',
+    params,
+    query: { hash },
+  }
+  return router.replace(target)
+}
+
+const doLoadLegacy = async () => {
+  if (!props.template) {
+    logger.error('*** TEMPLATE MISSING, CANNOT LOAD PAGE ***')
+    return
+  }
+  appData.currentProjectId = props.templateParameters?.projectId || 0
+  loading.value = true
+  pushBusyState()
+  closeNavigation()
+  asyncEmit(LEGACY_PAGE_CLEANUP)
+  logger.info('HISTORY STATE AT ENTRY', currentHistoryState.value)
+  const historyAppData = currentHistoryState.value.post
+  const post = {
+    template: props.template,
+    ...props.templateParameters,
+  }
+  Object.assign(post, historyAppData, post)
+  Object.assign(historyAppData, post)
+  logger.info('POST including history state', post, currentHistoryState.value)
+  previousHash = objectHash(post)
+  if (props.hash !== previousHash) {
+    scheduleHistoryReplace(post)
+    synchronizeHistoryState(previousHash)
+  }
+  try {
+    const response: AxiosResponse<LoadPartsData> = await axios.post(generateAppUrl('page/remember/parts'), post)
+    const data = response.data // todo: validate
+    legacyBodyHtml.value = data.bodyHtml
+    legacyHeaderHtml.value = data.headerHtml
+    legacyCssPrefix.value = data.cssPrefix
+    legacyCssClass.value = data.cssClass
+    await nextTick()
+    logger.info('RUN READY CALLBACKS', legacyHtmlContainer.value)
+    await asyncEmit(LEGACY_PAGE_FINALIZE)
+    logger.info('AFTER RUN READY CALLBACKS')
+    const titleProvider = document.getElementById(globalState.PHPMyEdit.pmePrefix + '-short-title')
+    if (titleProvider) {
+      shortTitle.value = titleProvider.textContent || ''
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    logger.error('ERROR', generateAppUrl('page/remember/parts'), post, e)
+    await loadTranslations('logreader', () => logger.info('LOGREADER L10N'))
+    ajaxError.value = e
+  }
+  popBusyState()
+  loading.value = false
+}
+
+const loadLegacy = async () => {
+  logger.info('VUE APP LOAD PAGE LOADING', props.template, props.templateParameters, props.hash)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let promise: Promise<any>
+  do {
+    await (promise = loadingPromise)
+    logger.info('AFTER AWAIT PROMISE IN LOOP', props.template, props.templateParameters, props.hash)
+  } while (promise !== loadingPromise)
+  await (loadingPromise = doLoadLegacy())
+  logger.info('AFTER AWAIT PAGE LOAD', props.template, props.templateParameters, props.hash)
+}
+
+// *** watchers
+watch(legacyHtmlLoaded, (value, oldValue) => {
+  logger.info('Legacy HTML Loaded Watcher', value, oldValue)
+  if (value) {
+    legacyHtmlLoaded.value = false
+  }
+})
+watch(
+  () => props.templateParameters?.projectId,
+  (value, oldValue) => {
+    logger.info('PROJECT ID CHANGED', value, oldValue)
+    appData.currentProjectId = value
+    logger.info('TRIGGER PAGE LOAD')
+    pageLoadTrigger.value = true
   },
-  mixins,
-  props: {
-    template: {
-      type: String,
-      required: true,
-    },
-    templateParameters: {
-      type: Object,
-      default: () => {},
-    },
-    hash: {
-      type: String,
-      default: '',
-    },
-    noLegacyReload: {
-      type: Boolean,
-      default: false,
-    },
-    navButtonSize: {
-      type: String,
-      default: 'large',
-    },
+)
+watch(
+  () => props.template,
+  (...args) => {
+    logger.info('TEMPLATE CHANGE', ...args)
+    logger.info('TRIGGER PAGE LOAD')
+    pageLoadTrigger.value = true
   },
-  // setup() {
-  //   const legacyHtmlContainer = ref(null)
-  //   const legacyHtmlLoaded = ref(false)
-  //   const mutationObserver = useMutationObserver(legacyHtmlContainer, (mutations) => {
-  //     console.info('MUTATION OBSERVER', mutations)
-  //     legacyHtmlLoaded.value = true
-  //   }, {
-  //     childList: true,
-  //   })
-  //   watch (legacyHtmlLoaded, (value, oldValue) => {})
-  //   return {
-  //     legacyHtmlContainer,
-  //     legacyHtmlLoaded,
-  //     observerSupported: mutationObserver.isSupported,
-  //   }
-  // },
-  data() {
-    return {
-      legacyHeaderHtml: '',
-      legacyBodyHtml: '',
-      legacyCssPrefix: this.appId as string,
-      legacyCssClass: '',
-      loading: true,
-      shortTitle: this.template,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      loadingPromise: Promise.resolve(true) as Promise<any>,
-      pageLoadTrigger: false,
-      previousHash: null as null|string,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ajaxError: null as any, // any cannot be avoided here
-      legacyHtmlLoaded: false,
+)
+watch(
+  () => props.hash,
+  (value, oldValue) => {
+    logger.info('POST DATA HASH CHANGE', value, oldValue, props.hash)
+    if (value !== previousHash) {
+      previousHash = value
+      logger.info('TRIGGER PAGE LOAD')
+      pageLoadTrigger.value = true
+    } else {
+      logger.info('NEW HASH EQUAL TO PREVIOUS AFTER LOAD HASH, DO NOT TRIGGER PAGE LOAD')
     }
   },
-  computed: {
-    legacyHtmlContainer() {
-      return this.$refs.legacyHtmlContainer
-    },
-    wikiManualSection() {
-      return this.dokuWikiSection([
-        this.appName,
-        'documentation',
-        'user-manual',
-        this.template,
-      ])
-    },
-    wikiManualUrl() {
-      return this.dokuWikiUrl(this.wikiManualSection)
-    },
-    wikiManualUrlTarget() {
-      return this.dokuWikiUrlTarget(this.wikiManualSection)
-    },
-    ...mapState(
-      useAppDataStore, [
-        'busyState',
-      ],
-    ),
-    ...mapWritableState(
-      useAppDataStore, [
-        'currentProjectId',
-      ],
-    ),
-    ...mapState(
-      useHistoryStore, [
-        'currentHistoryState',
-        'prevHistoryIndex',
-        'nextHistoryIndex',
-      ],
-    ),
-    pmePrefix() {
-      return this.globalState.PHPMyEdit.pmePrefix
-    },
-    pmeForm() {
-      return this.pmeSelector('form', 'form')
-    },
-    appPrefixGeneral() {
-      return this.appPrefix('general')
-    },
-    pagePrefix() {
-      return this.legacyCssPrefix + '-'
-    },
+)
+watch(
+  () => props.noLegacyReload,
+  (value, oldValue) => {
+    logger.info('NO LEGACY RELOAD CHANGE', value, oldValue, pageLoadTrigger.value)
   },
-  watch: {
-    legacyHtmlLoaded(value, oldValue) {
-      this.info('Legacy HTML Loaded Watcher', value, oldValue)
-      if (value) {
-        this.legacyHtmlLoaded = false
-      }
-    },
-    'templateParameters.projectId'(value, ...rest) {
-      this.info('PROJECT ID CHANGED', value, ...rest)
-      this.currentProjectId = value
-      this.info('TRIGGER PAGE LOAD')
-      this.pageLoadTrigger = true
-    },
-    template(...args) {
-      this.info('TEMPLATE CHANGE', ...args)
-      this.info('TRIGGER PAGE LOAD')
-      this.pageLoadTrigger = true
-    },
-    hash(value, oldValue) {
-      this.info('POST DATA HASH CHANGE', value, oldValue, this.previousHash)
-      if (value !== this.previousHash) {
-        this.previousHash = value
-        this.info('TRIGGER PAGE LOAD')
-        this.pageLoadTrigger = true
+)
+watch(
+  pageLoadTrigger,
+  async (...args) => {
+    logger.info('PAGE LOAD TRIGGER CHANGE', ...args)
+    if (pageLoadTrigger.value) {
+      pageLoadTrigger.value = false
+      ajaxError.value = null
+      if (!props.noLegacyReload) {
+        await loadLegacy()
       } else {
-        this.info('NEW HASH EQUAL TO PREVIOUS AFTER LOAD HASH, DO NOT TRIGGER PAGE LOAD')
+        logger.info('NO LOAD FLAG ACTIVE, SKIPPING PAGE LOAD')
+        // keep current post data, this is just for updating the hash value in window.location
+        scheduleHistoryReplace(currentHistoryState.value.post)
+        // remove no-load from the display URL
+        await synchronizeHistoryState(props.hash || '')
+        logger.info('SYNCHRONIZED BROWSER HISTORY STATE WITH COMPONENT STATE', window.location, props.hash, props.noLegacyReload)
       }
-    },
-    async noLegacyReload(value, oldValue) {
-      this.info('NO LEGACY RELOAD CHANGE', value, oldValue, this.pageLoadTrigger)
-    },
-    async pageLoadTrigger(...args) {
-      this.info('PAGE LOAD TRIGGER CHANGE', ...args)
-      if (this.pageLoadTrigger) {
-        this.pageLoadTrigger = false
-        this.ajaxError = null
-        if (!this.noLegacyReload) {
-          await this.loadLegacy()
-        } else {
-          this.info('NO LOAD FLAG ACTIVE, SKIPPING PAGE LOAD')
-          // keep current post data, this is just for updating the hash value in window.location
-          this.scheduleHistoryReplace(this.currentHistoryState.post)
-          // remove no-load from the display URL
-          await this.synchronizeHistoryState(this.hash)
-          this.info('SYNCHRONIZED BROWSER HISTORY STATE WITH COMPONENT STATE', window.location, this.hash, this.noLegacyReload)
-        }
-      }
-    },
-    'globalState.toolTipsEnabled'(value, oldValue) {
-      this.info('TOOLTIPS MODE CHANGED', value, oldValue)
-    },
+    }
   },
-  async created() {
-    this.pageLoadSubscriber()
-    this.info('TRIGGER PAGE LOAD')
-    this.pageLoadTrigger = true
+)
+
+// event subscriptions may come last ..
+
+asyncSubscribe(
+  LEGACY_PAGE_LOAD,
+  (eventData) => {
+    logger.info('LEGACY PAGE LOAD CALLED', eventData)
+    ajaxError.value = null
+    const params = {
+      template: eventData?.template || eventData.post.template,
+    }
+    const projectId = eventData?.projectId || eventData.post?.projectId
+    const projectName = eventData?.projectName || eventData.post?.projectName
+    projectId && Object.assign(params, { projectId })
+    projectName && Object.assign(params, { projectName })
+    const post = Object.assign({}, eventData.post, params)
+    const target = {
+      name: 'legacy-page',
+      params,
+      hash: objectHash(post),
+    }
+    if (eventData.keepHistory) {
+      scheduleHistoryReplace(post)
+      return router.replace(target)
+    } else {
+      scheduleHistoryPush(post)
+      return router.push(target)
+    }
   },
-  mounted() {
-    const observer = useMutationObserver(this.legacyHtmlContainer, (mutations) => {
-      this.info('MUTATION OBSERVER', mutations)
-      this.info('LEGACY HTML LOADED', this.legacyHtmlLoaded)
-      this.legacyHtmlLoaded = true
-      this.info('LEGACY HTML LOADED', this.legacyHtmlLoaded, this)
-    }, {
-      childList: true,
-    })
-    this.info('MUTATION OBSERVER ETC', observer.isSupported, this.legacyHtmlContainer)
+)
+asyncSubscribe(
+  LEGACY_PME_HISTORY_UPDATE,
+  (eventData) => {
+    logger.info('LEGACY PME HISTORY UPDATE', eventData)
+    ajaxError.value = null
+    const post = eventData.post
+    const params = {
+      template: post.template,
+    }
+    const projectId = post?.projectId
+    const projectName = post?.projectName
+    projectId && Object.assign(params, { projectId })
+    projectName && Object.assign(params, { projectName })
+    const target = {
+      name: 'legacy-page',
+      params,
+      query: {
+        hash: objectHash(post),
+        'no-reload': '1',
+      },
+    }
+    logger.info('INSTALL NEW HTML', eventData)
+    legacyBodyHtml.value = eventData.htmlBody
+    if (eventData?.action === 'push') {
+      scheduleHistoryPush(post)
+      return router.push(target)
+    } else {
+      scheduleHistoryReplace(post)
+      return router.replace(target)
+    }
   },
-  methods: {
-    ...mapActions(
-      useAppDataStore, [
-        'pushBusyState',
-        'popBusyState',
-      ],
-    ),
-    ...mapActions(
-      useHistoryStore, [
-        'scheduleHistoryPush',
-        'scheduleHistoryReplace',
-      ],
-    ),
-    onUserManualPopup() {
-      return asyncEmit(WIKI_POPUP, {
-        wikiPage: this.wikiManualSection,
-        popupTitle: this.t(this.appName, 'User Manual: {section}', { section: this.shortTitle }, 0, { escape: false }),
-      })
-    },
-    async loadLegacy() {
-      this.info('VUE APP LOAD PAGE LOADING', this.template, this.templateParameters, this.postDataHash)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let promise: Promise<any>
-      do {
-        await (promise = this.loadingPromise)
-        this.info('AFTER AWAIT PROMISE IN LOOP', this.template, this.templateParameters, this.postDataHash)
-      } while (promise !== this.loadingPromise)
-      await (this.loadingPromise = this.doLoadLegacy())
-      this.info('AFTER AWAIT PAGE LOAD', this.template, this.templateParameters, this.postDataHash)
-    },
-    async doLoadLegacy() {
-      if (!this.template) {
-        this.error('*** TEMPLATE MISSING, CANNOT LOAD PAGE ***')
-        return
-      }
-      this.currentProjectId = this.templateParameters?.projectId || 0
-      this.loading = true
-      this.pushBusyState()
-      closeNavigation()
-      asyncEmit(LEGACY_PAGE_CLEANUP)
-      this.info('HISTORY STATE AT ENTRY', this.currentHistoryState)
-      const historyAppData = this.currentHistoryState.post
-      const post = {
-        template: this.template,
-        ...this.templateParameters,
-      }
-      Object.assign(post, historyAppData, post)
-      Object.assign(historyAppData, post)
-      this.info('POST including history state', post, this.currentHistoryState)
-      this.previousHash = objectHash(post)
-      if (this.hash !== this.previousHash) {
-        this.scheduleHistoryReplace(post)
-        this.synchronizeHistoryState(this.previousHash)
-      }
-      try {
-        const response: AxiosResponse<LoadPartsData> = await axios.post(generateAppUrl('page/remember/parts'), post)
-        const data = response.data // todo: validate
-        this.legacyBodyHtml = data.bodyHtml
-        this.legacyHeaderHtml = data.headerHtml
-        this.legacyCssPrefix = data.cssPrefix
-        this.legacyCssClass = data.cssClass
-        await nextTick()
-        this.info('RUN READY CALLBACKS', this.legacyHtmlContainer)
-        await asyncEmit(LEGACY_PAGE_FINALIZE)
-        this.info('AFTER RUN READY CALLBACKS')
-        const titleProvider = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-short-title')
-        if (titleProvider) {
-          this.shortTitle = titleProvider.textContent || ''
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        this.error('ERROR', generateAppUrl('page/remember/parts'), post, e)
-        await loadTranslations('logreader', () => this.info('LOGREADER L10N'))
-        this.ajaxError = e
-      }
-      this.popBusyState()
-      this.loading = false
-    },
-    pmeSelector(token: string, element: string) {
-      return (element || '') + '.' + this.pmePrefix + '-' + token
-    },
-    async reloadPage() {
-      const pmeContainer = document.getElementById(this.globalState.PHPMyEdit.pmePrefix + '-table-container')
-      if (pmeContainer) {
-        const reloadButton = pmeContainer.querySelector(this.pmeForm + ' ' + this.pmeSelector('reload', 'input')) as HTMLElement
-        if (reloadButton) {
-          this.debug('TRIGGER CLICK ON PME RELOAD BUTTON', reloadButton, window?.history?.state)
-          LegacyNotification.hide()
-          reloadButton.click()
-          document.querySelector('body')!.classList.remove('dialog-titlebar-clicked') // need for "mobile" css
-          return
-        }
-      }
-      await this.loadLegacy()
-    },
-    navigateBack() {
-      this.$router.back()
-    },
-    navigateForward() {
-      this.$router.forward()
-    },
-    // make sure the URL reflects the given hash and remove the no-reload query
-    synchronizeHistoryState(hash: string) {
-      this.info('REPLACE ROUTE TO SYNC BROWSER HISTORY', hash)
-      const params = {
-        template: this.template,
-        projectId: this.templateParameters?.projectId,
-        projectName: this.templateParameters?.projectName,
-      }
-      const target = {
-        name: 'legacy-page',
-        params,
-        query: { hash },
-      }
-      return this.$router.replace(target)
-    },
-    pageLoadSubscriber() {
-      asyncSubscribe(LEGACY_PAGE_LOAD, (eventData) => {
-        this.info('LEGACY PAGE LOAD CALLED', eventData)
-        this.ajaxError = null
-        const params = {
-          template: eventData?.template || eventData.post.template,
-        }
-        const projectId = eventData?.projectId || eventData.post?.projectId
-        const projectName = eventData?.projectName || eventData.post?.projectName
-        projectId && Object.assign(params, { projectId })
-        projectName && Object.assign(params, { projectName })
-        const post = Object.assign({}, eventData.post, params)
-        const target = {
-          name: 'legacy-page',
-          params,
-          hash: objectHash(post),
-        }
-        if (eventData.keepHistory) {
-          this.scheduleHistoryReplace(post)
-          return this.$router.replace(target)
-        } else {
-          this.scheduleHistoryPush(post)
-          return this.$router.push(target)
-        }
-      })
-      asyncSubscribe(LEGACY_PME_HISTORY_UPDATE, (eventData) => {
-        this.info('LEGACY PME HISTORY UPDATE', eventData)
-        this.ajaxError = null
-        const post = eventData.post
-        const params = {
-          template: post.template,
-        }
-        const projectId = post?.projectId
-        const projectName = post?.projectName
-        projectId && Object.assign(params, { projectId })
-        projectName && Object.assign(params, { projectName })
-        const target = {
-          name: 'legacy-page',
-          params,
-          query: {
-            hash: objectHash(post),
-            'no-reload': '1',
-          },
-        }
-        this.info('INSTALL NEW HTML', eventData)
-        this.legacyBodyHtml = eventData.htmlBody
-        if (eventData?.action === 'push') {
-          this.scheduleHistoryPush(post)
-          return this.$router.push(target)
-        } else {
-          this.scheduleHistoryReplace(post)
-          return this.$router.replace(target)
-        }
-      })
-    },
-  },
-}
+)
+
+// Initialization work different with composition API, so fore a page load at start
+pageLoadTrigger.value = true
 </script>
 <style lang="scss" scoped>
 ##{$appName}-legacy-wrapper {
@@ -532,7 +476,7 @@ export default {
     width: 2px;
   }
 }
-.#{$appName}-page-container {
+.#{$appName}-general {
   position: relative;
   padding-top: var(--#{$appName}-top-padding);
   height: 100%;

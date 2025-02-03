@@ -22,7 +22,8 @@
  */
 
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { useRoute } from 'vue-router/composables';
 import Console from '../util/console.ts';
 
 export class HistorySetupError extends Error {}
@@ -43,29 +44,59 @@ export interface RouterHistoryState {
 }
 
 export default defineStore(storeId, () => {
-  const consoleRef = ref(new Console(storeId));
-  const console = consoleRef.value;
+  const loggerRef = ref(new Console(storeId));
+  const logger = loggerRef.value;
 
-  const initialHistoryIndex = window?.history?.state?.key
+  logger.error('HISTORY STORE INIT');
+
+  const routerHistory = ref<Record<string, RouterHistoryState> >({});
+  const currentRoute = useRoute();
+
+  const defineInitialHistory = (initialHistoryIndex: string) => {
+    routerHistory.value = {
+      [initialHistoryIndex]: {
+        prev: null,
+        next: null,
+        post: {},
+        key: initialHistoryIndex,
+        position: window?.history?.length,
+      },
+    };
+    currentHistoryIndex.value = initialHistoryIndex;
+    logger.debug('INITIAL ROUTER HISTORY', currentHistoryIndex, { ...routerHistory.value });
+  };
+
+  const initialHistoryIndex: undefined|string = window?.history?.state?.key;
+  const currentHistoryIndex = ref(initialHistoryIndex);
+
   if (!initialHistoryIndex) {
-    throw new HistorySetupError('Window history state has not been setup up: ' + window?.history);
+    const stop = watch(
+      currentRoute,
+      (newValue, oldValue) => {
+        stop();
+        logger.debug('INITIAL ROUTE WATCHER', newValue, oldValue);
+        const initialHistoryIndex = window?.history?.state?.key;
+        if (!initialHistoryIndex) {
+          let historyString: string;
+          try {
+            historyString = JSON.stringify(window?.history, null, 2);
+          } catch (e: any) {
+            historyString = ''
+          }
+          logger.error('Window history state has not been set up.', { ...(window?.history || {}) });
+          throw new HistorySetupError('Window history state has not been set up: ' + historyString);
+        }
+        defineInitialHistory(initialHistoryIndex);
+      },
+    );
+  } else {
+    defineInitialHistory(initialHistoryIndex);
   }
 
-  const routerHistory = ref<Record<string, RouterHistoryState> >({
-    [initialHistoryIndex]: {
-      prev: null,
-      next: null,
-      post: {},
-      key: initialHistoryIndex,
-      position: window?.history?.length,
-    },
-  });
-  console.info('INITIAL ROUTER HISTORY', { ...routerHistory.value });
-  const currentHistoryIndex = ref(initialHistoryIndex);
   const pendingHistoryData = ref<null|object>(null);
   const pendingHistoryAction = ref<null|HistoryAction>(null);
   const pendingHistoryKey = ref<null|string|number>('initial');
-  const currentHistoryState = computed(() => routerHistory.value?.[currentHistoryIndex.value] || null);
+  const currentHistoryState = computed(() => routerHistory.value?.[currentHistoryIndex.value || ''] || null);
   const prevHistoryIndex = computed(() => currentHistoryState.value.prev);
   const nextHistoryIndex = computed(() => currentHistoryState.value.next);
   const prevHistoryState = computed(() => routerHistory.value?.[prevHistoryIndex.value || ''] || null);
@@ -88,7 +119,7 @@ export default defineStore(storeId, () => {
     pendingHistoryAction.value = action;
     pendingHistoryData.value = post || {};
     pendingHistoryKey.value = key;
-    console.info('scheduleHistoryAction()', {
+    logger.info('scheduleHistoryAction()', {
       action,
       key,
       currentHistoryIndex: currentHistoryIndex.value,
@@ -97,7 +128,7 @@ export default defineStore(storeId, () => {
       routerHistory: routerHistory.value,
     });
     if (currentHistoryIndex.value !== 'initial' && pendingHistoryKey.value !== currentHistoryIndex.value) {
-      console.trace('SCHEDULE HISTORY KEY MISTMATCH', pendingHistoryKey.value, currentHistoryIndex.value);
+      logger.trace('SCHEDULE HISTORY KEY MISTMATCH', pendingHistoryKey.value, currentHistoryIndex.value);
     }
   }
 
@@ -113,7 +144,7 @@ export default defineStore(storeId, () => {
     pendingHistoryAction.value = null;
     pendingHistoryData.value = null;
     pendingHistoryKey.value = null;
-    console.info('cancelHistoryAction()', routerHistory.value);
+    logger.info('cancelHistoryAction()', routerHistory.value);
   }
 
   /**
@@ -130,7 +161,7 @@ export default defineStore(storeId, () => {
   function finishHistoryAction() {
     const key = window?.history?.state?.key || 'initial';
     const history = routerHistory.value;
-    console.info('ON HISTORY FINISH', {
+    logger.info('ON HISTORY FINISH', {
       key,
       keyType: typeof key,
       currentHistoryIndex: currentHistoryIndex.value,
@@ -148,7 +179,7 @@ export default defineStore(storeId, () => {
     // unfortunately history.state.key is undefined until after the
     // first navigation.
     if (pendingHistoryAction.value === 'replace' && key !== currentHistoryIndex.value && currentHistoryIndex.value !== 'initial') {
-      console.trace('EXPLICIT HISTORY REPLACE REQUESTED, BUT CURRENT HISTORY IS GONE', {
+      logger.trace('EXPLICIT HISTORY REPLACE REQUESTED, BUT CURRENT HISTORY IS GONE', {
         key,
         pendingHistoryKey: pendingHistoryKey.value,
         currentHistoryIndex: currentHistoryIndex.value,
@@ -169,7 +200,7 @@ export default defineStore(storeId, () => {
         // assume 'push'
         pendingHistoryAction.value = 'push';
       }
-      console.info('TWEAKED HISTORY ACTION IS', {
+      logger.info('TWEAKED HISTORY ACTION IS', {
         pendingHistoryAction: pendingHistoryAction.value,
         key,
         pendingHistoryKey: pendingHistoryKey.value,
@@ -195,7 +226,7 @@ export default defineStore(storeId, () => {
           nextKey = history[nextKey].next
           delete history[removeKey]
         } catch (error: any) {
-          console.error('Exception while removing orphan tail on history push', {
+          logger.error('Exception while removing orphan tail on history push', {
             nextKey,
             removeKey,
             history: { ...history },
@@ -207,11 +238,11 @@ export default defineStore(storeId, () => {
       currentHistoryIndex.value = key;
     } else if (pendingHistoryAction.value === 'replace') {
       if (key !== currentHistoryIndex.value) {
-        console.info('BEFORE ADJUST KEYS', key, currentHistoryIndex.value, { ...history[currentHistoryIndex.value] }, history?.[key]);
+        logger.info('BEFORE ADJUST KEYS', key, currentHistoryIndex.value, { ...history[currentHistoryIndex.value] }, history?.[key]);
         history[key] = history[currentHistoryIndex.value];
-        console.info('CURRENT STATE 0', { ...history[key] });
+        logger.info('CURRENT STATE 0', { ...history[key] });
         delete history[currentHistoryIndex.value];
-        console.info('CURRENT STATE 1', { ...history[key] });
+        logger.info('CURRENT STATE 1', { ...history[key] });
         currentHistoryIndex.value = key;
         history[key].key = key;
         const prev = history[key].prev;
@@ -224,14 +255,14 @@ export default defineStore(storeId, () => {
             history[next].prev = key;
           }
         } catch (error) {
-          console.error('Exception during history replace', {
+          logger.error('Exception during history replace', {
             history: { ...history },
             key,
             next,
             prev,
           })
         }
-        console.info('AFTER ADJUST KEYS', history);
+        logger.info('AFTER ADJUST KEYS', history);
       }
       history[key].post = pendingHistoryData.value || {};
     } else {
@@ -239,17 +270,17 @@ export default defineStore(storeId, () => {
     }
     for (const [key, record] of Object.entries(routerHistory.value)) {
       if (key !== record.key) {
-        console.trace('SELF INCONSISTENCY', key, record, routerHistory.value);
+        logger.trace('SELF INCONSISTENCY', key, record, routerHistory.value);
       }
       if ((record.next || record.prev)
         && (record.next === record.prev || record.next === record.key || record.prev === record.key)) {
-        console.trace('EQUAL KEYS', key, { ...record }, { ...routerHistory.value });
+        logger.trace('EQUAL KEYS', key, { ...record }, { ...routerHistory.value });
       }
     }
     pendingHistoryData.value = null;
     pendingHistoryAction.value = null;
     pendingHistoryKey.value = null;
-    console.info('finishHistoryAction()', {
+    logger.info('finishHistoryAction()', {
       currentHistoryIndex: currentHistoryIndex.value,
       currentHistoryState: { ...currentHistoryState.value },
       routerHistory: { ...routerHistory.value },
@@ -258,7 +289,8 @@ export default defineStore(storeId, () => {
   }
 
   return {
-    console: consoleRef,
+    logger: loggerRef,
+    currentRoute,
     routerHistory,
     currentHistoryIndex,
     currentHistoryState,
