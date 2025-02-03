@@ -133,8 +133,6 @@ class PageController extends Controller
   }
 
   /**
-   * @param int $level
-   *
    * @return bool
    */
   private function shouldLoadHistory():bool
@@ -277,8 +275,6 @@ class PageController extends Controller
    *
    * @param string $historyAction
    *
-   * @param bool $omitEnvelope
-   *
    * @return Http\Response
    *
    * @NoAdminRequired
@@ -336,7 +332,7 @@ class PageController extends Controller
     $this->logDebug("Try load template ".$template);
     try {
       /** @var IRenderer $renderer */
-      $renderer = $this->appContainer->get('foobar' . RendererRegistration::TEMPLATE_PREFIX . $template);
+      $renderer = $this->appContainer->get(RendererRegistration::TEMPLATE_PREFIX . $template);
       if (empty($renderer)) {
         return self::response(
           $this->l->t("Template-renderer for template `%s' is empty.", [$template]),
