@@ -73,11 +73,11 @@ const makeSVGElement = function() {
   }
 
   if (props.width !== undefined) {
-    logger.info('BASE WIDTH BEFORE')
+    logger.debug('BASE WIDTH BEFORE')
     svg.width.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, props.width)
-    logger.info('ANIM WIDTH BEFORE')
+    logger.debug('ANIM WIDTH BEFORE')
     // svg.width.animVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, props.width)
-    // logger.info('ANIM WIDTH AFTER')
+    // logger.debug('ANIM WIDTH AFTER')
   }
   if (props.height !== undefined) {
     svg.height.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, props.height)
@@ -97,7 +97,7 @@ const makeSVGElement = function() {
     }
     titleElement.textContent = props.title
   }
-  logger.info('SVG DOM ELEMENT', svg)
+  logger.debug('SVG DOM ELEMENT', svg)
 
   return svg
 }
@@ -105,13 +105,13 @@ const makeSVGElement = function() {
 const container = ref<HTMLDivElement|null>(null)
 
 onMounted(() => {
-  logger.info('CONTAINER REF', container)
   container.value!.replaceChildren(makeSVGElement())
 })
 
 watch(props, () => {
-  logger.info('PROPS CHANGED, RECOMPUTING SVG ELEMENT')
-  container.value!.replaceChildren(makeSVGElement())
+  if (container.value) {
+    container.value!.replaceChildren(makeSVGElement())
+  }
 })
 
 </script>
