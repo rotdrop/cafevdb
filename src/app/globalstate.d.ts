@@ -34,6 +34,7 @@ export interface GlobalState {
     router: VueRouter,
     store: Pinia,
   },
+  orchestra: string,
   userPermissions: int,
   financeMode: boolean,
   wikiNamespace: string,
