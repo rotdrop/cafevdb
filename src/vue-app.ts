@@ -21,19 +21,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'core-js/actual';
 import { appName } from './config.ts';
 import globalState from './app/globalstate.js';
 import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
 // import { sync } from 'vuex-router-sync'
-import Vue, { set as vueSet } from 'vue';
+import Vue from 'vue';
 import CAFeVDB from './CAFeVDB.vue';
 import router from './router/app-router.ts';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 import { Tooltip } from '@nextcloud/vue';
 import { mixin as globalMixin } from './mixins/global-mixin.ts';
-import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import * as Authorization from './authorization.ts';
+
+// Enabe dev-tools also needs unsafe-eval on script-src in the CSP.
+// window.__VUE_DEVTOOLS_GLOBAL_HOOK__.enabled = true;
+// window.__VUE__ = Vue;
 
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
