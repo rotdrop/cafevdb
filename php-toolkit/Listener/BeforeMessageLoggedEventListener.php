@@ -78,9 +78,11 @@ class BeforeMessageLoggedEventListener implements IEventListener
       return;
     }
     $data = $event->getMessage();
-    if (!is_callable($data[$appName]['callback'] ?? null)) {
+    $callback = $data[$appName]['callback'] ?? null;
+    if (!is_callable($callback)) {
       return;
     }
+    unset($data[$appName]['callback']);
     try {
       $systemConfig = $this->appContainer->get(SystemConfig::class);
       $logDetails = new class($systemConfig) extends LogDetails {
@@ -91,7 +93,7 @@ class BeforeMessageLoggedEventListener implements IEventListener
         }
       };
       $logEntry = $logDetails->logDetails($appName, $data, $event->getLevel());
-      $data[$appName]['callback']($logEntry);
+      $callback($logEntry);
     } catch (Throwable $t) {
       $this->logException($t);
     }

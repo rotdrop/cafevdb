@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2014-2024 Claus-Justus Heine
+ * @copyright 2014-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -83,6 +83,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 
 use OCA\CAFEVDB\Service\EventsService;
 
+use OCA\CAFEVDB\Middleware\ExceptionMiddleware;
 use OCA\CAFEVDB\Middleware\SubadminMiddleware;
 use OCA\CAFEVDB\Middleware\GroupMemberMiddleware;
 use OCA\CAFEVDB\Middleware;
@@ -205,10 +206,9 @@ class Application extends App implements IBootstrap
     });
 
     // Register Middleware
-    $context->registerServiceAlias('SubadminMiddleware', SubadminMiddleware::class);
-    $context->registerMiddleWare('SubadminMiddleware');
-    $context->registerServiceAlias('GroupMemberMiddleware', GroupMemberMiddleware::class);
-    $context->registerMiddleWare('GroupMemberMiddleware');
+    $context->registerMiddleWare(ExceptionMiddleware::class); // must come first
+    $context->registerMiddleWare(SubadminMiddleware::class);
+    $context->registerMiddleWare(GroupMemberMiddleware::class);
     $context->registerMiddleWare(Middleware\CSPViolationReporting::class);
     $context->registerMiddleware(Middleware\ConfigLockMiddleware::class);
 

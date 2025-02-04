@@ -79,7 +79,7 @@
       </NcActions>
     </div>
     <!-- eslint-disable vue/no-v-html  -->
-    <div v-if="!ajaxError"
+    <div v-if="!appError"
          :id="appPrefix('general')"
          :class="{ [appPrefix('general')]: true, loading, }"
     >
@@ -99,9 +99,9 @@
       </div>
     </div>
     <div v-else class="flex-container flex-justify-center">
-      <AjaxErrorPage :id="appPrefix('error')"
-                     :class="{ [appPrefix('general')]: true, loading, }"
-                     :error="ajaxError"
+      <ErrorPage :id="appPrefix('error')"
+                 :class="{ [appPrefix('general')]: true, loading, }"
+                 :error="appError"
       />
     </div>
   </div>
@@ -109,7 +109,15 @@
 <script setup lang="ts">
 import { appName, appPrefix } from '../config.ts'
 import { globalState } from '../app/pme-state.js'
-import { nextTick, ref, computed, watch } from 'vue'
+import {
+  nextTick,
+  ref,
+  computed,
+  watch,
+  onBeforeMount,
+  onUnmounted,
+  onErrorCaptured,
+} from 'vue'
 import {
   NcActionButton,
   NcActionCheckbox,
@@ -123,12 +131,13 @@ import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
 import InfoOffIcon from 'vue-material-design-icons/InformationOffOutline.vue'
 import HistoryBackIcon from 'vue-material-design-icons/ArrowULeftTop.vue'
 import HistoryForwardIcon from 'vue-material-design-icons/ArrowURightTop.vue'
-import AjaxErrorPage from './AjaxErrorPage.vue'
+import ErrorPage from './ErrorPage.vue'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
 import { closeNavigation } from '../services/navigation.js'
 import useAppDataStore from '../stores/app-data.ts'
 import useHistoryStore from '../stores/history.ts'
+import useErrorHandlerStore from '../stores/error-handler.ts'
 import { subscribe as asyncSubscribe, emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
 import {
   LEGACY_PAGE_LOAD,
@@ -144,10 +153,22 @@ import type { LoadPartsData } from '../types/ajax/page-load-response.ts'
 import { loadTranslations, translate as t } from '@nextcloud/l10n'
 import { useRouter } from 'vue-router/composables'
 import { dokuWikiSection, dokuWikiUrl, dokuWikiUrlTarget } from '../util/doku-wiki.ts'
+import { AppError } from '../types/errors.ts'
 import Console from '../util/console.ts'
 
 const COMPONENT_NAME = 'LegacyWrapper'
 const logger = new Console(COMPONENT_NAME)
+
+const appError = ref<null | AppError>(null) // any cannot be avoided here
+const errorHandler = <E extends AppError>(error: E) => {
+  appError.value = error
+  logger.error('LEGACY WRAPPER ERROR')
+}
+const errorHandlerProvider = useErrorHandlerStore()
+
+errorHandlerProvider.pushHandler(errorHandler)
+
+onErrorCaptured((...args) => { logger.error('Vue error captured', ...args) })
 
 const router = useRouter()
 
@@ -184,7 +205,6 @@ let loadingPromise = Promise.resolve(true) as Promise<any> // reactivity not nee
 const pageLoadTrigger = ref(false)
 let previousHash = null as null|string // reactivity not needed
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ajaxError = ref<any>(null) // any cannot be avoided here
 const legacyHtmlLoaded = ref(false)
 
 // *** former computed properties
@@ -303,7 +323,7 @@ const doLoadLegacy = async () => {
   } catch (e: any) {
     logger.error('ERROR', generateAppUrl('page/remember/parts'), post, e)
     await loadTranslations('logreader', () => logger.info('LOGREADER L10N'))
-    ajaxError.value = e
+    appError.value = new AppError(t(appName, 'Error loading view "{template}".', { template: props.template }), { cause: e })
   }
   popBusyState()
   loading.value = false
@@ -370,7 +390,7 @@ watch(
     logger.info('PAGE LOAD TRIGGER CHANGE', ...args)
     if (pageLoadTrigger.value) {
       pageLoadTrigger.value = false
-      ajaxError.value = null
+      appError.value = null
       if (!props.noLegacyReload) {
         await loadLegacy()
       } else {
@@ -391,7 +411,7 @@ asyncSubscribe(
   LEGACY_PAGE_LOAD,
   (eventData) => {
     logger.info('LEGACY PAGE LOAD CALLED', eventData)
-    ajaxError.value = null
+    appError.value = null
     const params = {
       template: eventData?.template || eventData.post.template,
     }
@@ -418,7 +438,7 @@ asyncSubscribe(
   LEGACY_PME_HISTORY_UPDATE,
   (eventData) => {
     logger.info('LEGACY PME HISTORY UPDATE', eventData)
-    ajaxError.value = null
+    appError.value = null
     const post = eventData.post
     const params = {
       template: post.template,
@@ -449,6 +469,12 @@ asyncSubscribe(
 
 // Initialization work different with composition API, so fore a page load at start
 pageLoadTrigger.value = true
+
+errorHandlerProvider.popHandler()
+
+onBeforeMount(() => errorHandlerProvider.pushHandler(errorHandler))
+onUnmounted(() => errorHandlerProvider.popHandler())
+
 </script>
 <style lang="scss" scoped>
 ##{$appName}-legacy-wrapper {

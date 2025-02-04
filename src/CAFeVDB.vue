@@ -222,13 +222,22 @@
                   @view-details="handleDetailsRequest"
       />
       <NcEmptyContent v-if="isRoot || appError" class="emp-content">
-        {{ t(appId, '{orchestraName} Orchestra Portal', { orchestraName, }) }}
+        <template #name>
+          <h2>{{ t(appId, '{orchestraName} Orchestra Portal', { orchestraName, }) }}</h2>
+        </template>
         <template #icon>
+          <DynamicSvgIcon :data="icon" :title="orchestraName + ' logo'" />
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <span class="app-icon" v-html="icon" />
+          <!-- <span class="app-icon" v-html="icon" /> -->
         </template>
         <template #description>
-          {{ t(appId, 'Description') }}
+          <span v-if="!appError">
+            {{ t(appId, 'Description') }}
+          </span>
+          <ErrorPage v-else
+                     :id="appPrefix('error')"
+                     :error="appError"
+          />
         </template>
       </NcEmptyContent>
     </NcAppContent>
@@ -274,7 +283,7 @@
   </NcContent>
 </template>
 <script setup lang="ts">
-import { appName as appId } from './config.ts'
+import { appName as appId, appPrefix } from './config.ts'
 import globalState from './app/globalstate.js'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import {
@@ -289,9 +298,11 @@ import {
   NcEllipsisedOption,
   NcEmptyContent,
 } from '@nextcloud/vue'
+import ErrorPage from './components/ErrorPage.vue'
 import { translate as t } from '@nextcloud/l10n'
 import useAppDataStore from './stores/app-data.ts'
 import useHistoryStore from './stores/history.ts'
+import useErrorHandlerStore from './stores/error-handler.ts'
 // import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 // import ProjectPartici<pantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 // import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
@@ -312,6 +323,7 @@ import { emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
 import type { SetterEvents, SetterEventValue } from '@rotdrop/async-nextcloud-event-bus'
 import { closeNavigation } from './services/navigation.js'
 import * as BusEvents from './event-bus-events.ts'
+import DynamicSvgIcon from './components/DynamicSvgIcon.vue'
 import appIcon from '../img/cafevdb.svg?raw'
 import { getInitialState } from './toolkit/services/InitialStateService.js'
 import { useRoute, useRouter } from 'vue-router/composables'
@@ -327,10 +339,20 @@ import {
 import { asyncComputed } from '@vueuse/core'
 import { tooltips } from './util/tooltips.ts'
 import Console from './util/console.ts'
+import { AppError } from './types/errors.ts'
 import md5 from 'blueimp-md5'
 
 const COMPONENT_NAME = 'CAFeVDB'
 const logger = new Console(COMPONENT_NAME)
+
+const errorHandlerProvider = useErrorHandlerStore()
+
+const appError = ref<null | AppError>(null)
+const errorHandler = <E extends AppError>(error: E) => {
+  logger.info('TOP LEVEL ERROR', error)
+  appError.value = error
+}
+errorHandlerProvider.pushHandler(errorHandler)
 
 const initialState = getInitialState('CAFEVDB')
 
@@ -352,15 +374,15 @@ const appData = useAppDataStore()
 const history = useHistoryStore()
 
 const {
-  appError,
   currentProjectId,
   currentProjectName,
 } = storeToRefs(appData)
 
 const routerHistory = history.routerHistory
 
-const orchestraName = ref(initialState?.orchestraName || t(appId, '[UNKNOWN]'))
+const orchestraName = ref(initialState?.orchestra || t(appId, '[UNKNOWN]'))
 const icon = ref(appIcon)
+
 const loading = ref(true)
 const isMounted = ref(false)
 const debugModes = ref<DebugOption[]>([])
@@ -516,13 +538,10 @@ const updateNavigationItems = async () => {
 
 // watchers
 const reactifyGlobalState = function() {
-  logger.info('BEFORE REACTIFY GLOBAL STATE', globalState)
+  logger.debug('BEFORE REACTIFY GLOBAL STATE', globalState)
   reactive(globalState)
-  // for (const [key, value] of Object.entries(globalState)) {
-  //   Vue.delete(globalState, key)
-  //   vueSet(globalState, key, value)
-  // }
-  logger.info('AFTER REACTIFY GLOBAL STATE', globalState)
+  logger.debug('AFTER REACTIFY GLOBAL STATE', globalState)
+  orchestraName.value = globalState.orchestra
   watch(
     () => globalState.toolTipsEnabled,
     (value, oldValue) => updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue),
@@ -602,7 +621,6 @@ if (!(globalState.initialized && globalState.PHPMyEdit.initialized)) {
   )
 } else {
   reactifyGlobalState()
-  console.info('GLOBAL STATE ALREADY INITIALIZED; MADE REACTIVE', globalState)
 }
 
 watch(

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Middleware;
+
+use Throwable;
 
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Http\Response;
@@ -53,7 +55,7 @@ class CSPViolationReporting extends Middleware
     $reportCSP = $this->inGroup();
     try {
       $reportCSP = $this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_CSP;
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $reportCSP = false;
     }
     if ($reportCSP) {

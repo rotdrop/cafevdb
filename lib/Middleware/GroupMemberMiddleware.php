@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,10 +24,12 @@
 
 namespace OCA\CAFEVDB\Middleware;
 
+use Exception;
+
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
-use OCP\AppFramework\Http;
 use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
 
 use OCA\CAFEVDB\Service\AuthorizationService;
@@ -73,13 +75,13 @@ class GroupMemberMiddleware extends Middleware
    *
    * Return 403 page in case of an exception
    */
-  public function afterException($controller, $methodName, \Exception $exception)
+  public function afterException($controller, $methodName, Exception $exception)
   {
-    if ($exception instanceof NotAdminException) {
-      $response = $this->templateResponse('403', [], self::RENDER_AS_GUEST, appName: 'core');
-      $response->setStatus(Http::STATUS_FORBIDDEN);
-      return $response;
+    if (!($exception instanceof NotAdminException)) {
+      throw $exception;
     }
-    throw $exception;
+    $response = $this->templateResponse('403', [], self::RENDER_AS_GUEST, appName: 'core');
+    $response->setStatus(Http::STATUS_FORBIDDEN);
+    return $response;
   }
 }

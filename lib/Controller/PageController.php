@@ -330,30 +330,12 @@ class PageController extends Controller
 
     $template = $this->getTemplate($template, $renderAs);
     $this->logDebug("Try load template ".$template);
-    try {
-      /** @var IRenderer $renderer */
-      $renderer = $this->appContainer->get(RendererRegistration::TEMPLATE_PREFIX . $template);
-      if (empty($renderer)) {
-        return self::response(
-          $this->l->t("Template-renderer for template `%s' is empty.", [$template]),
-          Http::INTERNAL_SERVER_ERROR);
-      }
-    } catch (Throwable $t) {
-      $logEntry = $this->logException(
-        new Exceptions\EnduserNotificationException(
-          $this->l->t('Unable to load template "%s".', $template), 0, $t
-        ),
-        returnLogEntry: true,
+    /** @var IRenderer $renderer */
+    $renderer = $this->appContainer->get(RendererRegistration::TEMPLATE_PREFIX . $template);
+    if (empty($renderer)) {
+      throw new Exceptions\Exception(
+        $this->l->t("Template-renderer for template `%s' is empty.", [$template]),
       );
-      switch (get_class($t)) {
-        case QueryNotFoundException::class:
-          $status = Http::STATUS_NOT_FOUND;
-          break;
-        default:
-          $status = Http::STATUS_BAD_REQUEST;
-          break;
-      }
-      return self::dataResponse($logEntry, $status);
     }
 
     $templateParameters = [

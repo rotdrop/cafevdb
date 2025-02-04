@@ -23,15 +23,24 @@
  -->
 <template>
   <div class="container">
-    <NextcloudLogException v-if="isPHPException"
+    <div v-if="envelopeError" class="envelope-error">
+      {{ envelopeErrorMessage }}
+    </div>
+    <NextcloudLogException v-if="exception"
                            :exception="exception"
                            :is-expanded="true"
     />
-    <div v-else-if="isAxiosErrorResponse">
-      {{ t(appName, 'AXIOS ERROR WITH RESPONSE DATA') }}
+    <div v-else-if="originalError && isAxiosErrorResponse">
+      <p>{{ t(appName, 'AXIOS ERROR WITH RESPONSE DATA') }}</p>
+      <p>{{ errorMessage }}</p>
     </div>
-    <div v-else-if="isAxiosError">
-      {{ t(appName, 'AXIOS ERROR WITHOUT RESPONSE DATA') }}
+    <div v-else-if="originalError && isAxiosError">
+      <p>{{ t(appName, 'AXIOS ERROR WITHOUT RESPONSE DATA') }}</p>
+      <p>{{ errorMessage }}</p>
+    </div>
+    <div v-else-if="originalError && (originalError instanceof Error)">
+      <p>{{ t(appName, 'FRONTEND ERROR') }}</p>
+      <p>{{ errorMessage }}</p>
     </div>
     <div v-else>
       {{ t(appName, 'UNKNOWN ERROR') }}
@@ -46,11 +55,15 @@ import {
   isAxiosErrorResponse as isAxiosErrorResponseGuard,
   isAxiosError as isAxiosErrorGuard,
 } from '../types/ajax/axios-type-guards.ts'
+import { AppError } from '../types/errors.ts'
 import { computed } from 'vue'
-import type { PropType } from 'vue'
 import { appName } from '../config.ts'
 import { translate as t, loadTranslations } from '@nextcloud/l10n'
 import NextcloudLogException from '@nextcloud/app-logreader/src/components/exception/LogException.vue'
+import Console from '../util/console.ts'
+
+const COMPONENT_NAME = 'ErrorPage'
+const logger = new Console(COMPONENT_NAME)
 
 loadTranslations('logreader', () => console.info('LOGREADER TRANSLATION HAVE BEEN LOADED'))
   .then((...args) => console.info('LOGREADER LOAD PROMISE', ...args))
@@ -65,19 +78,36 @@ NextcloudLogException.props.isExpanded.required = false
 // @ts-expect-error The Logger app forgets to flags this property as optional though it provides a default.
 NextcloudLogException.props.isPrevious.required = false
 
-const props = defineProps({
-  // The error resulting from a try-catch. Hence no type information is available
-  error: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    type: Object as PropType<any | AxiosError | AxiosError<NextcloudExceptionLogEntry> >,
-    required: true,
-  },
-})
+const props = defineProps <{
+  error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>,
+}>()
 
-const isAxiosError = computed(() => isAxiosErrorGuard(props.error))
-const isAxiosErrorResponse = computed(() => isAxiosErrorResponseGuard(props.error))
-const isPHPException = computed(() => isNextcloudExceptionResponse(props.error))
-const logEntry = computed(() => isPHPException.value ? props.error.response.data : null)
-const exception = computed(() => isPHPException.value ? logEntry.value.exception : null)
+const envelopeError = computed(() =>
+  props.error instanceof AppError && props.error.cause instanceof Error
+    ? props.error
+    : null)
+const originalError = computed(() =>
+  envelopeError.value && envelopeError.value.cause instanceof Error
+    ? envelopeError.value.cause
+    : envelopeError.value)
+
+logger.info('ERRORS', envelopeError, originalError)
+
+const isAxiosError = computed(() => isAxiosErrorGuard(originalError.value))
+const isAxiosErrorResponse = computed(() => isAxiosErrorResponseGuard(originalError.value))
+// const logEntry = computed(() => isNextcloudExceptionResponse(originalError) ? originalError.value.response.data : null)
+const exception = computed(() => isNextcloudExceptionResponse(originalError.value) ? originalError.value.response.data.exception : null)
+
+const makeErrorMessage = (error: Error) => error.name + ': ' + error.message
+
+const errorMessage = computed(() =>
+  originalError.value && originalError.value instanceof Error
+    ? makeErrorMessage(originalError.value)
+    : '')
+
+const envelopeErrorMessage = computed(() =>
+  envelopeError.value && envelopeError.value instanceof Error
+    ? makeErrorMessage(envelopeError.value)
+    : '')
 
 </script>

@@ -30,15 +30,18 @@ import type { AxiosResponse } from 'axios';
 import { PUSH_BUSY_STATE, POP_BUSY_STATE, SET_BUSY_FLAG } from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus'
 import Console from '../util/console.ts';
+import { AppError } from '../types/errors.ts';
+import type { ErrorContext, ErrorHandler } from '../types/errors.ts';
+import { appName } from '../config.ts';
+import { translate as t } from '@nextcloud/l10n';
+import useErrorHandler from './error-handler.ts';
 
 const storeId = 'app-data';
 const logger = new Console(storeId);
 
+export class AppDateStoreError extends AppError {};
+
 const abortController = new AbortController();
-
-export class HistorySetupError extends Error {}
-
-type ErrorHandler = <E extends Error>(error: E|any, context: object) => void;
 
 export const HistoryActionPush = 'push';
 export const HistoryActionPop = 'pop';
@@ -82,10 +85,19 @@ const usePrivateState = defineStore(storeId + '-private', {
     loadingPromise: Promise.resolve(true) as Promise<any>,
   }),
   actions: {
-    handleError<E extends Error>(error: E|any, context: object, errorHandler: ErrorHandler|null) {
+    handleError<E extends Error>(error: E|any, context: ErrorContext, errorHandler: ErrorHandler|null) {
       logger.error(context, error);
+      const message = typeof context.message === 'string'
+        ? context.message : t(appName, 'An error occurred in the app-data store.')
+      error = new AppDateStoreError(message, { cause: error });
+      error.context = {
+        type: storeId,
+        ...context,
+      }
       if (typeof errorHandler === 'function') {
-        errorHandler(error, context);
+        errorHandler(error);
+      } else {
+        throw error;
       }
     },
     abort() {
@@ -141,7 +153,11 @@ const usePrivateState = defineStore(storeId + '-private', {
         logger.info('FIND PROJECT IDS RESPONSE', response);
         return response.data;
       } catch (e) {
-        this.handleError(e, { action: 'findProjectIds', url }, errorHandler);
+        this.handleError(e, {
+          message: t(appName, 'Unable to fetch the poject-ids from the database.'),
+          action: 'findProjectIds',
+          url,
+        }, errorHandler);
         return undefined;
       }
     },
@@ -169,6 +185,7 @@ const usePrivateState = defineStore(storeId + '-private', {
         return response.data;
       } catch (e) {
         this.handleError(e, { action: 'searchProjects', query }, errorHandler);
+        return undefined;
       }
     },
     deleteProject(projectId: number) {
@@ -178,10 +195,10 @@ const usePrivateState = defineStore(storeId + '-private', {
 });
 
 export default defineStore(storeId, () => {
+  const errorHandlerProvider = useErrorHandler();
   const state = usePrivateState();
+  const loggerRef = ref(logger);
 
-  const debugMode = ref(0);
-  const appError = ref(false);
   const busyCount = ref(0);
   const busyFlag = ref(false);
   const busyState = computed(() => busyCount.value > 0 || busyFlag.value);
@@ -196,7 +213,7 @@ export default defineStore(storeId, () => {
   asyncSubscribe(POP_BUSY_STATE, () => popBusyState())
 
   const currentProjectId = ref(0);
-  const errorHandler = ref(null);
+  const errorHandler = computed(() => errorHandlerProvider.errorHandler);
   const evaluating = ref(false);
   const projectMode = computed(() => currentProjectId.value > 0);
   const currentProject = computedAsync(
@@ -205,7 +222,7 @@ export default defineStore(storeId, () => {
         return null;
       }
       // onCancel(() => state.abort());
-      const project = await state.getProject(currentProjectId.value, errorHandler.value);
+      const project = await state.getProject(currentProjectId.value, errorHandlerProvider.getHandler());
       logger.debug('CURRENT PROJECT', project);
       return project;
     },
@@ -215,14 +232,14 @@ export default defineStore(storeId, () => {
   const currentProjectName = computed(() => currentProject.value?.name || '');
 
   const projectIds = ref<number[]>([]);
-  state.findProjectIds(errorHandler.value)
+  state.findProjectIds(errorHandlerProvider.getHandler())
     .then((value) => { if (value) { projectIds.value = value; } })
-    .catch((error) => { projectIds.value = []; logger.error('Fetching the project ids failed', error); });
+    .catch((error) => { projectIds.value = []; logger.error('Fetching the project ids failed', error, errorHandlerProvider.getHandler(), errorHandlerProvider.errorHandler); });
   const projects = computed(() => state.projects);
   watch(projects, (value, oldValue) => logger.info('PROJECTS WATCHER', value, oldValue));
 
   async function getProject(projectId: number, handler?: ErrorHandler) {
-    const result = await state.getProject(projectId, handler || errorHandler.value);
+    const result = await state.getProject(projectId, handler || errorHandlerProvider.getHandler());
     if (result && !(projectId in projectIds.value)) {
       projectIds.value!.push(projectId);
     }
@@ -230,7 +247,7 @@ export default defineStore(storeId, () => {
   }
 
   async function searchProjects(query: string, handler?: ErrorHandler) {
-    const result = await state.searchProjects(query, handler || errorHandler.value) || [];
+    const result = await state.searchProjects(query, handler || errorHandlerProvider.getHandler()) || [];
     for (const project of result) {
       if (!(project.id in projectIds.value)) {
         projectIds.value!.push(project.id);
@@ -239,10 +256,12 @@ export default defineStore(storeId, () => {
   }
 
   return {
+    logger: loggerRef,
+    errorHandler,
+    pushErrorHandler: errorHandlerProvider.pushHandler,
+    popErrorHandler: errorHandlerProvider.popHandler,
     busyFlag,
     setBusyFlag,
-    debugMode,
-    appError,
     busyCount,
     busyState,
     pushBusyState,
@@ -251,7 +270,6 @@ export default defineStore(storeId, () => {
     currentProjectId,
     currentProjectName,
     projectMode,
-    errorHandler,
     getProject,
     searchProjects,
     projects,

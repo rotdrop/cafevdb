@@ -25,8 +25,11 @@ import { defineStore } from 'pinia';
 import { ref, computed, watch } from 'vue';
 import { useRoute } from 'vue-router/composables';
 import Console from '../util/console.ts';
+import { AppError } from '../types/errors.ts';
+import useErrorHandler from './error-handler.ts';
+import type { ErrorHandler } from '../types/errors.ts';
 
-export class HistorySetupError extends Error {}
+export class HistoryStoreSetupError extends AppError {}
 
 export const HistoryActionPush = 'push';
 export const HistoryActionPop = 'pop';
@@ -44,13 +47,19 @@ export interface RouterHistoryState {
 }
 
 export default defineStore(storeId, () => {
+  const errorHandlerProvider = useErrorHandler();
+  const errorHandler = ref(errorHandlerProvider.errorHandler);
+
   const loggerRef = ref(new Console(storeId));
   const logger = loggerRef.value;
 
-  logger.error('HISTORY STORE INIT');
+  logger.debug('HISTORY STORE INIT');
 
   const routerHistory = ref<Record<string, RouterHistoryState> >({});
   const currentRoute = useRoute();
+
+  const initialHistoryIndex: undefined|string = window?.history?.state?.key;
+  const currentHistoryIndex = ref(initialHistoryIndex || '');
 
   const defineInitialHistory = (initialHistoryIndex: string) => {
     routerHistory.value = {
@@ -62,12 +71,9 @@ export default defineStore(storeId, () => {
         position: window?.history?.length,
       },
     };
-    currentHistoryIndex.value = initialHistoryIndex;
+    currentHistoryIndex.value = initialHistoryIndex  || '';
     logger.debug('INITIAL ROUTER HISTORY', currentHistoryIndex, { ...routerHistory.value });
   };
-
-  const initialHistoryIndex: undefined|string = window?.history?.state?.key;
-  const currentHistoryIndex = ref(initialHistoryIndex);
 
   if (!initialHistoryIndex) {
     const stop = watch(
@@ -84,7 +90,13 @@ export default defineStore(storeId, () => {
             historyString = ''
           }
           logger.error('Window history state has not been set up.', { ...(window?.history || {}) });
-          throw new HistorySetupError('Window history state has not been set up: ' + historyString);
+          const error = new HistoryStoreSetupError('Window history state has not been set up: ' + historyString);
+          error.context.type = storeId;
+          if (errorHandler.value) {
+            errorHandler.value(error);
+          } else {
+            throw error;
+          }
         }
         defineInitialHistory(initialHistoryIndex);
       },
@@ -290,6 +302,9 @@ export default defineStore(storeId, () => {
 
   return {
     logger: loggerRef,
+    errorHandler,
+    pushErrorHandler: errorHandlerProvider.pushHandler,
+    popErrorHandler: errorHandlerProvider.popHandler,
     currentRoute,
     routerHistory,
     currentHistoryIndex,

@@ -1,11 +1,11 @@
 <?php
 /**
- * Orchestra member, musicion and project management application.
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,26 +26,37 @@ namespace OCA\CAFEVDB\Middleware;
 
 use Exception;
 
+use Psr\Log\LoggerInterface;
+
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Middleware;
+use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
+use OCP\IRequest;
+use OC\AppFramework\Utility\QueryNotFoundException;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 
 /**
- * Deny all request while config-lock is active.
+ * Turn an exception into a data response which can be parsed by the frontend
+ * if the controller method has the @CatchExceptions annotation.
  */
-class ConfigLockMiddleware extends Middleware
+class ExceptionMiddleware extends Middleware
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
+    protected IAppContainer $appContainer,
     protected IControllerMethodReflector $reflector,
-    protected ConfigService $configService,
     protected IL10N $l,
+    protected IRequest $request,
+    protected LoggerInterface $logger,
   ) {
   }
   // phpcs:enable
@@ -53,30 +64,28 @@ class ConfigLockMiddleware extends Middleware
   /**
    * {@inheritdoc}
    *
-   * Check if the user is a sub-admin of the orchestra group.
-   */
-  public function beforeController($controller, $methodName)
-  {
-    if ($this->reflector->hasAnnotation('IgnoreConfigLock')) {
-      return;
-    }
-    if (!empty($this->configService->getConfigValue(ConfigService::CONFIG_LOCK_KEY))) {
-      throw new Exceptions\ConfigLockedException;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * Return maintenance-mode response in case of an error.
+   * Convert the exception to a data-response for the front-end. In effect
+   * this disables the exception handling of the Nextcloud core.
    */
   public function afterException($controller, $methodName, Exception $exception)
   {
-    if (!($exception instanceof Exceptions\ConfigLockedException)) {
+    if ($this->reflector->hasAnnotation('DoNotCatchExceptions')) {
       throw $exception;
     }
-    $response = $this->templateResponse('update.user', [], self::RENDER_AS_GUEST, appName: 'core');
-    $response->setStatus(Http::STATUS_LOCKED);
-    return $response;
+    $logEntry = $this->logException(
+      new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to serve request to "%s".', $this->request->getPathInfo()), 0, $exception
+      ),
+      returnLogEntry: true,
+    );
+    switch (get_class($exception)) {
+      case QueryNotFoundException::class:
+        $httpStatus = Http::STATUS_NOT_FOUND;
+        break;
+      default:
+        $httpStatus = Http::STATUS_INTERNAL_SERVER_ERROR;
+        break;
+    }
+    return new JSONResponse($logEntry, $httpStatus);
   }
 }

@@ -18,6 +18,7 @@
   ],
   "compilerOptions": {
     "types": ["jest", "node", "vue", "vue-router"],
+    "lib": [ "ES2022", "DOM", "DOM.Iterable" ],
     "outDir": "./dist/",
     "target": "ESNext",
     "module": "esnext",
