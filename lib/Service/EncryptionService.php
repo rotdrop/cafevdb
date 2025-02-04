@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -238,7 +238,7 @@ class EncryptionService
 
   /**
    * Initialize the per-user public/private key pair, which
-   * inparticular is used to propagate the app's encryption key to all
+   * in particular is used to propagate the app's encryption key to all
    * relevant users.
    *
    * @param bool $forceNewKeyPair Generate a new key pair even if an
