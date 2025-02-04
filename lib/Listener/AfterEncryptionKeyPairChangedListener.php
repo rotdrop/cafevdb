@@ -25,6 +25,8 @@
 
 namespace OCA\CAFEVDB\Listener;
 
+use Exception;
+
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
@@ -73,6 +75,8 @@ class AfterEncryptionKeyPairChangedListener implements IEventListener
     $ownerId = $event->getOwnerId();
     $oldKeyPair = $event->getOldKeyPair();
     $newKeyPair = $event->getNewKeyPair();
+
+    $this->logException(new Exception('ENCRYPTION KEY PAIR CHANED ' . $ownerId . ' ' . print_r($oldKeyPair, true) . '  ' . print_r($newKeyPair, true)));
 
     /** @var AsymmetricKeyService $keyService */
     $keyService = $this->appContainer->get(AsymmetricKeyService::class);
