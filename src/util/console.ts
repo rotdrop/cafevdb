@@ -22,11 +22,11 @@
  */
 
 import StackTrace from 'stacktrace-js';
-import type { StackFrame } from 'stacktrace-js';
 
 export function stackFrame(offset: number) {
   const trace = StackTrace.getSync();
-  return trace?.[offset + 1];
+  const frame = trace?.[offset + 1];
+  return frame;
 }
 
 class Console {
