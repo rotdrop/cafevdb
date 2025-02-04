@@ -35,7 +35,6 @@ use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
@@ -113,7 +112,6 @@ class Projects extends PMETableViewBase
     PageNavigation $pageNavigation,
     protected ProjectService $projectService,
     private EventsService $eventsService,
-    private ImagesService $imagesService,
     private MailingListsService $listsService,
     private OrganizationalRolesService $orgaRolesService,
     protected UserStorage $userStorage,

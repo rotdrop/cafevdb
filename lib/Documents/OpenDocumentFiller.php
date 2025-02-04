@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024 Claus-Justus Heine
+ * @copyright 2011-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Exceptions;
@@ -328,10 +327,6 @@ class OpenDocumentFiller
     $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
     $substitutions['org'][ConfigService::DOCUMENT_TEMPLATE_LOGO] = $this->createDataUri($logo->getContent(), $logo->getMimeType());
 
-    // $logoData = $logo->getContent();
-    // $logoImage = ImagesService::rasterize($logoData, 1200);
-    // $substitutions['org:'.ConfigService::DOCUMENT_TEMPLATE_LOGO] = 'data:'.$logoImage->mimeType().';base64,' . base64_encode($logoImage->data());
-
     /** @var OrganizationalRolesService $rolesService */
     $rolesService = $this->di(OrganizationalRolesService::class);
 
@@ -348,9 +343,6 @@ class OpenDocumentFiller
       $signature = $rolesService->{$boardMember . 'Signature'}();
 
       if (!empty($signature)) {
-        // if ($signature->mimeType() != 'image/png') {
-        //   $signature = ImagesService::rasterize($signature, 1200, 1200);
-        // }
         $signature = $this->createDataUri($signature->data(), $signature->mimeType());
       }
       $substitutions['org'][$boardMember]['signature'] = $signature;

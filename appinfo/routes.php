@@ -108,7 +108,7 @@ $routes = [
       ],
     ],
     [
-      'name' => 'encryption#handleRecryptRequest',
+      'name' => 'encryption#handleRecryp<tRequest',
       'url' => '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
       'verb' => 'POST',
       'requirements' => [
@@ -347,44 +347,6 @@ $routes = [
       'requirements' => [
         'section' => '^(?!pdf).*$',
       ],
-    ],
-    /**
-     * Image service out of database or OC file-space
-     *
-     * FROM OLD VERSION
-     *
-     * GET: stored photo from data base
-     * POST: upload / select cloud / save crop
-     * POST: delete image by id
-     *
-     * Commands:
-     * - section as OBJECT_IMAGE
-     *     - musician_photo
-     *     - project_poster
-     *     - project_flyer
-     *     - cloud
-     * - object:
-     */
-    [
-      'name' => 'images#get',
-      'url' => '/image/{joinTable}/{ownerId}',
-      'verb' => 'GET',
-    ],
-    /**
-     * operations:
-     *   - upload, upload from client machine
-     *     Respond with temporary image path
-     *   - cloud, select from cloud storage
-     *     Respond with temporary image path
-     *   - dragndrop
-     *   - save, save image data, possibly from crop-editor
-     *   - edit, crop existing edit
-     *   - delete, delete given image
-     */
-    [
-      'name' => 'images#post',
-      'url' => '/image/{operation}',
-      'verb' => 'POST',
     ],
     /**
      * Project data validation etc.
