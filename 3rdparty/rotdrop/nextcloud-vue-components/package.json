@@ -16,8 +16,8 @@
     "url": "git+https://github.com/rotdrop/nextcloud-vue-components.git"
   },
   "engines": {
-    "node": "^16.0.0",
-    "npm": "^8.0.0"
+    "node": "^20.0.0",
+    "npm": "^10.0.0"
   },
   "keywords": [
     "Vue",
