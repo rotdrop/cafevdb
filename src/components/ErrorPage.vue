@@ -26,9 +26,13 @@
     <div v-if="envelopeError" class="envelope-error">
       {{ envelopeErrorMessage }}
     </div>
-    <NextcloudLogException v-if="exception"
+    <!-- <NextcloudLogException v-if="exception"
                            :exception="exception"
                            :is-expanded="true"
+    /> -->
+    <NextcloudLogModal v-if="exception"
+                       :open="true"
+                       :current-entry="logEntry"
     />
     <div v-else-if="originalError && isAxiosErrorResponse">
       <p>{{ t(appName, 'AXIOS ERROR WITH RESPONSE DATA') }}</p>
@@ -59,7 +63,8 @@ import { AppError } from '../types/errors.ts'
 import { computed } from 'vue'
 import { appName } from '../config.ts'
 import { translate as t, loadTranslations } from '@nextcloud/l10n'
-import NextcloudLogException from '@nextcloud/app-logreader/src/components/exception/LogException.vue'
+import NextcloudLogModal from './LogEntry/LogDetailsModal.vue'
+import NextcloudLogException from './LogEntry/exception/LogException.vue'
 import Console from '../util/console.ts'
 
 const COMPONENT_NAME = 'ErrorPage'
@@ -95,8 +100,14 @@ logger.info('ERRORS', envelopeError, originalError)
 
 const isAxiosError = computed(() => isAxiosErrorGuard(originalError.value))
 const isAxiosErrorResponse = computed(() => isAxiosErrorResponseGuard(originalError.value))
-// const logEntry = computed(() => isNextcloudExceptionResponse(originalError) ? originalError.value.response.data : null)
-const exception = computed(() => isNextcloudExceptionResponse(originalError.value) ? originalError.value.response.data.exception : null)
+const logEntry = computed(() =>
+  isNextcloudExceptionResponse(originalError)
+    ? originalError.value.response.data
+    : null)
+const exception = computed(() =>
+  isNextcloudExceptionResponse(originalError.value)
+    ? originalError.value.response.data.exception
+    : null)
 
 const makeErrorMessage = (error: Error) => error.name + ': ' + error.message
 
