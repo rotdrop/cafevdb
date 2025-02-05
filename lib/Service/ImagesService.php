@@ -140,7 +140,7 @@ class ImagesService
       $data = $file->getContent();
     }
     $dataUri = $this->generateDataUri($data, $mimeType);
-    $this->filesCacheService->set($file, $cacheKey, $data);
+    $this->filesCacheService->set($file, $cacheKey, $dataUri);
     return $dataUri;
   }
 
