@@ -32,20 +32,22 @@ use clsTinyButStrong as OpenDocumentFillerBackend;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ExecutableFinder;
 
-use OCP\IL10N;
+use OCP\AppFramework\IAppContainer;
 use OCP\Files\File;
 use OCP\Files\IMimeTypeDetector;
+use OCP\IL10N;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Autofill for Libre-/Openoffice documents. */
 class OpenDocumentFiller
@@ -62,16 +64,18 @@ class OpenDocumentFiller
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
+    private AnyToPdf $anyToPdf,
+    private ExecutableFinder $executableFinder,
+    private IMimeTypeDetector $mimeTypeDetector,
+    private ImagesService $imagesService,
+    private OpenDocumentFillerBackend $backend,
+    private TemplateService $templateService,
+    private UserStorage $userStorage,
     protected ConfigService $configService,
     protected EntityManager $entityManager,
-    private UserStorage $userStorage,
-    private TemplateService $templateService,
-    private OpenDocumentFillerBackend $backend,
-    private AnyToPdf $anyToPdf,
-    private IMimeTypeDetector $mimeTypeDetector,
-    private ExecutableFinder $executableFinder,
+    protected IAppContainer $appContainer,
   ) {
-    $this->di(\clsOpenTBS::class); // ??
+    $this->appContainer->get(\clsOpenTBS::class); // ??
     ob_start();
     $this->backend->NoErr = true;
     $this->backend->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
@@ -325,10 +329,11 @@ class OpenDocumentFiller
     // Logo
     /** @var \OCP\Files\File */
     $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
-    $substitutions['org'][ConfigService::DOCUMENT_TEMPLATE_LOGO] = $this->createDataUri($logo->getContent(), $logo->getMimeType());
+    $substitutions['org'][ConfigService::DOCUMENT_TEMPLATE_LOGO] =
+      $this->imagesService->dataUriFromFile($logo, ImagesService::SVG_TEXT_TO_PATH);
 
     /** @var OrganizationalRolesService $rolesService */
-    $rolesService = $this->di(OrganizationalRolesService::class);
+    $rolesService = $this->appContainer->get(OrganizationalRolesService::class);
 
     foreach (OrganizationalRolesService::BOARD_MEMBERS as $boardMember) {
 
@@ -343,7 +348,7 @@ class OpenDocumentFiller
       $signature = $rolesService->{$boardMember . 'Signature'}();
 
       if (!empty($signature)) {
-        $signature = $this->createDataUri($signature->data(), $signature->mimeType());
+        $signature = $this->imagesService->dataUriFromFile($signature, ImagesService::SVG_TEXT_TO_PATH);
       }
       $substitutions['org'][$boardMember]['signature'] = $signature;
       $substitutions['org'][$boardMember]['role'] = $this->l->t($boardMember);
@@ -356,7 +361,7 @@ class OpenDocumentFiller
     $bank = $this->getConfigValue('bankAccountBankName');
     if (empty($bank)) {
       /** @var FinanceService $financeService */
-      $financeService = $this->di(FinanceService::class);
+      $financeService = $this->appContainer->get(FinanceService::class);
       if (!empty($iban)) {
         $ibanInfo = $financeService->getIbanInfo($iban);
         $bank = $ibanInfo['bank'];
@@ -396,43 +401,5 @@ class OpenDocumentFiller
     }
 
     return $substitutions;
-  }
-
-  /**
-   * Create a data-uri from a data string. If $data is svg then first convert
-   * texts to paths as Libreoffice has a bug with font rendering with svg
-   * images.
-   *
-   * @param string $data
-   *
-   * @parma null|string $mimeType
-   *
-   * @return string
-   */
-  protected function createDataUri(string $data, ?string $mimeType = null):string
-  {
-    if ($mimeType === null) {
-      $mimeType = $this->mimeTypeDetector->detectString($data);
-    }
-    if ($mimeType == 'image/svg+xml') {
-      // libreoffice has a bug with SVGs which contain text.
-      $inkscape = $this->executableFinder->find('inkscape');
-      if (!empty($inkscape)) {
-        $process = new Process([
-          $inkscape,
-          '--export-plain-svg',
-          '--export-text-to-path',
-          '-o', '-',
-          '-p',
-        ]);
-        try {
-          $process->setInput($data)->run();
-          $data = $process->getOutput();
-        } catch (Throwable $t) {
-          $this->logException('Calling inkscape as filter failed.', $t);
-        }
-      }
-    }
-    return 'data:' . $mimeType . ';base64,' . base64_encode($data);
   }
 }
