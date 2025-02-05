@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB;
 
-if ($omitEnvelope) {
+if ($omitEnvelope ?? false) {
   return '';
 }
 

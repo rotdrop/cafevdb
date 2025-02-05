@@ -24,13 +24,13 @@
 
 namespace OCA\CAFEVDB;
 
-if ($omitEnvelope) {
+if ($omitEnvelope ?? false) {
   return '';
 }
 
 $css_pfx = $_['css-prefix'];
 
-$uploadName = Controller\ImagesController::UPLOAD_NAME;
+$uploadName = 'imagefile';
 
 ?>
 
