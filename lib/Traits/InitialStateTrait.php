@@ -24,17 +24,22 @@
 
 namespace OCA\CAFEVDB\Traits;
 
+use Throwable;
+
+use OCP\AppFramework\IAppContainer;
+use OCP\IConfig;
 use OCP\IInitialStateService;
 use OCP\IL10N;
 use OCP\IUser;
-use OCP\IConfig;
 
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Documents\TemplateService;
+use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
+use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\Service\AuthorizationService;
-use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
-use OCA\CAFEVDB\Common\Util;
 
 /** Provide an "initial state" for JavaScript. */
 trait InitialStateTrait
@@ -55,6 +60,9 @@ trait InitialStateTrait
 
   /** @var ConfigService */
   protected ConfigService $configService;
+
+  /** @var IAppContainer */
+  protected IAppContainer $appContainer;
 
   /**
    * @param string $userId
@@ -82,20 +90,39 @@ trait InitialStateTrait
     $financeMode = $this->getUserValue('financeMode');
     $financeMode = filter_var($financeMode, FILTER_VALIDATE_BOOLEAN);
 
-    $adminContact = $this->appContainer()->get(OrganizationalRolesService::class)->cloudAdminContact(implode: true);
+    $adminContact = $this->appContainer->get(OrganizationalRolesService::class)->cloudAdminContact(implode: true);
 
-    $authorizationService = $this->appContainer()->get(AuthorizationService::class);
+    $authorizationService = $this->appContainer->get(AuthorizationService::class);
 
     $languageComplete = $l->getLanguageCode();
     list($languageShort,) = explode('_', $languageComplete);
     $locale = $l->getLocaleCode();
 
-    $this->initialStateService->provideInitialState(
+    try {
+      /** @var TemplateService $templateService */
+      $templateService = $this->appContainer->get(TemplateService::class);
+      $orchestraLogo = $templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
+
+      if ($orchestraLogo) {
+        /** @var ImagesService $imagesService */
+        $imagesService = $this->appContainer->get(ImagesService::class);
+
+        $orchestraLogo = $imagesService->svgFromFile($orchestraLogo, ImagesService::SVG_OPTIMIZE);
+      }
+    } catch (Throwable $t) {
+      $this->logException($t);
+    }
+
+    /** @var IInitialStateService $initialStateService */
+    $initialStateService = $this->appContainer->get(IInitialStateService::class);
+
+    $initialStateService->provideInitialState(
       $this->appName,
       'CAFEVDB',
       [
         'appName' => $this->appName,
         'orchestra' => $this->getConfigValue('orchestra', $this->l->t('unconfigured')),
+        'orchestraLogo' => $orchestraLogo ?? '',
         'toolTipsEnabled' => $tooltips,
         'wysiwygEditor' => $editor,
         'language' => $languageShort,
@@ -117,7 +144,7 @@ trait InitialStateTrait
         'uploadMaxFileSize' => Util::maxUploadSize(),
       ]);
 
-    $this->initialStateService->provideInitialState(
+    $initialStateService->provideInitialState(
       $this->appName,
       'PHPMyEdit',
       [
