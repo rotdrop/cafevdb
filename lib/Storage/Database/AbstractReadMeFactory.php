@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,14 +26,12 @@ namespace OCA\CAFEVDB\Storage\Database;
 
 use Throwable;
 
-use Psr\Container\ContainerInterface;
-
+use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
-
-use OCA\Text\Service\WorkspaceService;
 
 use OCA\CAFEVDB\AppInfo\AppL10N;
 use OCA\CAFEVDB\Storage\StorageUtil;
+use OCA\Text\Service\WorkspaceService;
 
 /**
  * Abstract factory baseclass.
@@ -51,14 +49,14 @@ abstract class AbstractReadMeFactory implements ReadMeFactoryInterface
   protected ?array $readMeFileNames = null;
 
   /**
-   * @param ContainerInterface $appContainer
+   * @param IAppContainer $appContainer
    *
    * @param IL10N $l
    *
    * @param AppL10N $appL10n
    */
   public function __construct(
-    protected ContainerInterface $appContainer,
+    protected IAppContainer $appContainer,
     protected IL10N $l,
     protected AppL10N $appL10n,
   ) {
