@@ -259,7 +259,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     $this->financeMode = $this->getUserValue('financeMode', false) === 'on';
     $this->filterVisibility = $this->getUserValue('filtervisibility', 'off') == 'on';
 
-    $this->debugRequests = 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_REQUEST);
+    $this->debugRequests = 0 != ((int)$this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_REQUEST);
 
     $this->membersProjectId = $this->getClubMembersProjectId();
 
