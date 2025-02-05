@@ -108,7 +108,7 @@ $routes = [
       ],
     ],
     [
-      'name' => 'encryption#handleRecryp<tRequest',
+      'name' => 'encryption#handleRecryptRequest',
       'url' => '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
       'verb' => 'POST',
       'requirements' => [
