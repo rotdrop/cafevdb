@@ -117,6 +117,7 @@ class PageController extends Controller
    * @NoAdminRequired
    * @NoGroupMemberRequired
    * @NoCSRFRequired
+   * @AllowIFrameSelf
    */
   public function index():Http\Response
   {
@@ -203,6 +204,7 @@ class PageController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
+   * @AllowIFrameSelf
    */
   private function restore(string $renderAs = 'blank'):Http\Response
   {
@@ -228,6 +230,7 @@ class PageController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
+   * @AllowIFrameSelf
    */
   public function remember(string $renderAs = self::RENDER_AS_USER):Http\Response
   {
@@ -278,6 +281,7 @@ class PageController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
+   * @AllowIFrameSelf
    */
   public function loader(
     string $renderAs,

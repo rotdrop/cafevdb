@@ -82,6 +82,7 @@ class VueAppController extends Controller
    *
    * @NoAdminRequired
    * @NoCSRFRequired
+   * @AllowIFrameSelf
    */
   public function index():TemplateResponse
   {
