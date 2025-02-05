@@ -101,8 +101,6 @@ class BeforeTemplateRenderedListener implements IEventListener
         /** @var ImagesService $imagesService */
         $imagesService = $this->appContainer->get(ImagesService::class);
         $customLogo = $imagesService->dataUriFromFile($customLogo, ImagesService::SVG_OPTIMIZE|ImagesService::CONVERT_TO_SVG);
-        $this->logInfo('LOGO ??? ' . $customLogo);
-        $customLogo = null;
       }
     } catch (Throwable $t) {
       $this->logException($t);
