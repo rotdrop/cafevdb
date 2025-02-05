@@ -317,7 +317,8 @@ import axios from '@nextcloud/axios'
 import generateAppUrl from './toolkit/util/generate-url.js'
 import { storeToRefs } from 'pinia'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
-import allDebugOptions from './debug-modes.ts'
+import allDebugOptions, { DEBUG_VUE } from './debug-modes.ts'
+import enableVueDevTools from './util/vue-devtools.ts'
 import { formatFileSize } from '@nextcloud/files'
 import { emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
 import type { SetterEvents, SetterEventValue } from '@rotdrop/async-nextcloud-event-bus'
@@ -542,6 +543,11 @@ const reactifyGlobalState = function() {
   reactive(globalState)
   logger.debug('AFTER REACTIFY GLOBAL STATE', globalState)
   orchestraName.value = globalState.orchestra
+
+  if (globalState.debugModes & DEBUG_VUE) {
+    enableVueDevTools()
+  }
+
   watch(
     () => globalState.toolTipsEnabled,
     (value, oldValue) => updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue),
@@ -572,6 +578,10 @@ const reactifyGlobalState = function() {
       debugModes.value.splice(0, Infinity, ...newSelection)
       await nextTick()
       settingsLocked.value = false
+
+      if (globalState.debugModes & DEBUG_VUE) {
+        enableVueDevTools()
+      }
     },
   )
   watch(

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -76,7 +76,17 @@ class ConfigService
   const DEBUG_TOOLTIPS  = (1 << 5);
   const DEBUG_EMAILFORM = (1 << 6);
   const DEBUG_GEOCODING = (1 << 7);
-  const DEBUG_ALL       = self::DEBUG_GENERAL|self::DEBUG_QUERY|self::DEBUG_CSP|self::DEBUG_L10N|self::DEBUG_REQUEST|self::DEBUG_TOOLTIPS|self::DEBUG_EMAILFORM|self::DEBUG_GEOCODING;
+  const DEBUG_VUE       = (1 << 8);
+  const DEBUG_ALL       = self::DEBUG_GENERAL
+    |self::DEBUG_QUERY
+    |self::DEBUG_CSP
+    |self::DEBUG_L10N
+    |self::DEBUG_REQUEST
+    |self::DEBUG_TOOLTIPS
+    |self::DEBUG_EMAILFORM
+    |self::DEBUG_GEOCODING
+    |self::DEBUG_VUE
+    ;
   const DEBUG_NONE      = 0;
 
   const DEFAULT_LOCALE = 'en_US';
