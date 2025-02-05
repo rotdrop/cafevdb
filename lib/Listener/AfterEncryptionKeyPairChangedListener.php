@@ -76,7 +76,7 @@ class AfterEncryptionKeyPairChangedListener implements IEventListener
     $oldKeyPair = $event->getOldKeyPair();
     $newKeyPair = $event->getNewKeyPair();
 
-    $this->logException(new Exception('ENCRYPTION KEY PAIR CHANED ' . $ownerId . ' ' . print_r($oldKeyPair, true) . '  ' . print_r($newKeyPair, true)));
+    $this->logException(new Exception('ENCRYPTION KEY PAIR CHANGED ' . $ownerId . ' ' . print_r($oldKeyPair, true) . '  ' . print_r($newKeyPair, true)));
 
     /** @var AsymmetricKeyService $keyService */
     $keyService = $this->appContainer->get(AsymmetricKeyService::class);
