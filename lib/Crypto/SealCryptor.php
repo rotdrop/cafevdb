@@ -117,7 +117,7 @@ class SealCryptor implements ICryptor
       try {
         return $this->sealService->unseal($data, $id, $this->sealCryptors[$id]);
       } catch (Exceptions\EncryptionException $e) {
-        $this->logException($e, level: LogLevel::INFO);
+        $this->logDebug('Decryption for id "' . $id . '" failed.');
       }
     }
     throw new Exceptions\EncryptionFailedException('Unable to decrypt sealed data, all candidates have failed: ' . implode(', ', $candidates));

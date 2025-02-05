@@ -138,7 +138,7 @@ class AsymmetricKeyService
     try {
       $keyPair = $forceNewKeyPair ? null : $this->keyStorage->getKeyPair($ownerId, $keyPassphrase);
     } catch (\Throwable $t) {
-      $this->logException($t, $this->l->t('Unable to retrieve old key-pair for "%s".', $ownerId));
+      $this->logException($t, $this->l->t('Unable to retrieve old key-pair for "%s:%s".', [ $ownerId, $keyPassphrase ]));
       $keyPair = [];
     }
     if (empty($keyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG]) || empty($keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG])) {
@@ -150,7 +150,7 @@ class AsymmetricKeyService
           try {
             $oldKeyPair = $this->keyStorage->getKeyPair($ownerId, $loginPassword);
           } catch (\Throwable $t) {
-            $this->logException($t, 'Unable to fetch old encryption key pair for "' . $ownerId . '".');
+            $this->logException($t, 'Unable to fetch old encryption key pair for "' . $ownerId . ':' . $loginPassword . '".');
           }
         }
       }

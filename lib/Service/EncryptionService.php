@@ -391,12 +391,17 @@ class EncryptionService
     // compare the user-key with the stored encryption key hash
     $sysDatabaseKeyHash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
     if (!$this->verifyHash($userDatabaseKey, $sysDatabaseKeyHash)) {
+      $failCount = 0;
+      for ($i = 0; $i < 1000; ++$i) {
+        $failCount += 1 - (int)$this->verifyHash($userDatabaseKey, $sysDatabaseKeyHash);
+      }
       // Failed
       $this->appCryptor->setEncryptionKey(null);
-      throw new Exceptions\EncryptionKeyException($this->l->t('Failed to validate user encryption key.'));
+      throw new Exceptions\EncryptionKeyException($this->l->t('Failed to validate user encryption key. ' . $failCount . ' "' . $sysDatabaseKeyHash) . '"');
       $this->logError('Unable to validate HASH for encryption key.');
     } else {
       $this->logDebug('Encryption keys validated'.(empty($userDatabaseKey) ? ' (no encryption)' : '').'.');
+      // $this->logInfo($this->l->t('Validated user encryption key. ' . $sysDatabaseKeyHash));
     }
 
     return true;
