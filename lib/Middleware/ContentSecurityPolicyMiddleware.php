@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,49 +24,32 @@
 
 namespace OCA\CAFEVDB\Middleware;
 
-use Throwable;
-
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Http\Response;
-
-use OCA\CAFEVDB\Service\ConfigService;
+use OCP\AppFramework\Utility\IControllerMethodReflector;
 
 /**
- * Sends CSP reports to a dedicated addresss for debugging.
+ * Tweak the CSP header, in particular allow iframe access for "local" iframes
+ * if requested by the controller method.
  */
-class CSPViolationReporting extends Middleware
+class ContentSecurityPolicyMiddleware extends Middleware
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
-
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  /**
+   * @param IControllerMethodReflector $reflector
+   */
   public function __construct(
-    protected ConfigService $configService,
+    protected IControllerMethodReflector $reflector,
   ) {
   }
-  // phpcs:enable
 
   /**
    * {@inheritdoc}
-   *
-   * Add CSP reporting to CSP header.
    */
   public function afterController($controller, $methodName, Response $response)
   {
-    $reportCSP = $this->inGroup();
-    try {
-      $reportCSP = $this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_CSP;
-    } catch (Throwable $t) {
-      $reportCSP = false;
-    }
-    if ($reportCSP) {
-      $reportLocation = $this->getConfigValue('cspfailurereporting', null);
-      if (empty($this->reportLocation)) {
-        $cspFailureToken = $this->getAppValue('cspfailuretoken');
-        $reportLocation = $this->urlGenerator()->linkToRoute($this->appName().'.csp_violation.post', ['operation' => 'report']);
-        $reportLocation .= '?cspFailureToken='.urlencode($cspFailureToken);
-      }
-      $csp = $response->getContentSecurityPolicy();
-      $csp->addReportTo($reportLocation);
+    $csp = $response->getContentSecurityPolicy();
+    if ($this->reflector->hasAnnotation('AllowIFrameSelf')) {
+      $csp->addAllowedFrameAncestorDomain("'self'");
     }
     return $response;
   }

@@ -205,8 +205,8 @@ trait ResponseTrait
   protected static function dataResponse(array $data, int $status = Http::STATUS_OK):DataResponse
   {
     $response = new DataResponse($data, $status);
-    $policy = $response->getContentSecurityPolicy();
-    $policy->addAllowedFrameAncestorDomain("'self'");
+    // $policy = $response->getContentSecurityPolicy();
+    // $policy->addAllowedFrameAncestorDomain("'self'");
     return $response;
   }
 

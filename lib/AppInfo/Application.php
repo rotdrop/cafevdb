@@ -47,7 +47,6 @@ use OCP\AppFramework\App;
  * Navigation and settings depending on the group-membership
  *
  */
-use OCP\INavigationManager;
 use OCP\Settings\IManager as ISettingsManager;
 use OCP\IURLGenerator;
 
@@ -83,9 +82,6 @@ use OCA\CAFEVDB\Database\EntityManager;
 
 use OCA\CAFEVDB\Service\EventsService;
 
-use OCA\CAFEVDB\Middleware\ExceptionMiddleware;
-use OCA\CAFEVDB\Middleware\SubadminMiddleware;
-use OCA\CAFEVDB\Middleware\GroupMemberMiddleware;
 use OCA\CAFEVDB\Middleware;
 
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
@@ -206,11 +202,12 @@ class Application extends App implements IBootstrap
     });
 
     // Register Middleware
-    $context->registerMiddleWare(ExceptionMiddleware::class); // must come first
-    $context->registerMiddleWare(SubadminMiddleware::class);
-    $context->registerMiddleWare(GroupMemberMiddleware::class);
-    $context->registerMiddleWare(Middleware\CSPViolationReporting::class);
+    $context->registerMiddleWare(Middleware\ExceptionMiddleware::class); // must come first
+    $context->registerMiddleWare(Middleware\SubadminMiddleware::class);
+    $context->registerMiddleWare(Middleware\GroupMemberMiddleware::class);
+    $context->registerMiddleWare(Middleware\DebugModeMiddleware::class);
     $context->registerMiddleware(Middleware\ConfigLockMiddleware::class);
+    $context->registerMiddleware(Middleware\ContentSecurityPolicyMiddleware::class);
 
     // Register listeners
     ListenerRegistration::register($context);
