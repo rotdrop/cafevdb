@@ -41,7 +41,6 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Controller\MailingListsController;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Controller\ImagesController;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
