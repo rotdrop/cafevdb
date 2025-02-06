@@ -61,7 +61,7 @@ class FilesCacheService
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected string $userId,
+    protected ?string $userId,
     protected AppStorageDisclosure $appStorage,
     protected IL10N $l,
     protected IRootFolder $rootFolder,
