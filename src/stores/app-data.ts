@@ -39,7 +39,7 @@ import useErrorHandler from './error-handler.ts';
 const storeId = 'app-data';
 const logger = new Console(storeId);
 
-export class AppDateStoreError extends AppError {};
+export class AppDataStoreError extends AppError {};
 
 const abortController = new AbortController();
 
@@ -89,7 +89,7 @@ const usePrivateState = defineStore(storeId + '-private', {
       logger.error(context, error);
       const message = typeof context.message === 'string'
         ? context.message : t(appName, 'An error occurred in the app-data store.')
-      error = new AppDateStoreError(message, { cause: error });
+      error = new AppDataStoreError(message, { cause: error });
       error.context = {
         type: storeId,
         ...context,
