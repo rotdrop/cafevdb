@@ -72,12 +72,14 @@ class ExceptionMiddleware extends Middleware
     if ($this->reflector->hasAnnotation('DoNotCatchExceptions')) {
       throw $exception;
     }
-    $logEntry = $this->logException(
-      new Exceptions\EnduserNotificationException(
-        $this->l->t('Unable to serve request to "%s".', $this->request->getPathInfo()), 0, $exception
-      ),
-      returnLogEntry: true,
-    );
+    if (!($exception instanceof Exceptions\EnduserNotificationException)) {
+      $exception = new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to serve request to "%s".', $this->request->getPathInfo()),
+        0,
+        $exception,
+      );
+    }
+    $logEntry = $this->logException($exception, returnLogEntry: true);
     switch (get_class($exception)) {
       case QueryNotFoundException::class:
         $httpStatus = Http::STATUS_NOT_FOUND;
