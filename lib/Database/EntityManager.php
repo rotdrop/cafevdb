@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\Database;
 
-use \RuntimeException;
-use \InvalidArgumentException;
+use InvalidArgumentException;
+use RuntimeException;
+use Throwable;
 
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
@@ -217,6 +218,7 @@ class EntityManager extends EntityManagerDecorator
 
   /** {@inheritdoc} */
   public function __construct(
+    protected string $appName,
     private EncryptionService $encryptionService,
     protected IAppContainer $appContainer,
     private CloudLogger $sqlLogger,
@@ -320,9 +322,13 @@ class EntityManager extends EntityManagerDecorator
   public function getConnection():DatabaseConnection
   {
     if (empty($this->entityManager)) {
-      throw new Exceptions\DatabaseNotConnectedException($this->l->t('There is no entity-manager initialized yet'));
+      throw new Exceptions\DatabaseNotConnectedException($this->l->t('There is no entity-manager initialized yet.'));
     }
-    return $this->entityManager->getConnection();
+    try {
+      return $this->entityManager->getConnection();
+    } catch (ConnectionException $t) {
+      throw new Exceptions\DatabaseNotConnectedException($this->l->t('The entity-manager is unable to connect to the database.'));
+    }
   }
 
   /** {@inheritdoc} */
@@ -401,7 +407,9 @@ class EntityManager extends EntityManagerDecorator
     try {
       $connection = $this->getConnection();
     } catch (Exceptions\DatabaseNotConnectedException $e) {
-      $this->logException($e);
+      if (str_contains($this->request->getPathInfo(), 'apps/' . $this->appName)) {
+        $this->logException($e);
+      }
       return false;
     }
     $params = $connection->getParams();
@@ -422,8 +430,10 @@ class EntityManager extends EntityManagerDecorator
           return false;
         }
       }
-    } catch (\Throwable $t) {
-      $this->logException($t, 'Caught execption checking connection to database server ' . $params['user'] . '@' . $params['host'] . ':' . $params['dbname']);
+    } catch (Throwable $t) {
+      if (str_contains($this->request->getPathInfo(), 'apps/' . $this->appName)) {
+        $this->logException($t, 'Caught execption checking connection to database server ' . $params['user'] . '@' . $params['host'] . ':' . $params['dbname']);
+      }
       return false;
     }
     return true;
