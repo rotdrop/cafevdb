@@ -221,7 +221,7 @@
                   :loading.sync="loading"
                   @view-details="handleDetailsRequest"
       />
-      <NcEmptyContent v-if="isRoot || appError" class="emp-content">
+      <NcEmptyContent v-if="isRoot || appError" :class="{ 'error-page': appError }">
         <template #name>
           <h2>{{ t(appId, '{orchestraName} Orchestra Portal', { orchestraName, }) }}</h2>
         </template>
@@ -336,6 +336,8 @@ import {
   nextTick,
   onMounted,
   reactive,
+  set as vueSet,
+  del as vueDel,
 } from 'vue'
 import { asyncComputed } from '@vueuse/core'
 import { tooltips } from './util/tooltips.ts'
@@ -537,16 +539,44 @@ const updateNavigationItems = async () => {
   }
 }
 
-// watchers
-const reactifyGlobalState = function() {
-  logger.debug('BEFORE REACTIFY GLOBAL STATE', globalState)
-  reactive(globalState)
-  logger.debug('AFTER REACTIFY GLOBAL STATE', globalState)
-  orchestraName.value = globalState.orchestra
+const updateDebugModes = async (newValue: number, oldValue?: number) => {
+  logger.info('DEBUG MODES CHANGED', newValue, oldValue, isMounted.value, settingsLocked.value)
+  if (settingsLocked.value) {
+    return
+  }
+  const newSelection: DebugOption[] = []
+  for (const option of debugOptions.value) {
+    const flag = +option.value
+    if ((newValue & flag)) {
+      newSelection.push(option)
+    }
+  }
+  settingsLocked.value = true
+  debugModes.value.splice(0, Infinity, ...newSelection)
+  await nextTick()
+  settingsLocked.value = false
 
   if (globalState.debugModes & DEBUG_VUE) {
     enableVueDevTools()
   }
+}
+
+// watchers
+const reactifyGlobalState = function() {
+  logger.debug('BEFORE REACTIFY GLOBAL STATE', globalState)
+  for (const [key, value] of Object.entries(globalState)) {
+    vueDel(globalState, key)
+    vueSet(globalState, key, value)
+  }
+  for (const [key, value] of Object.entries(globalState.PHPMyEdit)) {
+    vueDel(globalState.PHPMyEdit, key)
+    vueSet(globalState.PHPMyEdit, key, value)
+  }
+  // reactive(globalState) this alone does not seem to work ...
+  logger.debug('AFTER REACTIFY GLOBAL STATE', globalState)
+  orchestraName.value = globalState.orchestra
+
+  updateDebugModes(globalState.debugModes)
 
   watch(
     () => globalState.toolTipsEnabled,
@@ -560,30 +590,7 @@ const reactifyGlobalState = function() {
     () => globalState.expertMode,
     (value, oldValue) => updatePersonalSettings(BusEvents.SET_EXPERT_MODE, value, oldValue),
   )
-  watch(
-    () => globalState.debugModes,
-    async (newValue, oldValue) => {
-      logger.info('DEBUG MODES CHANGED', newValue, oldValue, isMounted.value, settingsLocked.value)
-      if (settingsLocked.value) {
-        return
-      }
-      const newSelection: DebugOption[] = []
-      for (const option of debugOptions.value) {
-        const flag = +option.value
-        if ((newValue & flag)) {
-          newSelection.push(option)
-        }
-      }
-      settingsLocked.value = true
-      debugModes.value.splice(0, Infinity, ...newSelection)
-      await nextTick()
-      settingsLocked.value = false
-
-      if (globalState.debugModes & DEBUG_VUE) {
-        enableVueDevTools()
-      }
-    },
-  )
+  watch(() => globalState.debugModes, updateDebugModes)
   watch(
     () => globalState.restoreHistory,
     (value, oldValue) => updatePersonalSettings(BusEvents.SET_RESTORE_HISTORY, value, oldValue),
@@ -719,22 +726,16 @@ onMounted(() => {
   }
 }
 .empty-content::v-deep {
+  &.error-page h2 ~ p {
+    min-width: 80%;
+    text-align: left;
+  }
   h2 ~ p {
     text-align: center;
   }
   .hint {
     color: var(--color-text-lighter);
   }
-  .error-section {
-    text-align: center;
-    .error-info {
-      font-weight: bold;
-      font-style: italic;
-      max-width: 66ex;
-    }
-    .hint {
-      max-width: 66ex;
-    }
-  }
+
 }
 </style>
