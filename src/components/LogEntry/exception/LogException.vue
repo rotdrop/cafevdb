@@ -27,8 +27,8 @@ import { translate as t } from '@nextcloud/l10n'
 import StackTrace from './StackTrace.vue'
 
 const props = withDefaults(defineProps<{
-  isPrevious: boolean,
-  isExpanded: boolean,
+  isPrevious?: boolean,
+  isExpanded?: boolean,
   exception: IException
 }>(), {
   isExpanded: false,
