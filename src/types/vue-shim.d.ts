@@ -57,9 +57,12 @@ declare module '@nextcloud/vue' {
 
   const NcCounterBubble: Vue;
 
-  const NcListItem: Vue;
+  const NcListItem: Vue & {
+    forceDisplayActions: true,
+  };
   const NcListItemIcon: Vue;
   const NcProgressBar: Vue;
+  const NcRichText: Vue;
   const NcSettingsSection: Vue;
 
   const NcTextField: Vue & {
@@ -101,6 +104,7 @@ declare module '@nextcloud/vue' {
     NcListItem,
     NcListItemIcon,
     NcProgressBar,
+    NcRichText,
     NcSettingsSection,
     NcTextField,
     Tooltip,
