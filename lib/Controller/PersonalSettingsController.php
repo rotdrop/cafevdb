@@ -1821,10 +1821,13 @@ class PersonalSettingsController extends Controller
           if ($components['scheme'] != 'http' && $components['scheme'] != 'https') {
             return self::grumble($this->l->t('"%1$s" must be a http(s) URL, scheme "%2$s" not supported.', [$value, $components['scheme']]));
           }
+          $this->setConfigValue($parameter, $realValue);
+        } else {
+          $this->deleteConfigValue($parameter);
+          $realValue = null;
         }
-        $this->setConfigValue($parameter, $realValue);
         $key = $parameter;
-        $this->logDebug($key . ' => ' . $this->getConfigValue($key));
+        $this->logDebug($key . ' => ' . $this->getConfigValue($key, null));
         return self::valueResponse($realValue, $this->l->t(' "%s" set to "%s".', [$parameter, $realValue]));
         // link to CMS, currently Redaxo4
       case 'redaxo'.str_replace('redaxo', '', $parameter):
