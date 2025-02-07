@@ -94,7 +94,10 @@
               <IconCancel :size="20" />
             </template>
           </NcButton>
-          <NcButton type="terciary" name="submit">
+          <NcButton type="terciary"
+                    name="submit"
+                    @click="reportError"
+          >
             <template #icon>
               <IconSubmit :size="20" />
             </template>
@@ -135,7 +138,7 @@ import {
   isAxiosError as isAxiosErrorGuard,
 } from '../types/ajax/axios-type-guards.ts'
 import { AppError } from '../types/errors.ts'
-import { computed, watch, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { appName } from '../config.ts'
 import { translate as t, loadTranslations } from '@nextcloud/l10n'
 import { useRouter } from 'vue-router/composables'
@@ -153,6 +156,9 @@ import Console from '../util/console.ts'
 import { serializeError, isErrorLike } from 'serialize-error'
 import type { ErrorLike } from 'serialize-error'
 import md5 from 'blueimp-md5'
+import axios from '@nextcloud/axios'
+import generateAppUrl from '../toolkit/util/generate-url.js'
+import { showError, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 
 const COMPONENT_NAME = 'ErrorPage'
 const logger = new Console(COMPONENT_NAME)
@@ -201,7 +207,6 @@ const showProblemReport = ref(false)
 const userComment = ref('')
 const substitutions = ref<Record<string, string>>({})
 
-const serializedError = serializeError(props.error, { useToJSON: false })
 type StackedErrorObject = Omit<ErrorLike, 'stack'> & { stack?: string | string[] }
 
 // Remove the stack but for the first level. Actually, passing level
@@ -228,8 +233,10 @@ const removeStack = (error: StackedErrorObject, level: number = 0) => {
   }
   return error
 }
+const serializedError = removeStack(serializeError(props.error, { useToJSON: false }))
+
 logger.debug('SERIALIZED ERROR', { serializedError, origError: props.error })
-const systemErrorString = JSON.stringify(removeStack(serializedError), undefined, 2)
+const systemErrorString = JSON.stringify(serializedError, undefined, 2)
 
 const currentUser = getCurrentUser()
 const currentUserDisplay = `${currentUser?.uid} AKA ${currentUser?.displayName}`
@@ -257,8 +264,44 @@ loadTranslations('logreader', () => false)
     translationsLoaded.value = true
   })
   .catch((e) => {
+    logger.error('Unable to fetch logreader translations', e)
     translationsLoaded.value = true // still open untranslated
   })
+
+const reportError = async () => {
+  const postData = {
+    userId: currentUser?.uid || '',
+    comment: userComment.value,
+    errorData: serializedError,
+  }
+  console.info('POST DATA', postData)
+  const url = generateAppUrl('vue-app/a/problem-report')
+  try {
+    const result = await axios.post(url, postData)
+    const messages = [
+      t(appName, 'Your problem-report has been submitted.'),
+    ]
+    if (Array.isArray(result.data.messages)) {
+      messages.splice(1, 0, ...result.data.messages)
+    }
+    showInfo(messages.join(' '), { timeout: TOAST_DEFAULT_TIMEOUT })
+  } catch (reportError) {
+    // @todo should make this a reusable utility function
+    // just notifiy the user that it did not work out
+    logger.error('Unable to submit the problem report', reportError)
+    const errorString = reportError instanceof Error
+      ? reportError.toString()
+      : t(appName, 'unknown error')
+    const messages = [
+      t(appName, 'Could not submit the problem report: "{errorString}".', { errorString }),
+    ]
+    if (isAxiosErrorResponseGuard(reportError) && Array.isArray(reportError.response.data.messages)) {
+      messages.splice(0, 1, ...reportError.response.data.messages)
+    }
+    showError(messages.join(' '), { timeout: TOAST_PERMANENT_TIMEOUT })
+  }
+}
+
 </script>
 <style lang="scss" scoped>
 ::v-deep {

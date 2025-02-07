@@ -167,6 +167,11 @@ $routes = [
       'requirements' => [ 'template' => '.+' ],
     ],
     [
+      'name' => 'problemReport#post',
+      'url' => '/vue-app/a/problem-report',
+      'verb' => 'POST',
+    ],
+    [
       'name' => 'page#index',
       'url' => '/',
       'verb' => 'GET',
