@@ -34,6 +34,7 @@ import { createPinia, PiniaVuePlugin } from 'pinia';
 import { Tooltip } from '@nextcloud/vue';
 import { mixin as globalMixin } from './mixins/global-mixin.ts';
 import * as Authorization from './authorization.ts';
+import { provideMountableComponents } from './services/mountable-components.ts';
 
 // Enabe dev-tools also needs unsafe-eval on script-src in the CSP.
 // window.__VUE_DEVTOOLS_GLOBAL_HOOK__.enabled = true;
@@ -71,11 +72,7 @@ const vueApp = new Vue({
 });
 
 globalState.vueMode = true;
-globalState.vue = {
-  app: vueApp,
-  Vue,
-  router,
-  store: pinia,
-};
+
+provideMountableComponents(vueApp);
 
 export default vueApp;

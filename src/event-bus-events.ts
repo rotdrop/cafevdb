@@ -54,5 +54,7 @@ export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');
 export const LEGACY_PME_HISTORY_UPDATE = appEventName('legacy-pme-history-update');
 export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
 
+export const GET_VUE_COMPONENT = appEventName('get-vue-component');
+
 // global events
 export const TOGGLE_NAVIGATION = 'toggle-navigation';

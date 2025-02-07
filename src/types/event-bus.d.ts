@@ -25,6 +25,7 @@ import type { NextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 
 import {
   APP_SETTINGS_POPUP,
+  GET_VUE_COMPONENT,
   LEGACY_PAGE_CLEANUP,
   LEGACY_PAGE_FINALIZE,
   LEGACY_PAGE_LOAD,
@@ -45,6 +46,8 @@ import {
   SET_TOOLTIPS_MODE,
   WIKI_POPUP,
 } from '../event-bus-events.ts';
+
+import type { ComponentProps, PropsData } from '../mountable-component-names.ts';
 
 declare module '@rotdrop/async-nextcloud-event-bus' {
 
@@ -70,6 +73,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
   export interface AsyncNextcloudEvents {
     // mapping of 'event name' => 'event type'
     [APP_SETTINGS_POPUP]: Callbacks,
+    [GET_VUE_COMPONENT]: { name: keyof ComponentProps, propsData: PropsData<keyof ComponentProps> }, // { name: keyof ComponentProps, propsData: ComponentProps[typeof name] },
     [LEGACY_PAGE_CLEANUP]: undefined,
     [LEGACY_PAGE_FINALIZE]: undefined,
     [LEGACY_PAGE_LOAD]: { post: TemplatePostData, template: string|null, projectId: number|null, projectName: string|undefined, keepHistory: boolean, },

@@ -51,6 +51,7 @@ import setBusyIndicators from './busy-indicators.js';
 import iFrameResize from './iframe-resize.js';
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import * as BusEvents from '../event-bus-events.ts';
+import { PROJECT_ACTIONS_MENU } from '../mountable-component-names.ts';
 
 // eslint-disable-next-line no-unused-vars
 // import iFrameResize from 'iframe-resizer';
@@ -328,29 +329,30 @@ const handleProjectActions = function($menuItem, containerSel) {
   CAFEVDB.snapperClose();
 };
 
-let VueProjectMenu = null;
-
 const actionMenu = async function(containerSel) {
   console.info('PROJECT CONTAINER SELECTOR', containerSel);
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
 
   if (globalState.vueMode) {
-    if (!VueProjectMenu) {
-      VueProjectMenu = (await import(/* webpackChunkName: 'project-actions-menu' */ '../components/ProjectActionsMenu.vue')).default;
-      VueProjectMenu = globalState.vue.Vue.extend(VueProjectMenu);
-      console.info('VUE PROJECT MENU', VueProjectMenu);
-    }
     const generateVueMenu = async ($actionMenu) => {
       const projectId = $actionMenu.data('projectId');
       const projectName = $actionMenu.data('projectName');
-      const vueMenu = new VueProjectMenu({
+      const eventBusResult = await asyncEmit(BusEvents.GET_VUE_COMPONENT, {
+        name: PROJECT_ACTIONS_MENU,
         propsData: {
           projectId,
           projectName,
           enableOverviewItem: $container.find(pmeFormSelector).hasClass(pmeToken('list')),
         },
       });
+      if (!Array.isArray(eventBusResult)
+          || eventBusResult.length !== 1
+          || typeof eventBusResult[0].value !== 'object') {
+        throw new Error(t(appName, 'Unable to create project actions menu'));
+      }
+      const vueMenu = eventBusResult[0].value;
+      console.info('AFTER CREATE NEW MENU', vueMenu);
       $actionMenu.data('vueMenu', vueMenu);
       $actionMenu.removeClass('dropdown-container').empty().html('<div></div>');
       return await vueMenu.$mount($actionMenu.children(':first')[0]);
@@ -374,7 +376,7 @@ const actionMenu = async function(containerSel) {
         const vueMenu = $actionMenu.data('vueMenu') || await generateVueMenu($actionMenu);
         const projectId = $actionMenu.data('projectId');
 
-        if (vueMenu.open) {
+        if (vueMenu.isOpen()) {
           vueMenu.closeMenu();
         } else {
           asyncEmit(BusEvents.PROJECT_ACTIONS, {
