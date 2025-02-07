@@ -49,7 +49,7 @@
             >
               {{ t(appId, 'Sychronize User Backends') }}
             </NcActionButton>
-          </template>(
+          </template>
         </SelectWithSubmitButton>
       </div>
       <div v-if="config.isSubAdmin || config.isAdmin">
@@ -69,7 +69,7 @@
                              :loading="loading.settings"
                              :disabled="loading.general || groupAdminsDisabled"
                              :required="true"
-                             @input="info"
+                             @input="logger.info"
                              @update="saveSetting('orchestraUserGroupAdmins')"
                              @error="showErrorToast"
         />
@@ -219,7 +219,7 @@
                       :placeholder="t(appId, 'e.g. Auvergne2019')"
                       :multiple="false"
                       :submit-button="false"
-                      @update="(...rest) => info('Projects Update', ...rest)"
+                      @update="(...rest) => logger.info('Projects Update', ...rest)"
       />
       <input id="include-disabled"
              v-model="access.includeDeactivated"
@@ -312,8 +312,18 @@
     </NcSettingsSection>
   </div>
 </template>
-<script lang="ts">
-import { set as vueSet, del as vueDelete, nextTick as vueNextTick } from 'vue'
+<script setup lang="ts">
+import {
+  set as vueSet,
+  del as vueDelete,
+  nextTick as vueNextTick,
+  ref,
+  watch,
+  computed,
+  reactive,
+  onBeforeMount,
+  onUnmounted,
+} from 'vue'
 import {
   NcActions,
   NcActionButton,
@@ -342,19 +352,27 @@ import SelectProjects from './SelectProjects.vue'
 
 import SettingsSelectGroup from './SettingsSelectGroup.vue'
 import SettingsSelectUsers from './SettingsSelectUsers.vue'
-import l10nMixin from '../mixins/l10n.ts'
-import tooltipMixin from '../mixins/tooltips.ts'
-import formatDate from '../mixins/formatDate.js'
-import consoleMixin from '../mixins/console.ts'
-import toasts from '../mixins/toasts.ts'
-import dialogs from '../mixins/dialogs.ts'
+import { tooltips } from '../util/tooltips.ts'
+import formatDate from '../util/formatDate.js'
+import { showErrorToast } from '../util/toasts.ts'
+import dialogConfirm from '../util/dialogs.ts'
 import type { AxiosResponse } from 'axios'
 // eslint-disable-next-line n/no-missing-import
 import type { OCSResponse } from '@nextcloud/typings/ocs'
 import type { CloudUser, CloudGroup } from '../stores/cloud-users-groups.ts'
 import { translate as t } from '@nextcloud/l10n'
-
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
+import Console from '../util/console.ts'
+
+const COMPONENT_NAME = 'AdminSettings'
+
+const logger = new Console(COMPONENT_NAME)
+
+/******************************************************************************
+ *
+ * Type definitions.
+ *
+ */
 
 type Project = {
   id: number,
@@ -367,6 +385,7 @@ type Musician = {
 }
 
 type FontFiles = {
+  family: string,
   x?: string,
   xb?: string,
   xi?: string,
@@ -444,694 +463,657 @@ type GroupType = (CloudGroup|Pick<CloudGroup, 'id'|'displayname'|'backends'|'use
   status?: string,
 }
 
+/*
+ * End type definitions
+ *
+ ******************************************************************************
+ *
+ * Props and data.
+ *
+ */
+
+const props = withDefaults(defineProps<{
+  recryptionPollTimeout?: number,
+}>(), {
+  recryptionPollTimeout: 10 * 1000,
+})
+
 const initialState: InitialState = loadState(appId, 'adminConfig')
 
-export default {
-  name: 'AdminSettings',
-  components: {
-    CheckboxBlankCircle,
-    GroupIcon,
-    NcActionButton,
-    NcActions,
-    NcListItem,
-    NcProgressBar,
-    NcSettingsSection,
-    SelectMusicians,
-    SelectProjects,
-    SelectWithSubmitButton,
-    SettingsSelectGroup,
-    SettingsSelectUsers,
-    TextField,
-  },
-  mixins: [
-    l10nMixin,
-    tooltipMixin,
-    formatDate,
-    consoleMixin,
-    toasts,
-    dialogs,
-  ],
-  props: {
-    recryptionPollTimeout: {
-      type: Number,
-      default: 10 * 1000,
-    },
-  },
-  setup() {
-    const store = useCloudUsersGroupsStore()
-    return { store }
-  },
-  data() {
-    return {
-      cloudVersionClasses,
-      defaultOfficeFont: null as null|FontFiles,
-      loading: {
-        general: true,
-        recryption: true,
-        tooltips: true,
-        fonts: true,
-        settings: true,
-        groups: true,
-      },
-      settings: {
-        userAndGroupBackend: '',
-        orchestraUserGroup: '',
-        orchestraUserGroupAdmins: [],
-        wikiNameSpace: '',
-        cloudUserBackendConfig: '',
-        defaultOfficeFont: '',
-      } as AppAdminSettings,
-      settingsBackup: {} as AppAdminSettings,
-      orchestraGroups: {} as Record<string, GroupType>,
-      config: initialState,
-      hints: {
-        'settings:admin:cloud-user-backend-conf': '',
-        'settings:admin:wiki-name-space': '',
-        'settings:admin:user-group': '',
-        'settings:admin:user-group:admins': '',
-        'settings:admin:user-and-group-backend': '',
-        'settings:admin:access-control:musicians': '',
-        'settings:admin:true-type-fonts-folder': '',
-        'settings:admin:user-backend:move-users': '',
-      },
-      forword: '',
-      recryption: {
-        requests: {} as Record<string, RecryptionRequest>,
-        allRequestsMarked: false,
-      },
-      recryptionPollTimer: undefined as undefined|NodeJS.Timeout,
-      access: {
-        musicians: [] as Musician[],
-        project: undefined as Project|undefined,
-        includeDeactivated: false,
-        includeDisabled: false,
-        action: {
-          failure: false,
-          totals: 0,
-          done: 0,
-          active: false,
-          label: '',
-        },
-      },
-    }
-  },
-  computed: {
-    humanOfficeFontsFolder() {
-      return '.../' + (this.config.officeFontsFolder + '/').replace(/\/+/, '/').split('/').splice(-4).join('/')
-    },
-    orchestraUserGroup() {
-      return this.settings.orchestraUserGroup
-    },
-    groupAdminsDisabled() {
-      return this.settings.orchestraUserGroup === '' || !this.config.isAdmin
-    },
-    projectId() {
-      try { return this.access.project!.id } catch (ignoreMe) { return 0 }
-    },
-    applyAccessToAll() {
-      return this.access.musicians.length === 1 && this.access.musicians[0].id <= 0
-    },
-    showAccessActionProgress() {
-      return this.access.action.active
-    },
-    accessActionPercentage() {
-      const totals = this.access.action.totals
-      const done = this.access.action.done
-      return totals > 0 ? done * 100.0 / totals : 0
-    },
-    accessActionTest() {
-      return this.access.action.label
-    },
-    accessActionFinished() {
-      const totals = this.access.action.totals
-      const done = this.access.action.done
-      return totals === 0 || (done > 0 && done >= totals) || this.access.action.failure
-    },
-    accessActionLabel() {
-      return this.access.action.label
-    },
-    accessActionCounter() {
-      const totals = this.access.action.totals
-      const current = this.access.action.done
-      return t(appId, '{current} of {totals}', { current, totals })
-    },
-    accessActionError() {
-      return this.access.action.failure
-    },
-    isLoading() {
-      return this.loading.general
-        || this.loading.tooltips
-        || this.loading.recryption
-        || this.loading.fonts
-        || this.loading.groups
-    },
-    savedDefaultOfficeFont() {
-      const result = this.config.officeFonts?.[this.settingsBackup.defaultOfficeFont]
-      return result
-    },
-  },
-  watch: {
-    defaultOfficeFont(newValue) {
-      vueSet(this.settings, 'defaultOfficeFont', newValue?.family)
-    },
-  },
-  async created() {
-    await this.getData()
-  },
-  beforeDestroy() {
-    clearTimeout(this.recryptionPollTimer)
-    this.recryptionPollTimer = undefined
-  },
-  methods: {
-    async getData() {
-      this.loading.general = true
-      this.loading.recryption = true
-      this.loading.fonts = true
-      this.loading.settings = true
-      this.loading.groups = true
-      this.loadTooltips()
-      if (this.config.isSubAdmin) {
-        // fetch recryption requests
-        this.getRecryptionRequests()
-      }
+const store = useCloudUsersGroupsStore()
 
-      this.disableUnavailableFontOptions()
+const defaultOfficeFont = ref<FontFiles|null>(null)
+const loading = reactive({
+  general: true,
+  recryption: true,
+  tooltips: true,
+  fonts: true,
+  settings: true,
+  groups: true,
+})
 
-      await this.getSettingsData()
+const settings = reactive({
+  userAndGroupBackend: '',
+  orchestraUserGroup: '',
+  orchestraUserGroupAdmins: [],
+  wikiNameSpace: '',
+  cloudUserBackendConfig: '',
+  defaultOfficeFont: '',
+} as AppAdminSettings)
 
-      this.loadOrchestraGroups()
-
-      this.defaultOfficeFont = this.config.officeFonts[this.settings.defaultOfficeFont]
-      await vueNextTick()
-      this.loading.fonts = false
-      this.loading.general = false
-    },
-    async loadOrchestraGroups() {
-      if (!this.orchestraUserGroup || this.orchestraUserGroup === '') {
-        return []
-      }
-      this.loading.groups = true
-      const gids = Object.values(this.config.authorizationGroupSuffixes).map((suffix) => this.orchestraUserGroup + suffix).sort()
-      for (const id of gids) {
-        let group = (await this.getGroup(id)) as GroupType | undefined
-        if (group) {
-          if (!group.users) {
-            await (group as CloudGroup).getUsers(this.errorHandler)
-          }
-          group.l10nStatus = t(appId, group.status = 'accessible')
-        } else {
-          group = {
-            id,
-            displayname: id,
-            backends: [],
-            status: 'inaccessible',
-            usercount: 0,
-            disabled: false,
-            l10nStatus: t(appId, 'inaccessible'),
-          }
-          console.info('GROUP INACCESSIBLE', group)
-        }
-        vueSet(this.orchestraGroups, id, group)
-      }
-      this.loading.groups = false
-    },
-    async loadTooltips() {
-      this.loading.tooltips = true
-      const personalSettingsLink = '<a class="external settings" href="' + this.config.personalAppSettingsLink + '">' + appId + '</a>'
-      this.forword = t(
-        appId,
-        'Further detailed configurations are necessary after configuring the user-group. Please configure a dedicated group-admin for the user-group and then log-in as this group-admin and head over to the {personalSettingsLink} settings.', {
-          personalSettingsLink,
-        }, undefined, { escape: false })
-      this.hints = await this.tooltips(Object.keys(this.hints))
-      this.loading.tooltips = false
-    },
-    async getSettingsData() {
-      this.loading.settings = true
-      const requests = {}
-      for (const key of Object.keys(this.settings)) {
-        requests[key] = axios.get(generateAppUrl('settings/admin/{key}', { key }))
-      }
-      for (const [key, request] of Object.entries(requests)) {
-        const response = (await request) as AxiosResponse<{ value: string }>
-        vueSet(this.settings, key, response.data.value)
-      }
-      this.settingsBackup = { ...this.settings }
-      this.loading.settings = false
-    },
-    async getRecryptionRequests() {
-      this.loading.recryption = true
-      vueSet(this.recryption, 'requests', {})
-      vueSet(this.recryption, 'allRequestsMarked', '')
-      await this.updateRecryptionRequests()
-      this.recryptionPollTimer = setTimeout(() => this.pollRecryptionRequests(), this.recryptionPollTimeout)
-    },
-    async pollRecryptionRequests() {
-      await this.updateRecryptionRequests()
-      this.recryptionPollTimer = setTimeout(() => this.pollRecryptionRequests(), this.recryptionPollTimeout)
-    },
-    /**
-     * Update the recryption requests if needed. It is assumed that
-     * the time-stamp is a unique key, so if there is already a
-     * recryption request for a user with the same time-stamp then it
-     * is not replaced.
-     */
-    async updateRecryptionRequests() {
-      try {
-        const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt')
-        const response = (await axios.get(url + '?format=json')) as RecryptionGetResponse
-        const recryptionRequests = response.data.ocs.data.requests
-        // remove requests which are no longer there
-        for (const userId of Object.keys(this.recryption.requests)) {
-          if (!recryptionRequests[userId]) {
-            vueDelete(this.recryption.requests, userId)
-          }
-        }
-        // update existing requests (time-stamp changed) and add new
-        // ones. Initiate the AJAX calls in parallel, then serialize
-        // later
-        const cloudUserPromises = [] as { userId: string, timeStamp: number, promise: Promise<CloudUserGetResponse> }[]
-        for (const [userId, timeStamp] of Object.entries(recryptionRequests)) {
-          if (!this.recryption.requests[userId] || this.recryption.requests[userId].timeStamp !== timeStamp) {
-            cloudUserPromises.push({
-              userId,
-              timeStamp,
-              promise: axios.get(generateOcsUrl('cloud/users/{userId}', { userId })),
-            })
-          }
-        }
-        for (const cloudUserPromise of cloudUserPromises) {
-          const { userId, timeStamp, promise } = cloudUserPromise
-          try {
-            const response = await promise
-            const user = response.data.ocs.data
-            const isOrganizer = user.groups.indexOf(this.settings.orchestraUserGroup) >= 0
-            const isGroupAdmin = this.settings.orchestraUserGroupAdmins.indexOf(userId) >= 0
-            vueSet(this.recryption.requests, userId, {
-              id: userId,
-              timeStamp,
-              displayName: user.displayname,
-              groups: user.groups,
-              enabled: user.enabled,
-              isOrganizer,
-              isGroupAdmin,
-              marked: false,
-            })
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (e: any) {
-            console.error('Unable to fetch data for user ' + userId, e)
-          }
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        // admin is maybe not authorized
-        console.error('Unable to fetch recryption entries', e)
-      }
-      this.loading.recryption = false
-    },
-    async saveSetting(settingsKey: string, value?: string) {
-      try {
-        if (value === undefined) {
-          value = this.settings[settingsKey]
-        } else {
-          this.info('VALUE vs VMODEL', value, this.settings[settingsKey])
-        }
-        const response: AdminSettingPostResponse = await axios.post(generateAppUrl('settings/admin/{settingsKey}', { settingsKey }), { value })
-        const responseData = response.data
-        if (responseData.status === 'unconfirmed') {
-          await new Promise(resolve => {
-            this.dialogConfirm(
-              t(appId, 'Confirmation Required'),
-              responseData.feedback as string,
-              (answer) => {
-                if (answer) {
-                  this.saveSetting(settingsKey, value)
-                } else {
-                  showInfo(t(appId, 'Unconfirmed, reverting to old value.'))
-                  this.getSettingsData()
-                }
-                resolve(answer)
-              },
-            )
-          })
-          // OC.dialogs.confirm(
-          //   responseData.feedback,
-          //   t(appId, 'Confirmation Required'),
-          //   (answer) => {
-          //     if (answer) {
-          //       this.saveSetting(settingsKey, value, true)
-          //     } else {
-          //       showInfo(t(appId, 'Unconfirmed, reverting to old value.'))
-          //       this.getSettingsData()
-          //     }
-          //   },
-          //   true)
-        } else {
-          const messages = responseData.messages || {}
-          const transient = messages.transient || []
-          const permanent = messages.permanent || []
-          if (responseData.value) {
-            value = responseData.value
-          }
-          if (permanent.length === 0 && transient.length === 0) {
-            if (Array.isArray(value)) {
-              value = value.join(', ')
-            }
-            if (value) {
-              transient.push(t(appId, 'Successfully set value for "{settingsKey}" to "{value}".', { settingsKey, value }))
-            } else {
-              transient.push(t(appId, 'Value for "{settingsKey}" has been erased.', { settingsKey }))
-            }
-          }
-          for (const message of transient) {
-            showInfo(message, { timeout: TOAST_DEFAULT_TIMEOUT, isHTML: true })
-          }
-          for (const message of permanent) {
-            showInfo(message, { timeout: TOAST_PERMANENT_TIMEOUT, isHTML: true })
-          }
-          this.settingsBackup[settingsKey] = value
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        let message = t(appId, 'reason unknown')
-        if (e.response && e.response.data && e.response.data.message) {
-          message = e.response.data.message
-          console.error('RESPONSE', e.response)
-        }
-        if (value !== undefined) {
-          if (Array.isArray(value)) {
-            value = value.join(', ')
-          }
-          showError(t(appId, 'Could not set "{settingsKey}" to "{value}": {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-        } else {
-          showError(t(appId, 'Could not set "{settingsKey}": {message}', { settingsKey, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-        }
-        this.getSettingsData()
-      }
-    },
-    synchronizeUserBackends() {
-      showError(t(appId, 'Synchronizing user backends not yet implemented.'), { timeout: TOAST_PERMANENT_TIMEOUT })
-    },
-    markAllRecryptionRequests(/* event */) {
-      const value = !!this.recryption.allRequestsMarked
-      for (const request of Object.values(this.recryption.requests)) {
-        request.marked = value
-      }
-    },
-    markRecryptionRequest(/* userId, event */) {
-      const allRequests = Object.values(this.recryption.requests)
-      const marked = allRequests.filter(request => request.marked)
-      if (marked.length === allRequests.length) {
-        this.recryption.allRequestsMarked = true
-      } else {
-        this.recryption.allRequestsMarked = false
-      }
-    },
-    doHandleRecryptionRequest(userId: string, silent = false, allowFailure = false) {
-      const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt/{userId}', {
-        userId,
-      })
-      return axios.post(url + '?format=json', {
-        notifyUser: silent !== true,
-        allowFailure,
-      }) as Promise<UserRecryptionResponse>
-    },
-    async handleRecryptionRequest(userId: string, silent = false) {
-      this.awaitRecryptionRequestPromise(userId, this.doHandleRecryptionRequest(userId, silent))
-    },
-    async awaitRecryptionRequestPromise(userId: string, promise: Promise<UserRecryptionResponse>) {
-      try {
-        await promise
-        showInfo(t(appId, 'Successfully handled recryption request for {userId}.', { userId }))
-        vueDelete(this.recryption.requests, userId)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        if (e.response) {
-          console.error('RESPONSE', e.response)
-        }
-        let message = t(appId, 'reason unknown')
-        if (e.response && e.response.data && e.response.data.ocs) {
-          message = e.response.data.ocs.meta.message
-                  + ' ('
-                  + e.response.data.ocs.meta.statuscode
-                  + ', ' + e.response.data.ocs.meta.status
-                  + ')'
-        }
-        showError(t(appId, 'Could not resolve the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-        this.getRecryptionRequests()
-      }
-    },
-    async deleteRecryptionRequest(userId: string) {
-      try {
-        const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt/{userId}', {
-          userId,
-        })
-        await axios.delete(url + '?format=json')
-        showInfo(t(appId, 'Successfully deleted recryption request for {userId}.', { userId }))
-        vueDelete(this.recryption.requests, userId)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        if (e.response) {
-          console.error('RESPONSE', e.response)
-        }
-        let message = t(appId, 'reason unknown')
-        if (e.response && e.response.data && e.response.data.ocs) {
-          message = e.response.data.ocs.meta.message
-                  + ' ('
-                  + e.response.data.ocs.meta.statuscode
-                  + ', ' + e.response.data.ocs.meta.status
-                  + ')'
-        }
-        showError(t(appId, 'Could not delete the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-        this.getRecryptionRequests()
-      }
-    },
-    async doRevokeCloudAccess(userId: string/*, allowFailure */) {
-      const url = generateAppOcsUrl(
-        'api/v1/maintenance/encryption/revoke/{userId}', {
-          userId,
-        },
-      )
-      return await axios.post(url + '?format=json')
-    },
-    async handleMarkedRecrytpionRequests() {
-      const allRequests = Object.values(this.recryption.requests)
-      const marked = allRequests.filter(request => request.marked)
-      const recryptionPromises: Record<string, Promise<UserRecryptionResponse> > = {}
-      for (const request of marked) {
-        const userId = request.id
-        recryptionPromises[userId] = this.doHandleRecryptionRequest(userId)
-      }
-      for (const [userId, promise] of Object.entries(recryptionPromises)) {
-        this.awaitRecryptionRequestPromise(userId, promise)
-      }
-    },
-    async deleteMarkedRecryptionRequests() {
-      const allRequests = Object.values(this.recryption.requests)
-      const marked = allRequests.filter(request => request.marked)
-      for (const request of marked) {
-        this.deleteRecryptionRequest(request.id)
-      }
-    },
-    async handleAccessAction(action: AccessActions) {
-      if (this.access.musicians.length === 0) {
-        showError(t(appId, 'No musicians selected, doing nothing.'), { timeout: TOAST_DEFAULT_TIMEOUT })
-      }
-      if (this.access.musicians.length === 1 && this.access.musicians[0].id <= 0) {
-        this.handleBulkAccessAction(action)
-        return
-      }
-      this.access.action.active = true
-      this.access.action.totals = this.access.musicians.length
-      let failedUsers = 0
-      try {
-        for (const musician of this.access.musicians) {
-          const response = action === 'grant'
-            ? await this.doHandleRecryptionRequest(musician.userIdSlug, true, true)
-            : await this.doRevokeCloudAccess(musician.userIdSlug)
-          const ocsData = response.data.ocs.data
-          const lastUser = ocsData.userId
-          ocsData.status === 'failure' && ++failedUsers
-          this.access.action.done++
-          this.access.action.label = t(appId, 'Processed user-id {userId}.', { userId: lastUser })
-          if (failedUsers > 0) {
-            this.access.action.label += ' ' + t(appId, '{failedUsers} users have failed.', { failedUsers })
-          }
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        this.info('ERROR', e)
-        let message = t(appId, 'reason unknown')
-        if (e.response && e.response.data) {
-          const data = e.response.data
-          if (data.message) {
-            message = data.message
-          } else if (data.ocs && data.ocs.meta && data.ocs.meta.message) {
-            message = data.ocs.meta.message
-          }
-        }
-        showError(t(appId, 'Unable to handle access action: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-        this.access.action.failure = true
-      }
-      const numUsers = this.access.action.done - failedUsers
-      const remainingUsers = this.access.action.totals - this.access.action.done
-
-      if (this.access.action.failure) {
-        this.access.action.label = t(appId, 'Failed after {numUsers} users have been processed successfully.', { numUsers })
-        if (failedUsers > 0) {
-          this.access.action.label += ' ' + t(appId, '{failedUsers} were processed unsuccessfully.', { failedUsers })
-        }
-        this.access.action.label += ' ' + t(appId, '{remainingUsers} remain unprocessed.', { remainingUsers })
-      } else {
-        this.access.action.label = t(appId, '{numUsers} users have been processed successfully.', { numUsers })
-        if (failedUsers > 0) {
-          this.access.action.label += ' ' + t(appId, '{failedUsers} were processed unsuccessfully.', { failedUsers })
-        }
-      }
-    },
-    async handleBulkAccessAction(action: AccessActions) {
-      this.access.action.active = true
-      let failedUsers = 0
-      try {
-        const url = generateAppOcsUrl('api/v1/maintenance/encryption/bulk-recryption?format=json')
-        const response: BulkRecryptionCountResponse = await axios.post(url, {
-          grantAccess: action === 'grant',
-          includeDisabled: this.access.includeDisabled,
-          includeDeactivated: this.access.includeDeactivated,
-          projectId: this.projectId,
-          offset: 0,
-          limit: 0,
-        })
-        this.access.action.totals = response.data.ocs.data.count
-        const limit = this.access.action.totals > 100 ? this.access.action.totals / 100 : 1
-        let count = 0
-        let lastUser: string
-        do {
-          const url = generateAppOcsUrl('api/v1/maintenance/encryption/bulk-recryption?format=json')
-          const response: BulkRecryptionResponse = await axios.post(url, {
-            grantAccess: action === 'grant',
-            includeDisabled: this.access.includeDisabled,
-            includeDeactivated: this.access.includeDeactivated,
-            projectId: this.projectId,
-            offset: this.access.action.done,
-            limit,
-          })
-          const musicians = response.data.ocs.data
-          failedUsers = musicians.reduce((failedUsers, musician) => failedUsers + (musician.status === 'failure' ? 1 : 0), failedUsers)
-          lastUser = musicians.slice(-1)[0].userId
-          count = musicians.length
-          this.access.action.done += count
-          this.access.action.label = t(appId, 'Processed user-id {userId}.', { userId: lastUser })
-          if (failedUsers > 0) {
-            this.access.action.label += ' ' + t(appId, '{failedUsers} users have failed.', { failedUsers })
-          }
-          this.access.action.label += '.'
-        } while (count > 0 && this.access.action.done < this.access.action.totals)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        this.info('ERROR', e)
-        let message = t(appId, 'reason unknown')
-        if (e.response && e.response.data) {
-          const data = e.response.data
-          if (data.message) {
-            message = data.message
-          } else if (data.ocs && data.ocs.meta && data.ocs.meta.message) {
-            message = data.ocs.meta.message
-          }
-        }
-        showError(t(appId, 'Unable to handle access action: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-        this.access.action.failure = true
-      }
-      const numUsers = this.access.action.done - failedUsers
-      const remainingUsers = this.access.action.totals - this.access.action.done
-
-      if (this.access.action.failure) {
-        this.access.action.label = t(appId, 'Failed after {numUsers} users have been processed successfully.', { numUsers })
-        if (failedUsers > 0) {
-          this.access.action.label += ' ' + t(appId, '{failedUsers} were processed unsuccessfully.', { failedUsers })
-        }
-        this.access.action.label += ' ' + t(appId, '{remainingUsers} remain unprocessed.', { remainingUsers })
-      } else {
-        this.access.action.label = t(appId, '{numUsers} users have been processed successfully.', { numUsers })
-        if (failedUsers > 0) {
-          this.access.action.label += ' ' + t(appId, '{failedUsers} were processed unsuccessfully.', { failedUsers })
-        }
-      }
-    },
-    hideAccessActionFeedback() {
-      this.access.action.active = false
-      this.access.action.failure = false
-      this.access.action.done = 0
-      this.access.action.totals = 0
-    },
-    async updateFontData() {
-      return this.fontCacheOperaton('update')
-    },
-    async rescanFontData() {
-      return this.fontCacheOperaton('rescan')
-    },
-    async purgeFontData() {
-      return this.fontCacheOperaton('purge')
-    },
-    async fontCacheOperaton(operation: FontCacheOperations) {
-      this.loading.fonts = true
-      try {
-        const response = await axios.post(generateAppUrl('settings/admin/font-cache'), { operation })
-        const responseData = response.data
-        if (responseData.message) {
-          showInfo(responseData.message)
-        } else {
-          showInfo(t(appId, 'Font cache operation {operation} completed successfully.', { operation }))
-        }
-        this.config.officeFonts = responseData.fonts
-        this.settings.defaultOfficeFont = responseData.default
-        this.defaultOfficeFont = this.config.officeFonts[this.settings.defaultOfficeFont]
-        this.disableUnavailableFontOptions()
-        this.info('FONT DATA', responseData)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        this.info('ERROR', e)
-        let message = t(appId, 'reason unknown')
-        if (e.response && e.response.data && e.response.data.message) {
-          message = e.response.data.message
-          console.error('RESPONSE', e.response)
-        }
-        showError(t(appId, 'Could not perform the requested font-cache operation "{operation}": {message}', { operation, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-      }
-      this.loading.fonts = false
-    },
-    disableUnavailableFontOptions() {
-      for (const [fontName, fontFiles] of Object.entries(this.config.officeFonts)) {
-        if (fontFiles.x && fontFiles.xb && fontFiles.xi && fontFiles.xbi) {
-          vueSet(this.config.officeFonts[fontName], 'disabled', false)
-        } else {
-          vueSet(this.config.officeFonts[fontName], 'disabled', true)
-          vueSet(this.config.officeFonts[fontName], '$isDisabled', true)
-          this.info('DISABLE FONT', fontName, this.config.officeFonts[fontName])
-        }
-      }
-    },
-    getGroup(gid: string) {
-      return this.store.getGroup(gid, this.errorHandler)
-    },
-    async createGroup(gid: string) {
-      const result = await this.store.createGroup(gid, gid, this.errorHandler)
-
-      if (result && this.orchestraGroups[gid]) {
-        if (!result.users) {
-          await result.getUsers(this.errorHandler)
-        }
-        vueSet(this.orchestraGroups, gid, result)
-      }
-
-      return result
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    errorHandler<T extends Error>(error: T|any) {
-      this.$emit('error', error)
-    },
+const settingsBackup = reactive({} as AppAdminSettings)
+const orchestraGroups = reactive({} as Record<string, GroupType>)
+const config = reactive(initialState)
+const hints = reactive({
+  'settings:admin:cloud-user-backend-conf': '',
+  'settings:admin:wiki-name-space': '',
+  'settings:admin:user-group': '',
+  'settings:admin:user-group:admins': '',
+  'settings:admin:user-and-group-backend': '',
+  'settings:admin:access-control:musicians': '',
+  'settings:admin:true-type-fonts-folder': '',
+  'settings:admin:user-backend:move-users': '',
+})
+const forword = ref('')
+const recryption = reactive({
+  requests: {} as Record<string, RecryptionRequest>,
+  allRequestsMarked: false,
+})
+let recryptionPollTimer = undefined as undefined | NodeJS.Timeout
+const access = reactive({
+  musicians: [] as Musician[],
+  project: undefined as Project|undefined,
+  includeDeactivated: false,
+  includeDisabled: false,
+  action: {
+    failure: false,
+    totals: 0,
+    done: 0,
+    active: false,
+    label: '',
   },
+})
+
+/*
+ * End props and data
+ *
+ ******************************************************************************
+ *
+ * computed data
+ *
+ */
+
+const humanOfficeFontsFolder = computed(() =>
+  '.../' + (config.officeFontsFolder + '/').replace(/\/+/, '/').split('/').splice(-4).join('/'),
+)
+const orchestraUserGroup = computed(() => settings.orchestraUserGroup)
+const groupAdminsDisabled = computed(() => settings.orchestraUserGroup === '' || !config.isAdmin)
+const projectId = computed(() => {
+  try { return access.project!.id } catch (ignoreMe) { return 0 }
+})
+const applyAccessToAll = computed(() => access.musicians.length === 1 && access.musicians[0].id <= 0)
+const showAccessActionProgress = computed(() => access.action.active)
+const accessActionPercentage = computed(() => {
+  const totals = access.action.totals
+  const done = access.action.done
+  return totals > 0 ? done * 100.0 / totals : 0
+})
+const accessActionFinished = computed(() => {
+  const totals = access.action.totals
+  const done = access.action.done
+  return totals === 0 || (done > 0 && done >= totals) || access.action.failure
+})
+const accessActionLabel = computed(() => access.action.label)
+const accessActionCounter = computed(() => {
+  const totals = access.action.totals
+  const current = access.action.done
+  return t(appId, '{current} of {totals}', { current, totals })
+})
+const accessActionError = computed(() => access.action.failure)
+const savedDefaultOfficeFont = computed(() => config.officeFonts?.[settingsBackup.defaultOfficeFont])
+
+watch(defaultOfficeFont, (newValue) => {
+  vueSet(settings, 'defaultOfficeFont', newValue?.family)
+})
+
+/*
+ * End computed data
+ *
+ ******************************************************************************
+ *
+ * methods / functions
+ *
+ */
+
+const getData = async () => {
+  loading.general = true
+  loading.recryption = true
+  loading.fonts = true
+  loading.settings = true
+  loading.groups = true
+  loadTooltips()
+  if (config.isSubAdmin) {
+    // fetch recryption requests
+    getRecryptionRequests()
+  }
+
+  disableUnavailableFontOptions()
+
+  await getSettingsData()
+
+  loadOrchestraGroups()
+
+  defaultOfficeFont.value = config.officeFonts[settings.defaultOfficeFont]
+  await vueNextTick()
+  loading.fonts = false
+  loading.general = false
 }
+const loadOrchestraGroups = async () => {
+  if (!orchestraUserGroup.value || orchestraUserGroup.value === '') {
+    return []
+  }
+  loading.groups = true
+  const gids = Object.values(config.authorizationGroupSuffixes).map((suffix) => orchestraUserGroup.value + suffix).sort()
+  for (const id of gids) {
+    let group = (await getGroup(id)) as GroupType | undefined
+    if (group) {
+      if (!group.users) {
+        await (group as CloudGroup).getUsers(errorHandler)
+      }
+      group.l10nStatus = t(appId, group.status = 'accessible')
+    } else {
+      group = {
+        id,
+        displayname: id,
+        backends: [],
+        status: 'inaccessible',
+        usercount: 0,
+        disabled: false,
+        l10nStatus: t(appId, 'inaccessible'),
+      }
+      console.info('GROUP INACCESSIBLE', group)
+    }
+    vueSet(orchestraGroups, id, group)
+  }
+  loading.groups = false
+}
+const loadTooltips = async () => {
+  loading.tooltips = true
+  const personalSettingsLink = '<a class="external settings" href="' + config.personalAppSettingsLink + '">' + appId + '</a>'
+  forword.value = t(
+    appId,
+    'Further detailed configurations are necessary after configuring the user-group. Please configure a dedicated group-admin for the user-group and then log-in as this group-admin and head over to the {personalSettingsLink} settings.', {
+      personalSettingsLink,
+    }, undefined, { escape: false })
+  Object.assign(hints, await tooltips(Object.keys(hints)))
+  loading.tooltips = false
+}
+const getSettingsData = async () => {
+  loading.settings = true
+  const requests = {}
+  for (const key of Object.keys(settings)) {
+    requests[key] = axios.get(generateAppUrl('settings/admin/{key}', { key }))
+  }
+  for (const [key, request] of Object.entries(requests)) {
+    const response = (await request) as AxiosResponse<{ value: string }>
+    vueSet(settings, key, response.data.value)
+  }
+  Object.assign(settingsBackup, { ...settings })
+  loading.settings = false
+}
+const getRecryptionRequests = async () => {
+  loading.recryption = true
+  vueSet(recryption, 'requests', {})
+  vueSet(recryption, 'allRequestsMarked', '')
+  await updateRecryptionRequests()
+  recryptionPollTimer = setTimeout(() => pollRecryptionRequests(), props.recryptionPollTimeout)
+}
+const pollRecryptionRequests = async () => {
+  await updateRecryptionRequests()
+  recryptionPollTimer = setTimeout(() => pollRecryptionRequests(), props.recryptionPollTimeout)
+}
+/**
+ * Update the recryption requests if needed. It is assumed that
+ * the time-stamp is a unique key, so if there is already a
+ * recryption request for a user with the same time-stamp then it
+ * is not replaced.
+ */
+const updateRecryptionRequests = async () => {
+  try {
+    const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt')
+    const response = (await axios.get(url + '?format=json')) as RecryptionGetResponse
+    const recryptionRequests = response.data.ocs.data.requests
+    // remove requests which are no longer there
+    for (const userId of Object.keys(recryption.requests)) {
+      if (!recryptionRequests[userId]) {
+        vueDelete(recryption.requests, userId)
+      }
+    }
+    // update existing requests (time-stamp changed) and add new
+    // ones. Initiate the AJAX calls in parallel, then serialize
+    // later
+    const cloudUserPromises = [] as { userId: string, timeStamp: number, promise: Promise<CloudUserGetResponse> }[]
+    for (const [userId, timeStamp] of Object.entries(recryptionRequests)) {
+      if (!recryption.requests[userId] || recryption.requests[userId].timeStamp !== timeStamp) {
+        cloudUserPromises.push({
+          userId,
+          timeStamp,
+          promise: axios.get(generateOcsUrl('cloud/users/{userId}', { userId })),
+        })
+      }
+    }
+    for (const cloudUserPromise of cloudUserPromises) {
+      const { userId, timeStamp, promise } = cloudUserPromise
+      try {
+        const response = await promise
+        const user = response.data.ocs.data
+        const isOrganizer = user.groups.indexOf(settings.orchestraUserGroup) >= 0
+        const isGroupAdmin = settings.orchestraUserGroupAdmins.indexOf(userId) >= 0
+        vueSet(recryption.requests, userId, {
+          id: userId,
+          timeStamp,
+          displayName: user.displayname,
+          groups: user.groups,
+          enabled: user.enabled,
+          isOrganizer,
+          isGroupAdmin,
+          marked: false,
+        })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        console.error('Unable to fetch data for user ' + userId, e)
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    // admin is maybe not authorized
+    console.error('Unable to fetch recryption entries', e)
+  }
+  loading.recryption = false
+}
+const saveSetting = async (settingsKey: string, value?: string) => {
+  try {
+    if (value === undefined) {
+      value = settings[settingsKey]
+    } else {
+      logger.info('VALUE vs VMODEL', value, settings[settingsKey])
+    }
+    const response: AdminSettingPostResponse = await axios.post(generateAppUrl('settings/admin/{settingsKey}', { settingsKey }), { value })
+    const responseData = response.data
+    if (responseData.status === 'unconfirmed') {
+      await new Promise(resolve => {
+        dialogConfirm(
+          t(appId, 'Confirmation Required'),
+          responseData.feedback as string,
+          (answer) => {
+            if (answer) {
+              saveSetting(settingsKey, value)
+            } else {
+              showInfo(t(appId, 'Unconfirmed, reverting to old value.'))
+              getSettingsData()
+            }
+            resolve(answer)
+          },
+        )
+      })
+      // OC.dialogs.confirm(
+      //   responseData.feedback,
+      //   t(appId, 'Confirmation Required'),
+      //   (answer) => {
+      //     if (answer) {
+      //       saveSetting(settingsKey, value, true)
+      //     } else {
+      //       showInfo(t(appId, 'Unconfirmed, reverting to old value.'))
+      //       getSettingsData()
+      //     }
+      //   },
+      //   true)
+    } else {
+      const messages = responseData.messages || {}
+      const transient = messages.transient || []
+      const permanent = messages.permanent || []
+      if (responseData.value) {
+        value = responseData.value
+      }
+      if (permanent.length === 0 && transient.length === 0) {
+        if (Array.isArray(value)) {
+          value = value.join(', ')
+        }
+        if (value) {
+          transient.push(t(appId, 'Successfully set value for "{settingsKey}" to "{value}".', { settingsKey, value }))
+        } else {
+          transient.push(t(appId, 'Value for "{settingsKey}" has been erased.', { settingsKey }))
+        }
+      }
+      for (const message of transient) {
+        showInfo(message, { timeout: TOAST_DEFAULT_TIMEOUT, isHTML: true })
+      }
+      for (const message of permanent) {
+        showInfo(message, { timeout: TOAST_PERMANENT_TIMEOUT, isHTML: true })
+      }
+      settingsBackup[settingsKey] = value
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    let message = t(appId, 'reason unknown')
+    if (e.response && e.response.data && e.response.data.message) {
+      message = e.response.data.message
+      console.error('RESPONSE', e.response)
+    }
+    if (value !== undefined) {
+      if (Array.isArray(value)) {
+        value = value.join(', ')
+      }
+      showError(t(appId, 'Could not set "{settingsKey}" to "{value}": {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+    } else {
+      showError(t(appId, 'Could not set "{settingsKey}": {message}', { settingsKey, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+    }
+    getSettingsData()
+  }
+}
+const synchronizeUserBackends = () => {
+  showError(t(appId, 'Synchronizing user backends not yet implemented.'), { timeout: TOAST_PERMANENT_TIMEOUT })
+}
+const markAllRecryptionRequests = (/* event */) => {
+  const value = !!recryption.allRequestsMarked
+  for (const request of Object.values(recryption.requests)) {
+    request.marked = value
+  }
+}
+const markRecryptionRequest = (/* userId, event */) => {
+  const allRequests = Object.values(recryption.requests)
+  const marked = allRequests.filter(request => request.marked)
+  if (marked.length === allRequests.length) {
+    recryption.allRequestsMarked = true
+  } else {
+    recryption.allRequestsMarked = false
+  }
+}
+const doHandleRecryptionRequest = (userId: string, silent = false, allowFailure = false) => {
+  const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt/{userId}', {
+    userId,
+  })
+  return axios.post(url + '?format=json', {
+    notifyUser: silent !== true,
+    allowFailure,
+  }) as Promise<UserRecryptionResponse>
+}
+const handleRecryptionRequest = (userId: string, silent = false) =>
+  awaitRecryptionRequestPromise(userId, doHandleRecryptionRequest(userId, silent))
+const awaitRecryptionRequestPromise = async (userId: string, promise: Promise<UserRecryptionResponse>) => {
+  try {
+    await promise
+    showInfo(t(appId, 'Successfully handled recryption request for {userId}.', { userId }))
+    vueDelete(recryption.requests, userId)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    if (e.response) {
+      console.error('RESPONSE', e.response)
+    }
+    let message = t(appId, 'reason unknown')
+    if (e.response && e.response.data && e.response.data.ocs) {
+      message = e.response.data.ocs.meta.message
+        + ' ('
+        + e.response.data.ocs.meta.statuscode
+        + ', ' + e.response.data.ocs.meta.status
+        + ')'
+    }
+    showError(t(appId, 'Could not resolve the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+    getRecryptionRequests()
+  }
+}
+const deleteRecryptionRequest = async (userId: string) => {
+  try {
+    const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt/{userId}', {
+      userId,
+    })
+    await axios.delete(url + '?format=json')
+    showInfo(t(appId, 'Successfully deleted recryption request for {userId}.', { userId }))
+    vueDelete(recryption.requests, userId)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    if (e.response) {
+      console.error('RESPONSE', e.response)
+    }
+    let message = t(appId, 'reason unknown')
+    if (e.response && e.response.data && e.response.data.ocs) {
+      message = e.response.data.ocs.meta.message
+        + ' ('
+        + e.response.data.ocs.meta.statuscode
+        + ', ' + e.response.data.ocs.meta.status
+        + ')'
+    }
+    showError(t(appId, 'Could not delete the recryption request for {userId}: {message}', { userId, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+    getRecryptionRequests()
+  }
+}
+const doRevokeCloudAccess = (userId: string/*, allowFailure */) => {
+  const url = generateAppOcsUrl(
+    'api/v1/maintenance/encryption/revoke/{userId}', {
+      userId,
+    },
+  )
+  return axios.post(url + '?format=json')
+}
+const handleMarkedRecrytpionRequests = async () => {
+  const allRequests = Object.values(recryption.requests)
+  const marked = allRequests.filter(request => request.marked)
+  const recryptionPromises: Record<string, Promise<UserRecryptionResponse>> = {}
+  for (const request of marked) {
+    const userId = request.id
+    recryptionPromises[userId] = doHandleRecryptionRequest(userId)
+  }
+  for (const [userId, promise] of Object.entries(recryptionPromises)) {
+    // @todo Promise.allSettled
+    await awaitRecryptionRequestPromise(userId, promise)
+  }
+}
+const deleteMarkedRecryptionRequests = async () => {
+  const allRequests = Object.values(recryption.requests)
+  const marked = allRequests.filter(request => request.marked)
+  for (const request of marked) {
+    // @todo Promise.allSettled
+    await deleteRecryptionRequest(request.id)
+  }
+}
+const handleAccessAction = async (action: AccessActions) => {
+  if (access.musicians.length === 0) {
+    showError(t(appId, 'No musicians selected, doing nothing.'), { timeout: TOAST_DEFAULT_TIMEOUT })
+  }
+  if (access.musicians.length === 1 && access.musicians[0].id <= 0) {
+    handleBulkAccessAction(action)
+    return
+  }
+  access.action.active = true
+  access.action.totals = access.musicians.length
+  let failedUsers = 0
+  try {
+    for (const musician of access.musicians) {
+      const response = action === 'grant'
+        ? await doHandleRecryptionRequest(musician.userIdSlug, true, true)
+        : await doRevokeCloudAccess(musician.userIdSlug)
+      const ocsData = response.data.ocs.data
+      const lastUser = ocsData.userId
+      ocsData.status === 'failure' && ++failedUsers
+      access.action.done++
+      access.action.label = t(appId, 'Processed user-id {userId}.', { userId: lastUser })
+      if (failedUsers > 0) {
+        access.action.label += ' ' + t(appId, '{failedUsers} users have failed.', { failedUsers })
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    logger.info('ERROR', e)
+    let message = t(appId, 'reason unknown')
+    if (e.response && e.response.data) {
+      const data = e.response.data
+      if (data.message) {
+        message = data.message
+      } else if (data.ocs && data.ocs.meta && data.ocs.meta.message) {
+        message = data.ocs.meta.message
+      }
+    }
+    showError(t(appId, 'Unable to handle access action: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+    access.action.failure = true
+  }
+  const numUsers = access.action.done - failedUsers
+  const remainingUsers = access.action.totals - access.action.done
+
+  if (access.action.failure) {
+    access.action.label = t(appId, 'Failed after {numUsers} users have been processed successfully.', { numUsers })
+    if (failedUsers > 0) {
+      access.action.label += ' ' + t(appId, '{failedUsers} were processed unsuccessfully.', { failedUsers })
+    }
+    access.action.label += ' ' + t(appId, '{remainingUsers} remain unprocessed.', { remainingUsers })
+  } else {
+    access.action.label = t(appId, '{numUsers} users have been processed successfully.', { numUsers })
+    if (failedUsers > 0) {
+      access.action.label += ' ' + t(appId, '{failedUsers} were processed unsuccessfully.', { failedUsers })
+    }
+  }
+}
+const handleBulkAccessAction = async (action: AccessActions) => {
+  access.action.active = true
+  let failedUsers = 0
+  try {
+    const url = generateAppOcsUrl('api/v1/maintenance/encryption/bulk-recryption?format=json')
+    const response: BulkRecryptionCountResponse = await axios.post(url, {
+      grantAccess: action === 'grant',
+      includeDisabled: access.includeDisabled,
+      includeDeactivated: access.includeDeactivated,
+      projectId: projectId.value,
+      offset: 0,
+      limit: 0,
+    })
+    access.action.totals = response.data.ocs.data.count
+    const limit = access.action.totals > 100 ? access.action.totals / 100 : 1
+    let count = 0
+    let lastUser: string
+    do {
+      const url = generateAppOcsUrl('api/v1/maintenance/encryption/bulk-recryption?format=json')
+      const response: BulkRecryptionResponse = await axios.post(url, {
+        grantAccess: action === 'grant',
+        includeDisabled: access.includeDisabled,
+        includeDeactivated: access.includeDeactivated,
+        projectId: projectId.value,
+        offset: access.action.done,
+        limit,
+      })
+      const musicians = response.data.ocs.data
+      failedUsers = musicians.reduce((failedUsers, musician) => failedUsers + (musician.status === 'failure' ? 1 : 0), failedUsers)
+      lastUser = musicians.slice(-1)[0].userId
+      count = musicians.length
+      access.action.done += count
+      access.action.label = t(appId, 'Processed user-id {userId}.', { userId: lastUser })
+      if (failedUsers > 0) {
+        access.action.label += ' ' + t(appId, '{failedUsers} users have failed.', { failedUsers })
+      }
+      access.action.label += '.'
+    } while (count > 0 && access.action.done < access.action.totals)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    logger.info('ERROR', e)
+    let message = t(appId, 'reason unknown')
+    if (e.response && e.response.data) {
+      const data = e.response.data
+      if (data.message) {
+        message = data.message
+      } else if (data.ocs && data.ocs.meta && data.ocs.meta.message) {
+        message = data.ocs.meta.message
+      }
+    }
+    showError(t(appId, 'Unable to handle access action: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+    access.action.failure = true
+  }
+  const numUsers = access.action.done - failedUsers
+  const remainingUsers = access.action.totals - access.action.done
+
+  if (access.action.failure) {
+    access.action.label = t(appId, 'Failed after {numUsers} users have been processed successfully.', { numUsers })
+    if (failedUsers > 0) {
+      access.action.label += ' ' + t(appId, '{failedUsers} were processed unsuccessfully.', { failedUsers })
+    }
+    access.action.label += ' ' + t(appId, '{remainingUsers} remain unprocessed.', { remainingUsers })
+  } else {
+    access.action.label = t(appId, '{numUsers} users have been processed successfully.', { numUsers })
+    if (failedUsers > 0) {
+      access.action.label += ' ' + t(appId, '{failedUsers} were processed unsuccessfully.', { failedUsers })
+    }
+  }
+}
+const hideAccessActionFeedback = () => {
+  access.action.active = false
+  access.action.failure = false
+  access.action.done = 0
+  access.action.totals = 0
+}
+const updateFontData = () => fontCacheOperaton('update')
+const rescanFontData = () => fontCacheOperaton('rescan')
+const purgeFontData = () => fontCacheOperaton('purge')
+const fontCacheOperaton = async (operation: FontCacheOperations) => {
+  loading.fonts = true
+  try {
+    const response = await axios.post(generateAppUrl('settings/admin/font-cache'), { operation })
+    const responseData = response.data
+    if (responseData.message) {
+      showInfo(responseData.message)
+    } else {
+      showInfo(t(appId, 'Font cache operation {operation} completed successfully.', { operation }))
+    }
+    config.officeFonts = responseData.fonts
+    settings.defaultOfficeFont = responseData.default
+    defaultOfficeFont.value = config.officeFonts[settings.defaultOfficeFont]
+    disableUnavailableFontOptions()
+    logger.info('FONT DATA', responseData)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    logger.info('ERROR', e)
+    let message = t(appId, 'reason unknown')
+    if (e.response && e.response.data && e.response.data.message) {
+      message = e.response.data.message
+      console.error('RESPONSE', e.response)
+    }
+    showError(t(appId, 'Could not perform the requested font-cache operation "{operation}": {message}', { operation, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+  }
+  loading.fonts = false
+}
+const disableUnavailableFontOptions = () => {
+  for (const [fontName, fontFiles] of Object.entries(config.officeFonts)) {
+    if (fontFiles.x && fontFiles.xb && fontFiles.xi && fontFiles.xbi) {
+      vueSet(config.officeFonts[fontName], 'disabled', false)
+    } else {
+      vueSet(config.officeFonts[fontName], 'disabled', true)
+      vueSet(config.officeFonts[fontName], '$isDisabled', true)
+      logger.info('DISABLE FONT', fontName, config.officeFonts[fontName])
+    }
+  }
+}
+const getGroup = (gid: string) => store.getGroup(gid, errorHandler)
+const createGroup = async (gid: string) => {
+  const result = await store.createGroup(gid, gid, errorHandler)
+
+  if (result && orchestraGroups[gid]) {
+    if (!result.users) {
+      await result.getUsers(errorHandler)
+    }
+    vueSet(orchestraGroups, gid, result)
+  }
+
+  return result
+}
+
+const emit = defineEmits(['error'])
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const errorHandler = <T extends Error>(error: T | any) => {
+  emit('error', error)
+}
+
+onBeforeMount(getData)
+onUnmounted(() => {
+  clearTimeout(recryptionPollTimer)
+  recryptionPollTimer = undefined
+})
 </script>
 <style lang="scss" scoped>
 .cloud-version {
