@@ -99,6 +99,8 @@ export default {
       }
       &:hover, &:focus {
         &:not(:disabled) {
+          top: 0;
+          right: 0;
           border: 2px solid var(--color-primary-element);
           border-radius: var(--border-radius-large);
           outline: 2px solid var(--color-main-background);
