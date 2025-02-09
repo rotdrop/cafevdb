@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
+use OCP\AppFramework\Http;
+
 /**
  * This exception should provide an error message which informs an
  * end-user about an error.
@@ -34,4 +36,30 @@ namespace OCA\CAFEVDB\Exceptions;
  */
 class EnduserNotificationException extends Exception
 {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(
+    string $message,
+    int $code = 0,
+    $previous = null,
+    protected $httpStatusCode = Http::STATUS_BAD_REQUEST,
+  ) {
+    parent::__construct($message, $code, $previous);
+  }
+  // phpcs:enable
+
+  /**
+   * @param int $code
+   *
+   * @return void
+   */
+  public function setHttpStatusCode(int $code):void
+  {
+    $this->httpStatusCode = $code;
+  }
+
+  /** @return int */
+  public function getHttpStatusCode():int
+  {
+    return $this->httpStatusCode;
+  }
 }

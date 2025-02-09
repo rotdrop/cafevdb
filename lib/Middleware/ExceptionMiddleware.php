@@ -77,17 +77,12 @@ class ExceptionMiddleware extends Middleware
         $this->l->t('Unable to serve request to "%s".', $this->request->getPathInfo()),
         0,
         $exception,
+        httpStatusCode: ($exception instanceof QueryNotFoundException)
+          ? Http::STATUS_NOT_FOUND : Http::STATUS_INTERNAL_SERVER_ERROR,
       );
     }
-    $logEntry = $this->logException($exception, returnLogEntry: true);
-    switch (get_class($exception)) {
-      case QueryNotFoundException::class:
-        $httpStatus = Http::STATUS_NOT_FOUND;
-        break;
-      default:
-        $httpStatus = Http::STATUS_INTERNAL_SERVER_ERROR;
-        break;
-    }
-    return new JSONResponse($logEntry, $httpStatus);
+    $logEntry = $this->logException($exception, message: $exception->getMessage(), returnLogEntry: true);
+    $httpStatusCode = $exception->getHttpStatusCode();
+    return new JSONResponse($logEntry, $httpStatusCode);
   }
 }
