@@ -120,7 +120,7 @@ class ConfigCheckService
 
     $key ='orchestra';
     try {
-      $result[$key]['status'] = $this->getConfigValue('orchestra');
+      $result[$key]['status'] = $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY);
     } catch (Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
@@ -128,7 +128,7 @@ class ConfigCheckService
 
     $key = 'encryptionkey';
     try {
-      $result[$key]['status'] = $result['orchestra']['status'] && $this->encryptionKeyValid();
+      $result[$key]['status'] = $result[ConfigService::ORCHESTRA_NAME_KEY]['status'] && $this->encryptionKeyValid();
     } catch (Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
@@ -136,7 +136,7 @@ class ConfigCheckService
 
     $key = 'database';
     try {
-      $result[$key]['status'] = $result['orchestra']['status'] && $this->databaseAccessible();
+      $result[$key]['status'] = $result[ConfigService::ORCHESTRA_NAME_KEY]['status'] && $this->databaseAccessible();
     } catch (Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }

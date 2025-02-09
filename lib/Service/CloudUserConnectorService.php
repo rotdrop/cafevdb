@@ -387,7 +387,7 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
 
     $catchAllGroup = $this->encryptionService->getConfigValue('musiciansaddressbook');
     if (empty($catchAllGroup)) {
-      $orchestraName = ucfirst($this->encryptionService->getConfigValue('orchestra'));
+      $orchestraName = ucfirst($this->encryptionService->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY));
       $catchAllGroup = $orchestraName . ' ' . $this->l->t('Musicians');
     }
 

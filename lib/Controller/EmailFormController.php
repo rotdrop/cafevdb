@@ -144,7 +144,7 @@ class EmailFormController extends Controller
       'requesttoken' => \OCP\Util::callRegister(), // @todo: check
       'projectName' => $projectName,
       'projectId' => $projectId,
-      'wikinamespace' => $this->getAppValue('wikinamespace'),
+      ConfigService::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY),
       'bulkTransactionId' => $bulkTransactionId,
       // Provide enough data s.t. a form-reload will bump the user to the
       // form the email-dialog was opened from. Ideally, we intercept the

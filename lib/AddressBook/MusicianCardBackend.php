@@ -6,7 +6,7 @@ declare(strict_types=1);
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2021-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
@@ -70,7 +70,7 @@ class MusicianCardBackend implements ICardBackend
   {
     $name = $this->getConfigValue('musiciansaddressbook');
     if (empty($name)) {
-      $name = $this->l->t('%s Musicians', ucfirst($this->getConfigValue('orchestra', 'unknown')));
+      $name = $this->l->t('%s Musicians', ucfirst($this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY, 'unknown')));
     }
     return $name;
   }

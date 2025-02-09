@@ -57,9 +57,11 @@ class PersonalForm
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  const ERROR_TEMPLATE = "errorpage";
-  const TEMPLATE = "settings";
-  const DEFAULT_EDITOR = 'tinymce';
+  public const ERROR_TEMPLATE = "errorpage";
+  public const TEMPLATE = "settings";
+  public const DEFAULT_EDITOR = 'tinymce';
+
+  public const CSP_FAILURE_REPORTING_KEY = 'cspfailurereporting';
 
   /** {@inheritdoc} */
   public function __construct(
@@ -283,7 +285,7 @@ class PersonalForm
             'userGroups' => array_map(function($group) {
               return [ 'value' => $group->getGID(), 'name' => $group->getDisplayName(), ];
             }, $this->groupManager()->search('')),
-            'orchestra' => $this->getConfigValue('orchestra'),
+            ConfigService::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY),
 
             'cloudUserRequirements' => $this->cloudUserService->checkRequirements(
               $this->getConfigValue('cloudUserViewsDatabase')
@@ -427,7 +429,7 @@ class PersonalForm
           'sourcecode' => null,
           'sourcedocs' => null,
           'clouddev' => null,
-          'cspfailurereporting' => $this->urlGenerator()->linkToRouteAbsolute($this->appName().'.csp_violation.post', ['operation' => 'report']),
+          self::CSP_FAILURE_REPORTING_KEY => $this->urlGenerator()->linkToRouteAbsolute($this->appName().'.csp_violation.post', ['operation' => 'report']),
         ] as $link => $default) {
           $this->parameterFromConfig($templateParameters, $link, $default);
         }

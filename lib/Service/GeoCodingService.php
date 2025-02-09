@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -76,7 +76,7 @@ class GeoCodingService
     protected EntityManager $entityManager,
   ) {
     $this->l = $this->l10n();
-    $this->userName = $this->getConfigValue('orchestra').'_'.$this->appName();
+    $this->userName = $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY).'_'.$this->appName();
     $this->debug = $this->shouldDebug(ConfigService::DEBUG_GEOCODING);
   }
 

@@ -121,7 +121,7 @@ trait InitialStateTrait
       'CAFEVDB',
       [
         'appName' => $this->appName,
-        'orchestra' => $this->getConfigValue('orchestra', $this->l->t('unconfigured')),
+        ConfigService::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY, $this->l->t('unconfigured')),
         'orchestraLogo' => $orchestraLogo ?? '',
         'toolTipsEnabled' => $tooltips,
         'wysiwygEditor' => $editor,

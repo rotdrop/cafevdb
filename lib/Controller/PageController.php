@@ -358,8 +358,8 @@ class PageController extends Controller
       'appNameTag' => 'app-' . $this->appName,
 
       'configcheck' => $this->configCheck,
-      'orchestra' => $this->getConfigValue('orchestra'),
-      'wikinamespace' => $this->getAppValue('wikinamespace'),
+      ConfigService::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY),
+      ConfigService::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY),
       ConfigService::USER_GROUP_KEY => $this->groupId(),
       ConfigService::SHAREOWNER_KEY => $this->getConfigValue(ConfigService::SHAREOWNER_KEY),
       'sharedfolder' => $this->getConfigValue('sharedfolder'),

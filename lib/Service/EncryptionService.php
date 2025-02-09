@@ -93,10 +93,10 @@ class EncryptionService
     ConfigService::SHAREOWNER_KEY, // needed as calendar principal in the member's app
     ConfigService::SHARED_FOLDER, // needed by some listeners in order to bail out early
     ConfigService::PROJECT_PARTICIPANTS_FOLDER, // needed by some listeners in order to bail out early
-    'wikinamespace', // cloud-admin setting
+    ConfigService::WIKI_NAME_SPACE_KEY, // cloud-admin setting
     'cspfailuretoken', // for public post route
     'configlock', // better kept open
-    'orchestra', // used in the member's app for the front-page announcement
+    ConfigService::ORCHESTRA_NAME_KEY, // used in the member's app for the front-page announcement
     'orchestraLocale', // used in the member's app for consistent currencies etc.
     self::APP_ENCRYPTION_KEY_HASH_KEY,
   ];
@@ -394,6 +394,10 @@ class EncryptionService
       $failCount = 0;
       for ($i = 0; $i < 1000; ++$i) {
         $failCount += 1 - (int)$this->verifyHash($userDatabaseKey, $sysDatabaseKeyHash);
+      }
+      if ($failCount < 10) {
+        $this->logError('BOGUS HARDWARE OR SOFTWARE ' . $failCount);
+        return true;
       }
       // Failed
       $this->appCryptor->setEncryptionKey(null);

@@ -1356,8 +1356,8 @@ class ProjectService
    */
   public function projectWikiLink(string $pageName):string
   {
-    $wikiNameSpace = $this->getConfigValue('orchestra');
-    $wikiNameSpace = $this->getAppValue('wikinamespace', $wikiNameSpace);
+    $wikiNameSpace = $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY);
+    $wikiNameSpace = $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
     $projectsNamespace = strtolower($this->getConfigValue(ConfigService::PROJECTS_FOLDER));
 
     return $wikiNameSpace . ':' . $projectsNamespace . ':' . $pageName;
@@ -1387,7 +1387,7 @@ class ProjectService
   ==== 2013 ====
   * [[Listenpunkt]]
   */
-    $orchestra = $this->getConfigValue('orchestra');
+    $orchestra = $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY);
     $orchestra = $this->getConfigValue('streetAddressName01', $orchestra);
 
     $projects = [];

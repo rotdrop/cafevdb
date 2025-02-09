@@ -279,7 +279,7 @@ class PersonalSettingsController extends Controller
           'localeInfo' => $this->generateLocaleInfo('app'),
         ]);
         // fall through
-      case 'orchestra':
+      case ConfigService::ORCHESTRA_NAME_KEY:
         $value = strtolower(Util::removeSpaces($value));
         // fall through
       case 'dbserver': // could check for valid hostname
@@ -1650,7 +1650,7 @@ class PersonalSettingsController extends Controller
           return self::grumble($this->l->t('Unable to parse email address "%1$s": %2$s', [ $value, $e->getMessage() ]));
         }
         if (count($parsedEmail) !== 1) {
-          return self::grumble($this->l->t('"%s" seems to contain multiple email address, only a single address is allowed here.', $value));
+          return self::grumble($this->l->t('"%s" seems to contain multiple email addresses, only a single address is allowed here.', $value));
         }
         $realValue = array_key_first($parsedEmail);
         $displayName = reset($parsedEmail);

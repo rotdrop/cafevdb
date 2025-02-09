@@ -141,9 +141,9 @@ class Projects extends PMETableViewBase
   public function shortTitle()
   {
     if (!empty($this->projectName)) {
-      return $this->l->t("%s Project %s", [ ucfirst($this->getConfigValue('orchestra')), $this->projectName]);
+      return $this->l->t("%s Project %s", [ ucfirst($this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY)), $this->projectName]);
     } else {
-      return $this->l->t("%s Projects", [ ucfirst($this->getConfigValue('orchestra')) ]);
+      return $this->l->t("%s Projects", [ ucfirst($this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY)) ]);
     }
   }
 

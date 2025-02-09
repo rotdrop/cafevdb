@@ -335,6 +335,15 @@ class ConfigService
   /** @var string */
   public const CLUB_MEMBER_PROJECT_ID_KEY = self::CLUB_MEMBERS_PROJECT_KEY . 'Id';
 
+  /** @var string */
+  public const WIKI_NAME_SPACE_KEY = 'wikinamespace';
+
+  /** @var string */
+  public const DEBUG_MODE_KEY = 'debugmode';
+
+  /** @var string */
+  public const ORCHESTRA_NAME_KEY = 'orchestra';
+
   /**
    * @var array
    *
