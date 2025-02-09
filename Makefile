@@ -309,14 +309,14 @@ package-lock.json: package.json webpack.config.js Makefile $(THIRD_PARTY_NPM_DEP
 BUILD_FLAVOUR_FILE = $(ABSSRCDIR)/build-flavour
 PREV_BUILD_FLAVOUR = $(shell cat $(BUILD_FLAVOUR_FILE) 2> /dev/null || echo)
 
-$(WEBPACK_TARGETS): $(WEBPACK_DEPS) $(BUILD_FLAVOUR_FILE)
+$(WEBPACK_TARGETS): $(WEBPACK_DEPS) $(BUILD_FLAVOUR_FILE) ts-app-config
 	make webpack-clean
 	npm run $(shell cat $(BUILD_FLAVOUR_FILE)) || rm -f $(WEBPACK_TARGETS)
 
 .PHONY: build-flavour-dev
 build-flavour-dev:
 ifneq ($(PREV_BUILD_FLAVOUR), dev)
-	make clean
+	make clean ts-app-config
 	echo dev > $(BUILD_FLAVOUR_FILE)
 endif
 
