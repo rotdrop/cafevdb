@@ -39,9 +39,12 @@ class ConfigCheck extends AbstractPageRenderer
   public const TEMPLATE = 'maintenance/configcheck';
 
   /**
+   * @param $appName
+   *
    * @param IL10N $l
    */
   public function __construct(
+    protected $appName,
     protected IL10N $l,
   ) {
   }
