@@ -276,6 +276,7 @@ export default {
   flex-wrap: wrap;
   flex-direction: column;
   width: 100%;
+  margin: 0 0 var(--default-grid-baseline);
   &::v-deep .alignment-wrapper {
     display: flex;
     flex-grow: 1;
@@ -324,6 +325,7 @@ export default {
     .v-select.select {
       flex-grow:1;
       max-width:100%;
+      margin: 0 0 0;
     }
     &.submit-button::v-deep .v-select.select {
       .vs__dropdown-toggle {
@@ -349,6 +351,7 @@ export default {
             border-radius: var(--vs-border-radius);
             outline: 2px solid var(--color-main-background);
             background-color: var(--vs-search-input-bg);
+            padding: calc((var(--default-clickable-area) - 1lh)/2 - var(--vs-border-width)) calc(3*var(--default-grid-baseline));
           }
         }
       }
