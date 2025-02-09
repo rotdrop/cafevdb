@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -86,15 +86,15 @@ class EmailAddressService
         // don't care about group stuff
         continue;
       }
-      if ($emailRecord->host === 'localhost') {
+      if ($emailRecord->host === 'localhost' || !$emailRecord->host) {
         throw new Exceptions\EnduserNotificationException(
-          $this->l->t('Missing host for email-address: %s. ', $emailRecord->mailbox)
+          $this->l->t('Missing host for email-address: "%s".', $emailRecord->mailbox)
         );
       }
       $recipient = strtolower($emailRecord->mailbox . '@' . $emailRecord->host);
       if (!$this->phpMailer->validateAddress($recipient)) {
         throw new Exceptions\EnduserNotificationException(
-          $this->l->t('Validation failed for: %s. ', $recipient)
+          $this->l->t('Validation failed for: "%s".', $recipient)
         );
       }
       $displayName = $emailRecord->personal ?: ($emailRecord->comment ?? null);
