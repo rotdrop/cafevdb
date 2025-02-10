@@ -345,6 +345,8 @@ import { tooltips } from './util/tooltips.ts'
 import Console from './util/console.ts'
 import { AppError } from './types/errors.ts'
 import md5 from 'blueimp-md5'
+import type { NavigationItem } from './types/ajax/navigation-items.d.ts'
+import type { ConfigCheckResult } from './types/ajax/config-check.d.ts'
 
 const COMPONENT_NAME = 'CAFeVDB'
 const logger = new Console(COMPONENT_NAME)
@@ -359,15 +361,6 @@ const errorHandler = <E extends AppError>(error: E) => {
 errorHandlerProvider.pushHandler(errorHandler)
 
 const initialState = getInitialState('CAFEVDB')
-
-type NavigationItem = {
-  template: string,
-  name: string,
-  tooltip: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  templateParameters: any[],
-  permissions: number,
-}
 
 type DebugOption = {
   value: number,
@@ -500,6 +493,28 @@ const updatePersonalSettings = (
       },
     },
   })
+}
+
+const configCheck = async () => {
+  const url = generateAppUrl('vue-app/a/config-check')
+  logger.info('URL', url)
+  try {
+    const response: AxiosResponse<ConfigCheckResult> = await axios.get(url)
+    logger.info('CONFIG CHECK RESULT', response)
+    if (!response.data.summary) {
+      const target = {
+        name: 'legacy-page',
+        params: { template: 'maintenance:configcheck' },
+      }
+      history.scheduleHistoryPush(target.params)
+      router.push(target)
+    }
+    return response.data.summary
+  } catch (error) {
+    logger.error('Unable to run the basic configuration checks', url, error)
+    appError.value = new AppError(t(appName, 'Unable to run the config-check.'), { cause: error })
+    return false
+  }
 }
 
 const updateNavigationItems = async () => {
@@ -651,6 +666,10 @@ watch(
     logger.info('CURRENT TEMPLATE CHANGED', value, oldValue)
     if (value === 'home') {
       currentProjectId.value = 0
+      // should also run the config checks ... all other templates
+      // call into the legacy page loader which runs the config check
+      // by itself.
+      configCheck()
     }
     triggerNavigationUpdate.value = true
   })

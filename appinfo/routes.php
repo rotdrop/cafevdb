@@ -138,6 +138,7 @@ $routes = [
     ],
   ],
   'routes' => [
+    // new Vue frontend wrapper
     [
       'name' => 'vueApp#index',
       'url' => '/vue-app',
@@ -171,6 +172,12 @@ $routes = [
       'url' => '/vue-app/a/problem-report',
       'verb' => 'POST',
     ],
+    [
+      'name' => 'configCheck#get',
+      'url' => '/vue-app/a/config-check',
+      'verb' => 'GET',
+    ],
+    //
     [
       'name' => 'page#index',
       'url' => '/',

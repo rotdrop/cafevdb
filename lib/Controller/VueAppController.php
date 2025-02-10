@@ -36,24 +36,18 @@ use OCP\IInitialStateService;
 use OCP\IRequest;
 use OCP\Util;
 
+use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service\AssetService;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
-use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\PageRenderer;
 
 /** AJAX endpoint for generating the main page of the app. */
 class VueAppController extends Controller
 {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-
-  /** @var array
-   *
-   * Result of ConfigCheckService.
-   */
-  private $configCheck;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
