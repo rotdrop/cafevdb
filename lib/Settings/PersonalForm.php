@@ -151,7 +151,7 @@ class PersonalForm
           Constants::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
         ],
         'appName' => $this->appName(),
-        'appNameTag' => 'app-' . $this->appName,
+        'appNameTag' => 'app-' . $this->appName(),
         'appInfo' => $this->appManager->getAppInfo($this->appName()),
         'userId' => $this->userId(),
         //
