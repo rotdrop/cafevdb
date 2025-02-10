@@ -193,8 +193,6 @@ import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus'
 const COMPONENT_NAME = 'LegacyWrapper'
 const logger = new Console(COMPONENT_NAME)
 
-logger.error('SETUP CALLED')
-
 const appError = ref<null | AppError>(null) // any cannot be avoided here
 const errorHandler = <E extends AppError>(error: E) => {
   appError.value = error
