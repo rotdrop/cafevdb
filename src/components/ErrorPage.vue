@@ -23,7 +23,7 @@
  -->
 <template>
   <div class="container">
-    <ul>
+    <ul class="flex-container flex-column">
       <NcListItem v-if="envelopeError"
                   bold
                   :active="true"
@@ -41,16 +41,20 @@
                              :current-entry="logEntry"
                              :translations-loaded="translationsLoaded"
           />
+          <div>
+            <!-- TODO: split the message to have a nice continuation, see nextcloud-vue -->
+            {{ envelopeErrorMessage }}
+          </div>
         </template>
         <template #actions>
+          <NcActionButton :name="t(appName, 'report error')"
+                          close-after-click
+                          @click="showProblemReport = !showProblemReport"
+          />
           <NcActionButton v-if="logEntry"
                           close-after-click
                           :name="t(appName, 'open details')"
                           @click="detailsModalOpen = true"
-          />
-          <NcActionButton :name="t(appName, 'report error')"
-                          close-after-click
-                          @click="showProblemReport = !showProblemReport"
           />
           <NcActionButton :name="t(appName, 'go to previous page')"
                           close-after-click
@@ -72,6 +76,14 @@
       />
       <NcListItem v-else-if="originalError && (originalError instanceof Error)"
                   :name="t(appName, 'FRONTEND ERROR')"
+                  :subname="errorMessage"
+      />
+      <NcListItem v-else-if="originalError && isJqJsonXHR"
+                  :name="t(appName, 'jQuery AJAX ERROR WITH RESPONSE DATA')"
+                  :subname="errorMessage"
+      />
+      <NcListItem v-else-if="originalError && isJqXHR"
+                  :name="t(appName, 'jQuery AJAX ERROR WITHOUT RESPONSE DATA')"
                   :subname="errorMessage"
       />
       <NcListItem v-else :name="t(appName, 'UNKNOWN ERROR')" />
@@ -188,6 +200,12 @@ import generateAppUrl from '../toolkit/util/generate-url.js'
 import { showError, showInfo, /* TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { asyncComputed } from '@vueuse/core'
 import { tooltips } from '../util/tooltips.ts'
+import {
+  JQueryAjaxError,
+  isJqXHR as isJqXHRGuard,
+  isJqJsonXHR as isJqJsonXHRGuard,
+  isJqNextcloudLogEntryXHR,
+} from '../types/ajax/jqxhr-error.ts'
 
 const COMPONENT_NAME = 'ErrorPage'
 const logger = new Console(COMPONENT_NAME)
@@ -213,11 +231,11 @@ const hints = asyncComputed(
 const router = useRouter()
 
 const envelopeError = computed(() =>
-  props.error instanceof AppError && props.error.cause instanceof Error
+  (props.error instanceof AppError || props.error instanceof JQueryAjaxError) && (props.error.cause instanceof Error || isJqXHRGuard(props.error.cause))
     ? props.error
     : null)
 const originalError = computed(() =>
-  envelopeError.value && envelopeError.value.cause instanceof Error
+  envelopeError.value && (envelopeError.value.cause instanceof Error || isJqXHRGuard(envelopeError.value.cause))
     ? envelopeError.value.cause
     : envelopeError.value)
 
@@ -225,10 +243,16 @@ logger.debug('ERRORS', envelopeError, originalError)
 
 const isAxiosError = computed(() => isAxiosErrorGuard(originalError.value))
 const isAxiosErrorResponse = computed(() => isAxiosErrorResponseGuard(originalError.value))
+const isJqXHR = computed(() => isJqXHRGuard(originalError.value))
+const isJqJsonXHR = computed(() => isJqJsonXHRGuard(originalError.value))
+
 const logEntry = computed(() =>
   isNextcloudExceptionResponse(originalError.value)
     ? originalError.value.response.data
-    : null)
+    : isJqNextcloudLogEntryXHR(originalError.value)
+      ? originalError.value.responseJSON
+      : null,
+)
 // const exception = computed(() =>
 //   isNextcloudExceptionResponse(originalError.value)
 //     ? originalError.value.response.data.exception
@@ -312,7 +336,7 @@ loadTranslations('logreader', () => false)
     translationsLoaded.value = true // still open untranslated
   })
 
-const submittedUserComments: Record<string, sting> = {}
+const submittedUserComments: Record<string, string> = {}
 
 const reportError = async () => {
   userComment.value = userComment.value.trim()
@@ -365,9 +389,27 @@ const reportError = async () => {
 }
 
 </script>
-<style lang="scss" scoped>
-::v-deep {
-  .envelope-error, .problem-report {
+<style scoped lang="scss">
+@import './../../style/flex.scss';
+.container {
+  :deep(.envelope-error) {
+    .list-item__anchor {
+      height: auto;
+    }
+    .list-item-content__subname {
+      white-space: normal;
+    }
+    h5 {
+      margin: auto;
+      color: inherit;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .list-item-content__actions {
+      align-self: start;
+    }
+  }
+  .problem-report {
     h5 {
       margin: auto;
       color: inherit;
@@ -390,6 +432,13 @@ const reportError = async () => {
   }
   .list-item__anchor {
     height: auto;
+  }
+}
+</style>
+<style lange="scss">
+.modal-mask {
+  &, * {
+    box-sizing: border-box;
   }
 }
 </style>

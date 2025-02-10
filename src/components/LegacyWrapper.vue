@@ -32,7 +32,9 @@
         </template>
       </NcButton>
       <div class="spacer" />
-      <NcButton :class="{ [appPrefix('top-nav-button')]: true, loading: busyState }"
+      <NcButton :class="{ [appPrefix('top-nav-button')]: true, loading: busyState, }"
+                :data-busy-flag="appData.busyFlag ? 'true' : 'false'"
+                :data-busy-count="'' + appData.busyCount"
                 @click="reloadPage"
       >
         <template #icon>
@@ -104,6 +106,30 @@
                  :error="appError"
       />
     </div>
+    <div v-if="legacyAjaxError" class="flex-container flex-justify-center">
+      <NcModal :show="showLegacyAjaxError"
+               size="large"
+               :has-next="false"
+               :has-previous="false"
+               :close-on-click-outside="false"
+               label-id="legacy-ajax-error-heading"
+               @update:show="handleLegacyAjaxErrorClose"
+      >
+        <template #default>
+          <h2 id="legacy-ajax-error-heading">
+            {{ t(appName, 'Sorry, an Error Occurred') }}
+          </h2>
+          <ErrorPage :id="appPrefix('legacy-ajax-error')"
+                     :error="legacyAjaxError"
+          />
+        </template>
+        <!-- <template #actions>
+          <NcActionButton name="ONE" />
+          <NcActionButton name="TWO" />
+          <NcActionButton name="THREE" />
+        </template> -->
+      </NcModal>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -125,6 +151,7 @@ import {
   NcActions,
   NcButton,
 } from '@nextcloud/vue'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import HomeIcon from 'vue-material-design-icons/Home.vue'
 import ReloadIcon from 'vue-material-design-icons/Reload.vue'
 import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
@@ -138,8 +165,13 @@ import { closeNavigation } from '../services/navigation.js'
 import useAppDataStore from '../stores/app-data.ts'
 import useHistoryStore from '../stores/history.ts'
 import useErrorHandlerStore from '../stores/error-handler.ts'
-import { subscribe as asyncSubscribe, emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
 import {
+  subscribe as asyncSubscribe,
+  unsubscribe as asyncUnSubscribe,
+  emit as asyncEmit,
+} from '../services/async-event-bus.ts'
+import {
+  LEGACY_AJAX_ERROR,
   LEGACY_PAGE_LOAD,
   LEGACY_PME_HISTORY_UPDATE,
   LEGACY_PAGE_CLEANUP,
@@ -155,9 +187,13 @@ import { useRouter } from 'vue-router/composables'
 import { dokuWikiSection, dokuWikiUrl, dokuWikiUrlTarget } from '../util/doku-wiki.ts'
 import { AppError } from '../types/errors.ts'
 import Console from '../util/console.ts'
+import { JQueryAjaxError } from '../types/ajax/jqxhr-error.ts'
+import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus'
 
 const COMPONENT_NAME = 'LegacyWrapper'
 const logger = new Console(COMPONENT_NAME)
+
+logger.error('SETUP CALLED')
 
 const appError = ref<null | AppError>(null) // any cannot be avoided here
 const errorHandler = <E extends AppError>(error: E) => {
@@ -280,6 +316,36 @@ const synchronizeHistoryState = (hash: string) => {
   return router.replace(target)
 }
 
+const updateLegacyRoute = (post: TemplatePostData, action: string = 'replace', htmlBody?: string) => {
+  appError.value = null
+  const params = {
+    template: post.template,
+  }
+  const projectId = post?.projectId
+  const projectName = post?.projectName
+  projectId && Object.assign(params, { projectId })
+  projectName && Object.assign(params, { projectName })
+  const target = {
+    name: 'legacy-page',
+    params,
+    query: {
+      hash: objectHash(post),
+      'no-reload': '1',
+    },
+  }
+  if (htmlBody) {
+    logger.info('INSTALL NEW HTML')
+    legacyBodyHtml.value = htmlBody
+  }
+  if (action === 'push') {
+    scheduleHistoryPush(post)
+    return router.push(target)
+  } else {
+    scheduleHistoryReplace(post)
+    return router.replace(target)
+  }
+}
+
 const doLoadLegacy = async () => {
   if (!props.template) {
     logger.error('*** TEMPLATE MISSING, CANNOT LOAD PAGE ***')
@@ -299,10 +365,11 @@ const doLoadLegacy = async () => {
   Object.assign(post, historyAppData, post)
   Object.assign(historyAppData, post)
   logger.info('POST including history state', post, currentHistoryState.value)
-  previousHash = objectHash(post)
-  if (props.hash !== previousHash) {
+  const currentHash = objectHash(post)
+  if (props.hash !== currentHash) {
+    previousHash = currentHash
     scheduleHistoryReplace(post)
-    synchronizeHistoryState(previousHash)
+    synchronizeHistoryState(currentHash)
   }
   try {
     const response: AxiosResponse<LoadPartsData> = await axios.post(generateAppUrl('page/remember/parts'), post)
@@ -318,6 +385,15 @@ const doLoadLegacy = async () => {
     const titleProvider = document.getElementById(globalState.PHPMyEdit.pmePrefix + '-short-title')
     if (titleProvider) {
       shortTitle.value = titleProvider.textContent || ''
+    }
+    const responseTemplate = data.template?.replace(/%2F|\//, ':') || props.template
+    if (responseTemplate !== props.template) {
+      logger.info('TEMPLATE HAS CHANGED, SYNC HISTORY', responseTemplate, props.template)
+      const post: TemplatePostData = {
+        template: responseTemplate,
+        ...data.defaultTemplateParameters,
+      }
+      updateLegacyRoute(post)
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
@@ -406,14 +482,13 @@ watch(
 )
 
 // event subscriptions may come last ..
-
-asyncSubscribe(
+const legacyPageLoadHandler = asyncSubscribe(
   LEGACY_PAGE_LOAD,
-  (eventData) => {
+  async (eventData) => {
     logger.info('LEGACY PAGE LOAD CALLED', eventData)
     appError.value = null
     const params = {
-      template: eventData?.template || eventData.post.template,
+      template: (eventData?.template || eventData.post.template).replace(/%2F|\//, ':'),
     }
     const projectId = eventData?.projectId || eventData.post?.projectId
     const projectName = eventData?.projectName || eventData.post?.projectName
@@ -423,49 +498,50 @@ asyncSubscribe(
     const target = {
       name: 'legacy-page',
       params,
-      hash: objectHash(post),
+      query: { hash: objectHash(post) },
     }
     if (eventData.keepHistory) {
       scheduleHistoryReplace(post)
-      return router.replace(target)
+      try {
+        return await router.replace(target)
+      } catch (e) {
+        console.info('ROUTER ERROR', { e })
+        return router.go(0)
+      }
     } else {
       scheduleHistoryPush(post)
       return router.push(target)
     }
   },
 )
-asyncSubscribe(
+const legacyPmeHistoryUpdateHandler = asyncSubscribe(
   LEGACY_PME_HISTORY_UPDATE,
   (eventData) => {
     logger.info('LEGACY PME HISTORY UPDATE', eventData)
-    appError.value = null
-    const post = eventData.post
-    const params = {
-      template: post.template,
-    }
-    const projectId = post?.projectId
-    const projectName = post?.projectName
-    projectId && Object.assign(params, { projectId })
-    projectName && Object.assign(params, { projectName })
-    const target = {
-      name: 'legacy-page',
-      params,
-      query: {
-        hash: objectHash(post),
-        'no-reload': '1',
-      },
-    }
-    logger.info('INSTALL NEW HTML', eventData)
-    legacyBodyHtml.value = eventData.htmlBody
-    if (eventData?.action === 'push') {
-      scheduleHistoryPush(post)
-      return router.push(target)
-    } else {
-      scheduleHistoryReplace(post)
-      return router.replace(target)
-    }
+    return updateLegacyRoute(eventData.post, eventData.action, eventData.htmlBody)
   },
 )
+const legacyAjaxError = ref<JQueryAjaxError | undefined>()
+const showLegacyAjaxError = ref(false)
+const legacyAjaxErrorResolve = ref((_value: unknown) => {})
+const legacyAjaxErrorHandler = asyncSubscribe(
+  LEGACY_AJAX_ERROR,
+  async (eventData) => {
+    logger.error('LEGACY_AJAX_ERROR', { eventData })
+    legacyAjaxError.value = new JQueryAjaxError(
+      eventData.message || t(appName, 'An error occured during communication with the server.'),
+      eventData.xhr,
+    )
+    showLegacyAjaxError.value = true
+    const closePromise = new Promise((resolve) => { legacyAjaxErrorResolve.value = resolve })
+    await closePromise
+    legacyAjaxError.value = undefined
+  },
+)
+const handleLegacyAjaxErrorClose = () => {
+  showLegacyAjaxError.value = false
+  legacyAjaxErrorResolve.value(false)
+}
 
 // Initialization work different with composition API, so fore a page load at start
 pageLoadTrigger.value = true
@@ -473,7 +549,12 @@ pageLoadTrigger.value = true
 errorHandlerProvider.popHandler()
 
 onBeforeMount(() => errorHandlerProvider.pushHandler(errorHandler))
-onUnmounted(() => errorHandlerProvider.popHandler())
+onUnmounted(() => {
+  errorHandlerProvider.popHandler()
+  asyncUnSubscribe(LEGACY_PAGE_LOAD, legacyPageLoadHandler)
+  asyncUnSubscribe(LEGACY_PME_HISTORY_UPDATE, legacyPmeHistoryUpdateHandler)
+  asyncUnSubscribe(LEGACY_AJAX_ERROR, legacyAjaxErrorHandler)
+})
 
 </script>
 <style lang="scss" scoped>
@@ -518,6 +599,9 @@ onUnmounted(() => errorHandlerProvider.popHandler())
 }
 ##{$appName}-error {
   max-width: 90%;
+}
+#legacy-ajax-error-heading {
+  margin-left: 6px;
 }
 .flex-container {
   display: flex;

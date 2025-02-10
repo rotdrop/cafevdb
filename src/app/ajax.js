@@ -29,6 +29,8 @@ import * as Dialogs from './dialogs.js';
 import { isPlainObject } from 'is-plain-object';
 import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
 import { loadState } from '@nextcloud/initial-state';
+import { emit as asyncEmit } from '../services/async-event-bus.ts';
+import { LEGACY_AJAX_ERROR } from '../event-bus-events.ts';
 
 const cloudWebRoot = getCloudRootUrl() || '/';
 
@@ -135,7 +137,7 @@ const ajaxHttpStatus = {
  *
  * @returns {object} TBD.
  */
-const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
+const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) {
 
   if (!globalState.initialized) {
     $.extend(globalState, loadState(appName, 'CAFEVDB'));
@@ -204,12 +206,7 @@ Error Data: ${print_r(failData, true)}
   case ajaxHttpStatus.NOT_FOUND:
   case ajaxHttpStatus.CONFLICT:
   case ajaxHttpStatus.INTERNAL_SERVER_ERROR: {
-    if (failData.error && ajaxHttpStatus[xhr.status] !== t(appName, failData.error)) {
-      info += ': '
-        + '<span class="bold error toastify name">'
-        + t(appName, failData.error)
-        + '</span>';
-    }
+
     if (failData.message) {
       if (!Array.isArray(failData.message)) {
         failData.message = [failData.message];
@@ -218,22 +215,36 @@ Error Data: ${print_r(failData, true)}
         info += '<div class="' + appName + ' error toastify">' + msg + '</div>';
       }
     }
-    info += '<div class="error toastify feedback-link">'
-      + t(appName, 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
-      + '</div>';
-    autoReport = '';
-    let exceptionData = failData;
-    if (exceptionData.exception !== undefined) {
-      info += '<div class="exception error name"><pre>' + exceptionData.brief + '</pre></div>'
-        + '<div class="exception error trace"><pre>' + exceptionData.exception.trace + '</pre></div>';
-      while ((exceptionData = exceptionData.previous) != null) {
-        info += '<div class="bold error toastify">' + exceptionData.message + '</div>';
+
+    if (globalState.vueMode) {
+      await asyncEmit(LEGACY_AJAX_ERROR, { xhr, message: failData.message?.join(' ') });
+      console.info('RUNNING CLEANUP HOOKS', callbacks);
+      callbacks.cleanup(failData);
+    } else {
+      if (failData.error && ajaxHttpStatus[xhr.status] !== t(appName, failData.error)) {
+        info += ': '
+          + '<span class="bold error toastify name">'
+          + t(appName, failData.error)
+          + '</span>';
+      }
+      info += '<div class="error toastify feedback-link">'
+        + t(appName, 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
+        + '</div>';
+      autoReport = '';
+      let exceptionData = failData;
+      if (exceptionData.exception !== undefined) {
         info += '<div class="exception error name"><pre>' + exceptionData.brief + '</pre></div>'
           + '<div class="exception error trace"><pre>' + exceptionData.exception.trace + '</pre></div>';
+        while ((exceptionData = exceptionData.previous) != null) {
+          info += '<div class="bold error toastify">' + exceptionData.message + '</div>';
+          info += '<div class="exception error name"><pre>' + exceptionData.brief + '</pre></div>'
+            + '<div class="exception error trace"><pre>' + exceptionData.exception.trace + '</pre></div>';
+        }
       }
-    }
-    if (failData.info) {
-      info += '<div class="' + appName + ' error-page">' + failData.info + '</div>';
+      if (failData.info) {
+        info += '<div class="' + appName + ' error-page">' + failData.info + '</div>';
+      }
+      Dialogs.alert(info, caption, function() { callbacks.cleanup(failData); }, true, true);
     }
     break;
   }
@@ -263,6 +274,7 @@ certain security token could not be refreshed regularly which may
 produce the error your see. A simple page reload may help. This is
 done automatically when cloud click "ok" or close this dialog window.
 </div>`;
+    Dialogs.alert(info, caption, function() { callbacks.cleanup(failData); }, true, true);
     break;
   case ajaxHttpStatus.UNAUTHORIZED: {
     // no point in continuing, direct the user to the login page
@@ -284,12 +296,12 @@ done automatically when cloud click "ok" or close this dialog window.
     // info += '<div class="error toastify feedback-link">'
     //       + t(appName, 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
     //       + '</div>';
+    Dialogs.alert(info, caption, function() { callbacks.cleanup(failData); }, true, true);
     break;
   }
   }
 
   // console.info(info);
-  Dialogs.alert(info, caption, function() { callbacks.cleanup(failData); }, true, true);
   return failData;
 };
 
@@ -401,29 +413,28 @@ const ajaxFailData = function(xhr, textStatus, errorThrown) {
   if (xhr.parsed !== undefined && xhr.error !== undefined && xhr.status !== undefined && xhr.message !== undefined) {
     return xhr;
   }
-  const ct = xhr.getResponseHeader('content-type') || '';
-  let data = {
+  const data = {
     error: errorThrown,
     status: textStatus,
     message: t(appName, 'Unknown JSON error response to AJAX call: {status} / {error}', { status: textStatus, error: errorThrown }),
     xhr,
     parsed: false,
   };
-  if (ct.indexOf('html') > -1) {
-    console.debug('html response', xhr, xhr.status, textStatus, errorThrown);
-    data.message = t(
-      appName, 'HTTP error response to AJAX call: {code} / {error}',
-      { code: xhr.status, error: errorThrown });
-    data.info = $(xhr.responseText).find('main').html();
-    data.parsed = true;
-  } else if (ct.indexOf('json') > -1) {
-    const response = JSON.parse(xhr.responseText);
-    // console.info('XHR response text', xhr.responseText);
-    // console.log('JSON response', response);
-    data = { ...data, ...response };
+  if (xhr.responseJSON) {
+    Object.assign(data, xhr.responseJSON);
     data.parsed = true;
   } else {
-    console.log('unknown response');
+    const ct = xhr.getResponseHeader('content-type') || '';
+    if (ct.indexOf('html') > -1) {
+      console.debug('html response', xhr, xhr.status, textStatus, errorThrown);
+      data.message = t(
+        appName, 'HTTP error response to AJAX call: {code} / {error}',
+        { code: xhr.status, error: errorThrown });
+      data.info = $(xhr.responseText).find('main').html();
+      data.parsed = true;
+    } else {
+      console.log('unknown response');
+    }
   }
   // console.info(data);
   return data;

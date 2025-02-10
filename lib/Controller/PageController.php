@@ -334,7 +334,7 @@ class PageController extends Controller
 
     $template = $this->getTemplate($template, $renderAs);
     $this->logDebug("Try load template ".$template);
-    /** @var IRenderer $renderer */
+    /** @var IPageRenderer $renderer */
     $renderer = $this->appContainer->get(RendererRegistration::TEMPLATE_PREFIX . $template);
     if (empty($renderer)) {
       throw new Exceptions\Exception(
@@ -399,6 +399,7 @@ class PageController extends Controller
       )->render();
       return self::dataResponse([
         'template' => $template,
+        'defaultTemplateParameters' => $renderer->navigationItem($projectId, $projectName)['templateParameters'],
         'headerHtml' => $renderer->headerText(), // actually html
         'bodyHtml' => $pageHtml,
         'cssPrefix' => $renderer->cssPrefix(),
