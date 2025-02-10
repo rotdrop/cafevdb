@@ -183,7 +183,7 @@ import objectHash from 'object-hash'
 import type { AxiosResponse } from 'axios'
 import type { LoadPartsData } from '../types/ajax/page-load-response.ts'
 import { loadTranslations, translate as t } from '@nextcloud/l10n'
-import { useRouter } from 'vue-router/composables'
+import { useRouter, useRoute } from 'vue-router/composables'
 import { dokuWikiSection, dokuWikiUrl, dokuWikiUrlTarget } from '../util/doku-wiki.ts'
 import { AppError } from '../types/errors.ts'
 import Console from '../util/console.ts'
@@ -207,6 +207,7 @@ errorHandlerProvider.pushHandler(errorHandler)
 onErrorCaptured((...args) => { logger.error('Vue error captured', ...args) })
 
 const router = useRouter()
+const route = useRoute()
 
 const props = withDefaults(defineProps<{
   template: string,
@@ -499,6 +500,10 @@ const legacyPageLoadHandler = asyncSubscribe(
       name: 'legacy-page',
       params,
       query: { hash: objectHash(post) },
+    }
+    // force the router to navigate by altering the hash
+    if (route.query.hash === target.query.hash) {
+      target.query.hash = '-'
     }
     if (eventData.keepHistory) {
       scheduleHistoryReplace(post)
