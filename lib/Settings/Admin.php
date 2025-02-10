@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -64,6 +64,9 @@ class Admin implements IDelegatedSettings
   const USER_AND_GROUP_BACKENDS = 'userAndGroupBackends';
   const AUTHORIZATION_GROUP_SUFFIXES = AuthorizationService::GROUP_SUFFIX_LIST;
   const AUTHORIZATION_GROUP_SUFFIXES_KEY = 'authorizationGroupSuffixes';
+  const PROBLEM_REPORT_EMAIL_RECIPIENT_KEY = 'problemReportEmailRecipient';
+  const EMAIL_CHALLENGE_SUFFIX = 'Challenge';
+  const EMAIL_VERIFICATION_SUFFIX = 'Verification';
 
   const DELEGATABLE = 'delegatable';
   const ADMIN_ONLY = 'admin_only';
@@ -131,7 +134,7 @@ class Admin implements IDelegatedSettings
     $configData = [
       self::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue(ConfigService::USER_GROUP_KEY),
       self::PERSONAL_APP_SETTINGS_LINK => $personalAppSettingsLink,
-      self::WIKI_NAME_SPACE_KEY => $this->getAppValue('wikinamespace'),
+      self::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY),
       self::WIKI_VERSION => $this->wikiRPC->version(),
       self::CLOUD_USER_BACKEND => $cloudUserBackend,
       self::CLOUD_USER_BACKEND_RESTRICTIONS => $cloudUserBackendRestrictions,
@@ -144,6 +147,8 @@ class Admin implements IDelegatedSettings
       self::IS_SUB_ADMIN => $isSubAdmin,
       self::USER_AND_GROUP_BACKENDS => $userAndGroupBackends,
       self::AUTHORIZATION_GROUP_SUFFIXES_KEY => self::AUTHORIZATION_GROUP_SUFFIXES,
+      self::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY => $this->getAppValue(self::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY),
+      self::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . self::EMAIL_VERIFICATION_SUFFIX => $this->getAppValue(self::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . self::EMAIL_VERIFICATION_SUFFIX),
     ];
 
     $this->initialState->provideInitialState('adminConfig', $configData);

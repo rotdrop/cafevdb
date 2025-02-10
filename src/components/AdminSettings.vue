@@ -116,18 +116,19 @@
           </NcListItem>
         </ul>
       </div>
-      <label for="wiki-name-space">
-        {{ t(appId, 'Wiki Name-Space') }}
-      </label>
-      <!-- Note: v-model does not work here -->
-      <TextField v-if="config.isSubAdmin || config.isAdmin"
-                 id="wiki-name-space"
-                 :value.sync="settings.wikiNameSpace"
-                 type="text"
-                 :label="t(appId, 'Wiki Name-Space')"
-                 :hint="hints['settings:admin:wiki-name-space']"
-                 @submit="saveSetting('wikiNameSpace', settings.wikiNameSpace)"
-      />
+      <div v-if="config.isSubAdmin || config.isAdmin">
+        <label for="wiki-name-space">
+          {{ t(appId, 'Wiki Name-Space') }}
+        </label>
+        <!-- Note: v-model does not work here -->
+        <TextField id="wiki-name-space"
+                   :value.sync="settings.wikiNameSpace"
+                   type="text"
+                   :label="t(appId, 'Wiki Name-Space')"
+                   :hint="hints['settings:admin:wiki-name-space']"
+                   @submit="saveSetting('wikiNameSpace', settings.wikiNameSpace)"
+        />
+      </div>
     </NcSettingsSection>
     <NcSettingsSection v-if="config.isSubAdmin" :name="t(appId, 'Configure User Backend')">
       <div>
@@ -310,6 +311,77 @@
         </template>
       </SelectWithSubmitButton>
     </NcSettingsSection>
+    <NcSettingsSection v-if="config.isSubAdmin"
+                       :class="['sub-admin', 'problem-reports']"
+                       :name="t(appId, 'Configure Problem Report Handling')"
+    >
+      <div :class="['problem-report', 'email-recipient', 'verification-status-' + settings.problemReportEmailRecipientStatus]">
+        <TextField :value.sync="settings.problemReportEmailRecipient"
+                   :disabled="settings.problemReportEmailRecipientStatus === 'pending'"
+                   type="text"
+                   :label="t(appId, 'Problem Report Email Recipient')"
+                   class="recipient-email-address"
+                   :show-trailing-button="true"
+                   trailing-button-icon="arrowRight"
+                   :helper-text="hints['settings:admin:problem-report:email:recipient']"
+                   :success="settings.problemReportEmailRecipientStatus === 'verified'"
+                   :error="settings.problemReportEmailRecipientStatus === 'failed'"
+                   @submit="saveProblemReportEmailRecipient"
+        >
+          <IconEmailVerified v-if="settings.problemReportEmailRecipientStatus === 'verified'"
+                             v-tooltip="hints['settings:admin:problem-report:email:verification:status:verified']"
+                             :size="props.leadingIconSize"
+          />
+          <IconEmailVerificationFailed v-else-if="settings.problemReportEmailRecipientStatus === 'failed'"
+                                       v-tooltip="hints['settings:admin:problem-report:email:verification:status:failed']"
+                                       :size="props.leadingIconSize"
+          />
+          <IconEmailVerificationPending v-else
+                                        v-tooltip="hints['settings:admin:problem-report:email:verification:status:pending']"
+                                        :size="props.leadingIconSize"
+          />
+        </TextField>
+        <TextField v-if="settings.problemReportEmailRecipientStatus === 'pending' || settings.problemReportEmailRecipientStatus === 'failed'"
+                   :value.sync="settings.problemReportEmailRecipientVerification"
+                   type="text"
+                   :label="t(appId, 'Email Verification Code')"
+                   :helper-text="hints['settings:admin:problem-report:email:verification:code']"
+                   :class="['verification-code', { 'new-input': problemReportRecipientVerificationInput }]"
+                   :error="settings.problemReportEmailRecipientStatus === 'failed'"
+                   @input="problemReportRecipientVerificationInput = true"
+                   @submit="saveProblemReportEmailRecipientVerification"
+        >
+          <IconEmailVerificationFailed v-if="settings.problemReportEmailRecipientStatus === 'failed'"
+                                       v-tooltip="hints['settings:admin:problem-report:email:verification:status:failed']"
+                                       :size="props.leadingIconSize"
+          />
+          <IconEmailVerificationPending v-else
+                                        v-tooltip="hints['settings:admin:problem-report:email:verification:status:pending']"
+                                        :size="props.leadingIconSize"
+          />
+          <template #alignedAfter>
+            <NcActions>
+              <NcActionButton v-tooltip="hints['settings:admin:problem-report:email:verification:resend']"
+                              :name="t(appId, 'resend verification code')"
+                              @click="saveProblemReportEmailRecipient"
+              >
+                <template #icon>
+                  <IconResendVerificationCode />
+                </template>
+              </NcActionButton>
+              <NcActionButton v-tooltip="hints['settings:admin:problem-report:email:verification:cancel']"
+                              :name="t(appId, 'cancel verification')"
+                              @click="cancelProblemReportEmailRecipientVerification"
+              >
+                <template #icon>
+                  <IconCancel />
+                </template>
+              </NcActionButton>
+            </NcActions>
+          </template>
+        </TextField>
+      </div>
+    </NcSettingsSection>
   </div>
 </template>
 <script setup lang="ts">
@@ -331,6 +403,11 @@ import {
   NcSettingsSection,
   NcListItem,
 } from '@nextcloud/vue'
+import IconEmailVerificationPending from 'vue-material-design-icons/Help.vue'
+import IconEmailVerified from 'vue-material-design-icons/EmailCheck.vue'
+import IconEmailVerificationFailed from 'vue-material-design-icons/Cancel.vue'
+// import IconCancel from 'vue-material-design-icons/Cancel.vue'
+import IconResendVerificationCode from 'vue-material-design-icons/Sync.vue'
 import TextField from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 
@@ -363,6 +440,8 @@ import type { CloudUser, CloudGroup } from '../stores/cloud-users-groups.ts'
 import { translate as t } from '@nextcloud/l10n'
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
 import Console from '../util/console.ts'
+import { joinLiterals } from '../util/string-literals.ts'
+const IconCancel = IconEmailVerificationFailed
 
 const COMPONENT_NAME = 'AdminSettings'
 
@@ -411,6 +490,9 @@ type AppAdminSettings = {
   wikiNameSpace: string,
   cloudUserBackendConfig: string,
   defaultOfficeFont: string,
+  problemReportEmailRecipient: string;
+  problemReportEmailRecipientVerification: string;
+  problemReportEmailRecipientStatus: string;
 }
 
 type CloudUserGetResponse = AxiosResponse<OCSResponse<CloudUser> >
@@ -474,8 +556,10 @@ type GroupType = (CloudGroup|Pick<CloudGroup, 'id'|'displayname'|'backends'|'use
 
 const props = withDefaults(defineProps<{
   recryptionPollTimeout?: number,
+  leadingIconSize?: number,
 }>(), {
   recryptionPollTimeout: 10 * 1000,
+  leadingIconSize: 24,
 })
 
 const initialState: InitialState = loadState(appId, 'adminConfig')
@@ -492,14 +576,19 @@ const loading = reactive({
   groups: true,
 })
 
-const settings = reactive({
+const settings: AppAdminSettings = reactive({
   userAndGroupBackend: '',
   orchestraUserGroup: '',
   orchestraUserGroupAdmins: [],
   wikiNameSpace: '',
   cloudUserBackendConfig: '',
   defaultOfficeFont: '',
-} as AppAdminSettings)
+  problemReportEmailRecipient: '',
+  problemReportEmailRecipientVerification: '',
+  problemReportEmailRecipientStatus: '',
+})
+
+const problemReportRecipientVerificationInput = ref(false)
 
 const settingsBackup = reactive({} as AppAdminSettings)
 const orchestraGroups = reactive({} as Record<string, GroupType>)
@@ -513,6 +602,12 @@ const hints = reactive({
   'settings:admin:access-control:musicians': '',
   'settings:admin:true-type-fonts-folder': '',
   'settings:admin:user-backend:move-users': '',
+  'settings:admin:problem-report:email:recipient': '',
+  'settings:admin:problem-report:email:verification:code': '',
+  'settings:admin:problem-report:email:verification:resend': '',
+  'settings:admin:problem-report:email:verification:status:verified': '',
+  'settings:admin:problem-report:email:verification:status:pending': '',
+  'settings:admin:problem-report:email:verification:status:failed': '',
 })
 const forword = ref('')
 const recryption = reactive({
@@ -648,88 +743,34 @@ const loadTooltips = async () => {
   Object.assign(hints, await tooltips(Object.keys(hints)))
   loading.tooltips = false
 }
-const getSettingsData = async () => {
+const getSettingsData = async (settingsKeys: (keyof AppAdminSettings)[] = []) => {
   loading.settings = true
-  const requests = {}
-  for (const key of Object.keys(settings)) {
-    requests[key] = axios.get(generateAppUrl('settings/admin/{key}', { key }))
+  const requests: Promise<AxiosResponse<{ value: string }> >[] = []
+  if (settingsKeys.length === 0) {
+    settingsKeys = Object.keys(settings) as (keyof AppAdminSettings)[]
   }
-  for (const [key, request] of Object.entries(requests)) {
-    const response = (await request) as AxiosResponse<{ value: string }>
-    vueSet(settings, key, response.data.value)
+  for (const key of settingsKeys) {
+    requests.push(axios.get(generateAppUrl('settings/admin/{key}', { key })))
+  }
+  const responses = await Promise.allSettled(requests)
+  for (const [i, promiseResult] of responses.entries()) {
+    const key = settingsKeys[i]
+    if (promiseResult.status === 'fulfilled') {
+      const response = promiseResult.value
+      vueSet(settings, key, response.data.value)
+    } else {
+      const e = promiseResult.reason
+      let message = t(appId, 'reason unknown')
+      if (e.response && e.response.data && e.response.data.message) {
+        message = e.response.data.message
+        console.error('RESPONSE', e.response)
+      }
+      showError(t(appId, 'Could not fetch the value for "{key}": {message}', { key, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+      vueSet(settings, key, settingsBackup[key])
+    }
   }
   Object.assign(settingsBackup, { ...settings })
   loading.settings = false
-}
-const getRecryptionRequests = async () => {
-  loading.recryption = true
-  vueSet(recryption, 'requests', {})
-  vueSet(recryption, 'allRequestsMarked', '')
-  await updateRecryptionRequests()
-  recryptionPollTimer = setTimeout(() => pollRecryptionRequests(), props.recryptionPollTimeout)
-}
-const pollRecryptionRequests = async () => {
-  await updateRecryptionRequests()
-  recryptionPollTimer = setTimeout(() => pollRecryptionRequests(), props.recryptionPollTimeout)
-}
-/**
- * Update the recryption requests if needed. It is assumed that
- * the time-stamp is a unique key, so if there is already a
- * recryption request for a user with the same time-stamp then it
- * is not replaced.
- */
-const updateRecryptionRequests = async () => {
-  try {
-    const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt')
-    const response = (await axios.get(url + '?format=json')) as RecryptionGetResponse
-    const recryptionRequests = response.data.ocs.data.requests
-    // remove requests which are no longer there
-    for (const userId of Object.keys(recryption.requests)) {
-      if (!recryptionRequests[userId]) {
-        vueDelete(recryption.requests, userId)
-      }
-    }
-    // update existing requests (time-stamp changed) and add new
-    // ones. Initiate the AJAX calls in parallel, then serialize
-    // later
-    const cloudUserPromises = [] as { userId: string, timeStamp: number, promise: Promise<CloudUserGetResponse> }[]
-    for (const [userId, timeStamp] of Object.entries(recryptionRequests)) {
-      if (!recryption.requests[userId] || recryption.requests[userId].timeStamp !== timeStamp) {
-        cloudUserPromises.push({
-          userId,
-          timeStamp,
-          promise: axios.get(generateOcsUrl('cloud/users/{userId}', { userId })),
-        })
-      }
-    }
-    for (const cloudUserPromise of cloudUserPromises) {
-      const { userId, timeStamp, promise } = cloudUserPromise
-      try {
-        const response = await promise
-        const user = response.data.ocs.data
-        const isOrganizer = user.groups.indexOf(settings.orchestraUserGroup) >= 0
-        const isGroupAdmin = settings.orchestraUserGroupAdmins.indexOf(userId) >= 0
-        vueSet(recryption.requests, userId, {
-          id: userId,
-          timeStamp,
-          displayName: user.displayname,
-          groups: user.groups,
-          enabled: user.enabled,
-          isOrganizer,
-          isGroupAdmin,
-          marked: false,
-        })
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        console.error('Unable to fetch data for user ' + userId, e)
-      }
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (e: any) {
-    // admin is maybe not authorized
-    console.error('Unable to fetch recryption entries', e)
-  }
-  loading.recryption = false
 }
 const saveSetting = async (settingsKey: string, value?: string) => {
   try {
@@ -810,6 +851,108 @@ const saveSetting = async (settingsKey: string, value?: string) => {
     }
     getSettingsData()
   }
+}
+
+const saveProblemReportEmailRecipient = async () => {
+  const key = 'problemReportEmailRecipient'
+  const requestedValue = settings[key]
+  await saveSetting(key)
+  if (requestedValue === settings[key]) {
+    getSettingsData([joinLiterals()(key, 'Verification'), joinLiterals()(key, 'Status')])
+  }
+  problemReportRecipientVerificationInput.value = false
+}
+const saveProblemReportEmailRecipientVerification = async () => {
+  const baseKey = 'problemReportEmailRecipient'
+  const key = joinLiterals()(baseKey, 'Verification')
+  const requestedValue = settings[key]
+  await saveSetting(key)
+  if (requestedValue === settings[key]) {
+    getSettingsData([joinLiterals()(baseKey, 'Status')])
+  }
+  problemReportRecipientVerificationInput.value = false
+}
+const cancelProblemReportEmailRecipientVerification = async () => {
+  const keys = ['problemReportEmailRecipient', 'problemReportEmailRecipientVerification'] as const
+  for (const key of keys) {
+    settings[key] = ''
+    await saveSetting(key)
+    if (settings[key] !== '') {
+      return
+    }
+  }
+  getSettingsData([...keys, joinLiterals()(keys[0], 'Status')])
+  problemReportRecipientVerificationInput.value = false
+}
+const getRecryptionRequests = async () => {
+  loading.recryption = true
+  vueSet(recryption, 'requests', {})
+  vueSet(recryption, 'allRequestsMarked', '')
+  await updateRecryptionRequests()
+  recryptionPollTimer = setTimeout(() => pollRecryptionRequests(), props.recryptionPollTimeout)
+}
+const pollRecryptionRequests = async () => {
+  await updateRecryptionRequests()
+  recryptionPollTimer = setTimeout(() => pollRecryptionRequests(), props.recryptionPollTimeout)
+}
+/**
+ * Update the recryption requests if needed. It is assumed that
+ * the time-stamp is a unique key, so if there is already a
+ * recryption request for a user with the same time-stamp then it
+ * is not replaced.
+ */
+const updateRecryptionRequests = async () => {
+  try {
+    const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt')
+    const response = (await axios.get(url + '?format=json')) as RecryptionGetResponse
+    const recryptionRequests = response.data.ocs.data.requests
+    // remove requests which are no longer there
+    for (const userId of Object.keys(recryption.requests)) {
+      if (!recryptionRequests[userId]) {
+        vueDelete(recryption.requests, userId)
+      }
+    }
+    // update existing requests (time-stamp changed) and add new
+    // ones. Initiate the AJAX calls in parallel, then serialize
+    // later
+    const cloudUserPromises = [] as { userId: string, timeStamp: number, promise: Promise<CloudUserGetResponse> }[]
+    for (const [userId, timeStamp] of Object.entries(recryptionRequests)) {
+      if (!recryption.requests[userId] || recryption.requests[userId].timeStamp !== timeStamp) {
+        cloudUserPromises.push({
+          userId,
+          timeStamp,
+          promise: axios.get(generateOcsUrl('cloud/users/{userId}', { userId })),
+        })
+      }
+    }
+    for (const cloudUserPromise of cloudUserPromises) {
+      const { userId, timeStamp, promise } = cloudUserPromise
+      try {
+        const response = await promise
+        const user = response.data.ocs.data
+        const isOrganizer = user.groups.indexOf(settings.orchestraUserGroup) >= 0
+        const isGroupAdmin = settings.orchestraUserGroupAdmins.indexOf(userId) >= 0
+        vueSet(recryption.requests, userId, {
+          id: userId,
+          timeStamp,
+          displayName: user.displayname,
+          groups: user.groups,
+          enabled: user.enabled,
+          isOrganizer,
+          isGroupAdmin,
+          marked: false,
+        })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        console.error('Unable to fetch data for user ' + userId, e)
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    // admin is maybe not authorized
+    console.error('Unable to fetch recryption entries', e)
+  }
+  loading.recryption = false
 }
 const synchronizeUserBackends = () => {
   showError(t(appId, 'Synchronizing user backends not yet implemented.'), { timeout: TOAST_PERMANENT_TIMEOUT })
@@ -1164,6 +1307,15 @@ onUnmounted(() => {
   .flex-spacer {
     flex-grow:4;
     height:34px
+  }
+  ::v-deep .problem-report {
+    &.email-recipient {
+      &.verification-status-failed {
+        .verification-code:not(.new-input) input.input-field__input {
+          text-decoration: line-through;
+        }
+      }
+    }
   }
   .access-action-status {
     display:flex;

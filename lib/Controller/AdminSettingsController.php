@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,11 +32,15 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use OCP\IL10N;
 
-use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\FontService;
+use OCA\CAFEVDB\Service\ProblemReportService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
+use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 
 /** AJAX end-points for admin setttings. */
 class AdminSettingsController extends Controller
@@ -46,9 +50,12 @@ class AdminSettingsController extends Controller
 
   public const POST_REQUEST_FONT_CACHE = 'font-cache';
   public const DELEGATABLE_POST_REQUESTS = [
-    self::POST_REQUEST_FONT_CACHE,
-    FontService::DEFAULT_OFFICE_FONT_CONFIG,
     AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY,
+    AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY,
+    AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX,
+    AdminSettings::WIKI_NAME_SPACE_KEY,
+    FontService::DEFAULT_OFFICE_FONT_CONFIG,
+    self::POST_REQUEST_FONT_CACHE,
   ];
 
 
@@ -60,8 +67,10 @@ class AdminSettingsController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    protected ConfigService $configService,
+    private EmailAddressService $emailAddressService,
+    private ProblemReportService $problemReportService,
     private WikiRPC $wikiRPC,
+    protected ConfigService $configService,
   ) {
     parent::__construct($appName, $request);
 
@@ -83,6 +92,24 @@ class AdminSettingsController extends Controller
   {
     $value = null;
     switch ($parameter) {
+      case AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY:
+      case AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX:
+        $value = $this->getAppValue($parameter, '');
+        break;
+      case AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . 'Status':
+        $email = $this->getAppValue(AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY, '');
+        $verification = $this->getAppValue(AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX, '');
+        $challenge =  $this->getAppValue(AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_CHALLENGE_SUFFIX, '');
+        if (!$email || !$challenge) {
+          $this->l->t($value = 'irrelevant');
+        } elseif ($challenge === $verification) {
+          $this->l->t($value = 'verified');
+        } elseif (!$verification) {
+          $this->l->t($value = 'pending');
+        } else {
+          $this->l->t($value = 'failed');
+        }
+        break;
       case AdminSettings::USER_AND_GROUP_BACKEND_KEY:
         $value = $this->getAppValue(ConfigService::USER_AND_GROUP_BACKEND_KEY, AdminSettings::DEFAULT_USER_AND_GROUP_BACKEND);
         break;
@@ -98,7 +125,7 @@ class AdminSettingsController extends Controller
         }
         break;
       case AdminSettings::WIKI_NAME_SPACE_KEY:
-        $value = $this->getAppValue('wikinamespace');
+        $value = $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY);
         break;
       case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
         $value = $this->di(CloudUserConnectorService::class)->haveCloudUserBackendConfig();
@@ -132,6 +159,8 @@ class AdminSettingsController extends Controller
    * @return DataResponse
    *
    * @NoGroupMemberRequired
+   *
+   * @throw Exceptions\EnduserNotificationException
    */
   public function postAdminOnly(string $parameter, mixed $value):DataResponse
   {
@@ -149,16 +178,17 @@ class AdminSettingsController extends Controller
    *
    * @NoGroupMemberRequired
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
+   *
+   * @throw Exceptions\EnduserNotificationException
    */
   public function postDelegated(string $parameter, mixed $value = null, ?string $operation = null):DataResponse
   {
-    switch ($parameter) {
-      case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
-      case FontService::DEFAULT_OFFICE_FONT_CONFIG:
-      case self::POST_REQUEST_FONT_CACHE:
-        return $this->post($parameter, $value, $operation);
+    if (array_search($parameter, self::DELEGATABLE_POST_REQUESTS) !== false) {
+      return $this->post($parameter, $value, $operation);
     }
-    return self::grumble($this->l->t('Settings is reserved to cloud-administrators: "%s".', $parameter));
+    throw new Exceptions\EnduserNotificationException(
+      $this->l->t('Settings is reserved to cloud-administrators: "%s".', $parameter),
+    );
   }
 
   /**
@@ -169,177 +199,235 @@ class AdminSettingsController extends Controller
    * @param null|string $operation Operation to perform.
    *
    * @return DataResponse
+   *
+   * @throw Exceptions\EnduserNotificationException
    */
   private function post(string $parameter, mixed $value = null, ?string $operation = null):DataResponse
   {
-    $wikiNameSpace = $this->getAppValue('wikinamespace');
+    $wikiNameSpace = $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY);
     $orchestraUserGroup = $this->getAppValue(ConfigService::USER_GROUP_KEY);
-    try {
-      switch ($parameter) {
-        case AdminSettings::USER_AND_GROUP_BACKEND_KEY:
-          // @todo something has to be done if this is really set to something
-          // and we want to support that.
-          $this->setAppValue(AdminSettings::USER_AND_GROUP_BACKEND_KEY, $value);
-          $result = [
-            'messages' => [
-              'transient' => [
-                $this->l->t('Setting user and group backend to "%s". Please have a look at the action-menu for additional actions.', [$value]),
-              ],
+    switch ($parameter) {
+      case AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY:
+        $value = Util::normalizeSpaces($value);
+        if (!empty($value)) {
+          try {
+            $parsedEmail = $this->emailAddressService->parseAddressString($value);
+          } catch (Exceptions\EnduserNotificationException $e) {
+            throw new Exceptions\EnduserNotificationException(
+              rtrim($this->l->t('Unable to parse email address "%1$s": %2$s', [ $value, $e->getMessage() ]), '.') . '.',
+              0,
+              $e,
+            );
+          }
+          $value = implode(', ', array_keys($parsedEmail));
+          $this->setAppValue($parameter, $value);
+          // invalidate current verification and re-issue challenge
+          $this->deleteAppValue($parameter . AdminSettings::EMAIL_VERIFICATION_SUFFIX);
+          $challenge = $this->generateRandomBytes(6);
+          $this->setAppValue($parameter . AdminSettings::EMAIL_CHALLENGE_SUFFIX, $challenge);
+          // TODO: perhaps think about the order of email-sending and storing app config values
+          $this->problemReportService->sendEmailVerificationChallenge($value, $challenge);
+        } else {
+          $this->deleteAppValue($parameter . AdminSettings::EMAIL_VERIFICATION_SUFFIX);
+          $this->deleteAppValue($parameter . AdminSettings::EMAIL_CHALLENGE_SUFFIX);
+          $this->deleteAppValue($parameter);
+        }
+        $result = [
+          'value' => $value,
+          'messages' => [
+            'transient' => [
+              $this->l->t('Setting the problem report email recipient to "%s".', $value),
             ],
-          ];
-          return self::dataResponse($result);
-          break;
-        case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
-          $realValue = trim($value);
-          if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
-            $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
+            'permanent' => [
+              $this->l->t(
+                'A verification email has been sent to "%s".
+Please enter the confirmation code contained in the email into the admin-settings form.',
+                $value,
+              )
+            ],
+          ],
+        ];
+        return self::dataResponse($result);
+      case AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX:
+        $value = Util::normalizeSpaces($value);
+        $challenge = $this->getAppValue(AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_CHALLENGE_SUFFIX, '');
+        // remember the value in order to be able to compute the status
+        $this->setAppValue($parameter, $value);
+        if ($value != $challenge) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Submitted verification code "%s" differs from sent email challenge.', $value),
+          );
+        }
+        $result = [
+          'value' => $value,
+          'messages' => [
+            'transient' => [
+              $this->l->t('Setting the problem report email verification code to "%s".', [$value]),
+            ],
+          ],
+        ];
+        return self::dataResponse($result);
+      case AdminSettings::USER_AND_GROUP_BACKEND_KEY:
+        // @todo something has to be done if this is really set to something
+        // and we want to support that.
+        $this->setAppValue(AdminSettings::USER_AND_GROUP_BACKEND_KEY, $value);
+        $result = [
+          'messages' => [
+            'transient' => [
+              $this->l->t('Setting user and group backend to "%s". Please have a look at the action-menu for additional actions.', [$value]),
+            ],
+          ],
+        ];
+        return self::dataResponse($result);
+      case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
+        $realValue = trim($value);
+        if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
+          $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
+        }
+        $orchestraUserGroup = $realValue;
+        $this->setAppValue(ConfigService::USER_GROUP_KEY, $orchestraUserGroup);
+        $result = [
+          $parameter => $orchestraUserGroup,
+        ];
+        if (empty($wikiNameSpace)) {
+          $wikiNameSpace = $orchestraUserGroup;
+          $this->setAppValue(ConfigService::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
+          $result[AdminSettings::WIKI_NAME_SPACE_KEY] = $wikiNameSpace;
+        }
+        $this->grantWikiAccess($wikiNameSpace, $orchestraUserGroup);
+        $result = [
+          'messages' => [
+            'transient' => [
+              $this->l->t('Setting orchestra group to "%s". Please login as group administrator and configure the Camerata DB application.', [$realValue]),
+            ],
+          ],
+        ];
+        return self::dataResponse($result);
+
+      case AdminSettings::ORCHESTRA_USER_GROUP_ADMINS_KEY:
+        if (!is_array($value)) {
+          return self::grumble($this->l->t('Expecting a list of user-ids.'));
+        }
+        $userGroup = $this->group();
+        if (empty($userGroup)) {
+          return self::grumble($this->l->t('Orchestra management group is unset or non-existent'));
+        }
+        $currentAdmins = array_map(fn($user) => $user->getUID(), $this->getGroupSubAdmins());
+        $missing = array_diff($value, $currentAdmins);
+        $remaining = array_intersect($value, $currentAdmins);
+        $excess = array_diff($currentAdmins, $value);
+        $success = [];
+        $failure = [];
+        if (!empty($remaining)) {
+          $success[] = $this->l->t('Already as sub-admin of "%1$s" configured: %2$s.', [ $userGroup->getGID(), implode(', ', $remaining) ]);
+        }
+        foreach ($missing as $userId) {
+          try {
+            $user = $this->user($userId);
+            $this->subAdminManager()->createSubAdmin($user, $userGroup);
+            $success[] = $this->l->t('Added "%1$s" as sub-admin of "%2$s".', [ $userId, $userGroup->getGID(), ]);
+          } catch (Throwable $t) {
+            $this->logException($t);
+            $failure[] = $this->l->t('Failed to add "%1$s" as sub-admin to "%2$s": %3$s', [ $userId, $userGroup->getGID(), $t->getMessage(), ]);
           }
-          $orchestraUserGroup = $realValue;
-          $this->setAppValue(ConfigService::USER_GROUP_KEY, $orchestraUserGroup);
-          $result = [
-            $parameter => $orchestraUserGroup,
-          ];
-          if (empty($wikiNameSpace)) {
-            $wikiNameSpace = $orchestraUserGroup;
-            $this->setAppValue('wikinamespace', $wikiNameSpace);
-            $result['wikiNameSpace'] = $wikiNameSpace;
+        }
+        foreach ($excess as $userId) {
+          try {
+            $user = $this->user($userId);
+            $this->subAdminManager()->deleteSubAdmin($user, $userGroup);
+            $success[] = $this->l->t('Deleted "%1$s" as sub-admin from "%2$s".', [ $userId, $userGroup->getGID(), ]);
+          } catch (Throwable $t) {
+            $this->logException($t);
+            $failure[] = $this->t->t('Failed to delete "%1$s" as sub-admin from "%2$s": %3$s', [ $userId, $userGroup->getGID(), $t->getMessage(), ]);
           }
+        }
+        $result = [
+          'messages' => [
+            'transient' => $success,
+            'permanent' => $failure,
+          ],
+        ];
+        return self::dataResponse($result);
+
+      case AdminSettings::WIKI_NAME_SPACE_KEY:
+        if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
+          $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
+        }
+        $realValue = trim($value);
+        $wikiNameSpace = $realValue;
+        $this->setAppValue(ConfigService::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
+        $result[AdminSettings::WIKI_NAME_SPACE_KEY] = $wikiNameSpace;
+
+        if (!empty($orchestraUserGroup)) {
           $this->grantWikiAccess($wikiNameSpace, $orchestraUserGroup);
-          $result = [
-            'messages' => [
-              'transient' => [
-                $this->l->t('Setting orchestra group to "%s". Please login as group administrator and configure the Camerata DB application.', [$realValue]),
-              ],
+        }
+
+        $result = [
+          'messages' => [
+            'transient' => [
+              $this->l->t('Setting wiki name-space to "%s".', [$realValue]),
             ],
-          ];
-          return self::dataResponse($result);
+          ],
+        ];
+        return self::dataResponse($result);
 
-        case AdminSettings::ORCHESTRA_USER_GROUP_ADMINS_KEY:
-          if (!is_array($value)) {
-            return self::grumble($this->l->t('Expecting a list of user-ids.'));
-          }
-          $userGroup = $this->group();
-          if (empty($userGroup)) {
-            return self::grumble($this->l->t('Orchestra management group is unset or non-existent'));
-          }
-          $currentAdmins = array_map(fn($user) => $user->getUID(), $this->getGroupSubAdmins());
-          $missing = array_diff($value, $currentAdmins);
-          $remaining = array_intersect($value, $currentAdmins);
-          $excess = array_diff($currentAdmins, $value);
-          $success = [];
-          $failure = [];
-          if (!empty($remaining)) {
-            $success[] = $this->l->t('Already as sub-admin of "%1$s" configured: %2$s.', [ $userGroup->getGID(), implode(', ', $remaining) ]);
-          }
-          foreach ($missing as $userId) {
-            try {
-              $user = $this->user($userId);
-              $this->subAdminManager()->createSubAdmin($user, $userGroup);
-              $success[] = $this->l->t('Added "%1$s" as sub-admin of "%2$s".', [ $userId, $userGroup->getGID(), ]);
-            } catch (Throwable $t) {
-              $this->logException($t);
-              $failure[] = $this->l->t('Failed to add "%1$s" as sub-admin to "%2$s": %3$s', [ $userId, $userGroup->getGID(), $t->getMessage(), ]);
-            }
-          }
-          foreach ($excess as $userId) {
-            try {
-              $user = $this->user($userId);
-              $this->subAdminManager()->deleteSubAdmin($user, $userGroup);
-              $success[] = $this->l->t('Deleted "%1$s" as sub-admin from "%2$s".', [ $userId, $userGroup->getGID(), ]);
-            } catch (Throwable $t) {
-              $this->logException($t);
-              $failure[] = $this->t->t('Failed to delete "%1$s" as sub-admin from "%2$s": %3$s', [ $userId, $userGroup->getGID(), $t->getMessage(), ]);
-            }
-          }
-          $result = [
-            'messages' => [
-              'transient' => $success,
-              'permanent' => $failure,
-            ],
-          ];
-          return self::dataResponse($result);
-
-        case AdminSettings::WIKI_NAME_SPACE_KEY:
-          if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
-            $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
-          }
-          $realValue = trim($value);
-          $wikiNameSpace = $realValue;
-          $this->setAppValue('wikinamespace', $wikiNameSpace);
-          $result['wikiNameSpace'] = $wikiNameSpace;
-
-          if (!empty($orchestraUserGroup)) {
-            $this->grantWikiAccess($wikiNameSpace, $orchestraUserGroup);
-          }
-
-          $result = [
-            'messages' => [
-              'transient' => [
-                $this->l->t('Setting wiki name-space to "%s".', [$realValue]),
-              ],
-            ],
-          ];
-          return self::dataResponse($result);
-
-        case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
-          $delete = $value !== null && $value !== '' && filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) === false;
-          $messages = [];
-          /** @var CloudUserConnectorService $cloudUserConnector */
+      case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
+        $delete = $value !== null && $value !== '' && filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) === false;
+        $messages = [];
+        /** @var CloudUserConnectorService $cloudUserConnector */
+        $cloudUserConnector = $this->di(CloudUserConnectorService::class);
+        if ($delete) {
+          $cloudUserConnector->setCloudUserSubAdmins(delete: true);
+          $responses = $cloudUserConnector->configureCloudUserBackend(erase: true);
+        } else {
           $cloudUserConnector = $this->di(CloudUserConnectorService::class);
-          if ($delete) {
-            $cloudUserConnector->setCloudUserSubAdmins(delete: true);
-            $responses = $cloudUserConnector->configureCloudUserBackend(erase: true);
-          } else {
-            $cloudUserConnector = $this->di(CloudUserConnectorService::class);
-            $responses = $cloudUserConnector->configureCloudUserBackend(erase: false);
-            $cloudUserConnector->setCloudUserSubAdmins(delete: false);
-          }
-          $messages[] = $this->l->t('"%1$s" controller answered with "%2$s".', [
-            CloudUserConnectorService::CLOUD_USER_BACKEND,
-            implode('", "', $responses)
-          ]);
+          $responses = $cloudUserConnector->configureCloudUserBackend(erase: false);
+          $cloudUserConnector->setCloudUserSubAdmins(delete: false);
+        }
+        $messages[] = $this->l->t('"%1$s" controller answered with "%2$s".', [
+          CloudUserConnectorService::CLOUD_USER_BACKEND,
+          implode('", "', $responses)
+        ]);
 
-          // Get front-end link to user-sql config
-          //
-          // https://example.com/nextcloud/index.php/settings/admin/user_sql
-          $cloudUserBackendSettings = $this->urlGenerator()->getBaseUrl() . '/index.php/settings/admin/' . CloudUserConnectorService::CLOUD_USER_BACKEND;
-          $settingsHint = $this->l->t('Please head over to the %1$s settings and check the generated "%2$s"-configuration.', [
-            '<a class="external settings" href="' . $cloudUserBackendSettings . '" target="' . \md5($cloudUserBackendSettings) . '">' . CloudUserConnectorService::CLOUD_USER_BACKEND . '</a>',
-            CloudUserConnectorService::CLOUD_USER_BACKEND,
-          ]);
-          return self::dataResponse([
-            'messages' => [
-              'transient' => $messages,
-              'permanent' => [ $settingsHint, ],
-            ],
-          ]);
-        case FontService::DEFAULT_OFFICE_FONT_CONFIG:
-          if (empty($value)) {
-            $this->deleteAppValue($parameter);
-            /** @var FontService $fontService */
-            $fontService = $this->di(FontService::class);
-            $defaultFont = $fontService->getDefaultFontName();
-            $value = $defaultFont;
-            $transient = [ $this->l->t('Default office font reset to default "%s".', $value), ];
-          } else {
-            $this->setAppValue($parameter, $value);
-            $transient = [ $this->l->t('Default office font set to "%s".', $value), ];
-          }
+        // Get front-end link to user-sql config
+        //
+        // https://example.com/nextcloud/index.php/settings/admin/user_sql
+        $cloudUserBackendSettings = $this->urlGenerator()->getBaseUrl() . '/index.php/settings/admin/' . CloudUserConnectorService::CLOUD_USER_BACKEND;
+        $settingsHint = $this->l->t('Please head over to the %1$s settings and check the generated "%2$s"-configuration.', [
+          '<a class="external settings" href="' . $cloudUserBackendSettings . '" target="' . \md5($cloudUserBackendSettings) . '">' . CloudUserConnectorService::CLOUD_USER_BACKEND . '</a>',
+          CloudUserConnectorService::CLOUD_USER_BACKEND,
+        ]);
+        return self::dataResponse([
+          'messages' => [
+            'transient' => $messages,
+            'permanent' => [ $settingsHint, ],
+          ],
+        ]);
+      case FontService::DEFAULT_OFFICE_FONT_CONFIG:
+        if (empty($value)) {
+          $this->deleteAppValue($parameter);
+          /** @var FontService $fontService */
+          $fontService = $this->di(FontService::class);
+          $defaultFont = $fontService->getDefaultFontName();
+          $value = $defaultFont;
+          $transient = [ $this->l->t('Default office font reset to default "%s".', $value), ];
+        } else {
+          $this->setAppValue($parameter, $value);
+          $transient = [ $this->l->t('Default office font set to "%s".', $value), ];
+        }
 
-          return self::dataResponse([
-            'messages' => [ 'transient' => $transient, ],
-            'value' => $value,
-          ]);
-        case self::POST_REQUEST_FONT_CACHE:
-          return $this->fontCache($operation);
-        default:
-          break;
-      }
-    } catch (Throwable $t) {
-      $this->logException($t);
-      return self::grumble($this->exceptionChainData($t));
+        return self::dataResponse([
+          'messages' => [ 'transient' => $transient, ],
+          'value' => $value,
+        ]);
+      case self::POST_REQUEST_FONT_CACHE:
+        return $this->fontCache($operation);
+      default:
+        break;
     }
-    return self::grumble($this->l->t('Unknown Request: "%s"', $parameter));
+    throw new Exceptions\EnduserNotificationException(
+      $this->l->t('Unknown Request: "%s"', $parameter),
+    );
   }
 
   /**
