@@ -27,6 +27,7 @@ export type HistoryActions = HistoryActionLoad|HistoryActionPush;
 
 export interface LoadPartsData {
   template: string,
+  defaultTemplateParameters: Record<string, unknown>,
   headerHtml: string,
   bodyHtml: string,
   cssPrefix: string,

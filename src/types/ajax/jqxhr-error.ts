@@ -21,31 +21,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { AxiosError } from 'axios';
-import { isAxiosError } from './axios-type-guards.ts';
+import { isNextcloudLogEntry } from './nextcloud-log.ts';
+import type { NextcloudLogEntry } from './nextcloud-log.ts';
 
-// A NC log entry instance
-export interface NextcloudLogEntry {
-  app: string,
-  level: number,
-  message: string, // JSON
-  method: string, // POST, GET, ...
-  remoteAddr: string, // network address
-  reqId: string, // unique NC request id
-  time: string, // time string
-  url: string, // request URL
-  user: string, // user issuing the request
-  userAgent: string, // client id, e.g web browser
-  version: string, // Nextcloud verion
+export type JqXHR<T = any> = JQuery.jqXHR<T>;
+
+export class JQueryAjaxError<T = any> extends Error {
+  constructor(message: string, xhr: JqXHR<T>) {
+    super(message);
+    this.name = 'JQAjaxError';
+    this.cause = xhr;
+  }
+  cause: JqXHR<T>;
 }
 
-export const isNextcloudLogEntry = (data: any): data is NextcloudLogEntry =>
-  (!!data
-   && typeof data === 'object'
-   && data.app
-   && data.level
-   && data.message
-   && data.reqId);
+export interface JqJsonXHR<T = any> extends Omit<JqXHR<T>, 'responseJSON'> {
+  responseJSON: T;
+}
 
-export const isNextcloudExceptionResponse = <D = any>(error: any): error is AxiosError<NextcloudLogEntry, D> =>
-  isAxiosError(error) && !!error.response && isNextcloudLogEntry(error.response.data);
+// sparse testing for a jQuery XHR object ...
+export const isJqXHR = <T = any>(error: any): error is JqXHR<T> =>
+  !!error && error.responseText && error.status && error.abort && error.done && error.fail;
+
+export const isJqJsonXHR = <T = any>(error: any): error is JqJsonXHR<T> =>
+  isJqXHR(error) && error.responseJSON
+
+export const isJqNextcloudLogEntryXHR = (error: any): error is JqJsonXHR<NextcloudLogEntry> =>
+  isJqXHR(error) && isNextcloudLogEntry(error.responseJSON);
