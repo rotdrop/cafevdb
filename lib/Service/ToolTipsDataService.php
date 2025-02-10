@@ -422,6 +422,15 @@ you can also simply double-click inside the boxed filter-region in order to acti
         ],
       ], // emailform
 
+      'error-page' => [
+        'problem-report' => [
+          'cancel' => self::t('Cancel the problem report.'),
+          'submit' => self::t('Submit the problem report.'),
+          'close' => self::t('Close problem report view.'),
+          'modify-comment' => self::t('Modify the comment and submit the error data again.'),
+        ],
+      ],
+
       'executive-board-project' => self::t('Name of the pseudo-project listing the members of the executive board.'),
 
       'expert-mode' => self::t('Display additional ``expert\'\' settings. Despite the name you are
@@ -1415,6 +1424,22 @@ placeholder "{FROM_YEAR}" and "{TO_YEAR}" in order to have the validity period i
           ],
           'wiki-name-space' => self::t('Add the name of a DokuWiki namespace which will host all wiki-pages of the orchestra. The namespace should be all lower-case and must not contain any spaces or fancy characters.'),
           'cloud-user-backend-conf' => self::t('It is possible to inject cloud-user-accounts for all orchestra club-members into the ambient cloud-software. This works by granting select access to the cloud database account on special views which just expose the necessary information to the cloud. The configuration has to be set up first in the "sharing" section of the personal configuration dialog of a group-admin of the orchestra group.'),
+          'problem-report' => [
+            'email' => [
+              'recipient' => self::t(
+                'An email address which receives the data posted by the problem report page. The problem report page is presented to the end-user when the application (frontend or backend) throws an error.'
+              ),
+              'verification' => [
+                'code' => self::t('Enter the code from the verification email sent to the problem report recipient address. If the verfication message has not yet been received, then please check the recipient\'s spam folders or wait a bit longer or check that the email address is indeed correct. If all these conditions are met then please click on the resend button.'),
+                'resend' => self::t('If you are sure that the entered email address is indeed correct and you have waited long enough and you have checked the recipient\'s spam folders then you may request a new verification message by clicking on this button.'),
+                'status' => [
+                  'verified' => self::t('Email address has been verified.'),
+                  'pending' => self::t('Email address is empty, invalid or has not yet been verified.'),
+                  'failed' => self::t('The provided verification code did not match the challenge sent by email to the configured address.'),
+                ],
+              ],
+            ],
+          ],
         ],
         'personal' => [
           'general' => [

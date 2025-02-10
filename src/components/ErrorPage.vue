@@ -86,7 +86,9 @@
           </h5>
         </template>
         <template #extra-actions>
-          <NcButton type="terciary"
+          <NcButton v-if="!submitted"
+                    v-tooltip="hints['error-page:problem-report:cancel']"
+                    type="tertiary"
                     name="cancel"
                     @click="showProblemReport = false"
           >
@@ -94,12 +96,34 @@
               <IconCancel :size="20" />
             </template>
           </NcButton>
-          <NcButton type="terciary"
+          <NcButton v-if="!submitted"
+                    v-tooltip="hints['error-page:problem-report:submit']"
+                    type="tertiary"
                     name="submit"
                     @click="reportError"
           >
             <template #icon>
               <IconSubmit :size="20" />
+            </template>
+          </NcButton>
+          <NcButton v-if="submitted"
+                    v-tooltip="hints['error-page:problem-report:modify-comment']"
+                    type="tertiary"
+                    name="modify comment"
+                    @click="submitted = false"
+          >
+            <template #icon>
+              <IconEdit />
+            </template>
+          </NcButton>
+          <NcButton v-if="submitted"
+                    v-tooltip="hints['error-page:problem-report:close']"
+                    type="tertiary"
+                    name="close"
+                    @click="showProblemReport = false"
+          >
+            <template #icon>
+              <IconClose />
             </template>
           </NcButton>
         </template>
@@ -111,6 +135,7 @@
             {{ t(appName, 'A preview of the error report is shown below.') }}
           </div>
           <textarea v-model="userComment"
+                    :readonly="submitted"
                     rows="5"
                     cols="60"
                     class="user-comment"
@@ -150,6 +175,8 @@ import {
 } from '@nextcloud/vue'
 import IconSubmit from 'vue-material-design-icons/Send.vue'
 import IconCancel from 'vue-material-design-icons/Cancel.vue'
+import IconClose from 'vue-material-design-icons/Close.vue'
+import IconEdit from 'vue-material-design-icons/TextBoxEdit.vue'
 import { getCurrentUser } from '@nextcloud/auth'
 import NextcloudLogModal from './LogEntry/LogDetailsModal.vue'
 import Console from '../util/console.ts'
@@ -158,7 +185,9 @@ import type { ErrorLike } from 'serialize-error'
 import md5 from 'blueimp-md5'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
-import { showError, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { showError, showInfo, /* TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { asyncComputed } from '@vueuse/core'
+import { tooltips } from '../util/tooltips.ts'
 
 const COMPONENT_NAME = 'ErrorPage'
 const logger = new Console(COMPONENT_NAME)
@@ -166,6 +195,20 @@ const logger = new Console(COMPONENT_NAME)
 const props = defineProps <{
   error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>,
 }>()
+
+const tooltipKeys = [
+  'error-page:problem-report:cancel',
+  'error-page:problem-report:submit',
+  'error-page:problem-report:close',
+  'error-page:problem-report:modify-comment',
+]
+const initialTooltips = Object.fromEntries(tooltipKeys.map(key => { return [key, ''] as [string, string] }))
+
+const hints = asyncComputed(
+  (/* onCancel */) => tooltips(tooltipKeys),
+  initialTooltips,
+  { lazy: true },
+)
 
 const router = useRouter()
 
@@ -204,6 +247,7 @@ const envelopeErrorMessage = computed(() =>
     : '')
 
 const showProblemReport = ref(false)
+const submitted = ref(false)
 const userComment = ref('')
 const substitutions = ref<Record<string, string>>({})
 
@@ -241,13 +285,13 @@ const systemErrorString = JSON.stringify(serializedError, undefined, 2)
 const currentUser = getCurrentUser()
 const currentUserDisplay = `${currentUser?.uid} AKA ${currentUser?.displayName}`
 const currentUserHeading = t(appName, 'Personal Comments by {user}', { user: currentUserDisplay })
-const effectiveUsrComment = computed(() => userComment.value ? userComment.value : t(appName, 'No comment.'))
+const effectiveUserComment = computed(() => userComment.value ? userComment.value : t(appName, 'No comment.'))
 const markDownDocLink = ref('https://www.markdownguide.org/cheat-sheet/')
 
 const reportText = computed(() =>
   `# ${t(appName, 'Problem Report')}
 ## ${currentUserHeading}
-${effectiveUsrComment.value}
+${effectiveUserComment.value}
 ## ${t(appName, 'System Error Report')}
 *${t(appName, 'You cannot change this part of the report.')}*
 \`\`\`
@@ -268,11 +312,26 @@ loadTranslations('logreader', () => false)
     translationsLoaded.value = true // still open untranslated
   })
 
+const submittedUserComments: Record<string, sting> = {}
+
 const reportError = async () => {
+  userComment.value = userComment.value.trim()
   const postData = {
-    userId: currentUser?.uid || '',
-    comment: userComment.value,
+    user: currentUser,
+    userComment: userComment.value,
     errorData: serializedError,
+  }
+  const userCommentHash = md5(userComment.value)
+  if (Object.keys(submittedUserComments).includes(userCommentHash)) {
+    showInfo(t(
+      appName,
+      'Your comment has already been submitted with the following notification: {notification}.',
+      { notification: submittedUserComments[userCommentHash] },
+      undefined,
+      { escape: false },
+    ))
+    submitted.value = true
+    return
   }
   console.info('POST DATA', postData)
   const url = generateAppUrl('vue-app/a/problem-report')
@@ -282,9 +341,12 @@ const reportError = async () => {
       t(appName, 'Your problem-report has been submitted.'),
     ]
     if (Array.isArray(result.data.messages)) {
-      messages.splice(1, 0, ...result.data.messages)
+      messages.splice(0, 1, ...result.data.messages)
     }
-    showInfo(messages.join(' '), { timeout: TOAST_DEFAULT_TIMEOUT })
+    const notification = messages.join(' ')
+    showInfo(notification, { timeout: TOAST_PERMANENT_TIMEOUT })
+    submittedUserComments[userCommentHash] = notification
+    submitted.value = true
   } catch (reportError) {
     // @todo should make this a reusable utility function
     // just notifiy the user that it did not work out

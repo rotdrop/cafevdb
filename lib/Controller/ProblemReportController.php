@@ -58,7 +58,7 @@ class ProblemReportController extends Controller
   /**
    * Submit a problem report.
    *
-   * @param string $userId The user id of the user reporint the error.
+   * @param array $user The user reporting the error [ 'uid' => UID, 'displayName' => DISPLAY_NAME ].
    *
    * @param array $errorData The raw error data caught by the frontend
    * code. Ideally, this is data in the format of Nextcloud log entries, but this is not guaranteed.
@@ -71,13 +71,13 @@ class ProblemReportController extends Controller
    * @NoGroupMemberRequired
    */
   public function post(
-    string $userId,
+    array $user,
     array $errorData,
     ?string $userComment,
   ):DataResponse {
     $status = Http::STATUS_OK;
     try {
-      $result = $this->reportService->submit($userId, $errorData, $userComment);
+      $result = $this->reportService->submit($user, $errorData, $userComment);
     } catch (Throwable $t) {
       $result = null;
     }
@@ -86,6 +86,6 @@ class ProblemReportController extends Controller
       $status = Http::STATUS_SERVICE_UNAVAILABLE;
     }
 
-    return self::dataResponse([ 'messages' => [ $result ] ], $status);
+    return self::dataResponse([ 'messages' => $result ], $status);
   }
 }

@@ -28,6 +28,7 @@
     "html2text/html2text": "^4.3",
     "jpgraph/jpgraph": "*",
     "kwn/number-to-words": "^2.8",
+    "league/commonmark": "^2.6",
     "league/html-to-markdown": "^5.1",
     "maennchen/zipstream-php": "^3.0.0",
     "mathiasreker/php-svg-optimizer": "^5.2",
