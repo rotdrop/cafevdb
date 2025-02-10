@@ -40,6 +40,7 @@ use OC\AppFramework\Utility\QueryNotFoundException;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\AppInfo\Application as App;
 
 /**
  * Turn an exception into a data response which can be parsed by the frontend
@@ -73,15 +74,25 @@ class ExceptionMiddleware extends Middleware
       throw $exception;
     }
     if (!($exception instanceof Exceptions\EnduserNotificationException)) {
+      $originalException = $exception;
+      $exceptionMessage = $this->l->t(
+        'Unable to serve request to "%1$s": %2$s',
+        [ $this->request->getPathInfo(), $originalException->getMessage() ],
+      );
+      $appRootFolder = $this->appContainer->get(App::APP_ROOT_FOLDER);
+      $exceptionMessage = str_replace($appRootFolder, '...', $exceptionMessage);
       $exception = new Exceptions\EnduserNotificationException(
-        $this->l->t('Unable to serve request to "%s".', $this->request->getPathInfo()),
-        0,
-        $exception,
+        $exceptionMessage, 0, $originalException,
         httpStatusCode: ($exception instanceof QueryNotFoundException)
           ? Http::STATUS_NOT_FOUND : Http::STATUS_INTERNAL_SERVER_ERROR,
       );
     }
-    $logEntry = $this->logException($exception, message: $exception->getMessage(), returnLogEntry: true);
+    $logEntry = $this->logException(
+      $exception,
+      message: $exception->getMessage(),
+      returnLogEntry: true,
+      shift: PHP_INT_MIN, // do not decorate with prefix
+    );
     $httpStatusCode = $exception->getHttpStatusCode();
     return new JSONResponse($logEntry, $httpStatusCode);
   }

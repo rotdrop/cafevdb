@@ -107,6 +107,8 @@ class Application extends App implements IBootstrap
 {
   use \OCA\CAFEVDB\Toolkit\Traits\AppNameTrait;
 
+  public const APP_ROOT_FOLDER = 'appRootFolder';
+
   /** @var IAppContainer */
   protected static $appContainer;
 
@@ -195,6 +197,11 @@ class Application extends App implements IBootstrap
     if ((include_once __DIR__ . '/../../vendor-wrapped/autoload.php') === false) {
       throw new Exception('Cannot include wrapped-autoload. Did you run install dependencies using composer?');
     }
+
+    $context->registerService(self::APP_ROOT_FOLDER, function($c) {
+      // ok, we are two levels below the top ...
+      return dirname(dirname(__DIR__));
+    });
 
     /* Doctrine DBAL needs a factory to be constructed. */
     $context->registerService(\OCA\CAFEVDB\Database\Connection::class, function($c) {
