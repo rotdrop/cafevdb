@@ -30,12 +30,6 @@ export interface GlobalState {
   PHPMyEdit: PHPMyEditState,
   vueMode?: boolean,
   eventBus?: EventBus,
-  vue?: {
-    app: CombinedVueInstance,
-    Vue: VueConstructor,
-    router: VueRouter,
-    store: Pinia,
-  },
   orchestra: string,
   userPermissions: int,
   financeMode: boolean,
