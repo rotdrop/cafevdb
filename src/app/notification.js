@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 - 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 - 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,6 @@ const toasts = globalState.Notification.toasts;
 
 const hide = function(callback) {
   for (const toast of toasts) {
-    console.info('TOAST', toast);
     toast.hideToast();
   }
   toasts.length = 0;
@@ -64,16 +63,17 @@ const tweakTimeout = function(options) {
   }
 };
 
-const show = function(text, options) {
+const show = function(text, options = {}) {
   console.info(text);
   tweakTimeout(options);
   options.timeout = options.timeout || TOAST_PERMANENT_TIMEOUT;
   const toast = showMessage(escapeHTML(text), options);
   toasts.push(toast);
+  console.info('SHOW TOAST', toast);
   return toast;
 };
 
-const showHtml = function(text, options) {
+const showHtml = function(text, options = {}) {
   console.info(text);
   options.isHTML = true;
   tweakTimeout(options);
@@ -83,7 +83,7 @@ const showHtml = function(text, options) {
   return toast;
 };
 
-const showTemporary = function(text, options) {
+const showTemporary = function(text, options = {}) {
   console.info(text);
   tweakTimeout(options);
   options.timeout = options.timeout || TOAST_DEFAULT_TIMEOUT;
@@ -102,7 +102,7 @@ const showTemporary = function(text, options) {
  *
  * @returns {Array} The message array for chaining.
  */
-function messages(messages, options) {
+function messages(messages, options = {}) {
   const defaultOptions = {
     timeout: TOAST_UNDO_TIMEOUT,
   };
