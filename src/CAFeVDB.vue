@@ -223,16 +223,17 @@
       />
       <NcEmptyContent v-if="isRoot || appError" :class="{ 'error-page': appError }">
         <template #name>
-          <h2>{{ t(appId, '{orchestraName} Orchestra Portal', { orchestraName, }) }}</h2>
+          <h2>{{ t(appId, '{orchestraName} Orchestra Management App', { orchestraName, }) }}</h2>
         </template>
         <template #icon>
-          <DynamicSvgIcon :data="icon" :title="orchestraName + ' logo'" />
+          <DynamicSvgIcon :size="64" :data="icon" :title="orchestraName + ' logo'" />
           <!-- eslint-disable-next-line vue/no-v-html -->
           <!-- <span class="app-icon" v-html="icon" /> -->
         </template>
         <template #description>
           <span v-if="!appError">
-            {{ t(appId, 'Description') }}
+            {{ t(appId, 'Please click on the ☰-button in order to open the navigation menu.') }}
+            {{ t(appId, 'Please click on your avatar or initials (top-right) for logout and configuration options.') }}
           </span>
           <ErrorPage v-else
                      :id="appPrefix('error')"
@@ -732,10 +733,13 @@ onMounted(() => {
   }
   h2 ~ p {
     text-align: center;
+    width: 72ex;
   }
   .hint {
     color: var(--color-text-lighter);
   }
-
+  .empty-content__icon {
+    margin-top: 16px;
+  }
 }
 </style>
