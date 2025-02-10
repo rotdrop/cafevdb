@@ -57,13 +57,13 @@ const noLegacyReload = ref(false)
 
 const onRouteChange = (to: Route) => {
   logger.info('onRouteChange()', to, window?.history?.state)
-  template.value = to?.params?.template
-  templateParameters.value.projectId = to?.params?.projectId
-  templateParameters.value.projectName = to?.params?.projectName
-  postDataHash.value = (to?.query?.hash as string) || undefined
-  noLegacyReload.value = +to?.query?.['no-reload'] === 1
+  template.value = to.params.template
+  Object.assign(templateParameters.value, to.params)
+  delete templateParameters.value.template
+  postDataHash.value = (to.query?.hash as string) || undefined
+  noLegacyReload.value = +to.query?.['no-reload'] === 1
   if (!postDataHash.value) {
-    postDataHash.value = objectHash(to?.params || {})
+    postDataHash.value = objectHash(to.params || {})
   }
 }
 

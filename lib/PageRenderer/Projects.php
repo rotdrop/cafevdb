@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Database\Legacy\PME\IOptions as IPMEOptions;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -158,6 +159,21 @@ class Projects extends PMETableViewBase
       ProjectInstrumentationNumbers::navigationItem(),
       Blog::navigationItem(),
     ];
+  }
+
+  /** {@inheritdoc} */
+  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
+  {
+    $item = parent::navigationItem($projectId, $projectName);
+
+    $currentYear = date('Y');
+    $pmeOptions = \OC::$server->get(IPMEOptions::class);
+    $sysPfx = $pmeOptions['cgi']['prefix']['sys'];
+    $field = 'year';
+    $item['templateParameters'][$sysPfx . PHPMyEdit::QUERY_FIELD . $field . '_comp'] = '>=';
+    $item['templateParameters'][$sysPfx . PHPMyEdit::QUERY_FIELD . $field] = $currentYear - 1;
+
+    return $item;
   }
 
   /** {@inheritdoc} */

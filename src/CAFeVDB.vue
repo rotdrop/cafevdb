@@ -284,7 +284,7 @@
   </NcContent>
 </template>
 <script setup lang="ts">
-import { appName as appId, appPrefix } from './config.ts'
+import { appName as appId, appName, appPrefix } from './config.ts'
 import globalState from './app/globalstate.js'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import {
@@ -535,8 +535,8 @@ const updateNavigationItems = async () => {
     logger.debug('NAVIGATION ITEMS TO INSTALL', newNavigationItems)
     navigationItems.value = newNavigationItems
   } catch (error) {
-    // TODO: notify user etc.
     logger.error('Unable to update navigation items', url, error)
+    appError.value = new AppError(t(appName, 'Unable to update navigation items.'), { cause: error })
   }
 }
 
