@@ -45,7 +45,7 @@ export interface PHPMyEditState {
   defaultSelector: string,
 
   /* actual volatile state variables */
-  tableLoadCallbacks: TableLoadCallback[],
+  tableLoadCallbacks: Record<string, TableLoadCallback>,
   openDialogs: Record<string, boolean>,
 
   stopped: boolean,

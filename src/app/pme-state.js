@@ -43,7 +43,7 @@ const PHPMyEditDefault = {
   defaultSelector: '#' + appName + '-page-body', // for delegate handlers, survives pseudo-submit
 
   /* actual volatile state variables */
-  tableLoadCallbacks: [],
+  tableLoadCallbacks: {},
   openDialogs: {},
 
   stopped: false,
