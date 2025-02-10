@@ -43,12 +43,12 @@ export default defineStore(storeId, () => {
 
   const pushHandler = (handler: ErrorHandler) => {
     errorHandlerStack.value.push(handler);
-    logger.error('ERROR HANDLER PUSH', handler, getHandler());
+    logger.debug('ERROR HANDLER PUSH', handler, getHandler());
     return handler;
   }
   const popHandler = () => {
     const handler = errorHandlerStack.value.pop();
-    logger.error('ERROR HANDLER POP', handler, getHandler());
+    logger.debug('ERROR HANDLER POP', handler, getHandler());
     return handler;
   },
   return {
