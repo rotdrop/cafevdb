@@ -33,7 +33,7 @@ import modalizer from './modalizer.js';
 import * as qs from 'qs';
 import { provideHistoryState, pushHistory, updateHistoryControls } from './brower-history.js';
 import pageBusyIcon from './busy-icon.js';
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import { LEGACY_PAGE_LOAD, LEGACY_PAGE_CLEANUP } from '../event-bus-events.ts';
 
 const pageCleanup = () => {
@@ -74,7 +74,7 @@ const loadPage = async function(post, keepHistory) {
   pageBusyIcon(true);
 
   if (globalState.vueMode) {
-    const eventData = { post, keepHistory };
+    const eventData = { post: postObject, keepHistory };
     console.debug('LEGACY LOAD PAGE IN VUE MODE', eventData);
     return asyncEmit(LEGACY_PAGE_LOAD, eventData)
       .finally(() => {

@@ -41,7 +41,7 @@ function documentReady() {
 
   $container.on('click', '#configrecheck', function(event) {
     console.info('Hello recheck');
-    Page.loadPage({ template: 'maintenance/configcheck' });
+    Page.loadPage({ template: 'maintenance/configcheck' }, true /* keepHistory */);
     return false;
   });
 
