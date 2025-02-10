@@ -120,20 +120,25 @@ trait LoggerTrait
     bool $returnLogEntry = false,
   ):?array {
     $level = $this->mapLogLevels($level);
-    $trace = debug_backtrace();
-    $prefix = '';
-    $shift = min($shift, count($trace));
 
-    do {
-      $caller = $trace[$shift];
-      $file = $caller['file'] ?? 'unknown';
-      $line = $caller['line'] ?? 'unknown';
-      $caller = $trace[$shift + 1] ?? 'unknown';
-      $class = $caller['class'] ?? 'unknown';
-      $method = $caller['function'];
+    if ($shift < 0) {
+      $prefix = '';
+    } else {
+      $trace = debug_backtrace();
+      $prefix = '';
+      $shift = min($shift, count($trace));
 
-      $prefix .= $file . ':' . $line . ': ' . $class . '::' . $method . '(): ';
-    } while ($showTrace && --$shift > 0);
+      do {
+        $caller = $trace[$shift];
+        $file = $caller['file'] ?? 'unknown';
+        $line = $caller['line'] ?? 'unknown';
+        $caller = $trace[$shift + 1] ?? 'unknown';
+        $class = $caller['class'] ?? 'unknown';
+        $method = $caller['function'];
+
+        $prefix .= $file . ':' . $line . ': ' . $class . '::' . $method . '(): ';
+      } while ($showTrace && --$shift > 0);
+    }
 
     $logEntry = null;
     if ($returnLogEntry) {
