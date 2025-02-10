@@ -101,7 +101,7 @@ module.exports = {
       'error',
       'before',
       {
-        'overrides': {
+        overrides: {
           '=': 'after',
           '+=': 'after',
           '-=': 'after',
@@ -114,6 +114,12 @@ module.exports = {
       files: ['*.vue'],
       rules: {
         semi: ['error', 'never'],
+      },
+    },
+    {
+      files: ['*.ts', '*.cts', '*.mts', '*.tsx', '*.vue'],
+      rules: {
+        '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       },
     },
   ],
