@@ -44,12 +44,14 @@ const logger = new Console(COMPONENT_NAME)
 
 const props = withDefaults(
   defineProps<{
+    size?: number,
     width?: number,
     height?: number,
     viewBox?: [number, number, number, number],
     title?: string,
     data: string, // the svg image data
   }>(), {
+    size: undefined,
     width: undefined,
     height: undefined,
     viewBox: undefined,
@@ -72,16 +74,19 @@ const makeSVGElement = function() {
     )
   }
 
-  if (props.width !== undefined) {
+  const width = props.size || props.width
+  const height = props.size || props.height
+
+  if (width !== undefined) {
     logger.debug('BASE WIDTH BEFORE')
-    svg.width.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, props.width)
+    svg.width.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, width)
     logger.debug('ANIM WIDTH BEFORE')
-    // svg.width.animVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, props.width)
+    // svg.width.animVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, width)
     // logger.debug('ANIM WIDTH AFTER')
   }
-  if (props.height !== undefined) {
-    svg.height.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, props.height)
-    // svg.height.animVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, props.height)
+  if (height !== undefined) {
+    svg.height.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, height)
+    // svg.height.animVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, height)
   }
   if (props.viewBox !== undefined) {
     svg.viewBox.baseVal.x = props.viewBox[0]
@@ -113,5 +118,9 @@ watch(props, () => {
     container.value!.replaceChildren(makeSVGElement())
   }
 })
-
 </script>
+<style scoped lang="scss">
+.container.dynamic-svg-icon {
+  display: flex;
+}
+</style>
