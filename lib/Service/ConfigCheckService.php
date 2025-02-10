@@ -114,13 +114,14 @@ class ConfigCheckService
       'database',
       'encryptionkey',
       'migrations',
+      'sharedaddressbooks',
     ] as $key) {
       $result[$key] = ['status' => false, 'message' => ''];
     }
 
     $key ='orchestra';
     try {
-      $result[$key]['status'] = $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY);
+      $result[$key]['status'] = !empty($this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY));
     } catch (Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
