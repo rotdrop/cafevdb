@@ -1160,6 +1160,10 @@ body > .ui-front.ui-draggable {
  * Password toggles and such.
  *
  */
+.password-container {
+  position: relative;
+}
+
 input[type=checkbox].#{$appName}-password-show {
   display: none;
 
@@ -1171,8 +1175,10 @@ input[type=checkbox].#{$appName}-password-show {
 
   + label.#{$appName}-password-show {
     position: absolute !important;
+    top: 0;
+    right: 8px;
     margin-top: 12px;
-    margin-left: -36px;
+    // margin-left: -36px;
     height: 14px;
     width: 24px;
     background-image: url("../../../core/img/actions/toggle.svg");

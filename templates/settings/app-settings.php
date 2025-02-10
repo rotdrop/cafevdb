@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -72,34 +72,38 @@ usort($localeOptions, fn($a, $b) => strcmp($a['name'], $b['name']));
   </form>
   <!-- ENCRYPTION-KEY -->
   <form id="systemkey">
-    <fieldset class="systemkey" <?php echo $off; ?> >
+    <fieldset class="systemkey flex-container" <?php echo $off; ?> >
       <legend><?php echo $l->t('Encryption settings'); ?></legend>
-      <input type="hidden"
-             autocomplete="username"
-             name="orchestraUserGroup"
-             value="@<?php p($orchestraUserGroup); ?>"
-      />
-      <input class="cafevdb-password"
-             type="password"
-             value="<?php false ? p($encryptionkey) : ''; ?>"
-             id="oldkey"
-             name="oldkey"
-             placeholder="<?php echo $l->t('Current Key');?>"
-             data-typetoggle="#oldkey-show"
-             autocomplete="current-password"
-      />
-      <input class="cafevdb-password-show" type="checkbox" id="oldkey-show" name="show" />
-      <label class="cafevdb-password-show" for="oldkey-show"><?php echo $l->t('show');?></label>
-      <input class="cafevdb-password randomkey"
-             type="password"
-             id="key"
-             name="systemkey"
-             placeholder="<?php echo $l->t('New Key');?>"
-             data-typetoggle="#systemkey-show"
-             autocomplete="new-password"
-      />
-      <input class="cafevdb-password-show" type="checkbox" id="systemkey-show" name="show" />
-      <label class="cafevdb-password-show" for="systemkey-show"><?php echo $l->t('show');?></label>
+      <div class="password-container">
+        <input type="hidden"
+               autocomplete="username"
+               name="orchestraUserGroup"
+               value="@<?php p($orchestraUserGroup); ?>"
+        />
+        <input class="cafevdb-password"
+               type="password"
+               value="<?php false ? p($encryptionkey) : ''; ?>"
+               id="oldkey"
+               name="oldkey"
+               placeholder="<?php echo $l->t('Current Key');?>"
+               data-typetoggle="#oldkey-show"
+               autocomplete="current-password"
+        />
+        <input class="cafevdb-password-show" type="checkbox" id="oldkey-show" name="show" />
+        <label class="cafevdb-password-show" for="oldkey-show"><?php echo $l->t('show');?></label>
+      </div>
+      <div class="password-container">
+        <input class="cafevdb-password randomkey"
+               type="password"
+               id="key"
+               name="systemkey"
+               placeholder="<?php echo $l->t('New Key');?>"
+               data-typetoggle="#systemkey-show"
+               autocomplete="new-password"
+        />
+        <input class="cafevdb-password-show" type="checkbox" id="systemkey-show" name="show" />
+        <label class="cafevdb-password-show" for="systemkey-show"><?php echo $l->t('show');?></label>
+      </div>
       <input name="keygenerate" id="keygenerate" type="button" value="<?php echo $l->t('Generate'); ?>" title="<?php echo $l->t('Generate a random encryption key');?>" />
       <input id="keychangebutton" type="button" value="<?php echo $l->t('Change Encryption Key');?>" />
       <!-- <span><?php p($encryptionkey); ?></span> -->
@@ -155,16 +159,18 @@ usort($localeOptions, fn($a, $b) => strcmp($a['name'], $b['name']));
       <div id="msgplaceholder"><div class="statusmessage" id="msg"></div></div>
     </fieldset>
     <!-- DATA-BASE password -->
-    <fieldset class="cafevdb_dbpassword">
-      <input class="cafevdb-password"
-             type="password"
-             id="cafevdb-dbpassword"
-             name="dbpassword"
-             placeholder="<?php echo $l->t('New Password');?>" data-typetoggle="#cafevdb-dbpassword-show"
-             autocomplete="current-password"
-      />
-      <input class="cafevdb-password-show" type="checkbox" id="cafevdb-dbpassword-show" name="dbpassword-show" />
-      <label class="cafevdb-password-show" for="cafevdb-dbpassword-show"><?php echo $l->t('show');?></label>
+    <fieldset class="cafevdb_dbpassword flex-container">
+      <div class="password-container">
+        <input class="cafevdb-password"
+               type="password"
+               id="cafevdb-dbpassword"
+               name="dbpassword"
+               placeholder="<?php echo $l->t('New Password');?>" data-typetoggle="#cafevdb-dbpassword-show"
+               autocomplete="current-password"
+        />
+        <input class="cafevdb-password-show" type="checkbox" id="cafevdb-dbpassword-show" name="dbpassword-show" />
+        <label class="cafevdb-password-show" for="cafevdb-dbpassword-show"><?php echo $l->t('show');?></label>
+      </div>
       <input id="button" type="button" title="<?php echo $toolTips['test-dbpassword']; ?>" value="<?php echo $l->t('Test Database Password');?>" />
       <div class="statusmessage" id="dbteststatus"></div>
     </fieldset>

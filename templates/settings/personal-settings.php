@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -162,41 +162,45 @@ namespace OCA\CAFEVDB;
     <input type="text" style="display:none;width:0%;float: left;" name="dummy" id="dummy" value="dummy" placeholder="dummy" title="<?php echo $l->t('Dummy'); ?>" />
   </form>
   <br />
-  <form id="userkey">
-    <fieldset class="inline-block">
+  <form id="userkey" class="flex-container">
+    <fieldset class="flex-container">
       <input type="hidden"
              name="userId"
              value="<?php p($userId); ?>"
              autocomplete="username"
       />
-      <input class="cafevdb-password tooltip-auto"
-             type="password"
-             autocomplete="current-password"
-             required="required"
-             id="password"
-             name="password"
-             title="<?php p($toolTips['settings:personal:encryptionkey:own-password']); ?>"
-             placeholder="<?php echo $l->t('Own Password');?>" data-typetoggle="#password-show"
-      />
-      <input class="cafevdb-password-show" type="checkbox" id="password-show" name="password-show" />
-      <label class="cafevdb-password-show" for="password-show"><?php echo $l->t('show');?></label>
+      <div class="password-container">
+        <input class="cafevdb-password tooltip-auto"
+               type="password"
+               autocomplete="current-password"
+               required="required"
+               id="password"
+               name="password"
+               title="<?php p($toolTips['settings:personal:encryptionkey:own-password']); ?>"
+               placeholder="<?php echo $l->t('Own Password');?>" data-typetoggle="#password-show"
+        />
+        <input class="cafevdb-password-show" type="checkbox" id="password-show" name="password-show" />
+        <label class="cafevdb-password-show" for="password-show"><?php echo $l->t('show');?></label>
+      </div>
     </fieldset>
-    <fieldset class="inline-block">
+    <fieldset class="flex-container password-container">
       <input type="hidden"
              name="orchestraUserGroup"
              value="@<?php p($orchestraUserGroup); ?>"
              autocomplete="username"
       />
-      <input class="cafevdb-password tooltip-auto"
-             type="password"
-             id="encryptionkey"
-             name="encryptionkey"
-             value="<?php echo (true ? '' : $_['encryptionkey']); ?>"
-             placeholder="<?php echo $l->t('DB Encryption Key');?>"
-             title="<?php p($toolTips['settings:personal:encryptionkey']); ?>"
-             data-typetoggle="#userkey-show" />
-      <input class="cafevdb-password-show" type="checkbox" id="userkey-show" name="userkey-show" />
-      <label class="cafevdb-password-show" for="userkey-show"><?php echo $l->t('show');?></label>
+      <div class="password-container">
+        <input class="cafevdb-password tooltip-auto"
+               type="password"
+               id="encryptionkey"
+               name="encryptionkey"
+               value="<?php echo (true ? '' : $_['encryptionkey']); ?>"
+               placeholder="<?php echo $l->t('DB Encryption Key');?>"
+               title="<?php p($toolTips['settings:personal:encryptionkey']); ?>"
+               data-typetoggle="#userkey-show" />
+        <input class="cafevdb-password-show" type="checkbox" id="userkey-show" name="userkey-show" />
+        <label class="cafevdb-password-show" for="userkey-show"><?php echo $l->t('show');?></label>
+      </div>
       <input id="button" type="button" value="<?php echo $l->t('Set Encryption Key');?>" />
     </fieldset>
     <div class="statusmessage changed"><?php echo $l->t('The encryption key has been set successfully.');?></div>

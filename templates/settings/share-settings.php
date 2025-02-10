@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,6 +44,7 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
                name="shareowner"
                placeholder="<?php echo $l->t('shareowner');?>"
                value="<?php echo $_['shareowner']; ?>"
+               title="<?php echo $_['shareowner']; ?>"
                <?php echo $_['shareowner'] != '' ? 'disabled' : '';?>
                autocomplete="username"
         />
@@ -54,17 +55,19 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         <input name="shareownercheck" id="check" type="button" value="<?php echo $l->t('Check');?>" <?php echo $off; ?> />
       </fieldset>
 <!-- CHANGE ITS PASSWORD -->
-      <fieldset class="shareownerpassword" <?php echo $off; ?> >
-        <input type="password"
-               id="shareownerpassword"
-               class="randompassword"
-               name="shareownerpassword"
-               placeholder="<?php echo $l->t('Share-Password');?>"
-               data-typetoggle="#shareownerpassword-show"
-               autocomplete="current-password"
-        />
-        <input class="cafevdb-password-show" type="checkbox" id="shareownerpassword-show" name="shareownerpassword-show" />
-        <label class="cafevdb-password-show" for="shareownerpassword-show"><?php echo $l->t('show');?></label>
+      <fieldset class="shareownerpassword flex-container" <?php echo $off; ?> >
+        <div class="password-container">
+          <input type="password"
+                 id="shareownerpassword"
+                 class="randompassword"
+                 name="shareownerpassword"
+                 placeholder="<?php echo $l->t('Share-Password');?>"
+                 data-typetoggle="#shareownerpassword-show"
+                 autocomplete="current-password"
+          />
+          <input class="cafevdb-password-show" type="checkbox" id="shareownerpassword-show" name="shareownerpassword-show" />
+          <label class="cafevdb-password-show" for="shareownerpassword-show"><?php echo $l->t('show');?></label>
+        </div>
         <input name="passwordgenerate" id="generate" type="button" value="<?php echo $l->t('Generate');?>" />
         <input name="passwordchange" id="change" type="button" value="<?php echo $l->t('Change');?>" />
       </fieldset>

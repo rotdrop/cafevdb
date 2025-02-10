@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -74,7 +74,7 @@ use OCA\CAFEVDB\Common\Util;
     <!-- GENERAL EMAIL STUFF -->
     <h4><?php echo $l->t('Email Account'); ?></h4>
     <form id="emailaccount">
-      <fieldset class="emailuser">
+      <fieldset class="emailuser flex-container flex-center">
         <!-- EMAIL user / password -->
         <input type="text"
                name="emailuser"
@@ -84,7 +84,9 @@ use OCA\CAFEVDB\Common\Util;
                autocomplete="username"
         />
         <label for="emailuser"><?php echo $l->t('Login for email account.');?></label>
-        <fieldset class="emailpassword">
+      </fieldset>
+      <fieldset class="emailpassword flex-container flex-center">
+        <div class="password-container inline-block">
           <input class="cafevdb-password"
                  type="password"
                  value="<?php echo $_['emailpassword']; ?>"
@@ -103,12 +105,12 @@ use OCA\CAFEVDB\Common\Util;
                  for="emailpassword-show">
             <?php echo $l->t('show');?>
           </label>
-          <input id="button"
-                 type="button"
-                 value="<?php echo $l->t('Change email password');?>"
-          />
-          <!-- div class="statusmessage"></div -->
-        </fieldset>
+        </div>
+        <input id="button"
+               type="button"
+               value="<?php echo $l->t('Change email password');?>"
+        />
+        <!-- div class="statusmessage"></div -->
       </fieldset>
       <fieldset id="emaildistribute">
         <input id="emaildistributebutton"
@@ -321,25 +323,27 @@ use OCA\CAFEVDB\Common\Util;
         <label for="mailingListRestPassword"
                title="<?php echo $toolTips['mailing-list:restapi:password']; ?>"
         >
-          <input class="cafevdb-password"
-                 name="mailingListRestPassword"
-                 type="password"
-                 autocomplete="current-password"
-                 value="<?php echo $mailingListRestPassword; ?>"
-                 id="mailingListRestPassword"
-                 placeholder="<?php echo $l->t('Password');?>"
-                 data-typetoggle="#mailingListRestPassword-show"
-                 required
-          />
-          <input class="cafevdb-password-show"
-                 type="checkbox"
-                 id="mailingListRestPassword-show"
-                 name="mailingListRestPassword-show"
-          />
-          <label class="cafevdb-password-show"
-                 for="mailingListRestPassword-show">
-            <?php echo $l->t('show');?>
-          </label>
+          <div class="password-container inline-block">
+            <input class="cafevdb-password"
+                   name="mailingListRestPassword"
+                   type="password"
+                   autocomplete="current-password"
+                   value="<?php echo $mailingListRestPassword; ?>"
+                   id="mailingListRestPassword"
+                   placeholder="<?php echo $l->t('Password');?>"
+                   data-typetoggle="#mailingListRestPassword-show"
+                   required
+            />
+            <input class="cafevdb-password-show"
+                   type="checkbox"
+                   id="mailingListRestPassword-show"
+                   name="mailingListRestPassword-show"
+            />
+            <label class="cafevdb-password-show"
+                   for="mailingListRestPassword-show">
+              <?php echo $l->t('show');?>
+            </label>
+          </div>
           <?php echo $l->t('REST Password');?>
         </label>
       </fieldset>
