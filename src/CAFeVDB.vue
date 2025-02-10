@@ -321,7 +321,10 @@ import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 import allDebugOptions, { DEBUG_VUE } from './debug-modes.ts'
 import enableVueDevTools from './util/vue-devtools.ts'
 import { formatFileSize } from '@nextcloud/files'
-import { emit as asyncEmit } from './services/async-event-bus.ts'
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+} from './services/async-event-bus.ts'
 import type { SetterEvents, SetterEventValue } from '@rotdrop/async-nextcloud-event-bus'
 import { closeNavigation } from './services/navigation.js'
 import * as BusEvents from './event-bus-events.ts'
@@ -494,6 +497,8 @@ const updatePersonalSettings = (
     },
   })
 }
+
+asyncSubscribe(BusEvents.LEGACY_BACK_REQUEST, () => router.back())
 
 const configCheck = async () => {
   const url = generateAppUrl('vue-app/a/config-check')

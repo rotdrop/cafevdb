@@ -347,6 +347,12 @@ const updateLegacyRoute = (post: TemplatePostData, action: string = 'replace', h
   }
 }
 
+const nextFrame = () => {
+  return new Promise(resolve => requestAnimationFrame(() => {
+    requestAnimationFrame(resolve)
+  }))
+}
+
 const doLoadLegacy = async () => {
   if (!props.template) {
     logger.error('*** TEMPLATE MISSING, CANNOT LOAD PAGE ***')
@@ -380,6 +386,7 @@ const doLoadLegacy = async () => {
     legacyCssPrefix.value = data.cssPrefix
     legacyCssClass.value = data.cssClass
     await nextTick()
+    await nextFrame()
     logger.info('RUN READY CALLBACKS', legacyHtmlContainer.value)
     await asyncEmit(LEGACY_PAGE_FINALIZE)
     logger.info('AFTER RUN READY CALLBACKS')

@@ -54,6 +54,7 @@ export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');
 export const LEGACY_PME_HISTORY_UPDATE = appEventName('legacy-pme-history-update');
 export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
 export const LEGACY_AJAX_ERROR = appEventName('legacy-ajax-error');
+export const LEGACY_BACK_REQUEST = appEventName('legacy-back-request');
 
 export const GET_VUE_COMPONENT = appEventName('get-vue-component');
 

@@ -22,6 +22,7 @@
  */
 
 import $ from './jquery.js';
+import globalState from './globalstate.js';
 import { appName } from '../config.ts';
 import * as Page from './page.js';
 import * as ProgressStatus from './progress-status.js';
@@ -31,6 +32,8 @@ import * as Notification from './notification.js';
 import { addReadyCallback } from './cafevdb.js';
 import generateUrl from './generate-url.js';
 import setBusyIndicators from './busy-indicators.js';
+import { LEGACY_BACK_REQUEST } from '../event-bus-events.ts';
+import { emit as asyncEmit } from '../services/async-event-bus.ts';
 
 /**
  * jQuery ready-callback used elsewhere.
@@ -95,15 +98,28 @@ function documentReady() {
                   { timeout: 30 });
                 let redirectTimeout = 10;
                 const makeText = timeout => t(appName, 'Redirecting to the orchestra app in {timeout} seconds.', { timeout: redirectTimeout });
-                const row = Notification.show(makeText(redirectTimeout));
+                const toast = Notification.show(makeText(redirectTimeout));
                 const second = 1000;
                 const notifier = setInterval(() => {
-                  row.text(makeText(--redirectTimeout));
+                  try {
+                    toast.toastElement.firstChild.textContent = makeText(--redirectTimeout);
+                  } catch (e) {
+                    console.error('TOAST ERROR', toast, e);
+                  }
                 }, second);
                 setTimeout(() => {
                   clearInterval(notifier);
                   setBusyIndicators(false, $container, false);
-                  window.location.reload();
+                  Notification.hide();
+                  if (globalState.vueMode) {
+                    // post a back-request to the Vue-router
+                    asyncEmit(LEGACY_BACK_REQUEST);
+                  } else {
+                    // reload is actually boring, but as it only
+                    // affects now the to be abandoned legacy part
+                    // just leave it ...
+                    window.location.reload();
+                  }
                 }, redirectTimeout * 1000);
               });
           },
