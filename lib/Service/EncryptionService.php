@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Throwable;
+
 use OCP\IConfig;
 use OCP\IUserSession;
 use OCP\Security\IHasher;
@@ -142,7 +144,7 @@ class EncryptionService
 
     try {
       $userId = $userSession->getUser()->getUID();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       //$this->logException($t);
       $userId = null;
     }
@@ -151,14 +153,14 @@ class EncryptionService
     }
     try {
       $userPassword = $credentialsStore->getLoginCredentials()->getPassword();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t, 'Unable to obtain login-password for "' . $userId . '".');
       $userPassword = null;
     }
     if (!empty($userId) && !empty($userPassword)) {
       try {
         $this->bind($userId, $userPassword);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t, 'Unable to bind to "' . $userId . '".');
       }
     }
@@ -262,7 +264,7 @@ class EncryptionService
           // after all, this means that all values are unencrypted, so be graceful here
           $this->asymKeyService->initEncryptionKeyPair($this->userId, $this->userPassword, forceNewKeyPair: true);
         }
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         // give up
         $this->logException($t, 'User\'s "' . $this->userId . '" asymmetric key pair is broken and encryption key appears to be non-empty.');
       }
@@ -613,7 +615,7 @@ class EncryptionService
       }
       try {
         $value = $this->appCryptor->decrypt($value);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         throw new Exceptions\DecryptionFailedException($this->l->t('Unable to decrypt value "%s" for "%s"', [$value, $key]), $t->getCode(), $t);
       }
       //$this->logInfo("Decrypted value for $key: ".$value);
