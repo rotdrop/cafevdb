@@ -26,7 +26,7 @@ import $ from './../jquery.js';
 import { setPersonalUrl } from './../settings-urls.js';
 import * as Ajax from './../ajax.js';
 import * as Notification from './../notification.js';
-import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { subscribe } from '../../services/async-event-bus.ts';
 import { SET_INITIAL_FILTER_VISIBILITY as EVENT } from '../../event-bus-events.ts';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');

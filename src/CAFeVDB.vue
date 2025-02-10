@@ -321,7 +321,7 @@ import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 import allDebugOptions, { DEBUG_VUE } from './debug-modes.ts'
 import enableVueDevTools from './util/vue-devtools.ts'
 import { formatFileSize } from '@nextcloud/files'
-import { emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
+import { emit as asyncEmit } from './services/async-event-bus.ts'
 import type { SetterEvents, SetterEventValue } from '@rotdrop/async-nextcloud-event-bus'
 import { closeNavigation } from './services/navigation.js'
 import * as BusEvents from './event-bus-events.ts'
@@ -444,7 +444,7 @@ const authorizedNavigationItems = computed(() => {
   const items = navigationItems.value.filter(
     (item: NavigationItem) => (item.permissions === (item.permissions & globalState.userPermissions)),
   )
-  logger.info('FILTERED NAVIGATION ITEMS', items)
+  logger.info('FILTERED NAVIGATION ITEMS', { items, globalState })
   return items
 })
 

@@ -56,7 +56,7 @@ const postDataHash = ref<undefined|string>(undefined)
 const noLegacyReload = ref(false)
 
 const onRouteChange = (to: Route) => {
-  logger.info('onRouteChange()', to, window?.history?.state)
+  logger.info('onRouteChange()', { to, historyState: window?.history?.state })
   template.value = to.params.template
   Object.assign(templateParameters.value, to.params)
   delete templateParameters.value.template

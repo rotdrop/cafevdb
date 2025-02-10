@@ -49,7 +49,7 @@ import * as SelectUtils from './select-utils.js';
 import wikiPopup from './wiki-popup.js';
 import setBusyIndicators from './busy-indicators.js';
 import iFrameResize from './iframe-resize.js';
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import * as BusEvents from '../event-bus-events.ts';
 import { PROJECT_ACTIONS_MENU } from '../mountable-component-names.ts';
 

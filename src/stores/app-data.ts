@@ -28,7 +28,7 @@ import axios from '@nextcloud/axios';
 import generateAppUrl from '../toolkit/util/generate-url.js';
 import type { AxiosResponse } from 'axios';
 import { PUSH_BUSY_STATE, POP_BUSY_STATE, SET_BUSY_FLAG } from '../event-bus-events.ts';
-import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus'
+import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
 import Console from '../util/console.ts';
 import { AppError } from '../types/errors.ts';
 import type { ErrorContext, ErrorHandler } from '../types/errors.ts';

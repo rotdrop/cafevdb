@@ -81,7 +81,7 @@ import 'jquery-ui/ui/widgets/sortable.js';
 import 'selectize/dist/css/selectize.bootstrap4.css';
 import mergician from 'mergician';
 import { LEGACY_PME_HISTORY_UPDATE } from '../event-bus-events.ts';
-import { emit } from '@rotdrop/async-nextcloud-event-bus';
+import { emit } from '../services/async-event-bus.ts';
 // import 'selectize/dist/css/selectize.css';
 require('cafevdb-selectize.scss');
 

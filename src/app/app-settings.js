@@ -25,7 +25,7 @@ import $ from './jquery.js';
 import { appName } from '../config.ts';
 import { unfocus } from './cafevdb.js';
 import generateUrl from './generate-url.js';
-import { subscribe, emit } from '@rotdrop/async-nextcloud-event-bus';
+import { subscribe, emit } from '../services/async-event-bus.ts';
 import { APP_SETTINGS_POPUP, PUSH_BUSY_STATE, POP_BUSY_STATE } from '../event-bus-events.ts';
 
 require('../legacy/nextcloud/jquery/requesttoken.js');

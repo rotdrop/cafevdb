@@ -24,10 +24,12 @@
 import type { CombinedVueInstance, VueConstructor, Ref } from 'vue';
 import type VueRouter from 'vue-router';
 import type { PHPMyEditState } from './pme-state.js';
+import type { EventBus } from '@rotdrop/async-nextcloud-event-bus';
 
 export interface GlobalState {
   PHPMyEdit: PHPMyEditState,
   vueMode?: boolean,
+  eventBus?: EventBus,
   vue?: {
     app: CombinedVueInstance,
     Vue: VueConstructor,

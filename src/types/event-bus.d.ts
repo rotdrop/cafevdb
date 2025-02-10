@@ -21,11 +21,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { NextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
+import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
+import { jqXHR } from '@types/jquery/misc.d.ts';
 
 import {
   APP_SETTINGS_POPUP,
   GET_VUE_COMPONENT,
+  LEGACY_AJAX_ERROR,
   LEGACY_PAGE_CLEANUP,
   LEGACY_PAGE_FINALIZE,
   LEGACY_PAGE_LOAD,
@@ -70,10 +72,11 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
   };
   type BoolSetterArgs = SetterArgs<boolean>
 
-  export interface AsyncNextcloudEvents {
+  export interface EventArgs {
     // mapping of 'event name' => 'event type'
     [APP_SETTINGS_POPUP]: Callbacks,
     [GET_VUE_COMPONENT]: { name: keyof ComponentProps, propsData: PropsData<keyof ComponentProps> }, // { name: keyof ComponentProps, propsData: ComponentProps[typeof name] },
+    [LEGACY_AJAX_ERROR]: { xhr: jqXHR, message: string },
     [LEGACY_PAGE_CLEANUP]: undefined,
     [LEGACY_PAGE_FINALIZE]: undefined,
     [LEGACY_PAGE_LOAD]: { post: TemplatePostData, template: string|null, projectId: number|null, projectName: string|undefined, keepHistory: boolean, },
@@ -102,11 +105,11 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     : never;
   }[keyof T]
 
-  export type SetterEventKeys = KeysOfValue<AsyncNextcloudEvents, SetterArgs>;
-  export type SetterEvents = Pick<AsyncNextcloudEvents, SetterEventKeys>;
+  export type SetterEventKeys = KeysOfValue<EventArgs, SetterArgs>;
+  export type SetterEvents = Pick<EventArgs, SetterEventKeys>;
   export type SetterEventValue<EventName extends SetterEventKeys> = SetterEvents[EventName]['value'];
 
-  export interface NextcloudEvents extends AsyncNextcloudEvents {
+  export interface AsyncNextcloudEvents extends EventArgs {
   }
 }
 

@@ -23,7 +23,7 @@
 
 import './jquery-cafevdb-tooltips.js';
 import globalState from './globalstate.js';
-import { emit } from '@rotdrop/async-nextcloud-event-bus';
+import { emit } from '../services/async-event-bus.ts';
 import { SET_BUSY_FLAG } from '../event-bus-events.ts';
 
 const busyIcon = function(on) {

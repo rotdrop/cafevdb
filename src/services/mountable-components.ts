@@ -22,15 +22,14 @@
  */
 
 import Vue from 'vue';
-import type { CombinedVueInstance } from 'vue/types';
 import ProjectActionsMenu from '../components/ProjectActionsMenu.vue';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
-import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
+import { subscribe as asyncSubscribe } from './async-event-bus.ts'
 import * as MountableComponents from '../mountable-component-names.ts';
 
 const ProjectActionsMenuConstructor = Vue.extend(ProjectActionsMenu);
 
-export const provideMountableComponents = (vueApp: CombinedVueInstance) => {
+export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
   asyncSubscribe(GET_VUE_COMPONENT, (event) => {
     switch (event.name) {
       case MountableComponents.PROJECT_ACTIONS_MENU:
