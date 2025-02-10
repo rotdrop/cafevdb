@@ -27,7 +27,7 @@ export interface NavigationItem {
   nameKey: string,
   tooltip: string,
   tooltipKey: string,
-  templateParameters: any[],
+  templateParameters: Record<string, any>,
   permissions: number,
 }
 
