@@ -769,7 +769,7 @@ const getSettingsData = async (settingsKeys: (keyof AppAdminSettings)[] = []) =>
       vueSet(settings, key, settingsBackup[key])
     }
   }
-  Object.assign(settingsBackup, { ...settings })
+  Object.assign(settingsBackup, settings)
   loading.settings = false
 }
 const saveSetting = async (settingsKey: string, value?: string) => {
