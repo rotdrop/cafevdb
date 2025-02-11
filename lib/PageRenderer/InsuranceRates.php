@@ -53,6 +53,9 @@ class InsuranceRates extends PMETableViewBase
     ],
   ];
 
+  /** @var Entities\Project */
+  private ?Entities\Project $project = null;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
@@ -63,6 +66,14 @@ class InsuranceRates extends PMETableViewBase
     PageNavigation $pageNavigation,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+
+    $this->projectId = $this->getClubMembersProjectId();
+    if ($this->projectId > 0) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+      $this->projectName = $this->project->getName();
+    } else {
+      $this->projectName = $this->getClubMembersProjectName();
+    }
 
     $scopes = array_values(Types\EnumGeographicalScope::toArray());
 
