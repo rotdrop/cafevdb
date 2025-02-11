@@ -32,9 +32,11 @@ declare global {
 }
 
 // Enabe dev-tools also needs unsafe-eval on script-src in the CSP.
-const enableVueDevTools = () => {
+export const enableVueDevTools = () => {
   window.__VUE_DEVTOOLS_GLOBAL_HOOK__.enabled = true;
   window.__VUE__ = Vue;
 };
 
-export default enableVueDevTools;
+export const disableVueDevTools = () => {
+  window.__VUE_DEVTOOLS_GLOBAL_HOOK__.enabled = false;
+}

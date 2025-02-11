@@ -319,7 +319,7 @@ import generateAppUrl from './toolkit/util/generate-url.js'
 import { storeToRefs } from 'pinia'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 import allDebugOptions, { DEBUG_VUE } from './debug-modes.ts'
-import enableVueDevTools from './util/vue-devtools.ts'
+import { enableVueDevTools, disableVueDevTools } from './util/vue-devtools.ts'
 import { formatFileSize } from '@nextcloud/files'
 import {
   emit as asyncEmit,
@@ -580,6 +580,8 @@ const updateDebugModes = async (newValue: number, oldValue?: number) => {
 
   if (globalState.debugModes & DEBUG_VUE) {
     enableVueDevTools()
+  } else {
+    disableVueDevTools()
   }
 }
 

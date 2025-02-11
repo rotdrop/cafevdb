@@ -382,6 +382,14 @@
         </TextField>
       </div>
     </NcSettingsSection>
+    <NcSettingsSection v-if="config.isSubAdmin"
+                       :class="['sub-admin', 'vue-devtools']"
+                       :name="t(appId, 'Enable Vue DevTools Support')"
+    >
+      <NcCheckboxRadioSwitch v-model="vueDevTools">
+        {{ t(appId, 'Check to enable Vue Devtools support (also needs unsafe-eval CSP)') }}
+      </NcCheckboxRadioSwitch>
+    </NcSettingsSection>
   </div>
 </template>
 <script setup lang="ts">
@@ -399,6 +407,7 @@ import {
 import {
   NcActions,
   NcActionButton,
+  NcCheckboxRadioSwitch,
   NcProgressBar,
   NcSettingsSection,
   NcListItem,
@@ -441,6 +450,8 @@ import { translate as t } from '@nextcloud/l10n'
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
 import Console from '../util/console.ts'
 import { joinLiterals } from '../util/string-literals.ts'
+import { enableVueDevTools, disableVueDevTools } from '../util/vue-devtools.ts'
+
 const IconCancel = IconEmailVerificationFailed
 
 const COMPONENT_NAME = 'AdminSettings'
@@ -565,6 +576,15 @@ const props = withDefaults(defineProps<{
 const initialState: InitialState = loadState(appId, 'adminConfig')
 
 const store = useCloudUsersGroupsStore()
+
+const vueDevTools = ref(false)
+watch(vueDevTools, (value) => {
+  if (value) {
+    enableVueDevTools()
+  } else {
+    disableVueDevTools()
+  }
+})
 
 const defaultOfficeFont = ref<FontFiles|null>(null)
 const loading = reactive({
