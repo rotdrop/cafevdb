@@ -141,18 +141,12 @@ $routes = [
     // new Vue frontend wrapper
     [
       'name' => 'vueApp#index',
-      'url' => '/vue-app',
+      'url' => '/',
       'verb' => 'GET',
     ],
     [
       'name' => 'vueApp#index',
-      'url' => '/vue-app/',
-      'verb' => 'GET',
-      'postfix' => 'slash',
-    ],
-    [
-      'name' => 'vueApp#index',
-      'url' => '/vue-app/p/{template}/{projectId}/{projectName}',
+      'url' => '/p/{template}/{projectId}/{projectName}',
       'verb' => 'GET',
       'requirements' => [ 'template' => '.+' ],
       'postfix' => 'front',
@@ -163,32 +157,21 @@ $routes = [
     ],
     [
       'name' => 'vueApp#navigation',
-      'url' => '/vue-app/n/{template}',
+      'url' => '/n/{template}',
       'verb' => 'POST',
       'requirements' => [ 'template' => '.+' ],
     ],
     [
       'name' => 'problemReport#post',
-      'url' => '/vue-app/a/problem-report',
+      'url' => '/a/problem-report',
       'verb' => 'POST',
     ],
     [
       'name' => 'configCheck#get',
-      'url' => '/vue-app/a/config-check',
+      'url' => '/a/config-check',
       'verb' => 'GET',
     ],
     //
-    [
-      'name' => 'page#index',
-      'url' => '/',
-      'verb' => 'GET',
-    ],
-    [
-      'name' => 'page#index',
-      'postfix' => 'post',
-      'url' => '/',
-      'verb' => 'POST',
-    ],
     [
       'name' => 'page#loader',
       'url' => '/page/loader/{renderAs}',
@@ -206,10 +189,6 @@ $routes = [
       'url' => '/page/pme/{topic}', // load or export
       'verb' => 'POST',
       'defaults' => [ 'topic' => 'load' ],
-    ],
-    [
-      'name' => 'page#debug',
-      'url' => '/page/debug',
     ],
     // admin settings
     [
@@ -780,24 +759,6 @@ $routes = [
       'name' => 'mail_merge#merge',
       'verb' => 'POST',
       'url' => '/documents/mail-merge',
-    ],
-    /**
-     * Attempt a catch all ...
-     */
-    [
-      'name' => 'page#post',
-      'postfix' => 'post',
-      'url' => '/{a}/{b}/{c}/{d}/{e}/{f}/{g}',
-      'verb' => 'POST',
-      'defaults' => [
-        'a' => '',
-        'b' => '',
-        'c' => '',
-        'd' => '',
-        'e' => '',
-        'f' => '',
-        'g' => '',
-      ],
     ],
   ],
 ];

@@ -162,40 +162,6 @@ class PageController extends Controller
   }
 
   /**
-   * @param mixed $a
-   *
-   * @param mixed $b
-   *
-   * @param mixed $c
-   *
-   * @param mixed $d
-   *
-   * @param mixed $e
-   *
-   * @param mixed $f
-   *
-   * @param mixed $g
-   *
-   * @return Http\Response
-   *
-   * @NoAdminRequired
-   * @NoGroupMemberRequired
-   * @NoCSRFRequired
-   */
-  public function post(mixed $a, mixed $b, mixed $c, mixed $d, mixed $e, mixed $f, mixed $g):Http\Response
-  {
-    $parts = [ $a, $b, $c, $d, $e, $f, $g ];
-    $request = implode('/', array_filter($parts));
-    if (!empty($request)) {
-      return self::grumble(
-        $this->l->t('Post to end-point "%s" not implemented.', $request));
-    } else {
-      return self::grumble(
-        $this->l->t('Post to base-url of app "%s" not allowed.', $this->appName()));
-    }
-  }
-
-  /**
    * Load a page at the specified offset from the history. Returns an
    * error if the entry cannot be found in the history.
    *
@@ -238,24 +204,6 @@ class PageController extends Controller
     return $this->loader(
       $this->parameterService->getParam('renderAs', self::RENDER_AS_USER),
       $this->parameterService['template'],
-      $this->parameterService['projectName'],
-      $this->parameterService['projectId'],
-      $this->parameterService['musicianId'],
-      historyAction: self::HISTORY_ACTION_PUSH,
-    );
-  }
-
-  /**
-   * @return Http\Response
-   *
-   * @NoAdminRequired
-   * @NoCSRFRequired
-   */
-  public function debug():Http\Response
-  {
-    return $this->loader(
-      self::RENDER_AS_USER,
-      'maintenance/debug', // template
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
       $this->parameterService['musicianId'],
@@ -461,37 +409,5 @@ class PageController extends Controller
     }
     $template = str_replace(':', Constants::PATH_SEP, $template);
     return $template;
-  }
-
-  /**
-   * @param mixed $a
-   *
-   * @param mixed $b
-   *
-   * @param mixed $c
-   *
-   * @param mixed $d
-   *
-   * @param mixed $e
-   *
-   * @param mixed $f
-   *
-   * @param mixed $g
-   *
-   * @return Http\Response
-   *
-   * @NoAdminRequired
-   */
-  public function notFound(mixed $a, mixed $b, mixed $c, mixed $d, mixed $e, mixed $f, mixed $g):Http\Response
-  {
-    $parts = [ $a, $b, $c, $d, $e, $f, $g ];
-    $route = '/ajax';
-    foreach ($parts as $part) {
-      if (empty($part)) {
-        break;
-      }
-      $route .= '/'.$part;
-    }
-    return self::response($this->l->t("Page `%s\' not found.", [$route]), Http::STATUS_NOT_FOUND);
   }
 }

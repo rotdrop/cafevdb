@@ -502,7 +502,7 @@ const updatePersonalSettings = (
 asyncSubscribe(BusEvents.LEGACY_BACK_REQUEST, () => router.back())
 
 const configCheck = async () => {
-  const url = generateAppUrl('vue-app/a/config-check')
+  const url = generateAppUrl('a/config-check')
   logger.info('URL', url)
   try {
     const response: AxiosResponse<ConfigCheckResult> = await axios.get(url)
@@ -527,7 +527,7 @@ const updateNavigationItems = async () => {
   if (!pageTemplate.value) {
     return
   }
-  const url = generateAppUrl('vue-app/n/{pageTemplate}', { pageTemplate: pageTemplate.value })
+  const url = generateAppUrl('n/{pageTemplate}', { pageTemplate: pageTemplate.value })
   logger.info('URL', url)
   try {
     const response: AxiosResponse<{ navigation: NavigationItem[] }> = await axios.post(

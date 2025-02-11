@@ -358,7 +358,7 @@ const reportError = async () => {
     return
   }
   console.info('POST DATA', postData)
-  const url = generateAppUrl('vue-app/a/problem-report')
+  const url = generateAppUrl('a/problem-report')
   try {
     const result = await axios.post(url, postData)
     const messages = [
