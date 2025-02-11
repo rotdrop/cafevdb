@@ -78,9 +78,7 @@ const makeSVGElement = function() {
   const height = props.size || props.height
 
   if (width !== undefined) {
-    logger.debug('BASE WIDTH BEFORE')
     svg.width.baseVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, width)
-    logger.debug('ANIM WIDTH BEFORE')
     // svg.width.animVal.newValueSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_NUMBER, width)
     // logger.debug('ANIM WIDTH AFTER')
   }
@@ -102,6 +100,7 @@ const makeSVGElement = function() {
     }
     titleElement.textContent = props.title
   }
+
   logger.debug('SVG DOM ELEMENT', svg)
 
   return svg
