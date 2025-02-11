@@ -24,7 +24,7 @@
 import $ from './jquery.js';
 import { appName } from '../config.ts';
 import { unfocus } from './cafevdb.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import { subscribe, emit } from '../services/async-event-bus.ts';
 import { APP_SETTINGS_POPUP, PUSH_BUSY_STATE, POP_BUSY_STATE } from '../event-bus-events.ts';
 
@@ -65,7 +65,7 @@ export const appSettingsPopup = async function(callbacks) {
     } else {
       // const arrowclass = $popup.hasClass('topright') ? 'up' : 'left';
       const route = 'settings/personal/form';
-      $.get(generateUrl(route))
+      $.get(generateAppUrl(route))
         .done(function(data) {
           $popup
             .html(data)

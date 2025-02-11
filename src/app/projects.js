@@ -22,7 +22,7 @@
  */
 
 import { globalState, appName, $ } from './globals.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
@@ -123,7 +123,7 @@ const eventsPopup = function(post, reopen) {
     eventsDlg.dialog('close').remove();
   }
   $.post(
-    generateUrl('projects/events/dialog'), post)
+    generateAppUrl('projects/events/dialog'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, afterInit);
     })
@@ -500,7 +500,7 @@ const pmeFormInit = function(containerSel) {
         $container.data('project-validating', false);
       };
       Notification.hide();
-      $.post(generateUrl('validate/projects/name'), post)
+      $.post(generateAppUrl('validate/projects/name'), post)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown);
           cleanup();
@@ -611,7 +611,7 @@ const pmeFormInit = function(containerSel) {
       const projectId = $form.find('input[name="projectId"]').val();
       setBusyIndicators(true, $container, false);
       $.post(
-        generateUrl('projects/' + projectId + '/share/downloads'))
+        generateAppUrl('projects/' + projectId + '/share/downloads'))
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, function() {
             setBusyIndicators(false, $container, false);
@@ -632,7 +632,7 @@ const pmeFormInit = function(containerSel) {
       const projectId = $form.find('input[name="projectId"]').val();
       setBusyIndicators(true, $container, true);
       $.ajax({
-        url: generateUrl('projects/' + projectId + '/share/downloads'),
+        url: generateAppUrl('projects/' + projectId + '/share/downloads'),
         type: 'DELETE',
       })
         .fail(function(xhr, status, errorThrown) {
@@ -656,7 +656,7 @@ const pmeFormInit = function(containerSel) {
       setBusyIndicators(true, $container, true);
       console.info('DATE', $this.val(), $this.datepicker('getDate'));
       $.ajax({
-        url: generateUrl('projects/' + projectId + '/share/downloads'),
+        url: generateAppUrl('projects/' + projectId + '/share/downloads'),
         type: 'PATCH',
         data: {
           expirationDate: $this.val(),
@@ -697,7 +697,7 @@ const pmeFormInit = function(containerSel) {
 
     const post = function(force) {
       $.post(
-        generateUrl('projects/mailing-lists/' + operation), {
+        generateAppUrl('projects/mailing-lists/' + operation), {
           operation,
           projectId,
           force,
@@ -776,7 +776,7 @@ const pmeFormInit = function(containerSel) {
 const projectWebPageRequest = function(post, container) {
 
   Notification.hide();
-  $.post(generateUrl('projects/webpages/' + post.action), post)
+  $.post(generateAppUrl('projects/webpages/' + post.action), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
     })
@@ -1142,7 +1142,7 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
       if (templateRenderer !== templateRenderer('projects')) {
         // we have to reload the default page as the underlying page
         // most likely depends on the now deleted project
-        window.location.replace(generateUrl('') + '?history=discard');
+        window.location.replace(generateAppUrl('') + '?history=discard');
         PHPMyEdit.halt();
       }
     }
@@ -1290,7 +1290,7 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
     for (const [instrument, voice] of Object.entries(additionalVoices || {})) {
       post += '&' + $.param({ [voicesName]: instrument + ':' + voice });
     }
-    $.post(generateUrl('projects/change-instrumentation'), post)
+    $.post(generateAppUrl('projects/change-instrumentation'), post)
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown);
         cleanup();

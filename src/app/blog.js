@@ -22,7 +22,7 @@
  */
 
 import { globalState, $, appName } from './globals.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
@@ -168,7 +168,7 @@ const submit = function(event) {
 
   console.info('GLOBAL', globalState.Blog);
   const action = globalState.Blog.blogId > 0 ? 'modify' : 'create';
-  $.post(generateUrl('blog/action/' + action), {
+  $.post(generateAppUrl('blog/action/' + action), {
     blogId: globalState.Blog.blogId,
     inReplyTo: globalState.Blog.inReplyTo,
     content: $('#blogtextarea').val(),
@@ -223,7 +223,7 @@ const popupMessages = function() {
           title: t(appName, 'Mark this popup as read; the popup will not show up again.'),
           click() {
             const action = 'markread';
-            $.post(generateUrl('blog/action/' + action), { blogId: thisBlogId })
+            $.post(generateAppUrl('blog/action/' + action), { blogId: thisBlogId })
               .fail(function(xhr, status, errorThrown) {
                 const message = Ajax.failMessage(xhr, status, errorThrown);
                 Dialogs.alert(message, t(appName, 'Error'));
@@ -273,7 +273,7 @@ const documentReady = function() {
     $('#blogform #blognewentry').click(function(event) {
       event.preventDefault();
       const post = $('#blogform').serializeArray();
-      $.post(generateUrl('blog/editentry'), post)
+      $.post(generateAppUrl('blog/editentry'), post)
         .fail(function(xhr, status, errorThrown) {
           const message = Ajax.failMessage(xhr, status, errorThrown);
           Dialogs.alert(message, t(appName, 'Error'));
@@ -290,7 +290,7 @@ const documentReady = function() {
       '#blogentryactions button.reply',
       function(event) {
         event.preventDefault();
-        $.post(generateUrl('blog/editentry'), {
+        $.post(generateAppUrl('blog/editentry'), {
           blogId: -1,
           inReplyTo: $(this).val(),
         })
@@ -307,7 +307,7 @@ const documentReady = function() {
       '#blogentryactions button.edit',
       function(event) {
         event.preventDefault();
-        $.post(generateUrl('blog/editentry'), {
+        $.post(generateAppUrl('blog/editentry'), {
           blogId: $(this).val(),
           inReplyTo: -1,
         })
@@ -331,7 +331,7 @@ const documentReady = function() {
           function(decision) {
             if (decision) {
               const action = 'delete';
-              $.post(generateUrl('blog/action/' + action), { blogId })
+              $.post(generateAppUrl('blog/action/' + action), { blogId })
                 .fail(function(xhr, status, errorThrown) {
                   const message = Ajax.failMessage(xhr, status, errorThrown);
                   Dialogs.alert(message, t(appName, 'Error'));
@@ -351,7 +351,7 @@ const documentReady = function() {
         const id = $(this).val();
         const prio = $('#blogpriority' + id).val();
         const action = 'modify';
-        $.post(generateUrl('blog/action/' + action), {
+        $.post(generateAppUrl('blog/action/' + action), {
           content: '',
           blogId: id,
           priority: +prio + 1,
@@ -374,7 +374,7 @@ const documentReady = function() {
         const id = $(this).val();
         const prio = $('#blogpriority' + id).val();
         const action = 'modify';
-        $.post(generateUrl('blog/action/' + action), {
+        $.post(generateAppUrl('blog/action/' + action), {
           content: '',
           blogId: id,
           priority: +prio - 1,

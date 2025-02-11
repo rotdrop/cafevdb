@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ import * as Dialogs from './dialogs.js';
 import * as FileUpload from './file-upload.js';
 import * as Notification from './notification.js';
 import { formSelector as pmeFormSelector } from './pme-selectors.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import md5 from 'blueimp-md5';
 // or: const md5 = require('blueimp-md5');
 // but NOT: import { md5 } from 'blueimp-md5';
@@ -151,7 +151,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
   };
 
   FileUpload.init({
-    url: generateUrl(uploadUrls.upload),
+    url: generateAppUrl(uploadUrls.upload),
     doneCallback,
     stopCallback() {
       setBusyIndicators(false);
@@ -196,7 +196,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
         handlePickedFiles(files, paths, cleanup) {
           const formData = $uploadUi.find('form').serializeArray();
           formData.push({ name: 'files', value: JSON.stringify(files) });
-          $.post(generateUrl(uploadUrls.upload), formData)
+          $.post(generateAppUrl(uploadUrls.upload), formData)
             .fail(function(xhr, status, errorThrown) {
               Ajax.handleError(xhr, status, errorThrown, cleanup);
             })
@@ -253,7 +253,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
             if (answer) { // try again with force parameter
               postData[data.confirmation.override] = true;
               $.post(
-                generateUrl(uploadUrls.delete),
+                generateAppUrl(uploadUrls.delete),
                 postData)
                 .fail(failHandler)
                 .done(doneHandler);
@@ -307,7 +307,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       cleanup();
     };
 
-    $.post(generateUrl(uploadUrls.delete), postData)
+    $.post(generateAppUrl(uploadUrls.delete), postData)
       .fail(failHandler)
       .done(doneHandler);
   });

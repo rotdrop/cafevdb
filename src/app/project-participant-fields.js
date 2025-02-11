@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ import * as SelectUtils from './select-utils.js';
 import * as Dialogs from './dialogs.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
 import { rec as pmeRec } from './pme-record-id.js';
 import './lock-input.js';
@@ -62,7 +62,7 @@ require('project-participant-fields.scss');
  */
 const getProjectParticipantFields = async function(projectId, multiplicity, type) {
   try {
-    return await $.get(generateUrl('projects/' + projectId + '/participant-fields'), {
+    return await $.get(generateAppUrl('projects/' + projectId + '/participant-fields'), {
       multiplicity,
       type,
     }).promise();
@@ -79,7 +79,7 @@ const getProjectParticipantFields = async function(projectId, multiplicity, type
  */
 const getProjectParticipantFieldOptions = async function(fieldId) {
   try {
-    return await $.get(generateUrl('projects/participant-fields/' + fieldId + '/options')).promise();
+    return await $.get(generateAppUrl('projects/participant-fields/' + fieldId + '/options')).promise();
   } catch (xhr) {
     await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
     return null;
@@ -93,7 +93,7 @@ const getProjectParticipantFieldOptions = async function(fieldId) {
  */
 const getProjectParticipants = async function(projectId) {
   try {
-    return await $.get(generateUrl('projects/' + projectId + '/participants')).promise();
+    return await $.get(generateAppUrl('projects/' + projectId + '/participants')).promise();
   } catch (xhr) {
     await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
     return null;
@@ -226,7 +226,7 @@ const confirmedReceivablesUpdate = async function(field, receivables, participan
       const request = 'option/regenerate';
       try {
         const data = await $.post(
-          generateUrl('projects/participant-fields/' + request), {
+          generateAppUrl('projects/participant-fields/' + request), {
             data: {
               fieldId,
               key,
@@ -653,7 +653,7 @@ const ready = function(selector, resizeCB) {
     }
     console.info('PARTICIPANTS', participants);
 
-    // let options = await $.get(generateUrl('projects/participant-fields/' + fieldId + '/options'));
+    // let options = await $.get(generateAppUrl('projects/participant-fields/' + fieldId + '/options'));
     // console.info('OPTIONS', options);
 
     // or parse the Dom:
@@ -699,7 +699,7 @@ const ready = function(selector, resizeCB) {
     const startDate = $self.closest('tr').find('.field-limit');
     $self.addClass('busy');
     $.post(
-      generateUrl('projects/participant-fields/' + request), {
+      generateAppUrl('projects/participant-fields/' + request), {
         data: {
           fieldId,
           startDate: startDate.val(),
@@ -799,7 +799,7 @@ const ready = function(selector, resizeCB) {
       };
 
       $.post(
-        generateUrl('validate/general/monetary-value'), { value: amount })
+        generateAppUrl('validate/general/monetary-value'), { value: amount })
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
@@ -890,7 +890,7 @@ const ready = function(selector, resizeCB) {
       };
 
       $.post(
-        generateUrl('projects/participant-fields/' + request),
+        generateAppUrl('projects/participant-fields/' + request),
         postData)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
@@ -1006,7 +1006,7 @@ const ready = function(selector, resizeCB) {
       };
 
       $.post(
-        generateUrl('projects/participant-fields/' + request),
+        generateAppUrl('projects/participant-fields/' + request),
         postData)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);

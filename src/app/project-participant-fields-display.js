@@ -29,7 +29,7 @@ import * as Dialogs from './dialogs.js';
 import { submitOuterForm, tableDialogLoadIndicator } from './pme.js';
 import { confirmedReceivablesUpdate } from './project-participant-fields.js';
 import pageBusyIcon from './busy-icon.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 import {
   formSelector as pmeFormSelector,
@@ -85,7 +85,7 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
 
       const revertHandler = function() {
         $.post(
-          generateUrl('projects/participant-fields/property/get'), {
+          generateAppUrl('projects/participant-fields/property/get'), {
             fieldId,
             property: fieldProperty,
           })

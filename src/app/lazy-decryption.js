@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ import {
   inputSelector as pmeInputSelector,
   queryInfoSelector as pmeQueryInfoSelector,
 } from './pme-selectors.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import jQuery from './jquery.js';
 import { isPlainObject } from 'is-plain-object';
 
@@ -229,7 +229,7 @@ const lazyBatchDecryptValues = function($container) {
       const valuesChunk = jobsArray.slice(i, i + batchSize);
       increaseDecryptionJobCount(valuesChunk.length);
       const timer = setTimeout(() => {
-        const url = generateUrl('crypto/decryption/unseal/batch');
+        const url = generateAppUrl('crypto/decryption/unseal/batch');
         const ajaxPromise = $.post(
           url, {
             sealedData: valuesChunk.map((job) => job.sealedData),
@@ -294,7 +294,7 @@ const lazyBatchDecryptValues = function($container) {
 //         return;
 //       }
 //       setTimeout(() => {
-//         const url = generateUrl('crypto/decryption/unseal');
+//         const url = generateAppUrl('crypto/decryption/unseal');
 //         $.post(url, { sealedData, metaData })
 //           .fail(function(xhr, textStatus, errorThrown) {
 //             console.info('DECRYPTION FAILED', sealedData, xhr, textStatus, errorThrown);

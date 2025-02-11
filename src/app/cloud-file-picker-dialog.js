@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ import { appName } from '../config.ts';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as Notification from './notification.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import { parse as pathParse } from './path.js';
 import escapeHtml from 'escape-html';
 
@@ -63,7 +63,7 @@ const cloudFilePickerDialog = function(options) {
       if (!Array.isArray(paths)) {
         paths = [paths];
       }
-      $.post(generateUrl(options.stashUrl), {
+      $.post(generateAppUrl(options.stashUrl), {
         cloudPaths: paths,
         uploadMode: 'test',
       })
@@ -73,7 +73,7 @@ const cloudFilePickerDialog = function(options) {
         .done(function(data) {
 
           const performUpload = function(uploadMode) {
-            $.post(generateUrl(options.stashUrl), {
+            $.post(generateAppUrl(options.stashUrl), {
               cloudPaths: paths,
               uploadMode,
             })

@@ -41,7 +41,7 @@ import {
 import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import modalizer from './modalizer.js';
 import checkInvalidInputs from './check-invalid-inputs.js';
 import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.js';
@@ -346,7 +346,7 @@ const pmePost = function(post) {
     return $.Deferred().promise();
   }
   closeActionMenus();
-  return $.post(generateUrl('page/pme/load'), post)
+  return $.post(generateAppUrl('page/pme/load'), post)
     .then(
       function(htmlContent, textStatus, request) {
         console.info('RESOLVE IN PME POST');
@@ -1491,7 +1491,7 @@ function installInputSelectize(containerSel, onlyClass) {
       const labelField = selectizeOptions.labelField || 'text';
       if (create.url) {
         selectizeOptions.create = function(input, setterCallback) {
-          $.post(generateUrl(create.url), {
+          $.post(generateAppUrl(create.url), {
             ...(create.post || {}),
             [inputField]: input,
           })

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2023-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 import { appName } from '../config.ts';
 import $ from './jquery.js';
 import { loadState } from '@nextcloud/initial-state';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 
 require('iframe-resizer');
 
@@ -43,7 +43,7 @@ const iFrameResize = function($iframe) {
 
   if (!scriptUrl) {
     const iFrameContentScriptData = loadState(appName, 'iFrameContentScript');
-    scriptUrl = generateUrl('js/' + iFrameContentScriptData.asset + '.js');
+    scriptUrl = generateAppUrl('js/' + iFrameContentScriptData.asset + '.js');
   }
 
   $iframe.contents().find('head').prepend(`<script type="text/javascript" defer src="${scriptUrl}"></script>`);

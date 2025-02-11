@@ -37,7 +37,7 @@ import { instrumentationNumbersPopup } from './projects.js';
 import { rec as pmeRec, recordValue as pmeRecordValue } from './pme-record-id.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
 import { pageRenderer } from './pme-state.js';
 import {
@@ -554,7 +554,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     validateInstrumentChoices({
       container,
       selectElement: selectProjectInstruments,
-      validationUrl: generateUrl('projects/participants/change-instruments/project'),
+      validationUrl: generateAppUrl('projects/participants/change-instruments/project'),
       done() {
         console.info('SELECTED PROJECT INSTRUMENTS', $self.data(selectedOptionsKey));
         // Reenable, otherwise the value will not be submitted
@@ -608,7 +608,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     validateInstrumentChoices({
       container,
       selectElement: selectMusicianInstruments,
-      validationUrl: generateUrl('projects/participants/change-instruments/musician'),
+      validationUrl: generateAppUrl('projects/participants/change-instruments/musician'),
       done() {
         // Reenable, otherwise the value will not be submitted
         lockOther(false);
@@ -817,7 +817,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
 
     const post = function(force) {
       $.post(
-        generateUrl('projects/participants/mailing-list/' + operation), {
+        generateAppUrl('projects/participants/mailing-list/' + operation), {
           projectId,
           musicianId,
           force,
@@ -956,7 +956,7 @@ const myDocumentReady = function() {
           event.preventDefault();
           const values = $(this).attr('name');
 
-          CAFEVDB.formSubmit(generateUrl(''), values, 'post');
+          CAFEVDB.formSubmit(generateAppUrl(''), values, 'post');
 
           return false;
         });

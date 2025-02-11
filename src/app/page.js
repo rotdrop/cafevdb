@@ -25,7 +25,7 @@ import { appName } from '../config.ts';
 import globalState from './globalstate.js';
 import $ from './jquery.js';
 import './jquery-cafevdb-tooltips.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import * as Notification from './notification.js';
 import { snapperClose, addReadyCallback, runReadyCallbacks } from './cafevdb.js';
 import * as Ajax from './ajax.js';
@@ -83,7 +83,7 @@ const loadPage = async function(post, keepHistory) {
       });
   }
 
-  return $.post(generateUrl('page/remember/blank'), post)
+  return $.post(generateAppUrl('page/remember/blank'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
       // If the error response contains history data, use it. Othewise

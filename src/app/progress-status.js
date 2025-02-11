@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 
 import { globalState, $ } from './globals.js';
 import * as Ajax from './ajax.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 
 require('progressbar.scss');
 
@@ -44,7 +44,7 @@ globalState.progressTimerStopped = true;
  */
 function createProgressStatus(target, current, data) {
   return $.post(
-    generateUrl('foregroundjob/progress/create'),
+    generateAppUrl('foregroundjob/progress/create'),
     { target: target || 100, current: current || 0, data });
 }
 
@@ -72,7 +72,7 @@ function pollProgressStatus(id, options) {
       console.info('PROGRESS STOPPED');
       return;
     }
-    $.get(generateUrl('foregroundjob/progress/' + id))
+    $.get(generateAppUrl('foregroundjob/progress/' + id))
       .done(function(data) {
         clearTimeout(globalState.progressTimer);
         globalState.progressTimer = false;
@@ -105,7 +105,7 @@ function pollProgressStatus(id, options) {
 
 const deleteProgressStatus = function(id) {
   return $.post(
-    generateUrl('foregroundjob/progress/delete'), { id });
+    generateAppUrl('foregroundjob/progress/delete'), { id });
 };
 
 pollProgressStatus.stop = function() {

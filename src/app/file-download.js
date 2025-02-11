@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 
 import $ from './jquery.js';
 import { appName } from '../config.ts';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as ncRouter from '@nextcloud/router';
@@ -37,7 +37,7 @@ require('../legacy/nextcloud/jquery/requesttoken.js');
  * Place a download request by posting to the given Ajax URL.
  *
  * @param {string} url Relative download url, will be first fed in to
- * generateUrl().
+ * generateAppUrl().
  *
  * @param {Array} post Optional. Additional post-data.
  *
@@ -99,7 +99,7 @@ const download = function(url, post, options) {
   const downloadUrl = (url.startsWith(ncRouter.generateUrl(''))
                        || url.startsWith(ncRouter.generateRemoteUrl('')))
     ? url
-    : generateUrl(url);
+    : generateAppUrl(url);
 
   options.setup();
 

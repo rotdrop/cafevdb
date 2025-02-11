@@ -23,7 +23,7 @@
 
 import { globalState, appName, appPrefix, $ } from './globals.js';
 import fileDownload from './file-download.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Legacy from '../legacy.js';
@@ -165,7 +165,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
         post.push({ name: 'eventKind', value: eventType });
 
         $('#dialog_holder').load(
-          generateUrl('legacy/events/forms/new'),
+          generateAppUrl('legacy/events/forms/new'),
           post,
           function(response, textStatus, xhr) {
             if (textStatus === 'success') {
@@ -269,7 +269,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
         .off(appName + ':events_changed')
         .on(appName + ':events_changed', function(event, events, source) {
           $.post(
-            generateUrl('projects/events/redisplay'),
+            generateAppUrl('projects/events/redisplay'),
             {
               projectId: globalState.Events.projectId,
               projectName: globalState.Events.projectName,
@@ -396,7 +396,7 @@ const relist = function(htmlContent, textStatus, xhr, afterInit) {
 const redisplay = function() {
   const post = $('#eventlistform').serializeArray();
 
-  $.post(generateUrl('projects/events/redisplay'), post)
+  $.post(generateAppUrl('projects/events/redisplay'), post)
     .fail(handleError)
     .done(relist);
 };
@@ -516,7 +516,7 @@ const eventAction = function(event) {
     post.push({ name: 'uri', value: uri });
     post.push({ name: 'calendarid', value: calendarId });
     $('#dialog_holder').load(
-      generateUrl('legacy/events/forms/edit'),
+      generateAppUrl('legacy/events/forms/edit'),
       post,
       function(response, textStatus, xhr) {
         if (textStatus === 'success') {
@@ -533,7 +533,7 @@ const eventAction = function(event) {
     post.push({ name: 'uri', value: uri });
     post.push({ name: 'calendarid', value: calendarId });
     $('#dialog_holder').load(
-      generateUrl('legacy/events/forms/clone'),
+      generateAppUrl('legacy/events/forms/clone'),
       post,
       function(response, textStatus, xhr) {
         if (textStatus === 'success') {
@@ -567,7 +567,7 @@ const eventAction = function(event) {
         t(appName, 'Really delete?'),
         function(decision) {
           if (decision) {
-            $.post(generateUrl('projects/events/' + name), post)
+            $.post(generateAppUrl('projects/events/' + name), post)
               .fail(handleError)
               .done(relist);
           } else {
@@ -576,7 +576,7 @@ const eventAction = function(event) {
         },
         true);
     } else {
-      $.post(generateUrl('projects/events/' + name), post)
+      $.post(generateAppUrl('projects/events/' + name), post)
         .fail(handleError)
         .done(relist);
     }

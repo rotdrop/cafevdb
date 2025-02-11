@@ -23,7 +23,7 @@
 
 import $ from './jquery.js';
 import { appName, appPrefix } from '../config.ts';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Page from './page.js';
 import * as Ajax from './ajax.js';
@@ -65,7 +65,7 @@ const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);
  */
 const getMusician = async function(musicianId) {
   try {
-    return await $.get(generateUrl('musicians/details/' + musicianId)).promise();
+    return await $.get(generateAppUrl('musicians/details/' + musicianId)).promise();
   } catch (xhr) {
     await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
     return null;
@@ -88,7 +88,7 @@ const addMusicians = function($form, post) {
 
   // Open the change-musician dialog with the newly
   // added musician in case of success.
-  $.post(generateUrl('projects/participants/add-musicians'),
+  $.post(generateAppUrl('projects/participants/add-musicians'),
     post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {
@@ -201,7 +201,7 @@ const contactValidation = function(container) {
       };
 
       $.post(
-        generateUrl('validate/musicians/phone'),
+        generateAppUrl('validate/musicians/phone'),
         post)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
@@ -283,7 +283,7 @@ const contactValidation = function(container) {
       };
 
       $.post(
-        generateUrl('validate/musicians/email'),
+        generateAppUrl('validate/musicians/email'),
         post)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
@@ -357,7 +357,7 @@ const contactValidation = function(container) {
         displayName,
       };
 
-      $.post(generateUrl('mailing-lists/' + operation), post)
+      $.post(generateAppUrl('mailing-lists/' + operation), post)
         .fail(onFail)
         .done(function(data) {
           const status = data.status;
@@ -501,7 +501,7 @@ const contactValidation = function(container) {
 
     console.info('INITIATE PLACE AUTOCOMPLETE');
     autocompletePlaceRequest = $.post(
-      generateUrl('validate/musicians/autocomplete/place'),
+      generateAppUrl('validate/musicians/autocomplete/place'),
       post)
       .fail(function(xhr, status, errorThrown) {
         if (status !== 'cancelled') {
@@ -562,7 +562,7 @@ const contactValidation = function(container) {
 
     console.info('INITIATE STREET AUTOCOMPLETE');
     autocompleteStreetRequest = $.post(
-      generateUrl('validate/musicians/autocomplete/street'),
+      generateAppUrl('validate/musicians/autocomplete/street'),
       post)
       .fail(function(xhr, status, errorThrown) {
         if (status !== 'cancelled') {
@@ -664,7 +664,7 @@ const checkForDuplicateMusicians = function($container, onCheckPassed) {
   };
 
   $.post(
-    generateUrl('validate/musicians/duplicates'),
+    generateAppUrl('validate/musicians/duplicates'),
     post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, cleanup);

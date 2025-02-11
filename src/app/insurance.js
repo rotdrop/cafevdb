@@ -30,7 +30,7 @@ import { templateRenderer } from './template-renderer.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
 import {
@@ -211,7 +211,7 @@ const pmeFormInit = function(containerSel) {
       validateLock(true);
 
       Notification.hide(function() {
-        $.post(generateUrl('insurance/validate/' + control), post)
+        $.post(generateAppUrl('insurance/validate/' + control), post)
           .fail(function(xhr, status, errorThrown) {
             Ajax.handleError(xhr, status, errorThrown, function() {
               for (const key in textInputs) {

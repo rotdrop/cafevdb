@@ -71,7 +71,7 @@ const Email = globalState.Email = {
   autoSaveDelete() {},
 };
 
-function generateUrl(url, urlParams, urlOptions) {
+function generateEmailFormUrl(url, urlParams, urlOptions) {
   return generateAppUrl('communication/email/outgoing/' + url, urlParams, urlOptions);
 }
 
@@ -81,7 +81,7 @@ function generateComposerUrl(operation, topic) {
     operation = operation.operation;
   }
   topic = topic || Email.topicUnspecific;
-  return generateUrl('composer/{operation}/{topic}', { operation, topic });
+  return generateEmailFormUrl('composer/{operation}/{topic}', { operation, topic });
 }
 
 function attachmentFromJSON(response, info) {
@@ -108,7 +108,7 @@ function attachmentFromJSON(response, info) {
 }
 
 const cloudAttachment = function(paths, callback) {
-  $.post(generateUrl('attachment/cloud'), { paths })
+  $.post(generateEmailFormUrl('attachment/cloud'), { paths })
     .fail(ajaxHandleError)
     .done(function(response) {
       for (const attachment of response) {
@@ -325,7 +325,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         post += '&' + elementNames[0][1] + '[userInteraction]=' + elementNames[0][2];
       }
     }
-    $.post(generateUrl('recipients-filter'), post)
+    $.post(generateEmailFormUrl('recipients-filter'), post)
       .fail(function(xhr, textStatus, errorThrown) {
         ajaxHandleError(xhr, textStatus, errorThrown, function(data) {
           parameters.cleanup();
@@ -1764,7 +1764,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   // Arguably, these should only be active if the
   // composer tab is active. Mmmh.
   fileUploadInit({
-    url: generateUrl('attachment/upload'),
+    url: generateEmailFormUrl('attachment/upload'),
     doneCallback(json, index, container) {
       attachmentFromJSON(json, { origin: 'upload', index });
     },
@@ -1891,7 +1891,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       }
 
       const post = { freeFormRecipients: input.val() };
-      $.post(generateUrl('contacts/list'), post)
+      $.post(generateEmailFormUrl('contacts/list'), post)
         .fail(function(xhr, status, errorThrown) {
           ajaxHandleError(xhr, status, errorThrown, cleanup);
         })
@@ -1924,10 +1924,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                     };
                   });
                   const innerPost = { addressBookCandidates: selectedFreeForm };
-                  $.post(generateUrl('contacts/save'), innerPost)
+                  $.post(generateEmailFormUrl('contacts/save'), innerPost)
                     .fail(ajaxHandleError)
                     .done(function(data) {
-                      $.post(generateUrl('contacts/list'), post)
+                      $.post(generateEmailFormUrl('contacts/list'), post)
                         .fail(ajaxHandleError)
                         .done(function(data) {
                           if (!ajaxValidateResponse(data, ['contents'])) {
@@ -2036,7 +2036,7 @@ function emailFormPopup(post, modal, single, afterInit) {
   if (typeof afterInit !== 'function') {
     afterInit = function() {};
   }
-  $.post(generateUrl('form'), post)
+  $.post(generateEmailFormUrl('form'), post)
     .fail(function(xhr, status, errorThrown) {
       ajaxHandleError(xhr, status, errorThrown, function() {
         Email.active = false;

@@ -30,7 +30,7 @@ import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as Notification from './notification.js';
 import { addReadyCallback } from './cafevdb.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import setBusyIndicators from './busy-indicators.js';
 import { LEGACY_BACK_REQUEST } from '../event-bus-events.ts';
 import { emit as asyncEmit } from '../services/async-event-bus.ts';
@@ -56,7 +56,7 @@ function documentReady() {
     setBusyIndicators(true, $container, false);
 
     // check for pending migrations and handle them
-    $.get(generateUrl('maintenance/migrations/unapplied'))
+    $.get(generateAppUrl('maintenance/migrations/unapplied'))
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown, function() {
           setBusyIndicators(false, $container, false);
@@ -84,7 +84,7 @@ function documentReady() {
               return;
             }
             setBusyIndicators(true, $container, false);
-            $.post(generateUrl('maintenance/migrations/apply/all'))
+            $.post(generateAppUrl('maintenance/migrations/apply/all'))
               .fail(function(xhr, status, errorThrown) {
                 Ajax.handleError(xhr, status, errorThrown, function() {
                   setBusyIndicators(false, $container, false);
@@ -135,7 +135,7 @@ function documentReady() {
       ProgressStatus.poll.stop();
       return false;
     }
-    $.post(generateUrl('foregroundjob/progress/create'), { target: 100, current: 0 })
+    $.post(generateAppUrl('foregroundjob/progress/create'), { target: 100, current: 0 })
       .fail(Ajax.handleError)
       .done(function(data) {
         console.log('Progress Create', data);
@@ -152,7 +152,7 @@ function documentReady() {
               Ajax.handleError(xhr, status, errorThrown);
             },
           });
-        $.post(generateUrl('foregroundjob/progress/test'), { id, target: 100, data: { foo: 'bar' } })
+        $.post(generateAppUrl('foregroundjob/progress/test'), { id, target: 100, data: { foo: 'bar' } })
           .fail(Ajax.handleError)
           .done(function(data) {});
       });

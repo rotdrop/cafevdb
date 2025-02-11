@@ -33,7 +33,7 @@ import * as Notification from './notification.js';
 import checkInvalidInputs from './check-invalid-inputs.js';
 import * as PHPMyEdit from './pme.js';
 import participantFieldsHandlers from './project-participant-fields-display.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import * as FileUpload from './file-upload.js';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
@@ -517,7 +517,7 @@ const mandatesInit = function(data, onChangeCallback) {
     });
 
     FileUpload.init({
-      url: generateUrl('upload/stash'),
+      url: generateAppUrl('upload/stash'),
       doneCallback: writtenMandateUploadDone,
       stopCallback: null,
       dropZone: mandateFieldset.find('.written-mandate-upload'),
@@ -730,7 +730,7 @@ const mandateLoad = function(options) {
   };
   options = $.extend({}, defaultOptions, options);
 
-  $.post(generateUrl('finance/sepa/debit-mandates/dialog'), options.sepaId)
+  $.post(generateAppUrl('finance/sepa/debit-mandates/dialog'), options.sepaId)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {
         options.fail();
@@ -787,7 +787,7 @@ const mandateStore = function(options) {
   // "submit" the entire form
   const post = $form.serialize();
 
-  $.post(generateUrl('finance/sepa/debit-mandates/store'), post)
+  $.post(generateAppUrl('finance/sepa/debit-mandates/store'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {
         options.fail();
@@ -861,7 +861,7 @@ const mandateDelete = function(sepaId, callbackOk, action) {
         Notification.show(t(appName, 'Unconfirmed, doing nothing'));
         return;
       }
-      $.post(generateUrl('finance/sepa/' + endPoint + '/' + action), sepaId)
+      $.post(generateAppUrl('finance/sepa/' + endPoint + '/' + action), sepaId)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, function() {});
         })
@@ -934,7 +934,7 @@ const mandateValidate = function(event, validateLockCB) {
   // until end of validation
   validateLock();
 
-  $.post(generateUrl('finance/sepa/debit-mandates/validate'), post)
+  $.post(generateAppUrl('finance/sepa/debit-mandates/validate'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, {
         cleanup: validateUnlock,
@@ -1116,7 +1116,7 @@ const mandateValidatePMEWorker = function(event, validateLockCB) {
 
   const post = $.param(mandateData);
 
-  $.post(generateUrl('finance/sepa/debit-mandates/validate'), post)
+  $.post(generateAppUrl('finance/sepa/debit-mandates/validate'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, {
         cleanup: validateErrorUnlock,
@@ -1270,7 +1270,7 @@ const mandateExportHandler = function(event) {
   };
 
   const formPost = form.serialize();
-  $.post(generateUrl('finance/sepa/bulk-transactions/create'), formPost)
+  $.post(generateAppUrl('finance/sepa/bulk-transactions/create'), formPost)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, clearBusyState);
     })

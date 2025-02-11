@@ -23,7 +23,7 @@
 
 import $ from './jquery.js';
 import { appName, cloudUser } from './config.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
@@ -158,7 +158,7 @@ const actionMenu = function(containerSel) {
     switch (operation) {
     case 'donation-receipt:download':
       fileDownload(
-        generateUrl('documents/mail-merge'), {
+        generateAppUrl('documents/mail-merge'), {
           templateName: 'donationReceipt',
           ...postData,
         },
@@ -170,7 +170,7 @@ const actionMenu = function(containerSel) {
       break;
     case 'standard-receipt:download':
       fileDownload(
-        generateUrl('documents/mail-merge'), {
+        generateAppUrl('documents/mail-merge'), {
           templateName: 'standardReceipt',
           ...postData,
         },
@@ -182,7 +182,7 @@ const actionMenu = function(containerSel) {
       break;
     case 'payment:download-data':
       fileDownload(
-        generateUrl('documents/mail-merge'), {
+        generateAppUrl('documents/mail-merge'), {
           templateName: 'standardReceipt',
           ...postData,
           operation: 'dataset',

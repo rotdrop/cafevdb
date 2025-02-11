@@ -28,7 +28,7 @@ import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
 import * as FileUpload from './file-upload.js';
 import * as SelectUtils from './select-utils.js';
-import generateUrl from './generate-url.js';
+import generateAppUrl from './generate-url.js';
 import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.js';
 import { toolTipsInit } from './cafevdb.js';
 import { setPersonalUrl, setAppUrl, getUrl } from './settings-urls.js';
@@ -1213,7 +1213,7 @@ const afterLoad = function(container) {
             + '/' + file.original_name;
 
       $.post(
-        generateUrl('upload/move'), {
+        generateAppUrl('upload/move'), {
           stashedFile: file.tmp_name,
           destinationPath,
           originalFileName: file.original_name,
@@ -1317,7 +1317,7 @@ const afterLoad = function(container) {
       $this.addClass('busy');
 
       FileUpload.init({
-        url: generateUrl('upload/stash'),
+        url: generateAppUrl('upload/stash'),
         doneCallback(file, index, container) {
           moveIntoPlace(file, $container, $this);
         },
@@ -1348,7 +1348,7 @@ const afterLoad = function(container) {
             $this.removeClass('busy');
             return;
           }
-          $.post(generateUrl('upload/stash'), { cloudPaths: [path] })
+          $.post(generateAppUrl('upload/stash'), { cloudPaths: [path] })
             .fail(function(xhr, status, errorThrown) {
               Ajax.handleError(xhr, status, errorThrown);
               $this.removeClass('busy');

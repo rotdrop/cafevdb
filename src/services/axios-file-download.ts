@@ -22,7 +22,7 @@
  */
 
 import * as ncRouter from '@nextcloud/router';
-import generateUrl from '../app/generate-url.js';
+import generateAppUrl from '../app/generate-url.js';
 import axios from '@nextcloud/axios';
 import { saveAs } from 'file-saver';
 import { parse as parseContentDisposition } from 'content-disposition';
@@ -41,7 +41,7 @@ export default async function(url: string, data: any, method = 'post') {
   url = (url.startsWith(ncRouter.generateUrl(''))
          || url.startsWith(ncRouter.generateRemoteUrl('')))
     ? url
-    : generateUrl(url);
+    : generateAppUrl(url);
   const response = await axios({
     method,
     url,
