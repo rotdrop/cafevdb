@@ -159,10 +159,12 @@ module.exports = {
     new NodePolyfillPlugin(),
     new DeadCodePlugin({
       patterns: [
-        'src/**/*.(vue|js|jsx|css)',
+        'src/**/*.(vue|js|ts|jsx|css)',
         'style/**/*.scss',
       ],
       exclude: [
+        'src/*.d.ts',
+        'src/**/*.d.ts',
         'src/toolkit/mixins/settings-sync.js',
         'src/toolkit/services/InitialStateService.js',
         'src/toolkit/util/ajax.js',
