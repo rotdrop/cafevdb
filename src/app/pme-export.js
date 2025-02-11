@@ -76,6 +76,7 @@ const pmeExportMenu = function(containerSel) {
   // plugin.
   const $exportSelect = container.find('select.pme-export-choice');
   $exportSelect.chosen({
+    width: 'auto',
     disable_search: true,
     inherit_select_classes: true,
     title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
