@@ -28,12 +28,13 @@
 <template>
   <component :is="icon" v-bind="$attrs" v-on="$listeners" />
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import AllMusiciansIcon from 'vue-material-design-icons/Human.vue'
 import BlogIcon from 'vue-material-design-icons/MessageBadge.vue'
 import DefaultIcon from 'vue-material-design-icons/Table.vue'
 import HomeIcon from 'vue-material-design-icons/Home.vue'
 import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
+import InstrumentInsuranceIcon from 'vue-material-design-icons/ShieldAccount.vue'
 import InstrumentsIcon from 'vue-material-design-icons/Trumpet.vue'
 import ProjectOverviewIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ProjectParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
@@ -42,34 +43,26 @@ import ProjectPaymentsIcon from 'vue-material-design-icons/Cash.vue'
 import ProjectsIcon from 'vue-material-design-icons/ListBox.vue'
 import SepaBankAccountsIcon from 'vue-material-design-icons/AccountCash.vue'
 import SepaBulkTransactionsIcon from 'vue-material-design-icons/BankTransfer.vue'
+import { computed } from 'vue'
 
-export default {
-  name: 'PageTemplateIcon',
-  components: {},
-  props: {
-    pageTemplate: {
-      type: String,
-      required: true,
-    },
-  },
-  computed: {
-    icon() {
-      switch (this.pageTemplate) {
-      case 'all-musicians': return AllMusiciansIcon
-      case 'blog/blog': return BlogIcon
-      case 'home': return HomeIcon
-      case 'instruments': return InstrumentsIcon
-      case 'project-instrumentation-numbers': return InstrumentationNumbersIcon
-      case 'project-overview': return ProjectOverviewIcon
-      case 'project-participant-fields': return ProjectParticipantFieldsIcon
-      case 'project-participants': return ProjectParticipantsIcon
-      case 'project-payments': return ProjectPaymentsIcon
-      case 'projects': return ProjectsIcon
-      case 'sepa-bank-accounts': return SepaBankAccountsIcon
-      case 'sepa-bulk-transactions': return SepaBulkTransactionsIcon
-      default: return DefaultIcon
-      }
-    },
-  },
-}
+const props = defineProps <{ pageTemplate: string }>()
+
+const icon = computed(() => {
+  switch (props.pageTemplate) {
+  case 'all-musicians': return AllMusiciansIcon
+  case 'blog/blog': return BlogIcon
+  case 'home': return HomeIcon
+  case 'instrument-insurance': return InstrumentInsuranceIcon
+  case 'instruments': return InstrumentsIcon
+  case 'project-instrumentation-numbers': return InstrumentationNumbersIcon
+  case 'project-overview': return ProjectOverviewIcon
+  case 'project-participant-fields': return ProjectParticipantFieldsIcon
+  case 'project-participants': return ProjectParticipantsIcon
+  case 'project-payments': return ProjectPaymentsIcon
+  case 'projects': return ProjectsIcon
+  case 'sepa-bank-accounts': return SepaBankAccountsIcon
+  case 'sepa-bulk-transactions': return SepaBulkTransactionsIcon
+  default: return DefaultIcon
+  }
+})
 </script>
