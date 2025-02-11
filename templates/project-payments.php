@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,46 +24,4 @@
 
 namespace OCA\CAFEVDB;
 
-$css_pfx = $renderer->cssPrefix();
-$projectName = $renderer->getProjectName();
-$projectId = $renderer->getProjectId();
-
-$nav = '';
-if (!empty($projectId)) {
-  $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('project-participants', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('project-participant-fields', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('sepa-bulk-transactions', $projectName, $projectId);
-  if ($projectId === $appConfig->getConfigValue('memberProjectId', false)) {
-    $nav .= $pageNavigation->pageControlElement('instrument-insurance');
-  }
-  $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('projects');
-} else {
-  $nav .= $pageNavigation->pageControlElement('projects');
-  $nav .= $pageNavigation->pageControlElement('all');
-  $nav .= $pageNavigation->pageControlElement('instruments');
-}
-
-echo $this->inc(
-  'part.common.header',
-  [
-    'css-prefix' => $css_pfx,
-    'navigationcontrols' => $nav,
-    'header' => $renderer->headerText(),
-  ]);
-
-if ($roles->inTreasurerGroup()) {
-  echo $this->inc('pme-table', []);
-} else {
-  echo '<div class="specialrole error">'.
-    $l->t(
-      "Sorry, this view is only available to the %s.",
-      [ $l->t('treasurer') ]).
-    '</div>';
-}
-
-// Close some still opened divs
-echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx ]);
+echo $this->inc('pme-table', []);

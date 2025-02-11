@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,31 +23,5 @@
  */
 namespace OCA\CAFEVDB\Templates;
 
-$css_pfx = $renderer->cssPrefix();
-$css_class = $renderer->cssClass();
-
-//$missing = Projects::missingInstrumentationTable($renderer->getProjectId());
-
-$nav = '';
-$nav .= $pageNavigation->pageControlElement('projectlabel', $renderer->getProjectName(), $renderer->getProjectId());
-$nav .= $pageNavigation->pageControlElement('projects');
-$nav .= $pageNavigation->pageControlElement('project-participants', $renderer->getProjectName(), $renderer->getProjectId());
-$nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $renderer->getProjectName(), $renderer->getProjectId());
-$nav .= $pageNavigation->pageControlElement('instruments', $renderer->getProjectName(), $renderer->getProjectId());
-//$nav .= $pageNavigation->pageControlElement('project-participants', $renderer->getProjectName(), $renderer->getProjectId());
-
-echo $this->inc(
-  'part.common.header',
-  [
-    'css-prefix' => $css_pfx,
-    'css-class' => $css_class,
-    'navigationcontrols' => $nav,
-    'header' => $renderer->headerText(),
-    //'navBarInfo' => $missing,
-  ]);
-
 // Issue the main part. The method will echo itself
 echo $this->inc('pme-table', []);
-
-// Close some still opened divs
-echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx ]);

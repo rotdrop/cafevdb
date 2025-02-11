@@ -30,26 +30,6 @@ $css_pfx = $renderer->cssPrefix();
 $css_class = $renderer->cssClass();
 unset($this->vars['css-class']);
 
-//style($appName, 'config-check');
-//script($appName, 'events-test');
-
-$nav = '';
-$nav .= $pageNavigation->pageControlElement('all');
-$nav .= $pageNavigation->pageControlElement('projects');
-$nav .= $pageNavigation->pageControlElement('instruments');
-$nav .= $pageNavigation->pageControlElement('project-participant-fields');
-$nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers');
-$nav .= $pageNavigation->pageControlElement('blog');
-
-$header = $renderer->headerText();
-
-echo $this->inc('part.common.header', [
-  'css-prefix' => $css_pfx,
-  'css-class' => $css_class,
-  'navigationcontrols' => $nav,
-  'header' => $header,
-]);
-
 $cfgchk = $_['configcheck'];
 
 $missingtext = [
@@ -253,9 +233,3 @@ group-administrator for the group `%s\'.',
 ?>
   </ul>
 </div>
-
-<?php
-// Close some still opened divs
-echo $this->inc('part.common.footer', array('css-prefix' => $css_pfx));
-
-?>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,37 +24,4 @@
 
 namespace OCA\CAFEVDB;
 
-$cssPfx = $renderer->cssPrefix();
-$projectName = $renderer->getProjectName();
-$projectId = $renderer->getProjectId();
-
-$nav = '';
-if (!empty($projectId)) {
-  $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('project-participants', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('project-participant-fields', $projectName, $projectId);
-  if ($roles->inTreasurerGroup()) {
-    $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
-    $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts', $projectName, $projectId);
-  }
-  $nav .= $pageNavigation->pageControlElement('projects');
-  $nav .= $pageNavigation->pageControlElement('instruments', $projectName, $projectId);
-} else {
-  $nav .= $pageNavigation->pageControlElement('projects');
-  $nav .= $pageNavigation->pageControlElement('all');
-  $nav .= $pageNavigation->pageControlElement('instruments');
-  $nav .= $pageNavigation->pageControlElement('project-participant-fields');
-}
-
-echo $this->inc(
-  'part.common.header',
-  [
-    'css-prefix' => $cssPfx,
-    'navigationcontrols' => $nav,
-    'header' => $renderer->headerText(),
-  ]);
-
 echo $this->inc('pme-table', []);
-
-// Close some still opened divs
-echo $this->inc('part.common.footer', [ 'css-prefix' => $cssPfx, ]);

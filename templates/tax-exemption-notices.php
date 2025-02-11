@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,41 +24,4 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\PageRenderer;
-use OCA\CAFEVDB\Service\ConfigService;
-
-$css_pfx = $renderer->cssPrefix();
-$projectName = $renderer->getProjectName();
-$projectId = $renderer->getProjectId();
-
-if (empty($projectId)) {
-  $projectId = (int)$appConfig->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0);
-  $projectName = $appConfig->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_KEY, '');
-}
-
-$projectNavs = [
-  PageRenderer\ProjectParticipants::TEMPLATE,
-  PageRenderer\ProjectParticipantFields::TEMPLATE,
-  PageRenderer\SepaBankAccounts::TEMPLATE,
-  PageRenderer\ProjectPayments::TEMPLATE,
-  PageRenderer\SepaBulkTransactions::TEMPLATE,
-  PageRenderer\DonationReceipts::TEMPLATE,
-];
-
-$nav = $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
-foreach ($projectNavs as $template) {
-  $nav .= $pageNavigation->pageControlElement($template, $projectName, $projectId);
-}
-$nav .= $pageNavigation->pageControlElement(PageRenderer\Projects::TEMPLATE);
-$nav .= $pageNavigation->pageControlElement('all');
-
-echo $this->inc('part.common.header', [
-  'css-prefix' => $css_pfx,
-  'navigationcontrols' => $nav,
-  'header' => $renderer->headerText(),
-]);
-
 echo $this->inc('pme-table', []);
-
-// Close some still opened divs
-echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx, ]);

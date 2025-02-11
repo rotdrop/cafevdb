@@ -23,31 +23,6 @@
  */
 
 namespace OCA\CAFEVDB;
-
-$css_pfx = $renderer->cssPrefix();
-$css_class = $renderer->cssClass();
-unset($this->vars['css-class']);
-
-$nav = '';
-$nav .= $pageNavigation->pageControlElement('projects');
-$nav .= $pageNavigation->pageControlElement('all');
-$nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers');
-$nav .= $pageNavigation->pageControlElement('instruments');
-$nav .= $pageNavigation->pageControlElement('instrument-families');
-if ($expertMode) {
-  $nav .= $pageNavigation->pageControlElement('config-check');
-}
-
-$header = $renderer->headerText();
-
-echo $this->inc(
-  'part.common.header',
-  [
-    'css-prefix' => $css_pfx,
-    'css-class' => $css_class,
-    'navigationcontrols' => $nav,
-    'header' => $header
-  ]);
 ?>
 
 <div id="blogframe">
@@ -62,11 +37,6 @@ echo $this->inc(
   </form>
 
   <div id="blogthreads" class="cafevdb-blogthread">
-    <?php
-                             echo $this->inc('blog/blogthreads', $_);
-    ?>
+    <?php echo $this->inc('blog/blogthreads', $_); ?>
   </div>
 </div>
-<?php
-// Close some still opened divs
-echo $this->inc('part.common.footer', ['css-prefix' => $css_pfx]);

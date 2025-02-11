@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,22 +24,4 @@
 
 namespace OCA\CAFEVDB;
 
-$css_pfx = $renderer->cssPrefix();
-
-$nav = '';
-$nav .= $pageNavigation->pageControlElement('projects');
-$nav .= $pageNavigation->pageControlElement('all');
-$nav .= $pageNavigation->pageControlElement('instrument-insurance');
-$nav .= $pageNavigation->pageControlElement('insurance-rates');
-$nav .= $pageNavigation->pageControlElement('sepa-bank-accounts');
-
-echo $this->inc('part.common.header', [
-  'css-prefix' => $css_pfx,
-  'navigationcontrols' => $nav,
-  'header' => $renderer->headerText(),
-]);
-
 echo $this->inc('pme-table', []);
-
-// Close some still opened divs
-echo $this->inc('part.common.footer', [ 'css-prefix' => $css_pfx, ]);
