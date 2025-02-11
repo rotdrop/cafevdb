@@ -55,8 +55,6 @@ const PHPMyEditDefault = {
     compKeySep: '-',
     joinFieldNameSeparator: ':',
   },
-
-  initialized: true,
 };
 
 /****************************************************************************
@@ -72,6 +70,7 @@ const PHPMyEdit = Object.assign(
     PHPMyEditDefault,
     initialState.PHPMyEdit,
     globalState.PHPMyEdit, // safe-guard against accidental multipled execution
+    { initialized: true },
   ));
 
 PHPMyEdit.dialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
