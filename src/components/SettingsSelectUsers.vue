@@ -48,11 +48,14 @@
                           v-on="$listeners"
                           @search="findUsers"
   >
-    <!-- Unfortunately, the stock NcSelect seems to be somewhat borken and does not set the "user" property. -->
+    <!--
+         Unfortunately, the stock NcSelect seems to be somewhat borken
+         and does not set the "user" property which is needed by the
+         NcAvatar component. Just doing v-bind="option" leads to a couple of
+    -->
     <template #option="option">
       <NcListItemIcon v-tooltip="userInfoPopup(option)"
-                      v-bind="option"
-                      :user="option.id"
+                      v-bind="toListItemProps(option)"
                       :avatar-size="24"
                       :name="ncSelect ? option[ncSelect.localLabel] : t(appName, 'undefined')"
                       :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
@@ -60,8 +63,7 @@
     </template>
     <template #selected-option="option">
       <NcListItemIcon v-tooltip="userInfoPopup(option)"
-                      v-bind="option"
-                      :user="option.id"
+                      v-bind="toListItemProps(option)"
                       :avatar-size="24"
                       :name="ncSelect ? option[ncSelect.localLabel] : t(appName, 'undefined')"
                       :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
@@ -85,7 +87,7 @@ import { userInfoPopup } from '../util/user-info-popup.ts'
 import type { CloudUser } from '../stores/cloud-users-groups.ts'
 import { storeToRefs } from 'pinia'
 
-type ValueObject = CloudUser | { id: string, displayname: string }
+type ValueObject = CloudUser | { id: string, displayname: string, email?: string }
 
 const props = withDefaults(
   defineProps<{
@@ -147,6 +149,15 @@ const getValueObjects = async () => {
     result.push(await getUserObject(userId))
   }
   return result.map((user) => user.id)
+}
+
+const toListItemProps = (user: ValueObject) => {
+  return {
+    displayName: user.displayname,
+    id: user.id,
+    user: user.id,
+    subname: user.email || undefined,
+  }
 }
 
 const emit = defineEmits([
