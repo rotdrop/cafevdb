@@ -40,14 +40,22 @@
                           @search="(query) => findProjects(query)"
   />
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
-import consoleMixin from '../mixins/console.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import useAppDataStore from '../stores/app-data.ts'
-import type { PropType } from 'vue'
+import { storeToRefs } from 'pinia'
+import {
+  computed,
+  getCurrentInstance,
+  onMounted,
+  ref,
+  watch,
+} from 'vue'
 import type { Project, ProjectTemporalType } from '../stores/app-data.ts'
+import { AppError } from '../types/errors.ts'
+import Console from '../util/console.ts'
 
 type OnlyIdType = { id: number }
 type ProjectItemType = Project | (OnlyIdType & { name: string, year: number, type: ProjectTemporalType })
@@ -58,163 +66,138 @@ type ValueType = InputObjectType[]|InputObjectType|undefined
 const isIdType = (arg: ValueType): arg is IdType => !!arg && !Array.isArray(arg) && (typeof arg !== 'number')
 const isIdTypeArray = (arg: ValueType): arg is IdType[] => !!arg && Array.isArray(arg) && (arg.length === 0 || (typeof arg[0] !== 'number'))
 
-/**
- * Select multiple or a single project. The provided value is always an array of project ids.
- */
-export default {
-  name: 'SelectProjects',
-  components: {
-    SelectWithSubmitButton,
-  },
-  mixins: [
-    consoleMixin,
-  ],
-  inheritAttrs: false,
-  props: {
-    multiple: {
-      type: Boolean,
-      default: true,
-    },
-    value: {
-      type: [Array, Object, Number] as PropType<ValueType>,
-      default: undefined,
-    },
-    clearable: {
-      type: Boolean,
-      default: true,
-    },
+const COMPONENT_NAME = 'SelectProjects'
+const logger = new Console(COMPONENT_NAME)
+
+const props = withDefaults(
+  defineProps<{
+    multiple?: boolean,
+    value?: ValueType,
+    clearable?: boolean,
     // clear all options, only makes sense if multiple == true
-    clearAction: {
-      type: Boolean,
-      default: true,
-    },
-    label: {
-      type: String,
-      required: true,
-    },
-    placeholder: {
-      type: String,
-      default: undefined,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    loadingIndicator: {
-      type: Boolean,
-      default: true,
-    },
+    clearAction?: boolean,
+    label: string,
+    placeholder?: string,
+    loading?: boolean,
+    loadingIndicator?: boolean,
+  }>(), {
+    multiple: true,
+    value: undefined,
+    clearable: true,
+    clearAction: true,
+    placeholder: undefined,
+    loading: false,
+    loadingIndicator:
+    true,
   },
-  setup() {
-    const appData = useAppDataStore()
-    return {
-      appData,
-      projects: appData.projects as ProjectItemType[],
+)
+
+const appData = useAppDataStore()
+const { projects } = storeToRefs(appData)
+
+const inputValObjects = ref<undefined | Project | Project[]>([])
+const ajaxLoading = ref(false)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ncSelect = ref<any>(undefined)
+const id = ref<null|string>(null)
+
+const isLoading = computed(() => (props.loading || ajaxLoading.value) && props.loadingIndicator)
+const projectsArray = computed(() => {
+  logger.info('RECOMPUTE PROJECTS ARRAY')
+  // const groupedValues = {}
+  // for (const project of Object.values(this.projects)) {
+  //   const year = project.year
+  //   if (groupedValues[year] === undefined) {
+  //     groupedValues[year] = {
+  //       year,
+  //       projects: [project],
+  //     }
+  //   } else {
+  //     groupedValues[year].projects.push(project)
+  //   }
+  // }
+  // return Object.values(groupedValues).sort((p1, p2) => -(p1.year - p2.year))
+  logger.info('PROJECTS', projects.value)
+  const result: ProjectItemType[] = Object.values(projects.value).sort((a, b) => {
+    const p1 = a as Project
+    const p2 = b as Project
+    const p1year = p1?.year || -1
+    const p2year = p2?.year || -1
+    return p1year === p2year ? p1.name.localeCompare(p2.name) : -(p1year - p2year)
+  })
+  if (result.length === 0) {
+    return []
+  }
+  let index = 0
+  let fakeId = -1
+  while (index < result.length) {
+    const project = result[index]
+    const year = project.year
+    const yearName = project.type === 'permanent' ? t(appName, 'Permanent') : '' + year
+    result.splice(index, 0, { id: fakeId--, name: yearName, year, type: '' })
+    ++index
+    while (++index < result.length && result[index].year === year) { /* nothing */ }
+  }
+  return result
+})
+
+const valueIds = computed(() => {
+  if (!props.value || (Array.isArray(props.value) && props.value.length === 0)) {
+    return []
+  }
+  const value = props.value
+  if (!Array.isArray(value)) {
+    return [isIdType(value) ? value.id : value]
+  }
+  if (isIdTypeArray(value)) {
+    return value.map((project) => project?.id).filter(id => !!id)
+  } else {
+    return (value as number[] /* TS fails to detect this */).filter(id => !!id)
+  }
+})
+
+watch(() => props.value, async () => {
+  if (ajaxLoading.value) {
+    return
+  }
+  ajaxLoading.value = true
+  for (const projectId of valueIds.value) {
+    if (!projects.value[projectId]) {
+      await findProjects('' + projectId)
     }
-  },
-  data() {
-    return {
-      inputValObjects: [] as undefined|Project|Project[],
-      ajaxLoading: false,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ncSelect: undefined as any,
-      id: null as null|string,
-    }
-  },
-  computed: {
-    isLoading() {
-      return (this.loading || this.ajaxLoading) && this.loadingIndicator
-    },
-    projectsArray() {
-      this.info('RECOMPUTE PROJECTS ARRAY')
-      // const groupedValues = {}
-      // for (const project of Object.values(this.projects)) {
-      //   const year = project.year
-      //   if (groupedValues[year] === undefined) {
-      //     groupedValues[year] = {
-      //       year,
-      //       projects: [project],
-      //     }
-      //   } else {
-      //     groupedValues[year].projects.push(project)
-      //   }
-      // }
-      // return Object.values(groupedValues).sort((p1, p2) => -(p1.year - p2.year))
-      this.info('PROJECTS', this.projects)
-      const projects = Object.values(this.projects).sort((a, b) => {
-        const p1 = a as Project
-        const p2 = b as Project
-        const p1year = p1?.year || -1
-        const p2year = p2?.year || -1
-        return p1year === p2year ? p1.name.localeCompare(p2.name) : -(p1year - p2year)
-      })
-      if (projects.length === 0) {
-        return []
-      }
-      let index = 0
-      let fakeId = -1
-      while (index < projects.length) {
-        const project = projects[index]
-        const year = project.year
-        const yearName = project.type === 'permanent' ? t(appName, 'Permanent') : '' + year
-        projects.splice(index, 0, { id: fakeId--, name: yearName, year, type: '' })
-        ++index
-        while (++index < projects.length && projects[index].year === year) { /* nothing */ }
-      }
-      return projects
-    },
-    valueIds() {
-      if (!this.value || (Array.isArray(this.value) && this.value.length === 0)) {
-        return []
-      }
-      const value = this.value
-      if (!Array.isArray(value)) {
-        return [isIdType(value) ? value.id : value]
-      }
-      if (isIdTypeArray(value)) {
-        return value.map((project) => project?.id).filter(id => !!id)
-      } else {
-        return (value as number[] /* TS fails to detect this */).filter(id => !!id)
-      }
-    },
-  },
-  watch: {
-    async value() {
-      if (this.ajaxLoading) {
-        return
-      }
-      this.ajaxLoading = true
-      for (const projectId of this.valueIds) {
-        if (!this.projects[projectId]) {
-          await this.findProjects('' + projectId)
-        }
-      }
-      this.inputValObjects = this.getValueObjects()
-      this.ajaxLoading = false
-    },
-  },
-  mounted() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.ncSelect = (this.$refs!.select! as any).ncSelect
-    this.id = this._uid
-  },
-  methods: {
-    isSelectable(option: Project) {
-      return option.id > 0
-    },
-    getProjectObject(id: number) {
-      return this.projects[id] || { id, name: id, year: -1, type: '' }
-    },
-    getValueObjects() {
-      const result = this.valueIds.map((projectId) => this.getProjectObject(projectId))
-      return this.multiple ? result : (result.length > 0) ? result[0] : undefined
-    },
-    async findProjects(query: string) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await this.appData.searchProjects(query, (error: any, context: object) => this.$emit('error', { error, context }))
-      return true
-    },
-  },
+  }
+  inputValObjects.value = getValueObjects()
+  ajaxLoading.value = false
+})
+
+const select = ref(null)
+
+const instance = getCurrentInstance()?.proxy
+
+onMounted(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ncSelect.value = (select.value! as any).ncSelect
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  id.value = (instance as any)._uid
+})
+
+const isSelectable = (option: Project) => option.id > 0
+
+const getProjectObject = (id: number) => {
+  return projects.value[id] || { id, name: id, year: -1, type: '' }
+}
+
+const getValueObjects = () => {
+  const result = valueIds.value.map((projectId) => getProjectObject(projectId))
+  return props.multiple ? result : (result.length > 0) ? result[0] : undefined
+}
+
+const emit = defineEmits(['error'])
+
+const findProjects = async (query: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await appData.searchProjects(query, <E extends AppError>(error: E) => emit('error', { error, context: error.context }))
+  return true
 }
 </script>
 <style lang="scss">
