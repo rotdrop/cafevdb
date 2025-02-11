@@ -43,9 +43,9 @@ require('cafevdb.scss');
 // ok, this ain't pretty, but unless we really switch to object OOP we
 // need some global state which is accessible in all or most modules.
 
-$.extend(
+Object.assign(
   globalState,
-  $.extend({
+  Object.assign({
     appName,
     toolTipsEnabled: true,
     wysiwygEditor: 'tinymce',

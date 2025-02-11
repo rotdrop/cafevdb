@@ -65,7 +65,14 @@ const PHPMyEditDefault = {
  *
  */
 
-const PHPMyEdit = Object.assign(globalState.PHPMyEdit, PHPMyEditDefault, initialState.PHPMyEdit);
+const PHPMyEdit = Object.assign(
+  globalState.PHPMyEdit,
+  Object.assign(
+    {},
+    PHPMyEditDefault,
+    initialState.PHPMyEdit,
+    globalState.PHPMyEdit, // safe-guard against accidental multipled execution
+  ));
 
 PHPMyEdit.dialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
 
