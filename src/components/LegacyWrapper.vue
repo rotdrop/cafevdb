@@ -134,7 +134,7 @@
 </template>
 <script setup lang="ts">
 import { appName, appPrefix } from '../config.ts'
-import { globalState } from '../app/pme-state.js'
+import globalState from '../app/globalstate.js'
 import {
   nextTick,
   ref,
