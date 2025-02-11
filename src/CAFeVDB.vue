@@ -424,7 +424,6 @@ const isRoot = computed(() => {
 })
 
 const projectMode = computed(() => appData.projectMode)
-const financeAllowed = computed(() => authorized(PERMISSION_FINANCE, globalState.userPermissions))
 const debugOptions = computed(() => {
   const options: DebugOption[] = []
   for (const [value, label] of Object.entries(allDebugOptions)) {
@@ -434,11 +433,13 @@ const debugOptions = computed(() => {
 })
 const pageRowsOptions = computed(() => [-1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
 const personalSettingsUrl = computed(() => nextcloudGenerateUrl('settings/user/' + appId))
-const uploadMaxFileSize = computed(() => globalState.uploadMaxFileSize || 0)
+const uploadMaxFileSize = ref<number>(0)
 const uploadMaxHumanFileSize = computed(() => formatFileSize(uploadMaxFileSize.value))
+const userPermissions = ref<number>(0)
+const financeAllowed = computed(() => authorized(PERMISSION_FINANCE, userPermissions.value))
 const authorizedNavigationItems = computed(() => {
   const items = navigationItems.value.filter(
-    (item: NavigationItem) => (item.permissions === (item.permissions & globalState.userPermissions)),
+    (item: NavigationItem) => (item.permissions === (item.permissions & userPermissions.value)),
   )
   logger.info('FILTERED NAVIGATION ITEMS', { items, globalState })
   return items
@@ -595,9 +596,23 @@ const reactifyGlobalState = function() {
   }
   // reactive(globalState) this alone does not seem to work ...
   logger.debug('AFTER REACTIFY GLOBAL STATE', globalState)
+
+  // due to the async initialization of the globalstate computed
+  // properties cannot work, but watchers do. We can exploit this to
+  // update refs through watchers which in effect is just the same.
+
   orchestraName.value = globalState.orchestra
+  watch(() => globalState.orchestra, (value) => { orchestraName.value = value })
+
+  uploadMaxFileSize.value = globalState.uploadMaxFileSize || 0
+  watch(() => globalState.uploadMaxFileSize, (value) => { uploadMaxFileSize.value = value || 0 })
+
+  userPermissions.value = globalState.userPermissions
+  watch(() => globalState.userPermissions, (value) => { userPermissions.value = value })
 
   updateDebugModes(globalState.debugModes)
+
+  // settings stuff
 
   watch(
     () => globalState.toolTipsEnabled,
@@ -649,6 +664,7 @@ if (!(globalState.initialized && globalState.PHPMyEdit.initialized)) {
   globalState.initialized = globalState.initialized || false
   globalState.PHPMyEdit.initialized = globalState.PHPMyEdit.initialized || false
   reactive(globalState)
+  logger.info('INSTALL WATCHER FOR GLOBAL STATE', Object.assign({}, globalState))
   const stop = watch(
     () => globalState.initialized && globalState.PHPMyEdit.initialized,
     () => {
