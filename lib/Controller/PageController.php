@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use Throwable;
 use OutOfBoundsException;
+use InvalidArgumentException;
 
 use Psr\Log\LoggerInterface;
 
@@ -45,7 +46,7 @@ use OC\AppFramework\Utility\QueryNotFoundException;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\PageRenderer\Blog as BlogRenderer;
+use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
 use OCA\CAFEVDB\PageRenderer\Registration as RendererRegistration;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -69,8 +70,7 @@ class PageController extends Controller
 
   const RENDER_AS_PARTS = 'parts'; // silly name
 
-  const DEFAULT_TEMPLATE = 'projects';
-  const HOME_TEMPLATE = 'home';
+  const DEFAULT_TEMPLATE = PageRenderer\Projects::TEMPLATE;
 
   public const HISTORY_ACTION_LOAD = 'load';
   public const HISTORY_ACTION_PUSH = 'push';
@@ -110,33 +110,12 @@ class PageController extends Controller
   // phpcs:enable
 
   /**
-   * Load the main page of the App.
+   * Unused ATM but keep it around until "remember last page" option has been
+   * revisited and implemented through the Vue frontend.
    *
-   * @return Http\Response
-   *
-   * @NoAdminRequired
-   * @NoGroupMemberRequired
-   * @NoCSRFRequired
-   * @AllowIFrameSelf
-   */
-  public function index():Http\Response
-  {
-    if ($this->parameterService->getParam('history', '') == 'discard') {
-      $this->historyService->save([]);
-      $this->historyService->store();
-      return new Http\RedirectResponse($this->urlGenerator->linkTo($this->appName, ''));
-    }
-    if ($this->shouldLoadHistory()) {
-      return $this->restore(self::RENDER_AS_USER);
-    } else {
-      return $this->remember(self::RENDER_AS_USER);
-    }
-  }
-
-  /**
    * @return bool
    */
-  private function shouldLoadHistory():bool
+  protected function shouldLoadHistory():bool
   {
     if ($this->getUserValue('restorehistory') !== 'on') {
       return false;
@@ -172,7 +151,7 @@ class PageController extends Controller
    * @NoAdminRequired
    * @AllowIFrameSelf
    */
-  private function restore(string $renderAs = 'blank'):Http\Response
+  protected function restore(string $renderAs):Http\Response
   {
     $originalParams = $this->parameterService->getParams();
     $this->parameterService->setParams($this->historyService->fetch());
@@ -198,7 +177,7 @@ class PageController extends Controller
    * @NoAdminRequired
    * @AllowIFrameSelf
    */
-  public function remember(string $renderAs = self::RENDER_AS_USER):Http\Response
+  public function remember(string $renderAs):Http\Response
   {
     $this->historyService->save($this->parameterService->getParams());
     return $this->loader(
@@ -239,8 +218,35 @@ class PageController extends Controller
     mixed $musicianId = null,
     string $historyAction = self::HISTORY_ACTION_PUSH,
   ) {
+    if ($renderAs != self::RENDER_AS_PARTS) {
+      throw new InvalidArgumentException($this->l->t('This controller can no longer serve front-page requests, in may only be accessed by the Vue frontend.'));
+    }
+
     if ($historyAction != self::HISTORY_ACTION_PUSH) {
       $this->logInfo('HISTORY ACTION ' . $historyAction);
+    }
+
+    $template = $this->getTemplate($template, $renderAs);
+    $this->logDebug("Try load template ".$template);
+    /** @var IPageRenderer $renderer */
+    $renderer = $this->appContainer->get(RendererRegistration::TEMPLATE_PREFIX . $template);
+    if (empty($renderer)) {
+      // in principle this cannot happen has the DI container should already
+      // have issued a QueryNotFoundException.
+      throw new Exceptions\Exception(
+        $this->l->t('Template-renderer for template "%s" is empty.', [$template]),
+      );
+    }
+
+    $requiredPermissions = AuthorizationService::PERMISSION_FRONTEND|$renderer->requiredPermissions();
+
+    if (!$this->authorizationService->authorized(null, $requiredPermissions)) {
+      throw new Exceptions\NotAuthorizedException(
+        $this->userId(),
+        $this->authorizationService->getUserPermissions(),
+        $requiredPermissions,
+        $this->l->t('Access to the web frontend was denied for user "%s".', $this->userId()),
+      );
     }
 
     // Initial state injecton for JS
@@ -268,27 +274,6 @@ class PageController extends Controller
     $debugMode    = (int)$this->getConfigValue('debugmode', 0);
 
     $this->toolTipsService->debug(!!($debugMode & ConfigService::DEBUG_TOOLTIPS));
-
-    if (!$this->authorizationService->authorized(null, AuthorizationService::PERMISSION_FRONTEND)) {
-      return $this->templateResponse(
-        'errorpage',
-        [
-          'error' => 'notamember',
-          'userId' => $this->userId(),
-        ],
-        self::RENDER_AS_USER,
-      );
-    };
-
-    $template = $this->getTemplate($template, $renderAs);
-    $this->logDebug("Try load template ".$template);
-    /** @var IPageRenderer $renderer */
-    $renderer = $this->appContainer->get(RendererRegistration::TEMPLATE_PREFIX . $template);
-    if (empty($renderer)) {
-      throw new Exceptions\Exception(
-        $this->l->t("Template-renderer for template `%s' is empty.", [$template]),
-      );
-    }
 
     $templateParameters = [
       'template' => $template,
@@ -338,46 +323,28 @@ class PageController extends Controller
       'pagerows' => $pageRows,
     ];
 
-    if ($renderAs == self::RENDER_AS_PARTS) {
-      $templateParameters['omitEnvelope'] = true;
-      $pageHtml = $this->templateResponse(
-        $template,
-        $templateParameters,
-        self::RENDER_AS_BLANK,
-      )->render();
-      return self::dataResponse([
-        'template' => $template,
-        'defaultTemplateParameters' => $renderer->navigationItem($projectId, $projectName)['templateParameters'],
-        'headerHtml' => $renderer->headerText(), // actually html
-        'bodyHtml' => $pageHtml,
-        'cssPrefix' => $renderer->cssPrefix(),
-        'cssClass' => $renderer->cssClass(),
-        'historyAction' => $historyAction,
-      ]);
-    } else {
-      $response = $this->templateResponse(
-        $template,
-        $templateParameters,
-        $renderAs,
-      );
+    $templateParameters['omitEnvelope'] = true;
+    $pageHtml = $this->templateResponse(
+      $template,
+      $templateParameters,
+      self::RENDER_AS_BLANK,
+    )->render();
 
-      // @todo: we need this only for some site like DokuWiki and CMS
-      $policy = new ContentSecurityPolicy();
-      $policy->addAllowedChildSrcDomain('*');
-      $policy->addAllowedFrameDomain('*');
-      $response->setContentSecurityPolicy($policy);
+    // @todo
+    //
+    // Perhaps should be revived, but this is currently not supported in the frontend.
+    //
+    // $this->historyService->store();
 
-      $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
-    }
-
-    try {
-      $this->historyService->store();
-    } catch (Throwable $t) {
-      // log, but ignore otherwise
-      $this->logException($t);
-    }
-
-    return $response;
+    return self::dataResponse([
+      'template' => $template,
+      'defaultTemplateParameters' => $renderer->navigationItem($projectId, $projectName)['templateParameters'],
+      'headerHtml' => $renderer->headerText(), // actually html
+      'bodyHtml' => $pageHtml,
+      'cssPrefix' => $renderer->cssPrefix(),
+      'cssClass' => $renderer->cssClass(),
+      'historyAction' => $historyAction,
+    ]);
   }
 
   /**
@@ -394,20 +361,20 @@ class PageController extends Controller
     // (i.e. '/') which optionally are replaced by colons (i.e. ':') in order
     // to avoid url en-/decoding. Here we need to convert back to path
     // separators.
-    if ($template != 'maintenance/debug' && !$this->configCheck['summary']) {
-      return 'maintenance/configcheck';
+    if (!$this->configCheck['summary']) {
+      return PageRenderer\ConfigCheck::TEMPLATE;
     }
-    if (empty($template) || $template == self::HOME_TEMPLATE) {
+    if (empty($template)) {
       $template = self::DEFAULT_TEMPLATE;
     }
-    if ($renderAs === self::RENDER_AS_USER) {
-      /** @var BlogRenderer $blogRenderer */
-      $blogRenderer = $this->appContainer->get(BlogRenderer::class);
-      if ($blogRenderer->notificationsPending()) {
-        $template = BlogRenderer::TEMPLATE;
-      }
+
+    /** @var BlogRenderer $blogRenderer */
+    $blogRenderer = $this->appContainer->get(PageRenderer\Blog::class);
+    if ($blogRenderer->notificationsPending()) {
+      $template = PageRenderer\BLOG::TEMPLATE;
     }
     $template = str_replace(':', Constants::PATH_SEP, $template);
+
     return $template;
   }
 }

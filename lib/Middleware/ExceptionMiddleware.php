@@ -81,10 +81,31 @@ class ExceptionMiddleware extends Middleware
       );
       $appRootFolder = $this->appContainer->get(App::APP_ROOT_FOLDER);
       $exceptionMessage = str_replace($appRootFolder, '...', $exceptionMessage);
+
+      $context = [];
+      switch (get_class($originalException)) {
+        case QueryNotFoundException::class:
+          $httpStatusCode = Http::STATUS_NOT_FOUND;
+          break;
+        case Exceptions\NotAuthorizedException::class:
+          /** @var Exceptions\NOtAuthorizedException $originalException */
+          $httpStatusCode = Http::STATUS_UNAUTHORIZED;
+          // @todo: the Vue error-page should compose a useful hint out of
+          // this information.
+          $context['authorization'] = [
+            'userId' => $originalException->getUserId(),
+            'actualPermissions' => $originalException->getActualPermissions(),
+            'requiredPermissions' => $originalException->getRequiredPermissions(),
+          ];
+          break;
+        default:
+          $httpStatusCode = Http::STATUS_INTERNAL_SERVER_ERROR;
+          break;
+      }
+
       $exception = new Exceptions\EnduserNotificationException(
         $exceptionMessage, 0, $originalException,
-        httpStatusCode: ($exception instanceof QueryNotFoundException)
-          ? Http::STATUS_NOT_FOUND : Http::STATUS_INTERNAL_SERVER_ERROR,
+        httpStatusCode: $httpStatusCode,
       );
     }
     $logEntry = $this->logException(

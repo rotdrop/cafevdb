@@ -48,8 +48,14 @@ abstract class AbstractPageRenderer extends Renderer implements IPageRenderer
       'name' => 'templates:navigation:name:' . static::TEMPLATE,
       'tooltip' => 'templates:navigation:tooltips:' . static::TEMPLATE,
       'templateParameters' => [],
-      'permissions' => AuthorizationService::PERMISSION_FRONTEND,
+      'permissions' => static::requiredPermissions(),
     ];
+  }
+
+  /*** {@inheritdoc} */
+  public static function requiredPermissions():int
+  {
+    return AuthorizationService::PERMISSION_FRONTEND;
   }
 
   /*** {@inheritdoc} */

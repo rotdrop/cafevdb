@@ -74,6 +74,9 @@ interface IPageRenderer extends IRenderer
    */
   public static function navigationItem(?int $projectId = null, ?string $projectName = null):array;
 
+  /** A bitwise or of the flags defined in the AuthorizationService class. */
+  public static function requiredPermissions():int;
+
   /**
    * Run underlying table-manager (phpMyEdit for now).
    *

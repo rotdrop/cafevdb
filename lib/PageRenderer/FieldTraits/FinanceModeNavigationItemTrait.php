@@ -40,7 +40,13 @@ trait FinanceModeNavigationItemTrait
     return array_merge(
       parent::navigationItem($projectId, $projectName), [
         'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
-        'permissions' => AuthorizationService::PERMISSION_FRONTEND|AuthorizationService::PERMISSION_FINANCE,
+        'permissions' => static::requiredPermissions(),
       ]);
+  }
+
+  /*** {@inheritdoc} */
+  public static function requiredPermissions():int
+  {
+    return AuthorizationService::PERMISSION_FRONTEND|AuthorizationService::PERMISSION_FINANCE;
   }
 }
