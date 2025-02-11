@@ -56,127 +56,84 @@
     </template>
   </SelectWithSubmitButton>
 </template>
-<script lang="ts">
+<script setup lang="ts">
+import {
+  computed,
+  ref,
+  watch,
+} from 'vue'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
-import groupInfoPopup from '../mixins/user-info-popup.ts'
-import consoleMixin from '../mixins/console.ts'
-import l10nMixin from '../mixins/l10n.ts'
+import type { NcSelect } from '@nextcloud/vue'
+import { translate as t } from '@nextcloud/l10n'
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
 import type { CloudGroup } from '../stores/cloud-users-groups.ts'
+import { groupInfoPopup } from '../util/user-info-popup.ts'
+import { storeToRefs } from 'pinia'
 
 type ValueObject = CloudGroup | { id: string, displayname: string }
 
-export default {
-  name: 'SettingsSelectGroup',
-  components: {
-    SelectWithSubmitButton,
-    NcEllipsisedOption,
-  },
-  mixins: [
-    groupInfoPopup,
-    consoleMixin,
-    l10nMixin,
-  ],
-  inheritAttrs: false,
-  props: {
-    label: {
-      type: String,
-      required: true,
-    },
-    hint: {
-      type: String,
-      default: '',
-    },
-    value: {
-      type: String,
-      default: '',
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
+const props = withDefaults(
+  defineProps<{
+    label: string,
+    hint?: string,
+    value?: string
+    disabled?: boolean,
     // clearable allows deselection of the last item
-    clearable: {
-      type: Boolean,
-      default: true,
-    },
+    clearable?: boolean
     // required blocks the final submit if no value is selected
-    required: {
-      type: Boolean,
-      default: false,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    loadingIndicator: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  setup() {
-    const store = useCloudUsersGroupsStore()
-    return { store, groups: store.groups }
-  },
-  data() {
-    return {
-      inputValObject: null as null|ValueObject,
-      ajaxLoading: false,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ncSelect: null as any,
-    }
-  },
-  computed: {
-    isLoading() {
-      return (this.loading || this.ajaxLoading) && this.loadingIndicator
-    },
-    groupsArray() {
-      return Object.values(this.groups)
-    },
-    groupId() {
-      return this.inputValObject?.id || ''
-    },
-  },
-  watch: {
-    /**
-     * This watcher catches changed property values and promotes the
-     * changed value to the wrapped select.
-     *
-     * @param newValue New GID set from outside
-     */
-    async value(newValue) {
-      if (this.ajaxLoading) {
-        return
-      }
-      if (!newValue) {
-        this.inputValObject = null
-        return
-      }
-      this.ajaxLoading = true
-      this.inputValObject = await this.getGroupObject(newValue)
-      this.ajaxLoading = false
-    },
-  },
-  mounted() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.ncSelect = (this.$refs!.select! as any).ncSelect
-  },
-  methods: {
-    reduceGroup: (group: ValueObject) => group.id,
-    async getGroupObject(id: string) {
-      return (await this.getGroup(id)) || { id, displayname: id }
-    },
-    getGroup(groupId: string) {
-      return this.store.getGroup(groupId, this.errorHandler)
-    },
-    findGroups(query: string) {
-      return this.store.findGroups(query, this.errorHandler)
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    errorHandler<T extends Error>(error: T | any) {
-      this.$emit('error', error)
-    },
-  },
-}
+    required?: boolean
+    loading?: boolean,
+    loadingIndicator?: boolean,
+  }>(), {
+    hint: '',
+    value: '',
+    disabled: false,
+    clearable: true,
+    required: false,
+    loading: false,
+    loadingIndicator: true,
+  })
+
+const store = useCloudUsersGroupsStore()
+const { groups } = storeToRefs(store)
+
+const inputValObject = ref<undefined|ValueObject>(undefined)
+const ajaxLoading = ref(false)
+
+const isLoading = computed(() => (props.loading || ajaxLoading.value) && props.loadingIndicator)
+const groupsArray = computed(() => Object.values(groups.value))
+
+/**
+ * This watcher catches changed property values and promotes the
+ * changed value to the wrapped select.
+ *
+ * @param newValue New GID set from outside
+ */
+watch(() => props.value, async (newValue) => {
+  if (ajaxLoading.value) {
+    return
+  }
+  if (!newValue) {
+    inputValObject.value = undefined
+    return
+  }
+  ajaxLoading.value = true
+  inputValObject.value = await getGroupObject(newValue)
+  ajaxLoading.value = false
+})
+
+const emit = defineEmits([
+  'error',
+])
+
+const reduceGroup = (group: ValueObject) => group.id
+const getGroupObject = async (id: string) => { return (await getGroup(id)) || { id, displayname: id } }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const errorHandler = <T extends Error>(error: T | any) => emit('error', error)
+const getGroup = (groupId: string) => store.getGroup(groupId, errorHandler)
+const findGroups = (query: string) => store.findGroups(query, errorHandler)
+
+const select = ref<null|typeof SelectWithSubmitButton>(null)
+const ncSelect = computed(() => select.value?.ncSelect as (typeof NcSelect|null))
 </script>

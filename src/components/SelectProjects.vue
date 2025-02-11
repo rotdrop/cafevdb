@@ -37,7 +37,7 @@
                           :multiple="multiple"
                           :clear-action="(!clearable && clearAction) || (multiple && clearAction)"
                           v-on="$listeners"
-                          @search="(query) => findProjects(query)"
+                          @search="findProjects"
   />
 </template>
 <script setup lang="ts">
@@ -48,8 +48,6 @@ import useAppDataStore from '../stores/app-data.ts'
 import { storeToRefs } from 'pinia'
 import {
   computed,
-  getCurrentInstance,
-  onMounted,
   ref,
   watch,
 } from 'vue'
@@ -98,7 +96,6 @@ const { projects } = storeToRefs(appData)
 const inputValObjects = ref<undefined | Project | Project[]>([])
 const ajaxLoading = ref(false)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ncSelect = ref<any>(undefined)
 const id = ref<null|string>(null)
 
 const isLoading = computed(() => (props.loading || ajaxLoading.value) && props.loadingIndicator)
@@ -171,15 +168,6 @@ watch(() => props.value, async () => {
 })
 
 const select = ref(null)
-
-const instance = getCurrentInstance()?.proxy
-
-onMounted(() => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ncSelect.value = (select.value! as any).ncSelect
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  id.value = (instance as any)._uid
-})
 
 const isSelectable = (option: Project) => option.id > 0
 

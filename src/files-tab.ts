@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,12 +21,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
+import { appName } from './config.ts';
+import Vue from 'vue';
+import { createPinia, PiniaVuePlugin } from 'pinia';
+import { Tooltip } from '@nextcloud/vue';
+import FilesTab from './views/FilesTab.vue';
+import type { LegacyFileInfo } from '@nextcloud/files';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 
-const mixin = {
-  inject: { appId: { default: appName, from: 'appId' } },
-  methods: { t, n },
-};
+interface FilesTabVue extends Vue {
+  update(fileInfo: LegacyFileInfo): Promise<unknown>,
+}
 
-export default mixin;
+Vue.mixin({ data() { return { appName } }, methods: { t, n } });
+Vue.directive('tooltip', Tooltip);
+Vue.use(PiniaVuePlugin);
+
+const FilesTabVue = Vue.extend(FilesTab);
+const pinia = createPinia();
+
+const createTabInstance = (parent: Vue):FilesTabVue => new FilesTabVue({ parent, pinia })
+
+export default createTabInstance;

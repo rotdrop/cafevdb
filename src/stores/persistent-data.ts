@@ -23,11 +23,12 @@
 
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import type { Musician } from '../types/address-book.d.ts'
 
 export const usePersistentDataStore = defineStore('parsistent-data', () => {
 
   // set of already loaded selectable musicians
-  const selectMusicians = ref({});
+  const selectMusicians = ref<Record<string, Record<number, Record<number, Musician> > > >({})
 
   return { selectMusicians };
 });

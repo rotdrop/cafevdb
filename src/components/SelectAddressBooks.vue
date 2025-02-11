@@ -39,15 +39,19 @@
                           v-on="$listeners"
   />
 </template>
-<script lang="ts">
-import { set as vueSet } from 'vue'
+<script setup lang="ts">
+import {
+  computed,
+  onBeforeMount,
+  ref,
+  set as vueSet,
+} from 'vue'
 import axios from '@nextcloud/axios'
 import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.js'
 import { getInitialState } from '../services/initial-state-service.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
-import consoleMixin from '../mixins/console.ts'
-import l10nMixin from '../mixins/l10n.ts'
 import type { AddressBook } from '../types/address-book.d.ts'
+import Console from '../util/console.ts'
 
 interface InitialState {
   contacts: {
@@ -55,154 +59,121 @@ interface InitialState {
   },
 }
 
-export default {
-  name: 'SelectAddressBooks',
-  components: {
-    SelectWithSubmitButton,
+const COMPONENT_NAME = 'SelectAddressBooks'
+const logger = new Console(COMPONENT_NAME)
+
+const props = withDefaults(
+  defineProps<{
+    multiple: boolean,
+    label: string,
+    value?: number|string|AddressBook|AddressBook[],
+    placeholder?: string,
+    loading?: boolean,
+    loadingIndicator?: boolean,
+    clearable?: boolean,
+    clearAction?: boolean,
+    resetAction?: boolean,
+    submitButton?: boolean,
+    noUndefined?: boolean,
+  }>(), {
+    multiple: true,
+    value: () => [],
+    placeholder: undefined,
+    loading: false,
+    loadingIndicator: true,
+    clearable: true,
+    clearAction: true,
+    resetAction: true,
+    submitButton: false,
+    noUndefined: false,
   },
-  mixins: [
-    consoleMixin,
-    l10nMixin,
-  ],
-  inheritAttrs: false,
-  props: {
-    multiple: {
-      type: Boolean,
-      default: true,
-    },
-    label: {
-      type: String,
-      required: true,
-    },
-    value: {
-      type: [Array, String, Object, Number],
-      default: () => [],
-    },
-    placeholder: {
-      type: String,
-      default: undefined,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    loadingIndicator: {
-      type: Boolean,
-      default: true,
-    },
-    clearable: {
-      type: Boolean,
-      default: true,
-    },
-    clearAction: {
-      type: Boolean,
-      default: true,
-    },
-    resetAction: {
-      type: Boolean,
-      default: true,
-    },
-    submitButton: {
-      type: Boolean,
-      default: false,
-    },
-    noUndefined: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data() {
-    return {
-      inputValObjects: undefined as undefined|AddressBook|AddressBook[],
-      initialValObjects: [] as AddressBook|AddressBook[],
-      addressBooks: {} as Record<string|number, AddressBook>,
-      ajaxLoading: true,
-      active: false,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ncSelect: null as any,
-      id: null,
-    }
-  },
-  computed: {
-    addressBooksArray() {
-      return Object.values(this.addressBooks)
-    },
-    isLoading() {
-      return (this.loading || this.ajaxLoading) && this.loadingIndicator
-    },
-  },
-  async created() {
-    const initialState: InitialState = getInitialState()
-    if (initialState.contacts && initialState.contacts.addressBooks) {
-      this.addressBooks = initialState.contacts.addressBooks
-      // console.info('ADDRESSBOOKS FROM STATE', this.addressBooks)
-    } else {
-      await this.provideAddressBooks()
-      // console.info('ADDRESSBOOKS FROM AJAX', this.addressBooks)
-    }
-    this.$emit('update:address-books', this.addressBooks)
-    if (Array.isArray(this.value) && this.value.length === 0) {
-      // pre-select all non-system address-books if no initial value is provided
-      this.inputValObjects = Object.values(this.addressBooks).filter((book) => !book.isSystemAddressBook)
-      // this is needed as the wrapped select only emits input events
-      // when it is changed through user interaction (in general)
-      this.emitInput(this.inputValObjects)
-    } else {
-      this.inputValObjects = this.getValueObject(this.noUndefined)
-    }
-    if (this.resetAction) {
-      this.initialValObjects = this.inputValObjects || []
-    }
-    this.ajaxLoading = false
-  },
-  mounted() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.ncSelect = (this.$refs!.select! as any).ncSelect
-    this.id = this._uid
-  },
-  methods: {
-    emitInput(value: undefined|AddressBook|AddressBook[]) {
-      this.info('EMIT INPUT', value)
-      this.$emit('input', value)
-    },
-    getValueObject(noUndefined: boolean) {
-      const value = Array.isArray(this.value) ? this.value : (this.value || this.value === 0 ? [this.value] : [])
-      let everybody = false
-      let result = value.filter((addressBook) => addressBook !== '' && typeof addressBook !== 'undefined').map(
-        (addressBook) => {
-          const key: string|number = addressBook.key !== undefined ? addressBook.key : (addressBook.UID || addressBook.URI || addressBook)
-          if (key === 0) {
-            everybody = true
-          }
-          if (typeof this.addressBooks[key] === 'undefined') {
-            return noUndefined ? null : { key, uid: key as string, displayName: key as string }
-          }
-          return this.addressBooks[key]
-        },
-      ).filter((addressBook) => addressBook !== null && addressBook !== undefined)
-      if (this.multiple) {
-        if (everybody) {
-          result = [this.addressBooks[0]]
-        }
-        for (const [addressBookKey, addressBook] of Object.entries(this.addressBooks)) {
-          if (addressBookKey !== '0') {
-            addressBook.$isDisabled = everybody
-          }
-        }
+)
+
+const inputValObjects = ref<undefined | AddressBook | AddressBook[]>(undefined)
+const initialValObjects = ref<AddressBook | AddressBook[]>([])
+const addressBooks = ref<Record<string | number, AddressBook> >({})
+const ajaxLoading = ref(true)
+
+const addressBooksArray = computed(() => Object.values(addressBooks.value))
+const isLoading = computed(() => (props.loading || ajaxLoading.value) && props.loadingIndicator)
+
+const emit = defineEmits([
+  'error',
+  'input',
+  'update:address-books',
+])
+
+onBeforeMount(async () => {
+  const initialState: InitialState = getInitialState()
+  if (initialState.contacts && initialState.contacts.addressBooks) {
+    addressBooks.value = initialState.contacts.addressBooks
+    // logger.info('ADDRESSBOOKS FROM STATE', addressBooks.value)
+  } else {
+    await provideAddressBooks()
+    // logger.info('ADDRESSBOOKS FROM AJAX', addressBooks.value)
+  }
+  emit('update:address-books', addressBooks.value)
+  if (Array.isArray(props.value) && props.value.length === 0) {
+    // pre-select all non-system address-books if no initial value is provided
+    inputValObjects.value = Object.values(addressBooks.value).filter((book) => !book.isSystemAddressBook)
+    // this is needed as the wrapped select only emits input events
+    // when it is changed through user interaction (in general)
+    emitInput(inputValObjects.value)
+  } else {
+    inputValObjects.value = getValueObject(props.noUndefined)
+  }
+  if (props.resetAction) {
+    initialValObjects.value = inputValObjects.value || []
+  }
+  ajaxLoading.value = false
+})
+
+const select = ref(null)
+
+const emitInput = (value: undefined|AddressBook|AddressBook[]) => {
+  logger.info('EMIT INPUT', value)
+  emit('input', value)
+}
+
+const getValueObject = (noUndefined: boolean) => {
+  const value = Array.isArray(props.value) ? props.value : (props.value || props.value === 0 ? [props.value] : [])
+  let everybody = false
+  let result = value.filter((addressBook) => !!addressBook).map(
+    (addressBook) => {
+      const key = typeof addressBook === 'string' || typeof addressBook === 'number'
+        ? addressBook
+        : addressBook.key || addressBook.uid || addressBook.uri!
+      if (key === 0) {
+        everybody = true
       }
-      return this.multiple ? result : (result.length > 0) ? result[0] : undefined
-    },
-    async provideAddressBooks() {
-      try {
-        const response = await axios.get(generateAppUrl('contacts/address-books'))
-        for (const [key, book] of Object.entries(response.data)) {
-          vueSet(this.addressBooks, key, book)
-        }
-        // console.info('ADDRESSBOOKS', this.addressBooks)
-      } catch (error) {
-        this.$emit('error', error)
+      if (typeof addressBooks.value[key] === 'undefined') {
+        return noUndefined ? null : { key, uid: key as string, displayName: key as string }
       }
+      return addressBooks.value[key]
     },
-  },
+  ).filter((addressBook) => addressBook !== null && addressBook !== undefined)
+  if (props.multiple) {
+    if (everybody) {
+      result = [addressBooks.value[0]]
+    }
+    for (const [addressBookKey, addressBook] of Object.entries(addressBooks.value)) {
+      if (addressBookKey !== '0') {
+        addressBook.$isDisabled = everybody
+      }
+    }
+  }
+  return props.multiple ? result : (result.length > 0) ? result[0] : undefined
+}
+
+const provideAddressBooks = async () => {
+  try {
+    const response = await axios.get(generateAppUrl('contacts/address-books'))
+    for (const [key, book] of Object.entries(response.data)) {
+      vueSet(addressBooks.value, key, book)
+    }
+    // logger.info('ADDRESSBOOKS', addressBooks.value)
+  } catch (error) {
+    emit('error', error)
+  }
 }
 </script>

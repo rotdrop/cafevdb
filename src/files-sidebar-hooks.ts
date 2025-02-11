@@ -26,8 +26,8 @@ import { getInitialState } from './services/initial-state-service.ts';
 import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
 import { translate as t } from '@nextcloud/l10n';
-// eslint-disable-next-line
 import logoSvg from '../img/cafevdb.svg?raw';
+import type { LegacyFileInfo } from '@nextcloud/files'
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken() || '');
@@ -35,15 +35,13 @@ __webpack_nonce__ = btoa(getRequestToken() || '');
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', '');
 
-interface LegacyFileInfo {
-  mimetype: string,
-  path: string,
-  isDirectory(): boolean,
+interface FilesTab extends Vue {
+  update(fileInfo: LegacyFileInfo): Promise<unknown>,
 }
 
 let OCA = window.OCA;
 
-let TabInstance = null;
+let TabInstance: undefined|FilesTab = undefined;
 
 if (!OCA.CAFEVDB) {
   OCA.CAFEVDB = {};
@@ -94,36 +92,28 @@ window.addEventListener('DOMContentLoaded', () => {
       name: t(appName, 'MailMerge'),
       iconSvg: logoSvg,
       enabled: enableTemplateActions,
-
-      async mount(el, fileInfo: LegacyFileInfo, context) {
-        const FilesTabAsset = (await import('./views/FilesTab.vue'));
-        const Vue = FilesTabAsset.Vue;
-        const pinia = FilesTabAsset.pinia;
-        const FilesTab = (await import('./views/FilesTab.vue')).default;
-        const View = Vue.extend(FilesTab);
+      async mount<VueType extends Vue>(el: HTMLElement, fileInfo: LegacyFileInfo, context: VueType) {
+        const FilesTabAsset = (await import('./files-tab.ts'));
+        const factory = FilesTabAsset.default;
 
         if (TabInstance) {
           TabInstance.$destroy();
         }
 
-        TabInstance = new View({
-          // Better integration with vue parent component
-          parent: context,
-          pinia,
-        });
+        TabInstance = factory(context)
 
         // Only mount after we hahve all the info we need
         await TabInstance.update(fileInfo);
         TabInstance.$mount(el);
       },
-      update(fileInfo) {
-        TabInstance.update(fileInfo);
+      update(fileInfo: LegacyFileInfo) {
+        TabInstance!.update(fileInfo);
       },
       destroy() {
-        if (TabInstance !== null) {
+        if (TabInstance !== undefined) {
           TabInstance.$destroy();
         }
-        TabInstance = null;
+        TabInstance = undefined;
       },
     }));
   }

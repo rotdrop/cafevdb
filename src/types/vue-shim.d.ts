@@ -63,6 +63,11 @@ declare module '@nextcloud/vue' {
   const NcListItemIcon: Vue;
   const NcProgressBar: Vue;
   const NcRichText: Vue;
+  const NcSelect : Vue & {
+    localLabel: string;
+    search: string;
+  };
+
   const NcSettingsSection: Vue;
 
   const NcTextField: Vue & {
@@ -105,6 +110,7 @@ declare module '@nextcloud/vue' {
     NcListItemIcon,
     NcProgressBar,
     NcRichText,
+    NcSelect,
     NcSettingsSection,
     NcTextField,
     Tooltip,

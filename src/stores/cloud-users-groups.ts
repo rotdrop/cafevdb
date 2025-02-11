@@ -40,6 +40,7 @@ export type CloudUser = {
   backend: string,
   lastLogin: number,
   groups: string[],
+  email: string,
   // ... and more but we don't need more ...
 }
 

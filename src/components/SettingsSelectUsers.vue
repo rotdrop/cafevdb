@@ -70,124 +70,94 @@
   </SelectWithSubmitButton>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { appName } from '../config.ts'
+import {
+  computed,
+  ref,
+  watch,
+} from 'vue'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import { NcListItemIcon } from '@nextcloud/vue'
+import type { NcSelect } from '@nextcloud/vue'
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
-import userInfoPopup from '../mixins/user-info-popup.ts'
-import consoleMixin from '../mixins/console.ts'
-import l10nMixin from '../mixins/l10n.ts'
-import type { PropType } from 'vue'
+import { userInfoPopup } from '../util/user-info-popup.ts'
 import type { CloudUser } from '../stores/cloud-users-groups.ts'
+import { storeToRefs } from 'pinia'
 
 type ValueObject = CloudUser | { id: string, displayname: string }
 
-export default {
-  name: 'SettingsSelectUsers',
-  components: {
-    SelectWithSubmitButton,
-    NcListItemIcon,
+const props = withDefaults(
+  defineProps<{
+    label: string,
+    value?: string[],
+    disabled?: boolean,
+    loading?: boolean,
+    loadingIndicator?: boolean,
+  }>(), {
+    value: () => [],
+    disabled: false,
+    loading: false,
+    loadingIndicator: true,
   },
-  mixins: [
-    userInfoPopup,
-    consoleMixin,
-    l10nMixin,
-  ],
-  inheritAttrs: false,
-  props: {
-    label: {
-      type: String,
-      required: true,
-    },
-    value: {
-      type: Array as PropType<string[]>,
-      default: () => [],
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    loadingIndicator: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  setup() {
-    const store = useCloudUsersGroupsStore()
-    return { store, users: store.users }
-  },
-  data() {
-    return {
-      inputValObjects: [] as string[],
-      ajaxLoading: false,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ncSelect: null as any,
+)
+
+const store = useCloudUsersGroupsStore()
+const { users } = storeToRefs(store)
+
+const inputValObjects = ref<string[]>([])
+const ajaxLoading = ref(false)
+
+const isLoading = computed(() => (props.loading || ajaxLoading.value) && props.loadingIndicator)
+const usersArray = computed(() => Object.values(users.value))
+
+watch(() => props.value, async (newValue) => {
+  if (ajaxLoading.value) {
+    return
+  }
+  if (newValue.length === 0) {
+    inputValObjects.value = []
+    return
+  }
+  ajaxLoading.value = true
+  for (const userId of newValue) {
+    if (!users.value[userId]) {
+      await findUsers(userId)
     }
-  },
-  computed: {
-    isLoading() {
-      return (this.loading || this.ajaxLoading) && this.loadingIndicator
-    },
-    usersArray() {
-      return Object.values(this.users)
-    },
-  },
-  watch: {
-    async value(newValue) {
-      if (this.ajaxLoading) {
-        return
-      }
-      if (newValue.length === 0) {
-        this.inputValObjects = []
-        return
-      }
-      this.ajaxLoading = true
-      for (const userId of newValue) {
-        if (!this.users[userId]) {
-          await this.findUsers(userId)
-        }
-      }
-      this.inputValObjects = await this.getValueObjects()
-      this.ajaxLoading = false
-    },
-  },
-  mounted() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.ncSelect = (this.$refs!.select! as any).ncSelect
-  },
-  methods: {
-    reduceUser: (user: ValueObject) => user.id,
-    async getUserObject(userId: string): Promise<ValueObject> {
-      return (await this.getUser(userId)) || { id: userId, displayname: userId }
-    },
-    /**
-     * Take the current value, fetch the users and again return the
-     * same value (array of uids) in most cases. The idea is to fetch
-     * the meta-info for each selected user in order to have a nice
-     * display in the UI, including meta-info.
-     */
-    async getValueObjects() {
-      const validValues: string[] = this.value.filter((userId) => userId !== '' && typeof userId !== 'undefined')
-      const result: ValueObject[] = []
-      for (const userId of validValues) {
-        result.push(await this.getUserObject(userId))
-      }
-      return result.map((user) => user.id)
-    },
-    getUser(userId: string) {
-      return this.store.getUser(userId, this.errorHandler)
-    },
-    findUsers(query: string) {
-      return this.store.findUsers(query, this.errorHandler)
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    errorHandler<T extends Error>(error: T | any) {
-      this.$emit('error', error)
-    },
-  },
+  }
+  inputValObjects.value = await getValueObjects()
+  ajaxLoading.value = false
+})
+
+const reduceUser = (user: ValueObject) => user.id
+const getUserObject = async (userId: string): Promise<ValueObject> => {
+  return (await getUser(userId)) || { id: userId, displayname: userId }
 }
+
+/**
+ * Take the current value, fetch the users and again return the
+ * same value (array of uids) in most cases. The idea is to fetch
+ * the meta-info for each selected user in order to have a nice
+ * display in the UI, including meta-info.
+ */
+const getValueObjects = async () => {
+  const validValues: string[] = props.value.filter((userId) => userId !== '' && typeof userId !== 'undefined')
+  const result: ValueObject[] = []
+  for (const userId of validValues) {
+    result.push(await getUserObject(userId))
+  }
+  return result.map((user) => user.id)
+}
+
+const emit = defineEmits([
+  'error',
+])
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const errorHandler = <T extends Error>(error: T | any) => emit('error', error)
+const getUser = (userId: string) => store.getUser(userId, errorHandler)
+const findUsers = (query: string) => store.findUsers(query, errorHandler)
+
+const select = ref<null|typeof SelectWithSubmitButton>(null)
+const ncSelect = computed(() => select.value?.ncSelect as (typeof NcSelect|null))
 </script>
