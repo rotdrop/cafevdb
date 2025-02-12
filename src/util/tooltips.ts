@@ -24,6 +24,7 @@
 import axios from '@nextcloud/axios';
 import generateAppUrl from '../toolkit/util/generate-url.js';
 import Console from './console.js';
+import type { AxiosResponse } from 'axios';
 
 export const logger = new Console('TOOLTIPS');
 
@@ -40,7 +41,7 @@ export const tooltip = async (key: string) => {
 
 export const tooltips =  async (keys: string[]) => {
   try {
-    const response = await axios.get(generateAppUrl('tooltips'), {
+    const response: AxiosResponse<Record<string, string> > = await axios.get(generateAppUrl('tooltips'), {
       params: {
         unescaped: true,
         keys,
@@ -50,6 +51,6 @@ export const tooltips =  async (keys: string[]) => {
     return response.data;
   } catch (e) {
     logger.error('ERROR FETCHING TOOLTIPS', e, keys);
-    return {};
+    return {} as Record<string, string>;
   }
 };
