@@ -41,6 +41,11 @@ export interface GlobalState {
   expertMode: boolean,
   restoreHistory: boolean,
 
+  currencyCode: string,
+  currencySymbol: string,
+  locale: string,
+  cloudLanguage: string,
+
   initialized?: boolean,
 }
 

@@ -38,6 +38,7 @@
                @closed="closeMenu"
     >
       <NcActionCaption v-if="showProjectName"
+                       class="project-actions project-name"
                        :name="projectName"
       />
       <NcActionSeparator v-if="showProjectName" />
@@ -134,7 +135,7 @@
                       @click="closeMenu"
       >
         <template #icon>
-          <SepaBankAccountsIcon />
+          <span class="font-currency-symbol">{{ globalState.currencySymbol }}</span>
         </template>
       </NcActionRouter>
       <NcActionLink v-tooltip="tooltips['project-action:financial-balance']"
@@ -172,6 +173,7 @@ import ProjectNotesIcon from 'vue-material-design-icons/MessageBulleted.vue'
 import ProjectEmailIcon from 'vue-material-design-icons/EmailArrowRight.vue'
 import ProjectEventsIcon from 'vue-material-design-icons/Calendar.vue'
 import SepaBankAccountsIcon from 'vue-material-design-icons/BankTransfer.vue'
+// import ProjectPaymentsIcon from 'vue-material-design-icons/CurrencyEur.vue' // Mmmh. l10n?
 
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
 import { PROJECT_ACTIONS } from '../event-bus-events.ts'
@@ -469,14 +471,24 @@ onMounted(() => {
       overflow: hidden;
     }
   }
-  .app-navigation-caption {
-    font-weight: bold;
-    color: blue;
-    font-style: italic;
-    text-align: center;
-    display: inline-block;
-    margin: auto;
-    // width: 100%;
-  }
+}
+</style>
+<style lang="scss">
+.project-actions.project-name.app-navigation-caption {
+  font-weight: bold;
+  color: blue;
+  font-style: italic;
+  text-align: center;
+  display: inline-block;
+  margin: auto;
+  width: 100%;
+  padding: 0;
+}
+.font-currency-symbol {
+  display: inline-block;
+  width: var(--default-clickable-area);
+  height: var(--default-clickable-area);
+  text-align: center;
+  font-size: x-large;
 }
 </style>
