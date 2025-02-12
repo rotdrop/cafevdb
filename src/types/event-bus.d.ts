@@ -26,6 +26,7 @@ import { jqXHR } from '@types/jquery/misc.d.ts';
 
 import {
   APP_SETTINGS_POPUP,
+  EMAIL_POPUP,
   GET_VUE_COMPONENT,
   LEGACY_AJAX_ERROR,
   LEGACY_BACK_REQUEST,
@@ -35,6 +36,7 @@ import {
   LEGACY_PME_HISTORY_UPDATE,
   POP_BUSY_STATE,
   PROJECT_ACTIONS,
+  PROJECT_EVENTS_POPUP,
   PUSH_BUSY_STATE,
   SET_BUSY_FLAG,
   SET_DEBUG_MODES,
@@ -85,6 +87,8 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [LEGACY_PME_HISTORY_UPDATE]: { post: TemplatePostData, htmlBody: string, action: string, },
     [POP_BUSY_STATE]: undefined,
     [PROJECT_ACTIONS]: { projectId: number, open: boolean, x?: number, y?: number },
+    [PROJECT_EMAIL_POPUP]: { projectId: number, projectName?: string, reopen?: boolean },
+    [PROJECT_EVENTS_POPUP]: { projectId: number, projectName?: string, reopen?: boolean },
     [PUSH_BUSY_STATE]: undefined,
     [SET_BUSY_FLAG]: { value: boolean },
     [WIKI_POPUP]: { wikiPage: string, popupTitle: string },

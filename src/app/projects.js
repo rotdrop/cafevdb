@@ -31,7 +31,6 @@ import { templateRenderer } from './template-renderer.js';
 import pageBusyIcon from './busy-icon.js';
 import * as Dialogs from './dialogs.js';
 import * as Notification from './notification.js';
-import { showError, /* showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import * as Events from './events.js';
 import * as Email from './email.js';
 import {
@@ -44,7 +43,6 @@ import {
   idSelector as pmeIdSelector,
 } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
-import * as ncRouter from '@nextcloud/router';
 import * as SelectUtils from './select-utils.js';
 import wikiPopup from './wiki-popup.js';
 import setBusyIndicators from './busy-indicators.js';
@@ -91,7 +89,14 @@ asyncSubscribe(BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP, async (event) => {
 asyncSubscribe(BusEvents.PROJECT_EVENTS_POPUP, async (event) => {
   console.info('EVENT', event);
   asyncEmit(BusEvents.PUSH_BUSY_STATE);
-  await eventsPopup(event);
+  await eventsPopup(event, event.reopen);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
+});
+
+asyncSubscribe(BusEvents.PROJECT_EMAIL_POPUP, async (event) => {
+  console.info('EVENT', event);
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
+  await emailPopup(event, event.reopen);
   asyncEmit(BusEvents.POP_BUSY_STATE);
 });
 
@@ -268,174 +273,98 @@ const projectViewPopup = async function(containerSel, post) {
   await PHPMyEdit.tableDialogOpen(tableOptions);
 };
 
-/**
- * Handle the project-actions menu
- *
- * @param {jQuery} $menuItem TBD.
- *
- * @param {string} containerSel CSS-selector for the surround page container.
- */
-const handleProjectActions = function($menuItem, containerSel) {
-  const operation = $menuItem.data('operation');
-  if (!operation) {
-    return;
-  }
-  const $dropDownContainer = $menuItem.closest('.dropdown-container');
-  const postData = {
-    projectId: $dropDownContainer.data('projectId'),
-    projectName: $dropDownContainer.data('projectName'),
-  };
-
-  switch (operation) {
-  case 'infopage':
-    projectViewPopup(containerSel, postData);
-    break;
-  case 'project-participants':
-  case 'sepa-bank-accounts':
-  case 'project-payments':
-    postData.template = operation;
-    CAFEVDB.formSubmit('', $.param(postData), 'post');
-    break;
-  case 'instrumentation-numbers':
-    instrumentationNumbersPopup(containerSel, postData);
-    break;
-  case 'participant-fields':
-    participantFieldsPopup(containerSel, postData);
-    break;
-  case 'files':
-  case 'financial-balance': {
-    const url = ncRouter.linkTo('files', 'index.php');
-    const path = $menuItem.data('projectFiles');
-    console.info('PATH URL', url, path);
-    CAFEVDB.formSubmit(url, $.param({ dir: path }), 'get');
-    break;
-  }
-  case 'wiki':
-    postData.wikiPage = $menuItem.data('wikiPage');
-    postData.popupTitle = $menuItem.data('wikiTitle');
-    wikiPopup(postData);
-    break;
-  case 'events':
-    eventsPopup(postData);
-    break;
-  case 'email':
-    emailPopup(postData, true);
-    break;
-  default:
-    showError(t(appName, 'Unknown operation: {operation}', { operation }), { timeout: TOAST_PERMANENT_TIMEOUT });
-    return;
-  }
-  $.fn.cafevTooltip.remove();
-  CAFEVDB.snapperClose();
-};
-
 const actionMenu = async function(containerSel) {
   console.info('PROJECT CONTAINER SELECTOR', containerSel);
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
 
-  if (globalState.vueMode) {
-    const generateVueMenu = async ($actionMenu) => {
-      const projectId = $actionMenu.data('projectId');
-      const projectName = $actionMenu.data('projectName');
-      const eventBusResult = await asyncEmit(BusEvents.GET_VUE_COMPONENT, {
-        name: PROJECT_ACTIONS_MENU,
-        propsData: {
-          projectId,
-          projectName,
-          enableOverviewItem: $container.find(pmeFormSelector).hasClass(pmeToken('list')),
-        },
-      });
-      if (!Array.isArray(eventBusResult)
-          || eventBusResult.length !== 1
-          || typeof eventBusResult[0].value !== 'object') {
-        throw new Error(t(appName, 'Unable to create project actions menu'));
+  const generateVueMenu = async ($actionMenu) => {
+    const projectId = $actionMenu.data('projectId');
+    const projectName = $actionMenu.data('projectName');
+    const eventBusResult = await asyncEmit(BusEvents.GET_VUE_COMPONENT, {
+      name: PROJECT_ACTIONS_MENU,
+      propsData: {
+        projectId,
+        projectName,
+        enableOverviewItem: $container.find(pmeFormSelector).hasClass(pmeToken('list')),
+      },
+    });
+    if (!Array.isArray(eventBusResult)
+        || eventBusResult.length !== 1
+        || typeof eventBusResult[0].value !== 'object') {
+      throw new Error(t(appName, 'Unable to create project actions menu'));
+    }
+    const vueMenu = eventBusResult[0].value;
+    console.info('AFTER CREATE NEW MENU', vueMenu);
+    $actionMenu.data('vueMenu', vueMenu);
+    $actionMenu.removeClass('dropdown-container').empty().html('<div></div>');
+    return await vueMenu.$mount($actionMenu.children(':first')[0]);
+  };
+  // $container.find('.project-actions.dropdown-container').each(function() { generateVueMenu($(this); });
+
+  $container
+    .off('click', '.project-actions')
+    .on('click', '.project-actions', async function(event) {
+
+      $.fn.cafevTooltip.hide();
+
+      const $actionMenu = $(this);
+      if ($actionMenu.data('vueMenu')) {
+        // the menu already exists, just let it do its work
+        return;
       }
-      const vueMenu = eventBusResult[0].value;
-      console.info('AFTER CREATE NEW MENU', vueMenu);
-      $actionMenu.data('vueMenu', vueMenu);
-      $actionMenu.removeClass('dropdown-container').empty().html('<div></div>');
-      return await vueMenu.$mount($actionMenu.children(':first')[0]);
-    };
-    // $container.find('.project-actions.dropdown-container').each(function() { generateVueMenu($(this); });
 
-    $container
-      .off('pme:contextmenu', 'tr.' + pmeToken('row'))
-      .on('pme:contextmenu', 'tr.' + pmeToken('row'), async function(event, originalEvent, databaseIdentifier) {
-        console.info('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
+      // otherwise intercept the event and mount the menu
+      event.preventDefault();
+      event.stopImmediatePropagation();
 
-        const $row = $(this);
-        const $form = $row.closest(pmeFormSelector);
-        const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
-        const $actionMenu = $actionMenuContainer.find('.project-actions').first();
+      const vueMenu = await generateVueMenu($actionMenu);
+      const projectId = $actionMenu.data('projectId');
 
-        if ($actionMenu.length === 0) {
-          return;
-        }
-
-        const vueMenu = $actionMenu.data('vueMenu') || await generateVueMenu($actionMenu);
-        const projectId = $actionMenu.data('projectId');
-
-        if (vueMenu.isOpen()) {
-          vueMenu.closeMenu();
-        } else {
-          asyncEmit(BusEvents.PROJECT_ACTIONS, {
-            open: false,
-            projectId: -projectId,
-          });
-          vueMenu.openMenu(
-            originalEvent.originalEvent.clientX,
-            originalEvent.originalEvent.clientY,
-          );
-        }
-
-        originalEvent.preventDefault();
-        originalEvent.stopImmediatePropagation();
+      asyncEmit(BusEvents.PROJECT_ACTIONS, {
+        open: false,
+        projectId: -projectId,
       });
-  } else {
-    $container.find('.project-actions.dropdown-container .project-action').on('click', function(event) {
-      handleProjectActions($(this), containerSel);
+      vueMenu.openMenu();
+
       return false;
     });
 
-    $container
-      .off('pme:contextmenu', 'tr.' + pmeToken('row'))
-      .on('pme:contextmenu', 'tr.' + pmeToken('row'), function(event, originalEvent, databaseIdentifier) {
-        console.info('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
+  $container
+    .off('pme:contextmenu', 'tr.' + pmeToken('row'))
+    .on('pme:contextmenu', 'tr.' + pmeToken('row'), async function(event, originalEvent, databaseIdentifier) {
+      console.info('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
 
-        const $contentTarget = $(originalEvent.target).closest('.dropdown-content');
-        console.info('TARGET', $contentTarget);
-        if ($contentTarget.length > 0) {
-          // use standard context menu inside dropdown
-          return;
-        }
+      const $row = $(this);
+      const $form = $row.closest(pmeFormSelector);
+      const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
+      const $actionMenu = $actionMenuContainer.find('.project-actions').first();
 
-        const $row = $(this);
-        const $form = $row.closest(pmeFormSelector);
-        const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
-        const $actionMenu = $actionMenuContainer.find('.project-actions.dropdown-container').first();
+      if ($actionMenu.length === 0) {
+        return;
+      }
 
-        if ($actionMenu.length === 0) {
-          return;
-        }
+      originalEvent.preventDefault();
+      originalEvent.stopImmediatePropagation();
 
-        const $actionMenuToggle = $actionMenu.find('.action-menu-toggle');
-        const $actionMenuContent = $actionMenu.find('.dropdown-content');
+      const vueMenu = $actionMenu.data('vueMenu') || await generateVueMenu($actionMenu);
+      const projectId = $actionMenu.data('projectId');
 
-        originalEvent.preventDefault();
-        originalEvent.stopImmediatePropagation();
-
-        $actionMenuContent.css({
-          position: 'fixed',
-          left: originalEvent.originalEvent.clientX,
-          top: originalEvent.originalEvent.clientY,
+      if (vueMenu.isOpen()) {
+        vueMenu.closeMenu();
+      } else {
+        asyncEmit(BusEvents.PROJECT_ACTIONS, {
+          open: false,
+          projectId: -projectId,
         });
-        $actionMenu.addClass('context-menu');
-        $actionMenuToggle.trigger('click');
+        vueMenu.openMenu(
+          originalEvent.originalEvent.clientX,
+          originalEvent.originalEvent.clientY,
+        );
+      }
 
-        return false;
-      });
-  }
+      return false;
+    });
 };
 
 const pmeFormInit = function(containerSel) {
@@ -1378,7 +1307,6 @@ const documentReady = function() {
   });
 
   CAFEVDB.addReadyCallback(function() {
-    console.info('CAFEVDB VUE MODE', globalState.vueMode);
     const container = PHPMyEdit.container();
     if (!container.hasClass('projects')) {
       return;

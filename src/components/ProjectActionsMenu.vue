@@ -42,6 +42,7 @@
       />
       <NcActionSeparator v-if="showProjectName" />
       <NcActionButton v-if="enableOverviewItem"
+                      v-tooltip="tooltips['project-infopage']"
                       :name="t(appId, 'Project Overview')"
                       @click="openProjectOverview"
       >
@@ -50,7 +51,8 @@
         </template>
       </NcActionButton>
       <NcActionSeparator v-if="enableOverviewItem" />
-      <NcActionRouter :to="toProjectRouteData('project-participants')"
+      <NcActionRouter v-tooltip="tooltips['project-action:project-participants']"
+                      :to="toProjectRouteData('project-participants')"
                       :name="t(appId, 'Participants')"
                       exact
                       @click="closeMenu"
@@ -59,7 +61,8 @@
           <ProjectParticipantsIcon />
         </template>
       </NcActionRouter>
-      <NcActionLink :name="t(appId, 'Instrumentation Numbers')"
+      <NcActionLink v-tooltip="tooltips['project-action:project-instrumentation-numbers']"
+                    :name="t(appId, 'Instrumentation Numbers')"
                     :href="getRouteHref(toProjectRouteData('project-instrumentation-numbers'))"
                     @click="openInstrumentationNumbers"
       >
@@ -67,7 +70,8 @@
           <InstrumentationNumbersIcon />
         </template>
       </NcActionLink>
-      <NcActionLink :name="t(appId, 'Participant Fields')"
+      <NcActionLink v-tooltip="tooltips['project-action:participant-fields']"
+                    :name="t(appId, 'Participant Fields')"
                     :href="getRouteHref(toProjectRouteData('project-participant-fields'))"
                     @click="openParticipantFields"
       >
@@ -76,7 +80,8 @@
         </template>
       </NcActionLink>
       <NcActionSeparator />
-      <NcActionLink :name="t(appId, 'Project Files')"
+      <NcActionLink v-tooltip="tooltips['project-action:files']"
+                    :name="t(appId, 'Project Files')"
                     :href="projectFolderLink"
                     :target="projectFolderLinkTarget"
                     @click="closeMenu"
@@ -85,7 +90,8 @@
           <ProjectFolderIcon />
         </template>
       </NcActionLink>
-      <NcActionLink :name="t(appId, 'Project Notes')"
+      <NcActionLink v-tooltip="tooltips['project-action:wiki']"
+                    :name="t(appId, 'Project Notes')"
                     :href="projectNotesLink"
                     @click="openProjectNotes"
       >
@@ -93,7 +99,8 @@
           <ProjectNotesIcon />
         </template>
       </NcActionLink>
-      <NcActionLink :name="t(appId, 'Events')"
+      <NcActionLink v-tooltip="tooltips['project-action:events']"
+                    :name="t(appId, 'Events')"
                     :href="projectEventsLink"
                     @click="openProjectEvents"
       >
@@ -101,9 +108,45 @@
           <ProjectEventsIcon />
         </template>
       </NcActionLink>
-      <NcActionButton v-if="financeMode">
-        Two
+      <NcActionButton v-tooltip="tooltips['project-action:email']"
+                      :name="t(appId, 'Em@il')"
+                      @click="openProjectEmail"
+      >
+        <template #icon>
+          <ProjectEmailIcon />
+        </template>
       </NcActionButton>
+      <NcActionSeparator v-if="financeMode" />
+      <NcActionRouter v-tooltip="tooltips['project-action:sepa-bank-accounts']"
+                      :to="toProjectRouteData('sepa-bank-accounts')"
+                      :name="t(appId, 'Debit Mandates')"
+                      exact
+                      @click="closeMenu"
+      >
+        <template #icon>
+          <SepaBankAccountsIcon />
+        </template>
+      </NcActionRouter>
+      <NcActionRouter v-tooltip="tooltips['project-action:payments']"
+                      :to="toProjectRouteData('project-payments')"
+                      :name="t(appId, 'Payments')"
+                      exact
+                      @click="closeMenu"
+      >
+        <template #icon>
+          <SepaBankAccountsIcon />
+        </template>
+      </NcActionRouter>
+      <NcActionLink v-tooltip="tooltips['project-action:financial-balance']"
+                    :name="t(appId, 'Financial Balance')"
+                    :href="financialBalanceLink"
+                    :target="financialBalanceLinkTarget"
+                    @click="closeMenu"
+      >
+        <template #icon>
+          <ProjectFolderIcon />
+        </template>
+      </NcActionLink>
     </NcActions>
   </div>
 </template>
@@ -119,17 +162,22 @@ import {
 import globalState from '../app/globalstate.js'
 import { appName as appId } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
+
 import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
 import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import ProjectFolderIcon from 'vue-material-design-icons/Folder.vue'
 import ProjectNotesIcon from 'vue-material-design-icons/MessageBulleted.vue'
+import ProjectEmailIcon from 'vue-material-design-icons/EmailArrowRight.vue'
 import ProjectEventsIcon from 'vue-material-design-icons/Calendar.vue'
+import SepaBankAccountsIcon from 'vue-material-design-icons/BankTransfer.vue'
+
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
 import { PROJECT_ACTIONS } from '../event-bus-events.ts'
 import { closeNavigation } from '../services/navigation.js'
 import useAppDataStore from '../stores/app-data.ts'
+import useTooltipsStore from '../stores/tooltips.ts'
 import type { Project } from '../stores/app-data.ts'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import md5 from 'blueimp-md5'
@@ -185,8 +233,26 @@ const triggerButton = ref<null|NcButtonType>(null)
 const positioned = ref(false)
 const project = ref<null|Project>(null)
 
+const tooltipKeys = [
+  'project-infopage',
+  'project-action:project-participants',
+  'project-action:project-instrumentation-numbers',
+  'project-action:participant-fields',
+  'project-action:files',
+  'project-action:wiki',
+  'project-action:events',
+  'project-action:email',
+  'project-action:sepa-bank-accounts',
+  'project-action:payments',
+  'project-action:financial-balance',
+]
+
+const tooltipsProvider = useTooltipsStore()
+tooltipsProvider.provideTooltips(tooltipKeys)
+const tooltips = tooltipsProvider.tooltipsData
+
 // computed
-const showProjectName = computed(() => props.forceProjectName || positioned)
+const showProjectName = computed(() => props.forceProjectName || positioned.value)
 const projectFolder = computed(() => project.value?.folders?.projectsfolder || null)
 const projectFolderLink = computed(() => nextcloudGenerateUrl('/apps/files/?dir=' + projectFolder.value))
 const projectFolderLinkTarget = computed(() => md5(projectFolderLink.value))
@@ -194,6 +260,9 @@ const wikiPage = computed(() => project.value?.wikiPage || '')
 const projectNotesLink = computed(() => nextcloudGenerateUrl('/apps/dokuwiki?wikiPage=' + wikiPage.value))
 const projectEventsLink = computed(() => nextcloudGenerateUrl('/apps/calendar'))
 const financeMode = computed(() => ((globalState?.userPermissions || 0) & Authorization.PERMISSION_FINANCE) && globalState?.financeMode)
+const projectBalanceFolder = computed(() => project.value?.folders?.balancesfolder || null)
+const financialBalanceLink = computed(() => nextcloudGenerateUrl('/apps/files/?dir=' + projectBalanceFolder.value))
+const financialBalanceLinkTarget = computed(() => md5(financialBalanceLink.value))
 
 // watchers
 watch(open, (state, oldState) => {
@@ -264,6 +333,17 @@ const openProjectEvents = (event: MouseEvent) => {
   asyncEmit(BusEvents.PROJECT_EVENTS_POPUP, {
     projectId: props.projectId,
     projectName: props.projectName,
+    reopen: false,
+  })
+}
+const openProjectEmail = (event: MouseEvent) => {
+  event.preventDefault()
+  open.value = false
+  closeNavigation()
+  asyncEmit(BusEvents.PROJECT_EMAIL_POPUP, {
+    projectId: props.projectId,
+    projectName: props.projectName,
+    reopen: true,
   })
 }
 const setPosition = (x?: number, y?: number) => {
@@ -305,14 +385,14 @@ const nextFrame = () => {
   }))
 }
 const openMenu = async (x?: number, y?: number) => {
-  logger.info('-> openMenu()')
+  logger.info('-> openMenu()', x, y, positioned.value)
   setPosition(x, y)
   open.value = true
   if (positioned.value) {
     await nextTick()
     triggerButton.value?.$el.blur()
   }
-  logger.info('<- openMenu()')
+  logger.info('<- openMenu()', x, y, positioned.value)
 }
 const moveToAnchor = async (event?: MouseEvent) => {
   if (!open.value || !positioned.value) {
@@ -333,7 +413,10 @@ const getRouteHref = (route: RouterLocation) => {
   return routeProps?.href || '#'
 }
 
-const isOpen = () => open.value
+const isOpen = () => {
+  logger.info('OPEN STATE', open.value)
+  return open.value
+}
 
 // we need to expose some methods in order to allow legacy code to
 // open, close and position the menu.
@@ -371,25 +454,29 @@ onMounted(() => {
 <style lang="scss" scoped>
 .container {
   display: flex;
-}
-.action-item.action-item--open.positioned {
-  &, ::v-deep * {
-    width: 0 !important;
-    height: 0 !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    max-width: 0 !important;
-    max-height: 0 !important;
-    overflow: hidden;
+  :deep(.button-vue__icon) svg {
+    width: 28px;
+    height: 28px;
   }
-}
-.app-navigation-caption {
-  font-weight: bold;
-  color: blue;
-  font-style: italic;
-  text-align: center;
-  display: inline-block;
-  margin: auto;
-  width: 100%;
+  .action-item.action-item--open.positioned {
+    &, ::v-deep * {
+      width: 0 !important;
+      height: 0 !important;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      max-width: 0 !important;
+      max-height: 0 !important;
+      overflow: hidden;
+    }
+  }
+  .app-navigation-caption {
+    font-weight: bold;
+    color: blue;
+    font-style: italic;
+    text-align: center;
+    display: inline-block;
+    margin: auto;
+    // width: 100%;
+  }
 }
 </style>
