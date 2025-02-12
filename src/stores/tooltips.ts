@@ -22,17 +22,17 @@
  */
 
 import { appName } from '../config.ts';
+import globalState from '../app/globalstate.js';
 import { translate as t } from '@nextcloud/l10n';
 import { defineStore } from 'pinia';
 import {
   reactive,
   ref,
-  set as vueSet,
   watch,
 } from 'vue';
-import type { Ref } from 'vue';
 import { tooltips } from '../util/tooltips.ts';
 import Console from '../util/console.ts';
+import { DEBUG_TOOLTIPS } from '../debug-modes.ts';
 
 const storeId = 'tooltips';
 
@@ -63,6 +63,21 @@ export default defineStore(storeId, () => {
     })
   };
 
+  const failedTooltipMessage = (key: string) => (globalState.debugModes & DEBUG_TOOLTIPS)
+    ? t(appName, 'No information available, fetching the tooltip with key "{key}" failed.', { key })
+    : '' // shut up
+
+  watch(
+    () => globalState.debugModes,
+    () => {
+      for (const key of failedKeys.value) {
+        if (tooltipsData[key] !== undefined) {
+          tooltipsData[key] = failedTooltipMessage(key);
+        }
+      }
+    },
+  );
+
   watch(() => pendingKeys, async () =>
     {
       if (pendingKeys.value.length === 0) {
@@ -76,7 +91,7 @@ export default defineStore(storeId, () => {
       for (const [key, tooltip] of Object.entries(newTooltips)) {
         if (!tooltip) {
           failedKeys.value.push(key);
-          tooltipsData[key] = t(appName, 'No information available'); // not for production, this would annoy the user
+          tooltipsData[key] = failedTooltipMessage(key);
         } else {
           tooltipsData[key] = tooltip;
         }
