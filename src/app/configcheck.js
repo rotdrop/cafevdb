@@ -22,7 +22,6 @@
  */
 
 import $ from './jquery.js';
-import globalState from './globalstate.js';
 import { appName } from '../config.ts';
 import * as Page from './page.js';
 import * as ProgressStatus from './progress-status.js';
@@ -111,15 +110,8 @@ function documentReady() {
                   clearInterval(notifier);
                   setBusyIndicators(false, $container, false);
                   Notification.hide();
-                  if (globalState.vueMode) {
-                    // post a back-request to the Vue-router
-                    asyncEmit(LEGACY_BACK_REQUEST);
-                  } else {
-                    // reload is actually boring, but as it only
-                    // affects now the to be abandoned legacy part
-                    // just leave it ...
-                    window.location.reload();
-                  }
+                  // post a back-request to the Vue-router
+                  asyncEmit(LEGACY_BACK_REQUEST);
                 }, redirectTimeout * 1000);
               });
           },

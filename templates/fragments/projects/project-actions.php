@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -82,7 +82,7 @@ echo $this->inc('fragments/action-menu/menu', [
   'cssClasses' => ['project-actions'],
   'menuData' => ['project-id' => $projectId, 'project-name' => $projectName],
   'toolTipPrefix' => 'project-actions',
-  'menuItemTemplate' => 'fragments/projects/action-items',
+  'menuItemTemplate' => false, // 'fragments/projects/action-items',
   'routes' => $routes,
   'projectFolders' => $projectFolders,
   'wikiPage' => $wikiPage,

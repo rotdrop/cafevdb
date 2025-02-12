@@ -33,11 +33,6 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import { templateFromRenderer } from './template-renderer.js';
 import pageBusyIcon from './busy-icon.js';
-import {
-  pushHistory as pushBrowserHistory,
-  replaceHistory as replaceBrowserHistory,
-  updateHistoryControls as updateBrowserHistoryControls,
-} from './brower-history.js';
 import * as Notification from './notification.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
@@ -1154,14 +1149,12 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
 
       const post = qs.parse(postData, { allowSparse: true });
       if (historyAction === 'push') {
-        pushBrowserHistory(post);
         await emit(LEGACY_PME_HISTORY_UPDATE, {
           post,
           htmlBody: htmlContent,
           action: 'push',
         });
       } else {
-        replaceBrowserHistory(post);
         await emit(LEGACY_PME_HISTORY_UPDATE, {
           post,
           htmlBody: htmlContent,
@@ -1174,11 +1167,6 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
       pmeUnTweak(container);
       WysiwygEditor.removeEditor(container.find('textarea.wysiwyg-editor'));
       console.info('PME INNER / CONTAINER', pmeInner(container), container);
-
-      if (!globalState.vueMode) {
-        updateBrowserHistoryControls();
-        pmeInner(container).html(htmlContent);
-      }
 
       container.find('iframe').on('load', function(event) {
         const $this = $(this);

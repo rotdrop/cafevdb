@@ -21,29 +21,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import './jquery-cafevdb-tooltips.js';
-import globalState from './globalstate.js';
 import { emit } from '../services/async-event-bus.ts';
 import { SET_BUSY_FLAG } from '../event-bus-events.ts';
 
 const busyIcon = function(on) {
-  if (!globalState.vueMode) {
-    const reloadButton = document.getElementById('reloadbutton');
-    const images = [
-      reloadButton?.querySelector('img.number-0'),
-      reloadButton?.querySelector('img.number-1'),
-    ];
-    if (!images[0] || !images[1]) {
-      return;
-    }
-    if (on) {
-      images[0].style.display = 'none';
-      images[1].style.display = 'block';
-    } else {
-      images[0].style.display = 'block';
-      images[1].style.display = 'none';
-    }
-  }
   console.debug('SET BUSY FLAG TO', !!on);
   emit(SET_BUSY_FLAG, { value: !!on });
 };

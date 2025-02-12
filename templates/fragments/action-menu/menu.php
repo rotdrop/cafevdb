@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -33,7 +33,6 @@
 
 $cssClasses = array_merge($cssClasses ?? [], ['actions', 'menu-actions']);
 $toolTipPrefix = $toolTipPrefix ?? 'action-menu';
-$menuItemTemplate = $menuItemTemplate ?? 'fragments/action-menu/dummy-item';
 ?>
 <span class="<?php p(implode(' ', $cssClasses)); ?> dropdown-container dropdown-no-hover tooltip-right"
       <?php foreach (($menuData ?? []) as $key => $value) { ?>
@@ -43,9 +42,11 @@ $menuItemTemplate = $menuItemTemplate ?? 'fragments/action-menu/dummy-item';
   <button class="menu-title action-menu-toggle tooltip-auto"
           title="<?php echo $toolTips[$toolTipPrefix]; ?>"
   >...</button>
+  <?php if ($menuItemTemplate) { ?>
   <nav class="dropdown-content dropdown-align-<?php p($direction); ?> dropdown-drop<?php p($dropDirection); ?>">
     <ul>
       <?php echo $this->inc($menuItemTemplate, $_); ?>
     </ul>
   </nav>
+  <?php } ?>
 </span>

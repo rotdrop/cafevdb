@@ -21,8 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, nonce, webRoot, $ } from './app/globals.js';
-import { runReadyCallbacks } from './app/cafevdb.js';
+import { nonce, webRoot, $ } from './app/globals.js';
 import settings from './app/settings.js';
 import appSettings from './app/app-settings.js';
 import personalSettings from './app/personal-settings.js';
@@ -79,9 +78,4 @@ $(function() {
   appSettings();
   personalSettings();
   beforeReady();
-  if (globalState.vueMode) {
-    console.debug('DO NOT INITIALLY CALL READY CALLBACKS IN VUE MODE');
-  } else {
-    runReadyCallbacks();
-  }
 });

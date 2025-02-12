@@ -24,7 +24,6 @@
 import $ from './jquery.js';
 import { appName } from '../config.ts';
 import globalState from './globalstate.js';
-import print_r from './print-r.js';
 import * as Dialogs from './dialogs.js';
 import { isPlainObject } from 'is-plain-object';
 import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
@@ -181,25 +180,6 @@ const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) 
   let info = '<span class="bold toastify http-status error">' + decodedStatus + '</span>';
   // console.info(xhr.status, info, errorThrown, textStatus);
 
-  const reportBody = `JavaScript User Agent:
-${navigator.userAgent}
-
-PHP User Agent:
-${globalState.phpUserAgent || 'unknown'}
-
-Error Code:  ${decodedStatus}
-
-Error Data: ${print_r(failData, true)}
-`;
-  let autoReport = '<a href="mailto:'
-      + encodeURIComponent(globalState.adminContact)
-      + '?subject=' + '[CAFEVDB Error] Error Feedback'
-      + '&body='
-      + encodeURIComponent(reportBody)
-      + '">'
-      + t(appName, 'System Administrator')
-      + '</a>';
-
   switch (xhr.status) {
   case ajaxHttpStatus.OK:
   case ajaxHttpStatus.BAD_REQUEST:
@@ -216,36 +196,9 @@ Error Data: ${print_r(failData, true)}
       }
     }
 
-    if (globalState.vueMode) {
-      await asyncEmit(LEGACY_AJAX_ERROR, { xhr, message: failData.message?.join(' ') });
-      console.info('RUNNING CLEANUP HOOKS', callbacks);
-      callbacks.cleanup(failData);
-    } else {
-      if (failData.error && ajaxHttpStatus[xhr.status] !== t(appName, failData.error)) {
-        info += ': '
-          + '<span class="bold error toastify name">'
-          + t(appName, failData.error)
-          + '</span>';
-      }
-      info += '<div class="error toastify feedback-link">'
-        + t(appName, 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
-        + '</div>';
-      autoReport = '';
-      let exceptionData = failData;
-      if (exceptionData.exception !== undefined) {
-        info += '<div class="exception error name"><pre>' + exceptionData.brief + '</pre></div>'
-          + '<div class="exception error trace"><pre>' + exceptionData.exception.trace + '</pre></div>';
-        while ((exceptionData = exceptionData.previous) != null) {
-          info += '<div class="bold error toastify">' + exceptionData.message + '</div>';
-          info += '<div class="exception error name"><pre>' + exceptionData.brief + '</pre></div>'
-            + '<div class="exception error trace"><pre>' + exceptionData.exception.trace + '</pre></div>';
-        }
-      }
-      if (failData.info) {
-        info += '<div class="' + appName + ' error-page">' + failData.info + '</div>';
-      }
-      Dialogs.alert(info, caption, function() { callbacks.cleanup(failData); }, true, true);
-    }
+    await asyncEmit(LEGACY_AJAX_ERROR, { xhr, message: failData.message?.join(' ') });
+    console.info('RUNNING CLEANUP HOOKS', callbacks);
+    callbacks.cleanup(failData);
     break;
   }
   case ajaxHttpStatus.PRECONDITION_FAILED:
@@ -293,9 +246,6 @@ done automatically when cloud click "ok" or close this dialog window.
           + 'temporary work-around. You will be redirected to the '
           + 'log-in page when you close this window.');
     info += '<div class="error general">' + generalHint + '</div>';
-    // info += '<div class="error toastify feedback-link">'
-    //       + t(appName, 'Feedback email: {AutoReport}', { AutoReport: autoReport }, -1, { escape: false })
-    //       + '</div>';
     Dialogs.alert(info, caption, function() { callbacks.cleanup(failData); }, true, true);
     break;
   }
