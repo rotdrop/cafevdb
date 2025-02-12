@@ -128,7 +128,7 @@
         ]"
         >
           <NcCheckboxRadioSwitch v-tooltip="hints['show-tool-tips']"
-                                 :checked.sync="globalState.toolTipsEnabled"
+                                 :checked.sync="toolTipsEnabled"
           >
             {{ t(appId, 'Tool-Tips') }}
           </NcCheckboxRadioSwitch>
@@ -347,6 +347,7 @@ import { asyncComputed } from '@vueuse/core'
 import { tooltips } from './util/tooltips.ts'
 import Console from './util/console.ts'
 import { AppError } from './types/errors.ts'
+import { options as tooltipOptions } from 'floating-vue'
 import md5 from 'blueimp-md5'
 import type { NavigationItem } from './types/ajax/navigation-items.d.ts'
 import type { ConfigCheckResult } from './types/ajax/config-check.d.ts'
@@ -430,6 +431,12 @@ const debugOptions = computed(() => {
     options.push({ value: +value, label })
   }
   return options
+})
+const toolTipsEnabled = ref(globalState.toolTipsEnabled)
+watch(toolTipsEnabled, (value) => {
+  if (value !== globalState.toolTipsEnabled) {
+    asyncEmit(BusEvents.TOGGLE_TOOLTIPS, { enabled: value })
+  }
 })
 const pageRowsOptions = computed(() => [-1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
 const personalSettingsUrl = computed(() => nextcloudGenerateUrl('settings/user/' + appId))
@@ -618,7 +625,11 @@ const reactifyGlobalState = function() {
 
   watch(
     () => globalState.toolTipsEnabled,
-    (value, oldValue) => updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue),
+    (value, oldValue) => {
+      updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue)
+      tooltipOptions.themes.tooltip.disabled = !value
+      toolTipsEnabled.value = value
+    },
   )
   watch(
     () => globalState.financeMode,

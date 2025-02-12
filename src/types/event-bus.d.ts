@@ -49,6 +49,7 @@ import {
   SET_RESTORE_HISTORY,
   SET_SHOW_DISABLED,
   SET_TOOLTIPS_MODE,
+  TOGGLE_TOOLTIPS,
   WIKI_POPUP,
 } from '../event-bus-events.ts';
 
@@ -103,6 +104,8 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [SET_RESTORE_HISTORY]: BoolSetterArgs,
     [SET_SHOW_DISABLED]: BoolSetterArgs,
     [SET_TOOLTIPS_MODE]: BoolSetterArgs,
+
+    [TOGGLE_TOOLTIPS]: { enabled: boolean },
   }
 
   type KeysOfValue<T, TCondition> = {

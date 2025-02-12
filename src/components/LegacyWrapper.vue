@@ -69,7 +69,7 @@
         <template v-else #icon>
           <InfoOffIcon />
         </template>
-        <NcActionCheckbox v-model="globalState.toolTipsEnabled" :model-value="globalState.toolTipsEnabled">
+        <NcActionCheckbox v-model="toolTipsEnabled" :model-value="toolTipsEnabled">
           {{ t(appId, 'Tooltips') }}
         </NcActionCheckbox>
         <NcActionLink :href="wikiManualUrl" :target="wikiManualUrlTarget">
@@ -176,6 +176,7 @@ import {
   LEGACY_PME_HISTORY_UPDATE,
   LEGACY_PAGE_CLEANUP,
   LEGACY_PAGE_FINALIZE,
+  TOGGLE_TOOLTIPS,
   WIKI_POPUP,
 } from '../event-bus-events.ts'
 import * as LegacyNotification from '../app/notification.js'
@@ -222,6 +223,18 @@ const props = withDefaults(defineProps<{
 })
 
 logger.info('PROPS AT START', props)
+
+// handle tooltips
+
+const toolTipsEnabled = ref(globalState.toolTipsEnabled)
+watch(toolTipsEnabled, (value) => {
+  if (value !== globalState.toolTipsEnabled) {
+    asyncEmit(TOGGLE_TOOLTIPS, { enabled: value })
+  }
+})
+watch(() => globalState.toolTipsEnabled, () => {
+  toolTipsEnabled.value = globalState.toolTipsEnabled
+})
 
 // *** app-data store, formerly accessed through "map..."
 const appData = useAppDataStore()
