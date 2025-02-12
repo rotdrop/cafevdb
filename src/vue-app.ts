@@ -45,7 +45,7 @@ const pinia = createPinia();
 
 declare global {
   var __webpack_nonce__: string;
-  var __webpack_public_path: string;
+  var __webpack_public_path__: string;
 }
 // CSP config for webpack dynamic chunk loading
 __webpack_nonce__ = btoa(getRequestToken() || '');
