@@ -546,7 +546,7 @@ const legacyPmeHistoryUpdateHandler = asyncSubscribe(
 )
 const legacyAjaxError = ref<JQueryAjaxError | undefined>()
 const showLegacyAjaxError = ref(false)
-const legacyAjaxErrorResolve = ref((_value: unknown) => {})
+let legacyAjaxErrorResolve: (_value: boolean) => void
 const legacyAjaxErrorHandler = asyncSubscribe(
   LEGACY_AJAX_ERROR,
   async (eventData) => {
@@ -556,14 +556,15 @@ const legacyAjaxErrorHandler = asyncSubscribe(
       eventData.xhr,
     )
     showLegacyAjaxError.value = true
-    const closePromise = new Promise((resolve) => { legacyAjaxErrorResolve.value = resolve })
+    const { promise: closePromise, resolve } = Promise.withResolvers<boolean>()
+    legacyAjaxErrorResolve = resolve
     await closePromise
     legacyAjaxError.value = undefined
   },
 )
 const handleLegacyAjaxErrorClose = () => {
   showLegacyAjaxError.value = false
-  legacyAjaxErrorResolve.value(false)
+  legacyAjaxErrorResolve(false)
 }
 
 // Initialization work different with composition API, so fore a page load at start
