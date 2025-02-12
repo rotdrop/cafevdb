@@ -1135,19 +1135,11 @@ class Projects extends PMETableViewBase
     string $dropDirection = 'down',
   ):string {
     $templateParameters = [
-      'appName' => $this->appName(),
       'projectId' => $projectId,
       'projectName' => $projectName,
-      'urlGenerator' => $this->urlGenerator(),
       'toolTips' => $this->toolTipsService,
-      'isOverview' => $overview,
-      'projectService' => $this->projectService,
       'direction' => $direction,
       'dropDirection' => $dropDirection,
-      'rolesService' => $this->orgaRolesService,
-      'currencySymbol' => $this->currencySymbol(),
-      'financeMode' => $this->financeMode,
-      'expertMode' => $this->expertMode,
     ];
     $template = $this->templateResponse(
       'fragments/projects/project-actions',

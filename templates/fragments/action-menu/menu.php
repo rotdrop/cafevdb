@@ -26,7 +26,8 @@
  * @param array $cssClasses
  * @param array $menuData
  * @param string $toolTipPrefix
- * @param Closure $menuItemTemplate
+ * @param \OCA\CAFEVDB\Service\ToolTipsService $toolTips
+ * @param ?string $menuItemTemplate
  * @param string $direction 'left' or 'right'
  * @param string $dropDirection 'up' or 'down'
  */
