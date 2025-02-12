@@ -198,8 +198,7 @@ import md5 from 'blueimp-md5'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
 import { showError, showInfo, /* TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
-import { asyncComputed } from '@vueuse/core'
-import { tooltips } from '../util/tooltips.ts'
+import useTooltipsStore from '../stores/tooltips.ts'
 import {
   JQueryAjaxError,
   isJqXHR as isJqXHRGuard,
@@ -220,13 +219,9 @@ const tooltipKeys = [
   'error-page:problem-report:close',
   'error-page:problem-report:modify-comment',
 ]
-const initialTooltips = Object.fromEntries(tooltipKeys.map(key => { return [key, ''] as [string, string] }))
-
-const hints = asyncComputed(
-  (/* onCancel */) => tooltips(tooltipKeys),
-  initialTooltips,
-  { lazy: true },
-)
+const tooltipsProvider = useTooltipsStore()
+tooltipsProvider.provideTooltips(tooltipKeys)
+const hints = tooltipsProvider.tooltipsData
 
 const router = useRouter()
 

@@ -220,7 +220,6 @@
                       :placeholder="t(appId, 'e.g. Auvergne2019')"
                       :multiple="false"
                       :submit-button="false"
-                      @update="(...rest) => logger.info('Projects Update', ...rest)"
       />
       <input id="include-disabled"
              v-model="access.includeDeactivated"
@@ -433,12 +432,13 @@ import { appName as appId } from '../config.ts'
 import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
 
 import SelectMusicians from './SelectMusicians.vue'
+import type { Musician } from '../types/address-book.d.ts'
 
 import SelectProjects from './SelectProjects.vue'
 
 import SettingsSelectGroup from './SettingsSelectGroup.vue'
 import SettingsSelectUsers from './SettingsSelectUsers.vue'
-import { tooltips } from '../util/tooltips.ts'
+import useTooltipsStore from '../stores/tooltips.ts'
 import formatDate from '../util/formatDate.js'
 import { showErrorToast } from '../util/toasts.ts'
 import dialogConfirm from '../util/dialogs.ts'
@@ -466,12 +466,6 @@ const logger = new Console(COMPONENT_NAME)
 
 type Project = {
   id: number,
-}
-
-type Musician = {
-  id: number,
-  userIdSlug: string,
-  status?: string,
 }
 
 type FontFiles = {
@@ -586,7 +580,7 @@ watch(vueDevTools, (value) => {
   }
 })
 
-const defaultOfficeFont = ref<FontFiles|null>(null)
+const defaultOfficeFont = ref<FontFiles|undefined>(undefined)
 const loading = reactive({
   general: true,
   recryption: true,
@@ -595,6 +589,8 @@ const loading = reactive({
   settings: true,
   groups: true,
 })
+
+watch(() => tooltipsProvider.loading, (value) => { loading.tooltips = value })
 
 const settings: AppAdminSettings = reactive({
   userAndGroupBackend: '',
@@ -613,22 +609,27 @@ const problemReportRecipientVerificationInput = ref(false)
 const settingsBackup = reactive({} as AppAdminSettings)
 const orchestraGroups = reactive({} as Record<string, GroupType>)
 const config = reactive(initialState)
-const hints = reactive({
-  'settings:admin:cloud-user-backend-conf': '',
-  'settings:admin:wiki-name-space': '',
-  'settings:admin:user-group': '',
-  'settings:admin:user-group:admins': '',
-  'settings:admin:user-and-group-backend': '',
-  'settings:admin:access-control:musicians': '',
-  'settings:admin:true-type-fonts-folder': '',
-  'settings:admin:user-backend:move-users': '',
-  'settings:admin:problem-report:email:recipient': '',
-  'settings:admin:problem-report:email:verification:code': '',
-  'settings:admin:problem-report:email:verification:resend': '',
-  'settings:admin:problem-report:email:verification:status:verified': '',
-  'settings:admin:problem-report:email:verification:status:pending': '',
-  'settings:admin:problem-report:email:verification:status:failed': '',
-})
+
+const tooltipKeys = [
+  'settings:admin:cloud-user-backend-conf',
+  'settings:admin:wiki-name-space',
+  'settings:admin:user-group',
+  'settings:admin:user-group:admins',
+  'settings:admin:user-and-group-backend',
+  'settings:admin:access-control:musicians',
+  'settings:admin:true-type-fonts-folder',
+  'settings:admin:user-backend:move-users',
+  'settings:admin:problem-report:email:recipient',
+  'settings:admin:problem-report:email:verification:code',
+  'settings:admin:problem-report:email:verification:resend',
+  'settings:admin:problem-report:email:verification:status:verified',
+  'settings:admin:problem-report:email:verification:status:pending',
+  'settings:admin:problem-report:email:verification:status:failed',
+]
+const tooltipsProvider = useTooltipsStore()
+tooltipsProvider.provideTooltips(tooltipKeys)
+const hints = tooltipsProvider.tooltipsData
+
 const forword = ref('')
 const recryption = reactive({
   requests: {} as Record<string, RecryptionRequest>,
@@ -706,7 +707,6 @@ const getData = async () => {
   loading.fonts = true
   loading.settings = true
   loading.groups = true
-  loadTooltips()
   if (config.isSubAdmin) {
     // fetch recryption requests
     getRecryptionRequests()
@@ -751,17 +751,6 @@ const loadOrchestraGroups = async () => {
     vueSet(orchestraGroups, id, group)
   }
   loading.groups = false
-}
-const loadTooltips = async () => {
-  loading.tooltips = true
-  const personalSettingsLink = '<a class="external settings" href="' + config.personalAppSettingsLink + '">' + appId + '</a>'
-  forword.value = t(
-    appId,
-    'Further detailed configurations are necessary after configuring the user-group. Please configure a dedicated group-admin for the user-group and then log-in as this group-admin and head over to the {personalSettingsLink} settings.', {
-      personalSettingsLink,
-    }, undefined, { escape: false })
-  Object.assign(hints, await tooltips(Object.keys(hints)))
-  loading.tooltips = false
 }
 const getSettingsData = async (settingsKeys: (keyof AppAdminSettings)[] = []) => {
   loading.settings = true
@@ -1093,8 +1082,8 @@ const handleAccessAction = async (action: AccessActions) => {
   try {
     for (const musician of access.musicians) {
       const response = action === 'grant'
-        ? await doHandleRecryptionRequest(musician.userIdSlug, true, true)
-        : await doRevokeCloudAccess(musician.userIdSlug)
+        ? await doHandleRecryptionRequest(musician.userIdSlug!, true, true)
+        : await doRevokeCloudAccess(musician.userIdSlug!)
       const ocsData = response.data.ocs.data
       const lastUser = ocsData.userId
       ocsData.status === 'failure' && ++failedUsers

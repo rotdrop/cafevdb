@@ -44,9 +44,14 @@ export default defineStore(storeId, () => {
 
   const failedKeys = ref<string[]>([]);
   const pendingKeys = ref<string[]>([]);
+  const loading = ref(false);
 
   let lock = Promise.resolve(true);
 
+  /**
+   * Runs synchronously and provides empty strings for all missing
+     keys. The missing keys are watched for and loaded asynchronously.
+   */
   const provideTooltips = (keys: string[]) => {
 
     const pending: string[] = [];
@@ -57,10 +62,13 @@ export default defineStore(storeId, () => {
       }
     }
 
-    lock = new Promise<boolean>((resolve) => {
+    if (pending.length > 0) {
+      loading.value = true;
+      const { promise, resolve } = Promise.withResolvers<boolean>();
+      lock = promise
       pendingKeys.value.splice(pendingKeys.value.length, 0, ...pending);
       resolve(true)
-    })
+    }
   };
 
   const failedTooltipMessage = (key: string) => (globalState.debugModes & DEBUG_TOOLTIPS)
@@ -81,6 +89,7 @@ export default defineStore(storeId, () => {
   watch(() => pendingKeys, async () =>
     {
       if (pendingKeys.value.length === 0) {
+        loading.value = false;
         return;
       }
       await lock;
@@ -106,5 +115,6 @@ export default defineStore(storeId, () => {
     tooltipsData,
     failedKeys,
     pendingKeys,
+    loading,
   };
 });

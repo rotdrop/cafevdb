@@ -147,7 +147,7 @@
           >
             {{ t(appId, 'Quick Change-Dialog') }}
           </NcCheckboxRadioSwitch>
-          <NcCheckboxRadioSwitch v-tooltip="hints['deslect-invisible-misc-recs']"
+          <NcCheckboxRadioSwitch v-tooltip="hints['deselect-invisible-misc-recs']"
                                  :checked.sync="globalState.PHPMyEdit.deselectInvisibleMiscRecs"
           >
             {{ t(appId, 'Deselect Invisible') }}
@@ -304,6 +304,7 @@ import { translate as t } from '@nextcloud/l10n'
 import useAppDataStore from './stores/app-data.ts'
 import useHistoryStore from './stores/history.ts'
 import useErrorHandlerStore from './stores/error-handler.ts'
+import useTooltipsStore from './stores/tooltips.ts'
 // import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 // import ProjectPartici<pantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 // import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
@@ -343,8 +344,6 @@ import {
   set as vueSet,
   del as vueDel,
 } from 'vue'
-import { asyncComputed } from '@vueuse/core'
-import { tooltips } from './util/tooltips.ts'
 import Console from './util/console.ts'
 import { AppError } from './types/errors.ts'
 import { options as tooltipOptions } from 'floating-vue'
@@ -405,13 +404,10 @@ const tooltipKeys = [
   'show-disabled',
   'show-tool-tips',
 ]
-const initialTooltips = Object.fromEntries(tooltipKeys.map(key => { return [key, ''] as [string, string] }))
 
-const hints = asyncComputed(
-  (/* onCancel */) => tooltips(tooltipKeys),
-  initialTooltips,
-  { lazy: true },
-)
+const tooltipsProvider = useTooltipsStore()
+tooltipsProvider.provideTooltips(tooltipKeys)
+const hints = tooltipsProvider.tooltipsData
 
 const triggerNavigationUpdate = ref<undefined | boolean>(undefined)
 const showSidebar = ref(false)
