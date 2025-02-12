@@ -489,6 +489,7 @@ onMounted(() => {
   width: var(--default-clickable-area);
   height: var(--default-clickable-area);
   text-align: center;
-  font-size: x-large;
+  font-size: large;
+  font-weight: bold;
 }
 </style>
