@@ -35,6 +35,9 @@ import pageBusyIcon from './busy-icon.js';
 import modalizer from './modalizer.js';
 import { close as closeActionMenus } from './action-menu.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
+import { emit as asyncEmit } from '../services/async-event-bus.ts';
+import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
+import { SIMPLE_EVENT_EDITOR } from '../mountable-component-names.ts';
 // import VueTestMenu from '../components/TestMenu.vue';
 
 require('jquery-ui/ui/widgets/accordion');
@@ -481,7 +484,7 @@ const scopeSelection = function(event) {
   return false;
 };
 
-const eventAction = function(event) {
+const eventAction = async function(event) {
 
   const evntdlgopen = $('#event').dialog('isOpen');
 
@@ -513,18 +516,31 @@ const eventAction = function(event) {
   case 'edit': {
     // Edit existing event. The legacy code does not allow
     // modifications of single instances in a series.
-    post.push({ name: 'uri', value: uri });
-    post.push({ name: 'calendarid', value: calendarId });
-    $('#dialog_holder').load(
-      generateAppUrl('legacy/events/forms/edit'),
-      post,
-      function(response, textStatus, xhr) {
-        if (textStatus === 'success') {
-          Legacy.Calendar.UI.startEventDialog(afterInit);
-          return;
-        }
-        handleError(xhr, textStatus, xhr.status);
-      });
+
+    // post.push({ name: 'uri', value: uri });
+    // post.push({ name: 'calendarid', value: calendarId });
+    // $('#dialog_holder').load(
+    //   generateAppUrl('legacy/events/forms/edit'),
+    //   post,
+    //   function(response, textStatus, xhr) {
+    //     if (textStatus === 'success') {
+    //       Legacy.Calendar.UI.startEventDialog(afterInit);
+    //       return;
+    //     }
+    //     handleError(xhr, textStatus, xhr.status);
+    //   });
+
+    const eventBusResult = await asyncEmit(GET_VUE_COMPONENT, {
+      name: SIMPLE_EVENT_EDITOR,
+      propsData: {},
+    });
+    if (!Array.isArray(eventBusResult)
+        || eventBusResult.length !== 1
+        || typeof eventBusResult[0].value !== 'object') {
+      throw new Error(t(appName, 'Unable to create simple event editor.'));
+    }
+    const simpleEditor = eventBusResult[0].value;
+    await simpleEditor.$mount($('#dialog_holder')[0]);
     break;
   }
   case 'clone': {
