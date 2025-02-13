@@ -61,6 +61,15 @@ export default defineStore(storeId, () => {
   const initialHistoryIndex: undefined|string = window?.history?.state?.key;
   const currentHistoryIndex = ref(initialHistoryIndex || '');
 
+  const pendingHistoryData = ref<null|object>(null);
+  const pendingHistoryAction = ref<null|HistoryAction>(null);
+  const pendingHistoryKey = ref<null|string|number>('initial');
+  const currentHistoryState = computed(() => routerHistory.value?.[currentHistoryIndex.value || ''] || null);
+  const prevHistoryIndex = computed(() => currentHistoryState.value.prev);
+  const nextHistoryIndex = computed(() => currentHistoryState.value.next);
+  const prevHistoryState = computed(() => routerHistory.value?.[prevHistoryIndex.value || ''] || null);
+  const nextHistoryState = computed(() => routerHistory.value?.[nextHistoryIndex.value || ''] || null);
+
   const defineInitialHistory = (initialHistoryIndex: string) => {
     routerHistory.value = {
       [initialHistoryIndex]: {
@@ -75,7 +84,12 @@ export default defineStore(storeId, () => {
     logger.debug('INITIAL ROUTER HISTORY', currentHistoryIndex, { ...routerHistory.value });
   };
 
-  if (!initialHistoryIndex) {
+  let runFinishAfterInit = false;
+
+  if (initialHistoryIndex) {
+    defineInitialHistory(initialHistoryIndex);
+  } else {
+    logger.info('HISTORY YET EMPTY, INSTALLING WATCH ON CURRENT ROUTE', currentRoute);
     const stop = watch(
       currentRoute,
       (newValue, oldValue) => {
@@ -99,20 +113,16 @@ export default defineStore(storeId, () => {
           }
         }
         defineInitialHistory(initialHistoryIndex);
+        if (pendingHistoryKey.value === 'initial') {
+          pendingHistoryKey.value = currentHistoryIndex.value;
+        }
+        if (runFinishAfterInit) {
+          runFinishAfterInit = false;
+          finishHistoryAction();
+        }
       },
     );
-  } else {
-    defineInitialHistory(initialHistoryIndex);
   }
-
-  const pendingHistoryData = ref<null|object>(null);
-  const pendingHistoryAction = ref<null|HistoryAction>(null);
-  const pendingHistoryKey = ref<null|string|number>('initial');
-  const currentHistoryState = computed(() => routerHistory.value?.[currentHistoryIndex.value || ''] || null);
-  const prevHistoryIndex = computed(() => currentHistoryState.value.prev);
-  const nextHistoryIndex = computed(() => currentHistoryState.value.next);
-  const prevHistoryState = computed(() => routerHistory.value?.[prevHistoryIndex.value || ''] || null);
-  const nextHistoryState = computed(() => routerHistory.value?.[nextHistoryIndex.value || ''] || null);
 
   /**
    * This is called before routing in order to record that a
@@ -184,6 +194,11 @@ export default defineStore(storeId, () => {
       historyOfKey: history?.['' + key],
       historyKeys: [...Object.keys(history)],
     });
+    if (Object.keys(routerHistory.value).length === 0) {
+      logger.info('POSTPONING HISTORY FINISH CALL UNTIL AFTER INIT');
+      runFinishAfterInit = true;
+      return;
+    }
 
     // Guard against router-links as their replace/push calls are not
     // interceptable. The following check will fail if the first
