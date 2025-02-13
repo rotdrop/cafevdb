@@ -25,6 +25,14 @@
 namespace OCA\CAFEVDB;
 
 use DateTimeImmutable;
+use DateTimeInterface;
+use DateTimeZone;
+
+// All day events: timestamps need to refer 00:00:00 in UTC.
+$utcTZ = new DateTimeZone('UTC');
+$utcDateStamp = function(DateTimeInterface $date) use ($utcTZ) {
+  return DateTimeImmutable::createFromFormat('Y-m-d|', $date->format('Y-m-d'), $utcTZ)->getTimestamp();
+};
 
 $selectId = 'select-check-' . $flatIdentifier;
 $actionScopeId = 'scope-radio-' . $flatIdentifier;
@@ -32,19 +40,31 @@ $absenceFieldCssId = 'absence-field' . $flatIdentifier;
 
 $calendarLink = [];
 $remoteEventUrl = $remoteUrl . '/' . $event['uri'];
+if ($event['allday']) {
+  $startStamp = [
+    'single' => $utcDateStamp($event['start']),
+    'series' => $utcDateStamp($event['seriesStart']),
+  ];
+} else {
+  $startStamp = [
+    'single' => $event['start']->getTimestamp(),
+    'series' => $event['seriesStart']->getTimestamp(),
+  ];
+}
+
 $calendarLink['single'] = $urlGenerator->linkToRoute('calendar.view.indexview.timerange.edit', [
   'view' => 'timeGridWeek',
   'timeRange' => $event['start']->format('Y-m-d'),
   'mode' => 'sidebar',
   'objectId' =>  base64_encode($remoteEventUrl),
-  'recurrenceId' => empty($event['recurrenceId']) ? $event['start']->getTimestamp() : $event['recurrenceId'],
+  'recurrenceId' => empty($event['recurrenceId']) ? $startStamp['single'] : $event['recurrenceId'],
 ]);
 $calendarLink['series'] = $urlGenerator->linkToRoute('calendar.view.indexview.timerange.edit', [
   'view' => 'timeGridWeek',
   'timeRange' => $event['seriesStart']->format('Y-m-d'),
   'mode' => 'sidebar',
   'objectId' =>  base64_encode($remoteEventUrl),
-  'recurrenceId' => $event['seriesStart']->getTimestamp(),
+  'recurrenceId' => $startStamp['series'],
 ]);
 $calendarTarget = md5($urlGenerator->linkToRoute('calendar.view.indexdirect.edit', [ 'objectId' =>  $appName ]));
 
