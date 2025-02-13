@@ -29,6 +29,7 @@ import { subscribe as asyncSubscribe } from './async-event-bus.ts'
 import * as MountableComponents from '../mountable-component-names.ts';
 
 const ProjectActionsMenuConstructor = Vue.extend(ProjectActionsMenu);
+const SimpleEventEditorConstructor = Vue.extend(SimpleEventEditor);
 
 export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
   asyncSubscribe(GET_VUE_COMPONENT, (event) => {
@@ -39,7 +40,7 @@ export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
           propsData: event.propsData,
         });
       case MountableComponents.SIMPLE_EVENT_EDITOR:
-        return new SimpleEventEditor({
+        return new SimpleEventEditorConstructor({
           parent: vueApp,
           propsData: event.propsData,
         });
