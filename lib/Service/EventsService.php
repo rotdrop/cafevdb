@@ -1591,7 +1591,7 @@ class EventsService
       $this->flush();
       $this->logInfo('Removed ' . $removed . ' stale project events.');
     } else {
-      $this->logInfo('Nothing to cleanup.');
+      $this->logDebug('Nothing to cleanup.');
     }
 
     $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
