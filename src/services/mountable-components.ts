@@ -23,6 +23,7 @@
 
 import Vue from 'vue';
 import ProjectActionsMenu from '../components/ProjectActionsMenu.vue';
+import SimpleEventEditor from '../components/SimpleEventEditor.vue';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe } from './async-event-bus.ts'
 import * as MountableComponents from '../mountable-component-names.ts';
@@ -34,6 +35,11 @@ export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
     switch (event.name) {
       case MountableComponents.PROJECT_ACTIONS_MENU:
         return new ProjectActionsMenuConstructor({
+          parent: vueApp,
+          propsData: event.propsData,
+        });
+      case MountableComponents.SIMPLE_EVENT_EDITOR:
+        return new SimpleEventEditor({
           parent: vueApp,
           propsData: event.propsData,
         });

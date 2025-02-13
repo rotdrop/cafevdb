@@ -271,6 +271,7 @@ module.exports = {
           '@rotdrop/nextcloud-vue-components',
           '@nextcloud/vue',
           '@nextcloud/app-logreader/src',
+          '@nextcloud/app-calendar/src',
         ]),
       },
       {
@@ -287,6 +288,7 @@ module.exports = {
         ],
         exclude: BabelLoaderExcludeNodeModulesExcept([
           '@nextcloud/app-logreader/src',
+          '@nextcloud/app-calendar/src',
         ]),
       },
       {
@@ -310,6 +312,7 @@ module.exports = {
           'toastify-js',
           'v-tooltip',
           'yocto-queue',
+          'moment',
         ]),
       },
       {
