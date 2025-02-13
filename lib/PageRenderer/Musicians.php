@@ -887,7 +887,7 @@ abstract class Musicians extends PMETableViewBase
             $pme->cgiSysName('qfinstrument_holder_id_idx[]') => $musicianId,
           ];
           $link = '<div class="pme-cell-wrapper restrict-height musician-instrument-insurance">
-  <a href="' . $this->urlGenerator()->linkToRoute($this->appName() . '.page.index', $urlParameters) . '"
+  <a href="' . $this->urlGenerator()->linkToRoute($this->appName() . '.vueApp.index', $urlParameters) . '"
      class="musician-instrument-insurance"
      title="' . $tip . '">' . $bval . '</a>
 </div>';

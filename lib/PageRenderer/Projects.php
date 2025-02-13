@@ -1100,7 +1100,7 @@ class Projects extends PMETableViewBase
     ];
     $json = htmlspecialchars(json_encode($post));
     $post = http_build_query($post, '', '&');
-    $url = $this->urlGenerator()->linkToRoute($this->appName() . '.page.index', compact('template', 'projectId', 'projectName'));
+    $url = $this->urlGenerator()->linkToRoute($this->appName() . '.vueApp.index', compact('template', 'projectId', 'projectName'));
     $html = '<a class="button button-use-icon edit tooltip-top nav"
    href="' . $url . '"
    data-post="' . $post . '" data-json=\'' . $json . '\'

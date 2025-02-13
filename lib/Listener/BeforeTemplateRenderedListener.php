@@ -109,7 +109,7 @@ class BeforeTemplateRenderedListener implements IEventListener
     $navEntry = [
       'id' => $appName,
       'name' => 'CAFeVDB',
-      'href' => $urlGenerator->linkToRoute(implode('.', [ $appName, 'page', 'index' ])),
+      'href' => $urlGenerator->linkToRoute(implode('.', [ $appName, 'vueApp', 'index' ])),
       'icon' => $customLogo ?? $appIcon,
       'type' => 'link',
       'order' => 1,

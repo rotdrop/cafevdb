@@ -143,7 +143,7 @@ class Notifier implements \OCP\Notification\INotifier
             'type' => 'highlight',
             'id' => $this->appName,
             'name' => $this->appName,
-            'link' => $this->urlGenerator->linkToRoute($this->appName . '.page.index'),
+            'link' => $this->urlGenerator->linkToRoute($this->appName . '.vueApp.index'),
           ];
         }
 
@@ -156,7 +156,7 @@ class Notifier implements \OCP\Notification\INotifier
             'type' => 'highlight',
             'id' => $membersApp,
             'name' => $membersApp,
-            'link' => $this->urlGenerator->linkToRoute($membersApp . '.page.index'),
+            'link' => $this->urlGenerator->linkToRoute($membersApp . '.vueApp.index'),
           ];
         }
 

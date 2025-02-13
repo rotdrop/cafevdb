@@ -731,6 +731,13 @@ router.afterEach((to, from) => {
   logger.info('GLOBAL AFTER EACH ROUTE CHANGE', to, from, window?.history?.state)
   pageTemplate.value = to.params?.template || 'home'
   history.finishHistoryAction()
+  // @todo: parse the query parameters, e.g.
+  //
+  // ?template=blah&foo=bar
+  //
+  // This should result in setting the legacacy template to blah and
+  // passing { foo: bar } as tempalte parameters, potentially
+  // extending given default template parameters (if present).
 })
 // router.onReady((...args) => {
 //   logger.info('ROUTER ON READY HOOK', ...args, window?.history?.state)

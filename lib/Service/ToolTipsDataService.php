@@ -214,7 +214,7 @@ where PAYMENT_ID is the numeric database id of the asociated payment, PERSON is 
                   $template = \OCA\CAFEVDB\PageRenderer\ProjectPayments::TEMPLATE;
                   /** @var \OCP\IURLGenerator  $urlGenerator */
                   $urlGenerator = $appContainer->get(\OCP\IURLGenerator::class);
-                  $url = $urlGenerator->linkToRoute($appName . '.page.index', compact('template'));
+                  $url = $urlGenerator->linkToRoute($appName . '.vueApp.index', compact('template'));
                   return $url;
                 }
               ],
@@ -255,7 +255,7 @@ where `TAX_TYPE` is one of "%1$s".
                 $template = \OCA\CAFEVDB\PageRenderer\TaxExemptionNotices::TEMPLATE;
                 /** @var \OCP\IURLGenerator  $urlGenerator */
                 $urlGenerator = $appContainer->get(\OCP\IURLGenerator::class);
-                $url = $urlGenerator->linkToRoute($appName . '.page.index', compact('template'));
+                $url = $urlGenerator->linkToRoute($appName . '.vueApp.index', compact('template'));
                 return $url;
               }
             ],
@@ -285,7 +285,7 @@ where `TRANSACTIONTYPE` is one of `banktransfer` or `debitnote`.
                 // https://dev3.home.claus-justus-heine.de/apps/cafevdb/?template=tax-exemption-notices
                 /** @var \OCP\IURLGenerator  $urlGenerator */
                 $urlGenerator = $appContainer->get(\OCP\IURLGenerator::class);
-                $url = $urlGenerator->linkToRoute($appName . '.page.index');
+                $url = $urlGenerator->linkToRoute($appName . '.vueApp.index');
                 return $url;
               }
             ],

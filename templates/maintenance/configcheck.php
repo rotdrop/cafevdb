@@ -108,7 +108,7 @@ log-in again in order to be able to access the encrypted values.',
        <pre><?php echo $_SERVER['PHP_SELF']; ?></pre>
        <pre>Image: <?php echo $urlGenerator->imagePath($appName, ''); ?></pre>
        <pre>File: <?php echo $urlGenerator->linkTo($appName, ''); ?></pre>
-       <pre>Route: <?php echo $urlGenerator->linkToRoute('cafevdb.page.index'); ?></pre> -->
+       <pre>Route: <?php echo $urlGenerator->linkToRoute($appName . '.vueApp.index'); ?></pre> -->
   <ul>
 
 <?php
