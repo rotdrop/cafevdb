@@ -38,6 +38,13 @@ const SimpleEventEditor = async () => {
   return import('@nextcloud/app-calendar/src/views/EditSimple.vue');
 }
 
+const SidebarEventEditor = async () => {
+  require('@nextcloud/app-calendar/css/app-sidebar.scss');
+  const calendarStoreSetup = (await import('../services/calendar-store-setup.ts')).default;
+  await calendarStoreSetup();
+  return import('@nextcloud/app-calendar/src/views/EditSidebar.vue');
+};
+
 const calenderEditRoutes = [
   'EditPopoverView',
   'EditSidebarView',
@@ -73,21 +80,28 @@ const routes: RouteConfig[] = [
           next();
         },
       },
-      // {
-      //   path: '/:view/:firstDay/edit/sidebar/:object/:recurrenceId',
-      //   name: 'EditSidebarView',
-      //   component: EditSidebar,
-      // },
+      {
+        path: 'event/edit/sidebar/:object/:recurrenceId',
+        name: 'EditSidebarView',
+        component: SidebarEventEditor,
+        beforeEnter: (_to, from, next) => {
+          if (!calenderEditRoutes.includes(from.name!)) {
+            logger.info('Remember previous route before entering calendar stuff', from);
+            preCalendarRoute = from;
+          }
+          next();
+        },
+      },
       {
         path: 'event/new/popover/:allDay/:dtstart/:dtend',
         name: 'NewPopoverView',
         component: SimpleEventEditor,
       },
-      // {
-      //   path: '/:view/:firstDay/new/sidebar/:allDay/:dtstart/:dtend',
-      //   name: 'NewSidebarView',
-      //   component: EditSidebar,
-      // },
+      {
+        path: 'event/new/sidebar/:allDay/:dtstart/:dtend',
+        name: 'NewSidebarView',
+        component: SidebarEventEditor,
+      },
       {
         path: '--never--',
         name: 'CalendarView',
