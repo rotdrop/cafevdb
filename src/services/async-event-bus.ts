@@ -71,3 +71,25 @@ export function emit<K extends keyof AsyncNextcloudEvents>(
 ): Promise<any> {
   return bus.emit(name, ...event);
 }
+
+/**
+ * Unsubscribe all subscribers for an event.
+ *
+ * @param name name of the event
+ */
+export function unsubscribeAll<K extends keyof AsyncNextcloudEvents>(
+  name: K,
+): void {
+  bus.unsubscribeAll(name);
+}
+
+/**
+ * Check if the given event has any subscribers.
+ *
+ * @param name The name of the event to examine.
+ */
+export function hasSubscriptions<K extends keyof AsyncNextcloudEvents>(
+  name: K,
+): boolean {
+  return bus.hasSubscriptions(name);
+}
