@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 
-use OCA\Calendar\Service\CategoriesService as CalendarCategoriesService;
+use OCA\Calendar\Service\CalendarInitialStateService;
 
 /** Provide an "initial state" for JavaScript. */
 trait InitialStateTrait
@@ -185,12 +185,8 @@ trait InitialStateTrait
       ]
     );
 
-    /** @var CalendarCategoriesService $categoriesService */
-    $categoriesService = $this->appContainer->get(CalendarCategoriesService::class);
-    $this->initialStateService->provideInitialState(
-      'calendar',
-      'categories',
-      $categoriesService->getCategories(),
-    );
+    /** @var CalendarInitialStateService $calendarInitialStateService */
+    $calendarInitialStateService = $this->appContainer->get(CalendarInitialStateService::class);
+    $calendarInitialStateService->run();
   }
 }
