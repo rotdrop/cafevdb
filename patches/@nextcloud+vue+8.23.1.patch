@@ -1,0 +1,28 @@
+diff --git a/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-BntAj6H-.css b/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-BntAj6H-.css
+index 5037aac..6d07270 100644
+--- a/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-BntAj6H-.css
++++ b/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-BntAj6H-.css
+@@ -173,7 +173,7 @@
+   flex-direction: row;
+ }
+ .app-sidebar .app-sidebar-header--compact.app-sidebar-header--with-figure .app-sidebar-header__info .app-sidebar-header__figure[data-v-a6baa268] {
+-  --figure-size: calc($desc-height + var(--app-sidebar-padding));
++  --figure-size: calc(8px + var(--app-sidebar-padding));
+   z-index: 2;
+   width: var(--figure-size);
+   height: var(--figure-size);
+diff --git a/node_modules/@nextcloud/vue/dist/assets/NcColorPicker-C1DuuANb.css b/node_modules/@nextcloud/vue/dist/assets/NcColorPicker-C1DuuANb.css
+index 213c0a2..41c1542 100644
+--- a/node_modules/@nextcloud/vue/dist/assets/NcColorPicker-C1DuuANb.css
++++ b/node_modules/@nextcloud/vue/dist/assets/NcColorPicker-C1DuuANb.css
+@@ -80,8 +80,8 @@
+   height: 30px;
+ }
+ [data-v-d877eef3]  .vc-chrome-active-color {
+-  width: calc(var(--default-clickable-area) - 10 px);
+-  height: calc(var(--default-clickable-area) - 10 px);
++  width: calc(var(--default-clickable-area) - 10px);
++  height: calc(var(--default-clickable-area) - 10px);
+   border-radius: 17px;
+ }
+ [data-v-d877eef3]  .vc-chrome-body {
