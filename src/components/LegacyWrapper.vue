@@ -180,7 +180,7 @@ import {
   WIKI_POPUP,
 } from '../event-bus-events.ts'
 import * as LegacyNotification from '../app/notification.js'
-import objectHash from 'object-hash'
+import objectHash from '../util/object-hash.ts'
 import type { AxiosResponse } from 'axios'
 import type { LoadPartsData } from '../types/ajax/page-load-response.ts'
 import { loadTranslations, translate as t } from '@nextcloud/l10n'
@@ -222,7 +222,7 @@ const props = withDefaults(defineProps<{
   navButtonSize: 'large',
 })
 
-logger.info('PROPS AT START', props)
+logger.info('PROPS AT START', { ...props })
 
 // handle tooltips
 
@@ -314,17 +314,12 @@ const onUserManualPopup = () => {
 
 // make sure the URL reflects the given hash and remove the no-reload query
 const synchronizeHistoryState = (hash: string) => {
-  logger.info('REPLACE ROUTE TO SYNC BROWSER HISTORY', hash)
-  const params = {
-    template: props.template,
-    projectId: props.templateParameters?.projectId,
-    projectName: props.templateParameters?.projectName,
-  }
   const target = {
     name: 'legacy-page',
-    params,
+    params: { ...route.params },
     query: { hash },
   }
+  logger.info('REPLACE ROUTE TO SYNC BROWSER HISTORY', { target: { ...target } })
   return router.replace(target)
 }
 
