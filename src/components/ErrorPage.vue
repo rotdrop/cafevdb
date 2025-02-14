@@ -385,7 +385,7 @@ const reportError = async () => {
 
 </script>
 <style scoped lang="scss">
-@import './../../style/flex.scss';
+@import '../../style/flex.scss';
 .container {
   :deep(.envelope-error) {
     .list-item__anchor {
