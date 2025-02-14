@@ -27,14 +27,17 @@
  - params as properties.
  -->
 <template>
-  <div class="container">
+  <div class="container flex-container">
     <LegacyWrapper :template="template"
                    :template-parameters="templateParameters"
                    :hash="postDataHash"
                    :no-legacy-reload="noLegacyReload"
+                   class="legacy-page-wrapper"
     />
     <!-- Project-event editing -->
-    <router-view />
+    <div class="app-calendar">
+      <router-view />
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -90,7 +93,7 @@ asyncSubscribe(CALENDAR_EVENT_EDIT, async (event) => {
 })
 
 const onRouteChange = (to: Route) => {
-  logger.info('onRouteChange()', { to, historyState: window?.history?.state })
+  logger.info('onRouteChange()', { to: { ...to }, historyState: window?.history?.state })
   template.value = to.params.template
   // Object.assign(templateParameters.value, to.params)
   templateParameters.value = { ...to.params }
@@ -120,3 +123,13 @@ onBeforeRouteLeave((to, from, next) => {
   next()
 })
 </script>
+<style scoped lang="scss">
+@import '../../style/flex.scss';
+.container {
+  > .legacy-page-wrapper {
+    flex-shrink: 1;
+    max-width: 100%;
+    overflow: auto
+  }
+}
+</style>
