@@ -82,6 +82,8 @@ declare module '@nextcloud/vue' {
   const NcAppNavigation: Vue;
   const NcAppNavigationItem: Vue;
   const NcAppNavigationSettings: Vue;
+  const NcAppSidebar: Vue;
+  const NcAppSidebarTab: Vue;
   const NcCheckboxRadioSwitch: Vue;
   const NcEllipsisedOption: Vue;
   const NcEmptyContent: Vue;
@@ -99,6 +101,8 @@ declare module '@nextcloud/vue' {
     NcAppNavigation,
     NcAppNavigationItem,
     NcAppNavigationSettings,
+    NcAppSidebar,
+    NcAppSidebarTab,
     NcButton,
     NcCheckboxRadioSwitch,
     NcColorPicker,
