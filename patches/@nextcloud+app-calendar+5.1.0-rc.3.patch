@@ -1,0 +1,32 @@
+diff --git a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
+index 1fe7770..92802ce 100644
+--- a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
++++ b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
+@@ -390,7 +390,7 @@ export default {
+ 		/**
+ 		 * Closes the editor and returns to normal calendar-view
+ 		 */
+-		closeEditor() {
++		async closeEditor() {
+ 			if (this.isWidget) {
+ 				this.calendarsStore.closeWidgetEventDetails()
+ 				return
+@@ -399,10 +399,14 @@ export default {
+ 			delete params.object
+ 			delete params.recurrenceId
+ 
+-			this.$router.push({
+-				name: getPrefixedRoute(this.$route.name, 'CalendarView'),
+-				params,
+-			})
++			try {
++				await this.$router.push({
++					name: getPrefixedRoute(this.$route.name, 'CalendarView'),
++					params,
++				})
++			} catch (error) {
++				console.error('Caught an error returning to the base view', error)
++			}
+ 
+ 			this.calendarObjectInstanceStore.resetCalendarObjectInstanceObjectIdAndRecurrenceId()
+ 		},
