@@ -21,38 +21,16 @@
 
 import { appName } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
-import Console from '../util/console.ts';
-import type { Route, RouteConfig } from 'vue-router';
+import calendarRoutes from './calendar-routes.ts';
+import type { RouteConfig } from 'vue-router';
 
-const COMPONENT_NAME = 'router';
-const logger = new Console(COMPONENT_NAME);
+// import Console from '../util/console.ts';
+// const COMPONENT_NAME = 'router';
+// const logger = new Console(COMPONENT_NAME);
 
 export type HomeRouteName = 'home';
 export type LegayPageRouteName = 'legacy-page';
 export type RouteNames = HomeRouteName|LegayPageRouteName;
-
-const SimpleEventEditor = async () => {
-  require('@nextcloud/app-calendar/css/app-sidebar.scss');
-  const calendarStoreSetup = (await import('../services/calendar-store-setup.ts')).default;
-  await calendarStoreSetup();
-  return import('@nextcloud/app-calendar/src/views/EditSimple.vue');
-}
-
-const SidebarEventEditor = async () => {
-  require('@nextcloud/app-calendar/css/app-sidebar.scss');
-  const calendarStoreSetup = (await import('../services/calendar-store-setup.ts')).default;
-  await calendarStoreSetup();
-  return import('@nextcloud/app-calendar/src/views/EditSidebar.vue');
-};
-
-const calenderEditRoutes = [
-  'EditPopoverView',
-  'EditSidebarView',
-  'NewPopoverView',
-  'NewSidebarView',
-];
-
-let preCalendarRoute: Route|undefined;
 
 const routes: RouteConfig[] = [
   {
@@ -67,62 +45,7 @@ const routes: RouteConfig[] = [
     component: () => import('../components/LegacyWrapperRouterReactivity.vue'),
     name: 'legacy-page',
     props: true,
-    children: [
-      {
-        path: 'event/edit/popover/:object/:recurrenceId',
-        name: 'EditPopoverView',
-        component: SimpleEventEditor,
-        beforeEnter: (_to, from, next) => {
-          if (!calenderEditRoutes.includes(from.name!)) {
-            logger.info('Remember previous route before entering calendar stuff', from);
-            preCalendarRoute = from;
-          }
-          next();
-        },
-      },
-      {
-        path: 'event/edit/sidebar/:object/:recurrenceId',
-        name: 'EditSidebarView',
-        component: SidebarEventEditor,
-        beforeEnter: (_to, from, next) => {
-          if (!calenderEditRoutes.includes(from.name!)) {
-            logger.info('Remember previous route before entering calendar stuff', from);
-            preCalendarRoute = from;
-          }
-          next();
-        },
-      },
-      {
-        path: 'event/new/popover/:allDay/:dtstart/:dtend',
-        name: 'NewPopoverView',
-        component: SimpleEventEditor,
-      },
-      {
-        path: 'event/new/sidebar/:allDay/:dtstart/:dtend',
-        name: 'NewSidebarView',
-        component: SidebarEventEditor,
-      },
-      {
-        path: '--never--',
-        name: 'CalendarView',
-        beforeEnter: (_to, _from, next) => {
-          if (preCalendarRoute) {
-            logger.info('Try restore previous route on leaving calendar stuff', preCalendarRoute);
-            const target = {
-              name: preCalendarRoute.name!,
-              params: preCalendarRoute.params,
-              query: preCalendarRoute.query,
-              replace: true,
-            };
-            preCalendarRoute = undefined;
-            next(target);
-          } else {
-            logger.error('No previous route defined');
-            next({ name: 'home', replace: true })
-          }
-        },
-      },
-    ],
+    children: calendarRoutes,
   },
 ];
 
