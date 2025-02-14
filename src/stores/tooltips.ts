@@ -95,7 +95,7 @@ export default defineStore(storeId, () => {
       await lock;
       const requestedTooltips = [...pendingKeys.value];
       pendingKeys.value = [];
-      logger.info('PENDING KEYS CHANGED', { requestedTooltips });
+      logger.debug('PENDING KEYS CHANGED', { requestedTooltips });
       const newTooltips = await tooltips(requestedTooltips);
       for (const [key, tooltip] of Object.entries(newTooltips)) {
         if (!tooltip) {
@@ -105,7 +105,7 @@ export default defineStore(storeId, () => {
           tooltipsData[key] = tooltip;
         }
       }
-      logger.info('TOOLTIPS AFTER FETCHING', tooltipsData);
+      logger.debug('TOOLTIPS AFTER FETCHING', tooltipsData);
     },
     { deep: true },
   );
