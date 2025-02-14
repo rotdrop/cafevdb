@@ -529,23 +529,6 @@ const eventAction = async function(event) {
 
     break;
   }
-  case 'clone': {
-    // Clone an existing event. The legacy code does not allow
-    // modifications of single instances in a series.
-    post.push({ name: 'uri', value: uri });
-    post.push({ name: 'calendarid', value: calendarId });
-    $('#dialog_holder').load(
-      generateAppUrl('legacy/events/forms/clone'),
-      post,
-      function(response, textStatus, xhr) {
-        if (textStatus === 'success') {
-          Legacy.Calendar.UI.startEventDialog(afterInit);
-          return;
-        }
-        handleError(xhr, textStatus, xhr.status);
-      });
-    break;
-  }
   case 'absenceField':
     post.push({ name: 'enableAbsenceField', value: $this.prop('checked') });
     // fallthrough

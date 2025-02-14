@@ -99,13 +99,6 @@ $actionItems = [
       'repeating-scope-single-disabled',
     ],
   ],
-  'clone' => [
-    'label' => $l->t('duplicate'),
-    'css' => [
-      'scope-related-disabled',
-      'repeating-scope-single-disabled',
-    ],
-  ],
   'delete' => [
     'label' => $l->t('delete'),
   ],
