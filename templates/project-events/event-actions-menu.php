@@ -116,8 +116,10 @@ $actionItems = [
 
 ?>
 
-<span class="event-actions dropdown-container dropdown-no-hover"
+<span class="event-actions dropdown-container dropdown-no-hover fc-event"
       data-calendar-object='<?php echo $calendarObjectData ?>'
+      data-object-id="<?php echo $calendarObject['single']['objectId'] ?>"
+      data-recurrence-id="<?php echo $calendarObject['single']['recurrenceId'] ?>"
 >
   <button class="menu-title action-menu-toggle"
           title="<?php echo $toolTips['projectevents:event']; ?>"
