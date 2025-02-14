@@ -513,41 +513,19 @@ const eventAction = async function(event) {
   case 'calendar-app':
     // just let the browser follow the link
     afterInit();
-    return true;
+    return true; // do not cancel event bubbling
   case 'edit': {
-    // Edit existing event. The legacy code does not allow
-    // modifications of single instances in a series.
-
-    // post.push({ name: 'uri', value: uri });
-    // post.push({ name: 'calendarid', value: calendarId });
-    // $('#dialog_holder').load(
-    //   generateAppUrl('legacy/events/forms/edit'),
-    //   post,
-    //   function(response, textStatus, xhr) {
-    //     if (textStatus === 'success') {
-    //       Legacy.Calendar.UI.startEventDialog(afterInit);
-    //       return;
-    //     }
-    //     handleError(xhr, textStatus, xhr.status);
-    //   });
-
-    // const eventBusResult = await asyncEmit(GET_VUE_COMPONENT, {
-    //   name: SIMPLE_EVENT_EDITOR,
-    //   propsData: {},
-    // });
-    // if (!Array.isArray(eventBusResult)
-    //     || eventBusResult.length !== 1
-    //     || typeof eventBusResult[0].value !== 'object') {
-    //   throw new Error(t(appName, 'Unable to create simple event editor.'));
-    // }
-    // const simpleEditor = eventBusResult[0].value;
-    // await simpleEditor.$mount($('#dialog_holder')[0]);
-
     const $actionContainer = $this.closest('.dropdown-container.event-actions');
     const calendarObject = $actionContainer.data('calendarObject');
     console.info('TRY TRIGGER SIMPLE EDIT EVENT', calendarObject);
 
-    await asyncEmit(CALENDAR_EVENT_EDIT, { mode: 'simple', objectId: calendarObject.objectId, recurrenceId: calendarObject.recurrenceId });
+    try {
+      await asyncEmit(CALENDAR_EVENT_EDIT, { mode: 'simple', objectId: calendarObject.objectId, recurrenceId: calendarObject.recurrenceId });
+    } catch (error) {
+      // @todo decide whether to trigger error page
+      console.error('UNABLE TO OPEN CALENDAR EVENT DIALOG.');
+    }
+    afterInit();
 
     break;
   }
