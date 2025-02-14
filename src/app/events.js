@@ -36,9 +36,10 @@ import modalizer from './modalizer.js';
 import { close as closeActionMenus } from './action-menu.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
 import { emit as asyncEmit } from '../services/async-event-bus.ts';
-import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
-import { SIMPLE_EVENT_EDITOR } from '../mountable-component-names.ts';
+// import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
+// import { SIMPLE_EVENT_EDITOR } from '../mountable-component-names.ts';
 // import VueTestMenu from '../components/TestMenu.vue';
+import { CALENDAR_EVENT_EDIT } from '../event-bus-events.ts';
 
 require('jquery-ui/ui/widgets/accordion');
 
@@ -530,17 +531,24 @@ const eventAction = async function(event) {
     //     handleError(xhr, textStatus, xhr.status);
     //   });
 
-    const eventBusResult = await asyncEmit(GET_VUE_COMPONENT, {
-      name: SIMPLE_EVENT_EDITOR,
-      propsData: {},
-    });
-    if (!Array.isArray(eventBusResult)
-        || eventBusResult.length !== 1
-        || typeof eventBusResult[0].value !== 'object') {
-      throw new Error(t(appName, 'Unable to create simple event editor.'));
-    }
-    const simpleEditor = eventBusResult[0].value;
-    await simpleEditor.$mount($('#dialog_holder')[0]);
+    // const eventBusResult = await asyncEmit(GET_VUE_COMPONENT, {
+    //   name: SIMPLE_EVENT_EDITOR,
+    //   propsData: {},
+    // });
+    // if (!Array.isArray(eventBusResult)
+    //     || eventBusResult.length !== 1
+    //     || typeof eventBusResult[0].value !== 'object') {
+    //   throw new Error(t(appName, 'Unable to create simple event editor.'));
+    // }
+    // const simpleEditor = eventBusResult[0].value;
+    // await simpleEditor.$mount($('#dialog_holder')[0]);
+
+    const $actionContainer = $this.closest('.dropdown-container.event-actions');
+    const calendarObject = $actionContainer.data('calendarObject');
+    console.info('TRY TRIGGER SIMPLE EDIT EVENT', calendarObject);
+
+    await asyncEmit(CALENDAR_EVENT_EDIT, { mode: 'simple', objectId: calendarObject.objectId, recurrenceId: calendarObject.recurrenceId });
+
     break;
   }
   case 'clone': {

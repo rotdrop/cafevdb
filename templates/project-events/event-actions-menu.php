@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2023 Claus-Justus Heine
+ * @copyright 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,8 +38,6 @@ $selectId = 'select-check-' . $flatIdentifier;
 $actionScopeId = 'scope-radio-' . $flatIdentifier;
 $absenceFieldCssId = 'absence-field' . $flatIdentifier;
 
-$calendarLink = [];
-$remoteEventUrl = $remoteUrl . '/' . $event['uri'];
 if ($event['allday']) {
   $startStamp = [
     'single' => $utcDateStamp($event['start']),
@@ -51,22 +49,31 @@ if ($event['allday']) {
     'series' => $event['seriesStart']->getTimestamp(),
   ];
 }
+$calendarObjectId = base64_encode($remoteUrl . '/' . $event['uri']);
+$calendarObject = [
+  'single' => [
+    'timeRange' => $event['start']->format('Y-m-d'),
+    'objectId' => $calendarObjectId,
+    'recurrenceId' => empty($event['recurrenceId']) ? $startStamp['single'] : $event['recurrenceId'],
+  ],
+  'series' => [
+    'timeRange' => $event['seriesStart']->format('Y-m-d'),
+    'objectId' => $calendarObjectId,
+    'recurrenceId' => $startStamp['series'],
+  ],
+];
+$calendarObjectData = json_encode($calendarObject['single'], JSON_FORCE_OBJECT);
 
-$calendarLink['single'] = $urlGenerator->linkToRoute('calendar.view.indexview.timerange.edit', [
-  'view' => 'timeGridWeek',
-  'timeRange' => $event['start']->format('Y-m-d'),
-  'mode' => 'sidebar',
-  'objectId' =>  base64_encode($remoteEventUrl),
-  'recurrenceId' => empty($event['recurrenceId']) ? $startStamp['single'] : $event['recurrenceId'],
-]);
-$calendarLink['series'] = $urlGenerator->linkToRoute('calendar.view.indexview.timerange.edit', [
-  'view' => 'timeGridWeek',
-  'timeRange' => $event['seriesStart']->format('Y-m-d'),
-  'mode' => 'sidebar',
-  'objectId' =>  base64_encode($remoteEventUrl),
-  'recurrenceId' => $startStamp['series'],
-]);
-$calendarTarget = md5($urlGenerator->linkToRoute('calendar.view.indexdirect.edit', [ 'objectId' =>  $appName ]));
+$calendarSideBarLink = [];
+foreach (['single', 'series'] as $variant) {
+  $calendarSideBarLink[$variant] = $urlGenerator->linkToRoute('calendar.view.indexview.timerange.edit', [
+    'view' => 'timeGridWeek',
+    'mode' => 'sidebar',
+    ...$calendarObject[$variant],
+  ]);
+}
+// fancy id
+$calendarSideBarLinkTarget = md5($appName . ': event edit in calendar app sidebar');
 
 $actionItems = [
   'calendar-app:single' => [
@@ -74,16 +81,16 @@ $actionItems = [
     'css' => [
       'scope-related-invisible scope-series-invisible',
     ],
-    'href' => $calendarLink['single'],
-    'target' => $calendarTarget,
+    'href' => $calendarSideBarLink['single'],
+    'target' => $calendarSideBarLinkTarget,
   ],
   'calendar-app:series' => [
     'label' => $l->t('edit in calendar app'),
     'css' => [
       'scope-related-disabled scope-single-invisible',
     ],
-    'href' => $calendarLink['series'],
-    'target' => $calendarTarget,
+    'href' => $calendarSideBarLink['series'],
+    'target' => $calendarSideBarLinkTarget,
   ],
   'edit' => [
     'label' => $l->t('edit in simple editor'),
@@ -109,7 +116,9 @@ $actionItems = [
 
 ?>
 
-<span class="event-actions dropdown-container dropdown-no-hover">
+<span class="event-actions dropdown-container dropdown-no-hover"
+      data-calendar-object='<?php echo $calendarObjectData ?>'
+>
   <button class="menu-title action-menu-toggle"
           title="<?php echo $toolTips['projectevents:event']; ?>"
   >

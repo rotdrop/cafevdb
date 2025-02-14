@@ -22,7 +22,6 @@
  */
 
 export const PROJECT_ACTIONS_MENU = 'ProjectActionsMenu';
-export const SIMPLE_EVENT_EDITOR = 'SimpleEventEditor';
 
 export interface ComponentProps {
   [PROJECT_ACTIONS_MENU]: {
@@ -31,9 +30,6 @@ export interface ComponentProps {
     forceProjectName?: boolean,
     enableOverviewItem?: boolean,
     testOpen?: boolean,
-  },
-  [SIMPLE_EVENT_EDITOR]: {
-    projectId: number,
   },
 }
 

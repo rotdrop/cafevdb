@@ -27,35 +27,36 @@ export const appEventName = <T extends string>(tag: T) => appPrefix(tag, '::');
 
 // app events
 export const APP_SETTINGS_POPUP = appEventName('app-settings-popup');
-export const TOGGLE_TOOLTIPS = appEventName('toggle-tooltips');
-export const PROJECT_POPUP = appEventName('project-popup');
-export const WIKI_POPUP = appEventName('wiki-popup');
-export const PROJECT_INSTRUMENTATION_NUMBERS_POPUP = appEventName('project-instrumentation-numbers-popup');
-export const PROJECT_PARTICIPANT_FIELDS_POPUP = appEventName('project-participant-fields-popup');
+export const CALENDAR_EVENT_EDIT = appEventName('calendar-event-edit');
+export const POP_BUSY_STATE = appEventName('pop-busy-state');
+export const PROJECT_ACTIONS = appEventName('project-actions');
 export const PROJECT_EMAIL_POPUP = appEventName('project-email-popup');
 export const PROJECT_EVENTS_POPUP = appEventName('project-events-popup');
-export const PROJECT_ACTIONS = appEventName('project-actions');
+export const PROJECT_INSTRUMENTATION_NUMBERS_POPUP = appEventName('project-instrumentation-numbers-popup');
+export const PROJECT_PARTICIPANT_FIELDS_POPUP = appEventName('project-participant-fields-popup');
+export const PROJECT_POPUP = appEventName('project-popup');
 export const PUSH_BUSY_STATE = appEventName('push-busy-state');
-export const POP_BUSY_STATE = appEventName('pop-busy-state');
 export const SET_BUSY_FLAG = appEventName('set-busy-flag');
+export const TOGGLE_TOOLTIPS = appEventName('toggle-tooltips');
+export const WIKI_POPUP = appEventName('wiki-popup');
 
-export const SET_FINANCE_MODE = appEventName('set-finance-mode');
-export const SET_EXPERT_MODE = appEventName('set-expert-mode');
-export const SET_SHOW_DISABLED = appEventName('set-show-disabled');
 export const SET_DEBUG_MODES = appEventName('set-debug-modes');
-export const SET_TOOLTIPS_MODE = appEventName('set-tooltips-mode');
-export const SET_PAGE_ROWS = appEventName('set-page-rows');
 export const SET_DESELECT_INVISIBLE = appEventName('set-deselect-invsible');
 export const SET_DIRECT_CHANGE = appEventName('set-direct-change');
+export const SET_EXPERT_MODE = appEventName('set-expert-mode');
+export const SET_FINANCE_MODE = appEventName('set-finance-mode');
 export const SET_INITIAL_FILTER_VISIBILITY = appEventName('set-initial-filter-visibility');
+export const SET_PAGE_ROWS = appEventName('set-page-rows');
 export const SET_RESTORE_HISTORY = appEventName('set-restore-history');
+export const SET_SHOW_DISABLED = appEventName('set-show-disabled');
+export const SET_TOOLTIPS_MODE = appEventName('set-tooltips-mode');
 
-export const LEGACY_PAGE_LOAD = appEventName('legacy-page-load');
-export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');
-export const LEGACY_PME_HISTORY_UPDATE = appEventName('legacy-pme-history-update');
-export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
 export const LEGACY_AJAX_ERROR = appEventName('legacy-ajax-error');
 export const LEGACY_BACK_REQUEST = appEventName('legacy-back-request');
+export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
+export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');
+export const LEGACY_PAGE_LOAD = appEventName('legacy-page-load');
+export const LEGACY_PME_HISTORY_UPDATE = appEventName('legacy-pme-history-update');
 
 export const GET_VUE_COMPONENT = appEventName('get-vue-component');
 

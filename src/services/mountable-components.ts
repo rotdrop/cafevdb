@@ -22,25 +22,22 @@
  */
 
 import Vue from 'vue';
-import ProjectActionsMenu from '../components/ProjectActionsMenu.vue';
-import SimpleEventEditor from '../components/SimpleEventEditor.vue';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe } from './async-event-bus.ts'
 import * as MountableComponents from '../mountable-component-names.ts';
+import type { VueConstructor } from 'vue/types/vue';
 
-const ProjectActionsMenuConstructor = Vue.extend(ProjectActionsMenu);
-const SimpleEventEditorConstructor = Vue.extend(SimpleEventEditor);
+let ProjectActionsMenuConstructor: VueConstructor;
 
 export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
-  asyncSubscribe(GET_VUE_COMPONENT, (event) => {
+  asyncSubscribe(GET_VUE_COMPONENT, async (event) => {
     switch (event.name) {
       case MountableComponents.PROJECT_ACTIONS_MENU:
+        if (!ProjectActionsMenuConstructor) {
+          const ProjectActionsMenu = (await import('../components/ProjectActionsMenu.vue')).default;
+          ProjectActionsMenuConstructor = Vue.extend(ProjectActionsMenu);
+        }
         return new ProjectActionsMenuConstructor({
-          parent: vueApp,
-          propsData: event.propsData,
-        });
-      case MountableComponents.SIMPLE_EVENT_EDITOR:
-        return new SimpleEventEditorConstructor({
           parent: vueApp,
           propsData: event.propsData,
         });
