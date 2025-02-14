@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\PageRenderer;
+use OCA\CAFEVDB\Common\Util;
 
 /**
  * Provide a navigationItem() method for page-renderers which need a current
@@ -38,7 +39,7 @@ trait ProjectModeNavigationItemTrait
   /*** {@inheritdoc} */
   public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
   {
-    return array_merge(
+    return Util::arrayMergeRecursive(
       parent::navigationItem($projectId, $projectName), [
         'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
       ]);
