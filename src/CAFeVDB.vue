@@ -242,13 +242,13 @@
         </template>
       </NcEmptyContent>
     </NcAppContent>
-    <!--
     <NcAppSidebar v-show="showSidebar"
-                  :name="sidebarTitle"
+                  :name="'Hello World'"
                   :loading.sync="loading"
-                  @close="closeSidebar"
+                  @close="showSidebar = false"
     >
-      <NcAppSidebarTab v-if="sidebarView === 'InstrumentInsurances'"
+      <NcAppSidebarTab id="leck-mich" name="I am a Tab!" />
+      <!-- <NcAppSidebarTab v-if="sidebarView === 'InstrumentInsurances'"
                        id="details-side-bar"
                        icon="icon-share"
                        :name="t(appId, 'details')"
@@ -261,9 +261,8 @@
                        :name="t(appId, 'details')"
       >
         <ProjectDetails v-bind="sidebarProps" />
-      </NcAppSidebarTab>
+      </NcAppSidebarTab> -->
     </NcAppSidebar>
-    -->
     <div id="appsettings_popup" class="personal-settings app-admin-settings popup bottomleft hidden" />
     <div id="fullcalendar">
       <!-- used by legacy calendar stuff -->
@@ -290,6 +289,8 @@ import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import {
   NcActions,
   NcActionLink,
+  NcAppSidebar,
+  NcAppSidebarTab,
   NcContent,
   NcAppContent,
   NcAppNavigation,
