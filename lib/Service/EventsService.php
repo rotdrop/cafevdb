@@ -834,7 +834,7 @@ class EventsService
 
     $shareOwnerId = $this->shareOwnerId();
 
-    foreach ($calendarIds as $calendarId) {
+    foreach ($calendarIds as $calendarUri => $calendarId) {
       $cal = $this->calDavService->calendarById($calendarId);
       $displayName = !empty($cal)
                    ? $cal->getDisplayName()
@@ -842,16 +842,18 @@ class EventsService
       $displayName = str_replace(' (' . $shareOwnerId . ')', '', $displayName);
 
       $calendarUris = $this->calDavService->calendarUris($calendarId);
-      $remoteUrl = $this->urlGenerator()->linkTo('', sprintf('remote.php/dav/calendars/%s/%s', $this->userId(), $calendarUris['shareuri']));
+      $remoteUrl = rtrim($this->urlGenerator()->linkTo('', sprintf('remote.php/dav/calendars/%s/%s', $this->userId(), $calendarUris['shareuri'])), '/') . '/';
 
       $result[$calendarId] = [
         'name' => $displayName,
+        'uri' => $calendarUri,
         'remoteUrl' => $remoteUrl,
         'events' => [],
       ];
     }
     $result[-1] = [
       'name' => strval($this->l->t('Miscellaneous Calendars')),
+      'uri' => '',
       'remoteUrl' => null,
       'events' => []
     ];
