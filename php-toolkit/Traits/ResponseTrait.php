@@ -32,6 +32,8 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\IL10N;
 
+use OCA\RotDrop\Toolkit\Response\PreRenderedTemplateResponse;
+
 /**
  * Utility class to ease constructing HTTP responses.
  *
@@ -60,13 +62,15 @@ trait ResponseTrait
   /**
    * @param string $templateName
    *
-   * @param array $params
+   * @param array $params Defaults to an empty array.
    *
-   * @param string $renderAs
+   * @param string $renderAs Defaults to 'blank'.
    *
-   * @param null|string $appName
+   * @param null|string $appName If null use $this->appName or $this->appName().
    *
-   * @param null|IL10N $l10n
+   * @param null|IL10N $l10n If null resulting in using $this->l.
+   *
+   * @param bool $preRender Whether to immediately render the content.
    *
    * @return TemplateResponse
    */
@@ -76,12 +80,13 @@ trait ResponseTrait
     string $renderAs = 'blank',
     ?string $appName = null,
     ?IL10N $l10n = null,
+    bool $preRender = false,
   ):TemplateResponse {
     if ($appName === null) {
       $appName = method_exists($this, 'appName') ? $this->appName() : $this->appName;
     }
     $l10n = $l10n == $this->l;
-    return new TemplateResponse(
+    $response = new PreRenderedTemplateResponse(
       $appName,
       $templateName,
       array_merge(
@@ -94,6 +99,10 @@ trait ResponseTrait
       ),
       $renderAs,
     );
+    if ($preRender) {
+      $response->preRender();
+    }
+    return $response;
   }
 
   /**
@@ -160,7 +169,12 @@ trait ResponseTrait
       'admin' => 'bofh@nowhere.com',
     ];
 
-    return new TemplateResponse($this->appName, 'errorpage', $templateParameters, $renderAs);
+    return new TemplateResponse(
+      $this->appName,
+      'errorpage',
+      $templateParameters,
+      $renderAs,
+    );
   }
 
   /**
