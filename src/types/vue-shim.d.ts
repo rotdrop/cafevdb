@@ -61,6 +61,7 @@ declare module '@nextcloud/vue' {
     forceDisplayActions: true,
   };
   const NcListItemIcon: Vue;
+  const NcModal: Vue;
   const NcProgressBar: Vue;
   const NcRichText: Vue;
   const NcSelect : Vue & {
@@ -112,6 +113,7 @@ declare module '@nextcloud/vue' {
     NcEmptyContent,
     NcListItem,
     NcListItemIcon,
+    NcModal,
     NcProgressBar,
     NcRichText,
     NcSelect,
