@@ -45,6 +45,7 @@ export interface GlobalState {
   currencySymbol: string,
   locale: string,
   cloudLanguage: string,
+  serverRoot: string,
 
   initialized?: boolean,
 }

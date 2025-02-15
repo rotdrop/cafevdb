@@ -38,9 +38,10 @@ use OCP\Mail\IEMailTemplate;
 use OCP\Mail\IMailer;
 use OCP\Mail\IMessage;
 
-use OCA\CAFEVDB\Settings\Admin as AdminSettings;
+use OCA\CAFEVDB\Common\Html2Text;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 
 /**
  * Collect problem reports and forward them to configured targets (e.g. submit
@@ -80,6 +81,8 @@ class ProblemReportService
    * @param array $errorData The raw error data caught by the frontend
    * code. Ideally, this is data in the format of Nextcloud log entries, but this is not guaranteed.
    *
+   * @param null|string $errorHtml Relevant parts of the Nextcloud exception page.
+   *
    * @param null|string $userComment Optional comment submitted alongside the user. May be markdown.
    *
    * @return ?array Notification messages which the frontend should present
@@ -89,10 +92,17 @@ class ProblemReportService
   public function submit(
     array $userData,
     array $errorData,
+    ?string $errorHtml,
     ?string $userComment,
   ):?array {
 
-    $this->logInfo('Requested problem report: USER "' .  print_r($userData, true) . '" DATA "' . (int)!empty($errorData) . '" COMMENT "' . $userComment . '".');
+    $this->logInfo(
+      'Requested problem report: '
+      . 'USER "' . print_r($userData, true)
+      . '" DATA "' . (int)!empty($errorData)
+      . '" HTML "' . (int)!empty($errorHtml)
+      . '" COMMENT "' . $userComment . '".'
+    );
 
     // slightly more complicated than neccessary in case we want to add
     // further communication channels like Github or Gilab issues in the
@@ -100,7 +110,7 @@ class ProblemReportService
     $notifications = [];
     $exceptions = [];
     try {
-      $notifications[self::REPORT_METHOD_EMAIL] = $this->submitViaEmail($userData, $errorData, $userComment);
+      $notifications[self::REPORT_METHOD_EMAIL] = $this->submitViaEmail($userData, $errorData, $errorHtml, $userComment);
     } catch (Throwable $e) {
       $exceptions[self::REPORT_METHOD_EMAIL] = $e;
     }
@@ -179,6 +189,8 @@ class ProblemReportService
    * @param array $errorData The raw error data caught by the frontend
    * code. Ideally, this is data in the format of Nextcloud log entries, but this is not guaranteed.
    *
+   * @param null|string $errorHtml Relevant parts of the Nextcloud exception page.
+   *
    * @param null|string $userComment Optional comment submitted alongside the user. May be markdown.
    *
    * @return ?string A notification message which the frontend should present
@@ -188,6 +200,7 @@ class ProblemReportService
   public function submitViaEmail(
     array $userData,
     array $errorData,
+    ?string $errorHtml,
     ?string $userComment,
   ):?string {
 
@@ -220,6 +233,10 @@ class ProblemReportService
     }
 
     $emailTemplate->addHeading($this->l->t('System Error Report'));
+    if (!empty($errorHtml)) {
+      $errorHtmlText = Html2Text::convert($errorHtml);
+      $emailTemplate->addBodyText($errorHtml, $errorHtmlText);
+    }
     if (!empty($errorData)) {
       $errorDataString = json_encode(
         $errorData,
@@ -232,7 +249,8 @@ class ProblemReportService
         $this->l->t('SystemErrorReport') . '.json',
         'application/json',
       );
-    } else {
+    }
+    if (empty($errorData) && empty($errorHtml)) {
       $bodyText = $this->l->t('No stack-trace or other data was submitted together the problem report.');
       $emailTemplate->addBodyText($bodyText, $bodyText);
       $errorDataAttachment = null;

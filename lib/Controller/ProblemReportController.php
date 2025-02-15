@@ -63,6 +63,8 @@ class ProblemReportController extends Controller
    * @param array $errorData The raw error data caught by the frontend
    * code. Ideally, this is data in the format of Nextcloud log entries, but this is not guaranteed.
    *
+   * @param null|string $errorHtml Relevant parts of the Nextcloud exception page.
+   *
    * @param null|string $userComment Optional comment submitted alongside the user. May be markdown.
    *
    * @return Http\DataResponse
@@ -73,11 +75,12 @@ class ProblemReportController extends Controller
   public function post(
     array $user,
     array $errorData,
+    ?string $errorHtml,
     ?string $userComment,
   ):DataResponse {
     $status = Http::STATUS_OK;
     try {
-      $result = $this->reportService->submit($user, $errorData, $userComment);
+      $result = $this->reportService->submit($user, $errorData, $errorHtml, $userComment);
     } catch (Throwable $t) {
       $result = null;
     }

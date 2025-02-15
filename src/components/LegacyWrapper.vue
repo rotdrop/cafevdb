@@ -549,6 +549,7 @@ const legacyAjaxErrorHandler = asyncSubscribe(
     legacyAjaxError.value = new JQueryAjaxError(
       eventData.message || t(appName, 'An error occured during communication with the server.'),
       eventData.xhr,
+      eventData.html,
     )
     showLegacyAjaxError.value = true
     const { promise: closePromise, resolve } = Promise.withResolvers<boolean>()

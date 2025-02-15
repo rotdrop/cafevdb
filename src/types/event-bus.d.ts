@@ -82,7 +82,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [APP_SETTINGS_POPUP]: Callbacks,
     [CALENDAR_EVENT_EDIT]: { mode: 'simple'|'sidebar', objectId: string, recurrenceId: string },
     [GET_VUE_COMPONENT]: { name: keyof ComponentProps, propsData: PropsData<keyof ComponentProps> }, // { name: keyof ComponentProps, propsData: ComponentProps[typeof name] },
-    [LEGACY_AJAX_ERROR]: { xhr: jqXHR, message: string },
+    [LEGACY_AJAX_ERROR]: { xhr: jqXHR, message: string, html?: string },
     [LEGACY_BACK_REQUEST]: undefined,
     [LEGACY_PAGE_CLEANUP]: undefined,
     [LEGACY_PAGE_FINALIZE]: undefined,

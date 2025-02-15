@@ -41,6 +41,10 @@
                              :current-entry="logEntry"
                              :translations-loaded="translationsLoaded"
           />
+          <HtmlErrorModal v-if="htmlString"
+                          :open.sync="detailsModalOpen"
+                          :html-string="htmlString"
+          />
           <div>
             <!-- TODO: split the message to have a nice continuation, see nextcloud-vue -->
             {{ envelopeErrorMessage }}
@@ -51,9 +55,9 @@
                           close-after-click
                           @click="showProblemReport = !showProblemReport"
           />
-          <NcActionButton v-if="logEntry"
+          <NcActionButton v-if="logEntry || htmlString"
                           close-after-click
-                          :name="t(appName, 'open details')"
+                          :name="t(appName, 'show details')"
                           @click="detailsModalOpen = true"
           />
           <NcActionButton :name="t(appName, 'go to previous page')"
@@ -185,12 +189,14 @@ import {
   NcListItem,
   NcRichText,
 } from '@nextcloud/vue'
+import { NodeHtmlMarkdown /* , NodeHtmlMarkdownOptions */ } from 'node-html-markdown'
 import IconSubmit from 'vue-material-design-icons/Send.vue'
 import IconCancel from 'vue-material-design-icons/Cancel.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
 import IconEdit from 'vue-material-design-icons/TextBoxEdit.vue'
 import { getCurrentUser } from '@nextcloud/auth'
 import NextcloudLogModal from './LogEntry/LogDetailsModal.vue'
+import HtmlErrorModal from './HtmlErrorModal.vue'
 import Console from '../util/console.ts'
 import { serializeError, isErrorLike } from 'serialize-error'
 import type { ErrorLike } from 'serialize-error'
@@ -204,7 +210,9 @@ import {
   isJqXHR as isJqXHRGuard,
   isJqJsonXHR as isJqJsonXHRGuard,
   isJqNextcloudLogEntryXHR,
+  isJQueryAjaxHtmlError,
 } from '../types/ajax/jqxhr-error.ts'
+import globalState from '../app/globalstate.js'
 
 const COMPONENT_NAME = 'ErrorPage'
 const logger = new Console(COMPONENT_NAME)
@@ -248,6 +256,13 @@ const logEntry = computed(() =>
       ? originalError.value.responseJSON
       : null,
 )
+
+const htmlString = computed(() =>
+  (isJQueryAjaxHtmlError(envelopeError.value) ? envelopeError.value.html : '')
+    .replaceAll(globalState.serverRoot, ''),
+)
+
+//  isJqHtmlXHR(originalError.value) ? originalError.value.
 // const exception = computed(() =>
 //   isNextcloudExceptionResponse(originalError.value)
 //     ? originalError.value.response.data.exception
@@ -307,12 +322,22 @@ const currentUserHeading = t(appName, 'Personal Comments by {user}', { user: cur
 const effectiveUserComment = computed(() => userComment.value ? userComment.value : t(appName, 'No comment.'))
 const markDownDocLink = ref('https://www.markdownguide.org/cheat-sheet/')
 
+// Bump the level of the headings.
+const htmlStringForReport = computed(() => htmlString.value.replace(/(<h|<\/h)([1-7])/g, (_match, p1, p2) => (p1 + (+p2 + 2))))
+const htmlStringForMarkdown = computed(() => NodeHtmlMarkdown.translate(htmlStringForReport.value))
+
+const systemErrorHeading = computed(() => htmlString.value
+  ? `
+### ${t(appName, 'Data Record')}`
+  : '')
+
 const reportText = computed(() =>
   `# ${t(appName, 'Problem Report')}
 ## ${currentUserHeading}
 ${effectiveUserComment.value}
 ## ${t(appName, 'System Error Report')}
 *${t(appName, 'You cannot change this part of the report.')}*
+${htmlStringForMarkdown.value}${systemErrorHeading.value}
 \`\`\`
 ${systemErrorString}
 \`\`\`
@@ -338,6 +363,7 @@ const reportError = async () => {
   const postData = {
     user: currentUser,
     userComment: userComment.value,
+    errorHtml: htmlStringForReport.value,
     errorData: serializedError,
   }
   const userCommentHash = md5(userComment.value)
@@ -404,10 +430,13 @@ const reportError = async () => {
       align-self: start;
     }
   }
-  .problem-report {
+  :deep(.problem-report) {
     h5 {
       margin: auto;
       color: inherit;
+    }
+    .list-item-content__subname {
+      white-space: normal;
     }
   }
 }

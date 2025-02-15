@@ -30,86 +30,12 @@ import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
 import { loadState } from '@nextcloud/initial-state';
 import { emit as asyncEmit } from '../services/async-event-bus.ts';
 import { LEGACY_AJAX_ERROR } from '../event-bus-events.ts';
+import l10nHttpStatus from '@http-util/status-i18n';
+import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
 
 const cloudWebRoot = getCloudRootUrl() || '/';
 
-const ajaxHttpStatus = {
-  200: t(appName, 'OK'),
-  201: t(appName, 'Created'),
-  202: t(appName, 'Accepted'),
-  203: t(appName, 'Non-Authoritative Information'),
-  204: t(appName, 'No Content'),
-  205: t(appName, 'Reset Content'),
-  206: t(appName, 'Partial Content'),
-  207: t(appName, 'Multi-Status (WebDAV)'),
-  208: t(appName, 'Already Reported (WebDAV)'),
-  226: t(appName, 'IM Used'),
-  300: t(appName, 'Multiple Choices'),
-  301: t(appName, 'Moved Permanently'),
-  302: t(appName, 'Found'),
-  303: t(appName, 'See Other'),
-  304: t(appName, 'Not Modified'),
-  305: t(appName, 'Use Proxy'),
-  306: t(appName, '(Unused)'),
-  307: t(appName, 'Temporary Redirect'),
-  308: t(appName, 'Permanent Redirect (experimental)'),
-  400: t(appName, 'Bad Request'),
-  401: t(appName, 'Unauthorized'),
-  402: t(appName, 'Payment Required'),
-  403: t(appName, 'Forbidden'),
-  404: t(appName, 'Not Found'),
-  405: t(appName, 'Method Not Allowed'),
-  406: t(appName, 'Not Acceptable'),
-  407: t(appName, 'Proxy Authentication Required'),
-  408: t(appName, 'Request Timeout'),
-  409: t(appName, 'Conflict'),
-  410: t(appName, 'Gone'),
-  411: t(appName, 'Length Required'),
-  412: t(appName, 'Precondition Failed'),
-  413: t(appName, 'Request Entity Too Large'),
-  414: t(appName, 'Request-URI Too Long'),
-  415: t(appName, 'Unsupported Media Type'),
-  416: t(appName, 'Requested Range Not Satisfiable'),
-  417: t(appName, 'Expectation Failed'),
-  418: t(appName, 'I\'m a teapot (RFC 2324)'),
-  420: t(appName, 'Enhance Your Calm (Twitter)'),
-  422: t(appName, 'Unprocessable Entity (WebDAV)'),
-  423: t(appName, 'Locked (WebDAV)'),
-  424: t(appName, 'Failed Dependency (WebDAV)'),
-  425: t(appName, 'Reserved for WebDAV'),
-  426: t(appName, 'Upgrade Required'),
-  428: t(appName, 'Precondition Required'),
-  429: t(appName, 'Too Many Requests'),
-  431: t(appName, 'Request Header Fields Too Large'),
-  444: t(appName, 'No Response (Nginx)'),
-  449: t(appName, 'Retry With (Microsoft)'),
-  450: t(appName, 'Blocked by Windows Parental Controls (Microsoft)'),
-  451: t(appName, 'Unavailable For Legal Reasons'),
-  499: t(appName, 'Client Closed Request (Nginx)'),
-  500: t(appName, 'Internal Server Error'),
-  501: t(appName, 'Not Implemented'),
-  502: t(appName, 'Bad Gateway'),
-  503: t(appName, 'Service Unavailable'),
-  504: t(appName, 'Gateway Timeout'),
-  505: t(appName, 'HTTP Version Not Supported'),
-  506: t(appName, 'Variant Also Negotiates (Experimental)'),
-  507: t(appName, 'Insufficient Storage (WebDAV)'),
-  508: t(appName, 'Loop Detected (WebDAV)'),
-  509: t(appName, 'Bandwidth Limit Exceeded (Apache)'),
-  510: t(appName, 'Not Extended'),
-  511: t(appName, 'Network Authentication Required'),
-  598: t(appName, 'Network read timeout error'),
-  599: t(appName, 'Network connect timeout error'),
-
-  // Seemingly Nextcloud always ever only returns one of these:
-  OK: 200,
-  BAD_REQUEST: 400,
-  UNAUTHORIZED: 401,
-  NOT_FOUND: 404,
-  CONFLICT: 409,
-  PRECONDITION_FAILED: 412,
-  INTERNAL_SERVER_ERROR: 500,
-};
+const httpStatusText = (code, lang = undefined) => l10nHttpStatus(code, lang || globalState.cloudLanguage);
 
 /**
  * Generate some diagnostic output, mostly needed during application
@@ -172,7 +98,7 @@ const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) 
   case 'parsererror':
   case 'success': // this should not happen here
   default:
-    decodedStatus = ajaxHttpStatus[xhr.status];
+    decodedStatus = httpStatusText(xhr.status);
     break;
   }
 
@@ -181,32 +107,36 @@ const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) 
   // console.info(xhr.status, info, errorThrown, textStatus);
 
   switch (xhr.status) {
-  case ajaxHttpStatus.OK:
-  case ajaxHttpStatus.BAD_REQUEST:
-  case ajaxHttpStatus.NOT_FOUND:
-  case ajaxHttpStatus.CONFLICT:
-  case ajaxHttpStatus.INTERNAL_SERVER_ERROR: {
+  case HttpStatusCodes.OK:
+  case HttpStatusCodes.BAD_REQUEST:
+  case HttpStatusCodes.NOT_FOUND:
+  case HttpStatusCodes.CONFLICT:
+  case HttpStatusCodes.INTERNAL_SERVER_ERROR: {
 
     if (failData.message) {
       if (!Array.isArray(failData.message)) {
         failData.message = [failData.message];
       }
-      for (const msg of failData.message) {
-        info += '<div class="' + appName + ' error toastify">' + msg + '</div>';
-      }
     }
 
-    await asyncEmit(LEGACY_AJAX_ERROR, { xhr, message: failData.message?.join(' ') });
+    const eventData = {
+      xhr,
+      message: failData.message?.join(' '),
+    };
+    if (failData.html) {
+      eventData.html = failData.html;
+    }
+    await asyncEmit(LEGACY_AJAX_ERROR, eventData);
     console.info('RUNNING CLEANUP HOOKS', callbacks);
     callbacks.cleanup(failData);
     break;
   }
-  case ajaxHttpStatus.PRECONDITION_FAILED:
+  case HttpStatusCodes.PRECONDITION_FAILED:
     // a simple page reload may help
     callbacks.cleanup = function() {
       window.location.reload();
     };
-    if (failData.error && ajaxHttpStatus[xhr.status] !== t(appName, failData.error)) {
+    if (failData.error && httpStatusText(xhr.status) !== t(appName, failData.error)) {
       info += ': '
         + '<span class="bold error toastify name">'
         + t(appName, failData.error)
@@ -229,7 +159,7 @@ done automatically when cloud click "ok" or close this dialog window.
 </div>`;
     Dialogs.alert(info, caption, function() { callbacks.cleanup(failData); }, true, true);
     break;
-  case ajaxHttpStatus.UNAUTHORIZED: {
+  case HttpStatusCodes.UNAUTHORIZED: {
     // no point in continuing, direct the user to the login page
     callbacks.cleanup = function() {
       window.location.replace(cloudWebRoot);
@@ -360,6 +290,15 @@ const ajaxValidateResponse = function(data, required, errorCB) {
  * @returns {object} TBD.
  */
 const ajaxFailData = function(xhr, textStatus, errorThrown) {
+  console.info('AJAX FAIL DATA ARGS', {
+    xhr,
+    textStatus,
+    errorThrown,
+  });
+  if (textStatus === 'error' && xhr.status !== undefined) {
+    textStatus = httpStatusText(xhr.status);
+    xhr.statusText = textStatus;
+  }
   if (xhr.parsed !== undefined && xhr.error !== undefined && xhr.status !== undefined && xhr.message !== undefined) {
     return xhr;
   }
@@ -378,9 +317,10 @@ const ajaxFailData = function(xhr, textStatus, errorThrown) {
     if (ct.indexOf('html') > -1) {
       console.debug('html response', xhr, xhr.status, textStatus, errorThrown);
       data.message = t(
-        appName, 'HTTP error response to AJAX call: {code} / {error}',
-        { code: xhr.status, error: errorThrown });
+        appName, 'HTTP error response to AJAX call: {code} / {text}',
+        { code: xhr.status, text: xhr.statusText });
       data.info = $(xhr.responseText).find('main').html();
+      data.html = data.info;
       data.parsed = true;
     } else {
       console.log('unknown response');
@@ -411,7 +351,6 @@ $(function() {
 });
 
 export {
-  ajaxHttpStatus as httpStatus,
   ajaxHandleError as handleError,
   ajaxValidateResponse as validateResponse,
   ajaxFailData as failData,

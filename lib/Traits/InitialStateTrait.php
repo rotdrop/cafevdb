@@ -134,6 +134,7 @@ trait InitialStateTrait
         'currencyCode' => $this->currencyCode(),
         'adminContact' => $adminContact,
         'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get from request
+        'serverRoot' => \OC::$SERVERROOT,
         'expertMode' => $expertMode,
         'financeMode' => $financeMode,
         'debugModes' => $this->getConfigValue('debugmode', 0),
