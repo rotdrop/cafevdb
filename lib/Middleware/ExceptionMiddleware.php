@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Middleware;
 
 use Exception;
+use Throwable;
 
 use Psr\Log\LoggerInterface;
 
@@ -41,6 +42,7 @@ use OC\AppFramework\Utility\QueryNotFoundException;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\AppInfo\Application as App;
+use OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse;
 
 /**
  * Turn an exception into a data response which can be parsed by the frontend
@@ -65,10 +67,38 @@ class ExceptionMiddleware extends Middleware
   /**
    * {@inheritdoc}
    *
+   * This is called just before the NC core would call Response::render()
+   * anyway. The goal is to catch exception during rendering of
+   * TemplateReponse instances. Normally an exception thrown during render
+   * ends up in the top-level exception handler which then renders the core
+   * exception template, which may be undesirable in certain contexts.
+   */
+  public function afterController($controller, $methodName, Response $response)
+  {
+    if ($this->reflector->hasAnnotation('DoNotCatchExceptions') || !($response instanceof PreRenderedTemplateResponse)) {
+      return $response;
+    }
+    try {
+      $response->preRender();
+    } catch (Throwable $t) {
+      return $this->afterThrowable($controller, $methodName, $t);
+    }
+    return $response;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
    * Convert the exception to a data-response for the front-end. In effect
    * this disables the exception handling of the Nextcloud core.
    */
   public function afterException($controller, $methodName, Exception $exception)
+  {
+    return $this->afterThrowable($controller, $methodName, $exception);
+  }
+
+  /** {@inheritdoc} */
+  protected function afterThrowable($controller, $methodName, Throwable $exception)
   {
     if ($this->reflector->hasAnnotation('DoNotCatchExceptions')) {
       throw $exception;
@@ -114,6 +144,9 @@ class ExceptionMiddleware extends Middleware
       returnLogEntry: true,
       shift: PHP_INT_MIN, // do not decorate with prefix
     );
+    $this->logInfo('LOG_ENTRY ' . print_r($logEntry, true));
+    array_walk_recursive($logEntry, fn(&$value) => $value = str_replace(\OC::$SERVERROOT, '', $value));
+    $this->logInfo('LOG_ENTRY ' . print_r($logEntry, true));
     $httpStatusCode = $exception->getHttpStatusCode();
     return new JSONResponse($logEntry, $httpStatusCode);
   }
