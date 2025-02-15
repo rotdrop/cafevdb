@@ -10,10 +10,10 @@
         {{ t('logreader', 'Line {line}', { line: line.line }) }}
       </span>
     </div>
-    <pre class="trace__function">
+    <div class="trace__function">
       <code class="trace__function_name" v-text="functionText" />
       <code class="trace__function_arguments" v-text="argumentText" />
-    </pre>
+    </div>
   </li>
 </template>
 

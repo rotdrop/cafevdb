@@ -7,7 +7,7 @@
            size="large"
            :has-previous="false"
            :has-next="false"
-           :name="'blah'"
+           name="dummy"
            @update:show="$emit('update:open', false)"
   >
     <template #default>
