@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020 - 2024 Claus-Justus Heine
+ * @copyright 2020 - 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,27 +70,6 @@ class VCalendarService
     protected ConfigService $configService,
     private OC_Calendar_Object $legacyCalendarObject,
   ) {
-  }
-
-  /**
-   * Validate the given request-data which is an associative array.
-   *
-   * @param mixed $eventData Legacy request event data.
-   *
-   * @param string $kind What kind of event to create.
-   *
-   * @return array|false Array of error messages or false on success
-   */
-  public function validateRequest(mixed $eventData, string $kind = self::VEVENT)
-  {
-    switch ($kind) {
-      case self::VEVENT:
-        return $this->legacyCalendarObject->validateRequest($eventData);
-      case self::VTODO:
-        return $this->validateVTodoRequest($eventData);
-      default:
-        return null;
-    }
   }
 
   /**

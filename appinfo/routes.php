@@ -259,17 +259,6 @@ $routes = [
       'url' => '/maintenance/migrations/{what}',
       'verb' => 'GET',
     ],
-    // legacy calendar events
-    [
-      'name' => 'legacy_events#service_switch',
-      'url' => '/legacy/events/{topic}/{subTopic}', // topic = forms|actions
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'legacy_events#export_event',
-      'url' => '/legacy/events/actions/export',
-      'verb' => 'GET',
-    ],
     // blog
     [ // generate template for editor popup
       'name' =>  'blog#edit_entry',

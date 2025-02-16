@@ -3792,7 +3792,8 @@ Störung.';
     $events = $this->eventAttachments();
     foreach (array_values($events) as $event) {
       $eventUri = $event['uri'];
-      if (!$this->eventsService->fetchEvent($this->projectId, $eventUri)) {
+      $recurrenceId = $event['recurrenceId'];
+      if (!$this->eventsService->fetchEvent($this->projectId, $eventUri, $recurrenceId)) {
         $this->executionStatus = false;
         $this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Events'][] = $eventUri;
       }
@@ -5652,10 +5653,10 @@ Störung.';
       foreach ($eventGroup['events'] as $event) {
         $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
         $name = stripslashes($event['summary']).', '.$datestring;
-        $value = ProjectEventsController::makeInputValue($event);
+        $eventData = ProjectEventsController::makeInputValue($event);
         $flatIdentifier = EventsService::makeFlatIdentifier($event);
         $selectOptions[] = [
-          'value' => $value,
+          'value' => json_encode($eventData),
           'name' => $name,
           'group' => $group,
           'flags' => isset($attachedEvents[$flatIdentifier]) ? PageNavigation::SELECTED : 0

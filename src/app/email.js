@@ -30,7 +30,6 @@ import { personalRecordDialog as participantRecordDialog } from './project-parti
 import { eventsPopup as projectEventsPopup } from './projects.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import fileUploadInit from './file-upload.js';
-import { Calendar as LegacyCalendar } from '../legacy.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
 import { show as notificationShow } from './notification.js';
@@ -2230,29 +2229,31 @@ function emailFormPopup(post, modal, single, afterInit) {
 
 const documentReady = function() {
 
-  $('button.eventattachments.edit').click(function(event) {
-    event.preventDefault();
+  // As of February 2025 there is on such button.
+  // $('button.eventattachments.edit').click(function(event) {
+  //   event.preventDefault();
 
-    // Edit existing event
-    const post = [];
-    const type = {};
-    type.name = 'id';
-    type.value = $(this).val();
-    post.push(type);
-    $('#dialog_holder').load(
-      generateAppUrl('legacy/events/forms/edit'),
-      post,
-      function(response, textStatus, xhr) {
-        if (textStatus === 'success') {
-          $('input[name="delete"]').prop('disabled', true);
-          LegacyCalendar.UI.startEventDialog();
-          return;
-        }
-        ajaxHandleError(xhr, textStatus, xhr.status);
-      });
+  //   // Edit existing event
+  //   const post = [];
+  //   const type = {};
+  //   type.name = 'id';
+  //   type.value = $(this).val();
 
-    return false;
-  });
+  //   post.push(type);
+  //   $('#dialog_holder').load(
+  //     generateAppUrl('legacy/events/forms/edit'),
+  //     post,
+  //     function(response, textStatus, xhr) {
+  //       if (textStatus === 'success') {
+  //         $('input[name="delete"]').prop('disabled', true);
+  //         LegacyCalendar.UI.startEventDialog();
+  //         return;
+  //       }
+  //       ajaxHandleError(xhr, textStatus, xhr.status);
+  //     });
+
+  //   return false;
+  // });
 
 };
 

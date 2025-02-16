@@ -598,7 +598,7 @@ class EventsService
    *
    * @see makeEvent()
    */
-  public function fetchEvent(mixed $projectOrId, string $eventURI, ?int $recurrenceId):?array
+  public function fetchEvent(mixed $projectOrId, string $eventURI, ?int $recurrenceId = null):?array
   {
     $projectEvent = $this->getProjectEvent($projectOrId, $eventURI, $recurrenceId);
     if (empty($projectEvent)) {
@@ -842,28 +842,32 @@ class EventsService
       $displayName = str_replace(' (' . $shareOwnerId . ')', '', $displayName);
 
       $calendarUris = $this->calDavService->calendarUris($calendarId);
-      $remoteUrl = rtrim($this->urlGenerator()->linkTo('', sprintf('remote.php/dav/calendars/%s/%s', $this->userId(), $calendarUris['shareuri'])), '/') . '/';
+      $urlPath = rtrim($this->urlGenerator()->linkTo('', sprintf('remote.php/dav/calendars/%s/%s', $this->userId(), $calendarUris['shareuri'])), '/') . '/';
 
       $result[$calendarId] = [
         'name' => $displayName,
         'uri' => $calendarUri,
-        'remoteUrl' => $remoteUrl,
+        'urlPath' => $urlPath,
         'events' => [],
       ];
     }
     $result[-1] = [
       'name' => strval($this->l->t('Miscellaneous Calendars')),
       'uri' => '',
-      'remoteUrl' => null,
+      'urlPath' => null,
       'events' => []
     ];
 
     foreach ($projectEvents as $event) {
       $calId = array_search($event['calendarid'], $calendarIds);
       if ($calId === false) {
+        $calendarUris = $this->calDavService->calendarUris($calendarId);
+        $urlPath = rtrim($this->urlGenerator()->linkTo('', sprintf('remote.php/dav/calendars/%s/%s', $this->userId(), $calendarUris['shareuri'])), '/') . '/';
+        $event['urlPath'] =  $urlPath . $event['uri'];
         $result[-1]['events'][] = $event;
       } else {
         $calId = $calendarIds[$calId];
+        $event['urlPath'] = $result[$calId]['urlPath'] . $event['uri'];
         $result[$calId]['events'][] = $event;
       }
     }

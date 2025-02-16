@@ -24,45 +24,9 @@
 
 namespace OCA\CAFEVDB;
 
-use DateTimeImmutable;
-use DateTimeInterface;
-use DateTimeZone;
-
-// All day events: timestamps need to refer 00:00:00 in UTC.
-$utcTZ = new DateTimeZone('UTC');
-$utcDateStamp = function(DateTimeInterface $date) use ($utcTZ) {
-  return DateTimeImmutable::createFromFormat('Y-m-d|', $date->format('Y-m-d'), $utcTZ)->getTimestamp();
-};
-
 $selectId = 'select-check-' . $flatIdentifier;
 $actionScopeId = 'scope-radio-' . $flatIdentifier;
 $absenceFieldCssId = 'absence-field' . $flatIdentifier;
-
-if ($event['allday']) {
-  $startStamp = [
-    'single' => $utcDateStamp($event['start']),
-    'series' => $utcDateStamp($event['seriesStart']),
-  ];
-} else {
-  $startStamp = [
-    'single' => $event['start']->getTimestamp(),
-    'series' => $event['seriesStart']->getTimestamp(),
-  ];
-}
-$calendarObjectId = base64_encode($remoteUrl . '/' . $event['uri']);
-$calendarObject = [
-  'single' => [
-    'timeRange' => $event['start']->format('Y-m-d'),
-    'objectId' => $calendarObjectId,
-    'recurrenceId' => empty($event['recurrenceId']) ? $startStamp['single'] : $event['recurrenceId'],
-  ],
-  'series' => [
-    'timeRange' => $event['seriesStart']->format('Y-m-d'),
-    'objectId' => $calendarObjectId,
-    'recurrenceId' => $startStamp['series'],
-  ],
-];
-$calendarObjectData = json_encode($calendarObject['single'], JSON_FORCE_OBJECT);
 
 $calendarSideBarLink = [];
 foreach (['single', 'series'] as $variant) {
@@ -76,6 +40,13 @@ foreach (['single', 'series'] as $variant) {
 $calendarSideBarLinkTarget = md5($appName . ': event edit in calendar app sidebar');
 
 $actionItems = [
+  'edit' => [
+    'label' => $l->t('edit'),
+    'css' => [
+      'scope-related-disabled',
+      'repeating-scope-single-disabled',
+    ],
+  ],
   'calendar-app:single' => [
     'label' => $l->t('edit in calendar app'),
     'css' => [
@@ -92,13 +63,6 @@ $actionItems = [
     'href' => $calendarSideBarLink['series'],
     'target' => $calendarSideBarLinkTarget,
   ],
-  'edit' => [
-    'label' => $l->t('edit in simple editor'),
-    'css' => [
-      'scope-related-disabled',
-      'repeating-scope-single-disabled',
-    ],
-  ],
   'delete' => [
     'label' => $l->t('delete'),
   ],
@@ -109,11 +73,7 @@ $actionItems = [
 
 ?>
 
-<span class="event-actions dropdown-container dropdown-no-hover fc-event"
-      data-calendar-object='<?php echo $calendarObjectData ?>'
-      data-object-id="<?php echo $calendarObject['single']['objectId'] ?>"
-      data-recurrence-id="<?php echo $calendarObject['single']['recurrenceId'] ?>"
->
+<span class="event-actions dropdown-container dropdown-no-hover fc-event">
   <button class="menu-title action-menu-toggle"
           title="<?php echo $toolTips['projectevents:event']; ?>"
   >

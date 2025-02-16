@@ -177,15 +177,6 @@ trait InitialStateTrait
         ],
       ]);
 
-    $calendarApp = \OC::$server->query(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_App::class);
-    $this->initialStateService->provideInitialState(
-      $this->appName,
-      'Calendar',
-      [
-        'categories' => $calendarApp->getCategoryOptions()
-      ]
-    );
-
     /** @var CalendarInitialStateService $calendarInitialStateService */
     $calendarInitialStateService = $this->appContainer->get(CalendarInitialStateService::class);
     $calendarInitialStateService->run();

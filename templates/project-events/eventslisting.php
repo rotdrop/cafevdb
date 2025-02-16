@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2023-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,9 +22,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use DateTimeImmutable;
+use DateTimeInterface;
+use DateTimeZone;
+
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
+
+// All day events: timestamps need to refer 00:00:00 in UTC.
+$utcTZ = new DateTimeZone('UTC');
+$utcDateStamp = function(DateTimeInterface $date) use ($utcTZ) {
+  return DateTimeImmutable::createFromFormat('Y-m-d|', $date->format('Y-m-d'), $utcTZ)->getTimestamp();
+};
 
 ?>
 <div class="size-holder event-list-container">
@@ -56,7 +66,7 @@ $n = 0;
 foreach ($eventMatrix as $key => $eventGroup) {
   $class = [ 'listing', ];
   $dpyName = $eventGroup['name'];
-  $remoteUrl = $eventGroup['remoteUrl'];
+  $urlPath = $eventGroup['urlPath'];
   $events  = $eventGroup['events'];
   if (empty($events)) {
     if ($key >= 0) {
@@ -77,7 +87,7 @@ foreach ($eventMatrix as $key => $eventGroup) {
     $calId  = $event['calendarid'];
     $evtUri = $event['uri'];
     $evtUid = $event['uid'];
-    $recurrenceId = $event['recurrenceId'];
+    $recurrenceId = $event['recurrenceId'] ?? 0;
     $seriesUid = $event['seriesUid'] ?? '';
     $absenceFieldId = $event['absenceField'];
 
@@ -113,14 +123,18 @@ foreach ($eventMatrix as $key => $eventGroup) {
       . (!empty($brief) ? '<br/>' . $brief  : '')
       . (!empty($location) ? '<br/>' . $location  : '')
       . (!empty($description) ? '<br/>' . $description : '');
+
+    $calendarObject = ProjectEventsController::makeCalendarAppData($event);
+    $calendarObjectData = json_encode($calendarObject['single'], JSON_FORCE_OBJECT);
 ?>
-        <tr class="<?php p($rowCssClass); ?> step-<?php p($n); ?>"
-            data-calendar-id="<?php p($calId); ?>"
-            data-uri="<?php p($evtUri); ?>"
-            data-recurrence-id="<?php p($recurrenceId); ?>"
-            data-series-uid="<?php p($seriesUid); ?>"
-            data-action-scope="<?php p($actionScope); ?>"
-            data-absence-field-id="<?php p($absenceFieldId); ?>"
+        <tr class="<?= $rowCssClass ?> step-<?= $n ?>"
+            data-calendar-id="<?= $calId ?>"
+            data-uri="<?= $evtUri ?>"
+            data-series-uid="<?= $seriesUid ?>"
+            data-action-scope="<?= $actionScope ?>"
+            data-absence-field-id="<?= $absenceFieldId ?>"
+            data-calendar-object='<?= $calendarObjectData ?>'
+            data-recurrence-id="<?= $recurrenceId ?>"
         >
           <td class="eventbuttons">
             <input type="hidden" id="calendarid-<?php p($evtUri); ?>" name="calendarId[<?php p($evtUri); ?>]" value="<?php p($calId); ?>"/>
@@ -128,19 +142,20 @@ foreach ($eventMatrix as $key => $eventGroup) {
     $title = $toolTips['projectevents:event:select'];
     $checked = isset($selected[$flatIdentifier]) ? 'checked="checked"' : '';
     $emailCheckId = 'email-check-' . $flatIdentifier;
-    echo $this->inc('project-events/event-actions-menu', [
-      'flatIdentifier' => $flatIdentifier,
-      'inputValue' => $inputValue,
-      'selected' => $selected,
-      'dateString' => $dateString,
-      'seriesUid' => $seriesUid,
-      'isRepeating' => $isRepeating,
-      'hasCrossSeriesRelations' => $hasCrossSeriesRelations,
-      'actionScope' => $actionScope,
-      'remoteUrl' => $remoteUrl,
-      'absenceFieldId' => $absenceFieldId,
-      'event' => $event,
-    ]);
+    echo $this->inc('project-events/event-actions-menu', compact(
+      'flatIdentifier',
+      'inputValue',
+      'selected',
+      'dateString',
+      'seriesUid',
+      'isRepeating',
+      'hasCrossSeriesRelations',
+      'actionScope',
+      'urlPath',
+      'absenceFieldId',
+      'event',
+      'calendarObject',
+    ));
 ?>
           </td>
           <td class="eventemail">

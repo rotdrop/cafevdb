@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, appPrefix, $ } from './globals.js';
+import { appName, appPrefix, $ } from './globals.js';
 import fileDownload from './file-download.js';
 import generateAppUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
@@ -35,16 +35,13 @@ import modalizer from './modalizer.js';
 import { close as closeActionMenus } from './action-menu.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
 import { emit as asyncEmit } from '../services/async-event-bus.ts';
-// import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
-// import { SIMPLE_EVENT_EDITOR } from '../mountable-component-names.ts';
-// import VueTestMenu from '../components/TestMenu.vue';
 import { CALENDAR_EVENT_EDIT, CALENDAR_EVENT_ADD } from '../event-bus-events.ts';
 
 require('jquery-ui/ui/widgets/accordion');
 
 require('events.scss');
 
-globalState.Events = {
+const project = {
   projectId: -1,
   projectName: '',
 };
@@ -102,8 +99,8 @@ const init = function(htmlContent, textStatus, request, afterInit) {
 
   afterInit = afterInit || function() {};
 
-  globalState.Events.projectId = parseInt(request.getResponseHeader('X-' + appName + '-project-id'));
-  globalState.Events.projectName = request.getResponseHeader('X-' + appName + '-project-name');
+  project.projectId = parseInt(request.getResponseHeader('X-' + appName + '-project-id'));
+  project.projectName = request.getResponseHeader('X-' + appName + '-project-name');
 
   const dialogContent = $(htmlContent);
   dialogContent.cafevDialog({
@@ -163,22 +160,26 @@ const init = function(htmlContent, textStatus, request, afterInit) {
           return false;
         }
 
-        const contextData = {
-          categories: $this.data('defaultCategories'),
-          requiredCategories: [$this.data('projectName')],
-          calendarId: btoa($this.data('calendarRemoteUrl')),
-          title: $this.data('defaultTitle'),
-        };
+        try {
+          const contextData = {
+            categories: $this.data('defaultCategories'),
+            requiredCategories: [project.projectName],
+            calendarId: btoa($this.data('calendarUrlPath')),
+            title: $this.data('defaultTitle'),
+          };
 
-        const now = Math.round(Date.now() / 1000);
-        const newEventArgs = {
-          allDay: true,
-          dtstart: now,
-          dtend: now,
-          context: btoa(JSON.stringify(contextData, undefined, 2)),
-        };
-        await asyncEmit(CALENDAR_EVENT_ADD, newEventArgs);
-
+          const now = Math.round(Date.now() / 1000);
+          const newEventArgs = {
+            allDay: true,
+            dtstart: now,
+            dtend: now,
+            context: contextData,
+          };
+          await asyncEmit(CALENDAR_EVENT_ADD, newEventArgs);
+        } catch (error) {
+          // @todo decide whether to trigger error page
+          console.error('UNABLE TO OPEN CALENDAR EVENT DIALOG.', error);
+        }
         $.fn.cafevTooltip.remove();
 
         return false;
@@ -275,8 +276,8 @@ const init = function(htmlContent, textStatus, request, afterInit) {
           $.post(
             generateAppUrl('projects/events/redisplay'),
             {
-              projectId: globalState.Events.projectId,
-              projectName: globalState.Events.projectName,
+              projectId: project.projectId,
+              projectName: project.projectName,
               eventSelect: events,
             })
             .fail(handleError)
@@ -515,15 +516,19 @@ const eventAction = async function(event) {
     afterInit();
     return true; // do not cancel event bubbling
   case 'edit': {
-    const $actionContainer = $this.closest('.dropdown-container.event-actions');
-    const calendarObject = $actionContainer.data('calendarObject');
-    console.info('TRY TRIGGER SIMPLE EDIT EVENT', calendarObject);
-
+    const calendarObject = rowData.calendarObject;
     try {
-      await asyncEmit(CALENDAR_EVENT_EDIT, { mode: 'simple', objectId: calendarObject.objectId, recurrenceId: calendarObject.recurrenceId });
+      await asyncEmit(CALENDAR_EVENT_EDIT, {
+        mode: 'simple',
+        objectId: calendarObject.objectId,
+        recurrenceId: calendarObject.recurrenceId,
+        context: {
+          requiredCategories: [project.projectName],
+        },
+      });
     } catch (error) {
       // @todo decide whether to trigger error page
-      console.error('UNABLE TO OPEN CALENDAR EVENT DIALOG.');
+      console.error('UNABLE TO OPEN CALENDAR EVENT DIALOG.', error);
     }
     afterInit();
 
@@ -610,6 +615,7 @@ const eventAction = async function(event) {
 };
 
 export {
+  project,
   init,
   redisplay,
 };

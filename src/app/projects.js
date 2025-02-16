@@ -116,7 +116,7 @@ const eventsPopup = function(post, reopen) {
   if (typeof reopen === 'undefined') {
     reopen = false;
   }
-  if (globalState.Events.projectId !== post.projectId) {
+  if (Events.project.projectId !== post.projectId) {
     reopen = true;
   }
   const eventsDlg = $('#events');

@@ -74,17 +74,15 @@ const router = useRouter()
 logger.debug('BEFORE ROUTE ENTER', { ...currentRoute }, { ...window?.history?.state })
 
 asyncSubscribe(CALENDAR_EVENT_EDIT, async (event) => {
-  logger.info('CALENDAR_EVENT_EDIT', event)
-  if (event.mode === 'sidebar') {
-    logger.error('SIDEBAR EDIT OF EVENTS NOT YET SUPPORTED')
-  }
-  const name = 'EditPopoverView'
-  const params = Object.assign({}, currentRoute.params, {
-    object: event.objectId,
-    recurrenceId: event.recurrenceId,
-  })
-  const query = currentRoute.query
+  logger.info('CALENDAR_EVENT_EDIT', event, atob(event.objectId))
+  const name = event.mode === 'simple' ? 'EditPopoverView' : 'EditSidebarView'
   try {
+    const params = Object.assign({}, currentRoute.params, {
+      object: event.objectId,
+      recurrenceId: event.recurrenceId,
+      context: event.context ? btoa(JSON.stringify(event.context)) : '',
+    })
+    const query = currentRoute.query
     return await router.push({ name, params, query })
   } catch (error) {
     logger.error('ROUTE PUSH FAILED', { currentRoute }, error)
@@ -92,22 +90,16 @@ asyncSubscribe(CALENDAR_EVENT_EDIT, async (event) => {
 })
 
 asyncSubscribe(CALENDAR_EVENT_ADD, async (event) => {
-  logger.info('EVENT DATA', {
-    allDay: event.allDay,
-    dtstart: event.dtstart,
-    dtend: event.dtend,
-    context: JSON.parse(atob(event.context)),
-  })
-  const name = 'NewPopoverView'
-  const params = Object.assign({
-  }, {
-    allDay: event.allDay,
-    dtstart: event.dtstart,
-    dtend: event.dtend,
-    context: event.context,
-  })
-  const query = currentRoute.query
+  logger.info('EVENT DATA', { ...event })
+  const name = event.mode === 'simple' ? 'NewPopoverView' : 'NewSidebarView'
   try {
+    const params = {
+      allDay: '' + event.allDay,
+      dtstart: '' + event.dtstart,
+      dtend: '' + event.dtend,
+      context: event.context ? btoa(JSON.stringify(event.context)) : '',
+    }
+    const query = currentRoute.query
     return await router.push({ name, params, query })
   } catch (error) {
     logger.error('ROUTE PUSH FAILED', { currentRoute }, error)

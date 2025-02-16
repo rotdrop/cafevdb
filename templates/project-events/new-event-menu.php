@@ -57,7 +57,7 @@ use OCA\CAFEVDB\Service\ConfigService;
           data-operation="<?php p($uri); ?>"
           data-calendar-uri="<?php p($uri); ?>"
           data-project-name="<?php p($projectName); ?>"
-          data-calendar-remote-url="<?php p($eventGroup['remoteUrl']); ?>"
+          data-calendar-url-path="<?php p($eventGroup['urlPath']); ?>"
           data-default-categories='<?php p($defaultCategories); ?>'
           data-default-title="<?php p($defaultTitle); ?>"
           title="<?php echo $toolTips['projectevents:all:new:' . $uri]; ?>"
