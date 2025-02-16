@@ -329,7 +329,6 @@ class ProjectEventsController extends Controller
     }
     $dfltIds = $this->eventsService->defaultCalendars();
     $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
-    $this->logInfo('EVENT MATRIX' . print_r($eventMatrix, true));
 
     $templateParameters = [
       'appName' => $this->appName,
@@ -347,6 +346,7 @@ class ProjectEventsController extends Controller
       'urlGenerator' => $this->urlGenerator(),
       'requesttoken' => \OCP\Util::callRegister(),
       ConfigService::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY),
+      'recordAbsenceCategory' => $this->eventsService->getRecordAbsenceCategory(),
     ];
     $response = $this->templateResponse(
       $template,

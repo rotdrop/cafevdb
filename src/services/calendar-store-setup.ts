@@ -23,39 +23,40 @@
 import useCalendarsStore from '@nextcloud/app-calendar/src/store/calendars.js';
 import usePrincipalsStore from '@nextcloud/app-calendar/src/store/principals.js';
 import { initializeClientForUserView } from '@nextcloud/app-calendar/src/services/caldavService.js';
+import getTimeZoneManager from '@nextcloud/app-calendar/src/services/timezoneDataProviderService.js';
 import Console from '../util/console.ts';
 
 interface Calendar {
   owner: string,
 }
 
+// make sure all the required data is loaded in order to (mis-)reuse
+// the calendar editor widgets.
 const calendarStoreSetup = async () => {
 
   const logger = new Console('calendarSetup');
 
-  const calendarsStore = useCalendarsStore()
-  const principalsStore = usePrincipalsStore()
+  const calendarsStore = useCalendarsStore();
+  const principalsStore = usePrincipalsStore();
 
   if (calendarsStore.initialCalendarsLoaded) {
-    logger.info('INITIAL CALENDARS ALREADY LOADED')
+    logger.debug('INITIAL CALENDARS ALREADY LOADED');
     return
   }
-  logger.info('initializeClientForUserView')
-  await initializeClientForUserView()
-  logger.info('fetchCurrentUserPrincipal')
-  await principalsStore.fetchCurrentUserPrincipal()
-  logger.info('loadCollections')
-  const { calendars, trashBin } = await calendarsStore.loadCollections()
-  logger.info('calendars and trash bin loaded', { calendars, trashBin })
-  const owners: string[] = []
+  getTimeZoneManager();
+  await initializeClientForUserView();
+  await principalsStore.fetchCurrentUserPrincipal();
+  const { calendars } = await calendarsStore.loadCollections();
+  const owners: string[] = [];
   calendars.forEach((calendar: Calendar) => {
     if (owners.indexOf(calendar.owner) === -1) {
-      owners.push(calendar.owner)
+      owners.push(calendar.owner);
     }
   })
   owners.forEach((owner) => {
-    principalsStore.fetchPrincipalByUrl({ url: owner })
+    principalsStore.fetchPrincipalByUrl({ url: owner });
   });
+  logger.debug('Calendar stores have been setup');
 };
 
 export default calendarStoreSetup;

@@ -53,8 +53,8 @@ import {
 } from 'vue-router/composables'
 import type { Route } from 'vue-router'
 import Console from '../util/console.ts'
-import { CALENDAR_EVENT_EDIT } from '../event-bus-events.ts'
-import { subscribe as asyncSubscribe, hasSubscriptions } from '../services/async-event-bus.ts'
+import { CALENDAR_EVENT_EDIT, CALENDAR_EVENT_ADD } from '../event-bus-events.ts'
+import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
 
 const COMPONENT_NAME = 'LegacyWrapperRouterReactivity'
 const logger = new Console(COMPONENT_NAME)
@@ -73,7 +73,6 @@ const router = useRouter()
 
 logger.debug('BEFORE ROUTE ENTER', { ...currentRoute }, { ...window?.history?.state })
 
-logger.info('SUBSCRIBE TO', CALENDAR_EVENT_EDIT, hasSubscriptions(CALENDAR_EVENT_EDIT))
 asyncSubscribe(CALENDAR_EVENT_EDIT, async (event) => {
   logger.info('CALENDAR_EVENT_EDIT', event)
   if (event.mode === 'sidebar') {
@@ -83,6 +82,29 @@ asyncSubscribe(CALENDAR_EVENT_EDIT, async (event) => {
   const params = Object.assign({}, currentRoute.params, {
     object: event.objectId,
     recurrenceId: event.recurrenceId,
+  })
+  const query = currentRoute.query
+  try {
+    return await router.push({ name, params, query })
+  } catch (error) {
+    logger.error('ROUTE PUSH FAILED', { currentRoute }, error)
+  }
+})
+
+asyncSubscribe(CALENDAR_EVENT_ADD, async (event) => {
+  logger.info('EVENT DATA', {
+    allDay: event.allDay,
+    dtstart: event.dtstart,
+    dtend: event.dtend,
+    context: JSON.parse(atob(event.context)),
+  })
+  const name = 'NewPopoverView'
+  const params = Object.assign({
+  }, {
+    allDay: event.allDay,
+    dtstart: event.dtstart,
+    dtend: event.dtend,
+    context: event.context,
   })
   const query = currentRoute.query
   try {

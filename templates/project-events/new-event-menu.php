@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2023 Claus-Justus Heine
+ * @copyright 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,11 +26,10 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
-$calendarUris = array_column(ConfigService::CALENDARS, 'uri');
-
 ?>
-
-<span class="new-event dropdown-container dropdown-no-hover">
+<span class="new-event dropdown-container dropdown-no-hover fc-event"
+      data-is-new="yes"
+>
   <button class="menu-title image-button button action-menu-toggle"
           title="<?php echo $toolTips['projectevents:all:new']; ?>"
   >
@@ -38,11 +37,29 @@ $calendarUris = array_column(ConfigService::CALENDARS, 'uri');
   </button>
   <nav class="new-event-dropdown dropdown-content dropdown-align-left">
     <ul>
-      <?php foreach ($calendarUris as $uri) {
+      <?php foreach ($eventMatrix as $eventGroup) {
+        $uri = $eventGroup['uri'];
+        if (!$uri) {
+          continue;
+        }
         $label = $l->t(ucfirst($uri));
+        $defaultCategories = [
+          $projectName,
+          $uri,
+        ];
+        if ($uri === ConfigService::REHEARSALS_CALENDAR_URI || $uri == ConfigService::CONCERTS_CALENDAR_URI) {
+          $defaultCategories[] = $recordAbsenceCategory;
+        }
+        $defaultCategories = json_encode($defaultCategories);
+        $defaultTitle = $label . ', ' . $projectName;
       ?>
       <li class="new-event menu-item tooltip-right new-event-<?php p($uri); ?>"
           data-operation="<?php p($uri); ?>"
+          data-calendar-uri="<?php p($uri); ?>"
+          data-project-name="<?php p($projectName); ?>"
+          data-calendar-remote-url="<?php p($eventGroup['remoteUrl']); ?>"
+          data-default-categories='<?php p($defaultCategories); ?>'
+          data-default-title="<?php p($defaultTitle); ?>"
           title="<?php echo $toolTips['projectevents:all:new:' . $uri]; ?>"
       >
         <a href="#" class="flex-container flex-center">

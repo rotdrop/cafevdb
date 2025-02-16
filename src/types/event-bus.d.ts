@@ -26,6 +26,7 @@ import { jqXHR } from '@types/jquery/misc.d.ts';
 
 import {
   APP_SETTINGS_POPUP,
+  CALENDAR_EVENT_ADD,
   CALENDAR_EVENT_EDIT,
   EMAIL_POPUP,
   GET_VUE_COMPONENT,
@@ -80,6 +81,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
   export interface EventArgs {
     // mapping of 'event name' => 'event type'
     [APP_SETTINGS_POPUP]: Callbacks,
+    [CALENDAR_EVENT_ADD]: { allDay: boolean, dtstart: number, dtend: number, context?: string },
     [CALENDAR_EVENT_EDIT]: { mode: 'simple'|'sidebar', objectId: string, recurrenceId: string },
     [GET_VUE_COMPONENT]: { name: keyof ComponentProps, propsData: PropsData<keyof ComponentProps> }, // { name: keyof ComponentProps, propsData: ComponentProps[typeof name] },
     [LEGACY_AJAX_ERROR]: { xhr: jqXHR, message: string, html?: string },

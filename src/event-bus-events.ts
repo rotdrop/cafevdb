@@ -28,6 +28,7 @@ export const appEventName = <T extends string>(tag: T) => appPrefix(tag, '::');
 // app events
 export const APP_SETTINGS_POPUP = appEventName('app-settings-popup');
 export const CALENDAR_EVENT_EDIT = appEventName('calendar-event-edit');
+export const CALENDAR_EVENT_ADD = appEventName('calendar-event-add');
 export const POP_BUSY_STATE = appEventName('pop-busy-state');
 export const PROJECT_ACTIONS = appEventName('project-actions');
 export const PROJECT_EMAIL_POPUP = appEventName('project-email-popup');

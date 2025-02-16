@@ -26,7 +26,8 @@ import type { Route, RouteConfig } from 'vue-router';
 const COMPONENT_NAME = 'CalendarRoutes';
 const logger = new Console(COMPONENT_NAME);
 
-const SimpleEventEditor = async () => {
+const calendarSetup = async () => {
+  // make sure the timezone are actually loaded
   // @ts-expect-error
   import('@nextcloud/app-calendar/css/app-sidebar.scss');
   import('../services/calendar-store-setup.ts')
@@ -34,17 +35,15 @@ const SimpleEventEditor = async () => {
   // translations are probably not reactive, so we have to await their
   // loading.
   await loadTranslations('calendar', () => {});
+};
+
+const SimpleEventEditor = async () => {
+  await calendarSetup()
   return import('@nextcloud/app-calendar/src/views/EditSimple.vue');
 }
 
 const SidebarEventEditor = async () => {
-  // @ts-expect-error
-  import('@nextcloud/app-calendar/css/app-sidebar.scss');
-  import('../services/calendar-store-setup.ts')
-    .then(({ default: calendarStoreSetup }) => calendarStoreSetup());
-  // translations are probably not reactive, so we have to await their
-  // loading.
-  await loadTranslations('calendar', () => {});
+  await calendarSetup()
   return import('@nextcloud/app-calendar/src/views/EditSidebar.vue');
 };
 
@@ -59,7 +58,7 @@ let preCalendarRoute: Route|undefined;
 
 const calendarRoutes: RouteConfig[] = [
   {
-    path: 'event/edit/popover/:object/:recurrenceId',
+    path: 'event/edit/popover/:object/:recurrenceId/:context?',
     name: 'EditPopoverView',
     component: SimpleEventEditor,
     beforeEnter: (_to, from, next) => {
@@ -71,7 +70,7 @@ const calendarRoutes: RouteConfig[] = [
     },
   },
   {
-    path: 'event/edit/sidebar/:object/:recurrenceId',
+    path: 'event/edit/sidebar/:object/:recurrenceId/:context?',
     name: 'EditSidebarView',
     component: SidebarEventEditor,
     beforeEnter: (_to, from, next) => {
@@ -83,14 +82,28 @@ const calendarRoutes: RouteConfig[] = [
     },
   },
   {
-    path: 'event/new/popover/:allDay/:dtstart/:dtend',
+    path: 'event/new/popover/:allDay/:dtstart/:dtend/:context?',
     name: 'NewPopoverView',
     component: SimpleEventEditor,
+    beforeEnter: (_to, from, next) => {
+      if (!calenderEditRoutes.includes(from.name!)) {
+        logger.info('Remember previous route before entering calendar stuff', from);
+        preCalendarRoute = from;
+      }
+      next();
+    },
   },
   {
-    path: 'event/new/sidebar/:allDay/:dtstart/:dtend',
+    path: 'event/new/sidebar/:allDay/:dtstart/:dtend/:context?',
     name: 'NewSidebarView',
     component: SidebarEventEditor,
+    beforeEnter: (_to, from, next) => {
+      if (!calenderEditRoutes.includes(from.name!)) {
+        logger.info('Remember previous route before entering calendar stuff', from);
+        preCalendarRoute = from;
+      }
+      next();
+    },
   },
   {
     path: '--never--',

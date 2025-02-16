@@ -26,7 +26,6 @@ import fileDownload from './file-download.js';
 import generateAppUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
-import * as Legacy from '../legacy.js';
 import * as Email from './email.js';
 import * as DialogUtils from './dialog-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
@@ -39,7 +38,7 @@ import { emit as asyncEmit } from '../services/async-event-bus.ts';
 // import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
 // import { SIMPLE_EVENT_EDITOR } from '../mountable-component-names.ts';
 // import VueTestMenu from '../components/TestMenu.vue';
-import { CALENDAR_EVENT_EDIT } from '../event-bus-events.ts';
+import { CALENDAR_EVENT_EDIT, CALENDAR_EVENT_ADD } from '../event-bus-events.ts';
 
 require('jquery-ui/ui/widgets/accordion');
 
@@ -156,7 +155,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
         });
       handleUserManualMenu($dialogHolder);
 
-      eventMenu.on('click', '.menu-item', function(event) {
+      eventMenu.on('click', '.menu-item', async function(event) {
         const $this = $(this);
 
         if ($('#event').dialog('isOpen') === true) {
@@ -164,20 +163,21 @@ const init = function(htmlContent, textStatus, request, afterInit) {
           return false;
         }
 
-        const post = eventForm.serializeArray();
-        const eventType = $this.data('operation');
-        post.push({ name: 'eventKind', value: eventType });
+        const contextData = {
+          categories: $this.data('defaultCategories'),
+          requiredCategories: [$this.data('projectName')],
+          calendarId: btoa($this.data('calendarRemoteUrl')),
+          title: $this.data('defaultTitle'),
+        };
 
-        $('#dialog_holder').load(
-          generateAppUrl('legacy/events/forms/new'),
-          post,
-          function(response, textStatus, xhr) {
-            if (textStatus === 'success') {
-              Legacy.Calendar.UI.startEventDialog(() => setLoadingIndicator(false));
-              return;
-            }
-            handleError(xhr, textStatus, xhr.status);
-          });
+        const now = Math.round(Date.now() / 1000);
+        const newEventArgs = {
+          allDay: true,
+          dtstart: now,
+          dtend: now,
+          context: btoa(JSON.stringify(contextData, undefined, 2)),
+        };
+        await asyncEmit(CALENDAR_EVENT_ADD, newEventArgs);
 
         $.fn.cafevTooltip.remove();
 
@@ -503,8 +503,8 @@ const eventAction = async function(event) {
   const $this = $(this);
   const $row = $this.closest('tr');
   const rowData = $row.data() || {};
-  const calendarId = rowData.calendarId;
-  const uri = rowData.uri;
+  // const calendarId = rowData.calendarId;
+  // const uri = rowData.uri;
   // const recurrenceId = $row.data('recurrenceId');
 
   const name = $this.attr('name') || $this.data('operation');
