@@ -31,7 +31,7 @@ import * as Notification from './notification.js';
 import { addReadyCallback } from './cafevdb.js';
 import generateAppUrl from './generate-url.js';
 import setBusyIndicators from './busy-indicators.js';
-import { LEGACY_BACK_REQUEST } from '../event-bus-events.ts';
+import { HISTORY_GO_REQUEST } from '../event-bus-events.ts';
 import { emit as asyncEmit } from '../services/async-event-bus.ts';
 
 /**
@@ -111,7 +111,7 @@ function documentReady() {
                   setBusyIndicators(false, $container, false);
                   Notification.hide();
                   // post a back-request to the Vue-router
-                  asyncEmit(LEGACY_BACK_REQUEST);
+                  asyncEmit(HISTORY_GO_REQUEST);
                 }, redirectTimeout * 1000);
               });
           },

@@ -56,70 +56,6 @@
             <PageTemplateIcon :page-template="item.template" />
           </template>
         </NcAppNavigationItem>
-        <!-- <NcAppNavigationItem v-if="projectMode"
-                             :to="{
-                               name: 'legacy-page',
-                               params: {
-                                 template: 'project-participants',
-                                 projectId: currentProjectId,
-                                 projectName: currentProjectName,
-                               },
-                             }"
-                             :name="t(appId, 'Participants')"
-                             exact
-                             @click="showSidebar = false"
-        >
-          <template #icon>
-            <ProjectParticipantsIcon />
-          </template>
-        </NcAppNavigationItem>
-        <NcAppNavigationItem v-if="projectMode"
-                             :to="{
-                               name: 'legacy-page',
-                               params: {
-                                 template: 'project-instrumentation-numbers',
-                                 projectId: currentProjectId,
-                                 projectName: currentProjectName,
-                               },
-                             }"
-                             :name="t(appId, 'Instrumentation Numbers')"
-                             exact
-                             @click="showSidebar = false"
-        >
-          <template #icon>
-            <InstrumentationNumbersIcon />
-          </template>
-        </NcAppNavigationItem>
-        <NcAppNavigationItem v-if="projectMode"
-                             :to="{
-                               name: 'legacy-page',
-                               params: {
-                                 template: 'project-participant-fields',
-                                 projectId: currentProjectId,
-                                 projectName: currentProjectName,
-                               },
-                             }"
-                             :name="t(appId, 'Extra Fields')"
-                             exact
-                             @click="showSidebar = false"
-        >
-          <template #icon>
-            <ParticipantFieldsIcon />
-          </template>
-        </NcAppNavigationItem>
-        <NcAppNavigationItem ref="projectView"
-                             :to="{name: 'legacy-page', params: { template: 'projects' }}"
-                             :name="t(appId, 'All Projects')"
-                             icon="icon-home"
-                             exact
-                             @click="showSidebar = false"
-        />
-        <NcAppNavigationItem :to="{ name: 'legacy-page', params: { template: 'all-musicians' }}"
-                             :name="t(appId, 'All Musicians')"
-                             icon="icon-home"
-                             exact
-                             @click="showSidebar = false"
-        /> -->
       </template>
       <template #footer>
         <NcAppNavigationSettings :exclude-click-outside-selectors="[
@@ -490,7 +426,7 @@ const updatePersonalSettings = (
   })
 }
 
-asyncSubscribe(BusEvents.LEGACY_BACK_REQUEST, () => router.back())
+asyncSubscribe(BusEvents.HISTORY_GO_REQUEST, (event) => router.go(event.level))
 
 const configCheck = async () => {
   const url = generateAppUrl('a/config-check')
