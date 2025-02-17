@@ -371,7 +371,8 @@ const doLoadLegacy = async () => {
   asyncEmit(LEGACY_PAGE_CLEANUP)
   logger.info('HISTORY STATE AT ENTRY', currentHistoryState.value)
   const historyAppData = currentHistoryState.value.post
-  const post = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const post: Record<string|number, any> = {
     template: props.template,
     ...props.templateParameters,
   }
@@ -384,6 +385,7 @@ const doLoadLegacy = async () => {
     scheduleHistoryReplace(post, currentHash)
     synchronizeHistoryState(currentHash)
   }
+  post.hash = currentHash
   try {
     const response: AxiosResponse<LoadPartsData> = await axios.post(generateAppUrl('page/remember/parts'), post)
     const data = response.data // todo: validate

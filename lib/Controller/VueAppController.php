@@ -78,8 +78,10 @@ class VueAppController extends Controller
    * @NoCSRFRequired
    * @AllowIFrameSelf
    */
-  public function index():TemplateResponse
+  public function index(?string $hash = null):TemplateResponse
   {
+    $this->logInfo('HASH VALUE ' . ($hash ?? 'UNSET'));
+
     // add the vue assets
     Util::addScript($this->appName, $this->assetService->getJSAsset('vue-app')['asset']);
     Util::addStyle($this->appName, $this->assetService->getCSSAsset('vue-app')['asset']);
