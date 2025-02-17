@@ -155,11 +155,6 @@ const init = function(htmlContent, textStatus, request, afterInit) {
       eventMenu.on('click', '.menu-item', async function(event) {
         const $this = $(this);
 
-        if ($('#event').dialog('isOpen') === true) {
-          $('#event').dialog('close');
-          return false;
-        }
-
         try {
           const contextData = {
             categories: $this.data('defaultCategories'),
@@ -170,6 +165,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
 
           const now = Math.round(Date.now() / 1000);
           const newEventArgs = {
+            mode: 'simple',
             allDay: true,
             dtstart: now,
             dtend: now,
@@ -297,7 +293,6 @@ const init = function(htmlContent, textStatus, request, afterInit) {
     },
     close(event, ui) {
       $.fn.cafevTooltip.remove();
-      $('#event').dialog('close');
       $(this).dialog('destroy').remove();
 
       // Remove modal plane if appropriate
@@ -488,15 +483,7 @@ const scopeSelection = function(event) {
 
 const eventAction = async function(event) {
 
-  const evntdlgopen = $('#event').dialog('isOpen');
-
   const post = $('#eventlistform').serializeArray();
-
-  if (evntdlgopen === true) {
-    // TODO: maybe save event
-    $('#event').dialog('close');
-    return false;
-  }
 
   setLoadingIndicator(true);
   const afterInit = () => setLoadingIndicator(false);
@@ -504,9 +491,6 @@ const eventAction = async function(event) {
   const $this = $(this);
   const $row = $this.closest('tr');
   const rowData = $row.data() || {};
-  // const calendarId = rowData.calendarId;
-  // const uri = rowData.uri;
-  // const recurrenceId = $row.data('recurrenceId');
 
   const name = $this.attr('name') || $this.data('operation');
 
@@ -516,6 +500,8 @@ const eventAction = async function(event) {
     afterInit();
     return true; // do not cancel event bubbling
   case 'edit': {
+    event.preventDefault();
+    event.stopImmediatePropagation();
     const calendarObject = rowData.calendarObject;
     try {
       await asyncEmit(CALENDAR_EVENT_EDIT, {
@@ -530,6 +516,7 @@ const eventAction = async function(event) {
       // @todo decide whether to trigger error page
       console.error('UNABLE TO OPEN CALENDAR EVENT DIALOG.', error);
     }
+
     afterInit();
 
     break;
