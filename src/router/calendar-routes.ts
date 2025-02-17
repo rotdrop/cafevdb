@@ -21,6 +21,8 @@
 
 import { loadTranslations } from '@nextcloud/l10n'
 import Console from '../util/console.ts';
+import { HISTORY_GO_REQUEST } from '../event-bus-events.ts';
+import { emit as asyncEmit } from '../services/async-event-bus.ts';
 import type { Route, RouteConfig } from 'vue-router';
 
 const COMPONENT_NAME = 'CalendarRoutes';
@@ -55,6 +57,7 @@ const calenderEditRoutes = [
 ];
 
 let preCalendarRoute: Route|undefined;
+let pushDepth = 0;
 
 const calendarRoutes: RouteConfig[] = [
   {
@@ -66,6 +69,7 @@ const calendarRoutes: RouteConfig[] = [
         logger.info('Remember previous route before entering calendar stuff', from);
         preCalendarRoute = from;
       }
+      ++pushDepth;
       next();
     },
   },
@@ -78,6 +82,7 @@ const calendarRoutes: RouteConfig[] = [
         logger.info('Remember previous route before entering calendar stuff', from);
         preCalendarRoute = from;
       }
+      ++pushDepth;
       next();
     },
   },
@@ -90,6 +95,7 @@ const calendarRoutes: RouteConfig[] = [
         logger.info('Remember previous route before entering calendar stuff', from);
         preCalendarRoute = from;
       }
+      ++pushDepth;
       next();
     },
   },
@@ -102,6 +108,7 @@ const calendarRoutes: RouteConfig[] = [
         logger.info('Remember previous route before entering calendar stuff', from);
         preCalendarRoute = from;
       }
+      ++pushDepth;
       next();
     },
   },
@@ -109,7 +116,11 @@ const calendarRoutes: RouteConfig[] = [
     path: '--never--',
     name: 'CalendarView',
     beforeEnter: (_to, _from, next) => {
-      if (preCalendarRoute) {
+      if (pushDepth > 0) {
+        logger.info('Try go back', pushDepth);
+        next();
+        asyncEmit(HISTORY_GO_REQUEST, { level: -pushDepth-1 });
+      } else if (preCalendarRoute) {
         logger.info('Try restore previous route on leaving calendar stuff', preCalendarRoute);
         const target = {
           name: preCalendarRoute.name!,
