@@ -123,6 +123,7 @@ trait InitialStateTrait
       'CAFEVDB',
       [
         'appName' => $this->appName,
+        // TRANSLATORS: default value for unconfigured setting.
         ConfigService::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY, $this->l->t('unconfigured')),
         'orchestraLogo' => $orchestraLogo ?? '',
         'toolTipsEnabled' => $tooltips,

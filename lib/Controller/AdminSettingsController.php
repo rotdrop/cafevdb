@@ -101,12 +101,16 @@ class AdminSettingsController extends Controller
         $verification = $this->getAppValue(AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX, '');
         $challenge =  $this->getAppValue(AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_CHALLENGE_SUFFIX, '');
         if (!$email || !$challenge) {
+          // TRANSLATORS: status of verification of problem report email address
           $this->l->t($value = 'irrelevant');
         } elseif ($challenge === $verification) {
+          // TRANSLATORS: status of verification of problem report email address
           $this->l->t($value = 'verified');
         } elseif (!$verification) {
+          // TRANSLATORS: status of verification of problem report email address
           $this->l->t($value = 'pending');
         } else {
+          // TRANSLATORS: status of verification of problem report email address
           $this->l->t($value = 'failed');
         }
         break;

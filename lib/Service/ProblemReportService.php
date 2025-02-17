@@ -246,12 +246,13 @@ class ProblemReportService
       );
       $errorDataAttachment = $this->mailer->createAttachment(
         $errorDataString,
+        // TRANSLATORS: file name for error report attchment
         $this->l->t('SystemErrorReport') . '.json',
         'application/json',
       );
     }
     if (empty($errorData) && empty($errorHtml)) {
-      $bodyText = $this->l->t('No stack-trace or other data was submitted together the problem report.');
+      $bodyText = $this->l->t('No stack-trace or other data was submitted together with the problem report.');
       $emailTemplate->addBodyText($bodyText, $bodyText);
       $errorDataAttachment = null;
     }
@@ -261,6 +262,9 @@ class ProblemReportService
     try {
       // ... do not assume decryption works at this point ...
       $orchestraName = $this->encryptionService->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY, $this->l->t('Unknown Orchestra'));
+      // TRANSLATORS: %s refers to the orchestra name, the configured name of
+      // TRANSLATORS: the organization using the app. The entire string is the
+      // TRANSLATORS: clear-test part of an email-address.
       $recipientName = $this->l->t('%s Problem Report Recipient', $orchestraName);
     } catch (Throwable $t) {
       $this->logError('Unable to retrieve the orchestra name from the configuration space.');
@@ -279,7 +283,7 @@ class ProblemReportService
 
     $recipientString = $recipientName . ' &lt;' . $recipient . '&gt;';
     $notifications = [
-      $this->l->t('You problem report has been submitted by email to "%s".', $recipientString),
+      $this->l->t('Your problem report has been submitted by email to "%s".', $recipientString),
     ];
 
     /** @var IUser $user */

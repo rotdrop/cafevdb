@@ -247,21 +247,7 @@
                   :loading.sync="loading"
                   @close="showSidebar = false"
     >
-      <NcAppSidebarTab id="leck-mich" name="I am a Tab!" />
-      <!-- <NcAppSidebarTab v-if="sidebarView === 'InstrumentInsurances'"
-                       id="details-side-bar"
-                       icon="icon-share"
-                       :name="t(appId, 'details')"
-      >
-        <InsuranceDetails v-bind="sidebarProps" />
-      </NcAppSidebarTab>
-      <NcAppSidebarTab v-if="sidebarView === 'Projects'"
-                       id="details-side-bar"
-                       icon="icon-share"
-                       :name="t(appId, 'details')"
-      >
-        <ProjectDetails v-bind="sidebarProps" />
-      </NcAppSidebarTab> -->
+      <NcAppSidebarTab id="I-am-a-tab" name="I am a Tab!" />
     </NcAppSidebar>
     <div id="appsettings_popup" class="personal-settings app-admin-settings popup bottomleft hidden" />
     <div id="fullcalendar">
@@ -381,6 +367,7 @@ const {
 
 const routerHistory = history.routerHistory
 
+// TRANSLATORS: unknown orchestra name placeholder
 const orchestraName = ref(initialState?.orchestra || t(appId, '[UNKNOWN]'))
 const icon = ref(appIcon)
 
