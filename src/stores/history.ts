@@ -27,7 +27,6 @@ import { useRoute } from 'vue-router/composables';
 import Console from '../util/console.ts';
 import { AppError } from '../types/errors.ts';
 import useErrorHandler from './error-handler.ts';
-import type { ErrorHandler } from '../types/errors.ts';
 
 export class HistoryStoreSetupError extends AppError {}
 
