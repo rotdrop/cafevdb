@@ -44,7 +44,6 @@
 // import globalState from '../app/globalstate.js'
 import { ref, onBeforeMount } from 'vue'
 import LegacyWrapper from './LegacyWrapper.vue'
-// import objectHash from '../util/object-hash'
 import {
   onBeforeRouteLeave,
   onBeforeRouteUpdate,
@@ -114,9 +113,6 @@ const onRouteChange = (to: Route) => {
   delete templateParameters.value.template
   postDataHash.value = (to.query?.hash as string) || undefined
   noLegacyReload.value = +to.query?.['no-reload'] === 1
-  // if (!postDataHash.value) {
-  //   postDataHash.value = objectHash(to.params || {})
-  // }
 }
 
 onBeforeMount(() => {

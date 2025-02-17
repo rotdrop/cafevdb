@@ -654,7 +654,7 @@ watch(
 router.afterEach((to, from) => {
   logger.info('GLOBAL AFTER EACH ROUTE CHANGE', to, from, window?.history?.state)
   pageTemplate.value = to.params?.template || 'home'
-  history.finishHistoryAction()
+  history.finishHistoryAction(to.transition)
   // @todo: parse the query parameters, e.g.
   //
   // ?template=blah&foo=bar

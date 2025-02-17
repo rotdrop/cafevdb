@@ -336,7 +336,7 @@ const updateLegacyRoute = (post: TemplatePostData, action: string = 'replace', h
     name: 'legacy-page',
     params,
     query: {
-      hash: objectHash(post),
+      hash: '',
       'no-reload': '1',
     },
   }
@@ -345,10 +345,10 @@ const updateLegacyRoute = (post: TemplatePostData, action: string = 'replace', h
     legacyBodyHtml.value = htmlBody
   }
   if (action === 'push') {
-    scheduleHistoryPush(post)
+    target.query.hash = scheduleHistoryPush(post)
     return router.push(target)
   } else {
-    scheduleHistoryReplace(post)
+    target.query.hash = scheduleHistoryReplace(post)
     return router.replace(target)
   }
 }
@@ -381,7 +381,7 @@ const doLoadLegacy = async () => {
   const currentHash = objectHash(post)
   if (props.hash !== currentHash) {
     previousHash = currentHash
-    scheduleHistoryReplace(post)
+    scheduleHistoryReplace(post, currentHash)
     synchronizeHistoryState(currentHash)
   }
   try {
@@ -486,9 +486,9 @@ watch(
       } else {
         logger.info('NO LOAD FLAG ACTIVE, SKIPPING PAGE LOAD')
         // keep current post data, this is just for updating the hash value in window.location
-        scheduleHistoryReplace(currentHistoryState.value.post)
+        const hash = scheduleHistoryReplace(currentHistoryState.value.post)
         // remove no-load from the display URL
-        await synchronizeHistoryState(props.hash || '')
+        await synchronizeHistoryState(hash)
         logger.info('SYNCHRONIZED BROWSER HISTORY STATE WITH COMPONENT STATE', window.location, props.hash, props.noLegacyReload)
       }
     }
@@ -512,14 +512,16 @@ const legacyPageLoadHandler = asyncSubscribe(
     const target = {
       name: 'legacy-page',
       params,
-      query: { hash: objectHash(post) },
-    }
-    // force the router to navigate by altering the hash
-    if (route.query.hash === target.query.hash) {
-      target.query.hash = '-'
+      query: {
+        hash: '',
+      },
     }
     if (eventData.keepHistory) {
-      scheduleHistoryReplace(post)
+      target.query.hash = scheduleHistoryReplace(post)
+      // force the router to navigate by altering the hash
+      if (route.query.hash === target.query.hash) {
+        target.query.hash = '-'
+      }
       try {
         return await router.replace(target)
       } catch (e) {
@@ -527,7 +529,11 @@ const legacyPageLoadHandler = asyncSubscribe(
         return router.go(0)
       }
     } else {
-      scheduleHistoryPush(post)
+      target.query.hash = scheduleHistoryPush(post)
+      // force the router to navigate by altering the hash
+      if (route.query.hash === target.query.hash) {
+        target.query.hash = '-'
+      }
       return router.push(target)
     }
   },

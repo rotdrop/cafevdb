@@ -22,18 +22,20 @@
  */
 
 import { defineStore } from 'pinia';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, reactive } from 'vue';
 import { useRoute } from 'vue-router/composables';
 import Console from '../util/console.ts';
 import { AppError } from '../types/errors.ts';
 import useErrorHandler from './error-handler.ts';
+import objectHash from '../util/object-hash.ts';
+import type { TransitionType } from 'vue-router';
 
 export class HistoryStoreSetupError extends AppError {}
 
 export const HistoryActionPush = 'push';
 export const HistoryActionPop = 'pop';
 export const HistoryActionReplace = 'replace';
-export type HistoryAction = typeof HistoryActionPop|typeof HistoryActionPush|typeof HistoryActionReplace;
+export type HistoryAction = TransitionType;
 
 const storeId = 'history';
 
@@ -42,6 +44,7 @@ export interface RouterHistoryState {
   prev: string|null,
   key: string,
   post: Record<string, any>,
+  hash: string,
   position: number|null,
 }
 
@@ -61,12 +64,16 @@ export default defineStore(storeId, () => {
   const currentHistoryIndex = ref(initialHistoryIndex || '');
 
   const pendingHistoryData = ref<null|object>(null);
+  const pendingHistoryHash = ref<null|string>(null);
   const pendingHistoryAction = ref<null|HistoryAction>(null);
   const pendingHistoryKey = ref<null|string|number>('initial');
   const currentHistoryState = computed(() => routerHistory.value?.[currentHistoryIndex.value || ''] || null);
   const prevHistoryIndex = computed(() => currentHistoryState.value.prev);
   const nextHistoryIndex = computed(() => currentHistoryState.value.next);
   const prevHistoryState = computed(() => routerHistory.value?.[prevHistoryIndex.value || ''] || null);
+
+  const requestData = reactive(new Map<string, Record<number|string, any> >);
+
   const nextHistoryState = computed(() => routerHistory.value?.[nextHistoryIndex.value || ''] || null);
 
   const defineInitialHistory = (initialHistoryIndex: string) => {
@@ -75,6 +82,7 @@ export default defineStore(storeId, () => {
         prev: null,
         next: null,
         post: {},
+        hash: objectHash({}),
         key: initialHistoryIndex,
         position: window?.history?.length,
       },
@@ -83,7 +91,7 @@ export default defineStore(storeId, () => {
     logger.debug('INITIAL ROUTER HISTORY', currentHistoryIndex, { ...routerHistory.value });
   };
 
-  let runFinishAfterInit = false;
+  let pendingInitTransition: TransitionType|undefined = undefined;
 
   if (initialHistoryIndex) {
     defineInitialHistory(initialHistoryIndex);
@@ -115,9 +123,9 @@ export default defineStore(storeId, () => {
         if (pendingHistoryKey.value === 'initial') {
           pendingHistoryKey.value = currentHistoryIndex.value;
         }
-        if (runFinishAfterInit) {
-          runFinishAfterInit = false;
-          finishHistoryAction();
+        if (pendingInitTransition !== undefined) {
+          finishHistoryAction(pendingInitTransition);
+          pendingInitTransition = undefined;
         }
       },
     );
@@ -133,14 +141,21 @@ export default defineStore(storeId, () => {
      will leave the 'post' property untouched, replace will replace
      the 'post' property.
    *
-   * @param post TBD
+   * @param post Request data to store.
+   *
+   * @param hash Hash value of request data. Recomputed if not provided.
    */
-  function scheduleHistoryAction(action: HistoryAction, post: object) {
+  function scheduleHistoryAction(action: HistoryAction, post: object, hash?: string): string {
     const key = window?.history?.state?.key || 'initial';
     pendingHistoryAction.value = action;
     pendingHistoryData.value = post || {};
+    hash = pendingHistoryHash.value = hash || objectHash(pendingHistoryData.value);
+    if (!requestData.has(hash)) {
+      requestData.set(hash, post);
+      logger.info('REQUEST DATA MAP', [...requestData])
+    }
     pendingHistoryKey.value = key;
-    logger.info('scheduleHistoryAction()', {
+    logger.debug('scheduleHistoryAction()', {
       action,
       key,
       currentHistoryIndex: currentHistoryIndex.value,
@@ -151,21 +166,23 @@ export default defineStore(storeId, () => {
     if (currentHistoryIndex.value !== 'initial' && pendingHistoryKey.value !== currentHistoryIndex.value) {
       logger.trace('SCHEDULE HISTORY KEY MISTMATCH', pendingHistoryKey.value, currentHistoryIndex.value);
     }
+    return pendingHistoryHash.value;
   }
 
-  function scheduleHistoryPush(post: object) {
-    scheduleHistoryAction('push', post);
+  function scheduleHistoryPush(post: object, hash?: string):string {
+    return scheduleHistoryAction('push', post, hash);
   }
 
-  function scheduleHistoryReplace(post: object) {
-    scheduleHistoryAction('replace', post);
+  function scheduleHistoryReplace(post: object, hash?: string):string {
+    return scheduleHistoryAction('replace', post, hash);
   }
 
   function cancelHistoryAction() {
     pendingHistoryAction.value = null;
     pendingHistoryData.value = null;
+    pendingHistoryHash.value = null;
     pendingHistoryKey.value = null;
-    logger.info('cancelHistoryAction()', routerHistory.value);
+    logger.debug('cancelHistoryAction()', routerHistory.value);
   }
 
   /**
@@ -179,10 +196,11 @@ export default defineStore(storeId, () => {
    *   (i.e. previous) key, then assume that the history state has
    *   been replaced, otherwise assume a push.
    */
-  function finishHistoryAction() {
+  function finishHistoryAction(transition: TransitionType) {
     const key = window?.history?.state?.key || 'initial';
     const history = routerHistory.value;
-    logger.info('ON HISTORY FINISH', {
+    logger.debug('ON HISTORY FINISH', {
+      transition,
       key,
       keyType: typeof key,
       currentHistoryIndex: currentHistoryIndex.value,
@@ -195,15 +213,11 @@ export default defineStore(storeId, () => {
     });
     if (Object.keys(routerHistory.value).length === 0) {
       logger.info('POSTPONING HISTORY FINISH CALL UNTIL AFTER INIT');
-      runFinishAfterInit = true;
+      pendingInitTransition = transition;
       return;
     }
 
-    // Guard against router-links as their replace/push calls are not
-    // interceptable. The following check will fail if the first
-    // navigation is initiated by a router-link in replace mode as
-    // unfortunately history.state.key is undefined until after the
-    // first navigation.
+    // TODO: is this still needed?
     if (pendingHistoryAction.value === 'replace' && key !== currentHistoryIndex.value && currentHistoryIndex.value !== 'initial') {
       logger.trace('EXPLICIT HISTORY REPLACE REQUESTED, BUT CURRENT HISTORY IS GONE', {
         key,
@@ -211,12 +225,18 @@ export default defineStore(storeId, () => {
         currentHistoryIndex: currentHistoryIndex.value,
         history: { ...history },
       });
-      pendingHistoryAction.value = null;
-      pendingHistoryData.value = null;
-      pendingHistoryKey.value = null;
+      cancelHistoryAction();
+    }
+    if (pendingHistoryAction.value !== transition) {
+      logger.error('PENDING HISTORY ACTION DOES NOT MATCH ACTUAL TRANSITION', {
+        pendingHistoryAction: pendingHistoryAction.value,
+        transition,
+      });
     }
     if (!pendingHistoryAction.value) {
-      if (key === pendingHistoryKey.value) {
+      if (transition !== 'unknown') {
+        pendingHistoryAction.value = transition;
+      } else if (key === pendingHistoryKey.value) {
         // replace action from RouterLink
         pendingHistoryAction.value = 'replace';
       } else if (history[key]) {
@@ -226,7 +246,7 @@ export default defineStore(storeId, () => {
         // assume 'push'
         pendingHistoryAction.value = 'push';
       }
-      logger.info('TWEAKED HISTORY ACTION IS', {
+      logger.debug('TWEAKED HISTORY ACTION IS', {
         pendingHistoryAction: pendingHistoryAction.value,
         key,
         pendingHistoryKey: pendingHistoryKey.value,
@@ -242,6 +262,7 @@ export default defineStore(storeId, () => {
         prev: currentHistoryIndex.value,
         next: null,
         post: pendingHistoryData.value || {},
+        hash: pendingHistoryHash.value || objectHash({}),
         key,
         position: window.history.length,
       };
@@ -264,11 +285,11 @@ export default defineStore(storeId, () => {
       currentHistoryIndex.value = key;
     } else if (pendingHistoryAction.value === 'replace') {
       if (key !== currentHistoryIndex.value) {
-        logger.info('BEFORE ADJUST KEYS', key, currentHistoryIndex.value, { ...history[currentHistoryIndex.value] }, history?.[key]);
+        logger.debug('BEFORE ADJUST KEYS', key, currentHistoryIndex.value, { ...history[currentHistoryIndex.value] }, history?.[key]);
         history[key] = history[currentHistoryIndex.value];
-        logger.info('CURRENT STATE 0', { ...history[key] });
+        logger.debug('CURRENT STATE 0', { ...history[key] });
         delete history[currentHistoryIndex.value];
-        logger.info('CURRENT STATE 1', { ...history[key] });
+        logger.debug('CURRENT STATE 1', { ...history[key] });
         currentHistoryIndex.value = key;
         history[key].key = key;
         const prev = history[key].prev;
@@ -288,7 +309,7 @@ export default defineStore(storeId, () => {
             prev,
           })
         }
-        logger.info('AFTER ADJUST KEYS', history);
+        logger.debug('AFTER ADJUST KEYS', history);
       }
       history[key].post = pendingHistoryData.value || {};
     } else {
@@ -306,7 +327,7 @@ export default defineStore(storeId, () => {
     pendingHistoryData.value = null;
     pendingHistoryAction.value = null;
     pendingHistoryKey.value = null;
-    logger.info('finishHistoryAction()', {
+    logger.debug('finishHistoryAction()', {
       currentHistoryIndex: currentHistoryIndex.value,
       currentHistoryState: { ...currentHistoryState.value },
       routerHistory: { ...routerHistory.value },
@@ -332,5 +353,6 @@ export default defineStore(storeId, () => {
     scheduleHistoryReplace,
     cancelHistoryAction,
     finishHistoryAction,
+    requestData,
   };
 });
