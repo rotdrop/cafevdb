@@ -71,9 +71,13 @@ $actionItems = [
   ],
 ];
 
+// the data items below are just the anchor selector for the event
+// edit popover
 ?>
-
-<span class="event-actions dropdown-container dropdown-no-hover fc-event">
+<span class="event-actions dropdown-container dropdown-no-hover fc-event"
+      data-recurrence-id="<?= $calendarObject['single']['recurrenceId'] ?>"
+      data-object-id="<?= $calendarObject['single']['objectId'] ?>"
+>
   <button class="menu-title action-menu-toggle"
           title="<?php echo $toolTips['projectevents:event']; ?>"
   >
