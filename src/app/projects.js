@@ -47,7 +47,11 @@ import * as SelectUtils from './select-utils.js';
 import wikiPopup from './wiki-popup.js';
 import setBusyIndicators from './busy-indicators.js';
 import iFrameResize from './iframe-resize.js';
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+  getEmitResult,
+} from '../services/async-event-bus.ts';
 import * as BusEvents from '../event-bus-events.ts';
 import { PROJECT_ACTIONS_MENU } from '../mountable-component-names.ts';
 
@@ -281,20 +285,16 @@ const actionMenu = async function(containerSel) {
   const generateVueMenu = async ($actionMenu) => {
     const projectId = $actionMenu.data('projectId');
     const projectName = $actionMenu.data('projectName');
-    const eventBusResult = await asyncEmit(BusEvents.GET_VUE_COMPONENT, {
-      name: PROJECT_ACTIONS_MENU,
-      propsData: {
-        projectId,
-        projectName,
-        enableOverviewItem: $container.find(pmeFormSelector).hasClass(pmeToken('list')),
-      },
-    });
-    if (!Array.isArray(eventBusResult)
-        || eventBusResult.length !== 1
-        || typeof eventBusResult[0].value !== 'object') {
-      throw new Error(t(appName, 'Unable to create project actions menu'));
-    }
-    const vueMenu = eventBusResult[0].value;
+    const vueMenu = await getEmitResult(
+      asyncEmit(BusEvents.GET_VUE_COMPONENT, {
+        name: PROJECT_ACTIONS_MENU,
+        propsData: {
+          projectId,
+          projectName,
+          enableOverviewItem: $container.find(pmeFormSelector).hasClass(pmeToken('list')),
+        },
+      }),
+    );
     console.info('AFTER CREATE NEW MENU', vueMenu);
     $actionMenu.data('vueMenu', vueMenu);
     $actionMenu.removeClass('dropdown-container').empty().html('<div></div>');
