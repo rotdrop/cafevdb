@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -64,7 +64,6 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Storage\UserStorage;
 
@@ -98,24 +97,22 @@ class PersonalSettingsController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    protected IAppContainer $appContainer,
-    private RequestParameterService $parameterService,
-    protected ConfigService $configService,
-    private Personal $personalSettings,
-    private ConfigCheckService $configCheckService,
-    private PhoneNumberService $phoneNumberService,
-    private FinanceService $financeService,
-    private ProjectService $projectService,
     private CalDavService $calDavService,
-    private TranslationService $translationService,
-    private FuzzyInputService $fuzzyInputService,
-    private UserStorage $userStorage,
-    private WikiRPC $wikiRPC,
-    private WebPagesRPC $webPagesRPC,
+    private ConfigCheckService $configCheckService,
     private EmailAddressService $emailAddressService,
+    private FinanceService $financeService,
+    private FuzzyInputService $fuzzyInputService,
+    private Personal $personalSettings,
+    private PhoneNumberService $phoneNumberService,
+    private ProjectService $projectService,
+    private TranslationService $translationService,
+    private UserStorage $userStorage,
+    private WebPagesRPC $webPagesRPC,
+    private WikiRPC $wikiRPC,
+    protected ConfigService $configService,
+    protected IAppContainer $appContainer,
   ) {
     parent::__construct($appName, $request);
-
     $this->l = $this->l10N();
   }
   // phpcs:enable
@@ -1872,7 +1869,7 @@ class PersonalSettingsController extends Controller
   {
     switch ($parameter) {
       case 'locale-info':
-        $localeInfo = $this->generateLocaleInfo($this->parameterService->getParam('scope'));
+        $localeInfo = $this->generateLocaleInfo($this->request->getParam('scope'));
         return self::dataResponse([
           'contents' => $localeInfo,
         ]);
@@ -1936,7 +1933,7 @@ class PersonalSettingsController extends Controller
   {
     switch ($parameter) {
       case 'locale-info':
-        $localeInfo = $this->generateLocaleInfo($this->parameterService->getParam('scope'));
+        $localeInfo = $this->generateLocaleInfo($this->request->getParam('scope'));
         return self::dataResponse([
           'contents' => $localeInfo,
         ]);
@@ -1952,12 +1949,12 @@ class PersonalSettingsController extends Controller
         return $response;
       case 'auto-fill-test':
       case 'auto-fill-test-data':
-        $templateName = $this->parameterService->getParam('documentTemplate');
+        $templateName = $this->request->getParam('documentTemplate');
         if (empty(ConfigService::DOCUMENT_TEMPLATES[$templateName])
             || ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE) {
           return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
         }
-        $format = $this->parameterService->getParam('format');
+        $format = $this->request->getParam('format');
 
         $project = $this->projectService->findById($this->getClubMembersProjectId());
         $flatProject = $this->flattenProject($project);

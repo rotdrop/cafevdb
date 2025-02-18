@@ -26,20 +26,19 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use DateTime;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCP\IRequest;
 
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
-
-use OCA\CAFEVDB\Common\Util;
 
 /** Table generator for DonationReceipt entities. */
 class DonationReceipts extends PMETableViewBase
@@ -133,14 +132,14 @@ class DonationReceipts extends PMETableViewBase
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
+    ToolTipsService $toolTipsService,
     protected UserStorage $userStorage,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(self::TEMPLATE, $configService, $request, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
 
     $this->userStorage = $userStorage;
     if ($this->projectId > 0) {

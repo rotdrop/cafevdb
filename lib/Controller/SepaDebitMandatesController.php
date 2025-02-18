@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,6 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\Files\SimpleFS\ISimpleFile;
 
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
@@ -49,7 +48,6 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Common\BankAccountValidator;
-
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;
 
@@ -76,17 +74,15 @@ class SepaDebitMandatesController extends Controller
   public function __construct(
     $appName,
     IRequest $request,
-    private RequestParameterService $parameterService,
+    private BankAccountValidator $bav,
+    private FinanceService $financeService,
+    private FuzzyInputService $fuzzyInputService,
+    private ProjectService $projectService,
+    private StorageFactory $storageFactory,
     protected ConfigService $configService,
     protected EntityManager $entityManager,
-    private FinanceService $financeService,
-    private ProjectService $projectService,
-    private FuzzyInputService $fuzzyInputService,
-    private BankAccountValidator $bav,
-    private StorageFactory $storageFactory,
   ) {
     parent::__construct($appName, $request);
-
     $this->l = $this->l10N();
 
     $this->bankAccountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
@@ -114,7 +110,7 @@ class SepaDebitMandatesController extends Controller
     ];
     foreach ($requiredKeys as $required) {
       $missing = [];
-      if ($this->parameterService->getParam($required, false) === false) {
+      if ($this->request->getParam($required, false) === false) {
         $missing[] = $required;
       }
       if (!empty($missing)) {
@@ -123,24 +119,24 @@ class SepaDebitMandatesController extends Controller
       }
     }
 
-    $projectId  = $this->parameterService['projectId'];
-    $musicianId = $this->parameterService['musicianId'];
-    $reference  = $this->parameterService['mandateReference'];
-    $mandateProjectId  = $this->parameterService['mandateProjectId'];
-    $mandateNonRecurring = $this->parameterService['mandateNonRecurring'];
+    $projectId  = $this->request['projectId'];
+    $musicianId = $this->request['musicianId'];
+    $reference  = $this->request['mandateReference'];
+    $mandateProjectId  = $this->request['mandateProjectId'];
+    $mandateNonRecurring = $this->request['mandateNonRecurring'];
     $mandateNonRecurring = filter_var($mandateNonRecurring, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
 
     $this->logDebug('NON RECUR '.$mandateNonRecurring.' '.(!!$mandateNonRecurring));
 
     $memberProjectId = $this->getConfigValue('memberProjectId', null);
 
-    $IBAN = $this->parameterService['bankAccountIBAN'];
-    $BLZ  = $this->parameterService['bankAccountBLZ'];
-    $BIC  = $this->parameterService['bankAccountBIC'];
-    $owner = $this->parameterService['bankAccountOwner'];
+    $IBAN = $this->request['bankAccountIBAN'];
+    $BLZ  = $this->request['bankAccountBLZ'];
+    $BIC  = $this->request['bankAccountBIC'];
+    $owner = $this->request['bankAccountOwner'];
 
-    $changed = $this->parameterService['changed'];
-    $value = $this->parameterService[$changed];
+    $changed = $this->request['changed'];
+    $value = $this->request[$changed];
 
     $validations = [
       [
@@ -211,7 +207,7 @@ class SepaDebitMandatesController extends Controller
           break;
         case 'mandateLastUsedDate':
           // Store the lastUsedDate immediately, if other fields are disabled
-          if (empty($this->parameterService['mandateDate'])) {
+          if (empty($this->request['mandateDate'])) {
             $mandate = [
               'mandateReference' => $reference,
               'musicianId' => $musicianId,
@@ -1113,14 +1109,14 @@ class SepaDebitMandatesController extends Controller
       case self::HARDCOPY_ACTION_UPLOAD:
         // we mis-use the participant-data upload form, so the actual identifiers
         // are in the "data" parameter and have to be remapped.
-        $data = $this->parameterService['data'];
+        $data = $this->request['data'];
         $uploadData = json_decode($data, true);
         $musicianId = $uploadData['fieldId'];
         $mandateSequence = $uploadData['optionKey'];
-        $files = $this->parameterService['files'];
+        $files = $this->request['files'];
         break;
       case self::HARDCOPY_ACTION_DELETE:
-        $mandateSequence = $this->parameterService['optionKey'];
+        $mandateSequence = $this->request['optionKey'];
         break;
     }
 

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,30 +29,28 @@ use RuntimeException;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\FuzzyInputService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\PageRenderer\ProjectParticipantFields as Renderer;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
-use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as ReceivablesGenerator;
-
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\ProjectParticipantFields as Renderer;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as ReceivablesGenerator;
+use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
+use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\ProgressStatusService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\ProjectService;
 
 /**
  * Ajax end-point to support the definition of project-participant fields.
@@ -61,8 +59,9 @@ use OCA\CAFEVDB\Constants;
  */
 class ProjectParticipantFieldsController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use GetPrefixParamsTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const REQUEST_TOPIC_GENERATOR = 'generator';
@@ -101,13 +100,12 @@ class ProjectParticipantFieldsController extends Controller
   public function __construct(
     $appName,
     IRequest $request,
-    private RequestParameterService $parameterService,
-    protected ConfigService $configService,
-    protected EntityManager $entityManager,
-    private Renderer $renderer,
-    protected PHPMyEdit $pme,
     private FuzzyInputService $fuzzyInput,
     private ProjectParticipantFieldsService $participantFieldsService,
+    private Renderer $renderer,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    protected PHPMyEdit $pme,
   ) {
     parent::__construct($appName, $request);
 
@@ -128,11 +126,11 @@ class ProjectParticipantFieldsController extends Controller
    */
   public function serviceSwitch(string $topic, ?string $subTopic, ?array $data = null):Response
   {
-    $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
+    $projectValues = $this->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
       case self::REQUEST_TOPIC_PROPERTY:
         foreach (['fieldId', 'property'] as $parameter) {
-          if (empty($this->parameterService[$parameter])) {
+          if (empty($this->request[$parameter])) {
             return self::grumble($this->l->t(
               'Missing parameters in request "%s": "%s".',
               [ $topic, $parameter ]));
@@ -141,14 +139,14 @@ class ProjectParticipantFieldsController extends Controller
         switch ($subTopic) {
           case self::REQUEST_SUB_TOPIC_GET:
             // fetch the field
-            $fieldId = $this->parameterService['fieldId'];
+            $fieldId = $this->request['fieldId'];
             /** @var Entities\ProjectParticipantField $field */
             $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
             if (empty($field)) {
               return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
             }
 
-            $property = $this->parameterService['property'];
+            $property = $this->request['property'];
 
             // remap special cases
             switch ($property) {
@@ -795,8 +793,8 @@ class ProjectParticipantFieldsController extends Controller
         }
         $patchedFields = [];
         foreach (self::OPTION_PATCH_FIELDS as $field) {
-          if (isset($this->parameterService[$field])) {
-            $value = $this->parameterService[$field];
+          if (isset($this->request[$field])) {
+            $value = $this->request[$field];
             $option[$field] = empty($value) ? null : $value;
             $patchedFields[$field] = $value;
           }

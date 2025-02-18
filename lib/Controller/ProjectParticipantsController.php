@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,14 +28,13 @@ use \RuntimeException;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\MailingListsService;
@@ -82,17 +81,16 @@ class ProjectParticipantsController extends Controller
   public function __construct(
     $appName,
     IRequest $request,
-    private RequestParameterService $parameterService,
+    private PHPMyEdit $pme,
+    private ProjectParticipantFieldsService $participantFieldsService,
+    private ProjectService $projectService,
+    private StorageFactory $storageFactory,
     protected ConfigService $configService,
     protected EntityManager $entityManager,
-    private PHPMyEdit $pme,
-    private ProjectService $projectService,
-    private ProjectParticipantFieldsService $participantFieldsService,
-    private StorageFactory $storageFactory,
   ) {
     parent::__construct($appName, $request);
-
     $this->l = $this->l10N();
+
     $this->setDatabaseRepository(Entities\ProjectParticipant::class);
   }
 
@@ -126,7 +124,7 @@ class ProjectParticipantsController extends Controller
           $id = json_decode($value, true);
           return $id['id']??$id;
         },
-        $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), [])
+        $this->request->getParam($this->pme->cgiSysName('mrecs'), [])
       );
     }
 

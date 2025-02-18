@@ -24,28 +24,27 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCP\IRequest;
 
+use OCA\CAFEVDB\Common\Functions;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\DownloadsController;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
-use OCA\CAFEVDB\Controller\DownloadsController;
-
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Functions;
-use OCA\CAFEVDB\Exceptions;
 
 /** TBD. */
 class SepaBankAccounts extends PMETableViewBase
@@ -190,17 +189,26 @@ class SepaBankAccounts extends PMETableViewBase
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    protected ProjectParticipantFieldsService $participantFieldsService,
+    ToolTipsService $toolTipsService,
     private FinanceService $financeService,
+    protected ProjectParticipantFieldsService $participantFieldsService,
     protected ProjectService $projectService,
     protected UserStorage $userStorage,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(
+      self::TEMPLATE,
+      //
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $pageNavigation,
+      $toolTipsService,
+    );
     $this->initCrypto();
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
@@ -316,7 +324,7 @@ class SepaBankAccounts extends PMETableViewBase
       });
 
       // Control to select what we want to debit
-      $cgiBulkTransactions = $this->requestParameters->getParam('sepaBulkTransactions');
+      $cgiBulkTransactions = $this->request->getParam('sepaBulkTransactions');
 
       $selectAllLabel = Util::htmlEscape($this->l->t('=== (DE-)SELECT ALL ==='));
 
@@ -339,7 +347,7 @@ class SepaBankAccounts extends PMETableViewBase
       $buttons[] = [ 'code' =>  $sepaBulkTransactions, 'name' => 'bulk-transactions' ];
 
       // Control to select when we want to have the money (or to have spent the money)
-      // $cgiDueDeadline = $this->requestParameters->getParam('sepaDueDeadline');
+      // $cgiDueDeadline = $this->request->getParam('sepaDueDeadline');
       $sepaDueDeadline = '
 <span id="sepa-due-deadline" class="sepa-due-deadline">
   <input type="text"

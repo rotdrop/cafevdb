@@ -31,27 +31,22 @@ use UnexpectedValueException;
 use Throwable;
 
 use OCP\IL10N;
-
-use OCA\CAFEVDB\Service;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\ProjectService;
-
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
-use OCA\CAFEVDB\Database\Constants as DBConstants;
-
-use OCA\CAFEVDB\Exceptions;
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
-
-use OCA\CAFEVDB\Storage\UserStorage;
-
+use OCA\CAFEVDB\Database\Constants as DBConstants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
+use OCA\CAFEVDB\Database\Doctrine\ORM;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Base for phpMyEdit based table-views. */
 abstract class PMETableViewBase extends AbstractPageRenderer
@@ -240,15 +235,44 @@ abstract class PMETableViewBase extends AbstractPageRenderer
    */
   protected $joinTables = null;
 
+  /**
+   * @var array
+   *
+   * Fetched from the database at construction.
+   */
+  protected $instrumentInfo;
+
+  /**
+   * @var array
+   *
+   * Fetched from the database at construction.
+   */
+  protected $instruments;
+
+  /**
+   * @var array
+   *
+   * Fetched from the database at construction.
+   */
+  protected $groupedInstruments;
+
+  /**
+   * @var array
+   *
+   * Fetched from the database at construction.
+   */
+  protected $instrumentFamilies;
+
   /** {@inheritdoc} */
   protected function __construct(
     protected string $template,
+    //
     protected ConfigService $configService,
-    protected RequestParameterService $requestParameters,
     protected EntityManager $entityManager,
+    protected IRequest $request,
     protected PHPMyEdit $pme,
-    protected ToolTipsService $toolTipsService,
     protected PageNavigation $pageNavigation,
+    protected ToolTipsService $toolTipsService,
   ) {
     $this->l = $this->l10n();
 
@@ -285,7 +309,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
 
     foreach ($cgiDefault as $key => $default) {
       $this->pmeOptions['cgi']['persist'][$key] =
-        $this->{lcFirst($key)} = $default($this->requestParameters->getParam($key, null));
+        $this->{lcFirst($key)} = $default($this->request[$key] ?? null);
     }
 
     $this->pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';

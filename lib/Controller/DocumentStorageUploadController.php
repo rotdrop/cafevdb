@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,22 +30,20 @@ use \PHP_IBAN\IBAN;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 use OCP\AppFramework\Controller;
-use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\Files\SimpleFS\ISimpleFile;
-
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
-use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
+use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /** AJAX endpoint to support maintenance of tax exemption notices. */
 class DocumentStorageUploadController extends Controller
@@ -93,10 +91,9 @@ class DocumentStorageUploadController extends Controller
   public function __construct(
     $appName,
     IRequest $request,
+    private StorageFactory $storageFactory,
     protected ConfigService $configService,
     protected EntityManager $entityManager,
-    private RequestParameterService $parameterService,
-    private StorageFactory $storageFactory,
   ) {
     parent::__construct($appName, $request);
     $this->l = $this->l10N();
@@ -137,11 +134,11 @@ class DocumentStorageUploadController extends Controller
         $uploadData = json_decode($data, true);
         $entityId = $uploadData['optionKey'];
         $fileName = $uploadData['fileName'];
-        $files = $this->parameterService['files'];
+        $files = $this->request['files'];
         $filesAppPath = $uploadData['filesAppPath'] ?? null;
         break;
       case self::DOCUMENT_ACTION_DELETE:
-        $entityId = $this->parameterService['optionKey'];
+        $entityId = $this->request['optionKey'];
         break;
     }
 

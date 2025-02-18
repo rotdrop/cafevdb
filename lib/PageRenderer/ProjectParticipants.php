@@ -28,30 +28,28 @@ use InvalidArgumentException;
 
 use chillerlan\QRCode\QRCode;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OC\IRequest;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Service\ContactsService;
-use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\Finance\FinanceService;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Storage\UserStorage;
-
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-
+use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Common\Functions;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /**Table generator for Instruments table. */
 class ProjectParticipants extends PMETableViewBase
@@ -197,22 +195,30 @@ class ProjectParticipants extends PMETableViewBase
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-
-    private GeoCodingService $geoCodingService,
+    ToolTipsService $toolTipsService,
+    //
     private ContactsService $contactsService,
-    private PhoneNumberService $phoneNumberService,
     private FinanceService $financeService,
+    private GeoCodingService $geoCodingService,
     private InstrumentInsuranceService $insuranceService,
+    private PhoneNumberService $phoneNumberService,
     protected ProjectParticipantFieldsService $participantFieldsService,
     protected ProjectService $projectService,
     protected UserStorage $userStorage,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(
+      self::TEMPLATE,
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $pageNavigation,
+      $toolTipsService,
+    );
 
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);

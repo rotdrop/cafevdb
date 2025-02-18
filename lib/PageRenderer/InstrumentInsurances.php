@@ -26,23 +26,22 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use DateTime;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use IRequest;
 
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
-use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Common\Uuid;
-
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Common\Util;
 
 /** Render the instrument insurances of the club-members. */
 class InstrumentInsurances extends PMETableViewBase
@@ -104,8 +103,8 @@ class InstrumentInsurances extends PMETableViewBase
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
@@ -113,7 +112,16 @@ class InstrumentInsurances extends PMETableViewBase
     protected ProjectService $projectService,
     protected UserStorage $userStorage,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(
+      self::TEMPLATE,
+      //
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $pageNavigation,
+      $toolTipsService,
+    );
 
     $this->showDisabled = true; // otherwise it is too confusing.
 

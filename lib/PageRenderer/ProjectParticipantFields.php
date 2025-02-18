@@ -26,31 +26,28 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use RuntimeException;
 
-use \OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Service\InstrumentationService;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\Service\FuzzyInputService;
-use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
+use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Exceptions;
-
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
+use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\InstrumentationService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Table generator for Instruments table. */
 class ProjectParticipantFields extends PMETableViewBase
@@ -147,16 +144,25 @@ class ProjectParticipantFields extends PMETableViewBase
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    private InstrumentationService $instrumentationService,
+    ToolTipsService $toolTipsService,
     private FuzzyInputService $fuzzyInput,
+    private InstrumentationService $instrumentationService,
     protected ProjectParticipantFieldsService $participantFieldsService,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(
+      self::TEMPLATE,
+      //
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $pageNavigation,
+      $toolTipsService,
+    );
   }
   // phpcs:enable
 

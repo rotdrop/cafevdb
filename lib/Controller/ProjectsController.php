@@ -29,28 +29,28 @@ use DateTime;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\SimpleSharingService;
-use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
-use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 /** AJAX controller for projects. */
 class ProjectsController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use GetPrefixParamsTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
@@ -64,13 +64,11 @@ class ProjectsController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    private RequestParameterService $parameterService,
     protected ConfigService $configService,
     protected EntityManager $entityManager,
     protected PHPMyEdit $pme,
   ) {
     parent::__construct($appName, $request);
-
     $this->l = $this->l10N();
   }
 
@@ -83,7 +81,7 @@ class ProjectsController extends Controller
    */
   public function validate(string $topic):DataResponse
   {
-    $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
+    $projectValues = $this->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
       case 'name':
         $required = [
@@ -96,7 +94,7 @@ class ProjectsController extends Controller
             return self::grumble($this->l->t("The %s must not be empty.", [$subject]));
           }
         }
-        $control = $this->parameterService->getParam('control', 'name');
+        $control = $this->request->getParam('control', 'name');
         $record = $this->pme->getCGIRecordId();
         $projectId = $record['id']??null;
         $projectName = $projectValues['name'];
@@ -196,10 +194,10 @@ class ProjectsController extends Controller
   public function changeInstrumentation(string $instruments, string $voices):DataResponse
   {
     $instrumentsKey = str_replace('[]', '', $instruments);
-    $instruments = array_filter($this->parameterService[$instrumentsKey]??[]);
+    $instruments = array_filter($this->request[$instrumentsKey]??[]);
 
     $voicesKey = str_replace('[]', '', $voices);
-    $voices = array_filter($this->parameterService[$voicesKey]??[]);
+    $voices = array_filter($this->request[$voicesKey]??[]);
 
     $instrumentInfo =
       $this->getDatabaseRepository(Entities\Instrument::class)->describeALL();
@@ -445,8 +443,8 @@ class ProjectsController extends Controller
         $data['wikiPage'] = $projectService->projectWikiLink($project->getName());
         return self::dataResponse($data);
       case self::GET_PARTICIPANT_FIELDS:
-        $multiplicity = $this->parameterService->getParam('multiplicity');
-        $type = $this->parameterService->getParam('type');
+        $multiplicity = $this->request->getParam('multiplicity');
+        $type = $this->request->getParam('type');
         $data = [];
         /** @var Entities\ProjectParticipantField $field */
         foreach ($project->getParticipantFields() as $field) {
@@ -638,8 +636,8 @@ class ProjectsController extends Controller
             if (empty($share)) {
               return self::grumble($this->l->t('Project "%s" does not have a participants download share.', $project->getName()));
             }
-            if (isset($this->parameterService['expirationDate'])) {
-              $expirationDate = $this->parameterService['expirationDate'];
+            if (isset($this->request['expirationDate'])) {
+              $expirationDate = $this->request['expirationDate'];
               $expirationDate = Util::dateTime($expirationDate);
               /** @var SimpleSharingService $shareService */
               $shareService = $this->di(SimpleSharingService::class);

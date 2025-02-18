@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,6 @@ use OCP\ISession;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
@@ -173,11 +172,17 @@ class RecipientsFilter
   /** @var Repositories\MusiciansRepository */
   protected $musiciansRepository;
 
+  /**
+   * @var array
+   *
+   * Bound request parameters.
+   */
+  private ?array $requestParameters = null;
+
   /** {@inheritdoc} */
   public function __construct(
     protected ConfigService $configService,
     private ISession $session,
-    private RequestParameterService $parameterService,
     protected EntityManager $entityManager,
     protected PHPMyEdit $pme,
   ) {
@@ -186,24 +191,28 @@ class RecipientsFilter
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
 
     $this->jsonFlags = JSON_FORCE_OBJECT|JSON_HEX_QUOT|JSON_HEX_APOS;
-
-    $this->bind();
   }
 
   /**
-   * @param RequestParameterService $parameterService Bind self to the
+   * @return bool
+   */
+  public function bound():bool
+  {
+    return $this->requestParameters !== null;
+  }
+
+  /**
+   * @param array $requestParameters Bind self to the
    * given request parameters.
    *
    * @return void
    */
-  public function bind(?RequestParameterService $parameterService = null):void
+  public function bind(array $requestParameters):void
   {
-    if ($parameterService !== null) {
-      $this->parameterService = $parameterService;
-    }
+    $this->requestParameters = $requestParameters;
 
     // Fetch all data submitted by form
-    $this->cgiData = $this->parameterService->getParam(self::POST_TAG, []);
+    $this->cgiData = $this->requestParameters[self::POST_TAG] ?? [];
 
     // The web-form submits the basic recipient set as array
     $values = array_flip($this->cgiData[self::BASIC_RECIPIENTS_SET_KEY] ?? []);
@@ -219,21 +228,21 @@ class RecipientsFilter
     $this->cgiData[self::BASIC_RECIPIENTS_SET_KEY][self::PROJECT_MAILING_LIST_KEY] =
       isset($values[self::PROJECT_MAILING_LIST_KEY]);
 
-    $this->projectId = $this->parameterService->getParam('projectId', -1);
-    $this->projectName = $this->parameterService->getParam('projectName', '');
+    $this->projectId = $this->requestParameters['projectId'] ?? 0;
+    $this->projectName = $this->requestParameters['projectName'] ?? '';
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)
         ->find($this->projectId);
 
     }
 
-    $this->bulkTransactionId = $this->parameterService->getParam('bulkTransactionId', 0);
+    $this->bulkTransactionId = $this->requestParameters['bulkTransactionId'] ?? 0;
     if ($this->bulkTransactionId > 0) {
       $this->bulkTransaction = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class)
                                     ->find($this->bulkTransactionId);
     }
 
-    $this->donationReceiptId = $this->parameterService->getParam('donationReceiptId', 0);
+    $this->donationReceiptId = $this->requestParameters['donationReceiptId'] ?? 0;
     if ($this->donationReceiptId > 0) {
       $this->donationReceipt = $this->getDatabaseRepository(Entities\DonationReceipt::class)
                                     ->find($this->donationReceiptId);
@@ -264,8 +273,8 @@ class RecipientsFilter
     $this->submitted = $this->cgiValue('formStatus', '') === 'submitted';
 
     // "sane" default setttings
-    $this->emailRecs = $this->parameterService->getParam($this->emailKey, []);
-    $this->emailTable = $this->parameterService->getParam($this->mtabKey, '');
+    $this->emailRecs = $this->requestParameters[$this->emailKey] ?? [];
+    $this->emailTable = $this->requestParameters[$this->mtabKey] ?? '';
 
     $this->reload = false;
     $this->snapshot = false;

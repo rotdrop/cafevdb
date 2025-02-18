@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,9 +27,9 @@ namespace OCA\CAFEVDB\Controller;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -41,7 +41,6 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 
 /** Validation controller for some personal input fields. */
 class MusicianValidationController extends Controller
@@ -61,19 +60,18 @@ class MusicianValidationController extends Controller
   public function __construct(
     $appName,
     IRequest $request,
-    private RequestParameterService $parameterService,
-    protected ConfigService $configService,
+    private EmailAddressService $emailAddressService,
     private GeoCodingService $geoCodingService,
     private PhoneNumberService $phoneNumberService,
+    protected ConfigService $configService,
     protected EntityManager $entityManager,
     protected PHPMyEdit $pme,
-    private EmailAddressService $emailAddressService,
   ) {
     parent::__construct($appName, $request);
 
     $this->l = $this->l10N();
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
-    $this->dataPrefix = $this->parameterService['dataPrefix']['musicians']??'';
+    $this->dataPrefix = $this->request['dataPrefix']['musicians']??'';
   }
 
   /**
@@ -87,7 +85,8 @@ class MusicianValidationController extends Controller
   private function requestParameter(string $name):string
   {
     return Util::normalizeSpaces(
-      $this->parameterService[$this->pme->cgiDataName($this->dataPrefix . $name)]?:'');
+      $this->request[$this->pme->cgiDataName($this->dataPrefix . $name)] ?: ''
+    );
   }
 
   /**

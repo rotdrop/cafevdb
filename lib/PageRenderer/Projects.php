@@ -28,25 +28,24 @@ use Throwable;
 use RuntimeException;
 use DateTimeImmutable;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\EventsService;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\Legacy\PME\IOptions as IPMEOptions;
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
-
-use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\IOptions as IPMEOptions;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /**Table generator for Projects table. */
 class Projects extends PMETableViewBase
@@ -106,18 +105,28 @@ class Projects extends PMETableViewBase
   /** {@inheritdoc} */
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    protected ProjectService $projectService,
+    ToolTipsService $toolTipsService,
+    //
     private EventsService $eventsService,
     private MailingListsService $listsService,
     private OrganizationalRolesService $orgaRolesService,
+    protected ProjectService $projectService,
     protected UserStorage $userStorage,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(
+      self::TEMPLATE,
+      //
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $pageNavigation,
+      $toolTipsService,
+    );
 
     if (!($this->projectId > 0)) {
       $this->projectId = $this->pmeRecordId['id']??null;
@@ -129,12 +138,6 @@ class Projects extends PMETableViewBase
 
     if ($this->listOperation()) {
       $this->pme->overrideLabel('Add', $this->l->t('New Project'));
-    }
-
-    if (empty($this->requestParameters['template'])) {
-      // "booted" as default Page
-      $this->requestParameters[$this->pme->cgiSysName('qfyear_comp')] = '>=';
-      $this->requestParameters[$this->pme->cgiSysName('qfyear')] = date('Y') - 1;
     }
   }
 
@@ -1014,9 +1017,11 @@ class Projects extends PMETableViewBase
       );
 
     $opts['filters'] = [ 'OR' => [], 'AND' => [] ];
-    if (!empty($this->requestParameters[$this->pme->cgiSysName(PHPMyEdit::QUERY_FIELD . $nameIdx.'_idx')])) {
+    if (!empty($this->request[$this->pme->cgiSysName(PHPMyEdit::QUERY_FIELD . $nameIdx.'_idx')])) {
       // unset the year filter, as it does not make sense
-      unset($this->parameterService[$this->pme->cgiSysName(PHPMyEdit::QUERY_FIELD . $yearIdx)]);
+      //
+      // Leave to the user ...
+      // unset($this-> parameter Service [$this->pme->cgiSysName(PHPMyEdit::QUERY_FIELD . $yearIdx)]);
     } else {
       $opts['filters']['OR'][] = [
         'sql' => '$table.type IN ("' . ProjectType::PERMANENT . '","' . ProjectType::TEMPLATE . '")',

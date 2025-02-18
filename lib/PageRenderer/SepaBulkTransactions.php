@@ -24,11 +24,11 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCP\IRequest;
 
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
@@ -37,7 +37,6 @@ use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
 
@@ -167,16 +166,25 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   /** {@inheritdoc} */
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
+    ToolTipsService $toolTipsService,
+    //
     private FinanceService $financeService,
     private SepaBulkTransactionService $bulkTransactionService,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->bulkTransactionExpanded = $this->requestParameters['bulkTransactionExpanded'];
+    parent::__construct(
+      self::TEMPLATE,
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $pageNavigation,
+      $toolTipsService,
+    );
+    $this->bulkTransactionExpanded = $this->request['bulkTransactionExpanded'];
 
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);

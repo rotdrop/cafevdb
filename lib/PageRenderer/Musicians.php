@@ -26,29 +26,27 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use chillerlan\QRCode\QRCode;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Service\ContactsService;
-use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\MusicianService;
-use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Service\AuthorizationService;
-use OCA\CAFEVDB\Controller\MailingListsController;
-use OCA\CAFEVDB\Storage\UserStorage;
-
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Controller\MailingListsController;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Service\MusicianService;
+use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Abstract table generator for Musicians table. */
 abstract class Musicians extends PMETableViewBase
@@ -130,27 +128,30 @@ abstract class Musicians extends PMETableViewBase
   /** {@inheritdoc} */
   public function __construct(
     string $template,
+    //
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    private GeoCodingService $geoCodingService,
+    ToolTipsService $toolTipsService,
+    //
     private ContactsService $contactsService,
-    private PhoneNumberService $phoneNumberService,
+    private GeoCodingService $geoCodingService,
     private InstrumentInsuranceService $insuranceService,
-    private MusicianService $musicianService,
     private MailingListsService $listsService,
+    private MusicianService $musicianService,
+    private PhoneNumberService $phoneNumberService,
   ) {
     parent::__construct(
       $template,
+      //
       $configService,
-      $requestParameters,
       $entityManager,
+      $request,
       $phpMyEdit,
-      $toolTipsService,
       $pageNavigation,
+      $toolTipsService,
     );
 
     if (empty($this->musicianId)) {

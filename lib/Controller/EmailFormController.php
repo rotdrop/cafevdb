@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -46,7 +48,6 @@ use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Controller class for the mass-email form */
@@ -63,15 +64,14 @@ class EmailFormController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    protected IAppContainer $appContainer,
-    private IURLGenerator $urlGenerator,
-    private RequestParameterService $parameterService,
-    private PageNavigation $pageNavigation,
-    protected ConfigService $configService,
-    private ProjectService $projectService,
     private ContactsService $contactsService,
     private EmailAddressService $emailAddressService,
-    private PHPMyEdit $pme
+    private IURLGenerator $urlGenerator,
+    private PHPMyEdit $pme,
+    private PageNavigation $pageNavigation,
+    private ProjectService $projectService,
+    protected ConfigService $configService,
+    protected IAppContainer $appContainer,
   ) {
     parent::__construct($appName, $request);
     $this->l = $this->l10N();
@@ -106,24 +106,31 @@ class EmailFormController extends Controller
   ):DataResponse {
 
     // try to fetch filter information from the base-table if possible.
-    $idx = $this->parameterService['memberStatusFddIndex'];
-    $memberStatusFilter = $this->parameterService[$this->pme->cgiSysName('qf' . $idx . '_idx')];
+    $idx = $this->request['memberStatusFddIndex'];
+    $memberStatusFilter = $this->request[$this->pme->cgiSysName('qf' . $idx . '_idx')];
 
-    $idx = $this->parameterService['instrummentsFddIndex'];
-    $instrumentsFilter = $this->parameterService[$this->pme->cgiSysName('qf' . $idx . '_idx')];
+    $idx = $this->request['instrummentsFddIndex'];
+    $instrumentsFilter = $this->request[$this->pme->cgiSysName('qf' . $idx . '_idx')];
 
     $this->logInfo('MEMBER / INSTRUMENTS ' . print_r($memberStatusFilter, true) . ' / ' . print_r($instrumentsFilter, true));
-    $recipientsFilterCGI = $this->parameterService->getParam(RecipientsFilter::POST_TAG, []);
+    $recipientsFilterCGI = $this->request->getParam(RecipientsFilter::POST_TAG, []);
     if (!empty($instrumentsFilter)) {
       $recipientsFilterCGI['instrumentsFilter'] = $instrumentsFilter;
     }
     if (!empty($memberStatusFilter)) {
       $recipientsFilterCGI['memberStatusFilter'] = $memberStatusFilter;
     }
-    $this->parameterService->setParam(RecipientsFilter::POST_TAG, $recipientsFilterCGI);
+
+    $requestParameters = $this->request->getParams();
+    $requestParameters[RecipientsFilter::POST_TAG] = $recipientsFilterCGI;
 
     /** @var Composer $composer */
-    $composer = $this->appContainer->query(Composer::class);
+    try {
+      $composer = $this->appContainer->query(Composer::class);
+    } catch (Throwable $t) {
+      $this->logException($t);
+    }
+    $composer->bind($requestParameters);
     $recipientsFilter = $composer->getRecipientsFilter();
 
     $fileAttachments = $composer->fileAttachments();
@@ -153,7 +160,7 @@ class EmailFormController extends Controller
       'formData' => [
         'projectName' => $projectName,
         'projectId' => $projectId,
-        'template' => $this->parameterService['template'],
+        'template' => $this->request['template'],
         // 'renderer' => ???? @todo check
         'bulkTransactionId' => $bulkTransactionId,
         'requesttoken' => \OCP\Util::callRegister(),
@@ -285,12 +292,15 @@ class EmailFormController extends Controller
       'projectName' => $projectName,
       'bulkTransactionId' => -1,
     ];
-    $requestData = array_merge($defaultData, $this->parameterService->getParam(Composer::POST_TAG, []));
+    $requestData = array_merge($defaultData, $this->request->getParam(Composer::POST_TAG, []));
     $projectId   = $requestData['projectId'];
     $projectName = $requestData['projectName'];
 
     /** @var Composer $composer */
     $composer = $this->appContainer->get(Composer::class);
+    if (!$composer->bound()) {
+      $composer->bind($this->request->getParams());
+    }
     $recipientsFilter = $composer->getRecipientsFilter();
 
     if (isset($requestData['singleItem'])) {
@@ -547,7 +557,7 @@ class EmailFormController extends Controller
             $draftParameters[Composer::POST_TAG]['messageDraftId'] =
               $requestData['messageDraftId'] = $draftId;
 
-            $requestParameters = $this->parameterService->getParams();
+            $requestParameters = $this->request->getParams();
 
             // Loading a draft message means that the project-relation of the
             // stored draft should be re-established. Unfortunately, it is stored
@@ -559,17 +569,15 @@ class EmailFormController extends Controller
 
             $requestParameters = Util::arrayMergeRecursive($requestParameters, $draftParameters);
 
+            // "reload" the composer and recipients filter
+            $composer->bind($requestParameters);
+
             // Update project name and id
             $projectId = $requestData['projectId'] = $requestParameters['projectId'];
             $projectName = $requestData['projectName'] = $requestParameters['projectName'];
 
             $requestData['bulkTransactionId'] = $requestParameters['bulkTransactionId'];
 
-            // install new request parameters
-            $this->parameterService->setParams($requestParameters);
-
-            // "reload" the composer and recipients filter
-            $composer->bind($this->parameterService);
 
             $requestData['errorStatus'] = $composer->errorStatus();
             $requestData['diagnostics'] = $composer->statusDiagnostics();
@@ -884,7 +892,7 @@ class EmailFormController extends Controller
     switch ($operation) {
       case 'list':
         // Free-form recipients from Cc: or Bcc:
-        $freeForm  = $this->parameterService->getParam('freeFormRecipients', '');
+        $freeForm  = $this->request->getParam('freeFormRecipients', '');
 
         try {
           $freeForm = $this->emailAddressService->parseAddressString($freeForm);
@@ -959,7 +967,7 @@ class EmailFormController extends Controller
       case 'save':
         // Get some common post data, rest has to be handled by the
         // recipients and the sender class.
-        $addressBookCandidates = $this->parameterService->getParam('addressBookCandidates', []);
+        $addressBookCandidates = $this->request->getParam('addressBookCandidates', []);
 
         $formContacts = [];
         foreach ($addressBookCandidates as $record) {
@@ -1010,6 +1018,9 @@ class EmailFormController extends Controller
   public function attachment(string $source):DataResponse
   {
     $composer = $this->appContainer->query(Composer::class);
+    if (!$composer->bound()) {
+      $composer->bind($this->request->getParams());
+    }
     $uploadMaxFileSize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
     $postMaxSize = \OCP\Util::computerFileSize(ini_get('post_max_size'));
     $maxUploadFileSize = min($uploadMaxFileSize, $postMaxSize);
@@ -1017,7 +1028,7 @@ class EmailFormController extends Controller
 
     switch ($source) {
       case AttachmentOrigin::CLOUD:
-        $paths = $this->parameterService['paths'];
+        $paths = $this->request['paths'];
         if (empty($paths)) {
           return self::grumble($this->l->t('Attachment file-names were not submitted'));
         }

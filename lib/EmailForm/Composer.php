@@ -66,7 +66,6 @@ use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\SimpleSharingService;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
@@ -466,32 +465,44 @@ Störung.';
    */
   private $implicitFileAttachments = null;
 
+  /**
+   * @var array
+   *
+   * Bound request parameters.
+   */
+  private ?array $requestParameters = null;
+
   /** {@inheritdoc} */
   public function __construct(
-    protected ConfigService $configService,
-    private RequestParameterService $parameterService,
-    private EventsService $eventsService,
-    private RecipientsFilter $recipientsFilter,
-    protected EntityManager $entityManager,
-    private ProjectParticipantFieldsService $participantFieldsService,
-    private ProgressStatusService $progressStatusService,
-    private SimpleSharingService $simpleSharingService,
-    private OrganizationalRolesService $organizationRolesService,
     private AppStorage $appStorage,
-    private UserStorage $userStorage,
-    private IMAPService $imapService,
     private EmailAddressService $emailAddressService,
+    private EventsService $eventsService,
+    private IMAPService $imapService,
+    private OrganizationalRolesService $organizationRolesService,
+    private ProgressStatusService $progressStatusService,
+    private ProjectParticipantFieldsService $participantFieldsService,
+    private RecipientsFilter $recipientsFilter,
+    private SimpleSharingService $simpleSharingService,
+    private UserStorage $userStorage,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
   ) {
     $this->l = $this->l10N();
 
     $this->constructionMode = $this->getConfigValue('emailtestmode') !== 'off';
     $this->setCatchAll();
-
-    $this->bind($parameterService, $recipientsFilter);
   }
 
   /**
-   * @param RequestParameterService $parameterService Control
+   * @return bool
+   */
+  public function bound():bool
+  {
+    return $this->requestParameters !== null;
+  }
+
+  /**
+   * @param array $requestParameters Control
    *   structure holding the request parameters to bind to.
    *
    * @param RecipientsFilter $recipientsFilter Already bound
@@ -501,35 +512,31 @@ Störung.';
    * @return void
    */
   public function bind(
-    RequestParameterService $parameterService,
+    array $requestParameters,
     RecipientsFilter $recipientsFilter = null,
   ):void {
-    $this->parameterService = $parameterService;
+    $this->requestParameters = $requestParameters;
 
-    if (empty($recipientsFilter)) {
-      $this->recipientsFilter->bind($parameterService);
-    } else {
+    if (!empty($recipientsFilter)) {
       $this->recipientsFilter = $recipientsFilter;
     }
+    $this->recipientsFilter->bind($requestParameters);
 
     $this->recipients = $this->recipientsFilter->selectedRecipients();
 
-    $template = $this->parameterService['emailTemplate'];
+    $template = $this->requestParameters['emailTemplate'];
 
-    $this->cgiData = $this->parameterService->getParam(self::POST_TAG, []);
+    $this->cgiData = $this->requestParameters[self::POST_TAG] ?? [];
 
-    $this->projectId   = $this->cgiValue(
-      'projectId', $this->parameterService->getParam('projectId', 0));
-    $this->projectName = $this->cgiValue(
-      'projectName', $this->parameterService->getParam('projectName', ''));
+    $this->projectId   = $this->cgiValue('projectId', $this->requestParameters['projectId'] ?? 0);
+    $this->projectName = $this->cgiValue('projectName', $this->requestParameters['projectName'] ?? '');
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)
                             ->find($this->projectId);
       $this->projectName = $this->project->getName();
     }
 
-    $this->bulkTransactionId = $this->cgiValue(
-      'bulkTransactionId', $this->parameterService->getParam('bulkTransactionId', 0));
+    $this->bulkTransactionId = $this->cgiValue('bulkTransactionId', $this->requestParameters['bulkTransactionId'] ?? 0);
     if ($this->bulkTransactionId > 0) {
       $this->bulkTransaction = $this
         ->getDatabaseRepository(Entities\SepaBulkTransaction::class)
@@ -549,8 +556,7 @@ Störung.';
       }
     }
 
-    $this->donationReceiptId =  $this->cgiValue(
-      'donationReceiptId', $this->parameterService->getParam('donationReceiptId', 0));
+    $this->donationReceiptId =  $this->cgiValue('donationReceiptId', $this->requestParameters['donationReceiptId'] ?? 0);
     if ($this->donationReceiptId > 0) {
       $this->donationReceipt = $this
         ->getDatabaseRepository(Entities\DonationReceipt::class)
@@ -4556,18 +4562,18 @@ Störung.';
 
     // autoSave is the flag programmatically submitted by the ajax-call,
     // draftAutoSave is that state of the auto-save enable button.
-    $autoSave = $this->parameterService[self::POST_TAG]['autoSave'] ?? null;
+    $autoSave = $this->requestParameters[self::POST_TAG]['autoSave'] ?? null;
     if ($autoSave === null) {
-      $autoSave = $this->parameterService[self::POST_TAG]['draftAutoSave'] ?? false;
+      $autoSave = $this->requestParameters[self::POST_TAG]['draftAutoSave'] ?? false;
     }
     $autoSave = filter_var($autoSave, FILTER_VALIDATE_BOOLEAN);
 
     $draftData = [
-      'projectId' => $this->parameterService['projectId'],
-      'projectName' => $this->parameterService['projectName'],
-      'bulkTransactionId' => $this->parameterService['bulkTransactionId'],
-      self::POST_TAG => $this->parameterService[self::POST_TAG],
-      RecipientsFilter::POST_TAG => $this->parameterService[RecipientsFilter::POST_TAG],
+      'projectId' => $this->requestParameters['projectId'],
+      'projectName' => $this->requestParameters['projectName'],
+      'bulkTransactionId' => $this->requestParameters['bulkTransactionId'],
+      self::POST_TAG => $this->requestParameters[self::POST_TAG],
+      RecipientsFilter::POST_TAG => $this->requestParameters[RecipientsFilter::POST_TAG],
     ];
 
     unset($draftData[self::POST_TAG]['request']);
@@ -5605,8 +5611,7 @@ Störung.';
    */
   public function eventAttachments()
   {
-    $attachedEvents = $this->parameterService->getParam(
-      'eventSelect', $this->cgiValue('attachedEvents', []));
+    $attachedEvents = $this->requestParameters['eventSelect'] ?? $this->cgiValue('attachedEvents', []);
     $events = [];
     foreach ($attachedEvents as $event) {
       $event = json_decode($event, true);

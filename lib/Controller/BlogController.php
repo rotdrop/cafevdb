@@ -28,19 +28,18 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IUserSession;
-use OCP\IRequest;
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
+use OCP\AppFramework\Http\Response;
 use OCP\IDateTimeZone;
+use OCP\IL10N;
+use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUserSession;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\PageRenderer\Blog as BlogRenderer;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**
@@ -58,16 +57,15 @@ class BlogController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    private IURLGenerator $urlGenerator,
-    private RequestParameterService $parameterService,
-    protected ToolTipsService $toolTipsService,
-    protected ConfigService $configService,
+    private ?string $userId,
     private BlogMapper $blogMapper,
     private BlogRenderer $blogRenderer,
-    private ?string $userId,
-    protected IL10N $l,
     private IDateTimeZone $timeZone,
+    private IURLGenerator $urlGenerator,
+    protected ConfigService $configService,
+    protected IL10N $l,
     protected ILogger $logger,
+    protected ToolTipsService $toolTipsService,
   ) {
     parent::__construct($appName, $request);
   }
@@ -82,14 +80,14 @@ class BlogController extends Controller
    */
   public function editEntry():Response
   {
-    $author   = $this->parameterService->getParam('author', $this->userId);
+    $author   = $this->request->getParam('author', $this->userId);
 
-    $blogId   = $this->parameterService->getParam('blogId', null);
-    $inReplyTo  = $this->parameterService->getParam('inReplyTo', null);
-    $content  = $this->parameterService->getParam('content', '');
-    $priority = $this->parameterService->getParam('priority', false);
-    $popup    = $this->parameterService->getParam('popup', false);
-    $reader   = $this->parameterService->getParam('reader', '');
+    $blogId   = $this->request->getParam('blogId', null);
+    $inReplyTo  = $this->request->getParam('inReplyTo', null);
+    $content  = $this->request->getParam('content', '');
+    $priority = $this->request->getParam('priority', false);
+    $popup    = $this->request->getParam('popup', false);
+    $reader   = $this->request->getParam('reader', '');
 
     if (empty($author)) {
       return self::grumble($this->l->t('Refusing to create blog entry without author identity.'));
@@ -161,14 +159,14 @@ class BlogController extends Controller
    */
   public function action(string $operation):Response
   {
-    $author    = $this->parameterService->getParam('author', $this->userId);
-    $blogId    = $this->parameterService->getParam('blogId', null);
-    $inReplyTo = $this->parameterService->getParam('inReplyTo', null);
-    $content   = $this->parameterService->getParam('content', '');
-    $priority  = $this->parameterService->getParam('priority', false);
-    $popup     = $this->parameterService->getParam('popup', false);
-    $reader    = $this->parameterService->getParam('reader', '');
-    $clearRdr  = $this->parameterService->getParam('clearReader', false);
+    $author    = $this->request->getParam('author', $this->userId);
+    $blogId    = $this->request->getParam('blogId', null);
+    $inReplyTo = $this->request->getParam('inReplyTo', null);
+    $content   = $this->request->getParam('content', '');
+    $priority  = $this->request->getParam('priority', false);
+    $popup     = $this->request->getParam('popup', false);
+    $reader    = $this->request->getParam('reader', '');
+    $clearRdr  = $this->request->getParam('clearReader', false);
 
     $inReplyTo = $inReplyTo ?: null;
 

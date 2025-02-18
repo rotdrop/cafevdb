@@ -28,14 +28,13 @@ use DateTimeZone;
 use Throwable;
 
 use OCP\AppFramework\Controller;
-use OCP\IRequest;
 use OCP\AppFramework\Http;
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\CalDavService;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 use OCA\CAFEVDB\Exceptions;
@@ -51,13 +50,11 @@ class ProjectEventsController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    private RequestParameterService $parameterService,
-    protected ConfigService $configService,
-    private EventsService $eventsService,
     private CalDavService $calDavService,
+    private EventsService $eventsService,
+    protected ConfigService $configService,
   ) {
     parent::__construct($appName, $request);
-
     $this->l = $this->l10N();
   }
   // phpcs:enable
@@ -138,8 +135,8 @@ class ProjectEventsController extends Controller
    */
   public function serviceSwitch(string $topic):Http\Response
   {
-    $projectId = $this->parameterService['projectId'];
-    $projectName = $this->parameterService['projectName'];
+    $projectId = $this->request['projectId'];
+    $projectName = $this->request['projectName'];
 
     if (empty($projectId) || empty($projectName)) {
       return self::grumble(
@@ -149,8 +146,8 @@ class ProjectEventsController extends Controller
             empty($projectName) ? '?' : $projectName ]));
     }
 
-    $selectedEvents = array_unique($this->parameterService->getParam('eventSelect', []));
-    $calendarIds = array_unique($this->parameterService->getParam('calendarId', []));
+    $selectedEvents = array_unique($this->request->getParam('eventSelect', []));
+    $calendarIds = array_unique($this->request->getParam('calendarId', []));
 
     $selected = []; // array marking selected events
     foreach ($selectedEvents as $eventIdentifier) {
@@ -159,11 +156,11 @@ class ProjectEventsController extends Controller
       $selected[$flatIdentifier] = $eventIdentifier;
     }
 
-    $eventIdentifier = $this->parameterService->getParam('eventIdentifier');
+    $eventIdentifier = $this->request->getParam('eventIdentifier');
     if (!empty($eventIdentifier)) {
       $eventIdentifier = json_decode($eventIdentifier, true);
       $flatIdentifier = EventsService::makeFlatIdentifier($eventIdentifier);
-      $scope = $this->parameterService->getParam('scope');
+      $scope = $this->request->getParam('scope');
       if (!empty($scope[$flatIdentifier])) {
         $scope = $scope[$flatIdentifier];
       }
@@ -180,7 +177,7 @@ class ProjectEventsController extends Controller
       case 'absenceField':
         $template = 'project-events/eventslisting';
 
-        $enable = $this->parameterService->getParam('enableAbsenceField', false);
+        $enable = $this->request->getParam('enableAbsenceField', false);
         $enable = filter_var($enable, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
 
         $calendarId = $eventIdentifier['calendarId'];

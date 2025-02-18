@@ -27,30 +27,28 @@ namespace OCA\CAFEVDB\PageRenderer;
 use \InvalidArgumentException;
 use \BadFunctionCallException;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-
-use OCA\CAFEVDB\Service\AuthorizationService;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\Service\Finance\FinanceService;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Functions;
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller\DownloadsController;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Table generator for Instruments table. */
 class ProjectPayments extends PMETableViewBase
@@ -302,19 +300,29 @@ WHERE dsf.id IS NOT NULL',
   /** {@inheritdoc} */
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    protected ProjectService $projectService,
-    protected ProjectParticipantFieldsService $participantFieldsService,
-    private FinanceService $financeService,
-    protected UserStorage $userStorage,
+    ToolTipsService $toolTipsService,
+    //
     private DatabaseStorageUtil $databaseStorageUtil,
+    private FinanceService $financeService,
+    protected ProjectParticipantFieldsService $participantFieldsService,
+    protected ProjectService $projectService,
+    protected UserStorage $userStorage,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->compositePaymentExpanded = $this->requestParameters['compositePaymentExpanded'];
+    parent::__construct(
+      self::TEMPLATE,
+      //
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $toolTipsService,
+      $pageNavigation,
+    );
+    $this->compositePaymentExpanded = $this->request['compositePaymentExpanded'];
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
     }

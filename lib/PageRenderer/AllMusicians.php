@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use OCP\IRequest;
+
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -35,7 +37,6 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Table generator for Musicians table. */
@@ -46,32 +47,35 @@ class AllMusicians extends Musicians
   /** {@inheritdoc} */
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $requst,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    GeoCodingService $geoCodingService,
+    ToolTipsService $toolTipsService,
+    //
     ContactsService $contactsService,
-    PhoneNumberService $phoneNumberService,
+    GeoCodingService $geoCodingService,
     InstrumentInsuranceService $insuranceService,
-    MusicianService $musicianService,
     MailingListsService $listsService,
+    MusicianService $musicianService,
+    PhoneNumberService $phoneNumberService,
   ) {
     parent::__construct(
       self::TEMPLATE,
+      //
       $configService,
-      $requestParameters,
       $entityManager,
+      $request,
       $phpMyEdit,
-      $toolTipsService,
       $pageNavigation,
-      $geoCodingService,
+      $toolTipsService,
+      //
       $contactsService,
-      $phoneNumberService,
+      $geoCodingService,
       $insuranceService,
-      $musicianService,
       $listsService,
+      $musicianService,
+      $phoneNumberService,
     );
   }
 
