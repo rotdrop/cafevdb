@@ -3564,13 +3564,13 @@ EOT;
 		is_array($prefix_ar)  || $prefix_ar	 = array($prefix_ar);
 		is_array($postfix_ar) || $postfix_ar = array($postfix_ar);
 		foreach ($prefix_ar as $prefix) {
-			if (! strncmp($prefix, $urllink, strlen($prefix))) {
+			if (! strncmp($prefix ?? '', $urllink, strlen($prefix ?? ''))) {
 				$prefix_found = true;
 				break;
 			}
 		}
 		foreach ($postfix_ar as $postfix) {
-			if (! strncmp($postfix, $urllink, strlen($postfix))) {
+			if (! strncmp($postfix ?? '', $urllink, strlen($postfix ?? ''))) {
 				$postfix_found = true;
 				break;
 			}
@@ -3747,7 +3747,7 @@ EOT;
 		if ($this->col_has_php($k)) {
 			return $this->call_display_closure($k, $value, self::OPERATION_DISPLAY, $row, $key_rec);
 		}
-		if (strlen($value) <= 0) {
+		if (strlen($value ?? '') <= 0) {
 			return $escape ? '&nbsp;' : ''; // ??? why
 		}
 		if ($escape) {
