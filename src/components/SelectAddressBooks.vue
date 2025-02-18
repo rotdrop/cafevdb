@@ -48,7 +48,7 @@ import {
 } from 'vue'
 import axios from '@nextcloud/axios'
 import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.js'
-import { getInitialState } from '../services/initial-state-service.ts'
+import { getInitialState } from '../toolkit/services/InitialStateService.js'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import type { AddressBook } from '../types/address-book.d.ts'
 import Console from '../util/console.ts'
@@ -104,7 +104,7 @@ const emit = defineEmits([
 ])
 
 onBeforeMount(async () => {
-  const initialState: InitialState = getInitialState()
+  const initialState: InitialState = getInitialState('files')
   if (initialState.contacts && initialState.contacts.addressBooks) {
     addressBooks.value = initialState.contacts.addressBooks
     // logger.info('ADDRESSBOOKS FROM STATE', addressBooks.value)
