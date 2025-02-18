@@ -598,6 +598,8 @@ onUnmounted(() => {
   min-height: 100%;
   max-height: 100%;
   --#{$appName}-top-padding: 44px;
+  width: 100%;
+  flex-shrink: 10;
 }
 ##{$appName}-top-navigation {
   position: absolute;
@@ -637,28 +639,5 @@ onUnmounted(() => {
 #legacy-ajax-error-heading {
   margin-left: 6px;
 }
-.flex-container {
-  display: flex;
-  &.flex- {
-    &align- {
-      &center {
-        align-items: center;
-      }
-      &baseline {
-        align-items: baseline;
-      }
-    }
-    &justify- {
-      &center {
-        justify-content: center;
-      }
-      &start {
-        justify-content: flex-start;
-      }
-      &left {
-        justify-content: left;
-      }
-    }
-  }
-}
+@import "../../style/flex.scss";
 </style>
