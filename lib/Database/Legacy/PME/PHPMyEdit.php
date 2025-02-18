@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,28 +32,27 @@ use RuntimeException;
 
 use phpMyEdit as LegacyPHPMyEdit;
 
-use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
-use OCP\IDateTimeZone;
+
 use OCP\IDateTimeFormatter;
+use OCP\IDateTimeZone;
+use OCP\IL10N;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Result;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\FetchMode;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
-
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Connection;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Connection;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\FetchMode;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Result;
 
 /**
  * Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL.
  */
 class PHPMyEdit extends LegacyPHPMyEdit
 {
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var Connection */
   private $connection;
@@ -91,26 +90,21 @@ class PHPMyEdit extends LegacyPHPMyEdit
   /** @var string Hash of most recent query */
   private $queryHash;
 
-  // phpcs:disable Squiz.Commenting.FunctionComment.MissingParamTag
-  /**
-   * Override constructor, delay most of the actual work to the
-   * execute() method.
-   *
-   * @param EntityManager $entityManager
-   *
-   * @param IOptions $options
-   *
-   * We do also some construction thing s.t. add_operation() and
-   * friends does something useful.
-   */
+  /** @var array */
+  protected $dir;
+
+  /** @var string */
+  protected $currentLanguage;
+
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected EntityManager $entityManager,
     IOptions $options,
-    private RequestParameterService $request,
-    protected ILogger $logger,
-    protected IL10N $l,
-    private IDateTimeZone $dateTimeZone,
     private IDateTimeFormatter $dateTimeFormatter,
+    private IDateTimeZone $dateTimeZone,
+    private IRequest $request,
+    protected EntityManager $entityManager,
+    protected IL10N $l,
+    protected ILogger $logger,
   ) {
     $this->connection = $this->entityManager->getConnection();
     if (empty($this->connection)) {
@@ -524,7 +518,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
   /**
    * {@inheritdoc}
    *
-   * Override parent::get_cgi_var to use RequestParameterService
+   * Override parent::get_cgi_var to use IRequest
    */
   public function get_cgi_var($name, $defaultValue = null)
   {

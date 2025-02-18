@@ -402,6 +402,9 @@ class ConfigService
   /** @var IConfig */
   private IConfig $cloudConfig;
 
+  /** @var IUserSession */
+  private IUserSession $userSession;
+
   /**
    * {@inheritdoc}
    *

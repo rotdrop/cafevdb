@@ -5,7 +5,7 @@
  * phpMyEdit.class.php - main table editor class definition file
  * ____________________________________________________________
  *
- * Copyright (c) 2011-2016, 2020-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * C opyright (c) 1999-2002 John McCreesh <jpmcc@users.sourceforge.net>
  * C opyright (c) 2001-2002 Jim Kraai <jkraai@users.sourceforge.net>
@@ -177,6 +177,7 @@ class phpMyEdit
 	public $mrec;      // array of all fields provided as data in the misc checkboxes
 	public $mrec_num;  // field numbers of mrec fields
 	public $mrec_rec; // values of the union or the rec, groupby_rec and additional mrec fields.
+	protected $multiple; // referenced, define to get rid of a PHP deprecation message.
 	public $deselect_invisible_mrecs; // deselect non-visible mrecs when +/- action is issued
 	public $inc;		// number of records to display
 	public $total_recs; // total number of records available
@@ -240,6 +241,24 @@ class phpMyEdit
 	public $tabs_by_name;  // TAB indices by Id
 	public $timer = null;	// phpMyEdit_timer object
 	public $sd; public $ed;	// sql start and end delimiters '`' in case of MySQL
+
+	// various "spurious" on-the-fly members ... these trigger PHP errors/warnings as of now
+	protected $display;
+	protected $displayed;
+	protected $filters;
+	protected $guidance;
+	protected $having;
+	protected $misc_deselect_invisible;
+	protected $navfm;
+	protected $num_fields_displayed;
+	protected $page_name;
+	protected $prev_qfn;
+	protected $query_group_opts;
+	protected $query_opts;
+	protected $sort_fields_w;
+	protected $sys_cols;
+	protected $triggers;
+	protected $field;
 
 	// Predefined variables
 
@@ -638,7 +657,7 @@ class phpMyEdit
 	public function enc($string, $double_encode = false)
 	{
 		return htmlspecialchars(
-			$string,
+			$string ?? '',
 			flags: ENT_COMPAT | ENT_SUBSTITUTE | ENT_HTML401,
 			encoding: 'UTF-8',
 			double_encode: $double_encode);
@@ -4539,7 +4558,7 @@ EOT;
 		++$num_nav_cols;
 		echo $but_str,'</td>',"\n";
 		// Message is now written here
-		if (strlen(@$this->message) > 0) {
+		if (strlen($this->message ?? '') > 0) {
 			echo '<td class="',$this->getCSSclass('message', $position),'">',$this->message,'</td>',"\n";
 			++$num_nav_cols;
 		}
@@ -7054,7 +7073,7 @@ EOT;
 		$groupby_rec = $this->get_sys_cgi_var('groupby_rec', []);
 
 		$querypart = '';
-		$qpos = strpos($operation, '?');
+		$qpos = strpos($operation ?? '', '?');
 		if ($qpos !== false) {
 			$querypart = substr($operation, $qpos);
 			$operation = substr($operation, 0, $qpos);
@@ -7107,6 +7126,9 @@ EOT;
 			foreach ($filters as $junctor => $filter) {
 				if (empty($filter)) {
 					continue;
+				}
+				if ($filtersArray[$junctor] === false) {
+					$filtersArray[$junctor] = [];
 				}
 				if (is_array($filter)) {
 					$filtersArray[$junctor]['sql'] = implode(
@@ -7338,7 +7360,7 @@ EOT;
 		/*-***************************************************************/
 
 		$oper_prefix_len = strlen($this->cgi['prefix']['operation']);
-		if (! strncmp($this->cgi['prefix']['operation'], $this->operation, $oper_prefix_len)) {
+		if (!strncmp($this->cgi['prefix']['operation'], $this->operation ?? '', $oper_prefix_len)) {
 			$this->operation = $this->labels[substr($this->operation, $oper_prefix_len)];
 		}
 		// Persistent values.
@@ -7370,7 +7392,7 @@ EOT;
 					}
 				}
 			} else {
-				$this->cgi['persist'] .= '&'.rawurlencode($key).'='.rawurlencode($val);
+				$this->cgi['persist'] .= '&'.rawurlencode($key).'='.rawurlencode($val ?? '');
 			}
 		}
 		// Form variables all around

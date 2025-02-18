@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -225,11 +225,12 @@ class ToolTipsService implements \ArrayAccess, \Countable
       }
     }
 
-    $tip = preg_replace('/(^\s*[\n])+/m', self::PARAGRAPH . "\n", $tip);
-
-    // idea: allow markdown?
-
-    $this->lastToolTip = empty($tip) ? null : ($escape ? htmlspecialchars($tip) : $tip);
+    if (!empty($tip)) {
+      $tip = preg_replace('/(^\s*[\n])+/m', self::PARAGRAPH . "\n", $tip);
+      $this->lastToolTip = $escape ? htmlspecialchars($tip) : $tip;
+    } else {
+      $this->lastToolTip = null;
+    }
 
     return $this->lastToolTip;
   }

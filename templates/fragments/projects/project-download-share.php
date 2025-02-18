@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2025 Claus-Justus Heine
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 
 $toolTipsPrefix = 'page-renderer:projects:public-downloads:';
 $dataToolTip = implode('<br/>', array_filter([ $folder, $share, $expirationDate ]));
-$filesAppTarget = md5($folder);
+$filesAppTarget = md5($folder ?? '');
 
 ?>
 
@@ -53,7 +53,7 @@ $filesAppTarget = md5($folder);
     <?php p($l->t('delete share link')); ?>
   </a>
   <a class="url external not-empty tooltip-top tooltip-wide"
-     target="<?php p(md5($share)); ?>"
+     target="<?php p(md5($share ?? '')); ?>"
      title="<?php p($dataToolTip); ?>"
      href="<?php p($share); ?>">
     <div class="nav content pme-cell-wrapper pme-cell-squeezer pme-style-all-views one-liner ellipsis medium-width clip-long-text">
