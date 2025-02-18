@@ -65,7 +65,7 @@ class VueAppController extends Controller
   ) {
     parent::__construct($appName, $request);
 
-    $this->l = $this->l10N();
+    $this->l = $this->l10n();
   }
   // phpcs:enable
 
@@ -78,10 +78,8 @@ class VueAppController extends Controller
    * @NoCSRFRequired
    * @AllowIFrameSelf
    */
-  public function index(?string $hash = null):TemplateResponse
+  public function index():TemplateResponse
   {
-    $this->logInfo('HASH VALUE ' . ($hash ?? 'UNSET'));
-
     // add the vue assets
     Util::addScript($this->appName, $this->assetService->getJSAsset('vue-app')['asset']);
     Util::addStyle($this->appName, $this->assetService->getCSSAsset('vue-app')['asset']);
@@ -98,6 +96,22 @@ class VueAppController extends Controller
       'iFrameContentScript',
       $this->assetService->getJSAsset('iframe-content-script'),
     );
+
+    $queryHash = $this->request->getParam('hash');
+    if ($queryHash) {
+      $initialPostData = $this->historyService->get($queryHash);
+      $this->logInfo('HASH VALUE ' . $queryHash . ' DATA ' . print_r($initialPostData ?? [], true));
+      if (!empty($initialPostData)) {
+        $this->initialStateService->provideInitialState(
+          $this->appName,
+          'historyPostData',
+          [
+            'hash' => $queryHash,
+            'post' => $initialPostData,
+          ],
+        );
+      }
+    }
 
     return new TemplateResponse($this->appName, 'vue-app');
   }

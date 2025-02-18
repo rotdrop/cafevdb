@@ -27,6 +27,8 @@
                              :name="t(appId, 'Home')"
                              exact
                              @click="showSidebar = false"
+                             @onTransitionComplete="onTransitionComplete"
+                             @onTransitionError="onTransitionError"
         >
           <template #icon>
             <PageTemplateIcon page-template="home" />
@@ -51,6 +53,8 @@
                              :name="item.name"
                              exact
                              @click="showSidebar = false"
+                             @onTransitionComplete="onTransitionComplete"
+                             @onTransitionError="onTransitionError"
         >
           <template #icon>
             <PageTemplateIcon :page-template="item.template" />
@@ -281,7 +285,7 @@ const errorHandlerProvider = useErrorHandlerStore()
 
 const appError = ref<null | AppError>(null)
 const errorHandler = <E extends AppError>(error: E) => {
-  logger.info('TOP LEVEL ERROR', error)
+  logger.debug('TOP LEVEL ERROR', error)
   appError.value = error
 }
 errorHandlerProvider.pushHandler(errorHandler)
@@ -368,7 +372,7 @@ const authorizedNavigationItems = computed(() => {
   const items = navigationItems.value.filter(
     (item: NavigationItem) => (item.permissions === (item.permissions & userPermissions.value)),
   )
-  logger.info('FILTERED NAVIGATION ITEMS', { items, globalState })
+  logger.debug('FILTERED NAVIGATION ITEMS', { items, globalState })
   return items
 })
 
@@ -430,10 +434,9 @@ asyncSubscribe(BusEvents.HISTORY_GO_REQUEST, (event) => router.go(event.level))
 
 const configCheck = async () => {
   const url = generateAppUrl('a/config-check')
-  logger.info('URL', url)
   try {
     const response: AxiosResponse<ConfigCheckResult> = await axios.get(url)
-    logger.info('CONFIG CHECK RESULT', response)
+    logger.debug('CONFIG CHECK RESULT', response)
     if (!response.data.summary) {
       const target = {
         name: 'legacy-page',
@@ -445,7 +448,7 @@ const configCheck = async () => {
     return response.data.summary
   } catch (error) {
     logger.error('Unable to run the basic configuration checks', url, error)
-    appError.value = new AppError(t(appName, 'Unable to run the config-check.'), { cause: error })
+    appError.value = new AppError({ component: COMPONENT_NAME }, t(appName, 'Unable to run the config-check.'), { cause: error })
     return false
   }
 }
@@ -455,7 +458,7 @@ const updateNavigationItems = async () => {
     return
   }
   const url = generateAppUrl('n/{pageTemplate}', { pageTemplate: pageTemplate.value })
-  logger.info('URL', url)
+  logger.debug('URL', url)
   try {
     const response: AxiosResponse<{ navigation: NavigationItem[] }> = await axios.post(
       url, {
@@ -484,12 +487,12 @@ const updateNavigationItems = async () => {
     navigationItems.value = newNavigationItems
   } catch (error) {
     logger.error('Unable to update navigation items', url, error)
-    appError.value = new AppError(t(appName, 'Unable to update navigation items.'), { cause: error })
+    appError.value = new AppError({ component: COMPONENT_NAME }, t(appName, 'Unable to update navigation items.'), { cause: error })
   }
 }
 
 const updateDebugModes = async (newValue: number, oldValue?: number) => {
-  logger.info('DEBUG MODES CHANGED', newValue, oldValue, isMounted.value, settingsLocked.value)
+  logger.debug('DEBUG MODES CHANGED', newValue, oldValue, isMounted.value, settingsLocked.value)
   if (settingsLocked.value) {
     return
   }
@@ -567,7 +570,7 @@ const reactifyGlobalState = function() {
   watch(
     () => globalState.userPermissions,
     (...args) => {
-      logger.info('USER APP PERMISSIONS CHANGED', ...args)
+      logger.debug('USER APP PERMISSIONS CHANGED', ...args)
       triggerNavigationUpdate.value = true
     },
   )
@@ -597,12 +600,12 @@ if (!(globalState.initialized && globalState.PHPMyEdit.initialized)) {
   globalState.initialized = globalState.initialized || false
   globalState.PHPMyEdit.initialized = globalState.PHPMyEdit.initialized || false
   reactive(globalState)
-  logger.info('INSTALL WATCHER FOR GLOBAL STATE', Object.assign({}, globalState))
+  logger.debug('INSTALL WATCHER FOR GLOBAL STATE', Object.assign({}, globalState))
   const stop = watch(
     () => globalState.initialized && globalState.PHPMyEdit.initialized,
     () => {
       reactifyGlobalState()
-      console.info('AFTER GLOBAL STATE REACTIFY IN WATCHER', globalState)
+      logger.debug('AFTER GLOBAL STATE REACTIFY IN WATCHER', globalState)
       stop()
     },
   )
@@ -617,7 +620,7 @@ watch(
 watch(
   pageTemplate,
   (value, oldValue) => {
-    logger.info('CURRENT TEMPLATE CHANGED', value, oldValue)
+    logger.debug('CURRENT TEMPLATE CHANGED', value, oldValue)
     if (value === 'home') {
       currentProjectId.value = 0
       // should also run the config checks ... all other templates
@@ -630,13 +633,13 @@ watch(
 watch(
   currentProjectId,
   (...args) => {
-    logger.info('CURRENT PROJECT ID CHANGED', ...args)
+    logger.debug('CURRENT PROJECT ID CHANGED', ...args)
     triggerNavigationUpdate.value = true
   })
 watch(
   triggerNavigationUpdate,
   async (value, oldValue) => {
-    logger.info('TRIGGER NAVIGATION UPDATE CHANGED', value, oldValue)
+    logger.debug('TRIGGER NAVIGATION UPDATE CHANGED', value, oldValue)
     if (value) {
       triggerNavigationUpdate.value = false
       if (pageTemplate.value) {
@@ -645,16 +648,22 @@ watch(
     }
   })
 
-// the following was created() in options api ...
-
-// router.beforeEach((to, from, next) => {
-//   logger.info('GLOBAL BEFORE EACH ROUTE CHANGE', to, from, window?.history?.state)
-//   next()
-// })
+router.beforeEach((to, from, next) => {
+  logger.debug('GLOBAL BEFORE EACH ROUTE CHANGE', {
+    to,
+    from,
+    windowHistory: window?.history?.state,
+    pendingHistoryAction: history.pendingHistoryAction,
+  })
+  if (!history.pendingHistoryAction) {
+    history.scheduleHistoryAction(to.transition, to.params)
+  }
+  next()
+})
 router.afterEach((to, from) => {
-  logger.info('GLOBAL AFTER EACH ROUTE CHANGE', to, from, window?.history?.state)
+  logger.debug('GLOBAL AFTER EACH ROUTE CHANGE', to, from, window?.history?.state)
   pageTemplate.value = to.params?.template || 'home'
-  history.finishHistoryAction(to.transition)
+  history.finishHistoryAction(to)
   // @todo: parse the query parameters, e.g.
   //
   // ?template=blah&foo=bar
@@ -664,12 +673,14 @@ router.afterEach((to, from) => {
   // extending given default template parameters (if present).
 })
 // router.onReady((...args) => {
-//   logger.info('ROUTER ON READY HOOK', ...args, window?.history?.state)
+//   logger.debug('ROUTER ON READY HOOK', ...args, window?.history?.state)
 // })
 router.onError((...args) => {
-  logger.info('ROUTER ON ERROR HOOK', ...args, window?.history?.state)
+  logger.debug('ROUTER ON ERROR HOOK', ...args, window?.history?.state)
   history.cancelHistoryAction()
 })
+const onTransitionComplete = (...args: unknown[]) => { logger.debug('ON TRANSITION COMPLETE', { ...args }) }
+const onTransitionError = (...args: unknown[]) => { logger.debug('ON TRANSITION COMPLETE', { ...args }) }
 
 onMounted(() => {
   logger.debug('INITIAL HISTORY', {

@@ -172,15 +172,16 @@ import {
 } from '../services/async-event-bus.ts'
 import {
   LEGACY_AJAX_ERROR,
-  LEGACY_PAGE_LOAD,
-  LEGACY_PME_HISTORY_UPDATE,
   LEGACY_PAGE_CLEANUP,
   LEGACY_PAGE_FINALIZE,
+  LEGACY_PAGE_LOAD,
+  LEGACY_PME_UPDATE,
+  LEGACY_POST_HASH,
   TOGGLE_TOOLTIPS,
   WIKI_POPUP,
 } from '../event-bus-events.ts'
 import * as LegacyNotification from '../app/notification.js'
-import objectHash from '../util/object-hash.ts'
+import objectHash, { HASH_KEY } from '../util/object-hash.ts'
 import type { AxiosResponse } from 'axios'
 import type { LoadPartsData } from '../types/ajax/page-load-response.ts'
 import { loadTranslations, translate as t } from '@nextcloud/l10n'
@@ -285,6 +286,7 @@ const pagePrefix = computed(() => legacyCssPrefix.value + '-')
 const pushBusyState = appData.pushBusyState
 const popBusyState = appData.popBusyState
 
+const scheduleHistoryAction = browserHistory.scheduleHistoryAction
 const scheduleHistoryPush = browserHistory.scheduleHistoryPush
 const scheduleHistoryReplace = browserHistory.scheduleHistoryReplace
 
@@ -312,7 +314,7 @@ const onUserManualPopup = () => {
   })
 }
 
-// make sure the URL reflects the given hash and remove the no-reload query
+// make sure the URL reflects the given hash and remove the no-reload query parameter
 const synchronizeHistoryState = (hash: string) => {
   const target = {
     name: 'legacy-page',
@@ -323,7 +325,7 @@ const synchronizeHistoryState = (hash: string) => {
   return router.replace(target)
 }
 
-const updateLegacyRoute = (post: TemplatePostData, action: string = 'replace', htmlBody?: string) => {
+const updateLegacyRoute = (post: TemplatePostData, action: 'push'|'replace' = 'replace', htmlBody?: string) => {
   appError.value = null
   const params = {
     template: post.template,
@@ -344,13 +346,8 @@ const updateLegacyRoute = (post: TemplatePostData, action: string = 'replace', h
     logger.info('INSTALL NEW HTML')
     legacyBodyHtml.value = htmlBody
   }
-  if (action === 'push') {
-    target.query.hash = scheduleHistoryPush(post)
-    return router.push(target)
-  } else {
-    target.query.hash = scheduleHistoryReplace(post)
-    return router.replace(target)
-  }
+  target.query.hash = scheduleHistoryAction(action, post)
+  return router[action](target)
 }
 
 const nextFrame = () => {
@@ -378,14 +375,14 @@ const doLoadLegacy = async () => {
   }
   Object.assign(post, historyAppData, post)
   Object.assign(historyAppData, post)
-  logger.info('POST including history state', post, currentHistoryState.value)
+  logger.info('POST including history state', post, { ...currentHistoryState.value, post: historyAppData })
   const currentHash = objectHash(post)
   if (props.hash !== currentHash) {
     previousHash = currentHash
     scheduleHistoryReplace(post, currentHash)
     synchronizeHistoryState(currentHash)
   }
-  post.hash = currentHash
+  post[HASH_KEY] = currentHash
   try {
     const response: AxiosResponse<LoadPartsData> = await axios.post(generateAppUrl('page/remember/parts'), post)
     const data = response.data // todo: validate
@@ -415,7 +412,7 @@ const doLoadLegacy = async () => {
   } catch (e: any) {
     logger.error('ERROR', generateAppUrl('page/remember/parts'), post, e)
     await loadTranslations('logreader', () => logger.info('LOGREADER L10N'))
-    appError.value = new AppError(t(appName, 'Error loading view "{template}".', { template: props.template }), { cause: e })
+    appError.value = new AppError({ component: COMPONENT_NAME }, t(appName, 'Error loading view "{template}".', { template: props.template }), { cause: e })
   }
   popBusyState()
   loading.value = false
@@ -443,6 +440,10 @@ watch(legacyHtmlLoaded, (value, oldValue) => {
 watch(
   () => props.templateParameters?.projectId,
   (value, oldValue) => {
+    if (!value && !oldValue) {
+      // protect against change between null, undefined and possibly 0
+      return
+    }
     logger.info('PROJECT ID CHANGED', value, oldValue)
     appData.currentProjectId = value
     logger.info('TRIGGER PAGE LOAD')
@@ -541,12 +542,16 @@ const legacyPageLoadHandler = asyncSubscribe(
   },
 )
 const legacyPmeHistoryUpdateHandler = asyncSubscribe(
-  LEGACY_PME_HISTORY_UPDATE,
+  LEGACY_PME_UPDATE,
   (eventData) => {
     logger.info('LEGACY PME HISTORY UPDATE', eventData)
     return updateLegacyRoute(eventData.post, eventData.action, eventData.htmlBody)
   },
 )
+const legacyPostHashHandler = asyncSubscribe(LEGACY_POST_HASH, (event) => {
+  return { [HASH_KEY]: objectHash(event.post) }
+})
+
 const legacyAjaxError = ref<JQueryAjaxError | undefined>()
 const showLegacyAjaxError = ref(false)
 let legacyAjaxErrorResolve: (_value: boolean) => void
@@ -579,9 +584,10 @@ errorHandlerProvider.popHandler()
 onBeforeMount(() => errorHandlerProvider.pushHandler(errorHandler))
 onUnmounted(() => {
   errorHandlerProvider.popHandler()
-  asyncUnSubscribe(LEGACY_PAGE_LOAD, legacyPageLoadHandler)
-  asyncUnSubscribe(LEGACY_PME_HISTORY_UPDATE, legacyPmeHistoryUpdateHandler)
   asyncUnSubscribe(LEGACY_AJAX_ERROR, legacyAjaxErrorHandler)
+  asyncUnSubscribe(LEGACY_PAGE_LOAD, legacyPageLoadHandler)
+  asyncUnSubscribe(LEGACY_PME_UPDATE, legacyPmeHistoryUpdateHandler)
+  asyncUnSubscribe(LEGACY_POST_HASH, legacyPostHashHandler)
 })
 
 </script>

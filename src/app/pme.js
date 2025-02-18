@@ -75,8 +75,14 @@ import 'jquery-ui/ui/effects/effect-highlight.js';
 import 'jquery-ui/ui/widgets/sortable.js';
 import 'selectize/dist/css/selectize.bootstrap4.css';
 import mergician from 'mergician';
-import { LEGACY_PME_HISTORY_UPDATE } from '../event-bus-events.ts';
-import { emit } from '../services/async-event-bus.ts';
+import {
+  LEGACY_PME_UPDATE,
+  LEGACY_POST_HASH,
+} from '../event-bus-events.ts';
+import {
+  emit as asyncEmit,
+  getEmitResult,
+} from '../services/async-event-bus.ts';
 // import 'selectize/dist/css/selectize.css';
 require('cafevdb-selectize.scss');
 
@@ -1081,7 +1087,25 @@ const pseudoSubmitPost = function(form, element, resetFilter) {
     post += '&' + $.param(element);
   }
 
-  return pmePost(post);
+  // convert to plain object
+  post = qs.parse(post, { allowSparse: true, duplicates: 'last' });
+  const result = $.Deferred();
+  getEmitResult(asyncEmit(LEGACY_POST_HASH, { post }))
+    .then(
+      (hashData) => {
+        console.info('HASH DATA', hashData);
+        Object.assign(post, hashData);
+        pmePost(post)
+          .then(
+            (htmlContent, historyAction, post) => { result.resolve(htmlContent, historyAction, post); },
+            (xhr, status, errorThrown) => { result.reject(xhr, status, errorThrown); },
+          );
+      },
+      (error) => {
+        result.reject(error);
+      },
+    );
+  return result;
 };
 
 /**
@@ -1124,8 +1148,8 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
     }
 
     console.warn('PSEUDO SUBMIT VIA FORM SUBMIT');
-    form.submit();
-    return false;
+    form.trigger('submit');
+    return Promise.resolve(true);
   }
 
   if (!submitOptions.keepBusy) {
@@ -1138,24 +1162,25 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
   templateRenderer = templateRenderer.val();
   const template = templateFromRenderer(templateRenderer);
 
-  pseudoSubmitPost(form, element, resetFilter)
+  const result = pseudoSubmitPost(form, element, resetFilter);
+  console.info('PSEUDO SUBMIT POST YIELDS', result);
+  return result
     .fail(function(xhr, status, errorThrown) {
       pageBusyIcon(false);
       modalizer(false);
     })
-    .done(async function(htmlContent, historyAction, postData) {
+    .done(async function(htmlContent, historyAction, post) {
 
-      console.info('DONE AFTER PSEUDO SUBMIT', historyAction, postData);
+      console.info('DONE AFTER PSEUDO SUBMIT', historyAction, post);
 
-      const post = qs.parse(postData, { allowSparse: true });
       if (historyAction === 'push') {
-        await emit(LEGACY_PME_HISTORY_UPDATE, {
+        await asyncEmit(LEGACY_PME_UPDATE, {
           post,
           htmlBody: htmlContent,
           action: 'push',
         });
       } else {
-        await emit(LEGACY_PME_HISTORY_UPDATE, {
+        await asyncEmit(LEGACY_PME_UPDATE, {
           post,
           htmlBody: htmlContent,
           action: 'replace',
@@ -1197,7 +1222,6 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
         container.trigger('pmetable:layoutchange');
       });
     });
-  return false;
 };
 
 /**
@@ -1415,7 +1439,8 @@ const installFilterChosen = function(containerSel) {
     // There doesn't seem to be a "this" for dblclick, though
     // searching the web did not reveal similar problems. Doesn't
     // matter, we just trigger the click on the query-submit button
-    // return pseudoSubmit(container.find('form.pme-form'), $(event.target), containerSel);
+    // pseudoSubmit(container.find('form.pme-form'), $(event.target), containerSel);
+    // return false;
     container.find('td.' + pmeFilter + ' input.' + pmeToken('query')).trigger('click');
   });
 
@@ -1949,7 +1974,8 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
   container
     .off('change', onChangeSel)
     .on('change', onChangeSel, function(event) {
-      return pseudoSubmit($(this.form), $(this), containerSel);
+      pseudoSubmit($(this.form), $(this), containerSel);
+      return false;
     });
 
   // view/change/copy/delete buttons lead to a a popup
@@ -1994,7 +2020,8 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     container
       .off('click', submitSel)
       .on('click', submitSel, function(event) {
-        return pseudoSubmit($(this.form), $(this), containerSel);
+        pseudoSubmit($(this.form), $(this), containerSel);
+        return false;
       });
   }
 
@@ -2034,7 +2061,8 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
       pressedKey = event.keyCode;
     }
     if (pressedKey === 13) { // enter pressed
-      return pseudoSubmit($(this.form), $(this), containerSel);
+      pseudoSubmit($(this.form), $(this), containerSel);
+      return false;
     }
     return true; // other key pressed
   });

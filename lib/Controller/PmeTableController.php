@@ -24,39 +24,26 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-/*-*****************************************************************************
- *
- * We may want to move the office stuff to a separate service
- *
- */
-
-use PhpOffice\PhpSpreadsheet;
-use OCA\CAFEVDB\PageRenderer\Util\PhpSpreadsheetValueBinder;
-
-/*
- *
- *****************************************************************************/
-
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\IAppContainer;
-use OCP\IUserSession;
-use OCP\IRequest;
-use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
+use OCP\IRequest;
 use OCP\ITempManager;
+use OCP\IUserSession;
+use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\IPageRenderer;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\PageRenderer\IPageRenderer;
 
 /** AJAX backends for legacy PME table stuff. */
 class PmeTableController extends Controller
@@ -71,7 +58,6 @@ class PmeTableController extends Controller
     protected IAppContainer $appContainer,
     protected ConfigService $configService,
     private HistoryService $historyService,
-    private RequestParameterService $parameterService,
     private ProjectService $projectService,
     protected PHPMyEdit $pme,
     private ITempManager $tempManager,
@@ -112,62 +98,51 @@ class PmeTableController extends Controller
   private function load():Http\Response
   {
     $this->logDebug('Start');
-    try {
-      $templateRenderer = $this->parameterService->getParam('templateRenderer');
-      $template = $this->parameterService->getParam('template');
-      $dialogMode = !empty($this->parameterService->getParam('ambientContainerSelector'));
-      $reloadAction = false;
-      $reloadAction = $this->parameterService->getParam(
-        $this->pme->cgiSysName('reloadfilter'),
-        $this->parameterService->getParam($this->pme->cgiSysName('reloadlist'))
-      ) !== null;
+    $templateRenderer = $this->request->getParam('templateRenderer');
+    $template = $this->request->getParam('template');
+    $dialogMode = !empty($this->request->getParam('ambientContainerSelector'));
+    $reloadAction = false;
+    $reloadAction = $this->request->getParam(
+      $this->pme->cgiSysName('reloadfilter'),
+      $this->request->getParam($this->pme->cgiSysName('reloadlist'))
+    ) !== null;
 
-      if (empty($templateRenderer)) {
-        return self::grumble(['error' => $this->l->t('missing arguments'),
-                              'message' => $this->l->t('No template-renderer submitted.'), ]);
-      }
-
-      /** @var IPageRenderer $renderer */
-      $renderer = $this->appContainer->query($templateRenderer);
-      if (empty($renderer)) {
-        return self::response(
-          $this->l->t("Template-renderer `%s' cannot be found.", [$templateRenderer]),
-          Http::INTERNAL_SERVER_ERROR);
-      }
-      // $renderer->navigation(false); NOPE, navigation is needed, number of query records may change.
-
-      if ($dialogMode || $reloadAction) {
-        $historyAction = PageController::HISTORY_ACTION_LOAD;
-      } else {
-        $this->historyService->save($this->parameterService->getParams());
-        $historyAction = PageController::HISTORY_ACTION_PUSH;
-      }
-
-      $template = 'pme-table';
-      $templateParameters = [
-        'renderer' => $renderer,
-        'templateRenderer' => $templateRenderer,
-        'template' => $template,
-        'recordId' => $this->pme->getCGIRecordId(),
-      ];
-
-      $response = $this->templateResponse(
-        $template,
-        $templateParameters,
-      );
-
-      $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
-
-      if (!$dialogMode && !$reloadAction) {
-        $this->historyService->store();
-      }
-
-      return $response;
-
-    } catch (\Throwable $t) {
-      $this->logException($t);
-      return self::grumble($this->exceptionChainData($t));
+    if (empty($templateRenderer)) {
+      return self::grumble(['error' => $this->l->t('missing arguments'),
+                            'message' => $this->l->t('No template-renderer submitted.'), ]);
     }
+
+    /** @var IPageRenderer $renderer */
+    $renderer = $this->appContainer->query($templateRenderer);
+    if (empty($renderer)) {
+      throw new Exceptions\Exception(
+        $this->l->t("Template-renderer `%s' cannot be found.", [$templateRenderer]),
+      );
+    }
+
+    if ($dialogMode || $reloadAction) {
+      $historyAction = PageController::HISTORY_ACTION_LOAD;
+    } else {
+      $this->historyService->save($this->request->getParams());
+      $historyAction = PageController::HISTORY_ACTION_PUSH;
+    }
+
+    $template = 'pme-table';
+    $templateParameters = [
+      'renderer' => $renderer,
+      'templateRenderer' => $templateRenderer,
+      'template' => $template,
+      'recordId' => $this->pme->getCGIRecordId(),
+    ];
+
+    $response = $this->templateResponse(
+      $template,
+      $templateParameters,
+    );
+
+    $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
+
+    return $response;
   }
 
   /**
@@ -180,12 +155,12 @@ class PmeTableController extends Controller
    */
   private function export():Http\Response
   {
-    $exportFormat = $this->parameterService['exportFormat'];
+    $exportFormat = $this->request['exportFormat'];
     if (empty($exportFormat)) {
       return self::grumble($this->l->t('No export-format submitted'));
     }
 
-    $template = $this->parameterService->getParam('template');
+    $template = $this->request->getParam('template');
     if (empty($template)) {
       return self::grumble(['error' => $this->l->t('missing arguments'),
                             'message' => $this->l->t('No template submitted.'), ]);

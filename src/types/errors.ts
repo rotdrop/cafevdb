@@ -24,9 +24,9 @@
 export type ErrorContext = Record<string, string|number|object|undefined|null>;
 
 export class AppError extends Error {
-  constructor(...p: ConstructorParameters<ErrorConstructor>) {
+  constructor(context: ErrorContext, ...p: ConstructorParameters<ErrorConstructor>) {
     super(...p);
-    this.context = {};
+    this.context = context;
     this.name = 'AppError'
   }
   context: ErrorContext;

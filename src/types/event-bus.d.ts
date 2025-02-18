@@ -35,7 +35,8 @@ import {
   LEGACY_PAGE_CLEANUP,
   LEGACY_PAGE_FINALIZE,
   LEGACY_PAGE_LOAD,
-  LEGACY_PME_HISTORY_UPDATE,
+  LEGACY_PME_UPDATE,
+  LEGACY_POST_HASH,
   POP_BUSY_STATE,
   PROJECT_ACTIONS,
   PROJECT_EVENTS_POPUP,
@@ -63,6 +64,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     template: string,
     projectId?: number,
     projectName?: string,
+    [key: string|number]: any,
   }
 
   type Callbacks = {
@@ -89,7 +91,8 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [LEGACY_PAGE_CLEANUP]: undefined,
     [LEGACY_PAGE_FINALIZE]: undefined,
     [LEGACY_PAGE_LOAD]: { post: TemplatePostData, template: string|null, projectId: number|null, projectName: string|undefined, keepHistory: boolean, },
-    [LEGACY_PME_HISTORY_UPDATE]: { post: TemplatePostData, htmlBody: string, action: string, },
+    [LEGACY_PME_UPDATE]: { post: TemplatePostData, htmlBody: string, action: 'push'|'replace', },
+    [LEGACY_POST_HASH]: { post: TemplatePostData },
     [POP_BUSY_STATE]: undefined,
     [PROJECT_ACTIONS]: { projectId: number, open: boolean, x?: number, y?: number },
     [PROJECT_EMAIL_POPUP]: { projectId: number, projectName?: string, reopen?: boolean },

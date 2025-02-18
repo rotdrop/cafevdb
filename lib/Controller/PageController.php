@@ -37,7 +37,6 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\IAppContainer;
-use OCP\IInitialStateService;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -58,15 +57,14 @@ use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\MigrationsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Listener\BeforeMessageLoggedEventListener;
 
 /** Main UI entry point providing the front pages. */
 class PageController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\InitialStateTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const RENDER_AS_PARTS = 'parts'; // silly name
 
@@ -91,81 +89,20 @@ class PageController extends Controller
     protected HistoryService $historyService,
     private OrganizationalRolesService $organizationalRolesService,
     private AuthorizationService $authorizationService,
-    private RequestParameterService $parameterService,
     protected ToolTipsService $toolTipsService,
     private PageNavigation $pageNavigation,
-    protected IInitialStateService $initialStateService,
     private ConfigCheckService $configCheckService,
     private IURLGenerator $urlGenerator,
     protected LoggerInterface $logger,
   ) {
-
     parent::__construct($appName, $request);
 
-    $this->l = $this->l10N();
+    $this->l = $this->l10n();
 
     // See if we are configured
     $this->configCheck = $this->configCheckService->configured();
   }
   // phpcs:enable
-
-  /**
-   * Unused ATM but keep it around until "remember last page" option has been
-   * revisited and implemented through the Vue frontend.
-   *
-   * @return bool
-   */
-  protected function shouldLoadHistory():bool
-  {
-    if ($this->getUserValue('restorehistory') !== 'on') {
-      return false;
-    }
-    if ($this->request->getMethod() !== 'GET') {
-      return false;
-    }
-    $template = $this->parameterService->getParam('template');
-    if (empty($template)) {
-      return true;
-    }
-    $get = $this->request->get;
-    $historyData = $this->historyService->fetch();
-    foreach ($get as $key => $value) {
-      if ($key == '_route') {
-        continue;
-      }
-      if (($historyData[$key] ?? null) !== $value) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Load a page at the specified offset from the history. Returns an
-   * error if the entry cannot be found in the history.
-   *
-   * @param string $renderAs
-   *
-   * @return Http\Response
-   *
-   * @NoAdminRequired
-   * @AllowIFrameSelf
-   */
-  protected function restore(string $renderAs):Http\Response
-  {
-    $originalParams = $this->parameterService->getParams();
-    $this->parameterService->setParams($this->historyService->fetch());
-    $this->parameterService['originalRequestParameters'] = $originalParams;
-    $this->parameterService->setParam('renderAs', $renderAs);
-    return $this->loader(
-      $renderAs,
-      $this->parameterService['template'],
-      $this->parameterService['projectName'],
-      $this->parameterService['projectId'],
-      $this->parameterService['musicianId'],
-      historyAction: self::HISTORY_ACTION_LOAD,
-    );
-  }
 
   /**
    * Load a page and remembers the request parameters in the history.
@@ -179,13 +116,13 @@ class PageController extends Controller
    */
   public function remember(string $renderAs):Http\Response
   {
-    $this->historyService->save($this->parameterService->getParams());
+    $this->historyService->save($this->request->getParams());
     return $this->loader(
-      $this->parameterService->getParam('renderAs', self::RENDER_AS_USER),
-      $this->parameterService['template'],
-      $this->parameterService['projectName'],
-      $this->parameterService['projectId'],
-      $this->parameterService['musicianId'],
+      $this->request->getParam('renderAs') ?? self::RENDER_AS_USER,
+      $this->request['template'],
+      $this->request['projectName'],
+      $this->request['projectId'],
+      $this->request['musicianId'],
       historyAction: self::HISTORY_ACTION_PUSH,
     );
   }
@@ -248,15 +185,6 @@ class PageController extends Controller
         $this->l->t('Access to the web frontend was denied for user "%s".', $this->userId()),
       );
     }
-
-    // Initial state injecton for JS
-    $this->publishInitialStateForUser($this->userId());
-
-    $this->initialStateService->provideInitialState(
-      $this->appName,
-      'iFrameContentScript',
-      $this->assetService->getJSAsset('iframe-content-script'),
-    );
 
     // The most important ...
     $encrkey = $this->getAppEncryptionKey();
@@ -329,12 +257,6 @@ class PageController extends Controller
       $templateParameters,
       self::RENDER_AS_BLANK,
     )->render();
-
-    // @todo
-    //
-    // Perhaps should be revived, but this is currently not supported in the frontend.
-    //
-    // $this->historyService->store();
 
     return self::dataResponse([
       'template' => $template,

@@ -26,9 +26,11 @@ namespace OCA\CAFEVDB\Service;
 
 use OutOfBoundsException;
 
-use OCP\ISession;
-use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
+
+use OCP\IL10N;
+use OCP\ISession;
+use OCP\IRequest;
 
 /**
  * Page history via PHP session.
@@ -41,137 +43,105 @@ class HistoryService
   use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  const MAX_HISTORY_SIZE = 1;
+  const HASH_KEY = '__post_data_hash__';
   const SESSION_HISTORY_KEY = 'PageHistory';
-  const PME_ERROR_READONLY = 1;
+  const SESSION_LAST_URL_PATH_KEY = 'LastUrlPath';
+
+  /**
+   * @var array
+   *
+   * Top-level excluded keys which we do not want to cache.
+   */
+  private const EXCLUDE_KEYS = [
+    self::HASH_KEY,
+    '_route',
+    'renderas',
+    'template',
+    'projectId',
+    'projectName',
+  ];
 
   /** @var bool */
   protected $debug = false;
 
-  /**
-   * @var array|null Clone of the most recent request. The purpose is to
-   * restore the previous view acros browser reload/close, change of user agents.
-   */
-  private ?array $historyRecord;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    private ISession $session,
+    private IRequest $request,
     protected IL10N $l,
     protected ILogger $logger,
+    protected ISession $session,
+    protected string $appName,
   ) {
-    $this->load();
+    if (!$this->sessionKeyExists(self::SESSION_HISTORY_KEY)) {
+      $this->logInfo('NO SESSION HISTORY DATA PRESENT, INITIALIZE');
+      $this->sessionStoreValue(self::SESSION_HISTORY_KEY, []);
+    } else {
+      $this->logInfo('SESSION HISTORY DATA ' . print_r($this->sessionRetrieveValue(self::SESSION_HISTORY_KEY), true));
+    }
   }
   // phpcs:enable
 
   /**
-   * Initialize a sane do-nothing record.
+   * Save a history snapshot. If $key is given use its value as key. Otherwise
+   * if $data[self::HASH_KEY] is present use it as key. Otherwise do nothing.
+   * Save a history snapshot
+   *
+   * @param null|array $data Data to store. If null
+   * IRequest::getParams() is used.
+   *
+   * @param null|string $key
    *
    * @return void
    */
-  private function default():void
+  public function save(?array $data = null, ?string $key = null):void
   {
-    $this->historyRecord = [
-      'md5' => md5(serialize([])),
-      'data' => []
-    ];
+    if ($data === null) {
+      $data = $this->request->getParams();
+    }
+    $hash = $key ?? ($data[self::HASH_KEY] ?? null);
+    if (!$hash) {
+      $this->logError('NO HASH KEY');
+      return;
+    }
+    $this->set($hash, $data);
+    // $this->sessionStoreValue(self::SESSION_LAST_URL_PATH_KEY, $this->request->getR
   }
 
   /**
-   * Add a history snapshot.
+   * Add a history snapshot. If $key is given use its value as key. Otherwise
+   * if $data[self::HASH_KEY] is present use it as key. Otherwise do nothing.
+   *
+   * @param string $hash
    *
    * @param array $data
    *
    * @return void
    */
-  public function save(array $data):void
+  public function set(string $hash, array $data):void
   {
-    ksort($data);
-    $md5 = md5(serialize($data));
-    if ($this->historyRecord['md5'] != $md5) {
-      // add the new record if it appears to be new
-      $this->historyRecord['md5'] = $md5;
-      $this->historyRecord['data'] = $data;
-      if ($this->debug) {
-        $this->printRecord();
-      }
+    foreach (self::EXCLUDE_KEYS as $key) {
+      unset($data[$key]);
+    }
+    $historyData = $this->sessionRetrieveValue(self::SESSION_HISTORY_KEY);
+    if (empty($historyData[$hash])) {
+      $historyData[$hash] = $data;
+      $this->sessionStoreValue(self::SESSION_HISTORY_KEY, $historyData);
     }
   }
 
   /**
-   * Debugging utility.
+   * Retrieve previously stored request data from the PHP session.
    *
-   * @return void
+   * @param string $hash
+   *
+   * @return null|array
    */
-  private function printRecord():void
+  public function get(string $hash):?array
   {
-    $printKeys = [ 'projectId', 'template' ];
-    $printRecord = [];
-    foreach ($printKeys as $key) {
-      $printRecord[$key] = $this->historyRecord['data'][$key] ?? 'undefined';
+    $data = $this->sessionRetrieveValue(self::SESSION_HISTORY_KEY)[$hash] ?? null;
+    if ($data) {
+      $data = array_filter($data, fn($value, $key) => !in_array($key, self::EXCLUDE_KEYS), ARRAY_FILTER_USE_BOTH);
     }
-    $message .= ', '. print_r($printRecord, true);
-    $this->logInfo($message, [], 2, true);
-  }
-
-  /**
-   * Fetch the history record.
-   *
-   * @return array
-   */
-  public function fetch():array
-  {
-    if ($this->debug) {
-      $this->printRecord();
-    }
-
-    // Could check for valid data here, but so what
-    return $this->historyRecord['data'];
-  }
-
-  /**
-   * Store the current state whereever. Currently the PHP session
-   * data, but this is not guaranteed.
-   *
-   * @return void
-   */
-  public function store():void
-  {
-    $this->sessionStoreValue(self::SESSION_HISTORY_KEY, $this->historyRecord);
-  }
-
-  /**
-   * Load the history state. Initialize to default state in case of
-   * errors.
-   *
-   * @return bool
-   */
-  private function load():bool
-  {
-    $loadValue = $this->sessionRetrieveValue(self::SESSION_HISTORY_KEY);
-    if (!$this->validate($loadValue)) {
-      $this->default();
-      return false;
-    }
-    $this->historyRecord = $loadValue;
-    return true;
-  }
-
-  /**
-   * Validate the given history record, return false on error.
-   *
-   * @param null|array $record
-   *
-   * @return bool
-   */
-  private function validate(?array $record):bool
-  {
-    if (!is_array($record)) {
-      return false;
-    }
-    if (!isset($record['md5']) || $record['md5'] != md5(serialize($record['data']))) {
-      return false;
-    }
-    return true;
+    return $data;
   }
 }

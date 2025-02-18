@@ -29,17 +29,33 @@ const COMPONENT_NAME = 'generateObjectHash';
 
 const logger = new Console(COMPONENT_NAME);
 
+export const HASH_KEY = '__post_data_hash__';
+
 type NormalOptionsExt = NormalOption & {
-  exclude: ((key: string, value: any) => boolean)|undefined;
+  exclude: ((key: string, value: any, level: number) => boolean)|undefined;
 };
+
+const EXCLUDED_KEYS = [
+  '__ob__', // vue reactivity hook
+];
+
+const TOP_LEVEL_EXCLUDED_KEYS = [
+  HASH_KEY, // reserved to hold the hash value
+  'hash',
+  'template', // url-parameter
+  'projectId', // url-parameter
+  'projectName', // url-parameter
+];
 
 const generateObjectHash = (instance: NotUndefined):string => {
   const options: NormalOptionsExt = {
     unorderedArrays: true, // sort arrays
-    exclude: (key, value) =>
-      key === '__ob__' // vue reactivity hook
+    exclude: (key, value, level) =>
+      (level === 0 && TOP_LEVEL_EXCLUDED_KEYS.includes(key))
+        || EXCLUDED_KEYS.includes(key)
         || value === undefined // exclude undefined
         || value === null, // or better debug the code ...
+
   };
   const result = objectHash(instance, options);
   logger.debug('HASH @ OBJECT', result, instance);

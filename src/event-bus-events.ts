@@ -27,8 +27,9 @@ export const appEventName = <T extends string>(tag: T) => appPrefix(tag, '::');
 
 // app events
 export const APP_SETTINGS_POPUP = appEventName('app-settings-popup');
-export const CALENDAR_EVENT_EDIT = appEventName('calendar-event-edit');
 export const CALENDAR_EVENT_ADD = appEventName('calendar-event-add');
+export const CALENDAR_EVENT_EDIT = appEventName('calendar-event-edit');
+export const HISTORY_GO_REQUEST = appEventName('history-go-request');
 export const POP_BUSY_STATE = appEventName('pop-busy-state');
 export const PROJECT_ACTIONS = appEventName('project-actions');
 export const PROJECT_EMAIL_POPUP = appEventName('project-email-popup');
@@ -53,11 +54,11 @@ export const SET_SHOW_DISABLED = appEventName('set-show-disabled');
 export const SET_TOOLTIPS_MODE = appEventName('set-tooltips-mode');
 
 export const LEGACY_AJAX_ERROR = appEventName('legacy-ajax-error');
-export const HISTORY_GO_REQUEST = appEventName('history-go-request');
 export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
 export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');
 export const LEGACY_PAGE_LOAD = appEventName('legacy-page-load');
-export const LEGACY_PME_HISTORY_UPDATE = appEventName('legacy-pme-history-update');
+export const LEGACY_PME_UPDATE = appEventName('legacy-pme-update');
+export const LEGACY_POST_HASH = appEventName('legacy-post-hash');
 
 export const GET_VUE_COMPONENT = appEventName('get-vue-component');
 

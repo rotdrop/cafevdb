@@ -22,15 +22,19 @@
 import { appName } from '../config.ts';
 import Vue from 'vue';
 import Router from 'vue-router';
+import type { RouterOptions } from 'vue-router';
 import { generateUrl } from '@nextcloud/router';
-// import { getCurrentUser } from '@nextcloud/auth';
 import appRoutes from './routes.js';
+// import Console from '../util/console.ts';
+
+// const COMPONENT_NAME = 'app-router';
+// const logger = new Console(COMPONENT_NAME);
 
 Vue.use(Router);
 
 const base = generateUrl('/apps/' + appName);
 
-const router = new Router({
+const options: RouterOptions = {
   mode: 'history',
   base,
   linkActiveClass: 'active',
@@ -42,9 +46,11 @@ const router = new Router({
       return {
         selector: to.hash,
         behavior: 'smooth',
-      }
+      };
     }
   },
-});
+};
+
+const router = new Router(options);
 
 export default router;

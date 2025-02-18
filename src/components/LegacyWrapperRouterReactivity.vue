@@ -109,8 +109,11 @@ const onRouteChange = (to: Route) => {
   logger.info('onRouteChange()', { to: { ...to }, historyState: window?.history?.state })
   template.value = to.params.template
   // Object.assign(templateParameters.value, to.params)
-  templateParameters.value = { ...to.params }
-  delete templateParameters.value.template
+  templateParameters.value = Object.fromEntries(
+    Object.entries(to.params).filter(
+      ([key, value]) => key !== 'template' && (!!value || (key !== 'projectId' && key !== 'projectName')),
+    ),
+  )
   postDataHash.value = (to.query?.hash as string) || undefined
   noLegacyReload.value = +to.query?.['no-reload'] === 1
 }
