@@ -199,7 +199,7 @@ import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dial
 import { translate as t } from '@nextcloud/l10n'
 import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.js'
 import { generateUrl } from '@nextcloud/router'
-import { getInitialState } from '../services/initial-state-service.ts'
+import { getInitialState } from '../toolkit/services/InitialStateService.js'
 import SelectContacts from '../components/SelectContacts.vue'
 import SelectAddressBooks from '../components/SelectAddressBooks.vue'
 import SelectMusicians from '../components/SelectMusicians.vue'
@@ -379,7 +379,7 @@ defineExpose({
 let initialState: InitialState
 
 const getData = async () => {
-  initialState = getInitialState() as InitialState
+  initialState = getInitialState('files') as InitialState
   if (initialState.personal.musicianId > 0) {
     sender.value = { id: initialState.personal.musicianId }
   }

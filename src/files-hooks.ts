@@ -23,7 +23,7 @@
 
 import Vue from 'vue';
 import { appName } from './config.ts';
-import { getInitialState } from './services/initial-state-service.ts';
+import { getInitialState } from './toolkit/services/InitialStateService.js';
 import { basename } from 'path';
 import { generateFilePath } from '@nextcloud/router';
 import { emit } from '@nextcloud/event-bus';
@@ -54,7 +54,7 @@ if (!window.OCA.CAFEVDB) {
   window.OCA.CAFEVDB = {};
 }
 
-const initialState = getInitialState();
+const initialState = getInitialState('files');
 
 const projectBalancesFolder = initialState.sharing.files.folders.projectBalances;
 const supportingDocumentsFolder = initialState.sharing.files.subFolders.supportingDocuments;

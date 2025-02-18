@@ -22,7 +22,7 @@
  */
 
 import { appName } from './config.ts';
-import { getInitialState } from './services/initial-state-service.ts';
+import { getInitialState } from './toolkit/services/InitialStateService.js';
 import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
 import { translate as t } from '@nextcloud/l10n';
@@ -47,7 +47,7 @@ if (!OCA.CAFEVDB) {
   OCA.CAFEVDB = {};
 }
 
-const initialState = getInitialState();
+const initialState = getInitialState('files');
 
 // @todo: we can of course support much more ...
 const supportedMimeTypes = [
