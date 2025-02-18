@@ -48,7 +48,7 @@ class AllMusicians extends Musicians
   public function __construct(
     ConfigService $configService,
     EntityManager $entityManager,
-    IRequest $requst,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
