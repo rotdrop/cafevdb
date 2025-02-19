@@ -515,6 +515,8 @@ const updateDebugModes = async (newValue: number, oldValue?: number) => {
   }
 }
 
+const redirectToLastUrlPath = ref(false)
+
 // watchers
 const reactifyGlobalState = function() {
   logger.debug('BEFORE REACTIFY GLOBAL STATE', globalState)
@@ -613,6 +615,18 @@ if (!(globalState.initialized && globalState.PHPMyEdit.initialized)) {
   reactifyGlobalState()
 }
 
+const stopRedirectWatcher = watch(
+  () => globalState.initialized && globalState.PHPMyEdit.initialized && redirectToLastUrlPath.value,
+  () => {
+    stopRedirectWatcher()
+    // globalState is now initialized
+    if (globalState.restoreHistory && redirectToLastUrlPath.value) {
+      history.scheduleHistoryReplace(history.lastUrlData!, history.lastUrlHash)
+      router.replace(history.lastUrlPath!)
+    }
+  },
+)
+
 watch(
   debugModes,
   (value, oldValue) => updatePersonalSettings(BusEvents.SET_DEBUG_MODES, value, oldValue),
@@ -672,18 +686,29 @@ router.afterEach((to, from) => {
   // passing { foo: bar } as tempalte parameters, potentially
   // extending given default template parameters (if present).
 })
-// router.onReady((...args) => {
-//   logger.debug('ROUTER ON READY HOOK', ...args, window?.history?.state)
-// })
+// onReady is called once at start
+router.onReady(() => {
+  logger.debug('ROUTER ON READY HOOK', {
+    urlPath: history.lastUrlPath,
+    route,
+    windowHistoryState: window?.history?.state,
+  })
+  if (history.lastUrlPath && route.name === 'home') {
+    redirectToLastUrlPath.value = true
+  } else {
+    stopRedirectWatcher()
+  }
+})
+// onError does catch anything __except__ routing errors.
 router.onError((...args) => {
-  logger.debug('ROUTER ON ERROR HOOK', ...args, window?.history?.state)
+  logger.debug('ROUTER ON ERROR HOOK', { ...args }, window?.history?.state)
   history.cancelHistoryAction()
 })
 const onTransitionComplete = (...args: unknown[]) => { logger.debug('ON TRANSITION COMPLETE', { ...args }) }
 const onTransitionError = (...args: unknown[]) => { logger.debug('ON TRANSITION COMPLETE', { ...args }) }
 
 onMounted(() => {
-  logger.debug('INITIAL HISTORY', {
+  logger.debug('ON MOUNTED INITIAL HISTORY', {
     currentRoute: { ...router.currentRoute },
     windowHistoryState: { ...window.history?.state },
     history: { ...routerHistory },

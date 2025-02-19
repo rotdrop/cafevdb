@@ -54,6 +54,7 @@ import type { Route } from 'vue-router'
 import Console from '../util/console.ts'
 import { CALENDAR_EVENT_EDIT, CALENDAR_EVENT_ADD } from '../event-bus-events.ts'
 import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
+import { sanitizeTemplateParams } from '../util/legacy-post-data.ts'
 
 const COMPONENT_NAME = 'LegacyWrapperRouterReactivity'
 const logger = new Console(COMPONENT_NAME)
@@ -109,11 +110,7 @@ const onRouteChange = (to: Route) => {
   logger.info('onRouteChange()', { to: { ...to }, historyState: window?.history?.state })
   template.value = to.params.template
   // Object.assign(templateParameters.value, to.params)
-  templateParameters.value = Object.fromEntries(
-    Object.entries(to.params).filter(
-      ([key, value]) => key !== 'template' && (!!value || (key !== 'projectId' && key !== 'projectName')),
-    ),
-  )
+  templateParameters.value = sanitizeTemplateParams(to.params)
   postDataHash.value = (to.query?.hash as string) || undefined
   noLegacyReload.value = +to.query?.['no-reload'] === 1
 }
@@ -139,6 +136,7 @@ onBeforeRouteLeave((to, from, next) => {
 <style scoped lang="scss">
 @import '../../style/flex.scss';
 .container {
+  height: 100%;
   > .legacy-page-wrapper {
     flex-shrink: 1;
     max-width: 100%;

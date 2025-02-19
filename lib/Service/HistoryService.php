@@ -44,6 +44,7 @@ class HistoryService
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const HASH_KEY = '__post_data_hash__';
+  const FRONTEND_URL_PATH_KEY = '__frontend_url_path__';
   const SESSION_HISTORY_KEY = 'PageHistory';
   const SESSION_LAST_URL_PATH_KEY = 'LastUrlPath';
 
@@ -54,8 +55,9 @@ class HistoryService
    */
   private const EXCLUDE_KEYS = [
     self::HASH_KEY,
+    self::FRONTEND_URL_PATH_KEY,
     '_route',
-    'renderas',
+    'renderAs',
     'template',
     'projectId',
     'projectName',
@@ -76,7 +78,7 @@ class HistoryService
       $this->logInfo('NO SESSION HISTORY DATA PRESENT, INITIALIZE');
       $this->sessionStoreValue(self::SESSION_HISTORY_KEY, []);
     } else {
-      $this->logInfo('SESSION HISTORY DATA ' . print_r($this->sessionRetrieveValue(self::SESSION_HISTORY_KEY), true));
+      $this->logDebug('SESSION HISTORY DATA ' . print_r($this->sessionRetrieveValue(self::SESSION_HISTORY_KEY), true));
     }
   }
   // phpcs:enable
@@ -104,7 +106,6 @@ class HistoryService
       return;
     }
     $this->set($hash, $data);
-    // $this->sessionStoreValue(self::SESSION_LAST_URL_PATH_KEY, $this->request->getR
   }
 
   /**
@@ -119,14 +120,21 @@ class HistoryService
    */
   public function set(string $hash, array $data):void
   {
+    $urlPath = $data[self::FRONTEND_URL_PATH_KEY];
     foreach (self::EXCLUDE_KEYS as $key) {
       unset($data[$key]);
     }
-    $historyData = $this->sessionRetrieveValue(self::SESSION_HISTORY_KEY);
-    if (empty($historyData[$hash])) {
-      $historyData[$hash] = $data;
-      $this->sessionStoreValue(self::SESSION_HISTORY_KEY, $historyData);
+    if (!empty($data)) {
+      $historyData = $this->sessionRetrieveValue(self::SESSION_HISTORY_KEY);
+      if (empty($historyData[$hash])) {
+        $historyData[$hash] = $data;
+        $this->sessionStoreValue(self::SESSION_HISTORY_KEY, $historyData);
+      }
     }
+    if (empty($urlPath) || $urlPath === '/') {
+      $urlPath = null;
+    }
+    $this->sessionStoreValue(self::SESSION_LAST_URL_PATH_KEY, $urlPath);
   }
 
   /**
@@ -142,6 +150,17 @@ class HistoryService
     if ($data) {
       $data = array_filter($data, fn($value, $key) => !in_array($key, self::EXCLUDE_KEYS), ARRAY_FILTER_USE_BOTH);
     }
-    return $data;
+    return empty($data) ? null : $data;
+  }
+
+  /**
+   * Fetch the most recent frontend url path from the session, if it exists.
+   *
+   * @return null|string
+   */
+  public function getLastUrlPath():?string
+  {
+    $urlPath = $this->sessionRetrieveValue(self::SESSION_LAST_URL_PATH_KEY, null);
+    return $urlPath === '/' ? null : $urlPath;
   }
 }

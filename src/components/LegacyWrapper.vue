@@ -176,12 +176,17 @@ import {
   LEGACY_PAGE_FINALIZE,
   LEGACY_PAGE_LOAD,
   LEGACY_PME_UPDATE,
-  LEGACY_POST_HASH,
+  LEGACY_POST_META_DATA,
   TOGGLE_TOOLTIPS,
   WIKI_POPUP,
 } from '../event-bus-events.ts'
 import * as LegacyNotification from '../app/notification.js'
-import objectHash, { HASH_KEY } from '../util/object-hash.ts'
+import {
+  FRONTEND_URL_PATH_KEY,
+  HASH_KEY,
+  generatePostHash,
+  sanitizePostData,
+} from '../util/legacy-post-data.ts'
 import type { AxiosResponse } from 'axios'
 import type { LoadPartsData } from '../types/ajax/page-load-response.ts'
 import { loadTranslations, translate as t } from '@nextcloud/l10n'
@@ -327,13 +332,12 @@ const synchronizeHistoryState = (hash: string) => {
 
 const updateLegacyRoute = (post: TemplatePostData, action: 'push'|'replace' = 'replace', htmlBody?: string) => {
   appError.value = null
-  const params = {
+  post = sanitizePostData(post)
+  const params: TemplatePostData = {
     template: post.template,
   }
-  const projectId = post?.projectId
-  const projectName = post?.projectName
-  projectId && Object.assign(params, { projectId })
-  projectName && Object.assign(params, { projectName })
+  post.projectId && (params.projectId = post.projectId)
+  post.projectName && (params.projectName = post.projectName)
   const target = {
     name: 'legacy-page',
     params,
@@ -376,13 +380,14 @@ const doLoadLegacy = async () => {
   Object.assign(post, historyAppData, post)
   Object.assign(historyAppData, post)
   logger.info('POST including history state', post, { ...currentHistoryState.value, post: historyAppData })
-  const currentHash = objectHash(post)
+  const currentHash = generatePostHash(post)
   if (props.hash !== currentHash) {
     previousHash = currentHash
     scheduleHistoryReplace(post, currentHash)
     synchronizeHistoryState(currentHash)
   }
   post[HASH_KEY] = currentHash
+  post[FRONTEND_URL_PATH_KEY] = route.fullPath
   try {
     const response: AxiosResponse<LoadPartsData> = await axios.post(generateAppUrl('page/remember/parts'), post)
     const data = response.data // todo: validate
@@ -548,8 +553,12 @@ const legacyPmeHistoryUpdateHandler = asyncSubscribe(
     return updateLegacyRoute(eventData.post, eventData.action, eventData.htmlBody)
   },
 )
-const legacyPostHashHandler = asyncSubscribe(LEGACY_POST_HASH, (event) => {
-  return { [HASH_KEY]: objectHash(event.post) }
+const legacyPostMetaDataHandler = asyncSubscribe(LEGACY_POST_META_DATA, (event) => {
+  const hash = generatePostHash(event.post)
+  return {
+    [FRONTEND_URL_PATH_KEY]: route.path + '?hash=' + hash,
+    [HASH_KEY]: hash,
+  }
 })
 
 const legacyAjaxError = ref<JQueryAjaxError | undefined>()
@@ -587,7 +596,7 @@ onUnmounted(() => {
   asyncUnSubscribe(LEGACY_AJAX_ERROR, legacyAjaxErrorHandler)
   asyncUnSubscribe(LEGACY_PAGE_LOAD, legacyPageLoadHandler)
   asyncUnSubscribe(LEGACY_PME_UPDATE, legacyPmeHistoryUpdateHandler)
-  asyncUnSubscribe(LEGACY_POST_HASH, legacyPostHashHandler)
+  asyncUnSubscribe(LEGACY_POST_META_DATA, legacyPostMetaDataHandler)
 })
 
 </script>

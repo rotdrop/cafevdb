@@ -29,7 +29,7 @@ import { useRoute } from 'vue-router/composables';
 import Console from '../util/console.ts';
 import { AppError } from '../types/errors.ts';
 import useErrorHandler from './error-handler.ts';
-import objectHash from '../util/object-hash.ts';
+import { generatePostHash, sanitizePostData } from '../util/legacy-post-data.ts';
 import getInitialState from '../toolkit/services/InitialStateService.js';
 import type { Route, TransitionType } from 'vue-router';
 
@@ -95,15 +95,16 @@ export default defineStore(storeId, () => {
       hash?: string,
       post?: Record<number|string, any>,
     }) {
+      logger.debug('REPLACE HASH ARGS', arg);
       if (arg.hash) {
         this._hash = arg.hash;
       } else if (arg.post) {
-        this._hash = objectHash(arg.post);
+        this._hash = generatePostHash(arg.post);
       } else {
         throw new AppError({ arg }, t(appName, 'Either "hash" or "post" have to be specified.'));
       }
       if (arg.post && !requestData[this._hash]) {
-        requestData[this._hash] = arg.post;
+        requestData[this._hash] = sanitizePostData(arg.post);
         logger.info('REQUEST DATA MAP', [...Object.entries(requestData)]);
       }
     };
@@ -126,18 +127,39 @@ export default defineStore(storeId, () => {
 
   const nextHistoryState = computed(() => routerHistory.value?.[nextHistoryIndex.value || ''] || null);
 
-  let initialPostData = {}
-
-  const initialState = getInitialState('historyPostData');
+  const initialState = getInitialState('historyPostData', null);
   logger.info('INITIAL POST DATA STATE', initialState);
+
+  let initialPostHash: undefined|string = undefined;
+  let initialPostData: Record<number|string, any> = {};
+  const lastUrlPath = ref<undefined|string>(undefined);
+  const lastUrlHash = ref<undefined|string>(undefined);
+  const lastUrlData = ref<undefined|Record<string|number, any> >(undefined);
+
   if (initialState) {
-    initialPostData = initialState.post;
+    if (initialState?.post) {
+      for (const [hash, post] of Object.entries(initialState.post)) {
+        requestData[hash] = sanitizePostData(post);
+      }
+    }
+    const queryHash = initialState.queryHash;
+    if (queryHash && requestData[queryHash]) {
+      initialPostData = requestData[queryHash];
+      initialPostHash = queryHash;
+    }
+    const lastHash = initialState.lastUrlHash;
+    if (lastHash && requestData[lastHash] && initialState.lastUrlPath) {
+      lastUrlPath.value = initialState.lastUrlPath;
+      lastUrlHash.value = lastHash;
+      lastUrlData.value = requestData[lastHash];
+    }
   }
 
   const defineInitialHistory = (initialHistoryIndex: string) => {
     routerHistory.value = {
       [initialHistoryIndex]: new RouterHistoryRecord({
         post: initialPostData,
+        hash: initialPostHash,
         key: initialHistoryIndex,
         path: currentRoute.fullPath,
       }),
@@ -204,7 +226,7 @@ export default defineStore(storeId, () => {
     const key = window?.history?.state?.key || 'initial';
     pendingHistoryAction.value = action;
     pendingHistoryData.value = post || {};
-    hash = pendingHistoryHash.value = hash || objectHash(pendingHistoryData.value);
+    hash = pendingHistoryHash.value = hash || generatePostHash(pendingHistoryData.value);
     pendingHistoryKey.value = key;
     logger.debug('scheduleHistoryAction()', {
       action,
@@ -440,5 +462,8 @@ export default defineStore(storeId, () => {
     cancelHistoryAction,
     finishHistoryAction,
     requestData,
+    lastUrlPath,
+    lastUrlHash,
+    lastUrlData,
   };
 });

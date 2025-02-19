@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Common\Util as CommonUtil;
 
 /** AJAX endpoint for generating the main page of the app. */
 class VueAppController extends Controller
@@ -97,20 +98,47 @@ class VueAppController extends Controller
       $this->assetService->getJSAsset('iframe-content-script'),
     );
 
+    $historyPostData = [];
+
     $queryHash = $this->request->getParam('hash');
     if ($queryHash) {
       $initialPostData = $this->historyService->get($queryHash);
       $this->logInfo('HASH VALUE ' . $queryHash . ' DATA ' . print_r($initialPostData ?? [], true));
       if (!empty($initialPostData)) {
-        $this->initialStateService->provideInitialState(
-          $this->appName,
-          'historyPostData',
-          [
-            'hash' => $queryHash,
-            'post' => $initialPostData,
+        $historyPostData = CommonUtil::arrayMergeRecursive(
+          $historyPostData, [
+            'post' => [
+              $queryHash => $initialPostData,
+            ],
+            'queryHash' => $queryHash,
           ],
         );
       }
+    }
+
+    $lastUrlPath = $this->historyService->getLastUrlPath();
+    if (!empty($lastUrlPath)) {
+      $queryData = [];
+      parse_str(parse_url($lastUrlPath, PHP_URL_QUERY), $queryData);
+      $hash = $queryData['hash'] ?? null;
+      if ($hash) {
+        $postData = $this->historyService->get($hash);
+        if (!empty($postData)) {
+          $historyPostData = CommonUtil::arrayMergeRecursive(
+            $historyPostData, [
+              'post' => [
+                $hash => $postData,
+              ],
+              'lastUrlPath' => $lastUrlPath,
+              'lastUrlHash' => $hash,
+            ]
+          );
+        }
+      }
+    }
+
+    if (!empty($historyPostData)) {
+      $this->initialStateService->provideInitialState($this->appName, 'historyPostData', $historyPostData);
     }
 
     return new TemplateResponse($this->appName, 'vue-app');
