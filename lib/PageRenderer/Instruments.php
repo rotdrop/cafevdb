@@ -114,7 +114,6 @@ class Instruments extends PMETableViewBase
       $pageNavigation,
       $toolTipsService,
     );
-    $this->projectMode = false;
     $this->getDatabaseRepository(Entities\Instrument::class)->findAll();
     $this->flush();
   }
