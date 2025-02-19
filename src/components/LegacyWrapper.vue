@@ -123,11 +123,6 @@
                      :error="legacyAjaxError"
           />
         </template>
-        <!-- <template #actions>
-          <NcActionButton name="ONE" />
-          <NcActionButton name="TWO" />
-          <NcActionButton name="THREE" />
-        </template> -->
       </NcModal>
     </div>
   </div>
@@ -274,7 +269,6 @@ const wikiManualSection = computed(() => dokuWikiSection([
 const wikiManualUrl = computed(() => dokuWikiUrl(wikiManualSection.value))
 const wikiManualUrlTarget = computed(() => dokuWikiUrlTarget(wikiManualSection.value))
 const busyState = computed(() => appData.busyState)
-// let currentProjectId = appData.currentProjectId
 const currentHistoryState = computed(() => browserHistory.currentHistoryState)
 const prevHistoryIndex = computed(() => browserHistory.prevHistoryIndex)
 const nextHistoryIndex = computed(() => browserHistory.nextHistoryIndex)
