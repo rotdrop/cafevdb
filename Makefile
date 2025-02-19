@@ -39,6 +39,8 @@ COMPOSER_OPTIONS=--prefer-dist
 #
 OCC=$(ABSSRCDIR)/../../occ
 ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
+WGET = $(shell which wget 2> /dev/null)
+TINYMCE_VERSION=7
 
 ###############################################################################
 #
@@ -161,7 +163,6 @@ dev: dev-setup npm-dev post-build
 dev-setup: pre-build composer namespace-wrapper
 .PHONY: dev-setup
 
-
 .PHONY: composer-download
 composer-download:
 	mkdir -p $(BUILD_TOOLS_DIR)
@@ -266,6 +267,25 @@ $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js: $(shell find $(ABSSRCDIR)/
 $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css): $(wildcard $(ABSSRCDIR)/3rdparty/selectize/src/scss/*.scss)
 	make -C $(ABSSRCDIR)/3rdparty/selectize compile clean
 
+# Copy from node_modules/ to 3rdparty/tinymce/
+.PHONY: tinymce
+tinymce: $(ABSSRCDIR)/3rdparty/tinymce/__ready__
+
+$(ABSSRCDIR)/3rdparty/tinymce/__ready__: $(ABSSRCDIR)/node_modules/tinymce/package.json
+	for FILE in $$(find node_modules/tinymce -name "*.js" -o -name "*.css"); do\
+  DEST=$$(echo $$FILE|sed 's/node_modules/3rdparty/g');\
+  mkdir -p $$(dirname $$DEST);\
+  cp $$FILE $$DEST;\
+done
+	rm -f $(ABSSRCDIR)/3rdparty/tinymce/*.js
+	cd $$(dirname $@);\
+ $(WGET) https://download.tiny.cloud/tinymce/community/languagepacks/$(TINYMCE_VERSION)/langs.zip;\
+ unzip -o langs.zip;\
+ rm -f langs.zip
+	date > $@
+
+$(ABSSRCDIR)/node_modules/tinymce/package.json: package-lock.json
+
 CSS_FILES = $(shell find $(ABSSRCDIR)/style -name "*.css" -o -name "*.scss")
 JS_FILES = \
  $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue" -o -name "*.ts") \
@@ -285,11 +305,12 @@ BOOTSTRAP_DUALLISTBOX_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/bootstrap-duallist
 NPM_INIT_DEPS =\
  Makefile package-lock.json package.json webpack.config.js .eslintrc.js
 
-THIRD_PARTY_NPM_DEPS = $(SELECTIZE_DIST) $(BOOTSTRAP_DUALLISTBOX_DIST)
+THIRD_PARTY_NPM_DEPS = $(SELECTIZE_DIST) $(BOOTSTRAP_DUALLISTBOX_DIST) $(TINYMCE_JQUERY_DIST)
 
 WEBPACK_DEPS =\
  $(NPM_INIT_DEPS)\
  $(TINYMCE_DIST)\
+ tinymce\
  $(CHOSEN_DIST)\
  $(CSS_FILES) $(JS_FILES) $(L10N_FILES)
 
@@ -345,12 +366,13 @@ clean: ## Tidy up local environment
 .PHONY: clean
 
 #@@ Same as clean but also removes dependencies installed by composer, bower and npm
-distclean: clean ## Clean even more, calls clean
+distclean: clean
 	rm -rf vendor
 	rm -rf vendor-wrapped
 	rm -rf vendor-bin/*/vendor
 	rm -rf node_modules
 	rm -rf lib/Toolkit/*
+	rm -rf 3rdparty/tinymce/*
 .PHONY: distclean
 
 #@@ Really delete everything but the bare source files

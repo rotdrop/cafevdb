@@ -74,8 +74,9 @@ module.exports = {
     compareBeforeEmit: true, // true would break the Makefile
   },
   node: {
-    __dirname: true,
-    __filename: true,
+    // global: true,
+    __dirname: true, // 'node-module',
+    __filename: true, // 'node-module',
   },
   devtool: 'source-map',
   optimization: {
@@ -120,12 +121,11 @@ module.exports = {
     //   filename: './statistics/visualizer-stats.html',
     // }),
     new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      jquery: 'jquery',
+      process: 'process/browser.js',
       'window.$': 'jquery',
       'window.jQuery': 'jquery',
-      process: 'process/browser.js',
+      $: 'jquery',
+      jQuery: 'jquery',
     }),
     new MiniCssExtractPlugin({
       filename: 'css/[name]-[contenthash].css',
@@ -340,9 +340,6 @@ module.exports = {
     ],
     alias: {
       core: path.resolve(__dirname, '../../core/src'),
-      tinymce: path.resolve(__dirname, '3rdparty/tinymce/tinymce.min.js'),
-      // 'jquery.tinymce': path.resolve(__dirname, '3rdparty/tinymce/jquery.tinymce.min.js'),
-      'jquery.tinymce': path.resolve(__dirname, '3rdparty/tinymce/JqueryIntegration.js'),
       // 'canvas-to-blob': 'blueimp-canvas-to-blob',
       // 'load-image': 'blueimp-load-image',
       vue$: path.resolve('./node_modules/vue'),

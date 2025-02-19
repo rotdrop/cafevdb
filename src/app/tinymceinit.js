@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,13 +23,12 @@
 
 /* eslint camelcase: ["error", {properties: "never"}] */
 
-import { globalState, appName, nonce, $ } from './globals.js';
-
-require('3rdparty/tinymce/tinymce.min');
-require('3rdparty/tinymce/JqueryIntegration');
+import { globalState, appName, webRoot, $ } from './globals.js';
+import 'tinymce';
+import '@tinymce/tinymce-jquery';
 
 // console.info('CAFEVDB MCE INIT: ', $.fn.jquery);
-// console.info('MCE: ', window.tinyMCE, window.tinymce);
+// console.info('MCE: ', console, window.tinyMCE, window.tinymce);
 
 const myPostProcessCallback = function(e) {
   e.content = e.content.replace(/((&nbsp;|[\n\r\s])*<p>(&nbsp;|[\n\r\s])*<\/p>(&nbsp;|[\n\r\s])*)+$/g, '');
@@ -49,13 +48,14 @@ const myConfig = {
   //    force_br_newlines : false,
   //    force_p_newlines : true,
   browser_spellcheck: true,
-  gecko_spellcheck: true,
+  // gecko_spellcheck: true,
   file_picker_types: 'file image media',
   // convert_urls: false,
   relative_urls: true,
-  base_url: OC.appswebroots[appName] + '/3rdparty/tinymce',
+  base_url: webRoot + '3rdparty/tinymce',
   // document_base_url: OC.appswebroots[appName] + '/3rdparty/tinymce',
   suffix: '.min',
+  promotion: false,
 
   setup(editor) {
     console.debug('tinyMCE::setup()');
@@ -124,9 +124,35 @@ const myConfig = {
 
   // spellchecker_rpc_url: OC.filePath(appName, '3rdparty/js/tinymce/plugins/spellchecker', 'rpc.php'),
   plugins: [
-    'advlist autolink link image lists charmap print preview hr anchor pagebreak', // spellchecker
-    'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-    'save table directionality template paste textcolor emoticons', // emoticons smileys contextmenu
+    'advlist',
+    'anchor',
+    'autolink',
+    'charmap',
+    'code',
+    'directionality',
+    'emoticons',
+    'fullscreen',
+    'image',
+    'insertdatetime',
+    'link',
+    'lists',
+    'media',
+    'nonbreaking',
+    'pagebreak',
+    'preview',
+    'save',
+    'searchreplace',
+    'table',
+    'visualblocks',
+    'visualchars',
+    'wordcount',
+    // 'hr',
+    // 'paste',
+    // 'print',
+    // 'spellchecker',
+    // 'template',
+    // 'textcolor',
+    // emoticons smileys contextmenu
   ],
   // content_css: 'css/content.css',
   toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | pastetext | link image | print preview media fullscreen | forecolor backcolor emoticons | code', // emoticons
@@ -183,33 +209,13 @@ const myGetConfig = function(plusConfig) {
   if (typeof plusConfig === 'undefined') {
     plusConfig = {};
   }
-  // NOTE: This must return the initial nonce as the nonce is part of
-  // the CSP policy and thus configured when the page is
-  // loaded. Although the request token changes while after while the
-  // nonce value must be the one of the CSP policy and thus based on
-  // the initial request token.
-  const nonceConfig = {
-    nonce: () => globalState.initialNonce,
-  };
-  // const width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-  // if (width <= 768) { // perhaps mobile
-  //   return $.extend({}, myConfig, mySmallConfig, plusConfig, { width });
-  // } else {
-  // //   return $.extend(nonceConfig, myConfig, plusConfig);
-  // // }
-  return $.extend(nonceConfig, myConfig, plusConfig);
+  return { ...myConfig, ...plusConfig };
 };
 
 const myInit = function(lang) {
   myConfig.language = lang;
   const allconfig = myGetConfig({
     selector: 'textarea.wysiwyg-editor',
-    // NOTE: This must return the initial nonce as the nonce is part of
-    // the CSP policy and thus configured when the page is
-    // loaded. Although the request token changes while after while the
-    // nonce value must be the one of the CSP policy and thus based on
-    // the initial request token.
-    nonce: () => globalState.initialNonce,
   });
   // console.info('Try init tinymce');
   // console.info('tinymce: ', window.tinymce);
@@ -218,7 +224,6 @@ const myInit = function(lang) {
 
 $(function() {
   myInit(globalState.language);
-  console.info('MCE nonce', nonce);
 });
 
 export {
@@ -228,7 +233,3 @@ export {
   myInit as init,
   myGetConfig as getConfig,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// End: ***

@@ -1,0 +1,30 @@
+diff --git a/node_modules/imagesloaded/imagesloaded.js b/node_modules/imagesloaded/imagesloaded.js
+index f527a71..f8b3fe1 100644
+--- a/node_modules/imagesloaded/imagesloaded.js
++++ b/node_modules/imagesloaded/imagesloaded.js
+@@ -38,7 +38,7 @@ function factory( window, EvEmitter ) {
+ 
+ 'use strict';
+ 
+-var $ = window.jQuery;
++var $ = jQuery;
+ var console = window.console;
+ 
+ // -------------------------- helpers -------------------------- //
+@@ -355,7 +355,6 @@ Background.prototype.confirm = function( isLoaded, message ) {
+ // -------------------------- jQuery -------------------------- //
+ 
+ ImagesLoaded.makeJQueryPlugin = function( jQuery ) {
+-  jQuery = jQuery || window.jQuery;
+   if ( !jQuery ) {
+     return;
+   }
+@@ -368,7 +367,7 @@ ImagesLoaded.makeJQueryPlugin = function( jQuery ) {
+   };
+ };
+ // try making plugin
+-ImagesLoaded.makeJQueryPlugin();
++ImagesLoaded.makeJQueryPlugin(jQuery);
+ 
+ // --------------------------  -------------------------- //
+ 
