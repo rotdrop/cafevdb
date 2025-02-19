@@ -2,6 +2,7 @@ ajax/
 3rdparty/
 vendor/
 vendor-wrapped/
+vendor-bin/
 build/
 doc/
 translationfiles/music/
