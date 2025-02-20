@@ -21,10 +21,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.js';
 import { getCurrentUser } from '@nextcloud/auth';
 import generateAppUrl from './generate-url.js';
 import globalState from './globalstate.js';
+import axios from '@nextcloud/axios';
 
 require('../legacy/nextcloud/jquery/requesttoken.js');
 
@@ -37,20 +37,20 @@ globalState.BackgroundJobs = {
 
 const url = generateAppUrl('backgroundjob/trigger');
 
-const runner = function() {
+const runner = async function() {
   const self = globalState.BackgroundJobs;
   if (cloudUser) {
-    console.info('Triggered background jobs.');
-    $.get(url)
-      .always(function() {
-        self.timer = setTimeout(runner, self.interval * 1000);
-      })
-      .fail(function(xhr, status, errorThrown) {
-        console.info('Failed running background jobs', status, errorThrown);
-      })
-      .done(function(data) {
-        console.info('Successful return from background jobs.');
-      });
+    console.info('Triggering background jobs.');
+    try {
+      await axios.get(url);
+      console.info('Successful return from background jobs.');
+    } catch (error) {
+      if (error?.status !== 429) {
+        console.info('Failed running background jobs', error);
+      }
+    } finally {
+      self.timer = setTimeout(runner, self.interval * 1000);
+    }
   } else if (self.timer !== false) {
     clearTimeout(self.timer);
     self.timer = false;
@@ -72,8 +72,3 @@ const start = function() {
 };
 
 export default start;
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
