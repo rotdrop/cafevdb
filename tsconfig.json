@@ -30,7 +30,8 @@
     "declaration": false,
     "noImplicitAny": false,
     "resolveJsonModule": true,
-    "strict": true
+    "strict": true,
+    "sourceMap": true
   },
   "vueCompilerOptions": {
     "target": 2.7

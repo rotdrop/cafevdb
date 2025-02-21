@@ -183,7 +183,12 @@ import {
   isAxiosError as isAxiosErrorGuard,
 } from '../types/ajax/axios-type-guards.ts'
 import { AppError } from '../types/errors.ts'
-import { computed, ref } from 'vue'
+import {
+  computed,
+  onBeforeMount,
+  ref,
+  watch,
+} from 'vue'
 import { appName } from '../config.ts'
 import { translate as t, loadTranslations } from '@nextcloud/l10n'
 import { useRouter } from 'vue-router/composables'
@@ -201,7 +206,7 @@ import IconEdit from 'vue-material-design-icons/TextBoxEdit.vue'
 import { getCurrentUser } from '@nextcloud/auth'
 import NextcloudLogModal from './LogEntry/LogDetailsModal.vue'
 import HtmlErrorModal from './HtmlErrorModal.vue'
-import Console from '../util/console.ts'
+import Console, { stackTraceOptions } from '../util/console.ts'
 import { serializeError, isErrorLike } from 'serialize-error'
 import type { ErrorLike } from 'serialize-error'
 import md5 from 'blueimp-md5'
@@ -217,6 +222,8 @@ import {
   isJQueryAjaxHtmlError,
 } from '../types/ajax/jqxhr-error.ts'
 import globalState from '../app/globalstate.js'
+import StackTrace from 'stacktrace-js'
+import type { StackFrame } from 'stacktrace-js'
 
 const COMPONENT_NAME = 'ErrorPage'
 const logger = new Console(COMPONENT_NAME)
@@ -315,10 +322,19 @@ const removeStack = (error: StackedErrorObject, level: number = 0) => {
   }
   return error
 }
+
 const serializedError = removeStack(serializeError(props.error, { useToJSON: false }))
 
 logger.debug('SERIALIZED ERROR', { serializedError, origError: props.error })
-const systemErrorString = JSON.stringify(serializedError, undefined, 2)
+const systemErrorString = ref(JSON.stringify(serializedError, undefined, 2))
+
+const stackTrace = ref<null|array<StackFrame> >(null)
+watch(stackTrace, (value) => {
+  if (Array.isArray(value)) {
+    serializedError.stack = value
+    systemErrorString.value = JSON.stringify(serializedError, undefined, 2)
+  }
+})
 
 const currentUser = getCurrentUser()
 const currentUserDisplay = `${currentUser?.uid} AKA ${currentUser?.displayName}`
@@ -343,7 +359,7 @@ ${effectiveUserComment.value}
 *${t(appName, 'You cannot change this part of the report.')}*
 ${htmlStringForMarkdown.value}${systemErrorHeading.value}
 \`\`\`
-${systemErrorString}
+${systemErrorString.value}
 \`\`\`
 `,
 )
@@ -382,7 +398,7 @@ const reportError = async () => {
     submitted.value = true
     return
   }
-  console.info('POST DATA', postData)
+  logger.info('POST DATA', postData)
   const url = generateAppUrl('a/problem-report')
   try {
     const result = await axios.post(url, postData)
@@ -412,6 +428,17 @@ const reportError = async () => {
     showError(messages.join(' '), { timeout: TOAST_PERMANENT_TIMEOUT })
   }
 }
+
+const parseStackTrace = async () => {
+  try {
+    stackTrace.value = await StackTrace.fromError(props.error, stackTraceOptions)
+  } catch (error) {
+    logger.error('Unable to parse stack trace', error)
+    stackTrace.value = null
+  }
+}
+
+onBeforeMount(parseStackTrace)
 
 </script>
 <style scoped lang="scss">

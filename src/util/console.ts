@@ -26,7 +26,7 @@ import StackTrace from 'stacktrace-js';
 import globalState from '../app/globalstate.js';
 import { DEBUG_SMAPS } from '../debug-modes.ts';
 
-const stackTraceOptions = {
+export const stackTraceOptions = {
   sourceMapConsumerCache: {},
   sourceCache: {}
 }

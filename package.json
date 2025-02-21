@@ -114,6 +114,7 @@
     "selectize": "file:3rdparty/selectize",
     "serialize-error": "^12.0.0",
     "stacktrace-js": "^2.0.2",
+    "stacktrace-gps": "github:stacktracejs/stacktrace-gps#62f6967fc85e6fdd5fb9cea1a056b935d9b07a9a",
     "stream-browserify": "*",
     "stream-http": "*",
     "style-loader": "^2.0.0",
