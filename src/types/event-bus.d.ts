@@ -61,7 +61,7 @@ import type { ComponentProps, PropsData } from '../mountable-component-names.ts'
 declare module '@rotdrop/async-nextcloud-event-bus' {
 
   export type TemplatePostData = {
-    template: string,
+    template?: string,
     projectId?: number,
     projectName?: string,
     musicianId?: number,

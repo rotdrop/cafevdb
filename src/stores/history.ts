@@ -30,6 +30,7 @@ import Console from '../util/console.ts';
 import { AppError } from '../types/errors.ts';
 import useErrorHandler from './error-handler.ts';
 import { generatePostHash, sanitizePostData } from '../util/legacy-post-data.ts';
+import type { TemplatePostData } from '../util/legacy-post-data.ts';
 import getInitialState from '../toolkit/services/InitialStateService.js';
 import type { Route, TransitionType } from 'vue-router';
 
@@ -52,7 +53,14 @@ export interface RouterHistoryState {
   key: string;
   hash: string;
   position: number|null;
-  readonly post: Record<number|string, any>;
+  readonly post: TemplatePostData,
+}
+
+interface HistoryInitialState {
+  post?: Record<string, TemplatePostData>,
+  queryHash?: string,
+  lastUrlHash?: string,
+  lastUrlPath?: string,
 }
 
 export default defineStore(storeId, () => {
@@ -64,7 +72,7 @@ export default defineStore(storeId, () => {
 
   logger.debug('HISTORY STORE INIT');
 
-  const requestData = reactive<Record<string, Record<number|string, any> > >({});
+  const requestData = reactive<Record<string, TemplatePostData> >({});
 
   class RouterHistoryRecord implements RouterHistoryState {
     constructor(arg: {
@@ -72,7 +80,7 @@ export default defineStore(storeId, () => {
       prev?: string|number|null,
       key: string|number,
       hash?: string,
-      post?: Record<number|string, any>,
+      post?: TemplatePostData,
       path: string,
     }) {
       this.next = arg.next || null;
@@ -93,7 +101,7 @@ export default defineStore(storeId, () => {
     get hash() { return this._hash; };
     replaceHash(arg: {
       hash?: string,
-      post?: Record<number|string, any>,
+      post?: TemplatePostData,
     }) {
       logger.debug('REPLACE HASH ARGS', arg);
       if (arg.hash) {
@@ -113,6 +121,8 @@ export default defineStore(storeId, () => {
   const routerHistory = ref<Record<string, RouterHistoryRecord> >({});
   const currentRoute = useRoute();
 
+  const historyModificationTime = ref<number>(0);
+
   const initialHistoryIndex: undefined|string = window?.history?.state?.key;
   const currentHistoryIndex = ref(initialHistoryIndex || '');
 
@@ -127,14 +137,14 @@ export default defineStore(storeId, () => {
 
   const nextHistoryState = computed(() => routerHistory.value?.[nextHistoryIndex.value || ''] || null);
 
-  const initialState = getInitialState('historyPostData', null);
+  const initialState: HistoryInitialState = getInitialState('historyPostData', null);
   logger.info('INITIAL POST DATA STATE', initialState);
 
   let initialPostHash: undefined|string = undefined;
-  let initialPostData: Record<number|string, any> = {};
+  let initialPostData: TemplatePostData = {};
   const lastUrlPath = ref<undefined|string>(undefined);
   const lastUrlHash = ref<undefined|string>(undefined);
-  const lastUrlData = ref<undefined|Record<string|number, any> >(undefined);
+  const lastUrlData = ref<undefined|TemplatePostData>(undefined);
 
   if (initialState) {
     if (initialState?.post) {
@@ -165,6 +175,7 @@ export default defineStore(storeId, () => {
       }),
     };
     currentHistoryIndex.value = initialHistoryIndex;
+    historyModificationTime.value = Date.now();
     logger.debug('INITIAL ROUTER HISTORY', currentHistoryIndex, { ...routerHistory.value[initialHistoryIndex] });
   };
 
@@ -242,7 +253,7 @@ export default defineStore(storeId, () => {
         && currentHistoryIndex.value !== 'initial'
         && pendingHistoryKey.value !== currentHistoryIndex.value
     ) {
-      logger.trace('SCHEDULE HISTORY KEY MISTMATCH', pendingHistoryKey.value, currentHistoryIndex.value);
+      logger.trace('SCHEDULE HISTORY KEY MISMATCH', pendingHistoryKey.value, currentHistoryIndex.value);
     }
     return pendingHistoryHash.value;
   }
@@ -314,10 +325,11 @@ export default defineStore(storeId, () => {
         currentHistoryIndex.value = key;
         logger.info('Adjusted initial history key', { ...history }, { ...currentHistoryState.value });
       }
-      if (currentHistoryState.path !== route.fullPath) {
-        logger.info('Replacing route path', currentHistoryState.path, route.fullPath);
-        currentHistoryState.path = route.fullPath;
+      if (currentHistoryState.value.path !== route.fullPath) {
+        logger.info('Replacing route path', currentHistoryState.value.path, route.fullPath);
+        currentHistoryState.value.path = route.fullPath;
       }
+      historyModificationTime.value = Date.now();
       clearHistoryAction();
       return;
     }
@@ -388,6 +400,7 @@ export default defineStore(storeId, () => {
       }
       history[currentHistoryIndex.value].next = key;
       currentHistoryIndex.value = key;
+      historyModificationTime.value = Date.now();
     } else if (pendingHistoryAction.value === 'replace') {
       if (key !== currentHistoryIndex.value) {
         logger.debug('BEFORE ADJUST KEYS', key, currentHistoryIndex.value, { ...history[currentHistoryIndex.value] }, history?.[key]);
@@ -421,8 +434,10 @@ export default defineStore(storeId, () => {
         post: pendingHistoryData.value,
       })
       history[key].path = route.fullPath;
+      historyModificationTime.value = Date.now();
     } else {
       currentHistoryIndex.value = window.history?.state?.key || 'initial';
+      historyModificationTime.value = Date.now();
     }
     for (const [key, record] of Object.entries(routerHistory.value)) {
       if (key !== record.key) {
@@ -441,6 +456,9 @@ export default defineStore(storeId, () => {
       windowHistoryState: window?.history?.state,
     });
   }
+
+  const saveHistoryData = () => {
+  };
 
   return {
     logger: loggerRef,
@@ -465,5 +483,7 @@ export default defineStore(storeId, () => {
     lastUrlPath,
     lastUrlHash,
     lastUrlData,
+    saveHistoryData,
+    historyModificationTime,
   };
 });

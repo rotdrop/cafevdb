@@ -365,7 +365,7 @@ const doLoadLegacy = async () => {
   logger.info('HISTORY STATE AT ENTRY', currentHistoryState.value)
   const historyAppData = currentHistoryState.value.post
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const post: Record<string|number, any> = {
+  const post: TemplatePostData = {
     template: props.template,
     ...props.templateParameters,
   }
@@ -502,7 +502,7 @@ const legacyPageLoadHandler = asyncSubscribe(
     logger.info('LEGACY PAGE LOAD CALLED', eventData)
     appError.value = null
     const params = {
-      template: (eventData?.template || eventData.post.template).replace(/%2F|\//, ':'),
+      template: (eventData?.template || eventData.post.template!).replace(/%2F|\//, ':'),
     }
     const projectId = eventData?.projectId || eventData.post?.projectId
     const projectName = eventData?.projectName || eventData.post?.projectName

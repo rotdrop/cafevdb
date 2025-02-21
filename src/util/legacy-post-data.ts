@@ -31,6 +31,8 @@ const COMPONENT_NAME = 'legacyPostData';
 
 const logger = new Console(COMPONENT_NAME);
 
+export type { TemplatePostData };
+
 export const HASH_KEY = '__post_data_hash__';
 export const FRONTEND_URL_PATH_KEY = '__frontend_url_path__';
 
