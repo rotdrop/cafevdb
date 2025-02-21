@@ -25,6 +25,7 @@
     <div :id="appPrefix('top-navigation')" class="flex-container flex-align-center">
       <NcButton :class="appPrefix('top-nav-button')"
                 :disabled="busyState || !prevHistoryIndex"
+                :aria-label="t(appName, 'Navigate to the previous view in the browser history stack.')"
                 @click="navigateBack"
       >
         <template #icon>
@@ -35,6 +36,7 @@
       <NcButton :class="{ [appPrefix('top-nav-button')]: true, loading: busyState, }"
                 :data-busy-flag="appData.busyFlag ? 'true' : 'false'"
                 :data-busy-count="'' + appData.busyCount"
+                :aria-label="t(appName, 'Reload the current view.')"
                 @click="reloadPage"
       >
         <template #icon>
@@ -44,6 +46,7 @@
       <div class="spacer" />
       <NcButton :class="appPrefix('top-nav-button')"
                 :disabled="busyState || !nextHistoryIndex"
+                :aria-label="t(appName, 'Navigate to the next view in the browser history stack.')"
                 @click="navigateForward"
       >
         <template #icon>
@@ -57,11 +60,6 @@
         </template>
       </NcButton>
       <div class="buttonseparator" />
-      <!-- <NcButton>
-           <template #icon>
-           <InfoIcon />
-           </template>
-           </NcButton> -->
       <NcActions>
         <template v-if="globalState.toolTipsEnabled" #icon>
           <InfoIcon />

@@ -106,6 +106,7 @@
                     v-tooltip="hints['error-page:problem-report:cancel']"
                     type="tertiary"
                     name="cancel"
+                    :aria-label="t(appName, 'Cancel the problem report.')"
                     @click="showProblemReport = false"
           >
             <template #icon>
@@ -116,6 +117,7 @@
                     v-tooltip="hints['error-page:problem-report:submit']"
                     type="tertiary"
                     name="submit"
+                    :aria-label="t(appName, 'Submit the problem report.')"
                     @click="reportError"
           >
             <template #icon>
@@ -126,6 +128,7 @@
                     v-tooltip="hints['error-page:problem-report:modify-comment']"
                     type="tertiary"
                     name="modify comment"
+                    :aria-label="t(appName, 'Modify the comment of the problem report.')"
                     @click="submitted = false"
           >
             <template #icon>
@@ -136,6 +139,7 @@
                     v-tooltip="hints['error-page:problem-report:close']"
                     type="tertiary"
                     name="close"
+                    :aria-label="t(appName, 'Close the problem report page.')"
                     @click="showProblemReport = false"
           >
             <template #icon>
