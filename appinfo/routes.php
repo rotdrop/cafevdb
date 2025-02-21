@@ -171,6 +171,21 @@ $routes = [
       'url' => '/a/config-check',
       'verb' => 'GET',
     ],
+    [
+      'name' => 'webBrowserHistory#get',
+      'url' => '/a/session/history/{timestamp}',
+      'verb' => 'GET',
+    ],
+    [
+      'name' => 'webBrowserHistory#get',
+      'url' => '/a/session/history/{timestamp}',
+      'verb' => 'PUT',
+    ],
+    [
+      'name' => 'webBrowserHistory#get',
+      'url' => '/a/session/history/{timestamp}',
+      'verb' => 'DELETE',
+    ],
     //
     [
       'name' => 'page#loader',
