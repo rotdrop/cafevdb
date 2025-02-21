@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-02-19 15:56+0100\n"
+"POT-Creation-Date: 2025-02-21 13:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -629,8 +629,8 @@ msgstr ""
 #: lib/Command/ProjectEvents.php:336
 #, php-format
 msgid ""
-"Would hard-remove soft-deleted event \"%1$s@%2$s\" from project "
-"\"%3$s\" (dry-run)"
+"Would hard-remove soft-deleted event \"%1$s@%2$s\" from project \"%3$s\" "
+"(dry-run)"
 msgstr ""
 
 #: lib/Command/ProjectEvents.php:363
@@ -693,8 +693,8 @@ msgstr ""
 #: lib/Command/ProjectEvents.php:475
 #, php-format
 msgid ""
-"Would split non-repeating multi-day event \"%1$s@%2$s\" of project "
-"\"%3$s\" (dry-run)."
+"Would split non-repeating multi-day event \"%1$s@%2$s\" of project \"%3$s\" "
+"(dry-run)."
 msgstr ""
 
 #: lib/Command/ProjectEvents.php:482
@@ -738,15 +738,15 @@ msgstr ""
 #: lib/Command/ProjectEvents.php:603
 #, php-format
 msgid ""
-"Would delete unregistered event \"%1$s@%2$s\" with project-category "
-"\"%3$s\" (dry-run)."
+"Would delete unregistered event \"%1$s@%2$s\" with project-category \"%3$s\" "
+"(dry-run)."
 msgstr ""
 
 #: lib/Command/ProjectEvents.php:610
 #, php-format
 msgid ""
-"Will delete unregistered event \"%1$s@%2$s\" with project-category "
-"\"%3$s\" (dry-run)."
+"Will delete unregistered event \"%1$s@%2$s\" with project-category \"%3$s\" "
+"(dry-run)."
 msgstr ""
 
 #: lib/Command/ProjectEvents.php:628
@@ -3967,6 +3967,12 @@ msgid ""
 "possible."
 msgstr ""
 
+#: lib/Controller/WebBrowserHistoryController.php:71
+#: lib/Controller/WebBrowserHistoryController.php:85
+#: lib/Controller/WebBrowserHistoryController.php:97
+msgid "Unimplemented"
+msgstr ""
+
 #: lib/Crypto/AsymmetricKeyService.php:123
 msgid ""
 "The owner-id was not specified and could not be determined automatically."
@@ -4725,6 +4731,10 @@ msgstr ""
 msgid "Provide a table for recording tax exemption notices."
 msgstr ""
 
+#: lib/Maintenance/Migrations/CreateWebBrowserHistoryTables.php:57
+msgid "Create tables for storing the web-browser history between sessions."
+msgstr ""
+
 #: lib/Maintenance/Migrations/DecryptShareOwner.php:55
 #, php-format
 msgid "Decrypt the \"%s\" configuration value."
@@ -4983,7 +4993,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:317
 #: lib/PageRenderer/ProjectPayments.php:565
 #: lib/PageRenderer/SepaBulkTransactions.php:374
-#: specialVueFakeDummyForL10nScript.js:406
+#: specialVueFakeDummyForL10nScript.js:426
 msgid "Project"
 msgstr ""
 
@@ -5122,9 +5132,9 @@ msgstr ""
 #. TRANSLATORS src/views/FilesTab.vue:77
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:97
 #: lib/Service/CloudUserConnectorService.php:391
-#: specialVueFakeDummyForL10nScript.js:84
-#: specialVueFakeDummyForL10nScript.js:390
-#: specialVueFakeDummyForL10nScript.js:402
+#: specialVueFakeDummyForL10nScript.js:90
+#: specialVueFakeDummyForL10nScript.js:410
+#: specialVueFakeDummyForL10nScript.js:422
 msgid "Musicians"
 msgstr ""
 
@@ -5791,7 +5801,7 @@ msgstr ""
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:113
 #: lib/PageRenderer/PME/Config.php:64
 #: lib/PageRenderer/PMETableViewBase.php:661
-#: specialVueFakeDummyForL10nScript.js:326
+#: specialVueFakeDummyForL10nScript.js:346
 msgid "Em@il"
 msgstr ""
 
@@ -5943,7 +5953,7 @@ msgstr ""
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:66
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:116
 #: lib/Service/ToolTipsDataService.php:1499
-#: specialVueFakeDummyForL10nScript.js:316
+#: specialVueFakeDummyForL10nScript.js:336
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -6015,7 +6025,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:203
 #: lib/PageRenderer/ProjectParticipantFields.php:260
-#: specialVueFakeDummyForL10nScript.js:82
+#: specialVueFakeDummyForL10nScript.js:88
 msgid "Access Control"
 msgstr ""
 
@@ -6392,7 +6402,7 @@ msgstr ""
 #: lib/PageRenderer/Projects.php:396
 #: lib/PageRenderer/Projects.php:473
 #: lib/PageRenderer/Projects.php:908
-#: src/app/pme.js:1464
+#: src/app/pme.js:1463
 msgid "Clear"
 msgstr ""
 
@@ -6439,14 +6449,14 @@ msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:75
 #: lib/PageRenderer/Projects.php:882
-#: specialVueFakeDummyForL10nScript.js:318
+#: specialVueFakeDummyForL10nScript.js:338
 msgid "Participant Fields"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:57
 #: lib/PageRenderer/Projects.php:945
 #: lib/Service/ToolTipsDataService.php:1501
-#: specialVueFakeDummyForL10nScript.js:314
+#: specialVueFakeDummyForL10nScript.js:334
 msgid "Participants"
 msgstr ""
 
@@ -6685,7 +6695,7 @@ msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:94
 #: lib/PageRenderer/SepaBulkTransactions.php:615
-#: specialVueFakeDummyForL10nScript.js:394
+#: specialVueFakeDummyForL10nScript.js:414
 #: templates/emailform/form.php:36
 #: templates/emailform/part.emailform.composer.php:125
 msgid "Recipients"
@@ -7508,9 +7518,9 @@ msgstr ""
 msgid "Personal Comments by %s"
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:338
+#. TRANSLATORS src/components/ErrorPage.vue:342
 #: lib/Service/ProblemReportService.php:235
-#: specialVueFakeDummyForL10nScript.js:258
+#: specialVueFakeDummyForL10nScript.js:272
 msgid "System Error Report"
 msgstr ""
 
@@ -7725,9 +7735,9 @@ msgid ""
 "Whatever."
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:160
+#. TRANSLATORS src/components/ErrorPage.vue:164
 #: lib/Service/ProjectService.php:1655
-#: specialVueFakeDummyForL10nScript.js:248
+#: specialVueFakeDummyForL10nScript.js:262
 msgid "Preview"
 msgstr ""
 
@@ -8113,8 +8123,8 @@ msgid ""
 "banktransaction, either bank transfers or debit notes.\n"
 "\n"
 "The data format is CSV, in order to transfer the data to the bank the "
-"command-line tool `aqbanking-cli` from the [AqBanking](https://www."
-"aquamaniac.de/rdm/projects/aqbanking) software-suite has to be used.\n"
+"command-line tool `aqbanking-cli` from the [AqBanking](https://"
+"www.aquamaniac.de/rdm/projects/aqbanking) software-suite has to be used.\n"
 "\n"
 "Please note that the files listed here are read-only. They are generated by "
 "the [%1$s-app](%2$s). Each project has an entry in the side-bar menu which "
@@ -8466,11 +8476,15 @@ msgid ""
 "respective musician and correct the email addresses there."
 msgstr ""
 
+#. TRANSLATORS src/components/ErrorPage.vue:109
 #: lib/Service/ToolTipsDataService.php:427
+#: specialVueFakeDummyForL10nScript.js:246
 msgid "Cancel the problem report."
 msgstr ""
 
+#. TRANSLATORS src/components/ErrorPage.vue:120
 #: lib/Service/ToolTipsDataService.php:428
+#: specialVueFakeDummyForL10nScript.js:248
 msgid "Submit the problem report."
 msgstr ""
 
@@ -10043,8 +10057,8 @@ msgid ""
 "to add a page to the project which has not been created by hitting the `+'-"
 "button above, but was created directly in the CMS backend. When linking "
 "articles from the `trashbin' category then those articles will automatically "
-"moved to the `preview' category; this is some not-so-hidden undelete feature."
-"z"
+"moved to the `preview' category; this is some not-so-hidden undelete "
+"feature.z"
 msgstr ""
 
 #: lib/Service/ToolTipsDataService.php:1247
@@ -11247,353 +11261,18 @@ msgstr ""
 msgid "Orchestra Management Application"
 msgstr ""
 
-#. TRANSLATORS src/CAFeVDB.vue:27
-#: specialVueFakeDummyForL10nScript.js:2
-#: src/router/routes.ts:40
-msgid "Home"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:38
-#: specialVueFakeDummyForL10nScript.js:4
-msgid "Overview {currentProjectName}"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:73
-#: specialVueFakeDummyForL10nScript.js:6
-#: templates/settings/part.side-menu-settings.php:59
-#: templates/settings/personal-settings.php:37
-msgid "Tool-Tips"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:78
-#: specialVueFakeDummyForL10nScript.js:8
-#: templates/settings/part.side-menu-settings.php:71
-#: templates/settings/personal-settings.php:48
-msgid "Restore Last View"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:83
-#: specialVueFakeDummyForL10nScript.js:10
-#: templates/settings/part.side-menu-settings.php:83
-#: templates/settings/personal-settings.php:59
-msgid "Filter-Controls"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:88
-#: specialVueFakeDummyForL10nScript.js:12
-#: templates/settings/part.side-menu-settings.php:95
-#: templates/settings/personal-settings.php:70
-msgid "Quick Change-Dialog"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:93
-#: specialVueFakeDummyForL10nScript.js:14
-#: templates/settings/part.side-menu-settings.php:107
-#: templates/settings/personal-settings.php:81
-msgid "Deselect Invisible"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:97
-#: specialVueFakeDummyForL10nScript.js:16
-#: templates/settings/part.side-menu-settings.php:126
-msgid "#Rows/Page in Tables"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:118
-#: specialVueFakeDummyForL10nScript.js:18
-#: templates/settings/part.side-menu-settings.php:139
-#: templates/settings/personal-settings.php:131
-msgid "Finance-Mode"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:123
-#: specialVueFakeDummyForL10nScript.js:20
-#: templates/settings/part.side-menu-settings.php:152
-#: templates/settings/personal-settings.php:143
-msgid "Expert-Mode"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:128
-#: specialVueFakeDummyForL10nScript.js:22
-#: templates/settings/part.side-menu-settings.php:164
-#: templates/settings/personal-settings.php:155
-msgid "Show Disabled Data-Sets"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:132
-#: specialVueFakeDummyForL10nScript.js:24
-msgid "Debug"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:145
-#. TRANSLATORS src/CAFeVDB.vue:153
-#: specialVueFakeDummyForL10nScript.js:26
-#: specialVueFakeDummyForL10nScript.js:28
-#: templates/settings/part.side-menu-settings.php:175
-msgid "Further Settings"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:166
-#: specialVueFakeDummyForL10nScript.js:30
-msgid "{orchestraName} Orchestra Management App"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:175
-#: specialVueFakeDummyForL10nScript.js:32
-msgid "Please click on the ☰-button in order to open the navigation menu."
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:176
-#: specialVueFakeDummyForL10nScript.js:34
-msgid ""
-"Please click on your avatar or initials (top-right) for logout and "
-"configuration options."
-msgstr ""
-
-#. TRANSLATORS unknown orchestra name placeholder (src/CAFeVDB.vue:311)
-#: specialVueFakeDummyForL10nScript.js:36
-msgid "[UNKNOWN]"
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:451
-#: specialVueFakeDummyForL10nScript.js:38
-msgid "Unable to run the config-check."
-msgstr ""
-
-#. TRANSLATORS src/CAFeVDB.vue:490
-#: specialVueFakeDummyForL10nScript.js:40
-msgid "Unable to update navigation items."
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:25
-#: specialVueFakeDummyForL10nScript.js:42
-msgid "Camerata DB"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:34
-#: specialVueFakeDummyForL10nScript.js:44
-msgid "User and group backend"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:50
-#: specialVueFakeDummyForL10nScript.js:46
-msgid "Sychronize User Backends"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:57
-#: specialVueFakeDummyForL10nScript.js:48
-msgid "User Group"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:67
-#: specialVueFakeDummyForL10nScript.js:50
-msgid "User Group Admins"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:107
-#: specialVueFakeDummyForL10nScript.js:52
-msgid "Create Group"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:121
-#. TRANSLATORS src/components/AdminSettings.vue:127
-#: specialVueFakeDummyForL10nScript.js:54
-#: specialVueFakeDummyForL10nScript.js:56
-msgid "Wiki Name-Space"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:133
-#: specialVueFakeDummyForL10nScript.js:58
-msgid "Configure User Backend"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:141
-#: specialVueFakeDummyForL10nScript.js:60
-msgid "Autoconfigure \"{cloudUserBackend}\" app"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:150
-#: specialVueFakeDummyForL10nScript.js:62
-msgid "Recryption Requests"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:162
-#: specialVueFakeDummyForL10nScript.js:64
-#: specialVueFakeDummyForL10nScript.js:76
-msgid "recrypt"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:165
-#: specialVueFakeDummyForL10nScript.js:66
-#: specialVueFakeDummyForL10nScript.js:78
-#: templates/fragments/mailing-lists/announcements-list-controls.php:84
-msgid "reject"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:172
-#: specialVueFakeDummyForL10nScript.js:68
-msgid "organizer"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:174
-#: specialVueFakeDummyForL10nScript.js:70
-msgid "group-admin"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:184
-#: specialVueFakeDummyForL10nScript.js:72
-msgid "mark/unmark all."
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:186
-#: specialVueFakeDummyForL10nScript.js:74
-msgid "With the marked requests perform the following action:"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:198
-#: specialVueFakeDummyForL10nScript.js:80
-msgid "No recryption requests are pending."
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:208
-#. TRANSLATORS src/views/FilesTab.vue:133
-#: specialVueFakeDummyForL10nScript.js:86
-#: specialVueFakeDummyForL10nScript.js:404
-msgid "e.g. Jane Doe"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:219
-#: specialVueFakeDummyForL10nScript.js:88
-msgid "Restrict User Selection to Project"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:220
-#. TRANSLATORS src/views/FilesTab.vue:144
-#: specialVueFakeDummyForL10nScript.js:90
-#: specialVueFakeDummyForL10nScript.js:408
-msgid "e.g. Auvergne2019"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:231
-#: specialVueFakeDummyForL10nScript.js:92
-msgid "include disabled accounts"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:240
-#: specialVueFakeDummyForL10nScript.js:94
-msgid "include deactivated accounts"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:247
-#: specialVueFakeDummyForL10nScript.js:96
-msgid "Remove the status feedback from the last action."
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:250
-#: specialVueFakeDummyForL10nScript.js:98
-msgid "Ok"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:259
-#: specialVueFakeDummyForL10nScript.js:100
-msgid "With the selected musicians perform the following action:"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:263
-#: specialVueFakeDummyForL10nScript.js:102
-msgid "deny access"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:266
-#: specialVueFakeDummyForL10nScript.js:104
-msgid "grant access"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:273
-#: specialVueFakeDummyForL10nScript.js:106
-msgid "Configure Office Fonts for Office Exports"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:276
-#: specialVueFakeDummyForL10nScript.js:108
-msgid "Font Data Folder"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:297
-#: specialVueFakeDummyForL10nScript.js:110
-msgid "Default Font"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:302
-#: specialVueFakeDummyForL10nScript.js:112
-msgid "Update Font Data"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:305
-#: specialVueFakeDummyForL10nScript.js:114
-msgid "Rescan Font Data"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:308
-#: specialVueFakeDummyForL10nScript.js:116
-msgid "Purge Font Data"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:315
-#: specialVueFakeDummyForL10nScript.js:118
-msgid "Configure Problem Report Handling"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:321
-#: specialVueFakeDummyForL10nScript.js:120
-msgid "Problem Report Email Recipient"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:346
-#: specialVueFakeDummyForL10nScript.js:122
-msgid "Email Verification Code"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:364
-#: specialVueFakeDummyForL10nScript.js:124
-msgid "resend verification code"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:372
-#: specialVueFakeDummyForL10nScript.js:126
-msgid "cancel verification"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:386
-#: specialVueFakeDummyForL10nScript.js:128
-msgid "Enable Vue DevTools Support"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:389
-#: specialVueFakeDummyForL10nScript.js:130
-msgid "Check to enable Vue Devtools support (also needs unsafe-eval CSP)"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:686
-#: specialVueFakeDummyForL10nScript.js:132
-msgid "{current} of {totals}"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:747
-#: specialVueFakeDummyForL10nScript.js:134
-msgid "inaccessible"
-msgstr ""
-
+#. TRANSLATORS /dev5/htdocs/nextcloud-git-30/apps/cafevdb/blah.vue:79
 #. TRANSLATORS src/components/AdminSettings.vue:772
 #. TRANSLATORS src/views/FilesTab.vue:476
-#: specialVueFakeDummyForL10nScript.js:136
-#: specialVueFakeDummyForL10nScript.js:152
-#: specialVueFakeDummyForL10nScript.js:162
+#: specialVueFakeDummyForL10nScript.js:2
+#: specialVueFakeDummyForL10nScript.js:142
+#: specialVueFakeDummyForL10nScript.js:158
 #: specialVueFakeDummyForL10nScript.js:168
-#: specialVueFakeDummyForL10nScript.js:178
-#: specialVueFakeDummyForL10nScript.js:196
-#: specialVueFakeDummyForL10nScript.js:212
-#: specialVueFakeDummyForL10nScript.js:418
+#: specialVueFakeDummyForL10nScript.js:174
+#: specialVueFakeDummyForL10nScript.js:184
+#: specialVueFakeDummyForL10nScript.js:202
+#: specialVueFakeDummyForL10nScript.js:218
+#: specialVueFakeDummyForL10nScript.js:438
 #: src/toolkit/mixins/settings-sync.js:53
 #: src/toolkit/mixins/settings-sync.js:91
 #: src/toolkit/mixins/settings-sync.js:152
@@ -11601,14 +11280,365 @@ msgstr ""
 msgid "reason unknown"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:777
+#. TRANSLATORS /dev5/htdocs/nextcloud-git-30/apps/cafevdb/blah.vue:97
+#. TRANSLATORS src/views/FilesTab.vue:494
+#: specialVueFakeDummyForL10nScript.js:4
+#: specialVueFakeDummyForL10nScript.js:440
+msgid "no response received from {ajaxUrl}"
+msgstr ""
+
+#. TRANSLATORS /dev5/htdocs/nextcloud-git-30/apps/cafevdb/blah.vue:101
+#. TRANSLATORS src/views/FilesTab.vue:498
+#: specialVueFakeDummyForL10nScript.js:6
+#: specialVueFakeDummyForL10nScript.js:442
+msgid "Could not perform mail-merge: {message}"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:27
+#: specialVueFakeDummyForL10nScript.js:8
+#: src/router/routes.ts:40
+msgid "Home"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:38
+#: specialVueFakeDummyForL10nScript.js:10
+msgid "Overview {currentProjectName}"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:73
+#: specialVueFakeDummyForL10nScript.js:12
+#: templates/settings/part.side-menu-settings.php:59
+#: templates/settings/personal-settings.php:37
+msgid "Tool-Tips"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:78
+#: specialVueFakeDummyForL10nScript.js:14
+#: templates/settings/part.side-menu-settings.php:71
+#: templates/settings/personal-settings.php:48
+msgid "Restore Last View"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:83
+#: specialVueFakeDummyForL10nScript.js:16
+#: templates/settings/part.side-menu-settings.php:83
+#: templates/settings/personal-settings.php:59
+msgid "Filter-Controls"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:88
+#: specialVueFakeDummyForL10nScript.js:18
+#: templates/settings/part.side-menu-settings.php:95
+#: templates/settings/personal-settings.php:70
+msgid "Quick Change-Dialog"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:93
+#: specialVueFakeDummyForL10nScript.js:20
+#: templates/settings/part.side-menu-settings.php:107
+#: templates/settings/personal-settings.php:81
+msgid "Deselect Invisible"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:97
+#: specialVueFakeDummyForL10nScript.js:22
+#: templates/settings/part.side-menu-settings.php:126
+msgid "#Rows/Page in Tables"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:118
+#: specialVueFakeDummyForL10nScript.js:24
+#: templates/settings/part.side-menu-settings.php:139
+#: templates/settings/personal-settings.php:131
+msgid "Finance-Mode"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:123
+#: specialVueFakeDummyForL10nScript.js:26
+#: templates/settings/part.side-menu-settings.php:152
+#: templates/settings/personal-settings.php:143
+msgid "Expert-Mode"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:128
+#: specialVueFakeDummyForL10nScript.js:28
+#: templates/settings/part.side-menu-settings.php:164
+#: templates/settings/personal-settings.php:155
+msgid "Show Disabled Data-Sets"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:132
+#: specialVueFakeDummyForL10nScript.js:30
+msgid "Debug"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:145
+#. TRANSLATORS src/CAFeVDB.vue:153
+#: specialVueFakeDummyForL10nScript.js:32
+#: specialVueFakeDummyForL10nScript.js:34
+#: templates/settings/part.side-menu-settings.php:175
+msgid "Further Settings"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:166
+#: specialVueFakeDummyForL10nScript.js:36
+msgid "{orchestraName} Orchestra Management App"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:175
+#: specialVueFakeDummyForL10nScript.js:38
+msgid "Please click on the ☰-button in order to open the navigation menu."
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:176
+#: specialVueFakeDummyForL10nScript.js:40
+msgid ""
+"Please click on your avatar or initials (top-right) for logout and "
+"configuration options."
+msgstr ""
+
+#. TRANSLATORS unknown orchestra name placeholder (src/CAFeVDB.vue:311)
+#: specialVueFakeDummyForL10nScript.js:42
+msgid "[UNKNOWN]"
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:451
+#: specialVueFakeDummyForL10nScript.js:44
+msgid "Unable to run the config-check."
+msgstr ""
+
+#. TRANSLATORS src/CAFeVDB.vue:490
+#: specialVueFakeDummyForL10nScript.js:46
+msgid "Unable to update navigation items."
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:25
+#: specialVueFakeDummyForL10nScript.js:48
+msgid "Camerata DB"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:34
+#: specialVueFakeDummyForL10nScript.js:50
+msgid "User and group backend"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:50
+#: specialVueFakeDummyForL10nScript.js:52
+msgid "Sychronize User Backends"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:57
+#: specialVueFakeDummyForL10nScript.js:54
+msgid "User Group"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:67
+#: specialVueFakeDummyForL10nScript.js:56
+msgid "User Group Admins"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:107
+#: specialVueFakeDummyForL10nScript.js:58
+msgid "Create Group"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:121
+#. TRANSLATORS src/components/AdminSettings.vue:127
+#: specialVueFakeDummyForL10nScript.js:60
+#: specialVueFakeDummyForL10nScript.js:62
+msgid "Wiki Name-Space"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:133
+#: specialVueFakeDummyForL10nScript.js:64
+msgid "Configure User Backend"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:141
+#: specialVueFakeDummyForL10nScript.js:66
+msgid "Autoconfigure \"{cloudUserBackend}\" app"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:150
+#: specialVueFakeDummyForL10nScript.js:68
+msgid "Recryption Requests"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:162
+#: specialVueFakeDummyForL10nScript.js:70
+#: specialVueFakeDummyForL10nScript.js:82
+msgid "recrypt"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:165
+#: specialVueFakeDummyForL10nScript.js:72
+#: specialVueFakeDummyForL10nScript.js:84
+#: templates/fragments/mailing-lists/announcements-list-controls.php:84
+msgid "reject"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:172
+#: specialVueFakeDummyForL10nScript.js:74
+msgid "organizer"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:174
+#: specialVueFakeDummyForL10nScript.js:76
+msgid "group-admin"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:184
+#: specialVueFakeDummyForL10nScript.js:78
+msgid "mark/unmark all."
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:186
+#: specialVueFakeDummyForL10nScript.js:80
+msgid "With the marked requests perform the following action:"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:198
+#: specialVueFakeDummyForL10nScript.js:86
+msgid "No recryption requests are pending."
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:208
+#. TRANSLATORS src/views/FilesTab.vue:133
+#: specialVueFakeDummyForL10nScript.js:92
+#: specialVueFakeDummyForL10nScript.js:424
+msgid "e.g. Jane Doe"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:219
+#: specialVueFakeDummyForL10nScript.js:94
+msgid "Restrict User Selection to Project"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:220
+#. TRANSLATORS src/views/FilesTab.vue:144
+#: specialVueFakeDummyForL10nScript.js:96
+#: specialVueFakeDummyForL10nScript.js:428
+msgid "e.g. Auvergne2019"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:231
+#: specialVueFakeDummyForL10nScript.js:98
+msgid "include disabled accounts"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:240
+#: specialVueFakeDummyForL10nScript.js:100
+msgid "include deactivated accounts"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:247
+#: specialVueFakeDummyForL10nScript.js:102
+msgid "Remove the status feedback from the last action."
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:250
+#: specialVueFakeDummyForL10nScript.js:104
+msgid "Ok"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:259
+#: specialVueFakeDummyForL10nScript.js:106
+msgid "With the selected musicians perform the following action:"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:263
+#: specialVueFakeDummyForL10nScript.js:108
+msgid "deny access"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:266
+#: specialVueFakeDummyForL10nScript.js:110
+msgid "grant access"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:273
+#: specialVueFakeDummyForL10nScript.js:112
+msgid "Configure Office Fonts for Office Exports"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:276
+#: specialVueFakeDummyForL10nScript.js:114
+msgid "Font Data Folder"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:297
+#: specialVueFakeDummyForL10nScript.js:116
+msgid "Default Font"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:302
+#: specialVueFakeDummyForL10nScript.js:118
+msgid "Update Font Data"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:305
+#: specialVueFakeDummyForL10nScript.js:120
+msgid "Rescan Font Data"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:308
+#: specialVueFakeDummyForL10nScript.js:122
+msgid "Purge Font Data"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:315
+#: specialVueFakeDummyForL10nScript.js:124
+msgid "Configure Problem Report Handling"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:321
+#: specialVueFakeDummyForL10nScript.js:126
+msgid "Problem Report Email Recipient"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:346
+#: specialVueFakeDummyForL10nScript.js:128
+msgid "Email Verification Code"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:364
+#: specialVueFakeDummyForL10nScript.js:130
+msgid "resend verification code"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:372
+#: specialVueFakeDummyForL10nScript.js:132
+msgid "cancel verification"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:386
+#: specialVueFakeDummyForL10nScript.js:134
+msgid "Enable Vue DevTools Support"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:389
+#: specialVueFakeDummyForL10nScript.js:136
+msgid "Check to enable Vue Devtools support (also needs unsafe-eval CSP)"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:686
 #: specialVueFakeDummyForL10nScript.js:138
+msgid "{current} of {totals}"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:747
+#: specialVueFakeDummyForL10nScript.js:140
+msgid "inaccessible"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:777
+#: specialVueFakeDummyForL10nScript.js:144
 msgid "Could not fetch the value for \"{key}\": {message}"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:796
-#: specialVueFakeDummyForL10nScript.js:140
-#: specialVueFakeDummyForL10nScript.js:144
+#: specialVueFakeDummyForL10nScript.js:146
+#: specialVueFakeDummyForL10nScript.js:150
 #: src/app/project-participants.js:830
 #: src/app/projects.js:641
 #: src/app/sepa-debit-mandate.js:858
@@ -11617,383 +11647,408 @@ msgid "Confirmation Required"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:802
-#: specialVueFakeDummyForL10nScript.js:142
-#: specialVueFakeDummyForL10nScript.js:146
+#: specialVueFakeDummyForL10nScript.js:148
+#: specialVueFakeDummyForL10nScript.js:152
 #: src/toolkit/mixins/settings-sync.js:207
 msgid "Unconfirmed, reverting to old value."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:833
-#: specialVueFakeDummyForL10nScript.js:148
+#: specialVueFakeDummyForL10nScript.js:154
 msgid "Successfully set value for \"{settingsKey}\" to \"{value}\"."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:835
-#: specialVueFakeDummyForL10nScript.js:150
+#: specialVueFakeDummyForL10nScript.js:156
 msgid "Value for \"{settingsKey}\" has been erased."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:857
-#: specialVueFakeDummyForL10nScript.js:154
+#: specialVueFakeDummyForL10nScript.js:160
 msgid "Could not set \"{settingsKey}\" to \"{value}\": {message}"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:859
-#: specialVueFakeDummyForL10nScript.js:156
+#: specialVueFakeDummyForL10nScript.js:162
 msgid "Could not set \"{settingsKey}\": {message}"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:967
-#: specialVueFakeDummyForL10nScript.js:158
+#: specialVueFakeDummyForL10nScript.js:164
 msgid "Synchronizing user backends not yet implemented."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:998
-#: specialVueFakeDummyForL10nScript.js:160
+#: specialVueFakeDummyForL10nScript.js:166
 msgid "Successfully handled recryption request for {userId}."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1013
-#: specialVueFakeDummyForL10nScript.js:164
+#: specialVueFakeDummyForL10nScript.js:170
 msgid "Could not resolve the recryption request for {userId}: {message}"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1023
-#: specialVueFakeDummyForL10nScript.js:166
+#: specialVueFakeDummyForL10nScript.js:172
 msgid "Successfully deleted recryption request for {userId}."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1038
-#: specialVueFakeDummyForL10nScript.js:170
+#: specialVueFakeDummyForL10nScript.js:176
 msgid "Could not delete the recryption request for {userId}: {message}"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1073
-#: specialVueFakeDummyForL10nScript.js:172
+#: specialVueFakeDummyForL10nScript.js:178
 msgid "No musicians selected, doing nothing."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1091
-#: specialVueFakeDummyForL10nScript.js:174
-#: specialVueFakeDummyForL10nScript.js:192
+#: specialVueFakeDummyForL10nScript.js:180
+#: specialVueFakeDummyForL10nScript.js:198
 msgid "Processed user-id {userId}."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1093
-#: specialVueFakeDummyForL10nScript.js:176
-#: specialVueFakeDummyForL10nScript.js:194
+#: specialVueFakeDummyForL10nScript.js:182
+#: specialVueFakeDummyForL10nScript.js:200
 msgid "{failedUsers} users have failed."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1108
-#: specialVueFakeDummyForL10nScript.js:180
-#: specialVueFakeDummyForL10nScript.js:198
+#: specialVueFakeDummyForL10nScript.js:186
+#: specialVueFakeDummyForL10nScript.js:204
 msgid "Unable to handle access action: {message}"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1115
-#: specialVueFakeDummyForL10nScript.js:182
-#: specialVueFakeDummyForL10nScript.js:200
+#: specialVueFakeDummyForL10nScript.js:188
+#: specialVueFakeDummyForL10nScript.js:206
 msgid "Failed after {numUsers} users have been processed successfully."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1117
-#: specialVueFakeDummyForL10nScript.js:184
 #: specialVueFakeDummyForL10nScript.js:190
-#: specialVueFakeDummyForL10nScript.js:202
+#: specialVueFakeDummyForL10nScript.js:196
 #: specialVueFakeDummyForL10nScript.js:208
+#: specialVueFakeDummyForL10nScript.js:214
 msgid "{failedUsers} were processed unsuccessfully."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1119
-#: specialVueFakeDummyForL10nScript.js:186
-#: specialVueFakeDummyForL10nScript.js:204
+#: specialVueFakeDummyForL10nScript.js:192
+#: specialVueFakeDummyForL10nScript.js:210
 msgid "{remainingUsers} remain unprocessed."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1121
-#: specialVueFakeDummyForL10nScript.js:188
-#: specialVueFakeDummyForL10nScript.js:206
+#: specialVueFakeDummyForL10nScript.js:194
+#: specialVueFakeDummyForL10nScript.js:212
 msgid "{numUsers} users have been processed successfully."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1213
-#: specialVueFakeDummyForL10nScript.js:210
+#: specialVueFakeDummyForL10nScript.js:216
 msgid "Font cache operation {operation} completed successfully."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:1228
-#: specialVueFakeDummyForL10nScript.js:214
+#: specialVueFakeDummyForL10nScript.js:220
 msgid ""
 "Could not perform the requested font-cache operation \"{operation}\": "
 "{message}"
 msgstr ""
 
 #. TRANSLATORS src/components/DynamicSvgIcon.vue:73
-#: specialVueFakeDummyForL10nScript.js:216
+#: specialVueFakeDummyForL10nScript.js:222
 msgid "Provided data is not a valid SVG image: \"{data}\"."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:54
-#: specialVueFakeDummyForL10nScript.js:218
+#: specialVueFakeDummyForL10nScript.js:224
 msgid "report error"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:60
-#: specialVueFakeDummyForL10nScript.js:220
+#: specialVueFakeDummyForL10nScript.js:226
 msgid "show details"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:63
-#: specialVueFakeDummyForL10nScript.js:222
+#: specialVueFakeDummyForL10nScript.js:228
 msgid "go to previous page"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:67
-#: specialVueFakeDummyForL10nScript.js:224
+#: specialVueFakeDummyForL10nScript.js:230
 msgid "try to reload"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:74
-#: specialVueFakeDummyForL10nScript.js:226
+#: specialVueFakeDummyForL10nScript.js:232
 msgid "AXIOS ERROR WITH RESPONSE DATA"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:78
-#: specialVueFakeDummyForL10nScript.js:228
+#: specialVueFakeDummyForL10nScript.js:234
 msgid "AXIOS ERROR WITHOUT RESPONSE DATA"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:82
-#: specialVueFakeDummyForL10nScript.js:230
+#: specialVueFakeDummyForL10nScript.js:236
 msgid "FRONTEND ERROR"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:86
-#: specialVueFakeDummyForL10nScript.js:232
+#: specialVueFakeDummyForL10nScript.js:238
 msgid "jQuery AJAX ERROR WITH RESPONSE DATA"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:90
-#: specialVueFakeDummyForL10nScript.js:234
+#: specialVueFakeDummyForL10nScript.js:240
 msgid "jQuery AJAX ERROR WITHOUT RESPONSE DATA"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:93
-#: specialVueFakeDummyForL10nScript.js:236
+#: specialVueFakeDummyForL10nScript.js:242
 msgid "UNKNOWN ERROR"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:101
-#. TRANSLATORS src/components/ErrorPage.vue:335
-#: specialVueFakeDummyForL10nScript.js:238
-#: specialVueFakeDummyForL10nScript.js:256
+#. TRANSLATORS src/components/ErrorPage.vue:339
+#: specialVueFakeDummyForL10nScript.js:244
+#: specialVueFakeDummyForL10nScript.js:270
 msgid "Problem Report"
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:147
-#: specialVueFakeDummyForL10nScript.js:240
-msgid "Optional Comment"
+#. TRANSLATORS src/components/ErrorPage.vue:131
+#: specialVueFakeDummyForL10nScript.js:250
+msgid "Modify the comment of the problem report."
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:149
-#: specialVueFakeDummyForL10nScript.js:242
-msgid "You can optionally add comments. Markdown is supported."
+#. TRANSLATORS src/components/ErrorPage.vue:142
+#: specialVueFakeDummyForL10nScript.js:252
+msgid "Close the problem report page."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:151
-#: specialVueFakeDummyForL10nScript.js:244
+#: specialVueFakeDummyForL10nScript.js:254
+msgid "Optional Comment"
+msgstr ""
+
+#. TRANSLATORS src/components/ErrorPage.vue:153
+#: specialVueFakeDummyForL10nScript.js:256
+msgid "You can optionally add comments. Markdown is supported."
+msgstr ""
+
+#. TRANSLATORS src/components/ErrorPage.vue:155
+#: specialVueFakeDummyForL10nScript.js:258
 msgid "A preview of the error report is shown below."
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:158
-#: specialVueFakeDummyForL10nScript.js:246
+#. TRANSLATORS src/components/ErrorPage.vue:162
+#: specialVueFakeDummyForL10nScript.js:260
 msgid "Please add your personal notes here."
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:321
-#: specialVueFakeDummyForL10nScript.js:250
+#. TRANSLATORS src/components/ErrorPage.vue:325
+#: specialVueFakeDummyForL10nScript.js:264
 msgid "Personal Comments by {user}"
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:322
-#: specialVueFakeDummyForL10nScript.js:252
+#. TRANSLATORS src/components/ErrorPage.vue:326
+#: specialVueFakeDummyForL10nScript.js:266
 msgid "No comment."
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:331
-#: specialVueFakeDummyForL10nScript.js:254
+#. TRANSLATORS src/components/ErrorPage.vue:335
+#: specialVueFakeDummyForL10nScript.js:268
 msgid "Data Record"
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:339
-#: specialVueFakeDummyForL10nScript.js:260
+#. TRANSLATORS src/components/ErrorPage.vue:343
+#: specialVueFakeDummyForL10nScript.js:274
 msgid "You cannot change this part of the report."
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:371
-#: specialVueFakeDummyForL10nScript.js:262
+#. TRANSLATORS src/components/ErrorPage.vue:375
+#: specialVueFakeDummyForL10nScript.js:276
 msgid ""
 "Your comment has already been submitted with the following notification: "
 "{notification}."
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:386
-#: specialVueFakeDummyForL10nScript.js:264
+#. TRANSLATORS src/components/ErrorPage.vue:390
+#: specialVueFakeDummyForL10nScript.js:278
 msgid "Your problem-report has been submitted."
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:401
-#: specialVueFakeDummyForL10nScript.js:266
+#. TRANSLATORS src/components/ErrorPage.vue:405
+#: specialVueFakeDummyForL10nScript.js:280
 #: src/app/file-download.js:60
 #: src/toolkit/util/file-download.js:50
 msgid "unknown error"
 msgstr ""
 
-#. TRANSLATORS src/components/ErrorPage.vue:403
-#: specialVueFakeDummyForL10nScript.js:268
+#. TRANSLATORS src/components/ErrorPage.vue:407
+#: specialVueFakeDummyForL10nScript.js:282
 msgid "Could not submit the problem report: \"{errorString}\"."
 msgstr ""
 
-#. TRANSLATORS src/components/LegacyWrapper.vue:73
-#: specialVueFakeDummyForL10nScript.js:270
+#. TRANSLATORS src/components/LegacyWrapper.vue:28
+#: specialVueFakeDummyForL10nScript.js:284
+msgid "Navigate to the previous view in the browser history stack."
+msgstr ""
+
+#. TRANSLATORS src/components/LegacyWrapper.vue:39
+#: specialVueFakeDummyForL10nScript.js:286
+msgid "Reload the current view."
+msgstr ""
+
+#. TRANSLATORS src/components/LegacyWrapper.vue:49
+#: specialVueFakeDummyForL10nScript.js:288
+msgid "Navigate to the next view in the browser history stack."
+msgstr ""
+
+#. TRANSLATORS src/components/LegacyWrapper.vue:71
+#: specialVueFakeDummyForL10nScript.js:290
 msgid "Tooltips"
 msgstr ""
 
-#. TRANSLATORS src/components/LegacyWrapper.vue:76
-#: specialVueFakeDummyForL10nScript.js:272
+#. TRANSLATORS src/components/LegacyWrapper.vue:74
+#: specialVueFakeDummyForL10nScript.js:292
 msgid "Manual (other tab or window)"
 msgstr ""
 
-#. TRANSLATORS src/components/LegacyWrapper.vue:79
-#: specialVueFakeDummyForL10nScript.js:274
+#. TRANSLATORS src/components/LegacyWrapper.vue:77
+#: specialVueFakeDummyForL10nScript.js:294
 #: templates/emailform/form.php:62
 #: templates/project-events/events-manual.php:53
 msgid "Manual (popup)"
 msgstr ""
 
-#. TRANSLATORS src/components/LegacyWrapper.vue:120
-#: specialVueFakeDummyForL10nScript.js:276
+#. TRANSLATORS src/components/LegacyWrapper.vue:118
+#: specialVueFakeDummyForL10nScript.js:296
 msgid "Sorry, an Error Occurred"
 msgstr ""
 
-#. TRANSLATORS src/components/LegacyWrapper.vue:312
-#: specialVueFakeDummyForL10nScript.js:278
+#. TRANSLATORS src/components/LegacyWrapper.vue:310
+#: specialVueFakeDummyForL10nScript.js:298
 #: src/app/user-manual.js:62
 msgid "User Manual: {section}"
 msgstr ""
 
-#. TRANSLATORS src/components/LegacyWrapper.vue:414
-#: specialVueFakeDummyForL10nScript.js:280
+#. TRANSLATORS src/components/LegacyWrapper.vue:412
+#: specialVueFakeDummyForL10nScript.js:300
 msgid "Error loading view \"{template}\"."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:566
-#: specialVueFakeDummyForL10nScript.js:282
+#: specialVueFakeDummyForL10nScript.js:302
 msgid "An error occured during communication with the server."
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:16
-#: specialVueFakeDummyForL10nScript.js:284
+#: specialVueFakeDummyForL10nScript.js:304
 msgid "Level"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:18
-#: specialVueFakeDummyForL10nScript.js:286
+#: specialVueFakeDummyForL10nScript.js:306
 msgid "App"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:20
-#: specialVueFakeDummyForL10nScript.js:288
+#: specialVueFakeDummyForL10nScript.js:308
 msgid "No app in context"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:22
-#: specialVueFakeDummyForL10nScript.js:290
+#: specialVueFakeDummyForL10nScript.js:310
 msgid "Time"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:26
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:30
-#: specialVueFakeDummyForL10nScript.js:292
-#: specialVueFakeDummyForL10nScript.js:294
+#: specialVueFakeDummyForL10nScript.js:312
+#: specialVueFakeDummyForL10nScript.js:314
 msgid "Copy raw entry"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:32
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:36
-#: specialVueFakeDummyForL10nScript.js:296
-#: specialVueFakeDummyForL10nScript.js:298
+#: specialVueFakeDummyForL10nScript.js:316
+#: specialVueFakeDummyForL10nScript.js:318
 msgid "Copy formatted entry"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:42
-#: specialVueFakeDummyForL10nScript.js:300
+#: specialVueFakeDummyForL10nScript.js:320
 msgid "Hide exception details"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:300
+#: specialVueFakeDummyForL10nScript.js:320
 msgid "View exception details"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:53
-#: specialVueFakeDummyForL10nScript.js:302
+#: specialVueFakeDummyForL10nScript.js:322
 msgid "Raw log entry"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:134
-#: specialVueFakeDummyForL10nScript.js:304
-#: specialVueFakeDummyForL10nScript.js:306
+#: specialVueFakeDummyForL10nScript.js:324
+#: specialVueFakeDummyForL10nScript.js:326
 msgid "Log entry successfully copied"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/exception/LogException.vue:50
-#: specialVueFakeDummyForL10nScript.js:308
+#: specialVueFakeDummyForL10nScript.js:328
 msgid "Caused by {exception}"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/exception/TraceLine.vue:10
-#: specialVueFakeDummyForL10nScript.js:310
+#: specialVueFakeDummyForL10nScript.js:330
 msgid "Line {line}"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:47
-#: specialVueFakeDummyForL10nScript.js:312
+#: specialVueFakeDummyForL10nScript.js:332
 msgid "Project Overview"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:85
-#: specialVueFakeDummyForL10nScript.js:320
+#: specialVueFakeDummyForL10nScript.js:340
 msgid "Project Files"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:95
-#: specialVueFakeDummyForL10nScript.js:322
+#: specialVueFakeDummyForL10nScript.js:342
 msgid "Project Notes"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:104
-#: specialVueFakeDummyForL10nScript.js:324
+#: specialVueFakeDummyForL10nScript.js:344
 msgid "Events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:123
-#: specialVueFakeDummyForL10nScript.js:328
+#: specialVueFakeDummyForL10nScript.js:348
 msgid "Debit Mandates"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:133
-#: specialVueFakeDummyForL10nScript.js:330
+#: specialVueFakeDummyForL10nScript.js:350
 msgid "Payments"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:142
-#: specialVueFakeDummyForL10nScript.js:332
+#: specialVueFakeDummyForL10nScript.js:352
 msgid "Financial Balance"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:328
-#: specialVueFakeDummyForL10nScript.js:334
+#: specialVueFakeDummyForL10nScript.js:354
 msgid "Project Wiki for {projectName}"
 msgstr ""
 
@@ -12001,126 +12056,116 @@ msgstr ""
 #. TRANSLATORS src/components/SelectMusicians.vue:45
 #. TRANSLATORS src/components/SettingsSelectGroup.vue:47
 #. TRANSLATORS src/components/SettingsSelectUsers.vue:60
-#: specialVueFakeDummyForL10nScript.js:336
-#: specialVueFakeDummyForL10nScript.js:338
-#: specialVueFakeDummyForL10nScript.js:340
-#: specialVueFakeDummyForL10nScript.js:342
-#: specialVueFakeDummyForL10nScript.js:346
-#: specialVueFakeDummyForL10nScript.js:348
-#: specialVueFakeDummyForL10nScript.js:350
-#: specialVueFakeDummyForL10nScript.js:352
+#: specialVueFakeDummyForL10nScript.js:356
 #: specialVueFakeDummyForL10nScript.js:358
 #: specialVueFakeDummyForL10nScript.js:360
 #: specialVueFakeDummyForL10nScript.js:362
-#: specialVueFakeDummyForL10nScript.js:364
 #: specialVueFakeDummyForL10nScript.js:366
 #: specialVueFakeDummyForL10nScript.js:368
 #: specialVueFakeDummyForL10nScript.js:370
 #: specialVueFakeDummyForL10nScript.js:372
+#: specialVueFakeDummyForL10nScript.js:378
+#: specialVueFakeDummyForL10nScript.js:380
+#: specialVueFakeDummyForL10nScript.js:382
+#: specialVueFakeDummyForL10nScript.js:384
+#: specialVueFakeDummyForL10nScript.js:386
+#: specialVueFakeDummyForL10nScript.js:388
+#: specialVueFakeDummyForL10nScript.js:390
+#: specialVueFakeDummyForL10nScript.js:392
 msgid "undefined"
 msgstr ""
 
 #. TRANSLATORS src/components/SelectContacts.vue:166
 #. TRANSLATORS src/components/SelectMusicians.vue:239
-#: specialVueFakeDummyForL10nScript.js:344
-#: specialVueFakeDummyForL10nScript.js:354
+#: specialVueFakeDummyForL10nScript.js:364
+#: specialVueFakeDummyForL10nScript.js:374
 msgid "** everybody **"
 msgstr ""
 
 #. TRANSLATORS src/components/SelectProjects.vue:133
-#: specialVueFakeDummyForL10nScript.js:356
+#: specialVueFakeDummyForL10nScript.js:376
 msgid "Permanent"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:31
-#: specialVueFakeDummyForL10nScript.js:374
+#: specialVueFakeDummyForL10nScript.js:394
 msgid "Mail merge operations"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:40
-#: specialVueFakeDummyForL10nScript.js:376
+#: specialVueFakeDummyForL10nScript.js:396
 msgid "Download Merged Document"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:43
-#: specialVueFakeDummyForL10nScript.js:378
+#: specialVueFakeDummyForL10nScript.js:398
 msgid "download locally"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:48
-#: specialVueFakeDummyForL10nScript.js:380
+#: specialVueFakeDummyForL10nScript.js:400
 msgid "Merge Document into Cloud"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:54
-#: specialVueFakeDummyForL10nScript.js:382
+#: specialVueFakeDummyForL10nScript.js:402
 msgid "save to cloud"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:59
-#: specialVueFakeDummyForL10nScript.js:384
+#: specialVueFakeDummyForL10nScript.js:404
 msgid "Download Replacement Data"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:65
-#: specialVueFakeDummyForL10nScript.js:386
+#: specialVueFakeDummyForL10nScript.js:406
 msgid "download data"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:72
-#: specialVueFakeDummyForL10nScript.js:388
+#: specialVueFakeDummyForL10nScript.js:408
 msgid "Sender"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:80
-#: specialVueFakeDummyForL10nScript.js:392
+#: specialVueFakeDummyForL10nScript.js:412
 msgid "e.g. John Doe"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:106
-#: specialVueFakeDummyForL10nScript.js:396
+#: specialVueFakeDummyForL10nScript.js:416
 msgid "Musician's Datebase"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:115
-#: specialVueFakeDummyForL10nScript.js:398
+#: specialVueFakeDummyForL10nScript.js:418
 msgid "Addressbooks"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:125
-#: specialVueFakeDummyForL10nScript.js:400
+#: specialVueFakeDummyForL10nScript.js:420
 msgid "Enter Address"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:154
-#: specialVueFakeDummyForL10nScript.js:410
+#: specialVueFakeDummyForL10nScript.js:430
 #: templates/settings/share-settings.php:103
 msgid "Contacts"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:155
-#: specialVueFakeDummyForL10nScript.js:412
+#: specialVueFakeDummyForL10nScript.js:432
 msgid "e.g. Bilbo Baggins"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:167
-#: specialVueFakeDummyForL10nScript.js:414
+#: specialVueFakeDummyForL10nScript.js:434
 msgid "Address-Books"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:322
-#: specialVueFakeDummyForL10nScript.js:416
+#: specialVueFakeDummyForL10nScript.js:436
 msgid "Required."
-msgstr ""
-
-#. TRANSLATORS src/views/FilesTab.vue:494
-#: specialVueFakeDummyForL10nScript.js:420
-msgid "no response received from {ajaxUrl}"
-msgstr ""
-
-#. TRANSLATORS src/views/FilesTab.vue:498
-#: specialVueFakeDummyForL10nScript.js:422
-msgid "Could not perform mail-merge: {message}"
 msgstr ""
 
 #: src/app/ajax.js:89
@@ -12771,15 +12816,15 @@ msgid ""
 "information is available. Sorry for that."
 msgstr ""
 
-#: src/app/pme.js:1347
+#: src/app/pme.js:1346
 msgid "#columns"
 msgstr ""
 
-#: src/app/pme.js:1356
+#: src/app/pme.js:1355
 msgid "#rows"
 msgstr ""
 
-#: src/app/pme.js:1457
+#: src/app/pme.js:1456
 msgid "Remove"
 msgstr ""
 
@@ -13097,52 +13142,58 @@ msgstr ""
 msgid "Unable to download translation templates."
 msgstr ""
 
-#: src/debug-modes.ts:49
+#: src/debug-modes.ts:51
 #: templates/settings/part.debug-mode.php:37
 msgid "General Information"
 msgstr ""
 
-#: src/debug-modes.ts:50
+#: src/debug-modes.ts:52
 #: templates/settings/part.debug-mode.php:38
 msgid "SQL Queries"
 msgstr ""
 
-#: src/debug-modes.ts:51
+#: src/debug-modes.ts:53
 #: templates/settings/part.debug-mode.php:39
 #: templates/settings/part.debug-mode.php:37
 #, php-format
 msgid "CSP Violations"
 msgstr ""
 
-#: src/debug-modes.ts:52
+#: src/debug-modes.ts:54
 #: templates/settings/part.debug-mode.php:40
 #: templates/settings/part.debug-mode.php:39
 #, php-format
 msgid "L10N"
 msgstr ""
 
-#: src/debug-modes.ts:53
+#: src/debug-modes.ts:55
 #: templates/settings/part.debug-mode.php:41
 msgid "HTTP Requests"
 msgstr ""
 
-#: src/debug-modes.ts:54
+#: src/debug-modes.ts:56
 #: templates/settings/part.debug-mode.php:42
 msgid "Missing Context Help"
 msgstr ""
 
-#: src/debug-modes.ts:55
+#: src/debug-modes.ts:57
 #: templates/settings/part.debug-mode.php:43
 msgid "Mass Email Form"
 msgstr ""
 
-#: src/debug-modes.ts:56
+#: src/debug-modes.ts:58
 #: templates/settings/part.debug-mode.php:44
 msgid "GeoCoding"
 msgstr ""
 
-#: src/debug-modes.ts:57
+#: src/debug-modes.ts:59
+#: templates/settings/part.debug-mode.php:45
 msgid "Vue JS Frontend"
+msgstr ""
+
+#: src/debug-modes.ts:60
+#: templates/settings/part.debug-mode.php:46
+msgid "Resolve JS Sourceode"
 msgstr ""
 
 #: src/files-hooks.ts:151
@@ -14076,10 +14127,11 @@ msgstr ""
 
 #: templates/emailform/part.emailform.statuspage.php:318
 msgid ""
-"You did not specify any recipients (Cc: and Bcc: does not count here!)."
-"Please got to the `Em@il Recipients' panel and select some before hitting "
-"the `Send'-button again. Please possibly take care of the list of musicians "
-"without email address at the bottom of the `Em@il Recipients' panel."
+"You did not specify any recipients (Cc: and Bcc: does not count "
+"here!).Please got to the `Em@il Recipients' panel and select some before "
+"hitting the `Send'-button again. Please possibly take care of the list of "
+"musicians without email address at the bottom of the `Em@il Recipients' "
+"panel."
 msgstr ""
 
 #: templates/emailform/part.emailform.statuspage.php:341
@@ -14182,9 +14234,9 @@ msgstr ""
 #: templates/emailform/part.emailform.statuspage.php:574
 #, php-format
 msgid ""
-"This is an internal error. Please copy this page and send it via email to %s."
-"It may be possible to simply click on the red, underlined text in order to "
-"compose a useful message."
+"This is an internal error. Please copy this page and send it via email to "
+"%s.It may be possible to simply click on the red, underlined text in order "
+"to compose a useful message."
 msgstr ""
 
 #: templates/emailform/part.emailform.statuspage.php:606
@@ -15265,8 +15317,8 @@ msgstr ""
 
 #: templates/settings/orchestra-settings.php:183
 msgid ""
-"IBAN or number of the orchestra's bank account. If this is a account number,"
-"then please first enter the BLZ"
+"IBAN or number of the orchestra's bank account. If this is a account "
+"number,then please first enter the BLZ"
 msgstr ""
 
 #: templates/settings/orchestra-settings.php:189
@@ -15439,7 +15491,7 @@ msgstr ""
 msgid "e.g. treasurer@me.tld"
 msgstr ""
 
-#: templates/settings/part.debug-mode.php:53
+#: templates/settings/part.debug-mode.php:55
 msgid "Enable Debug Mode"
 msgstr ""
 
@@ -15985,7 +16037,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME = 'general debit-note mandate';
 #: templates/settings/orchestra-settings.php:142
-#: lib/Service/ConfigService.php:265
+#: lib/Service/ConfigService.php:267
 #, php-format
 msgid "general debit-note mandate"
 msgstr ""
@@ -15993,7 +16045,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME = 'project debit-note mandate';
 #: templates/settings/orchestra-settings.php:142
-#: lib/Service/ConfigService.php:264
+#: lib/Service/ConfigService.php:266
 #, php-format
 msgid "project debit-note mandate"
 msgstr ""
@@ -16006,7 +16058,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME = 'instrument insurance record template';
 #: templates/settings/orchestra-settings.php:142
-#: lib/Service/ConfigService.php:270
+#: lib/Service/ConfigService.php:272
 #, php-format
 msgid "instrument insurance record template"
 msgstr ""
@@ -16081,7 +16133,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_LOGO_NAME = 'orchestra logo';
 #: templates/settings/orchestra-settings.php:156
-#: lib/Service/ConfigService.php:261
+#: lib/Service/ConfigService.php:263
 #, php-format
 msgid "orchestra logo"
 msgstr ""
@@ -16095,7 +16147,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_SEAL_NAME = 'orchestra seal';
 #: templates/settings/orchestra-settings.php:159
-#: lib/Service/ConfigService.php:262
+#: lib/Service/ConfigService.php:264
 #, php-format
 msgid "orchestra seal"
 msgstr ""
@@ -16313,7 +16365,7 @@ msgstr ""
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME = 'member data update';
 #: lib/EmailForm/Composer.php:4016
 #: templates/settings/orchestra-settings.php:180
-#: lib/Service/ConfigService.php:266
+#: lib/Service/ConfigService.php:268
 #, php-format
 msgid "member data update"
 msgstr ""
@@ -16610,28 +16662,28 @@ msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME = 'standard letter';
-#: lib/Service/ConfigService.php:263
+#: lib/Service/ConfigService.php:265
 #, php-format
 msgid "standard letter"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_INVOICE_NAME = 'invoice';
-#: lib/Service/ConfigService.php:267
+#: lib/Service/ConfigService.php:269
 #, php-format
 msgid "invoice"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME = 'standard receipt';
-#: lib/Service/ConfigService.php:268
+#: lib/Service/ConfigService.php:270
 #, php-format
 msgid "standard receipt"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME = 'donation receipt';
-#: lib/Service/ConfigService.php:269
+#: lib/Service/ConfigService.php:271
 #, php-format
 msgid "donation receipt"
 msgstr ""
