@@ -548,6 +548,7 @@ const reactifyGlobalState = function() {
 
   // settings stuff
 
+  toolTipsEnabled.value = globalState.toolTipsEnabled
   watch(
     () => globalState.toolTipsEnabled,
     (value, oldValue) => {
