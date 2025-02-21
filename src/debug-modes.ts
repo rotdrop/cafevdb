@@ -33,6 +33,7 @@ export const DEBUG_TOOLTIPS = (1 << 5);
 export const DEBUG_EMAILFORM = (1 << 6);
 export const DEBUG_GEOCODING = (1 << 7);
 export const DEBUG_VUE = (1 << 8);
+export const DEBUG_SMAPS = (1 << 9);
 export const DEBUG_ALL = DEBUG_GENERAL
   | DEBUG_QUERY
   | DEBUG_CSP
@@ -42,6 +43,7 @@ export const DEBUG_ALL = DEBUG_GENERAL
   | DEBUG_EMAILFORM
   | DEBUG_GEOCODING
   | DEBUG_VUE
+  | DEBUG_SMAPS
 ;
 export const DEBUG_NONE = 0;
 
@@ -55,6 +57,7 @@ export const debugOptions = {
   [DEBUG_EMAILFORM]: t(appName, 'Mass Email Form'),
   [DEBUG_GEOCODING]: t(appName, 'GeoCoding'),
   [DEBUG_VUE]: t(appName, 'Vue JS Frontend'),
+  [DEBUG_SMAPS]: t(appName, 'Resolve JS Sourceode'),
 };
 
 export default debugOptions;

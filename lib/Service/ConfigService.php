@@ -77,6 +77,7 @@ class ConfigService
   const DEBUG_EMAILFORM = (1 << 6);
   const DEBUG_GEOCODING = (1 << 7);
   const DEBUG_VUE       = (1 << 8);
+  const DEBUG_SMAPS     = (1 << 9);
   const DEBUG_ALL       = self::DEBUG_GENERAL
     |self::DEBUG_QUERY
     |self::DEBUG_CSP
@@ -86,6 +87,7 @@ class ConfigService
     |self::DEBUG_EMAILFORM
     |self::DEBUG_GEOCODING
     |self::DEBUG_VUE
+    |self::DEBUG_SMAPS
     ;
   const DEBUG_NONE      = 0;
 

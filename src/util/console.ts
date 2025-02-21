@@ -23,10 +23,19 @@
 
 import StackTrace from 'stacktrace-js';
 
-export function stackFrame(offset: number) {
-  const trace = StackTrace.getSync();
-  const frame = trace?.[offset + 1];
-  return frame;
+import globalState from '../app/globalstate.js';
+import { DEBUG_SMAPS } from '../debug-modes.ts';
+
+const stackTraceOptions = {
+  sourceMapConsumerCache: {},
+  sourceCache: {}
+}
+
+export const stackFrame = async (offset: number) => {
+  const stackFrames = (globalState.debugModes & DEBUG_SMAPS)
+    ? await StackTrace.get(stackTraceOptions)
+    : StackTrace.getSync(stackTraceOptions);
+  return stackFrames?.[offset + 1];
 }
 
 class Console {
@@ -34,20 +43,25 @@ class Console {
     this.prefix = prefix;
   }
   prefix: string;
-  locationMessage() {
-    return this.prefix + ': ' + stackFrame(2).toString();
+  async locationMessage() {
+    try {
+      const frame = (await stackFrame(2)).toString();
+      return this.prefix + ': ' + frame;
+    } catch {
+      return this.prefix;
+    }
   };
-  debug(...args: any[]) {
-    console.debug(this.locationMessage(), ...args);
+  async debug(...args: any[]) {
+    console.debug(await this.locationMessage(), ...args);
   };
-  info(...args: any[]) {
-    console.info(this.locationMessage(), ...args);
+  async info(...args: any[]) {
+    console.info(await this.locationMessage(), ...args);
   };
-  error(...args: any[]) {
-    console.error(this.locationMessage(), ...args);
+  async error(...args: any[]) {
+    console.error(await this.locationMessage(), ...args);
   };
-  trace(...args: any[]) {
-    console.trace(this.locationMessage(), ...args);
+  async trace(...args: any[]) {
+    console.trace(await this.locationMessage(), ...args);
   };
 }
 
