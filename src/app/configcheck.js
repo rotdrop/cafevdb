@@ -111,7 +111,7 @@ function documentReady() {
                   setBusyIndicators(false, $container, false);
                   Notification.hide();
                   // post a back-request to the Vue-router
-                  asyncEmit(HISTORY_GO_REQUEST);
+                  asyncEmit(HISTORY_GO_REQUEST, { level: -1 }); // i.e. "back"
                 }, redirectTimeout * 1000);
               });
           },
