@@ -58,7 +58,7 @@ export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
 export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');
 export const LEGACY_PAGE_LOAD = appEventName('legacy-page-load');
 export const LEGACY_PME_UPDATE = appEventName('legacy-pme-update');
-export const LEGACY_POST_META_DATA = appEventName('legacy-post-meta-data');
+export const LEGACY_SANITIZE_POST_DATA = appEventName('legacy-sanitize-post-data');
 
 export const GET_VUE_COMPONENT = appEventName('get-vue-component');
 

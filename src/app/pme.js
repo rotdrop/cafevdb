@@ -77,7 +77,7 @@ import 'selectize/dist/css/selectize.bootstrap4.css';
 import mergician from 'mergician';
 import {
   LEGACY_PME_UPDATE,
-  LEGACY_POST_META_DATA,
+  LEGACY_SANITIZE_POST_DATA,
 } from '../event-bus-events.ts';
 import {
   emit as asyncEmit,
@@ -1090,14 +1090,13 @@ const pseudoSubmitPost = function(form, element, resetFilter) {
   // convert to plain object
   post = qs.parse(post, { allowSparse: true, duplicates: 'last' });
   const result = $.Deferred();
-  getEmitResult(asyncEmit(LEGACY_POST_META_DATA, { post }))
+  getEmitResult(asyncEmit(LEGACY_SANITIZE_POST_DATA, { post }))
     .then(
-      (hashData) => {
-        console.info('HASH DATA', hashData);
-        Object.assign(post, hashData);
-        pmePost(post)
+      (postData) => {
+        console.info('POST DATA', postData);
+        pmePost(postData)
           .then(
-            (htmlContent, historyAction, post) => { result.resolve(htmlContent, historyAction, post); },
+            (htmlContent, historyAction, post) => { result.resolve(htmlContent, historyAction, postData); },
             (xhr, status, errorThrown) => { result.reject(xhr, status, errorThrown); },
           );
       },

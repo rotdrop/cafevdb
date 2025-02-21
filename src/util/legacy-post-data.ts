@@ -21,12 +21,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import objectHash from 'object-hash';
+import objectHash from 'object-hash/index.js'; // avoid using the browserified version
+import { walk, deepCopy } from 'walkjs';
 import Console from './console.ts';
 import type { NormalOption } from 'object-hash';
 import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus'
 
-const COMPONENT_NAME = 'generateObjectHash';
+const COMPONENT_NAME = 'legacyPostData';
 
 const logger = new Console(COMPONENT_NAME);
 
@@ -48,11 +49,18 @@ const POST_DATA_EXCLUDED_KEYS = [
   '_route',
   'renderAs',
 ];
-const TOP_LEVEL_EXCLUDED_KEYS = [
+
+const HASH_TOP_LEVEL_EXCLUDED_KEYS = [
   'template', // url-parameter
   'projectId', // url-parameter
   'projectName', // url-parameter
   ...POST_DATA_EXCLUDED_KEYS,
+];
+
+const EMPTY_VALUE_KEYS = [
+  'projectId',
+  'projectName',
+  'musicianId',
 ];
 
 /**
@@ -63,22 +71,18 @@ export const generatePostHash = (postData: TemplatePostData):string => {
   const options: NormalOptionsExt = {
     unorderedArrays: true, // sort arrays
     exclude: (key, value, level) =>
-      (level === 0 && TOP_LEVEL_EXCLUDED_KEYS.includes(key))
+      (level === 0 && HASH_TOP_LEVEL_EXCLUDED_KEYS.includes(key))
         || EXCLUDED_KEYS.includes(key)
         || value === undefined // exclude undefined
         || value === null // or better debug the code ...
-        || (key === 'musicianId' && +(value as string) === 0),
+        || ('' + value) === ''
+        || (EMPTY_VALUE_KEYS.includes(key) && +(value as string) === 0),
+    algorithm: 'sha256',
   };
   const result = objectHash(postData, options);
   logger.debug('HASH @ OBJECT', result, postData);
   return result;
 };
-
-const EMPTY_VALUE_KEYS = [
-  'projectId',
-  'projectName',
-  'musicianId',
-];
 
 /**
  * Sanitize template parameters
@@ -90,15 +94,53 @@ const EMPTY_VALUE_KEYS = [
  *
  * @param  params Template / post parameters.
  */
-export const sanitizeTemplateParams = (params: TemplatePostData) => Object.fromEntries(
+export const sanitizeTemplateParamsOld = (params: TemplatePostData) => Object.fromEntries(
   Object.entries(params).filter(
     ([key, value]) => key !== 'template'
       && value !== null
       && value !== undefined
+      && ('' + value) !== ''
       && (!EMPTY_VALUE_KEYS.includes(key) || +(value as string) !== 0)
     ,
   ),
 );
+
+export const sanitizeTemplateParams = (params: TemplatePostData) => {
+  params = deepCopy(params) as TemplatePostData;
+
+  walk(params, {
+    trackExecutedCallbacks: false,
+    onVisit: {
+      timing: 'postVisit',
+      callback(node) {
+        if (node.isRoot) {
+          return;
+        }
+        let del = false;
+        switch (node.nodeType) {
+          case 'value':
+            del = node.val === null
+              || node.val === undefined
+              || ('' + node.val) === ''
+              || (EMPTY_VALUE_KEYS.includes(node.key as string) && +(node.val as string) === 0);
+            break;
+          case 'array':
+            del = node.val.length === 0;
+            break;
+          case 'object':
+            del = Object.keys(node.val).length === 0
+            break;
+        }
+        if (del) {
+          logger.debug('SANITIZE TEMPLATE PARAMS DELETING NODE', node.getPath(), '=', node.val);
+          delete node.parent!.val[node.key!];
+        }
+      },
+    },
+  });
+
+  return params;
+};
 
 /**
  * Remove empty values for projectId, projectName and musicianId,
@@ -106,7 +148,7 @@ export const sanitizeTemplateParams = (params: TemplatePostData) => Object.fromE
  *
  * @param params
  */
-export const sanitizePostData = (params: TemplatePostData): TemplatePostData => Object.fromEntries(
+export const sanitizePostDataOld = (params: TemplatePostData): TemplatePostData => Object.fromEntries(
   Object.entries(params).filter(
     ([key, value]) => value !== null
       && value !== undefined
@@ -115,3 +157,42 @@ export const sanitizePostData = (params: TemplatePostData): TemplatePostData => 
       && !EXCLUDED_KEYS.includes(key),
   ),
 ) as TemplatePostData;
+
+export const sanitizePostData = (params: TemplatePostData): TemplatePostData => {
+  params = deepCopy(params) as TemplatePostData;
+
+  walk(params, {
+    trackExecutedCallbacks: false,
+    onVisit: {
+      timing: 'postVisit',
+      callback(node) {
+        if (node.isRoot) {
+          return;
+        }
+        let del = false;
+        switch (node.nodeType) {
+          case 'value':
+            del = node.val === null
+              || node.val === undefined
+              || ('' + node.val) === ''
+              || (EMPTY_VALUE_KEYS.includes(node.key as string) && +(node.val as string) === 0)
+              || POST_DATA_EXCLUDED_KEYS.includes(node.key as string)
+              || EXCLUDED_KEYS.includes(node.key as string);
+            break;
+          case 'array':
+            del = node.val.length === 0;
+            break;
+          case 'object':
+            del = Object.keys(node.val).length === 0;
+            break;
+        }
+        if (del) {
+          logger.debug('SANITIZE POST DATA DELETING NODE', node.getPath(), '=', node.val);
+          delete node.parent!.val[node.key!];
+        }
+      },
+    },
+  });
+
+  return params;
+}

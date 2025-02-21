@@ -171,7 +171,7 @@ import {
   LEGACY_PAGE_FINALIZE,
   LEGACY_PAGE_LOAD,
   LEGACY_PME_UPDATE,
-  LEGACY_POST_META_DATA,
+  LEGACY_SANITIZE_POST_DATA,
   TOGGLE_TOOLTIPS,
   WIKI_POPUP,
 } from '../event-bus-events.ts'
@@ -547,9 +547,11 @@ const legacyPmeHistoryUpdateHandler = asyncSubscribe(
     return updateLegacyRoute(eventData.post, eventData.action, eventData.htmlBody)
   },
 )
-const legacyPostMetaDataHandler = asyncSubscribe(LEGACY_POST_META_DATA, (event) => {
-  const hash = generatePostHash(event.post)
+const legacyPostMetaDataHandler = asyncSubscribe(LEGACY_SANITIZE_POST_DATA, (event) => {
+  const post = sanitizePostData(event.post)
+  const hash = generatePostHash(post)
   return {
+    ...post,
     [FRONTEND_URL_PATH_KEY]: route.path + '?hash=' + hash,
     [HASH_KEY]: hash,
   }
@@ -590,7 +592,7 @@ onUnmounted(() => {
   asyncUnSubscribe(LEGACY_AJAX_ERROR, legacyAjaxErrorHandler)
   asyncUnSubscribe(LEGACY_PAGE_LOAD, legacyPageLoadHandler)
   asyncUnSubscribe(LEGACY_PME_UPDATE, legacyPmeHistoryUpdateHandler)
-  asyncUnSubscribe(LEGACY_POST_META_DATA, legacyPostMetaDataHandler)
+  asyncUnSubscribe(LEGACY_SANITIZE_POST_DATA, legacyPostMetaDataHandler)
 })
 
 </script>

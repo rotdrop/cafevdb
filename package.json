@@ -129,6 +129,7 @@
     "vue-material-design-icons": "^5.3.0",
     "vue-multiselect": "*",
     "vue-router": "github:rotdrop/vue-router#feature/routing-completion-events",
+    "walkjs": "^6.0.1",
     "webpack": "^5.64.4",
     "webpack-bundle-analyzer": "^4.4.0",
     "webpack-cli": "^4.9.1",
