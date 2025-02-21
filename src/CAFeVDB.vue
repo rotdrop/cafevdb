@@ -77,6 +77,17 @@
           >
             {{ t(appId, 'Restore Last View') }}
           </NcCheckboxRadioSwitch>
+          <NcActions>
+            <NcActionButton>
+              {{ t(appName, 'Save History') }}
+            </NcActionButton>
+            <NcActionButton>
+              {{ t(appName, 'Load History') }}
+            </NcActionButton>
+            <NcActionButton>
+              {{ t(appName, 'Delete History') }}
+            </NcActionButton>
+          </NcActions>
           <NcCheckboxRadioSwitch v-tooltip="hints['filter-visibility']"
                                  :checked.sync="globalState.PHPMyEdit.initialFilterVisibility"
           >
@@ -122,12 +133,14 @@
           >
             {{ t(appId, 'Expert-Mode') }}
           </NcCheckboxRadioSwitch>
-          <NcCheckboxRadioSwitch v-tooltip="hints['show-disabled']"
+          <NcCheckboxRadioSwitch v-if="globalState.expertMode"
+                                 v-tooltip="hints['show-disabled']"
                                  :checked.sync="globalState.PHPMyEdit.showDisabled"
           >
             {{ t(appId, 'Show Disabled Data-Sets') }}
           </NcCheckboxRadioSwitch>
-          <SelectWithSubmitButton v-model="debugModes"
+          <SelectWithSubmitButton v-if="globalState.expertMode"
+                                  v-model="debugModes"
                                   input-id="debug-modes-select"
                                   :input-label="t(appId, 'Debug')"
                                   :tooltip="hints['debug-mode']"
@@ -214,6 +227,7 @@ import globalState from './app/globalstate.js'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import {
   NcActions,
+  NcActionButton,
   NcActionLink,
   NcAppSidebar,
   NcAppSidebarTab,
