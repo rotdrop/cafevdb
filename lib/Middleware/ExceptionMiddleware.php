@@ -136,11 +136,13 @@ class ExceptionMiddleware extends Middleware
       $exception = new Exceptions\EnduserNotificationException(
         $exceptionMessage, 0, $originalException,
         httpStatusCode: $httpStatusCode,
+        context: $context,
       );
     }
     $logEntry = $this->logException(
       $exception,
       message: $exception->getMessage(),
+      context: $exception->getContext(),
       returnLogEntry: true,
       shift: PHP_INT_MIN, // do not decorate with prefix
     );

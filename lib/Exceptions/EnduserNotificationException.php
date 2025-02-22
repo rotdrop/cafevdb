@@ -41,7 +41,8 @@ class EnduserNotificationException extends Exception
     string $message,
     int $code = 0,
     $previous = null,
-    protected $httpStatusCode = Http::STATUS_BAD_REQUEST,
+    protected int $httpStatusCode = Http::STATUS_BAD_REQUEST,
+    protected ?array $context = null,
   ) {
     parent::__construct($message, $code, $previous);
   }
@@ -50,16 +51,34 @@ class EnduserNotificationException extends Exception
   /**
    * @param int $code
    *
-   * @return void
+   * @return EnduserNotificationException
    */
-  public function setHttpStatusCode(int $code):void
+  public function setHttpStatusCode(int $code):EnduserNotificationException
   {
     $this->httpStatusCode = $code;
+    return $this;
   }
 
   /** @return int */
   public function getHttpStatusCode():int
   {
     return $this->httpStatusCode;
+  }
+
+  /**
+   * @param null|array $context
+   *
+   * @return EnduserNotificationException
+   */
+  public function setContext(?array $context):EnduserNotificationException
+  {
+    $this->context = $context;
+    return $this;
+  }
+
+  /** @return null|array */
+  public function getContext():?array
+  {
+    return $this->context;
   }
 }
