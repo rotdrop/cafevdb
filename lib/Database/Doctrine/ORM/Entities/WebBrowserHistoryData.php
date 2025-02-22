@@ -44,16 +44,24 @@ class WebBrowserHistoryData implements \ArrayAccess
   /**
    * @var int
    */
-  #[ORM\Column(type: 'string', length: 64, nullable: false)]
+  #[ORM\Column(type: 'string', length: 64, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   #[ORM\Id]
   protected $hash;
 
   #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'data', cascade: ['persist'], orphanRemoval: true, indexBy: 'key')]
-  protected ?Collection $entries;
+  protected Collection $entries;
 
   #[MediaMonks\Transformable(name: 'encrypt', override: true, context: 'encryptionContext')]
-  #[ORM\Column(type: 'blob', nullable: false)]
+  #[ORM\Column(type: 'json', nullable: false)]
   protected ?string $data;
+
+    /** {@inheritdoc} */
+  public function __construct(?string $hash, ?array $data)
+  {
+    $this->entries = new ArrayCollection;
+    $this->data = $data;
+    $this->hash = $hash;
+  }
 
   /** @return null|string */
   public function getHash():?string
@@ -71,5 +79,63 @@ class WebBrowserHistoryData implements \ArrayAccess
     $this->hash = $hash;
 
     return $this;
+  }
+
+  /** @return null|string */
+  public function getData():array
+  {
+    return $this->data;
+  }
+
+  /**
+   * @param array $data
+   *
+   * @return DatabaseStorageDirEntry
+   */
+  public function setData(array $data):WebBrowserHistoryData
+  {
+    $this->data = $data;
+
+    return $this;
+  }
+
+  /** @return null|string */
+  public function getEntries():Collection
+  {
+    return $this->entries;
+  }
+
+  /**
+   * @param null|string $entries
+   *
+   * @return EntriesbaseStorageDirEntry
+   */
+  public function setEntries(Collection $entries):WebBrowserHistoryEntries
+  {
+    $this->entries = $entries;
+
+    return $this;
+  }
+
+  /**
+   * @param WebBrowserHistoryEntry $entry
+   *
+   * @return EntriesbaseStorageDirEntry
+   */
+  public function addToEntry(WebBrowserHistoryEntry $entry):WebBrowserHistoryData
+  {
+    $this->entries->setKey($entry->getKey(), $entry);
+    $entry->setData($this);
+
+    return $this;
+  }
+
+  /**
+   * @param WebBrowserHistoryEntry $entry
+   *
+   * @return EntriesbaseStorageDirEntry
+   */
+  public function removeFromEntry(WebBrowserHistoryEntry $entry):WebBrowserHistoryData
+  {
   }
 }

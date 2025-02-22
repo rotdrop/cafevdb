@@ -41,23 +41,28 @@ class WebBrowserHistoryEntry implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
 
+  #[ORM\ManyToOne(targetEntity: WebBrowserHistoryState::class, cascade: ['persist'], inversedBy: 'chain')]
+  #[ORM\Id]
+  protected WebBrowserHistoryEntry $state;
+
   /**
    * @var int
    */
-  #[ORM\Column(type: 'string', length: 16, nullable: false)]
+  #[ORM\Column(type: 'string', length: 16, nullable: false, options: ['collation' => 'ascii_general_ci'])]
+  #[ORM\GeneratedValue(strategy: 'NONE')]
   #[ORM\Id]
   protected $key;
 
-  #[ORM\JoinColumn(name: 'next', referencedColumnName: 'key', nullable: true)]
+  #[ORM\JoinColumn(name: 'next_state_id', referencedColumnName: 'state_id', nullable: true)]
+  #[ORM\JoinColumn(name: 'next_key', referencedColumnName: 'key', nullable: true)]
   #[ORM\OneToOne(targetEntity: WebBrowserHistoryEntry::class)]
   protected $next;
 
-  #[ORM\JoinColumn(name: 'prev', referencedColumnName: 'key', nullable: true)]
+  #[ORM\JoinColumn(name: 'prev_state_id', referencedColumnName: 'state_id', nullable: true)]
+  #[ORM\JoinColumn(name: 'prev_key', referencedColumnName: 'key', nullable: true)]
   #[ORM\OneToOne(targetEntity: WebBrowserHistoryEntry::class)]
   protected $prev;
 
-  #[ORM\ManyToOne(targetEntity: WebBrowserHistoryState::class, cascade: ['persist'], inversedBy: 'chain')]
-  protected ?WebBrowserHistoryEntry $state;
 
   #[ORM\JoinColumn(name: 'data_hash', referencedColumnName: 'hash', nullable: false)]
   #[ORM\ManyToOne(targetEntity: WebBrowserHistoryData::class, cascade: ['persist'], inversedBy: 'entries')]
@@ -77,6 +82,78 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   public function setKey(?string $key):WebBrowserHistoryEntry
   {
     $this->key = $key;
+
+    return $this;
+  }
+
+  /** @return null|string */
+  public function getPrev():?WebBrowserHistoryEntry
+  {
+    return $this->prev;
+  }
+
+  /**
+   * @param null|WebBrowserHistoryEntry $prev
+   *
+   * @return DatabaseStorageDirEntry
+   */
+  public function setPrev(?WebBrowserHistoryEntry $prev):WebBrowserHistoryEntry
+  {
+    $this->prev = $prev;
+
+    return $this;
+  }
+
+  /** @return null|string */
+  public function getNext():?WebBrowserHistoryEntry
+  {
+    return $this->next;
+  }
+
+  /**
+   * @param null|WebBrowserHistoryEntry $next
+   *
+   * @return DatabaseStorageDirEntry
+   */
+  public function setNext(?WebBrowserHistoryEntry $next):WebBrowserHistoryEntry
+  {
+    $this->next = $next;
+
+    return $this;
+  }
+
+  /** @return null|string */
+  public function getData():?WebBrowserHistoryData
+  {
+    return $this->data;
+  }
+
+  /**
+   * @param WebBrowserHistoryData $data
+   *
+   * @return DatabaseStorageDirEntry
+   */
+  public function setData(WebBrowserHistoryData $data):WebBrowserHistoryEntry
+  {
+    $this->data = $data;
+
+    return $this;
+  }
+
+  /** @return null|string */
+  public function getState():?WebBrowserHistoryState
+  {
+    return $this->state;
+  }
+
+  /**
+   * @param WebBrowserHistoryState $state
+   *
+   * @return StatebaseStorageDirEntry
+   */
+  public function setState(WebBrowserHistoryState $state):WebBrowserHistoryEntry
+  {
+    $this->state = $state;
 
     return $this;
   }

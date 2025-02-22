@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use DateTimeImmutable;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
@@ -36,33 +38,43 @@ use OCA\CAFEVDB\Constants;
  * Generic directory entry for a database-backed file.
  */
 #[ORM\Table(name: 'WebBrowserHistoryState')]
+#[ORM\UniqueConstraint(columns: ['user_id', 'created'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
 class WebBrowserHistoryState implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\UpdatedAtEntity;
-  use CAFEVDB\Traits\CreatedAtEntity;
 
   /**
    * @var int
+   *
+   * We could use $userId and $created as ids, but that would make the
+   * chaining between the entries and the state much more complicated.
    */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   protected $id;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256)]
-  protected ?string $userId;
+  protected string $userId;
+
+  #[ORM\Column(type: 'datetime_immutable', nullable: false)]
+  protected DateTimeImmutable $created;
 
   #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'state', cascade: ['persist'], orphanRemoval: true, indexBy: 'key')]
   protected ?Collection $chain;
 
+  #[ORM\JoinColumn(name: 'pos_state_id', referencedColumnName: 'state_id', nullable: false)]
   #[ORM\JoinColumn(name: 'pos_key', referencedColumnName: 'key', nullable: false)]
   #[ORM\OneToOne(targetEntity: WebBrowserHistoryEntry::class)]
   protected ?WebBrowserHistoryEntry $pos;
+
+  /** {@inheritdoc} */
+  public function __construct()
+  {
+    $this->chain = new ArrayCollection;
+  }
 
   /** @return null|int */
   public function getId():?int
