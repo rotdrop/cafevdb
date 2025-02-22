@@ -92,11 +92,6 @@ $.fn.cafevDialog = function(argument) {
   return this;
 };
 
-// $.extend($.ui.dialog.prototype.options, {
-//   appendTo: '#content',
-//   containment: '#content'
-// });
-
 /**
  * Determine whether scrollbars would be needed.
  *
@@ -185,23 +180,6 @@ $.fn.horizontalScrollbarHeight = function() {
   return node.offsetHeight - node.clientHeight;
 };
 
-$.extend({
-  alert(message, title) {
-    $('<div></div>').dialog({
-      buttons: { Ok() { $(this).dialog('close'); } },
-      open(event, ui) {
-        $(this).css({ 'max-height': 800, 'overflow-y': 'auto', height: 'auto' });
-        $(this).dialog('option', 'resizable', false);
-      },
-      close(event, ui) { $(this).remove(); },
-      resizable: false,
-      title,
-      modal: true,
-      height: 'auto',
-    }).html(message);
-  },
-});
-
 /**
  * Compute the maximum width of a set of elements
  *
@@ -269,9 +247,7 @@ $.fn.maxOuterHeight = function(extended) {
  * @returns {number}
  */
 $.fn.toEm = function(settings) {
-  settings = $.extend({
-    scope: 'body',
-  }, settings);
+  settings = Object.assign({ scope: 'body' }, settings);
   const that = parseInt(this[0], 10);
   const scopeTest = $('<div style="display: none; font-size: 1em; margin: 0; padding:0; height: auto; line-height: 1; border:0;">&nbsp;</div>').appendTo(settings.scope);
   const scopeVal = scopeTest.height();
@@ -280,9 +256,7 @@ $.fn.toEm = function(settings) {
 };
 
 $.fn.toPx = function(settings) {
-  settings = $.extend({
-    scope: 'body',
-  }, settings);
+  settings = Object.assign({ scope: 'body' }, settings);
   const that = parseFloat(this[0]);
   const scopeTest = $('<div style="display: none; font-size: 1em; margin: 0; padding:0; height: auto; line-height: 1; border:0;">&nbsp;</div>').appendTo(settings.scope);
   const scopeVal = scopeTest.height();

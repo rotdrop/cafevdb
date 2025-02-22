@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,11 +59,11 @@ const simpleSetValueHandler = function(element, eventType, msgElement, userCallb
       };
     },
   };
-  const callbacks = $.extend({}, defaultCallbacks);
+  const callbacks = { ...defaultCallbacks };
   if (typeof userCallbacks === 'function') {
     callbacks.success = userCallbacks;
   } else if (typeof userCallbacks === 'object') {
-    $.extend(callbacks, userCallbacks);
+    Object.assign(callbacks, userCallbacks);
   }
   if (!msgElement) {
     msgElement = $();
@@ -130,11 +130,11 @@ const simpleSetHandler = function(element, eventType, msgElement, userCallbacks)
     cleanup() {},
   };
   msgElement = msgElement || $();
-  const callbacks = $.extend({}, defaultCallbacks);
+  const callbacks = { ...defaultCallbacks };
   if (typeof userCallbacks === 'function') {
     callbacks.success = userCallbacks;
   } else if (typeof userCallbacks === 'object') {
-    $.extend(callbacks, userCallbacks);
+    Object.assign(callbacks, userCallbacks);
   }
   // console.debug('simpleSetHandler', element, eventType);
   element.on(eventType, function(event) {

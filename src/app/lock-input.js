@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,12 +43,15 @@ $('body').on('change', 'input[type="checkbox"].' + appName + '-lock-input-widget
 $.fn.lockUnlock = function(argument) {
   if (arguments.length === 0 || (arguments.length === 1 && typeof argument === 'object' && argument !== null)) {
     argument = argument || {};
-    const options = $.extend({}, {
-      position: 'top',
-      locked: false,
-      hardLocked: false,
-      cssClass: undefined,
-    }, argument);
+    const options = Object.assign(
+      {
+        position: 'top',
+        locked: false,
+        hardLocked: false,
+        cssClass: undefined,
+      },
+      argument,
+    );
     options.locked = options.locked || options.hardLocked;
     let cssClass = appName + '-lock-input-widget' + ' lock-unlock' + ' checkbox';
     if (options.cssClass) {

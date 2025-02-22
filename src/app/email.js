@@ -90,10 +90,10 @@ function attachmentFromJSON(response, info) {
     return;
   }
 
-  let file = response;
+  const file = { ...response };
   file.status = 'new';
   if (typeof info === 'object') {
-    file = $.extend(file, info);
+    Object.assign(file, info);
   }
   let fileAttachments = fileAttachmentsHolder.val();
 
@@ -302,7 +302,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
 
     filterUpdateActive = true;
 
-    parameters = $.extend({}, defaultParameters, parameters);
+    parameters = { ...defaultParameters, ...parameters };
 
     const historySnapshot = parameters.historySnapshot;
     if (!historySnapshot) {

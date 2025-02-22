@@ -212,7 +212,7 @@ const ajaxHandleError = function(xhr, textStatus, errorThrown, callbacks) {
       cleanup: callbacks,
     };
   }
-  callbacks = $.extend({}, defaultCallbacks, callbacks);
+  callbacks = { ...defaultCallbacks, ...callbacks };
 
   const failData = ajaxFailData(xhr, textStatus, errorThrown);
   callbacks.preProcess(failData);

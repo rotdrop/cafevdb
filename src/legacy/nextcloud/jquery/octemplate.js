@@ -59,7 +59,7 @@ const Template = {
 	init(vars, options, elem) {
 		// Mix in the passed in options with the default options
 		this.vars = vars
-		this.options = $.extend({}, this.options, options)
+	  this.options = { ...this.options, ...options }
 
 		this.elem = elem
 		const self = this

@@ -101,7 +101,7 @@ const projectPaymentPopup = function(containerSel, post) {
     modalDialog: false,
     modified: false,
   };
-  PHPMyEdit.tableDialogOpen($.extend({}, tableOptions, post));
+  PHPMyEdit.tableDialogOpen({ ...tableOptions, ...post });
 };
 
 const backgroundDecryption = function(container) {

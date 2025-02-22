@@ -27,7 +27,6 @@ import globalState from './globalstate.js';
 import * as Dialogs from './dialogs.js';
 import { isPlainObject } from 'is-plain-object';
 import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
-import { loadState } from '@nextcloud/initial-state';
 import { emit as asyncEmit } from '../services/async-event-bus.ts';
 import { LEGACY_AJAX_ERROR } from '../event-bus-events.ts';
 import l10nHttpStatus from '@http-util/status-i18n';
@@ -35,7 +34,7 @@ import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
 
 const cloudWebRoot = getCloudRootUrl() || '/';
 
-const httpStatusText = (code, lang = undefined) => l10nHttpStatus(code, lang || globalState.cloudLanguage);
+const httpStatusText = (code, lang = undefined) => l10nHttpStatus(code, lang || globalState.cloudLanguage || 'en_US');
 
 /**
  * Generate some diagnostic output, mostly needed during application
@@ -64,10 +63,6 @@ const httpStatusText = (code, lang = undefined) => l10nHttpStatus(code, lang || 
  */
 const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) {
 
-  if (!globalState.initialized) {
-    $.extend(globalState, loadState(appName, 'CAFEVDB'));
-  }
-
   const defaultCallbacks = {
     cleanup(data) {},
     preProcess(data) {},
@@ -78,7 +73,7 @@ const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) 
       cleanup: callbacks,
     };
   }
-  callbacks = $.extend({}, defaultCallbacks, callbacks);
+  callbacks = { ...defaultCallbacks, ...callbacks };
 
   const failData = ajaxFailData(xhr, textStatus, errorThrown);
   callbacks.preProcess(failData);

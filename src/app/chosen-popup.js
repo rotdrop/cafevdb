@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,7 +52,7 @@ const chosenPopup = function(contents, userOptions) {
     saveCallback: false,
     closeCallback: false,
   };
-  const options = $.extend({}, defaultOptions, userOptions);
+  const options = { ...defaultOptions, ...userOptions };
 
   const cssClass = (options.dialogClass ? options.dialogClass + ' ' : '') + 'chosen-popup-dialog';
   const dialogHolder = $('<div class="' + cssClass + '"></div>');

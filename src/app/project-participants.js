@@ -99,23 +99,23 @@ const myPersonalRecordDialog = function(record, options) {
   const pmeOperation = PHPMyEdit.sys('operation');
   const pmeRecord = PHPMyEdit.sys('rec');
 
-  let tableOptions = {
-    projectId: -1,
-    projectName: '',
-    ambientContainerSelector: PHPMyEdit.selector(),
-    dialogHolderCSSId: 'personal-record-dialog',
-    // Now special options for the dialog popup
-    initialViewOperation: options.initialValue === 'View',
-    initialName: pmeOperation,
-    initialValue: 'View',
-    reloadName: pmeOperation,
-    reloadValue: 'View',
-    modalDialog: true,
-    modified: false,
-  };
-
-  // Merge remaining options in.
-  tableOptions = $.extend(tableOptions, options);
+  const tableOptions = Object.assign(
+    {
+      projectId: -1,
+      projectName: '',
+      ambientContainerSelector: PHPMyEdit.selector(),
+      dialogHolderCSSId: 'personal-record-dialog',
+      // Now special options for the dialog popup
+      initialViewOperation: options.initialValue === 'View',
+      initialName: pmeOperation,
+      initialValue: 'View',
+      reloadName: pmeOperation,
+      reloadValue: 'View',
+      modalDialog: true,
+      modified: false,
+    },
+    options,
+  );
 
   if (tableOptions.table === 'Musicians') {
     const projectMode = options.projectId > 0;
@@ -255,7 +255,7 @@ const loadPMETableFiltered = function(form, formData, ids) {
       filterData[name] = value;
     }
   }
-  $.extend(formData, filterData);
+  Object.extend(formData, filterData);
 
   return loadPMETable(form, formData);
 };

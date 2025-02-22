@@ -175,7 +175,7 @@ const tableLoadCallback = function(template, selector, parameters, resizeReadyCB
   if (typeof parameters === 'undefined') {
     parameters = {};
   }
-  parameters = $.extend({ reason: null }, parameters);
+  parameters = Object.assign({ reason: null }, parameters);
 
   const args = [selector, parameters, resizeReadyCB];
   $.merge(args, cbHandle.parameters);
@@ -200,7 +200,7 @@ const pmeSubmitOuterForm = function(outerSelector, options) {
   console.warn('SUBMIT OUTER FORM, NEEDS MORE WORK WITH VUE');
 
   outerSelector = pmeSelector(outerSelector);
-  options = $.extend({}, { keepLocked: false, keepBusy: false, discard: false }, options);
+  options = Object.assign({ keepLocked: false, keepBusy: false, discard: false }, options);
 
   // try a reload while saving data. The purpose is to resolve
   // inter-table dependencies like changed instrument lists and so
@@ -962,7 +962,7 @@ const pmeTableDialogOpen = async function(tableOptions, post) {
                 },
                 tableOptions,
               };
-              parameters = $.extend({}, defaultParameters, parameters);
+              parameters = { ...defaultParameters, ...parameters };
               if (parameters.reason === 'unknown') {
                 console.trace();
               }

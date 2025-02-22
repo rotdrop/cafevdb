@@ -72,7 +72,7 @@ const download = function(url, post, options) {
       },
     };
   }
-  options = $.extend({}, defaultOptions, options);
+  options = { ...defaultOptions, ...options };
   const fail = options.fail;
   options.fail = function(data) {
     Notification.showTemporary(options.errorMessage(url, data));

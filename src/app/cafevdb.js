@@ -171,7 +171,7 @@ const attachToolTip = function(selector, options) {
     html: true,
     placement: 'auto',
   };
-  options = $.extend({}, defaultOptions, options);
+  options = { ...defaultOptions, ...options };
   return $(selector).cafevTooltip(options);
 };
 
@@ -233,7 +233,7 @@ const applyToolTips = function(selector, options, container) {
     options = classOptions;
   } else {
     // supplied options override class options
-    options = $.extend({}, classOptions, options);
+    options = { ...classOptions, ...options };
   }
 
   if (extraClass) {

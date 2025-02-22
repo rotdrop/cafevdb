@@ -69,7 +69,7 @@ const confirm = function(text, title, options, modal, allowHtml) {
     };
   }
 
-  options = $.extend({}, defaultOptions, options);
+  options = { ...defaultOptions, ...options };
 
   if (!options.buttons || options.buttons === OC.dialogs.YES_NO_BUTTONS) {
     options.buttons = {

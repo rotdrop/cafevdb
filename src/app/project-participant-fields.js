@@ -868,7 +868,7 @@ const ready = function(selector, resizeCB) {
       const $row = $self.closest('tr.data-options');
 
       const request = 'generator/define';
-      const data = $.extend({}, fieldTypeData(), $row.data());
+      const data = { ...fieldTypeData(), ...$row.data() };
       const allowed = $row.find(textElementSelector);
       const postData = $.param({ request, data })
             + '&' + allowed.serialize();
@@ -989,7 +989,7 @@ const ready = function(selector, resizeCB) {
       const dflt = $container.find('select.default-multi-value');
 
       const request = 'option/define';
-      const data = $.extend({ default: dflt.val() }, fieldTypeData(), $row.data());
+      const data = Object.assign({ default: dflt.val() }, fieldTypeData(), $row.data());
       const allowed = $row.find(textElementSelector);
       const postData = $.param({ request, data })
             + '&' + allowed.serialize();

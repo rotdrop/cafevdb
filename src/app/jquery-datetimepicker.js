@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -77,22 +77,24 @@ $.fn.datepicker = function(options) {
 };
 
 const datePickerDefaults = $.datepicker.regional[globalState.language] || {};
-$.extend(datePickerDefaults, {
-  beforeShow(inputElement) {
-    const $inputElement = $(inputElement);
-    if ($inputElement.prop('readonly')) {
-      return false;
-    }
-    $inputElement.data(datePickerOldValue, $inputElement.val());
-    return true;
+Object.assign(
+  datePickerDefaults, {
+    beforeShow(inputElement) {
+      const $inputElement = $(inputElement);
+      if ($inputElement.prop('readonly')) {
+        return false;
+      }
+      $inputElement.data(datePickerOldValue, $inputElement.val());
+      return true;
+    },
+    // The datepicker will not trigger the 'change' event when onSelect() is there
+    onSelect(dateText, datePickerInstance) {
+      const $inputElement = $(this);
+      console.debug('Re-trigger jQuery-UI datepicker blur event AFTER set-date');
+      $inputElement.trigger('blur', onselectDatePickerReason);
+    },
   },
-  // The datepicker will not trigger the 'change' event when onSelect() is there
-  onSelect(dateText, datePickerInstance) {
-    const $inputElement = $(this);
-    console.debug('Re-trigger jQuery-UI datepicker blur event AFTER set-date');
-    $inputElement.trigger('blur', onselectDatePickerReason);
-  },
-});
+);
 
 $.datepicker.setDefaults(datePickerDefaults);
 $.datetimepicker.setLocale(globalState.language);
@@ -116,26 +118,29 @@ const dateTimeFormat = [dateFormat, timeFormat].join(', ');
 
 // override datetimepicker a little bit
 const jQueryDateTimePicker = $.fn.datetimepicker;
-$.fn.datetimepicker = function(opt, opt2) {
-  $.extend(opt, {
-    format: dateTimeFormat,
-    formatTime: timeFormat,
-    formatDate: dateFormat,
-    step: 5,
-    onShow(currentTime, $inputElement, event) {
-      return !$inputElement.prop('readonly');
+$.fn.datetimepicker = function(opt, ...rest) {
+  opt = Object.assign(
+    {
+      format: dateTimeFormat,
+      formatTime: timeFormat,
+      formatDate: dateFormat,
+      step: 5,
+      onShow(currentTime, $inputElement, event) {
+        return !$inputElement.prop('readonly');
+      },
+      // onChangeDateTime(currentTime, $inputElement, event) {
+      //   // const dateTimePicker = this;
+      //   // $inputElement.blur();
+      //   console.info('DATETIMEPICKER CURRENT TIME', currentTime);
+      // },
+      onClose(currentTime, $inputElement, event) {
+        // $inputElement.trigger('blur');
+        $inputElement.trigger('focusout');
+      },
     },
-    // onChangeDateTime(currentTime, $inputElement, event) {
-    //   // const dateTimePicker = this;
-    //   // $inputElement.blur();
-    //   console.info('DATETIMEPICKER CURRENT TIME', currentTime);
-    // },
-    onClose(currentTime, $inputElement, event) {
-      // $inputElement.trigger('blur');
-      $inputElement.trigger('focusout');
-    },
-  }, opt);
-  return jQueryDateTimePicker.apply(this, arguments);
+    opt,
+  );
+  return jQueryDateTimePicker.call(this, opt, ...rest);
 };
 
 // Local Variables: ***

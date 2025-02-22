@@ -71,7 +71,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
   }
 
   $thisRow.data('uploadFormId', widgetId);
-  uploadUrls = $.extend({}, defaultUploadUrls, uploadUrls);
+  uploadUrls = { ...defaultUploadUrls, ...uploadUrls };
 
   const $parentFolder = $thisRow.find('.operation.open-parent');
   const $deleteUndelete = $thisRow.find('.operation.delete-undelete');

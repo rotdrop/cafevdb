@@ -188,7 +188,7 @@ const mandatesInit = function(data, onChangeCallback) {
   });
 
   popup.on('click', mandateFormSelector + ' ' + downloadPrefilledSelector, function(event) {
-    const sepaId = $.extend({}, popup.data('sepaId'));
+    const sepaId = { ...popup.data('sepaId') };
     if (popup.find(projectIdAllSelector).prop('checked')) {
       // request pre-filled form for club-member
       sepaId.projectId = 0;
@@ -728,7 +728,7 @@ const mandateLoad = function(options) {
     fail() {},
     always() {},
   };
-  options = $.extend({}, defaultOptions, options);
+  options = { ...defaultOptions, ...options };
 
   $.post(generateAppUrl('finance/sepa/debit-mandates/dialog'), options.sepaId)
     .fail(function(xhr, status, errorThrown) {
@@ -764,7 +764,7 @@ const mandateStore = function(options) {
     fail() {},
     always() {},
   };
-  options = $.extend({}, defaultOptions, options);
+  options = { ...defaultOptions, ...options };
 
   if (!checkInvalidInputs(options.form)) {
     options.fail();
