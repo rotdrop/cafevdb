@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,36 +24,38 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IRequest;
 use OCP\IL10N;
+use OCP\IRequest;
 
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MigrationsService;
 
 /** AJAX end-points for database migrations. */
 class MigrationsController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const ALL_MIGRATIONS = 'all';
-  const UNAPPLIED_MIGRATIONS = 'unapplied';
   const LATEST_MIGRATION = 'latest';
   const MIGRATION_DESCRIPTION = 'description';
+  const UNAPPLIED_MIGRATIONS = 'unapplied';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    protected ConfigService $configService,
     private MigrationsService $migrationsService,
+    protected ConfigService $configService,
+    protected IL10N $l,
   ) {
     parent::__construct($appName, $request);
-
-    $this->l = $this->l10N();
   }
   // phpcs:enable
 
@@ -113,14 +115,30 @@ class MigrationsController extends Controller
               try {
                 $this->migrationsService->apply($version);
                 $applied[] = $version;
-              } catch (\Throwable $t) {
-                $data = $this->exceptionChainData($t);
-                $data['migrations'] = [
-                  'payload' => $unapplied,
-                  'handled' => $applied,
-                  'failing' => $version,
+              } catch (Throwable $t) {
+                $context = [
+                  'migrations' => [
+                    'payload' => $unapplied,
+                    'handled' => $applied,
+                    'failing' => $version,
+                  ],
                 ];
-                return self::grumble($data);
+                $message = $this->l->t('Migration step "%1$s" ("%2$s") failed.', [
+                  $version, $unapplied[$version],
+                ]);
+                if (count($applied) > 0) {
+                  $message .= ' ' . $this->l->n(
+                    'The following migration has successfully been applied: "%1$s".',
+                    'The following migrations have successfully been applied: "%1$s".',
+                    count($applied),
+                    join(', ', $applied),
+                  );
+                }
+                $remaining = array_diff(array_keys($unapplied), [ $version, ...$applied ]);
+                if (count($remaining) > 0) {
+                  $message .= ' ' . $this->l->t('Also still pending: "%1$s".', join('", "', $remaining));
+                }
+                throw new Exceptions\EnduserNotificationException($message, 0, $t, context: $context, httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR);
               }
             }
             return self::dataResponse([
@@ -135,13 +153,24 @@ class MigrationsController extends Controller
             try {
               $this->migrationsService->apply($version);
             } catch (\Throwable $t) {
-              $data = $this->exceptionChainData($t);
-              $data['migrations'] = [
-                'payload' => [ $version, ],
-                'handled' => [],
-                'failing' => $version,
+              $description = $this->migrationsService->getDescription($version);
+              $context = [
+                'migrations' => [
+                  'payload' => [ $version => $description, ],
+                  'handled' => [],
+                  'failing' => $version,
+                ],
               ];
-              return self::grumble($data);
+              if ($description) {
+                $message = $this->l->t('Migration step "%1$s" ("%2$s") failed.', [
+                  $version, $description,
+                ]);
+              } else {
+                $message = $this->l->t('Migration step "%1$s" failed.', [
+                  $version,
+                ]);
+              }
+              throw new Exceptions\EnduserNotificationException($message, 0, $t, context: $context, httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR);
             }
             return self::dataResponse([
               'migrations' => [

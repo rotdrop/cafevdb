@@ -24,24 +24,24 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use FilesystemIterator;
+use InvalidArgumentException;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RegexIterator;
+use RuntimeException;
 use Throwable;
 
-use RuntimeException;
-use RegexIterator;
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
-use FilesystemIterator;
-
+use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\AppFramework\IAppContainer;
 
-use OCA\CAFEVDB\Exceptions\EnduserNotificationException;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions\EnduserNotificationException;
 use OCA\CAFEVDB\Maintenance\IMigration;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\InvalidFieldNameException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception as DBALException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\InvalidFieldNameException;
 
 /** Manage database migrations. */
 class MigrationsService
@@ -56,14 +56,17 @@ class MigrationsService
   public const VERSION_REGEXP = '/^\d{14}$/';
 
   /** @var null|array */
-  private $unappliedMigrations = null;
+  private ?array $allMigrations = null;
+
+  /** @var null|array */
+  private ?array $unappliedMigrations = null;
 
   // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
+    protected EntityManager $entityManager,
+    protected IAppContainer $appContainer,
     protected IL10N $l,
     protected ILogger $logger,
-    protected IAppContainer $appContainer,
-    protected EntityManager $entityManager,
   ) {
   }
   // phpcs:enable
@@ -130,31 +133,39 @@ class MigrationsService
   }
 
   /**
-   * Apply the migration with the given version
+   * Apply the migration with the given version.
    *
    * @param string $version
    *
    * @return void
+   *
+   * @throws InvalidArgumentException
    */
   public function apply(string $version):void
   {
     $allMigrations = $this->findMigrations(self::MIGRATIONS_FOLDER);
     if (!empty($allMigrations[$version])) {
       $this->applyMigration($version, $allMigrations[$version]);
+    } else {
+      throw new InvalidArgumentException($this->l->t('A migration with the version "%s" does not exist.', $version));
     }
   }
 
   /**
-   * Get the description of the migration with the given version
+   * Get the description of the migration with the given version.
    *
-   * @param string $className The version (which is also the class-name).
+   * @param string $version
    *
-   * @return string The description
+   * @return null|string The description or null if the migration could not be found.
    */
-  public function description(string $className):string
+  public function description(string $version):string
   {
+    $allMigrations = $this->findMigrations(self::MIGRATIONS_FOLDER);
+    if (empty($allMigrations[$version])) {
+      return null;
+    }
     /** @var IMigration $instance */
-    $instance = $this->appContainer->get($className);
+    $instance = $this->appContainer->get($allMigrations[$version]);
     return $instance->description();
   }
 
@@ -209,7 +220,7 @@ class MigrationsService
         $this->flush();
         break;
       } catch (Throwable $t) {
-        $this->logInfo('Try to sanitize the migrations table');
+        $this->logInfo('Try to sanitize the migrations table: ' . $state);
         $this->sanitizeMigrationsTable();
       }
     }
@@ -222,6 +233,9 @@ class MigrationsService
    */
   protected function ensureMigrationsAreLoaded():void
   {
+    if ($this->allMigrations === null) {
+      $this->allMigrations = $this->findMigrations(self::MIGRATIONS_FOLDER);
+    }
     if ($this->unappliedMigrations === null) {
       $this->unappliedMigrations = $this->findUnappliedMigrations(self::MIGRATIONS_FOLDER);
     }
@@ -317,6 +331,10 @@ ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS run_count INT DEFAULT 1 NOT NULL
    */
   protected function findMigrations(string $directory):array
   {
+    if ($this->allMigrations !== null) {
+      return $this->allMigrations;
+    }
+
     $directory = realpath($directory);
     if ($directory === false || !file_exists($directory) || !is_dir($directory)) {
       return [];
@@ -353,7 +371,9 @@ ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS run_count INT DEFAULT 1 NOT NULL
 
     ksort($migrations);
 
-    return $migrations;
+    $this->allMigrations = $migrations;
+
+    return $this->allMigrations;
   }
 
   /**
