@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020-2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,24 +24,26 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
+use DateTimeInterface;
+
 /** Field $created and setter/getter. */
 trait CreatedAt
 {
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
   /**
-   * @var \DateTimeImmutable
+   * @var DateTimeInterface
    */
-  protected $created;
+  protected DateTimeInterface $created;
 
   /**
    * Sets created.
    *
-   * @param string|int|\DateTimeInterface $created
+   * @param mixed $created
    *
    * @return self
    */
-  public function setCreated($created)
+  public function setCreated(mixed $created):self
   {
     $this->created = self::convertToDateTime($created);
     return $this;
@@ -50,9 +52,9 @@ trait CreatedAt
   /**
    * Returns created.
    *
-   * @return \DateTimeImmutable
+   * @return null|DateTimeInterface
    */
-  public function getCreated()
+  public function getCreated():?DateTimeInterface
   {
     return $this->created;
   }

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -193,7 +193,7 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
    * orphan when it is no longer owned by other directory entries.
    */
   #[ORM\PreRemove]
-  public function preRemove(Event  $event)
+  public function preRemove(Event\PreRemoveEventArgs $event)
   {
     if (empty($this->file)) {
       return;
