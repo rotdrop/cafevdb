@@ -17,7 +17,9 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div :class="['input-wrapper', { empty, required }, ...actionClasses]">
+  <div v-tooltip="tooltipToShow"
+       :class="['input-wrapper', { empty, required }, ...actionClasses]"
+  >
     <label v-if="!labelOutside && inputLabel" :for="selectId" class="select-with-submit-button-label">
       {{ inputLabel }}
     </label>
@@ -29,7 +31,6 @@
         <NcSelect ref="ncSelect"
                   v-bind="$attrs"
                   v-model="value"
-                  v-tooltip="tooltipToShow"
                   :multiple="props.multiple"
                   :label-outside="true"
                   :clearable="props.clearable"
