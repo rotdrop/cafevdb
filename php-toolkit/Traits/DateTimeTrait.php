@@ -3,7 +3,7 @@
  * A collection of reusable traits classes for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -60,7 +60,8 @@ trait DateTimeTrait
         $timeStamp = filter_var($dateTime, FILTER_VALIDATE_FLOAT, [ 'min_range' => 0 ]);
       }
       if ($timeStamp !== false) {
-        return (new DateTimeImmutable())->setTimestamp($timeStamp);
+        // return (new DateTimeImmutable())->setTimestamp($timeStamp); GNAHHHHHHHHHHHHHHHHHHHHHHHHH
+        return (new DateTimeImmutable())->modify('@' . $timeStamp);
       } elseif (is_string($dateTime)) {
         return new DateTimeImmutable($dateTime);
       } else {
