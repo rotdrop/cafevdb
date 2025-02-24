@@ -119,7 +119,8 @@ export const sanitizeTemplateParams = (params: TemplatePostData) => {
           return;
         }
         let del = false;
-        switch (node.nodeType) {
+        const nodeType = node.val === null ? 'value' : node.nodeType;
+        switch (nodeType) {
           case 'value':
             del = node.val === null
               || node.val === undefined
@@ -172,7 +173,8 @@ export const sanitizePostData = (params: TemplatePostData): TemplatePostData => 
           return;
         }
         let del = false;
-        switch (node.nodeType) {
+        const nodeType = node.val === null ? 'value' : node.nodeType;
+        switch (nodeType) {
           case 'value':
             del = node.val === null
               || node.val === undefined
@@ -195,6 +197,8 @@ export const sanitizePostData = (params: TemplatePostData): TemplatePostData => 
       },
     },
   });
+
+  logger.debug('SANITIZE POST DATA RESULT', params);
 
   return params;
 }
