@@ -45,18 +45,21 @@ require('cafevdb.scss');
 
 Object.assign(
   globalState,
-  Object.assign({
-    appName,
-    toolTipsEnabled: true,
-    wysiwygEditor: 'tinymce',
-    language: 'en',
-    readyCallbacks: [], // quasi-document-ready-callbacks
-    creditsTimer: -1,
-    adminContact: t(appName, 'unknown'),
-    phpUserAgent: t(appName, 'unknown'),
-    subscribe: {},
-    initialized: true,
-  }, globalState),
+  Object.assign(
+    {
+      appName,
+      toolTipsEnabled: true,
+      wysiwygEditor: 'tinymce',
+      language: 'en',
+      readyCallbacks: [], // quasi-document-ready-callbacks
+      creditsTimer: -1,
+      adminContact: t(appName, 'unknown'),
+      phpUserAgent: t(appName, 'unknown'),
+      subscribe: {},
+    },
+    globalState,
+    { initialized: true },
+  ),
 );
 
 /**

@@ -24,9 +24,10 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 use OCA\CAFEVDB\Controller\AdminSettingsController;
+use OCA\CAFEVDB\Controller\WebBrowserHistoryController;
 use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 
 /**
  * @file
@@ -173,17 +174,21 @@ $routes = [
     ],
     [
       'name' => 'webBrowserHistory#get',
-      'url' => '/a/session/history/{timestamp}',
+      'url' => '/a/browser/history/{timestamp}/{modeOrKey}',
       'verb' => 'GET',
+      'defaults' => [
+        'timestamp' => WebBrowserHistoryController::GET_REQUEST_ALL,
+        'modeOrKey' => WebBrowserHistoryController::GET_MODE_SHALLOW,
+      ],
     ],
     [
-      'name' => 'webBrowserHistory#get',
-      'url' => '/a/session/history/{timestamp}',
+      'name' => 'webBrowserHistory#put',
+      'url' => '/a/browser/history/{timestamp}',
       'verb' => 'PUT',
     ],
     [
-      'name' => 'webBrowserHistory#get',
-      'url' => '/a/session/history/{timestamp}',
+      'name' => 'webBrowserHistory#delete',
+      'url' => '/a/browser/history/{timestamp}',
       'verb' => 'DELETE',
     ],
     //

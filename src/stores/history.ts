@@ -21,18 +21,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
-import { translate as t } from '@nextcloud/l10n';
-import { defineStore } from 'pinia';
-import { ref, computed, watch, reactive } from 'vue';
-import { useRoute } from 'vue-router/composables';
 import Console from '../util/console.ts';
-import { AppError } from '../types/errors.ts';
-import useErrorHandler from './error-handler.ts';
-import { generatePostHash, sanitizePostData } from '../util/legacy-post-data.ts';
-import type { TemplatePostData } from '../util/legacy-post-data.ts';
+import axios, { type AxiosResponse } from '@nextcloud/axios';
+import generateAppUrl from '../toolkit/util/generate-url.js';
 import getInitialState from '../toolkit/services/InitialStateService.js';
+import moment from '@nextcloud/moment';
 import type { Route, TransitionType } from 'vue-router';
+import type { TemplatePostData } from '../util/legacy-post-data.ts';
+import useErrorHandler from './error-handler.ts';
+import { AppError } from '../types/errors.ts';
+import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
+import { appName } from '../config.ts';
+import { defineStore } from 'pinia';
+import { generatePostHash, sanitizePostData } from '../util/legacy-post-data.ts';
+import { isAxiosError } from '../types/ajax/axios-type-guards.ts';
+import { ref, computed, watch, reactive } from 'vue';
+import { showError, showInfo, showMessage } from '@nextcloud/dialogs';
+import { translate as t } from '@nextcloud/l10n';
+import { useRoute } from 'vue-router/composables';
 
 export const HistoryActionPush = 'push';
 export const HistoryActionPop = 'pop';
@@ -41,19 +47,29 @@ export type HistoryAction = TransitionType;
 
 const storeId = 'history';
 
+export class HistoryStorePersistenceError extends AppError {
+  constructor(...p: ConstructorParameters<ErrorConstructor>) {
+    super({ component: storeId + '-store', type: storeId }, ...p);
+  }
+}
+
 export class HistoryStoreSetupError extends AppError {
   constructor(...p: ConstructorParameters<ErrorConstructor>) {
     super({ component: storeId + '-store', type: storeId }, ...p);
   }
 }
 
-export interface RouterHistoryState {
-  next: string|number|null;
-  prev: string|number|null;
-  key: string;
-  hash: string;
-  position: number|null;
-  readonly post: TemplatePostData,
+export type FetchMode = 'deep'|'shallow';
+export type FetchAll = 'all';
+
+export interface RouterHistoryState<Mode extends FetchMode = 'deep'> {
+  next: string|number|null,
+  prev: string|number|null,
+  key: string,
+  hash: string,
+  position: number|null,
+  path: string,
+  post: Mode extends 'deep' ? TemplatePostData : undefined|TemplatePostData;
 }
 
 interface HistoryInitialState {
@@ -62,6 +78,20 @@ interface HistoryInitialState {
   lastUrlHash?: string,
   lastUrlPath?: string,
 }
+
+export interface HistoryPersistenceRecord<Mode extends FetchMode = 'deep'> {
+  modificationTime?: number,
+  position: string, // current history key
+  history: Record<string, RouterHistoryState<Mode> >,
+  requestData: Mode extends 'deep' ? Record<string, TemplatePostData> : undefined|Record<string, TemplatePostData>,
+}
+
+type LoadHistoryDataType<T extends FetchAll|number, M extends string> =
+ T extends FetchAll
+ ? (M extends FetchMode ? Record<number, HistoryPersistenceRecord<M> > : never)
+ : (M extends FetchMode
+    ? HistoryPersistenceRecord<M>
+    : RouterHistoryState<'deep'>);
 
 export default defineStore(storeId, () => {
   const errorHandlerProvider = useErrorHandler();
@@ -116,12 +146,20 @@ export default defineStore(storeId, () => {
         logger.info('REQUEST DATA MAP', [...Object.entries(requestData)]);
       }
     };
+    // just convert _hash to hash.
+    toJSON() {
+      return Object.fromEntries(
+        Object.entries(this).map(([key, value]) => key === '_hash' ? ['hash', value] : [key, value]),
+      )
+    };
   }
 
   const routerHistory = ref<Record<string, RouterHistoryRecord> >({});
   const currentRoute = useRoute();
 
-  const historyModificationTime = ref<number>(0);
+  const saveTime = ref<number>(0);
+  const modificationTime = ref<number>(0);
+  const updateModificationTime = () => { modificationTime.value = Date.now() / 1000.0; };
 
   const initialHistoryIndex: undefined|string = window?.history?.state?.key;
   const currentHistoryIndex = ref(initialHistoryIndex || '');
@@ -131,8 +169,8 @@ export default defineStore(storeId, () => {
   const pendingHistoryAction = ref<undefined|HistoryAction>(undefined);
   const pendingHistoryKey = ref<undefined|string|number>('initial');
   const currentHistoryState = computed(() => routerHistory.value?.[currentHistoryIndex.value || ''] || null);
-  const prevHistoryIndex = computed(() => currentHistoryState.value.prev);
-  const nextHistoryIndex = computed(() => currentHistoryState.value.next);
+  const prevHistoryIndex = computed(() => currentHistoryState.value?.prev);
+  const nextHistoryIndex = computed(() => currentHistoryState.value?.next);
   const prevHistoryState = computed(() => routerHistory.value?.[prevHistoryIndex.value || ''] || null);
 
   const nextHistoryState = computed(() => routerHistory.value?.[nextHistoryIndex.value || ''] || null);
@@ -175,7 +213,7 @@ export default defineStore(storeId, () => {
       }),
     };
     currentHistoryIndex.value = initialHistoryIndex;
-    historyModificationTime.value = Date.now();
+    updateModificationTime();
     logger.debug('INITIAL ROUTER HISTORY', currentHistoryIndex, { ...routerHistory.value[initialHistoryIndex] });
   };
 
@@ -329,7 +367,7 @@ export default defineStore(storeId, () => {
         logger.info('Replacing route path', currentHistoryState.value.path, route.fullPath);
         currentHistoryState.value.path = route.fullPath;
       }
-      historyModificationTime.value = Date.now();
+      updateModificationTime();
       clearHistoryAction();
       return;
     }
@@ -400,7 +438,7 @@ export default defineStore(storeId, () => {
       }
       history[currentHistoryIndex.value].next = key;
       currentHistoryIndex.value = key;
-      historyModificationTime.value = Date.now();
+      updateModificationTime();
     } else if (pendingHistoryAction.value === 'replace') {
       if (key !== currentHistoryIndex.value) {
         logger.debug('BEFORE ADJUST KEYS', key, currentHistoryIndex.value, { ...history[currentHistoryIndex.value] }, history?.[key]);
@@ -434,10 +472,10 @@ export default defineStore(storeId, () => {
         post: pendingHistoryData.value,
       })
       history[key].path = route.fullPath;
-      historyModificationTime.value = Date.now();
+      updateModificationTime();
     } else {
       currentHistoryIndex.value = window.history?.state?.key || 'initial';
-      historyModificationTime.value = Date.now();
+      updateModificationTime();
     }
     for (const [key, record] of Object.entries(routerHistory.value)) {
       if (key !== record.key) {
@@ -457,7 +495,149 @@ export default defineStore(storeId, () => {
     });
   }
 
-  const saveHistoryData = () => {
+  /**
+   * Flat array of available history state in the database. Entries
+     are the time-stamps.
+   */
+  const savedHistoryStates = ref<number[]>([]);
+  axios.get<any, AxiosResponse<number[]>, any>(generateAppUrl('a/browser/history/timestamps'))
+    .then((response) => {
+      savedHistoryStates.value = response.data.map(stamp => +(+stamp).toFixed(3));
+      logger.info('SAVE HISTORY STATES', { savedHistoryStates: savedHistoryStates.value });
+    })
+    .catch(e => {
+      const error = new HistoryStorePersistenceError(
+        t(appName, 'Unable to load the timestamps of the available history states.'),
+        { cause: e },
+      );
+      if (errorHandler.value) {
+        errorHandler.value(error);
+      } else {
+        throw error;
+      }
+    });
+
+  const loadHistoryData = async <T extends FetchAll|number, M extends string>(timestamp: T, modeOrKey: M)
+    : Promise<undefined|LoadHistoryDataType<T, M> > => {
+    const url = generateAppUrl('a/browser/history/{timestamp}/{modeOrKey}', {
+      timestamp,
+      modeOrKey,
+    });
+    try {
+      const response: AxiosResponse<LoadHistoryDataType<T, M> > = await axios.get(url);
+      return response.data;
+    } catch (e) {
+      let message: string;
+      if (timestamp === 'all') {
+        message = t(appName, 'Unable to load the available history states.');
+      } else if (modeOrKey === 'shallow' || modeOrKey === 'deep') {
+        message = t(appName, 'Unable to load the history states at time {time} (timestamp: {timestamp}).', {
+          time: moment((timestamp as number) * 1000).format('LLL'),
+          timestamp,
+        });
+      } else {
+        message = t(appName, 'Unable to load the history state data for "{key}" at time {time} (timestamp: {timestamp}).', {
+          key:  modeOrKey,
+          time: moment((timestamp as number) * 1000).format('LLL'),
+          timestamp,
+        });
+      }
+      const error = new HistoryStorePersistenceError(message, { cause: e });
+      if (errorHandler.value) {
+        errorHandler.value(error);
+      } else {
+        throw error;
+      }
+    }
+  };
+
+  const loadHistoryState = (timestamp: number, modeOrKey: FetchMode = 'shallow') => loadHistoryData(timestamp, modeOrKey);
+
+  function loadHistoryStates(): ReturnType<typeof loadHistoryData<'all', 'shallow'> >;
+  function loadHistoryStates<M extends FetchMode>(mode: M): ReturnType<typeof loadHistoryData<'all', M> >;
+  function loadHistoryStates(mode: FetchMode = 'shallow') {
+    return loadHistoryData('all', mode);
+  }
+  const loadHistoryEntry = (timestamp: number, key: string) => loadHistoryData(timestamp, key);
+
+  /**
+   * Collect the current history state into one JSON serializatble
+   * object for persisting into databases or the browser's
+   * localStorage area. localStorage is for one machine and one local
+   * user, storing it in the database enables a restore from another
+   * client machine.
+   */
+  const prepareHistorySaveRecord = () => {
+    return {
+      position: currentHistoryIndex.value,
+      requestData, // the post data proper
+      history: routerHistory.value,
+    }
+  };
+
+  /**
+   * Save the current history data to the DB.
+   */
+  const saveHistoryData = async () => {
+    // logger.info('PREPARED HISTORY DATA', JSON.stringify(prepareHistorySaveRecord(), undefined, 2));
+    const historySaveData = prepareHistorySaveRecord();
+    const url = generateAppUrl(
+      'a/browser/history/{timestamp}', {
+        timestamp: modificationTime.value,
+      });
+    try {
+      const response: AxiosResponse<{ message?: string }> = await axios.put(url, historySaveData);
+      if (response.data.message) {
+        showMessage(response.data.message);
+      }
+      saveTime.value = modificationTime.value;
+      if (!savedHistoryStates.value.includes(modificationTime.value)) {
+
+      }
+    } catch (e: any) {
+      if (isAxiosError(e) && e.status === HttpStatusCodes.CONFLICT) {
+        showError(t(appName, 'The current history state has already been saved.'));
+      } else {
+        const error = new HistoryStorePersistenceError(
+          t(appName, 'Unable to persist current history state to the database.'),
+          { cause: e },
+        );
+        if (errorHandler.value) {
+          errorHandler.value(error);
+        } else {
+          throw error;
+        }
+      }
+    }
+  };
+
+  /**
+   * Just delete the history record at the given time.
+   */
+  const deleteHistoryState = async (timestamp: number) => {
+    const url = generateAppUrl('a/browser/history/{timestamp}', { timestamp });
+    const time = moment(timestamp * 1000).format('LLL');
+
+    try {
+      await axios.delete(url);
+      showInfo(t(appName, 'The history state at time {time} has been deleted.', { time }));
+      return true;
+    } catch (e) {
+      if (isAxiosError(e) && e.status === HttpStatusCodes.NOT_FOUND) {
+        showError(t(appName, 'The history state at time {time} could not be delete as it does not seem to exist on the server.', { time }));
+      } else {
+        const error = new HistoryStorePersistenceError(
+          t(appName, 'Unable to delete the history state at time {time} from the database.', { time }),
+          { cause: e },
+        );
+        if (errorHandler.value) {
+          errorHandler.value(error);
+        } else {
+          throw error;
+        }
+      }
+      return false; // maybe not reached
+    }
   };
 
   return {
@@ -484,6 +664,13 @@ export default defineStore(storeId, () => {
     lastUrlHash,
     lastUrlData,
     saveHistoryData,
-    historyModificationTime,
+    modificationTime,
+    saveTime,
+    savedHistoryStates,
+    loadHistoryData,
+    loadHistoryState,
+    loadHistoryStates,
+    loadHistoryEntry,
+    deleteHistoryState,
   };
 });

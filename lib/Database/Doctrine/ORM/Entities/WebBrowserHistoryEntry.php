@@ -24,69 +24,132 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 /**
  * Generic directory entry for a database-backed file.
  */
-#[ORM\Table(name: 'WebBrowserHistoryEntry')]
+#[ORM\Table(name: 'WebBrowserHistoryEntries')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class WebBrowserHistoryEntry implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
 
-  #[ORM\ManyToOne(targetEntity: WebBrowserHistoryState::class, cascade: ['persist'], inversedBy: 'chain')]
+  #[ORM\ManyToOne(targetEntity: WebBrowserHistoryState::class, cascade: ['persist'], inversedBy: 'stack')]
   #[ORM\Id]
-  protected WebBrowserHistoryEntry $state;
+  protected WebBrowserHistoryState $state;
 
   /**
    * @var int
    */
-  #[ORM\Column(type: 'string', length: 16, nullable: false, options: ['collation' => 'ascii_general_ci'])]
+  #[ORM\Column(type: 'string', length: 16, nullable: false, options: ['collation' => 'ascii_bin'])]
   #[ORM\GeneratedValue(strategy: 'NONE')]
   #[ORM\Id]
-  protected $key;
+  protected string $key;
+
+  #[ORM\Column(type: 'string', length: 32768, nullable: false, options: ['collation' => 'ascii_bin'])]
+  protected string $path;
 
   #[ORM\JoinColumn(name: 'next_state_id', referencedColumnName: 'state_id', nullable: true)]
   #[ORM\JoinColumn(name: 'next_key', referencedColumnName: 'key', nullable: true)]
-  #[ORM\OneToOne(targetEntity: WebBrowserHistoryEntry::class)]
-  protected $next;
+  #[ORM\OneToOne(targetEntity: WebBrowserHistoryEntry::class, fetch: 'EXTRA_LAZY')]
+  protected ?WebBrowserHistoryEntry $next;
 
   #[ORM\JoinColumn(name: 'prev_state_id', referencedColumnName: 'state_id', nullable: true)]
   #[ORM\JoinColumn(name: 'prev_key', referencedColumnName: 'key', nullable: true)]
-  #[ORM\OneToOne(targetEntity: WebBrowserHistoryEntry::class)]
-  protected $prev;
-
+  #[ORM\OneToOne(targetEntity: WebBrowserHistoryEntry::class, fetch: 'EXTRA_LAZY')]
+  protected ?WebBrowserHistoryEntry $prev;
 
   #[ORM\JoinColumn(name: 'data_hash', referencedColumnName: 'hash', nullable: false)]
-  #[ORM\ManyToOne(targetEntity: WebBrowserHistoryData::class, cascade: ['persist'], inversedBy: 'entries')]
-  protected ?WebBrowserHistoryData $data;
+  #[ORM\ManyToOne(targetEntity: WebBrowserHistoryData::class, cascade: ['persist'], inversedBy: 'entries', fetch: 'EXTRA_LAZY')]
+  protected WebBrowserHistoryData $data;
 
-  /** @return null|string */
-  public function getKey():?string
+  /** {@inheritdoc} */
+  public function __construct(
+    ?string $key = null,
+    ?WebBrowserHistoryState $state = null,
+    ?WebBrowserHistoryEntry $next = null,
+    ?string $path = null,
+    ?WebBrowserHistoryEntry $prev = null,
+    ?WebBrowserHistoryData $data = null,
+  ) {
+    $key && $this->key = $key;
+    $state && $this->state = $state;
+    $path && $this->path = $path;
+    $this->setPrev($prev);
+    $this->setNext($next);
+    $data && $this->setData($data);
+  }
+
+  /** @return WebBrowserHistoryState */
+  public function getState():WebBrowserHistoryState
+  {
+    return $this->state;
+  }
+
+  /**
+   * @param WebBrowserHistoryState $state
+   *
+   * @return WebBrowserHistoryEntry
+   */
+  public function setState(WebBrowserHistoryState $state):WebBrowserHistoryEntry
+  {
+    $this->state = $state;
+
+    return $this;
+  }
+
+  /** @return string */
+  public function getKey():string
   {
     return $this->key;
   }
 
   /**
-   * @param null|string $key
+   * @param string $key
    *
-   * @return DatabaseStorageDirEntry
+   * @return WebBrowserHistoryEntry
    */
-  public function setKey(?string $key):WebBrowserHistoryEntry
+  public function setKey(string $key):WebBrowserHistoryEntry
   {
     $this->key = $key;
 
     return $this;
   }
 
+  /** @return string */
+  public function getPath():string
+  {
+    return $this->path;
+  }
+
+  /**
+   * @param string $path
+   *
+   * @return WebBrowserHistoryEntry
+   */
+  public function setPath(string $path):WebBrowserHistoryEntry
+  {
+    $this->path = $path;
+
+    return $this;
+  }
+
   /** @return null|string */
+  public function getPrevKey():?string
+  {
+    return $this->prev ? $this->prev->getKey() : null;
+  }
+
+  /** @return null|WebBrowserHistoryEntry */
   public function getPrev():?WebBrowserHistoryEntry
   {
     return $this->prev;
@@ -95,7 +158,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   /**
    * @param null|WebBrowserHistoryEntry $prev
    *
-   * @return DatabaseStorageDirEntry
+   * @return WebBrowserHistoryEntry
    */
   public function setPrev(?WebBrowserHistoryEntry $prev):WebBrowserHistoryEntry
   {
@@ -105,6 +168,12 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   }
 
   /** @return null|string */
+  public function getNextKey():?string
+  {
+    return $this->next ? $this->next->getKey() : null;
+  }
+
+  /** @return null|WebBrowserHistoryEntry */
   public function getNext():?WebBrowserHistoryEntry
   {
     return $this->next;
@@ -113,7 +182,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   /**
    * @param null|WebBrowserHistoryEntry $next
    *
-   * @return DatabaseStorageDirEntry
+   * @return WebBrowserHistoryEntry
    */
   public function setNext(?WebBrowserHistoryEntry $next):WebBrowserHistoryEntry
   {
@@ -122,8 +191,8 @@ class WebBrowserHistoryEntry implements \ArrayAccess
     return $this;
   }
 
-  /** @return null|string */
-  public function getData():?WebBrowserHistoryData
+  /** @return WebBrowserHistoryData */
+  public function getData():WebBrowserHistoryData
   {
     return $this->data;
   }
@@ -131,30 +200,32 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   /**
    * @param WebBrowserHistoryData $data
    *
-   * @return DatabaseStorageDirEntry
+   * @return WebBrowserHistoryEntry
    */
   public function setData(WebBrowserHistoryData $data):WebBrowserHistoryEntry
   {
     $this->data = $data;
+    $data->addToEntry($this);
 
     return $this;
   }
 
-  /** @return null|string */
-  public function getState():?WebBrowserHistoryState
+  /** @return string */
+  public function getDataHash():string
   {
-    return $this->state;
+    return $this->data->getHash();
   }
 
   /**
-   * @param WebBrowserHistoryState $state
-   *
-   * @return StatebaseStorageDirEntry
+   * {@inheritdoc}
    */
-  public function setState(WebBrowserHistoryState $state):WebBrowserHistoryEntry
+  #[ORM\PreRemove]
+  public function preRemove(Event\PreRemoveEventArgs $event)
   {
-    $this->state = $state;
-
-    return $this;
+    // nope, need not be, would have to traverse the list
+    // $this->data->removeEncryptionIdentity($this->state->getUserId());
+    $this->data->removeFromEntry($this);
+    $this->setPrev(null);
+    $this->setNext(null);
   }
 }

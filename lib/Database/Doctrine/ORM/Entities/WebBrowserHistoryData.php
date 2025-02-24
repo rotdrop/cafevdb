@@ -24,19 +24,22 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping as MediaMonks;
 
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 /**
  * Generic directory entry for a database-backed file.
  */
 #[ORM\Table(name: 'WebBrowserHistoryData')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class WebBrowserHistoryData implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -48,19 +51,27 @@ class WebBrowserHistoryData implements \ArrayAccess
   #[ORM\Id]
   protected $hash;
 
-  #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'data', cascade: ['persist'], orphanRemoval: true, indexBy: 'key')]
+  #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'data', cascade: ['persist'], orphanRemoval: true, indexBy: 'key', fetch: 'EXTRA_LAZY')]
   protected Collection $entries;
 
   #[MediaMonks\Transformable(name: 'encrypt', override: true, context: 'encryptionContext')]
-  #[ORM\Column(type: 'json', nullable: false)]
-  protected ?string $data;
+  #[ORM\Column(type: 'blob', nullable: false, options: ['comment' => 'JSON encrypted'])]
+  protected $data;
 
-    /** {@inheritdoc} */
-  public function __construct(?string $hash, ?array $data)
+  /**
+   * @var array
+   *
+   * In memory encryption context to support multi user encryption. This is a
+   * multi-field encryption context indexed by the property name.
+   */
+  protected array $encryptionContext = [];
+
+  /** {@inheritdoc} */
+  public function __construct(string $hash, array $data)
   {
-    $this->entries = new ArrayCollection;
-    $this->data = $data;
+    $this->setData($data);
     $this->hash = $hash;
+    $this->entries = new ArrayCollection;
   }
 
   /** @return null|string */
@@ -72,7 +83,7 @@ class WebBrowserHistoryData implements \ArrayAccess
   /**
    * @param null|string $hash
    *
-   * @return DatabaseStorageDirEntry
+   * @return WebBrowserHistoryData
    */
   public function setHash(?string $hash):WebBrowserHistoryData
   {
@@ -81,36 +92,36 @@ class WebBrowserHistoryData implements \ArrayAccess
     return $this;
   }
 
-  /** @return null|string */
+  /** @return array */
   public function getData():array
   {
-    return $this->data;
+    return json_decode($this->data, true);
   }
 
   /**
    * @param array $data
    *
-   * @return DatabaseStorageDirEntry
+   * @return WebBrowserHistoryData
    */
   public function setData(array $data):WebBrowserHistoryData
   {
-    $this->data = $data;
+    $this->data = json_encode($data, JSON_FORCE_OBJECT);
 
     return $this;
   }
 
-  /** @return null|string */
+  /** @return Collection */
   public function getEntries():Collection
   {
     return $this->entries;
   }
 
   /**
-   * @param null|string $entries
+   * @param Collection $entries
    *
-   * @return EntriesbaseStorageDirEntry
+   * @return WebBrowserHistoryData
    */
-  public function setEntries(Collection $entries):WebBrowserHistoryEntries
+  public function setEntries(Collection $entries):WebBrowserHistoryData
   {
     $this->entries = $entries;
 
@@ -120,12 +131,12 @@ class WebBrowserHistoryData implements \ArrayAccess
   /**
    * @param WebBrowserHistoryEntry $entry
    *
-   * @return EntriesbaseStorageDirEntry
+   * @return WebBrowserHistoryData
    */
   public function addToEntry(WebBrowserHistoryEntry $entry):WebBrowserHistoryData
   {
-    $this->entries->setKey($entry->getKey(), $entry);
-    $entry->setData($this);
+    $this->entries->set($entry->getKey(), $entry);
+    $this->addEncryptionIdentity($entry->getState()->getUserId());
 
     return $this;
   }
@@ -133,9 +144,74 @@ class WebBrowserHistoryData implements \ArrayAccess
   /**
    * @param WebBrowserHistoryEntry $entry
    *
-   * @return EntriesbaseStorageDirEntry
+   * @return WebBrowserHistoryData
    */
   public function removeFromEntry(WebBrowserHistoryEntry $entry):WebBrowserHistoryData
   {
+    if ($this->entries->containsKey($entry->getKey())) {
+      $this->entries->remove($entry->getKey());
+    }
+    return $this;
+  }
+
+  /**
+   * Add a user-id or group-id to the list of "encryption identities",
+   * i.e. the list of identities which can read and write this entry.
+   *
+   * @param string $personality
+   *
+   * @return WebBrowserHistoryData
+   */
+  public function addEncryptionIdentity(string $personality):WebBrowserHistoryData
+  {
+    if (empty($this->encryptionContext)) {
+      $this->encryptionContext = [];
+    }
+    if (!in_array($personality, $this->encryptionContext)) {
+      $this->encryptionContext[] = $personality;
+    }
+    return $this;
+  }
+
+  /**
+   * Remove a user-id or group-id to the list of "encryption identities",
+   * i.e. the list of identities which can read and write this entry.
+   *
+   * @param string $personality
+   *
+   * @return WebBrowserHistoryData
+   */
+  public function removeEncryptionIdentity(string $personality):WebBrowserHistoryData
+  {
+    $pos = array_search($personality, $this->encryptionContext??[]);
+    if ($pos !== false) {
+      unset($this->encryptionContext[pos]);
+      $this->encryptionContext = array_values($this->encryptionContext);
+    }
+    return $this;
+  }
+
+  /**
+   * Ensure that the encryptionContext contains the user-id of the history owner.
+   *
+   * @return void
+   */
+  private function sanitizeEncryptionContext()
+  {
+    /** @var WebBrowserHistoryEntry $entry */
+    foreach ($this->entries as $entry) {
+      $this->addEncryptionIdentity($entry->getState()->getUserId());
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  #[ORM\PostLoad]
+  #[ORM\PrePersist]
+  public function handleLifecycleEvent(
+    Event\PostLoadEventArgs|Event\PrepersistEventArgs $eventArgs,
+  ) {
+    $this->sanitizeEncryptionContext();
   }
 }

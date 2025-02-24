@@ -34,49 +34,56 @@ class CreateWebBrowserHistoryTables extends AbstractMigration
     self::STRUCTURAL => [
       "CREATE TABLE IF NOT EXISTS
   WebBrowserHistoryData
-  (hash CHAR(64) NOT NULL COLLATE `ascii_general_ci`, data JSON NOT NULL COMMENT '(DC2Type:json)', PRIMARY KEY(hash))",
-      "CREATE TABLE IF NOT EXISTS
-  WebBrowserHistoryEntry
-  (state_id INT NOT NULL,
-   `key` VARCHAR(16) NOT NULL COLLATE `ascii_general_ci`,
-   next_state_id INT DEFAULT NULL,
-   next_key VARCHAR(16) DEFAULT NULL COLLATE `ascii_general_ci`,
-   prev_state_id INT DEFAULT NULL,
-   prev_key VARCHAR(16) DEFAULT NULL COLLATE `ascii_general_ci`,
-   data_hash CHAR(64) NOT NULL COLLATE `ascii_general_ci`,
-   INDEX IDX_DD9282C45D83CC1 (state_id),
-   INDEX IDX_DD9282C43DC2702F7451AA4E (next_state_id, next_key),
-   INDEX IDX_DD9282C46A3487C77A916932 (prev_state_id, prev_key),
-   INDEX IDX_DD9282C46AF7A95A (data_hash),
-   PRIMARY KEY(state_id, `key`)
+  (
+    hash CHAR(64) NOT NULL COLLATE `ascii_general_ci`,
+    data LONGBLOB NOT NULL COMMENT 'JSON encrypted',
+    PRIMARY KEY(hash)
   )",
       "CREATE TABLE IF NOT EXISTS
-  WebBrowserHistoryState
-  (id INT AUTO_INCREMENT NOT NULL,
-   pos_state_id INT NOT NULL,
-   pos_key VARCHAR(16) NOT NULL COLLATE `ascii_general_ci`,
-   user_id VARCHAR(256) NOT NULL,
-   created DATETIME(6) NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-   updated DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
-   INDEX IDX_5520CD4F4CDC76F1D06B458A (pos_state_id, pos_key),
-   UNIQUE INDEX UNIQ_5520CD4FA76ED395B23DB7B8 (user_id, created),
-   PRIMARY KEY(id)
+  WebBrowserHistoryEntries
+  (
+    state_id INT NOT NULL,
+    `key` VARCHAR(16) NOT NULL COLLATE `ascii_bin`,
+    path VARCHAR(32768) CHARACTER SET ascii NOT NULL COLLATE `ascii_bin`,
+    next_state_id INT DEFAULT NULL,
+    next_key VARCHAR(16) DEFAULT NULL COLLATE `ascii_bin`,
+    prev_state_id INT DEFAULT NULL,
+    prev_key VARCHAR(16) DEFAULT NULL COLLATE `ascii_bin`,
+    data_hash CHAR(64) NOT NULL COLLATE `ascii_general_ci`,
+    INDEX IDX_2059233F5D83CC1 (state_id),
+    INDEX IDX_2059233F3DC2702F7451AA4E (next_state_id, next_key),
+    INDEX IDX_2059233F6A3487C77A916932 (prev_state_id, prev_key),
+    INDEX IDX_2059233F6AF7A95A (data_hash),
+    PRIMARY KEY(state_id, `key`)
   )",
-      "ALTER TABLE WebBrowserHistoryEntry
-  ADD CONSTRAINT FK_DD9282C45D83CC1
-  FOREIGN KEY IF NOT EXISTS (state_id) REFERENCES WebBrowserHistoryState (id)",
-      "ALTER TABLE WebBrowserHistoryEntry
-  ADD CONSTRAINT FK_DD9282C43DC2702F7451AA4E
-  FOREIGN KEY IF NOT EXISTS (next_state_id, next_key) REFERENCES WebBrowserHistoryEntry (state_id, `key`)",
-      "ALTER TABLE WebBrowserHistoryEntry
-  ADD CONSTRAINT FK_DD9282C46A3487C77A916932
-  FOREIGN KEY IF NOT EXISTS (prev_state_id, prev_key) REFERENCES WebBrowserHistoryEntry (state_id, `key`)",
-      "ALTER TABLE WebBrowserHistoryEntry
-  ADD CONSTRAINT FK_DD9282C46AF7A95A
+      "CREATE TABLE IF NOT EXISTS
+  WebBrowserHistoryStates
+  (
+    id INT AUTO_INCREMENT NOT NULL,
+    pos_state_id INT DEFAULT NULL,
+    pos_key VARCHAR(16) DEFAULT NULL COLLATE `ascii_bin`,
+    user_id VARCHAR(256) NOT NULL,
+    created DATETIME(6) NOT NULL COMMENT '(DC2Type:datetime_immutable)',
+    updated DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
+    INDEX IDX_FD38B3C74CDC76F1D06B458A (pos_state_id, pos_key),
+    UNIQUE INDEX UNIQ_FD38B3C7A76ED395B23DB7B8 (user_id, created),
+    PRIMARY KEY(id)
+  )",
+      "ALTER TABLE WebBrowserHistoryEntries
+  ADD CONSTRAINT FK_2059233F5D83CC1
+  FOREIGN KEY IF NOT EXISTS (state_id) REFERENCES WebBrowserHistoryStates (id)",
+      "ALTER TABLE WebBrowserHistoryEntries
+  ADD CONSTRAINT FK_2059233F3DC2702F7451AA4E
+  FOREIGN KEY IF NOT EXISTS (next_state_id, next_key) REFERENCES WebBrowserHistoryEntries (state_id, `key`)",
+      "ALTER TABLE WebBrowserHistoryEntries
+  ADD CONSTRAINT FK_2059233F6A3487C77A916932
+  FOREIGN KEY IF NOT EXISTS (prev_state_id, prev_key) REFERENCES WebBrowserHistoryEntries (state_id, `key`)",
+      "ALTER TABLE WebBrowserHistoryEntries
+  ADD CONSTRAINT FK_2059233F6AF7A95A
   FOREIGN KEY IF NOT EXISTS (data_hash) REFERENCES WebBrowserHistoryData (hash)",
-      "ALTER TABLE WebBrowserHistoryState
-  ADD CONSTRAINT FK_5520CD4F4CDC76F1D06B458A
-  FOREIGN KEY IF NOT EXISTS (pos_state_id, pos_key) REFERENCES WebBrowserHistoryEntry (state_id, `key`)",
+      "ALTER TABLE WebBrowserHistoryStates
+  ADD CONSTRAINT FK_FD38B3C74CDC76F1D06B458A
+  FOREIGN KEY IF NOT EXISTS (pos_state_id, pos_key) REFERENCES WebBrowserHistoryEntries(state_id, `key`)",
     ],
   ];
 

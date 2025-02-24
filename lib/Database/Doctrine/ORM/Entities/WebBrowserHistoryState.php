@@ -25,25 +25,29 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 /**
  * Generic directory entry for a database-backed file.
  */
-#[ORM\Table(name: 'WebBrowserHistoryState')]
+#[ORM\Table(name: 'WebBrowserHistoryStates')]
 #[ORM\UniqueConstraint(columns: ['user_id', 'created'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class WebBrowserHistoryState implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\UpdatedAtEntity;
+  use CAFEVDB\Traits\CreatedAt;
 
   /**
    * @var int
@@ -56,28 +60,31 @@ class WebBrowserHistoryState implements \ArrayAccess
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   protected $id;
 
-  #[ORM\Column(type: 'string', length: 256)]
+  #[ORM\Column(type: 'string', length: 256, nullable: false)]
   protected string $userId;
 
   #[ORM\Column(type: 'datetime_immutable', nullable: false)]
-  protected DateTimeImmutable $created;
+  protected DateTimeInterface $created;
 
-  #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'state', cascade: ['persist'], orphanRemoval: true, indexBy: 'key')]
-  protected ?Collection $chain;
+  #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'state', cascade: ['persist', 'remove'], orphanRemoval: true, indexBy: 'key', fetch: 'EXTRA_LAZY')]
+  protected Collection $stack;
 
-  #[ORM\JoinColumn(name: 'pos_state_id', referencedColumnName: 'state_id', nullable: false)]
-  #[ORM\JoinColumn(name: 'pos_key', referencedColumnName: 'key', nullable: false)]
-  #[ORM\OneToOne(targetEntity: WebBrowserHistoryEntry::class)]
+  #[ORM\JoinColumn(name: 'pos_state_id', referencedColumnName: 'state_id', nullable: true)]
+  #[ORM\JoinColumn(name: 'pos_key', referencedColumnName: 'key', nullable: true)]
+  #[ORM\OneToOne(targetEntity: WebBrowserHistoryEntry::class, cascade: ['remove'], fetch: 'EXTRA_LAZY')]
   protected ?WebBrowserHistoryEntry $pos;
 
   /** {@inheritdoc} */
-  public function __construct()
+  public function __construct(mixed $created, string $userId)
   {
-    $this->chain = new ArrayCollection;
+    $this->setCreated($created);
+    $this->setUserId($userId);
+
+    $this->stack = new ArrayCollection;
   }
 
   /** @return null|int */
-  public function getId():?int
+  public function getId():int
   {
     return $this->id;
   }
@@ -85,30 +92,98 @@ class WebBrowserHistoryState implements \ArrayAccess
   /**
    * @param null|int $id
    *
-   * @return DatabaseStorageDirEntry
+   * @return WebBrowserHistoryState
    */
-  public function setId(?int $id):WebBrowserHistoryState
+  public function setId(int $id):WebBrowserHistoryState
   {
     $this->id = $id;
 
     return $this;
   }
 
-  /** @return null|string */
-  public function getUserId():?string
+  /** @return string */
+  public function getUserId():string
   {
     return $this->userId;
   }
 
   /**
-   * @param null|string $userId
+   * @param string $userId
    *
-   * @return DatabaseStorageDirEntry
+   * @return WebBrowserHistoryState
    */
-  public function setUserId(?string $userId):WebBrowserHistoryState
+  public function setUserId(string $userId):WebBrowserHistoryState
   {
     $this->userId = $userId;
 
     return $this;
+  }
+
+  /** @return Collection */
+  public function getStack():Collection
+  {
+    return $this->stack;
+  }
+
+  /**
+   * @param Collection $stack
+   *
+   * @return WebBrowserHistoryState
+   */
+  public function setStack(Collection $stack):WebBrowserHistoryState
+  {
+    $this->stack = $stack;
+
+    return $this;
+  }
+
+  /** @return WebBrowserHistoryEntry */
+  public function getPos():?WebBrowserHistoryEntry
+  {
+    return $this->pos;
+  }
+
+  /**
+   * @param null|WebBrowserHistoryEntry $pos
+   *
+   * @return WebBrowserHistoryState
+   */
+  public function setPos(?WebBrowserHistoryEntry $pos):WebBrowserHistoryState
+  {
+    $this->pos = $pos;
+
+    return $this;
+  }
+
+  /**
+   * @param WebBrowserHistoryEntry $entry
+   *
+   * @return WebBrowserHistoryState
+   */
+  public function addEntry(WebBrowserHistoryEntry $entry):WebBrowserHistoryState
+  {
+    $entry->setState($this);
+    $this->stack->set($entry->getKey(), $entry);
+
+    return $this;
+  }
+
+  /**
+   * @param ?string $key
+   *
+   * @return null|WebBrowserHistoryEntry
+   */
+  public function getEntry(?string $key): ?WebBrowserHistoryEntry
+  {
+    return ($key !== null && $this->stack->containsKey($key)) ? $this->stack->get($key) : null;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  #[ORM\PreRemove]
+  public function preRemove(Event\PreRemoveEventArgs $event)
+  {
+    // $this->setPos(null);
   }
 }

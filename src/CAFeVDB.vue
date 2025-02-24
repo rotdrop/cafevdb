@@ -31,7 +31,7 @@
                              @onTransitionError="onTransitionError"
         >
           <template #icon>
-            <PageTemplateIcon page-template="home" />
+            <IconPageTemplate page-template="home" />
           </template>
         </NcAppNavigationItem>
         <NcAppNavigationItem v-if="projectMode"
@@ -39,7 +39,7 @@
                              @click="openProjectOverview"
         >
           <template #icon>
-            <PageTemplateIcon page-template="project-overview" />
+            <IconPageTemplate page-template="project-overview" />
           </template>
         </NcAppNavigationItem>
         <NcAppNavigationItem v-for="item in authorizedNavigationItems"
@@ -57,7 +57,7 @@
                              @onTransitionError="onTransitionError"
         >
           <template #icon>
-            <PageTemplateIcon :page-template="item.template" />
+            <IconPageTemplate :page-template="item.template" />
           </template>
         </NcAppNavigationItem>
       </template>
@@ -65,6 +65,7 @@
         <NcAppNavigationSettings :exclude-click-outside-selectors="[
           '#appsettings_popup *',
           '.vs__dropdown-menu',
+          '.v-popper--theme-dropdown',
         ]"
         >
           <NcCheckboxRadioSwitch v-tooltip="hints['show-tool-tips']"
@@ -72,20 +73,33 @@
           >
             {{ t(appId, 'Tool-Tips') }}
           </NcCheckboxRadioSwitch>
-          <NcCheckboxRadioSwitch v-tooltip="hints['restore-history']"
-                                 :checked.sync="globalState.restoreHistory"
+          <NcActions :menu-name="t(appName, 'Web Browser History')"
+                     class="web-browser-history-menu"
           >
-            {{ t(appId, 'Restore Last View') }}
-          </NcCheckboxRadioSwitch>
-          <NcActions>
-            <NcActionButton>
-              {{ t(appName, 'Save History') }}
+            <NcActionCheckbox v-model="globalState.restoreHistory"
+                              v-tooltip="hints['restore-history']"
+                              :close-after-click="true"
+            >
+              {{ t(appId, 'Restore Last View') }}
+            </NcActionCheckbox>
+            <NcActionButton :disabled="historyHasBeenSaved"
+                            :close-after-click="true"
+                            @click="history.saveHistoryData"
+            >
+              <template #icon>
+                <IconHistorySaved v-if="historyHasBeenSaved" />
+                <IconHistorySave v-else />
+              </template>
+              {{ t(appName, 'Save Web Browser History') }}
             </NcActionButton>
-            <NcActionButton>
-              {{ t(appName, 'Load History') }}
-            </NcActionButton>
-            <NcActionButton>
-              {{ t(appName, 'Delete History') }}
+            <NcActionButton :disabled="history.savedHistoryStates.length === 0"
+                            :close-after-click="true"
+                            @click="showBrowserHistoryModal = true"
+            >
+              <template #icon>
+                <IconHistoryManage />
+              </template>
+              {{ t(appName, 'Manage Saved History') }}
             </NcActionButton>
           </NcActions>
           <NcCheckboxRadioSwitch v-tooltip="hints['filter-visibility']"
@@ -161,7 +175,7 @@
                           @click="openSettingsPopup"
             >
               <template #icon>
-                <AppSettingsIcon />
+                <IconAppSettings />
               </template>
               {{ t(appId, 'Further Settings') }}
             </NcActionLink>
@@ -170,11 +184,11 @@
       </template>
     </NcAppNavigation>
     <NcAppContent :class="{ 'icon-loading': loading }">
-      <RouterView v-show="!loading && !appError"
+      <RouterView v-show="!loading"
                   :loading.sync="loading"
                   @view-details="handleDetailsRequest"
       />
-      <NcEmptyContent v-if="isRoot || appError" :class="{ 'error-page': appError }">
+      <NcEmptyContent v-if="isRoot">
         <template #name>
           <h2>{{ t(appId, '{orchestraName} Orchestra Management App', { orchestraName, }) }}</h2>
         </template>
@@ -184,16 +198,23 @@
           <!-- <span class="app-icon" v-html="icon" /> -->
         </template>
         <template #description>
-          <span v-if="!appError">
+          <span>
             {{ t(appId, 'Please click on the ☰-button in order to open the navigation menu.') }}
             {{ t(appId, 'Please click on your avatar or initials (top-right) for logout and configuration options.') }}
           </span>
-          <ErrorPage v-else
-                     :id="appPrefix('error')"
-                     :error="appError"
-          />
         </template>
       </NcEmptyContent>
+      <div v-if="!!appError" class="flex-container flex-justify-center">
+        <ErrorPageModal :show="!!appError"
+                        :error="appError"
+                        @update:show="appError = null"
+        />
+      </div>
+      <div v-if="showBrowserHistoryModal" class="flex-container flex-justify-center">
+        <BrowserHistoryModal :show="showBrowserHistoryModal"
+                             @update:show="showBrowserHistoryModal = false"
+        />
+      </div>
     </NcAppContent>
     <NcAppSidebar v-show="showSidebar"
                   :name="'Hello World'"
@@ -222,12 +243,13 @@
   </NcContent>
 </template>
 <script setup lang="ts">
-import { appName as appId, appName, appPrefix } from './config.ts'
+import { appName as appId, appName } from './config.ts'
 import globalState from './app/globalstate.js'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import {
   NcActions,
   NcActionButton,
+  NcActionCheckbox,
   NcActionLink,
   NcAppSidebar,
   NcAppSidebarTab,
@@ -240,7 +262,8 @@ import {
   NcEllipsisedOption,
   NcEmptyContent,
 } from '@nextcloud/vue'
-import ErrorPage from './components/ErrorPage.vue'
+import BrowserHistoryModal from './components/BrowserHistoryModal.vue'
+import ErrorPageModal from './components/ErrorPageModal.vue'
 import { translate as t } from '@nextcloud/l10n'
 import useAppDataStore from './stores/app-data.ts'
 import useHistoryStore from './stores/history.ts'
@@ -250,12 +273,15 @@ import useTooltipsStore from './stores/tooltips.ts'
 // import ProjectPartici<pantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 // import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
 // import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
-import AppSettingsIcon from 'vue-material-design-icons/Cogs.vue'
+import IconAppSettings from 'vue-material-design-icons/Cogs.vue'
+import IconHistoryManage from 'vue-material-design-icons/History.vue'
+import IconHistorySave from 'vue-material-design-icons/ContentSave.vue'
+import IconHistorySaved from 'vue-material-design-icons/ContentSaveCheck.vue'
+import IconPageTemplate from './components/PageTemplateIcon.vue'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import ImageUploadTemplate from './components/oc-template/ImageUploadTemplate.vue'
 import FileUploadTemplate from './components/oc-template/FileUploadTemplate.vue'
 import CloudFileSystemOperations from './components/oc-template/CloudFileSystemOperations.vue'
-import PageTemplateIcon from './components/PageTemplateIcon.vue'
 import axios from '@nextcloud/axios'
 import generateAppUrl from './toolkit/util/generate-url.js'
 import { storeToRefs } from 'pinia'
@@ -372,6 +398,7 @@ const debugOptions = computed(() => {
 })
 const toolTipsEnabled = ref(globalState.toolTipsEnabled)
 watch(toolTipsEnabled, (value) => {
+  tooltipOptions.themes.tooltip.disabled = !value
   if (value !== globalState.toolTipsEnabled) {
     asyncEmit(BusEvents.TOGGLE_TOOLTIPS, { enabled: value })
   }
@@ -417,7 +444,7 @@ const openSettingsPopup = (event: MouseEvent) => {
   })
 }
 
-const updatePersonalSettings = (
+const updatePersonalSettings = async (
   event: keyof SetterEvents,
   value: SetterEventValue<typeof event>,
   oldValue: SetterEventValue<typeof event>|undefined,
@@ -433,7 +460,7 @@ const updatePersonalSettings = (
     return
   }
   settingsLocked.value = true
-  asyncEmit(event, {
+  await asyncEmit(event, {
     value,
     callbacks: {
       always: async () => {
@@ -529,6 +556,9 @@ const updateDebugModes = async (newValue: number, oldValue?: number) => {
   }
 }
 
+const historyHasBeenSaved = computed(() => history.modificationTime === history.saveTime)
+const showBrowserHistoryModal = ref(false)
+
 const redirectToLastUrlPath = ref(false)
 
 // watchers
@@ -563,12 +593,13 @@ const reactifyGlobalState = function() {
   // settings stuff
 
   toolTipsEnabled.value = globalState.toolTipsEnabled
+  tooltipOptions.themes.tooltip.disabled = !toolTipsEnabled.value
   watch(
     () => globalState.toolTipsEnabled,
     (value, oldValue) => {
-      updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue)
       tooltipOptions.themes.tooltip.disabled = !value
       toolTipsEnabled.value = value
+      updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue)
     },
   )
   watch(
@@ -617,7 +648,7 @@ if (!(globalState.initialized && globalState.PHPMyEdit.initialized)) {
   globalState.initialized = globalState.initialized || false
   globalState.PHPMyEdit.initialized = globalState.PHPMyEdit.initialized || false
   reactive(globalState)
-  logger.debug('INSTALL WATCHER FOR GLOBAL STATE', Object.assign({}, globalState))
+  logger.debug('INSTALL WATCHER FOR GLOBAL STATE', { ...globalState })
   const stop = watch(
     () => globalState.initialized && globalState.PHPMyEdit.initialized,
     () => {
@@ -748,6 +779,18 @@ onMounted(() => {
   flex-shrink: 10;
   #app-settings__content {
     max-height: 100%;
+    .web-browser-history-menu {
+      button {
+        padding-left: 0px;
+        .button-vue__text {
+          font-weight: normal;
+        }
+        background-color: inherit;
+        &:hover {
+          background-color: var(--color-background-hover);
+        }
+      }
+    }
   }
 }
 .app-navigation-entry.disabled::v-deep {
@@ -758,10 +801,6 @@ onMounted(() => {
   }
 }
 .empty-content::v-deep {
-  &.error-page h2 ~ p {
-    min-width: 80%;
-    text-align: left;
-  }
   h2 ~ p {
     text-align: center;
     width: 72ex;
