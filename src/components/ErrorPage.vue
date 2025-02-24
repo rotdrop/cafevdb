@@ -40,6 +40,7 @@
                              :open.sync="detailsModalOpen"
                              :current-entry="logEntry"
                              :translations-loaded="translationsLoaded"
+                             :name="t(appName, 'Error Details')"
           />
           <HtmlErrorModal v-if="htmlString"
                           :open.sync="detailsModalOpen"
@@ -206,7 +207,6 @@ import IconEdit from 'vue-material-design-icons/TextBoxEdit.vue'
 import { getCurrentUser } from '@nextcloud/auth'
 import NextcloudLogModal from './LogEntry/LogDetailsModal.vue'
 import HtmlErrorModal from './HtmlErrorModal.vue'
-import Console, { stackTraceOptions } from '../util/console.ts'
 import { serializeError, isErrorLike } from 'serialize-error'
 import type { ErrorLike } from 'serialize-error'
 import md5 from 'blueimp-md5'
@@ -224,6 +224,7 @@ import {
 import globalState from '../app/globalstate.js'
 import StackTrace from 'stacktrace-js'
 import type { StackFrame } from 'stacktrace-js'
+import Console, { stackTraceOptions } from '../util/console.ts'
 
 const COMPONENT_NAME = 'ErrorPage'
 const logger = new Console(COMPONENT_NAME)

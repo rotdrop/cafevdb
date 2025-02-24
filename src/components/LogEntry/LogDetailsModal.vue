@@ -1,5 +1,5 @@
 <!--
-        SPDX-FileCopyrightText: 2023 Nextcloud Gmbh and Nextcloud contributors
+        SPDX-FileCopyrightText: 2023, 2025 Nextcloud Gmbh and Nextcloud contributors
         SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
@@ -7,7 +7,8 @@
            size="large"
            :has-previous="false"
            :has-next="false"
-           name="dummy"
+           :name="name"
+           container="#body-user"
            @update:show="$emit('update:open', false)"
   >
     <template #default>
@@ -21,8 +22,7 @@
           </dd>
           <dt>{{ t('logreader', 'Time') }}</dt>
           <dd>{{ timeString }}</dd>
-        </dl>
-        <div class="log-details__actions">
+        </dl>        <div class="log-details__actions">
           <NcButton :aria-label="t('logreader', 'Copy raw entry')" type="tertiary" @click="copyRaw">
             <template #icon>
               <IconContentCopy />
@@ -80,10 +80,13 @@ import LogException from './exception/LogException.vue'
 
 hljs.registerLanguage('json', json)
 
-const props = defineProps<{
-  open: boolean
-  currentEntry: ILogEntry
-}>()
+const props = withDefaults(defineProps<{
+  open: boolean,
+  currentEntry: ILogEntry,
+  name?: string
+}>(), {
+  name: undefined,
+})
 
 const { formatTime, formatLogEntry } = useLogFormatting()
 

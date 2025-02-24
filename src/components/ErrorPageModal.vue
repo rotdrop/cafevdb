@@ -22,17 +22,20 @@
  -
  -->
 <template>
-  <NcModal v-if="htmlString"
-           :show="open"
-           size="large"
-           :has-previous="false"
+  <NcModal :close-on-click-outside="false"
            :has-next="false"
-           :name="t(appName, 'An Error Occurred')"
-           @update:show="$emit('update:open', false)"
+           :has-previous="false"
+           :label-id="errorPageHeadingId"
+           size="large"
+           container="#body-user"
+           v-bind="$attrs"
+           v-on="$listeners"
   >
     <template #default>
-      <!-- eslint-disable-next-line vue/no-v-html  -->
-      <div class="error-html-container" v-html="htmlString" />
+      <h2 :id="errorPageHeadingId" class="error-page-heading">
+        {{ heading }}
+      </h2>
+      <ErrorPage :error="error" />
     </template>
   </NcModal>
 </template>
@@ -42,55 +45,30 @@ import { translate as t } from '@nextcloud/l10n'
 import {
   NcModal,
 } from '@nextcloud/vue'
+import {
+  ref,
+} from 'vue'
+import ErrorPage from './ErrorPage.vue'
+import { v4 as uuidv4 } from 'uuid'
+import type { AxiosError } from 'axios'
+import type { NextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts'
+
+withDefaults(defineProps<{
+  error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>,
+  heading?: string,
+}>(), {
+  heading: t(appName, 'Sorry, an Error Occurred'),
+})
+
+const errorPageHeadingId = ref<string>(uuidv4())
+
 // import Console from '../util/console.ts'
 
 // const COMPONENT_NAME = 'HtmlErrorPage'
 // const logger = new Console(COMPONENT_NAME)
-
-defineProps <{
-  open: boolean,
-  htmlString: string,
-}>()
-
 </script>
-<style lang="scss">
-@import '../../style/flex.scss';
-.error-html-container {
-  // so the many nth mean that this is tied closely to the core
-  // exception template ...
-  padding: 12px;
-  // heading
-  // > h1 {
-  // }
-  .guest-box {
-    ul:nth-of-type(2):not(:nth-of-type(3)) {
-      // type, code, message, file, line
-      li {
-        display: inline;
-        &:after {
-          content: ", ";
-        }
-      }
-      li:nth-of-type(3) {
-        // message
-        color:red;
-        font-weight:bold;
-      }
-    }
-    // trace heading
-    // h3:nth-of-type(3) {
-    // }
-    // trace content
-    pre {
-      // display:none;
-      // &.visible {
-      //   display: block;
-      // }
-      color:blue;
-      margin: 0 2em 0 2em;
-      max-width:100%;
-      overflow:auto;
-    }
-  }
+<style scoped lang="scss">
+.error-page-heading {
+  margin-left: 6px;
 }
 </style>

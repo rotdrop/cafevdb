@@ -105,23 +105,10 @@
       />
     </div>
     <div v-if="legacyAjaxError" class="flex-container flex-justify-center">
-      <NcModal :show="showLegacyAjaxError"
-               size="large"
-               :has-next="false"
-               :has-previous="false"
-               :close-on-click-outside="false"
-               label-id="legacy-ajax-error-heading"
-               @update:show="handleLegacyAjaxErrorClose"
-      >
-        <template #default>
-          <h2 id="legacy-ajax-error-heading">
-            {{ t(appName, 'Sorry, an Error Occurred') }}
-          </h2>
-          <ErrorPage :id="appPrefix('legacy-ajax-error')"
-                     :error="legacyAjaxError"
-          />
-        </template>
-      </NcModal>
+      <ErrorPageModal :show="showLegacyAjaxError"
+                      :error="legacyAjaxError"
+                      @update:show="handleLegacyAjaxErrorClose"
+      />
     </div>
   </div>
 </template>
@@ -144,7 +131,6 @@ import {
   NcActions,
   NcButton,
 } from '@nextcloud/vue'
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import HomeIcon from 'vue-material-design-icons/Home.vue'
 import ReloadIcon from 'vue-material-design-icons/Reload.vue'
 import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
@@ -152,6 +138,7 @@ import InfoOffIcon from 'vue-material-design-icons/InformationOffOutline.vue'
 import HistoryBackIcon from 'vue-material-design-icons/ArrowULeftTop.vue'
 import HistoryForwardIcon from 'vue-material-design-icons/ArrowURightTop.vue'
 import ErrorPage from './ErrorPage.vue'
+import ErrorPageModal from './ErrorPageModal.vue'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
 import { closeNavigation } from '../services/navigation.js'
@@ -369,7 +356,8 @@ const doLoadLegacy = async () => {
     template: props.template,
     ...props.templateParameters,
   }
-  Object.assign(post, historyAppData, post)
+  // TODO: when chaning template, post-data exception project-id, project-name, musician-id should probably be cleared ...
+  Object.assign(post, historyAppData, { ...post /* spread is necessary here */ })
   Object.assign(historyAppData, post)
   logger.info('POST including history state', post, { ...currentHistoryState.value, post: historyAppData })
   const currentHash = generatePostHash(post)
