@@ -46,6 +46,17 @@ return [
       }
       return $content;
     },
+    // Symfony ProxyHelper, literal \\Symfony\\Component\\VarExporter in HERE doc
+    function(string $filePath, string $prefix, string $content): string {
+      if (str_ends_with($filePath, 'symfony/var-exporter/ProxyHelper.php')) {
+        $content = str_replace(
+          '\\\\Symfony\\\\Component\\\\VarExporter',
+          '\\\\' . str_replace('\\', '\\\\', $prefix) . '\\\\Symfony\\\\Component\\\\VarExporter',
+          $content,
+        );
+      }
+      return $content;
+    },
     // Gedmo behaviours
     function(string $filePath, string $prefix, string $content): string {
       if (str_contains($filePath, 'gedmo/doctrine-extensions/src')) {
