@@ -39,9 +39,10 @@ use OCP\IL10N;
 use OCP\IRequest;
 use OC\AppFramework\Utility\QueryNotFoundException;
 
+use OCA\CAFEVDB\AppInfo\Application as App;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\AppInfo\Application as App;
 use OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse;
 
 /**
@@ -139,17 +140,24 @@ class ExceptionMiddleware extends Middleware
         context: $context,
       );
     }
+    $httpStatusCode = $exception->getHttpStatusCode();
+    $context = Util::arrayMergeRecursive(
+      [
+        'httpStatusCode' => $httpStatusCode,
+      ],
+      $exception->getContext() ?? [],
+    );
     $logEntry = $this->logException(
       $exception,
       message: $exception->getMessage(),
-      context: $exception->getContext(),
+      context: $context,
       returnLogEntry: true,
       shift: PHP_INT_MIN, // do not decorate with prefix
     );
-    $this->logInfo('LOG_ENTRY ' . print_r($logEntry, true));
+    // $this->logInfo('LOG_ENTRY ' . print_r($logEntry, true));
+    // $this->logInfo('LOG_ENTRY ' . \OCA\CAFEVDB\Common\Functions\dump($logEntry));
     array_walk_recursive($logEntry, fn(&$value) => $value = str_replace(\OC::$SERVERROOT, '', $value));
-    $this->logInfo('LOG_ENTRY ' . print_r($logEntry, true));
-    $httpStatusCode = $exception->getHttpStatusCode();
+    $this->logDebug('LOG_ENTRY ' . print_r($logEntry, true));
     return new JSONResponse($logEntry, $httpStatusCode);
   }
 }
