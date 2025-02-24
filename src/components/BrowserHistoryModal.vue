@@ -74,17 +74,36 @@
             </NcButton>
           </template>
           <template #actions>
-            <NcActionButton>
+            <NcActionButton v-tooltip="t(appName, `Push the listed items after the current view
+and navigate to the last active view of the saved history.`)">
               <template #icon>
                 <IconLoad />
               </template>
-              Load
+              {{ t(appName, 'Insert Here') }}
+            </NcActionButton>
+            <NcActionButton v-tooltip="t(appName, `Replace the current browser history by the listed item
+and navigate to the last active view of the saved history.`)"
+                            disabled
+            >
+              <template #icon>
+                <IconLoad />
+              </template>
+              {{ t(appName, 'Replace Current') }}
+            </NcActionButton>
+            <NcActionButton v-tooltip="t(appName, `Append the listed items at the end of the current browser history
+and navigate to the last active view of the saved history.`)"
+                            disabled
+            >
+              <template #icon>
+                <IconLoad />
+              </template>
+              {{ t(appName, 'Append to Current') }}
             </NcActionButton>
             <NcActionButton @click="dataPopupShown = undefined; deleteHistoryState(+mtime)">
               <template #icon>
                 <IconDelete />
               </template>
-              Delete
+              {{ t(appName, 'Delete') }}
             </NcActionButton>
           </template>
         </NcListItem>
