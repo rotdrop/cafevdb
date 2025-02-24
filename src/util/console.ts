@@ -44,11 +44,12 @@ class Console {
   }
   prefix: string;
   async locationMessage() {
+    const time = (new Date()).toLocaleTimeString("en-gb", { hour: '2-digit', minute: '2-digit', second: '2-digit', fractionalSecondDigits: 3 });
     try {
       const frame = (await stackFrame(2)).toString();
-      return this.prefix + ': ' + frame;
+      return time + ' ' + this.prefix + ': ' + frame;
     } catch {
-      return this.prefix;
+      return time + ' ' + this.prefix;
     }
   };
   async debug(...args: any[]) {
