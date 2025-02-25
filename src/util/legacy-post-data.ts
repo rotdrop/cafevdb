@@ -52,10 +52,15 @@ const POST_DATA_EXCLUDED_KEYS = [
   'renderAs',
 ];
 
+// Keys contained in the url-params.
+const URL_PARAMS_KEYS = [
+  'template',
+  'projectId',
+  'projectName',
+];
+
 const HASH_TOP_LEVEL_EXCLUDED_KEYS = [
-  'template', // url-parameter
-  'projectId', // url-parameter
-  'projectName', // url-parameter
+  ...URL_PARAMS_KEYS,
   ...POST_DATA_EXCLUDED_KEYS,
 ];
 
@@ -161,7 +166,7 @@ export const sanitizePostDataOld = (params: TemplatePostData): TemplatePostData 
   ),
 ) as TemplatePostData;
 
-export const sanitizePostData = (params: TemplatePostData): TemplatePostData => {
+export const sanitizePostData = (params: TemplatePostData, excludeUrlParams = false): TemplatePostData => {
   params = deepCopy(params) as TemplatePostData;
 
   walk(params, {
@@ -173,22 +178,26 @@ export const sanitizePostData = (params: TemplatePostData): TemplatePostData => 
           return;
         }
         let del = false;
-        const nodeType = node.val === null ? 'value' : node.nodeType;
-        switch (nodeType) {
-          case 'value':
-            del = node.val === null
-              || node.val === undefined
-              || ('' + node.val) === ''
-              || (EMPTY_VALUE_KEYS.includes(node.key as string) && +(node.val as string) === 0)
-              || POST_DATA_EXCLUDED_KEYS.includes(node.key as string)
-              || EXCLUDED_KEYS.includes(node.key as string);
-            break;
-          case 'array':
-            del = node.val.length === 0;
-            break;
-          case 'object':
-            del = Object.keys(node.val).length === 0;
-            break;
+        if (excludeUrlParams && node.parent?.isRoot && URL_PARAMS_KEYS.includes(node.key as string)) {
+          del = true;
+        } else {
+          const nodeType = node.val === null ? 'value' : node.nodeType;
+          switch (nodeType) {
+            case 'value':
+              del = node.val === null
+                || node.val === undefined
+                || ('' + node.val) === ''
+                || (EMPTY_VALUE_KEYS.includes(node.key as string) && +(node.val as string) === 0)
+                || POST_DATA_EXCLUDED_KEYS.includes(node.key as string)
+                || EXCLUDED_KEYS.includes(node.key as string);
+              break;
+            case 'array':
+              del = node.val.length === 0;
+              break;
+            case 'object':
+              del = Object.keys(node.val).length === 0;
+              break;
+          }
         }
         if (del) {
           logger.debug('SANITIZE POST DATA DELETING NODE', node.getPath(), '=', node.val);
