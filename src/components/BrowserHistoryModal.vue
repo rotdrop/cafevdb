@@ -75,20 +75,22 @@
           </template>
           <template #actions>
             <NcActionButton v-tooltip="t(appName, `Push the listed items after the current view
-and navigate to the last active view of the saved history.`)">
+and navigate to the last active view of the saved history.`)"
+                            @click="pushHistoryChain(+mtime)"
+            >
               <template #icon>
                 <IconLoad />
               </template>
-              {{ t(appName, 'Insert Here') }}
+              {{ t(appName, 'Push History') }}
             </NcActionButton>
-            <NcActionButton v-tooltip="t(appName, `Replace the current browser history by the listed item
+            <NcActionButton v-tooltip="t(appName, `Replace the current browser history by the listed items
 and navigate to the last active view of the saved history.`)"
                             disabled
             >
               <template #icon>
                 <IconLoad />
               </template>
-              {{ t(appName, 'Replace Current') }}
+              {{ t(appName, 'Replace History') }}
             </NcActionButton>
             <NcActionButton v-tooltip="t(appName, `Append the listed items at the end of the current browser history
 and navigate to the last active view of the saved history.`)"
@@ -201,6 +203,10 @@ withDefaults(defineProps<{
   heading: t(appName, 'Manage Saved Web-Browser History'),
 })
 
+const emit = defineEmits([
+  'update:show',
+])
+
 const modalPageHeadingId = ref<string>(uuidv4())
 
 const history = useHistoryStore()
@@ -243,11 +249,23 @@ const pushRoute = async (timestamp: number, key: string) => {
   logger.info('RESOLVED ROUTE', resolved)
   const params = sanitizePostData(Object.assign(postData, resolved.location.params))
   const location = {
-    name: resolved.route.name!,
+    name: resolved.route.name!, // @todo error handling
     params,
   }
   logger.info('ABOUT TO PUSH ROUTE', location)
   return router.push(location)
+}
+
+const pushHistoryChain = async (timestamp: number) => {
+  const promises = Object.keys(historyData.value[timestamp].history).map(key => loadPostData(timestamp, key))
+  await Promise.all(promises) // the attached error handler should catch all errors
+  for (const entry of Object.values(historyData.value[timestamp].history)) {
+    if (!entry.post) {
+      return // user has already be informed
+    }
+  }
+  await history.pushHistoryChain(historyData.value[timestamp].history, historyData.value[timestamp].position)
+  emit('update:show', false)
 }
 
 const reloadHistoryStates = async () => {
@@ -259,10 +277,6 @@ const reloadHistoryStates = async () => {
   }
   for (const state of Object.values(historyData.value)) {
     state.requestData = requestData
-    // for (const entry of Object.values(state.history)) {
-    //   const route = router.resolve(entry.path)
-    //   state.history.route = route.location
-    // }
   }
   loading.value = false
 }

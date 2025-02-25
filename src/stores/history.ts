@@ -39,6 +39,7 @@ import { ref, computed, watch, reactive } from 'vue';
 import { showError, showInfo, showMessage } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
 import { useRoute } from 'vue-router/composables';
+import router from '../router/app-router.ts';
 
 export const HistoryActionPush = 'push';
 export const HistoryActionPop = 'pop';
@@ -48,6 +49,12 @@ export type HistoryAction = TransitionType;
 const storeId = 'history';
 
 export class HistoryStorePersistenceError extends AppError {
+  constructor(...p: ConstructorParameters<ErrorConstructor>) {
+    super({ component: storeId + '-store', type: storeId }, ...p);
+  }
+}
+
+export class HistoryStoreMutationError extends AppError {
   constructor(...p: ConstructorParameters<ErrorConstructor>) {
     super({ component: storeId + '-store', type: storeId }, ...p);
   }
@@ -142,7 +149,7 @@ export default defineStore(storeId, () => {
         throw new AppError({ arg }, t(appName, 'Either "hash" or "post" have to be specified.'));
       }
       if (arg.post && !requestData[this._hash]) {
-        requestData[this._hash] = sanitizePostData(arg.post);
+        requestData[this._hash] = sanitizePostData(arg.post, true /* excludeUrlParams */);
         logger.info('REQUEST DATA MAP', [...Object.entries(requestData)]);
       }
     };
@@ -164,7 +171,7 @@ export default defineStore(storeId, () => {
   const initialHistoryIndex: undefined|string = window?.history?.state?.key;
   const currentHistoryIndex = ref(initialHistoryIndex || '');
 
-  const pendingHistoryData = ref<undefined|object>(undefined);
+  const pendingHistoryData = ref<undefined|TemplatePostData>(undefined);
   const pendingHistoryHash = ref<undefined|string>(undefined); // optimization, do not compute twice
   const pendingHistoryAction = ref<undefined|HistoryAction>(undefined);
   const pendingHistoryKey = ref<undefined|string|number>('initial');
@@ -258,6 +265,38 @@ export default defineStore(storeId, () => {
   }
 
   /**
+   * Adjust the document title in order to provide more useful
+   * informations in the history menus of the web-browser. The goal is to replace
+   *
+   * blah
+   * blah
+   * blah
+   *
+   * by
+   *
+   * blah - useful info 1
+   * blah - useful info 2
+   * blah - useful info 3
+   */
+  function adjustDocumentTitle(route: Route) {
+    const titleElement = document.querySelector('head title')!;
+    const originalTitleAttribute = appName + '-original-title';
+    if (!titleElement.getAttribute(originalTitleAttribute)) {
+      titleElement.setAttribute(originalTitleAttribute, titleElement.textContent!.trim())
+    }
+    const originalTitle = titleElement.getAttribute(originalTitleAttribute);
+
+    let titleSupplement = '';
+    if (route.path === '/') {
+      titleSupplement = t(appName, 'Home');
+    } else {
+      const routeParams = sanitizePostData(Object.assign({}, route.params));
+      titleSupplement = Object.values(routeParams).join('/');
+    }
+    document.title = originalTitle + ' - ' + titleSupplement;
+  }
+
+  /**
    * This is called before routing in order to record that a
    * history-state action will be initiated. After completion the
    * provided data will be install at the proper position in the
@@ -271,7 +310,7 @@ export default defineStore(storeId, () => {
    *
    * @param hash Hash value of request data. Recomputed if not provided.
    */
-  function scheduleHistoryAction(action: HistoryAction, post: object, hash?: string): string {
+  function scheduleHistoryAction(action: HistoryAction, post: TemplatePostData, hash?: string): string {
     const key = window?.history?.state?.key || 'initial';
     pendingHistoryAction.value = action;
     pendingHistoryData.value = post || {};
@@ -317,6 +356,31 @@ export default defineStore(storeId, () => {
   }
 
   /**
+   * Remove the history chain following the current index. This is
+   * needed when pushing a new state at a position which is not the
+   * final position in the current stack.
+   */
+  function removeHistoryTail() {
+    const history = routerHistory.value;
+    let nextKey = history[currentHistoryIndex.value].next;
+    while (nextKey) {
+      const removeKey = nextKey
+      try {
+        nextKey = history[nextKey].next
+        delete history[removeKey]
+      } catch (error: any) {
+        logger.error('Exception while removing orphan tail on history push', {
+          nextKey,
+          removeKey,
+            history: { ...history },
+        })
+        break;
+      }
+    }
+    history[currentHistoryIndex.value].next = null;
+  }
+
+  /**
    * Called after route completion. Unfortunately the RouterLink Vue
    * component does not provide means to propagate the kind of
    * history-state action -- push or replace -- to the available
@@ -350,6 +414,7 @@ export default defineStore(storeId, () => {
       pendingInitTransition = transition;
       return;
     }
+    adjustDocumentTitle(currentRoute);
     if (transition === 'replace' && pendingHistoryKey.value === 'initial') {
       // just replace the keys and be gone.
       if (Object.keys(history).length > 1) {
@@ -421,21 +486,7 @@ export default defineStore(storeId, () => {
         key,
         path: route.fullPath,
       });
-      let nextKey = history[currentHistoryIndex.value].next;
-      while (nextKey) {
-        const removeKey = nextKey
-        try {
-          nextKey = history[nextKey].next
-          delete history[removeKey]
-        } catch (error: any) {
-          logger.error('Exception while removing orphan tail on history push', {
-            nextKey,
-            removeKey,
-            history: { ...history },
-          })
-          break;
-        }
-      }
+      removeHistoryTail();
       history[currentHistoryIndex.value].next = key;
       currentHistoryIndex.value = key;
       updateModificationTime();
@@ -640,6 +691,86 @@ export default defineStore(storeId, () => {
     }
   };
 
+  /**
+   * Push the given history chain to on top of the current state and
+   * navigate then to the given location.
+   *
+   * In order to keep the states consistent we have to adjust the keys
+   * to start just after the current index.
+   *
+   * @param chain History data to append, including post-data.
+   *
+   * @param posKey Position to finally go to.
+   *
+   * @todo We should probably check that the history data is sorted in
+   * ascending order. Actually, we could get rid of the rather
+   * complicated prev/next list by just using the key, which is a
+   * timestamp and hence always increasing.
+   */
+  const pushHistoryChain = async (chain: Record<string, RouterHistoryState<'deep'> >, posKey: string) => {
+    const posEntry = chain[posKey];
+    if (!posEntry) {
+      throw new HistoryStoreMutationError(t(appName, 'The key "{posKey}" of the final destination does not point into the provided history chain.', { posKey }));
+    }
+    removeHistoryTail();
+    const history = routerHistory.value;
+    // we need to tweak the keys of the given chain
+    const offset = currentHistoryIndex.value;
+    let counter = 0;
+    // sort the keys ascending
+    const keys = Object.keys(chain).sort((a, b) => +a - +b);
+    const keyMap = Object.fromEntries(keys.map(key => [key, '' + (+offset + (++counter) / 1000.0)]));
+    logger.debug('KEYMAP', keyMap);
+    for (const key of keys) {
+      const entry = chain[key];
+      const prev = entry.prev ? keyMap[entry.prev] : currentHistoryIndex.value;
+      const next = entry.next ? keyMap[entry.next] : null;
+      history[keyMap[key]] = new RouterHistoryRecord({
+        next,
+        prev,
+        key: keyMap[key],
+        hash: entry.hash,
+        post: entry.post,
+        path: entry.path,
+      })
+      logger.debug('HISTORY DURING MUTAION', key, keyMap[key], { ...history });
+      if (!entry.prev) {
+        currentHistoryState.value.next = keyMap[key];
+      }
+    }
+
+    logger.debug('HISTORY AFTER INTERNAL STATE MUTATION', { ...history });
+
+    // First push to the window history ignoring the vue-router
+    for (const [key, mappedKey] of Object.entries(keyMap)) {
+      const entry = chain[key];
+      const url = generateAppUrl(entry.path.replace(/^\/+/, ''));
+      window.history.pushState({ key: mappedKey }, '', url);
+
+      const resolved = router.resolve(entry.path);
+      adjustDocumentTitle(resolved.route);
+    }
+    // Compute the offset from the tail to the desired position
+    const jump = keys.indexOf(posKey) + 1 - keys.length;
+    logger.debug('JUMP COMPUTATION', jump, keys.indexOf(posKey), keys.length);
+    if (jump < 0) {
+      logger.debug('JUMPING', jump);
+      router.go(jump);
+    } else {
+      logger.debug('REPLACE AS REQUEST POS IS LAST ONE');
+      // otherwise replace as go(0) triggers an active reload of the current page.
+      const entry = chain[posKey];
+      const resolved = router.resolve(entry.path);
+      const params = sanitizePostData(Object.assign({}, entry.post, resolved.location.params))
+      const location = {
+        name: resolved.route.name!, // @todo error handling
+        params,
+      }
+      currentHistoryIndex.value = keyMap[posKey];
+      await router.replace(location);
+    }
+  }
+
   return {
     logger: loggerRef,
     errorHandler,
@@ -672,5 +803,7 @@ export default defineStore(storeId, () => {
     loadHistoryStates,
     loadHistoryEntry,
     deleteHistoryState,
+    pushHistoryChain,
+    adjustDocumentTitle,
   };
 });
