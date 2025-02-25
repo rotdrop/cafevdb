@@ -1,0 +1,21 @@
+diff --git a/node_modules/@nextcloud/moment/dist/lib/constants.d.ts b/node_modules/@nextcloud/moment/dist/lib/constants.d.ts
+new file mode 100644
+index 0000000..efe5958
+--- /dev/null
++++ b/node_modules/@nextcloud/moment/dist/lib/constants.d.ts
+@@ -0,0 +1,15 @@
++/**
++ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
++ * SPDX-License-Identifier: GPL-3.0-or-later
++ */
++interface Translations {
++	locale: string
++	json: object
++}
++
++declare const LOCALES: Translations[]
++
++declare module 'moment/min/moment-with-locales.js' {
++	import moment from 'moment'
++	export default moment
++}
