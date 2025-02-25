@@ -31,20 +31,28 @@ export const stackTraceOptions = {
   sourceCache: {}
 }
 
-export const stackFrame = async (offset: number) => {
-  const stackFrames = (globalState.debugModes & DEBUG_SMAPS)
-    ? await StackTrace.get(stackTraceOptions)
-    : StackTrace.getSync(stackTraceOptions);
+export const syncStackFrame = (offset: number) => StackTrace.getSync(stackTraceOptions)?.[offset+1];
+export const asyncStackFrame = async (offset: number) => {
+  const stackFrames = await StackTrace.get(stackTraceOptions);
   return stackFrames?.[offset + 1];
-}
+};
+
+export const stackFrame = async (offset: number) => (globalState.debugModes & DEBUG_SMAPS)
+  ? asyncStackFrame(offset)
+  : syncStackFrame(offset);
+
+type ConsoleMethods = 'debug'|'info'|'error'|'trace';
 
 class Console {
   constructor(prefix: string) {
     this.prefix = prefix;
   }
   prefix: string;
-  async locationMessage() {
-    const time = (new Date()).toLocaleTimeString("en-gb", { hour: '2-digit', minute: '2-digit', second: '2-digit', fractionalSecondDigits: 3 });
+  private timestamp() {
+    return (new Date()).toLocaleTimeString("en-gb", { hour: '2-digit', minute: '2-digit', second: '2-digit', fractionalSecondDigits: 3 });
+  }
+  private async asyncLocationMessage() {
+    const time = this.timestamp();
     try {
       const frame = (await stackFrame(2)).toString();
       return time + ' ' + this.prefix + ': ' + frame;
@@ -52,17 +60,33 @@ class Console {
       return time + ' ' + this.prefix;
     }
   };
-  async debug(...args: any[]) {
-    console.debug(await this.locationMessage(), ...args);
+  private syncLocationMessage() {
+    const time = this.timestamp();
+    try {
+      const frame = syncStackFrame(2).toString();
+      return time + ' ' + this.prefix + ': ' + frame;
+    } catch {
+      return time + ' ' + this.prefix;
+    }
+  };
+  private emitMessage(method: ConsoleMethods, ...args: any[]) {
+    if (globalState.debugModes & DEBUG_SMAPS) {
+      this.asyncLocationMessage().then(message => console[method](message, ...args));
+    } else {
+      console[method](this.syncLocationMessage(), ...args);
+    }
+  }
+  debug(...args: any[]) {
+    return this.emitMessage('debug', ...args);
   };
   async info(...args: any[]) {
-    console.info(await this.locationMessage(), ...args);
+    return this.emitMessage('info', ...args);
   };
   async error(...args: any[]) {
-    console.error(await this.locationMessage(), ...args);
+    return this.emitMessage('error', ...args);
   };
   async trace(...args: any[]) {
-    console.trace(await this.locationMessage(), ...args);
+    return this.emitMessage('trace', ...args);
   };
 }
 
