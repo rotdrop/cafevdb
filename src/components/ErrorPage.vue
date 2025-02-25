@@ -46,7 +46,7 @@
                           :open.sync="detailsModalOpen"
                           :html-string="htmlString"
           />
-          <div>
+          <div v-if="false">
             <!-- TODO: split the message to have a nice continuation, see nextcloud-vue -->
             {{ envelopeErrorMessage }}
           </div>
