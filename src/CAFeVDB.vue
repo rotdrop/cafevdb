@@ -326,7 +326,11 @@ const errorHandlerProvider = useErrorHandlerStore()
 const appError = ref<null | AppError>(null)
 const errorHandler = <E extends AppError>(error: E) => {
   logger.debug('TOP LEVEL ERROR', error)
-  appError.value = error
+  if (!error.cause) {
+    appError.value = new AppError({ component: COMPONENT_NAME }, t(appName, 'Top-Level Error'), { cause: error })
+  } else {
+    appError.value = error
+  }
 }
 errorHandlerProvider.pushHandler(errorHandler)
 
