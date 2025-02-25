@@ -24,7 +24,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import Console from '../util/console.ts';
-import type { ErrorHandler } from '../types/errors.ts';
+import type { AppError, ErrorHandler } from '../types/errors.ts';
 
 const storeId = 'error-handler';
 
@@ -36,7 +36,11 @@ export default defineStore(storeId, () => {
 
   const errorHandlerStack = ref<ErrorHandler[]>([]);
 
-  const errorHandler = computed<null|ErrorHandler>(() => errorHandlerStack.value?.[errorHandlerStack.value.length - 1] || null);
+  const defaultHandler = <E extends AppError>(error: E) => { throw error; };
+
+  const errorHandler = computed<ErrorHandler>(
+    () => errorHandlerStack.value?.[errorHandlerStack.value.length - 1] || defaultHandler
+  );
   // Mmmh. Reactivity. But in principle here we want to have the
   // handler available RIGHT NOW and not only on the next tick ...
   const getHandler = () => errorHandlerStack.value?.[errorHandlerStack.value.length - 1] || null
@@ -45,12 +49,14 @@ export default defineStore(storeId, () => {
     errorHandlerStack.value.push(handler);
     logger.debug('ERROR HANDLER PUSH', handler, getHandler());
     return handler;
-  }
+  };
+
   const popHandler = () => {
     const handler = errorHandlerStack.value.pop();
     logger.debug('ERROR HANDLER POP', handler, getHandler());
     return handler;
-  },
+  };
+
   return {
     logger: loggerRef,
     errorHandlerStack,
