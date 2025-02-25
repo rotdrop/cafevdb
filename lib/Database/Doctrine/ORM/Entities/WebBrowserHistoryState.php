@@ -67,6 +67,7 @@ class WebBrowserHistoryState implements \ArrayAccess
   protected DateTimeInterface $created;
 
   #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'state', cascade: ['persist', 'remove'], orphanRemoval: true, indexBy: 'key', fetch: 'EXTRA_LAZY')]
+  #[ORM\OrderBy(['key' => 'ASC'])]
   protected Collection $stack;
 
   #[ORM\JoinColumn(name: 'pos_state_id', referencedColumnName: 'state_id', nullable: true)]

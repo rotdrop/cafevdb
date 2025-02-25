@@ -43,12 +43,12 @@ class CreateWebBrowserHistoryTables extends AbstractMigration
   WebBrowserHistoryEntries
   (
     state_id INT NOT NULL,
-    `key` VARCHAR(16) NOT NULL COLLATE `ascii_bin`,
+    `key` NUMERIC(16, 3) NOT NULL,
     path VARCHAR(32768) CHARACTER SET ascii NOT NULL COLLATE `ascii_bin`,
     next_state_id INT DEFAULT NULL,
-    next_key VARCHAR(16) DEFAULT NULL COLLATE `ascii_bin`,
+    next_key NUMERIC(16, 3) DEFAULT NULL,
     prev_state_id INT DEFAULT NULL,
-    prev_key VARCHAR(16) DEFAULT NULL COLLATE `ascii_bin`,
+    prev_key NUMERIC(16, 3) DEFAULT NULL,
     data_hash CHAR(64) NOT NULL COLLATE `ascii_general_ci`,
     INDEX IDX_2059233F5D83CC1 (state_id),
     INDEX IDX_2059233F3DC2702F7451AA4E (next_state_id, next_key),
@@ -61,7 +61,7 @@ class CreateWebBrowserHistoryTables extends AbstractMigration
   (
     id INT AUTO_INCREMENT NOT NULL,
     pos_state_id INT DEFAULT NULL,
-    pos_key VARCHAR(16) DEFAULT NULL COLLATE `ascii_bin`,
+    pos_key NUMERIC(16, 3) DEFAULT NULL,
     user_id VARCHAR(256) NOT NULL,
     created DATETIME(6) NOT NULL COMMENT '(DC2Type:datetime_immutable)',
     updated DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',

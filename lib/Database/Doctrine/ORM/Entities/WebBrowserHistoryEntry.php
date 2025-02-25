@@ -50,7 +50,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   /**
    * @var int
    */
-  #[ORM\Column(type: 'string', length: 16, nullable: false, options: ['collation' => 'ascii_bin'])]
+  #[ORM\Column(type: 'decimal', precision: 16, scale: 3, nullable: false)]
   #[ORM\GeneratedValue(strategy: 'NONE')]
   #[ORM\Id]
   protected string $key;
