@@ -47,11 +47,6 @@ export class AppDataStoreError extends AppError {
 
 const abortController = new AbortController();
 
-export const HistoryActionPush = 'push';
-export const HistoryActionPop = 'pop';
-export const HistoryActionReplace = 'replace';
-export type HistoryAction = typeof HistoryActionPop|typeof HistoryActionPush|typeof HistoryActionReplace;
-
 export interface RouterHistoryState {
   next: string|null,
   prev: string|null,

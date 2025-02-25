@@ -121,7 +121,7 @@ class PmeTableController extends Controller
     }
 
     if ($dialogMode || $reloadAction) {
-      $historyAction = PageController::HISTORY_ACTION_LOAD;
+      $historyAction = PageController::HISTORY_ACTION_REPLACE;
     } else {
       $this->historyService->save($this->request->getParams());
       $historyAction = PageController::HISTORY_ACTION_PUSH;

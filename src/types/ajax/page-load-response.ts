@@ -21,9 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type HistoryActionLoad = 'load';
-export type HistoryActionPush = 'push';
-export type HistoryActions = HistoryActionLoad|HistoryActionPush;
+import type { HistoryActionReplace, HistoryActionPush } from '../../stores/history.ts';
 
 export interface LoadPartsData {
   template: string,
@@ -32,5 +30,5 @@ export interface LoadPartsData {
   bodyHtml: string,
   cssPrefix: string,
   cssClass: string,
-  historyAction: HistoryActions,
+  historyAction: HistoryActionPush|HistoryActionReplace,
 }

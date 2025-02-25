@@ -70,7 +70,7 @@ class PageController extends Controller
 
   const DEFAULT_TEMPLATE = PageRenderer\Projects::TEMPLATE;
 
-  public const HISTORY_ACTION_LOAD = 'load';
+  public const HISTORY_ACTION_REPLACE = 'replace';
   public const HISTORY_ACTION_PUSH = 'push';
 
   /** @var array

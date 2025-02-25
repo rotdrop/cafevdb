@@ -1168,23 +1168,15 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
       pageBusyIcon(false);
       modalizer(false);
     })
-    .done(async function(htmlContent, historyAction, post) {
+    .done(async function(htmlBody, action, post) {
 
-      console.info('DONE AFTER PSEUDO SUBMIT', historyAction, post);
+      console.info('DONE AFTER PSEUDO SUBMIT', action, post);
 
-      if (historyAction === 'push') {
-        await asyncEmit(LEGACY_PME_UPDATE, {
-          post,
-          htmlBody: htmlContent,
-          action: 'push',
-        });
-      } else {
-        await asyncEmit(LEGACY_PME_UPDATE, {
-          post,
-          htmlBody: htmlContent,
-          action: 'replace',
-        });
-      }
+      await asyncEmit(LEGACY_PME_UPDATE, {
+        post,
+        htmlBody,
+        action,
+      });
 
       $.fn.cafevTooltip.remove();
 
