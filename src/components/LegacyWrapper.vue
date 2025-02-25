@@ -79,8 +79,7 @@
       </NcActions>
     </div>
     <!-- eslint-disable vue/no-v-html  -->
-    <div v-if="!appError"
-         :id="appPrefix('general')"
+    <div :id="appPrefix('general')"
          :class="{ [appPrefix('general')]: true, loading, }"
     >
       <!-- /* used to eliminate the pixel-size of the control bar -->
@@ -98,10 +97,10 @@
         </div>
       </div>
     </div>
-    <div v-else class="flex-container flex-justify-center">
-      <ErrorPage :id="appPrefix('error')"
-                 :class="{ [appPrefix('general')]: true, loading, }"
-                 :error="appError"
+    <div v-if="appError" class="flex-container flex-justify-center">
+      <ErrorPageModal :show="showAppError"
+                      :error="appError"
+                      @update:show="showAppError = false"
       />
     </div>
     <div v-if="legacyAjaxError" class="flex-container flex-justify-center">
@@ -137,7 +136,6 @@ import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
 import InfoOffIcon from 'vue-material-design-icons/InformationOffOutline.vue'
 import HistoryBackIcon from 'vue-material-design-icons/ArrowULeftTop.vue'
 import HistoryForwardIcon from 'vue-material-design-icons/ArrowURightTop.vue'
-import ErrorPage from './ErrorPage.vue'
 import ErrorPageModal from './ErrorPageModal.vue'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.js'
@@ -180,9 +178,11 @@ import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus'
 const COMPONENT_NAME = 'LegacyWrapper'
 const logger = new Console(COMPONENT_NAME)
 
+const showAppError = ref(false)
 const appError = ref<null | AppError>(null) // any cannot be avoided here
 const errorHandler = <E extends AppError>(error: E) => {
   appError.value = error
+  showAppError.value = true
   logger.error('LEGACY WRAPPER ERROR')
 }
 const errorHandlerProvider = useErrorHandlerStore()
@@ -623,12 +623,6 @@ onUnmounted(() => {
       display:none;
     }
   }
-}
-##{$appName}-error {
-  max-width: 90%;
-}
-#legacy-ajax-error-heading {
-  margin-left: 6px;
 }
 @import "../../style/flex.scss";
 </style>
