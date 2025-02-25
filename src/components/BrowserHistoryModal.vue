@@ -31,14 +31,15 @@
            v-bind="$attrs"
            v-on="$listeners"
            @click="dataPopupShown = undefined"
+           @update:show="emit('update:show', false)"
   >
     <template #default>
       <NcActions :class="['browser-history-actions', { loading }]">
         <NcActionButton @click="reloadHistoryStates">
           <template #icon>
             <IconReload :size="20" />
-            {{ t(appName, 'Reload History States') }}
           </template>
+          {{ t(appName, 'Reload History States') }}
         </NcActionButton>
       </NcActions>
       <h2 :id="modalPageHeadingId" class="modal-page-heading">
@@ -76,7 +77,7 @@
           <template #actions>
             <NcActionButton v-tooltip="t(appName, `Push the listed items after the current view
 and navigate to the last active view of the saved history.`)"
-                            @click="pushHistoryChain(+mtime)"
+                            @click="pushHistoryStack(+mtime)"
             >
               <template #icon>
                 <IconLoad />
@@ -85,7 +86,7 @@ and navigate to the last active view of the saved history.`)"
             </NcActionButton>
             <NcActionButton v-tooltip="t(appName, `Replace the current browser history by the listed items
 and navigate to the last active view of the saved history.`)"
-                            disabled
+                            @click="replaceHistoryStack(+mtime)"
             >
               <template #icon>
                 <IconLoad />
@@ -94,7 +95,7 @@ and navigate to the last active view of the saved history.`)"
             </NcActionButton>
             <NcActionButton v-tooltip="t(appName, `Append the listed items at the end of the current browser history
 and navigate to the last active view of the saved history.`)"
-                            disabled
+                            @click="appendHistoryStack(+mtime)"
             >
               <template #icon>
                 <IconLoad />
@@ -256,15 +257,38 @@ const pushRoute = async (timestamp: number, key: string) => {
   return router.push(location)
 }
 
-const pushHistoryChain = async (timestamp: number) => {
+const ensurePostData = async (timestamp: number) => {
   const promises = Object.keys(historyData.value[timestamp].history).map(key => loadPostData(timestamp, key))
   await Promise.all(promises) // the attached error handler should catch all errors
   for (const entry of Object.values(historyData.value[timestamp].history)) {
     if (!entry.post) {
-      return // user has already be informed
+      return false
     }
   }
-  await history.pushHistoryChain(historyData.value[timestamp].history, historyData.value[timestamp].position)
+  return true
+}
+
+const pushHistoryStack = async (timestamp: number) => {
+  if (!await ensurePostData(timestamp)) {
+    return // user has already be informed
+  }
+  await history.pushHistoryStack(historyData.value[timestamp].history, historyData.value[timestamp].position)
+  emit('update:show', false)
+}
+
+const replaceHistoryStack = async (timestamp: number) => {
+  if (!await ensurePostData(timestamp)) {
+    return // user has already be informed
+  }
+  await history.replaceHistoryStack(historyData.value[timestamp].history, historyData.value[timestamp].position)
+  emit('update:show', false)
+}
+
+const appendHistoryStack = async (timestamp: number) => {
+  if (!await ensurePostData(timestamp)) {
+    return // user has already be informed
+  }
+  await history.appendHistoryStack(historyData.value[timestamp].history, historyData.value[timestamp].position)
   emit('update:show', false)
 }
 
