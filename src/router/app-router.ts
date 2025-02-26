@@ -22,13 +22,14 @@
 import { appName } from '../config.ts';
 import Vue from 'vue';
 import Router from 'vue-router';
-import type { RouterOptions } from 'vue-router';
+import type { RouterOptions, Route } from 'vue-router';
 import { generateUrl } from '@nextcloud/router';
 import appRoutes from './routes.js';
-// import Console from '../util/console.ts';
+import { isNavigationFailure, NavigationFailureType } from 'vue-router'
+import Console from '../util/console.ts';
 
-// const COMPONENT_NAME = 'app-router';
-// const logger = new Console(COMPONENT_NAME);
+const COMPONENT_NAME = 'app-router';
+const logger = new Console(COMPONENT_NAME);
 
 Vue.use(Router);
 
@@ -49,6 +50,23 @@ const options: RouterOptions = {
       };
     }
   },
+  // Disable throwing errors on redirection. We use this to
+  // re-"mis"-use the calendar-app editor widgets which otherwise would
+  // lead to an unhandled promise error.
+  navigationPromiseFactory(arg) {
+    const { promise, resolve, reject } = Promise.withResolvers<Route>();
+
+    arg(resolve, (any) => {
+      if (isNavigationFailure(any, NavigationFailureType.redirected)) {
+        logger.debug('Catch and ignore redirection navigation error', { error: any });
+        resolve(any.to);
+      } else {
+        reject(any);
+      }
+    });
+
+    return promise;
+  }
 };
 
 const router = new Router(options);
