@@ -466,15 +466,15 @@ export default defineStore(storeId, () => {
     let promise: Promise<void>;
     let count = 0;
     do {
-      logger.debug('ATTEMPT TO AQUIRE MUTATION LOCK', ++count);
+      logger.debug(3, 'ATTEMPT TO AQUIRE MUTATION LOCK', ++count);
       await (promise = mutationLock.promise);
     } while (promise !== mutationLock.promise);
-    logger.debug('AQUIRED MUTATION LOCK');
+    logger.debug(3, 'AQUIRED MUTATION LOCK');
     return mutationLock = Promise.withResolvers<void>();
   };
 
   const releaseMutationLock = () => {
-    logger.debug('RELEASE MUTATION LOCK');
+    logger.debug(3, 'RELEASE MUTATION LOCK');
     mutationLock.resolve();
   };
 
