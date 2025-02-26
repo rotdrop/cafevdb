@@ -49,5 +49,4 @@ const routes: RouteConfig[] = [
   },
 ];
 
-export default routes
-;
+export default routes;
