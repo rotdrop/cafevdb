@@ -47,13 +47,13 @@
       </h2>
       <ul v-for="(state, mtime) in historyData" :key="mtime">
         <NcListItem active
-                    :name="stateDisplayName(state, +mtime)"
+                    :name="stateDisplayName(state, mtime)"
                     :bold="true"
                     :counter-number="Object.keys(state.history).length"
                     :href="generateAppUrl(state.history[state.position].path.replace(/^\/+/, ''))"
                     counter-type="highlighted"
                     :force-display-actions="true"
-                    @click.prevent="pushRoute(+mtime, state.position)"
+                    @click.prevent="pushRoute(mtime, state.position)"
         >
           <template #icon>
             <IconHistoryState />
@@ -66,10 +66,10 @@
           <template #extra-actions>
             <NcButton type="primary"
                       :aria-label="t(appName, 'Toggle Details')"
-                      @click="dataPopupShown = undefined; expandedState = expandedState === +mtime ? undefined : +mtime"
+                      @click="dataPopupShown = undefined; expandedState = expandedState === mtime ? undefined : mtime"
             >
               <template #icon>
-                <IconShowDetails v-if="expandedState !== +mtime" />
+                <IconShowDetails v-if="expandedState !== mtime" />
                 <IconHideDetails v-else />
               </template>
             </NcButton>
@@ -77,7 +77,7 @@
           <template #actions>
             <NcActionButton v-tooltip="t(appName, `Push the listed items after the current view
 and navigate to the last active view of the saved history.`)"
-                            @click="pushHistoryStack(+mtime)"
+                            @click="pushHistoryStack(mtime)"
             >
               <template #icon>
                 <IconLoad />
@@ -86,7 +86,7 @@ and navigate to the last active view of the saved history.`)"
             </NcActionButton>
             <NcActionButton v-tooltip="t(appName, `Replace the current browser history by the listed items
 and navigate to the last active view of the saved history.`)"
-                            @click="replaceHistoryStack(+mtime)"
+                            @click="replaceHistoryStack(mtime)"
             >
               <template #icon>
                 <IconLoad />
@@ -95,14 +95,14 @@ and navigate to the last active view of the saved history.`)"
             </NcActionButton>
             <NcActionButton v-tooltip="t(appName, `Append the listed items at the end of the current browser history
 and navigate to the last active view of the saved history.`)"
-                            @click="appendHistoryStack(+mtime)"
+                            @click="appendHistoryStack(mtime)"
             >
               <template #icon>
                 <IconLoad />
               </template>
               {{ t(appName, 'Append to Current') }}
             </NcActionButton>
-            <NcActionButton @click="dataPopupShown = undefined; deleteHistoryState(+mtime)">
+            <NcActionButton @click="dataPopupShown = undefined; deleteHistoryState(mtime)">
               <template #icon>
                 <IconDelete />
               </template>
@@ -112,18 +112,18 @@ and navigate to the last active view of the saved history.`)"
         </NcListItem>
         <!-- .stop in order to prevent floating-vue to close the tooltip -->
         <NcListItem v-for="(entry, key) in state.history"
-                    v-show="expandedState === +mtime"
+                    v-show="expandedState === mtime"
                     :key="key"
                     v-tooltip="{
-                      content: () => makePostDataTooltip(+mtime, key),
+                      content: () => makePostDataTooltip(mtime, key),
                       html: true,
-                      shown: isDataPopupShown(+mtime, key),
+                      shown: isDataPopupShown(mtime, key),
                       triggers: [],
                     }"
                     :bold="key === state.position"
                     :href="generateAppUrl(state.history[state.position].path.replace(/^\/+/, ''))"
                     :force-display-actions="true"
-                    @click.stop.prevent="pushRoute(+mtime, key)"
+                    @click.stop.prevent="pushRoute(mtime, key)"
         >
           <template #icon>
             <IconLinkPosition v-if="key === state.position" />
@@ -140,10 +140,10 @@ and navigate to the last active view of the saved history.`)"
           <template #actions>
             <!-- .stop in order to prevent floating-vue to close the tooltip -->
             <NcActionButton v-tooltip="t(appName, 'Show the raw data submitted to the server (expert use).')"
-                            @click.stop.prevent="toggleDataPopupShown(+mtime, key)"
+                            @click.stop.prevent="toggleDataPopupShown(mtime, key)"
             >
               <template #icon>
-                <IconViewData v-if="!isDataPopupShown(+mtime, key)" />
+                <IconViewData v-if="!isDataPopupShown(mtime, key)" />
                 <IconHideData v-else />
               </template>
               {{ t(appName, 'Data-Record') }}
