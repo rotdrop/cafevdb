@@ -115,7 +115,7 @@ const calendarRoutes: RouteConfig[] = [
   {
     path: '--never--',
     name: 'CalendarView',
-    beforeEnter: (_to, _from, next) => {
+    beforeEnter: (to, _from, next) => {
       if (pushDepth > 0) {
         logger.info('Try go back', pushDepth);
         next();
@@ -126,13 +126,17 @@ const calendarRoutes: RouteConfig[] = [
           name: preCalendarRoute.name!,
           params: preCalendarRoute.params,
           query: preCalendarRoute.query,
-          replace: true,
+          // Unconditional replace would be wrong, we just redirect
+          // the push to --never-- to the previous page, but still
+          // push to the history stack. So just keep the transition
+          // type of the original target route.
+          replace: to.transition === 'replace',
         };
         preCalendarRoute = undefined;
         next(target);
       } else {
         logger.error('No previous route defined');
-        next({ name: 'home', replace: true })
+        next({ name: 'home', replace: to.transition === 'replace' })
       }
     },
   },
