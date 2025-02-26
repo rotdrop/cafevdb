@@ -49,5 +49,5 @@ trait CreatedAtEntity
    */
   #[Gedmo\Timestampable(on: 'create')]
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected DateTimeInterface $created;
+  protected ?DateTimeInterface $created;
 }

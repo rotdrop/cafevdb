@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024, 2025, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,14 +24,15 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Exceptions\DatabaseException;
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use DateTimeInterface;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Exceptions\DatabaseException;
 
 /**
  * An entity which modesl a file-system file. While it is not always
@@ -51,9 +52,9 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 class File implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\CreatedAtEntity;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\UpdatedAt;
-  use CAFEVDB\Traits\CreatedAtEntity;
 
   const PATH_SEPARATOR = '/';
 
@@ -104,7 +105,7 @@ class File implements \ArrayAccess
    */
   #[Gedmo\Timestampable(on: ['update', 'change'], field: 'fileData')]
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected $updated;
+  protected ?DateTimeInterface $updated;
 
   /** {@inheritdoc} */
   public function __construct($fileName = null, $data = null, $mimeType = null)

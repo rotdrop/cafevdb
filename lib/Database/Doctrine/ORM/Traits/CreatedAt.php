@@ -32,9 +32,9 @@ trait CreatedAt
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
   /**
-   * @var DateTimeInterface
+   * @var null|DateTimeInterface
    */
-  protected DateTimeInterface $created;
+  protected ?DateTimeInterface $created;
 
   /**
    * Sets created.
