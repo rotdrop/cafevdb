@@ -65,7 +65,7 @@ class WebBrowserHistoryController extends Controller
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ?string $appName,
+    string $appName,
     IRequest $request,
     protected EntityManager $entityManager,
     protected IDateTimeFormatter $dateTimeFormatter,
