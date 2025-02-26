@@ -32,7 +32,7 @@ import axios, { type AxiosResponse } from '@nextcloud/axios';
 import moment from '@nextcloud/moment';
 import { showError, showInfo, showMessage } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
-import { getBuilder } from '@nextcloud/browser-storage';
+import * as SessionStorage from '../util/session-storage.ts';
 
 import Console from '../util/console.ts';
 import generateAppUrl from '../toolkit/util/generate-url.js';
@@ -135,8 +135,6 @@ export default defineStore(storeId, () => {
   const logger = loggerRef.value;
 
   logger.debug('HISTORY STORE INIT');
-
-  const browserStorage = getBuilder(appName).clearOnLogout().build();
 
   const requestData = reactive<Record<string, TemplatePostData> >({});
 
@@ -243,26 +241,21 @@ export default defineStore(storeId, () => {
   // addEventListener("beforeunload", (event) => {
   //   logger.info('BEFORE UNLOAD EVENT', event);
   // });
-  document.onvisibilitychange = (event) => {
-    logger.info('VISIBILITY CHANGE EVENT', event);
+  document.onvisibilitychange = (_event) => {
+    // no async code in this function, it will not be executed.
+    logger.info('VISIBILITY CHANGE EVENT', { state: document.visibilityState });
     if (document.visibilityState === 'hidden' && Object.keys(routerHistory.value).length > 1) {
-      try {
-        const historySaveRecord = JSON.stringify(prepareHistorySaveRecord());
-        browserStorage.setItem(sessionStorageHistoryKey, historySaveRecord);
-      } catch(error) {
-        logger.error('Cannot store the history in the session storage', error);
-      }
-      //   navigator.sendBeacon("/log", analyticsData);
+      const historySaveRecord = prepareHistorySaveRecord();
+      SessionStorage.setItem(sessionStorageHistoryKey, historySaveRecord);
     }
   };
 
   const getSessionStorageHistoryData = ():HistoryPersistenceRecord|null => {
     try {
-      const sessionData = browserStorage.getItem(sessionStorageHistoryKey);
-      browserStorage.removeItem(sessionStorageHistoryKey);
-      if (sessionData) {
-        return JSON.parse(sessionData);
-      }
+      const historyData = SessionStorage.getItem(sessionStorageHistoryKey);
+      logger.debug('GOT HISTORY DATA', historyData);
+      // SessionStorage.removeItem(sessionStorageHistoryKey);
+      return historyData;
     } catch (error) {
       logger.error('Unable to retrieve history data from the session storage', error);
     }
