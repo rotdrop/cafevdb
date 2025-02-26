@@ -207,7 +207,7 @@ export const sanitizePostData = (params: TemplatePostData, excludeUrlParams = fa
     },
   });
 
-  logger.debug('SANITIZE POST DATA RESULT', params);
+  logger.debug('SANITIZE POST DATA RESULT', { ...params });
 
   return params;
 }
