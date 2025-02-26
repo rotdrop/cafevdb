@@ -54,7 +54,12 @@
         </template>
       </NcButton>
       <div class="spacer" />
-      <NcButton>
+      <NcButton :class="appPrefix('top-nav-button')"
+                :disabled="busyState || !nextHistoryIndex"
+                :aria-label="t(appName, 'Got to the start page of the app.')"
+                :to="{ name: 'home' }"
+                exact
+      >
         <template #icon>
           <HomeIcon />
         </template>
