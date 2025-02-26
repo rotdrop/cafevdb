@@ -749,11 +749,7 @@ router.onReady(() => {
     stopRedirectWatcher()
   }
 })
-// onError does catch anything __except__ routing errors.
-router.onError((...args) => {
-  logger.debug('ROUTER ON ERROR HOOK', { ...args }, window?.history?.state)
-  history.cancelHistoryAction()
-})
+
 const onTransitionComplete = (...args: unknown[]) => { logger.debug('ON TRANSITION COMPLETE', { ...args }) }
 const onTransitionError = (...args: unknown[]) => { logger.debug('ON TRANSITION COMPLETE', { ...args }) }
 

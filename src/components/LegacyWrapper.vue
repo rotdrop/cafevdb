@@ -278,6 +278,8 @@ const popBusyState = appData.popBusyState
 const scheduleHistoryAction = browserHistory.scheduleHistoryAction
 const scheduleHistoryPush = browserHistory.scheduleHistoryPush
 const scheduleHistoryReplace = browserHistory.scheduleHistoryReplace
+const aquireHistoryMutationLock = browserHistory.aquireMutationLock
+const releaseHistoryMutationLock = browserHistory.releaseMutationLock
 
 const navigateBack = () => router.back()
 const navigateForward = () => router.forward()
@@ -293,7 +295,9 @@ const reloadPage = async () => {
       return
     }
   }
+  await aquireHistoryMutationLock()
   await loadLegacy()
+  releaseHistoryMutationLock()
 }
 
 const onUserManualPopup = () => {
@@ -472,6 +476,7 @@ watch(
   async (...args) => {
     logger.info('PAGE LOAD TRIGGER CHANGE', ...args)
     if (pageLoadTrigger.value) {
+      await aquireHistoryMutationLock()
       pageLoadTrigger.value = false
       appError.value = null
       if (!props.noLegacyReload) {
@@ -484,6 +489,7 @@ watch(
         await synchronizeHistoryState(hash)
         logger.info('SYNCHRONIZED BROWSER HISTORY STATE WITH COMPONENT STATE', window.location, props.hash, props.noLegacyReload)
       }
+      releaseHistoryMutationLock()
     }
   },
 )
