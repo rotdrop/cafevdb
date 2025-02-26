@@ -22,6 +22,7 @@
  */
 
 import StackTrace from 'stacktrace-js';
+import type { StackFrame } from 'stacktrace-js';
 
 import globalState from '../app/globalstate.js';
 import { DEBUG_SMAPS } from '../debug-modes.ts';
@@ -31,62 +32,81 @@ export const stackTraceOptions = {
   sourceCache: {}
 }
 
-export const syncStackFrame = (offset: number) => StackTrace.getSync(stackTraceOptions)?.[offset+1];
-export const asyncStackFrame = async (offset: number) => {
+const syncStackFrames = (offset: number, depth: number) =>
+  StackTrace.getSync(stackTraceOptions).slice(offset + 1, offset + 1 + depth)
+const asyncStackFrames = async (offset: number, depth: number) => {
   const stackFrames = await StackTrace.get(stackTraceOptions);
-  return stackFrames?.[offset + 1];
+  return stackFrames.slice(offset + 1, offset + 1 + depth);
 };
 
-export const stackFrame = async (offset: number) => (globalState.debugModes & DEBUG_SMAPS)
-  ? asyncStackFrame(offset)
-  : syncStackFrame(offset);
+export const stackFrames = async (offset: number, depth: number) => (globalState.debugModes & DEBUG_SMAPS)
+  ? asyncStackFrames(offset, depth)
+  : syncStackFrames(offset, depth);
 
 type ConsoleMethods = 'debug'|'info'|'error'|'trace';
 
 class Console {
   constructor(prefix: string) {
     this.prefix = prefix;
+    this.enabled = { debug: true, info: true, error: true, trace: true };
+    this.stackDepth = 0;
   }
-  prefix: string;
+  private prefix: string;
+  private enabled: { debug: boolean, info: boolean, error: boolean, trace: boolean };
+  private stackDepth: number;
   private timestamp() {
     return (new Date()).toLocaleTimeString("en-gb", { hour: '2-digit', minute: '2-digit', second: '2-digit', fractionalSecondDigits: 3 });
   }
-  private async asyncLocationMessage() {
-    const time = this.timestamp();
+  private async asyncStackFrames(depth: number) {
     try {
-      const frame = (await stackFrame(2)).toString();
-      return time + ' ' + this.prefix + ': ' + frame;
+      return (await stackFrames(4, depth));
     } catch {
-      return time + ' ' + this.prefix;
+      return [];
     }
   };
-  private syncLocationMessage() {
-    const time = this.timestamp();
+  private syncStackFrames(depth: number) {
     try {
-      const frame = syncStackFrame(2).toString();
-      return time + ' ' + this.prefix + ': ' + frame;
+      return syncStackFrames(4, depth);
     } catch {
-      return time + ' ' + this.prefix;
+      return [];
     }
+  };
+  private locationObject(stack: StackFrame[]) {
+    const time = this.timestamp();
+    const prefix = time + ' ' + this.prefix + (stack.length > 0 ? (' ' + stack[0].toString()) : '');
+    return stack.length > 1 ? [ prefix, { stack: stack.map(entry => entry.toString()) } ] : [ prefix ];
   };
   private emitMessage(method: ConsoleMethods, ...args: any[]) {
+    const depth = Math.max(1, (args.length > 0 && typeof args[0] === 'number') ? args.shift() : this.stackDepth);
     if (globalState.debugModes & DEBUG_SMAPS) {
-      this.asyncLocationMessage().then(message => console[method](message, ...args));
+      this.asyncStackFrames(depth).then(stack => { console[method](...this.locationObject(stack), ...args); });
     } else {
-      console[method](this.syncLocationMessage(), ...args);
+      console[method](...this.locationObject(this.syncStackFrames(depth)), ...args);
     }
   }
   debug(...args: any[]) {
     return this.emitMessage('debug', ...args);
   };
-  async info(...args: any[]) {
+  info(...args: any[]) {
     return this.emitMessage('info', ...args);
   };
-  async error(...args: any[]) {
+  error(...args: any[]) {
     return this.emitMessage('error', ...args);
   };
-  async trace(...args: any[]) {
+  trace(...args: any[]) {
     return this.emitMessage('trace', ...args);
+  };
+  disable(method: 'debug'|'info'|'error'|'trace') {
+    this.enabled[method] = false;
+  };
+  enable(method: 'debug'|'info'|'error'|'trace') {
+    this.enabled[method] = true;
+  };
+  withStack(depth: number) {
+    this.stackDepth = depth;
+  };
+  withoutStack() {
+    this.stackDepth = 0;
   };
 }
 
