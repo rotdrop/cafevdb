@@ -92,8 +92,6 @@ class WebBrowserHistoryController extends Controller
     $data = [
       'key' => $entry->getKey(),
       'path' => $entry->getPath(),
-      'next' => $entry->getNextKey(),
-      'prev' => $entry->getPrevKey(),
       'hash' => $entry->getDataHash(),
     ];
     if ($mode === self::GET_MODE_DEEP) {
@@ -259,12 +257,6 @@ class WebBrowserHistoryController extends Controller
         $this->persist($entry);
         $historyState->addEntry($entry);
       }
-      // loop again to establish the connectivity
-      foreach ($history as $key => $entryData) {
-        $entry = $historyState->getEntry($key);
-        $entry->setNext($historyState->getEntry($entryData['next']));
-        $entry->setPrev($historyState->getEntry($entryData['prev']));
-      }
 
       $historyState->setPos($historyState->getEntry($position));
 
@@ -328,8 +320,6 @@ class WebBrowserHistoryController extends Controller
       $historyState->setPos(null);
       $this->entityManager->flush();
       foreach ($historyState->getStack() as $entry) {
-        $entry->setNext(null);
-        $entry->setPrev(null);
         $this->entityManager->flush();
         $entry->getData()->removeFromEntry($entry);
       }

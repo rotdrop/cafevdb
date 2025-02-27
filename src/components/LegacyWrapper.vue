@@ -24,7 +24,7 @@
   <div :id="appPrefix('legacy-wrapper')">
     <div :id="appPrefix('top-navigation')" class="flex-container flex-align-center">
       <NcButton :class="appPrefix('top-nav-button')"
-                :disabled="busyState || !prevHistoryIndex"
+                :disabled="busyState || atHistoryBase"
                 :aria-label="t(appName, 'Navigate to the previous view in the browser history stack.')"
                 @click="navigateBack"
       >
@@ -45,7 +45,7 @@
       </NcButton>
       <div class="spacer" />
       <NcButton :class="appPrefix('top-nav-button')"
-                :disabled="busyState || !nextHistoryIndex"
+                :disabled="busyState || atHistoryTop"
                 :aria-label="t(appName, 'Navigate to the next view in the browser history stack.')"
                 @click="navigateForward"
       >
@@ -55,7 +55,7 @@
       </NcButton>
       <div class="spacer" />
       <NcButton :class="appPrefix('top-nav-button')"
-                :disabled="busyState || !nextHistoryIndex"
+                :disabled="busyState"
                 :aria-label="t(appName, 'Got to the start page of the app.')"
                 :to="{ name: 'home' }"
                 exact
@@ -259,9 +259,9 @@ const wikiManualSection = computed(() => dokuWikiSection([
 const wikiManualUrl = computed(() => dokuWikiUrl(wikiManualSection.value))
 const wikiManualUrlTarget = computed(() => dokuWikiUrlTarget(wikiManualSection.value))
 const busyState = computed(() => appData.busyState)
-const currentHistoryState = computed(() => browserHistory.currentHistoryState)
-const prevHistoryIndex = computed(() => browserHistory.prevHistoryIndex)
-const nextHistoryIndex = computed(() => browserHistory.nextHistoryIndex)
+const currentHistoryState = browserHistory.currentHistoryState
+const atHistoryBase = browserHistory.atHistoryBase
+const atHistoryTop = browserHistory.atHistoryTop
 const pmePrefix = computed(() => globalState.PHPMyEdit.pmePrefix)
 const pmeSelector = (token: string, element: string) =>
   (element || '') + '.' + pmePrefix.value + '-' + token
@@ -358,8 +358,8 @@ const doLoadLegacy = async () => {
   pushBusyState()
   closeNavigation()
   asyncEmit(LEGACY_PAGE_CLEANUP)
-  logger.info('HISTORY STATE AT ENTRY', currentHistoryState.value)
-  const historyAppData = currentHistoryState.value.post
+  logger.info('HISTORY STATE AT ENTRY', currentHistoryState)
+  const historyAppData = currentHistoryState.post
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const post: TemplatePostData = {
     template: props.template,
@@ -368,7 +368,7 @@ const doLoadLegacy = async () => {
   // TODO: when chaning template, post-data exception project-id, project-name, musician-id should probably be cleared ...
   Object.assign(post, historyAppData, { ...post /* spread is necessary here */ })
   Object.assign(historyAppData, post)
-  logger.info('POST including history state', post, { ...currentHistoryState.value, post: historyAppData })
+  logger.info('POST including history state', post, { ...currentHistoryState, post: historyAppData })
   const currentHash = generatePostHash(post)
   if (props.hash !== currentHash) {
     previousHash = currentHash
@@ -484,7 +484,7 @@ watch(
       } else {
         logger.info('NO LOAD FLAG ACTIVE, SKIPPING PAGE LOAD')
         // keep current post data, this is just for updating the hash value in window.location
-        const hash = scheduleHistoryReplace(currentHistoryState.value.post)
+        const hash = scheduleHistoryReplace(currentHistoryState.post)
         // remove no-load from the display URL
         await synchronizeHistoryState(hash)
         logger.info('SYNCHRONIZED BROWSER HISTORY STATE WITH COMPONENT STATE', window.location, props.hash, props.noLegacyReload)

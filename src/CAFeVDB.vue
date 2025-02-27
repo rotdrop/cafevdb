@@ -349,8 +349,6 @@ const {
   currentProjectName,
 } = storeToRefs(appData)
 
-const routerHistory = history.routerHistory
-
 // TRANSLATORS: unknown orchestra name placeholder
 const orchestraName = ref(initialState?.orchestra || t(appId, '[UNKNOWN]'))
 const icon = ref(appIcon)
@@ -757,7 +755,6 @@ onMounted(() => {
   logger.debug('ON MOUNTED INITIAL HISTORY', {
     currentRoute: { ...router.currentRoute },
     windowHistoryState: { ...window.history?.state },
-    history: { ...routerHistory },
   })
 
   // works only after mounting

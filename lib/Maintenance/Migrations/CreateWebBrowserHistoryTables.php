@@ -45,14 +45,8 @@ class CreateWebBrowserHistoryTables extends AbstractMigration
     state_id INT NOT NULL,
     `key` NUMERIC(16, 3) NOT NULL,
     path VARCHAR(32768) CHARACTER SET ascii NOT NULL COLLATE `ascii_bin`,
-    next_state_id INT DEFAULT NULL,
-    next_key NUMERIC(16, 3) DEFAULT NULL,
-    prev_state_id INT DEFAULT NULL,
-    prev_key NUMERIC(16, 3) DEFAULT NULL,
     data_hash CHAR(64) NOT NULL COLLATE `ascii_general_ci`,
     INDEX IDX_2059233F5D83CC1 (state_id),
-    INDEX IDX_2059233F3DC2702F7451AA4E (next_state_id, next_key),
-    INDEX IDX_2059233F6A3487C77A916932 (prev_state_id, prev_key),
     INDEX IDX_2059233F6AF7A95A (data_hash),
     PRIMARY KEY(state_id, `key`)
   )",
@@ -72,12 +66,6 @@ class CreateWebBrowserHistoryTables extends AbstractMigration
       "ALTER TABLE WebBrowserHistoryEntries
   ADD CONSTRAINT FK_2059233F5D83CC1
   FOREIGN KEY IF NOT EXISTS (state_id) REFERENCES WebBrowserHistoryStates (id)",
-      "ALTER TABLE WebBrowserHistoryEntries
-  ADD CONSTRAINT FK_2059233F3DC2702F7451AA4E
-  FOREIGN KEY IF NOT EXISTS (next_state_id, next_key) REFERENCES WebBrowserHistoryEntries (state_id, `key`)",
-      "ALTER TABLE WebBrowserHistoryEntries
-  ADD CONSTRAINT FK_2059233F6A3487C77A916932
-  FOREIGN KEY IF NOT EXISTS (prev_state_id, prev_key) REFERENCES WebBrowserHistoryEntries (state_id, `key`)",
       "ALTER TABLE WebBrowserHistoryEntries
   ADD CONSTRAINT FK_2059233F6AF7A95A
   FOREIGN KEY IF NOT EXISTS (data_hash) REFERENCES WebBrowserHistoryData (hash)",

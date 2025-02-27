@@ -58,16 +58,6 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 32768, nullable: false, options: ['collation' => 'ascii_bin'])]
   protected string $path;
 
-  #[ORM\JoinColumn(name: 'next_state_id', referencedColumnName: 'state_id', nullable: true)]
-  #[ORM\JoinColumn(name: 'next_key', referencedColumnName: 'key', nullable: true)]
-  #[ORM\OneToOne(targetEntity: WebBrowserHistoryEntry::class, fetch: 'EXTRA_LAZY')]
-  protected ?WebBrowserHistoryEntry $next;
-
-  #[ORM\JoinColumn(name: 'prev_state_id', referencedColumnName: 'state_id', nullable: true)]
-  #[ORM\JoinColumn(name: 'prev_key', referencedColumnName: 'key', nullable: true)]
-  #[ORM\OneToOne(targetEntity: WebBrowserHistoryEntry::class, fetch: 'EXTRA_LAZY')]
-  protected ?WebBrowserHistoryEntry $prev;
-
   #[ORM\JoinColumn(name: 'data_hash', referencedColumnName: 'hash', nullable: false)]
   #[ORM\ManyToOne(targetEntity: WebBrowserHistoryData::class, cascade: ['persist'], inversedBy: 'entries', fetch: 'EXTRA_LAZY')]
   protected WebBrowserHistoryData $data;
@@ -76,16 +66,12 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   public function __construct(
     ?string $key = null,
     ?WebBrowserHistoryState $state = null,
-    ?WebBrowserHistoryEntry $next = null,
     ?string $path = null,
-    ?WebBrowserHistoryEntry $prev = null,
     ?WebBrowserHistoryData $data = null,
   ) {
     $key && $this->key = $key;
     $state && $this->state = $state;
     $path && $this->path = $path;
-    $this->setPrev($prev);
-    $this->setNext($next);
     $data && $this->setData($data);
   }
 
@@ -143,54 +129,6 @@ class WebBrowserHistoryEntry implements \ArrayAccess
     return $this;
   }
 
-  /** @return null|string */
-  public function getPrevKey():?string
-  {
-    return $this->prev ? $this->prev->getKey() : null;
-  }
-
-  /** @return null|WebBrowserHistoryEntry */
-  public function getPrev():?WebBrowserHistoryEntry
-  {
-    return $this->prev;
-  }
-
-  /**
-   * @param null|WebBrowserHistoryEntry $prev
-   *
-   * @return WebBrowserHistoryEntry
-   */
-  public function setPrev(?WebBrowserHistoryEntry $prev):WebBrowserHistoryEntry
-  {
-    $this->prev = $prev;
-
-    return $this;
-  }
-
-  /** @return null|string */
-  public function getNextKey():?string
-  {
-    return $this->next ? $this->next->getKey() : null;
-  }
-
-  /** @return null|WebBrowserHistoryEntry */
-  public function getNext():?WebBrowserHistoryEntry
-  {
-    return $this->next;
-  }
-
-  /**
-   * @param null|WebBrowserHistoryEntry $next
-   *
-   * @return WebBrowserHistoryEntry
-   */
-  public function setNext(?WebBrowserHistoryEntry $next):WebBrowserHistoryEntry
-  {
-    $this->next = $next;
-
-    return $this;
-  }
-
   /** @return WebBrowserHistoryData */
   public function getData():WebBrowserHistoryData
   {
@@ -225,7 +163,5 @@ class WebBrowserHistoryEntry implements \ArrayAccess
     // nope, need not be, would have to traverse the list
     // $this->data->removeEncryptionIdentity($this->state->getUserId());
     $this->data->removeFromEntry($this);
-    $this->setPrev(null);
-    $this->setNext(null);
   }
 }
