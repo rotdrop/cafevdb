@@ -116,10 +116,22 @@ const calendarRoutes: RouteConfig[] = [
     path: '--never--',
     name: 'CalendarView',
     beforeEnter: (to, _from, next) => {
-      if (pushDepth > 0) {
+      if (pushDepth > 0 && pushDepth < 0) { // grin So: the history
+        // tail is deleted by a push, but not by simple go back. This
+        // means that going back will keep the history stack as is and
+        // just move to the desired position. Then clicking next would
+        // "move back" to the previous view which is probably not what
+        // the user would expect, so it is probably really better to
+        // only push to the history, and not restore a previous view
+        // by a programmatic go-to.
+        //
+        // The only way around be complicated: if we have a
+        // previous-previous view, move to that view and then push. If
+        // there is no such view, move to the base view and replace --
+        // oh no.
         logger.info('Try go back', pushDepth);
-        next();
-        asyncEmit(HISTORY_GO_REQUEST, { level: -pushDepth-1 });
+        next(false);
+        asyncEmit(HISTORY_GO_REQUEST, { level: -pushDepth });
       } else if (preCalendarRoute) {
         logger.info('Try restore previous route on leaving calendar stuff', preCalendarRoute);
         const target = {

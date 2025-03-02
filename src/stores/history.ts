@@ -24,7 +24,14 @@
 import type { Route, TransitionType } from 'vue-router';
 import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
 import { defineStore } from 'pinia';
-import { ref, computed, watch, reactive } from 'vue';
+import {
+  computed,
+  del as vueDel,
+  reactive,
+  ref,
+  set as vueSet,
+  watch,
+} from 'vue';
 import { useRoute } from 'vue-router/composables';
 import { isNavigationFailure, NavigationFailureType } from 'vue-router'
 
@@ -202,7 +209,11 @@ export default defineStore(storeId, () => {
 
   const initialHistoryKey: undefined|string = window?.history?.state?.key;
   const currentHistoryKey = ref(initialHistoryKey || '');
-  const routerHistoryKeys = computed(() => Object.keys(routerHistory.value).sort((a, b) => +a - +b));
+  const routerHistoryKeys = computed(() => {
+    const keys = Object.keys(routerHistory.value).sort((a, b) => +a - +b);
+    logger.debug('KEYS COMPUTATION', { keys: [...keys] });
+    return keys;
+  });
 
   const pendingHistoryData = ref<undefined|TemplatePostData>(undefined);
   const pendingHistoryHash = ref<undefined|string>(undefined); // optimization, do not compute twice
@@ -245,9 +256,9 @@ export default defineStore(storeId, () => {
   // addEventListener("beforeunload", (event) => {
   //   logger.info('BEFORE UNLOAD EVENT', event);
   // });
-  document.onvisibilitychange = (_event) => {
+  document.onvisibilitychange = (event) => {
     // no async code in this function, it will not be executed.
-    logger.info('VISIBILITY CHANGE EVENT', { state: document.visibilityState });
+    logger.info('VISIBILITY CHANGE EVENT', { event, state: document.visibilityState });
     if (document.visibilityState === 'hidden' && routerHistoryKeys.value.length > 1) {
       const historySaveRecord = prepareHistorySaveRecord();
       SessionStorage.setItem(sessionStorageHistoryKey, historySaveRecord);
@@ -434,18 +445,36 @@ export default defineStore(storeId, () => {
   /**
    * Remove the history chain following the current index. This is
    * needed when pushing a new state at a position which is not the
-   * final position in the current stack. History state are ordered by
-   * the numerical value of their key.
+   * final position in the current stack. History states are ordered
+   * by the numerical value of their key.
    */
   function removeHistoryTail() {
     if (currentHistoryIndex.value < 0) {
+      logger.debug('INDEX < 0', {
+        keys: [...routerHistoryKeys.value],
+        history: { ...routerHistory },
+        key: currentHistoryKey.value,
+        index: currentHistoryIndex.value,
+      });
       errorHandler(new HistoryStoreConsistencyError(
         t(appName, 'Unable to find key {key} in current history stack.', { key: currentHistoryKey.value }),
       ));
       return false;
     }
-    for (const key of routerHistoryKeys.value.splice(0, currentHistoryIndex.value)) {
-      delete routerHistory.value[key];
+    const keysToDelete = routerHistoryKeys.value.slice(currentHistoryIndex.value + 1);
+    logger.debug('Removing history tail', {
+      currentHistoryKey: currentHistoryKey.value,
+      currentHistoryIndex: currentHistoryIndex.value,
+      history: { ...routerHistory.value },
+      keysToDelete,
+      routerHistoryKeys: [...routerHistoryKeys.value],
+    });
+    for (const key of keysToDelete) {
+      logger.debug('DELETING HISTORY ENTRY', {
+        key,
+        entry: { ...routerHistory.value[key] },
+      });
+      vueDel(routerHistory.value, key);
     }
   }
 
@@ -548,8 +577,8 @@ export default defineStore(storeId, () => {
       }
       if (currentHistoryKey.value !== key) {
         const currentState = currentHistoryState.value;
-        delete history[currentHistoryKey.value];
-        history[key] = currentState;
+        vueDel(history, currentHistoryKey.value);
+        vueSet(history, key, currentState);
         currentState.replaceKey(key);
         currentHistoryKey.value = key;
         logger.info('Adjusted initial history key', { ...history }, { ...currentHistoryState.value });
@@ -579,6 +608,8 @@ export default defineStore(storeId, () => {
         pendingHistoryAction: pendingHistoryAction.value,
         transition,
       });
+      // reset ...
+      cancelHistoryAction();
     }
     if (!pendingHistoryAction.value) {
       if (transition !== HistoryActionUnknown) {
@@ -605,14 +636,18 @@ export default defineStore(storeId, () => {
 
     switch (pendingHistoryAction.value) {
       case HistoryActionPush: {
-        const key = window.history.state.key;
-        history[key] = new RouterHistoryRecord({
-          hash: pendingHistoryHash.value,
-          post: pendingHistoryData.value,
-          key,
-          path: route.fullPath,
-        });
         removeHistoryTail();
+        const key = window.history.state.key;
+        vueSet(
+          history,
+          key,
+          new RouterHistoryRecord({
+            hash: pendingHistoryHash.value,
+            post: pendingHistoryData.value,
+            key,
+            path: route.fullPath,
+          }),
+        );
         currentHistoryKey.value = key;
         updateModificationTime();
         break;
@@ -620,9 +655,9 @@ export default defineStore(storeId, () => {
       case HistoryActionReplace: {
         if (key !== currentHistoryKey.value) {
           logger.debug('BEFORE ADJUST KEYS', key, currentHistoryKey.value, { ...history[currentHistoryKey.value] }, history?.[key]);
-          history[key] = history[currentHistoryKey.value];
+          vueSet(history, key, history[currentHistoryKey.value]);
           logger.debug('CURRENT STATE 0', { ...history[key] });
-          delete history[currentHistoryKey.value];
+          vueDel(history, currentHistoryKey.value);
           logger.debug('CURRENT STATE 1', { ...history[key] });
           currentHistoryKey.value = key;
           history[key].key = key;
@@ -659,7 +694,11 @@ export default defineStore(storeId, () => {
       currentHistoryKey: currentHistoryKey.value,
       currentHistoryState: { ...currentHistoryState.value },
       routerHistory: { ...routerHistory.value },
+      routerHistoryKeys: [...routerHistoryKeys.value],
+      currentHistoryIndex: currentHistoryIndex.value,
       windowHistoryState: window?.history?.state,
+      atBase: atHistoryBase.value,
+      atTop: atHistoryTop.value,
     });
   }
 
@@ -962,12 +1001,16 @@ export default defineStore(storeId, () => {
       logger.debug('KEYMAP', keyMap);
       for (const key of keys) {
         const entry = chain[key];
-        history[keyMap[key]] = new RouterHistoryRecord({
-          key: keyMap[key],
-          hash: entry.hash,
-          post: entry.post,
-          path: entry.path,
-        })
+        vueSet(
+          history,
+          keyMap[key],
+          new RouterHistoryRecord({
+            key: keyMap[key],
+            hash: entry.hash,
+            post: entry.post,
+            path: entry.path,
+          }),
+        );
         logger.debug('HISTORY DURING MUTAION', key, keyMap[key], { ...history });
         currentHistoryKey.value = keyMap[key];
       };
@@ -1105,7 +1148,8 @@ export default defineStore(storeId, () => {
     scheduleHistoryAction,
     scheduleHistoryPush,
     scheduleHistoryReplace,
-    cancelHistoryAction,
+    clearHistoryAction, // clear pending action without error
+    cancelHistoryAction, // abort with error
     finishHistoryAction,
     requestData,
     lastUrlPath,

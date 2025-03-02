@@ -56,12 +56,16 @@ const options: RouterOptions = {
   navigationPromiseFactory(arg) {
     const { promise, resolve, reject } = Promise.withResolvers<Route>();
 
-    arg(resolve, (any) => {
-      if (isNavigationFailure(any, NavigationFailureType.redirected)) {
-        logger.debug('Catch and ignore redirection navigation error', { error: any });
-        resolve(any.to);
+    arg(resolve, (error) => {
+      logger.debug('NAVIGATION PROMISE REJECT', { error });
+      if (isNavigationFailure(error, NavigationFailureType.redirected)) {
+        logger.debug('Catch and ignore redirection navigation error', { error});
+        resolve(error.to);
+      } else if (isNavigationFailure(error, NavigationFailureType.aborted)
+                 && error.to.path.endsWith('--never--')) {
+        resolve(error.from);
       } else {
-        reject(any);
+        reject(error);
       }
     });
 

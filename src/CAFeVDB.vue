@@ -473,7 +473,10 @@ const updatePersonalSettings = async (
   })
 }
 
-asyncSubscribe(BusEvents.HISTORY_GO_REQUEST, (event) => router.go(event.level))
+asyncSubscribe(BusEvents.HISTORY_GO_REQUEST, (event) => {
+  history.clearHistoryAction()
+  router.go(event.level)
+})
 
 const configCheck = async () => {
   const url = generateAppUrl('a/config-check')
@@ -723,7 +726,11 @@ router.beforeEach((to, from, next) => {
   next()
 })
 router.afterEach((to, from) => {
-  logger.debug('GLOBAL AFTER EACH ROUTE CHANGE', to, from, window?.history?.state)
+  logger.debug('GLOBAL AFTER EACH ROUTE CHANGE', {
+    to,
+    from,
+    windowHistory: window?.history?.state,
+  })
   pageTemplate.value = to.params?.template || 'home'
   history.finishHistoryAction(to)
   // @todo: parse the query parameters, e.g.
