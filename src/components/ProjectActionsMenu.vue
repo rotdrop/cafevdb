@@ -197,7 +197,6 @@ import * as BusEvents from '../event-bus-events.ts'
 import type { Location as RouterLocation } from 'vue-router'
 import Console from '../util/console.ts'
 import { PROJECT_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
-// import type { ComponentProps } from '../mountable-component-names.ts'
 
 const logger = new Console(COMPONENT_NAME)
 
@@ -291,6 +290,9 @@ const toProjectRouteData = (template: string):RouterLocation => {
 }
 const syncProjectData = async (projectId: number) => {
   project.value = await appData.getProject(projectId) || null
+  if (project.value) {
+    await project.value.getFolders()
+  }
   // vueSet(this.project, 'folders', this.project.folders)
 }
 const openProjectOverview = () => {
