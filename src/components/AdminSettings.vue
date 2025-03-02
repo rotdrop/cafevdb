@@ -590,8 +590,6 @@ const loading = reactive({
   groups: true,
 })
 
-watch(() => tooltipsProvider.loading, (value) => { loading.tooltips = value })
-
 const settings: AppAdminSettings = reactive({
   userAndGroupBackend: '',
   orchestraUserGroup: '',
@@ -627,6 +625,9 @@ const tooltipKeys = [
   'settings:admin:problem-report:email:verification:status:failed',
 ]
 const tooltipsProvider = useTooltipsStore()
+
+watch(() => tooltipsProvider.loading, (value) => { loading.tooltips = value })
+
 tooltipsProvider.provideTooltips(tooltipKeys)
 const hints = tooltipsProvider.tooltipsData
 
