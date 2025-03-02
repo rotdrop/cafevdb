@@ -248,7 +248,8 @@ const router = useRouter()
 const envelopeError = computed(() =>
   (props.error instanceof AppError || props.error instanceof JQueryAjaxError) && (props.error.cause instanceof Error || isJqXHRGuard(props.error.cause))
     ? props.error
-    : null)
+    : new AppError({ component: COMPONENT_NAME }, t(appName, 'Top-Level Erorr'), { cause: props.error }),
+)
 const originalError = computed(() =>
   envelopeError.value && (envelopeError.value.cause instanceof Error || isJqXHRGuard(envelopeError.value.cause))
     ? envelopeError.value.cause
