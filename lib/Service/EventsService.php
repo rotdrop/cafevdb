@@ -65,6 +65,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
 use OCA\CAFEVDB\Events\PreProjectUpdatedEvent;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /**
  * Events and tasks handling.
@@ -543,8 +544,8 @@ class EventsService
     $dtStart = $vObject->DTSTART;
     $dtEnd   = VCalendarService::getDTEnd($vObject);
 
-    $start = $dtStart->getDateTime();
-    $end = $dtEnd->getDateTime();
+    $start = self::convertToDateTime($dtStart->getDateTime());
+    $end = self::convertToDateTime($dtEnd->getDateTime());
     $allDay = !$dtStart->hasTime();
 
     $timeZone = $this->getDateTimezone();
@@ -557,12 +558,17 @@ class EventsService
         $end = $end->setTimezone($timeZone);
       }
     } else {
-      // @todo: This calls for trouble! The Nextcloud calendar assumes UTC
-      // timestamps for the recurrene-ids.
       $this->logInfo('START AND END ' . print_r($start, true) . ' ' . print_r($end, true));
-      $start = new DateTimeImmutable($start->format('Y-m-d H:i:s'), $timeZone);
-      $end = new DateTimeImmutable($end->format('Y-m-d H:i:s'), $timeZone);
     }
+    // } else {
+    //   // @todo: This calls for trouble! The Nextcloud calendar assumes UTC
+    //   // timestamps for the recurrene-ids.
+    //   // $this->logInfo('START AND END ' . print_r($start, true) . ' ' . print_r($end, true));
+    //   // $start = new DateTimeImmutable($start->format('Y-m-d H:i:s'), $timeZone);
+    //   // $end = new DateTimeImmutable($end->format('Y-m-d H:i:s'), $timeZone);
+    //   $start = self::convertToDateTime($start);
+    //   $end = self::convertToDateTime($end);
+    // }
 
     $event['start'] = $start;
     $event['end'] = $end;
@@ -715,29 +721,51 @@ class EventsService
   {
     if ($timezone === null) {
       $timezone = $this->getTimezone();
+      $this->getDateTimeZone();
     }
     if ($locale === null) {
       $locale = $this->getLocale();
     }
+    if (!empty($eventObject['times']) && $eventObject['times']['locale'] == $locale && $eventObject['times']['timezone'] == $timezone) {
+      return $eventObject['times'];
+    }
 
-    $start = $eventObject['start'];
-    $end   = $eventObject['end'];
+    $language = locale_get_primary_language($locale);
+    $region = locale_get_region($locale);
+    $carbonLocale = $language . ($region ? '_' . $region : '');
+    $dateTimeZone = new DateTimeZone($timezone);
+
+    // Variant using Carbon. We could do the same using Nextcloud's
+    // IDateTimeFormatter by constructing an UTC locale.
+    /** @var CarbonImmutable $start */
+    $start = CarbonImmutable::createFromInterface($eventObject['start'])->locale($carbonLocale);
+    /** @var CarbonImmutable $end */
+    $end   = CarbonImmutable::createFromInterface($eventObject['end'])->locale($carbonLocale);
     $allDay = $eventObject['allday'];
 
     $startStamp = $start->getTimestamp();
-
     $endStamp = $end->getTimestamp();
 
-    // locale date representation
-    $startDate = Util::strftime("%x", $startStamp, $timezone, $locale);
-    $startTime = $start->format('H:i');
-    $endTime = $end->format('H:i');
-    if ($endTime == '00:00') {
-      // make whole-day events a little more readable
-      $endTime = '24:00';
-      $endDate = Util::strftime("%x", $endStamp - 1, $timezone, $locale);
-    } else {
-      $endDate = Util::strftime("%x", $endStamp, $timezone, $locale);
+    if (!$allDay) {
+      // all-day event dates have UTC timezone and THAT JUST SHOULD BE LEFT AS IS
+      // $startDate = $start->format;
+      $start = $start->setTimezone($dateTimeZone);
+      $end = $end->setTimezone($dateTimeZone);
+    }
+    $startDate = $start->isoFormat('L');
+    $startTime = $start->isoFormat('LT');
+    $endTime = $end->isoFormat('LT');
+
+    // make events ending at midnight more readable for known locales.
+    switch ($endTime) {
+      case '00:00':
+        $endDate = $end->setTimestamp($endStamp - 1)->isoFormat('L');
+        $endTime = '24:00';
+        break;
+      default:
+        // leave as is
+        $endDate = $end->isoFormat('L');
+        break;
     }
 
     return [
@@ -855,6 +883,8 @@ class EventsService
     ];
 
     foreach ($projectEvents as $event) {
+      $event['times'] = $this->eventTimes($event);
+      $this->logInfo('EVENT TIMES ' . print_r($event['times'], true));
       $calId = array_search($event['calendarid'], $calendarIds);
       if ($calId === false) {
         $calendarUris = $this->calDavService->calendarUris($calendarId);

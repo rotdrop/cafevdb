@@ -74,18 +74,10 @@ class ProjectEventsController extends Controller
    */
   public static function makeCalendarAppData(array $event): array
   {
-    if ($event['allday']) {
-      $utcTZ = new DateTimeZone('UTC');
-      $startStamp = [
-        'single' => self::convertToTimezoneDate($event['start'], $utcTZ)->getTimestamp(),
-        'series' => self::convertToTimezoneDate($event['seriesStart'])->getTimestamp(),
-      ];
-    } else {
-      $startStamp = [
-        'single' => $event['start']->getTimestamp(),
-        'series' => $event['seriesStart']->getTimestamp(),
-      ];
-    }
+    $startStamp = [
+      'single' => $event['start']->getTimestamp(),
+      'series' => $event['seriesStart']->getTimestamp(),
+    ];
     $calendarObjectId = base64_encode($event['urlPath']);
     $calendarObject = [
       'single' => [
