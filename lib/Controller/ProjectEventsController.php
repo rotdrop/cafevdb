@@ -32,12 +32,11 @@ use OCP\AppFramework\Http;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
-
-use OCA\CAFEVDB\Exceptions;
 
 /** AJAX end-points to manage events linked to projects */
 class ProjectEventsController extends Controller
@@ -386,7 +385,6 @@ class ProjectEventsController extends Controller
       'cssClass' => 'projectevents',
       'localeSymbol' => $this->getLocale(),
       'timezone' => $this->getTimeZone(),
-      'events' => $events,
       'eventMatrix' => $eventMatrix,
       'selected' => $selected,
       'eventsService' => $this->eventsService,
@@ -405,5 +403,28 @@ class ProjectEventsController extends Controller
     $response->addHeader('X-'.$this->appName().'-project-name', $projectName);
 
     return $response;
+  }
+
+  /**
+   * @param mixed $inputId
+   *
+   * @return Http\DataResponse
+   *
+   * @NoAdminRequired
+   */
+  public function matrix(mixed $inputId):Http\DataResponse
+  {
+    $projectId = filter_var($inputId, FILTER_VALIDATE_INT, ['min_range' => 1]);
+    if ($projectId === false) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Given project "%1$s" must be integral and positive.', inputId),
+        httpStatusCode: Http::STATUS_BAD_REQUEST,
+      );
+    }
+    $events = $this->eventsService->events($projectId);
+    $dfltIds = $this->eventsService->defaultCalendars();
+    $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
+
+    return self::dataResponse($eventMatrix);
   }
 }

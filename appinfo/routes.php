@@ -51,19 +51,6 @@ use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 $routes = [
   'ocs' => [
     [
-      'name' => 'project_events_api#service_switch',
-      'url' => '/api/{apiVersion}/projects/events/{indexObject}/{objectId}/{calendar}/{timezone}/{locale}',
-      'verb' => 'GET',
-      'defaults' => [
-        'calendar' => 'all',
-        'timezone' => null,
-        'locale' => null,
-      ],
-      'requirements' => [
-        'apiVersion' => 'v1',
-      ],
-    ],
-    [
       'name' => 'maintenance_api#service_switch',
       'url' => '/api/{apiVersion}/maintenance/{topic}/{operation}',
       'verb' => 'POST',
@@ -190,6 +177,11 @@ $routes = [
       'name' => 'webBrowserHistory#delete',
       'url' => '/a/browser/history/{timestamp}',
       'verb' => 'DELETE',
+    ],
+    [
+      'name' => 'projectEvents#matrix',
+      'url' => '/a/projects/{projectId}/events/matrix',
+      'verb' => 'GET',
     ],
     //
     [
@@ -671,12 +663,7 @@ $routes = [
       ],
     ],
     [
-      'name' => 'musicians#getProject',
-      'verb' => 'GET',
-      'url' => '/projects/details/{projectId}',
-    ],
-    [
-      'name' => 'musicians#search_projects',
+      'name' => 'projects#search_projects',
       'verb' => 'GET',
       'url' => '/projects/search/{pattern}',
       'defaults' => [
