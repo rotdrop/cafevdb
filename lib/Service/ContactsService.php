@@ -24,34 +24,35 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Throwable;
-use Exception;
 use DateTimeImmutable;
+use DateTimeZone;
+use Exception;
+use Throwable;
 
 use Sabre\VObject\Component\VCard;
 use Sabre\VObject\Property;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-
 use OCP\AppFramework\IAppContainer;
+use OCP\Constants;
 use OCP\Contacts\IManager as IContactsManager;
 use OCP\IAddressBook;
-use OCP\Constants;
-use OCP\Image;
-use OCP\IL10N;
-use OCP\IAvatarManager;
 use OCP\IAvatar;
+use OCP\IAvatarManager;
+use OCP\IL10N;
+use OCP\Image;
 
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /** Contacts handling. */
 class ContactsService
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
@@ -580,12 +581,12 @@ class ContactsService
     if (!empty($musician['birthday'])) {
       $birthDay = $musician['birthday'];
       if (is_string($birthDay)) {
-        $birthDay = Util::dateTime($birthDay);
+        $birthDay = self::convertToDateTime($birthDay);
       }
       $vcard->add('BDAY', $birthDay);
     }
     if (!empty($musician['updated'])) {
-      $vcard->add('REV', gmdate('Ymd\THis\Z', Util::dateTime($musician['updated'])->getTimestamp()));
+      $vcard->add('REV', gmdate('Ymd\THis\Z', self::convertToDateTime($musician['updated'])->getTimestamp()));
     }
     $countryNames = $this->geoCodingService()->countryNames('en');
     if (!isset($countryNames[$musician['country']])) {

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,15 +24,15 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Psr\Container\ContainerInterface;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\IConfig;
-use OCP\L10N\IFactory as IL10NFactory;
 use OCP\IL10N;
+use Psr\Container\ContainerInterface;
 
-use OCA\CAFEVDB\AppInfo\AppL10N;
-use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Crypto\CloudSymmetricCryptor;
+use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\L10N\L10NFactory;
 
 /** Register some utiltiy services in order to ease dependency injection. */
 class Registration
@@ -78,8 +78,8 @@ class Registration
 
     $context->registerService(self::USER_LOCALE, function(ContainerInterface $container) {
       $appName = $container->get('AppName');
-      /** @var IL10NFactory $l10NFactory */
-      $l10NFactory = $container->get(IL10NFactory::class);
+      /** @var L10NFactory $l10NFactory */
+      $l10NFactory = $container->get(L10NFactory::class);
       $lang = $l10NFactory->findLanguage($appName);
       if (empty($lang) || $lang == 'en') {
         $lang = null;

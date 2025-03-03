@@ -31,6 +31,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\IDateTimeZone;
+use OCP\IDateTimeFormatter;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -62,6 +63,7 @@ class BlogController extends Controller
     private BlogRenderer $blogRenderer,
     private IDateTimeZone $timeZone,
     private IURLGenerator $urlGenerator,
+    private IDateTimeFormatter $dateTimeFormatter,
     protected ConfigService $configService,
     protected IL10N $l,
     protected ILogger $logger,
@@ -124,7 +126,6 @@ class BlogController extends Controller
       'priority' => $priority,
       'popup' => $popup,
       'toolTips' => $this->toolTipsService,
-      'localeSymbol' => $this->getLocale(), // locale itself should already have been provided by NC core
     ];
     $tmpl = $this->templateResponse(
       $template,
@@ -230,8 +231,7 @@ class BlogController extends Controller
     if ($generateContents) {
       $template = 'blog/blogthreads';
       $templateParameters = [
-        'timezone' => $this->timeZone->getTimeZone(time())->getName(),
-        'localeSymbol' => $this->getLocale(), // locale itself should already have been provided by NC core
+        'dateTimeFormatter' => $this->dateTimeFormatter,
         'user' => $this->userId,
         'urlGenerator' => $this->urlGenerator,
         'renderer' => $this->blogRenderer,

@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\SimpleSharingService;
@@ -49,6 +50,7 @@ use OCA\CAFEVDB\Service\SimpleSharingService;
 class ProjectsController extends Controller
 {
   use GetPrefixParamsTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -400,6 +402,16 @@ class ProjectsController extends Controller
    */
   const GET_PARTICIPANT_FIELDS = 'participant-fields';
 
+  /**
+   * Return the list of calendar events.
+   */
+  const GET_CALENDAR_EVENTS = 'calendar-events';
+
+  /**
+   * Return the "event matrix", project events sorted by category with extra
+   * information.
+   */
+  const GET_EVENT_MATRIX = 'event-matrix';
 
   /**
    * Return all project indices as flat array.
@@ -492,6 +504,27 @@ class ProjectsController extends Controller
           default:
             return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
         }
+        break;
+      case self::GET_CALENDAR_EVENTS:
+        $calendarEvents = [];
+        /** @var Entities\ProjectEvent $event */
+        foreach ($project->getCalendarEvents() as $event) {
+          $flatEvent = $event->toArray();
+          unset($flatEvent['project']);
+          $flatEvent['projectId'] = $project->getId();
+          unset($flatEvent['absenceField']);
+          $flatEvent['absenceFieldId'] = $event->getAbsenceField() ? $event->getAbsenceField()->getId() : null;
+          $calendarEvents = $flatEvent;
+        }
+        return self::dataResponse($calendarEvents);
+        break;
+      case self::GET_EVENT_MATRIX:
+        /** @var EventsService $eventsService */
+        $eventsService = $this->di(EventsService::class);
+        $events = $eventsService->events($projectId);
+        $dfltIds = $eventsService->defaultCalendars();
+        $eventMatrix = $eventsService->eventMatrix($events, $dfltIds);
+        return self::dataResponse($eventMatrix);
         break;
       case self::GET_PROJECT_FOLDER:
         switch ($subTopic) {
@@ -638,7 +671,7 @@ class ProjectsController extends Controller
             }
             if (isset($this->request['expirationDate'])) {
               $expirationDate = $this->request['expirationDate'];
-              $expirationDate = Util::dateTime($expirationDate);
+              $expirationDate = self::convertToDateTime($expirationDate);
               /** @var SimpleSharingService $shareService */
               $shareService = $this->di(SimpleSharingService::class);
               $shareService->expireLinkShare($share, $expirationDate);
@@ -659,5 +692,55 @@ class ProjectsController extends Controller
         break;
     }
     return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
+  }
+
+  /**
+   * Search by project-id and name. Pattern may contain wildcards (* and %).
+   *
+   * @param string $pattern
+   *
+   * @param null|int $limit
+   *
+   * @param null|int $offset
+   *
+   * @param null|int $year
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
+   */
+  public function searchProjects(string $pattern, ?int $limit = null, ?int $offset = null, ?int $year = null):DataResponse
+  {
+    $repository = $this->getDatabaseRepository(Entities\Project::class);
+
+    if (empty($pattern)) {
+      $criteria = [];
+    } else {
+      $pattern = str_replace('*', '%', $pattern);
+
+      if (strpos($pattern, '%') === false) {
+        if ($pattern[0] != '^') {
+          $pattern = '%' . $pattern;
+        }
+        if (substr($pattern, -1) != '$') {
+          $pattern = $pattern . '%';
+        }
+      }
+      $criteria = [
+        '(|name' => $pattern,
+        'id' => $pattern,
+        ')' => true,
+      ];
+      if ($year !== null) {
+        $criteria[] = [ 'year' => $year ];
+      }
+    }
+
+    $projects = $repository->findBy($criteria, [
+      'year' => 'DESC',
+      'name' => 'ASC',
+    ], $limit, $offset);
+
+    return self::dataResponse(array_map(fn($project) => $this->flattenProject($project), $projects));
   }
 }

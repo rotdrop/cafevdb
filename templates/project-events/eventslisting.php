@@ -30,12 +30,6 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
 
-// All day events: timestamps need to refer 00:00:00 in UTC.
-$utcTZ = new DateTimeZone('UTC');
-$utcDateStamp = function(DateTimeInterface $date) use ($utcTZ) {
-  return DateTimeImmutable::createFromFormat('Y-m-d|', $date->format('Y-m-d'), $utcTZ)->getTimestamp();
-};
-
 ?>
 <div class="size-holder event-list-container">
 <?php
@@ -92,7 +86,7 @@ foreach ($eventMatrix as $key => $eventGroup) {
     $absenceFieldId = $event['absenceField'];
 
     $flatIdentifier = EventsService::makeFlatIdentifier($event);
-    $inputValue = ProjectEventsController::makeInputValue($event);
+    $inputValue = json_encode(ProjectEventsController::makeInputValue($event));
 
     $isRepeating = isset($eventSeries[$evtUid]);
     $hasCrossSeriesRelations = count($relationMatrix[$seriesUid] ?? []) > 1;
@@ -116,8 +110,8 @@ foreach ($eventMatrix as $key => $eventGroup) {
     $location = htmlspecialchars(stripslashes($event['location']));
     $description = nl2br(htmlspecialchars(stripslashes($event['description'])));
 
-    $dateString = $eventsService->briefEventDate($event, $timezone, $localeSymbol);
-    $longDate = $eventsService->longEventDate($event, $timezone, $localeSymbol);
+    $dateString = $eventsService->briefEventDate($event);
+    $longDate = $eventsService->longEventDate($event);
 
     $description = $longDate
       . (!empty($brief) ? '<br/>' . $brief  : '')

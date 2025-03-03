@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -240,71 +240,5 @@ class MusiciansController extends Controller
       ],
       $this->flattenMusician($musician, only: [])
     );
-  }
-
-  /**
-   * Get a short description of the project with no extra data.
-   *
-   * @param int $projectId
-   *
-   * @return DataResponse
-   *
-   * @NoAdminRequired
-   *   */
-  public function getProject(int $projectId):DataResponse
-  {
-    $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
-
-    return self::dataResponse($this->flattenProject($project));
-  }
-
-  /**
-   * Search by project-id and name. Pattern may contain wildcards (* and %).
-   *
-   * @param string $pattern
-   *
-   * @param null|int $limit
-   *
-   * @param null|int $offset
-   *
-   * @param null|int $year
-   *
-   * @return DataResponse
-   *
-   * @NoAdminRequired
-   */
-  public function searchProjects(string $pattern, ?int $limit = null, ?int $offset = null, ?int $year = null):DataResponse
-  {
-    $repository = $this->getDatabaseRepository(Entities\Project::class);
-
-    if (empty($pattern)) {
-      $criteria = [];
-    } else {
-      $pattern = str_replace('*', '%', $pattern);
-
-      if (strpos($pattern, '%') === false) {
-        if ($pattern[0] != '^') {
-          $pattern = '%' . $pattern;
-        }
-        if (substr($pattern, -1) != '$') {
-          $pattern = $pattern . '%';
-        }
-      }
-      $criteria = [
-        '(|name' => $pattern,
-        'id' => $pattern,
-        ')' => true,
-      ];
-      if ($year !== null) {
-        $criteria[] = [ 'year' => $year ];
-      }
-    }
-
-    $projects = $repository->findBy($criteria, [
-      'year' => 'DESC',
-      'name' => 'ASC',
-    ], $limit, $offset);
-
-    return self::dataResponse(array_map(fn($project) => $this->flattenProject($project), $projects));
   }
 }

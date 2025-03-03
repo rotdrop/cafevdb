@@ -24,6 +24,9 @@
 ?>
 <div id="events" class="cafev not-fixed-container"
      title="<?php p($l->t('Events for').' '.$projectName); ?>">
+  <div id="blahfoobar">
+    <span></span>
+  </div>
   <form id="eventlistform" class="<?php p($cssClass); ?> not-fixed-container" >
     <input type="hidden" name="projectId"   value="<?php p($projectId); ?>" />
     <input type="hidden" name="projectName" value="<?php p($projectName); ?>" />

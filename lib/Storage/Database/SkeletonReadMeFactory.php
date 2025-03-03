@@ -34,7 +34,7 @@ use OCP\IUserSession;
 use OCP\Files\File;
 use OCP\AppFramework\IAppContainer;
 
-use OCA\CAFEVDB\AppInfo\AppL10N;
+use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 use OCA\CAFEVDB\Service\AppMTimeService;

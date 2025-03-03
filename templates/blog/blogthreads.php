@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2020, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2020, 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,17 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Common\Util;
 
-$blog = $_['renderer']->findThreadDisplay();
+/**
+ * @param OCA\CAFEVDB\PageRenderer\BlogRenderer $renderer
+ * @param OCP\IDateTimeFormatter $dateTimeFormatter
+ */
+
+$formatDateTime = function(mixed $timeStamp) use ($dateTimeFormatter) {
+  // was s_trftime('%x, %H:%M', $created, $timezone, $localeSymbol);
+  return $dateTimeFormatter->formatDateTime(created, formatDate: 'short', formatTime: 'short');
+};
+
+$blog = $renderer->findThreadDisplay();
 
 echo '<ul id="bloglist" class="bloglist">'."\n";
 $level = 0;
@@ -37,7 +47,7 @@ while (!empty($blog)) {
   $id       = $msg->getId();
   $author   = $msg->getAuthor();
   $created  = $msg->getCreated();
-  $created  = Util::strftime('%x, %H:%M', $created, $_['timezone'], $localeSymbol);
+  $created  = $formatDateTime($created);
   $editor   = $msg->getEditor();
   $modified = $msg->getModified();
   $priority = $msg->getPriority();
@@ -52,7 +62,7 @@ while (!empty($blog)) {
   $imgtitle = $l->t("Avatar pictures can be uploaded through the personal settings page.");
   $imgtitle = 'title="'.$imgtitle.'" ';
   if ($deleted > 0) {
-    $deleted = Util::strftime('%x, %H:%M', $deleted, $_['timezone'], $localeSymbol);
+    $deleted = $formatDateTime($deleted);
     continue;
   }
 
@@ -63,7 +73,7 @@ while (!empty($blog)) {
 
   $edittxt = '';
   if ($modified > 0) {
-    $modified = Util::strftime('%x, %H:%M', $modified, $_['timezone'], $localeSymbol);
+    $modified = $formatDateTime($modified);
     $edittxt = $l->t(', latest change by `%s\', %s', [$editor,$modified]);
   }
 

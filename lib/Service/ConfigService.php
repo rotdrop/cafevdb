@@ -30,24 +30,25 @@ use DateTimeZone;
 use NumberFormatter;
 use DateTimeImmutable;
 
-use OCP\IUser;
-use OCP\IGroup;
-use OCP\IConfig;
-use OCP\IUserSession;
-use OCP\IL10N;
-use OCP\IUserManager;
-use OCP\IGroupManager;
-use OCP\Group\ISubAdmin;
-use OCP\IURLGenerator;
-use OCP\L10N\IFactory as IL10NFactory;
-use OCP\IDateTimeZone;
-use OCP\Security\ISecureRandom;
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\Group\ISubAdmin;
+use OCP\IConfig;
 use OCP\IDateTimeFormatter;
+use OCP\IDateTimeZone;
+use OCP\IGroup;
+use OCP\IGroupManager;
+use OCP\IL10N;
+use OCP\IURLGenerator;
+use OCP\IUser;
+use OCP\IUserManager;
+use OCP\IUserSession;
+use OCP\L10N\IFactory as IL10NFactory;
+use OCP\Security\ISecureRandom;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\AppInfo\AppL10N;
+use OCA\CAFEVDB\Service\L10N\AppL10N;
+use OCA\CAFEVDB\Service\L10N\L10NFactory;
 use OCA\CAFEVDB\Exceptions;
 
 /**
@@ -380,8 +381,8 @@ class ConfigService
    */
   private $localeCountryNames = [];
 
-  /** @var IL10NFactory */
-  private IL10NFactory $l10NFactory;
+  /** @var L10NFactory */
+  private L10NFactory $l10NFactory;
 
   /** @var IURLGenerator */
   private IURLGenerator $urlGenerator;
@@ -431,7 +432,7 @@ class ConfigService
    */
   private function getL10NFactory():IL10NFactory
   {
-    return $this->l10NFactory ?? ($this->l10NFactory = $this->appContainer->get(IL10NFactory::class));
+    return $this->l10NFactory ?? ($this->l10NFactory = $this->appContainer->get(L10NFactory::class));
   }
 
   /**
@@ -1084,30 +1085,46 @@ class ConfigService
   }
 
   /**
+   * Cache for self::getLocale().
+   */
+  private array $localeLanguageCache = [];
+
+  /**
    * Return the locale as string, e.g. de_DE.UTF-8.
    *
-   * @param string|null $lang
+   * @param string|null $lang Maybe be a short language stringike 'de' or
+   * something up to a full-fledged locate symbold 'de_DE.UTF-8'. In the
+   * latter case this function is "idem potent and just returns the given
+   * string. If $lang is null the cloud's idea about the language setting is
+   * used.
    *
    * @return string
    */
   public function getLocale(?string $lang = null):string
   {
+    if (!empty($this->localeLanguageCache[$lang])) {
+      return $this->localeLanguageCache[$lang];
+    }
+
     if (empty($lang)) {
       $locale = $this->appContainer->get(Registration::USER_LOCALE);
       $this->logDebug('Locale seems to be ' . $locale);
       $this->logDebug('Language seems to be ' . $lang);
-      $lang = locale_get_primary_language($locale);
     } else {
-      $locale = $lang;
-    }
-    $primary = locale_get_primary_language($locale);
-    if ($primary == $locale) {
-      $locale = $lang.'_'.strtoupper($lang);
+      $primary = locale_get_primary_language($lang);
+      if ($primary == $lang) {
+        $locale = $lang . '_' . strtoupper($lang);
+      } else {
+        $locale = $lang;
+      }
     }
     if (strpos($locale, '.') === false) {
       $locale .= '.UTF-8';
     }
     $this->logDebug('Generated locale string: ' . $locale);
+
+    $this->localeLanguageCache[$lang] = $locale;
+
     return $locale;
   }
 

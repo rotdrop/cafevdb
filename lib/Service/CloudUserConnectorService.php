@@ -84,7 +84,7 @@ WITH CHECK OPTION';
   const USER_SQL_USER_GROUP_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
-SELECT m.user_id_slug AS uid,
+SELECT CONVERT(m.user_id_slug USING ' . DBConstants::CHARACTER_SET . ') AS uid,
        CONVERT((CONCAT(_ascii "%2$s' . self::GROUP_ID_SEPARATOR . '", p.id) COLLATE ascii_bin) USING ' . DBConstants::CHARACTER_SET . ') AS gid
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id

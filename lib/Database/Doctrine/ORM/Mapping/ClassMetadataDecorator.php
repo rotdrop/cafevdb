@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,24 +24,21 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 
-use \Stringable;
-use \Exception;
-use \RuntimeException;
+use Stringable;
 
-use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\ConversionException;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Proxy\Proxy;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\PersistentCollection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
-use OCA\CAFEVDB\Exceptions\DatabaseException;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\ConversionException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\PersistentCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Proxy\Proxy;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 
 /** Counter part to the decorated entity manager. */
 class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
@@ -61,8 +58,8 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
   public function __construct(
     private ClassMetadata $metaData,
     private EntityManager $entityManager,
-    protected ILogger $logger,
     private IL10N $l,
+    protected ILogger $logger,
   ) {
   }
 
@@ -200,8 +197,8 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
     if (is_callable([ $this->metaData, $method ])) {
       return call_user_func_array([ $this->metaData, $method ], $args);
     }
-    throw new Exception(
-      sprintf('Undefined method - %s::%s', get_class($this->metaData), $method)
+    throw new Exceptions\DecoratorException(
+      $this->l->t('Undefined method - %1$s::%2$s', [ get_class($this->metaData), $method ]),
     );
   }
 
@@ -311,7 +308,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
         /** @var ClassMetadata $targetMeta */
         $targetMeta = $this->entityManager->getClassMetadata($targetEntity);
         if (count($association['joinColumns']) != 1) {
-          throw new Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
+          throw new Exceptions\DatabaseException($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
         $joinInfo = $association['joinColumns'][0];
         $columnName = $joinInfo->name;
@@ -375,7 +372,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
       $dbalType = null;
       if (isset($this->metaData->associationMappings[$field])) {
         if (count($this->metaData->associationMappings[$field]['joinColumns']) != 1) {
-          throw new Exception($this->l->t('Foreign keys as principle keys cannot be composite'));
+          throw new Exceptions\DatabaseException($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
         $columnName = $this->metaData->associationMappings[$field]['joinColumns'][0]->name;
       } else {
@@ -385,7 +382,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
           if ($ignoreMissing || $this->metaData->usesIdGenerator()) {
             continue;
           }
-          throw new Exception(
+          throw new Exceptions\DatabaseException(
             $this->l->t('Missing value and no generator for identifier field: %s::%s', [ $this->getName(), $field ]));
         }
         $dbalType = Type::getType($this->metaData->fieldMappings[$field]->type);
@@ -450,7 +447,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
       if (empty($value) && is_callable([ $entity, $method ])) {
         $this->logException($e, 'Type conversion for field ' . $field . ' failed, continuing anyway.');
       } else {
-        throw new DatabaseException($this->l->t('Type conversion for field "%s" failed.', $field), 0, $e);
+        throw new Exceptions\DatabaseException($this->l->t('Type conversion for field "%s" failed.', $field), 0, $e);
       }
     }
     if (is_callable([ $entity, $method ])) {
@@ -524,7 +521,6 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
       ++$numSetters;
     }
     if ($numSetters == 0) {
-      // throw new \RuntimeException($this->l->t('Unable to feed a single field with the value of the column "' . $column . '".'));
       $this->debug('Remember value for column ' . $column . ': ' . $value);
       $this->temporaryColumnStorage[$column] = $value;
     } else {
@@ -564,7 +560,12 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
       } else {
         // assume the field-value is the just the column value of the single join-column
         if (count($associationMapping['joinColumns']) != 1) {
-          throw new RuntimeException($this->l->t('Association field must eiter be an entity or the value of the single join column.') . print_r($associationMapping['joinColumns'], true));
+          throw new Exceptions\DatabaseException(
+            $this->l->t(
+              'Association field must eiter be an entity or the value of the single join column: %s',
+              print_r($associationMapping['joinColumns'], true),
+            ),
+          );
         }
         return $fieldValue;
       }

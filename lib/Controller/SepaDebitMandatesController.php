@@ -24,42 +24,42 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use \DateTimeImmutable;
-use \PHP_IBAN\IBAN;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use DateTimeImmutable;
+use PHP_IBAN\IBAN;
 
 use OCP\AppFramework\Controller;
-use OCP\IRequest;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\Files\SimpleFS\ISimpleFile;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\Finance\FinanceService;
-use OCA\CAFEVDB\Service\FuzzyInputService;
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Common;
+use OCA\CAFEVDB\Common\BankAccountValidator;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
-use OCA\CAFEVDB\Common\BankAccountValidator;
-use OCA\CAFEVDB\Common;
-use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /** AJAX endpoints for debit mandates */
 class SepaDebitMandatesController extends Controller
 {
+  use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // cloud-paths
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
-  use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
-  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // cloud-paths
 
   public const HARDCOPY_ACTION_UPLOAD = 'upload';
   public const HARDCOPY_ACTION_DELETE = 'delete';
@@ -909,7 +909,7 @@ class SepaDebitMandatesController extends Controller
 
     // @todo check if this works as expected
     // @todo validate, check for date-in-the-future
-    $mandateDate = Util::dateTime($mandateDate);
+    $mandateDate = self::convertToDateTime($mandateDate);
 
     if ($debitMandate->inUse()) {
       if ($debitMandate->getMandateDate() != $mandateDate) {

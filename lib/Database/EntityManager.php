@@ -1226,10 +1226,10 @@ class EntityManager extends EntityManagerDecorator
   {
     if ($this->decorateClassMetadata) {
       return new ClassMetadataDecorator(
-        $this->entityManager->getClassMetadata($className),
-        $this,
-        $this->logger,
-        $this->l,
+        metaData: $this->entityManager->getClassMetadata($className),
+        entityManager: $this,
+        l: $this->l,
+        logger: $this->logger,
       );
     } else {
       return $this->entityManager->getClassMetadata($className);

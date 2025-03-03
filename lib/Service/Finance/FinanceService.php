@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,36 +27,35 @@ namespace OCA\CAFEVDB\Service\Finance;
 use InvalidArgumentException;
 use RuntimeException;
 
-use PHP_IBAN;
+use Cmixin\BusinessDay;
 use DateTimeImmutable as DateTime;
 use DateTimeInterface;
-use Cmixin\BusinessDay;
-use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
-use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
+use PHP_IBAN;
 
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Common\BankAccountValidator;
+use OCA\CAFEVDB\Common\NumberFormatter;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\BankAccountValidator;
-use OCA\CAFEVDB\Common\NumberFormatter;
-
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Documents\OpenDocumentFiller;
+use OCA\CAFEVDB\Documents\PDFFormFiller;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
-
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Documents\PDFFormFiller;
-use OCA\CAFEVDB\Documents\OpenDocumentFiller;
+use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /** Finance and bank related stuff. */
 class FinanceService
 {
-  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
 
   /**
@@ -1174,8 +1173,8 @@ class FinanceService
     $tz = $this->getTimezone();
     date_default_timezone_set($tz);
 
-    $nowDate  = Util::dateTime(strftime('%Y-%m-%d'));
-    $usedDate = Util::dateTime($usageInfo['lastUsed']); // lastUsed may already be a DateTime object
+    $nowDate  = self::convertToDateTime('now');
+    $usedDate = self::convertToDateTime($usageInfo['lastUsed']); // lastUsed may already be a DateTime object
 
     $diff = $usedDate->diff($nowDate);
     $months = $diff->format('%y') * 12 + $diff->format('%m');

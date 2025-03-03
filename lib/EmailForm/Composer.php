@@ -30,11 +30,10 @@ use DateTimeInterface;
 use PHP_IBAN;
 use Throwable;
 use UnexpectedValueException;
+use array_search;
 use stdClass;
 
 use OCP\IDateTimeFormatter;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
 use OCA\CAFEVDB\Common\PHPMailer;
@@ -70,6 +69,7 @@ use OCA\CAFEVDB\Service\SimpleSharingService;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /**
  * This is the mass-email composer class. We try to be somewhat
@@ -81,10 +81,10 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class Composer
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
   const MSG_ID_AT = '_at_';
 
@@ -3001,13 +3001,11 @@ Störung.';
 
     $this->diagnostics[self::DIAGNOSTICS_MESSAGE]['Events'] = [];
     $events = $this->eventAttachments();
-    $locale = $this->getLocale();
-    $timezone = $this->getTimezone();
     foreach (array_values($events) as $eventIdentifier) {
       $eventUri = $eventIdentifier['uri'];
       $recurrenceId = $eventIdentifier['recurrenceId'];
       $event = $this->eventsService->fetchEvent($this->projectId, $eventUri, $recurrenceId);
-      $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
+      $datestring = $this->eventsService->briefEventDate($event);
       $name = stripslashes($event['summary']).', '.$datestring;
       $this->diagnostics[self::DIAGNOSTICS_MESSAGE]['Events'][] = $name;
     }
@@ -4040,13 +4038,7 @@ Störung.';
       if (\array_search($dateFormat, ['full', 'long', 'medium', 'short']) !== false) {
         return $this->formatDate($stamp, $dateFormat);
       }
-      $oldLocale = setlocale(LC_TIME, '0');
-      setlocale(LC_TIME, $this->getLocale());
-      $oldTimezone = \date_default_timezone_get();
-      \date_default_timezone_set($this->getTimezone());
-      $result = strftime($dateFormat, $stamp);
-      \date_default_timezone_set($oldTimezone);
-      setlocale(LC_TIME, $oldLocale);
+      $result = Util::strftime($dateFormat, $stamp, tz: $this->getTimezone(), locale: $this->getLocale());
       return $result;
     } catch (\Throwable $t) {
       throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
@@ -5647,16 +5639,12 @@ Störung.';
     $dfltIds     = $this->eventsService->defaultCalendars();
     $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
 
-    // timezone, locale
-    $locale = $this->getLocale();
-    $timezone = $this->getTimezone();
-
     // build the select option control array
     $selectOptions = [];
     foreach ($eventMatrix as $eventGroup) {
       $group = $this->l->t($eventGroup['name']);
       foreach ($eventGroup['events'] as $event) {
-        $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
+        $datestring = $this->eventsService->briefEventDate($event);
         $name = stripslashes($event['summary']).', '.$datestring;
         $eventData = ProjectEventsController::makeInputValue($event);
         $flatIdentifier = EventsService::makeFlatIdentifier($event);

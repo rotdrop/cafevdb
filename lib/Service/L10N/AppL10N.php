@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,79 +22,82 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\AppInfo;
+namespace OCA\CAFEVDB\Service\L10N;
 
 use OCP\IL10N;
-use OCP\L10N\IFactory as IL10NFactory;
 
-use OCA\CAFEVDB\Service\Registration;
+use OCA\CAFEVDB\Exceptions;
 
 /**
  * AppL10N for the sake of dependency injection is defined as registerd
  * service which simply return an instance of IL10N which reads the app's
  * config space in order to have a IL10N instance bound to the configured
- * orchestra locale. This "interface" is just to help autocompletion and such
- * and to have the type defined.
+ * orchestra locale.
+ *
+ * $appLocale is registered as a service by the app.
  *
  * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class AppL10N implements IL10N
 {
   /** @var IL10N */
-  protected IL10N $appL10n;
+  protected IL10N $base;
 
-  /**
-   * @param string $appName
-   *
-   * @param IL10NFactory $l10NFactory
-   *
-   * @param string $appLocale
-   */
+  /** {@inheritdoc} */
   public function __construct(
+    protected IL10N $l,
+    protected L10NFactory $l10NFactory,
     protected string $appName,
-    protected IL10NFactory $l10NFactory,
     string $appLocale,
   ) {
     $appLanguage = locale_get_primary_language($appLocale);
-    // The following is a hack because get() below does not underst .UTF-8 etc
-    $appLocale = $appLanguage . '_' . locale_get_region($appLocale);
-    /** @var IL10NFactory $l10NFactory */
-    $this->appL10n = $l10NFactory->get($appName, $appLanguage, $appLocale);
+    $this->base = $l10NFactory->get($appName, $appLanguage, $appLocale);
   }
 
   /** {@inheritdoc} */
   public function t(string $text, $parameters = []): string
   {
-    return $this->appL10n->t($text, $parameters);
+    return static::__call(__FUNCTION__, func_get_args());
   }
 
   /** {@inheritdoc} */
   public function n(string $textSingular, string $textPlural, int $count, array $parameters = []): string
   {
-    return $this->appL10n->n($textSingular, $textPlural, $count, $parameters);
+    return static::__call(__FUNCTION__, func_get_args());
   }
 
   /** {@inheritdoc} */
   public function l(string $type, $data, array $options = [])
   {
-    return $this->appL10n->l($type, $data, $options);
+    return static::__call(__FUNCTION__, func_get_args());
   }
 
   /** {@inheritdoc} */
   public function getLanguageCode(): string
   {
-    return $this->appL10n->getLanguageCode();
+    return static::__call(__FUNCTION__, func_get_args());
   }
 
   /** {@inheritdoc} */
   public function getLocaleCode(): string
   {
-    return $this->appL10n->getLocaleCode();
+    return static::__call(__FUNCTION__, func_get_args());
   }
 
   /** {@inheritdoc} */
   public function getTranslations(): array
   {
-    return $this->appL10n->getTranslations();
+    return static::__call(__FUNCTION__, func_get_args());
+  }
+
+  /** {@inheritdoc} */
+  protected function __call($method, $args)
+  {
+    if (is_callable([ $this->base, $method ])) {
+      return call_user_func_array([ $this->base, $method ], $args);
+    }
+    throw new Exceptions\DecoratorException(
+      $this->l->t('Undefined method - %1$s::%2$s', [ get_class($this->base), $method ]),
+    );
   }
 }

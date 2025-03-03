@@ -29,12 +29,12 @@ use InvalidArgumentException;
 
 use OCP\Notification\INotification;
 use OCP\IURLGenerator;
-use OCP\L10N\IFactory as IL10NFactory;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\L10N\L10NFactory;
 
 /** Notification support class. */
 class Notifier implements \OCP\Notification\INotifier
@@ -52,7 +52,7 @@ class Notifier implements \OCP\Notification\INotifier
   public function __construct(
     protected string $appName,
     protected IAppContainer $appContainer,
-    protected IL10NFactory $l10nFactory,
+    protected L10NFactory $l10nFactory,
     protected IURLGenerator $urlGenerator,
     protected ILogger $logger,
   ) {

@@ -31,12 +31,6 @@ use DateTimeInterface;
 use DateTimeImmutable;
 use DateTimeZone;
 
-use OCP\IL10N;
-use OCP\IUserSession;
-use OCP\SystemTag\ISystemTagManager;
-use OCP\SystemTag\TagAlreadyExistsException;
-use OCP\SystemTag\TagNotFoundException;
-
 use Sabre\VObject;
 use Sabre\VObject\Recur\EventIterator;
 use Sabre\VObject\Recur\MaxInstancesExceededException;
@@ -46,27 +40,30 @@ use Sabre\VObject\Component\VEvent;
 use Sabre\VObject\Component as VComponent;
 use Sabre\DAV\Exception\Forbidden as DavForbiddenException;
 
-use OCA\DAV\Events\CalendarUpdatedEvent;
+use OCP\IDateTimeFormatter;
+use OCP\IL10N;
+use OCP\IUserSession;
+use OCP\SystemTag\ISystemTagManager;
+use OCP\SystemTag\TagAlreadyExistsException;
+use OCP\SystemTag\TagNotFoundException;
+
 use OCA\DAV\Events\CalendarDeletedEvent;
 use OCA\DAV\Events\CalendarMovedToTrashEvent;
-
 use OCA\DAV\Events\CalendarObjectCreatedEvent;
-use OCA\DAV\Events\CalendarObjectRestoredEvent;
 use OCA\DAV\Events\CalendarObjectDeletedEvent;
-use OCA\DAV\Events\CalendarObjectMovedToTrashEvent;
-use OCA\DAV\Events\CalendarObjectUpdatedEvent;
 use OCA\DAV\Events\CalendarObjectMovedEvent;
-
-use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
-use OCA\CAFEVDB\Events\PreProjectUpdatedEvent;
-
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
+use OCA\DAV\Events\CalendarObjectMovedToTrashEvent;
+use OCA\DAV\Events\CalendarObjectRestoredEvent;
+use OCA\DAV\Events\CalendarObjectUpdatedEvent;
+use OCA\DAV\Events\CalendarUpdatedEvent;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
+use OCA\CAFEVDB\Events\PreProjectUpdatedEvent;
 use OCA\CAFEVDB\Exceptions;
 
 /**
@@ -116,6 +113,7 @@ class EventsService
     private ProjectService $projectService,
     private CalDavService $calDavService,
     private VCalendarService $vCalendarService,
+    private IDateTimeFormatter $dateTimeFormatter,
   ) {
     $this->setDatabaseRepository(Entities\ProjectEvent::class);
     $this->l = $this->l10n();
@@ -551,6 +549,7 @@ class EventsService
 
     $timeZone = $this->getDateTimezone();
     if (!$allDay) {
+      // isFloating() means no time-zone, so assume localtime.
       if ($dtStart->isFloating()) {
         $start = $start->setTimezone($timeZone);
       }
@@ -558,6 +557,9 @@ class EventsService
         $end = $end->setTimezone($timeZone);
       }
     } else {
+      // @todo: This calls for trouble! The Nextcloud calendar assumes UTC
+      // timestamps for the recurrene-ids.
+      $this->logInfo('START AND END ' . print_r($start, true) . ' ' . print_r($end, true));
       $start = new DateTimeImmutable($start->format('Y-m-d H:i:s'), $timeZone);
       $end = new DateTimeImmutable($end->format('Y-m-d H:i:s'), $timeZone);
     }
@@ -703,8 +705,13 @@ class EventsService
    * ```
    *
    * @todo Perhaps convert to DateTime class instead of using strftime().
+   *
+   * @note The $locale and $timezone parameters are still used by
+   * self::eventData() which is used by the ProjectEventsApiController via
+   * self::projectEventData(). The controller serves requests from the Redaxo
+   * cloud calendar plugin.
    */
-  private function eventTimes(array$eventObject, ?string $timezone = null, ?string $locale = null):array
+  private function eventTimes(array $eventObject, ?string $timezone = null, ?string $locale = null):array
   {
     if ($timezone === null) {
       $timezone = $this->getTimezone();
@@ -721,9 +728,10 @@ class EventsService
 
     $endStamp = $end->getTimestamp();
 
+    // locale date representation
     $startDate = Util::strftime("%x", $startStamp, $timezone, $locale);
-    $startTime = Util::strftime("%H:%M", $startStamp, $timezone, $locale);
-    $endTime = Util::strftime("%H:%M", $endStamp, $timezone, $locale);
+    $startTime = $start->format('H:i');
+    $endTime = $end->format('H:i');
     if ($endTime == '00:00') {
       // make whole-day events a little more readable
       $endTime = '24:00';
@@ -754,17 +762,11 @@ class EventsService
    *
    * @param array $eventObject The corresponding event object from fetchEvent() or events().
    *
-   * @param null|string $timezone Explicit time zone to use, otherwise fetched
-   * from user-settings.
-   *
-   * @param null|string $locale Explicit language setting to use, otherwise
-   * fetched from user-settings.
-   *
    * @return string
    */
-  public function briefEventDate(array $eventObject, ?string $timezone = null, ?string $locale = null):string
+  public function briefEventDate(array $eventObject):string
   {
-    $times = $this->eventTimes($eventObject, $timezone, $locale);
+    $times = $this->eventTimes($eventObject);
 
     if ($times['start']['date'] == $times['end']['date']) {
       $datestring = $times['start']['date'];
@@ -783,17 +785,11 @@ class EventsService
    *
    * @param array $eventObject The corresponding event object from fetchEvent() or events().
    *
-   * @param null|string $timezone Explicit time zone to use, otherwise fetched
-   * from user-settings.
-   *
-   * @param null|string $locale Explicit language setting to use, otherwise
-   * fetched from user-settings.
-   *
    * @return string
    */
-  public function longEventDate(array $eventObject, ?string $timezone = null, ?string $locale = null):string
+  public function longEventDate(array $eventObject):string
   {
-    $times = $this->eventTimes($eventObject, $timezone, $locale);
+    $times = $this->eventTimes($eventObject);
 
     if ($times['start']['date'] == $times['end']['date']) {
       $datestring = $times['start']['date'];
@@ -937,9 +933,16 @@ class EventsService
    *   ...
    * ]
    * ```
+   *
+   * @note The $timezone and $locale parameters are still used by the Redaxo
+   * plugin, so we keep them for the time being.
    */
-  public function projectEventData(int $projectId, mixed $calendarIds = null, ?string $timezone = null, ?string $locale = null):array
-  {
+  public function projectEventData(
+    int $projectId,
+    mixed $calendarIds = null,
+    ?string $timezone = null,
+    ?string $locale = null,
+  ):array {
     $events = $this->events($projectId);
 
     if ($calendarIds === null || $calendarIds === false) {
@@ -1668,11 +1671,6 @@ class EventsService
     $relatedEvents = array_diff($relatedEvents, array_keys($handledUids));
     if (!empty($relatedEvents)) {
       $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-      $criteria = [
-        'project' => $projectId,
-        // 'calendarId' => $calendarId,
-        'eventUid' => $relatedEvents,
-      ];
       $flatSiblings = $this->findBy(
         criteria: [
           'project' => $projectId,

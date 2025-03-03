@@ -29,7 +29,7 @@ use Throwable;
 use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 
-use OCA\CAFEVDB\AppInfo\AppL10N;
+use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Storage\StorageUtil;
 use OCA\Text\Service\WorkspaceService;
 

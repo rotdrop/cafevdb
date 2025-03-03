@@ -32,7 +32,7 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
 use OCP\IL10N;
 
-use OCA\CAFEVDB\AppInfo\AppL10N;
+use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 use OCA\CAFEVDB\Service\AppMTimeService;

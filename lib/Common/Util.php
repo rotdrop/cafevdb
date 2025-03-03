@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Common;
 
 use NumberFormatter;
 use DateTimeImmutable;
+use DateTime;
 use DateTimeZone;
 use InvalidArgumentException;
 
@@ -711,56 +712,6 @@ class Util
       $array[$key] = $value;
     }
     return $array;
-  }
-
-  /**
-   * Quick and dirty convenience function which combines
-   * "constructors" into a single function. In particular the case
-   * wherer $arg1 is already a date-time object is handled gracefully
-   * by either pass-through to the return value or converting it to a
-   * \DateTimeImmutable.
-   *
-   * @param string|\DateTimeImmutable|\DateTime|\DateTimeInterface $arg1
-   *
-   * @param null|string|\DateTimeZone $arg2
-   *
-   * @param null|string|\DateTimeZone $arg3
-   *
-   * @return DateTimeImmutable TBD.
-   */
-  public static function dateTime($arg1 = "now", $arg2 = null, $arg3 = null):DateTimeImmutable
-  {
-    if ($arg1 instanceof \DateTimeImmutable) {
-      if ($arg2 !== null || $arg3 !== null) {
-        throw \InvalidArgumentException('Excess arguments, expected 1, got 3.');
-      }
-      return $arg1;
-    }
-    if ($arg1 instanceof \DateTime) {
-      if ($arg2 !== null || $arg3 !== null) {
-        throw \InvalidArgumentException('Excess arguments, expected 1, got 3.');
-      }
-      return \DateTimeImmutable::createFromMutable($arg1);
-    }
-    if ($arg1 instanceof \DateTimeInterface) {
-      if ($arg2 !== null || $arg3 !== null) {
-        throw \InvalidArgumentException('Excess arguments, expected 1, got 3.');
-      }
-      return \DateTimeImmutable::createFromInterface($arg1);
-    }
-    if (is_string($arg1) && is_string($arg2)) {
-      return \DateTimeImmutable::createFromFormat($arg1, $arg2, $arg3);
-    } elseif ($arg2 === null && $arg3 === null) {
-      $timeStamp = filter_var($arg1, FILTER_VALIDATE_INT, [ 'min' => 0 ]);
-      if ($timeStamp !== false) {
-        return (new DateTimeImmutable())->setTimestamp($timeStamp);
-      } elseif (is_string($arg1)) {
-         return new DateTimeImmutable($arg1);
-      }
-    } elseif ($arg3 === null) {
-      return new DateTimeImmutable($arg1, $arg2);
-    }
-    throw new InvalidArgumentException('Unsupported arguments');
   }
 
   /**
