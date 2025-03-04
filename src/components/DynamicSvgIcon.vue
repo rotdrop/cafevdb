@@ -31,11 +31,11 @@
 import { onMounted, ref, watch } from 'vue'
 import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
-import Console from '../util/console.ts'
 import sanitzeSVG from '../util/sanitize-inline-svg.ts'
+// import Console from '../util/console.ts'
 
-const COMPONENT_NAME = 'DynamicSvgIcon'
-const logger = new Console(COMPONENT_NAME)
+// const COMPONENT_NAME = 'DynamicSvgIcon'
+// const logger = new Console(COMPONENT_NAME)
 
 // Something like the following:
 //
@@ -103,7 +103,7 @@ const makeSVGElement = () => {
     titleElement.textContent = props.title
   }
 
-  logger.debug('SVG DOM ELEMENT', svg)
+  // logger.debug('SVG DOM ELEMENT', svg)
 
   return svg
 }
