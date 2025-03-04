@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -105,7 +105,7 @@ class Html2Text
       return null;
     }
     array_unshift($arguments, $converter);
-    $htmlConvert = new Process($arguments, null, [ 'LC_ALL' => 'en_US.UTF-8' ]);
+    $htmlConvert = new Process($arguments, null, [ 'LC_ALL' => 'C.UTF-8' ]);
     $htmlConvert->setInput($html);
     $htmlConvert->run();
     $text = $htmlConvert->getOutput();
