@@ -1092,18 +1092,21 @@ class ConfigService
   /**
    * Return the locale as string, e.g. de_DE.UTF-8.
    *
-   * @param string|null $lang Maybe be a short language stringike 'de' or
+   * @param string|null $lang Maybe be a short language string like 'de' or
    * something up to a full-fledged locate symbold 'de_DE.UTF-8'. In the
-   * latter case this function is "idem potent and just returns the given
+   * latter case this function is "idem potent" and just returns the given
    * string. If $lang is null the cloud's idea about the language setting is
    * used.
    *
+   * @param bool $addEncoding Whether to add '.UTF-8' if not already presend
+   * in $lang
+   *
    * @return string
    */
-  public function getLocale(?string $lang = null):string
+  public function getLocale(?string $lang = null, bool $addEncoding = false):string
   {
-    if (!empty($this->localeLanguageCache[$lang])) {
-      return $this->localeLanguageCache[$lang];
+    if (!empty($this->localeLanguageCache[$lang . $addEncoding])) {
+      return $this->localeLanguageCache[$lang . $addEncoding];
     }
 
     if (empty($lang)) {
@@ -1112,18 +1115,27 @@ class ConfigService
       $this->logDebug('Language seems to be ' . $lang);
     } else {
       $primary = locale_get_primary_language($lang);
-      if ($primary == $lang) {
-        $locale = $lang . '_' . strtoupper($lang);
+      $region = locale_get_region($lang);
+      if (empty($region)) {
+        $locale = $primary . '_' . strtoupper($primary);
       } else {
         $locale = $lang;
       }
     }
-    if (strpos($locale, '.') === false) {
-      $locale .= '.UTF-8';
-    }
-    $this->logDebug('Generated locale string: ' . $locale);
 
-    $this->localeLanguageCache[$lang] = $locale;
+    if (strpos($locale, '.') === false) {
+      if ($addEncoding) {
+        $locale .= '.UTF-8';
+      }
+    } else {
+      if (!$addEncoding) {
+        $locale = locale_get_primary_language($locale) . '_' . locale_get_region($locale);
+      }
+    }
+
+    $this->localeLanguageCache[$lang . $addEncoding] = $locale;
+
+    $this->logDebug('Generated locale string: ' . $locale);
 
     return $locale;
   }
