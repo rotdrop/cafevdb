@@ -32,6 +32,7 @@ import { onMounted, ref, watch } from 'vue'
 import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
 import Console from '../util/console.ts'
+import sanitzeSVG from '../util/sanitize-inline-svg.ts'
 
 const COMPONENT_NAME = 'DynamicSvgIcon'
 const logger = new Console(COMPONENT_NAME)
@@ -63,9 +64,10 @@ defineEmits(['click'])
 
 const dummy = document.createElement('div')
 
-const makeSVGElement = function() {
+const makeSVGElement = () => {
 
-  dummy.innerHTML = props.data
+  dummy.innerHTML = sanitzeSVG(props.data)
+
   const svg = dummy.firstChild
 
   if (!(svg instanceof SVGSVGElement)) {
