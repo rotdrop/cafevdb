@@ -28,7 +28,7 @@ use InvalidArgumentException;
 
 use chillerlan\QRCode\QRCode;
 
-use OC\IRequest;
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
