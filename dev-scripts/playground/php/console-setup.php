@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,10 +88,11 @@ try {
 
     $application = new Application(
         \OC::$server->getConfig(),
-        \OC::$server->getEventDispatcher(),
+        \OC::$server->get(\OCP\EventDispatcher\IEventDispatcher::class),
         \OC::$server->getRequest(),
         \OC::$server->get(\Psr\Log\LoggerInterface::class),
-        \OC::$server->query(\OC\MemoryInfo::class)
+        \OC::$server->query(\OC\MemoryInfo::class),
+        \OC::$server->get(\OCP\App\IAppManager::class),
     );
     // $application->loadCommands(new ArgvInput(), new ConsoleOutput());
     // $application->run();
