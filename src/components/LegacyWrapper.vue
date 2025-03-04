@@ -359,16 +359,19 @@ const doLoadLegacy = async () => {
   closeNavigation()
   asyncEmit(LEGACY_PAGE_CLEANUP)
   logger.info('HISTORY STATE AT ENTRY', { ...currentHistoryState.value })
-  const historyAppData = currentHistoryState.value.post
+  // const historyAppData = { ...currentHistoryState.value.post }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const post: TemplatePostData = {
     template: props.template,
     ...props.templateParameters,
   }
   // TODO: when chaning template, post-data exception project-id, project-name, musician-id should probably be cleared ...
-  Object.assign(post, historyAppData, { ...post /* spread is necessary here */ })
-  Object.assign(historyAppData, post)
-  logger.info('POST including history state', post, { ...currentHistoryState.value, post: historyAppData })
+  Object.assign(post, currentHistoryState.value.post, { ...post /* spread is necessary here */ })
+  // Object.assign(historyAppData, post)
+  logger.info('POST including history state', {
+    post,
+    currentHistoryState: { ...currentHistoryState.value, post: { ...currentHistoryState.value.post } },
+  })
   const currentHash = generatePostHash(post)
   if (props.hash !== currentHash) {
     previousHash = currentHash

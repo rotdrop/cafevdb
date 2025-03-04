@@ -52,7 +52,7 @@ import {
 } from 'vue-router/composables'
 import type { Route } from 'vue-router'
 import Console from '../util/console.ts'
-import { CALENDAR_EVENT_EDIT, CALENDAR_EVENT_ADD } from '../event-bus-events.ts'
+import { CALENDAR_EVENT_EDIT, CALENDAR_EVENT_ADD, PROJECT_EVENTS_LISTING } from '../event-bus-events.ts'
 import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
 import { sanitizeTemplateParams } from '../util/legacy-post-data.ts'
 
@@ -92,17 +92,34 @@ asyncSubscribe(CALENDAR_EVENT_EDIT, async (event) => {
 asyncSubscribe(CALENDAR_EVENT_ADD, async (event) => {
   logger.info('EVENT DATA', { ...event })
   const name = event.mode === 'simple' ? 'NewPopoverView' : 'NewSidebarView'
+  const params = {
+    allDay: '' + event.allDay,
+    dtstart: '' + event.dtstart,
+    dtend: '' + event.dtend,
+    context: event.context ? btoa(JSON.stringify(event.context)) : '',
+  }
+  const query = currentRoute.query
   try {
-    const params = {
-      allDay: '' + event.allDay,
-      dtstart: '' + event.dtstart,
-      dtend: '' + event.dtend,
-      context: event.context ? btoa(JSON.stringify(event.context)) : '',
-    }
-    const query = currentRoute.query
     return await router.push({ name, params, query })
   } catch (error) {
     logger.error('ROUTE PUSH FAILED', { currentRoute }, error)
+  }
+})
+
+asyncSubscribe(PROJECT_EVENTS_LISTING, async (event) => {
+  logger.info('EVENT DATA', { ...event })
+  const name = 'ProjectEventsListing'
+  const params = {
+    eventsProjectId: '' + event.projectId,
+  }
+  const query = currentRoute.query
+  try {
+    return await router.push({ name, params, query })
+  } catch (error) {
+    logger.error('ROUTE PUSH FAILED', {
+      error,
+      currentRoute: { ...currentRoute },
+    })
   }
 })
 
@@ -122,7 +139,7 @@ onBeforeMount(() => {
 
 onBeforeRouteUpdate((to, from, next) => {
   logger.debug('ON BEFORE ROUTE UPDATE', { ...to }, { ...from }, window?.history?.state)
-  if (to.name === 'legacy-page') {
+  if (to.name === 'legacy-page' || (to.matched.length > 1 && to.matched[0].name === 'legacy-page')) {
     onRouteChange(to)
   }
   next()

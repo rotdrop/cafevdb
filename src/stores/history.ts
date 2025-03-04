@@ -1030,13 +1030,15 @@ export default defineStore(storeId, () => {
     } else {
       try {
         // push the final state throught the vue-router to avoid a reload by go(0)
-        logger.debug('PUSH FINAL STATE AS REQUESTED POS IS LAST ONE');
+        logger.debug('PUSH FINAL STATE AS REQUESTED POS IS LAST ONE', { entry: { ...chain[posKey] } });
         const entry = chain[posKey];
         const resolved = router.resolve(entry.path);
-        const params = sanitizePostData(Object.assign({}, entry.post, resolved.location.params))
+        const params = sanitizePostData(Object.assign({}, entry.post, resolved.location.params));
+        const hash = entry.hash;
         const location = {
           name: resolved.route.name!, // @todo error handling
           params,
+          query: { hash },
         }
         scheduleHistoryPush(params);
         await router.push(location);
