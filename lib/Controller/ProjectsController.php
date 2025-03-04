@@ -514,7 +514,7 @@ class ProjectsController extends Controller
           $flatEvent['projectId'] = $project->getId();
           unset($flatEvent['absenceField']);
           $flatEvent['absenceFieldId'] = $event->getAbsenceField() ? $event->getAbsenceField()->getId() : null;
-          $calendarEvents = $flatEvent;
+          $calendarEvents[] = $flatEvent;
         }
         return self::dataResponse($calendarEvents);
         break;
