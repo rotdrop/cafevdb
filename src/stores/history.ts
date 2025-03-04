@@ -187,9 +187,9 @@ export default defineStore(storeId, () => {
         return errorHandler(new AppError({ arg }, t(appName, 'Either "hash" or "post" have to be specified.')));
       }
       if (arg.post && !requestData[this._hash]) {
-        requestData[this._hash] = sanitizePostData(arg.post, true /* excludeUrlParams */);
-        logger.info('REQUEST DATA MAP', [...Object.entries(requestData)]);
+        requestData[this._hash] = Object.freeze(sanitizePostData(arg.post, true /* excludeUrlParams */));
       }
+      logger.info('REPLACE HASH REQUEST DATA', { post: this.post });
     };
     // just convert _hash to hash.
     toJSON() {
@@ -209,11 +209,7 @@ export default defineStore(storeId, () => {
 
   const initialHistoryKey: undefined|string = window?.history?.state?.key;
   const currentHistoryKey = ref(initialHistoryKey || '');
-  const routerHistoryKeys = computed(() => {
-    const keys = Object.keys(routerHistory.value).sort((a, b) => +a - +b);
-    logger.debug('KEYS COMPUTATION', { keys: [...keys] });
-    return keys;
-  });
+  const routerHistoryKeys = computed(() => Object.keys(routerHistory.value).sort((a, b) => +a - +b));
 
   const pendingHistoryData = ref<undefined|TemplatePostData>(undefined);
   const pendingHistoryHash = ref<undefined|string>(undefined); // optimization, do not compute twice
@@ -236,7 +232,7 @@ export default defineStore(storeId, () => {
   if (initialState) {
     if (initialState?.post) {
       for (const [hash, post] of Object.entries(initialState.post)) {
-        requestData[hash] = sanitizePostData(post, true /* excludeUrlParams */);
+        requestData[hash] = Object.freeze(sanitizePostData(post, true /* excludeUrlParams */));
       }
     }
     const queryHash = initialState.queryHash;
@@ -276,26 +272,6 @@ export default defineStore(storeId, () => {
     }
     return null;
   };
-
-  router.onReady(() => {
-    logger.debug('ON ROUTER READY HOOK');
-
-    // try load history from session storage ...
-    const historyData = getSessionStorageHistoryData();
-    if (historyData && historyData.history[historyData.position].path === currentRoute.fullPath) {
-      logger.debug('Try load history data from browser session');
-      for (const entry of Object.values(historyData.history)) {
-        entry.post = historyData.requestData[entry.hash];
-      }
-      replaceHistoryStack(historyData.history, historyData.position)
-    }
-  });
-
-  // If available
-  //
-  // - verify the page URL matches the URL saved in the session storage
-  // - use replaceHistoryStack -- maybe tweak that ...
-  // logger.debug('HISTORY DATA FROM SESSION STORAGE', getSessionStorageHistoryData());
 
   const defineInitialHistory = (initialHistoryKey: string) => {
     routerHistory.value = {
@@ -542,14 +518,15 @@ export default defineStore(storeId, () => {
    *   (i.e. previous) key, then assume that the history state has
    *   been replaced, otherwise assume a push.
    */
-  function finishHistoryAction(route: Route) {
+  function finishHistoryAction(route: Route, from?: Route) {
     const transition = route.transition;
     const key = window?.history?.state?.key || 'initial';
     const history = routerHistory.value;
     logger.debug('ON HISTORY FINISH', {
-      transition,
       key,
-      keyType: typeof key,
+      transition,
+      to: { ...route },
+      from: from ? { ...from } : undefined,
       currentHistoryIndex: currentHistoryIndex.value,
       currentHistoryKey: currentHistoryKey.value,
       pendingHistoryAction: pendingHistoryAction.value,
@@ -636,6 +613,13 @@ export default defineStore(storeId, () => {
 
     switch (pendingHistoryAction.value) {
       case HistoryActionPush: {
+        if (route.matched.length > 1 && route.query.hash && requestData?.[route.query.hash as string]) {
+          pendingHistoryHash.value = undefined; // @todo: get rid of the pending history hash value
+          pendingHistoryData.value = Object.assign(
+            pendingHistoryData.value || {},
+            requestData?.[route.query.hash as string],
+          );
+        }
         removeHistoryTail();
         const key = window.history.state.key;
         vueSet(
@@ -691,14 +675,16 @@ export default defineStore(storeId, () => {
     }
     clearHistoryAction();
     logger.debug('finishHistoryAction()', {
-      currentHistoryKey: currentHistoryKey.value,
-      currentHistoryState: { ...currentHistoryState.value },
-      routerHistory: { ...routerHistory.value },
-      routerHistoryKeys: [...routerHistoryKeys.value],
-      currentHistoryIndex: currentHistoryIndex.value,
-      windowHistoryState: window?.history?.state,
       atBase: atHistoryBase.value,
       atTop: atHistoryTop.value,
+      currentHistoryIndex: currentHistoryIndex.value,
+      currentHistoryKey: currentHistoryKey.value,
+      currentHistoryState: { ...currentHistoryState.value },
+      requestData: { ...requestData },
+      currentPostData: { ...currentHistoryState.value.post },
+      routerHistory: { ...routerHistory.value },
+      routerHistoryKeys: [...routerHistoryKeys.value],
+      windowHistoryState: window?.history?.state,
     });
   }
 
@@ -898,7 +884,7 @@ export default defineStore(storeId, () => {
     if (error.to.transition === HistoryActionPop
         && error.type === NavigationFailureType.duplicated) {
       logger.debug('Finish history action on duplicated navigation.', { error });
-      finishHistoryAction(error.to);
+      finishHistoryAction(error.to, error.from);
     }
   });
 
@@ -963,7 +949,7 @@ export default defineStore(storeId, () => {
         } catch (error) {
           if (isNavigationFailure(error, NavigationFailureType.duplicated)) {
             logger.debug('Finish history action after duplicated navigation during history replace.', { error });
-            finishHistoryAction(error.to);
+            finishHistoryAction(error.to, error.from);
           } else {
             errorHandler(
               new HistoryStoreMutationError(
@@ -1057,7 +1043,7 @@ export default defineStore(storeId, () => {
       } catch (error) {
         if (isNavigationFailure(error, NavigationFailureType.duplicated)) {
           logger.debug('Finish history action after duplicated navigation during history replace.', { error });
-          finishHistoryAction(error.to);
+          finishHistoryAction(error.to, error.from);
         } else {
           errorHandler(
             new HistoryStoreMutationError(
@@ -1130,6 +1116,26 @@ export default defineStore(storeId, () => {
     }
     return pushHistoryStack(chain, posKey, { replaceCurrent: true, mutationLock });
   };
+
+  // If available
+  //
+  // - verify the page URL matches the URL saved in the session storage
+  // - use replaceHistoryStack -- maybe tweak that ...
+  // logger.debug('HISTORY DATA FROM SESSION STORAGE', getSessionStorageHistoryData());
+
+  router.onReady(() => {
+    logger.debug('ON ROUTER READY HOOK');
+
+    // try load history from session storage ...
+    const historyData = getSessionStorageHistoryData();
+    if (historyData && historyData.history[historyData.position].path === currentRoute.fullPath) {
+      logger.debug('Try load history data from browser session');
+      for (const entry of Object.values(historyData.history)) {
+        entry.post = historyData.requestData[entry.hash];
+      }
+      replaceHistoryStack(historyData.history, historyData.position)
+    }
+  });
 
   return {
     logger: loggerRef,
