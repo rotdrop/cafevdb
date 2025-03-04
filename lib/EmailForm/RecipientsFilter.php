@@ -182,9 +182,10 @@ class RecipientsFilter
   /** {@inheritdoc} */
   public function __construct(
     protected ConfigService $configService,
-    private ISession $session,
     protected EntityManager $entityManager,
+    protected ISession $session,
     protected PHPMyEdit $pme,
+    protected string $appName,
   ) {
     $this->l = $this->l10n();
 
