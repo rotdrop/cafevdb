@@ -1,6 +1,6 @@
 <?php
 
-$locale = 'de_DE.UTF-8';
+$locale = 'de_DE'; // .UTF-8';
 
 $fmt = new \NumberFormatter($locale, \NumberFormatter::SPELLOUT);
 echo $fmt->format(97.41) . PHP_EOL;

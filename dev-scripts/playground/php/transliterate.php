@@ -11,5 +11,9 @@ function transliterate(string $string, $locale):string
   return $result;
 }
 
-echo transliterate('èÈéÉüÜöÖäÄß', 'de_DE.UTF-8').PHP_EOL;
-echo transliterate('èÈéÉüÜöÖäÄß', 'fr_FR.UTF-8').PHP_EOL;
+$string = 'èÈéÉüÜöÖäÄß';
+
+echo $string . ' -> ' . transliterate($string, 'de_DE.UTF-8').PHP_EOL;
+echo $string . ' -> ' . transliterate($string, 'de_DE').PHP_EOL;
+echo $string . ' -> ' . transliterate($string, 'fr_FR.UTF-8').PHP_EOL;
+echo $string . ' -> ' . transliterate($string, 'fr_FR').PHP_EOL;

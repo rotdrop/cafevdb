@@ -8,7 +8,7 @@ use NumberToWords\NumberToWords;
 
 $numberToWords = \OC::$server->get(NumberToWords::class);
 
-$locale = 'de_DE.UTF-8';
+$locale = 'de_DE'; // .UTF-8';
 $lang = locale_get_primary_language($locale);
 
 $myFormatter = new OCA\CAFEVDB\Common\NumberFormatter($locale);
