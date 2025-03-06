@@ -33,7 +33,7 @@ import {
   watch,
 } from 'vue';
 import { useRoute } from 'vue-router/composables';
-import { isNavigationFailure, NavigationFailureType } from 'vue-router'
+import { isNavigationFailure, NavigationFailureType } from 'vue-router';
 
 import axios, { type AxiosResponse } from '@nextcloud/axios';
 import moment from '@nextcloud/moment';
@@ -159,20 +159,20 @@ export default defineStore(storeId, () => {
       post?: TemplatePostData,
       path: string,
     }) {
-      this.key = parseFloat(arg.key || window.history.state.key);
+      this.replaceKey(arg.key);
       this.path = arg.path;
       this.position = window.history.length;
       this.replaceHash(arg);
     }
-
-    key: number;
+    _key: number = -1;
     private _hash: string = '';
     position: number;
     path: string;
+    get key() { return this._key; };
     get post() { return requestData[this._hash]; };
     get hash() { return this._hash; };
     replaceKey(arg?: string|number) {
-      this.key = parseFloat(arg || window.history.state.key);
+      this._key = parseFloat(arg || window.history.state.key);
     };
     replaceHash(arg: {
       hash?: string,
@@ -406,7 +406,12 @@ export default defineStore(storeId, () => {
     pendingHistoryData.value = undefined;
     pendingHistoryHash.value = undefined;
     pendingHistoryKey.value = undefined;
-    logger.debug('terminateHistoryAction()', { resolve }, { ...routerHistory.value });
+    logger.debug('terminateHistoryAction()', {
+      resolve,
+      history:  { ...routerHistory.value },
+      currentHistoryKey: currentHistoryKey.value,
+      currentHistoryState: { ...(currentHistoryState.value || { undefined }) },
+    });
     settleMutationPromise(resolve);
   }
 
@@ -644,7 +649,7 @@ export default defineStore(storeId, () => {
           vueDel(history, currentHistoryKey.value);
           logger.debug('CURRENT STATE 1', { ...history[key] });
           currentHistoryKey.value = key;
-          history[key].key = key;
+          history[key].replaceKey(key);
           logger.debug('AFTER ADJUST KEYS', history);
         }
         history[key].replaceHash({
@@ -968,6 +973,7 @@ export default defineStore(storeId, () => {
       currentHistoryState.value.replaceHash(entry);
       // bypass routing
       const url = generateAppUrl(entry.path.replace(/^\/+/, ''));
+      logger.debug('REPLACE HISTORY STATE', { state: window.history.state, url });
       window.history.replaceState(window.history.state, '', url);
     }
 
@@ -1008,7 +1014,6 @@ export default defineStore(storeId, () => {
         const entry = chain[key];
         const url = generateAppUrl(entry.path.replace(/^\/+/, ''));
         window.history.pushState({ key: mappedKey }, '', url);
-
         const resolved = router.resolve(entry.path);
         adjustDocumentTitle(resolved.route);
       }
@@ -1028,6 +1033,10 @@ export default defineStore(storeId, () => {
         );
       }
     } else {
+      const currentState = {
+        state: window.history.state,
+        url: window.location.href,
+      }
       try {
         // push the final state throught the vue-router to avoid a reload by go(0)
         logger.debug('PUSH FINAL STATE AS REQUESTED POS IS LAST ONE', { entry: { ...chain[posKey] } });
@@ -1044,7 +1053,20 @@ export default defineStore(storeId, () => {
         await router.push(location);
       } catch (error) {
         if (isNavigationFailure(error, NavigationFailureType.duplicated)) {
-          logger.debug('Finish history action after duplicated navigation during history replace.', { error });
+          // Insist on our potentially tweaked history state
+          window.history.replaceState(currentState.state, '', currentState.url);
+          // here we need to push anyway, otherwise we get out of sync
+          const entry = chain[posKey];
+          const key = (+currentHistoryKey.value + 0.001).toFixed(3);
+          const url = generateAppUrl(entry.path.replace(/^\/+/, ''));
+          const state = window.history.state;
+          state.key = key;
+          window.history.pushState(state, '', url);
+          logger.debug('Finish history action after duplicated navigation during history replace.', {
+            error,
+            currentState,
+            newState: { state, url },
+          });
           finishHistoryAction(error.to, error.from);
         } else {
           errorHandler(
@@ -1123,14 +1145,16 @@ export default defineStore(storeId, () => {
   //
   // - verify the page URL matches the URL saved in the session storage
   // - use replaceHistoryStack -- maybe tweak that ...
-  // logger.debug('HISTORY DATA FROM SESSION STORAGE', getSessionStorageHistoryData());
+ // logger.debug('HISTORY DATA FROM SESSION STORAGE', getSessionStorageHistoryData());
 
   router.onReady(() => {
     logger.debug('ON ROUTER READY HOOK');
 
     // try load history from session storage ...
     const historyData = getSessionStorageHistoryData();
-    if (historyData && historyData.history[historyData.position].path === currentRoute.fullPath) {
+    if (historyData
+        && historyData.history[historyData.position]
+        && historyData.history[historyData.position].path === currentRoute.fullPath) {
       logger.debug('Try load history data from browser session');
       for (const entry of Object.values(historyData.history)) {
         entry.post = historyData.requestData[entry.hash];
