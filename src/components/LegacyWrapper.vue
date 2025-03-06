@@ -197,7 +197,7 @@ errorHandlerProvider.pushHandler(errorHandler)
 onErrorCaptured((...args) => { logger.error('Vue error captured', ...args) })
 
 const router = useRouter()
-const route = useRoute()
+const currentRoute = useRoute()
 
 const props = withDefaults(defineProps<{
   template: string,
@@ -310,9 +310,9 @@ const onUserManualPopup = () => {
 // make sure the URL reflects the given hash and remove the no-reload query parameter
 const synchronizeHistoryState = (hash: string) => {
   const target = {
-    name: 'legacy-page',
-    params: { ...route.params },
-    query: { hash },
+    name: currentRoute.name || 'legacy-page',
+    params: { ...currentRoute.params },
+    query: { ...currentRoute.query, hash },
   }
   logger.info('REPLACE ROUTE TO SYNC BROWSER HISTORY', { target: { ...target } })
   return router.replace(target)
@@ -326,10 +326,12 @@ const updateLegacyRoute = (post: TemplatePostData, action: 'push'|'replace' = 'r
   }
   post.projectId && (params.projectId = post.projectId)
   post.projectName && (params.projectName = post.projectName)
+
   const target = {
-    name: 'legacy-page',
-    params,
+    name: currentRoute.name || 'legacy-page',
+    params: { ...currentRoute.params, ...params },
     query: {
+      ...currentRoute.query,
       hash: '',
       'no-reload': '1',
     },
@@ -379,7 +381,7 @@ const doLoadLegacy = async () => {
     synchronizeHistoryState(currentHash)
   }
   post[HASH_KEY] = currentHash
-  post[FRONTEND_URL_PATH_KEY] = route.fullPath
+  post[FRONTEND_URL_PATH_KEY] = currentRoute.fullPath
   try {
     const response: AxiosResponse<LoadPartsData> = await axios.post(generateAppUrl('page/remember/parts'), post)
     const data = response.data // todo: validate
@@ -521,7 +523,7 @@ const legacyPageLoadHandler = asyncSubscribe(
     if (eventData.keepHistory) {
       target.query.hash = scheduleHistoryReplace(post)
       // force the router to navigate by altering the hash
-      if (route.query.hash === target.query.hash) {
+      if (currentRoute.query.hash === target.query.hash) {
         target.query.hash = '-'
       }
       try {
@@ -533,7 +535,7 @@ const legacyPageLoadHandler = asyncSubscribe(
     } else {
       target.query.hash = scheduleHistoryPush(post)
       // force the router to navigate by altering the hash
-      if (route.query.hash === target.query.hash) {
+      if (currentRoute.query.hash === target.query.hash) {
         target.query.hash = '-'
       }
       return router.push(target)
@@ -552,7 +554,7 @@ const legacyPostMetaDataHandler = asyncSubscribe(LEGACY_SANITIZE_POST_DATA, (eve
   const hash = generatePostHash(post)
   return {
     ...post,
-    [FRONTEND_URL_PATH_KEY]: route.path + '?hash=' + hash,
+    [FRONTEND_URL_PATH_KEY]: currentRoute.path + '?hash=' + hash,
     [HASH_KEY]: hash,
   }
 })

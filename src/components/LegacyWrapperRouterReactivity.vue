@@ -35,7 +35,7 @@
                    class="legacy-page-wrapper"
     />
     <!-- Project-event editing -->
-    <div class="app-calendar">
+    <div class="router-view-container">
       <router-view />
     </div>
   </div>
@@ -139,7 +139,9 @@ onBeforeMount(() => {
 
 onBeforeRouteUpdate((to, from, next) => {
   logger.debug('ON BEFORE ROUTE UPDATE', { ...to }, { ...from }, window?.history?.state)
-  if (to.name === 'legacy-page' || (to.matched.length > 1 && to.matched[0].name === 'legacy-page')) {
+  if (!to.path.includes('--never--')
+      && (to.name === 'legacy-page'
+          || (to.matched.length > 1 && to.matched[0].name === 'legacy-page'))) {
     onRouteChange(to)
   }
   next()
