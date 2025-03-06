@@ -26,7 +26,6 @@ import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router';
 import md5 from 'blueimp-md5';
 
 export function dokuWikiSection(path: string[]) {
-  // @ts-expect-error globalStaten not defined
   return [globalState.wikiNamespace, ...path].join(':');
 }
 export function dokuWikiUrl(path: string|string[]) {
