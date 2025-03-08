@@ -32,6 +32,9 @@ import { LEGACY_PAGE_LOAD, LEGACY_PAGE_CLEANUP } from '../event-bus-events.ts';
 
 const pageCleanup = () => {
   // Remove pending dialog when moving away from the page
+  console.info('PAGE CLEANUP');
+
+  $('.ui-dialog-content').dialog('close');
   $('.ui-dialog-content').dialog('destroy').remove();
 
   $('body').removeClass('dialog-titlebar-clicked');

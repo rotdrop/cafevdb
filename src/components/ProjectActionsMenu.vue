@@ -344,7 +344,7 @@ const openProjectEmail = (event: MouseEvent) => {
   event.preventDefault()
   open.value = false
   closeNavigation()
-  asyncEmit(BusEvents.PROJECT_EMAIL_POPUP, {
+  asyncEmit(BusEvents.EMAIL_POPUP, {
     projectId: props.projectId,
     projectName: props.projectName,
     reopen: true,

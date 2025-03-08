@@ -22,13 +22,38 @@
  */
 import useCalendarsStore from '@nextcloud/app-calendar/src/store/calendars.js';
 import usePrincipalsStore from '@nextcloud/app-calendar/src/store/principals.js';
+import useSettingsStore from '@nextcloud/app-calendar/src/store/settings.js';
 import { initializeClientForUserView } from '@nextcloud/app-calendar/src/services/caldavService.js';
+import loadMomentLocalization from '@nextcloud/app-calendar/src/utils/moment.js';
 import getTimeZoneManager from '@nextcloud/app-calendar/src/services/timezoneDataProviderService.js';
 import Console from '../util/console.ts';
+import type { Store } from 'pinia';
 
-interface Calendar {
+export interface Calendar {
   owner: string,
 }
+
+export type CalendarsStore = Store<
+  'calendars',
+  {
+    initialCalendarsLoaded: boolean,
+    loadCollections: () => Promise<{ calendars: Calendar[] }>,
+  }
+>;
+export type PricipalsStore = Store<
+  'principals',
+  {
+    fetchCurrentUserPrincipal: () => Promise<void>,
+    fetchPrincipalByUrl: ({ url }) => Promise<void>,
+  }
+>;
+
+export type SettingsStore = Store<
+  'settings',
+  {
+    setMomentLocale: ({ locale }) => void,
+  }
+>
 
 // make sure all the required data is loaded in order to (mis-)reuse
 // the calendar editor widgets.
@@ -36,12 +61,18 @@ const calendarStoreSetup = async () => {
 
   const logger = new Console('calendarSetup');
 
-  const calendarsStore = useCalendarsStore();
-  const principalsStore = usePrincipalsStore();
+  const calendarsStore: CalendarsStore = useCalendarsStore();
+  const principalsStore: PricipalsStore = usePrincipalsStore();
+  const settingsStore: SettingsStore = useSettingsStore();
+  loadMomentLocalization().then((locale: string) => { settingsStore.setMomentLocale({ locale }) })
 
   if (calendarsStore.initialCalendarsLoaded) {
     logger.debug('INITIAL CALENDARS ALREADY LOADED');
-    return
+    return {
+      calendarsStore,
+      principalsStore,
+      settingsStore,
+    };
   }
   getTimeZoneManager();
   await initializeClientForUserView();
@@ -57,6 +88,11 @@ const calendarStoreSetup = async () => {
     principalsStore.fetchPrincipalByUrl({ url: owner });
   });
   logger.debug('Calendar stores have been setup');
+  return {
+    calendarsStore,
+    principalsStore,
+    settingsStore,
+  };
 };
 
 export default calendarStoreSetup;

@@ -22,6 +22,7 @@
  */
 
 export const PROJECT_ACTIONS_MENU = 'ProjectActionsMenu';
+export const PROJECT_EVENTS_LISTING = 'ProjectEventsListing';
 
 export interface ComponentProps {
   [PROJECT_ACTIONS_MENU]: {
@@ -30,6 +31,9 @@ export interface ComponentProps {
     forceProjectName?: boolean,
     enableOverviewItem?: boolean,
     testOpen?: boolean,
+  },
+  [PROJECT_EVENTS_LISTING]: {
+    projectId: number,
   },
 }
 

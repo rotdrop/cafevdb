@@ -980,7 +980,9 @@ const pmeTableDialogOpen = async function(tableOptions, post) {
                     // console.trace();
                     // installInputChosen(containerSel);
                     resizeHandler(parameters);
-                    parameters.triggerData.postOpen(dialogHolder);
+                    if (parameters.triggerData?.postOpen) {
+                      parameters.triggerData.postOpen(dialogHolder);
+                    }
                     CAFEVDB.toolTipsInit(containerSel);
                     if (!keepLocked) {
                       unblockTableDialog(dialogHolder);

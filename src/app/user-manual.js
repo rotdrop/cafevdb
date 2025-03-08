@@ -25,6 +25,15 @@ import $ from './jquery.js';
 import { appName, appPrefix } from '../config.ts';
 import * as ncRouter from '@nextcloud/router';
 import wikiPopup from './wiki-popup.js';
+import { WIKI_POPUP } from '../event-bus-events.ts';
+import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
+
+// listen to requests from the Vue wrapper application, the idea is
+// not to have to load all the code twice, or not to have to change
+// anything at once.
+asyncSubscribe(WIKI_POPUP, async (event) => {
+  wikiPopup(event);
+});
 
 const userManualMenuHandler = function(event) {
   const $this = $(this);

@@ -58,10 +58,16 @@ $.fn.elements = function() {
  *
  * @param {object} argument TBD.
  *
+ * @param {Array} rest TBD.
+ *
  * @returns {object}
  */
-$.fn.cafevDialog = function(argument) {
-  if (arguments.length === 1 && typeof argument === 'object' && argument !== null) {
+$.fn.cafevDialog = function(argument, ...rest) {
+  if (rest.length === 0 && typeof argument === 'object' && argument !== null) {
+    console.info('CAFEVDB DIALOG OPEN', {
+      argument,
+      ...rest,
+    });
     const options = {
       appendTo: '#' + appPrefix('general'),
       // appendTop: 'body',
@@ -87,7 +93,11 @@ $.fn.cafevDialog = function(argument) {
       $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#app-content, #app-content-vue');
     }
   } else {
-    return $.fn.dialog.apply(this, arguments);
+    console.info('CAFEVDB DIALOG FORWARD', {
+      argument,
+      ...rest,
+    });
+    return $.fn.dialog.apply(this, [argument, ...rest]);
   }
   return this;
 };

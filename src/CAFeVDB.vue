@@ -474,6 +474,7 @@ const updatePersonalSettings = async (
 }
 
 asyncSubscribe(BusEvents.HISTORY_GO_REQUEST, (event) => {
+  logger.info('RECEIVED HISTORY GO REQUEST', { event })
   history.clearHistoryAction()
   router.go(event.level)
 })
@@ -732,7 +733,7 @@ router.afterEach((to, from) => {
     windowHistory: window?.history?.state,
   })
   pageTemplate.value = to.params?.template || 'home'
-  history.finishHistoryAction(to)
+  history.finishHistoryAction(to, from)
   // @todo: parse the query parameters, e.g.
   //
   // ?template=blah&foo=bar

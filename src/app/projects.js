@@ -44,7 +44,6 @@ import {
 } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
-import wikiPopup from './wiki-popup.js';
 import setBusyIndicators from './busy-indicators.js';
 import iFrameResize from './iframe-resize.js';
 import {
@@ -61,13 +60,6 @@ import { PROJECT_ACTIONS_MENU } from '../mountable-component-names.ts';
 // import iFrameContentScript from '!!raw-loader!iframe-resizer/js/iframeResizer.contentWindow.js';
 
 require('projects.scss');
-
-// listen to requests from the Vue wrapper application, the idea is
-// not to have to load all the code twice, or not to have to change
-// anything at once.
-asyncSubscribe(BusEvents.WIKI_POPUP, async (event) => {
-  wikiPopup(event);
-});
 
 asyncSubscribe(BusEvents.PROJECT_POPUP, async (event) => {
   console.info('EVENT', event);
@@ -97,10 +89,15 @@ asyncSubscribe(BusEvents.PROJECT_EVENTS_POPUP, async (event) => {
   asyncEmit(BusEvents.POP_BUSY_STATE);
 });
 
-asyncSubscribe(BusEvents.PROJECT_EMAIL_POPUP, async (event) => {
+asyncSubscribe(BusEvents.EMAIL_POPUP, async (event) => {
   console.info('EVENT', event);
   asyncEmit(BusEvents.PUSH_BUSY_STATE);
-  await emailPopup(event, event.reopen);
+  const post = {
+    projectId: event.projectId,
+    projectName: event.projectName,
+    ...(event.post || {}),
+  };
+  await emailPopup(post, event.reopen);
   asyncEmit(BusEvents.POP_BUSY_STATE);
 });
 

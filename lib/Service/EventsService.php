@@ -486,6 +486,7 @@ class EventsService
     $event['projectid'] = $projectEvent->getProject()->getId();
     $event['uri'] = $projectEvent->getEventUri();
     $event['uid'] = $projectEvent->getEventUid();
+    $event['deleted'] = $projectEvent->getDeleted();
     $event['calendarid'] = $projectEvent->getCalendarId();
     $event['calendarId'] = $event['calendarid'];
     $event['calendarUri'] = $projectEvent->getCalendarUri();
@@ -557,8 +558,6 @@ class EventsService
       if ($dtEnd->isFloating()) {
         $end = $end->setTimezone($timeZone);
       }
-    } else {
-      $this->logInfo('START AND END ' . print_r($start, true) . ' ' . print_r($end, true));
     }
     // } else {
     //   // @todo: This calls for trouble! The Nextcloud calendar assumes UTC
@@ -732,15 +731,15 @@ class EventsService
 
     $language = locale_get_primary_language($locale);
     $region = locale_get_region($locale);
-    $carbonLocale = $language . ($region ? '_' . $region : '');
+    $locale = $language . ($region ? '_' . $region : ''); // strip coding from locale
     $dateTimeZone = new DateTimeZone($timezone);
 
     // Variant using Carbon. We could do the same using Nextcloud's
     // IDateTimeFormatter by constructing an UTC locale.
     /** @var CarbonImmutable $start */
-    $start = CarbonImmutable::createFromInterface($eventObject['start'])->locale($carbonLocale);
+    $start = CarbonImmutable::createFromInterface($eventObject['start'])->locale($locale);
     /** @var CarbonImmutable $end */
-    $end   = CarbonImmutable::createFromInterface($eventObject['end'])->locale($carbonLocale);
+    $end   = CarbonImmutable::createFromInterface($eventObject['end'])->locale($locale);
     $allDay = $eventObject['allday'];
 
     $startStamp = $start->getTimestamp();
@@ -871,12 +870,14 @@ class EventsService
       $result[$calendarId] = [
         'name' => $displayName,
         'uri' => $calendarUri,
+        'calendarId' => $calendarId,
         'urlPath' => $urlPath,
         'events' => [],
       ];
     }
     $result[-1] = [
       'name' => strval($this->l->t('Miscellaneous Calendars')),
+      'calendarId' => -1,
       'uri' => '',
       'urlPath' => null,
       'events' => []
@@ -884,7 +885,7 @@ class EventsService
 
     foreach ($projectEvents as $event) {
       $event['times'] = $this->eventTimes($event);
-      $this->logInfo('EVENT TIMES ' . print_r($event['times'], true));
+      // $this->logInfo('EVENT TIMES ' . print_r($event['times'], true));
       $calId = array_search($event['calendarid'], $calendarIds);
       if ($calId === false) {
         $calendarUris = $this->calDavService->calendarUris($calendarId);
@@ -1008,7 +1009,7 @@ class EventsService
   /**
    * Export the given events in ICAL format. The events need not
    * belong to the same calendar.
-   *
+   *  //
    * @param array $events An array of event identifiers in the form
    * ```
    * [

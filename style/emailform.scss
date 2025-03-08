@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -97,6 +97,19 @@ $editorHeight: 20em;
       } /* ul#emailformtabs */
 
       form##{$appName}-email-form {
+
+        &.project-mode-off {
+          fieldset##{$appName}-email-composition-fieldset {
+            tr.event-attachments {
+              display: none !important;
+              visibility: hidden !important;
+            }
+            tr.all-attachments button.attachment.events  {
+              display: none !important;
+              visibility: hidden !important;
+            }
+          }
+        }
 
         fieldset.page {
           max-width:65em;
@@ -600,14 +613,19 @@ $editorHeight: 20em;
                 margin-bottom:3px;
               }
               button {
+                display: flex;
+                align-items: center;
                 background-color:#C6DEFF;
-                vertical-align:middle;
+                // vertical-align:middle;
                 height:34px;
                 min-height: 34px;
                 width:34px;
-                padding:5px;
+                padding:0;
                 border-style:outset;
                 margin-right: 0.5em;
+                & img {
+                  margin: auto;
+                }
                 &.upload {
                   img {
                     width:24px;
@@ -632,7 +650,6 @@ $editorHeight: 20em;
                   }
                 }
                 &.visibility-toggle {
-                  padding: 5px 0;
                   img {
                     width:24px;
                   }

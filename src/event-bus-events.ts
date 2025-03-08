@@ -29,10 +29,11 @@ export const appEventName = <T extends string>(tag: T) => appPrefix(tag, '::');
 export const APP_SETTINGS_POPUP = appEventName('app-settings-popup');
 export const CALENDAR_EVENT_ADD = appEventName('calendar-event-add');
 export const CALENDAR_EVENT_EDIT = appEventName('calendar-event-edit');
+export const EMAIL_POPUP = appEventName('email-popup');
 export const HISTORY_GO_REQUEST = appEventName('history-go-request');
 export const POP_BUSY_STATE = appEventName('pop-busy-state');
 export const PROJECT_ACTIONS = appEventName('project-actions');
-export const PROJECT_EMAIL_POPUP = appEventName('project-email-popup');
+export const PROJECT_EVENTS_LISTING = appEventName('project-events-listing');
 export const PROJECT_EVENTS_POPUP = appEventName('project-events-popup');
 export const PROJECT_INSTRUMENTATION_NUMBERS_POPUP = appEventName('project-instrumentation-numbers-popup');
 export const PROJECT_PARTICIPANT_FIELDS_POPUP = appEventName('project-participant-fields-popup');
@@ -59,6 +60,7 @@ export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');
 export const LEGACY_PAGE_LOAD = appEventName('legacy-page-load');
 export const LEGACY_PME_UPDATE = appEventName('legacy-pme-update');
 export const LEGACY_SANITIZE_POST_DATA = appEventName('legacy-sanitize-post-data');
+export const LEGACY_UPDATE_EVENTS_SELECTION = appEventName('legacy-update-events-selection');
 
 export const GET_VUE_COMPONENT = appEventName('get-vue-component');
 

@@ -61,9 +61,9 @@ const options: RouterOptions = {
       if (isNavigationFailure(error, NavigationFailureType.redirected)) {
         logger.debug('Catch and ignore redirection navigation error', { error});
         resolve(error.to);
-      } else if (isNavigationFailure(error, NavigationFailureType.aborted)
-                 && error.to.path.endsWith('--never--')) {
-        resolve(error.from);
+      // } else if (isNavigationFailure(error, NavigationFailureType.aborted)
+      //            && error.to.path.endsWith('--never--')) {
+      //   resolve(error.from);
       } else {
         reject(error);
       }

@@ -47,14 +47,6 @@ export class AppDataStoreError extends AppError {
 
 const abortController = new AbortController();
 
-export interface RouterHistoryState {
-  next: string|null,
-  prev: string|null,
-  key: string,
-  post: Record<string, any>,
-  position: number|null,
-}
-
 export type ProjectTypeTemporary = 'temporary';
 export type ProjectTypePermanent = 'permanent';
 export type ProjectTypeTemplate = 'template';
@@ -69,13 +61,111 @@ interface ProjectFolders {
   balancesfolder: string,
 }
 
+interface ProjectEventEntity {
+  id: number,
+  projectId: number,
+  calendarId: number,
+  calendarUri: string,
+  eventUid: string,
+  seriesUid: null|string,
+  eventUri: string,
+  recurrenceId: number,
+  sequence: number,
+  type: 'VEVENT'|'VTODO'|'VJOURNAL'|'VCARD',
+  absenceFieldId: null|number,
+}
+
+// Date from PHP
+interface SerializedPHPDate {
+  date: string, // e.g 2014-03-29 11:30:00.000000
+  timezone_type: number, // e.g. 3
+  timezone: string, // e.g. UTC
+}
+
+interface EventTimes {
+  timezone: string,
+  locale: string,
+  allday: boolean,
+  start: {
+    stamp: number, // timestamp
+    date: string, // short date string
+    time: string,
+  },
+  end: {
+    stamp: number,
+    date: string, // end date at last day of allday events
+    time: string, // time with 00:00 -> 24:00
+  },
+}
+
+export interface EventMatrixEvent {
+  instanceId: string,
+  projectId: number,
+  deleted?: string|null,
+  uri: string,
+  uid: string,
+  calendarId: number,
+  calendarUri: string,
+  sequence: number,
+  recurrenceId: number,
+  seriesUid: string,
+  absenceField: number|null|undefined,
+  allday: boolean,
+  summary: string,
+  description: string,
+  location: string,
+  categories: string[],
+  urlPath: string,
+  start: SerializedPHPDate,
+  end: SerializedPHPDate,
+  seriesStart: SerializedPHPDate,
+  times: EventTimes,
+}
+
+export type CalendarUris = 'concerts'|'rehearsals'|'other'|'management'|'finance';
+
+export interface EventMatrixEntry {
+  name: string, // displayName
+  uri: CalendarUris|'',
+  calendarId: number,
+  urlPath: string, // local url-path
+  events: EventMatrixEvent[],
+}
+
+export interface SpecialCategories {
+  recordAbsence: string,
+  projectRegistration: string,
+}
+
+export interface ProjectEventMatrix {
+  calendars: {
+    [Key in CalendarUris]: {
+      uri: Key,
+      public: boolean,
+    };
+  },
+  categories: {
+    // some meta data ...
+    C: SpecialCategories,
+    L10N: SpecialCategories,
+  },
+  matrix: {
+    [key: number]: EventMatrixEntry,
+  }
+}
+
 export interface Project {
   id: number,
   name: string,
   year: number,
-  folders?: ProjectFolders,
   wikiPage: string,
   type: ProjectTemporalType,
+  folders?: ProjectFolders,
+  calendarEvents?: ProjectEventEntity[],
+  eventMatrix?: ProjectEventMatrix,
+  getFolders: (errorHandler?: ErrorHandler) => Promise<undefined|ProjectFolders>,
+  getCalendarEvents: (errorHandler?: ErrorHandler) => Promise<undefined|ProjectEventEntity[]>,
+  getEventMatrix: (errorHandler?: ErrorHandler) => Promise<undefined|ProjectEventMatrix>,
 }
 
 const usePrivateState = defineStore(storeId + '-private', {
@@ -84,7 +174,7 @@ const usePrivateState = defineStore(storeId + '-private', {
     loadingPromise: Promise.resolve(true) as Promise<any>,
   }),
   actions: {
-    handleError<E extends Error>(error: E|any, context: ErrorContext, errorHandler: ErrorHandler|null) {
+    handleError<E extends Error>(error: E|any, context: ErrorContext, errorHandler?: ErrorHandler) {
       logger.error(context, error);
       const message = typeof context.message === 'string'
         ? context.message : t(appName, 'An error occurred in the app-data store.')
@@ -104,32 +194,69 @@ const usePrivateState = defineStore(storeId + '-private', {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
     },
-    async getProject(projectId: number, errorHandler: ErrorHandler|null): Promise<undefined|Project> {
+    async getProject(projectId: number, errorHandler?: ErrorHandler): Promise<undefined|Project> {
       await this.awaitLoadingPromise();
       if (!this.projects[projectId]) {
         await (this.loadingPromise = this.findProject(projectId, errorHandler));
       }
       return this.projects?.[projectId] || undefined;
     },
-    async putProject(project: Project, errorHandler: ErrorHandler|null) {
+    async getProjectEvents(project: Project, errorHandler?: ErrorHandler) {
+      const projectId = project.id;
+      const url = generateAppUrl('projects/{projectId}/calendar-events', { projectId });
+      try {
+        const response: AxiosResponse<ProjectEventEntity[]> = await axios.get(url, { signal: abortController.signal });
+        logger.debug('FETCH PROJECT EVENTS RESPONSE', response);
+        vueSet(project, 'calendarEvents', response.data);
+        return response.data;
+      } catch (e) {
+        this.handleError(e, { action: 'getProjectEvents', projectId, url }, errorHandler);
+        return undefined;
+      }
+    },
+    async getEventMatrix(project: Project, errorHandler?: ErrorHandler) {
+      const projectId = project.id;
+      const url = generateAppUrl('projects/{projectId}/event-matrix', { projectId });
+      try {
+        const response: AxiosResponse<ProjectEventMatrix> = await axios.get(url, { signal: abortController.signal });
+        logger.debug('FETCH EVENT MATRIX RESPONSE', response);
+        vueSet(project, 'eventMatrix', response.data);
+        for (const entry of Object.values(project.eventMatrix!.matrix)) {
+          for (const event of entry.events) {
+            event.instanceId = event.uri + (event.recurrenceId ? '@' + event.recurrenceId : '');
+          }
+        }
+        return response.data;
+      } catch (e) {
+        this.handleError(e, { action: 'getEventMatrix', projectId, url }, errorHandler);
+        return undefined;
+      }
+    },
+    async getProjectFolders(project: Project, errorHandler?: ErrorHandler) {
+      const projectId = project.id;
+      const url = generateAppUrl('projects/{projectId}/folder/all', { projectId });
+      try {
+        const response: AxiosResponse<ProjectFolders> = await axios.get(url, { signal: abortController.signal });
+        logger.debug('FETCH PROJECT FOLDERS RESPONSE', response);
+        vueSet(project, 'folders', response.data);
+        return response.data;
+      } catch (e) {
+        this.handleError(e, { action: 'getProjectFolders', projectId, url }, errorHandler);
+        return undefined;
+      }
+    },
+    async putProject(project: Project, errorHandler?: ErrorHandler) {
       const projectId = project.id;
       if (this.projects[projectId]) {
         return this.projects[projectId];
       }
-      const url = generateAppUrl('projects/{projectId}/folder/all', { projectId });
+      project.getFolders = (handler?: ErrorHandler) => this.getProjectFolders(project, handler || errorHandler);
+      project.getCalendarEvents = (handler?: ErrorHandler) => this.getProjectEvents(project, handler || errorHandler);
+      project.getEventMatrix = (handler?: ErrorHandler) => this.getEventMatrix(project, handler || errorHandler);
       vueSet(this.projects, projectId, project);
-      try {
-        const response: AxiosResponse<ProjectFolders> = await axios.get(url, { signal: abortController.signal });
-        logger.info('FETCH PROJECT FOLDERS RESPONSE', response);
-        vueSet(this.projects[projectId], 'folders', response.data);
-        return this.projects[projectId];
-      } catch (e) {
-        this.deleteProject(projectId);
-        this.handleError(e, { action: 'findProject', projectId, url }, errorHandler);
-        return undefined;
-      }
+      return this.projects[projectId];
     },
-    async findProject(projectId: number, errorHandler: ErrorHandler|null) {
+    async findProject(projectId: number, errorHandler?: ErrorHandler) {
       let url = generateAppUrl('projects/{projectId}', { projectId });
       try {
         const response: AxiosResponse<Project> = await axios.get(url, { signal: abortController.signal });
@@ -141,7 +268,7 @@ const usePrivateState = defineStore(storeId + '-private', {
         return undefined;
       }
     },
-    async findProjectIds(errorHandler: ErrorHandler|null) {
+    async findProjectIds(errorHandler?: ErrorHandler) {
       let url = generateAppUrl('projects');
       try {
         const response: AxiosResponse<number[]> = await axios.get(url, { signal: abortController.signal });
@@ -156,7 +283,7 @@ const usePrivateState = defineStore(storeId + '-private', {
         return undefined;
       }
     },
-    async searchProjects(query: string, errorHandler: ErrorHandler|null) {
+    async searchProjects(query: string, errorHandler?: ErrorHandler) {
       query = encodeURI(query);
       if (query !== '') {
         query = '/' + query;

@@ -359,7 +359,9 @@ const doLoadLegacy = async () => {
   loading.value = true
   pushBusyState()
   closeNavigation()
-  asyncEmit(LEGACY_PAGE_CLEANUP)
+  logger.debug('REQUESTING PAGE CLEANUP')
+  await asyncEmit(LEGACY_PAGE_CLEANUP)
+  logger.debug('AFTER PAGE CLEANUP')
   logger.info('HISTORY STATE AT ENTRY', { ...currentHistoryState.value })
   // const historyAppData = { ...currentHistoryState.value.post }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

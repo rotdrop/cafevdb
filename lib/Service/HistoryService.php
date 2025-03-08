@@ -61,6 +61,11 @@ class HistoryService
     'template',
     'projectId',
     'projectName',
+    'eventsProjectId',
+    // calendar app
+    'recurrenceId',
+    'object',
+    'context',
   ];
 
   /** @var bool */

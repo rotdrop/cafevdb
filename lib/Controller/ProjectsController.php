@@ -454,6 +454,7 @@ class ProjectsController extends Controller
         $data = $this->flattenProject($project);
         $data['wikiPage'] = $projectService->projectWikiLink($project->getName());
         return self::dataResponse($data);
+
       case self::GET_PARTICIPANT_FIELDS:
         $multiplicity = $this->request->getParam('multiplicity');
         $type = $this->request->getParam('type');
@@ -479,6 +480,7 @@ class ProjectsController extends Controller
         }
         usort($data, fn($a, $b) => strcmp($a['name'], $b['name']));
         return self::dataResponse($data);
+
       case self::GET_PARTICIPANTS:
         $data = [];
         /** @var Entities\ProjectParticipant $participant */
@@ -494,6 +496,7 @@ class ProjectsController extends Controller
         }
         usort($data, fn($a, $b) => strcmp($a['publicName'], $b['publicName']));
         return self::dataResponse($data);
+
       case self::GET_PROJECT_SHARE:
         switch ($subTopic) {
           case ProjectService::FOLDER_TYPE_DOWNLOADS:
@@ -504,7 +507,7 @@ class ProjectsController extends Controller
           default:
             return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
         }
-        break;
+
       case self::GET_CALENDAR_EVENTS:
         $calendarEvents = [];
         /** @var Entities\ProjectEvent $event */
@@ -517,15 +520,30 @@ class ProjectsController extends Controller
           $calendarEvents[] = $flatEvent;
         }
         return self::dataResponse($calendarEvents);
-        break;
+
       case self::GET_EVENT_MATRIX:
         /** @var EventsService $eventsService */
         $eventsService = $this->di(EventsService::class);
         $events = $eventsService->events($projectId);
         $dfltIds = $eventsService->defaultCalendars();
         $eventMatrix = $eventsService->eventMatrix($events, $dfltIds);
-        return self::dataResponse($eventMatrix);
-        break;
+        // provide also some meta-info in order to avoid further bloats to the initial-state data.
+        $data = [
+          'calendars' => ConfigService::CALENDARS,
+          'categories' => [
+            'C' => [
+              'recordAbsence' => $eventsService->getRecordAbsenceCategory(translate: false),
+              'projectRegistration' => $eventsService->getProjectRegistrationCategory(translate: false),
+            ],
+            'L10N' => [ // app-locale
+              'recordAbsence' => $eventsService->getRecordAbsenceCategory(translate: true),
+              'projectRegistration' => $eventsService->getProjectRegistrationCategory(translate: true),
+            ],
+          ],
+          'matrix' => $eventMatrix,
+        ];
+        return self::dataResponse($data);
+
       case self::GET_PROJECT_FOLDER:
         switch ($subTopic) {
           case '':
@@ -543,9 +561,10 @@ class ProjectsController extends Controller
           default:
             return self::grumble($this->l->t('Unknown folder type "%s".', $subTopic));
         }
+
       default:
+        return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
     }
-    return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
   }
 
   /**

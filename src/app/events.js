@@ -34,8 +34,17 @@ import pageBusyIcon from './busy-icon.js';
 import modalizer from './modalizer.js';
 import { close as closeActionMenus } from './action-menu.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
-import { emit as asyncEmit } from '../services/async-event-bus.ts';
-import { CALENDAR_EVENT_EDIT, CALENDAR_EVENT_ADD } from '../event-bus-events.ts';
+import {
+  emit as asyncEmit,
+  // getEmitResult,
+} from '../services/async-event-bus.ts';
+import {
+  CALENDAR_EVENT_EDIT,
+  CALENDAR_EVENT_ADD,
+  PROJECT_EVENTS_LISTING,
+  // GET_VUE_COMPONENT,
+} from '../event-bus-events.ts';
+// import { PROJECT_EVENTS_LISTING } from '../mountable-component-names.ts';
 
 require('jquery-ui/ui/widgets/accordion');
 
@@ -113,9 +122,23 @@ const init = function(htmlContent, textStatus, request, afterInit) {
     width: 'auto', // 510,
     height: 'auto',
     resizable: false,
-    open() {
+    async open() {
       // $.fn.cafevTooltip.remove();
       const $dialogHolder = $(this);
+
+      /// /////////////////////////////////////////////
+      // const vueListing = await getEmitResult(
+      //   asyncEmit(GET_VUE_COMPONENT, {
+      //     name: PROJECT_EVENTS_LISTING,
+      //     propsData: {
+      //       projectId: project.projectId,
+      //     },
+      //   }),
+      // );
+      asyncEmit(PROJECT_EVENTS_LISTING, { projectId: project.projectId });
+
+      // vueListing.$mount($dialogHolder.find('#blahfoobar span')[0]);
+      /// /////////////////////////////////////////////
 
       $dialogHolder.find('table.listing').each(function(index) {
         // sort newest-first for large numbers of events.

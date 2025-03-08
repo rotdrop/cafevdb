@@ -52,11 +52,18 @@ const POST_DATA_EXCLUDED_KEYS = [
   'renderAs',
 ];
 
-// Keys contained in the url-params.
+// Keys contained in the url-params. The code should be changed to
+// look at the actual parameters. However, for simplicity we just list
+// the known keys here.
 const URL_PARAMS_KEYS = [
   'template',
   'projectId',
   'projectName',
+  'eventsProjectId',
+  // app calendar parameters
+  'recurrenceId',
+  'object',
+  'context',
 ];
 
 const HASH_TOP_LEVEL_EXCLUDED_KEYS = [
@@ -68,6 +75,7 @@ const EMPTY_VALUE_KEYS = [
   'projectId',
   'projectName',
   'musicianId',
+  'eventsProjectId',
 ];
 
 /**
@@ -207,7 +215,10 @@ export const sanitizePostData = (params: TemplatePostData, excludeUrlParams = fa
     },
   });
 
-  logger.debug('SANITIZE POST DATA RESULT', { ...params });
+  logger.debug('SANITIZE POST DATA RESULT', {
+    excludeUrlParams,
+    params: { ...params },
+  });
 
   return params;
 }

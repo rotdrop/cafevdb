@@ -138,7 +138,11 @@ onBeforeMount(() => {
 })
 
 onBeforeRouteUpdate((to, from, next) => {
-  logger.debug('ON BEFORE ROUTE UPDATE', { ...to }, { ...from }, window?.history?.state)
+  logger.debug('ON BEFORE ROUTE UPDATE', {
+    to: { ...to },
+    from: { ...from },
+    windowState: { ...(window?.history?.state || {}) },
+  })
   if (!to.path.includes('--never--')
       && (to.name === 'legacy-page'
           || (to.matched.length > 1 && to.matched[0].name === 'legacy-page'))) {

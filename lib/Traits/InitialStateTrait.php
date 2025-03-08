@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Documents\TemplateService;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
@@ -144,7 +145,7 @@ trait InitialStateTrait
         'isGroupAdmin' => $authorizationService->isAdmin($this->userId()),
         'sharedFolder' => $this->getSharedFolderPath(),
         'projectsFolder' => $this->getProjectsFolderPath(),
-        'wikiNamespace' => $this->getAppValue('wikinamespace'),
+        'wikiNamespace' => $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY),
         'uploadMaxFileSize' => Util::maxUploadSize(),
       ]);
 

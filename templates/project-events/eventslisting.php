@@ -22,11 +22,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use DateTimeImmutable;
-use DateTimeInterface;
-use DateTimeZone;
-
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
 
@@ -128,6 +123,7 @@ foreach ($eventMatrix as $key => $eventGroup) {
             data-action-scope="<?= $actionScope ?>"
             data-absence-field-id="<?= $absenceFieldId ?>"
             data-calendar-object='<?= $calendarObjectData ?>'
+            data-blah='<?= json_encode($event['times']) ?>'            '
             data-recurrence-id="<?= $recurrenceId ?>"
         >
           <td class="eventbuttons">
