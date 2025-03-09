@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Middleware;
 
 use Exception;
+use InvalidArgumentException;
 use Throwable;
 
 use Psr\Log\LoggerInterface;
@@ -128,6 +129,9 @@ class ExceptionMiddleware extends Middleware
             'actualPermissions' => $originalException->getActualPermissions(),
             'requiredPermissions' => $originalException->getRequiredPermissions(),
           ];
+          break;
+        case InvalidArgumentException::class:
+          $httpStatusCode = Http::STATUS_BAD_REQUEST;
           break;
         default:
           $httpStatusCode = Http::STATUS_INTERNAL_SERVER_ERROR;
