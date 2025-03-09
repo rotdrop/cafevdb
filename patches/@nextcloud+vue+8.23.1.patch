@@ -1,5 +1,31 @@
+diff --git a/node_modules/@nextcloud/vue/dist/Components/NcActionLink.cjs b/node_modules/@nextcloud/vue/dist/Components/NcActionLink.cjs
+index 713d541..58a8729 100644
+--- a/node_modules/@nextcloud/vue/dist/Components/NcActionLink.cjs
++++ b/node_modules/@nextcloud/vue/dist/Components/NcActionLink.cjs
+@@ -64,7 +64,7 @@ const _sfc_main = {
+ };
+ var _sfc_render = function render() {
+   var _vm = this, _c = _vm._self._c;
+-  return _c("li", { staticClass: "action", attrs: { "role": _vm.isInSemanticMenu && "presentation" } }, [_c("a", { staticClass: "action-link focusable", attrs: { "download": _vm.download, "href": _vm.href, "aria-label": _vm.ariaLabel, "target": _vm.target, "title": _vm.title, "rel": "nofollow noreferrer noopener", "role": _vm.isInSemanticMenu && "menuitem" }, on: { "click": _vm.onClick } }, [_vm._t("icon", function() {
++  return _c("li", { staticClass: "action", attrs: { "role": _vm.isInSemanticMenu && "presentation" } }, [_c("a", { staticClass: "action-link focusable", attrs: { "download": _vm.download, "href": _vm.href, "aria-label": _vm.ariaLabel, "target": _vm.target, "title": _vm.title, "rel": _vm.target.startsWith('_') ? "nofollow noreferrer noopener" : "nofollow", "role": _vm.isInSemanticMenu && "menuitem" }, on: { "click": _vm.onClick } }, [_vm._t("icon", function() {
+     return [_c("span", { staticClass: "action-link__icon", class: [_vm.isIconUrl ? "action-link__icon--url" : _vm.icon], style: { backgroundImage: _vm.isIconUrl ? `url(${_vm.icon})` : null }, attrs: { "aria-hidden": "true" } })];
+   }), _vm.name ? _c("span", { staticClass: "action-link__longtext-wrapper" }, [_c("strong", { staticClass: "action-link__name" }, [_vm._v(" " + _vm._s(_vm.name) + " ")]), _c("br"), _c("span", { staticClass: "action-link__longtext", domProps: { "textContent": _vm._s(_vm.text) } })]) : _vm.isLongText ? _c("span", { staticClass: "action-link__longtext", domProps: { "textContent": _vm._s(_vm.text) } }) : _c("span", { staticClass: "action-link__text" }, [_vm._v(_vm._s(_vm.text))]), _vm._e()], 2)]);
+ };
+diff --git a/node_modules/@nextcloud/vue/dist/Components/NcActionLink.mjs b/node_modules/@nextcloud/vue/dist/Components/NcActionLink.mjs
+index 1f2fb04..28de19c 100644
+--- a/node_modules/@nextcloud/vue/dist/Components/NcActionLink.mjs
++++ b/node_modules/@nextcloud/vue/dist/Components/NcActionLink.mjs
+@@ -63,7 +63,7 @@ const _sfc_main = {
+ };
+ var _sfc_render = function render() {
+   var _vm = this, _c = _vm._self._c;
+-  return _c("li", { staticClass: "action", attrs: { "role": _vm.isInSemanticMenu && "presentation" } }, [_c("a", { staticClass: "action-link focusable", attrs: { "download": _vm.download, "href": _vm.href, "aria-label": _vm.ariaLabel, "target": _vm.target, "title": _vm.title, "rel": "nofollow noreferrer noopener", "role": _vm.isInSemanticMenu && "menuitem" }, on: { "click": _vm.onClick } }, [_vm._t("icon", function() {
++  return _c("li", { staticClass: "action", attrs: { "role": _vm.isInSemanticMenu && "presentation" } }, [_c("a", { staticClass: "action-link focusable", attrs: { "download": _vm.download, "href": _vm.href, "aria-label": _vm.ariaLabel, "target": _vm.target, "title": _vm.title, "rel": _vm.target.startsWith('_') ? "nofollow noreferrer noopener" : "nofollow", "role": _vm.isInSemanticMenu && "menuitem" }, on: { "click": _vm.onClick } }, [_vm._t("icon", function() {
+     return [_c("span", { staticClass: "action-link__icon", class: [_vm.isIconUrl ? "action-link__icon--url" : _vm.icon], style: { backgroundImage: _vm.isIconUrl ? `url(${_vm.icon})` : null }, attrs: { "aria-hidden": "true" } })];
+   }), _vm.name ? _c("span", { staticClass: "action-link__longtext-wrapper" }, [_c("strong", { staticClass: "action-link__name" }, [_vm._v(" " + _vm._s(_vm.name) + " ")]), _c("br"), _c("span", { staticClass: "action-link__longtext", domProps: { "textContent": _vm._s(_vm.text) } })]) : _vm.isLongText ? _c("span", { staticClass: "action-link__longtext", domProps: { "textContent": _vm._s(_vm.text) } }) : _c("span", { staticClass: "action-link__text" }, [_vm._v(_vm._s(_vm.text))]), _vm._e()], 2)]);
+ };
 diff --git a/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-BntAj6H-.css b/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-BntAj6H-.css
-index 5037aac..6d07270 100644
+index 5037aac..42de66e 100644
 --- a/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-BntAj6H-.css
 +++ b/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-BntAj6H-.css
 @@ -173,7 +173,7 @@
@@ -12,7 +38,7 @@ index 5037aac..6d07270 100644
    width: var(--figure-size);
    height: var(--figure-size);
 diff --git a/node_modules/@nextcloud/vue/dist/assets/NcColorPicker-C1DuuANb.css b/node_modules/@nextcloud/vue/dist/assets/NcColorPicker-C1DuuANb.css
-index 213c0a2..41c1542 100644
+index 213c0a2..99dab17 100644
 --- a/node_modules/@nextcloud/vue/dist/assets/NcColorPicker-C1DuuANb.css
 +++ b/node_modules/@nextcloud/vue/dist/assets/NcColorPicker-C1DuuANb.css
 @@ -80,8 +80,8 @@
