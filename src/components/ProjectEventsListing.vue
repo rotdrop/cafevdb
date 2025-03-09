@@ -945,7 +945,13 @@ const exportEvents = async () => {
     link.click()
     URL.revokeObjectURL(link.href)
   } catch (error) {
-    errorHandler(new AppError({ component: COMPONENT_NAME }, t(appName, 'Unable to export selected events.')))
+    errorHandler(
+      new AppError(
+        { component: COMPONENT_NAME },
+        t(appName, 'Unable to export selected events.'),
+        { cause: error },
+      ),
+    )
   }
 }
 
