@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -142,7 +142,7 @@ class ProjectEvent implements \ArrayAccess
    * possibly repeating or we need a list of linked fields in order to record
    * the participation for each event instance.
    */
-  #[ORM\OneToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'projectEvent', cascade: ['remove'], orphanRemoval: true)]
+  #[ORM\OneToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'projectEvent', cascade: ['persist', 'remove'], orphanRemoval: true)]
   #[Gedmo\SoftDeleteableCascade(undelete: true)]
   private $absenceField;
 

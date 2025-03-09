@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -189,7 +189,7 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var null|ProjectEvent
    */
-  #[ORM\OneToOne(targetEntity: ProjectEvent::class, mappedBy: 'absenceField')]
+  #[ORM\OneToOne(targetEntity: ProjectEvent::class, mappedBy: 'absenceField', orphanRemoval: true)]
   private $projectEvent;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
