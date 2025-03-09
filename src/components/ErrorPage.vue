@@ -298,6 +298,8 @@ const submitted = ref(false)
 const userComment = ref('')
 const substitutions = ref<Record<string, string>>({})
 
+watch(() => props.error, () => { showProblemReport.value = false })
+
 type StackedErrorObject = Omit<ErrorLike, 'stack'> & { stack?: string | string[] }
 
 // Remove the stack but for the first level. Actually, passing level
