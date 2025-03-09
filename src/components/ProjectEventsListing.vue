@@ -29,7 +29,8 @@
     >
       <template #description>
         <div class="global-actions-container flex-container flex-center">
-          <NcActions :type="actionButtonType"
+          <NcActions v-tooltip="hints['projectevents:all:new']"
+                     :type="actionButtonType"
                      class="new-event-menu fc-event"
                      data-is-new="yes"
                      :aria-label="t(appName, 'create new appointments')"
@@ -40,6 +41,7 @@
             </template>
             <NcActionRouter v-for="(item, uri) in routerEventAdd"
                             :key="uri"
+                            v-tooltip="hints['projectevents:all:new:' + uri]"
                             :to="item.location"
                             :exact="true"
                             :close-after-click="true"
@@ -50,45 +52,47 @@
               {{ item.label }}
             </NcActionRouter>
           </NcActions>
-          <NcActions :inline="1000"
-                     :force-name="true"
+          <NcButton v-tooltip="hints['projectevents:all:select']"
+                    :data-tooltip="hints['projectevents:all:select']"
+                    :aria-label="t(appName, 'mark all events')"
+                    :disabled="isLoading"
+                    @click="markAllEvents(true)"
+          >
+            <template #icon>
+              <DynamicSvgIcon :size="24" :data="svgEmailChecked" class="material-design-icon" />
+            </template>
+          </NcButton>
+          <NcButton v-tooltip="hints['projectevents:all:deselect']"
+                    :aria-label="t(appName, 'unmark all events')"
+                    :disabled="isLoading"
+                    @click="markAllEvents(false)"
+          >
+            <template #icon>
+              <DynamicSvgIcon :size="24" :data="svgEmailCross" class="material-design-icon" />
+            </template>
+          </NcButton>
+          <NcButton v-tooltip="hints['projectevents:all:sendmail']"
+                    :aria-label="t(appName, 'open email editor')"
+                    :disabled="isLoading"
+                    @click="emailEditor"
+          >
+            <template #icon>
+              <DynamicSvgIcon :size="24" :data="svgEmailUnchecked" class="material-design-icon" />
+            </template>
+            {{ t(appName, 'Em@il') }}
+          </NcButton>
+          <NcButton v-tooltip="hints['projectevents:all:download']"
+                    :aria-label="t(appName, 'export events')"
+                    :disabled="isLoading"
+                    @click="exportEvents"
+          >
+            <template #icon>
+              <IconExport />
+            </template>
+          </NcButton>
+          <NcActions v-tooltip="hints['projectevents:manual']"
                      :type="actionButtonType"
           >
-            <NcActionButton :aria-label="t(appName, 'mark all events')"
-                            :disabled="isLoading"
-                            @click="markAllEvents(true)"
-            >
-              <template #icon>
-                <DynamicSvgIcon :size="24" :data="svgEmailChecked" class="material-design-icon" />
-              </template>
-            </NcActionButton>
-            <NcActionButton :aria-label="t(appName, 'unmark all events')"
-                            :disabled="isLoading"
-                            @click="markAllEvents(false)"
-            >
-              <template #icon>
-                <DynamicSvgIcon :size="24" :data="svgEmailCross" class="material-design-icon" />
-              </template>
-            </NcActionButton>
-            <NcActionButton :aria-label="t(appName, 'open email editor')"
-                            :disabled="isLoading"
-                            @click="emailEditor"
-            >
-              <template #icon>
-                <DynamicSvgIcon :size="24" :data="svgEmailUnchecked" class="material-design-icon" />
-              </template>
-              {{ t(appName, 'Em@il') }}
-            </NcActionButton>
-            <NcActionButton :aria-label="t(appName, 'export events')"
-                            :disabled="isLoading"
-                            @click="exportEvents"
-            >
-              <template #icon>
-                <IconExport />
-              </template>
-            </NcActionButton>
-          </NcActions>
-          <NcActions :type="actionButtonType">
             <template #icon>
               <IconInfo />
             </template>
@@ -110,7 +114,8 @@
               {{ t(appId, 'Manual (popup)') }}
             </NcActionButton>
           </NcActions>
-          <NcButton :class="{ loading: showLoadingIndicator }"
+          <NcButton v-tooltip="hints['projectevents:all:reload']"
+                    :class="{ loading: showLoadingIndicator }"
                     :disabled="!project || isLoading"
                     :aria-label="t(appName, 'reload the project appointments')"
                     @click="syncProjectData(project?.id || -1)"
@@ -174,18 +179,25 @@
                                 :data="svgEmailChecked"
                                 class="material-design-icon"
                 />
-                <IconRecordAbsence v-if="hasAbsenceField[event.instanceId]" />
+                <IconRecordAbsence v-if="hasAbsenceField[event.instanceId]"
+                                   v-tooltip="hints['projectevents:event:absence-field:indicator']"
+                />
               </div>
             </template>
             <template #indicator>
               <div class="flex-container flex-baseline">
-                <span :class="'event-uid-' + eventSeries[event.uid]"><span>{{ eventSeriesIndicator(event) }}</span></span>
-                <span :class="'event-series-uid-' + eventRelations[event.seriesUid]"><span>{{ eventRelationsIndicator(event) }}</span></span>
+                <span v-tooltip="hints['projectevents:event:event-uid']"
+                      :class="'event-uid-' + eventSeries[event.uid]"
+                ><span>{{ eventSeriesIndicator(event) }}</span></span>
+                <span v-tooltip="hints['projectevents:event:event-series-uid']"
+                      :class="'event-series-uid-' + eventRelations[event.seriesUid]"
+                ><span>{{ eventRelationsIndicator(event) }}</span></span>
               </div>
             </template>
             <template #actions>
               <NcActionRadio v-if="eventRelations[event.seriesUid]"
                              v-model="actionScope[event.uid]"
+                             v-tooltip="hints['projectevents:event:scope:single']"
                              value="single"
                              :name="'action-scope-' + event.uid"
                              :close-after-click="true"
@@ -195,6 +207,7 @@
               </NcActionRadio>
               <NcActionRadio v-if="eventSeries[event.uid]"
                              v-model="actionScope[event.uid]"
+                             v-tooltip="hints['projectevents:event:scope:series']"
                              value="series"
                              :name="'action-scope-' + event.uid"
                              :close-after-click="true"
@@ -204,6 +217,7 @@
               </NcActionRadio>
               <NcActionRadio v-if="eventRelations[event.seriesUid]"
                              v-model="actionScope[event.uid]"
+                             v-tooltip="hints['projectevents:event:scope:related']"
                              value="related"
                              :name="'action-scope-' + event.uid"
                              :close-after-click="true"
@@ -212,7 +226,8 @@
                 {{ t(appId, 'act on all related events') }}
               </NcActionRadio>
               <NcActionSeparator v-if="eventRelations[event.seriesUid]" />
-              <NcActionButton type="checkbox"
+              <NcActionButton v-tooltip="hints['projectevents:event:absence-field:check']"
+                              type="checkbox"
                               :close-after-click="true"
                               :disabled="!mutationsAllowed || !!event.deleted"
                               @click="toggleAbsenceField(event)"
@@ -223,7 +238,8 @@
                 </template>
                 {{ t(appName, 'record absence') }}
               </NcActionButton>
-              <NcActionButton :disabled="!!event.deleted"
+              <NcActionButton v-tooltip="hints['projectevents:event:select']"
+                              :disabled="!!event.deleted"
                               type="checkbox"
                               :close-after-click="true"
                               @click="toggleAttachmentMark(event)"
@@ -236,7 +252,8 @@
                 </template>
                 {{ t(appName, 'mark for download / em@il') }}
               </NcActionButton>
-              <NcActionRouter :to="routerEventEdit[event.instanceId] || ''"
+              <NcActionRouter v-tooltip="hints['projectevents:event:edit']"
+                              :to="routerEventEdit[event.instanceId] || ''"
                               :exact="true"
                               :close-after-click="true"
               >
@@ -245,7 +262,9 @@
                 </template>
                 {{ t(appName, 'edit') }}
               </NcActionRouter>
-              <NcActionLink :href="calendarAppEventEdit[event.instanceId] || ''"
+              <NcActionLink v-if="actionScope[event.uid] !== 'series'"
+                            v-tooltip="hints['projectevents:event:calendar-app:single']"
+                            :href="calendarAppEventEdit[event.instanceId] || ''"
                             :target="calendarAppTarget"
                             :close-after-click="true"
               >
@@ -254,7 +273,19 @@
                 </template>
                 {{ t(appName, 'open in calendar-app') }}
               </NcActionLink>
-              <NcActionButton :close-after-click="true"
+              <NcActionLink v-else
+                            v-tooltip="hints['projectevents:event:calendar-app:series']"
+                            :href="calendarAppEventEditSeries[event.uid] || ''"
+                            :target="calendarAppTarget"
+                            :close-after-click="true"
+              >
+                <template #icon>
+                  <IconCalendar />
+                </template>
+                {{ t(appName, 'open in calendar-app') }}
+              </NcActionLink>
+              <NcActionButton v-tooltip="hints['projectevents:event:delete']"
+                              :close-after-click="true"
                               :disabled="!mutationsAllowed"
                               @click="handleDeleteEvent(matrixEntry, event)"
               >
@@ -264,6 +295,7 @@
                 {{ t(appName, 'delete') }}
               </NcActionButton>
               <NcActionButton v-if="!event.deleted"
+                              v-tooltip="hints['projectevents:event:detach']"
                               :close-after-click="true"
                               :disabled="!mutationsAllowed"
                               @click="handleProjectLink(event, false)"
@@ -274,6 +306,7 @@
                 {{ t(appName, 'detach from project') }}
               </NcActionButton>
               <NcActionButton v-else
+                              v-tooltip="hints['projectevents:event:reattach']"
                               :close-after-click="true"
                               :disabled="!mutationsAllowed"
                               @click="handleProjectLink(event, true)"
@@ -336,7 +369,6 @@ import useErrorHandlerStore from '../stores/error-handler.ts'
 import { AppError } from '../types/errors.ts'
 import { generateUrl } from '@nextcloud/router'
 import generateAppUrl from '../toolkit/util/generate-url.js'
-import moment from '@nextcloud/moment'
 import axios from '@nextcloud/axios'
 import type {
   CalendarUris,
@@ -363,7 +395,9 @@ import {
   useRouter,
   onBeforeRouteUpdate,
 } from 'vue-router/composables'
-import type { RouteRecord } from 'vue-router'
+import type {
+  RouteRecord,
+} from 'vue-router'
 import capitalize from 'capitalize'
 import {
   dokuWikiSection,
@@ -384,9 +418,11 @@ import calendarStoreSetup from '../services/calendar-store-setup.ts'
 import Console from '../util/console.ts'
 import md5 from 'blueimp-md5'
 import { parse as parseContentDisposition } from 'content-disposition'
+import { DateTime } from 'luxon'
 // _at_ts-expect-error: 7016
 import useCalendarObjectInstance from '@nextcloud/app-calendar/src/store/calendarObjectInstance.js'
 import useCalendarObjects from '@nextcloud/app-calendar/src/store/calendarObjects.js'
+import useTooltipsStore from '../stores/tooltips.ts'
 import { storeToRefs } from 'pinia'
 import type { Store } from 'pinia'
 import type { EventArgs } from '@rotdrop/async-nextcloud-event-bus'
@@ -490,6 +526,42 @@ const calendarAppSideBarActive = computed(() => currentRoute.path.includes('/sid
 
 const actionButtonType = ref('secondary')
 
+const tooltipKeys = [
+  'projectevents:event',
+  'projectevents:event:scope',
+  'projectevents:event:scope:single',
+  'projectevents:event:scope:series',
+  'projectevents:event:scope:related',
+  'projectevents:event:select',
+  'projectevents:event:absence-field:check',
+  'projectevents:event:edit',
+  'projectevents:event:calendar-app:single',
+  'projectevents:event:calendar-app:series',
+  'projectevents:event:delete',
+  'projectevents:event:detach',
+  'projectevents:event:reattach',
+  'projectevents:event:event-uid',
+  'projectevents:event:event-series-uid',
+  'projectevents:event:absence-field:indicator',
+  'projectevents:manual',
+  'projectevents:all:select',
+  'projectevents:all:deselect',
+  'projectevents:all:sendmail',
+  'projectevents:all:download',
+  'projectevents:all:reload',
+  'projectevents:all:new',
+]
+
+for (const uri of Object.keys(calendarOrdering)) {
+  if (uri) {
+    tooltipKeys.push('projectevents:all:new:' + uri)
+  }
+}
+
+const tooltipsProvider = useTooltipsStore()
+tooltipsProvider.provideTooltips(tooltipKeys)
+const hints = tooltipsProvider.tooltipsData
+
 const wikiManualSection = computed(() => dokuWikiSection([
   appName,
   'documentation',
@@ -546,7 +618,8 @@ const attachmentMark = ref<Record<string, boolean> >({})
 const routerEventEdit = ref<Record<string, CalendarEditLocation>>({})
 const routerEventAdd = ref<Record<string, { location: CalendarAddLocation, label: string }>>({})
 const calendarAppEventEdit = ref<Record<string, string> >({})
-const calendarAppTarget = md5(appName + ': event edit in calendar app sidebar')
+const calendarAppEventEditSeries = ref<Record<string, string> >({})
+const calendarAppTarget = computed(() => md5(appName + ': event edit in calendar app sidebar'))
 const actionScope = ref<Record<string, ActionScope> >({})
 
 const eventSeries = ref<Record<string, number> >({})
@@ -602,7 +675,7 @@ const syncProjectData = async (projectId: number) => {
           if (entry.uri === 'rehearsals') {
             context.categories.push(projectEventMatrix.value.categories.L10N.recordAbsence)
           }
-          const nowSeconds = Math.round(Date.now() / 1000)
+          const nowSeconds = Math.round(Date.now() / 1000 / 3600) * 3600
           const params = {
             allDay: true,
             dtstart: nowSeconds,
@@ -622,6 +695,27 @@ const syncProjectData = async (projectId: number) => {
           vueSet(hasAbsenceField.value, event.instanceId, +(event.absenceField || 0) > 0)
           vueSet(attachmentMark.value, event.instanceId, false || attachmentMark.value?.[event.instanceId])
           vueSet(actionScope.value, event.uid, actionScope.value?.[event.uid] || 'single')
+
+          const name = 'EditPopoverView'
+          const context = {}
+          const eventObject = btoa(event.urlPath)
+          const params = {
+            object: eventObject,
+            recurrenceId: event.times.start.stamp, // event.recurrenceId is different
+            context: btoa(JSON.stringify(context)),
+          }
+          const query = currentRoute.query
+          vueSet(routerEventEdit.value, event.instanceId, { name, params, query })
+
+          const calendarAppUrlParams = {
+            view: 'timeGridWeek',
+            timeRange: DateTime.fromSQL(event.start.date + ' ' + event.start.timezone).toISODate(),
+            mode: 'sidebar',
+            objectId: params.object,
+            recurrenceId: params.recurrenceId,
+          }
+          vueSet(calendarAppEventEdit.value, event.instanceId, generateUrl('/apps/calendar/{view}/{timeRange}/edit/{mode}/{objectId}/{recurrenceId}', calendarAppUrlParams))
+
           if (event.seriesUid) {
             if (eventRelations.value[event.seriesUid] === undefined) {
               vueSet(eventRelations.value, event.seriesUid, relationsCounter++)
@@ -633,29 +727,14 @@ const syncProjectData = async (projectId: number) => {
             if (eventSeries.value[event.uid] === undefined) {
               vueSet(eventSeries.value, event.uid, seriesCounter++)
               seriesEvents[event.uid] = []
+              calendarAppUrlParams.recurrenceId = DateTime.fromSQL(
+                event.seriesStart.date + ' ' + event.seriesStart.timezone,
+                { setZone: true },
+              ).toUnixInteger()
+              vueSet(calendarAppEventEditSeries.value, event.uid, generateUrl('/apps/calendar/{view}/{timeRange}/edit/{mode}/{objectId}/{recurrenceId}', calendarAppUrlParams))
             }
             seriesEvents[event.uid].push(event)
           }
-          const name = 'EditPopoverView'
-          const context = {}
-          const eventObject = btoa(event.urlPath)
-          const params = {
-            object: eventObject,
-            recurrenceId: event.times.start.stamp, // event.recurrenceId is different
-            context: btoa(JSON.stringify(context)),
-          }
-          const query = currentRoute.query
-          vueSet(routerEventEdit.value, event.instanceId, { name, params, query })
-          vueSet(calendarAppEventEdit.value, event.instanceId, generateUrl('/apps/calendar/{view}/{timeRange}/edit/{mode}/{objectId}/{recurrenceId}', {
-            view: 'timeGridWeek',
-            timeRange: moment(
-              event.start.date + ' ' + event.start.timezone,
-              'YYYY-MM-DD HH:mm:ss.SSSSSS zz',
-            ).format('YYYY-MM-DD'),
-            mode: 'sidebar',
-            objectId: params.object,
-            recurrenceId: params.recurrenceId,
-          }))
           // check if the current route contains a calendar app component
           if (CALENDAR_APP_ROUTES.includes(currentRoute.name!)) {
             if (eventObject === currentRoute.params.object) {
@@ -1177,10 +1256,10 @@ watch(syncEventListTrigger, async (value) => {
           ...currentRoute.params as { object: string, context: string },
           recurrenceId,
         },
-        // @ts-expect-error: 2322 why???
+        // @ts-expect-error: 2322
         query: currentRoute.query,
       }
-      // @ts-expect-error: 2769 why???
+      // @ts-expect-error: 2769
       await router.replace(location)
     }
   }

@@ -1254,6 +1254,8 @@ events associated to the project.
 Events can be added and modified
 as needed.'),
 
+        'manual' => self::t('Open the user manual either as a popup or in another tab or window'),
+
         'event' => [
           'edit' => self::t('Modify the event.'),
 
@@ -1268,7 +1270,9 @@ The event can be reattached by
 adding the project-name to its
 categories.'),
 
-          'select' => self::t('Mark the respective event for being
+          'reattach' => self::t('Reattach the respective event to the project.'),
+
+          'select' => self::t('Mark the respective event for download or for being
 sent by email as ICS-attachment.
 
 Hitting the email button at the top of the dialog
@@ -1291,6 +1295,8 @@ case for this particular event.'),
 
           'calendar-app' => [
             'default' => self::t('Open the respective event instance in the calendar app in another browser window or tab.'),
+            'single' => self::t('SINGLE Open the respective event instance in the calendar app in another browser window or tab.'),
+            'series' => self::t('SERIES Open the respective event instance in the calendar app in another browser window or tab.'),
           ],
 
           'event-series-uid' => self::t('When changing particular events of repeating event series then calendar apps may choose to even split those repeating events into several distinct series. This happens in particular if the user chooses to alter properties for "this and future events". This column is used to visually group such related event series. Events which do not belong to a repeating event will have no label and just show the background color.'),
