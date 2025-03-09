@@ -27,7 +27,6 @@ import { handleError as ajaxHandleError, validateResponse as ajaxValidateRespons
 import pageBusyIcon from './busy-icon.js';
 import * as Dialogs from './dialogs.js';
 import { personalRecordDialog as participantRecordDialog } from './project-participants.js';
-import { eventsPopup as projectEventsPopup } from './projects.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import fileUploadInit from './file-upload.js';
 import * as DialogUtils from './dialog-utils.js';
@@ -44,7 +43,10 @@ import modalizer from './modalizer.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
 import fileDownload from './file-download.js';
 import { token as pmeToken } from './pme-selectors.js';
-import { LEGACY_UPDATE_EVENTS_SELECTION } from '../event-bus-events.ts';
+import {
+  LEGACY_UPDATE_EVENTS_SELECTION,
+  PROJECT_EVENTS_LISTING,
+} from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe, emit as asyncEmit } from '../services/async-event-bus.ts';
 
 import 'selectize';
@@ -1625,16 +1627,26 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         events = [];
       }
       eventAttachmentsRow.addClass('show-selectable');
-      projectEventsPopup({
-        projectId: projectId(),
-        projectName: projectName(),
-        eventSelect: events,
-      },
-      false /* only move to top if already open */);
 
       if (wasVisible !== eventAttachmentsRow.is(':visible')) {
         panelHolder.trigger('resize', { position: 'bottom' });
       }
+
+      asyncEmit(
+        PROJECT_EVENTS_LISTING, {
+          projectId: projectId(),
+          projectName: projectName(),
+        },
+      ).then(() => {
+        if (events.length > 0) {
+          asyncEmit(LEGACY_UPDATE_EVENTS_SELECTION, {
+            origin: 'EmailForm',
+            projectgId: projectId(),
+            projectName: projectName(),
+            selection: events,
+          });
+        }
+      });
 
       return false;
     });
@@ -1678,7 +1690,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       if ($attachmentRows.filter(':visible').length > 0) {
         $attachmentRows.removeClass('show-selectable').addClass('hidden');
       } else {
-        $attachmentRows.addClass('show-selectable').removeClass('hidden');
+        $attachmentRows.addClass('svhow-selectable').removeClass('hidden');
       }
       panelHolder.trigger('resize', { position: 'bottom' });
     });
@@ -1733,17 +1745,13 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .off('change')
     .on('change', function(event) {
       const $this = $(this);
-      const eventDialog = $('.' + appPrefix('project-events') + ' #events');
       let events = $this.val();
       if (events.length === 0) {
         events = [];
-        // fieldset.find('tr.event-attachments').hide();
       }
       $this.closest('tr')
         .toggleClass('empty-selection', events.length === 0)
         .toggleClass('no-attachments', $this.find('option').length === 0);
-      // events = events.map(item => JSON.parse(item).uri);
-      eventDialog.trigger(appName + ':events_changed', [events]);
       asyncEmit(LEGACY_UPDATE_EVENTS_SELECTION, {
         origin: 'EmailForm',
         projectgId: projectId(),

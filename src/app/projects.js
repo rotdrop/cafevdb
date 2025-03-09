@@ -31,7 +31,6 @@ import { templateRenderer } from './template-renderer.js';
 import pageBusyIcon from './busy-icon.js';
 import * as Dialogs from './dialogs.js';
 import * as Notification from './notification.js';
-import * as Events from './events.js';
 import * as Email from './email.js';
 import {
   data as pmeData,
@@ -82,13 +81,6 @@ asyncSubscribe(BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP, async (event) => {
   asyncEmit(BusEvents.POP_BUSY_STATE);
 });
 
-asyncSubscribe(BusEvents.PROJECT_EVENTS_POPUP, async (event) => {
-  console.info('EVENT', event);
-  asyncEmit(BusEvents.PUSH_BUSY_STATE);
-  await eventsPopup(event, event.reopen);
-  asyncEmit(BusEvents.POP_BUSY_STATE);
-});
-
 asyncSubscribe(BusEvents.EMAIL_POPUP, async (event) => {
   console.info('EVENT', event);
   asyncEmit(BusEvents.PUSH_BUSY_STATE);
@@ -100,43 +92,6 @@ asyncSubscribe(BusEvents.EMAIL_POPUP, async (event) => {
   await emailPopup(post, event.reopen);
   asyncEmit(BusEvents.POP_BUSY_STATE);
 });
-
-/**
- * Generate a popup-dialog for the events-listing for the given
- * project.
- *
- * @param {object} post Arguments object:
- * { projectName: 'NAME', projectId: XX }
- *
- * @param {boolean} reopen If true, close any already dialog and re-open it
- * (the default). If false, only raise an existing dialog to top.
- */
-const eventsPopup = function(post, reopen) {
-  pageBusyIcon(true);
-  const afterInit = () => pageBusyIcon(false);
-  if (typeof reopen === 'undefined') {
-    reopen = false;
-  }
-  if (Events.project.projectId !== post.projectId) {
-    reopen = true;
-  }
-  const eventsDlg = $('#events');
-  if (eventsDlg.dialog('isOpen') === true) {
-    if (reopen === false) {
-      eventsDlg.dialog('moveToTop');
-      return;
-    }
-    eventsDlg.dialog('close').remove();
-  }
-  $.post(
-    generateAppUrl('projects/events/dialog'), post)
-    .fail(function(xhr, status, errorThrown) {
-      Ajax.handleError(xhr, status, errorThrown, afterInit);
-    })
-    .done(function(data, textStatus, request) {
-      Events.init(data, textStatus, request, afterInit);
-    });
-};
 
 /**
  * Generate a popup-dialog for project related email.
@@ -1315,7 +1270,6 @@ const documentReady = function() {
 
 export {
   documentReady,
-  eventsPopup,
   projectViewPopup,
   instrumentationNumbersPopup,
 };

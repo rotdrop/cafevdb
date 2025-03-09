@@ -52,7 +52,7 @@ import {
 } from 'vue-router/composables'
 import type { Route } from 'vue-router'
 import Console from '../util/console.ts'
-import { CALENDAR_EVENT_EDIT, CALENDAR_EVENT_ADD, PROJECT_EVENTS_LISTING } from '../event-bus-events.ts'
+import { PROJECT_EVENTS_LISTING } from '../event-bus-events.ts'
 import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
 import { sanitizeTemplateParams } from '../util/legacy-post-data.ts'
 
@@ -73,41 +73,7 @@ const router = useRouter()
 
 logger.debug('BEFORE ROUTE ENTER', { ...currentRoute }, { ...window?.history?.state })
 
-asyncSubscribe(CALENDAR_EVENT_EDIT, async (event) => {
-  logger.info('CALENDAR_EVENT_EDIT', event, atob(event.objectId))
-  const name = event.mode === 'simple' ? 'EditPopoverView' : 'EditSidebarView'
-  try {
-    const params = Object.assign({}, currentRoute.params, {
-      object: event.objectId,
-      recurrenceId: event.recurrenceId,
-      context: event.context ? btoa(JSON.stringify(event.context)) : '',
-    })
-    const query = currentRoute.query
-    return await router.push({ name, params, query })
-  } catch (error) {
-    logger.error('ROUTE PUSH FAILED', { currentRoute }, error)
-  }
-})
-
-asyncSubscribe(CALENDAR_EVENT_ADD, async (event) => {
-  logger.info('EVENT DATA', { ...event })
-  const name = event.mode === 'simple' ? 'NewPopoverView' : 'NewSidebarView'
-  const params = {
-    allDay: '' + event.allDay,
-    dtstart: '' + event.dtstart,
-    dtend: '' + event.dtend,
-    context: event.context ? btoa(JSON.stringify(event.context)) : '',
-  }
-  const query = currentRoute.query
-  try {
-    return await router.push({ name, params, query })
-  } catch (error) {
-    logger.error('ROUTE PUSH FAILED', { currentRoute }, error)
-  }
-})
-
 asyncSubscribe(PROJECT_EVENTS_LISTING, async (event) => {
-  logger.info('EVENT DATA', { ...event })
   const name = 'ProjectEventsListing'
   const params = {
     eventsProjectId: '' + event.projectId,

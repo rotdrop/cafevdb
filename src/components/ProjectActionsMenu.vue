@@ -191,12 +191,16 @@ import {
   onBeforeMount,
   onMounted,
 } from 'vue'
-import { useRouter } from 'vue-router/composables'
+import {
+  useRoute,
+  useRouter,
+} from 'vue-router/composables'
 import * as Authorization from '../authorization.ts'
 import * as BusEvents from '../event-bus-events.ts'
 import type { Location as RouterLocation } from 'vue-router'
 import Console from '../util/console.ts'
 import { PROJECT_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
+import { PROJECT_EVENTS_LISTING_NAME } from '../router/calendar-routes.ts'
 
 const logger = new Console(COMPONENT_NAME)
 
@@ -334,11 +338,16 @@ const openProjectEvents = (event: MouseEvent) => {
   event.preventDefault()
   open.value = false
   closeNavigation()
-  asyncEmit(BusEvents.PROJECT_EVENTS_POPUP, {
-    projectId: props.projectId,
-    projectName: props.projectName,
-    reopen: false,
-  })
+  const location = {
+    name: PROJECT_EVENTS_LISTING_NAME,
+    params: {
+      ...currentRoute.params,
+      eventsProjectId: props.projectId,
+    },
+    query: currentRoute.query,
+  }
+  // @ts-expect-error: 2769
+  return router.push(location)
 }
 const openProjectEmail = (event: MouseEvent) => {
   event.preventDefault()
@@ -411,6 +420,7 @@ const moveToAnchor = async (event?: MouseEvent) => {
 }
 
 const router = useRouter()
+const currentRoute = useRoute()
 
 const getRouteHref = (route: RouterLocation) => {
   const routeProps = router.resolve(route)

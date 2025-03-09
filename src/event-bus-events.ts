@@ -27,14 +27,11 @@ export const appEventName = <T extends string>(tag: T) => appPrefix(tag, '::');
 
 // app events
 export const APP_SETTINGS_POPUP = appEventName('app-settings-popup');
-export const CALENDAR_EVENT_ADD = appEventName('calendar-event-add');
-export const CALENDAR_EVENT_EDIT = appEventName('calendar-event-edit');
 export const EMAIL_POPUP = appEventName('email-popup');
 export const HISTORY_GO_REQUEST = appEventName('history-go-request');
 export const POP_BUSY_STATE = appEventName('pop-busy-state');
 export const PROJECT_ACTIONS = appEventName('project-actions');
 export const PROJECT_EVENTS_LISTING = appEventName('project-events-listing');
-export const PROJECT_EVENTS_POPUP = appEventName('project-events-popup');
 export const PROJECT_INSTRUMENTATION_NUMBERS_POPUP = appEventName('project-instrumentation-numbers-popup');
 export const PROJECT_PARTICIPANT_FIELDS_POPUP = appEventName('project-participant-fields-popup');
 export const PROJECT_POPUP = appEventName('project-popup');
