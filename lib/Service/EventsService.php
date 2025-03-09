@@ -441,7 +441,13 @@ class EventsService
         while ($eventIterator->valid()) {
           $sibling = $eventIterator->getEventObject();
           $recurrenceId = $sibling->{'RECURRENCE-ID'}->getDateTime()->getTimestamp();
-          $siblings[$recurrenceId] = $sibling;
+          if (empty($siblings[$recurrenceId]) || $siblings[$recurrenceId]->{'LAST-MODIFIED'}->getDateTime() < $sibling->{'LAST-MODIFIED'}->getDateTime()) {
+            // This might have been intended for an undo-feature. At any rate:
+            // there may be mutiple siblings for the same recurrence id, and
+            // the one with the most recent mtime is the one to consider.
+            $siblings[$recurrenceId] = $sibling;
+            // $this->logInfo('REPLACED SIBLING ' . $uid . ' -> ' . $recurrenceId . ' mtime ' . $lastModified);
+          }
           $eventIterator->next();
         }
       } catch (NoInstancesException $e) {
