@@ -375,10 +375,9 @@ $routes = [
      * Project events
      */
     [
-      'name' => 'project_events#service_switch',
-      'url' => '/projects/events/{topic}',
+      'name' => 'project_events#download',
+      'url' => '/projects/events/download',
       'verb' => 'POST',
-      'defaults' => [ 'topic' => 'dialog' ],
     ],
     /**
      * Project web-pages
