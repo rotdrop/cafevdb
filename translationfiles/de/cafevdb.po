@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-02-21 13:48+0100\n"
-"PO-Revision-Date: 2025-02-21 13:51+0100\n"
+"POT-Creation-Date: 2025-03-09 23:19+0100\n"
+"PO-Revision-Date: 2025-03-09 23:20+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1401,11 +1401,11 @@ msgstr ""
 msgid "The old ``%1$s`` content on %2$s at %3$s was:"
 msgstr "Am \"%2$s um \"%3$s war der Inhalt der alten Datei ``%1$s``:"
 
-#: lib/Common/Util.php:815
+#: lib/Common/Util.php:766
 msgid "There is no error, the file uploaded with success"
 msgstr "Datei erfolgreich hochgeladen."
 
-#: lib/Common/Util.php:818
+#: lib/Common/Util.php:769
 #, php-format
 msgid ""
 "The uploaded file exceeds the upload_max_filesize directive in php.ini: %s"
@@ -1413,7 +1413,7 @@ msgstr ""
 "Dis Datei ist zu groß und kann deshalb nicht hochgeladen werden (Einstellung "
 "`upload_max_filesize' in `php.ini': %s)"
 
-#: lib/Common/Util.php:821
+#: lib/Common/Util.php:772
 msgid ""
 "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
 "the HTML form"
@@ -1421,27 +1421,27 @@ msgstr ""
 "Dis Datei ist zu groß und kann deshalb nicht hochgeladen werden (Einstellung "
 "im HTML-Formular)"
 
-#: lib/Common/Util.php:823
+#: lib/Common/Util.php:774
 msgid "The uploaded file was only partially uploaded"
 msgstr "Die Datei konnte nur teilweise hochgeladen werden."
 
-#: lib/Common/Util.php:825
+#: lib/Common/Util.php:776
 msgid "No file was uploaded"
 msgstr "Es wurde keine Datei hochgeladen."
 
-#: lib/Common/Util.php:827
+#: lib/Common/Util.php:778
 msgid "Missing a temporary folder"
 msgstr "Temporäres Verzeichnis nicht vorhanden."
 
-#: lib/Common/Util.php:829
+#: lib/Common/Util.php:780
 msgid "Failed to write to disk"
 msgstr "Kann nicht auf den Massenspeicher schreiben"
 
-#: lib/Common/Util.php:831
+#: lib/Common/Util.php:782
 msgid "A PHP extension stopped the file upload."
 msgstr "Eine PHP-Erweiterung hat das Laden der Datei beendet."
 
-#: lib/Common/Util.php:833
+#: lib/Common/Util.php:784
 msgid "Unknown upload error"
 msgstr "Irgendein Hochlade-Fehler"
 
@@ -1627,16 +1627,16 @@ msgstr ""
 msgid "Caught exception \\`%s' at %s:%s"
 msgstr "Ausnahme `aufgefangen': \\`%s' bei %s:%s."
 
-#: lib/Controller/BlogController.php:93 lib/Controller/BlogController.php:186
+#: lib/Controller/BlogController.php:95 lib/Controller/BlogController.php:187
 msgid "Refusing to create blog entry without author identity."
 msgstr "Pinnwand-Einträge ohne Autor können leider nicht erstellt werden."
 
-#: lib/Controller/BlogController.php:102
+#: lib/Controller/BlogController.php:104
 #, php-format
 msgid "Error, caught an exception `%s'."
 msgstr "Interner Fehler: `%s'."
 
-#: lib/Controller/BlogController.php:177
+#: lib/Controller/BlogController.php:178
 #: lib/Controller/PersonalSettingsController.php:155
 #: lib/Controller/PersonalSettingsController.php:1704
 #, php-format
@@ -1644,7 +1644,7 @@ msgid "Value \"%1$s\" for set \"%2$s\" is not convertible to boolean."
 msgstr ""
 "Wert \"%1$s\" für \"%2$s\" kann nicht als Wahrheitswert interpretiert werden."
 
-#: lib/Controller/BlogController.php:191
+#: lib/Controller/BlogController.php:192
 #, php-format
 msgid ""
 "Message priority should be numeric (and in principle positiv and in the "
@@ -1653,29 +1653,28 @@ msgstr ""
 "Die Darstellungspriorität für Notizen sollte eine Zahl zwischen 0 und\n"
 "255 sein. Angegeben wurde `%s'."
 
-#: lib/Controller/BlogController.php:201
+#: lib/Controller/BlogController.php:202
 msgid "Refusing to create empty blog entry."
 msgstr "Leere Notizen werden nicht abgespeichert."
 
-#: lib/Controller/BlogController.php:208 lib/Controller/BlogController.php:215
+#: lib/Controller/BlogController.php:209 lib/Controller/BlogController.php:216
 msgid "Cannot modify a blog-entry without id."
 msgstr "Ohne Notizen Id kann die Notiz nicht modifiziert werden."
 
-#: lib/Controller/BlogController.php:222
+#: lib/Controller/BlogController.php:223
 msgid "Cannot delete a blog-thread without id."
 msgstr "Numerische Id des Threads fehlt, daher kann er nicht gelöscht werden."
 
-#: lib/Controller/BlogController.php:227
+#: lib/Controller/BlogController.php:228
 #: lib/Controller/CspViolationController.php:67
 #: lib/Controller/DownloadsController.php:154
 #: lib/Controller/MusicianValidationController.php:452
 #: lib/Controller/PersonalSettingsController.php:248
 #: lib/Controller/ProgressStatusController.php:147
-#: lib/Controller/ProjectEventsController.php:372
 #: lib/Controller/ProjectParticipantsController.php:182
 #: lib/Controller/ProjectWebPagesController.php:176
-#: lib/Controller/ProjectsController.php:163
-#: lib/Controller/ProjectsController.php:182
+#: lib/Controller/ProjectsController.php:165
+#: lib/Controller/ProjectsController.php:184
 #: lib/Controller/ValidationController.php:82
 msgid "Unknown Request"
 msgstr "Unbekannte Anfrage."
@@ -2077,8 +2076,8 @@ msgstr "Der Hersteller wurde nicht angegeben."
 #: lib/Service/Finance/InstrumentInsuranceService.php:611
 #: lib/Service/Finance/InstrumentInsuranceService.php:615
 #: lib/Service/PhoneNumberService.php:155
-#: lib/Service/PhoneNumberService.php:306 src/app/cafevdb.js:55
-#: src/app/cafevdb.js:56
+#: lib/Service/PhoneNumberService.php:306 src/app/cafevdb.js:56
+#: src/app/cafevdb.js:57
 msgid "unknown"
 msgstr "unbekannt"
 
@@ -2165,11 +2164,35 @@ msgstr "Die Email-Verteiler-Id darf nicht leer sein."
 msgid "Email-address must not be empty."
 msgstr "Die Email-Adresse darf nicht fehlen."
 
-#: lib/Controller/MigrationsController.php:77
-#: lib/Controller/MigrationsController.php:155
+#: lib/Controller/MigrationsController.php:79
+#: lib/Controller/MigrationsController.php:184
 #, php-format
 msgid "Unknown Request \"%s\"."
 msgstr "Unbekannte Anfrage: \"%s\"."
+
+#: lib/Controller/MigrationsController.php:126
+#: lib/Controller/MigrationsController.php:165
+#, php-format
+msgid "Migration step \"%1$s\" (\"%2$s\") failed."
+msgstr "Datenmigration \"%1$s\" (\"%2$s\") fehlgeschlagen."
+
+#: lib/Controller/MigrationsController.php:131
+#, php-format
+msgid "The following migration has successfully been applied: \"%1$s\"."
+msgid_plural ""
+"The following migrations have successfully been applied: \"%1$s\"."
+msgstr[0] "Die folgende Migration wurde bereits ausgeführt: \"%1$s\"."
+msgstr[1] "Die folgende Migrationen wurden bereits ausgeführt: \"%1$s\"."
+
+#: lib/Controller/MigrationsController.php:139
+#, php-format
+msgid "Also still pending: \"%1$s\"."
+msgstr "Ebenfalls anhängig: \"%1$s\"."
+
+#: lib/Controller/MigrationsController.php:169
+#, php-format
+msgid "Migration step \"%1$s\" failed."
+msgstr "Datenmigration \"%1$s\" ist fehlgeschlagen."
 
 #: lib/Controller/MusicianValidationController.php:148
 #: lib/Controller/PersonalSettingsController.php:552
@@ -3013,7 +3036,7 @@ msgstr "Es gibt keine Template-Datei für das Template \"%s\""
 
 #: lib/Controller/PersonalSettingsController.php:2199
 #: lib/Controller/PmeTableController.php:90
-#: lib/Controller/ProjectsController.php:374
+#: lib/Controller/ProjectsController.php:376
 #: lib/Controller/SepaBulkTransactionsController.php:131
 #, php-format
 msgid "Unknown Request: \"%s\"."
@@ -3112,15 +3135,10 @@ msgstr "Kann den Zustand der Aufgabe \"%s\" nicht finden."
 msgid "Progress \"%s\" successfully deleted."
 msgstr "Fortschrittsstatus \"%s\" wurde erfolgreich gelöscht."
 
-#: lib/Controller/ProjectEventsApiController.php:126
+#: lib/Controller/ProjectEventsController.php:138
 #, php-format
-msgid "Invalid calendar type: \"%1$s\""
-msgstr "Ungültiger Kalendertyp \"%1$s\"."
-
-#: lib/Controller/ProjectEventsController.php:144
-#, php-format
-msgid "Project-id AND -name have to be specified (%s / %s)"
-msgstr "Projekt-Id und -Name müssen angegeben werden (%s / %s)"
+msgid "Project-id AND -name have to be specified (%s / %s)."
+msgstr "Projekt-Id und -Name müssen angegeben werden (%s / %s)."
 
 #: lib/Controller/ProjectParticipantFieldsController.php:135
 #: lib/Controller/ProjectParticipantFieldsController.php:251
@@ -3293,10 +3311,10 @@ msgid "Unknown Request \"%s/%s\""
 msgstr "Unbekannte Anfrage \"%s/%s\""
 
 #: lib/Controller/ProjectParticipantFieldsController.php:763
-#: lib/Controller/ProjectsController.php:515
-#: lib/Controller/ProjectsController.php:555
-#: lib/Controller/ProjectsController.php:606
-#: lib/Controller/ProjectsController.php:661
+#: lib/Controller/ProjectsController.php:566
+#: lib/Controller/ProjectsController.php:607
+#: lib/Controller/ProjectsController.php:658
+#: lib/Controller/ProjectsController.php:713
 #, php-format
 msgid "Unknown request: \"%1$s / %2$s\"."
 msgstr "Unbekannte Anfrage: \"%1$s / %2$s\""
@@ -3634,37 +3652,37 @@ msgid "Removed public web page %s (id %d) from the project with id %d."
 msgstr ""
 "Die Web-Seite %s mit der id %d für das Projekt mit der Id %d wurde entfernt."
 
-#: lib/Controller/ProjectsController.php:88
+#: lib/Controller/ProjectsController.php:90
 msgid "project-year"
 msgstr "Projekt-Jahr"
 
-#: lib/Controller/ProjectsController.php:89
+#: lib/Controller/ProjectsController.php:91
 msgid "project-name"
 msgstr "Projekt-Name"
 
-#: lib/Controller/ProjectsController.php:90
+#: lib/Controller/ProjectsController.php:92
 msgid "project-kind"
 msgstr "Projekt-Art"
 
-#: lib/Controller/ProjectsController.php:94
+#: lib/Controller/ProjectsController.php:96
 #, php-format
 msgid "The %s must not be empty."
 msgstr "%s darf nicht leer sein."
 
-#: lib/Controller/ProjectsController.php:116
+#: lib/Controller/ProjectsController.php:118
 #, php-format
 msgid "The project name has been simplified from \"%s\" to \"%s\"."
 msgstr "Der Projekt-Name wurde von \"%s\" zu \"%s\" vereinfacht."
 
-#: lib/Controller/ProjectsController.php:129
+#: lib/Controller/ProjectsController.php:131
 msgid "The project-name must not only consist of the year-number."
 msgstr "Der Projekt-Name darf nicht nur aus der Jahreszahl bestehen."
 
-#: lib/Controller/ProjectsController.php:132
+#: lib/Controller/ProjectsController.php:134
 msgid "No project-name given."
 msgstr "Kein Projekt-Name angegeben."
 
-#: lib/Controller/ProjectsController.php:136
+#: lib/Controller/ProjectsController.php:138
 #, php-format
 msgid ""
 "The project-name is too long, please use something less than %d characters "
@@ -3673,20 +3691,20 @@ msgstr ""
 "Der Projekt-Name ist zu lang. Bitte höchstens %d Buchstaben verwenden\n"
 "(ausschließlich der angehängten Jahreszahl)."
 
-#: lib/Controller/ProjectsController.php:145
+#: lib/Controller/ProjectsController.php:147
 msgid "No project-year given."
 msgstr "Kein Projekt-Jahr angegeben."
 
-#: lib/Controller/ProjectsController.php:148
+#: lib/Controller/ProjectsController.php:150
 msgid "The project-year has to consist of four digits, e.g. ``1984''."
 msgstr "Das Projekt-Jahr muss aus vier Ziffern bestehen."
 
-#: lib/Controller/ProjectsController.php:157
+#: lib/Controller/ProjectsController.php:159
 #, php-format
 msgid "The year %s has been appended to the project-slug %s."
 msgstr "Das Jahr %s wurde an den Projekt-\"Slug\" %s angehängt."
 
-#: lib/Controller/ProjectsController.php:171
+#: lib/Controller/ProjectsController.php:173
 #, php-format
 msgid ""
 "A project with the name \"%1$s\" already exists in the year %2$s with the id "
@@ -3695,52 +3713,52 @@ msgstr ""
 "Ein Projekt mit dem Namen \"%s\" gibt es bereits für das Jahr %s. Bitte "
 "wählen Sie einen anderen Namen oder ein anderes Jahr."
 
-#: lib/Controller/ProjectsController.php:256
-#: lib/Controller/ProjectsController.php:277 lib/PageRenderer/Projects.php:800
+#: lib/Controller/ProjectsController.php:258
+#: lib/Controller/ProjectsController.php:279 lib/PageRenderer/Projects.php:800
 msgid "closed"
 msgstr "geschlossen"
 
-#: lib/Controller/ProjectsController.php:258
-#: lib/Controller/ProjectsController.php:280 lib/PageRenderer/Projects.php:798
+#: lib/Controller/ProjectsController.php:260
+#: lib/Controller/ProjectsController.php:282 lib/PageRenderer/Projects.php:798
 msgid "active"
 msgstr "aktiv"
 
-#: lib/Controller/ProjectsController.php:260
+#: lib/Controller/ProjectsController.php:262
 #, php-format
 msgid "Mailing-list \"%s\" successfully created."
 msgstr "Email-Verteiler \"%s\" wurde erfolgreich angelegt."
 
-#: lib/Controller/ProjectsController.php:278
+#: lib/Controller/ProjectsController.php:280
 #, php-format
 msgid "Successfully closed \"%s\"."
 msgstr "Email-Verteiler \"%s\" deaktiviert."
 
-#: lib/Controller/ProjectsController.php:281
+#: lib/Controller/ProjectsController.php:283
 #, php-format
 msgid "Successfully re-opened \"%s\"."
 msgstr "Email-Verteiler \"%s\" reaktiviert."
 
-#: lib/Controller/ProjectsController.php:296
+#: lib/Controller/ProjectsController.php:298
 #, php-format
 msgid "Really delete the mailing list \"%1$s\" for the project \"%2$s\"?"
 msgstr ""
 "Den Email-Verteiler \"%1$s\" für das Projekt \"%2$s\" wirklich löschen?"
 
-#: lib/Controller/ProjectsController.php:301
+#: lib/Controller/ProjectsController.php:303
 #, php-format
 msgid "Successfully deleted \"%s\"."
 msgstr "\"%s\" erfolgreich gelöscht."
 
-#: lib/Controller/ProjectsController.php:305 lib/PageRenderer/Projects.php:789
+#: lib/Controller/ProjectsController.php:307 lib/PageRenderer/Projects.php:789
 msgid "unset"
 msgstr "nicht konfiguriert"
 
-#: lib/Controller/ProjectsController.php:348
+#: lib/Controller/ProjectsController.php:350
 #, php-format
 msgid "%1$d new subscriptions, %2$d existing subscriptions have been kept."
 msgstr "%1$d neue Abos, %2$d Abos wurden beibehalten."
 
-#: lib/Controller/ProjectsController.php:352
+#: lib/Controller/ProjectsController.php:354
 msgid "%n person has not been subscribed because of unconfirmed participation."
 msgid_plural ""
 "%n persons have not been subscribed because their participation is not "
@@ -3752,7 +3770,7 @@ msgstr[1] ""
 "Für %n Personen wurde die Liste nicht abonniert, weil deren Teilnahme "
 "fraglich zu sein scheint."
 
-#: lib/Controller/ProjectsController.php:358
+#: lib/Controller/ProjectsController.php:360
 #, php-format
 msgid ""
 "%d persons have not been subscribed because we do not have their email-"
@@ -3761,50 +3779,50 @@ msgstr ""
 "Für %d Personen wurde die Liste nicht abonniert, weil deren Email-Adresse "
 "nicht vorliegt."
 
-#: lib/Controller/ProjectsController.php:361
+#: lib/Controller/ProjectsController.php:363
 #, php-format
 msgid "%d subscription requests have failed."
 msgstr "%d Abo-Versuche sind fehlgeschlagen."
 
-#: lib/Controller/ProjectsController.php:364
+#: lib/Controller/ProjectsController.php:366
 #, php-format
 msgid "Error for \"%1$s <%2$s>\": %3$s"
 msgstr "Fehler für \"%1$s <%2$s>\": %3$s"
 
-#: lib/Controller/ProjectsController.php:438
-#: lib/Controller/ProjectsController.php:535
-#: lib/Controller/ProjectsController.php:577
-#: lib/Controller/ProjectsController.php:628
+#: lib/Controller/ProjectsController.php:450
+#: lib/Controller/ProjectsController.php:587
+#: lib/Controller/ProjectsController.php:629
+#: lib/Controller/ProjectsController.php:680
 #, php-format
 msgid "Unable to find project with id \"%d\"."
 msgstr "Konnte kein Projekt mit der Id \"%d\" finden."
 
-#: lib/Controller/ProjectsController.php:493
-#: lib/Controller/ProjectsController.php:549
-#: lib/Controller/ProjectsController.php:600
-#: lib/Controller/ProjectsController.php:655
+#: lib/Controller/ProjectsController.php:508
+#: lib/Controller/ProjectsController.php:601
+#: lib/Controller/ProjectsController.php:652
+#: lib/Controller/ProjectsController.php:707
 #, php-format
 msgid "Unknown share type \"%s\"."
 msgstr "Unbekannter Freigabe-Typ \"%s\"."
 
-#: lib/Controller/ProjectsController.php:511
+#: lib/Controller/ProjectsController.php:562
 #, php-format
 msgid "Unknown folder type \"%s\"."
 msgstr "Unbekannter Ordner-Type \"%s\"."
 
-#: lib/Controller/ProjectsController.php:543
+#: lib/Controller/ProjectsController.php:595
 #, php-format
 msgid "Participant download share for project \"%1$s\" created as \"%2$s\""
 msgstr ""
 "Die Download-Freigabe für Teilnehmende für das Projekt \"%1$s\" ist \"%2$s\"."
 
-#: lib/Controller/ProjectsController.php:586
-#: lib/Controller/ProjectsController.php:637
+#: lib/Controller/ProjectsController.php:638
+#: lib/Controller/ProjectsController.php:689
 #, php-format
 msgid "Project \"%s\" does not have a participants download share."
 msgstr "Das Projekt \"%s\" hat keine Teilnehmenden-Download-Freigabe."
 
-#: lib/Controller/ProjectsController.php:594
+#: lib/Controller/ProjectsController.php:646
 #, php-format
 msgid ""
 "Participant download share \"%1$s\" for project \"%2$s\" has been deleted."
@@ -3812,7 +3830,7 @@ msgstr ""
 "Die Teilnehmenden-Download-Freigabe \"%1$s\" für das Projekt \"%2$s\" wurde "
 "gelöscht."
 
-#: lib/Controller/ProjectsController.php:647
+#: lib/Controller/ProjectsController.php:699
 #, php-format
 msgid ""
 "Expiration date of the participant download share \"%1$s\" for project "
@@ -4480,11 +4498,51 @@ msgstr ""
 "Für das Hochladen von einem eigenen Gerät ist der einzig erlaubte Modus "
 "\"kopieren\" (\"copy\"), angefragt wurde aber \"%s\"."
 
-#: lib/Controller/WebBrowserHistoryController.php:71
-#: lib/Controller/WebBrowserHistoryController.php:85
-#: lib/Controller/WebBrowserHistoryController.php:97
-msgid "Unimplemented"
-msgstr "Nicht implementiert"
+#: lib/Controller/WebBrowserHistoryController.php:146
+#, php-format
+msgid ""
+"History record with key \"%1$s\" at time \"%2$s\" for user \"%3$s\" could "
+"not be found."
+msgstr ""
+"Der Browserlauf zum Index \"%1$s\" zum Zeitpunkt \"%2$s\" der Person "
+"\"%3$s\" wurde nicht gefunden."
+
+#: lib/Controller/WebBrowserHistoryController.php:202
+#: lib/Controller/WebBrowserHistoryController.php:309
+#, php-format
+msgid "History record at time \"%1$s\" for user \"%2$s\" could not be found."
+msgstr ""
+"Der Browserverlauf der Person \"%2$s\" für den Zeitpunkt \"%1$s\" wurde "
+"nicht gefunden."
+
+#: lib/Controller/WebBrowserHistoryController.php:270
+#, php-format
+msgid ""
+"History record at time \"%1$s\" for user \"%2$s\" already has been saved "
+"previously."
+msgstr ""
+"Ein Browserverlauf zum Zeitpunk \"%1$s\" der Person \"%2$s\" wurde früher "
+"bereits schon einmal gespeichert."
+
+#: lib/Controller/WebBrowserHistoryController.php:281
+msgid "Unable to store history data."
+msgstr "Kann den Browserverlauf nicht speichern."
+
+#: lib/Controller/WebBrowserHistoryController.php:287
+#, php-format
+msgid ""
+"History record at time \"%1$s\" for user \"%2$s\" has been saved into the "
+"database."
+msgstr ""
+"Der Browserverlauf der Person \"%2$s\" zum Zeitpunkt \"%1$s\" wurde in der "
+"Datenbank gesichert."
+
+#: lib/Controller/WebBrowserHistoryController.php:333
+#, php-format
+msgid "Unable delete history state at time %1$s of user \"%2$s\"."
+msgstr ""
+"Kann den Browserverlaufseintrag der Person \"%2$s\" zum Zeitpunkt \"%1$s\" "
+"nicht löschen."
 
 #: lib/Crypto/AsymmetricKeyService.php:123
 msgid ""
@@ -4539,30 +4597,37 @@ msgstr "Kann den privaten Schlüssel für \"%s\" nicht entsperren."
 msgid "Key-storage mismatch: %1$s / %2$s"
 msgstr "Schlüssel-Speicher passen nicht: %1$s / %2$s"
 
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:314
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:378
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:599
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:201
+#: lib/Service/L10N/AppL10N.php:100 lib/Service/L10N/L10NFactory.php:143
+#, php-format
+msgid "Undefined method - %1$s::%2$s"
+msgstr "Nicht definierte Methode - %1$s::%2$s"
+
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:311
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:375
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:600
 msgid "Foreign keys as principle keys cannot be composite"
 msgstr "Fremde Schlüssel as Primärschlüssel können nicht zusammengesetzt sein"
 
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:389
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:386
 #, php-format
 msgid "Missing value and no generator for identifier field: %s::%s"
 msgstr ""
 "Fehlender Wert und es gibt keinen Wert-Generator für das Id-Feld: %s::%s"
 
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:453
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:450
 #, php-format
 msgid "Type conversion for field \"%s\" failed."
 msgstr "Typen-Konvertierung für das Feld \"%s\" ist fehlgeschlagen."
 
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:567
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:565
+#, php-format
 msgid ""
 "Association field must eiter be an entity or the value of the single join "
-"column."
+"column: %s"
 msgstr ""
 "Das Verknüpfungsfeld muss entweder eine Datenbank-Entität sein oder der Wert "
-"der einzigen Verknüpfungs-Spalte."
+"der einzigen Verknüpfungs-Spalte: %s"
 
 #: lib/Database/EntityManager.php:325
 msgid "There is no entity-manager initialized yet."
@@ -4653,7 +4718,7 @@ msgstr "Ankündigung"
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:651 src/app/email.js:1409
+#: lib/EmailForm/Composer.php:651 src/app/email.js:1427
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
@@ -4723,7 +4788,7 @@ msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:1858 lib/EmailForm/Composer.php:3590
+#: lib/EmailForm/Composer.php:1858 lib/EmailForm/Composer.php:3588
 #, php-format
 msgid "Unable to find a payment for the musician \"%s\" (transaction %d)"
 msgstr "Kann keine Buchung für die Person \"%s\" finden (Banktransaktion %d)"
@@ -4776,23 +4841,23 @@ msgstr ""
 "  </body>\n"
 "</html>"
 
-#: lib/EmailForm/Composer.php:2756 lib/EmailForm/Composer.php:3241
+#: lib/EmailForm/Composer.php:2756 lib/EmailForm/Composer.php:3239
 msgid "DO NOT REPLY"
 msgstr "NICHT ANTWORTEN"
 
-#: lib/EmailForm/Composer.php:3424
+#: lib/EmailForm/Composer.php:3422
 msgid "*** empty content ***"
 msgstr "*** leeres Dokument ***"
 
-#: lib/EmailForm/Composer.php:3478
+#: lib/EmailForm/Composer.php:3476
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:3480
+#: lib/EmailForm/Composer.php:3478
 msgid "Prewiew generation detected errors!"
 msgstr "Bei der Erzeugung der Vorschauen gab es Fehler!"
 
-#: lib/EmailForm/Composer.php:3543
+#: lib/EmailForm/Composer.php:3541
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
@@ -4801,47 +4866,47 @@ msgstr ""
 "einfügen. Personalisierte Emails müssen einzeln an jeden Empfänger\n"
 "versendet werden."
 
-#: lib/EmailForm/Composer.php:3546
+#: lib/EmailForm/Composer.php:3544
 msgid "The email text contains personalized substitutions."
 msgstr "Der Email-Text enthält personalisierte Ersetzungen."
 
-#: lib/EmailForm/Composer.php:3549
+#: lib/EmailForm/Composer.php:3547
 msgid "The email contains personalized attachments."
 msgstr "Die Email enhält personalisierte Anhänge."
 
-#: lib/EmailForm/Composer.php:3809
+#: lib/EmailForm/Composer.php:3807
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
 #. TRANSLATORS: email prefix when writing to all musicians
-#: lib/EmailForm/Composer.php:3844
+#: lib/EmailForm/Composer.php:3842
 msgid "ALL_PERSONS: musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:3923 lib/EmailForm/Composer.php:3939
+#: lib/EmailForm/Composer.php:3921 lib/EmailForm/Composer.php:3937
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:4052 lib/EmailForm/Composer.php:4182
-#: lib/EmailForm/Composer.php:4192
+#: lib/EmailForm/Composer.php:4044 lib/EmailForm/Composer.php:4174
+#: lib/EmailForm/Composer.php:4184
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
 #. TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
 #. TRANSLATORS: team, like e.g. "treasurer".
-#: lib/EmailForm/Composer.php:4074
+#: lib/EmailForm/Composer.php:4066
 #, php-format
 msgid "Nothing known about \"%s\""
 msgstr "Die Rolle \"%s\" scheint nicht besetzt zu sein."
 
-#: lib/EmailForm/Composer.php:4078
+#: lib/EmailForm/Composer.php:4070
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr "Kontakt-Datenfeld für \"%1$s feht, bekannte Datenfelder sind %2$s."
 
-#: lib/EmailForm/Composer.php:4084
+#: lib/EmailForm/Composer.php:4076
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
@@ -4849,152 +4914,152 @@ msgstr ""
 "Kontakt-Datenfeld \"%3$s\" für \"%1$s\" ist unbekannt, bekannte Datenfelder "
 "sind %2$s."
 
-#: lib/EmailForm/Composer.php:4111
+#: lib/EmailForm/Composer.php:4103
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:4114
+#: lib/EmailForm/Composer.php:4106
 msgid "PROJECT_PUBLIC_SHARE"
 msgstr "PROJEKT_OEFFENTLICHE_FREIGABE"
 
-#: lib/EmailForm/Composer.php:4124
+#: lib/EmailForm/Composer.php:4116
 msgid "PROJECT_PUBLIC_SHARE_EXPIRATION"
 msgstr "PROJEKT_OEFFENTLICHE_FREIGABE_ABLAUF"
 
-#: lib/EmailForm/Composer.php:4136
+#: lib/EmailForm/Composer.php:4128
 msgid "phrase"
 msgstr "Phrase"
 
-#: lib/EmailForm/Composer.php:4153
+#: lib/EmailForm/Composer.php:4145
 #, php-format
 msgid "(expires at %s)"
 msgstr "(läuft ab am %s)"
 
-#: lib/EmailForm/Composer.php:4293
+#: lib/EmailForm/Composer.php:4285
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr "Am %1$s um %2$s schrieb %3$s:"
 
-#: lib/EmailForm/Composer.php:4632
+#: lib/EmailForm/Composer.php:4624
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:4644
+#: lib/EmailForm/Composer.php:4636
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:4668
+#: lib/EmailForm/Composer.php:4660
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 "Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" "
 "löschen."
 
-#: lib/EmailForm/Composer.php:4700
+#: lib/EmailForm/Composer.php:4692
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4760 lib/EmailForm/Composer.php:4887
+#: lib/EmailForm/Composer.php:4752 lib/EmailForm/Composer.php:4879
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4796
+#: lib/EmailForm/Composer.php:4788
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:4821
+#: lib/EmailForm/Composer.php:4813
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:5561
+#: lib/EmailForm/Composer.php:5553
 msgid "Blank Template"
 msgstr "Blanko-Vorlage"
 
-#: lib/EmailForm/Composer.php:5562
+#: lib/EmailForm/Composer.php:5554
 msgid "blank"
 msgstr "blanko"
 
-#: lib/EmailForm/Composer.php:5565
+#: lib/EmailForm/Composer.php:5557
 msgid "Personalized"
 msgstr "Personifiziert"
 
-#: lib/EmailForm/Composer.php:5568
+#: lib/EmailForm/Composer.php:5560
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:5571
+#: lib/EmailForm/Composer.php:5563
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/EmailForm/Composer.php:5701
+#: lib/EmailForm/Composer.php:5689
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
 
-#: lib/EmailForm/RecipientsFilter.php:552
+#: lib/EmailForm/RecipientsFilter.php:553
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr "Ungültige Position %d, Länge der Filter-Historie ist %d."
 
-#: lib/EmailForm/RecipientsFilter.php:581
+#: lib/EmailForm/RecipientsFilter.php:582
 #, php-format
 msgid "No payments for bulk-transaction id %d."
 msgstr "Umsätze zum Sammelauftrag mit der Id %d liegen nicht vor."
 
-#: lib/EmailForm/RecipientsFilter.php:597
+#: lib/EmailForm/RecipientsFilter.php:598
 #, php-format
 msgid "No payment attached to the donation receipt with id %d."
 msgstr "Der Zuwendungsbestätigung mit Id %d ist keine Zahlung zugeordnet."
 
-#: lib/EmailForm/RecipientsFilter.php:845
+#: lib/EmailForm/RecipientsFilter.php:846
 msgid "member status "
 msgstr "Mitglieds-Status"
 
-#: lib/EmailForm/RecipientsFilter.php:971
+#: lib/EmailForm/RecipientsFilter.php:972
 msgid "project mailing list"
 msgstr "Projekt-Email-Verteiler"
 
-#: lib/EmailForm/RecipientsFilter.php:975
+#: lib/EmailForm/RecipientsFilter.php:976
 msgid "announcements mailing list"
 msgstr "Ankündigungs-Email-Verteiler"
 
-#: lib/EmailForm/RecipientsFilter.php:979
+#: lib/EmailForm/RecipientsFilter.php:980
 msgid "musician database"
 msgstr "Musiker-Datenbank"
 
-#: lib/EmailForm/RecipientsFilter.php:983
+#: lib/EmailForm/RecipientsFilter.php:984
 msgid "all known musicians"
 msgstr "Alle bekannten Musiker*innen"
 
-#: lib/EmailForm/RecipientsFilter.php:987
+#: lib/EmailForm/RecipientsFilter.php:988
 msgid "all musicians NOT participating"
 msgstr "alle NICHT-Teilnehmenden"
 
-#: lib/EmailForm/RecipientsFilter.php:991
+#: lib/EmailForm/RecipientsFilter.php:992
 msgid "participants (confirmed)"
 msgstr "bestätigt Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:995
+#: lib/EmailForm/RecipientsFilter.php:996
 msgid "participants (preliminary)"
 msgstr "vorläufig Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:999
+#: lib/EmailForm/RecipientsFilter.php:1000
 msgid "participants (preliminary and confirmed)"
 msgstr "alle Teilnehmenden (bestätigt und vorläufig)"
 
-#: lib/EmailForm/RecipientsFilter.php:1003
+#: lib/EmailForm/RecipientsFilter.php:1004
 msgid "all musicians except confirmed participants"
 msgstr "alle Personen AUSSER bestätigt Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:1007
+#: lib/EmailForm/RecipientsFilter.php:1008
 msgid "all musicians except preliminary participants"
 msgstr "alle Personen AUSSER vorläufig Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:1011
+#: lib/EmailForm/RecipientsFilter.php:1012
 msgid "no one"
 msgstr "niemand"
 
@@ -5303,7 +5368,7 @@ msgstr ""
 msgid "Provide a table for recording tax exemption notices."
 msgstr "Eine Tabelle für die Freistellungsbescheide zur Verfügung stellen."
 
-#: lib/Maintenance/Migrations/CreateWebBrowserHistoryTables.php:57
+#: lib/Maintenance/Migrations/CreateWebBrowserHistoryTables.php:81
 msgid "Create tables for storing the web-browser history between sessions."
 msgstr "Datenbanktabellen zur Speicherung der Web-Browser-Historie erzeugen."
 
@@ -5425,7 +5490,7 @@ msgid "Sanitizing of life-cycle stage \"%s\" is not implemented."
 msgstr ""
 "Die Aufräumroutine ist für den Lebensabschnitt \"%s\" nicht implementiert."
 
-#: lib/Middleware/ExceptionMiddleware.php:109
+#: lib/Middleware/ExceptionMiddleware.php:111
 #, php-format
 msgid "Unable to serve request to \"%1$s\": %2$s"
 msgstr "Kann die Anfrage an \"%1$s\" nicht beantworten: %2$s"
@@ -5453,7 +5518,7 @@ msgstr "Orchester-Verwaltung"
 msgid "User Recryption Request for {fancy}"
 msgstr "Benutzer-Neuverschlüsselungs-Anfrage für {fancy}"
 
-#: lib/Notifications/Notifier.php:110 src/app/email.js:1904
+#: lib/Notifications/Notifier.php:110 src/app/email.js:1938
 msgid "Accept"
 msgstr "Zustimmen"
 
@@ -5596,7 +5661,7 @@ msgstr "Konsistenztests waren erfolgreich"
 #: lib/PageRenderer/ProjectParticipantFields.php:317
 #: lib/PageRenderer/ProjectPayments.php:565
 #: lib/PageRenderer/SepaBulkTransactions.php:374
-#: specialVueFakeDummyForL10nScript.js:426
+#: specialVueFakeDummyForL10nScript.js:532
 msgid "Project"
 msgstr "Projekt"
 
@@ -5732,9 +5797,9 @@ msgstr "Gesamtversicherungssumme ab %s"
 #. TRANSLATORS src/views/FilesTab.vue:77
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:97
 #: lib/Service/CloudUserConnectorService.php:391
-#: specialVueFakeDummyForL10nScript.js:90
-#: specialVueFakeDummyForL10nScript.js:410
-#: specialVueFakeDummyForL10nScript.js:422
+#: specialVueFakeDummyForL10nScript.js:98
+#: specialVueFakeDummyForL10nScript.js:516
+#: specialVueFakeDummyForL10nScript.js:528
 msgid "Musicians"
 msgstr "Personen"
 
@@ -5890,7 +5955,7 @@ msgstr "Die Datei \"%s\" konnte nicht auf dem Server gefunden werden."
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1039
 #, php-format
 msgid "The folder \"%s\" could not be found on the server."
-msgstr "Die Ordner \"%s\" konnte nicht auf dem Server gefunden werden."
+msgstr "Der Ordner \"%s\" konnte nicht auf dem Server gefunden werden."
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:793
 msgid "The folder is empty."
@@ -6405,8 +6470,10 @@ msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:113
+#. TRANSLATORS src/components/ProjectEventsListing.vue:82
 #: lib/PageRenderer/PME/Config.php:64 lib/PageRenderer/PMETableViewBase.php:661
-#: specialVueFakeDummyForL10nScript.js:346
+#: specialVueFakeDummyForL10nScript.js:394
+#: specialVueFakeDummyForL10nScript.js:414
 msgid "Em@il"
 msgstr "Em@il"
 
@@ -6572,8 +6639,8 @@ msgstr "Besetzungszahlen für `%s'"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:66
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:116
-#: lib/Service/ToolTipsDataService.php:1499
-#: specialVueFakeDummyForL10nScript.js:336
+#: lib/Service/ToolTipsDataService.php:1505
+#: specialVueFakeDummyForL10nScript.js:384
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
@@ -6650,7 +6717,7 @@ msgstr "Anzeige"
 
 #. TRANSLATORS src/components/AdminSettings.vue:203
 #: lib/PageRenderer/ProjectParticipantFields.php:260
-#: specialVueFakeDummyForL10nScript.js:88
+#: specialVueFakeDummyForL10nScript.js:96
 msgid "Access Control"
 msgstr "Zugriffskontrolle"
 
@@ -7030,7 +7097,7 @@ msgid "Instrumentation"
 msgstr "Besetzung"
 
 #: lib/PageRenderer/Projects.php:396 lib/PageRenderer/Projects.php:473
-#: lib/PageRenderer/Projects.php:908 src/app/pme.js:1463
+#: lib/PageRenderer/Projects.php:908 src/app/pme.js:1457
 msgid "Clear"
 msgstr "Leeren"
 
@@ -7075,13 +7142,13 @@ msgid "Public Downloads"
 msgstr "Öffentliche Freigabe"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:75
-#: lib/PageRenderer/Projects.php:882 specialVueFakeDummyForL10nScript.js:338
+#: lib/PageRenderer/Projects.php:882 specialVueFakeDummyForL10nScript.js:386
 msgid "Participant Fields"
 msgstr "Personen-Daten"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:57
-#: lib/PageRenderer/Projects.php:945 lib/Service/ToolTipsDataService.php:1501
-#: specialVueFakeDummyForL10nScript.js:334
+#: lib/PageRenderer/Projects.php:945 lib/Service/ToolTipsDataService.php:1507
+#: specialVueFakeDummyForL10nScript.js:382
 msgid "Participants"
 msgstr "Teilnehmende"
 
@@ -7106,8 +7173,8 @@ msgstr "Plakate"
 msgid "Copy of %s"
 msgstr "Kopie von %s"
 
-#: lib/PageRenderer/Projects.php:1113
-#: templates/project-events/event-actions-menu.php:44
+#. TRANSLATORS src/components/ProjectEventsListing.vue:263
+#: lib/PageRenderer/Projects.php:1113 specialVueFakeDummyForL10nScript.js:440
 msgid "edit"
 msgstr "bearbeiten"
 
@@ -7332,7 +7399,7 @@ msgstr "Vorankündigung"
 
 #. TRANSLATORS src/views/FilesTab.vue:94
 #: lib/PageRenderer/SepaBulkTransactions.php:615
-#: specialVueFakeDummyForL10nScript.js:414 templates/emailform/form.php:36
+#: specialVueFakeDummyForL10nScript.js:520 templates/emailform/form.php:36
 #: templates/emailform/part.emailform.composer.php:125
 msgid "Recipients"
 msgstr "Empfänger*innen"
@@ -7534,7 +7601,7 @@ msgstr "Der Ordner `%s' konnte nicht erzeugt werden."
 msgid "Unapplied migrations: %s."
 msgstr "Ausstehende Datenmigrationen: %s."
 
-#: lib/Service/ContactsService.php:417
+#: lib/Service/ContactsService.php:418
 msgid "PO Box"
 msgstr "Postfach"
 
@@ -7598,7 +7665,7 @@ msgstr ""
 "Verschlüsselung für \"%s\" angefragt aber nicht konfiguriert, leeres "
 "Verschlüsselungs-Passwort."
 
-#: lib/Service/EventsService.php:211
+#: lib/Service/EventsService.php:210
 #, php-format
 msgid ""
 "Calendar entry \"%1$s\" is in use by the finance sub-system and cannot be "
@@ -7607,7 +7674,7 @@ msgstr ""
 "Der Kalender-Eintrag \"%1$s\" wird vom Finanz-Modul verwendet und darf "
 "deshalb nicht aus dem %2$s-Kalender verschoben werden."
 
-#: lib/Service/EventsService.php:222
+#: lib/Service/EventsService.php:221
 #, php-format
 msgid ""
 "Calendar entry \"%1$s\" is a project registration event and must not be "
@@ -7616,7 +7683,7 @@ msgstr ""
 "Der Kalender-Eintrag \"%1$s\" kennzeichnet den Berwerbungszeitraum für ein "
 "Projekt und darf deshalb nicht aus dem %2$s-Kalender verschoben werden."
 
-#: lib/Service/EventsService.php:267
+#: lib/Service/EventsService.php:266
 #, php-format
 msgid ""
 "Calendar entry \"%1$s\" is in use by the finance sub-system and must not be "
@@ -7625,43 +7692,43 @@ msgstr ""
 "Der Kalender-Eintrag \"%1$s\" wird vom Finanz-Modul verwendet und darf "
 "deshalb nicht gelöscht werden."
 
-#: lib/Service/EventsService.php:773
+#: lib/Service/EventsService.php:808
 #, php-format
 msgid "till %s"
 msgstr "bis %s"
 
-#: lib/Service/EventsService.php:841 lib/Service/EventsService.php:957
+#: lib/Service/EventsService.php:870 lib/Service/EventsService.php:997
 msgid "Unknown Calendar"
 msgstr "Unbekannter Kalender."
 
-#: lib/Service/EventsService.php:855
+#: lib/Service/EventsService.php:885
 msgid "Miscellaneous Calendars"
 msgstr "Weitere Kalender"
 
-#: lib/Service/EventsService.php:1202
+#: lib/Service/EventsService.php:1242
 #, php-format
 msgid "Unable to ensure the existence of the system tag \"%s\"."
 msgstr "Kann nicht sicherstellen, dass das System-Schlagwort \"%S\" existiert."
 
-#: lib/Service/EventsService.php:1635 lib/Service/EventsService.php:1864
+#: lib/Service/EventsService.php:1675 lib/Service/EventsService.php:1899
 #, php-format
 msgid "Unable to unregister the deleted calendar event with uri \"%s\"."
 msgstr "Kann der Kalender-Eintrag mit URI \"%s\" nicht vom Projekt lösen."
 
-#: lib/Service/EventsService.php:2565
+#: lib/Service/EventsService.php:2600
 msgid "Found more than one project registration calendar event."
 msgstr "Es wurden mehrere Anmeldetermin im Kalender gefunden."
 
-#: lib/Service/EventsService.php:2598
+#: lib/Service/EventsService.php:2633
 msgid "Unsupported argument type."
 msgstr "Nicht unterstützter Argument-Typ"
 
-#: lib/Service/EventsService.php:2647
+#: lib/Service/EventsService.php:2682
 #, php-format
 msgid "Registration for %s"
 msgstr "Bewerbungszeitraum für %s"
 
-#: lib/Service/EventsService.php:2653
+#: lib/Service/EventsService.php:2688
 #, php-format
 msgid ""
 "Project registation period for the project \"%1$s\". Participants can apply "
@@ -7670,7 +7737,7 @@ msgstr ""
 "Anmeldezeitraum für das Projekt \"%1$s\". Interessierte können sich während "
 "dieser Zeit über den öffentlichen Link %2$s online bewerben."
 
-#: lib/Service/EventsService.php:2657
+#: lib/Service/EventsService.php:2692
 msgid "CyberSpace"
 msgstr "CyberSpace"
 
@@ -7707,7 +7774,7 @@ msgstr "Nicht unterstützte Sammelauftrags-Klasse: \"%s\"."
 msgid "nothing"
 msgstr "nichts"
 
-#: lib/Service/Finance/FinanceService.php:155
+#: lib/Service/Finance/FinanceService.php:154
 #, php-format
 msgid ""
 "The business-day and calendar-day offset must have the same sign (%d / %d)"
@@ -7715,12 +7782,12 @@ msgstr ""
 "Die Fristen für Werktage und Kalendertage müssen das gleiche Vorzeichen "
 "haben (%d / %d)"
 
-#: lib/Service/Finance/FinanceService.php:392
+#: lib/Service/Finance/FinanceService.php:391
 #, php-format
 msgid "The composite payment \"%s\" does not refer to a donation."
 msgstr "Die Buchung \"%s\" bezieht sich nicht auf eine Spende."
 
-#: lib/Service/Finance/FinanceService.php:394
+#: lib/Service/Finance/FinanceService.php:393
 #, php-format
 msgid ""
 "The composite pamynet \"%s\" contains more than one donation. This is not "
@@ -7729,7 +7796,7 @@ msgstr ""
 "Der Sammel-Umsatz \"%s\" enthält mehr als eine Spende. Das wird\n"
 "derzeit nicht von der Software unterstützt."
 
-#: lib/Service/Finance/FinanceService.php:403
+#: lib/Service/Finance/FinanceService.php:402
 #, php-format
 msgid ""
 "The donation in the composite payment \"%s\" sums up to less or equal zero: "
@@ -7738,7 +7805,7 @@ msgstr ""
 "Die Spendenanteile des Sammelumsatzes \"%s\" summieren sich auf einen Betrag "
 "kleiner oder gleich 0: \"%s\"."
 
-#: lib/Service/Finance/FinanceService.php:413
+#: lib/Service/Finance/FinanceService.php:412
 #, php-format
 msgid ""
 "The non-donation parts of the composite payment \"%s\" sum up to an income "
@@ -7747,7 +7814,7 @@ msgstr ""
 "Die nicht-Spendenanteile des Sammelumsatzes \"%s\" summieren sich zu\n"
 "einem Einkommen \"%s\". Das wird nicht unterstützt."
 
-#: lib/Service/Finance/FinanceService.php:486
+#: lib/Service/Finance/FinanceService.php:485
 #, php-format
 msgid ""
 "Bankaccount belongs to musician \"%s\", but specified musician is \"%s\"."
@@ -7755,12 +7822,12 @@ msgstr ""
 "Die Bankverbindung gehört zur Person \"%s\", übermittelt wurde aber "
 "zusätzlich die Person \"%s\"."
 
-#: lib/Service/Finance/FinanceService.php:700
-#: lib/Service/Finance/FinanceService.php:772
+#: lib/Service/Finance/FinanceService.php:699
+#: lib/Service/Finance/FinanceService.php:771
 msgid "finance"
 msgstr "Kasse"
 
-#: lib/Service/Finance/FinanceService.php:821
+#: lib/Service/Finance/FinanceService.php:820
 #, php-format
 msgid ""
 "Unable to find calendar entry with identifier \"%2$s\" in calendar with id "
@@ -7769,44 +7836,44 @@ msgstr ""
 "Kann den Kalender-Eintrag \"%2$s\" im Kalender mit der Id \"%1$s\" nicht "
 "finden."
 
-#: lib/Service/Finance/FinanceService.php:938
+#: lib/Service/Finance/FinanceService.php:937
 msgid "The given mandate does not contain a valid project-id."
 msgstr "Das Lastschriftmandat enthält keine gültige Projekt-Id."
 
-#: lib/Service/Finance/FinanceService.php:954
+#: lib/Service/Finance/FinanceService.php:953
 msgid "The given mandate does not contain a valid musician-id."
 msgstr "Das Lastschriftmandat enthält keine gültige Musizierenden-Id."
 
-#: lib/Service/Finance/FinanceService.php:980
+#: lib/Service/Finance/FinanceService.php:979
 #, php-format
 msgid "SEPA mandate-reference \"%s\" is too long (%d > %d)."
 msgstr "Die SEPA-Mandatsreferenz \"%s\" ist zu lang (%d > %d)."
 
-#: lib/Service/Finance/FinanceService.php:1299
+#: lib/Service/Finance/FinanceService.php:1298
 msgid "Illegal characters in bank account owner field."
 msgstr "Ungültige Buchstaben im Kontoinhaber:innen:feld."
 
-#: lib/Service/Finance/FinanceService.php:1310
+#: lib/Service/Finance/FinanceService.php:1309
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr "Ungültige IBAN: %s."
 
-#: lib/Service/Finance/FinanceService.php:1319
+#: lib/Service/Finance/FinanceService.php:1318
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr "BLZ und IBAN passen nicht zusammen: %s != %s."
 
-#: lib/Service/Finance/FinanceService.php:1325
+#: lib/Service/Finance/FinanceService.php:1324
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: lib/Service/Finance/FinanceService.php:1329
+#: lib/Service/Finance/FinanceService.php:1328
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/Service/Finance/FinanceService.php:1334
+#: lib/Service/Finance/FinanceService.php:1333
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
@@ -8043,6 +8110,11 @@ msgstr "Nirgends"
 msgid "Project file attachments"
 msgstr "Datei-Anhänge"
 
+#: lib/Service/L10N/TranslationService.php:159
+#, php-format
+msgid "Translation for %1$s is empty."
+msgstr "Die Übersetzung für \"%1$s\" ist leer."
+
 #: lib/Service/MailingListsService.php:476
 msgid "Adding email alias is not yet supported"
 msgstr "Email-Aliase für Listen werden derzeit noch nicht unterstützt"
@@ -8055,7 +8127,12 @@ msgstr "Es gib mehr als eine Abo-Anfrage, ich mach' nichts."
 msgid "Missing subscriber email-address."
 msgstr "Die Email-Adresse des Email-Verteiler-Abonnenten fehlt."
 
-#: lib/Service/MigrationsService.php:186
+#: lib/Service/MigrationsService.php:150
+#, php-format
+msgid "A migration with the version \"%s\" does not exist."
+msgstr "Es existiert keine Datenmigration zur Versionsnummer \"%s\"."
+
+#: lib/Service/MigrationsService.php:197
 #, php-format
 msgid "Migration %s has failed to execute."
 msgstr "Datenmigration %s konnte nicht ausgeführt werden."
@@ -8236,9 +8313,9 @@ msgstr "[%1$s Fehler] Fehlerbreicht von %2$s"
 msgid "Personal Comments by %s"
 msgstr "Zusätzliche Kommentare von %s"
 
-#. TRANSLATORS src/components/ErrorPage.vue:342
+#. TRANSLATORS src/components/ErrorPage.vue:362
 #: lib/Service/ProblemReportService.php:235
-#: specialVueFakeDummyForL10nScript.js:272
+#: specialVueFakeDummyForL10nScript.js:316
 msgid "System Error Report"
 msgstr "Fehlerbericht des Systems"
 
@@ -8509,8 +8586,8 @@ msgstr ""
 "===== Location =====\n"
 "Was auch immer."
 
-#. TRANSLATORS src/components/ErrorPage.vue:164
-#: lib/Service/ProjectService.php:1655 specialVueFakeDummyForL10nScript.js:262
+#. TRANSLATORS src/components/ErrorPage.vue:165
+#: lib/Service/ProjectService.php:1655 specialVueFakeDummyForL10nScript.js:304
 msgid "Preview"
 msgstr "Vorschau"
 
@@ -9520,15 +9597,15 @@ msgstr ""
 "Formular, in dem man (unter anderem) die Em@il-Adresse korrigieren\n"
 "könnte."
 
-#. TRANSLATORS src/components/ErrorPage.vue:109
+#. TRANSLATORS src/components/ErrorPage.vue:110
 #: lib/Service/ToolTipsDataService.php:427
-#: specialVueFakeDummyForL10nScript.js:246
+#: specialVueFakeDummyForL10nScript.js:288
 msgid "Cancel the problem report."
 msgstr "Verfassen des Fehlerberichts abbrechen."
 
-#. TRANSLATORS src/components/ErrorPage.vue:120
+#. TRANSLATORS src/components/ErrorPage.vue:121
 #: lib/Service/ToolTipsDataService.php:428
-#: specialVueFakeDummyForL10nScript.js:248
+#: specialVueFakeDummyForL10nScript.js:290
 msgid "Submit the problem report."
 msgstr "Den Fehlerbericht abschicken."
 
@@ -11330,7 +11407,7 @@ msgstr ""
 "Rechten die Eingabetaste drücken oder dort Doppelklicken."
 
 #: lib/Service/ToolTipsDataService.php:1078
-#: lib/Traits/InitialStateTrait.php:163
+#: lib/Traits/InitialStateTrait.php:164
 msgid ""
 "Select from the pull-down menu. Double-click will submit the form. The pull-"
 "down can be closed by clicking anywhere outside the menu."
@@ -11491,7 +11568,7 @@ msgstr ""
 
 #: lib/Service/ToolTipsDataService.php:1158
 #: lib/Service/ToolTipsDataService.php:1205
-#: lib/Service/ToolTipsDataService.php:1516
+#: lib/Service/ToolTipsDataService.php:1522
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -11777,11 +11854,15 @@ msgstr ""
 "Veranstaltungsankündigung und diesem Projekt. Primär als\n"
 "\"Undo\"-Funktion nach versehentlichem Verknüpfen gemeint."
 
-#: lib/Service/ToolTipsDataService.php:1258
+#: lib/Service/ToolTipsDataService.php:1257
+msgid "Open the user manual either as a popup or in another tab or window"
+msgstr "Das Anwendungshandbuch öffnen."
+
+#: lib/Service/ToolTipsDataService.php:1260
 msgid "Modify the event."
 msgstr "Termin ändern."
 
-#: lib/Service/ToolTipsDataService.php:1260
+#: lib/Service/ToolTipsDataService.php:1262
 msgid ""
 "Clone (duplicate) the event. A new event-form will popup with just the data "
 "from this event."
@@ -11789,13 +11870,13 @@ msgstr ""
 "Den Termin duplizieren. A neues Termin-Formular wird geöffnet, das gerade "
 "die Daten dieses Termins enthält."
 
-#: lib/Service/ToolTipsDataService.php:1262
+#: lib/Service/ToolTipsDataService.php:1264
 msgid "Delete the event from the system (no undo possible)."
 msgstr ""
 "Termin komplett aus dem Kalender löschen (kann nicht rückgängig gemacht "
 "werden)."
 
-#: lib/Service/ToolTipsDataService.php:1264
+#: lib/Service/ToolTipsDataService.php:1266
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -11808,9 +11889,13 @@ msgstr ""
 "Es ist möglich, den Termin wieder zum Projekt hinzuzufügen, indem man den "
 "Projekt-Namen zu der Katergorien-Liste des Termins hinzufügt."
 
-#: lib/Service/ToolTipsDataService.php:1271
+#: lib/Service/ToolTipsDataService.php:1273
+msgid "Reattach the respective event to the project."
+msgstr "Den Termin wieder mit dem Projekt verknüpfen."
+
+#: lib/Service/ToolTipsDataService.php:1275
 msgid ""
-"Mark the respective event for being\n"
+"Mark the respective event for download or for being\n"
 "sent by email as ICS-attachment.\n"
 "\n"
 "Hitting the email button at the top of the dialog\n"
@@ -11819,7 +11904,8 @@ msgid ""
 "\n"
 "The download button at the top will just download the selected items."
 msgstr ""
-"Termin zum Versand als ICS-Attachment per Email auswählen.\n"
+"Termin zum Runterladen oder zum Versand als ICS-Attachment per Email "
+"auswählen.\n"
 "\n"
 "Der Email-Knopf über der Tabelle führt zu einem Email-Formular, über\n"
 "das der eigentliche Versand an ausgewählte Empfänger vorgenommen\n"
@@ -11828,7 +11914,7 @@ msgstr ""
 "Alternativ können die ausgwählten Termine auch einfach\n"
 "herunter-geladen werden."
 
-#: lib/Service/ToolTipsDataService.php:1281
+#: lib/Service/ToolTipsDataService.php:1285
 msgid ""
 "Optionally augment the instrumenation table by an additional columns which "
 "can\n"
@@ -11852,7 +11938,7 @@ msgstr ""
 "Besetzungstabelle und können in der Rubrik \"Definition Personendaten\"\n"
 "auch modifiziert werden."
 
-#: lib/Service/ToolTipsDataService.php:1287
+#: lib/Service/ToolTipsDataService.php:1291
 msgid ""
 "The instrumentation table can be augmented by additional columns which can "
 "be\n"
@@ -11863,7 +11949,7 @@ msgstr ""
 "werden, um die Abwesenheit bei Terminen -- Proben, Konzerte -- zu\n"
 "notieren. Diese Spalte zeigt, ob ein solches Feld existiert."
 
-#: lib/Service/ToolTipsDataService.php:1293
+#: lib/Service/ToolTipsDataService.php:1297
 msgid ""
 "Open the respective event instance in the calendar app in another browser "
 "window or tab."
@@ -11871,7 +11957,23 @@ msgstr ""
 "Die Kalender-App der Cloud in einem anderen Tab oder Fenster öffnen. Der "
 "aktuelle Termin kann dort detaillierter angezeigt und verändert werden."
 
-#: lib/Service/ToolTipsDataService.php:1296
+#: lib/Service/ToolTipsDataService.php:1298
+msgid ""
+"SINGLE Open the respective event instance in the calendar app in another "
+"browser window or tab."
+msgstr ""
+"Den Termin in der Kalender-App der Cloud in einem anderen Tab oder Fenster "
+"öffnen."
+
+#: lib/Service/ToolTipsDataService.php:1299
+msgid ""
+"SERIES Open the respective event instance in the calendar app in another "
+"browser window or tab."
+msgstr ""
+"Den Start-Termin der Terminserie in der Kalender-App in einem anderen Tab "
+"oder Fenster öffnen."
+
+#: lib/Service/ToolTipsDataService.php:1302
 msgid ""
 "When changing particular events of repeating event series then calendar apps "
 "may choose to even split those repeating events into several distinct "
@@ -11890,7 +11992,7 @@ msgstr ""
 "Anklicken des Feldes wählt den Terminverbund zum Download oder\n"
 "Email-Versand aus."
 
-#: lib/Service/ToolTipsDataService.php:1298
+#: lib/Service/ToolTipsDataService.php:1304
 msgid ""
 "If this particular event instance belongs to a series of repeating events "
 "then all events which belong to this series will show the same letter and "
@@ -11907,17 +12009,17 @@ msgstr ""
 "Anklicken des Feldes wählt die Terminserie zum Download oder\n"
 "Email-Versand aus oder ab."
 
-#: lib/Service/ToolTipsDataService.php:1305
+#: lib/Service/ToolTipsDataService.php:1311
 msgid "Act only on this particular event."
 msgstr "Die folgende Aktionen beziehen sich nur auf diesen Termin."
 
-#: lib/Service/ToolTipsDataService.php:1306
+#: lib/Service/ToolTipsDataService.php:1312
 msgid "Act on the event series this event belongs to."
 msgstr ""
 "Die folgenden Aktion beziehen sich auf die ganze Terminserie, zu der dieser "
 "Termin gehört."
 
-#: lib/Service/ToolTipsDataService.php:1307
+#: lib/Service/ToolTipsDataService.php:1313
 msgid ""
 "Act on the entire family of related events. When changing particular events "
 "of\n"
@@ -11933,7 +12035,7 @@ msgstr ""
 "Familie miteinander verknüpfter Termine, wenn dieser Schalter\n"
 "aktiviert ist."
 
-#: lib/Service/ToolTipsDataService.php:1316
+#: lib/Service/ToolTipsDataService.php:1322
 msgid ""
 "Add a new event for the project. The event is added to the respective\n"
 "calendar and will also be visible and editable through the calendar\n"
@@ -11952,28 +12054,28 @@ msgstr ""
 "Kalender-App und einem Projekt wird dadurch vermittelt, dass dem\n"
 "Termin der Projektname als \"Kategorie\" hinzugefügt wird."
 
-#: lib/Service/ToolTipsDataService.php:1324
+#: lib/Service/ToolTipsDataService.php:1330
 msgid "Add a new concert-event to the project."
 msgstr ""
 "Neuen Konzert-Termin für das Projekt in den Konzerte-Kalender eintragen."
 
-#: lib/Service/ToolTipsDataService.php:1326
+#: lib/Service/ToolTipsDataService.php:1332
 msgid "Add a new rehearsal-event to the project."
 msgstr "Neuen Proben-Termin für das Projekt in den Proben-Kalender eintragen."
 
-#: lib/Service/ToolTipsDataService.php:1328
+#: lib/Service/ToolTipsDataService.php:1334
 msgid "Add a non-categorized event to the project."
 msgstr ""
 "Neuen nicht-kategorisierten Termin für das Projekt in den Kalender eintragen."
 
-#: lib/Service/ToolTipsDataService.php:1330
+#: lib/Service/ToolTipsDataService.php:1336
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 "Vorstands-Termin hinzufügen. Die Vorstandstermine sind nicht öffentlich "
 "sichtbar."
 
-#: lib/Service/ToolTipsDataService.php:1332
+#: lib/Service/ToolTipsDataService.php:1338
 msgid ""
 "Add a finance event to the project, e.g. a dead-line for debit-notes or bank "
 "transfers."
@@ -11981,7 +12083,7 @@ msgstr ""
 "Finanz-Termin zum Projekt hinzufügen, z.B. Ende einer Einreichungsfrist für "
 "Lastschriften oder Überweisungen."
 
-#: lib/Service/ToolTipsDataService.php:1335
+#: lib/Service/ToolTipsDataService.php:1341
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
@@ -11990,15 +12092,15 @@ msgstr ""
 "Ausgewählte Termine als ICS-Attachment per Email veschicken; öffnet ein "
 "Email-Formular."
 
-#: lib/Service/ToolTipsDataService.php:1339
+#: lib/Service/ToolTipsDataService.php:1345
 msgid "Select all events for email-submission"
 msgstr "Alle Termin für Download bzw. Email-Attachment auswählen."
 
-#: lib/Service/ToolTipsDataService.php:1341
+#: lib/Service/ToolTipsDataService.php:1347
 msgid "Exclude all events from email-submission"
 msgstr "Auswahl zum Download bzw. Email-Versand bei allen Terminen entfernen."
 
-#: lib/Service/ToolTipsDataService.php:1343
+#: lib/Service/ToolTipsDataService.php:1349
 msgid ""
 "Download the events as ICS file. In principle it is possible to import\n"
 "the ICS file into the respective calendar apps of your smartphone,\n"
@@ -12008,36 +12110,36 @@ msgstr ""
 "Prinzip in eine geeignete Kalender App Deines SmartPhones, Tables oder\n"
 "Desktop-PCs importiert werden."
 
-#: lib/Service/ToolTipsDataService.php:1347
+#: lib/Service/ToolTipsDataService.php:1353
 msgid "Reload all events from the cloud-calendars."
 msgstr "Alle Termine neu aus den Cloud-Kalendern laden."
 
-#: lib/Service/ToolTipsDataService.php:1352
+#: lib/Service/ToolTipsDataService.php:1358
 msgid ""
 "Force the re-creation of the folder where financial balances are stored."
 msgstr "Erzwinge die Neu-Erstellung des Abrechnungs-Datei-Ordners."
 
-#: lib/Service/ToolTipsDataService.php:1354
+#: lib/Service/ToolTipsDataService.php:1360
 msgid "Force the re-creation of the folder where project data is stored."
 msgstr "Erstellen des gemeinsamen Ordners erzwingen."
 
-#: lib/Service/ToolTipsDataService.php:1356
+#: lib/Service/ToolTipsDataService.php:1362
 msgid "Article category of the concert-archive inside the Redaxo CMS."
 msgstr "Redaxo Artikel Kategorie für archivierte Konzerte."
 
-#: lib/Service/ToolTipsDataService.php:1358
+#: lib/Service/ToolTipsDataService.php:1364
 msgid "Article category of the concert-previews inside the Redaxo CMS."
 msgstr "Artikel-Kategorie für Konzertankündigungen."
 
-#: lib/Service/ToolTipsDataService.php:1360
+#: lib/Service/ToolTipsDataService.php:1366
 msgid "Article category of the rehearsals inside the Redaxo CMS."
 msgstr "Artikel-Kategorier für Probenpläne."
 
-#: lib/Service/ToolTipsDataService.php:1362
+#: lib/Service/ToolTipsDataService.php:1368
 msgid "Article category for templates inside the Redaxo CMS."
 msgstr "Artikel-Kategorie für Templates."
 
-#: lib/Service/ToolTipsDataService.php:1364
+#: lib/Service/ToolTipsDataService.php:1370
 msgid ""
 "Trashbin pseudo-category, articles deleted from within the\n"
 "project-views are moved here."
@@ -12045,7 +12147,7 @@ msgstr ""
 "Papierkorb Pseudo-Kategorie. Wird ein Artikel über das DB-Interface\n"
 "gelöscht, landet der in diesem Unterordner."
 
-#: lib/Service/ToolTipsDataService.php:1367
+#: lib/Service/ToolTipsDataService.php:1373
 msgid ""
 "This is checked for officially registered musicians, those, who have\n"
 "sent us a signed registration form. It is left blannk otherwise."
@@ -12054,12 +12156,12 @@ msgstr ""
 "uns eine unterschriebene Anmeldung geschickt haben. Ansonsten ist das\n"
 "Feld leer."
 
-#: lib/Service/ToolTipsDataService.php:1370
+#: lib/Service/ToolTipsDataService.php:1376
 msgid "This is checked for section-leaders and left blank otherwise."
 msgstr ""
 "Die Markierung ist bei Stimmführern gesetzt, ansonsten bleibt das Feld leer."
 
-#: lib/Service/ToolTipsDataService.php:1373
+#: lib/Service/ToolTipsDataService.php:1379
 msgid ""
 "Delete the given account. If the account has been used for payments then the "
 "bank-account will just be marked disabled, but not removed from the data-"
@@ -12069,21 +12171,21 @@ msgstr ""
 "Zahlungen verwendet wurde, wird der Account lediglich als inaktiv\n"
 "markiert, aber nicht in der Datenbank gelöscht."
 
-#: lib/Service/ToolTipsDataService.php:1374
+#: lib/Service/ToolTipsDataService.php:1380
 msgid "Add a new dialog with detailed information about the bank-account."
 msgstr ""
 "Öffnet einen neuen Eingabe-Dialog mit Detailinformationen zu dieser "
 "Bankverbindung."
 
-#: lib/Service/ToolTipsDataService.php:1375
+#: lib/Service/ToolTipsDataService.php:1381
 msgid "Add a new dialog for defining a new bank-account."
 msgstr "Öffnet einen Eingabedialog, um eine neue Bankverbindung zu definieren."
 
-#: lib/Service/ToolTipsDataService.php:1376
+#: lib/Service/ToolTipsDataService.php:1382
 msgid "Show also the disabled bank accounts, if any."
 msgstr "Auch deaktiviert Bankverbindungen anzeigen, falls vorhanden."
 
-#: lib/Service/ToolTipsDataService.php:1380
+#: lib/Service/ToolTipsDataService.php:1386
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -12100,7 +12202,7 @@ msgstr ""
 "muss der Haken zunächst wieder gesetzt werden, dann wird die IBAN auf\n"
 "Korrektheit überprüft und man kann dann anschließend speichern."
 
-#: lib/Service/ToolTipsDataService.php:1383
+#: lib/Service/ToolTipsDataService.php:1389
 #, php-format
 msgid ""
 "This debit-mandate has not been used for more than %d month and\n"
@@ -12111,7 +12213,7 @@ msgstr ""
 "verwendet und ist deshalb abgelaufen und kann nicht weiter verwendet\n"
 "werden. Bitte löschen und den Schatzmeister informieren, vielen Dank!"
 
-#: lib/Service/ToolTipsDataService.php:1388
+#: lib/Service/ToolTipsDataService.php:1394
 msgid ""
 "Use this debit-mandate only for the given project. Note that debit-mandates "
 "of club-members are always general debit-mandates for all receivables."
@@ -12121,17 +12223,17 @@ msgstr ""
 "immer nur allgemeine Mandate für alle Forderungen des Vereins\n"
 "gegenüber dem Mitglied sind."
 
-#: lib/Service/ToolTipsDataService.php:1389
+#: lib/Service/ToolTipsDataService.php:1395
 msgid "Use this as a general debit-mandate for all receivables of this person."
 msgstr ""
 "Dieses Lastschriftmandat als allgemeines Mandat für alle Forderungen\n"
 "des Vereins gegenüber der Person verwenden."
 
-#: lib/Service/ToolTipsDataService.php:1391
+#: lib/Service/ToolTipsDataService.php:1397
 msgid "Download the existing signed hard-copy of the debit mandate."
 msgstr "Die abgespeicherte Kopie des unterschriebenen Mandats herunterladen."
 
-#: lib/Service/ToolTipsDataService.php:1392
+#: lib/Service/ToolTipsDataService.php:1398
 msgid ""
 "Download a prefilled debit-mandate form with the name and bank-account of "
 "this person, suitable to be handed to the person in order to be signed. Note "
@@ -12143,20 +12245,20 @@ msgstr ""
 "das Email-Formular kann solche vorausgefüllten Lastschriftmandata\n"
 "automatisch and Serienbriefe anhängen."
 
-#: lib/Service/ToolTipsDataService.php:1395
+#: lib/Service/ToolTipsDataService.php:1401
 msgid "Upload a signed hard-copy of the debit-mandate from the computer."
 msgstr ""
 "Das unterschriebene Original bzw. eine elektronische Kopie davon vom Gerät "
 "hochladen."
 
-#: lib/Service/ToolTipsDataService.php:1396
+#: lib/Service/ToolTipsDataService.php:1402
 msgid ""
 "Choose a signed hard-copy of the debit-mandate from the cloud file-system."
 msgstr ""
 "Eine Kopie des unterschriebenen Originals aus dem Cloud-Dateisystem "
 "auswählen."
 
-#: lib/Service/ToolTipsDataService.php:1397
+#: lib/Service/ToolTipsDataService.php:1403
 msgid ""
 "For your inconvenience you have to check this box if you want skip the "
 "upload-step and store the mandate-data without a signed hard-copy."
@@ -12166,11 +12268,11 @@ msgstr ""
 "unterschriebenes Original abspeichern möchte.<\n"
 "\n"
 
-#: lib/Service/ToolTipsDataService.php:1402
+#: lib/Service/ToolTipsDataService.php:1408
 msgid "Folder shared by the orchestra group."
 msgstr "Gemeinsamer Ordner der Orchestergruppe."
 
-#: lib/Service/ToolTipsDataService.php:1403
+#: lib/Service/ToolTipsDataService.php:1409
 msgid ""
 "Public upload \"postbox\" folder. Meant for anonymous public uploads of "
 "larger files."
@@ -12178,23 +12280,23 @@ msgstr ""
 "Öffentlicher \"Briefkasten\"-Ordner. Für anonymes Hochladen von größeren "
 "Dateien."
 
-#: lib/Service/ToolTipsDataService.php:1404
+#: lib/Service/ToolTipsDataService.php:1410
 msgid "Shared folder for document templates."
 msgstr "Gemeinsamer Ordner für Dokumentenvorlagen."
 
-#: lib/Service/ToolTipsDataService.php:1405
+#: lib/Service/ToolTipsDataService.php:1411
 msgid "Shared folder for per-project data."
 msgstr "Gemeinsamer Ordner für Projektdaten."
 
-#: lib/Service/ToolTipsDataService.php:1406
+#: lib/Service/ToolTipsDataService.php:1412
 msgid "Shared folder for per-project per-participant data"
 msgstr "Gemeinsamer Ordner für personalisierte Projekt-Mitglieder-Daten."
 
-#: lib/Service/ToolTipsDataService.php:1407
+#: lib/Service/ToolTipsDataService.php:1413
 msgid "Shared folder for flyers and posters"
 msgstr "Gemeinsamer Ordner für Werbematerial (Handzettel, Plakate)"
 
-#: lib/Service/ToolTipsDataService.php:1409
+#: lib/Service/ToolTipsDataService.php:1415
 msgid ""
 "Link-shared folder for data needed by participants. In particular, this can "
 "be used for music-sheet downloads. The folder is automatically created and "
@@ -12207,7 +12309,7 @@ msgstr ""
 "Rundmails kann man auf den Freigabe-Link mit der Ersetzung\n"
 "${GLOBAL::PROJEKT_DOWNLOAD_FREIGABE} verweisen."
 
-#: lib/Service/ToolTipsDataService.php:1414
+#: lib/Service/ToolTipsDataService.php:1420
 msgid ""
 "Shared folder for the financial balances, probably used after the project is "
 "finished."
@@ -12215,11 +12317,11 @@ msgstr ""
 "Gemeinsamer Ordner mit der Gewinn- und Verlustrechnung; vermutlich erst nach "
 "Abschluß des Projekts von Bedeutung."
 
-#: lib/Service/ToolTipsDataService.php:1415
+#: lib/Service/ToolTipsDataService.php:1421
 msgid "Subfolder for incoming letters from the tax offices."
 msgstr "Unterordner für den eingehende (Brief-)Korrespondenz vom Finanzamt."
 
-#: lib/Service/ToolTipsDataService.php:1416
+#: lib/Service/ToolTipsDataService.php:1422
 msgid ""
 "Template file name for tax excemption notices, may and probably should "
 "contain\n"
@@ -12233,7 +12335,7 @@ msgstr ""
 "speichern, dass diese Schablone passt. Das ist (noch) kein\n"
 "Automatismus."
 
-#: lib/Service/ToolTipsDataService.php:1422
+#: lib/Service/ToolTipsDataService.php:1428
 msgid ""
 "Add the name of a dedicated user-group for the people allowed to access the "
 "orchestra-administration app."
@@ -12241,7 +12343,7 @@ msgstr ""
 "Name einer Benutzenden-Gruppe für alle Personen, die Zugriff zur Orchester-"
 "Orga-App bekommen."
 
-#: lib/Service/ToolTipsDataService.php:1423
+#: lib/Service/ToolTipsDataService.php:1429
 msgid ""
 "The list of group-admins for the dedicated user-group. You should at least "
 "add one group-admin."
@@ -12249,7 +12351,7 @@ msgstr ""
 "Die Gruppen-Administratoren für die Orchester-Benutzer-Gruppe. Wenigstens "
 "einer muss angegeben werden."
 
-#: lib/Service/ToolTipsDataService.php:1425
+#: lib/Service/ToolTipsDataService.php:1431
 msgid ""
 "Add the name of a DokuWiki namespace which will host all wiki-pages of the "
 "orchestra. The namespace should be all lower-case and must not contain any "
@@ -12259,7 +12361,7 @@ msgstr ""
 "gesammelt werden. Der Namensraum sollte nur Kleinbuchstaben und keine\n"
 "Sonder- oder gar Leerzeichen enthalten."
 
-#: lib/Service/ToolTipsDataService.php:1426
+#: lib/Service/ToolTipsDataService.php:1432
 msgid ""
 "It is possible to inject cloud-user-accounts for all orchestra club-members "
 "into the ambient cloud-software. This works by granting select access to the "
@@ -12276,7 +12378,7 @@ msgstr ""
 "\"Sharing\"-Einstellungen von einem Gruppen-Adminstrator der\n"
 "Orchester-Gruppe vorgenommen werden."
 
-#: lib/Service/ToolTipsDataService.php:1430
+#: lib/Service/ToolTipsDataService.php:1436
 msgid ""
 "An email address which receives the data posted by the problem report page. "
 "The problem report page is presented to the end-user when the application "
@@ -12287,7 +12389,7 @@ msgstr ""
 "Backend) ein Dialog angezeigt, mit dem Fehlerberichte erstellt und\n"
 "versendet werden können."
 
-#: lib/Service/ToolTipsDataService.php:1433
+#: lib/Service/ToolTipsDataService.php:1439
 msgid ""
 "Enter the code from the verification email sent to the problem report "
 "recipient address. If the verfication message has not yet been received, "
@@ -12302,7 +12404,7 @@ msgstr ""
 "angegebene Em@il-Adresse auch wirklich stimmt. Falls das alles der\n"
 "Fall ist, gerne auf den \"Noch einmal senden\"-Knopf drücken."
 
-#: lib/Service/ToolTipsDataService.php:1434
+#: lib/Service/ToolTipsDataService.php:1440
 msgid ""
 "If you are sure that the entered email address is indeed correct and you "
 "have waited long enough and you have checked the recipient's spam folders "
@@ -12313,16 +12415,16 @@ msgstr ""
 "das Eintreffen der Em@il gewartet hast, dann kannst Du einen neuen\n"
 "Code anfordern, indem Du auf diesen Knopf drückst."
 
-#: lib/Service/ToolTipsDataService.php:1436
+#: lib/Service/ToolTipsDataService.php:1442
 msgid "Email address has been verified."
 msgstr "Die Em@il-Adresse wurde verifiziert."
 
-#: lib/Service/ToolTipsDataService.php:1437
+#: lib/Service/ToolTipsDataService.php:1443
 msgid "Email address is empty, invalid or has not yet been verified."
 msgstr ""
 "Die Em@il-Adresse ist leer, ungültig oder wurde noch nicht verifiziert."
 
-#: lib/Service/ToolTipsDataService.php:1438
+#: lib/Service/ToolTipsDataService.php:1444
 msgid ""
 "The provided verification code did not match the challenge sent by email to "
 "the configured address."
@@ -12330,7 +12432,7 @@ msgstr ""
 "Der eingetragene Code stimmt nicht mit dem versendeten Code aus der\n"
 "Verifikations-Em@il überein."
 
-#: lib/Service/ToolTipsDataService.php:1447
+#: lib/Service/ToolTipsDataService.php:1453
 msgid ""
 "Short descriptive name of the orchestra, e.g. use \"camerata\" instead of "
 "\"camerata academica freiburg e.V.\". The short name is used in various "
@@ -12341,7 +12443,7 @@ msgstr ""
 "verschiedenen Stellen verwendet. Er sollte kleingeschrieben,\n"
 "\"handlich\" und ohne Leerzeichen sein."
 
-#: lib/Service/ToolTipsDataService.php:1448
+#: lib/Service/ToolTipsDataService.php:1454
 msgid ""
 "The locale of the orchestral organization. In particular, this determines "
 "the currency and the name of some directories in the file-system. Note that "
@@ -12354,7 +12456,7 @@ msgstr ""
 "allerdings immer die Zeitzone des Servers ist in dem die\n"
 "Cloud-Software läuft."
 
-#: lib/Service/ToolTipsDataService.php:1453
+#: lib/Service/ToolTipsDataService.php:1459
 #, php-format
 msgid ""
 "Import the orchestra club-members into the ambient cloud as ordinary cloud-"
@@ -12367,7 +12469,7 @@ msgstr ""
 "insbesondere GRANT-Rechte für ihre Datenbank haben. Es sind auch\n"
 "weitere Einstellungen in der \"%s\"-App als Administrator nötig."
 
-#: lib/Service/ToolTipsDataService.php:1454
+#: lib/Service/ToolTipsDataService.php:1460
 #, php-format
 msgid ""
 "Recreate all \"%1$s\" views and grant permissions to use them to the cloud "
@@ -12376,7 +12478,7 @@ msgstr ""
 "Alle \"%1$s\"-Ansichten erneut erzeugen und dem Cloud-Datenbank-Account "
 "Leserechte daran geben."
 
-#: lib/Service/ToolTipsDataService.php:1455
+#: lib/Service/ToolTipsDataService.php:1461
 msgid ""
 "In order to isolate the SQL-views for the cloud-user-backend from the rest "
 "of the database tables it is possible to put them into their own separate "
@@ -12388,7 +12490,7 @@ msgstr ""
 "werden. Dazu ist es nötig, dass der Datenbank-Account der APP alls -- und "
 "insbesondere: GRANT -- Rechte an dieser separaten Datenbank hat."
 
-#: lib/Service/ToolTipsDataService.php:1459
+#: lib/Service/ToolTipsDataService.php:1465
 msgid ""
 "Optionally parts of the data-base and some configuration settings can be "
 "stored encrypted. If you are confronted with error messages about a missing "
@@ -12403,7 +12505,7 @@ msgstr ""
 "zu können, muss man sich außerdem noch mit dem eigenen Passwort\n"
 "authentifizieren."
 
-#: lib/Service/ToolTipsDataService.php:1460
+#: lib/Service/ToolTipsDataService.php:1466
 msgid ""
 "Changing the encryption key needs your login-password. Please enter it here "
 "before trying to save the changed encryption key."
@@ -12411,19 +12513,19 @@ msgstr ""
 "Das Setzen des Verschlüsselungs-Schlüssels erfordert das eigenen\n"
 "Cloud-Passwort, das hier eingegeben werden muss."
 
-#: lib/Service/ToolTipsDataService.php:1465
+#: lib/Service/ToolTipsDataService.php:1471
 msgid "Personal application settings."
 msgstr "Persönliche Einstellung für die Musizierendne-DB Anwendung."
 
-#: lib/Service/ToolTipsDataService.php:1467
+#: lib/Service/ToolTipsDataService.php:1473
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
 msgstr "Erzwinge die Neuerstellung des gemeinsamen Ordners."
 
-#: lib/Service/ToolTipsDataService.php:1469
+#: lib/Service/ToolTipsDataService.php:1475
 msgid "Re-create the share-owner."
 msgstr "Erzeuge eine neue Share-Strohpuppe."
 
-#: lib/Service/ToolTipsDataService.php:1471
+#: lib/Service/ToolTipsDataService.php:1477
 msgid ""
 "Some data-sets should better not be deleted because they have attached\n"
 "important - e.g. financial - data attached to it. In this case a\n"
@@ -12438,19 +12540,19 @@ msgstr ""
 "unsichtbar ist. Aktivieren dieser Option macht auch solche Datensätze\n"
 "sichtbar."
 
-#: lib/Service/ToolTipsDataService.php:1477
+#: lib/Service/ToolTipsDataService.php:1483
 msgid "Toggle Tooltips"
 msgstr "Ballon-Hilfe ein- und ausschalten"
 
-#: lib/Service/ToolTipsDataService.php:1479
+#: lib/Service/ToolTipsDataService.php:1485
 msgid "Link to the source-code archives for the DB app."
 msgstr "Web-Verweis zur Quell-Code-Dokumentation. "
 
-#: lib/Service/ToolTipsDataService.php:1481
+#: lib/Service/ToolTipsDataService.php:1487
 msgid "Link to the source-code documentation for the DB app."
 msgstr "Web-Verweis zur Quell-Code-Dokumentation. "
 
-#: lib/Service/ToolTipsDataService.php:1483
+#: lib/Service/ToolTipsDataService.php:1489
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
@@ -12458,7 +12560,7 @@ msgstr ""
 "Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die "
 "Projekt-Kategorien als Kriterium."
 
-#: lib/Service/ToolTipsDataService.php:1485
+#: lib/Service/ToolTipsDataService.php:1491
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
@@ -12467,55 +12569,55 @@ msgstr ""
 "Anfängliche Anzahl von Tabellenzeilen pro Seite. Kann bei den\n"
 "indivuduellen Tabellen später noch einzeln angepasst werden."
 
-#: lib/Service/ToolTipsDataService.php:1492
+#: lib/Service/ToolTipsDataService.php:1498
 msgid "Display all Musicians"
 msgstr "Alle Personen"
 
-#: lib/Service/ToolTipsDataService.php:1493
+#: lib/Service/ToolTipsDataService.php:1499
 msgid "Frontpage Blog"
 msgstr "Startseiten-Blog"
 
-#: lib/Service/ToolTipsDataService.php:1494
+#: lib/Service/ToolTipsDataService.php:1500
 msgid "Musical Instruments"
 msgstr "Musikinstrumente"
 
-#: lib/Service/ToolTipsDataService.php:1495
+#: lib/Service/ToolTipsDataService.php:1501
 msgid "Instrument Families"
 msgstr "Instrumenten-Familien"
 
-#: lib/Service/ToolTipsDataService.php:1496
+#: lib/Service/ToolTipsDataService.php:1502
 msgid "Insurances"
 msgstr "Versicherungen"
 
-#: lib/Service/ToolTipsDataService.php:1497
+#: lib/Service/ToolTipsDataService.php:1503
 msgid "Insurance Brokers"
 msgstr "Versicherungsmakler"
 
-#: lib/Service/ToolTipsDataService.php:1498
+#: lib/Service/ToolTipsDataService.php:1504
 msgid "Insurance Rates"
 msgstr "Versicherungs-Raten"
 
-#: lib/Service/ToolTipsDataService.php:1500
+#: lib/Service/ToolTipsDataService.php:1506
 msgid "Project Participant-Fields"
 msgstr "Definition Personen-Daten"
 
-#: lib/Service/ToolTipsDataService.php:1502
+#: lib/Service/ToolTipsDataService.php:1508
 msgid "Received Payments"
 msgstr "Eingegangene Zahlungen"
 
-#: lib/Service/ToolTipsDataService.php:1503
+#: lib/Service/ToolTipsDataService.php:1509
 msgid "All Projects"
 msgstr "Projekte"
 
-#: lib/Service/ToolTipsDataService.php:1504
+#: lib/Service/ToolTipsDataService.php:1510
 msgid "Create Bulk Transactions"
 msgstr "Sammelauftrag erzeugen"
 
-#: lib/Service/ToolTipsDataService.php:1505
+#: lib/Service/ToolTipsDataService.php:1511
 msgid "Issued Bulk Transactions"
 msgstr "Sammelaufträge"
 
-#: lib/Service/ToolTipsDataService.php:1508
+#: lib/Service/ToolTipsDataService.php:1514
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
@@ -12523,7 +12625,7 @@ msgstr ""
 "Alle Personen anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
 "ausführliche Such- und Auswahlfunktionalität."
 
-#: lib/Service/ToolTipsDataService.php:1509
+#: lib/Service/ToolTipsDataService.php:1515
 msgid ""
 "Simplistic blog page with follow apps, used primarily to display hints\n"
 "if something has changed in the orchestra app."
@@ -12531,7 +12633,7 @@ msgstr ""
 "Einfacher Blog mit Antwortmöglichkeit, primär, um Änderungen in der\n"
 "Orchestersoftware zu kommunizieren."
 
-#: lib/Service/ToolTipsDataService.php:1511
+#: lib/Service/ToolTipsDataService.php:1517
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
@@ -12539,14 +12641,14 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/Service/ToolTipsDataService.php:1512
+#: lib/Service/ToolTipsDataService.php:1518
 msgid ""
 "Display the list of instrument families and add or change them as needed."
 msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/Service/ToolTipsDataService.php:1513
+#: lib/Service/ToolTipsDataService.php:1519
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
@@ -12554,12 +12656,12 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die "
 "Instrumentensammelversicherungen an."
 
-#: lib/Service/ToolTipsDataService.php:1514
+#: lib/Service/ToolTipsDataService.php:1520
 msgid "Display a table with the insurance brokers."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsanbieter an."
 
-#: lib/Service/ToolTipsDataService.php:1515
+#: lib/Service/ToolTipsDataService.php:1521
 msgid ""
 "Display a table with the insurance rates for the individual instrument "
 "insurances."
@@ -12567,11 +12669,11 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsraten der\n"
 "Instrumenten-Sammelversicherungen an."
 
-#: lib/Service/ToolTipsDataService.php:1517
+#: lib/Service/ToolTipsDataService.php:1523
 msgid "Add additional data-fields to the instrumenation table for the project."
 msgstr "Definition der Personen-Daten für das Projekt."
 
-#: lib/Service/ToolTipsDataService.php:1518
+#: lib/Service/ToolTipsDataService.php:1524
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
@@ -12581,15 +12683,15 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/Service/ToolTipsDataService.php:1519
+#: lib/Service/ToolTipsDataService.php:1525
 msgid "A table holding the various payments of participants."
 msgstr "Daten-Tabelle mit allen Zahlungen der Teilnehmenden."
 
-#: lib/Service/ToolTipsDataService.php:1520
+#: lib/Service/ToolTipsDataService.php:1526
 msgid "Overview over all known projects (start-page)."
 msgstr "Alle gespeicherten Projekte anzeigen; Startseite der `Camerata App'."
 
-#: lib/Service/ToolTipsDataService.php:1521
+#: lib/Service/ToolTipsDataService.php:1527
 msgid ""
 "Display a table with the bank accounts of the project participants,\n"
 "with the possibility to issued money transfers as well as debit-notes\n"
@@ -12599,7 +12701,7 @@ msgstr ""
 "inklusive der Möglichkeit, Bankeinzüge und Überweisungen zu\n"
 "initiieren."
 
-#: lib/Service/ToolTipsDataService.php:1524
+#: lib/Service/ToolTipsDataService.php:1530
 msgid ""
 "A table holding all bulk bank-transactions issued from the orchestra-"
 "software."
@@ -12607,7 +12709,7 @@ msgstr ""
 "Eine Tabelle mit allen Sammelaufträgen, die aus der Musizierenden-DB heraus "
 "erzeugt wurden."
 
-#: lib/Service/ToolTipsDataService.php:1527 lib/Service/ToolTipsService.php:989
+#: lib/Service/ToolTipsDataService.php:1533 lib/Service/ToolTipsService.php:989
 #, php-format
 msgid ""
 "An image file with the orchestra logo -- preferably in SVG format. The logo "
@@ -12617,7 +12719,7 @@ msgstr ""
 "Logo kann in Dokumentenvorlagen eingesetzt werden, indem man den\n"
 "\"[LOGO]\"-Platzhalter verwendet."
 
-#: lib/Service/ToolTipsDataService.php:1528
+#: lib/Service/ToolTipsDataService.php:1534
 msgid ""
 "A fillable PDF form for debit-mandates bound to special projects. The app is "
 "able to auto-fill form-fields with the names \"projectName\", "
@@ -12634,7 +12736,7 @@ msgstr ""
 "entsprechend erzeugt werden. Vorausgefüllte Mandate können aus der\n"
 "Teilnehmenden- und Musizierenden-Ansicht heraus herunter geladen werden."
 
-#: lib/Service/ToolTipsDataService.php:1530
+#: lib/Service/ToolTipsDataService.php:1536
 msgid ""
 "A fillable PDF form for debit-mandates not bound to special projects. The "
 "app is able to auto-fill form-fields with the names \"bankAccountOwner\", "
@@ -12652,7 +12754,7 @@ msgstr ""
 "werden. Vorausgefüllte Mandate können aus der Musizierenden- und\n"
 "Vereinsmitglieds-Ansicht heraus herunter geladen werden."
 
-#: lib/Service/ToolTipsDataService.php:1532
+#: lib/Service/ToolTipsDataService.php:1538
 msgid ""
 "A fillable form in order to collect address updates and for renewal of debit-"
 "mandates."
@@ -12660,7 +12762,7 @@ msgstr ""
 "Ein Formular um Adress-Aktualisierungen zu melden und um Lastschriftmandate "
 "zu erneuern."
 
-#: lib/Service/ToolTipsDataService.php:1534
+#: lib/Service/ToolTipsDataService.php:1540
 msgid ""
 "An office document with variable substitutions \"[PLACEHOLDER]\" used to "
 "communicate the\n"
@@ -12670,19 +12772,19 @@ msgstr ""
 "im Stil \"[PLATZHALTER]\" um die jährlichen Versicherungsbeiträge an die "
 "betreffenden Personen zu kommunizieren."
 
-#: lib/Service/ToolTipsDataService.php:1537
+#: lib/Service/ToolTipsDataService.php:1543
 msgid "Delete this document template from the server"
 msgstr "Diese Dokumentenvorlage vom Server löschen"
 
-#: lib/Service/ToolTipsDataService.php:1540
+#: lib/Service/ToolTipsDataService.php:1546
 msgid "Choose a template file from the cloud storage."
 msgstr "Dokumentenvorlage-Datei aus der \"Cloud\" auswählen"
 
-#: lib/Service/ToolTipsDataService.php:1541
+#: lib/Service/ToolTipsDataService.php:1547
 msgid "Upload a document template from your computer or mobile."
 msgstr "Eine Dokumentenvorlage von Ihrem Computer oder Mobilgerät laden."
 
-#: lib/Service/ToolTipsDataService.php:1545
+#: lib/Service/ToolTipsDataService.php:1551
 msgid ""
 "Test the form-filling features with a test-data-set. The file-format of the "
 "generated download remains the same as of the original template."
@@ -12690,7 +12792,7 @@ msgstr ""
 "Das automatische Ausfüllen der Dokumentenvorlage mit einem Beispiel-"
 "Datensatz testen. Das Dateiformat bleibt dabei das der Vorlage."
 
-#: lib/Service/ToolTipsDataService.php:1546
+#: lib/Service/ToolTipsDataService.php:1552
 msgid ""
 "Test the form-filling features with a test-data-set and convert the "
 "generated file to PDF, providing a fillable PDF-form if the original "
@@ -12701,7 +12803,7 @@ msgstr ""
 "Vorlage ausfüllbare Formularfelder enthält, wird ein ausfüllbares PDF-"
 "Dokument erstellt."
 
-#: lib/Service/ToolTipsDataService.php:1547
+#: lib/Service/ToolTipsDataService.php:1553
 msgid ""
 "Just download the test-data set as JSON data for inspection and for "
 "debugging."
@@ -12709,26 +12811,26 @@ msgstr ""
 "Den Test-Datensatz im JSON herunterladen. Zur Illustration und zur "
 "Fehlersuche."
 
-#: lib/Service/ToolTipsDataService.php:1551
+#: lib/Service/ToolTipsDataService.php:1557
 msgid "Select the sender from the members of the executive board."
 msgstr "Den Absender aus dem Orga-Team auswählen."
 
-#: lib/Service/ToolTipsDataService.php:1553
+#: lib/Service/ToolTipsDataService.php:1559
 msgid "Select the recipients for the mail-merge."
 msgstr "Die Empfänger*innen für den Serienbrief auswählen."
 
-#: lib/Service/ToolTipsDataService.php:1554
+#: lib/Service/ToolTipsDataService.php:1560
 msgid "Select recipients from the one of the cloud's address-books."
 msgstr "Empfänger:innen aus einem der Adressbücherauswählen."
 
-#: lib/Service/ToolTipsDataService.php:1556
+#: lib/Service/ToolTipsDataService.php:1562
 msgid ""
 "Optionally select a project to provide more context information for the mail-"
 "merge operation."
 msgstr ""
 "Optional ein Projekt auswählen, um mehr Kontext-Informationen zu erzeugen."
 
-#: lib/Service/ToolTipsDataService.php:1557
+#: lib/Service/ToolTipsDataService.php:1563
 msgid ""
 "Preferred for one-time merges or for testing. Just download to your local "
 "computer."
@@ -12736,7 +12838,7 @@ msgstr ""
 "Vorzugsweise für einmalige Vorlagen-Ersetzungen oder zu Testzwecken. Einfach "
 "die ausgefüllte Vorlage herunterladen auf den eigenen Computer."
 
-#: lib/Service/ToolTipsDataService.php:1558
+#: lib/Service/ToolTipsDataService.php:1564
 msgid ""
 "Preferred for mass-mail-merges and when the substituted template does not "
 "need to be post-processed."
@@ -12744,7 +12846,7 @@ msgstr ""
 "Vorzugsweise bei \"echten\" Massen-Serien-Briefen und wenn die ausgefüllten "
 "Vorlagen nicht mehr weiter bearbeitet werden müssen."
 
-#: lib/Service/ToolTipsDataService.php:1559
+#: lib/Service/ToolTipsDataService.php:1565
 msgid ""
 "Download the data-set which would be substituted into the document. This is "
 "primarily meant for debuggin."
@@ -12753,11 +12855,11 @@ msgstr ""
 "Ggf. nützlich beim Entwurf neuer Vorlagen, oder falls das Ergebnis anders "
 "aussieht als erwartet."
 
-#: lib/Service/ToolTipsDataService.php:1564
+#: lib/Service/ToolTipsDataService.php:1570
 msgid "Test data-base passphrase."
 msgstr "Datenbank-Passwort testen"
 
-#: lib/Service/ToolTipsDataService.php:1566
+#: lib/Service/ToolTipsDataService.php:1572
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
@@ -12767,7 +12869,7 @@ msgstr ""
 "Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
 "Test erfolgreich absolviert wurde."
 
-#: lib/Service/ToolTipsDataService.php:1570
+#: lib/Service/ToolTipsDataService.php:1576
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -12775,7 +12877,7 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/Service/ToolTipsDataService.php:1572
+#: lib/Service/ToolTipsDataService.php:1578
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
@@ -12784,7 +12886,7 @@ msgstr ""
 "noch\n"
 "die Höhe der Außenstände angegeben."
 
-#: lib/Service/ToolTipsDataService.php:1574
+#: lib/Service/ToolTipsDataService.php:1580
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -12793,7 +12895,7 @@ msgstr ""
 "Besetzungstabelle eintragen; die Soll-Besetzungszahlen werden\n"
 "allerdings nicht angepasst."
 
-#: lib/Service/ToolTipsDataService.php:1576
+#: lib/Service/ToolTipsDataService.php:1582
 msgid "Change to another WYSIWYG editor."
 msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 
@@ -13078,7 +13180,7 @@ msgstr ""
 #: lib/Storage/UserStorage.php:167
 #, php-format
 msgid "File-system node \"%s\" could not been found."
-msgstr "Die Ordner \"%s\" konnte nicht gefunden werden."
+msgstr "Der Ordner \"%s\" konnte nicht gefunden werden."
 
 #: lib/Storage/UserStorage.php:389 lib/Storage/UserStorage.php:610
 #, php-format
@@ -13152,23 +13254,23 @@ msgid "donation-receipts"
 msgstr "Zuwendungsbestätigungen"
 
 #. TRANSLATORS: default value for unconfigured setting.
-#: lib/Traits/InitialStateTrait.php:127
+#: lib/Traits/InitialStateTrait.php:128
 msgid "unconfigured"
 msgstr "nicht konfiguriert"
 
-#: lib/Traits/InitialStateTrait.php:161
+#: lib/Traits/InitialStateTrait.php:162
 msgid "Select a filter option."
 msgstr "Wähle einen Filter."
 
-#: lib/Traits/InitialStateTrait.php:162 lib/Traits/InitialStateTrait.php:168
+#: lib/Traits/InitialStateTrait.php:163 lib/Traits/InitialStateTrait.php:169
 msgid "No values match."
 msgstr "Kein Wert passt."
 
-#: lib/Traits/InitialStateTrait.php:167
+#: lib/Traits/InitialStateTrait.php:168
 msgid "Select an option."
 msgstr "Wähle eine Option."
 
-#: lib/Traits/InitialStateTrait.php:169
+#: lib/Traits/InitialStateTrait.php:170
 msgid ""
 "Select from the pull-down menu. The pull-down can be closed by clicking "
 "anywhere outside the menu."
@@ -13257,17 +13359,17 @@ msgid "Orchestra Management Application"
 msgstr "Orchester-Verwaltungs-Anwendung"
 
 #. TRANSLATORS /dev5/htdocs/nextcloud-git-30/apps/cafevdb/blah.vue:79
-#. TRANSLATORS src/components/AdminSettings.vue:772
+#. TRANSLATORS src/components/AdminSettings.vue:773
 #. TRANSLATORS src/views/FilesTab.vue:476
 #: specialVueFakeDummyForL10nScript.js:2
-#: specialVueFakeDummyForL10nScript.js:142
-#: specialVueFakeDummyForL10nScript.js:158
-#: specialVueFakeDummyForL10nScript.js:168
-#: specialVueFakeDummyForL10nScript.js:174
-#: specialVueFakeDummyForL10nScript.js:184
-#: specialVueFakeDummyForL10nScript.js:202
-#: specialVueFakeDummyForL10nScript.js:218
-#: specialVueFakeDummyForL10nScript.js:438
+#: specialVueFakeDummyForL10nScript.js:150
+#: specialVueFakeDummyForL10nScript.js:166
+#: specialVueFakeDummyForL10nScript.js:176
+#: specialVueFakeDummyForL10nScript.js:182
+#: specialVueFakeDummyForL10nScript.js:192
+#: specialVueFakeDummyForL10nScript.js:210
+#: specialVueFakeDummyForL10nScript.js:226
+#: specialVueFakeDummyForL10nScript.js:544
 #: src/toolkit/mixins/settings-sync.js:53
 #: src/toolkit/mixins/settings-sync.js:91
 #: src/toolkit/mixins/settings-sync.js:152
@@ -13278,19 +13380,22 @@ msgstr "Grund unbekannt"
 #. TRANSLATORS /dev5/htdocs/nextcloud-git-30/apps/cafevdb/blah.vue:97
 #. TRANSLATORS src/views/FilesTab.vue:494
 #: specialVueFakeDummyForL10nScript.js:4
-#: specialVueFakeDummyForL10nScript.js:440
+#: specialVueFakeDummyForL10nScript.js:546
 msgid "no response received from {ajaxUrl}"
 msgstr "keine Antwort von {ajaxUrl} erhalten"
 
 #. TRANSLATORS /dev5/htdocs/nextcloud-git-30/apps/cafevdb/blah.vue:101
 #. TRANSLATORS src/views/FilesTab.vue:498
 #: specialVueFakeDummyForL10nScript.js:6
-#: specialVueFakeDummyForL10nScript.js:442
+#: specialVueFakeDummyForL10nScript.js:548
 msgid "Could not perform mail-merge: {message}"
 msgstr "Konnte die Vorlage nicht ausfüllen: {message}"
 
 #. TRANSLATORS src/CAFeVDB.vue:27
-#: specialVueFakeDummyForL10nScript.js:8 src/router/routes.ts:40
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:219
+#: specialVueFakeDummyForL10nScript.js:8
+#: specialVueFakeDummyForL10nScript.js:252 src/router/routes.ts:40
+#: src/stores/history.ts:349
 msgid "Home"
 msgstr "Startseite"
 
@@ -13299,93 +13404,108 @@ msgstr "Startseite"
 msgid "Overview {currentProjectName}"
 msgstr "Überblick über {currentProjectName}"
 
-#. TRANSLATORS src/CAFeVDB.vue:73
+#. TRANSLATORS src/CAFeVDB.vue:74
 #: specialVueFakeDummyForL10nScript.js:12
 #: templates/settings/part.side-menu-settings.php:59
 #: templates/settings/personal-settings.php:37
 msgid "Tool-Tips"
 msgstr "Ballon-Hilfe"
 
-#. TRANSLATORS src/CAFeVDB.vue:78
+#. TRANSLATORS src/CAFeVDB.vue:76
 #: specialVueFakeDummyForL10nScript.js:14
+msgid "Web Browser History"
+msgstr "Webbrowser-Verlauf"
+
+#. TRANSLATORS src/CAFeVDB.vue:83
+#: specialVueFakeDummyForL10nScript.js:16
 #: templates/settings/part.side-menu-settings.php:71
 #: templates/settings/personal-settings.php:48
 msgid "Restore Last View"
 msgstr "Letzte Ansicht wieder herstellen"
 
-#. TRANSLATORS src/CAFeVDB.vue:83
-#: specialVueFakeDummyForL10nScript.js:16
+#. TRANSLATORS src/CAFeVDB.vue:93
+#: specialVueFakeDummyForL10nScript.js:18
+msgid "Save Web Browser History"
+msgstr "Den Browser-Verlauf sichern"
+
+#. TRANSLATORS src/CAFeVDB.vue:102
+#: specialVueFakeDummyForL10nScript.js:20
+msgid "Manage Saved History"
+msgstr "Gespeicherte Browserverläufe verwalten"
+
+#. TRANSLATORS src/CAFeVDB.vue:108
+#: specialVueFakeDummyForL10nScript.js:22
 #: templates/settings/part.side-menu-settings.php:83
 #: templates/settings/personal-settings.php:59
 msgid "Filter-Controls"
 msgstr "Such-Filter"
 
-#. TRANSLATORS src/CAFeVDB.vue:88
-#: specialVueFakeDummyForL10nScript.js:18
+#. TRANSLATORS src/CAFeVDB.vue:113
+#: specialVueFakeDummyForL10nScript.js:24
 #: templates/settings/part.side-menu-settings.php:95
 #: templates/settings/personal-settings.php:70
 msgid "Quick Change-Dialog"
 msgstr "Ändern-Dialog bei Mausklick"
 
-#. TRANSLATORS src/CAFeVDB.vue:93
-#: specialVueFakeDummyForL10nScript.js:20
+#. TRANSLATORS src/CAFeVDB.vue:118
+#: specialVueFakeDummyForL10nScript.js:26
 #: templates/settings/part.side-menu-settings.php:107
 #: templates/settings/personal-settings.php:81
 msgid "Deselect Invisible"
 msgstr "Unsichtbare abwählen"
 
-#. TRANSLATORS src/CAFeVDB.vue:97
-#: specialVueFakeDummyForL10nScript.js:22
+#. TRANSLATORS src/CAFeVDB.vue:122
+#: specialVueFakeDummyForL10nScript.js:28
 #: templates/settings/part.side-menu-settings.php:126
 msgid "#Rows/Page in Tables"
 msgstr "#Zeilen/Seite für Tabellen"
 
-#. TRANSLATORS src/CAFeVDB.vue:118
-#: specialVueFakeDummyForL10nScript.js:24
+#. TRANSLATORS src/CAFeVDB.vue:143
+#: specialVueFakeDummyForL10nScript.js:30
 #: templates/settings/part.side-menu-settings.php:139
 #: templates/settings/personal-settings.php:131
 msgid "Finance-Mode"
 msgstr "Finanz-Modus"
 
-#. TRANSLATORS src/CAFeVDB.vue:123
-#: specialVueFakeDummyForL10nScript.js:26
+#. TRANSLATORS src/CAFeVDB.vue:148
+#: specialVueFakeDummyForL10nScript.js:32
 #: templates/settings/part.side-menu-settings.php:152
 #: templates/settings/personal-settings.php:143
 msgid "Expert-Mode"
 msgstr "Experten-Modus"
 
-#. TRANSLATORS src/CAFeVDB.vue:128
-#: specialVueFakeDummyForL10nScript.js:28
+#. TRANSLATORS src/CAFeVDB.vue:154
+#: specialVueFakeDummyForL10nScript.js:34
 #: templates/settings/part.side-menu-settings.php:164
 #: templates/settings/personal-settings.php:155
 msgid "Show Disabled Data-Sets"
 msgstr "Zeige inaktive Datensätze"
 
-#. TRANSLATORS src/CAFeVDB.vue:132
-#: specialVueFakeDummyForL10nScript.js:30
+#. TRANSLATORS src/CAFeVDB.vue:159
+#: specialVueFakeDummyForL10nScript.js:36
 msgid "Debug"
 msgstr "Fehlersuche"
 
-#. TRANSLATORS src/CAFeVDB.vue:145
-#. TRANSLATORS src/CAFeVDB.vue:153
-#: specialVueFakeDummyForL10nScript.js:32
-#: specialVueFakeDummyForL10nScript.js:34
+#. TRANSLATORS src/CAFeVDB.vue:172
+#. TRANSLATORS src/CAFeVDB.vue:180
+#: specialVueFakeDummyForL10nScript.js:38
+#: specialVueFakeDummyForL10nScript.js:40
 #: templates/settings/part.side-menu-settings.php:175
 msgid "Further Settings"
 msgstr "Weitere Einstellungen"
 
-#. TRANSLATORS src/CAFeVDB.vue:166
-#: specialVueFakeDummyForL10nScript.js:36
+#. TRANSLATORS src/CAFeVDB.vue:193
+#: specialVueFakeDummyForL10nScript.js:42
 msgid "{orchestraName} Orchestra Management App"
 msgstr "{orchestraName} Orchester-Verwaltungs-Anwendung"
 
-#. TRANSLATORS src/CAFeVDB.vue:175
-#: specialVueFakeDummyForL10nScript.js:38
+#. TRANSLATORS src/CAFeVDB.vue:202
+#: specialVueFakeDummyForL10nScript.js:44
 msgid "Please click on the ☰-button in order to open the navigation menu."
 msgstr "Bitte auf den ☰-Knopf drücken, um in das Navigationsmenü zu gelangen."
 
-#. TRANSLATORS src/CAFeVDB.vue:176
-#: specialVueFakeDummyForL10nScript.js:40
+#. TRANSLATORS src/CAFeVDB.vue:203
+#: specialVueFakeDummyForL10nScript.js:46
 msgid ""
 "Please click on your avatar or initials (top-right) for logout and "
 "configuration options."
@@ -13393,491 +13513,596 @@ msgstr ""
 "Bitte Deinen Avatar oder Deine Initialen (oben rechts) anklicken, um\n"
 "zu den Einstellungen zu gelangen oder Dich abzumelden."
 
-#. TRANSLATORS unknown orchestra name placeholder (src/CAFeVDB.vue:311)
-#: specialVueFakeDummyForL10nScript.js:42
+#. TRANSLATORS src/CAFeVDB.vue:330
+#: specialVueFakeDummyForL10nScript.js:48
+msgid "Top-Level Error"
+msgstr "Fehler in der obersten App-Ebene"
+
+#. TRANSLATORS unknown orchestra name placeholder (src/CAFeVDB.vue:353)
+#: specialVueFakeDummyForL10nScript.js:50
 msgid "[UNKNOWN]"
 msgstr "[UNBEKANNT]"
 
-#. TRANSLATORS src/CAFeVDB.vue:451
-#: specialVueFakeDummyForL10nScript.js:44
+#. TRANSLATORS src/CAFeVDB.vue:498
+#: specialVueFakeDummyForL10nScript.js:52
 msgid "Unable to run the config-check."
 msgstr "Kann den Konfigurations-Test nicht ausführen."
 
-#. TRANSLATORS src/CAFeVDB.vue:490
-#: specialVueFakeDummyForL10nScript.js:46
+#. TRANSLATORS src/CAFeVDB.vue:537
+#: specialVueFakeDummyForL10nScript.js:54
 msgid "Unable to update navigation items."
 msgstr "Kann das Navigations-Menü nicht aktualisieren."
 
 #. TRANSLATORS src/components/AdminSettings.vue:25
-#: specialVueFakeDummyForL10nScript.js:48
+#: specialVueFakeDummyForL10nScript.js:56
 msgid "Camerata DB"
 msgstr "Camerata DB"
 
 #. TRANSLATORS src/components/AdminSettings.vue:34
-#: specialVueFakeDummyForL10nScript.js:50
+#: specialVueFakeDummyForL10nScript.js:58
 msgid "User and group backend"
 msgstr "Benutzer- und Gruppen-Backend: %s"
 
 #. TRANSLATORS src/components/AdminSettings.vue:50
-#: specialVueFakeDummyForL10nScript.js:52
+#: specialVueFakeDummyForL10nScript.js:60
 msgid "Sychronize User Backends"
 msgstr "Benutzer-Backend synchronisieren"
 
 #. TRANSLATORS src/components/AdminSettings.vue:57
-#: specialVueFakeDummyForL10nScript.js:54
+#: specialVueFakeDummyForL10nScript.js:62
 msgid "User Group"
 msgstr "Benutzer-Gruppe"
 
 #. TRANSLATORS src/components/AdminSettings.vue:67
-#: specialVueFakeDummyForL10nScript.js:56
+#: specialVueFakeDummyForL10nScript.js:64
 msgid "User Group Admins"
 msgstr "Gruppen-Administratoren"
 
 #. TRANSLATORS src/components/AdminSettings.vue:107
-#: specialVueFakeDummyForL10nScript.js:58
+#: specialVueFakeDummyForL10nScript.js:66
 msgid "Create Group"
 msgstr "Gruppe erzeugen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:121
 #. TRANSLATORS src/components/AdminSettings.vue:127
-#: specialVueFakeDummyForL10nScript.js:60
-#: specialVueFakeDummyForL10nScript.js:62
+#: specialVueFakeDummyForL10nScript.js:68
+#: specialVueFakeDummyForL10nScript.js:70
 msgid "Wiki Name-Space"
 msgstr "Wiki Namensraum"
 
 #. TRANSLATORS src/components/AdminSettings.vue:133
-#: specialVueFakeDummyForL10nScript.js:64
+#: specialVueFakeDummyForL10nScript.js:72
 msgid "Configure User Backend"
 msgstr "Konfiguration des Benutzer-Backends"
 
 #. TRANSLATORS src/components/AdminSettings.vue:141
-#: specialVueFakeDummyForL10nScript.js:66
+#: specialVueFakeDummyForL10nScript.js:74
 msgid "Autoconfigure \"{cloudUserBackend}\" app"
 msgstr "Autokonfiguration für die \"{cloudUserBackend}\"-App vornehmen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:150
-#: specialVueFakeDummyForL10nScript.js:68
+#: specialVueFakeDummyForL10nScript.js:76
 msgid "Recryption Requests"
 msgstr "Neuverschlüsselungs-Anfragen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:162
-#: specialVueFakeDummyForL10nScript.js:70
-#: specialVueFakeDummyForL10nScript.js:82
+#: specialVueFakeDummyForL10nScript.js:78
+#: specialVueFakeDummyForL10nScript.js:90
 msgid "recrypt"
 msgstr "neu verschlüsseln"
 
 #. TRANSLATORS src/components/AdminSettings.vue:165
-#: specialVueFakeDummyForL10nScript.js:72
-#: specialVueFakeDummyForL10nScript.js:84
+#: specialVueFakeDummyForL10nScript.js:80
+#: specialVueFakeDummyForL10nScript.js:92
 #: templates/fragments/mailing-lists/announcements-list-controls.php:84
 msgid "reject"
 msgstr "zurückweisen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:172
-#: specialVueFakeDummyForL10nScript.js:74
+#: specialVueFakeDummyForL10nScript.js:82
 msgid "organizer"
 msgstr "Organisator"
 
 #. TRANSLATORS src/components/AdminSettings.vue:174
-#: specialVueFakeDummyForL10nScript.js:76
+#: specialVueFakeDummyForL10nScript.js:84
 msgid "group-admin"
 msgstr "Gruppen-Administrator"
 
 #. TRANSLATORS src/components/AdminSettings.vue:184
-#: specialVueFakeDummyForL10nScript.js:78
+#: specialVueFakeDummyForL10nScript.js:86
 msgid "mark/unmark all."
 msgstr "alle aus-/abwählen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:186
-#: specialVueFakeDummyForL10nScript.js:80
+#: specialVueFakeDummyForL10nScript.js:88
 msgid "With the marked requests perform the following action:"
 msgstr "Mit den ausgewählten Anfragen die folgende Aktion ausführen:"
 
 #. TRANSLATORS src/components/AdminSettings.vue:198
-#: specialVueFakeDummyForL10nScript.js:86
+#: specialVueFakeDummyForL10nScript.js:94
 msgid "No recryption requests are pending."
 msgstr "Keine Neuverschlüsselungs-Anfragen anhängig."
 
 #. TRANSLATORS src/components/AdminSettings.vue:208
 #. TRANSLATORS src/views/FilesTab.vue:133
-#: specialVueFakeDummyForL10nScript.js:92
-#: specialVueFakeDummyForL10nScript.js:424
+#: specialVueFakeDummyForL10nScript.js:100
+#: specialVueFakeDummyForL10nScript.js:530
 msgid "e.g. Jane Doe"
 msgstr "z.B. Maximiliane Musterfrau"
 
 #. TRANSLATORS src/components/AdminSettings.vue:219
-#: specialVueFakeDummyForL10nScript.js:94
+#: specialVueFakeDummyForL10nScript.js:102
 msgid "Restrict User Selection to Project"
 msgstr "Benutzerauswahl auf ein Projekt einschränken"
 
 #. TRANSLATORS src/components/AdminSettings.vue:220
 #. TRANSLATORS src/views/FilesTab.vue:144
-#: specialVueFakeDummyForL10nScript.js:96
-#: specialVueFakeDummyForL10nScript.js:428
+#: specialVueFakeDummyForL10nScript.js:104
+#: specialVueFakeDummyForL10nScript.js:534
 msgid "e.g. Auvergne2019"
 msgstr "z.B. Auvergne2019"
 
 #. TRANSLATORS src/components/AdminSettings.vue:231
-#: specialVueFakeDummyForL10nScript.js:98
+#: specialVueFakeDummyForL10nScript.js:106
 msgid "include disabled accounts"
 msgstr "gesperrte Benutzerkonten einschließen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:240
-#: specialVueFakeDummyForL10nScript.js:100
+#: specialVueFakeDummyForL10nScript.js:108
 msgid "include deactivated accounts"
 msgstr "deaktivierte Benutzerkonten einschließen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:247
-#: specialVueFakeDummyForL10nScript.js:102
+#: specialVueFakeDummyForL10nScript.js:110
 msgid "Remove the status feedback from the last action."
 msgstr "Die Status-Rückmeldung der letzten Aktion entfernden."
 
 #. TRANSLATORS src/components/AdminSettings.vue:250
-#: specialVueFakeDummyForL10nScript.js:104
+#: specialVueFakeDummyForL10nScript.js:112
 msgid "Ok"
 msgstr "Fertig"
 
 #. TRANSLATORS src/components/AdminSettings.vue:259
-#: specialVueFakeDummyForL10nScript.js:106
+#: specialVueFakeDummyForL10nScript.js:114
 msgid "With the selected musicians perform the following action:"
 msgstr "Mit den ausgewählten Personen die folgende Aktion ausführen:"
 
 #. TRANSLATORS src/components/AdminSettings.vue:263
-#: specialVueFakeDummyForL10nScript.js:108
+#: specialVueFakeDummyForL10nScript.js:116
 msgid "deny access"
 msgstr "Zugriff entziehen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:266
-#: specialVueFakeDummyForL10nScript.js:110
+#: specialVueFakeDummyForL10nScript.js:118
 msgid "grant access"
 msgstr "Zugriff gewähren"
 
 #. TRANSLATORS src/components/AdminSettings.vue:273
-#: specialVueFakeDummyForL10nScript.js:112
+#: specialVueFakeDummyForL10nScript.js:120
 msgid "Configure Office Fonts for Office Exports"
 msgstr "Schriftarten für den Export der Office-Tabellen konfigurieren."
 
 #. TRANSLATORS src/components/AdminSettings.vue:276
-#: specialVueFakeDummyForL10nScript.js:114
+#: specialVueFakeDummyForL10nScript.js:122
 msgid "Font Data Folder"
 msgstr "Schriftarten Daten-Ordner"
 
 #. TRANSLATORS src/components/AdminSettings.vue:297
-#: specialVueFakeDummyForL10nScript.js:116
+#: specialVueFakeDummyForL10nScript.js:124
 msgid "Default Font"
 msgstr "Voreinstellung"
 
 #. TRANSLATORS src/components/AdminSettings.vue:302
-#: specialVueFakeDummyForL10nScript.js:118
+#: specialVueFakeDummyForL10nScript.js:126
 msgid "Update Font Data"
 msgstr "Schriftarten aktualisieren"
 
 #. TRANSLATORS src/components/AdminSettings.vue:305
-#: specialVueFakeDummyForL10nScript.js:120
+#: specialVueFakeDummyForL10nScript.js:128
 msgid "Rescan Font Data"
 msgstr "Erneut nach Schriftarten suchen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:308
-#: specialVueFakeDummyForL10nScript.js:122
+#: specialVueFakeDummyForL10nScript.js:130
 msgid "Purge Font Data"
 msgstr "Schriftarten-Daten löschen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:315
-#: specialVueFakeDummyForL10nScript.js:124
+#: specialVueFakeDummyForL10nScript.js:132
 msgid "Configure Problem Report Handling"
 msgstr "Fehlerberichte konfigurieren"
 
 #. TRANSLATORS src/components/AdminSettings.vue:321
-#: specialVueFakeDummyForL10nScript.js:126
+#: specialVueFakeDummyForL10nScript.js:134
 msgid "Problem Report Email Recipient"
 msgstr "Em@il-Adressat für Fehlerberichte."
 
 #. TRANSLATORS src/components/AdminSettings.vue:346
-#: specialVueFakeDummyForL10nScript.js:128
+#: specialVueFakeDummyForL10nScript.js:136
 msgid "Email Verification Code"
 msgstr "Em@il-Bestätigungs-Code"
 
 #. TRANSLATORS src/components/AdminSettings.vue:364
-#: specialVueFakeDummyForL10nScript.js:130
+#: specialVueFakeDummyForL10nScript.js:138
 msgid "resend verification code"
 msgstr "Verifikations-Code erneut senden"
 
 #. TRANSLATORS src/components/AdminSettings.vue:372
-#: specialVueFakeDummyForL10nScript.js:132
+#: specialVueFakeDummyForL10nScript.js:140
 msgid "cancel verification"
 msgstr "Bestätigung abbrechen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:386
-#: specialVueFakeDummyForL10nScript.js:134
+#: specialVueFakeDummyForL10nScript.js:142
 msgid "Enable Vue DevTools Support"
 msgstr "Vue DevTools ermöglichen"
 
 #. TRANSLATORS src/components/AdminSettings.vue:389
-#: specialVueFakeDummyForL10nScript.js:136
+#: specialVueFakeDummyForL10nScript.js:144
 msgid "Check to enable Vue Devtools support (also needs unsafe-eval CSP)"
 msgstr ""
 "Ankreuzen, um Vue Devtools Zugriff zu ermöglichen (benötigt aber außerdem "
 "\"unsafe-eval\" in der CSP)"
 
-#. TRANSLATORS src/components/AdminSettings.vue:686
-#: specialVueFakeDummyForL10nScript.js:138
+#. TRANSLATORS src/components/AdminSettings.vue:687
+#: specialVueFakeDummyForL10nScript.js:146
 msgid "{current} of {totals}"
 msgstr "{current} von {totals}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:747
-#: specialVueFakeDummyForL10nScript.js:140
+#. TRANSLATORS src/components/AdminSettings.vue:748
+#: specialVueFakeDummyForL10nScript.js:148
 msgid "inaccessible"
 msgstr "gesperrt"
 
-#. TRANSLATORS src/components/AdminSettings.vue:777
-#: specialVueFakeDummyForL10nScript.js:144
+#. TRANSLATORS src/components/AdminSettings.vue:778
+#: specialVueFakeDummyForL10nScript.js:152
 msgid "Could not fetch the value for \"{key}\": {message}"
 msgstr "Konnte den Wert für die Einstellung \"{key}\" nicht laden: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:796
-#: specialVueFakeDummyForL10nScript.js:146
-#: specialVueFakeDummyForL10nScript.js:150 src/app/project-participants.js:830
-#: src/app/projects.js:641 src/app/sepa-debit-mandate.js:858
+#. TRANSLATORS src/components/AdminSettings.vue:797
+#: specialVueFakeDummyForL10nScript.js:154
+#: specialVueFakeDummyForL10nScript.js:158 src/app/project-participants.js:830
+#: src/app/projects.js:593 src/app/sepa-debit-mandate.js:858
 #: src/toolkit/mixins/settings-sync.js:202
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
 
-#. TRANSLATORS src/components/AdminSettings.vue:802
-#: specialVueFakeDummyForL10nScript.js:148
-#: specialVueFakeDummyForL10nScript.js:152
+#. TRANSLATORS src/components/AdminSettings.vue:803
+#: specialVueFakeDummyForL10nScript.js:156
+#: specialVueFakeDummyForL10nScript.js:160
 #: src/toolkit/mixins/settings-sync.js:207
 msgid "Unconfirmed, reverting to old value."
 msgstr "Bestätigung nicht erfolgt, setze auf den alten Wert zurück."
 
-#. TRANSLATORS src/components/AdminSettings.vue:833
-#: specialVueFakeDummyForL10nScript.js:154
+#. TRANSLATORS src/components/AdminSettings.vue:834
+#: specialVueFakeDummyForL10nScript.js:162
 msgid "Successfully set value for \"{settingsKey}\" to \"{value}\"."
 msgstr "Wert für \"{settingsKey}\" auf \"{value}\" gesetzt."
 
-#. TRANSLATORS src/components/AdminSettings.vue:835
-#: specialVueFakeDummyForL10nScript.js:156
+#. TRANSLATORS src/components/AdminSettings.vue:836
+#: specialVueFakeDummyForL10nScript.js:164
 msgid "Value for \"{settingsKey}\" has been erased."
 msgstr "Der Wert der Einstellung \"{settingsKey}\" wurde gelöscht."
 
-#. TRANSLATORS src/components/AdminSettings.vue:857
-#: specialVueFakeDummyForL10nScript.js:160
+#. TRANSLATORS src/components/AdminSettings.vue:858
+#: specialVueFakeDummyForL10nScript.js:168
 msgid "Could not set \"{settingsKey}\" to \"{value}\": {message}"
 msgstr "Konnte \"{settingsKey}\" nicht auf \"{value}\" setzen: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:859
-#: specialVueFakeDummyForL10nScript.js:162
+#. TRANSLATORS src/components/AdminSettings.vue:860
+#: specialVueFakeDummyForL10nScript.js:170
 msgid "Could not set \"{settingsKey}\": {message}"
 msgstr "Konnte \"{settingsKey}\" nicht einstellen: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:967
-#: specialVueFakeDummyForL10nScript.js:164
+#. TRANSLATORS src/components/AdminSettings.vue:968
+#: specialVueFakeDummyForL10nScript.js:172
 msgid "Synchronizing user backends not yet implemented."
 msgstr ""
 "Die Synchronisierung des Benutzer-Backends ist noch nicht implementiert."
 
-#. TRANSLATORS src/components/AdminSettings.vue:998
-#: specialVueFakeDummyForL10nScript.js:166
+#. TRANSLATORS src/components/AdminSettings.vue:999
+#: specialVueFakeDummyForL10nScript.js:174
 msgid "Successfully handled recryption request for {userId}."
 msgstr "Neu-Verschlüsselungs-Anfrage für {userId} erfolgreich bearbeitet."
 
-#. TRANSLATORS src/components/AdminSettings.vue:1013
-#: specialVueFakeDummyForL10nScript.js:170
+#. TRANSLATORS src/components/AdminSettings.vue:1014
+#: specialVueFakeDummyForL10nScript.js:178
 msgid "Could not resolve the recryption request for {userId}: {message}"
 msgstr ""
 "Konnte die Neu-Verschlüsselungs-Anfrage für {userId} nicht abarbeiten: "
 "{message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:1023
-#: specialVueFakeDummyForL10nScript.js:172
+#. TRANSLATORS src/components/AdminSettings.vue:1024
+#: specialVueFakeDummyForL10nScript.js:180
 msgid "Successfully deleted recryption request for {userId}."
 msgstr "Neu-Verschlüsselungs-Anfrage für {userId} erfolgreich gelöscht."
 
-#. TRANSLATORS src/components/AdminSettings.vue:1038
-#: specialVueFakeDummyForL10nScript.js:176
+#. TRANSLATORS src/components/AdminSettings.vue:1039
+#: specialVueFakeDummyForL10nScript.js:184
 msgid "Could not delete the recryption request for {userId}: {message}"
 msgstr ""
 "Konnte die Neuverschlüsselungs-Anfrage für {userId} nicht löschen: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:1073
-#: specialVueFakeDummyForL10nScript.js:178
+#. TRANSLATORS src/components/AdminSettings.vue:1074
+#: specialVueFakeDummyForL10nScript.js:186
 msgid "No musicians selected, doing nothing."
 msgstr "Keine Personen ausgewählt, mache nichts."
 
-#. TRANSLATORS src/components/AdminSettings.vue:1091
-#: specialVueFakeDummyForL10nScript.js:180
-#: specialVueFakeDummyForL10nScript.js:198
+#. TRANSLATORS src/components/AdminSettings.vue:1092
+#: specialVueFakeDummyForL10nScript.js:188
+#: specialVueFakeDummyForL10nScript.js:206
 msgid "Processed user-id {userId}."
 msgstr "Benutzerkennung {userId} erledigt."
 
-#. TRANSLATORS src/components/AdminSettings.vue:1093
-#: specialVueFakeDummyForL10nScript.js:182
-#: specialVueFakeDummyForL10nScript.js:200
+#. TRANSLATORS src/components/AdminSettings.vue:1094
+#: specialVueFakeDummyForL10nScript.js:190
+#: specialVueFakeDummyForL10nScript.js:208
 msgid "{failedUsers} users have failed."
 msgstr "{failedUsers} Benutzerkennungen sind fehlgeschlagen."
 
-#. TRANSLATORS src/components/AdminSettings.vue:1108
-#: specialVueFakeDummyForL10nScript.js:186
-#: specialVueFakeDummyForL10nScript.js:204
+#. TRANSLATORS src/components/AdminSettings.vue:1109
+#: specialVueFakeDummyForL10nScript.js:194
+#: specialVueFakeDummyForL10nScript.js:212
 msgid "Unable to handle access action: {message}"
 msgstr "Kann die Zugriffs-Kontroll-Aktion nicht ausführen: {message}"
 
-#. TRANSLATORS src/components/AdminSettings.vue:1115
-#: specialVueFakeDummyForL10nScript.js:188
-#: specialVueFakeDummyForL10nScript.js:206
+#. TRANSLATORS src/components/AdminSettings.vue:1116
+#: specialVueFakeDummyForL10nScript.js:196
+#: specialVueFakeDummyForL10nScript.js:214
 msgid "Failed after {numUsers} users have been processed successfully."
 msgstr ""
 "Abbruch nachdem {numUsers} Benutzerkennungen erfolgreich bearbeitet wurden."
 
-#. TRANSLATORS src/components/AdminSettings.vue:1117
-#: specialVueFakeDummyForL10nScript.js:190
-#: specialVueFakeDummyForL10nScript.js:196
-#: specialVueFakeDummyForL10nScript.js:208
-#: specialVueFakeDummyForL10nScript.js:214
+#. TRANSLATORS src/components/AdminSettings.vue:1118
+#: specialVueFakeDummyForL10nScript.js:198
+#: specialVueFakeDummyForL10nScript.js:204
+#: specialVueFakeDummyForL10nScript.js:216
+#: specialVueFakeDummyForL10nScript.js:222
 msgid "{failedUsers} were processed unsuccessfully."
 msgstr ""
 "Die Bearbeitung von {failedUsers} Benutzerkennungen ist fehlgeschlagen."
 
-#. TRANSLATORS src/components/AdminSettings.vue:1119
-#: specialVueFakeDummyForL10nScript.js:192
-#: specialVueFakeDummyForL10nScript.js:210
+#. TRANSLATORS src/components/AdminSettings.vue:1120
+#: specialVueFakeDummyForL10nScript.js:200
+#: specialVueFakeDummyForL10nScript.js:218
 msgid "{remainingUsers} remain unprocessed."
 msgstr "{remainingUsers} Benutzerkennungen wurden noch nicht bearbeitet."
 
-#. TRANSLATORS src/components/AdminSettings.vue:1121
-#: specialVueFakeDummyForL10nScript.js:194
-#: specialVueFakeDummyForL10nScript.js:212
+#. TRANSLATORS src/components/AdminSettings.vue:1122
+#: specialVueFakeDummyForL10nScript.js:202
+#: specialVueFakeDummyForL10nScript.js:220
 msgid "{numUsers} users have been processed successfully."
 msgstr "{numUsers} Benutzerkennungen wurden erfolgreich bearbeitet."
 
-#. TRANSLATORS src/components/AdminSettings.vue:1213
-#: specialVueFakeDummyForL10nScript.js:216
+#. TRANSLATORS src/components/AdminSettings.vue:1214
+#: specialVueFakeDummyForL10nScript.js:224
 msgid "Font cache operation {operation} completed successfully."
 msgstr ""
 "Die Operation {operation} für den Schriftwarten-Speicher wurde erfolgreich "
 "ausgeführt."
 
-#. TRANSLATORS src/components/AdminSettings.vue:1228
-#: specialVueFakeDummyForL10nScript.js:220
+#. TRANSLATORS src/components/AdminSettings.vue:1229
+#: specialVueFakeDummyForL10nScript.js:228
 msgid ""
 "Could not perform the requested font-cache operation \"{operation}\": "
 "{message}"
 msgstr ""
 "Konnte die Schriftarten-Operation \"{operation}\" nicht ausführen: {message}"
 
-#. TRANSLATORS src/components/DynamicSvgIcon.vue:73
-#: specialVueFakeDummyForL10nScript.js:222
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:42
+#: specialVueFakeDummyForL10nScript.js:230
+msgid "Reload History States"
+msgstr "Browserverläufe neu laden"
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:62
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:133
+#: specialVueFakeDummyForL10nScript.js:232
+#: specialVueFakeDummyForL10nScript.js:244
+msgid "Active page when the history was saved."
+msgstr "Aktive Seite zum Zeitpunkt des Speicherns des Browserverlaufs."
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:68
+#. TRANSLATORS src/components/ProjectEventsListing.vue:148
+#: specialVueFakeDummyForL10nScript.js:234
+#: specialVueFakeDummyForL10nScript.js:426
+msgid "Toggle Details"
+msgstr "Details ein- oder ausblenden"
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:85
+#: specialVueFakeDummyForL10nScript.js:236
+msgid "Push History"
+msgstr "An aktueller Position anhängen"
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:94
+#: specialVueFakeDummyForL10nScript.js:238
+msgid "Replace History"
+msgstr "Browserverlauf ersetzen"
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:103
+#: specialVueFakeDummyForL10nScript.js:240
+msgid "Append to Current"
+msgstr "An aktuellen Verlauf anhängen"
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:109
+#: specialVueFakeDummyForL10nScript.js:242 src/app/sepa-debit-mandate.js:646
+#: templates/blog/blogthreads.php:100
+msgid "Delete"
+msgstr "Löschen"
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:142
+#: specialVueFakeDummyForL10nScript.js:246
+msgid "Show the raw data submitted to the server (expert use)."
+msgstr ""
+"Die Rohdaten anzeigen, die dem Server übermittelt wurden (für Experten)."
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:149
+#: specialVueFakeDummyForL10nScript.js:248
+msgid "Data-Record"
+msgstr "Datensatz"
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:204
+#: specialVueFakeDummyForL10nScript.js:250
+msgid "Manage Saved Web-Browser History"
+msgstr "Gespeicherte Browserverläufe verwalten"
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:336
+#: specialVueFakeDummyForL10nScript.js:254
+msgid "No data coulde be found."
+msgstr "Es konnten keine Daten gefunden werden."
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:78
+#: specialVueFakeDummyForL10nScript.js:256
+msgid ""
+"Push the listed items after the current view and navigate to the last active "
+"view of the saved history."
+msgstr ""
+"Den gespeicherten Eintrag nach der aktuellen Seite in den\n"
+"Browserverlauf einfügen und zur zuletzt aktiven Seite des gespeicherten\n"
+"Verlaufs springen."
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:87
+#: specialVueFakeDummyForL10nScript.js:258
+msgid ""
+"Replace the current browser history by the listed items and navigate to the "
+"last active view of the saved history."
+msgstr ""
+"Den aktuellen Browserverlauf durch den gespeicherten Verlauf ersetzen\n"
+"und zur zuletzt aktiven Seite des gespeicherten Verlaufs springen."
+
+#. TRANSLATORS src/components/BrowserHistoryModal.vue:96
+#: specialVueFakeDummyForL10nScript.js:260
+msgid ""
+"Append the listed items at the end of the current browser history and "
+"navigate to the last active view of the saved history."
+msgstr ""
+"Den gespeicherten Verlauf an den Ende des aktuellen Browserverlaufs\n"
+"anhängen und zur zuletzt aktiven Seite des gespeicherten Verlaufs\n"
+"springen."
+
+#. TRANSLATORS src/components/DynamicSvgIcon.vue:75
+#: specialVueFakeDummyForL10nScript.js:262
 msgid "Provided data is not a valid SVG image: \"{data}\"."
 msgstr "Die Daten konstituieren kein gültiges SVG-Bild: \"{data}\"."
 
-#. TRANSLATORS src/components/ErrorPage.vue:54
-#: specialVueFakeDummyForL10nScript.js:224
+#. TRANSLATORS src/components/ErrorPage.vue:43
+#: specialVueFakeDummyForL10nScript.js:264
+msgid "Error Details"
+msgstr "Fehler-Details"
+
+#. TRANSLATORS src/components/ErrorPage.vue:55
+#: specialVueFakeDummyForL10nScript.js:266
 msgid "report error"
 msgstr "Fehler berichten"
 
-#. TRANSLATORS src/components/ErrorPage.vue:60
-#: specialVueFakeDummyForL10nScript.js:226
+#. TRANSLATORS src/components/ErrorPage.vue:61
+#: specialVueFakeDummyForL10nScript.js:268
 msgid "show details"
 msgstr "Einzelheiten anzeigen"
 
-#. TRANSLATORS src/components/ErrorPage.vue:63
-#: specialVueFakeDummyForL10nScript.js:228
+#. TRANSLATORS src/components/ErrorPage.vue:64
+#: specialVueFakeDummyForL10nScript.js:270
 msgid "go to previous page"
 msgstr "zur vorherigen Seite gehen"
 
-#. TRANSLATORS src/components/ErrorPage.vue:67
-#: specialVueFakeDummyForL10nScript.js:230
+#. TRANSLATORS src/components/ErrorPage.vue:68
+#: specialVueFakeDummyForL10nScript.js:272
 msgid "try to reload"
 msgstr "Seite neu laden"
 
-#. TRANSLATORS src/components/ErrorPage.vue:74
-#: specialVueFakeDummyForL10nScript.js:232
+#. TRANSLATORS src/components/ErrorPage.vue:75
+#: specialVueFakeDummyForL10nScript.js:274
 msgid "AXIOS ERROR WITH RESPONSE DATA"
 msgstr "AXIOS-Fehler mit Antwortdaten"
 
-#. TRANSLATORS src/components/ErrorPage.vue:78
-#: specialVueFakeDummyForL10nScript.js:234
+#. TRANSLATORS src/components/ErrorPage.vue:79
+#: specialVueFakeDummyForL10nScript.js:276
 msgid "AXIOS ERROR WITHOUT RESPONSE DATA"
 msgstr "AXIOS-Fehler ohne Antwortdaten"
 
-#. TRANSLATORS src/components/ErrorPage.vue:82
-#: specialVueFakeDummyForL10nScript.js:236
+#. TRANSLATORS src/components/ErrorPage.vue:83
+#: specialVueFakeDummyForL10nScript.js:278
 msgid "FRONTEND ERROR"
 msgstr "Fehler im Web-Frontend"
 
-#. TRANSLATORS src/components/ErrorPage.vue:86
-#: specialVueFakeDummyForL10nScript.js:238
+#. TRANSLATORS src/components/ErrorPage.vue:87
+#: specialVueFakeDummyForL10nScript.js:280
 msgid "jQuery AJAX ERROR WITH RESPONSE DATA"
 msgstr "jQuery AJAX-Fehler mit Antwort-Daten"
 
-#. TRANSLATORS src/components/ErrorPage.vue:90
-#: specialVueFakeDummyForL10nScript.js:240
+#. TRANSLATORS src/components/ErrorPage.vue:91
+#: specialVueFakeDummyForL10nScript.js:282
 msgid "jQuery AJAX ERROR WITHOUT RESPONSE DATA"
 msgstr "jQuery-AJAX-Fehler ohne Antwortdaten"
 
-#. TRANSLATORS src/components/ErrorPage.vue:93
-#: specialVueFakeDummyForL10nScript.js:242
+#. TRANSLATORS src/components/ErrorPage.vue:94
+#: specialVueFakeDummyForL10nScript.js:284
 msgid "UNKNOWN ERROR"
 msgstr "Unspezifizierbarer Fehler"
 
-#. TRANSLATORS src/components/ErrorPage.vue:101
-#. TRANSLATORS src/components/ErrorPage.vue:339
-#: specialVueFakeDummyForL10nScript.js:244
-#: specialVueFakeDummyForL10nScript.js:270
+#. TRANSLATORS src/components/ErrorPage.vue:102
+#. TRANSLATORS src/components/ErrorPage.vue:359
+#: specialVueFakeDummyForL10nScript.js:286
+#: specialVueFakeDummyForL10nScript.js:314
 msgid "Problem Report"
 msgstr "Fehlerbericht"
 
-#. TRANSLATORS src/components/ErrorPage.vue:131
-#: specialVueFakeDummyForL10nScript.js:250
+#. TRANSLATORS src/components/ErrorPage.vue:132
+#: specialVueFakeDummyForL10nScript.js:292
 msgid "Modify the comment of the problem report."
 msgstr "Den Kommentar des Fehlerberichts abändern."
 
-#. TRANSLATORS src/components/ErrorPage.vue:142
-#: specialVueFakeDummyForL10nScript.js:252
+#. TRANSLATORS src/components/ErrorPage.vue:143
+#: specialVueFakeDummyForL10nScript.js:294
 msgid "Close the problem report page."
 msgstr "Den Ansicht mit dem Fehlerbericht schließen."
 
-#. TRANSLATORS src/components/ErrorPage.vue:151
-#: specialVueFakeDummyForL10nScript.js:254
+#. TRANSLATORS src/components/ErrorPage.vue:152
+#: specialVueFakeDummyForL10nScript.js:296
 msgid "Optional Comment"
 msgstr "Fakultativer Kommentar"
 
-#. TRANSLATORS src/components/ErrorPage.vue:153
-#: specialVueFakeDummyForL10nScript.js:256
+#. TRANSLATORS src/components/ErrorPage.vue:154
+#: specialVueFakeDummyForL10nScript.js:298
 msgid "You can optionally add comments. Markdown is supported."
 msgstr "Du kann fakultative Kommentare hinzufügen. Markdown wird unterstützt."
 
-#. TRANSLATORS src/components/ErrorPage.vue:155
-#: specialVueFakeDummyForL10nScript.js:258
+#. TRANSLATORS src/components/ErrorPage.vue:156
+#: specialVueFakeDummyForL10nScript.js:300
 msgid "A preview of the error report is shown below."
 msgstr "Eine Vorschau des Fehlerberichts findet sich unten."
 
-#. TRANSLATORS src/components/ErrorPage.vue:162
-#: specialVueFakeDummyForL10nScript.js:260
+#. TRANSLATORS src/components/ErrorPage.vue:163
+#: specialVueFakeDummyForL10nScript.js:302
 msgid "Please add your personal notes here."
 msgstr "Eigene Anmerkungen gerne hier einfügen."
 
-#. TRANSLATORS src/components/ErrorPage.vue:325
-#: specialVueFakeDummyForL10nScript.js:264
+#. TRANSLATORS src/components/ErrorPage.vue:251
+#: specialVueFakeDummyForL10nScript.js:306
+msgid "Top-Level Erorr"
+msgstr "Fehler auf der obersten App-Ebene"
+
+#. TRANSLATORS src/components/ErrorPage.vue:345
+#: specialVueFakeDummyForL10nScript.js:308
 msgid "Personal Comments by {user}"
 msgstr "Eigene Kommentare von {user}"
 
-#. TRANSLATORS src/components/ErrorPage.vue:326
-#: specialVueFakeDummyForL10nScript.js:266
+#. TRANSLATORS src/components/ErrorPage.vue:346
+#: specialVueFakeDummyForL10nScript.js:310
 msgid "No comment."
 msgstr "Kein Kommentar"
 
-#. TRANSLATORS src/components/ErrorPage.vue:335
-#: specialVueFakeDummyForL10nScript.js:268
+#. TRANSLATORS src/components/ErrorPage.vue:355
+#: specialVueFakeDummyForL10nScript.js:312
 msgid "Data Record"
 msgstr "Datensatz"
 
-#. TRANSLATORS src/components/ErrorPage.vue:343
-#: specialVueFakeDummyForL10nScript.js:274
+#. TRANSLATORS src/components/ErrorPage.vue:363
+#: specialVueFakeDummyForL10nScript.js:318
 msgid "You cannot change this part of the report."
 msgstr "Diesen Teil des Berichts kannst Du nicht ändern."
 
-#. TRANSLATORS src/components/ErrorPage.vue:375
-#: specialVueFakeDummyForL10nScript.js:276
+#. TRANSLATORS src/components/ErrorPage.vue:395
+#: specialVueFakeDummyForL10nScript.js:320
 msgid ""
 "Your comment has already been submitted with the following notification: "
 "{notification}."
@@ -13885,319 +14110,459 @@ msgstr ""
 "Deine Kommentare wurden bereits übermittelt mit der folgenden\n"
 "Rückmeldung: {notification}."
 
-#. TRANSLATORS src/components/ErrorPage.vue:390
-#: specialVueFakeDummyForL10nScript.js:278
+#. TRANSLATORS src/components/ErrorPage.vue:410
+#: specialVueFakeDummyForL10nScript.js:322
 msgid "Your problem-report has been submitted."
 msgstr "Dein Fehlerbericht wurde abgeschickt."
 
-#. TRANSLATORS src/components/ErrorPage.vue:405
-#: specialVueFakeDummyForL10nScript.js:280 src/app/file-download.js:60
+#. TRANSLATORS src/components/ErrorPage.vue:425
+#: specialVueFakeDummyForL10nScript.js:324 src/app/file-download.js:60
 #: src/toolkit/util/file-download.js:50
 msgid "unknown error"
 msgstr "irgendein Fehler"
 
-#. TRANSLATORS src/components/ErrorPage.vue:407
-#: specialVueFakeDummyForL10nScript.js:282
+#. TRANSLATORS src/components/ErrorPage.vue:427
+#: specialVueFakeDummyForL10nScript.js:326
 msgid "Could not submit the problem report: \"{errorString}\"."
 msgstr "Konnten den Fehlerbericht nicht senden: \"{errorString}\"."
 
+#. TRANSLATORS src/components/ErrorPageModal.vue:60
+#: specialVueFakeDummyForL10nScript.js:328
+msgid "Sorry, an Error Occurred"
+msgstr "'Tschuldigung, da gab es einen Fehler"
+
+#. TRANSLATORS src/components/HtmlErrorModal.vue:30
+#: specialVueFakeDummyForL10nScript.js:330
+msgid "An Error Occurred"
+msgstr "'Tschuldigung, da gab es einen Fehler"
+
 #. TRANSLATORS src/components/LegacyWrapper.vue:28
-#: specialVueFakeDummyForL10nScript.js:284
+#: specialVueFakeDummyForL10nScript.js:332
 msgid "Navigate to the previous view in the browser history stack."
 msgstr "Zurück zur vorigen Ansicht in der Seiten-Historie."
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:39
-#: specialVueFakeDummyForL10nScript.js:286
+#: specialVueFakeDummyForL10nScript.js:334
 msgid "Reload the current view."
 msgstr "Aktuelle Ansicht neu laden."
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:49
-#: specialVueFakeDummyForL10nScript.js:288
+#: specialVueFakeDummyForL10nScript.js:336
 msgid "Navigate to the next view in the browser history stack."
 msgstr "Zur nächsten Ansicht in der Seiten-Historie wechseln."
 
-#. TRANSLATORS src/components/LegacyWrapper.vue:71
-#: specialVueFakeDummyForL10nScript.js:290
+#. TRANSLATORS src/components/LegacyWrapper.vue:59
+#: specialVueFakeDummyForL10nScript.js:338
+msgid "Go to the start page of the app."
+msgstr "Zur Startseite der App springen."
+
+#. TRANSLATORS src/components/LegacyWrapper.vue:76
+#: specialVueFakeDummyForL10nScript.js:340
 msgid "Tooltips"
 msgstr "Kontext-Hilfe"
 
-#. TRANSLATORS src/components/LegacyWrapper.vue:74
-#: specialVueFakeDummyForL10nScript.js:292
+#. TRANSLATORS src/components/LegacyWrapper.vue:79
+#. TRANSLATORS src/components/ProjectEventsListing.vue:106
+#: specialVueFakeDummyForL10nScript.js:342
+#: specialVueFakeDummyForL10nScript.js:418
 msgid "Manual (other tab or window)"
 msgstr "Handbuch (anderes Fenster/Tab)"
 
-#. TRANSLATORS src/components/LegacyWrapper.vue:77
-#: specialVueFakeDummyForL10nScript.js:294 templates/emailform/form.php:62
-#: templates/project-events/events-manual.php:53
+#. TRANSLATORS src/components/LegacyWrapper.vue:82
+#. TRANSLATORS src/components/ProjectEventsListing.vue:114
+#: specialVueFakeDummyForL10nScript.js:344
+#: specialVueFakeDummyForL10nScript.js:420 templates/emailform/form.php:62
 msgid "Manual (popup)"
 msgstr "Handbuch (dieses Fenster, Popup)"
 
-#. TRANSLATORS src/components/LegacyWrapper.vue:118
-#: specialVueFakeDummyForL10nScript.js:296
-msgid "Sorry, an Error Occurred"
-msgstr "'Tschuldigung, da gab es einen Fehler"
-
-#. TRANSLATORS src/components/LegacyWrapper.vue:310
-#: specialVueFakeDummyForL10nScript.js:298 src/app/user-manual.js:62
+#. TRANSLATORS src/components/LegacyWrapper.vue:306
+#. TRANSLATORS src/components/ProjectEventsListing.vue:578
+#: specialVueFakeDummyForL10nScript.js:346
+#: specialVueFakeDummyForL10nScript.js:452 src/app/user-manual.js:71
 msgid "User Manual: {section}"
 msgstr "Benutzerhandbuch: {section}"
 
-#. TRANSLATORS src/components/LegacyWrapper.vue:412
-#: specialVueFakeDummyForL10nScript.js:300
+#. TRANSLATORS src/components/LegacyWrapper.vue:416
+#: specialVueFakeDummyForL10nScript.js:348
 msgid "Error loading view \"{template}\"."
 msgstr "Fehler beim Laden der Ansicht \"{template}\"."
 
-#. TRANSLATORS src/components/LegacyWrapper.vue:566
-#: specialVueFakeDummyForL10nScript.js:302
+#. TRANSLATORS src/components/LegacyWrapper.vue:572
+#: specialVueFakeDummyForL10nScript.js:350
 msgid "An error occured during communication with the server."
 msgstr ""
 "Es ist ein Fehler während der Kommunikation mit dem Server aufgetreten."
 
-#. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:16
-#: specialVueFakeDummyForL10nScript.js:304
+#. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:17
+#: specialVueFakeDummyForL10nScript.js:352
 msgid "Level"
 msgstr "Stufe"
 
-#. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:18
-#: specialVueFakeDummyForL10nScript.js:306
+#. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:19
+#: specialVueFakeDummyForL10nScript.js:354
 msgid "App"
 msgstr "App"
 
-#. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:20
-#: specialVueFakeDummyForL10nScript.js:308
+#. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:21
+#: specialVueFakeDummyForL10nScript.js:356
 msgid "No app in context"
 msgstr "Keine App im Kontext"
 
-#. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:22
-#: specialVueFakeDummyForL10nScript.js:310
+#. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:23
+#: specialVueFakeDummyForL10nScript.js:358
 msgid "Time"
 msgstr "Zeit"
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:26
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:30
-#: specialVueFakeDummyForL10nScript.js:312
-#: specialVueFakeDummyForL10nScript.js:314
+#: specialVueFakeDummyForL10nScript.js:360
+#: specialVueFakeDummyForL10nScript.js:362
 msgid "Copy raw entry"
 msgstr "Roheintrag kopieren"
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:32
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:36
-#: specialVueFakeDummyForL10nScript.js:316
-#: specialVueFakeDummyForL10nScript.js:318
+#: specialVueFakeDummyForL10nScript.js:364
+#: specialVueFakeDummyForL10nScript.js:366
 msgid "Copy formatted entry"
 msgstr "Formatierten Eintrag kopieren"
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:42
-#: specialVueFakeDummyForL10nScript.js:320
+#: specialVueFakeDummyForL10nScript.js:368
 msgid "Hide exception details"
 msgstr "Ausnahmedetails ausblenden"
 
-#: specialVueFakeDummyForL10nScript.js:320
+#: specialVueFakeDummyForL10nScript.js:368
 msgid "View exception details"
 msgstr "Ausnahmedetails anzeigen"
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:53
-#: specialVueFakeDummyForL10nScript.js:322
+#: specialVueFakeDummyForL10nScript.js:370
 msgid "Raw log entry"
 msgstr "Roh-Protokoll Eintrag"
 
-#. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:134
-#: specialVueFakeDummyForL10nScript.js:324
-#: specialVueFakeDummyForL10nScript.js:326
+#. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:137
+#: specialVueFakeDummyForL10nScript.js:372
+#: specialVueFakeDummyForL10nScript.js:374
 msgid "Log entry successfully copied"
 msgstr "Protokolleintrag erfolgreich kopiert"
 
 #. TRANSLATORS src/components/LogEntry/exception/LogException.vue:50
-#: specialVueFakeDummyForL10nScript.js:328
+#: specialVueFakeDummyForL10nScript.js:376
 msgid "Caused by {exception}"
 msgstr "Verursacht von {exception}"
 
 #. TRANSLATORS src/components/LogEntry/exception/TraceLine.vue:10
-#: specialVueFakeDummyForL10nScript.js:330
+#: specialVueFakeDummyForL10nScript.js:378
 msgid "Line {line}"
 msgstr "Zeile {line}"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:47
-#: specialVueFakeDummyForL10nScript.js:332
+#: specialVueFakeDummyForL10nScript.js:380
 msgid "Project Overview"
 msgstr "Projekt-Übersicht"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:85
-#: specialVueFakeDummyForL10nScript.js:340
+#: specialVueFakeDummyForL10nScript.js:388
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:95
-#: specialVueFakeDummyForL10nScript.js:342
+#: specialVueFakeDummyForL10nScript.js:390
 msgid "Project Notes"
 msgstr "Projekt-Notizen"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:104
-#: specialVueFakeDummyForL10nScript.js:344
+#: specialVueFakeDummyForL10nScript.js:392
 msgid "Events"
 msgstr "Termine"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:123
-#: specialVueFakeDummyForL10nScript.js:348
+#: specialVueFakeDummyForL10nScript.js:396
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:133
-#: specialVueFakeDummyForL10nScript.js:350
+#: specialVueFakeDummyForL10nScript.js:398
 msgid "Payments"
 msgstr "Zahlungen"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:142
-#: specialVueFakeDummyForL10nScript.js:352
+#: specialVueFakeDummyForL10nScript.js:400
 msgid "Financial Balance"
 msgstr "Gewinn-/Verlustrechung"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:328
-#: specialVueFakeDummyForL10nScript.js:354
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:334
+#: specialVueFakeDummyForL10nScript.js:402
 msgid "Project Wiki for {projectName}"
 msgstr "Wiki Projekt-Seite für {projectName}"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:26
+#: specialVueFakeDummyForL10nScript.js:404
+msgid "{name} - Appointments"
+msgstr "{name} - Termine"
+
+#: specialVueFakeDummyForL10nScript.js:404
+msgid "Appointments"
+msgstr "Termine"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:36
+#: specialVueFakeDummyForL10nScript.js:406
+msgid "create a new appointment"
+msgstr "Einen neuen Termin erstellen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:57
+#: specialVueFakeDummyForL10nScript.js:408
+msgid "mark all events"
+msgstr "alle Termine markieren"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:66
+#: specialVueFakeDummyForL10nScript.js:410
+msgid "unmark all events"
+msgstr "alle Markierungen entfernen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:75
+#: specialVueFakeDummyForL10nScript.js:412
+msgid "open email editor"
+msgstr "Termin-Editor öffnen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:85
+#: specialVueFakeDummyForL10nScript.js:416
+msgid "export events"
+msgstr "Termine exportieren"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:120
+#: specialVueFakeDummyForL10nScript.js:422
+msgid "reload the project appointments"
+msgstr "Projekt-Termine neu laden"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:133
+#: specialVueFakeDummyForL10nScript.js:424
+msgid "no events"
+msgstr "keine Termine"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:170
+#: specialVueFakeDummyForL10nScript.js:428
+msgid "detached"
+msgstr "losgelöst"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:206
+#: specialVueFakeDummyForL10nScript.js:430
+msgid "act only on this event"
+msgstr "nur dieser Termin"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:216
+#: specialVueFakeDummyForL10nScript.js:432
+msgid "act on the event series"
+msgstr "Terminserie"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:226
+#: specialVueFakeDummyForL10nScript.js:434
+msgid "act on all related events"
+msgstr "alle zugehörigen Termine"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:239
+#. TRANSLATORS: The expression in the sourcecode was
+#. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::RECORD_ABSENCE_CATEGORY = 'record absence';
+#: specialVueFakeDummyForL10nScript.js:436 lib/Service/EventsService.php:1203
+#, php-format
+msgid "record absence"
+msgstr "Abwesenheit erfassen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:253
+#: specialVueFakeDummyForL10nScript.js:438
+msgid "mark for download / em@il"
+msgstr "markieren für Em@il / Export)"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:274
+#: specialVueFakeDummyForL10nScript.js:442
+#: specialVueFakeDummyForL10nScript.js:444
+msgid "open in calendar-app"
+msgstr "in der Kalender-App öffnen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:295
+#: specialVueFakeDummyForL10nScript.js:446
+#: templates/fragments/projects/project-mailing-list.php:114
+msgid "delete"
+msgstr "löschen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:306
+#: specialVueFakeDummyForL10nScript.js:448
+msgid "detach from project"
+msgstr "vom Projekt lösen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:317
+#: specialVueFakeDummyForL10nScript.js:450
+msgid "reattach to project"
+msgstr "mit dem Projekt verknüpfen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:578
+#: specialVueFakeDummyForL10nScript.js:452
+#: templates/emailform/part.emailform.composer.php:267
+msgid "Project Events"
+msgstr "Projekt-Termine"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:951
+#: specialVueFakeDummyForL10nScript.js:454
+msgid "Unable to export selected events."
+msgstr "Kann die ausgewählten Termine nicht exportieren."
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:1108
+#: specialVueFakeDummyForL10nScript.js:456
+msgid "Unable to modify the absence field."
+msgstr "Kann das Abwesenheitsfeld nicht modifizieren."
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:1151
+#: specialVueFakeDummyForL10nScript.js:458
+msgid "Unable to detach events from the project."
+msgstr "Kann die Termine nicht vom Projekt lösen."
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:1228
+#: specialVueFakeDummyForL10nScript.js:460
+msgid "Unable to delete events."
+msgstr "Kann die Termine nicht löschen."
 
 #. TRANSLATORS src/components/SelectContacts.vue:45
 #. TRANSLATORS src/components/SelectMusicians.vue:45
 #. TRANSLATORS src/components/SettingsSelectGroup.vue:47
 #. TRANSLATORS src/components/SettingsSelectUsers.vue:60
-#: specialVueFakeDummyForL10nScript.js:356
-#: specialVueFakeDummyForL10nScript.js:358
-#: specialVueFakeDummyForL10nScript.js:360
-#: specialVueFakeDummyForL10nScript.js:362
-#: specialVueFakeDummyForL10nScript.js:366
-#: specialVueFakeDummyForL10nScript.js:368
-#: specialVueFakeDummyForL10nScript.js:370
-#: specialVueFakeDummyForL10nScript.js:372
-#: specialVueFakeDummyForL10nScript.js:378
-#: specialVueFakeDummyForL10nScript.js:380
-#: specialVueFakeDummyForL10nScript.js:382
-#: specialVueFakeDummyForL10nScript.js:384
-#: specialVueFakeDummyForL10nScript.js:386
-#: specialVueFakeDummyForL10nScript.js:388
-#: specialVueFakeDummyForL10nScript.js:390
-#: specialVueFakeDummyForL10nScript.js:392
+#: specialVueFakeDummyForL10nScript.js:462
+#: specialVueFakeDummyForL10nScript.js:464
+#: specialVueFakeDummyForL10nScript.js:466
+#: specialVueFakeDummyForL10nScript.js:468
+#: specialVueFakeDummyForL10nScript.js:472
+#: specialVueFakeDummyForL10nScript.js:474
+#: specialVueFakeDummyForL10nScript.js:476
+#: specialVueFakeDummyForL10nScript.js:478
+#: specialVueFakeDummyForL10nScript.js:484
+#: specialVueFakeDummyForL10nScript.js:486
+#: specialVueFakeDummyForL10nScript.js:488
+#: specialVueFakeDummyForL10nScript.js:490
+#: specialVueFakeDummyForL10nScript.js:492
+#: specialVueFakeDummyForL10nScript.js:494
+#: specialVueFakeDummyForL10nScript.js:496
+#: specialVueFakeDummyForL10nScript.js:498
 msgid "undefined"
 msgstr "nicht definiert"
 
 #. TRANSLATORS src/components/SelectContacts.vue:166
 #. TRANSLATORS src/components/SelectMusicians.vue:239
-#: specialVueFakeDummyForL10nScript.js:364
-#: specialVueFakeDummyForL10nScript.js:374
+#: specialVueFakeDummyForL10nScript.js:470
+#: specialVueFakeDummyForL10nScript.js:480
 msgid "** everybody **"
 msgstr "*** alle ***"
 
 #. TRANSLATORS src/components/SelectProjects.vue:133
-#: specialVueFakeDummyForL10nScript.js:376
+#: specialVueFakeDummyForL10nScript.js:482
 msgid "Permanent"
 msgstr "Permanent"
 
 #. TRANSLATORS src/views/FilesTab.vue:31
-#: specialVueFakeDummyForL10nScript.js:394
+#: specialVueFakeDummyForL10nScript.js:500
 msgid "Mail merge operations"
 msgstr "Serienbrief-Operation"
 
 #. TRANSLATORS src/views/FilesTab.vue:40
-#: specialVueFakeDummyForL10nScript.js:396
+#: specialVueFakeDummyForL10nScript.js:502
 msgid "Download Merged Document"
 msgstr "Ausgefüllte Vorlage laden"
 
 #. TRANSLATORS src/views/FilesTab.vue:43
-#: specialVueFakeDummyForL10nScript.js:398
+#: specialVueFakeDummyForL10nScript.js:504
 msgid "download locally"
 msgstr "lokal laden"
 
 #. TRANSLATORS src/views/FilesTab.vue:48
-#: specialVueFakeDummyForL10nScript.js:400
+#: specialVueFakeDummyForL10nScript.js:506
 msgid "Merge Document into Cloud"
 msgstr "Ergebnis in der Cloud speichern"
 
 #. TRANSLATORS src/views/FilesTab.vue:54
-#: specialVueFakeDummyForL10nScript.js:402
+#: specialVueFakeDummyForL10nScript.js:508
 msgid "save to cloud"
 msgstr "in die Cloud speichern"
 
 #. TRANSLATORS src/views/FilesTab.vue:59
-#: specialVueFakeDummyForL10nScript.js:404
+#: specialVueFakeDummyForL10nScript.js:510
 msgid "Download Replacement Data"
 msgstr "Ersetzungs-Datensatz laden"
 
 #. TRANSLATORS src/views/FilesTab.vue:65
-#: specialVueFakeDummyForL10nScript.js:406
+#: specialVueFakeDummyForL10nScript.js:512
 msgid "download data"
 msgstr "Daten laden"
 
 #. TRANSLATORS src/views/FilesTab.vue:72
-#: specialVueFakeDummyForL10nScript.js:408
+#: specialVueFakeDummyForL10nScript.js:514
 msgid "Sender"
 msgstr "Absender*in"
 
 #. TRANSLATORS src/views/FilesTab.vue:80
-#: specialVueFakeDummyForL10nScript.js:412
+#: specialVueFakeDummyForL10nScript.js:518
 msgid "e.g. John Doe"
 msgstr "z.B. Max Mustermann"
 
 #. TRANSLATORS src/views/FilesTab.vue:106
-#: specialVueFakeDummyForL10nScript.js:416
+#: specialVueFakeDummyForL10nScript.js:522
 msgid "Musician's Datebase"
 msgstr "Musiker-Datenbank"
 
 #. TRANSLATORS src/views/FilesTab.vue:115
-#: specialVueFakeDummyForL10nScript.js:418
+#: specialVueFakeDummyForL10nScript.js:524
 msgid "Addressbooks"
 msgstr "Adressbücher"
 
 #. TRANSLATORS src/views/FilesTab.vue:125
-#: specialVueFakeDummyForL10nScript.js:420
+#: specialVueFakeDummyForL10nScript.js:526
 msgid "Enter Address"
 msgstr "Anschrift eingeben"
 
 #. TRANSLATORS src/views/FilesTab.vue:154
-#: specialVueFakeDummyForL10nScript.js:430
+#: specialVueFakeDummyForL10nScript.js:536
 #: templates/settings/share-settings.php:103
 msgid "Contacts"
 msgstr "Kontakte"
 
 #. TRANSLATORS src/views/FilesTab.vue:155
-#: specialVueFakeDummyForL10nScript.js:432
+#: specialVueFakeDummyForL10nScript.js:538
 msgid "e.g. Bilbo Baggins"
 msgstr "z.B. Bilbo Beutlin"
 
 #. TRANSLATORS src/views/FilesTab.vue:167
-#: specialVueFakeDummyForL10nScript.js:434
+#: specialVueFakeDummyForL10nScript.js:540
 msgid "Address-Books"
 msgstr "Adressbücher"
 
 #. TRANSLATORS src/views/FilesTab.vue:322
-#: specialVueFakeDummyForL10nScript.js:436
+#: specialVueFakeDummyForL10nScript.js:542
 msgid "Required."
 msgstr "Benötigt."
 
-#: src/app/ajax.js:89 src/toolkit/util/ajax.js:223
+#: src/app/ajax.js:84 src/toolkit/util/ajax.js:223
 msgid "Operation cancelled by user."
 msgstr "Benutzer:in hat den Vorgang abgebrochen"
 
-#: src/app/ajax.js:92 src/toolkit/util/ajax.js:226
+#: src/app/ajax.js:87 src/toolkit/util/ajax.js:226
 msgid "Aborted"
 msgstr "Abgebrochen"
 
-#: src/app/ajax.js:105 src/app/ajax.js:272 src/app/blog.js:181
+#: src/app/ajax.js:100 src/app/ajax.js:267 src/app/blog.js:181
 #: src/app/blog.js:229 src/app/blog.js:279 src/app/blog.js:299
 #: src/app/blog.js:316 src/app/blog.js:337 src/app/blog.js:363
 #: src/app/blog.js:386 src/app/cloud-file-picker-dialog.js:59
-#: src/app/cloud-file-picker-dialog.js:87 src/app/email.js:89
-#: src/app/email.js:826 src/app/email.js:952
+#: src/app/cloud-file-picker-dialog.js:87 src/app/email.js:98
+#: src/app/email.js:844 src/app/email.js:970
 #: src/app/project-participant-fields.js:258 src/app/settings.js:1347
 #: src/app/settings.js:1360 src/toolkit/util/ajax.js:239
 #: src/toolkit/util/ajax.js:431
 msgid "Error"
 msgstr "Fehler"
 
-#: src/app/ajax.js:168 src/toolkit/util/ajax.js:323
+#: src/app/ajax.js:163 src/toolkit/util/ajax.js:323
 msgid "Something went wrong."
 msgstr "Irgendetwas ist schief gelaufen."
 
-#: src/app/ajax.js:170
+#: src/app/ajax.js:165
 msgid ""
 "If it should be the case that you are already logged in for a long time "
 "without interacting with the web-app, then the reason for this error is "
@@ -14206,7 +14571,7 @@ msgstr ""
 "Falls Du bereits längere Zeit angemeldet bist, ohne mit der Web-App zu\n"
 "interagieren, dann ist das der Grund für den Fehler."
 
-#: src/app/ajax.js:175
+#: src/app/ajax.js:170
 msgid ""
 "I any case it may help to logoff and logon again, as a temporary work-"
 "around. You will be redirected to the log-in page when you close this window."
@@ -14215,7 +14580,7 @@ msgstr ""
 "ab- und wieder an zu melden und den Vorgang zu wiederholen. Wenn Du\n"
 "dieses Fenster schließt, wirst Du zur Login-Seite weiter geleitet."
 
-#: src/app/ajax.js:220
+#: src/app/ajax.js:215
 msgid ""
 "Unrecoverable unknown internal error, no further information available, "
 "sorry."
@@ -14223,19 +14588,19 @@ msgstr ""
 "Tut uns leid, unbekannte interner Fehler, weitere Informationen sind\n"
 "leider nicht verfügbar."
 
-#: src/app/ajax.js:222 src/toolkit/util/ajax.js:381
+#: src/app/ajax.js:217 src/toolkit/util/ajax.js:381
 msgid "Internal Error"
 msgstr "Irgendein Fehler"
 
-#: src/app/ajax.js:229 src/toolkit/util/ajax.js:388
+#: src/app/ajax.js:224 src/toolkit/util/ajax.js:388
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr "In der AJAX-Antwort fehlt das Feld {RequiredField}."
 
-#: src/app/ajax.js:238 src/toolkit/util/ajax.js:397
+#: src/app/ajax.js:233 src/toolkit/util/ajax.js:397
 msgid "Missing data"
 msgstr "Fehlende Daten"
 
-#: src/app/ajax.js:250 src/toolkit/util/ajax.js:409
+#: src/app/ajax.js:245 src/toolkit/util/ajax.js:409
 msgid ""
 "The submitted data \"{stringValue}\" seems to be a plain string, but we need "
 "an object where the data is provided through above listed properties."
@@ -14245,11 +14610,11 @@ msgstr ""
 "Daten über die oben aufgeführten (fehlenden) Objekt-Eigenschaften zu "
 "Verfügung stellt."
 
-#: src/app/ajax.js:253 src/toolkit/util/ajax.js:412
+#: src/app/ajax.js:248 src/toolkit/util/ajax.js:412
 msgid "Error: plain string received"
 msgstr "Fehler: einfache Zeichenkette empfangen"
 
-#: src/app/ajax.js:258 src/toolkit/util/ajax.js:417
+#: src/app/ajax.js:253 src/toolkit/util/ajax.js:417
 msgid ""
 "The submitted data is not a plain object, and does not provide the "
 "properties listed above."
@@ -14257,15 +14622,15 @@ msgstr ""
 "Die übermittelten DAten sind kein einfaches Objekt und beinhalteten nicht "
 "die oben aufgeführten benötigten Eigentschaften."
 
-#: src/app/ajax.js:261 src/toolkit/util/ajax.js:420
+#: src/app/ajax.js:256 src/toolkit/util/ajax.js:420
 msgid "Error: not a plain object"
 msgstr "Fehler: kein einfaches Objekt"
 
-#: src/app/ajax.js:308 src/toolkit/util/ajax.js:460
+#: src/app/ajax.js:303 src/toolkit/util/ajax.js:460
 msgid "Unknown JSON error response to AJAX call: {status} / {error}"
 msgstr "Unbekannte JSON Fehler-Antwort auf AJAX-Anfrage: {status} / {error}"
 
-#: src/app/ajax.js:320
+#: src/app/ajax.js:315
 msgid "HTTP error response to AJAX call: {code} / {text}"
 msgstr "HTTP Fehler-Antwort auf AJAX-Anfrage: {code} / {text}"
 
@@ -14449,89 +14814,89 @@ msgstr ""
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
-#: src/app/email.js:89
+#: src/app/email.js:98
 msgid "Not called from main email-form."
 msgstr "Nicht vom Haupt-Formular aufgerufen (Fehler)."
 
-#: src/app/email.js:225
+#: src/app/email.js:234
 msgid "Move all"
 msgstr "Alle auswählen"
 
-#: src/app/email.js:226
+#: src/app/email.js:235
 msgid "Move selected"
 msgstr "Ausgewählte verschieben"
 
-#: src/app/email.js:227
+#: src/app/email.js:236
 msgid "Remove selected"
 msgstr "Ausgewählte entfernen"
 
-#: src/app/email.js:228
+#: src/app/email.js:237
 msgid "Remove all"
 msgstr "Alle entfernen"
 
-#: src/app/email.js:229
+#: src/app/email.js:238
 msgid "Remaining Recipients"
 msgstr "Verbleibende Empfänger"
 
-#: src/app/email.js:230
+#: src/app/email.js:239
 msgid "Selected Recipients"
 msgstr "Ausgewählte Empfänger"
 
-#: src/app/email.js:233
+#: src/app/email.js:242
 msgid "Filtered"
 msgstr "Suchergebnis"
 
-#: src/app/email.js:235
+#: src/app/email.js:244
 msgid "from"
 msgstr "von"
 
-#: src/app/email.js:237
+#: src/app/email.js:246
 msgid "Empty list"
 msgstr "Leere Liste"
 
-#: src/app/email.js:238
+#: src/app/email.js:247
 msgid "Filter"
 msgstr "Suchbegriff"
 
-#: src/app/email.js:239
+#: src/app/email.js:248
 msgid "show all"
 msgstr "alle anzeigen"
 
-#: src/app/email.js:246
+#: src/app/email.js:255
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 "Bitte die Namen anklicken, um den jeweiligen Adressaten in den anderen "
 "Kasten zu schieben."
 
-#: src/app/email.js:825
+#: src/app/email.js:843
 msgid "Unknown form element: {formElement}"
 msgstr "Unbekanntes Formularfeld: {formElement}"
 
-#: src/app/email.js:869 src/app/email.js:2068
+#: src/app/email.js:887 src/app/email.js:2106
 msgid "Em@il Form for {projectName}"
 msgstr "Em@il Formular für {projectName}"
 
-#: src/app/email.js:871 src/app/email.js:2070
+#: src/app/email.js:889 src/app/email.js:2108
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
-#: src/app/email.js:951
+#: src/app/email.js:969
 msgid "Unknown request: {operation} / {topic}"
 msgstr "Unbekannte Anfrage: {operation} / {topic}"
 
-#: src/app/email.js:1011
+#: src/app/email.js:1029
 msgid "Sending message {active} out of {total}"
 msgstr "Sende Nachricht {active} von {total}"
 
-#: src/app/email.js:1013
+#: src/app/email.js:1031
 msgid "Message delivery in progress"
 msgstr "Nachrichten-Auslieferung ist im Gang"
 
-#: src/app/email.js:1042
+#: src/app/email.js:1060
 msgid "Message Delivery Status"
 msgstr "Em@il-Sende-Monitor"
 
-#: src/app/email.js:1078
+#: src/app/email.js:1096
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
@@ -14539,11 +14904,11 @@ msgstr ""
 "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\n"
 "Vorgang möglicherweise abbrechen."
 
-#: src/app/email.js:1221
+#: src/app/email.js:1239
 msgid "Dummy Autosave Subject"
 msgstr "Pro-forma Autosave-Betreff"
 
-#: src/app/email.js:1253
+#: src/app/email.js:1271
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -14556,19 +14921,19 @@ msgstr ""
 "gespeichert und als explizite Sicherung markiert. Die Kopie verbleibt dann "
 "auf dem Server, bis Sie oder jemand anders die Kopie aktiv löscht."
 
-#: src/app/email.js:1258
+#: src/app/email.js:1276
 msgid "Delete Auto-Save Draft?"
 msgstr "Automatische Sicherungskopie löschen?"
 
-#: src/app/email.js:1319
+#: src/app/email.js:1337
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr "Automatische Sicherungskopie alle {seconds} Sekunden."
 
-#: src/app/email.js:1320
+#: src/app/email.js:1338
 msgid "Draft-auto-save switched off"
 msgstr "Erstellen automatischer Sicherungskopien ausgeschaltet"
 
-#: src/app/email.js:1352
+#: src/app/email.js:1370
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
@@ -14576,11 +14941,11 @@ msgstr ""
 "Es gibt bereits eine Vorlage mit dem Namen `{emailTemplateName}'; soll die "
 "überschrieben werden?"
 
-#: src/app/email.js:1354
+#: src/app/email.js:1372
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: src/app/email.js:1391
+#: src/app/email.js:1409
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
@@ -14588,17 +14953,17 @@ msgstr ""
 "Möchten Sie die Email-Vorlage mit dem Namen {emailTemplateName} wirklich "
 "löschen?"
 
-#: src/app/email.js:1393
+#: src/app/email.js:1411
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: src/app/email.js:1407
+#: src/app/email.js:1425
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 "Die Vorlage {emailTemplateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: src/app/email.js:1424
+#: src/app/email.js:1442
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
@@ -14606,19 +14971,19 @@ msgstr ""
 "Möchten Sie wirklich die Sicherungskopie der aktuellen Nachricht (id = {id}) "
 "löschen?"
 
-#: src/app/email.js:1427
+#: src/app/email.js:1445
 msgid "Really Delete Draft?"
 msgstr "Entwurf tatsächlich löschen?"
 
-#: src/app/email.js:1469
+#: src/app/email.js:1487
 msgid "There are currently no stored draft messages available."
 msgstr "Derzeit sind keine Entwürfe gespeichert."
 
-#: src/app/email.js:1470
+#: src/app/email.js:1488
 msgid "No Drafts Available"
 msgstr "Kein Entwürfe vorhanden"
 
-#: src/app/email.js:1534
+#: src/app/email.js:1552
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
@@ -14626,57 +14991,41 @@ msgstr ""
 "Möchten Sie wirklich die Massen-Email mit einer offenen Empfängerliste "
 "versenden? Das könnte Datenschutz-Richtlinien verletzen."
 
-#: src/app/email.js:1536
+#: src/app/email.js:1554
 msgid "Really disclose the recipients?"
 msgstr "Offene Empfängerliste? Wirklich??"
 
-#: src/app/email.js:1687
+#: src/app/email.js:1719
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: src/app/email.js:1688 src/app/email.js:1845
+#: src/app/email.js:1720 src/app/email.js:1879
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: src/app/email.js:1803
+#: src/app/email.js:1837
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: src/app/email.js:1844
+#: src/app/email.js:1878
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: src/app/email.js:1903 templates/emailform/part.emailform.composer.php:172
+#: src/app/email.js:1937 templates/emailform/part.emailform.composer.php:172
 #: templates/emailform/part.emailform.composer.php:191
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#: src/app/email.js:1907
+#: src/app/email.js:1941
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: src/app/email.js:1910
+#: src/app/email.js:1944
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 "Sichere die zusätzlichen Emails aus dem Eingabefeld im Adressbuch,\n"
 "damit die später wieder verwendet werden können."
-
-#: src/app/events.js:50
-msgid "Do you really want to delete this event?"
-msgstr "Möchten Sie den Termin wirklich löschen?"
-
-#: src/app/events.js:51
-msgid "Do you really want to detach this event from the current project?"
-msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
-
-#: src/app/events.js:544
-msgid "Really delete?"
-msgstr "Wirklich löschen?"
-
-#: src/app/events.js:586
-msgid "Unable to download calendar events."
-msgstr "Kann die Kalender-Einträge nicht laden."
 
 #: src/app/file-download.js:63 src/toolkit/util/file-download.js:53
 msgid "Unable to download data from \"{url}\": {message}"
@@ -14715,7 +15064,7 @@ msgstr "Fehler: {error}."
 msgid "Please fill out this field!"
 msgstr "Bitte diese Feld ausfüllen! Es darf nicht leer sein!"
 
-#: src/app/lock-input.js:81
+#: src/app/lock-input.js:84
 msgid ""
 "Lock or unlock this widget. Under certain circumstances the unlock-"
 "functionality is disabled or only available in expert mode."
@@ -14724,7 +15073,7 @@ msgstr ""
 "nicht entsperrt werden, oder eine Entsprerrung ist nur im\n"
 "Expertenmodus möglich."
 
-#: src/app/lock-input.js:120 src/app/lock-input.js:128
+#: src/app/lock-input.js:123 src/app/lock-input.js:131
 msgid "{command} expects an argument, but none was specified"
 msgstr "{command} erwartet genau ein Argument, es wurde aber keines angegeben"
 
@@ -14861,15 +15210,15 @@ msgstr ""
 "es keine spezifischeren Fehlermeldungen. Tut uns leid."
 
 # #Spalten
-#: src/app/pme.js:1346
+#: src/app/pme.js:1340
 msgid "#columns"
 msgstr "#Spalten"
 
-#: src/app/pme.js:1355
+#: src/app/pme.js:1349
 msgid "#rows"
 msgstr "#Zeilen"
 
-#: src/app/pme.js:1456
+#: src/app/pme.js:1450
 msgid "Remove"
 msgstr "Entfernen"
 
@@ -14970,7 +15319,7 @@ msgstr ""
 "Zu Viele Gruppenmitglieder, erlaubt sind {limit}, Du hast {count}\n"
 "ausgewählt. Die Daten können und werden so nicht gespeichert werden."
 
-#: src/app/project-participants.js:835 src/app/projects.js:646
+#: src/app/project-participants.js:835 src/app/projects.js:598
 msgid "Unconfirmed, doing nothing."
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
@@ -15006,36 +15355,36 @@ msgstr ""
 "Interner Fehler: Buchungsteile von Gesamtbuchungen können nicht zu "
 "verschiedenen Personen gehören ({musicians})."
 
-#: src/app/projects.js:613
+#: src/app/projects.js:565
 msgid "Share-link has been copied to the clipboard."
 msgstr "Der Link für die Freigabe wurde in die Zwischenablage kopiert."
 
-#: src/app/projects.js:615
+#: src/app/projects.js:567
 msgid "Failed copying share-link to the clipboard: {reason}."
 msgstr ""
 "Der Freigabe-Link konnte nicht in die Zwischenablage kopiert werden: "
 "{reason}."
 
-#: src/app/projects.js:766
+#: src/app/projects.js:718
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 "Soll die Verknüpfung mit der angezeigten Veranstaltungsankündigung wirklich "
 "gelöst werden?"
 
-#: src/app/projects.js:767
+#: src/app/projects.js:719
 msgid "Unlink Web-Page with Id {articleId}?"
 msgstr "Web-Seite mit Id {articleId} lösen?"
 
-#: src/app/projects.js:792
+#: src/app/projects.js:744
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 "Soll die angezeigte Veranstaltungsankündigung wirklich entfernt werden?"
 
-#: src/app/projects.js:793
+#: src/app/projects.js:745
 msgid "Delete Web-Page with Id {articleId}?"
 msgstr "Web-Seite mit Id {articleId} löschen?"
 
-#: src/app/projects.js:839
+#: src/app/projects.js:791
 msgid "No values match"
 msgstr "Kein Wert passt."
 
@@ -15073,10 +15422,6 @@ msgstr ""
 "Änderungen, die vorher über den `Anwenden'-Knopf gespeichert wurden,\n"
 "nicht rückgängig gemacht."
 
-#: src/app/sepa-debit-mandate.js:646 templates/blog/blogthreads.php:90
-msgid "Delete"
-msgstr "Löschen"
-
 #: src/app/sepa-debit-mandate.js:647
 msgid ""
 "Delete this bank-account from the data-base. Normally, this should only be "
@@ -15112,7 +15457,7 @@ msgstr ""
 "erst dann gesperrt werden, wenn alle assoziierten Lastschriftmandate\n"
 "entwertet wurden."
 
-#: src/app/sepa-debit-mandate.js:685 templates/project-events/events.php:68
+#: src/app/sepa-debit-mandate.js:685
 msgid "Reload"
 msgstr "Neu laden"
 
@@ -15300,23 +15645,116 @@ msgstr "Neuen Ordner \"{name}\" erzeugt"
 msgid "Document sequence determined as {sequence}."
 msgstr "Belegnummer als {sequence} ermittelt."
 
-#: src/stores/app-data.ts:95
+#: src/stores/app-data.ts:180
 msgid "An error occurred in the app-data store."
 msgstr "Es ist ein Fehler im App-Data-Magazin aufgetreten."
 
-#: src/stores/app-data.ts:157
+#: src/stores/app-data.ts:279
 msgid "Unable to fetch the poject-ids from the database."
 msgstr "Kann die Projekt-Kennungen nicht aus der Datenbank laden."
 
-#: src/stores/history.ts:104
+#: src/stores/history.ts:187
 msgid "Either \"hash\" or \"post\" have to be specified."
 msgstr ""
 "Wenigstens einer der beiden Parameter \"hash\" und \"post\" muss angegeben "
 "werden."
 
-#: src/stores/history.ts:307
+#: src/stores/history.ts:441
+msgid "Unable to find key {key} in current history stack."
+msgstr ""
+"Kann den Eintrag zum Index {key} im aktuellen Browserverlauf nicht finden."
+
+#: src/stores/history.ts:505
+msgid "Mutation promise has been rejected."
+msgstr "Ändern des Browserverlaufs wurde abgelehnt."
+
+#: src/stores/history.ts:557
 msgid "History already contains more than the initial setup item."
 msgstr "Der Browserverlauf enthält bereits mehr als nur das Anfangselement."
+
+#: src/stores/history.ts:671
+msgid "Unexpected transition type: {transition}."
+msgstr "Unerwarteter Übergangs-Typ: {operation}"
+
+#: src/stores/history.ts:708
+msgid "Unable to load the timestamps of the available history states."
+msgstr "Kann die Zeitstempel der gespeicherten Browserverläufe nicht laden."
+
+#: src/stores/history.ts:726
+msgid "Unable to load the available history states."
+msgstr "Kann die gespeicherten Browserverläufe nicht laden."
+
+#: src/stores/history.ts:728
+msgid ""
+"Unable to load the history states at time {time} (timestamp: {timestamp})."
+msgstr ""
+"Kann den gespeicherten Browserverlauf zum Zeitpunkt {time}\n"
+"(Zeitstempel: {timestamp}) nicht laden."
+
+#: src/stores/history.ts:733
+msgid ""
+"Unable to load the history state data for \"{key}\" at time {time} "
+"(timestamp: {timestamp})."
+msgstr ""
+"Kann den gespeicherten Browserverlauf zum Index \"{key}\" zum Zeitpunkt\n"
+"{time} (Zeitstempel: {timestamp}) nicht laden."
+
+#: src/stores/history.ts:788
+msgid "The current history state has already been saved."
+msgstr "Der aktuelle Browserverlauf wurde bereits gespeichert."
+
+#: src/stores/history.ts:791
+msgid "Unable to persist current history state to the database."
+msgstr "Kann den akutellen Browserverlauf nicht in der Datenbank speichern."
+
+#: src/stores/history.ts:808
+msgid "The history state at time {time} has been deleted."
+msgstr "Der Browserverlauf zum Zeitpunkt {time} wurde gelöscht."
+
+#: src/stores/history.ts:812
+msgid ""
+"The history state at time {time} could not be delete as it does not seem to "
+"exist on the server."
+msgstr ""
+"Der Browserverlauf zum Zeitpunkt {time} konnte nicht gelöscht werden, da er "
+"scheinbar nicht (mehr?) auf dem Server gespeichert ist."
+
+#: src/stores/history.ts:815
+msgid "Unable to delete the history state at time {time} from the database."
+msgstr ""
+"Kann den Browserverlauf zum Zeitpunkt {time} nicht aus der Datenbank löschen."
+
+#: src/stores/history.ts:832
+msgid ""
+"The key \"{posKey}\" of the final destination does not point into the "
+"provided history chain."
+msgstr ""
+"Der Index \"{posKey}\" des letztendlichen Ziels kommt im angegebenen\n"
+"Browserverlauf gar nicht vor."
+
+#: src/stores/history.ts:876
+msgid "Error during page transitions."
+msgstr "Fehler beim Seitenwechsel."
+
+#: src/stores/history.ts:961
+msgid "Unable to replace the current view."
+msgstr "Kann die aktuelle Ansicht nicht ersetzen."
+
+#: src/stores/history.ts:1030
+msgid "Unable to go to the desired view."
+msgstr "Kann nicht zur gewünschten Ansicht springen."
+
+#: src/stores/history.ts:1074
+msgid "Unable to push the desired view."
+msgstr "Kann die gewünschte Ansicht nicht hinzufügen."
+
+#: src/stores/history.ts:1104
+msgid "Unable to go to the end of the history stack."
+msgstr "Kann nicht zum Ende des Browserverlaufs springen."
+
+#: src/stores/history.ts:1133
+msgid "Unable to go to the start of the history stack."
+msgstr "Kann nicht zum Anfang des Browserverlaufs springen."
 
 #: src/stores/tooltips.ts:75
 msgid ""
@@ -15784,34 +16222,34 @@ msgstr "Popup-Funktion deaktivieren"
 msgid "Clear Reader List"
 msgstr "Leser-Liste löschen"
 
-#: templates/blog/blogthreads.php:52
+#: templates/blog/blogthreads.php:62
 msgid "Avatar pictures can be uploaded through the personal settings page."
 msgstr ""
 "Avatar-Bilder können bei den ``persönlichen Einstellungen'' angegeben werden."
 
-#: templates/blog/blogthreads.php:61
+#: templates/blog/blogthreads.php:71
 #, php-format
 msgid ", priority %d"
 msgstr ", Priorität %d"
 
-#: templates/blog/blogthreads.php:67
+#: templates/blog/blogthreads.php:77
 #, php-format
 msgid ", latest change by `%s', %s"
 msgstr ", zuletzt geändert von `%s', %s"
 
-#: templates/blog/blogthreads.php:75
+#: templates/blog/blogthreads.php:85
 msgid "Reply"
 msgstr "Anworten"
 
-#: templates/blog/blogthreads.php:78
+#: templates/blog/blogthreads.php:88
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: templates/blog/blogthreads.php:83
+#: templates/blog/blogthreads.php:93
 msgid "Raise priority"
 msgstr "Darstellungspriorität erhöhen"
 
-#: templates/blog/blogthreads.php:86
+#: templates/blog/blogthreads.php:96
 msgid "Lower priority"
 msgstr "Darstellungspriorität vermindern."
 
@@ -15828,12 +16266,10 @@ msgid "Status and Preview"
 msgstr "Vorschau und Fehler-Infos"
 
 #: templates/emailform/form.php:45
-#: templates/project-events/events-manual.php:35
 msgid "Manual"
 msgstr "Handbuch"
 
 #: templates/emailform/form.php:53
-#: templates/project-events/events-manual.php:44
 msgid "Manual (other tab)"
 msgstr "Handbuch (anderes Fenster/Tab)"
 
@@ -15925,11 +16361,6 @@ msgstr "Datei aus der Cloud"
 #: templates/emailform/part.emailform.composer.php:262
 msgid "Select from participant file attachments"
 msgstr "Datei aus den Projekt-Personen-Daten"
-
-#: templates/emailform/part.emailform.composer.php:267
-#: templates/project-events/events-manual.php:48
-msgid "Project Events"
-msgstr "Projekt-Termine"
 
 #: templates/emailform/part.emailform.composer.php:270
 msgid "Select Events"
@@ -16745,11 +17176,6 @@ msgstr "schließen"
 msgid "reopen"
 msgstr "wieder öffnen"
 
-#: templates/fragments/projects/project-mailing-list.php:114
-#: templates/project-events/event-actions-menu.php:67
-msgid "delete"
-msgstr "löschen"
-
 #: templates/fragments/projects/project-posters.php:46
 msgid "Project Posters and related Marketing Media"
 msgstr "Projekt-Plakate und sonstige Werbe-Medien"
@@ -16900,51 +17326,6 @@ msgstr "es müssen Daten migriert werden"
 #: templates/maintenance/configcheck.php:216
 msgid "is missing"
 msgstr "fehlt"
-
-#: templates/project-events/event-actions-menu.php:51
-#: templates/project-events/event-actions-menu.php:59
-msgid "edit in calendar app"
-msgstr "Kalender-App"
-
-#: templates/project-events/event-actions-menu.php:70
-msgid "detach from project"
-msgstr "vom Projekt lösen"
-
-#: templates/project-events/event-actions-menu.php:112
-msgid "act only on this event"
-msgstr "nur dieser Termin"
-
-#: templates/project-events/event-actions-menu.php:126
-msgid "act on the event series"
-msgstr "Terminserie"
-
-#: templates/project-events/event-actions-menu.php:140
-msgid "act on all related events"
-msgstr "alle zugehörigen Termine"
-
-#: templates/project-events/event-actions-menu.php:158
-msgid "em@ail / download"
-msgstr "Em@il / Download"
-
-#: templates/project-events/event-actions-menu.php:173
-msgid "absence field"
-msgstr "Abwesenheitsfeld"
-
-#: templates/project-events/events.php:26
-msgid "Events for"
-msgstr "Termine für"
-
-#: templates/project-events/events.php:60
-msgid "Download"
-msgstr "Herunterladen"
-
-#: templates/project-events/eventslisting.php:73
-msgid "no events"
-msgstr "keine Termine"
-
-#: templates/project-events/new-event-menu.php:36
-msgid "New Event"
-msgstr "Neuer Termin"
 
 #: templates/project-web-articles.php:114
 msgid "No public web pages registered for this project"
@@ -18317,7 +18698,7 @@ msgstr "Datei-Anhänge"
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME = 'general debit-note mandate';
 #: templates/settings/orchestra-settings.php:142
-#: lib/Service/ConfigService.php:267
+#: lib/Service/ConfigService.php:268
 #, php-format
 msgid "general debit-note mandate"
 msgstr "Allgemeines Lastschriftmandat"
@@ -18325,7 +18706,7 @@ msgstr "Allgemeines Lastschriftmandat"
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME = 'project debit-note mandate';
 #: templates/settings/orchestra-settings.php:142
-#: lib/Service/ConfigService.php:266
+#: lib/Service/ConfigService.php:267
 #, php-format
 msgid "project debit-note mandate"
 msgstr "Projekt-Lastschriftmandat"
@@ -18338,7 +18719,7 @@ msgstr "Unterschrift"
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME = 'instrument insurance record template';
 #: templates/settings/orchestra-settings.php:142
-#: lib/Service/ConfigService.php:272
+#: lib/Service/ConfigService.php:273
 #, php-format
 msgid "instrument insurance record template"
 msgstr "Vorlage Versicherungsaufstellung"
@@ -18413,7 +18794,7 @@ msgstr "Welt"
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_LOGO_NAME = 'orchestra logo';
 #: templates/settings/orchestra-settings.php:156
-#: lib/Service/ConfigService.php:263
+#: lib/Service/ConfigService.php:264
 #, php-format
 msgid "orchestra logo"
 msgstr "Orchester-Logo"
@@ -18427,7 +18808,7 @@ msgstr "Orchester-Logo auswählen"
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_SEAL_NAME = 'orchestra seal';
 #: templates/settings/orchestra-settings.php:159
-#: lib/Service/ConfigService.php:264
+#: lib/Service/ConfigService.php:265
 #, php-format
 msgid "orchestra seal"
 msgstr "Orchester-Stempel"
@@ -18645,7 +19026,7 @@ msgstr "Formular für Mitgliedsdaten-Aktualisierung"
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME = 'member data update';
 #: lib/EmailForm/Composer.php:4016
 #: templates/settings/orchestra-settings.php:180
-#: lib/Service/ConfigService.php:268
+#: lib/Service/ConfigService.php:269
 #, php-format
 msgid "member data update"
 msgstr "Mitgliedsdaten-Aktualisierung"
@@ -18942,45 +19323,38 @@ msgstr "MwSt"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME = 'standard letter';
-#: lib/Service/ConfigService.php:265
+#: lib/Service/ConfigService.php:266
 #, php-format
 msgid "standard letter"
 msgstr "Standard-Brief"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_INVOICE_NAME = 'invoice';
-#: lib/Service/ConfigService.php:269
+#: lib/Service/ConfigService.php:270
 #, php-format
 msgid "invoice"
 msgstr "Rechnunsvorlage"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME = 'standard receipt';
-#: lib/Service/ConfigService.php:270
+#: lib/Service/ConfigService.php:271
 #, php-format
 msgid "standard receipt"
 msgstr "Standard-Quittung"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME = 'donation receipt';
-#: lib/Service/ConfigService.php:271
+#: lib/Service/ConfigService.php:272
 #, php-format
 msgid "donation receipt"
 msgstr "Zuwendungsbestätigung"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::PROJECT_REGISTRATION_CATEGORY = 'project registration';
-#: lib/Service/EventsService.php:1149
+#: lib/Service/EventsService.php:1189
 #, php-format
 msgid "project registration"
 msgstr "Projekt-Anmeldung"
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::RECORD_ABSENCE_CATEGORY = 'record absence';
-#: lib/Service/EventsService.php:1163
-#, php-format
-msgid "record absence"
-msgstr "Abwesenheit erfassen"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::TEMPLATE_DIR_MAILING_LISTS = 'mailing-lists';
@@ -19047,6 +19421,40 @@ msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr "Zeigt einfach alle Spalten an."
+
+#, php-format
+#~ msgid "Invalid calendar type: \"%1$s\""
+#~ msgstr "Ungültiger Kalendertyp \"%1$s\"."
+
+#~ msgid "Unimplemented"
+#~ msgstr "Nicht implementiert"
+
+#~ msgid "Do you really want to delete this event?"
+#~ msgstr "Möchten Sie den Termin wirklich löschen?"
+
+#~ msgid "Do you really want to detach this event from the current project?"
+#~ msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
+
+#~ msgid "Really delete?"
+#~ msgstr "Wirklich löschen?"
+
+#~ msgid "Unable to download calendar events."
+#~ msgstr "Kann die Kalender-Einträge nicht laden."
+
+#~ msgid "em@ail / download"
+#~ msgstr "Em@il / Download"
+
+#~ msgid "absence field"
+#~ msgstr "Abwesenheitsfeld"
+
+#~ msgid "Events for"
+#~ msgstr "Termine für"
+
+#~ msgid "Download"
+#~ msgstr "Herunterladen"
+
+#~ msgid "New Event"
+#~ msgstr "Neuer Termin"
 
 #~ msgid "Extra Fields"
 #~ msgstr "Extra Felder"
@@ -19225,9 +19633,6 @@ msgstr "Zeigt einfach alle Spalten an."
 #~ "Vereinsadresse, außerdem wird die ganze Pracht in der Daten bank "
 #~ "gespeichter (siehe `Email Historie')"
 
-#~ msgid "Email History"
-#~ msgstr "Em@il Historie"
-
 #~ msgid "Display all emails sent by our mass-email form."
 #~ msgstr ""
 #~ "Zeigt alle über unser unsägliches Massen-Mail gespamten Emails an. "
@@ -19380,11 +19785,6 @@ msgstr "Zeigt einfach alle Spalten an."
 #~ msgid "Advanced options"
 #~ msgstr "Erweiterte Einstellungen"
 
-#~ msgid "Open the cloud's calendar app in another tab or window."
-#~ msgstr ""
-#~ "Die Kalender-App der Cloud in einem anderen Tab oder Fenster öffnen. Der "
-#~ "aktuelle Termin kann dort detaillierter angezeigt und verändert werden."
-
 #~ msgid "Calendar App"
 #~ msgstr "Kalender-App"
 
@@ -19417,9 +19817,6 @@ msgstr "Zeigt einfach alle Spalten an."
 
 #~ msgid "Edit categories"
 #~ msgstr "Kategorien bearbeiten"
-
-#~ msgid "Export event"
-#~ msgstr "Termin exportieren"
 
 #~ msgid "Export this event as ICS file."
 #~ msgstr "Diesen Termin als .ics-Datei exportieren."
@@ -19462,9 +19859,6 @@ msgstr "Zeigt einfach alle Spalten an."
 
 #~ msgid "Visibility to people shared with"
 #~ msgstr "Sichtbarkeit für geteilt-mit-denen"
-
-#~ msgid "Create a new event"
-#~ msgstr "Einen neuen Termin erstellen"
 
 #~ msgid "Create event"
 #~ msgstr "Termin erstellen"
@@ -19538,9 +19932,6 @@ msgstr "Zeigt einfach alle Spalten an."
 #, php-format
 #~ msgid "Renderer failed: %s"
 #~ msgstr "Laden der Seite fehlgeschlagen: %s"
-
-#~ msgid "edit in simple editor"
-#~ msgstr "einfacher Editor"
 
 #~ msgid "duplicate"
 #~ msgstr "duplizieren"
@@ -20725,9 +21116,6 @@ msgstr "Zeigt einfach alle Spalten an."
 #~ msgid "No hidden join column."
 #~ msgstr "Keine versteckte Verknüpfungsspalte."
 
-#~ msgid "Migration \"%s\" failed."
-#~ msgstr "Datenmigration \"%s\" fehlgeschlagen."
-
 #~ msgid "days"
 #~ msgstr "Tage"
 
@@ -20745,9 +21133,6 @@ msgstr "Zeigt einfach alle Spalten an."
 
 #~ msgid "Address Validation"
 #~ msgstr "Anschrifts-Validierung"
-
-#~ msgid "Add some other event to the project."
-#~ msgstr "Sonstigen Termin für das Projekt eintragen."
 
 #~ msgid "Concert"
 #~ msgstr "Konzert"
@@ -21197,9 +21582,6 @@ msgstr "Zeigt einfach alle Spalten an."
 
 #~ msgid "Unknown error uploading files"
 #~ msgstr "Irgendein Fehler beim Lader der Dateien :("
-
-#~ msgid "Unable to export debit notes."
-#~ msgstr "Kann die Lastschrifteinzüge nicht exportieren."
 
 #~ msgid "Unable to export insurance overviews."
 #~ msgstr "Kann die Versicherungs-Übersichten nicht exportieren."
@@ -21765,14 +22147,8 @@ msgstr "Zeigt einfach alle Spalten an."
 #~ msgid "Unable to store debit notes."
 #~ msgstr "Kann die Lastschrift nicht speichern."
 
-#~ msgid "Unable to store debit note data."
-#~ msgstr "Kann die Lastschrift-Bankdaten nicht speichern."
-
 #~ msgid "Unable to store debit note payments."
 #~ msgstr "Kann die Lastschriftumsätze nicht speichern."
-
-#~ msgid "Mandate project-id and/or name not set"
-#~ msgstr "Projekt Id und/order Name des Mandats wurde nicht übermittelt."
 
 #~ msgid "Musician-id and/or name not set"
 #~ msgstr "Musiker-Name und/oder Id unbekannt."
