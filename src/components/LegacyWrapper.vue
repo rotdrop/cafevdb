@@ -56,7 +56,7 @@
       <div class="spacer" />
       <NcButton :class="appPrefix('top-nav-button')"
                 :disabled="busyState"
-                :aria-label="t(appName, 'Got to the start page of the app.')"
+                :aria-label="t(appName, 'Go to the start page of the app.')"
                 :to="{ name: 'home' }"
                 exact
       >

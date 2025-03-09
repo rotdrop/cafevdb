@@ -33,7 +33,7 @@
                      :type="actionButtonType"
                      class="new-event-menu fc-event"
                      data-is-new="yes"
-                     :aria-label="t(appName, 'create new appointments')"
+                     :aria-label="t(appName, 'create a new appointment')"
                      :disabled="isLoading"
           >
             <template #icon>
