@@ -354,7 +354,10 @@ import {
   onUnmounted,
   set as vueSet,
 } from 'vue'
-import type { VueConstructor } from 'vue'
+import type {
+  VueConstructor,
+  WatchStopHandle,
+} from 'vue'
 import {
   useRoute,
   useRouter,
@@ -384,7 +387,6 @@ import { parse as parseContentDisposition } from 'content-disposition'
 // _at_ts-expect-error: 7016
 import useCalendarObjectInstance from '@nextcloud/app-calendar/src/store/calendarObjectInstance.js'
 import useCalendarObjects from '@nextcloud/app-calendar/src/store/calendarObjects.js'
-import debounce from 'debounce'
 import { storeToRefs } from 'pinia'
 import type { Store } from 'pinia'
 import type { EventArgs } from '@rotdrop/async-nextcloud-event-bus'
@@ -553,7 +555,28 @@ const eventRelations = ref<Record<string, number>>({})
 const relatedEvents: Record<string, EventMatrixEvent[]> = {}
 const seriesEvents: Record<string, EventMatrixEvent[]> = {}
 
+// Block other async reload request until one has finished
+const eventListLock = Promise.withResolvers<void>()
+eventListLock.resolve()
+
+const aquireEventListLock = async () => {
+  let promise: Promise<void>
+  let count = 0
+  do {
+    logger.debug('ATTEMPT TO AQUIRE EVENT LIST LOCK', ++count)
+    await (promise = eventListLock.promise)
+  } while (promise !== eventListLock.promise)
+  logger.debug('AQUIRED EVENT LIST LOCK', count)
+  return Object.assign(eventListLock, Promise.withResolvers<void>())
+}
+
+const releaseEventListLock = () => {
+  logger.debug('RELEASE EVENT LIST LOCK')
+  eventListLock.resolve()
+}
+
 const syncProjectData = async (projectId: number) => {
+  await aquireEventListLock()
   isLoading.value = true
   project.value = await appData.getProject(projectId) || null
   if (project.value) {
@@ -656,6 +679,7 @@ const syncProjectData = async (projectId: number) => {
     }
   }
   isLoading.value = false
+  releaseEventListLock()
   logger.debug('DERIVED EVENT MATRIX DATA', {
     eventSeries: { ...eventSeries.value },
     eventRelations: { ...eventRelations.value },
@@ -897,6 +921,13 @@ type CalendarObjectInstanceStore = Store<
 let calendarObjectsStore: CalendarObjectsStore
 let calendarObjectInstanceStore: CalendarObjectInstanceStore
 const mutationsAllowed = ref(false)
+let stopModificationCountWatch: WatchStopHandle
+
+const syncEventListTrigger = ref(false)
+
+// some mutations do not require a reload, so pause the mutation
+// observer for those
+let ignoreCalendarObjectMutations = false
 
 calendarStoreSetup().then((_arg) => {
   calendarObjectInstanceStore = useCalendarObjectInstance()
@@ -908,37 +939,17 @@ calendarStoreSetup().then((_arg) => {
   mutationsAllowed.value = true
   const { modificationCount } = storeToRefs(calendarObjectsStore)
   logger.debug('MOD COUNT REF', { modificationCount })
-  watch(modificationCount, (value) => logger.debug('MOD COUNT WATCHER', value))
-  watch(
+  stopModificationCountWatch = watch(
     modificationCount,
-    debounce(
-      async (value) => {
-        logger.info('OBSERVED MODIFICATION COUNT CHANGE', value)
-        if (!value || !props.projectId) {
-          return
-        }
-        // the the start date has changen the we probably have to chance the route
-        if (currentRoute.name === 'EditPopoverView' || currentRoute.name === 'EditSidebarView') {
-          const recurrenceId = Math.round(calendarObjectInstanceStore.calendarObjectInstance!.startDate.getTime() / 1000)
-          if (+currentRoute.params.recurrenceId !== recurrenceId) {
-            const location: CalendarEditLocation = {
-              name: currentRoute.name!,
-              params: {
-                ...currentRoute.params as { object: string, context: string },
-                recurrenceId,
-              },
-              // @ts-expect-error: 2322 why???
-              query: currentRoute.query,
-            }
-            // @ts-expect-error: 2769 why???
-            await router.replace(location)
-          }
-        }
-        await syncProjectData(props.projectId)
-        // TODO: update the route to reflect the URI change
-      },
-      50,
-    ),
+    (value) => {
+      logger.info('OBSERVED MODIFICATION COUNT CHANGE', value)
+      if (!value || !props.projectId) {
+        return
+      }
+      if (!ignoreCalendarObjectMutations) {
+        syncEventListTrigger.value = true
+      }
+    },
   )
 })
 
@@ -989,6 +1000,8 @@ const toggleAbsenceField = async (event: EventMatrixEvent) => {
   if (!calendarObjectInstanceStore || !projectEventMatrix.value) {
     return
   }
+  await aquireEventListLock()
+  ignoreCalendarObjectMutations = true
   const newValue = !hasAbsenceField.value[event.instanceId]
   try {
     switch (actionScope.value[event.uid]) {
@@ -1009,6 +1022,8 @@ const toggleAbsenceField = async (event: EventMatrixEvent) => {
   } catch (error) {
     errorHandler(new AppError({ component: COMPONENT_NAME }, t(appName, 'Unable to modify the absence field.')))
   }
+  ignoreCalendarObjectMutations = false
+  releaseEventListLock()
 }
 
 const singleEventProjectLink = async (event: EventMatrixEvent, linkToProject: boolean) => {
@@ -1024,6 +1039,8 @@ const handleProjectLink = async (event: EventMatrixEvent, linkToProject: boolean
   if (!calendarObjectInstanceStore || !projectEventMatrix.value) {
     return
   }
+  await aquireEventListLock()
+  ignoreCalendarObjectMutations = true
   try {
     switch (actionScope.value[event.uid]) {
     case 'single':
@@ -1051,6 +1068,8 @@ const handleProjectLink = async (event: EventMatrixEvent, linkToProject: boolean
       ),
     )
   }
+  ignoreCalendarObjectMutations = false
+  releaseEventListLock()
 }
 
 const deleteSingleEvent = async (matrixEntry: EventMatrixEntry, event: EventMatrixEvent) => {
@@ -1094,6 +1113,8 @@ const handleDeleteEvent = async (matrixEntry: EventMatrixEntry, event: EventMatr
   if (!calendarObjectInstanceStore || !projectEventMatrix.value) {
     return
   }
+  await aquireEventListLock()
+  ignoreCalendarObjectMutations = true
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     switch (actionScope.value[event.uid]) {
@@ -1123,6 +1144,8 @@ const handleDeleteEvent = async (matrixEntry: EventMatrixEntry, event: EventMatr
       ),
     )
   }
+  ignoreCalendarObjectMutations = false
+  releaseEventListLock()
 }
 
 const eventSeriesIndicator = (event: EventMatrixEvent) =>
@@ -1140,8 +1163,36 @@ watch(() => props.projectId, async (newValue/*, oldValue */) => {
   await syncProjectData(newValue)
 })
 
+watch(syncEventListTrigger, async (value) => {
+  if (!value) {
+    return
+  }
+  // the the start date has changen the we probably have to chance the route
+  if (currentRoute.name === 'EditPopoverView' || currentRoute.name === 'EditSidebarView') {
+    const recurrenceId = Math.round(calendarObjectInstanceStore.calendarObjectInstance!.startDate.getTime() / 1000)
+    if (+currentRoute.params.recurrenceId !== recurrenceId) {
+      const location: CalendarEditLocation = {
+        name: currentRoute.name!,
+        params: {
+          ...currentRoute.params as { object: string, context: string },
+          recurrenceId,
+        },
+        // @ts-expect-error: 2322 why???
+        query: currentRoute.query,
+      }
+      // @ts-expect-error: 2769 why???
+      await router.replace(location)
+    }
+  }
+  await syncProjectData(props.projectId)
+  syncEventListTrigger.value = false
+})
+
 onUnmounted(() => {
   asyncUnSubscribe(LEGACY_UPDATE_EVENTS_SELECTION, legacyEventsSelectionHandler)
+  if (stopModificationCountWatch) {
+    stopModificationCountWatch()
+  }
 })
 
 </script>
