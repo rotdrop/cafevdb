@@ -3,7 +3,7 @@
  * A collection of reusable traits classes for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -131,19 +131,22 @@ trait ResponseTrait
    *
    * @param null|string $method
    *
+   * @param int $status Defaults to Http::STATUS_BAD_REQUEST
+   *
    * @return TemplateResponse
    */
   protected function exceptionResponse(
     Throwable $throwable,
     string $renderAs,
     ?string $method = null,
+    int $status = Http::STATUS_BAD_REQUEST,
   ):Response {
     if (empty($method)) {
       $method = __METHOD__;
     }
     $this->logException($throwable, $method);
     if ($renderAs == 'blank') {
-      return self::grumble($this->exceptionChainData($throwable));
+      return self::grumble($this->exceptionChainData($throwable), status: $status);
     }
 
     $templateParameters = [
