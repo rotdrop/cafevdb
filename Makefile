@@ -344,7 +344,7 @@ endif
 .PHONY: build-flavour-build
 build-flavour-build:
 ifneq ($(PREV_BUILD_FLAVOUR), build)
-	make clean
+	make clean ts-app-config
 	echo build > $(BUILD_FLAVOUR_FILE)
 endif
 

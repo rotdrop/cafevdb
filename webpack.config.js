@@ -51,6 +51,7 @@ module.exports = {
   infrastructureLogging: {
     level: 'verbose',
   },
+  stats: 'verbose',
   entry: Object.entries({
     app: './src/app.js',
     'vue-app': './src/vue-app.ts',
@@ -289,6 +290,7 @@ module.exports = {
         exclude: BabelLoaderExcludeNodeModulesExcept([
           '@nextcloud/app-logreader/src',
           '@nextcloud/app-calendar/src',
+          '@rotdrop/nextcloud-app-dokuwiki',
         ]),
       },
       {

@@ -18,7 +18,7 @@ module.exports = {
   settings: {
     jsdoc: {
       tagNamePreference: {
-        returns: 'returns',
+        returns: 'return',
       },
     },
   },
