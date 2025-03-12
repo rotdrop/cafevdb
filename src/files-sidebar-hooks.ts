@@ -27,7 +27,7 @@ import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
 import { translate as t } from '@nextcloud/l10n';
 import logoSvg from '../img/cafevdb.svg?raw';
-import type { LegacyFileInfo } from '@nextcloud/files'
+import type { LegacyFileInfo } from '@nextcloud/files';
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken() || '');
