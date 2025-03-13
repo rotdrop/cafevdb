@@ -66,8 +66,6 @@ class PageController extends Controller
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  const RENDER_AS_PARTS = 'parts'; // silly name
-
   const DEFAULT_TEMPLATE = PageRenderer\Projects::TEMPLATE;
 
   public const HISTORY_ACTION_REPLACE = 'replace';
@@ -118,7 +116,7 @@ class PageController extends Controller
   {
     $this->historyService->save($this->request->getParams());
     return $this->loader(
-      $this->request->getParam('renderAs') ?? self::RENDER_AS_USER,
+      $renderAs,
       $this->request['template'],
       $this->request['projectName'],
       $this->request['projectId'],
@@ -155,7 +153,7 @@ class PageController extends Controller
     mixed $musicianId = null,
     string $historyAction = self::HISTORY_ACTION_PUSH,
   ) {
-    if ($renderAs != self::RENDER_AS_PARTS) {
+    if ($renderAs != Constants::RENDER_AS_PARTS) {
       throw new InvalidArgumentException($this->l->t('This controller can no longer serve front-page requests, in may only be accessed by the Vue frontend.'));
     }
 
@@ -226,7 +224,7 @@ class PageController extends Controller
       'sharedfolder' => $this->getConfigValue('sharedfolder'),
       'database' => $this->getConfigValue('database'),
       'groupadmin' => $this->isSubAdminOfGroup(),
-      self::RENDER_AS_USER => $this->userId(),
+      Constants::RENDER_AS_USER => $this->userId(),
       'expertMode' => $expertMode,
       'financeMode' => $financeMode,
       'showToolTips' => $showToolTips,
@@ -255,7 +253,7 @@ class PageController extends Controller
     $pageHtml = $this->templateResponse(
       $template,
       $templateParameters,
-      self::RENDER_AS_BLANK,
+      Constants::RENDER_AS_BLANK,
     )->render();
 
     return self::dataResponse([

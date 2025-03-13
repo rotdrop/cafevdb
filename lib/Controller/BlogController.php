@@ -38,6 +38,7 @@ use OCP\IURLGenerator;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\PageRenderer\Blog as BlogRenderer;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -130,7 +131,7 @@ class BlogController extends Controller
     $tmpl = $this->templateResponse(
       $template,
       $templateParameters,
-      self::RENDER_AS_BLANK,
+      Constants::RENDER_AS_BLANK,
     );
     $html = $tmpl->render();
 
@@ -240,7 +241,7 @@ class BlogController extends Controller
       $tmpl = $this->templateResponse(
         $template,
         $templateParameters,
-        self::RENDER_AS_BLANK,
+        Constants::RENDER_AS_BLANK,
       );
       $html = $tmpl->render();
     }
