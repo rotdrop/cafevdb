@@ -134,7 +134,7 @@ class L10NFactory implements IL10NFactory
   }
 
   /** {@inheritdoc} */
-  protected function __call($method, $args)
+  public function __call($method, $args)
   {
     if (is_callable([ $this->base, $method ])) {
       return call_user_func_array([ $this->base, $method ], $args);
