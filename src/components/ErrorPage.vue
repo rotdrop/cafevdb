@@ -182,7 +182,7 @@ import type { AxiosError } from 'axios'
 import {
   isAxiosErrorResponse as isAxiosErrorResponseGuard,
   isAxiosError as isAxiosErrorGuard,
-} from '../types/ajax/axios-type-guards.ts'
+} from '../toolkit/types/axios-type-guards.ts'
 import { AppError } from '../types/errors.ts'
 import {
   computed,

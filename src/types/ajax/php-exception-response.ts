@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isAxiosErrorResponse, type AxiosErrorResponse } from './axios-type-guards.ts';
+import { isAxiosErrorResponse, type AxiosErrorResponse } from '../../toolkit/types/axios-type-guards.ts';
 import ResponseTypes from './response-types.ts';
 import type {
   ILogEntry as NextcloudLogEntry,

@@ -50,7 +50,7 @@ import useErrorHandler from './error-handler.ts';
 import { AppError } from '../types/errors.ts';
 import { appName } from '../config.ts';
 import { generatePostHash, sanitizePostData } from '../util/legacy-post-data.ts';
-import { isAxiosError } from '../types/ajax/axios-type-guards.ts';
+import { isAxiosError } from '../toolkit/types/axios-type-guards.ts';
 
 export const HistoryActionPush = 'push';
 export const HistoryActionPop = 'pop';

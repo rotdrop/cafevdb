@@ -22,7 +22,7 @@
  */
 
 import { AxiosError } from 'axios';
-import { isAxiosError } from './axios-type-guards.ts';
+import { isAxiosError } from '../../toolkit/types/axios-type-guards.ts';
 
 // A NC log entry instance
 export interface NextcloudLogEntry {
