@@ -16,7 +16,7 @@ APP_NAME = $(shell $(XPATH) -q -e '/info/id/text()' $(APP_INFO))
 else
 APP_NAME = $(notdir $(CURDIR))
 endif
-APP_NAME = $(notdir $(CURDIR))
+DEV_LIB_DIR = $(ABSSRCDIR)/dev-scripts/lib
 BUILDDIR = ./build
 ABSBUILDDIR = $(CURDIR)/build
 BUILD_TOOLS_DIR = $(BUILDDIR)/tools
@@ -31,12 +31,13 @@ PHP = $(shell which php 2> /dev/null) # allow override
 PHP_SCOPER = $(ABSSRCDIR)/vendor-bin/php-scoper/vendor/bin/php-scoper
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
-COMPOSER_TOOL = $(PHP) $(BUILD_TOOLS_DIR)/composer.phar
+COMPOSER = $(PHP) $(BUILD_TOOLS_DIR)/composer.phar
 else
-COMPOSER_TOOL=$(COMPOSER_SYSTEM)
+COMPOSER=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--prefer-dist
 #
+NPM = $(shell which npm 2> /dev/null)
 OCC=$(ABSSRCDIR)/../../occ
 ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
 WGET = $(shell which wget 2> /dev/null)
@@ -116,32 +117,10 @@ include $(MAKE_HELP_DIR)/MakeHelp.mk
 
 all: help
 
-composer.json: composer.json.in
-	cp composer.json.in composer.json
-
-stamp.composer-core-versions: composer.lock
-	date > stamp.composer-core-versions
-
-composer.lock: DRY:=
-composer.lock: composer.json composer.json.in vendor-bin/*/composer.json
-	rm -f composer.lock
-	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
-	env DRY=$(DRY) dev-scripts/tweak-composer-json.sh || {\
- rm -f composer.lock;\
- $(COMPOSER_TOOL) install $(COMPOSER_OPTIONS);\
-}
-
-pre-build: php-scoper-install app-toolkit ts-app-config
+pre-build: php-scoper-install app-toolkit
 #	git submodule update --init
 	$(OCC) maintenance:mode --on
 .PHONY: pre-build
-
-ts-app-config: $(BUILDDIR)/ts-types/app-config.ts
-.PHONY: ts-app-config
-
-$(BUILDDIR)/ts-types/app-config.ts: Makefile $(APP_INFO) $(ABSSRCDIR)/app-config.ts.in
-	mkdir -p $$(dirname $@)
-	sed 's/@@APP_NAME@@/$(APP_NAME)/g' $(ABSSRCDIR)/app-config.ts.in > $@
 
 post-build:
 	$(OCC) maintenance:mode --off
@@ -163,23 +142,13 @@ dev: dev-setup npm-dev post-build
 dev-setup: pre-build composer namespace-wrapper
 .PHONY: dev-setup
 
-.PHONY: composer-download
-composer-download:
-	mkdir -p $(BUILD_TOOLS_DIR)
-	curl -sS https://getcomposer.org/installer | $(PHP)
-	mv composer.phar $(BUILD_TOOLS_DIR)
+include $(DEV_LIB_DIR)/makefile/composer.mk
 
 .PHONY: php-scoper-install
 php-scoper-install: composer
 	if ! [ -x $(PHP_SCOPER) ]; then\
-  $(COMPOSER_TOOL) bin php-scoper install;\
+  $(COMPOSER) bin php-scoper install;\
 fi
-
-# Installs and updates the composer dependencies. If composer is not installed
-# a copy is fetched from the web
-.PHONY: composer
-composer: stamp.composer-core-versions
-	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
 
 WRAPPER_PREV_BUILD_HASH = $(shell cat $(ABSSRCDIR)/wrapper-build-hash 2> /dev/null || echo)
 WRAPPER_GIT_BUILD_HASH = $(shell { $(WRAPPER_GIT_DEPENDENCIES:%=D=%; echo $$D; git -C $$D rev-parse HEAD;) })
@@ -202,21 +171,21 @@ $(BUILDDIR)/vendor-wrapped: composer-wrapped.lock wrapper-build-hash
 	ln -fs ../vendor $(BUILDDIR)
 	rm -rf $(BUILDDIR)/vendor-wrapped
 	ln -sf ../composer-patches $(BUILDDIR)
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER_TOOL) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER_TOOL) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
 
 $(BUILDDIR)/vendor-wrapped/autoload.php: $(BUILDDIR)/vendor-wrapped composer-wrapped.json Makefile
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER_TOOL) -d$(BUILDDIR) dump-autoload
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) dump-autoload
 
 .PHONY: composer-wrapped-suggest
 composer-wrapped-suggest:
 	@echo -e "\n*** Wrapped Composer Suggestions ***\n"
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER_TOOL) -d$(BUILDDIR) suggest --all
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) suggest --all
 
 .PHONY: composer-suggest
 composer-suggest: composer-wrapped-suggest
 	@echo -e "\n*** Regular Composer Suggestions ***\n"
-	$(COMPOSER_TOOL) suggest --all
+	$(COMPOSER) suggest --all
 
 $(PHP_SCOPER): php-scoper-install
 
@@ -228,7 +197,7 @@ vendor-wrapped: Makefile $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-wrapped
 	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
 
 vendor-wrapped/autoload.php: vendor-wrapped
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER_TOOL) dump-autoload
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
 
 .PHONY: namespace-wrapper
 namespace-wrapper: vendor-wrapped/autoload.php
@@ -257,6 +226,7 @@ APP_TOOLKIT_DEST = $(ABSSRCDIR)/lib/Toolkit
 APP_TOOLKIT_NS = CAFEVDB
 
 include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
+include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
 
 .PHONY: selectize
 selectize: $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
@@ -298,67 +268,23 @@ SELECTIZE_DIST =\
 
 CHOSEN_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/chosen/public/*)
 
-TINYMCE_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/tinymce/*)
-
 BOOTSTRAP_DUALLISTBOX_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/bootstrap-duallistbox/dist/*)
 
 NPM_INIT_DEPS =\
  Makefile package-lock.json package.json webpack.config.js .eslintrc.js
 
-THIRD_PARTY_NPM_DEPS = $(SELECTIZE_DIST) $(BOOTSTRAP_DUALLISTBOX_DIST) $(TINYMCE_JQUERY_DIST)
+THIRD_PARTY_NPM_DEPS = $(SELECTIZE_DIST) $(BOOTSTRAP_DUALLISTBOX_DIST)
 
 WEBPACK_DEPS =\
  $(NPM_INIT_DEPS)\
- $(TINYMCE_DIST)\
  tinymce\
  $(CHOSEN_DIST)\
- $(CSS_FILES) $(JS_FILES) $(L10N_FILES)
+ $(CSS_FILES)\
+ $(JS_FILES)\
+ $(L10N_FILES)\
+ $(TS_APP_CONFIG)
 
-# CSS_TARGETS = app.css settings.css admin-settings.css
-# JS_TARGETS = app.js settings.js admin-settings.js
-# WEBPACK_TARGETS =\
-#  $(patsubst %,$(ABSSRCDIR)/css/%,$(CSS_TARGETS))\
-#  $(patsubst %,$(ABSSRCDIR)/js/%,$(JS_TARGETS))
-
-WEBPACK_TARGETS = $(ABSSRCDIR)/js/asset-meta.json
-
-package-lock.json: package.json webpack.config.js Makefile $(THIRD_PARTY_NPM_DEPS)
-	{ [ -d package-lock.json ] && [ test -d node_modules ]; } || npm install
-	npm update
-	touch package-lock.json
-
-BUILD_FLAVOUR_FILE = $(ABSSRCDIR)/build-flavour
-PREV_BUILD_FLAVOUR = $(shell cat $(BUILD_FLAVOUR_FILE) 2> /dev/null || echo)
-
-$(WEBPACK_TARGETS): $(WEBPACK_DEPS) $(BUILD_FLAVOUR_FILE) ts-app-config
-	make webpack-clean
-	npm run $(shell cat $(BUILD_FLAVOUR_FILE)) || rm -f $(WEBPACK_TARGETS)
-
-.PHONY: build-flavour-dev
-build-flavour-dev:
-ifneq ($(PREV_BUILD_FLAVOUR), dev)
-	make clean ts-app-config
-	echo dev > $(BUILD_FLAVOUR_FILE)
-endif
-
-.PHONY: build-flavour-build
-build-flavour-build:
-ifneq ($(PREV_BUILD_FLAVOUR), build)
-	make clean ts-app-config
-	echo build > $(BUILD_FLAVOUR_FILE)
-endif
-
-.PHONY: npm-dev
-npm-dev: build-flavour-dev $(WEBPACK_TARGETS)
-
-.PHONY: npm-build
-npm-build: build-flavour-build $(WEBPACK_TARGETS)
-
-#@@ Removes WebPack builds
-webpack-clean:
-	rm -rf ./js/*
-	rm -rf ./css/*
-.PHONY: webpack-clean
+include $(DEV_LIB_DIR)/makefile/npm.mk
 
 #@@ Removes build files
 clean: ## Tidy up local environment
@@ -401,7 +327,7 @@ $(BUILDDIR)/core-exclude:
 .PHONY: cleanup
 cleanup: $(BUILDDIR)/core-exclude
 	while read LINE; do rm -rf $$(dirname $$LINE); done< <(cat $<)
-	$(COMPOSER_TOOL) dump-autoload
+	$(COMPOSER) dump-autoload
 
 APP_BUILD_HASH = app-git-build-hash
 APP_PREV_BUILD_HASH = $(shell cat $(ABSSRCDIR)/$(APP_BUILD_HASH) 2> /dev/null || echo)
@@ -498,7 +424,7 @@ $(GH_PAGES_JSDOC_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(JSDOC_HTML)/index.htm
 $(JSDOC_HTML)/index.html: doc/jsdoc/jsdoc.json $(APP_BUILD_HASH)
 	rm -rf $(JSDOC_HTML)/*
 	mkdir -p $(JSDOC_HTML)
-	npm run generate-docs
+	$(NPM) run generate-docs
 
 # END DOCS
 #
@@ -533,7 +459,7 @@ source:
 # Builds the source package for the app store, ignores php and js tests
 .PHONY: appstore
 appstore: $(BUILDDIR)/core-exclude
-	$(COMPOSER_TOOL) update --no-dev $(COMPOSER_OPTIONS)
+	$(COMPOSER) update --no-dev $(COMPOSER_OPTIONS)
 	ls -l vendor
 	rm -rf $(APPSTORE_BUILD_DIR)
 	mkdir -p $(APPSTORE_BUILD_DIR)
@@ -561,7 +487,7 @@ appstore: $(BUILDDIR)/core-exclude
  --exclude="../$(APP_NAME)/js/.*" \
  --exclude-from="$(BUILDDIR)/core-exclude" \
  ../$(APP_NAME)
-	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
+	$(COMPOSER) install $(COMPOSER_OPTIONS)
 
 .PHONY: verifydb
 verifydb: $(ABSSRCDIR)/vendor-wrapped
