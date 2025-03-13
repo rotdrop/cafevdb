@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-03-09 23:36+0100\n"
+"POT-Creation-Date: 2025-03-13 09:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5238,8 +5238,8 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:973
 #: lib/PageRenderer/ProjectParticipantFields.php:1549
 #: lib/Service/ProjectParticipantFieldsService.php:662
-#: src/toolkit/mixins/settings-sync.js:139
-#: src/toolkit/mixins/settings-sync.js:162
+#: src/toolkit/util/settings-sync.ts:162
+#: src/toolkit/util/settings-sync.ts:185
 msgid "true"
 msgstr ""
 
@@ -5249,7 +5249,6 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:974
 #: lib/PageRenderer/ProjectParticipantFields.php:1549
 #: lib/Service/ProjectParticipantFieldsService.php:662
-#: src/toolkit/mixins/settings-sync.js:170
 #: templates/pme-table.php:58
 msgid "false"
 msgstr ""
@@ -11334,11 +11333,11 @@ msgstr ""
 msgid "Login failed."
 msgstr ""
 
-#: php-toolkit/Traits/ResponseTrait.php:197
+#: php-toolkit/Traits/ResponseTrait.php:200
 msgid "Error, caught an exception."
 msgstr ""
 
-#: php-toolkit/Traits/ResponseTrait.php:198
+#: php-toolkit/Traits/ResponseTrait.php:201
 msgid "Caused by previous exception"
 msgstr ""
 
@@ -11362,10 +11361,10 @@ msgstr ""
 #: specialVueFakeDummyForL10nScript.js:210
 #: specialVueFakeDummyForL10nScript.js:226
 #: specialVueFakeDummyForL10nScript.js:544
-#: src/toolkit/mixins/settings-sync.js:53
-#: src/toolkit/mixins/settings-sync.js:91
-#: src/toolkit/mixins/settings-sync.js:152
-#: src/toolkit/mixins/settings-sync.js:240
+#: src/toolkit/util/settings-sync.ts:61
+#: src/toolkit/util/settings-sync.ts:100
+#: src/toolkit/util/settings-sync.ts:175
+#: src/toolkit/util/settings-sync.ts:303
 msgid "reason unknown"
 msgstr ""
 
@@ -11754,14 +11753,14 @@ msgstr ""
 #: src/app/project-participants.js:830
 #: src/app/projects.js:593
 #: src/app/sepa-debit-mandate.js:858
-#: src/toolkit/mixins/settings-sync.js:202
+#: src/toolkit/util/settings-sync.ts:250
 msgid "Confirmation Required"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:803
 #: specialVueFakeDummyForL10nScript.js:156
 #: specialVueFakeDummyForL10nScript.js:160
-#: src/toolkit/mixins/settings-sync.js:207
+#: src/toolkit/util/settings-sync.ts:269
 msgid "Unconfirmed, reverting to old value."
 msgstr ""
 
@@ -13649,42 +13648,6 @@ msgid ""
 "No information available, fetching the tooltip with key \"{key}\" failed."
 msgstr ""
 
-#: src/toolkit/mixins/settings-sync.js:60
-msgid "Unable to query the initial value of all settings: {message}"
-msgstr ""
-
-#: src/toolkit/mixins/settings-sync.js:98
-msgid "Unable to query the initial value of {settingsKey}: {message}"
-msgstr ""
-
-#: src/toolkit/mixins/settings-sync.js:142
-msgid "Successfully set \"{settingsKey}\" to {value}."
-msgstr ""
-
-#: src/toolkit/mixins/settings-sync.js:144
-msgid "Setting \"{settingsKey}\" has been unset successfully."
-msgstr ""
-
-#: src/toolkit/mixins/settings-sync.js:160
-msgid "Unable to set \"{settingsKey}\" to {value}: {message}."
-msgstr ""
-
-#: src/toolkit/mixins/settings-sync.js:168
-msgid "Unable to unset \"{settingsKey}\": {message}"
-msgstr ""
-
-#: src/toolkit/mixins/settings-sync.js:229
-msgid "Successfully set value for \"{settingsKey}\" to \"{displayValue}\""
-msgstr ""
-
-#: src/toolkit/mixins/settings-sync.js:231
-msgid "Setting \"{setting}\" has been unset successfully."
-msgstr ""
-
-#: src/toolkit/mixins/settings-sync.js:247
-msgid "Could not set value for \"{settingsKey}\" to \"{value}\": {message}"
-msgstr ""
-
 #. TRANSLATORS: Textual description of HTTP status code 200, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 #: src/toolkit/util/ajax.js:36
 msgid "OK"
@@ -14041,11 +14004,13 @@ msgid "HTTP error response to AJAX call: {code} / {error}"
 msgstr ""
 
 #: src/toolkit/util/dialogs.js:69
+#: src/toolkit/util/settings-sync.ts:254
 #: src/util/dialogs.ts:31
 msgid "No"
 msgstr ""
 
 #: src/toolkit/util/dialogs.js:70
+#: src/toolkit/util/settings-sync.ts:259
 #: src/util/dialogs.ts:36
 msgid "Yes"
 msgstr ""
@@ -14053,8 +14018,44 @@ msgstr ""
 #. TRANSLATORS: This should be a pangram in the target language, please have a look at
 #. TRANSLATORS: https://en.wikipedia.org/wiki/Pangram where you can
 #. TRANSLATORS: also find examples for some languages.
-#: src/toolkit/util/pangram.js:25
+#: src/toolkit/util/pangram.ts:26
 msgid "The quick brown fox jumps over the lazy dog."
+msgstr ""
+
+#: src/toolkit/util/settings-sync.ts:68
+msgid "Unable to query the initial value of all settings: {message}"
+msgstr ""
+
+#: src/toolkit/util/settings-sync.ts:107
+msgid "Unable to query the initial value of {settingsKey}: {message}"
+msgstr ""
+
+#: src/toolkit/util/settings-sync.ts:165
+msgid "Successfully set \"{settingsKey}\" to {value}."
+msgstr ""
+
+#: src/toolkit/util/settings-sync.ts:167
+msgid "Setting \"{settingsKey}\" has been unset successfully."
+msgstr ""
+
+#: src/toolkit/util/settings-sync.ts:183
+msgid "Unable to set \"{settingsKey}\" to {value}: {message}."
+msgstr ""
+
+#: src/toolkit/util/settings-sync.ts:191
+msgid "Unable to unset \"{settingsKey}\": {message}"
+msgstr ""
+
+#: src/toolkit/util/settings-sync.ts:292
+msgid "Successfully set value for \"{settingsKey}\" to \"{displayValue}\""
+msgstr ""
+
+#: src/toolkit/util/settings-sync.ts:294
+msgid "Setting \"{setting}\" has been unset successfully."
+msgstr ""
+
+#: src/toolkit/util/settings-sync.ts:310
+msgid "Could not set value for \"{settingsKey}\" to \"{value}\": {message}"
 msgstr ""
 
 #: src/util/address-popup.ts:29
