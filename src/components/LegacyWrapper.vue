@@ -411,9 +411,18 @@ const doLoadLegacy = async () => {
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
-    logger.error('ERROR', generateAppUrl('page/remember/parts'), post, e)
+    logger.error('ERROR', {
+      url: generateAppUrl('page/remember/parts'),
+      post: { ...post },
+      e,
+    })
     await loadTranslations('logreader', () => logger.info('LOGREADER L10N'))
-    appError.value = new AppError({ component: COMPONENT_NAME }, t(appName, 'Error loading view "{template}".', { template: props.template }), { cause: e })
+    errorHandler(
+      new AppError(
+        { component: COMPONENT_NAME },
+        t(appName, 'Error loading view "{template}".', { template: props.template }),
+        { cause: e }),
+    )
   }
   popBusyState()
   loading.value = false
