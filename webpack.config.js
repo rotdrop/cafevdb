@@ -48,10 +48,10 @@ const svgoOptions = {
 };
 
 module.exports = {
-  infrastructureLogging: {
-    level: 'verbose',
-  },
-  stats: 'verbose',
+  // infrastructureLogging: {
+  //   level: 'verbose',
+  // },
+  // stats: 'verbose',
   entry: Object.entries({
     app: './src/app.js',
     'vue-app': './src/vue-app.ts',
