@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectT
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -442,12 +443,21 @@ class ProjectsController extends Controller
    */
   public function get(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
+    if (!($projectId > 0)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Project-ids must be strictly positive: "%d".', $projectId),
+        httpStatusCode: Http::STATUS_NOT_FOUND,
+      );
+    }
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
     /** @var Entities\Project $project */
     $project = $projectService->findById($projectId);
     if (empty($project)) {
-      return self::grumble($this->l->t('Unable to find project with id "%d".', $projectId));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to find project with id "%d".', $projectId),
+        httpStatusCode: Http::STATUS_NOT_FOUND,
+      );
     }
     switch ($topic) {
       case '':
@@ -740,9 +750,13 @@ class ProjectsController extends Controller
       if (strpos($pattern, '%') === false) {
         if ($pattern[0] != '^') {
           $pattern = '%' . $pattern;
+        } else {
+          $pattern = substr($pattern, 1);
         }
         if (substr($pattern, -1) != '$') {
           $pattern = $pattern . '%';
+        } else {
+          $pattern = substr($pattern, 0, -1);
         }
       }
       $criteria = [

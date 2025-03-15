@@ -62,6 +62,7 @@ class HistoryService
     'projectId',
     'projectName',
     'eventsProjectId',
+    'eventsProjectName',
     // calendar app
     'recurrenceId',
     'object',
