@@ -23,7 +23,6 @@
 
 import { defineStore } from 'pinia';
 import { set as vueSet, del as vueDelete, ref, computed, watch } from 'vue';
-import { computedAsync } from '@vueuse/core';
 import axios from '@nextcloud/axios';
 import generateAppUrl from '../toolkit/util/generate-url.js';
 import type { AxiosResponse } from 'axios';
@@ -171,6 +170,7 @@ export interface Project {
 const usePrivateState = defineStore(storeId + '-private', {
   state: () => ({
     projects: {} as Record<number, Project>,
+    projectsByName: {} as Record<string, Project>,
     loadingPromise: Promise.resolve(true) as Promise<any>,
   }),
   actions: {
@@ -194,12 +194,21 @@ const usePrivateState = defineStore(storeId + '-private', {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
     },
-    async getProject(projectId: number, errorHandler?: ErrorHandler): Promise<undefined|Project> {
+    async getProject(projectKey: string|number, errorHandler?: ErrorHandler): Promise<undefined|Project> {
       await this.awaitLoadingPromise();
-      if (!this.projects[projectId]) {
-        await (this.loadingPromise = this.findProject(projectId, errorHandler));
+      const projectId = parseInt('' + projectKey)
+      if (projectId !== +projectKey) {
+        const projectName = '' + projectKey;
+        if (!this.projectsByName[projectName]) {
+          await (this.loadingPromise = this.doSearchProjects('^' + projectName + '$', errorHandler));
+        }
+        return this.projectsByName?.[projectName] || undefined;
+      } else {
+        if (!this.projects[projectId]) {
+          await (this.loadingPromise = this.findProject(projectId, errorHandler));
+        }
+        return this.projects?.[projectId] || undefined;
       }
-      return this.projects?.[projectId] || undefined;
     },
     async getProjectEvents(project: Project, errorHandler?: ErrorHandler) {
       const projectId = project.id;
@@ -254,6 +263,7 @@ const usePrivateState = defineStore(storeId + '-private', {
       project.getCalendarEvents = (handler?: ErrorHandler) => this.getProjectEvents(project, handler || errorHandler);
       project.getEventMatrix = (handler?: ErrorHandler) => this.getEventMatrix(project, handler || errorHandler);
       vueSet(this.projects, projectId, project);
+      vueSet(this.projectsByName, project.name, project);
       return this.projects[projectId];
     },
     async findProject(projectId: number, errorHandler?: ErrorHandler) {
@@ -284,14 +294,15 @@ const usePrivateState = defineStore(storeId + '-private', {
       }
     },
     async searchProjects(query: string, errorHandler?: ErrorHandler) {
+      this.awaitLoadingPromise();
+      const result = await (this.loadingPromise = this.doSearchProjects(query, errorHandler));
+      return result;
+    },
+    async doSearchProjects(query: string, errorHandler?: ErrorHandler) {
       query = encodeURI(query);
       if (query !== '') {
         query = '/' + query;
       }
-      let promise: Promise<any>;
-      do {
-        await (promise = this.loadingPromise);
-      } while (promise !== this.loadingPromise);
       try {
         const response: AxiosResponse<Project[]> = await axios.get(generateAppUrl(`projects/search${query}`), {
           params: { limit: 10 },
@@ -334,24 +345,7 @@ export default defineStore(storeId, () => {
   asyncSubscribe(PUSH_BUSY_STATE, () => pushBusyState())
   asyncSubscribe(POP_BUSY_STATE, () => popBusyState())
 
-  const currentProjectId = ref(0);
   const errorHandler = computed(() => errorHandlerProvider.errorHandler);
-  const evaluating = ref(false);
-  const projectMode = computed(() => currentProjectId.value > 0);
-  const currentProject = computedAsync(
-    async (/* onCancel */) => {
-      if (!projectMode.value) {
-        return null;
-      }
-      // onCancel(() => state.abort());
-      const project = await state.getProject(currentProjectId.value, errorHandlerProvider.getHandler());
-      logger.debug('CURRENT PROJECT', project);
-      return project;
-    },
-    null,
-    { lazy: true, evaluating },
-  );
-  const currentProjectName = computed(() => currentProject.value?.name || '');
 
   const projectIds = ref<number[]>([]);
   state.findProjectIds(errorHandlerProvider.getHandler())
@@ -360,10 +354,10 @@ export default defineStore(storeId, () => {
   const projects = computed(() => state.projects);
   watch(projects, (value, oldValue) => logger.info('PROJECTS WATCHER', value, oldValue));
 
-  async function getProject(projectId: number, handler?: ErrorHandler) {
-    const result = await state.getProject(projectId, handler || errorHandlerProvider.getHandler());
-    if (result && !(projectId in projectIds.value)) {
-      projectIds.value!.push(projectId);
+  async function getProject(projectKey: string|number, handler?: ErrorHandler) {
+    const result = await state.getProject(projectKey, handler || errorHandlerProvider.getHandler());
+    if (result && !(result.id in projectIds.value)) {
+      projectIds.value!.push(result.id);
     }
     return result;
   }
@@ -377,6 +371,23 @@ export default defineStore(storeId, () => {
     }
   }
 
+  const currentProject = ref<undefined|Project>(undefined);
+  const projectMode = computed(() => !!currentProject.value);
+  const currentProjectId = computed<number>(() => currentProject.value?.id || 0);
+  const currentProjectName = computed<string>(() => currentProject.value?.name || '');
+
+  const setCurrentProject = async (projectKey: string|number, handler?: ErrorHandler) => {
+    if (projectKey === currentProjectId.value || projectKey === currentProjectName.value) {
+      return currentProject.value;
+    }
+    if (projectKey) {
+      currentProject.value = await getProject(projectKey, handler);
+    } else {
+      currentProject.value = undefined;
+    }
+    return currentProject.value;
+  };
+
   return {
     logger: loggerRef,
     errorHandler,
@@ -388,6 +399,7 @@ export default defineStore(storeId, () => {
     busyState,
     pushBusyState,
     popBusyState,
+    setCurrentProject,
     currentProject,
     currentProjectId,
     currentProjectName,

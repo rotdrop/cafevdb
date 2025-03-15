@@ -60,6 +60,7 @@ const URL_PARAMS_KEYS = [
   'projectId',
   'projectName',
   'eventsProjectId',
+  'eventsProjectName',
   // app calendar parameters
   'recurrenceId',
   'object',
@@ -76,6 +77,7 @@ const EMPTY_VALUE_KEYS = [
   'projectName',
   'musicianId',
   'eventsProjectId',
+  'eventsProjectName',
 ];
 
 /**

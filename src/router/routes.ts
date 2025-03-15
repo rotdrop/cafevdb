@@ -41,7 +41,8 @@ const routes: RouteConfig[] = [
     }),
   },
   {
-    path: '/p/:template/:projectId(\\d+)?/:projectName?',
+    // use the human readable project-name and not the data base id for the URLs
+    path: '/p/:template/:projectName?',
     component: () => import('../components/LegacyWrapperRouterReactivity.vue'),
     name: 'legacy-page',
     props: true,

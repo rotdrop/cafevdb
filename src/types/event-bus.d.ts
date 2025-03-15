@@ -95,7 +95,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [LEGACY_UPDATE_EVENTS_SELECTION]: { origin?: string, projectId: number, projectName?: string, selection: string[] },
     [POP_BUSY_STATE]: undefined,
     [PROJECT_ACTIONS]: { projectId: number, open: boolean, x?: number, y?: number },
-    [PROJECT_EVENTS_LISTING]: { projectId: number },
+    [PROJECT_EVENTS_LISTING]: { projectName: string },
     [PUSH_BUSY_STATE]: undefined,
     [SET_BUSY_FLAG]: { value: boolean },
     [WIKI_POPUP]: { wikiPage: string, popupTitle: string },

@@ -318,7 +318,7 @@ const synchronizeHistoryState = (hash: string) => {
   return router.replace(target)
 }
 
-const updateLegacyRoute = (post: TemplatePostData, action: 'push'|'replace' = 'replace', htmlBody?: string) => {
+const updateLegacyRoute = async (post: TemplatePostData, action: 'push'|'replace' = 'replace', htmlBody?: string) => {
   appError.value = null
   post = sanitizePostData(post)
   const params: TemplatePostData = {
@@ -326,6 +326,13 @@ const updateLegacyRoute = (post: TemplatePostData, action: 'push'|'replace' = 'r
   }
   post.projectId && (params.projectId = post.projectId)
   post.projectName && (params.projectName = post.projectName)
+
+  if (!!params.projectId !== !!params.projectName) {
+    const projectKey = params.projectName || params.projectId
+    const project = await appData.getProject(projectKey!)
+    params.projectId = project?.id || undefined
+    params.projectName = project?.name || undefined
+  }
 
   const target = {
     name: currentRoute.name || 'legacy-page',
@@ -355,10 +362,15 @@ const doLoadLegacy = async () => {
     logger.error('*** TEMPLATE MISSING, CANNOT LOAD PAGE ***')
     return
   }
-  appData.currentProjectId = props.templateParameters?.projectId || 0
   loading.value = true
   pushBusyState()
   closeNavigation()
+  const projectKey = props.templateParameters?.projectName
+    || props.templateParameters.projectId
+    || 0
+  logger.info('BEFORE SET CURRENT PROJECT', { projectKey })
+  await appData.setCurrentProject(projectKey)
+  logger.info('AFTER SET CURRENT PROJECT', { projectKey })
   logger.debug('REQUESTING PAGE CLEANUP')
   await asyncEmit(LEGACY_PAGE_CLEANUP)
   logger.debug('AFTER PAGE CLEANUP')
@@ -433,9 +445,11 @@ const loadLegacy = async () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let promise: Promise<any>
   do {
+    logger.info('BEFORE AWAIT PROMISE IN LOOP', { loadingPromise })
     await (promise = loadingPromise)
-    logger.info('AFTER AWAIT PROMISE IN LOOP', props.template, props.templateParameters, props.hash)
+    logger.info('AFTER AWAIT PROMISE IN LOOP', { promise, loadingPromise })
   } while (promise !== loadingPromise)
+  logger.info('BEFORE DO LOAD LEGACY()')
   await (loadingPromise = doLoadLegacy())
   logger.info('AFTER AWAIT PAGE LOAD', props.template, props.templateParameters, props.hash)
 }
@@ -449,15 +463,28 @@ watch(legacyHtmlLoaded, (value, oldValue) => {
 })
 watch(
   () => props.templateParameters?.projectId,
-  (value, oldValue) => {
+  async (value, oldValue) => {
     if (!value && !oldValue) {
       // protect against change between null, undefined and possibly 0
       return
     }
     logger.info('PROJECT ID CHANGED', value, oldValue)
-    appData.currentProjectId = value
     logger.info('TRIGGER PAGE LOAD')
     pageLoadTrigger.value = true
+    await appData.setCurrentProject(value)
+  },
+)
+watch(
+  () => props.templateParameters?.projectName,
+  async (value, oldValue) => {
+    if (!value && !oldValue) {
+      // protect against change between null, undefined and possibly 0
+      return
+    }
+    logger.info('PROJECT NAME CHANGED', value, oldValue)
+    logger.info('TRIGGER PAGE LOAD')
+    pageLoadTrigger.value = true
+    await appData.setCurrentProject(value)
   },
 )
 watch(
@@ -516,13 +543,20 @@ const legacyPageLoadHandler = asyncSubscribe(
   async (eventData) => {
     logger.info('LEGACY PAGE LOAD CALLED', eventData)
     appError.value = null
-    const params = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const params: Record<string, any> = {
       template: (eventData?.template || eventData.post.template!).replace(/%2F|\//, ':'),
     }
     const projectId = eventData?.projectId || eventData.post?.projectId
     const projectName = eventData?.projectName || eventData.post?.projectName
-    projectId && Object.assign(params, { projectId })
-    projectName && Object.assign(params, { projectName })
+    projectId && (params.projectId = projectId)
+    projectName && (params.projectName = projectName)
+    if (!!params.projectId !== !!params.projectName) {
+      const projectKey = params.projectName || params.projectId
+      const project = await appData.getProject(projectKey!)
+      params.projectId = project?.id || undefined
+      params.projectName = project?.name || undefined
+    }
     const post = Object.assign({}, eventData.post, params)
     const target = {
       name: 'legacy-page',

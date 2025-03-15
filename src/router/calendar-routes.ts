@@ -176,10 +176,10 @@ export const PROJECT_EVENTS_LISTING_NAME = 'ProjectEventsListing';
 
 const projectEventRoutes: RouteConfig[] = [
   {
-    path: 'events/:eventsProjectId',
+    path: 'events/:eventsProjectName',
     name: PROJECT_EVENTS_LISTING_NAME,
     component: ProjectEventsListing,
-    props: route => ({ projectId: +route.params.eventsProjectId }),
+    props: route => ({ projectName: route.params.eventsProjectName }),
     beforeEnter: <V extends Vue>(to: Route, from: Route, next: NavigationGuardNext<V>) => {
       logger.info('BEFORE PROJECT EVENTS LISTING ENTER', {
         to,

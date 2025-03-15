@@ -685,10 +685,10 @@ watch(
 )
 watch(
   pageTemplate,
-  (value, oldValue) => {
+  async (value, oldValue) => {
     logger.debug('CURRENT TEMPLATE CHANGED', value, oldValue)
     if (value === 'home') {
-      currentProjectId.value = 0
+      await appData.setCurrentProject(0)
       // should also run the config checks ... all other templates
       // call into the legacy page loader which runs the config check
       // by itself.

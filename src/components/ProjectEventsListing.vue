@@ -440,7 +440,7 @@ const errorHandlerProvider = useErrorHandlerStore()
 const errorHandler = errorHandlerProvider.getHandler()
 
 const props = withDefaults(defineProps<{
-  projectId: number,
+  projectName: string,
 }>(), {})
 
 const appData = useAppDataStore()
@@ -648,10 +648,10 @@ const releaseEventListLock = () => {
   eventListLock.resolve()
 }
 
-const syncProjectData = async (projectId: number) => {
+const syncProjectData = async (projectName: string) => {
   await aquireEventListLock()
   isLoading.value = true
-  project.value = await appData.getProject(projectId) || null
+  project.value = await appData.getProject(projectName) || null
   if (project.value) {
     await Promise.allSettled([
       project.value.getCalendarEvents(),
@@ -930,7 +930,6 @@ const exportEvents = async () => {
   const url = generateAppUrl('projects/events/download')
   try {
     const response = await axios.post(url, post)
-    logger.info('RESPONSE', response)
     const contentType = response.headers['content-type'] || 'application/octetstream'
     let fileName = 'download'
     const contentDisposition = response.headers['content-disposition']
@@ -1017,7 +1016,7 @@ let ignoreCalendarObjectMutations = false
 calendarStoreSetup().then((_arg) => {
   calendarObjectInstanceStore = useCalendarObjectInstance()
   calendarObjectsStore = useCalendarObjects()
-  logger.info('STORES', {
+  logger.debug('STORES', {
     calendarObjectInstanceStore,
     calendarObjectsStore,
   })
@@ -1027,8 +1026,8 @@ calendarStoreSetup().then((_arg) => {
   stopModificationCountWatch = watch(
     modificationCount,
     (value) => {
-      logger.info('OBSERVED MODIFICATION COUNT CHANGE', value)
-      if (!value || !props.projectId) {
+      logger.debug('OBSERVED MODIFICATION COUNT CHANGE', value)
+      if (!value || !props.projectName) {
         return
       }
       if (!ignoreCalendarObjectMutations) {
@@ -1049,7 +1048,7 @@ const mutateCategory = async (event: EventMatrixEvent, category: string, enable:
   const { calendarObjectInstance, calendarObject } = await setCalendarObjectInstance(event)
   if (enable) {
     calendarObjectInstanceStore.addCategory({ calendarObjectInstance, category })
-    logger.info('ADD CATETGORY', {
+    logger.debug('ADD CATETGORY', {
       event,
       category,
       calendarObjectInstance,
@@ -1057,7 +1056,7 @@ const mutateCategory = async (event: EventMatrixEvent, category: string, enable:
     })
   } else {
     calendarObjectInstanceStore.removeCategory({ calendarObjectInstance, category })
-    logger.info('REMOVE CATETGORY', {
+    logger.debug('REMOVE CATETGORY', {
       event,
       category,
       calendarObjectInstance,
@@ -1243,8 +1242,8 @@ const eventRelationsIndicator = (event: EventMatrixEvent) =>
     ? String.fromCharCode('α'.charCodeAt(0) + eventRelations.value[event.seriesUid] - 1)
     : ''
 
-syncProjectData(props.projectId).then(() => logger.debug('Project-data has been synced'))
-watch(() => props.projectId, async (newValue/*, oldValue */) => {
+syncProjectData(props.projectName).then(() => logger.debug('Project-data has been synced'))
+watch(() => props.projectName, async (newValue/*, oldValue */) => {
   await syncProjectData(newValue)
 })
 
@@ -1269,7 +1268,7 @@ watch(syncEventListTrigger, async (value) => {
       await router.replace(location)
     }
   }
-  await syncProjectData(props.projectId)
+  await syncProjectData(props.projectName)
   syncEventListTrigger.value = false
 })
 

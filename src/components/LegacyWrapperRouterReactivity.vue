@@ -76,7 +76,7 @@ logger.debug('BEFORE ROUTE ENTER', { ...currentRoute }, { ...window?.history?.st
 asyncSubscribe(PROJECT_EVENTS_LISTING, async (event) => {
   const name = 'ProjectEventsListing'
   const params = {
-    eventsProjectId: '' + event.projectId,
+    eventsProjectName: '' + event.projectName,
   }
   const query = currentRoute.query
   try {
