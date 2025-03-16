@@ -121,16 +121,14 @@ class ProjectEventsController extends Controller
   }
 
   /**
-   * @param string $topic
-   *
    * @return Http\Response
    *
    * @NoAdminRequired
    */
-  public function download(string $topic):Http\Response
+  public function download():Http\Response
   {
-    $projectId = $this->request['projectId'];
-    $projectName = $this->request['projectName'];
+    $projectId = $this->request->getParam('projectId');
+    $projectName = $this->request->getParam('projectName');
 
     if (empty($projectId) || empty($projectName)) {
       throw new InvalidArgumentException(
