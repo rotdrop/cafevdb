@@ -118,7 +118,7 @@
                     :class="{ loading: showLoadingIndicator }"
                     :disabled="!project || isLoading"
                     :aria-label="t(appName, 'reload the project appointments')"
-                    @click="syncProjectData(project?.id || -1)"
+                    @click="syncProjectData(project?.name || '')"
           >
             <template #icon>
               <IconReload />
@@ -368,8 +368,6 @@ import useAppDataStore from '../stores/app-data.ts'
 import useErrorHandlerStore from '../stores/error-handler.ts'
 import { AppError } from '../types/errors.ts'
 import { generateUrl } from '@nextcloud/router'
-import generateAppUrl from '../toolkit/util/generate-url.js'
-import axios from '@nextcloud/axios'
 import type {
   CalendarUris,
   EventMatrixEntry,
@@ -417,7 +415,6 @@ import {
 import calendarStoreSetup from '../services/calendar-store-setup.ts'
 import Console from '../util/console.ts'
 import md5 from 'blueimp-md5'
-import { parse as parseContentDisposition } from 'content-disposition'
 import { DateTime } from 'luxon'
 // _at_ts-expect-error: 7016
 import useCalendarObjectInstance from '@nextcloud/app-calendar/src/store/calendarObjectInstance.js'
@@ -430,6 +427,7 @@ import {
   CALENDAR_APP_ROUTES,
   PROJECT_EVENTS_LISTING_NAME,
 } from '../router/calendar-routes.ts'
+import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
 
 const COMPONENT_NAME = PROJECT_EVENTS_LISTING_NAME
 
@@ -927,23 +925,10 @@ const exportEvents = async () => {
     projectName: project.value.name,
     eventSelect: Object.values(legacyEventSelection),
   }
-  const url = generateAppUrl('projects/events/download')
   try {
-    const response = await axios.post(url, post)
-    const contentType = response.headers['content-type'] || 'application/octetstream'
-    let fileName = 'download'
-    const contentDisposition = response.headers['content-disposition']
-    if (contentDisposition) {
-      const contentMeta = parseContentDisposition(contentDisposition)
-      fileName = contentMeta.parameters.filename || fileName
-    }
-    const blob = new Blob([response.data], { type: contentType })
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(blob)
-    link.download = fileName
-    link.click()
-    URL.revokeObjectURL(link.href)
+    await axiosFileDownload('projects/events/download', post)
   } catch (error) {
+    logger.error('DOWNLOAD ERROR', { error })
     errorHandler(
       new AppError(
         { component: COMPONENT_NAME },

@@ -204,7 +204,7 @@ import SelectContacts from '../components/SelectContacts.vue'
 import SelectAddressBooks from '../components/SelectAddressBooks.vue'
 import SelectMusicians from '../components/SelectMusicians.vue'
 import SelectProjects from '../components/SelectProjects.vue'
-import fileDownload from '../services/axios-file-download.ts'
+import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
 import md5 from 'blueimp-md5'
 import type { LegacyFileInfo } from '@nextcloud/files'
 import type { Project } from '../stores/app-data.ts'
@@ -458,7 +458,14 @@ const handleMailMergeRequest = async (operation: MailMergeOperations, event: Tar
       postData.limit = 1 // maybe ...
       // fallthrough
     case MailMergeDownload:
-      await fileDownload(ajaxUrl, postData)
+      try {
+        await axiosFileDownload(ajaxUrl, postData)
+      } catch (e) {
+        showError(
+          t(appName, 'File download failed for {fileName}.', { fileName: postData.fileName }),
+          { timeout: TOAST_PERMANENT_TIMEOUT },
+        )
+      }
       break
     case MailMergeCloud: {
       const response = await axios.post(ajaxUrl, postData)
