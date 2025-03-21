@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Constants;
+
 /** Dummy config-check renderer */
 class ConfigCheck extends AbstractPageRenderer
 {
@@ -58,7 +60,7 @@ class ConfigCheck extends AbstractPageRenderer
   /** {@inheritdoc} */
   public function headerText()
   {
-    return self::templateResponse('fragments/header-texts/configcheck', [ 'cssPrefix' => $this->cssPrefix() ], self::RENDER_AS_BLANK)->render();
+    return self::templateResponse('fragments/header-texts/configcheck', [ 'cssPrefix' => $this->cssPrefix() ], Constants::RENDER_AS_BLANK)->render();
   }
 
   /** {@inheritdoc} */
