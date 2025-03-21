@@ -22,7 +22,7 @@
  */
 
 export const PROJECT_ACTIONS_MENU = 'ProjectActionsMenu';
-export const PROJECT_EVENTS_LISTING = 'ProjectEventsListing';
+export const DOKU_WIKI_WRAPPER = 'DokuWikiWrapper';
 
 export interface ComponentProps {
   [PROJECT_ACTIONS_MENU]: {
@@ -32,8 +32,11 @@ export interface ComponentProps {
     enableOverviewItem?: boolean,
     testOpen?: boolean,
   },
-  [PROJECT_EVENTS_LISTING]: {
-    projectId: number,
+  [DOKU_WIKI_WRAPPER]: {
+    wikiPage?: string,
+    query?: Record<string, string>,
+    iFrameAttributes?: Record<string, string>,
+    compact?: boolean,
   },
 }
 

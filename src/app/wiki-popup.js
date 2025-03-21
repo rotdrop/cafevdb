@@ -22,10 +22,21 @@
  */
 
 import $ from './jquery.js';
-import { appName, appPrefix } from '../config.ts';
-import { wikiPopup as dokuWikiPopup } from '@rotdrop/nextcloud-app-dokuwiki/src/doku-wiki-popup.ts';
+import { appName } from '../config.ts';
 import { toBackButton as dialogToBackButton } from './dialog-utils.js';
 import modalizer from './modalizer.js';
+import { DOKU_WIKI_WRAPPER } from '../mountable-component-names.ts';
+import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
+import { emit as asyncEmit, getEmitResult } from '../services/async-event-bus.ts';
+
+let dokuWikiWrapper;
+
+const popupPosition = {
+  my: 'left top',
+  at: 'left+5% top+5%',
+  // of: window
+  of: '#app-content, #app-content-vue', // main?
+};
 
 /**
  * Generate a popup-dialog with a wiki-page. Not to much project
@@ -38,7 +49,7 @@ import modalizer from './modalizer.js';
  * @param {boolean} reopen If true, close any already dialog and re-open it
  * (the default). If false, only raise an existing dialog to top.
  */
-const wikiPopup = function(post, reopen = undefined) {
+const wikiPopup = async (post, reopen = undefined) => {
   if (typeof reopen === 'undefined') {
     reopen = false;
   }
@@ -50,27 +61,41 @@ const wikiPopup = function(post, reopen = undefined) {
     }
     wikiDlg.dialog('close').remove();
   }
-  dokuWikiPopup(
-    {
-      wikiPage: post.wikiPage,
-      popupTitle: post.popupTitle,
-      cssClass: [
-        appName,
-        'app-' + appName,
-      ].join(' '),
-      modal: false,
+  if (!dokuWikiWrapper) {
+    dokuWikiWrapper = await getEmitResult(
+      asyncEmit(GET_VUE_COMPONENT, {
+        name: DOKU_WIKI_WRAPPER,
+        propsData: {
+          wikiPage: post.wikiPage,
+          compact: true,
+        },
+      }),
+    );
+  }
+  const $dialogHolder = $('<div id="dokuwiki_popup"><div></div></div>');
+  await dokuWikiWrapper.$mount($dialogHolder.find('div')[0]);
+  console.info('DW WRAPPER', { dokuWikiWrapper });
+
+  $dialogHolder.cafevDialog({
+    title: post.popupTitle,
+    cssClass: [
+      appName,
+      'app-' + appName,
+    ].join(' '),
+    modal: false,
+    position: popupPosition,
+    width: 'auto',
+    height: 'auto',
+    closeOnEscape: false,
+    resizable: false,
+    draggable: true,
+    open() {
+      dialogToBackButton($dialogHolder);
     },
-    function(dwDialog, dwDialogWidget) {
-      // open callback
-      dwDialog.dialog('option', 'appendTo', '#' + appPrefix('general'));
-      // Custom shuffle button
-      dialogToBackButton(dwDialog);
-    },
-    function() {
-      // close callback
-      // Remove modal plane if appropriate
+    close() {
       modalizer(false);
-    });
+    },
+  });
 };
 
 export default wikiPopup;

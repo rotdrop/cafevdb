@@ -273,6 +273,7 @@ module.exports = {
           '@nextcloud/vue',
           '@nextcloud/app-logreader/src',
           '@nextcloud/app-calendar/src',
+          '@rotdrop/nextcloud-app-dokuwiki',
         ]),
       },
       {

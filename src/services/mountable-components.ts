@@ -27,20 +27,27 @@ import { subscribe as asyncSubscribe } from './async-event-bus.ts'
 import * as MountableComponents from '../mountable-component-names.ts';
 import type { VueConstructor } from 'vue/types/vue';
 
-let ProjectActionsMenuConstructor: VueConstructor;
+const vueConstructors: Record<string, VueConstructor> = {};
 
 export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
   asyncSubscribe(GET_VUE_COMPONENT, async (event) => {
-    switch (event.name) {
+    if (!vueConstructors[event.name]) {
+      let vueComponent: VueConstructor;
+      switch (event.name) {
       case MountableComponents.PROJECT_ACTIONS_MENU:
-        if (!ProjectActionsMenuConstructor) {
-          const ProjectActionsMenu = (await import('../components/ProjectActionsMenu.vue')).default;
-          ProjectActionsMenuConstructor = Vue.extend(ProjectActionsMenu);
-        }
-        return new ProjectActionsMenuConstructor({
-          parent: vueApp,
-          propsData: event.propsData,
-        });
+        vueComponent = (await import('../components/ProjectActionsMenu.vue')).default;
+        break;
+      case MountableComponents.DOKU_WIKI_WRAPPER:
+        vueComponent = (await import('@rotdrop/nextcloud-app-dokuwiki/src/DokuWikiWrapper.vue')).default;
+        break;
+      default:
+        return;
+      }
+      vueConstructors[event.name] = Vue.extend(vueComponent);
     }
+    return new vueConstructors[event.name]({
+      parent: vueApp,
+      propsData: event.propsData,
+    });
   });
 };
