@@ -75,10 +75,15 @@
         <NcActionCheckbox v-model="toolTipsEnabled" :model-value="toolTipsEnabled">
           {{ t(appId, 'Tooltips') }}
         </NcActionCheckbox>
-        <NcActionLink :href="wikiManualUrl" :target="wikiManualUrlTarget">
+        <NcActionLink :href="wikiManualUrl"
+                      :target="wikiManualUrlTarget"
+                      :close-after-click="true"
+        >
           {{ t(appId, 'Manual (other tab or window)') }}
         </NcActionLink>
-        <NcActionButton @click="onUserManualPopup">
+        <NcActionButton :close-after-click="true"
+                        @click="onUserManualPopup"
+        >
           {{ t(appId, 'Manual (popup)') }}
         </NcActionButton>
       </NcActions>
@@ -301,6 +306,7 @@ const reloadPage = async () => {
 }
 
 const onUserManualPopup = () => {
+  logger.info('USER MANUAL POPUP')
   return asyncEmit(WIKI_POPUP, {
     wikiPage: wikiManualSection.value,
     popupTitle: t(appName, 'User Manual: {section}', { section: shortTitle.value }, 0, { escape: false }),
