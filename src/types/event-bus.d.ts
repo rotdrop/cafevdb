@@ -84,7 +84,10 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     // mapping of 'event name' => 'event type'
     [APP_SETTINGS_POPUP]: Callbacks,
     [EMAIL_POPUP]: { projectId?: number, projectName?: string, reopen?: boolean, post?: Record<string, any> },
-    [GET_VUE_COMPONENT]: { name: keyof ComponentProps, propsData: PropsData<keyof ComponentProps> }, // { name: keyof ComponentProps, propsData: ComponentProps[typeof name] },
+    [GET_VUE_COMPONENT]: {
+      name: keyof ComponentProps,
+      propsData: PropsData<keyof ComponentProps>,
+    }, // { name: keyof ComponentProps, propsData: ComponentProps[typeof name] },
     [HISTORY_GO_REQUEST]: { level: number },
     [LEGACY_AJAX_ERROR]: { xhr: jqXHR, message: string, html?: string },
     [LEGACY_PAGE_CLEANUP]: undefined,
