@@ -32,6 +32,7 @@ use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
 use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
 
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Service\ConfigService;
 
 /**
@@ -80,7 +81,7 @@ class SubadminMiddleware extends Middleware
     if (!($exception instanceof NotAdminException)) {
       throw $exception;
     }
-    $response = $this->templateResponse('403', [], self::RENDER_AS_GUEST, appName: 'core');
+    $response = $this->templateResponse('403', [], Constants::RENDER_AS_GUEST, appName: 'core');
     $response->setStatus(Http::STATUS_FORBIDDEN);
     return $response;
   }

@@ -36,13 +36,15 @@ use OCP\IInitialStateService;
 use OCP\IRequest;
 use OCP\Util;
 
+use OCA\CAFEVDB\Common\Util as CommonUtil;
+use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Common\Util as CommonUtil;
 
 /** AJAX endpoint for generating the main page of the app. */
 class VueAppController extends Controller
@@ -172,7 +174,10 @@ class VueAppController extends Controller
         /** @var $renderer PageRenderer\IPageRenderer */
         $renderer = $this->appContainer->query(PageRenderer\Registration::TEMPLATE_PREFIX . $template);
       } catch (Throwable $t) {
-        return $this->exceptionResponse($t, self::RENDER_AS_BLANK);
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Unable to generate the navigation menu for page "%s".', $template),
+          previous: $t,
+        );
       }
       $navigationItems = $renderer->navigationItems();
     }

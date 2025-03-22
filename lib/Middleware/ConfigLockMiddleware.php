@@ -31,6 +31,7 @@ use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 
@@ -75,7 +76,7 @@ class ConfigLockMiddleware extends Middleware
     if (!($exception instanceof Exceptions\ConfigLockedException)) {
       throw $exception;
     }
-    $response = $this->templateResponse('update.user', [], self::RENDER_AS_GUEST, appName: 'core');
+    $response = $this->templateResponse('update.user', [], Constants::RENDER_AS_GUEST, appName: 'core');
     $response->setStatus(Http::STATUS_LOCKED);
     return $response;
   }

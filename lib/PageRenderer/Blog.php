@@ -25,6 +25,8 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use OCP\IL10N;
+
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 
 /** Blog renderer class, rendering is done through legacy templates.*/
@@ -65,7 +67,11 @@ class Blog extends AbstractPageRenderer
   /** {@inheritdoc} */
   public function headerText()
   {
-    return self::templateResponse('fragments/header-texts/blog', [ 'cssPrefix' => $this->cssPrefix() ], self::RENDER_AS_BLANK)->render();
+    return self::templateResponse(
+      'fragments/header-texts/blog',
+      [ 'cssPrefix' => $this->cssPrefix() ],
+      Constants::RENDER_AS_BLANK,
+    )->render();
   }
 
   /** {@inheritdoc} */
