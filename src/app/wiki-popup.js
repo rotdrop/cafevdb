@@ -29,7 +29,11 @@ import { DOKU_WIKI_WRAPPER } from '../mountable-component-names.ts';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
 import { emit as asyncEmit, getEmitResult } from '../services/async-event-bus.ts';
 
+require('dokuwiki-jquery-popup.scss');
+
 let dokuWikiWrapper;
+
+let wikiContentHeight = -1;
 
 const popupPosition = {
   my: 'left top',
@@ -67,20 +71,25 @@ const wikiPopup = async (post, reopen = undefined) => {
         name: DOKU_WIKI_WRAPPER,
         propsData: {
           wikiPage: post.wikiPage,
-          compact: true,
+          fullScreen: false,
         },
       }),
     );
+  } else {
+    // this is supposedly illegal and also skips the consistency
+    // checks, but maybe it just works ... ;)
+    dokuWikiWrapper._props.fullScreen = false;
+    dokuWikiWrapper._props.wikiPage = post.wikiPage;
   }
-  const $dialogHolder = $('<div id="dokuwiki_popup"><div></div></div>');
+  const $dialogHolder = $('<div id="dokuwiki_popup" style="overflow:hidden;"><div></div></div>');
   await dokuWikiWrapper.$mount($dialogHolder.find('div')[0]);
   console.info('DW WRAPPER', { dokuWikiWrapper });
 
   $dialogHolder.cafevDialog({
     title: post.popupTitle,
-    cssClass: [
+    dialogClass: [
+      'dokuwiki-page-popup',
       appName,
-      'app-' + appName,
     ].join(' '),
     modal: false,
     position: popupPosition,
@@ -91,9 +100,38 @@ const wikiPopup = async (post, reopen = undefined) => {
     draggable: true,
     open() {
       dialogToBackButton($dialogHolder);
+      const $dialogWidget = $dialogHolder.dialog('widget');
+      const titleHeight = $dialogWidget.find('.ui-dialog-titlebar').outerHeight();
+      dokuWikiWrapper.$on('iframe-loaded', (...args) => {
+        console.debug('WIKI POPUP LOADED LISTENER', { ...args });
+        const newHeight = $dialogWidget.height() - titleHeight;
+        $dialogHolder.height(newHeight);
+      });
+      dokuWikiWrapper.$on('iframe-resize', (event) => {
+        console.debug('WIKI POPUP RESIZE LISTENER', { event });
+        const height = event.contentRect.height;
+        if (height === wikiContentHeight || height === 0) {
+          return;
+        }
+        wikiContentHeight = height;
+        console.debug('new height', {
+          height,
+          contentHeight: wikiContentHeight,
+          frameHeight: dokuWikiWrapper.wikiIFrame.style.height,
+        });
+        // $dialogHolder.contentHeight = height;
+        dokuWikiWrapper.wikiIFrame.style.height = height + 'px';
+        $dialogHolder.height(height);
+        $dialogWidget.height(height + titleHeight);
+        const widgetHeight = $dialogWidget.outerHeight();
+        const maxHeight = widgetHeight - titleHeight;
+        dokuWikiWrapper.wikiIFrame.style['max-height'] = maxHeight + 'px';
+        $dialogHolder.height(maxHeight);
+      });
     },
     close() {
       modalizer(false);
+      dokuWikiWrapper.$off(['iframe-loaded', 'iframe-resize']);
     },
   });
 };
