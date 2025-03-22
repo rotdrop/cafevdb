@@ -36,7 +36,7 @@ export interface ComponentProps {
     wikiPage?: string,
     query?: Record<string, string>,
     iFrameAttributes?: Record<string, string>,
-    compact?: boolean,
+    fullScreen?: boolean,
   },
 }
 
