@@ -43,11 +43,14 @@ export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
       default:
         return;
       }
+      // generate the constructor
       vueConstructors[event.name] = Vue.extend(vueComponent);
     }
-    return new vueConstructors[event.name]({
+    // obtain a new instance
+    const instance = new vueConstructors[event.name]({
       parent: vueApp,
       propsData: event.propsData,
     });
+    return instance;
   });
 };
