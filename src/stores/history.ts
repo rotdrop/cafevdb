@@ -43,7 +43,7 @@ import * as SessionStorage from '../util/session-storage.ts';
 
 import Console from '../util/console.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
-import getInitialState from '../toolkit/services/InitialStateService.js';
+import getInitialState from '../toolkit/util/initial-state.ts';
 import router from '../router/app-router.ts';
 import type { TemplatePostData } from '../util/legacy-post-data.ts';
 import useErrorHandler from './error-handler.ts';
@@ -220,7 +220,7 @@ export default defineStore(storeId, () => {
   const atHistoryBase = computed(() => currentHistoryIndex.value === 0);
   const atHistoryTop = computed(() => currentHistoryIndex.value === routerHistoryKeys.value.length - 1);
 
-  const initialState: HistoryInitialState = getInitialState('historyPostData', null);
+  const initialState: null|HistoryInitialState = getInitialState<HistoryInitialState>({ section: 'historyPostData' });
   logger.info('INITIAL POST DATA STATE', initialState);
 
   let initialPostHash: undefined|string = undefined;

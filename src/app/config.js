@@ -22,7 +22,7 @@
 
 import * as ncAuth from '@nextcloud/auth';
 import { getRootUrl as getCloudRootUrl, getAppRootUrl } from '@nextcloud/router';
-import appInitialState from '../toolkit/services/InitialStateService.js';
+import getInitialState from '../toolkit/util/initial-state.ts';
 import { appName, appPrefix, appNameTag } from '../config.ts';
 
 const initialState = {
@@ -32,7 +32,7 @@ const initialState = {
 };
 
 try {
-  const state = appInitialState('CAFEVDB');
+  const state = getInitialState({ section: 'CAFEVDB' });
   initialState.CAFEVDB = state;
   console.debug('CAFEVDB INITIAL STATE', initialState.CAFEVDB);
   if (appName !== initialState.CAFEVDB.appName) {
@@ -42,7 +42,7 @@ try {
   console.error('Failed to load initial state for CAFEVDB', error);
 }
 try {
-  const state = appInitialState('PHPMyEdit');
+  const state = getInitialState({ section: 'PHPMyEdit' });
   initialState.PHPMyEdit = state;
   console.debug('PHPMyEdit INITIAL STATE', initialState.PHPMyEdit);
 } catch (error) {

@@ -23,7 +23,7 @@
 
 import Vue from 'vue';
 import { appName } from './config.ts';
-import { getInitialState } from './toolkit/services/InitialStateService.js';
+import getInitialState from './toolkit/util/initial-state.ts';
 import { basename } from 'path';
 import { generateFilePath } from '@nextcloud/router';
 import { emit } from '@nextcloud/event-bus';
@@ -33,8 +33,8 @@ import type { Entry } from '@nextcloud/files';
 import { action as sidebarAction } from '../../files/src/actions/sidebarAction.ts';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import axios from '@nextcloud/axios';
-
 import logoSvg from '../img/cafevdb.svg?raw';
+import type { FilesInitialState } from './types/initial-state.d.ts';
 
 declare global {
   interface Window {
@@ -54,10 +54,10 @@ if (!window.OCA.CAFEVDB) {
   window.OCA.CAFEVDB = {};
 }
 
-const initialState = getInitialState('files');
+const initialState = getInitialState<FilesInitialState>({ section: 'files' });
 
-const projectBalancesFolder = initialState.sharing.files.folders.projectBalances;
-const supportingDocumentsFolder = initialState.sharing.files.subFolders.supportingDocuments;
+const projectBalancesFolder = initialState?.sharing.files.folders.projectBalances;
+const supportingDocumentsFolder = initialState?.sharing.files.subFolders.supportingDocuments;
 
 // @todo: we can of course support much more ...
 const supportedMimeTypes = [
@@ -69,15 +69,15 @@ const acceptableMimeType = function(mimeType: string|undefined) {
 };
 
 const validTemplatePath = function(path: string) {
-  return path.startsWith(initialState.sharing.files.folders.templates);
+  return initialState && path.startsWith(initialState?.sharing.files.folders.templates);
 };
 
 const getProjectNameFromProjectBalancesFolders = function(folder: Folder) {
   let dirName = folder.dirname;
-  if (!dirName.startsWith(initialState.sharing.files.folders.projectBalances)) {
+  if (!initialState || !dirName.startsWith(initialState?.sharing.files.folders.projectBalances)) {
     return null;
   }
-  dirName = dirName.substring(initialState.sharing.files.folders.projectBalances.length);
+  dirName = dirName.substring(initialState?.sharing.files.folders.projectBalances.length);
   dirName = dirName.replace(/^\/?(\d{4}|)\/?/, '');
   const slashPos = dirName.indexOf('/');
   const projectName = slashPos >= 0 ? dirName.substring(0, dirName.indexOf('/')) : dirName;
@@ -97,7 +97,7 @@ const getProjectYearFromProjectName = function(projectName: string|null) {
 
 const isProjectBalanceSupportingDocumentsTopFolder = function(folder: Folder, projectName: string|null) {
   projectName = projectName || getProjectNameFromProjectBalancesFolders(folder);
-  if (!projectName) {
+  if (!projectName || !projectBalancesFolder) {
     return false;
   }
   const dirName = folder.dirname;

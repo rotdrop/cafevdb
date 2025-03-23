@@ -48,16 +48,11 @@ import {
 } from 'vue'
 import axios from '@nextcloud/axios'
 import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
-import { getInitialState } from '../toolkit/services/InitialStateService.js'
+import getInitialState from '../toolkit/util/initial-state.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import type { AddressBook } from '../types/address-book.d.ts'
 import Console from '../util/console.ts'
-
-interface InitialState {
-  contacts: {
-    addressBooks: Record<string|number, AddressBook>,
-  },
-}
+import type { FilesInitialState as InitialState } from '../types/initial-state.d.ts'
 
 const COMPONENT_NAME = 'SelectAddressBooks'
 const logger = new Console(COMPONENT_NAME)
@@ -91,7 +86,7 @@ const props = withDefaults(
 
 const inputValObjects = ref<undefined | AddressBook | AddressBook[]>(undefined)
 const initialValObjects = ref<AddressBook | AddressBook[]>([])
-const addressBooks = ref<Record<string | number, AddressBook> >({})
+const addressBooks = ref<Record<number, AddressBook> >({})
 const ajaxLoading = ref(true)
 
 const addressBooksArray = computed(() => Object.values(addressBooks.value))
@@ -104,8 +99,8 @@ const emit = defineEmits([
 ])
 
 onBeforeMount(async () => {
-  const initialState: InitialState = getInitialState('files')
-  if (initialState.contacts && initialState.contacts.addressBooks) {
+  const initialState = getInitialState<InitialState>({ section: 'files' })
+  if (initialState?.contacts && initialState.contacts.addressBooks) {
     addressBooks.value = initialState.contacts.addressBooks
     // logger.info('ADDRESSBOOKS FROM STATE', addressBooks.value)
   } else {

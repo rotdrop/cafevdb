@@ -22,12 +22,13 @@
  */
 
 import { appName } from './config.ts';
-import { getInitialState } from './toolkit/services/InitialStateService.js';
+import getInitialState from './toolkit/util/initial-state.ts';
 import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
 import { translate as t } from '@nextcloud/l10n';
 import logoSvg from '../img/cafevdb.svg?raw';
 import type { LegacyFileInfo } from '@nextcloud/files';
+import type { FilesInitialState } from './types/initial-state.d.ts';
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken() || '');
@@ -47,7 +48,7 @@ if (!OCA.CAFEVDB) {
   OCA.CAFEVDB = {};
 }
 
-const initialState = getInitialState('files');
+const initialState = getInitialState<FilesInitialState>({ section: 'files' });
 
 // @todo: we can of course support much more ...
 const supportedMimeTypes = [
@@ -59,7 +60,7 @@ const acceptableMimeType = function<T extends string>(mimeType: T) {
 };
 
 const validTemplatePath = function<T extends string>(path: T) {
-  return path.startsWith(initialState.sharing.files.folders.templates);
+  return initialState && path.startsWith(initialState.sharing.files.folders.templates);
 };
 
 const enableTemplateActions = function(fileInfo: LegacyFileInfo) {

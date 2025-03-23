@@ -199,7 +199,7 @@ import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dial
 import { translate as t } from '@nextcloud/l10n'
 import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
 import { generateUrl } from '@nextcloud/router'
-import { getInitialState } from '../toolkit/services/InitialStateService.js'
+import getInitialState from '../toolkit/util/initial-state.ts'
 import SelectContacts from '../components/SelectContacts.vue'
 import SelectAddressBooks from '../components/SelectAddressBooks.vue'
 import SelectMusicians from '../components/SelectMusicians.vue'
@@ -211,16 +211,10 @@ import type { Project } from '../stores/app-data.ts'
 import type { Contact, AddressBook, Musician } from '../types/address-book.d.ts'
 import Console from '../util/console.ts'
 import { tooltips } from '../util/tooltips.ts'
+import type { FilesInitialState as InitialState } from '../types/initial-state.d.ts'
 
 const COMPONENT_NAME = 'FilesTab'
 const logger = new Console(COMPONENT_NAME)
-
-interface InitialState {
-  personal: {
-    userId: string,
-    musicianId: number,
-  },
-}
 
 type MusicianModel = {
   id: number
@@ -376,11 +370,11 @@ defineExpose({
 /**
  * Fetch some needed data ...
  */
-let initialState: InitialState
+let initialState: null|InitialState
 
 const getData = async () => {
-  initialState = getInitialState('files') as InitialState
-  if (initialState.personal.musicianId > 0) {
+  initialState = getInitialState<InitialState>({ section: 'files' })
+  if (initialState && initialState.personal.musicianId > 0) {
     sender.value = { id: initialState.personal.musicianId }
   }
   logger.info('INITIAL STATE', initialState)
@@ -395,7 +389,7 @@ const resetState = () => {
   sender.value = undefined
   recipients.value = []
   project.value = undefined
-  if (initialState.personal.musicianId > 0) {
+  if (initialState && initialState.personal.musicianId > 0) {
     sender.value = { id: initialState.personal.musicianId }
   }
 }

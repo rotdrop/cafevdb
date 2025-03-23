@@ -298,7 +298,7 @@ import { closeNavigation } from './services/navigation.js'
 import * as BusEvents from './event-bus-events.ts'
 import DynamicSvgIcon from './components/DynamicSvgIcon.vue'
 import appIcon from '../img/cafevdb.svg?raw'
-import { getInitialState } from './toolkit/services/InitialStateService.js'
+import getInitialState from './toolkit/util/initial-state.ts'
 import { useRoute, useRouter } from 'vue-router/composables'
 import type { AxiosResponse } from 'axios'
 import {
@@ -334,7 +334,7 @@ const errorHandler = <E extends AppError>(error: E) => {
 }
 errorHandlerProvider.pushHandler(errorHandler)
 
-const initialState = getInitialState('CAFEVDB')
+const initialState = getInitialState({ section: 'CAFEVDB' })
 
 type DebugOption = {
   value: number,
