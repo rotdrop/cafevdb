@@ -65,7 +65,7 @@ import {
 import { appName } from '../config.ts'
 import axios from '@nextcloud/axios'
 import type { AxiosResponse } from 'axios'
-import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.js'
+import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
 import type { NcSelect } from '@nextcloud/vue'

@@ -211,7 +211,7 @@ import { serializeError, isErrorLike } from 'serialize-error'
 import type { ErrorLike } from 'serialize-error'
 import md5 from 'blueimp-md5'
 import axios from '@nextcloud/axios'
-import generateAppUrl from '../toolkit/util/generate-url.js'
+import generateAppUrl from '../toolkit/util/generate-url.ts'
 import { showError, showInfo, /* TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import useTooltipsStore from '../stores/tooltips.ts'
 import {

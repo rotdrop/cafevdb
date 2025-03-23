@@ -22,7 +22,7 @@
  */
 
 import axios from '@nextcloud/axios';
-import generateAppUrl from '../toolkit/util/generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import Console from './console.js';
 import type { AxiosResponse } from 'axios';
 

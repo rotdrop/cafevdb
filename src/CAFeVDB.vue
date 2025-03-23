@@ -283,7 +283,7 @@ import ImageUploadTemplate from './components/oc-template/ImageUploadTemplate.vu
 import FileUploadTemplate from './components/oc-template/FileUploadTemplate.vue'
 import CloudFileSystemOperations from './components/oc-template/CloudFileSystemOperations.vue'
 import axios from '@nextcloud/axios'
-import generateAppUrl from './toolkit/util/generate-url.js'
+import generateAppUrl from './toolkit/util/generate-url.ts'
 import { storeToRefs } from 'pinia'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 import allDebugOptions, { DEBUG_VUE } from './debug-modes.ts'

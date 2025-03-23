@@ -42,7 +42,7 @@ import { translate as t } from '@nextcloud/l10n';
 import * as SessionStorage from '../util/session-storage.ts';
 
 import Console from '../util/console.ts';
-import generateAppUrl from '../toolkit/util/generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import getInitialState from '../toolkit/services/InitialStateService.js';
 import router from '../router/app-router.ts';
 import type { TemplatePostData } from '../util/legacy-post-data.ts';

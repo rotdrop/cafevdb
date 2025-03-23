@@ -65,7 +65,7 @@ import {
 import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
 import axios from '@nextcloud/axios'
-import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.js'
+import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
 import { musicianAddressPopup } from '../util/address-popup.ts'
 import { usePersistentDataStore } from '../stores/persistent-data.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'

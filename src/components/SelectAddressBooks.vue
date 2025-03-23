@@ -47,7 +47,7 @@ import {
   set as vueSet,
 } from 'vue'
 import axios from '@nextcloud/axios'
-import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.js'
+import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
 import { getInitialState } from '../toolkit/services/InitialStateService.js'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import type { AddressBook } from '../types/address-book.d.ts'

@@ -424,7 +424,7 @@ import GroupIcon from 'vue-material-design-icons/AccountGroup.vue'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
-import { generateUrl as generateAppUrl, generateOcsUrl as generateAppOcsUrl } from '../toolkit/util/generate-url.js'
+import { generateUrl as generateAppUrl, generateOcsUrl as generateAppOcsUrl } from '../toolkit/util/generate-url.ts'
 import { loadState } from '@nextcloud/initial-state'
 import { showError, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 

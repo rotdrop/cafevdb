@@ -187,7 +187,7 @@ import {
   del as vueDel,
 } from 'vue'
 import { useRouter } from 'vue-router/composables'
-import generateAppUrl from '../toolkit/util/generate-url.js'
+import generateAppUrl from '../toolkit/util/generate-url.ts'
 import { v4 as uuidv4 } from 'uuid'
 import Console from '../util/console.ts'
 import { sanitizePostData } from '../util/legacy-post-data.ts'
