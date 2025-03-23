@@ -36,6 +36,7 @@ import fileDownload from './file-download.js';
 import { makePlaceholder as selectPlaceholder } from './select-utils.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import { updateCreditsTimer } from './personal-settings.js';
+import { showInfo } from '@nextcloud/dialogs';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -152,6 +153,16 @@ const afterLoad = function(container) {
         $('#userkey .info').html(data.message);
         $('#userkey .info').show();
         $('#userkey .changed').show();
+        showInfo(t(appName, 'Encryption key changed, reloading settings form.'));
+        const url = generateAppUrl('settings/personal/form');
+        $.get(url)
+          .done((data) => {
+            $('#personal-settings-container').replaceWith(data);
+            afterLoad($('#personal-settings-container'));
+          })
+          .fail((xhr, textStatus, errorThrown) => {
+            Ajax.handleError(xhr, textStatus, errorThrown);
+          });
       })
       .fail(function(xhr, status, errorThrown) {
         const failData = Ajax.handleError(xhr, status, errorThrown);
