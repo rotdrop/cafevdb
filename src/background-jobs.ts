@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import onDocumentLoaded from './toolkit/util/on-document-loaded.js';
+import onDocumentLoaded from './toolkit/util/on-document-loaded.ts';
 
 import backgroundJobs from './app/backgroundjobs.js';
 

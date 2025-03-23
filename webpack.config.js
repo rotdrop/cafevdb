@@ -53,14 +53,14 @@ module.exports = {
   // },
   // stats: 'verbose',
   entry: Object.entries({
-    app: './src/app.js',
+    app: './src/app.ts',
     'vue-app': './src/vue-app.ts',
     'admin-settings': './src/admin-settings.ts',
-    settings: './src/settings.js',
-    'background-jobs': './src/background-jobs.js',
+    settings: './src/settings.ts',
+    'background-jobs': './src/background-jobs.ts',
     'files-hooks': './src/files-hooks.ts',
     'files-sidebar-hooks': './src/files-sidebar-hooks.ts',
-    'iframe-content-script': './src/iframe-content-script.js',
+    'iframe-content-script': './src/iframe-content-script.ts',
   })
     .filter(([name, entry]) => !process.env.ONLY || process.env.ONLY === name)
     .reduce((a, [name, entry]) => Object.assign(a, { [name]: entry }), {}),
