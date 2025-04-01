@@ -296,7 +296,7 @@ import {
 import type { SetterEvents, SetterEventValue } from '@rotdrop/async-nextcloud-event-bus'
 import { closeNavigation } from './services/navigation.js'
 import * as BusEvents from './event-bus-events.ts'
-import DynamicSvgIcon from './components/DynamicSvgIcon.vue'
+import DynamicSvgIcon from '@rotdrop/nextcloud-vue-components/lib/components/DynamicSvgIcon.vue'
 import appIcon from '../img/cafevdb.svg?raw'
 import getInitialState from './toolkit/util/initial-state.ts'
 import { useRoute, useRouter } from 'vue-router/composables'

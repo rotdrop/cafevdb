@@ -360,7 +360,7 @@ import IconRecordAbsence from 'vue-material-design-icons/AccountMultipleCheckOut
 import IconRehearsals from 'vue-material-design-icons/AccountMusicOutline.vue'
 import IconReload from 'vue-material-design-icons/Reload.vue'
 import IconShowDetails from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
-import DynamicSvgIcon from './DynamicSvgIcon.vue'
+import DynamicSvgIcon from '@rotdrop/nextcloud-vue-components/lib/components/DynamicSvgIcon.vue'
 import svgEmailChecked from '../../img/email-new-yes-path.svg?raw'
 import svgEmailUnchecked from '../../img/email-new-path.svg?raw'
 import svgEmailCross from '../../img/email-new-x-path.svg?raw'
