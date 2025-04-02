@@ -21,10 +21,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'sass:meta';
 @use 'sass:map';
-
-@import 'variables';
-@import 'pme-table-tabs.scss';
+@use './variables.scss' as *;
+@use './pme-table-tabs.scss' as *;
 
 /* ie8 doesn't support :checked */
 html:not(.ie8) {
@@ -1391,14 +1391,14 @@ table.pme-main {
   }
 
   a.button {
-    &, &:hover, &:link, &:visited {
-      text-decoration:none;
-      color:inherit;
-    }
     display:inline-block;
     vertical-align:middle;
     background-color: var(--color-background-dark);
     min-height:34px;
+    &, &:hover, &:link, &:visited {
+      text-decoration:none;
+      color:inherit;
+    }
     &.button-use-icon {
       background-size:24px;
       background-position: center;
@@ -1601,8 +1601,10 @@ form.pme-form {
   * {
     all:revert;
   }
-  @import 'sanitize.css/sanitize';
-  @import '@csstools/normalize.css/normalize';
+  // @import 'sanitize.css/sanitize';
+  // @import '@csstools/normalize.css/normalize';
+  @include meta.load-css('sanitize.css/sanitize');
+  @include meta.load-css('@csstools/normalize.css/normalize');
 
   dt {
     font-weight:bold;
@@ -1622,10 +1624,3 @@ form.pme-form {
     // perhaps user clippy.svg copy icon
   }
 }
-
-/*
- * Local Variables: ***
- * css-indent-offset: 2 ***
- * cssm-indent-level: 2 ***
- * End: ***
- */

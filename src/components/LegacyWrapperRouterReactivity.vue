@@ -123,7 +123,8 @@ onBeforeRouteLeave((to, from, next) => {
 })
 </script>
 <style scoped lang="scss">
-@import '../../style/flex.scss';
+@use '../../style/mixins/flex.scss';
+@include flex.flexRules;
 .container {
   height: 100%;
   > .legacy-page-wrapper {

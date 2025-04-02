@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,12 +21,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use './mixins/mailing-lists.scss' as *;
+@use './mixins/personal-email-addresses.scss' as *;
+
 @mixin styleDisabled() {
+  opacity:50%;
+  text-decoration:line-through;
   &, * {
     pointer-events:none;
   }
-  opacity:50%;
-  text-decoration:line-through;
 }
 
 @mixin styleHidden() {
@@ -37,8 +40,8 @@
 
   form.pme-form {
 
-    @import 'personal-email-addresses.scss';
-    @import 'mailing-lists.scss';
+    @include personalEmailAddresses;
+    @include mailingListRules;
 
     td.pme-value.mailing-list.project {
       .status-label:not(.action-display) {
@@ -50,37 +53,37 @@
       .subscription {
         &.status-unknown {
           .subscription-action:not(.status-unknown-enabled) {
-            @include styleHidden
+            @include styleHidden;
           }
         }
         &.status-subscribed {
           .subscription-action.status-subscribed-disabled {
-            @include styleHidden
+            @include styleHidden;
           }
         }
         &:not(.status-subscribed) {
           .subscription-action.status-not-subscribed-disabled {
-            @include styleHidden
+            @include styleHidden;
           }
         }
         &.delivery-enabled {
           .subscription-action.delivery-enabled-disabled {
-            @include styleHidden
+            @include styleHidden;
           }
         }
         &.delivery-disabled {
           .subscription-action.delivery-disabled-disabled {
-            @include styleHidden
+            @include styleHidden;
           }
         }
         &.registration-confirmed {
           .subscription-action.registration-confirmed-disabled {
-            @include styleDisabled
+            @include styleDisabled;
           }
         }
         &.registration-preliminary {
           .subscription-action.registration-preliminary-disabled {
-            @include styleDisabled
+            @include styleDisabled;
           }
         }
       }

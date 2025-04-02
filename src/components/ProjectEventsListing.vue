@@ -1267,8 +1267,10 @@ onUnmounted(() => {
 </script>
 <style scoped lang="scss">
 @use "sass:list";
-@import '../../style/flex.scss';
-@import '../../style/color-palette.scss';
+@use '../../style/mixins/flex.scss';
+@use '../../style/color-palette.scss' as *;
+
+@include flex.flexRules;
 .icon-do-not-record-absence {
   opacity: 0.4;
 }

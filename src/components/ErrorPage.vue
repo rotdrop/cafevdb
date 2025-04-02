@@ -446,7 +446,8 @@ onBeforeMount(parseStackTrace)
 
 </script>
 <style scoped lang="scss">
-@import '../../style/flex.scss';
+@use '../../style/mixins/flex.scss';
+@include flex.flexRules;
 .container {
   :deep(.envelope-error) {
     .list-item__anchor {

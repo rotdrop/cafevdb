@@ -24,6 +24,9 @@
  * Some tweaks for jQuery dialogs in order to fix scrollbar issues etc.
  */
 
+@use './mixins/error-dialogs.scss' as *;
+@use './mixins/cloud-file-system-operations.scss' as *;
+
 $full-screen-zindex: 9000;
 
 .ui-dialog.ui-widget.#{$appName}-full-screen {
@@ -127,9 +130,9 @@ $full-screen-zindex: 9000;
 
 .oc-dialog {
 
-  @import 'error-dialogs.scss';
+  @include errorDialogs($appNameTag);
 
-  @import 'cloud-file-system-operations.scss';
+  @include cloudFileSystemOperations;
 
   &.maximize-width {
     .oc-dialog-content {

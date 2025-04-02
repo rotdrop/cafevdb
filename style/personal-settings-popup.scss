@@ -21,6 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use './mixins/personal-settings' as *;
+
 #appsettings_popup {
   div.personalblock.admin {
     min-width:46em;
@@ -74,6 +76,5 @@
     max-width:46em;
     width:46em;
   }
-
-  @import 'personal-settings';
+  @include personalSettings($appNameTag);
 }

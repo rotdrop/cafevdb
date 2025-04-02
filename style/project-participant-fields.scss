@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -121,7 +121,7 @@
   @include defaultHiddenElement("tr", $prefix, $relation);
 }
 @mixin rowShownIf($property, $prefix: "&", $relation: "~", $important: false) {
-  @include elementShownIf($property, "tr", $prefix, $relation, table-row, $important)
+  @include elementShownIf($property, "tr", $prefix, $relation, table-row, $important);
 }
 @mixin rowShownIfMultiplicity($multiplicity, $prefix: "&", $relation: "~") {
   @include rowShownIf(multiplicity-#{$multiplicity}, $prefix, $relation);

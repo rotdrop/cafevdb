@@ -21,35 +21,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-div.#{$appNameTag}.about {
-  a:link {
-    color:CornFlowerBlue;
-    /* text-decoration:underline; */
-    font-weight:bold;
-  }
+@use 'mixins/about' as *;
 
-  a:visited {
-    color:CornFlowerBlue;
-    /* text-decoration:underline; */
-    font-weight:bold;
-  }
-
-  a:hover {
-    color:CornFlowerBlue;
-    /* text-decoration:underline; */
-    font-style:italic;
-    font-weight:bold;
-  }
-
-  div.product.credits.intro {
-    padding:1em;
-    font-style:italic;
-  }
-
-  div.product.credits.list ul {
-    list-style-type:circle;
-    list-style-position:inside;
-    list-style-image:none;
-    list-style-image:url('../img/listitems/info1.svg');
-  }
-}
+@include about($appNameTag);

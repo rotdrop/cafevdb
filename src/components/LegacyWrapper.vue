@@ -650,6 +650,8 @@ onUnmounted(() => {
 
 </script>
 <style lang="scss" scoped>
+@use '../../style/mixins/flex.scss';
+@include flex.flexRules;
 ##{$appName}-legacy-wrapper {
   position: relative;
   height: 100%;
@@ -691,5 +693,4 @@ onUnmounted(() => {
     }
   }
 }
-@import "../../style/flex.scss";
 </style>

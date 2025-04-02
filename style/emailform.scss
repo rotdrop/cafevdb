@@ -21,6 +21,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:meta";
+@use './mixins/flex.scss' as *;
+@use './mixins/error-dialogs.scss' as *;
+
 $editorHeight: 20em;
 
 .ui-dialog.emailform {
@@ -39,7 +43,7 @@ $editorHeight: 20em;
 
   #emailformdialog {
 
-    @import 'flex.scss';
+    @include flexRules;
 
     padding:0;
     border-top-right-radius:0;
@@ -239,8 +243,11 @@ $editorHeight: 20em;
             button {
               min-height: unset;
             }
-            @import 'bootstrap/scss/bootstrap';
-            @import 'bootstrap4-duallistbox/dist/bootstrap-duallistbox';
+            // @import 'bootstrap/scss/bootstrap';
+            // @import 'bootstrap4-duallistbox/dist/bootstrap-duallistbox';
+            // @include meta.load-css('bootstrap/scss/bootstrap');
+            @include meta.load-css('bootstrap/dist/css/bootstrap.css');
+            @include meta.load-css('bootstrap4-duallistbox/dist/bootstrap-duallistbox');
             .bootstrap-duallistbox-container {
               input, select, button {
                 background-color:#FFF;
@@ -469,9 +476,11 @@ $editorHeight: 20em;
                 all:revert;
               }
 
-              @import 'sanitize.css/sanitize';
-              @import '@csstools/normalize.css/normalize';
+              // @import 'sanitize.css/sanitize';
+              // @import '@csstools/normalize.css/normalize';
               /*@import 'normalize.css/normalize';*/
+              @include meta.load-css('sanitize.css/sanitize');
+              @include meta.load-css('@csstools/normalize.css/normalize');
 
               blockquote {
                 display: block;
@@ -1098,11 +1107,5 @@ span.error.contents.item.substitutions {
  *
  */
 div.emailform.statuspage {
-  @import 'error-dialogs.scss';
+  @include errorDialogs($appNameTag);
 }
-
-/*
- * Local Variables: ***
- * css-indent-offset: 2 ***
- * End: ***
- */

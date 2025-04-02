@@ -27,6 +27,9 @@
  *
  */
 
+@use './mixins/flex.scss' as *;
+@use './mixins/wysiwyg-editors.scss' as *;
+
 body {
   overflow:hidden;
 }
@@ -36,10 +39,10 @@ body#body-settings {
 }
 
 #content.#{$appNameTag}, ##{$appName}-legacy-wrapper {
-  @import 'flex.scss';
+  @include flexRules;
 
   textarea.wysiwyg-editor {
-    @import 'wysiwyg-editors.scss';
+    @include wysiwygEditors;
   }
 
   // Seems to be counter productive with NC 25
@@ -643,12 +646,15 @@ span.dropdown-container {
         }
       }
       li, li.menu-item {
+        margin:0!important;
+        padding:0!important;
+        float:none!important;
         &.disabled, &[data-operation="none"] {
+          opacity:50%;
           &, * {
             // pointer-events: none;
             cursor:default;
           }
-          opacity:50%;
         }
         &:not([data-operation="none"]) {
           a, label {
@@ -657,15 +663,11 @@ span.dropdown-container {
             &:hover {
               background-color: var(--color-background-hover);
             }
-
             &:active {
-            background-color: var(--color-primary-light);
+              background-color: var(--color-primary-light);
             }
           }
         }
-        margin:0!important;
-        padding:0!important;
-        float:none!important;
         &.separator {
           cursor:default;
           .rule {

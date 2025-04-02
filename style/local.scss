@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,19 +21,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:meta";
 @use "sass:list";
 
 @function listToString($list, $glue: '') {
   $result: null;
 
-  @for $i from 1 through length($list) {
-    $e: nth($list, $i);
+  @for $i from 1 through list.length($list) {
+    $e: list.nth($list, $i);
 
-    @if type-of($e) == list {
+    @if meta.type-of($e) == list {
       $e: "#{listToString($e, $glue)}";
     }
     $result: if(
-      $i != length($list),
+      $i != list.length($list),
       "#{$result}#{$e}#{$glue}",
       "#{$result}#{$e}"
     );

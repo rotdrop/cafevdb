@@ -54,7 +54,8 @@ defineProps <{
 
 </script>
 <style lang="scss">
-@import '../../style/flex.scss';
+@use '../../style/mixins/flex.scss';
+@include flex.flexRules;
 .error-html-container {
   // so the many nth mean that this is tied closely to the core
   // exception template ...
