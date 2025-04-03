@@ -139,6 +139,7 @@ module.exports = {
     ),
     new webpack.DefinePlugin({
       APP_NAME: JSON.stringify(appName),
+      appName: JSON.stringify(appName),
     }),
     new HtmlWebpackPlugin({
       inject: false,
