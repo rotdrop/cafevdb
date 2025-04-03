@@ -242,6 +242,12 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
    * @param null|string $dataBaseName
    *
    * @return array
+   * ```
+   * [
+   *   'status' => true/false,
+   *   'hints' => [ HINT0, HINT1, ... ],
+   * ]
+   * ```
    */
   public function checkRequirements(?string $dataBaseName):array
   {
