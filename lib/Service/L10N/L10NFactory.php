@@ -116,6 +116,12 @@ class L10NFactory implements IL10NFactory
   }
 
   /** {@inheritdoc} */
+  public function getLanguageDirection(string $language): string
+  {
+    return static::__call(__FUNCTION__, func_get_args());
+  }
+
+  /** {@inheritdoc} */
   public function getLanguageIterator(?IUser $user = null): ILanguageIterator
   {
     return static::__call(__FUNCTION__, func_get_args());
