@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine  <himself@claus-justus-heine.de>
- * @copyright 2024, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024, 2025, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -219,14 +219,14 @@ class TaxExemptionNoticesStorage extends Storage
   }
 
   /**  {@inheritdoc} */
-  public function isUpdatable($path)
+  public function isUpdatable(string $path): bool
   {
     $result = $this->file_exists($path);
     return $result;
   }
 
    /** {@inheritdoc} */
-  public function unlink($path)
+  public function unlink(string $path): bool
   {
     if ($this->is_dir($path)) {
       return false;
@@ -323,7 +323,7 @@ class TaxExemptionNoticesStorage extends Storage
    * Allow rename if the change of the name respects the implied naming
    * scheme. In this case also the underlying entity is updated.
    */
-  public function rename($path1, $path2)
+  public function rename(string $path1, string $path2): bool
   {
     /** @var Entities\DatabaseStorageFile $dirEntry */
     $dirEntry = $this->fileFromFileName($path1);

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2024, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020-2025, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -119,7 +119,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   }
 
   /**  {@inheritdoc} */
-  public function isUpdatable($path)
+  public function isUpdatable(string $path): bool
   {
     $result = $this->file_exists($path);
     return $result;
@@ -202,7 +202,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   }
 
   /** {@inheritdoc} */
-  public function mkdir($path)
+  public function mkdir(string $path): bool
   {
     $sequence = $this->isContainerDirectory($path);
     $year = $this->isYearDirectory($path);
@@ -289,7 +289,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
    * b) both paths refer to files inside top-level directories, then either
    * just rename the file or move it to the other document container.
    */
-  public function rename($path1, $path2)
+  public function rename(string $path1, string $path2): bool
   {
     // $this->logInfo('P1 - P2 ' . $path1 . ' - ' . $path2);
 
@@ -431,7 +431,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   }
 
   /** {@inheritdoc} */
-  public function unlink($path)
+  public function unlink(string $path): bool
   {
     if ($this->is_dir($path)) {
       return false;

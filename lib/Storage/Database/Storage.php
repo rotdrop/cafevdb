@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2025, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -488,7 +488,7 @@ class Storage extends AbstractStorage
   }
 
   /** {@inheritdoc} */
-  public function isReadable($path)
+  public function isReadable(string $path): bool
   {
     // at least check whether it exists
     // subclasses might want to implement this more thoroughly
@@ -496,14 +496,14 @@ class Storage extends AbstractStorage
   }
 
   /** {@inheritdoc} */
-  public function isUpdatable($path)
+  public function isUpdatable(string $path): bool
   {
     // return $this->file_exists($path);
     return false; // readonly for now
   }
 
   /** {@inheritdoc} */
-  public function isSharable($path)
+  public function isSharable(string $path): bool
   {
     // sharing cannot work in general as the database access need additional
     // credentials
@@ -511,7 +511,7 @@ class Storage extends AbstractStorage
   }
 
   /** {@inheritdoc} */
-  public function filemtime($path)
+  public function filemtime(string $path): int|false
   {
     if ($this->is_dir($path)) {
       $mtime = $this->getDirectoryModificationTime($path)->getTimestamp();
@@ -541,7 +541,7 @@ class Storage extends AbstractStorage
    * storage_mtime of the $time argument, or if the file has vanished in which
    * case it should be removed from the filescache table.
    */
-  public function hasUpdated($path, $time)
+  public function hasUpdated(string $path, int $time): bool
   {
     $mtime = $this->filemtime($path);
     return $mtime === false || ($mtime > $time);
@@ -567,7 +567,7 @@ class Storage extends AbstractStorage
   }
 
   /** {@inheritdoc} */
-  public function test()
+  public function test(): bool
   {
     try {
       $this->filesRepository->count([]);
@@ -592,7 +592,7 @@ class Storage extends AbstractStorage
   }
 
   /** {@inheritdoc} */
-  public function file_exists($path)
+  public function file_exists(string $path): bool
   {
     try {
       if ($this->is_dir($path)) {
@@ -610,7 +610,13 @@ class Storage extends AbstractStorage
   }
 
   /** {@inheritdoc} */
-  public function unlink($path)
+  public function remove(string $path): bool
+  {
+    return parent::remove($path);
+  }
+
+  /** {@inheritdoc} */
+  public function unlink(string $path): bool
   {
     $file = $this->fileFromFileName($path);
     if (empty($file)) {
@@ -635,13 +641,13 @@ class Storage extends AbstractStorage
   }
 
   /** {@inheritdoc} */
-  public function mkdir($path)
+  public function mkdir(string $path): bool
   {
     return false;
   }
 
   /** {@inheritdoc} */
-  public function is_dir($path)
+  public function is_dir(string $path): bool
   {
     if ($path === '' || $path == self::PATH_SEPARATOR || $path === '.') {
       return true;
@@ -657,7 +663,7 @@ class Storage extends AbstractStorage
   }
 
   /** {@inheritdoc} */
-  public function is_file($path)
+  public function is_file(string $path): bool
   {
     return $this->filesize($path) !== false;
   }
@@ -811,7 +817,7 @@ class Storage extends AbstractStorage
   }
 
   /** {@inheritdoc} */
-  public function rename($path1, $path2)
+  public function rename(string $path1, string $path2): bool
   {
     return false;
   }
