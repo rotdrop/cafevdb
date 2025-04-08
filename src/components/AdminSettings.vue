@@ -450,7 +450,7 @@ import { translate as t } from '@nextcloud/l10n'
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
 import Console from '../util/console.ts'
 import { joinLiterals } from '../util/string-literals.ts'
-import { enableVueDevTools, disableVueDevTools } from '../util/vue-devtools.ts'
+import { enableVueDevTools, disableVueDevTools } from '../toolkit/util/vue-devtools.ts'
 
 const IconCancel = IconEmailVerificationFailed
 
