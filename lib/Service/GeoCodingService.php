@@ -274,10 +274,10 @@ class GeoCodingService
    * @return array
    */
   public function cachedLocations(
-    $postalCode = null,
-    $name = null,
-    $country = null,
-    $language = null,
+    ?string $postalCode = null,
+    ?string $name = null,
+    ?string $country = null,
+    ?string $language = null,
   ) {
     if (!$postalCode && !$name) {
       return [];
@@ -371,10 +371,10 @@ class GeoCodingService
    * @return array
    */
   public function remoteLocations(
-    $postalCode = null,
-    $name = null,
-    $country = null,
-    $language = null
+    ?string $postalCode = null,
+    ?string $name = null,
+    ?string $country = null,
+    ?string $language = null
   ):array {
     if (!$postalCode && !$name) {
       return []; // no-go
@@ -575,8 +575,11 @@ class GeoCodingService
    *
    * @return null|array [ name => TRANSLATION, adminName1 => TRANSLATED_ADMIN1, adminCode1 => CODE ], null if not found.
    */
-  private function translatePlaceName(string $name, string $country, ?string $language = null):?array
-  {
+  private function translatePlaceName(
+    string $name,
+    string $country,
+    ?string $language = null,
+  ):?array {
     if (!$language) {
       $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
@@ -659,8 +662,11 @@ class GeoCodingService
    *
    * @return bool Execution status.
    */
-  public function updatePostalCodes($language = null, int $limit = 100, array $forcedZipCodes = []):bool
-  {
+  public function updatePostalCodes(
+    ?string $language = null,
+    int $limit = 100,
+    array $forcedZipCodes = [],
+  ):bool {
     if (empty($language)) {
       $locale = $this->getLocale();
       $language = locale_get_primary_language($locale);
@@ -912,7 +918,7 @@ class GeoCodingService
    *
    * @return string Return the country-code for the requested or current locale.
    */
-  public function localeCountryName($locale = null):string
+  public function localeCountryName(?string $locale = null):string
   {
     if (!$locale) {
       $locale = $this->getLocale();
@@ -926,7 +932,7 @@ class GeoCodingService
    *
    * @return string The two-letter region.
    */
-  public function localeRegion($locale = null):string
+  public function localeRegion(?string $locale = null):string
   {
     if (!$locale) {
       $locale = $this->getLocale();
@@ -940,7 +946,7 @@ class GeoCodingService
    *
    * @return string The language for the requested or current locale.
    */
-  public function localeLanguage($locale = null):string
+  public function localeLanguage(?string $locale = null):string
   {
     if (!$locale) {
       $locale = $this->getLocale();
@@ -1097,7 +1103,7 @@ class GeoCodingService
    *
    * @return array An array array(CountryCode => ContinentName)
    */
-  public function countryContinents(string $language = null):array
+  public function countryContinents(?string $language = null):array
   {
     if (!$language) {
       $locale = $this->getLocale();

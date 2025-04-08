@@ -180,13 +180,13 @@ class ContactsService
    *
    * @param array $emailContact Contact to be added `[ 'name' => FN, 'email' => EMAIL ]`.
    *
-   * @param string $addressBookKey If set, the id of the address-book to add
+   * @param null|string $addressBookKey If set, the id of the address-book to add
    * entries to. Otherwise the @c addressbookid config-value will be
    * used. If none is set, return null.
    *
    * @return null|array
    */
-  public function addEmailContact(array $emailContact, string $addressBookKey = null):?array
+  public function addEmailContact(array $emailContact, ?string $addressBookKey = null):?array
   {
     if (empty($addressBookKey)) {
       $addressBookKey = $this->getConfigValue('generaladdressbookid', false);
