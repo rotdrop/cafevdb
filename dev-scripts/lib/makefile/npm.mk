@@ -28,8 +28,9 @@ endif
 .PHONY: build-flavour-build
 
 #@private
-$(WEBPACK_TARGETS): $(WEBPACK_DEPS) $(BUILD_FLAVOUR_FILE)
+$(WEBPACK_TARGETS): $(BUILD_FLAVOUR_FILE) $(WEBPACK_DEPS)
 	make webpack-clean
+	@env LC_ALL=C make $(WEBPACK_DEPS) 2>&1 | grep -vF 'Nothing to be done for'
 	$(NPM) run $(shell cat $(BUILD_FLAVOUR_FILE)) || rm -f $(WEBPACK_TARGETS)
 
 #@private
