@@ -220,7 +220,10 @@ export default defineStore(storeId, () => {
   const atHistoryBase = computed(() => currentHistoryIndex.value === 0);
   const atHistoryTop = computed(() => currentHistoryIndex.value === routerHistoryKeys.value.length - 1);
 
-  const initialState: null|HistoryInitialState = getInitialState<HistoryInitialState>({ section: 'historyPostData' });
+  const initialState: null|HistoryInitialState = getInitialState<HistoryInitialState>({
+    section: 'historyPostData',
+    defaults: null,
+  });
   logger.info('INITIAL POST DATA STATE', initialState);
 
   let initialPostHash: undefined|string = undefined;
