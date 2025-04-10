@@ -626,7 +626,7 @@ trait ConfigTrait
   /**
    * Return the full path to the document templates folder.
    *
-   * @param string $templateName If given return the full path to the
+   * @param null|string $templateName If given return the full path to the
    * given document template which can be one of the array-keys of
    * ConfigService::DOCUMENT_TEMPLATES.
    *
@@ -635,7 +635,7 @@ trait ConfigTrait
    *
    * @return string Cloud file-system path as requested.
    */
-  protected function getDocumentTemplatesPath(string $templateName = null, bool $dirName = false)
+  protected function getDocumentTemplatesPath(?string $templateName = null, bool $dirName = false)
   {
     $pathComponents = [''];
     $sharedFolder = $this->getSharedFolderPath();
@@ -834,13 +834,13 @@ trait ConfigTrait
    *
    * @param string $format
    *
-   * @param DateTimeZone $timeZone
+   * @param null|DateTimeZone $timeZone
    *
-   * @param IL10N $l
+   * @param null|IL10N $l
    *
    * @return string
    */
-  protected function formatDate($timestamp, string $format = 'long', DateTimeZone $timeZone = null, IL10N $l = null):string
+  protected function formatDate($timestamp, string $format = 'long', ?DateTimeZone $timeZone = null, ?IL10N $l = null):string
   {
     if ($timestamp instanceof DateTimeInterface
         && !($timestamp instanceof DateTime)) {
