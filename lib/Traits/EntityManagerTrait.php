@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -80,7 +80,7 @@ trait EntityManagerTrait
    * @return BaseEntityRepository The repository for the current target
    * database entity.
    */
-  protected function getDatabaseRepository($entityClassName = null):BaseEntityRepository
+  protected function getDatabaseRepository(?string $entityClassName = null):BaseEntityRepository
   {
     if (!empty($entityClassName) && $entityClassName !== $this->entityClassName) {
       $this->setDatabaseRepository($entityClassName);
@@ -254,7 +254,7 @@ trait EntityManagerTrait
    *         makes use of optimistic locking fails.
    * @throws ORMException
    */
-  protected function flush($entity = null, bool $useTransaction = false):void
+  protected function flush(mixed $entity = null, bool $useTransaction = false):void
   {
     if (!empty($entity)) {
       $this->entityManager->persist($entity);
@@ -279,7 +279,7 @@ trait EntityManagerTrait
    *
    * @return array The entities.
    */
-  protected function findAll($entityClassName = null)
+  protected function findAll(?string $entityClassName = null)
   {
     return $this->getDatabaseRepository($entityClassName)->findAll();
   }
@@ -330,7 +330,7 @@ trait EntityManagerTrait
    *
    * @return array The objects.
    */
-  protected function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+  protected function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null)
   {
     return $this->getDatabaseRepository()->findBy($criteria, $orderBy, $limit, $offset);
   }
@@ -343,7 +343,7 @@ trait EntityManagerTrait
    *
    * @return object|null The entity instance or NULL if the entity can not be found.
    */
-  protected function findOneBy(array $criteria, array $orderBy = null)
+  protected function findOneBy(array $criteria, ?array $orderBy = null)
   {
     return $this->getDatabaseRepository()->findOneBy($criteria, $orderBy);
   }
@@ -469,7 +469,7 @@ trait EntityManagerTrait
    *
    * @return int The cardinality of the objects that match the given criteria.
    */
-  protected function count(array $criteria, string $entityClassName = null):int
+  protected function count(array $criteria, ?string $entityClassName = null):int
   {
     return $this->getDatabaseRepository($entityClassName)->count($criteria);
   }
@@ -481,7 +481,7 @@ trait EntityManagerTrait
    *
    * @return array The column names.
    */
-  protected function columnNames($entityClassName = null)
+  protected function columnNames(?string $entityClassName = null)
   {
     empty($entityClassName) && ($entityClassName = $this->entityClassName);
     if (empty($entityClassName)) {
