@@ -863,13 +863,13 @@ trait ConfigTrait
    *
    * @param string $formatTime
    *
-   * @param DateTimeZone $timeZone
+   * @param null|DateTimeZone $timeZone
    *
-   * @param IL10N $l
+   * @param null|IL10N $l
    *
    * @return string
    */
-  protected function formatDateTime($timestamp, string $formatDate = 'long', string $formatTime = 'medium', DateTimeZone $timeZone = null, IL10N $l = null)
+  protected function formatDateTime($timestamp, string $formatDate = 'long', string $formatTime = 'medium', ?DateTimeZone $timeZone = null, ?IL10N $l = null)
   {
     if ($timestamp instanceof DateTimeInterface
         && !($timestamp instanceof DateTime)) {
