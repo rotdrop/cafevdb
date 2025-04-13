@@ -529,7 +529,7 @@ class ConfigService
       return $this->getUserManager()->get($userId);
     }
     if (empty($this->user)) {
-      if (\OC::$CLI && empty($userSession->getUser()) && !empty($GLOBALS['cafevdb-user'])) {
+      if (\OC::$CLI && empty($this->userSession->getUser()) && !empty($GLOBALS['cafevdb-user'])) {
         $this->setUserId($GLOBALS['cafevdb-user']);
       } else {
         $this->user = $this->getUserSession()->getUser();
