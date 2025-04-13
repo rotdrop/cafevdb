@@ -25,8 +25,7 @@ import { appName } from '../config.ts';
 import $ from './jquery.js';
 import { loadState } from '@nextcloud/initial-state';
 import generateAppUrl from './generate-url.js';
-
-require('iframe-resizer');
+import '@iframe-resizer/jquery';
 
 let scriptUrl;
 
@@ -48,7 +47,7 @@ const iFrameResize = function($iframe) {
 
   $iframe.contents().find('head').prepend(`<script type="text/javascript" defer src="${scriptUrl}"></script>`);
 
-  $iframe.iFrameResize();
+  $iframe.iFrameResize({ license: 'GPLv3' });
 };
 
 export default iFrameResize;
