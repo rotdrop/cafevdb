@@ -54,7 +54,7 @@
     Menu
 </label>
 <aside class="phpdocumentor-column -three phpdocumentor-sidebar">
-                    <section class="phpdocumentor-sidebar__category">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
             <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="namespaces/oca.html" class="">OCA</a>
@@ -67,15 +67,15 @@
             </ul>
 
                         </section>
-                <section class="phpdocumentor-sidebar__category">
+                <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/cafevdb.html" class="">cafevdb</a>
+    <a href="packages/Application.html" class="">Application</a>
 </h4>
 
                         </section>
             
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
@@ -83,7 +83,7 @@
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
     </section>
 
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -indices">
         <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
     </section>
@@ -102,7 +102,7 @@
     ScanFiles
 
         <span class="phpdocumentor-element__extends">
-        extends <abbr title="\OC\BackgroundJob\TimedJob">TimedJob</abbr>
+        extends <abbr title="\OCP\BackgroundJob\TimedJob">TimedJob</abbr>
     </span>
     
             <div class="phpdocumentor-element__package">
@@ -123,18 +123,21 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="BackgroundJob/ScanFiles.php"><a href="files/backgroundjob-scanfiles.html"><abbr title="BackgroundJob/ScanFiles.php">ScanFiles.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/BackgroundJob/ScanFiles.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/BackgroundJob/ScanFiles.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Class ScanFiles is a background job used to run the file scanner over the user
 accounts to ensure integrity of the file cache. This is a copy of</p>
 
+
     <section class="phpdocumentor-description"><p>OCA\Files\BackgroundJob\ScanFiles</p>
 <p>which is triggered by a JS timer via Ajax from the front-end in order to
 get authenticated background jobs.</p>
 </section>
+
+
 
 
 
@@ -159,7 +162,7 @@ get authenticated background jobs.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#constant_USERS_PER_SESSION">USERS_PER_SESSION</a>
+    <a class="" href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#constant_USERS_PER_SESSION">USERS_PER_SESSION</a>
     <span>
         &nbsp;= 500                            </span>
 </dt>
@@ -175,25 +178,25 @@ get authenticated background jobs.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_config">$config</a>
+    <a class="" href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_config">$config</a>
     <span>
                         &nbsp;: <abbr title="\OCP\IConfig">IConfig</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_connection">$connection</a>
+    <a class="" href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_connection">$connection</a>
     <span>
                         &nbsp;: <abbr title="\OCP\IDBConnection">IDBConnection</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_dispatcher">$dispatcher</a>
+    <a class="" href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_dispatcher">$dispatcher</a>
     <span>
                         &nbsp;: <abbr title="\OCP\EventDispatcher\IEventDispatcher">IEventDispatcher</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_logger">$logger</a>
+    <a class="" href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_logger">$logger</a>
     <span>
                         &nbsp;: <abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>            </span>
 </dt>
@@ -207,33 +210,32 @@ get authenticated background jobs.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method___construct">__construct()</a>
+    <a class="" href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method___construct">__construct()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_run">run()</a>
+    <a class="" href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_run">run()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_runScanner">runScanner()</a>
+    <a class="" href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_runScanner">runScanner()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_getUserToScan">getUserToScan()</a>
+    <a class="" href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_getUserToScan">getUserToScan()</a>
     <span>
                                 &nbsp;: string|false    </span>
 </dt>
 <dd>Find a storage which have unindexed files and return a user with access to the storage</dd>
 
     </dl>
-
 
 
 
@@ -254,13 +256,14 @@ get authenticated background jobs.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="BackgroundJob/ScanFiles.php"><a href="files/backgroundjob-scanfiles.html"><abbr title="BackgroundJob/ScanFiles.php">ScanFiles.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/BackgroundJob/ScanFiles.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Amount of users that should get scanned per execution</p>
 
+    
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
@@ -271,6 +274,8 @@ get authenticated background jobs.</p>
 
     
     
+    
+
     
 
 </article>
@@ -300,11 +305,12 @@ get authenticated background jobs.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="BackgroundJob/ScanFiles.php"><a href="files/backgroundjob-scanfiles.html"><abbr title="BackgroundJob/ScanFiles.php">ScanFiles.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
-            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/BackgroundJob/ScanFiles.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
@@ -314,6 +320,8 @@ get authenticated background jobs.</p>
 
     
     
+    
+
     
 
 </article>
@@ -334,11 +342,12 @@ get authenticated background jobs.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="BackgroundJob/ScanFiles.php"><a href="files/backgroundjob-scanfiles.html"><abbr title="BackgroundJob/ScanFiles.php">ScanFiles.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/BackgroundJob/ScanFiles.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
@@ -348,6 +357,8 @@ get authenticated background jobs.</p>
 
     
     
+    
+
     
 
 </article>
@@ -368,11 +379,12 @@ get authenticated background jobs.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="BackgroundJob/ScanFiles.php"><a href="files/backgroundjob-scanfiles.html"><abbr title="BackgroundJob/ScanFiles.php">ScanFiles.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/BackgroundJob/ScanFiles.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
@@ -382,6 +394,8 @@ get authenticated background jobs.</p>
 
     
     
+    
+
     
 
 </article>
@@ -402,11 +416,12 @@ get authenticated background jobs.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="BackgroundJob/ScanFiles.php"><a href="files/backgroundjob-scanfiles.html"><abbr title="BackgroundJob/ScanFiles.php">ScanFiles.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/BackgroundJob/ScanFiles.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
@@ -416,6 +431,8 @@ get authenticated background jobs.</p>
 
     
     
+    
+
     
 
 </article>
@@ -441,18 +458,19 @@ get authenticated background jobs.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="BackgroundJob/ScanFiles.php"><a href="files/backgroundjob-scanfiles.html"><abbr title="BackgroundJob/ScanFiles.php">ScanFiles.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/BackgroundJob/ScanFiles.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$config</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\EventDispatcher\IEventDispatcher">IEventDispatcher</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dispatcher</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IDBConnection">IDBConnection</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$connection</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$config</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\EventDispatcher\IEventDispatcher">IEventDispatcher</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dispatcher</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IDBConnection">IDBConnection</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$connection</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\AppFramework\Utility\ITimeFactory">ITimeFactory</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$time</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -484,7 +502,16 @@ get authenticated background jobs.</p>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$time</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\AppFramework\Utility\ITimeFactory">ITimeFactory</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
             </dl>
+
+    
 
     
 
@@ -504,9 +531,9 @@ get authenticated background jobs.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="BackgroundJob/ScanFiles.php"><a href="files/backgroundjob-scanfiles.html"><abbr title="BackgroundJob/ScanFiles.php">ScanFiles.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">104</span>
+    <span class="phpdocumentor-element-found-in__line">108</span>
 
-            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.108" class="phpdocumentor-element-found-in__source" data-line="108" data-modal="source-view" data-src="files/BackgroundJob/ScanFiles.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -518,6 +545,7 @@ get authenticated background jobs.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -528,6 +556,8 @@ get authenticated background jobs.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -547,9 +577,9 @@ get authenticated background jobs.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="BackgroundJob/ScanFiles.php"><a href="files/backgroundjob-scanfiles.html"><abbr title="BackgroundJob/ScanFiles.php">ScanFiles.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/BackgroundJob/ScanFiles.php.txt"></a>
     </aside>
 
     
@@ -559,6 +589,7 @@ get authenticated background jobs.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -570,6 +601,8 @@ get authenticated background jobs.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -589,9 +622,9 @@ get authenticated background jobs.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="BackgroundJob/ScanFiles.php"><a href="files/backgroundjob-scanfiles.html"><abbr title="BackgroundJob/ScanFiles.php">ScanFiles.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">90</span>
+    <span class="phpdocumentor-element-found-in__line">94</span>
 
-            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/BackgroundJob/ScanFiles.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Find a storage which have unindexed files and return a user with access to the storage</p>
@@ -604,6 +637,9 @@ get authenticated background jobs.</p>
         </div>
     
     
+    
+    
+
     
 
             <section>
@@ -725,27 +761,27 @@ get authenticated background jobs.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Constants</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#constant_USERS_PER_SESSION">USERS_PER_SESSION</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#constant_USERS_PER_SESSION">USERS_PER_SESSION</a></li>
                                             </ul>
                 </li>
             
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_config">$config<a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_connection">$connection<a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_dispatcher">$dispatcher<a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html"></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_config">$config</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_connection">$connection</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_dispatcher">$dispatcher</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#property_logger">$logger</a></li>
                                             </ul>
                 </li>
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                            <li><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method___construct">__construct()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_run">run()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_runScanner">runScanner()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_getUserToScan">getUserToScan()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method___construct">__construct()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_run">run()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_runScanner">runScanner()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-BackgroundJob-ScanFiles.html#method_getUserToScan">getUserToScan()</a></li>
                                     </ul>
             </li>
                     </ul>

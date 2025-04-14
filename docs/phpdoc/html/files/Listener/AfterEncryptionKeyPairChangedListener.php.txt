@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
  */
 
 namespace OCA\CAFEVDB\Listener;
+
+use Exception;
 
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
@@ -44,12 +46,15 @@ class AfterEncryptionKeyPairChangedListener implements IEventListener
 
   const EVENT = HandledEvent::class;
 
+  /** @var IL10N */
+  protected IL10N $l;
+
   /** @var string */
   private $appName;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    private IAppContainer $appContainer,
+    protected IAppContainer $appContainer,
   ) {
   }
   // phpcs:enable
@@ -70,6 +75,8 @@ class AfterEncryptionKeyPairChangedListener implements IEventListener
     $ownerId = $event->getOwnerId();
     $oldKeyPair = $event->getOldKeyPair();
     $newKeyPair = $event->getNewKeyPair();
+
+    $this->logException(new Exception('ENCRYPTION KEY PAIR CHANGED ' . $ownerId . ' ' . print_r($oldKeyPair, true) . '  ' . print_r($newKeyPair, true)));
 
     /** @var AsymmetricKeyService $keyService */
     $keyService = $this->appContainer->get(AsymmetricKeyService::class);

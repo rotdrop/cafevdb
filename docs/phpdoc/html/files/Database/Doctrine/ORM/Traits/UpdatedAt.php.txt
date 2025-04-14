@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
+use DateTimeInterface;
+
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /** Field $updated and setter/getter. */
@@ -41,18 +43,18 @@ trait UpdatedAt
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
   /**
-   * @var \DateTimeImmutable
+   * @var null|DateTimeInterface
    */
-  protected $updated;
+  protected ?DateTimeInterface $updated;
 
   /**
    * Sets updated.
    *
-   * @param string|int|\DateTimeInterface $updated
+   * @param mixed $updated
    *
    * @return self
    */
-  public function setUpdated($updated)
+  public function setUpdated(mixed $updated)
   {
     $this->updated = self::convertToDateTime($updated);
     return $this;
@@ -63,7 +65,7 @@ trait UpdatedAt
    *
    * @return \DateTimeImmutable
    */
-  public function getUpdated():?\DateTimeInterface
+  public function getUpdated():?DateTimeInterface
   {
     return $this->updated;
   }

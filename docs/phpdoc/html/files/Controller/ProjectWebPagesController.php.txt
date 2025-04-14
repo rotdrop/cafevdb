@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,11 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
 
 /** AJAX end-points to manage the web-pages via the CMS. */
@@ -42,9 +41,8 @@ class ProjectWebPagesController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    private RequestParameterService $parameterService,
-    protected ConfigService $configService,
     private ProjectService $projectService,
+    protected ConfigService $configService,
   ) {
     parent::__construct($appName, $request);
 

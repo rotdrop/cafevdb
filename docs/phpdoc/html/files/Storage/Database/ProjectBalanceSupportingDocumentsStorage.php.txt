@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020-2025, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,23 +26,17 @@ namespace OCA\CAFEVDB\Storage\Database;
 
 use \DateTimeImmutable;
 
-// F I X M E: those are not public, but ...
-use OC\Files\Storage\Common as AbstractStorage;
-use OC\Files\Storage\PolyFill\CopyDirectory;
 use OCP\EventDispatcher\IEventDispatcher;
 
-use Icewind\Streams\CallbackWrapper;
-use Icewind\Streams\CountWrapper;
-use Icewind\Streams\IteratorDirectory;
-
-use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
-use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Service\ProjectService;
 
 /**
  * Storage implementation for data-base storage, including access to
@@ -51,6 +45,7 @@ use OCA\CAFEVDB\Constants;
 class ProjectBalanceSupportingDocumentsStorage extends Storage
 {
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use DatabaseStorageNodeNameTrait;
 
   /** @var ProjectService */
   private $projectService;
@@ -75,7 +70,6 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
       try {
         $projectId = $this->project->getId();
-        $this->clearDatabaseRepository();
 
         $this->getRootFolder(create: false);
 
@@ -85,6 +79,19 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       }
       $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     });
+  }
+
+  /** {@inheritdoc} */
+  protected function getReadMeFactory():ReadMeFactoryInterface
+  {
+    if ($this->readMeFactory === null) {
+      $this->readMeFactory = clone $this->appContainer()->get(SkeletonReadMeFactory::class);
+      $skeletonPath = $this->projectService->getProjectSkeletonPaths(ProjectService::FOLDER_TYPE_BALANCE);
+      $skeletonPath .= self::PATH_SEPARATOR . $this->getSupportingDocumentsFolderName();
+      $this->readMeFactory->setSkeletonPath($skeletonPath);
+    }
+
+    return $this->readMeFactory;
   }
 
   /**
@@ -112,7 +119,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   }
 
   /**  {@inheritdoc} */
-  public function isUpdatable($path)
+  public function isUpdatable(string $path): bool
   {
     $result = $this->file_exists($path);
     return $result;
@@ -195,7 +202,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   }
 
   /** {@inheritdoc} */
-  public function mkdir($path)
+  public function mkdir(string $path): bool
   {
     $sequence = $this->isContainerDirectory($path);
     $year = $this->isYearDirectory($path);
@@ -282,7 +289,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
    * b) both paths refer to files inside top-level directories, then either
    * just rename the file or move it to the other document container.
    */
-  public function rename($path1, $path2)
+  public function rename(string $path1, string $path2): bool
   {
     // $this->logInfo('P1 - P2 ' . $path1 . ' - ' . $path2);
 
@@ -424,7 +431,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   }
 
   /** {@inheritdoc} */
-  public function unlink($path)
+  public function unlink(string $path): bool
   {
     if ($this->is_dir($path)) {
       return false;

@@ -54,7 +54,7 @@
     Menu
 </label>
 <aside class="phpdocumentor-column -three phpdocumentor-sidebar">
-                    <section class="phpdocumentor-sidebar__category">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
             <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="namespaces/oca.html" class="">OCA</a>
@@ -67,15 +67,15 @@
             </ul>
 
                         </section>
-                <section class="phpdocumentor-sidebar__category">
+                <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/cafevdb.html" class="">cafevdb</a>
+    <a href="packages/Application.html" class="">Application</a>
 </h4>
 
                         </section>
             
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
@@ -83,7 +83,7 @@
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
     </section>
 
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -indices">
         <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
     </section>
@@ -117,7 +117,7 @@
                             <abbr title="\ArrayAccess">ArrayAccess</abbr>                    </span>
     
             <span class="phpdocumentor-element__extends">
-            Uses
+            uses
                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>,                             <abbr title="\OCA\CAFEVDB\Wrapped\Gedmo\Blameable\Traits\BlameableEntity">BlameableEntity</abbr>                    </span>
     </h2>
 
@@ -129,40 +129,45 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">EmailDraft</p>
 
 
 
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
 
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">ORM\Table</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(name=&quot;EmailDrafts&quot;)</p>
-</section>
 
-                                    </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">ORM\Entity</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(repositoryClass=&quot;\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EmailDraftsRepository&quot;)</p>
-</section>
 
-                                    </dd>
-                                            </dl>
+    <section class="phpdocumentor-attributes">
+        <h5 class="phpdocumentor-elements__header" id="attributes">
+            Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h5>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Entity">Entity</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EmailDraftsRepository::class
+    </dd>
+    </dl>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\HasLifecycleCallbacks">HasLifecycleCallbacks</abbr>]
+    </dt>
+    </dl>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Table">Table</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $name: &#039;EmailDrafts&#039;
+    </dd>
+    </dl>
+            </section>
 
 
 
@@ -194,37 +199,37 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_autoGenerated">$autoGenerated</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_autoGenerated">$autoGenerated</a>
     <span>
                         &nbsp;: bool            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_data">$data</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_data">$data</a>
     <span>
                         &nbsp;: string            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_fileAttachments">$fileAttachments</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_fileAttachments">$fileAttachments</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailAttachment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EmailAttachment">EmailAttachment</abbr></a>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_id">$id</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_id">$id</a>
     <span>
                         &nbsp;: int            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a>
     <span>
                         &nbsp;: mixed            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_subject">$subject</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_subject">$subject</a>
     <span>
                         &nbsp;: string            </span>
 </dt>
@@ -238,123 +243,123 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method___construct">__construct()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method___construct">__construct()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method___wakeup">__wakeup()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method___wakeup">__wakeup()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getAutoGenerated">getAutoGenerated()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getAutoGenerated">getAutoGenerated()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
 <dd>Get autoGenerated.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getData">getData()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getData">getData()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
 <dd>Get data.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getFileAttachments">getFileAttachments()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getFileAttachments">getFileAttachments()</a>
     <span>
                                 &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>    </span>
 </dt>
 <dd>Get fileAttachments.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getId">getId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getId">getId()</a>
     <span>
                                 &nbsp;: null|int    </span>
 </dt>
 <dd>Get id.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getSubject">getSubject()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getSubject">getSubject()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Get subject.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetExists">offsetExists()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetExists">offsetExists()</a>
     <span>
                                 &nbsp;: bool    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetGet">offsetGet()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetGet">offsetGet()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetSet">offsetSet()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetSet">offsetSet()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetUnset">offsetUnset()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetUnset">offsetUnset()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setAutoGenerated">setAutoGenerated()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setAutoGenerated">setAutoGenerated()</a>
     <span>
                                 &nbsp;: <abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EmailDrafts">EmailDrafts</abbr>    </span>
 </dt>
 <dd>Set autoGenerated.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setData">setData()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setData">setData()</a>
     <span>
                                 &nbsp;: <abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EmailDrafts">EmailDrafts</abbr>    </span>
 </dt>
 <dd>Set data.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setFileAttachments">setFileAttachments()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setFileAttachments">setFileAttachments()</a>
     <span>
                                 &nbsp;: <abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EmailDrafts">EmailDrafts</abbr>    </span>
 </dt>
 <dd>Set fileAttachments.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setSubject">setSubject()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setSubject">setSubject()</a>
     <span>
                                 &nbsp;: <abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EmailDrafts">EmailDrafts</abbr>    </span>
 </dt>
 <dd>Set subject.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_toArray">toArray()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_toArray">toArray()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR">arrayCTOR()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR">arrayCTOR()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
@@ -362,19 +367,18 @@
 automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_methodName">methodName()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_methodName">methodName()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetNormalize">offsetNormalize()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetNormalize">offsetNormalize()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 
     </dl>
-
 
 
 
@@ -404,11 +408,12 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">77</span>
+    <span class="phpdocumentor-element-found-in__line">72</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
@@ -418,26 +423,33 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
     
         <section class="phpdocumentor-description"><p>Set to true if this draft was never actively saved or loaded. The
+flag is cleared when actively saving or loading a draft.
 flag is cleared when actively saving or loading a draft.</p>
 </section>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_autoGenerated#tags" class="headerlink"><i class="fas fa-link"></i></a>
 
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">ORM\Column</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(type=&quot;boolean&quot;, nullable=false, options={&quot;default&quot;=&quot;0&quot;})</p>
-</section>
+    
+    <section class="phpdocumentor-attributes">
+        <h5 class="phpdocumentor-elements__header" id="attributes">
+            Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_autoGenerated#attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
-                                    </dd>
-                                            </dl>
+        </h5>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;boolean&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $options: [&#039;default&#039; =&gt; &#039;0&#039;]
+    </dd>
+    </dl>
+            </section>
 
 </article>
                     <article
@@ -457,11 +469,12 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">67</span>
+    <span class="phpdocumentor-element-found-in__line">63</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
@@ -472,22 +485,28 @@ flag is cleared when actively saving or loading a draft.</p>
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_data#tags" class="headerlink"><i class="fas fa-link"></i></a>
 
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">ORM\Column</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(type=&quot;json&quot;, nullable=false, options={&quot;comment&quot;=&quot;Message Data Without Attachments&quot;})</p>
-</section>
+    
+    <section class="phpdocumentor-attributes">
+        <h5 class="phpdocumentor-elements__header" id="attributes">
+            Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_data#attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
-                                    </dd>
-                                            </dl>
+        </h5>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;json&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $options: [&#039;comment&#039; =&gt; &#039;Message Data Without Attachments&#039;]
+    </dd>
+    </dl>
+            </section>
 
 </article>
                     <article
@@ -507,11 +526,12 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">78</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
@@ -522,22 +542,28 @@ flag is cleared when actively saving or loading a draft.</p>
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_fileAttachments#tags" class="headerlink"><i class="fas fa-link"></i></a>
 
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">ORM\OneToMany</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(targetEntity=&quot;EmailAttachment&quot;, mappedBy=&quot;draft&quot;, orphanRemoval=true)</p>
-</section>
+    
+    <section class="phpdocumentor-attributes">
+        <h5 class="phpdocumentor-elements__header" id="attributes">
+            Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_fileAttachments#attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
-                                    </dd>
-                                            </dl>
+        </h5>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\OneToMany">OneToMany</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $targetEntity: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EmailAttachment::class
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $mappedBy: &#039;draft&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $orphanRemoval: true
+    </dd>
+    </dl>
+            </section>
 
 </article>
                     <article
@@ -557,11 +583,12 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
@@ -572,38 +599,38 @@ flag is cleared when actively saving or loading a draft.</p>
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_id#tags" class="headerlink"><i class="fas fa-link"></i></a>
 
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">ORM\Column</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(type=&quot;integer&quot;, nullable=false)</p>
-</section>
+    
+    <section class="phpdocumentor-attributes">
+        <h5 class="phpdocumentor-elements__header" id="attributes">
+            Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
-                                    </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">ORM\Id</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                             
-                                    </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">ORM\GeneratedValue</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(strategy=&quot;IDENTITY&quot;)</p>
-</section>
-
-                                    </dd>
-                                            </dl>
+        </h5>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;integer&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+    </dl>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $strategy: &#039;IDENTITY&#039;
+    </dd>
+    </dl>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
+    </dt>
+    </dl>
+            </section>
 
 </article>
                     <article
@@ -623,11 +650,12 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">36</span>
+    <span class="phpdocumentor-element-found-in__line">37</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
@@ -637,6 +665,8 @@ flag is cleared when actively saving or loading a draft.</p>
 
     
     
+    
+
     
 
 </article>
@@ -657,11 +687,12 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">60</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
@@ -672,22 +703,28 @@ flag is cleared when actively saving or loading a draft.</p>
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_subject#tags" class="headerlink"><i class="fas fa-link"></i></a>
 
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">ORM\Column</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>(type=&quot;string&quot;, length=256, nullable=false)</p>
-</section>
+    
+    <section class="phpdocumentor-attributes">
+        <h5 class="phpdocumentor-elements__header" id="attributes">
+            Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_subject#attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
-                                    </dd>
-                                            </dl>
+        </h5>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;string&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $length: 256
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+    </dl>
+            </section>
 
 </article>
             </section>
@@ -712,9 +749,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">82</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
     
@@ -726,6 +763,9 @@ flag is cleared when actively saving or loading a draft.</p>
         </div>
     
     
+    
+    
+
     
 
     
@@ -744,9 +784,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -759,6 +799,9 @@ flag is cleared when actively saving or loading a draft.</p>
         </div>
     
     
+    
+    
+
     
 
     
@@ -779,7 +822,7 @@ flag is cleared when actively saving or loading a draft.</p>
     :
     <span class="phpdocumentor-element-found-in__line">35</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/FactoryTrait.php.txt"></a>
     </aside>
 
     
@@ -791,6 +834,9 @@ flag is cleared when actively saving or loading a draft.</p>
         </div>
     
     
+    
+    
+
     
 
             <section>
@@ -813,9 +859,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">194</span>
+    <span class="phpdocumentor-element-found-in__line">190</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.194" class="phpdocumentor-element-found-in__source" data-line="194" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.190" class="phpdocumentor-element-found-in__source" data-line="190" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get autoGenerated.</p>
@@ -828,6 +874,9 @@ flag is cleared when actively saving or loading a draft.</p>
         </div>
     
     
+    
+    
+
     
 
             <section>
@@ -850,9 +899,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">146</span>
+    <span class="phpdocumentor-element-found-in__line">142</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.146" class="phpdocumentor-element-found-in__source" data-line="146" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get data.</p>
@@ -865,6 +914,9 @@ flag is cleared when actively saving or loading a draft.</p>
         </div>
     
     
+    
+    
+
     
 
             <section>
@@ -887,9 +939,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">170</span>
+    <span class="phpdocumentor-element-found-in__line">166</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.166" class="phpdocumentor-element-found-in__source" data-line="166" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get fileAttachments.</p>
@@ -902,6 +954,9 @@ flag is cleared when actively saving or loading a draft.</p>
         </div>
     
     
+    
+    
+
     
 
             <section>
@@ -924,9 +979,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">98</span>
+    <span class="phpdocumentor-element-found-in__line">94</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get id.</p>
@@ -939,6 +994,9 @@ flag is cleared when actively saving or loading a draft.</p>
         </div>
     
     
+    
+    
+
     
 
             <section>
@@ -961,9 +1019,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">122</span>
+    <span class="phpdocumentor-element-found-in__line">118</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.122" class="phpdocumentor-element-found-in__source" data-line="122" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get subject.</p>
@@ -976,6 +1034,9 @@ flag is cleared when actively saving or loading a draft.</p>
         </div>
     
     
+    
+    
+
     
 
             <section>
@@ -998,9 +1059,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">85</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1012,6 +1073,7 @@ flag is cleared when actively saving or loading a draft.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1022,6 +1084,8 @@ flag is cleared when actively saving or loading a draft.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -1045,9 +1109,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">94</span>
+    <span class="phpdocumentor-element-found-in__line">101</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1059,6 +1123,7 @@ flag is cleared when actively saving or loading a draft.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1069,6 +1134,8 @@ flag is cleared when actively saving or loading a draft.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -1088,9 +1155,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">107</span>
+    <span class="phpdocumentor-element-found-in__line">114</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1101,6 +1168,7 @@ flag is cleared when actively saving or loading a draft.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -1123,6 +1191,8 @@ flag is cleared when actively saving or loading a draft.</p>
     
 
     
+
+    
 </article>
                     <article
         class="phpdocumentor-element
@@ -1138,9 +1208,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">120</span>
+    <span class="phpdocumentor-element-found-in__line">127</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.127" class="phpdocumentor-element-found-in__source" data-line="127" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1152,6 +1222,7 @@ flag is cleared when actively saving or loading a draft.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1162,6 +1233,8 @@ flag is cleared when actively saving or loading a draft.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -1181,9 +1254,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">182</span>
+    <span class="phpdocumentor-element-found-in__line">178</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.182" class="phpdocumentor-element-found-in__source" data-line="182" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set autoGenerated.</p>
@@ -1195,6 +1268,7 @@ flag is cleared when actively saving or loading a draft.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1205,6 +1279,8 @@ flag is cleared when actively saving or loading a draft.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -1228,9 +1304,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">134</span>
+    <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.134" class="phpdocumentor-element-found-in__source" data-line="134" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set data.</p>
@@ -1242,6 +1318,7 @@ flag is cleared when actively saving or loading a draft.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1252,6 +1329,8 @@ flag is cleared when actively saving or loading a draft.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -1275,9 +1354,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">158</span>
+    <span class="phpdocumentor-element-found-in__line">154</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.158" class="phpdocumentor-element-found-in__source" data-line="158" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.154" class="phpdocumentor-element-found-in__source" data-line="154" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set fileAttachments.</p>
@@ -1289,6 +1368,7 @@ flag is cleared when actively saving or loading a draft.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1299,6 +1379,8 @@ flag is cleared when actively saving or loading a draft.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -1322,9 +1404,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailDraft.php"><a href="files/database-doctrine-orm-entities-emaildraft.html"><abbr title="Database/Doctrine/ORM/Entities/EmailDraft.php">EmailDraft.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">110</span>
+    <span class="phpdocumentor-element-found-in__line">106</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.110" class="phpdocumentor-element-found-in__source" data-line="110" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailDraft.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set subject.</p>
@@ -1336,6 +1418,7 @@ flag is cleared when actively saving or loading a draft.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -1346,6 +1429,8 @@ flag is cleared when actively saving or loading a draft.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -1369,9 +1454,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">75</span>
+    <span class="phpdocumentor-element-found-in__line">82</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
     
@@ -1383,6 +1468,9 @@ flag is cleared when actively saving or loading a draft.</p>
         </div>
     
     
+    
+    
+
     
 
             <section>
@@ -1405,9 +1493,9 @@ flag is cleared when actively saving or loading a draft.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Use reflection inspection to export all of the private keys;
@@ -1422,20 +1510,20 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR#tags" class="headerlink"><i class="fas fa-link"></i></a>
+    
 
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">ORM\PostLoad</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                             
-                                    </dd>
-                                            </dl>
+    
+    <section class="phpdocumentor-attributes">
+        <h5 class="phpdocumentor-elements__header" id="attributes">
+            Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h5>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\PostLoad">PostLoad</abbr>]
+    </dt>
+    </dl>
+            </section>
 
     
 </article>
@@ -1453,9 +1541,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">132</span>
+    <span class="phpdocumentor-element-found-in__line">139</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.132" class="phpdocumentor-element-found-in__source" data-line="132" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.139" class="phpdocumentor-element-found-in__source" data-line="139" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
     
@@ -1465,6 +1553,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -1483,6 +1572,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -1506,9 +1597,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">142</span>
+    <span class="phpdocumentor-element-found-in__line">149</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#source-view.149" class="phpdocumentor-element-found-in__source" data-line="149" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
     
@@ -1518,6 +1609,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -1529,6 +1621,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -1651,38 +1745,38 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_autoGenerated">$autoGenerated<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_data">$data<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_fileAttachments">$fileAttachments<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_id">$id<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_subject">$subject<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html"></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_autoGenerated">$autoGenerated</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_data">$data</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_fileAttachments">$fileAttachments</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_id">$id</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#property_subject">$subject</a></li>
                                             </ul>
                 </li>
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method___construct">__construct()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method___wakeup">__wakeup()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getAutoGenerated">getAutoGenerated()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getData">getData()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getFileAttachments">getFileAttachments()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getId">getId()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getSubject">getSubject()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetExists">offsetExists()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetGet">offsetGet()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetSet">offsetSet()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetUnset">offsetUnset()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setAutoGenerated">setAutoGenerated()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setData">setData()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setFileAttachments">setFileAttachments()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setSubject">setSubject()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_toArray">toArray()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR">arrayCTOR()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_methodName">methodName()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetNormalize">offsetNormalize()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method___construct">__construct()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method___wakeup">__wakeup()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getAutoGenerated">getAutoGenerated()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getData">getData()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getFileAttachments">getFileAttachments()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getId">getId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_getSubject">getSubject()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetExists">offsetExists()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetGet">offsetGet()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetSet">offsetSet()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetUnset">offsetUnset()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setAutoGenerated">setAutoGenerated()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setData">setData()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setFileAttachments">setFileAttachments()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailDraft.html#method_setSubject">setSubject()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_toArray">toArray()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR">arrayCTOR()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_methodName">methodName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetNormalize">offsetNormalize()</a></li>
                                     </ul>
             </li>
                     </ul>

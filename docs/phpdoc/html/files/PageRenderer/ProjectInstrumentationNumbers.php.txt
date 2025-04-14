@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,22 +24,22 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Navigation;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Table generator for Instruments table. */
 class ProjectInstrumentationNumbers extends PMETableViewBase
 {
+  use FieldTraits\ProjectModeNavigationItemTrait;
   const TEMPLATE = 'project-instrumentation-numbers';
   const TABLE = self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE;
 
@@ -84,13 +84,22 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
+    ToolTipsService $toolTipsService,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(
+      self::TEMPLATE,
+      //
+      $configService,
+      $entityManager,
+      $request,
+      $pageNavigation,
+      $phpMyEdit,
+      $toolTipsService,
+    );
 
     if ($this->listOperation()) {
       $this->pme->overrideLabel('Add', $this->l->t('New Voice'));
@@ -433,14 +442,11 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
 
     // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
-    //   $voiceIndex = $pme->fdn['voice'];
-    //   $instrumentIndex = $pme->fdn['instrument_id'];
-    //   $registeredIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'musician_id')];
-    //   if ($row['qf' . $voiceIndex] == 0 || !empty($row['qf' . $registeredIndex])) {
+    //   if ($row[$this->queryField('voice')] == 0 || !empty($row[$this->joinQueryField(self::PROJECT_INSTRUMENTS_TABLE, 'musician_id')])) {
     //     // disallow changes to instrument and voice as the integrity
     //     // constraints would not allow changing these anyway.
-    //     $pme->fdd[$instrumentIndex]['input'] .= 'R';
-    //     $pme->fdd[$voiceIndex]['input'] .= 'R';
+    //     $pme->fdd[$this->queryFieldIndex('instrument_id')]['input'] .= 'R';
+    //     $pme->fdd[$this->queryFieldIndex('voice')]['input'] .= 'R';
     //   }
 
     //   return true;

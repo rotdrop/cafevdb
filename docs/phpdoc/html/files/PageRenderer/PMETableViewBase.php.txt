@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,29 +31,25 @@ use UnexpectedValueException;
 use Throwable;
 
 use OCP\IL10N;
-
-use OCA\CAFEVDB\Service;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\ProjectService;
-
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
-
-use OCA\CAFEVDB\Exceptions;
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
-
+use OCA\CAFEVDB\Database\Constants as DBConstants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
+use OCA\CAFEVDB\Database\Doctrine\ORM;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-
 /** Base for phpMyEdit based table-views. */
-abstract class PMETableViewBase extends Renderer implements IPageRenderer
+abstract class PMETableViewBase extends AbstractPageRenderer
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -132,6 +128,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
   const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstruments';
   const MUSICIAN_PHOTO_JOIN_TABLE = 'MusicianPhoto';
+  const TAX_EXEMPTION_NOTICES_TABLE = 'TaxExemptionNotices';
+  const DONATION_RECEIPTS_TABLE = 'DonationReceipts';
   const FILES_TABLE = 'Files';
   const SENT_EMAILS_TABLE = 'SentEmails';
 
@@ -237,15 +235,44 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected $joinTables = null;
 
+  /**
+   * @var array
+   *
+   * Fetched from the database at construction.
+   */
+  protected $instrumentInfo;
+
+  /**
+   * @var array
+   *
+   * Fetched from the database at construction.
+   */
+  protected $instruments;
+
+  /**
+   * @var array
+   *
+   * Fetched from the database at construction.
+   */
+  protected $groupedInstruments;
+
+  /**
+   * @var array
+   *
+   * Fetched from the database at construction.
+   */
+  protected $instrumentFamilies;
+
   /** {@inheritdoc} */
   protected function __construct(
     protected string $template,
+    //
     protected ConfigService $configService,
-    protected RequestParameterService $requestParameters,
     protected EntityManager $entityManager,
+    protected IRequest $request,
     protected PHPMyEdit $pme,
-    protected ToolTipsService $toolTipsService,
     protected PageNavigation $pageNavigation,
+    protected ToolTipsService $toolTipsService,
   ) {
     $this->l = $this->l10n();
 
@@ -256,7 +283,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->financeMode = $this->getUserValue('financeMode', false) === 'on';
     $this->filterVisibility = $this->getUserValue('filtervisibility', 'off') == 'on';
 
-    $this->debugRequests = 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_REQUEST);
+    $this->debugRequests = 0 != ((int)$this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_REQUEST);
 
     $this->membersProjectId = $this->getClubMembersProjectId();
 
@@ -266,11 +293,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->defaultFDD = $this->createDefaultFDD();
 
     $cgiDefault = [
-      'template' => 'blog',
-      'musicianId' => null,
-      'projectId' => null,
-      'projectName' => '',
-      'recordsPerPage' => $this->getUserValue('pagerows', 20),
+      'template' => fn($value):string => (string)($value ?? 'blog'),
+      'musicianId' => fn($value):?int => $value === null ? null : (int)$value,
+      'projectId' => fn($value):?int => $value === null ? null : (int)$value,
+      'projectName' => fn($value):string => (string)($value ?? ''),
+      'recordsPerPage' => fn($value):int => (int)($value ?? $this->getUserValue('pagerows', 20)),
     ];
 
     $this->pmeOptions = [
@@ -279,13 +306,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       'css' => [ 'postfix' => [], ],
       'navigation' => self::PME_NAVIGATION_NO_MULTI,
     ];
-    $this->pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';
 
     foreach ($cgiDefault as $key => $default) {
       $this->pmeOptions['cgi']['persist'][$key] =
-        $this->{lcFirst($key)} =
-          $this->requestParameters->getParam($key, $default);
+        $this->{lcFirst($key)} = $default($this->request[$key] ?? null);
     }
+
+    $this->pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';
 
     $this->pmeOptions['cgi']['append'][$this->pme->cgiSysName('fl')] = $this->filterVisibility;
 
@@ -366,21 +393,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->groupedInstruments = $this->instrumentInfo['nameGroups'];
     $this->instrumentFamilies =
       $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class)->values();
-
-    // @todo think about how to generate translations
-    $this->memberStatus = DBTypes\EnumMemberStatus::toArray();
-    foreach ($this->memberStatus as $key => $tag) {
-      if (!isset($this->memberStatusNames[$tag])) {
-        $this->memberStatusNames[$tag] = $this->l->t('member status '.$tag);
-      }
-    }
-
-    $this->projectType = DBTypes\EnumProjectTemporalType::toArray();
-    foreach ($this->projectType as $key => $tag) {
-      if (!isset($this->projectTypeNames[$tag])) {
-        $this->projectTypeNames[$tag] = $this->l->t($tag);
-      }
-    }
   }
 
   /**
@@ -2286,7 +2298,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * The name of the field-descriptor for a join-table field
    * referencing a master-join-table.
    *
-   * @param string|array $joinInfo Table-description-data
+   * @param null|string|array $joinInfo Table-description-data
    * ```
    * [
    *   'table' => SQL_TABLE_NAME,
@@ -2298,7 +2310,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *     ...
    *   ]
    * ]
-   * ```.
+   * ```. If empty then assume the master tables, if a non-empty string assume
+   * it is the name of the joined table.
    *
    * @param string $column column to generate a query field for. This
    * is another column different from $joinInfo['column'] in order to
@@ -2308,6 +2321,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected static function joinTableFieldName($joinInfo, string $column)
   {
+    if (empty($joinInfo)) {
+      return $column;
+    }
     if (is_array($joinInfo)) {
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
         return $column;
@@ -2383,46 +2399,47 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected function makeJoinTableField(array &$fieldDescriptionData, $tableInfo, string $column, array $fdd = [])
   {
-    if (is_string($tableInfo) && isset($fdd['values']['join'])) {
-      $defaultFDD = [
-        'name' => $column,
-        'select' => 'T',
-        'maxlen' => 128,
-        'sort' => true,
-        'input' => 'S',
-        'values' => [
-          'table' => $tableInfo,
-          'column' => $column,
-        ],
-      ];
-    } else {
-      $masterFieldName = self::joinTableMasterFieldName($tableInfo);
-      $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
-      if ($joinIndex === false) {
-        $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
-        throw new Exception($this->l->t("Master join-table field for %s not found.", $table));
-      }
-      if (isset($fieldDescriptionData[$masterFieldName]['values']['join']['reference'])) {
-        $joinIndex = $fieldDescriptionData[$masterFieldName]['values']['join']['reference'];
-      }
-      $defaultFDD = [
-        'name' => $column,
-        'select' => 'T',
-        'maxlen' => 128,
-        'sort' => true,
-        'input' => 'S',
-        'values' => [
-          'column' => $column,
-          'join' => [ 'reference' => $joinIndex, ],
-        ],
-      ];
-      if (empty($fdd)) {
-        $defaultFDD['input'] = 'HRS';
-      }
-    }
+    $defaultFDD = [
+      'name' => $column,
+      'select' => 'T',
+      'maxlen' => 128,
+      'sort' => true,
+      'input' => 'S',
+      'values' => [],
+    ];
     $fieldName = $this->joinTableFieldName($tableInfo, $column);
     $index = count($fieldDescriptionData);
-    $fieldDescriptionData[$fieldName] = Util::arrayMergeRecursive($defaultFDD, $fdd);
+    $fdd = Util::arrayMergeRecursive($defaultFDD, $fdd);
+    $joinInfo = null;
+    $keys = array_keys($fdd);
+    foreach ($keys as $key) {
+      if ($fdd[$key] === null || ($key != 'values' && !str_starts_with($key, 'values|'))) {
+        continue;
+      }
+      $values = [
+        'column' => $column,
+      ];
+      if (is_string($tableInfo) && isset($fdd[$key]['join'])) {
+        $values['table'] = $tableInfo;
+      } else {
+        if ($joinInfo === null) {
+          $masterFieldName = self::joinTableMasterFieldName($tableInfo);
+          $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
+          if ($joinIndex === false) {
+            $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
+            throw new Exception($this->l->t("Master join-table field for %s not found.", $table));
+          }
+          if (isset($fieldDescriptionData[$masterFieldName]['values']['join']['reference'])) {
+            $joinIndex = $fieldDescriptionData[$masterFieldName]['values']['join']['reference'];
+          }
+          $joinInfo = [ 'reference' => $joinIndex, ];
+        }
+        $values['join'] = $joinInfo;
+      }
+      $fdd[$key] = Util::arrayMergeRecursive($values, $fdd[$key]);
+    }
+    $fieldDescriptionData[$fieldName] = $fdd;
+
     if (isset($fdd['decoration'])) {
       if (!empty($fdd['decoration']['slug'])) {
         $this->addSlug($fdd['decoration']['slug'], $fieldDescriptionData[$fieldName]);
@@ -2486,76 +2503,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected function tooltipSlug(string $slug):string
   {
     return $this->cssClass().ToolTipsService::SUB_KEY_SEP.$slug;
-  }
-
-  /**
-   * @param string $key
-   *
-   * @param array $fdd
-   *
-   * @return bool|int Result from array_search().
-   */
-  protected function queryFieldIndex(string $key, array $fdd)
-  {
-    return array_search($key, array_keys($fdd));
-  }
-
-  /**
-   * @param string $key
-   *
-   * @param array $fdd
-   *
-   * @return string 'qf'.N.
-   */
-  protected function queryField(string $key, array $fdd):string
-  {
-    return 'qf'.$this->queryFieldIndex($key, $fdd);
-  }
-
-  /**
-   * @param string $key
-   *
-   * @param array $fdd
-   *
-   * @return string 'qf'.N.'_idx'.
-   */
-  protected function queryIndexField(string $key, array $fdd)
-  {
-    return $this->queryField($key, $fdd) . '_idx';
-  }
-
-  /***
-   * @param string|array $tableInfo Table-description-data.
-   *
-   * @param string $column
-   *
-   * @param array $fdd
-   *
-   * @return string
-   *
-   * @see joinTableFieldName()
-   * @see queryField()
-   */
-  protected function joinQueryField($tableInfo, string $column, array $fdd)
-  {
-    return $this->queryField($this->joinTableFieldName($tableInfo, $column), $fdd);
-  }
-
-  /***
-   * @param string|array $tableInfo Table-description-data.
-   *
-   * @param string $column
-   *
-   * @param array $fdd
-   *
-   * @return string
-   *
-   * @see joinTableFieldName()
-   * @see queryIndexField()
-   */
-  protected function joinQueryIndexField($tableInfo, string $column, array $fdd)
-  {
-    return $this->queryIndexField($this->joinTableFieldName($tableInfo, $column), $fdd);
   }
 
   /**
@@ -2624,6 +2571,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     AND $joinTable.foreign_key = ";
       if (count($joinInfo['identifier']) > 1) {
         $l10nJoin .= " CONCAT_WS(' ', ";
+      } else {
+        $l10nJoin .= " CAST(";
       }
       $l10nJoin .= implode(' ,', array_map(function($id) use ($joinInfo) {
         $column = 't.' . $id;
@@ -2634,6 +2583,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }, array_keys($joinInfo['identifier'])));
       if (count($joinInfo['identifier']) > 1) {
         $l10nJoin .= ')';
+      } else {
+        $l10nJoin .= ' AS CHAR CHARACTER SET ' . DBConstants::CHARACTER_SET . ') COLLATE ' . DBConstants::FULL_COLLATION;
       }
       $l10nJoins[] = $l10nJoin;
     }
@@ -2728,201 +2679,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     } else {
       $this->logDebug($message, $context, $shift);
     }
-  }
-
-  /**
-   * Possibly regenerate the user-id slug.
-   *
-   * @param PHPMyEdit $pme The phpMyEdit instance.
-   *
-   * @param string $op The operation, 'insert', 'update' etc.
-   *
-   * @param string $step 'before' or 'after'.
-   *
-   * @param array $oldValues Self-explanatory.
-   *
-   * @param array $changed Set of changed fields, may be modified by the callback.
-   *
-   * @param null|array $newValues Set of new values, which may also be modified.
-   *
-   * @return bool If returning @c false the operation will be terminated
-   *
-   * @todo This would rather belong to some service class.
-   */
-  public function ensureUserIdSlug(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
-  {
-    $tag = 'user_id_slug';
-    if (!empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)])) {
-      $tag = $this->joinTableFieldName(self::MUSICIANS_TABLE, $tag);
-    }
-    if (empty($newValues[$tag])) {
-      // force regeneration by setting the slug to a "magic" value.
-      $newValues[$tag] = \Gedmo\Sluggable\SluggableListener::PLACEHOLDER_SLUG;
-      $changed[] = $tag;
-      $changed = array_values(array_unique($changed));
-    }
-
-    return true;
-  }
-
-  /**
-   * Fill an instance of Entities\Musician with the data from a legacy
-   * PHPMyEdit query.
-   *
-   * @param array $row The data generated by PHPMyEdit.
-   *
-   * @param null|PHPMyEdit $pme Instance of PME.
-   *
-   * @return array
-   * ```
-   * [ 'musician' => MUSICIAN_ENTITY, 'categories' => ADDRESSBOOK_CATEGORIES ]
-   * ```
-   *
-   * @bug This should be moved to a trait for reuse only in classes needing it.
-   */
-  protected function musicianFromRow(array $row, ?PHPMyEdit $pme)
-  {
-    $pme = $pme?:$this->pme;
-    $joinTable = !empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)]);
-    $data = [];
-    foreach ($pme->fds as $idx => $label) {
-      if (isset($row['qf' . $idx . '_idx'])) {
-        $data[$label] = $row['qf' . $idx . '_idx'];
-      } elseif (isset($row['qf'.$idx])) {
-        $data[$label] = $row['qf' . $idx];
-      }
-    }
-    $categories = [];
-    $musician = new Entities\Musician();
-    if ($joinTable) {
-      // make sure to fetch the id-record
-      foreach ($this->joinStructure as $joinInfo) {
-        if ($joinInfo['table'] == self::MUSICIANS_TABLE) {
-          $idColumn = $joinInfo['identifier']['id'];
-          $id = $row['qf' . ($pme->fdn[$idColumn])];
-          $musician->setId($id);
-          break;
-        }
-      }
-    }
-    $userIdSlugSeen = false;
-    foreach ($data as $key => $value) {
-      // In order to support "categories" the same way as the
-      // AddressBook-integration we need to feed the
-      // Musician-entity with more data:
-      switch ($key) {
-        case 'all_projects':
-        case 'projects':
-          $categories = array_merge($categories, explode(self::VALUES_SEP, Util::removeSpaces($value)));
-          break;
-        case $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id'):
-          foreach (explode(self::VALUES_SEP, Util::removeSpaces($value)) as $instrumentId) {
-            $categories[] = $this->instrumentInfo['byId'][$instrumentId] ?? null;
-          }
-          break;
-        case $this->joinTableFieldName(self::MUSICIAN_EMAILS_TABLE, 'address'):
-          $musician->setEmail(new Entities\MusicianEmailAddress($value, $musician));
-          break;
-        default:
-          if ($joinTable) {
-            $fieldInfo = $this->joinTableField($key);
-            if ($fieldInfo['table'] != self::MUSICIANS_TABLE) {
-              continue 2;
-            }
-            $column = $fieldInfo['column'];
-          } else {
-            $column = $key;
-          }
-          switch ($column) {
-            case 'email':
-              try {
-                $musician->setEmail($value, $musician);
-              } catch (Throwable $t) {
-                $this->logException($t);
-                /** @var Service\MusicianService $musicianService */
-                $musicianService = $this->di(Service\MusicianService::class);
-                $value = $musicianService->generateDisabledEmailAddress($musician);
-                $musician->setEmail($value);
-              }
-              break;
-            case 'user_id_slug':
-              $userIdSlugSeen = true;
-              // fallthrough
-            default:
-              try {
-                $musician[$column] = $value;
-                break;
-              } catch (Throwable $t) {
-                // Don't care, we know virtual stuff is not there
-              }
-          }
-          break;
-      }
-    }
-    if (!$userIdSlugSeen) {
-      $musicianId = $musician->getId();
-      $musician = $this->findEntity(Entities\Musician::class, $musicianId);
-      if (empty($musician)) {
-        $this->logError('NO MUSICIAN FOR ROW ' . $musicianId . ' ' . print_r($row, true));
-      }
-    }
-    return [ 'musician' => $musician, 'categories' => array_filter($categories) ];
-  }
-
-  /**
-   * Generate an SQL fragment which composes a display name from the
-   * available name-parts sur_name, first_name, nick_name,
-   * display_name.
-   *
-   * @param string $tableAlias Table to refer to, refers to
-   * placeholder '$table'.
-   *
-   * @param bool $firstNameFirst
-   *
-   * @return string SQL fragment.
-   */
-  public static function musicianPublicNameSql(string $tableAlias = '$table', bool $firstNameFirst = false):string
-  {
-    if ($firstNameFirst) {
-      return "CONCAT_WS(
-  ' ',
-  IF($tableAlias.nick_name IS NULL OR $tableAlias.nick_name = '',
-    $tableAlias.first_name,
-    $tableAlias.nick_name
-  ),
-  $tableAlias.sur_name)";
-    } else {
-      return "IF($tableAlias.display_name IS NULL OR $tableAlias.display_name = '',
-      CONCAT(
-        $tableAlias.sur_name,
-        ', ',
-        IF($tableAlias.nick_name IS NULL OR $tableAlias.nick_name = '',
-          $tableAlias.first_name,
-          $tableAlias.nick_name
-        )
-      ),
-      $tableAlias.display_name
-    )";
-    }
-  }
-
-  /**
-   * Return an SQL filter fragment to ensure that a musician-id is
-   * only in the request project.
-   *
-   * @param string $projectIdSql SQL to get the projects id.
-   *
-   * @param string $musicianId Field holding the musician id.
-   *
-   * @param string $tableAlias Table alias to use.
-   *
-   * @return string SQL fragment.
-   */
-  public static function musicianInProjectSql(string $projectIdSql, string $musicianId = 'id', string $tableAlias = '$table'):string
-  {
-    return "$tableAlias.$musicianId IN (SELECT pp.musician_id
-  FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
-  WHERE pp.project_id = $projectIdSql)";
   }
 
   /**

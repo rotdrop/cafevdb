@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024, Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2025, Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -100,7 +100,7 @@ class MountProvider implements IMountProvider
   {
     $userId = $user->getUID();
 
-    if ($this->userSession->isLoggedIn())  {
+    if (!$this->userSession->isLoggedIn()) {
       $this->logDebug('No one is logged in.');
       return [];
     }
@@ -157,17 +157,18 @@ class MountProvider implements IMountProvider
     $mounts = [];
     $bulkLoadStorageIds = [];
 
+    // allow only treasurers or similar folk
     if ($this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_FINANCE)) {
-      // allow only treasurers or similar folk
 
       $storage = $this->storageFactory->getBankTransactionsStorage();
       $bulkLoadStorageIds[] = $storage->getId();
 
       $mounts[] = new class(
         $storage,
-        '/' . $userId
-        . '/files'
-        . $this->getBankTransactionsPath(),
+        UserStorage::PATH_SEP . implode(
+          UserStorage::PATH_SEP,
+          [ $userId, 'files', $this->getBankTransactionsPath(), ]
+        ),
         null,
         $loader,
         [
@@ -186,16 +187,43 @@ class MountProvider implements IMountProvider
         }
       };
 
-      // allow only treasurers or similar folk
-
       $storage = $this->storageFactory->getTaxExemptionNoticesStorage();
       $bulkLoadStorageIds[] = $storage->getId();
 
       $mounts[] = new class(
         storage: $storage,
-        mountpoint: '/' . $userId
-        . '/files'
-        . $this->getTaxExemptionNoticesPath(),
+        mountpoint: UserStorage::PATH_SEP . implode(
+          UserStorage::PATH_SEP,
+          [ $userId, 'files', $this->getTaxExemptionNoticesPath(), ],
+        ),
+        mountId: null,
+        loader: $loader,
+        mountProvider: MountProvider::class,
+        mountOptions: [
+          'filesystem_check_changes' => 1,
+          'readonly' => false,
+          'previews' => true,
+          'enable_sharing' => false, // cannot work, mount needs DB access
+          'authenticated' => true,
+        ]
+      ) extends MountPoint
+      {
+        /** {@inheritdoc} */
+        public function getMountType()
+        {
+          return MountProvider::MOUNT_TYPE;
+        }
+      };
+
+      $storage = $this->storageFactory->getDonationReceiptsStorage();
+      $bulkLoadStorageIds[] = $storage->getId();
+
+      $mounts[] = new class(
+        storage: $storage,
+        mountpoint: UserStorage::PATH_SEP . implode(
+          UserStorage::PATH_SEP,
+          [ $userId, 'files', $this->getDonationReceiptsPath(), ],
+        ),
         mountId: null,
         loader: $loader,
         mountProvider: MountProvider::class,
@@ -246,7 +274,13 @@ class MountProvider implements IMountProvider
         $mountPathChain[] = $project->getName();
         $mountPathChain[] = $this->getSupportingDocumentsFolderName();
 
-        $mountPath = '/' . $userId . '/' . 'files' . implode('/', $mountPathChain);
+        $mountPath = UserStorage::PATH_SEP . implode(
+          UserStorage::PATH_SEP,
+          array_merge(
+            [ $userId, 'files', ],
+            $mountPathChain,
+          ),
+        );
 
         $mounts[] = new class(
           $storage,
@@ -313,10 +347,10 @@ class MountProvider implements IMountProvider
 
       $mounts[] = new class(
         $storage,
-        '/' . $userId
-        . '/files'
-        . $folder
-        . '/'. $this->getDocumentsFolderName(),
+        UserStorage::PATH_SEP . implode(
+          UserStorage::PATH_SEP,
+          [ $userId, 'files', $folder, $this->getDocumentsFolderName(), ]
+        ),
         null,
         $loader,
         [

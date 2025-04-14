@@ -54,7 +54,7 @@
     Menu
 </label>
 <aside class="phpdocumentor-column -three phpdocumentor-sidebar">
-                    <section class="phpdocumentor-sidebar__category">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
             <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="namespaces/oca.html" class="">OCA</a>
@@ -67,15 +67,15 @@
             </ul>
 
                         </section>
-                <section class="phpdocumentor-sidebar__category">
+                <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/cafevdb.html" class="">cafevdb</a>
+    <a href="packages/Application.html" class="">Application</a>
 </h4>
 
                         </section>
             
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
@@ -83,7 +83,7 @@
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
     </section>
 
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -indices">
         <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
     </section>
@@ -106,12 +106,13 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Utility class to ease constructing HTTP responses.</p>
+
 
     <section class="phpdocumentor-description"><p>The consuming class has to define a translitate() method compatible to the
 one defined in the UtilTrait.</p>
@@ -132,7 +133,9 @@ one defined in the UtilTrait.</p>
                                         
                                              
                                     </dd>
-                                            </dl>
+                                                                </dl>
+
+
 
 
 
@@ -148,55 +151,6 @@ one defined in the UtilTrait.</p>
 
 
 
-<h4 id="toc-constants">
-    Constants
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
-
-</h4>
-<dl class="phpdocumentor-table-of-contents">
-            <dt class="phpdocumentor-table-of-contents__entry -constant -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_APPNAME_PREFIX">APPNAME_PREFIX</a>
-    <span>
-        &nbsp;= &#039;app-&#039;                            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_BASE">RENDER_AS_BASE</a>
-    <span>
-        &nbsp;= \OCP\AppFramework\Http\TemplateResponse::RENDER_AS_BASE                            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_BLANK">RENDER_AS_BLANK</a>
-    <span>
-        &nbsp;= &#039;blank&#039;                            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_ERROR">RENDER_AS_ERROR</a>
-    <span>
-        &nbsp;= \OCP\AppFramework\Http\TemplateResponse::RENDER_AS_ERROR                            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_GUEST">RENDER_AS_GUEST</a>
-    <span>
-        &nbsp;= \OCP\AppFramework\Http\TemplateResponse::RENDER_AS_GUEST                            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_PUBLIC">RENDER_AS_PUBLIC</a>
-    <span>
-        &nbsp;= \OCP\AppFramework\Http\TemplateResponse::RENDER_AS_PUBLIC                            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_USER">RENDER_AS_USER</a>
-    <span>
-        &nbsp;= \OCP\AppFramework\Http\TemplateResponse::RENDER_AS_USER                            </span>
-</dt>
-
-    </dl>
 
 
 <h4 id="toc-properties">
@@ -206,13 +160,13 @@ one defined in the UtilTrait.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#property_appName">$appName</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#property_appName">$appName</a>
     <span>
                         &nbsp;: string            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#property_l">$l</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#property_l">$l</a>
     <span>
                         &nbsp;: <abbr title="\OCP\IL10N">IL10N</abbr>            </span>
 </dt>
@@ -226,19 +180,19 @@ one defined in the UtilTrait.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataDownloadResponse">dataDownloadResponse()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataDownloadResponse">dataDownloadResponse()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\DataDownloadResponse">DataDownloadResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataResponse">dataResponse()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataResponse">dataResponse()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionChainData">exceptionChainData()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionChainData">exceptionChainData()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
@@ -246,7 +200,7 @@ one defined in the UtilTrait.</p>
 post-processing.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionResponse">exceptionResponse()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionResponse">exceptionResponse()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\TemplateResponse">TemplateResponse</abbr>    </span>
 </dt>
@@ -255,31 +209,31 @@ works if a traditional &quot;errorpage.php&quot; file exists in the templates/
 directory.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_getResponseMessages">getResponseMessages()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_getResponseMessages">getResponseMessages()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_grumble">grumble()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_grumble">grumble()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_response">response()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_response">response()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_templateResponse">templateResponse()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_templateResponse">templateResponse()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\TemplateResponse">TemplateResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_valueResponse">valueResponse()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_valueResponse">valueResponse()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>    </span>
 </dt>
@@ -290,216 +244,6 @@ directory.</dd>
 
 
         
-    <section class="phpdocumentor-constants">
-        <h3 class="phpdocumentor-elements__header" id="constants">
-            Constants
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
-
-        </h3>
-                    <article class="phpdocumentor-element -constant -protected ">
-    <h4 class="phpdocumentor-element__name" id="constant_APPNAME_PREFIX">
-        APPNAME_PREFIX
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_APPNAME_PREFIX" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">52</span>
-
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">APPNAME_PREFIX</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;app-&#039;</span>
-</code>
-
-
-    
-    
-    
-
-</article>
-                    <article class="phpdocumentor-element -constant -protected ">
-    <h4 class="phpdocumentor-element__name" id="constant_RENDER_AS_BASE">
-        RENDER_AS_BASE
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_BASE" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">47</span>
-
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">RENDER_AS_BASE</span>
-    = <span class="phpdocumentor-signature__default-value">\OCP\AppFramework\Http\TemplateResponse::RENDER_AS_BASE</span>
-</code>
-
-
-    
-    
-    
-
-</article>
-                    <article class="phpdocumentor-element -constant -protected ">
-    <h4 class="phpdocumentor-element__name" id="constant_RENDER_AS_BLANK">
-        RENDER_AS_BLANK
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_BLANK" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">46</span>
-
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">RENDER_AS_BLANK</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;blank&#039;</span>
-</code>
-
-
-    
-    
-    
-
-</article>
-                    <article class="phpdocumentor-element -constant -protected ">
-    <h4 class="phpdocumentor-element__name" id="constant_RENDER_AS_ERROR">
-        RENDER_AS_ERROR
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_ERROR" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">49</span>
-
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">RENDER_AS_ERROR</span>
-    = <span class="phpdocumentor-signature__default-value">\OCP\AppFramework\Http\TemplateResponse::RENDER_AS_ERROR</span>
-</code>
-
-
-    
-    
-    
-
-</article>
-                    <article class="phpdocumentor-element -constant -protected ">
-    <h4 class="phpdocumentor-element__name" id="constant_RENDER_AS_GUEST">
-        RENDER_AS_GUEST
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_GUEST" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">45</span>
-
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">RENDER_AS_GUEST</span>
-    = <span class="phpdocumentor-signature__default-value">\OCP\AppFramework\Http\TemplateResponse::RENDER_AS_GUEST</span>
-</code>
-
-
-    
-    
-    
-
-</article>
-                    <article class="phpdocumentor-element -constant -protected ">
-    <h4 class="phpdocumentor-element__name" id="constant_RENDER_AS_PUBLIC">
-        RENDER_AS_PUBLIC
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_PUBLIC" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">50</span>
-
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">RENDER_AS_PUBLIC</span>
-    = <span class="phpdocumentor-signature__default-value">\OCP\AppFramework\Http\TemplateResponse::RENDER_AS_PUBLIC</span>
-</code>
-
-
-    
-    
-    
-
-</article>
-                    <article class="phpdocumentor-element -constant -protected ">
-    <h4 class="phpdocumentor-element__name" id="constant_RENDER_AS_USER">
-        RENDER_AS_USER
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_USER" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">48</span>
-
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">RENDER_AS_USER</span>
-    = <span class="phpdocumentor-signature__default-value">\OCP\AppFramework\Http\TemplateResponse::RENDER_AS_USER</span>
-</code>
-
-
-    
-    
-    
-
-</article>
-            </section>
 
         
     <section class="phpdocumentor-properties">
@@ -525,11 +269,12 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
@@ -539,6 +284,8 @@ directory.</dd>
 
     
     
+    
+
     
 
 </article>
@@ -559,11 +306,12 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
@@ -573,6 +321,8 @@ directory.</dd>
 
     
     
+    
+
     
 
 </article>
@@ -598,9 +348,9 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">108</span>
+    <span class="phpdocumentor-element-found-in__line">120</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.108" class="phpdocumentor-element-found-in__source" data-line="108" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -610,6 +360,7 @@ directory.</dd>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -644,6 +395,8 @@ directory.</dd>
 
     
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataDownloadResponse">DataDownloadResponse</abbr></span>
@@ -664,9 +417,9 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">193</span>
+    <span class="phpdocumentor-element-found-in__line">222</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.193" class="phpdocumentor-element-found-in__source" data-line="193" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.222" class="phpdocumentor-element-found-in__source" data-line="222" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -676,6 +429,7 @@ directory.</dd>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -699,6 +453,8 @@ directory.</dd>
 
     
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span>
@@ -719,9 +475,9 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">171</span>
+    <span class="phpdocumentor-element-found-in__line">193</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.171" class="phpdocumentor-element-found-in__source" data-line="171" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.193" class="phpdocumentor-element-found-in__source" data-line="193" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert a potentially nested exception into a nested array to ease
@@ -733,6 +489,7 @@ post-processing.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -756,6 +513,8 @@ post-processing.</p>
 
     
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
@@ -776,9 +535,9 @@ post-processing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">150</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.150" class="phpdocumentor-element-found-in__source" data-line="150" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return an HTML error page, populated with the exception data. This only
@@ -787,10 +546,11 @@ directory.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">exceptionResponse</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$throwable</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$renderAs</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$method</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\TemplateResponse">TemplateResponse</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">exceptionResponse</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$throwable</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$renderAs</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$method</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$status</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">Http::STATUS_BAD_REQUEST</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\TemplateResponse">TemplateResponse</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -815,7 +575,18 @@ directory.</p>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$status</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">Http::STATUS_BAD_REQUEST</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Defaults to Http::STATUS_BAD_REQUEST</p>
+</section>
+
+            </dd>
             </dl>
+
+    
 
     
 
@@ -839,9 +610,9 @@ directory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">300</span>
+    <span class="phpdocumentor-element-found-in__line">329</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.300" class="phpdocumentor-element-found-in__source" data-line="300" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.329" class="phpdocumentor-element-found-in__source" data-line="329" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -851,6 +622,7 @@ directory.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -881,6 +653,8 @@ directory.</p>
                                     </dd>
                                             </dl>
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
@@ -901,9 +675,9 @@ directory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">271</span>
+    <span class="phpdocumentor-element-found-in__line">300</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.300" class="phpdocumentor-element-found-in__source" data-line="300" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -913,6 +687,7 @@ directory.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -967,6 +742,8 @@ directory.</p>
                                     </dd>
                                             </dl>
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span>
@@ -987,9 +764,9 @@ directory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">267</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.267" class="phpdocumentor-element-found-in__source" data-line="267" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -999,6 +776,7 @@ directory.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -1037,6 +815,8 @@ directory.</p>
                                     </dd>
                                             </dl>
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span>
@@ -1057,18 +837,19 @@ directory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">73</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">templateResponse</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$templateName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$renderAs</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">&#039;blank&#039;</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10n</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\TemplateResponse">TemplateResponse</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">templateResponse</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$templateName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$renderAs</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">&#039;blank&#039;</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10n</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$preRender</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\TemplateResponse">TemplateResponse</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -1084,30 +865,49 @@ directory.</p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                  = <span class="phpdocumentor-signature__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>Defaults to an empty array.</p>
+</section>
+
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$renderAs</span>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                  = <span class="phpdocumentor-signature__argument__default-value">&#039;blank&#039;</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>Defaults to 'blank'.</p>
+</section>
+
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$appName</span>
                 : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>If null use $this-&gt;appName or $this-&gt;appName().</p>
+</section>
+
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$l10n</span>
                 : <span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\OCP\IL10N">IL10N</abbr></span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>If null resulting in using $this-&gt;l.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$preRender</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether to immediately render the content.</p>
+</section>
+
             </dd>
             </dl>
+
+    
 
     
 
@@ -1131,9 +931,9 @@ directory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">214</span>
+    <span class="phpdocumentor-element-found-in__line">243</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#source-view.243" class="phpdocumentor-element-found-in__source" data-line="243" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -1143,6 +943,7 @@ directory.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -1196,6 +997,8 @@ directory.</p>
 
                                     </dd>
                                             </dl>
+
+    
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -1308,42 +1111,29 @@ directory.</p>
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                        <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#toc-constants">Constants</a></li>
                                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#toc-properties">Properties</a></li>
                                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#toc-methods">Methods</a></li>
-                                    </ul>
-            </li>
-                        <li class="phpdocumentor-on-this-page-section__title">Constants</li>
-            <li>
-                <ul class="phpdocumentor-list -clean">
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_APPNAME_PREFIX">APPNAME_PREFIX</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_BASE">RENDER_AS_BASE</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_BLANK">RENDER_AS_BLANK</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_ERROR">RENDER_AS_ERROR</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_GUEST">RENDER_AS_GUEST</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_PUBLIC">RENDER_AS_PUBLIC</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#constant_RENDER_AS_USER">RENDER_AS_USER</a></li>
                                     </ul>
             </li>
                                     <li class="phpdocumentor-on-this-page-section__title">Properties</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#property_appName">$appName</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#property_l">$l</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#property_appName">$appName</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#property_l">$l</a></li>
                                     </ul>
             </li>
                                     <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataDownloadResponse">dataDownloadResponse()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataResponse">dataResponse()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionChainData">exceptionChainData()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionResponse">exceptionResponse()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_getResponseMessages">getResponseMessages()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_grumble">grumble()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_response">response()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_templateResponse">templateResponse()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_valueResponse">valueResponse()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataDownloadResponse">dataDownloadResponse()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataResponse">dataResponse()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionChainData">exceptionChainData()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionResponse">exceptionResponse()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_getResponseMessages">getResponseMessages()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_grumble">grumble()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_response">response()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_templateResponse">templateResponse()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_valueResponse">valueResponse()</a></li>
                                     </ul>
             </li>
                     </ul>

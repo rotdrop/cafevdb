@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,21 +27,20 @@ namespace OCA\CAFEVDB\Controller;
 use \PHP_IBAN\IBAN;
 
 use OCP\AppFramework\Controller;
-use OCP\IRequest;
 use OCP\AppFramework\Http;
-
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\FuzzyInputService;
-use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\ProjectService;
 
 /** AJAX end-points for instrument insurances */
 class InstrumentInsuranceController extends Controller
 {
+  use GetPrefixParamsTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
@@ -49,11 +48,10 @@ class InstrumentInsuranceController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    private RequestParameterService $parameterService,
-    protected ConfigService $configService,
+    private FuzzyInputService $fuzzyInputService,
     private InstrumentInsuranceService $insuranceService,
     private ProjectService $projectService,
-    private FuzzyInputService $fuzzyInputService,
+    protected ConfigService $configService,
     protected PHPMyEdit $phpMyEdit,
   ) {
     parent::__construct($appName, $request);
@@ -75,7 +73,7 @@ class InstrumentInsuranceController extends Controller
     $errorMessages = [];
     $message = [];
     $cgiPrefix  = $this->pme->cgiDataName();
-    $pmeData = $this->parameterService->getPrefixParams($cgiPrefix);
+    $pmeData = $this->getPrefixParams($cgiPrefix);
     switch ($template) {
       case 'insurance-brokers':
         $cgiKeys = [

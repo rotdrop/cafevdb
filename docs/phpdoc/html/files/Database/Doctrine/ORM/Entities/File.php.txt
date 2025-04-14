@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024, 2025, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,68 +24,64 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Exceptions\DatabaseException;
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use DateTimeInterface;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Exceptions\DatabaseException;
 
 /**
  * An entity which modesl a file-system file. While it is not always
  * advisable to store file-system data in a data-base, we do so
  * nevertheless for selected small files.
  *
- * @ORM\Table(name="Files",
- *   indexes={
- *     @ORM\Index(columns={"file_name"}),
- *   })
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type", type="EnumFileType")
- * @ORM\DiscriminatorMap({"generic"="File","encrypted"="EncryptedFile","image"="Image"})
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\FilesRepository")
  *
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
+#[ORM\Table(name: 'Files')]
+#[ORM\Index(columns: ['file_name'])]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'EnumFileType')]
+#[ORM\DiscriminatorMap(['generic' => 'File', 'encrypted' => 'EncryptedFile', 'image' => 'Image'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\FilesRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class File implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\CreatedAtEntity;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\UpdatedAt;
-  use CAFEVDB\Traits\CreatedAtEntity;
 
   const PATH_SEPARATOR = '/';
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   protected $id;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=512, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 512, nullable: true)]
   protected $fileName;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   protected $mimeType;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => -1])]
   protected $size = -1;
 
   /**
@@ -94,24 +90,22 @@ class File implements \ArrayAccess
    * As ORM still does not support lazy one-to-one associations from the
    * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
    * association in between.
-   *
-   * @ORM\OneToMany(targetEntity="FileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: FileData::class, mappedBy: 'file', cascade: ['all'], orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   protected $fileData;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=32, nullable=true, options={"fixed"=true})
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['fixed' => true])]
   protected $dataHash;
 
   /**
    * @var \DateTimeImmutable
-   * @Gedmo\Timestampable(on={"update","change"}, field="fileData")
-   * @ORM\Column(type="datetime_immutable", nullable=true)
    */
-  protected $updated;
+  #[Gedmo\Timestampable(on: ['update', 'change'], field: 'fileData')]
+  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+  protected ?DateTimeInterface $updated;
 
   /** {@inheritdoc} */
   public function __construct($fileName = null, $data = null, $mimeType = null)

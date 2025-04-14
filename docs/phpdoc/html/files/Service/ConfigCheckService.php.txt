@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\Service;
 use Throwable;
 use Exception;
 use RuntimeException;
-use Net_IMAP;
 
 use OCP\IUserManager;
 use OCP\IGroupManager;
@@ -115,13 +114,14 @@ class ConfigCheckService
       'database',
       'encryptionkey',
       'migrations',
+      'sharedaddressbooks',
     ] as $key) {
       $result[$key] = ['status' => false, 'message' => ''];
     }
 
     $key ='orchestra';
     try {
-      $result[$key]['status'] = $this->getConfigValue('orchestra');
+      $result[$key]['status'] = !empty($this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY));
     } catch (Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
@@ -129,7 +129,7 @@ class ConfigCheckService
 
     $key = 'encryptionkey';
     try {
-      $result[$key]['status'] = $result['orchestra']['status'] && $this->encryptionKeyValid();
+      $result[$key]['status'] = $result[ConfigService::ORCHESTRA_NAME_KEY]['status'] && $this->encryptionKeyValid();
     } catch (Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
@@ -137,7 +137,7 @@ class ConfigCheckService
 
     $key = 'database';
     try {
-      $result[$key]['status'] = $result['orchestra']['status'] && $this->databaseAccessible();
+      $result[$key]['status'] = $result[ConfigService::ORCHESTRA_NAME_KEY]['status'] && $this->databaseAccessible();
     } catch (Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
@@ -212,11 +212,19 @@ class ConfigCheckService
     string $user,
     string $password,
   ):bool {
-    $imap = new Net_IMAP($host, $port, $secure == 'starttls' ? true : false, 'UTF-8');
-    $result = $imap->login($user, $password) === true;
-    $imap->disconnect();
+    /** @var IMAPService $imapService */
+    $imapService = $this->di(IMAPService::class);
 
-    return $result;
+    $imapService->setAccount($host, $port, $secure, $user, $password);
+    try {
+      $imapService->connect();
+      $imapService->disconnet();
+      return true;
+    } catch (Throwable $t) {
+      $this->logException($t, 'Unable to connect to ' . $secure . '://' . urlencode($user) . ':' . 'XXXX@' . $host . ':' . $port);
+    }
+
+    return false;
   }
 
   /**
@@ -241,7 +249,7 @@ class ConfigCheckService
   ):bool {
     $result = true;
 
-    $mail = new PHPMailer(true);
+    $mail = new PHPMailer;
     $mail->CharSet = 'utf-8';
     $mail->SingleTo = false;
     $mail->IsSMTP();
@@ -527,7 +535,7 @@ class ConfigCheckService
         $postfix = '';
       }
     }
-    $this->logInfo('POSTFIX ' . $postfix);
+    // $this->logInfo('POSTFIX ' . $postfix);
 
     $sharedFolder == '' && $sharedFolder = $this->getConfigValue('sharedfolder', '');
 
@@ -554,7 +562,7 @@ class ConfigCheckService
       }
     }
 
-    $this->logInfo('FOLDER INFO ' . print_r($folderInfo, true));
+    // $this->logInfo('FOLDER INFO ' . print_r($folderInfo, true));
     foreach ($shareGroupIds as $groupId) {
       if (empty($folderInfo['groups'][$groupId])) {
         return false;
@@ -662,11 +670,11 @@ class ConfigCheckService
         $postfix = '';
       }
     }
-    $this->logInfo('POSTFIX ' . $postfix);
+    // $this->logInfo('POSTFIX ' . $postfix);
 
     $sharedFolder .= $postfix;
 
-    $this->logInfo('TRY CREATE ' . $sharedFolder);
+    // $this->logInfo('TRY CREATE ' . $sharedFolder);
 
     $adminGroupId = $this->subAdminGroupId();
     if (empty($adminGroupId)) {
@@ -747,7 +755,7 @@ class ConfigCheckService
     }
     if (!$this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
       // migration has been performed, so do nothing else
-      return result;
+      return $result;
     }
 
     if ($sharedFolder == '') {
@@ -1221,7 +1229,7 @@ class ConfigCheckService
     }
 
     $selfOpened = false;
-    if (!$connection->ping()) {
+    if (!$connection->isConnected()) {
       if (!$connection->connect()) {
         $this->logError('db cannot connect');
         return false;
@@ -1229,8 +1237,8 @@ class ConfigCheckService
       $selfOpened = true;
     }
 
-    if (!$connection->ping()) {
-      $this->logError('db cannot ping');
+    if (!$connection->isConnected()) {
+      $this->logError('db cannot connect');
       return false;
     }
 

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,47 +24,48 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Exception;
-use Throwable;
 use Carbon\Carbon as DateTime;
 use Carbon\CarbonInterval as DateInterval;
 use DateTimeImmutable;
+use DateTimeInterface;
+use Exception;
 use PHP_IBAN;
-use Mail_RFC822;
+use Throwable;
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
-use OCP\IRequest;
 use OCP\IL10N;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ConfigCheckService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Settings\Personal;
+use OCA\CAFEVDB\AddressBook\AddressBookProvider;
+use OCA\CAFEVDB\Common\BankAccountValidator;
+use OCA\CAFEVDB\Common\NumberFormatter;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Documents\OpenDocumentFiller;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\CalDavService;
-use OCA\CAFEVDB\Service\L10N\TranslationService;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
+use OCA\CAFEVDB\Service\ConfigCheckService;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\InstrumentationService;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
-use OCA\CAFEVDB\Service\CloudUserConnectorService;
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\BankAccountValidator;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\AddressBook\AddressBookProvider;
-use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\InstrumentationService;
+use OCA\CAFEVDB\Service\L10N\TranslationService;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo\Service\RPC as WebPagesRPC;
@@ -74,6 +75,7 @@ use OCA\RoundCube\Service\Config as RoundCubeConfig;
 class PersonalSettingsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   public const EMAIL_PROTO = [ 'smtp', 'imap' ];
@@ -95,23 +97,22 @@ class PersonalSettingsController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    private IAppContainer $appContainer,
-    private RequestParameterService $parameterService,
-    protected ConfigService $configService,
-    private Personal $personalSettings,
-    private ConfigCheckService $configCheckService,
-    private PhoneNumberService $phoneNumberService,
-    private FinanceService $financeService,
-    private ProjectService $projectService,
     private CalDavService $calDavService,
-    private TranslationService $translationService,
+    private ConfigCheckService $configCheckService,
+    private EmailAddressService $emailAddressService,
+    private FinanceService $financeService,
     private FuzzyInputService $fuzzyInputService,
+    private Personal $personalSettings,
+    private PhoneNumberService $phoneNumberService,
+    private ProjectService $projectService,
+    private TranslationService $translationService,
     private UserStorage $userStorage,
-    private WikiRPC $wikiRPC,
     private WebPagesRPC $webPagesRPC,
+    private WikiRPC $wikiRPC,
+    protected ConfigService $configService,
+    protected IAppContainer $appContainer,
   ) {
     parent::__construct($appName, $request);
-
     $this->l = $this->l10N();
   }
   // phpcs:enable
@@ -228,7 +229,7 @@ class PersonalSettingsController extends Controller
           return self::grumble($this->exceptionChainData($t));
         }
         return self::response($this->l->t('Encryption key stored.'));
-      case 'email-draft-auto-save':
+      case 'emailDraftAutoSave':
         $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 0]);
         if ($realValue === false) {
           $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
@@ -260,6 +261,8 @@ class PersonalSettingsController extends Controller
    * @SubAdminRequired
    *
    * @bug This function is too big.
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
    */
   public function setApp(string $parameter, mixed $value):Http\Response
   {
@@ -273,7 +276,7 @@ class PersonalSettingsController extends Controller
           'localeInfo' => $this->generateLocaleInfo('app'),
         ]);
         // fall through
-      case 'orchestra':
+      case ConfigService::ORCHESTRA_NAME_KEY:
         $value = strtolower(Util::removeSpaces($value));
         // fall through
       case 'dbserver': // could check for valid hostname
@@ -1173,7 +1176,6 @@ class PersonalSettingsController extends Controller
             return self::valueResponse($real, $this->l->t('Participants downloads-folder set to "%s".', $real));
           case ConfigService::BALANCES_FOLDER:
           case ConfigService::TRANSACTIONS_FOLDER:
-          case ConfigService::TAX_OFFICE_IN_TRAY_FOLDER:
             $prefixFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
             if (empty($prefixFolder)) {
               return self::grumble(
@@ -1276,28 +1278,6 @@ class PersonalSettingsController extends Controller
               'Failure checking folder "%s", caught an exception "%s".',
               [ $prefixFolder . $real, $e->getMessage() ]));
         }
-      case ConfigService::TAX_OFFICE_IN_TRAY_FOLDER:
-        return $this->setSimpleConfigValue($parameter, $value);
-      case ConfigService::TAX_EXEMPTION_NOTICE_TEMPLATE:
-        $real = trim($value);
-        $translatedFromYear = $this->l->t('FROM_YEAR');
-        $translatedToYear = $this->l->t('TO_YEAR');
-        $found = 0;
-        foreach (['from', 'to'] as $limit) {
-          foreach ([${$limit . 'Year'}, ${'translated' . ucfirst($limit) . 'Year'}] as $required) {
-            $required = '{' . $required . '}';
-            if (strpos($real, $required) !== false) {
-              ++$found;
-              break;
-            }
-          }
-        }
-        if ($found !== 2) {
-          return self::grumble($this->l->t('The tax-excemption-notice template must contain both, the from-year as well as the to-year placeholders ("{%1$s}", "{%2$s}").', [
-            $translatedFromYear, $translatedToYear,
-          ]));
-        }
-        return $this->setSimpleConfigValue($parameter, $value);
       case 'concertscalendar':
       case 'rehearsalscalendar':
       case 'othercalendar':
@@ -1386,11 +1366,12 @@ class PersonalSettingsController extends Controller
           return self::grumble($this->l->t('Value "%s" for set "%s" is not convertible to boolean.', [$value, $parameter]));
         }
         $stringValue = $realValue ? 'on' : 'off';
+        $hints = '';
         try {
           $cloudUserViewsDatabase = $this->getConfigValue('cloudUserViewsDatabase', null);
           /** @var CloudUserConnectorService $userConnectorService */
           $userConnectorService = $this->di(CloudUserConnectorService::class);
-          $requirements = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
+          list('hints' => $hints ,) = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
           if ($realValue) {
             $userConnectorService->updateUserSqlViews($cloudUserViewsDatabase);
             $userConnectorService->writeUserSqlConfig($cloudUserViewsDatabase);
@@ -1418,16 +1399,18 @@ class PersonalSettingsController extends Controller
           return self::grumble($this->exceptionChainData($t));
         }
         return $this->setSimpleConfigValue($parameter, $stringValue, furtherData: [
-          'message' => $requirements['hints'],
-          'hints' => $requirements['hints'],
+          'messages' => $hints,
+          'message' => $hints,
+          'hints' => $hints,
         ]);
 
       case 'userSqlBackendRecreateViews':
+        $hints = '';
         try {
           $cloudUserViewsDatabase = $this->getConfigValue('cloudUserViewsDatabase', null);
           /** @var CloudUserConnectorService $userConnectorService */
           $userConnectorService = $this->di(CloudUserConnectorService::class);
-          $requirements = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
+          list('hints' => $hints,) = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
           $userConnectorService->updateUserSqlViews($cloudUserViewsDatabase);
           $userConnectorService->writeUserSqlConfig($cloudUserViewsDatabase);
 
@@ -1443,22 +1426,25 @@ class PersonalSettingsController extends Controller
           $this->logException($t);
           return self::grumble($this->exceptionChainData($t));
         }
+        $messages = array_merge(
+          [ $this->l->t('Cloud-user-views have been regenerated successfully.'), ],
+          $hints,
+        );
         return self::dataResponse([
-          'message' => array_merge(
-            [ $this->l->t('Cloud-user-views have been regenerated successfully.'), ],
-            $requirements['hints']),
-          'hints' => $requirements['hints'],
+          'message' => $messages,
+          'hints' => $hints,
         ]);
 
       case 'cloudUserViewsDatabase':
         $newValue = Util::normalizeSpaces($value);
         $oldValue = $this->getConfigValue($parameter, null);
         $this->logInfo('OLD / NEW ' . $oldValue . ' / ' . $newValue);
+        $hints = '';
         if ($newValue != $oldValue) {
           try {
             /** @var CloudUserConnectorService $userConnectorService */
             $userConnectorService = $this->di(CloudUserConnectorService::class);
-            $requirements = $userConnectorService->checkRequirements($newValue);
+            list('hints' => $hints,) = $userConnectorService->checkRequirements($newValue);
             $userConnectorService->removeUserSqlViews($oldValue);
             $userConnectorService->updateUserSqlViews($newValue);
             $userConnectorService->writeUserSqlConfig($newValue);
@@ -1471,8 +1457,9 @@ class PersonalSettingsController extends Controller
           }
         }
         return $this->setSimpleConfigValue($parameter, $value, furtherData: [
-          'message' => $requirements['hints'],
-          'hints' => $requirements['hints'],
+          'messages' => $hints,
+          'message' => $hints,
+          'hints' => $hints,
         ]);
 
       case 'musicianPersonalizedViews':
@@ -1481,11 +1468,12 @@ class PersonalSettingsController extends Controller
           return self::grumble($this->l->t('Value "%s" for set "%s" is not convertible to boolean.', [$value, $parameter]));
         }
         $stringValue = $realValue ? 'on' : 'off';
+        $hints = '';
         try {
           $cloudUserViewsDatabase = $this->getConfigValue('cloudUserViewsDatabase', null);
           /** @var CloudUserConnectorService $userConnectorService */
           $userConnectorService = $this->di(CloudUserConnectorService::class);
-          $requirements = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
+          list('hints' => $hints,) = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
           if ($realValue) {
             $userConnectorService->updateMusicianPersonalizedViews($cloudUserViewsDatabase);
           } else {
@@ -1496,26 +1484,31 @@ class PersonalSettingsController extends Controller
           return self::grumble($this->exceptionChainData($t));
         }
         return $this->setSimpleConfigValue($parameter, $stringValue, furtherData: [
-          'message' => $requirements['hints'],
-          'hints' => $requirements['hints'],
+          'messages' => $hints,
+          'message' => $hints,
+          'hints' => $hints,
         ]);
 
       case 'musicianPersonalizedViewsRecreateViews':
+        $hints = '';
         try {
           $cloudUserViewsDatabase = $this->getConfigValue('cloudUserViewsDatabase', null);
           /** @var CloudUserConnectorService $userConnectorService */
           $userConnectorService = $this->di(CloudUserConnectorService::class);
-          $requirements = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
+          list('hints' => $hints,) = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
           $userConnectorService->updateMusicianPersonalizedViews($cloudUserViewsDatabase);
         } catch (Throwable $t) {
           $this->logException($t);
           return self::grumble($this->exceptionChainData($t));
         }
+        $messages = array_merge(
+          [ $this->l->t('Personalized single-row database-views have been regenerated successfully.'), ],
+          $hints,
+        );
         return self::dataResponse([
-          'message' => array_merge(
-            [ $this->l->t('Personalized single-row database-views have been regenerated successfully.'), ],
-            $requirements['hints']),
-          'hints' => $requirements['hints'],
+          'messages' => $messages,
+          'message' => $messages,
+          'hints' => $hints,
         ]);
 
       case 'keydistribute':
@@ -1661,28 +1654,16 @@ class PersonalSettingsController extends Controller
       case ConfigService::EMAIL_TEST_ADDRESS_KEY:
       case ConfigService::EMAIL_FORM_ADDRESS_KEY:
         $realValue = Util::normalizeSpaces($value);
-        $parser = new Mail_RFC822(null, null, null, false);
-        $parsedEmail = $parser->parseAddressList($realValue);
-        $parseError = $parser->parseError();
-        if ($parseError !== false) {
-          return self::grumble($this->l->t('Unable to parse email address "%1$s": %2$s', [ $value, $parseError['message'] ]));
+        try {
+          $parsedEmail = $this->emailAddressService->parseAddressString($realValue);
+        } catch (Exceptions\EnduserNotificationException $e) {
+          return self::grumble($this->l->t('Unable to parse email address "%1$s": %2$s', [ $value, $e->getMessage() ]));
         }
         if (count($parsedEmail) !== 1) {
-          return self::grumble($this->l->t('"%s" seems to contain multiple email address, only a single address is allowed here.', $value));
+          return self::grumble($this->l->t('"%s" seems to contain multiple email addresses, only a single address is allowed here.', $value));
         }
-        $parsedEmail = $parsedEmail[0];
-        if (empty($parsedEmail->host)) {
-          return self::grumble($this->l->t('"%s" does not contain the host-part of the email-address, local addresses are not allowed here.', $value));
-        }
-        $realValue = $parsedEmail->mailbox . '@' . $parsedEmail->host;
-        if (!empty($realValue) && filter_var($realValue, FILTER_VALIDATE_EMAIL) === false) {
-          return self::grumble($this->l->t('"%s" does not seem to be a valid email address', $value));
-        }
-        if (!empty($parsedEmail->personal)) {
-          $displayName = $parsedEmail->personal;
-        } elseif (!empty($parsedEmail->comment)) {
-          $displayName = implode(', ', $parsedEmail->comment);
-        }
+        $realValue = array_key_first($parsedEmail);
+        $displayName = reset($parsedEmail);
         $furtherData = [];
         if (!empty($displayName)) {
           switch ($parameter) {
@@ -1765,6 +1746,7 @@ class PersonalSettingsController extends Controller
         return $this->setSimpleConfigValue($parameter, $value);
 
       case (in_array($parameter, ConfigService::MAILING_LIST_REST_CONFIG) ? $parameter : null):
+        /** @var string $mailingListRestUrl */
         foreach (ConfigService::MAILING_LIST_REST_CONFIG as $listConfig) {
           ${$listConfig} = $this->getConfigValue($listConfig);
         }
@@ -1849,10 +1831,13 @@ class PersonalSettingsController extends Controller
           if ($components['scheme'] != 'http' && $components['scheme'] != 'https') {
             return self::grumble($this->l->t('"%1$s" must be a http(s) URL, scheme "%2$s" not supported.', [$value, $components['scheme']]));
           }
+          $this->setConfigValue($parameter, $realValue);
+        } else {
+          $this->deleteConfigValue($parameter);
+          $realValue = null;
         }
-        $this->setConfigValue($parameter, $realValue);
         $key = $parameter;
-        $this->logDebug($key . ' => ' . $this->getConfigValue($key));
+        $this->logDebug($key . ' => ' . $this->getConfigValue($key, null));
         return self::valueResponse($realValue, $this->l->t(' "%s" set to "%s".', [$parameter, $realValue]));
         // link to CMS, currently Redaxo4
       case 'redaxo'.str_replace('redaxo', '', $parameter):
@@ -1897,30 +1882,13 @@ class PersonalSettingsController extends Controller
   {
     switch ($parameter) {
       case 'locale-info':
-        $localeInfo = $this->generateLocaleInfo($this->parameterService->getParam('scope'));
+        $localeInfo = $this->generateLocaleInfo($this->request->getParam('scope'));
         return self::dataResponse([
           'contents' => $localeInfo,
         ]);
       case 'passwordgenerate':
       case 'generatepassword':
         return self::valueResponse($this->generateRandomBytes(32));
-      case 'test'.str_replace('test', '', $parameter):
-        $testKeys = [
-          'cspfailurereporting' => $this->urlGenerator()->linkToRouteAbsolute($this->appName().'.csp_violation.post', ['operation' => 'report']),
-          'clouddev' => null,
-          'sourcedocs' => null,
-          'sourcecode' => null,
-          'phpmyadmincloud' => null,
-          'phpmyadmin' => null,
-        ];
-        $key = substr($parameter, 4);
-        if (array_search($key, array_keys($testKeys)) === false) {
-          return self::grumble($this->l->t('Unknown link target %s', [ $parameter ]));
-        }
-        return self::valueResponse([
-          'link' => $this->getConfigValue($key, $testKeys[$key]),
-          'target' => $key.':'.$this->appName,
-        ]);
       case 'documenttemplatesfolder':
         $sharedFolder = $this->getConfigValue('sharedfolder');
         if (empty($sharedFolder)) {
@@ -1978,7 +1946,7 @@ class PersonalSettingsController extends Controller
   {
     switch ($parameter) {
       case 'locale-info':
-        $localeInfo = $this->generateLocaleInfo($this->parameterService->getParam('scope'));
+        $localeInfo = $this->generateLocaleInfo($this->request->getParam('scope'));
         return self::dataResponse([
           'contents' => $localeInfo,
         ]);
@@ -1993,96 +1961,208 @@ class PersonalSettingsController extends Controller
 
         return $response;
       case 'auto-fill-test':
-        $templateName = $this->parameterService->getParam('documentTemplate');
+      case 'auto-fill-test-data':
+        $templateName = $this->request->getParam('documentTemplate');
         if (empty(ConfigService::DOCUMENT_TEMPLATES[$templateName])
             || ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE) {
           return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
         }
-        $format = $this->parameterService->getParam('format');
+        $format = $this->request->getParam('format');
+
+        $project = $this->projectService->findById($this->getClubMembersProjectId());
+        $flatProject = $this->flattenProject($project);
+
+        /** @var InstrumentationService $instrumentationService */
+        $instrumentationService = $this->di(InstrumentationService::class);
+        $dummyRecipient = $instrumentationService->getDummyMusician(project: $project);
+        $flatRecipient = $this->flattenMusician($dummyRecipient);
+
+        /** @var OpenDocumentFiller $documentFiller */
+        $documentFiller = $this->di(OpenDocumentFiller::class);
+
+        /** @var \OCA\CAFEVDB\Common\NumberFormatter $numberFormatter */
+        $numberFormatter = new NumberFormatter($this->appLocale());
+
+        $templateData = null;
+        $blocks = [
+          'sender' => 'org.treasurer',
+        ];
+
+        $makePayment = fn(float $value, string $toolTip) => [
+          'amount' => $value,
+          'isIncome' => (int)($value > 0),
+          'subject' => $this->toolTipsService()['mailmerge:examples:finance:' . $toolTip],
+          'l10n' => [
+            'locale' => $this->appLocale(),
+            'amount' => $numberFormatter->formatCurrency($value),
+            'amountText' => $numberFormatter->currencyToWords($value),
+            'absAmount' => $numberFormatter->formatCurrency(abs($value)),
+            'absAmountText' => $numberFormatter->currencyToWords(abs($value)),
+          ],
+        ];
+        $makeCompositePayment = function(
+          DateTimeInterface $dateOfReceipt,
+          array $payments,
+        ) use (
+          $numberFormatter,
+        ):array {
+          $amount = round(
+            array_reduce($payments, fn(float $carry, array $payment) => $payment['amount'] + $carry, 0.0),
+            2,
+          );
+          return [
+            'dateOfReceipt' => $dateOfReceipt,
+            'amount' => $amount,
+            'l10n' => [
+              'locale' => $this->appLocale(),
+              'amount' => $numberFormatter->formatCurrency($amount),
+              'amountText' => $numberFormatter->currencyToWords($amount),
+              'absAmount' => $numberFormatter->formatCurrency(abs($amount)),
+              'absAmountText' => $numberFormatter->currencyToWords(abs($amount)),
+            ],
+            'payments' => $payments,
+          ];
+        };
 
         switch ($templateName) {
+          case ConfigService::DOCUMENT_TEMPLATE_STANDARD_LETTER:
+            $templateData = [
+              'project' => $flatProject,
+              'recipient' => $flatRecipient,
+            ];
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_DONATION_RECEIPT:
+            $income = 13.57;
+            $expenses = -13.57;
+            $amount = round($income + $expenses, 2);
+            $dateOfReceipt = (new DateTime('- 17 days'));
+            $templateData = [
+              'recipient' => $flatRecipient,
+              'project' => $flatProject,
+              'donation' => [
+                'amount' => $income,
+                'dateOfReceipt' => $dateOfReceipt,
+                'isWaivingOfReimbursement' => (int)($amount == 0),
+                'l10n' => [
+                  'locale' => $this->appLocale(),
+                  'amount' => $numberFormatter->formatCurrency($income),
+                  'amountText' => $numberFormatter->currencyToWords($income),
+                ],
+              ],
+              'payment' => $makeCompositePayment(
+                $dateOfReceipt, [
+                  $makePayment($expenses, 'donation:expensesSubject'),
+                  $makePayment($income, 'donation:incomeSubject'),
+                ],
+              ),
+            ];
+            $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.corporateIncomeTax';
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_STANDARD_RECEIPT:
+            $income = 42.57;
+            $expenses = -12.13;
+            $amount = round($income + $expenses, 2);
+            $dateOfReceipt = (new DateTime('- 17 days'));
+            $templateData = [
+              'recipient' => $flatRecipient,
+              'project' => $flatProject,
+              'payment' => $makeCompositePayment(
+                $dateOfReceipt, [
+                  $makePayment($expenses, 'receipt:expensesSubject'),
+                  $makePayment($income, 'receipt:incomeSubject'),
+                ],
+              ),
+            ];
+            $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.corporateIncomeTax';
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_INVOICE:
+            $amount = 13.57;
+            $gracePeriodDays = 14;
+            DateInterval::setLocale($this->getLanguage($this->appLocale()));
+            $gracePeriodText = (string)DateInterval::days($gracePeriodDays);
+            // für das Engagement unseres Orchesters für die Konzerte am
+            // 22.10.2022 (Maria Hilf Kirche Freiburg), 23.10.2022
+            // (Ev. Pfarrkirche Ihringen) und am 29.10.2022 (Grand Kursaal
+            // Besançon)
+            $subject = $this->toolTipsService()['mailmerge:examples:finance:invoice:subject'];
+            $purpose = $this->toolTipsService()['mailmerge:examples:finance:invoice:purpose'];
+            $templateData = [
+              'project' => $flatProject,
+              'recipient' => $flatRecipient,
+              'invoice' => [
+                'amount' => $amount,
+                'gracePeriodDays' => $gracePeriodDays,
+                'number' => $this->financeService->generateInvoiceNumber($dummyRecipient, $project),
+                'purpose' => $purpose,
+                'subject' => $subject,
+                'l10n' => [
+                  'locale' => $this->appLocale(),
+                  'amount' => $numberFormatter->formatCurrency($amount),
+                  'amountText' => $numberFormatter->currencyToWords($amount),
+                  'gracePeriod' => $gracePeriodText,
+                ],
+              ],
+            ];
+            break;
           case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
-            /** @var InstrumentationService $instrumentationService */
-            $instrumentationService = $this->di(InstrumentationService::class);
-            $musician = $instrumentationService->getDummyMusician();
-
             if ($format == 'pdf') {
               list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
-                $musician->getSepaBankAccounts()->first(),
+                $dummyRecipient->getSepaBankAccounts()->first(),
                 $this->getExecutiveBoardProjectId(),
                 formName: $templateName
               );
             } else {
-              /** @var OpenDocumentFiller $documentFiller */
-              $documentFiller = $this->di(OpenDocumentFiller::class);
-              $templateFileName = $this->getDocumentTemplatesPath($templateName);
-              if (empty($templateFileName)) {
-                return self::grumble(
-                  $this->l->t(
-                    'There is no template file for template "%s"', $templateName));
-              }
-              list($fileData, $mimeType, $fileName) = $documentFiller->fill(
-                $templateFileName, [], [ 'sender' => 'org.treasurer' ], false
-              );
+              $templateData = [];
             }
-
             break;
           case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
-            /** @var InstrumentationService $instrumentationService */
-            $instrumentationService = $this->di(InstrumentationService::class);
-            $musician = $instrumentationService->getDummyMusician();
-
             if ($format == 'pdf') {
               list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
-                $musician->getSepaBankAccounts()->first(),
+                $dummyRecipient->getSepaBankAccounts()->first(),
                 $this->getClubMembersProjectId(),
-                formName: $templateName
+                formName: $templateName,
               );
             } else {
-              /** @var OpenDocumentFiller $documentFiller */
-              $documentFiller = $this->di(OpenDocumentFiller::class);
-              $templateFileName = $this->getDocumentTemplatesPath($templateName);
-              if (empty($templateFileName)) {
-                return self::grumble(
-                  $this->l->t(
-                    'There is no template file for template "%s"', $templateName));
-              }
-              list($fileData, $mimeType, $fileName) = $documentFiller->fill(
-                $templateFileName, [], [ 'sender' => 'org.treasurer' ], false
-              );
+              $templateData = [];
             }
             break;
           case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
-            /** @var InstrumentationService $instrumentationService */
-            $instrumentationService = $this->di(InstrumentationService::class);
-            $musician = $instrumentationService->getDummyMusician();
-
             if ($format == 'pdf') {
               list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
-                $musician->getSepaBankAccounts()->first(),
+                $dummyRecipient->getSepaBankAccounts()->first(),
                 $this->getClubMembersProjectId(),
                 formName: $templateName
               );
             } else {
-              /** @var OpenDocumentFiller $documentFiller */
-              $documentFiller = $this->di(OpenDocumentFiller::class);
-              $templateFileName = $this->getDocumentTemplatesPath($templateName);
-              if (empty($templateFileName)) {
-                return self::grumble(
-                  $this->l->t(
-                    'There is no template file for template "%s"', $templateName));
-              }
-              list($fileData, $mimeType, $fileName) = $documentFiller->fill(
-                $templateFileName, [], [ 'sender' => 'org.treasurer' ], false
-              );
+              $templateData = [];
             }
             break;
           case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD:
             /** @var InstrumentInsuranceService $insuranceService */
             $insuranceService = $this->di(InstrumentInsuranceService::class);
-            $musician = $insuranceService->getDummyMusician();
-            $insuranceOverview = $insuranceService->musicianOverview($musician);
+            $dummyRecipient = $insuranceService->getDummyMusician();
+            $insuranceOverview = $insuranceService->musicianOverview($dummyRecipient);
 
+            // Prepare the data doing some translations first
+            foreach ($insuranceOverview['musicians'] as &$insurance) {
+              foreach ($insurance['items'] as &$item) {
+                $item['scope'] = $this->l->t($item['scope']);
+              }
+            }
+
+            $templateData = [
+              'instins' => $insuranceOverview,
+            ];
+            $blocks['recipient'] = 'instins.billTo';
+            break;
+          default:
+            return self::grumble(
+              $this->l->t(
+                'Auto-fill test for template "%s: not yet implemented, sorry.', $templateName));
+        }
+
+        if ($parameter == 'auto-fill-test') {
+          if ($templateData !== null) {
             /** @var OpenDocumentFiller $documentFiller */
             $documentFiller = $this->di(OpenDocumentFiller::class);
             $templateFileName = $this->getDocumentTemplatesPath($templateName);
@@ -2093,76 +2173,39 @@ class PersonalSettingsController extends Controller
             }
 
             list($fileData, $mimeType, $fileName) = $documentFiller->fill(
-              $templateFileName,
-              $insuranceOverview,
-              [
-                'sender' => 'org.treasurer',
-                'recipient' => 'billToParty',
-              ], $format == 'pdf'
+              templateFileName: $templateFileName,
+              templateData: $templateData,
+              blocks: $blocks,
+              asPdf: $format == str_contains($format, 'pdf'),
             );
+          }
 
-            break;
+          $pathInfo = pathinfo($fileName);
+          $fileName = implode('-', [
+            $this->timeStamp(),
+            $pathInfo['filename'],
+            'auto-fill-test',
+          ]) . '.' . $pathInfo['extension'];
 
-          default:
-            return self::grumble(
-              $this->l->t(
-                'Auto-fill test for template "%s: not yet implemented, sorry.', $templateName));
+          return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
+        } else {
+          /** @var OpenDocumentFiller $documentFiller */
+          $documentFiller = $this->di(OpenDocumentFiller::class);
+          $fillData = $documentFiller->fillData($templateData);
+
+          $fillData['__blocks__'] = $blocks;
+
+          $fileData = json_encode($fillData);
+          $fileName = implode('-', [
+            $this->timeStamp(),
+            $templateName,
+            'auto-fill-test-data'
+          ])
+            . '.' . 'json';
+          $mimeType = 'application/json';
+
+          return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
         }
-
-        $pathInfo = pathinfo($fileName);
-        $fileName = implode('-', [
-          $this->timeStamp(),
-          $pathInfo['filename'],
-          'auto-fill-test',
-        ]) . '.' . $pathInfo['extension'];
-
-        return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
-      case 'auto-fill-test-data':
-        $templateName = $this->parameterService->getParam('documentTemplate');
-        if (empty(ConfigService::DOCUMENT_TEMPLATES[$templateName])
-            ||ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE) {
-          return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
-        }
-
-        switch ($templateName) {
-          // /** @var InstrumentationService $instrumentationService */
-          // $instrumentationService = $this->di(InstrumentationService::class);
-          // $musician = $instrumentationService->getDummyMusician();
-          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
-          case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
-          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
-            /** @var InstrumentInsuranceService $insuranceService */
-            /** @var OpenDocumentFiller $documentFiller */
-            $documentFiller = $this->di(OpenDocumentFiller::class);
-            $fillData = $documentFiller->fillData([]);
-            break;
-          case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD:
-            /** @var InstrumentInsuranceService $insuranceService */
-            $insuranceService = $this->di(InstrumentInsuranceService::class);
-            $musician = $insuranceService->getDummyMusician();
-            $insuranceOverview = $insuranceService->musicianOverview($musician);
-
-            /** @var OpenDocumentFiller $documentFiller */
-            $documentFiller = $this->di(OpenDocumentFiller::class);
-
-            $fillData = $documentFiller->fillData($insuranceOverview);
-            break;
-          default:
-            return self::grumble(
-              $this->l->t(
-                'Download of auto-fill test-data for template "%s" is not yet implemented, sorry.', $templateName));
-        }
-
-        $fileData = json_encode($fillData);
-        $fileName = implode('-', [
-          $this->timeStamp(),
-          $templateName,
-          'auto-fill-test-data'
-        ])
-          . '.' . 'json';
-        $mimeType = 'application/json';
-
-        return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
       default:
         break;
     }
@@ -2170,17 +2213,20 @@ class PersonalSettingsController extends Controller
   }
 
   /**
-   * @param string $key
+   * @param string $key Config key to set.
    *
-   * @param mixed $value
+   * @param mixed $value Value to set. If empty config entry will be deleted.
    *
-   * @param mixed $reportValue
+   * @param mixed $reportValue Human readable value for display in the
+   * frontend (e.g. formatted floating point value, or boolean as text.
    *
-   * @param array $furtherData
+   * @param array $furtherData Further data to be mixed into the
+   * data-response data.
    *
-   * @param null|array $responseData
+   * @param null|array $responseData The data wrapped into the return
+   * value. Will be set if specified.
    *
-   * @return Http\Response
+   * @return Http\DataResponse
    */
   private function setSimpleConfigValue(
     string $key,
@@ -2188,7 +2234,7 @@ class PersonalSettingsController extends Controller
     mixed $reportValue = null,
     array $furtherData = [],
     ?array &$responseData = null
-  ):Http\Response {
+  ):Http\DataResponse {
     $realValue = Util::normalizeSpaces($value);
     if (empty($reportValue)) {
       $reportValue = $realValue;

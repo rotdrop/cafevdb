@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -228,9 +228,9 @@ trait FindLikeTrait
   public function findBy(
     array $criteria,
     ?array $orderBy = null,
-    $limit = null,
-    $offset = null,
-  ) {
+    ?int $limit = null,
+    ?int $offset = null,
+  ):array {
     $queryParts = $this->prepareFindBy($criteria, $orderBy);
 
     // The stock findBy() / findOneBy() functions do not use query-hints, see
@@ -268,7 +268,7 @@ trait FindLikeTrait
    *
    * @return int The number of found entities.
    */
-  public function count(array $criteria):int
+  public function count(array $criteria = []):int
   {
     $queryParts = $this->prepareFindBy($criteria);
 
@@ -302,7 +302,7 @@ trait FindLikeTrait
    *
    * @see findBy()
    */
-  public function findOneBy(array $criteria, ?array $orderBy = null)
+  public function findOneBy(array $criteria, ?array $orderBy = null):?object
   {
     $result = $this->findBy($criteria, $orderBy, 1, 0);
     return $result[0] ?? null;

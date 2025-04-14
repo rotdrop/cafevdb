@@ -30,12 +30,13 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  * Tax types.
  *
  * @method static EnumTaxType CORPORATE_INCOME()
- * @method static EnumVCalendarType SALES()
- * @method static EnumVCalendarType VAT()
+ * @method static EnumTaxType SALES()
+ * @method static EnumTaxType VAT()
  */
 class EnumTaxType extends EnumType
 {
   use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
+
   public const CORPORATE_INCOME = 'corporate income tax';
   public const SALES = 'sales tax';
   public const VAT = 'VAT';

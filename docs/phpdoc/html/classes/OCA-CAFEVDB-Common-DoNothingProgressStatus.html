@@ -54,7 +54,7 @@
     Menu
 </label>
 <aside class="phpdocumentor-column -three phpdocumentor-sidebar">
-                    <section class="phpdocumentor-sidebar__category">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
             <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="namespaces/oca.html" class="">OCA</a>
@@ -67,15 +67,15 @@
             </ul>
 
                         </section>
-                <section class="phpdocumentor-sidebar__category">
+                <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/cafevdb.html" class="">cafevdb</a>
+    <a href="packages/Application.html" class="">Application</a>
 </h4>
 
                         </section>
             
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
@@ -83,7 +83,7 @@
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
     </section>
 
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -indices">
         <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
     </section>
@@ -135,6 +135,9 @@
 
 
 
+
+
+
 <h3 id="toc">
     Table of Contents
     <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -156,19 +159,19 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#property_applicationData">$applicationData</a>
+    <a class="" href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#property_applicationData">$applicationData</a>
     <span>
                         &nbsp;: mixed            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#property_current">$current</a>
+    <a class="" href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#property_current">$current</a>
     <span>
                         &nbsp;: int            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#property_target">$target</a>
+    <a class="" href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#property_target">$target</a>
     <span>
                         &nbsp;: int            </span>
 </dt>
@@ -182,91 +185,95 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_bind">bind()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_bind">bind()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: void    </span>
 </dt>
-<dd>{@inheritdoc}</dd>
+<dd>Bind to the given storage object. Create a new object if $id is null.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_delete">delete()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_delete">delete()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: void    </span>
 </dt>
-<dd>{@inheritdoc}</dd>
+<dd>Delete the underlying storage object. Afterwards any operation
+except $this-&gt;bind() will exhibit undefined behaviour.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getCurrent">getCurrent()</a>
-    <span>
-                                &nbsp;: int    </span>
-</dt>
-<dd>{@inheritdoc}</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getData">getData()</a>
-    <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;|null    </span>
-</dt>
-<dd>{@inheritdoc}</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getId">getId()</a>
-    <span>
-                                &nbsp;: mixed    </span>
-</dt>
-<dd>{@inheritdoc}</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getTarget">getTarget()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getCurrent">getCurrent()</a>
     <span>
                                 &nbsp;: int    </span>
 </dt>
-<dd>{@inheritdoc}</dd>
+<dd>Return the cached value of the current state.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_increment">increment()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getData">getData()</a>
+    <span>
+                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+</dt>
+<dd>Return the cached value of the custom data, i.e. the data previously passed to update().</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getId">getId()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+<dd>Obtain a unique but opaque identifier (e.g. the id column in a
+database up to a serialized representation).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getTarget">getTarget()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Return the cached value of the target state.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_increment">increment()</a>
     <span>
                                 &nbsp;: bool|int    </span>
 </dt>
 <dd>Add the given amount to the progress-status counter.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_setCurrent">setCurrent()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_setCurrent">setCurrent()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Set the current value and sync.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_setData">setData()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_setData">setData()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Set the data value and sync.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_setTarget">setTarget()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_setTarget">setTarget()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Set the target value and sync.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_sync">sync()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_sync">sync()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: void    </span>
 </dt>
-<dd>{@inheritdoc}</dd>
+<dd>Synchronize with the underlying storage, i.e. read the data into
+this instance.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_update">update()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_update">update()</a>
     <span>
                                 &nbsp;: bool    </span>
 </dt>
-<dd>{@inheritdoc}</dd>
+<dd>Update to the given values, where null arguments are simply
+ignored. This function has to write the given values through to
+the underlying storage.</dd>
 
     </dl>
-
 
 
 
@@ -298,9 +305,10 @@
     :
     <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/Common/DoNothingProgressStatus.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
@@ -310,6 +318,8 @@
 
     
     
+    
+
     
 
 </article>
@@ -332,9 +342,10 @@
     :
     <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Common/DoNothingProgressStatus.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
@@ -344,6 +355,8 @@
 
     
     
+    
+
     
 
 </article>
@@ -366,9 +379,10 @@
     :
     <span class="phpdocumentor-element-found-in__line">42</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/Common/DoNothingProgressStatus.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
@@ -378,6 +392,8 @@
 
     
     
+    
+
     
 
 </article>
@@ -405,17 +421,18 @@
     :
     <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Common/DoNothingProgressStatus.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+        <p class="phpdocumentor-summary">Bind to the given storage object. Create a new object if $id is null.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">bind</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">bind</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -424,9 +441,13 @@
                 : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>Opaque data identifying the progress status object.</p>
+</section>
+
             </dd>
             </dl>
+
+    
 
     
 
@@ -448,19 +469,23 @@
     :
     <span class="phpdocumentor-element-found-in__line">51</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/Common/DoNothingProgressStatus.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+        <p class="phpdocumentor-summary">Delete the underlying storage object. Afterwards any operation
+except $this-&gt;bind() will exhibit undefined behaviour.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">delete</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">delete</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
     
+    
+    
+
     
 
     
@@ -481,10 +506,10 @@
     :
     <span class="phpdocumentor-element-found-in__line">85</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/Common/DoNothingProgressStatus.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+        <p class="phpdocumentor-summary">Return the cached value of the current state.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -494,6 +519,9 @@
         </div>
     
     
+    
+    
+
     
 
             <section>
@@ -518,24 +546,27 @@
     :
     <span class="phpdocumentor-element-found-in__line">97</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/Common/DoNothingProgressStatus.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+        <p class="phpdocumentor-summary">Return the cached value of the custom data, i.e. the data previously passed to update().</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getData</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;|null</span></code>
+                    <span class="phpdocumentor-signature__name">getData</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
     
     
+    
+
+    
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;|null</span>
+        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
             </section>
 
 </article>
@@ -555,10 +586,11 @@
     :
     <span class="phpdocumentor-element-found-in__line">61</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/Common/DoNothingProgressStatus.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+        <p class="phpdocumentor-summary">Obtain a unique but opaque identifier (e.g. the id column in a
+database up to a serialized representation).</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -568,6 +600,9 @@
         </div>
     
     
+    
+    
+
     
 
     
@@ -588,10 +623,10 @@
     :
     <span class="phpdocumentor-element-found-in__line">91</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/Common/DoNothingProgressStatus.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+        <p class="phpdocumentor-summary">Return the cached value of the target state.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -601,6 +636,9 @@
         </div>
     
     
+    
+    
+
     
 
             <section>
@@ -625,7 +663,7 @@
     :
     <span class="phpdocumentor-element-found-in__line">33</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.33" class="phpdocumentor-element-found-in__source" data-line="33" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.33" class="phpdocumentor-element-found-in__source" data-line="33" data-modal="source-view" data-src="files/Common/AbstractProgressStatus.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Add the given amount to the progress-status counter.</p>
@@ -637,6 +675,7 @@
     <div class="phpdocumentor-label-line">
         </div>
     
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -645,6 +684,7 @@
                  = <span class="phpdocumentor-signature__argument__default-value">1</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Amount to add, defaults to 1. Negative values
+are allowed.
 are allowed.</p>
 </section>
 
@@ -653,11 +693,14 @@ are allowed.</p>
 
     
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">bool|int</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>Current value of the counter or false if the
+underlying storage has been deleted.
 underlying storage has been deleted.</p>
 </section>
 
@@ -680,7 +723,7 @@ underlying storage has been deleted.</p>
     :
     <span class="phpdocumentor-element-found-in__line">42</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/Common/AbstractProgressStatus.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the current value and sync.</p>
@@ -692,6 +735,7 @@ underlying storage has been deleted.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -702,6 +746,8 @@ underlying storage has been deleted.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -723,7 +769,7 @@ underlying storage has been deleted.</p>
     :
     <span class="phpdocumentor-element-found-in__line">54</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/Common/AbstractProgressStatus.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the data value and sync.</p>
@@ -735,6 +781,7 @@ underlying storage has been deleted.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -745,6 +792,8 @@ underlying storage has been deleted.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -766,7 +815,7 @@ underlying storage has been deleted.</p>
     :
     <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/Common/AbstractProgressStatus.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the target value and sync.</p>
@@ -778,6 +827,7 @@ underlying storage has been deleted.</p>
     <div class="phpdocumentor-label-line">
         </div>
     
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -788,6 +838,8 @@ underlying storage has been deleted.</p>
                 
             </dd>
             </dl>
+
+    
 
     
 
@@ -809,19 +861,23 @@ underlying storage has been deleted.</p>
     :
     <span class="phpdocumentor-element-found-in__line">80</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/Common/DoNothingProgressStatus.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+        <p class="phpdocumentor-summary">Synchronize with the underlying storage, i.e. read the data into
+this instance.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">sync</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">sync</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
     
+    
+    
+
     
 
     
@@ -842,10 +898,12 @@ underlying storage has been deleted.</p>
     :
     <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Common/DoNothingProgressStatus.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+        <p class="phpdocumentor-summary">Update to the given values, where null arguments are simply
+ignored. This function has to write the given values through to
+the underlying storage.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -853,6 +911,7 @@ underlying storage has been deleted.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -868,22 +927,37 @@ underlying storage has been deleted.</p>
                 : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>If null the target remains unchanged.</p>
+</section>
+
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$data</span>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>&quot;user&quot;-data stored in the progress-status
+object. Can be retrieved later via getData(). If null then the
+currently stored data remains unchanged.
+currently stored data remains unchanged.</p>
+</section>
+
             </dd>
             </dl>
+
+    
 
     
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">bool</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>true on success, false if the underlying storage has
+been deleted.
+been deleted.</p>
+</section>
+
             </section>
 
 </article>
@@ -1000,27 +1074,27 @@ underlying storage has been deleted.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#property_applicationData">$applicationData<a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#property_current">$current<a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#property_target">$target<a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html"></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#property_applicationData">$applicationData</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#property_current">$current</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#property_target">$target</a></li>
                                             </ul>
                 </li>
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                            <li><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_bind">bind()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_delete">delete()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getCurrent">getCurrent()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getData">getData()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getId">getId()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getTarget">getTarget()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_increment">increment()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_setCurrent">setCurrent()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_setData">setData()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_setTarget">setTarget()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_sync">sync()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_update">update()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_bind">bind()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_delete">delete()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getCurrent">getCurrent()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getData">getData()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getId">getId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_getTarget">getTarget()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_increment">increment()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_setCurrent">setCurrent()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_setData">setData()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-AbstractProgressStatus.html#method_setTarget">setTarget()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_sync">sync()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-DoNothingProgressStatus.html#method_update">update()</a></li>
                                     </ul>
             </li>
                     </ul>

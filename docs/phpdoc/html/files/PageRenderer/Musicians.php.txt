@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,49 +26,47 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use chillerlan\QRCode\QRCode;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Service\ContactsService;
-use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\MusicianService;
-use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Controller\MailingListsController;
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Controller\ImagesController;
-
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Controller\MailingListsController;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Service\MusicianService;
+use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 
-/**Table generator for Musicians table. */
-class Musicians extends PMETableViewBase
+/** Abstract table generator for Musicians table. */
+abstract class Musicians extends PMETableViewBase
 {
-  use FieldTraits\SepaAccountsTrait;
-  use FieldTraits\MusicianAvatarTrait;
-  use FieldTraits\MailingListsTrait;
-  use FieldTraits\MusicianEmailsTrait;
   use FieldTraits\AllProjectsTrait;
+  use FieldTraits\MailingListsTrait;
+  use FieldTraits\MusicianAvatarTrait;
+  use FieldTraits\MusicianEmailsTrait;
+  use FieldTraits\MusicianFromRowTrait;
+  use FieldTraits\MusicianEnsureUserIdSlugTrait;
+  use FieldTraits\MusicianGenderTrait;
+  use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\QueryFieldTrait;
+  use FieldTraits\SepaAccountsTrait;
 
-  const ALL_TEMPLATE = 'all-musicians';
-  const ADD_TEMPLATE = 'add-musicians';
+  protected const ALL_TEMPLATE = 'all-musicians';
+  protected const ADD_TEMPLATE = 'add-musicians';
   const CSS_CLASS = 'musicians';
   const TABLE = self::MUSICIANS_TABLE;
   const ALL_EMAILS_TABLE = self::MUSICIAN_EMAILS_TABLE . self::VALUES_TABLE_SEP . 'all';
-
-  /**
-   * @var bool Called with project-id in order to add musicians to an
-   * existing project
-   */
-  private bool $projectMode;
 
   /**
    * Join table structure. All update are handled in
@@ -127,30 +125,39 @@ class Musicians extends PMETableViewBase
     ],
   ];
 
-  /** @var Entities\Project */
-  private ?Entities\Project $project;
-
   /** {@inheritdoc} */
   public function __construct(
+    string $template,
+    //
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    private GeoCodingService $geoCodingService,
+    ToolTipsService $toolTipsService,
+    //
     private ContactsService $contactsService,
-    private PhoneNumberService $phoneNumberService,
+    private GeoCodingService $geoCodingService,
     private InstrumentInsuranceService $insuranceService,
-    private MusicianService $musicianService,
     private MailingListsService $listsService,
+    private MusicianService $musicianService,
+    private PhoneNumberService $phoneNumberService,
   ) {
-    parent::__construct(self::ALL_TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->projectMode = false;
+    parent::__construct(
+      $template,
+      //
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $pageNavigation,
+      $toolTipsService,
+    );
 
     if (empty($this->musicianId)) {
       $this->musicianId = $this->pmeRecordId['id']??null;
     }
+
 
     if ($this->listOperation()) {
       $this->pme->overrideLabel('Add', $this->l->t('New Musician'));
@@ -164,43 +171,11 @@ class Musicians extends PMETableViewBase
   }
 
   /**
-   * Enable the project-mode which is used to add new participants to a
-   * project. In effect, all persons are shown except those already
-   * participating in the project and some additional controls are geneated in
-   * order to select new participants.
+   * To be used by the child classes to compose the shortTitle() method.
    *
-   * @return void
+   * @return null|string Common short title or null.
    */
-  public function enableProjectMode():void
-  {
-    $this->projectMode = true;
-    $this->setTemplate(self::ADD_TEMPLATE);
-    if (empty($this->projectId)) {
-      $this->logInfo('NO PROJECT ID ?????');
-    }
-    if (empty($this->project)) {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-      if (empty($this->projectName)) {
-        $this->projectName = $this->project->getName();
-      }
-    }
-  }
-
-  /**
-   * Disable project mode.
-   *
-   * @see enableProjectMode()
-   *
-   * @return void
-   */
-  public function disableProjectMode():void
-  {
-    $this->projectMode = false;
-    $this->setTemplate(self::ALL_TEMPLATE);
-  }
-
-  /** {@inheritdoc} */
-  public function shortTitle()
+  protected function commonShortTitle():?string
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Remove all data of the displayed musician?');
@@ -212,34 +187,30 @@ class Musicians extends PMETableViewBase
       return $this->l->t('Edit the personal data of the displayed musician.');
     } elseif ($this->addOperation()) {
       return $this->l->t('Add a new musician to the data-base.');
-    } elseif (!$this->projectMode) {
-      return $this->l->t('Overview over all registered musicians');
-    } else {
-      return $this->l->t("Add musicians to the project `%s'", [ $this->projectName ]);
     }
+    return null;
   }
 
-  /** {@inheritdoc} */
+  /*** {@inheritdoc} */
   public function headerText()
   {
-    $header = $this->shortTitle();
-    if ($this->projectMode) {
-      $title = $this->l->t("This page is the only way to add musicians to projects in order to
-make sure that the musicians are also automatically added to the
-`global' musicians data-base (and not only to the project).");
-    } else {
-      $title = '';
-    }
-
-    return '<div class="'.$this->cssPrefix().'-header-text" title="'.$title.'">'.$header.'</div>';
+    $title = $this->toolTipsService['page-renderer:' . $this->template . ':header-text'];
+    return '<div class="' . $this->cssPrefix() . '-header-text"'
+      . ($title ? ' title="' . $title . '"' : '')
+      . '>'
+      . $this->shortTitle()
+      . '</div>';
   }
 
-  /** {@inheritdoc} */
-  public function render(bool $execute = true):void
+  /**
+   * Generate the $opts array for the PHPMyEdit machinery. Used by the child
+   * classes in order to implement their render() method.
+   *
+   * @return array ```[ 'opts' => PME_OPTIONS, 'jointTables' => JOIN_TABLE_DEFS ]```
+   */
+  protected function generatePMEOptions():array
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
-    $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
 
@@ -303,11 +274,6 @@ make sure that the musicians are also automatically added to the
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '5';
 
-    if (!$this->projectMode) {
-      $export = $this->pageNavigation->tableExportButton();
-      $opts['buttons'] = $this->pageNavigation->prependTableButton($export, true);
-    }
-
     // Display special page elements
     $opts['display'] =  [
       'form'  => true,
@@ -317,19 +283,19 @@ make sure that the musicians are also automatically added to the
       'tabs'  => [
         [ 'id' => 'orchestra',
           'default' => true,
-          'tooltip' => $this->toolTipsService['musician-orchestra-tab'],
+          'tooltip' => $this->toolTipsService['page-renderer:musicians:tab:orchestra'],
           'name' => $this->l->t('Instruments and Status') ],
         [ 'id' => 'contact',
-          'tooltip' => $this->toolTipsService['musican-contact-tab'],
+          'tooltip' => $this->toolTipsService['page-renderer:musicians:tab:contact'],
           'name' => $this->l->t('Contact Information') ],
         [ 'id' => 'finance',
-          'tooltip' => $this->toolTipsService['musician-finance-tab'],
+          'tooltip' => $this->toolTipsService['page-renderer:musicians:tab:finance'],
           'name' => $this->l->t('Financial Topics') ],
         [ 'id' => 'miscinfo',
-          'tooltip' => $this->toolTipsService['musician-miscinfo-tab'],
+          'tooltip' => $this->toolTipsService['page-renderer:musicians:tab:miscinfo'],
           'name' => $this->l->t('Miscellaneous Data') ],
         [ 'id' => 'tab-all',
-          'tooltip' => $this->toolTipsService['pme-showall-tab'],
+          'tooltip' => $this->toolTipsService['page-rendererer:pme:tab:showall'],
           'name' => $this->l->t('Display all columns')
         ],
       ],
@@ -395,33 +361,6 @@ make sure that the musicians are also automatically added to the
 
     $joinTables = $this->defineJoinStructure($opts);
 
-    $bval = strval($this->l->t('Add to %s', [ $projectName ]));
-    $tip  = strval($this->toolTipsService['register-musician']);
-    if ($this->projectMode) {
-      $opts['fdd']['add_musicians'] = [
-        'tab' => [ 'id' => 'tab-all' ],
-        'name' => $this->l->t('Add Musicians'),
-        'css' => [ 'postfix' => [ 'register-musician', ], ],
-        'select' => 'T',
-        'options' => 'VCLR',
-        'input' => 'V',
-        'sql' => '$main_table.id',
-        'php' => function($musicianId, $action, $k, $row, $recordId, $pme) use ($bval, $tip) {
-            return '<div class="register-musician">'
-              .'  <input type="button"'
-              .'         value="'.$bval.'"'
-              .'         data-musician-id="'.$musicianId.'"'
-              .'         title="'.$tip.'"'
-              .'         name="registerMusician"'
-              .'         class="register-musician" />'
-              .'</div>';
-        },
-        'escape' => false,
-        'nowrap' => true,
-        'sort' =>false,
-      ];
-    }
-
     $opts['fdd']['sur_name'] = [
       'tab'      => [ 'id' => 'contact' ],
       'name'     => $this->l->t('Surname'),
@@ -457,10 +396,10 @@ make sure that the musicians are also automatically added to the
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
           $nickNamePlaceholder = $this->l->t('e.g. Cathy');
-          $firstName = $row['qf'.($k-1)] ?? '';
+          $firstName = $row[$this->queryField('first_name')];
           $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
           $unlockedPlaceholder = $nickNamePlaceholder;
-          if (empty($row['qf'.$k])) {
+          if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
             return [
               'placeholder' => $lockedPlaceholder,
               'readonly' => true,
@@ -475,7 +414,7 @@ make sure that the musicians are also automatically added to the
           }
         },
         'postfix' => function($op, $pos, $k, $row, $pme) {
-          $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+          $checked = empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? '' : 'checked="checked" ';
           return '<input id="pme-musician-nickname"
   '.$checked.'
   type="checkbox"
@@ -502,7 +441,7 @@ make sure that the musicians are also automatically added to the
           $addCSS,
         ],
       ],
-      'sql|LFVD' => parent::musicianPublicNameSql(),
+      'sql|LFVD' => static::musicianPublicNameSql(),
       'maxlen'   => 384,
       'sort'     => true,
       'select'   => 'T',
@@ -510,12 +449,12 @@ make sure that the musicians are also automatically added to the
         'attributes' => function($op, $k, $row, $pme) {
           // $this->logInfo('OP '.$op);
           $displayNamePlaceholder = $this->l->t('e.g. Doe, Cathy');
-          $surName = $row['qf'.($k-3)] ?? '';
-          $firstName = $row['qf'.($k-2)] ?? '';
-          $nickName = $row['qf'.($k-1)] ?? '';
+          $surName = $row[$this->queryField('sur_name')] ?? '';
+          $firstName = $row[$this->queryField('first_name')] ?? '';
+          $nickName = $row[$this->queryField('nick_name')] ?? '';
           $lockedPlaceholder = $op == 'add' ? $displayNamePlaceholder : $surName.', '.($nickName?:$firstName);
           $unlockedPlaceholder = $displayNamePlaceholder;
-          if (empty($row['qf'.$k])) {
+          if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
             return [
               'placeholder' => $lockedPlaceholder,
               'readonly' => true,
@@ -532,7 +471,7 @@ make sure that the musicians are also automatically added to the
           }
         },
         'postfix' => function($op, $pos, $k, $row, $pme) {
-          $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+          $checked = empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? '' : 'checked="checked" ';
           return '<input id="pme-musician-displayname"
   type="checkbox"
   '.$checked.'
@@ -551,8 +490,36 @@ make sure that the musicians are also automatically added to the
       'css'     => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', 'musician-personal-public-name' ], ],
       'options' => 'LFAVCPD',
       'input'   => $this->pmeBare ? 'R' : 'HR', // handy for export
-      'sql'     => parent::musicianPublicNameSql(firstNameFirst: true),
+      'sql'     => static::musicianPublicNameSql(firstNameFirst: true),
       'maxlen'  => 384,
+    ];
+
+    $opts['fdd']['gender'] = [
+      'name'    => strval($this->l->t('Gender')),
+      'tab'     => [ 'id' => [ 'contact' ] ],
+      'select'  => 'D',
+      'maxlen'  => 128,
+      'sort'    => true,
+      'css'     => [ 'postfix' => [ 'gender', 'tooltip-wide', ], ],
+      'options' => 'LFAVCPD',
+      'input|LF' => $this->pmeBare ? 'R' : 'HR', // handy for export
+      'values2' => Types\EnumGender::getL10NValues($this->l),
+      'tooltip' => $this->toolTipsService['page-renderer:musicians:gender'],
+      'display|LF' => [
+          'popup' => function($cellData, int $k, array $row, PHPMyEdit $pme) {
+            if (!empty($cellData) || empty($row) || !empty($row[$this->queryField($k)])) {
+              return '';
+            }
+            $genderTypes = $this->guessGender($row);
+            if (!empty($genderTypes)) {
+              return $this->l->t('auto-detected gender: %s', implode(', ', $genderTypes));
+            }
+            return '';
+          }
+      ],
+      'display|CPVD' => [
+        'postfix' => fn(string $op, string $pos, int $k, array $row, PHPMyEdit $pme) => $this->genderDisplayPostfix($op, $k, $row),
+      ],
     ];
 
     $opts['fdd']['user_id_slug'] = [
@@ -566,9 +533,9 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
-          $surName = $row['qf'.($k-4)] ?? '';
-          $firstName = $row['qf'.($k-3)] ?? '';
-          $nickName = $row['qf'.($k-2)] ?? '';
+          $surName = $row[$this->queryField('sur_name')];
+          $firstName = $row[$this->queryField('first_name')];
+          $nickName = $row[$this->queryField('nick_name')];
           $placeHolder = $this->defaultUserIdSlug($surName, $firstName, $nickName);
           return [
             'placeholder' => $op == 'add' ? '' : $placeHolder,
@@ -670,7 +637,7 @@ make sure that the musicians are also automatically added to the
         'default' => null,
         'select'  => 'M',
         'input'   => 'SR',
-        'tooltip' => $this->toolTipsService['musician-instruments-disabled'],
+        'tooltip' => $this->toolTipsService['page-renderer:musicians:instruments-disabled'],
         'values2' => $this->instrumentInfo['byId'],
         'valueGroups' => $this->instrumentInfo['idGroups'],
         'filter' => [
@@ -697,8 +664,8 @@ make sure that the musicians are also automatically added to the
       'maxlen'  => 128,
       'sort'    => true,
       'css'     => [ 'postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
-      'values2' => $this->memberStatusNames,
-      'tooltip' => $this->toolTipsService['member-status'],
+      'values2' => Types\EnumMemberStatus::getL10NValues($this->l),
+      'tooltip' => $this->toolTipsService['page-renderer:musicians:member-status'],
     ];
 
     $opts['fdd']['cloud_account_deactivated'] = [
@@ -921,8 +888,9 @@ make sure that the musicians are also automatically added to the
             $pme->cgiSysName('qfinstrument_holder_id_idx[]') => $musicianId,
           ];
           $link = '<div class="pme-cell-wrapper restrict-height musician-instrument-insurance">
-  <a href="' . $this->urlGenerator()->linkToRoute($this->appName() . '.page.index', $urlParameters) . '"
-     class="musician-instrument-insurance">' . $bval . '</a>
+  <a href="' . $this->urlGenerator()->linkToRoute($this->appName() . '.vueApp.index', $urlParameters) . '"
+     class="musician-instrument-insurance"
+     title="' . $tip . '">' . $bval . '</a>
 </div>';
           return $link;
         }
@@ -999,15 +967,6 @@ make sure that the musicians are also automatically added to the
         ]
       );
 
-    if ($this->projectMode) {
-      //$key = 'qf'.$projectsIdx;
-      $projectsJoin = $joinTables[self::PROJECT_PARTICIPANTS_TABLE];
-      $projectIds = "GROUP_CONCAT(DISTINCT {$projectsJoin}.project_id)";
-      $opts[PHPMyEdit::OPT_HAVING]['AND'] = "($projectIds IS NULL OR NOT FIND_IN_SET('$projectId', $projectIds))";
-      $opts['misc']['css']['minor'] = [ 'bulkcommit', 'tooltip-right' ];
-      $opts['labels']['Misc'] = strval($this->l->t('Add all to %s', [$projectName]));
-    }
-
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'ensureUserIdSlug' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'extractInstrumentRanking' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateDoUpdateAll' ];
@@ -1058,7 +1017,7 @@ make sure that the musicians are also automatically added to the
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeDeleteTrigger' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
-      if (!empty($row[$this->queryField('deleted', $pme->fdd)])) {
+      if (!empty($row[$this->queryField('deleted')])) {
         // disable misc-checkboxes for soft-deleted musicians in order to
         // avoid sending them bulk-email.
         $pme->options = str_replace('M', '', $opts['options']);
@@ -1072,22 +1031,18 @@ make sure that the musicians are also automatically added to the
         $this->logInfo('ROW ' . print_r($row, true));
       }
 
-      unset($row['qf' . $pme->fdn['uuid']]);
-      unset($row['qf' . $pme->fdn['user_id_slug']]);
+      unset($row[$this->queryField('uuid')]);
+      unset($row[$this->queryField('user_id_slug')]);
 
       return true;
     };
 
+    // The following are in order to aid the email form to extract
+    // pre-selected musiancs from the form-data.
     $opts['cgi']['persist']['memberStatusFddIndex'] = $memberStatusFddIndex;
     $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
 
-    $opts = $this->mergeDefaultOptions($opts);
-
-    if ($execute) {
-      $this->execute($opts);
-    } else {
-      $this->pme->setOptions($opts);
-    }
+    return [ 'opts' => $opts, 'joinTables' => $joinTables ];
   }
 
   /**

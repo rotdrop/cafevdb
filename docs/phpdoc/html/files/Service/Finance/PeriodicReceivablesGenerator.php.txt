@@ -63,7 +63,7 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected ConfigService $configService,
-    private ToolTipsService $toolTipsService,
+    protected ToolTipsService $toolTipsService,
     EntityManager $entityManager,
     ProgressStatusService $progressStatusService,
     ?\DateInterval $interval = null,

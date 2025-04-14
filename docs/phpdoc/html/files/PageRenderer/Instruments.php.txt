@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,25 +25,26 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use OCP\IL10N;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Common\Navigation;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
-
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Navigation;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Table generator for Instruments table. */
 class Instruments extends PMETableViewBase
 {
+  use FieldTraits\ProjectModeNavigationItemTrait;
+  use FieldTraits\QueryFieldTrait;
+
   const TEMPLATE = 'instruments';
   const TABLE = self::INSTRUMENTS_TABLE;
   private const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
@@ -96,15 +97,23 @@ class Instruments extends PMETableViewBase
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
+    ToolTipsService $toolTipsService,
     private BiDirectionalL10N $musicL10n,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->projectMode = false;
+    parent::__construct(
+      self::TEMPLATE,
+      //
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $pageNavigation,
+      $toolTipsService,
+    );
     $this->getDatabaseRepository(Entities\Instrument::class)->findAll();
     $this->flush();
   }
@@ -327,7 +336,7 @@ GROUP BY $columns[1]",
       'options' => 'LF',
       'sql'     => '$main_table.id',
       'php'   =>  function($value, $op, $field, $row, $recordId, $pme) use ($lang) {
-        $inst = $row[$this->queryField('name', $pme->fdd)];
+        $inst = $row[$this->queryField('name')];
         return '<a '
           .'href="http://'.$lang.'.wikipedia.org/wiki/'.$inst.'" '
           .'target="Wikipedia.'.$lang.'" '
@@ -350,7 +359,7 @@ GROUP BY $columns[1]",
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
       function(&$pme, $op, $step, &$row) use ($usageIdx, $expertMode) {
-        if (!$expertMode && !empty($row['qf'.$usageIdx])) {
+        if (!$expertMode && !empty($row[PHPMyEdit::QUERY_FIELD . $usageIdx])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
         return true;

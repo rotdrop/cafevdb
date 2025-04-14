@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,30 +28,27 @@ use \PHP_IBAN\IBAN;
 use \DateTimeImmutable;
 
 use OCP\AppFramework\Controller;
-use OCP\IRequest;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\RedirectResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\IDateTimeFormatter;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\Finance\FinanceService;
-use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
-use OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter;
-
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
-
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter;
+use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
+use OCA\CAFEVDB\Service\ProjectService;
 
 /** AJAX backend for managing bank bulk transactions. */
 class SepaBulkTransactionsController extends Controller
@@ -74,17 +71,15 @@ class SepaBulkTransactionsController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    private RequestParameterService $parameterService,
-    protected ConfigService $configService,
     private FinanceService $financeService,
+    private IDateTimeFormatter $dateTimeFormatter,
     private ProjectService $projectService,
     private SepaBulkTransactionService $bulkTransactionService,
-    private IDateTimeFormatter $dateTimeFormatter,
+    protected ConfigService $configService,
     protected EntityManager $entityManager,
     protected PHPMyEdit $pme,
   ) {
     parent::__construct($appName, $request);
-
     $this->l = $this->l10N();
   }
 
@@ -116,7 +111,7 @@ class SepaBulkTransactionsController extends Controller
       case 'create':
         $sepaBulkTransactions = array_values(array_unique($sepaBulkTransactions));
         // PME_sys_mrecs[] = "{\"musician_id\":\"1\",\"sequence\":\"1\"}"
-        $bankAccountRecords = $this->parameterService->getParam($this->pme->cgiSysName('mrecs'), []);
+        $bankAccountRecords = $this->request->getParam($this->pme->cgiSysName('mrecs'), []);
         if (!empty($sepaDueDeadline)) {
           // kludgy, but should work
           $sepaDueDeadline = (new DateTimeImmutable)

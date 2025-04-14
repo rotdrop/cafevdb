@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,28 +32,27 @@ use RuntimeException;
 
 use phpMyEdit as LegacyPHPMyEdit;
 
-use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
-use OCP\IDateTimeZone;
+
 use OCP\IDateTimeFormatter;
+use OCP\IDateTimeZone;
+use OCP\IL10N;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver\ResultStatement;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\FetchMode;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\DBALException;
-
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Connection;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Connection;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\FetchMode;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Result;
 
 /**
  * Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL.
  */
 class PHPMyEdit extends LegacyPHPMyEdit
 {
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var Connection */
   private $connection;
@@ -91,26 +90,21 @@ class PHPMyEdit extends LegacyPHPMyEdit
   /** @var string Hash of most recent query */
   private $queryHash;
 
-  // phpcs:disable Squiz.Commenting.FunctionComment.MissingParamTag
-  /**
-   * Override constructor, delay most of the actual work to the
-   * execute() method.
-   *
-   * @param EntityManager $entityManager
-   *
-   * @param IOptions $options
-   *
-   * We do also some construction thing s.t. add_operation() and
-   * friends does something useful.
-   */
+  /** @var array */
+  protected $dir;
+
+  /** @var string */
+  protected $currentLanguage;
+
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected EntityManager $entityManager,
     IOptions $options,
-    private RequestParameterService $request,
-    protected ILogger $logger,
-    protected IL10N $l,
-    private IDateTimeZone $dateTimeZone,
     private IDateTimeFormatter $dateTimeFormatter,
+    private IDateTimeZone $dateTimeZone,
+    private IRequest $request,
+    protected EntityManager $entityManager,
+    protected IL10N $l,
+    protected ILogger $logger,
   ) {
     $this->connection = $this->entityManager->getConnection();
     if (empty($this->connection)) {
@@ -381,7 +375,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
   /** {@inheritdoc} */
   public function resultValid(&$stmt)
   {
-    return ($stmt instanceof ResultStatement);
+    return ($stmt instanceof Result);
     //return is_object($stmt);
   }
 
@@ -396,9 +390,11 @@ class PHPMyEdit extends LegacyPHPMyEdit
   public function sql_fetch(&$stmt, $type = 'a')
   {
     if (!$this->resultValid($stmt)) {
+      $this->logError('RESULT INVALID ' . get_class($stmt));
       return false;
     }
-    $this->dbh->getWrappedConnection()->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
+    $pdo = $this->dbh->getWrappedConnection()->getNativeConnection();
+    $pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
     $type = $type === 'n' ? FetchMode::NUMERIC : FetchMode::ASSOCIATIVE;
     $result = $stmt->fetch($type);
     // Work around bug https://jira.mariadb.org/browse/MDEV-27323
@@ -422,7 +418,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
         }
       }
     }
-    $this->dbh->getWrappedConnection()->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
+    $pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
 
     return $result;
   }
@@ -433,7 +429,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
     if (!$this->resultValid($stmt)) {
       return false;
     }
-    return $stmt->closeCursor();
+    return $stmt->free();
   }
 
   /** {@inheritdoc} */
@@ -475,19 +471,19 @@ class PHPMyEdit extends LegacyPHPMyEdit
       $stmt = $this->dbh->executeQuery($query);
       $endTime = hrtime(true);
       $this->affectedRows = $stmt->rowCount();
-      $this->errorCode = $stmt->errorCode();
-      $this->errorInfo = $stmt->errorInfo();
       $logEntry['affectedRows'] = $this->affectedRows;
-      $logEntry['errorCode'] = $this->errorCode;
-      $logEntry['errorInfo'] = $this->errorInfo;
+      // $this->errorCode = $stmt->errorCode();
+      // $this->errorInfo = $stmt->errorInfo();
+      $logEntry['errorCode'] = 0;
+      $logEntry['errorInfo'] = null;
       $logEntry['duration'] = ($endTime - $startTime) / 1e6; // [ms]
       $this->queryLog[] = $logEntry;
-    } catch (DBALException $t) {
+    } catch (DriverException $t) {
       $endTime = hrtime(true);
       $this->logException($t);
       throw $t;
       $this->exception = $t;
-      $this->errorCode = $t->getCode();
+      $this->errorCode = $t->getSQLState();
       $this->errorInfo = $t->getMessage();
       $logEntry['affectedRows'] = $this->affectedRows;
       $logEntry['errorCode'] = $this->errorCode;
@@ -522,7 +518,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
   /**
    * {@inheritdoc}
    *
-   * Override parent::get_cgi_var to use RequestParameterService
+   * Override parent::get_cgi_var to use IRequest
    */
   public function get_cgi_var($name, $defaultValue = null)
   {

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@ use OCA\CAFEVDB\BackgroundJob\LazyUpdateGeoCoding;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\BackgroundJob\ScanFiles;
 use OCA\CAFEVDB\BackgroundJob\CleanupProjectEvents;
+use OCA\CAFEVDB\BackgroundJob\CleanupFilesCache;
 
 /**
  * Run background-jobs triggered by AJAX pings from the front-end. The idea
@@ -90,6 +91,8 @@ class BackgroundJobController extends Controller
       $this->di(ScanFiles::class)->run(true);
 
       $this->di(CleanupProjectEvents::class)->run();
+
+      $this->di(CleanupFilesCache::class)->run();
 
       return self::response('Ran background jobs');
     } catch (\Throwable $t) {

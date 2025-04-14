@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use OCP\IL10N;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
 use OCA\CAFEVDB\Wrapped\Acelaya\Doctrine\Type\PhpEnumType;
 
@@ -37,14 +39,16 @@ class EnumType extends PhpEnumType
   /** {@inheritdoc} */
   public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform):string
   {
-    $values = call_user_func([$this->enumClass, 'toArray']);
-    $values = array_map(fn($val) => "'".$val."'", $values);
-    return "enum(".implode(",", $values).")";
+    $class = $this->enumClass;
+    return "enum('" . implode("','", $class::toArray()) . "')";
   }
 
-  /** {@inheritdoc} */
-  public function getValues()
+  /**
+   * @return array
+   */
+  public function toArray():array
   {
-    return call_user_func([$this->enumClass, 'toArray']);
+    $class = $this->enumClass;
+    return $class::toArray();
   }
 }

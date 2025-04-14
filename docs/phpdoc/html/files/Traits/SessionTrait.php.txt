@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,9 +29,25 @@ use OCP\ISession;
 /** Session-store abstraction trait. */
 trait SessionTrait
 {
+  /**
+   * @var string
+   */
+  protected string $appName;
 
   /** @var ISession */
-  private ISession $session;
+  protected ISession $session;
+
+  /**
+   * Mangle the name in order to avoid conflicts in the PHP session data.
+   *
+   * @param string $key
+   *
+   * @return string Decorated key.
+   */
+  protected function sessionKey(string $key): string
+  {
+    return $this->appName . ':' . $key;
+  }
 
   /**
    * Store something in the session-data. It is completely left open
@@ -48,7 +64,7 @@ trait SessionTrait
    */
   protected function sessionStoreValue(string $key, mixed $value):void
   {
-    $this->session->set($key, $value);
+    $this->session->set($this->sessionKey($key), $value);
   }
 
   /**
@@ -67,10 +83,22 @@ trait SessionTrait
    */
   protected function sessionRetrieveValue(string $key, mixed $default = null)
   {
-    $value =  $this->session->get($key);
+    $value =  $this->session->get($this->sessionKey($key));
     if (empty($value)) {
       $value = $default;
     }
     return $value;
+  }
+
+  /**
+   * Check whether the given key is present in the session data.
+   *
+   * @param string $key The key tagging the desired data.
+   *
+   * @return bool
+   */
+  protected function sessionKeyExists(string $key):bool
+  {
+    return $this->session->exists($this->sessionKey($key));
   }
 }

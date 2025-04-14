@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2024
+ * @copyright Claus-Justus Heine 2014-2025
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,43 +27,48 @@ namespace OCA\CAFEVDB\Controller;
 
 use Throwable;
 use OutOfBoundsException;
+use InvalidArgumentException;
 
-use OCP\IRequest;
-use OCP\AppFramework\Http\ContentSecurityPolicy;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http;
+use Psr\Log\LoggerInterface;
+
 use OCP\AppFramework\Controller;
-use OCP\IL10N;
-use OCP\IInitialStateService;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\ContentSecurityPolicy;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\IAppContainer;
+use OCP\IL10N;
+use OCP\IRequest;
+use OCP\IURLGenerator;
+use OC\AppFramework\Utility\QueryNotFoundException;
 
 use OCA\CAFEVDB\Common\Util;
-
-use OCA\CAFEVDB\Service\HistoryService;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ConfigCheckService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\Service\AuthorizationService;
-use OCA\CAFEVDB\Service\MigrationsService;
-use OCA\CAFEVDB\Service\AssetService;
-use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
+use OCA\CAFEVDB\PageRenderer\Registration as RendererRegistration;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\AssetService;
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\ConfigCheckService;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\HistoryService;
+use OCA\CAFEVDB\Service\MigrationsService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Listener\BeforeMessageLoggedEventListener;
 
 /** Main UI entry point providing the front pages. */
 class PageController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\InitialStateTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  const DEFAULT_TEMPLATE = 'projects';
-  const HOME_TEMPLATE = 'home';
+  const DEFAULT_TEMPLATE = PageRenderer\Projects::TEMPLATE;
 
-  public const HISTORY_ACTION_LOAD = 'load';
+  public const HISTORY_ACTION_REPLACE = 'replace';
   public const HISTORY_ACTION_PUSH = 'push';
 
   /** @var array
@@ -76,151 +81,26 @@ class PageController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    private IAppContainer $appContainer,
+    protected IAppContainer $appContainer,
     private AssetService $assetService,
     protected ConfigService $configService,
     protected HistoryService $historyService,
     private OrganizationalRolesService $organizationalRolesService,
     private AuthorizationService $authorizationService,
-    private RequestParameterService $parameterService,
     protected ToolTipsService $toolTipsService,
     private PageNavigation $pageNavigation,
-    protected IInitialStateService $initialStateService,
     private ConfigCheckService $configCheckService,
-    private \OCP\IURLGenerator $urlGenerator,
+    private IURLGenerator $urlGenerator,
+    protected LoggerInterface $logger,
   ) {
-
     parent::__construct($appName, $request);
 
-    $this->l = $this->l10N();
+    $this->l = $this->l10n();
 
     // See if we are configured
     $this->configCheck = $this->configCheckService->configured();
   }
   // phpcs:enable
-
-  /**
-   * Load the main page of the App.
-   *
-   * @return Http\Response
-   *
-   * @NoAdminRequired
-   * @NoGroupMemberRequired
-   * @NoCSRFRequired
-   */
-  public function index():Http\Response
-  {
-    if ($this->parameterService->getParam('history', '') == 'discard') {
-      $this->historyService->push([]);
-      $this->historyService->store();
-      return new Http\RedirectResponse($this->urlGenerator->linkTo($this->appName, ''));
-    }
-    if ($this->shouldLoadHistory()) {
-      return $this->history(0, self::RENDER_AS_USER);
-    } else {
-      return $this->remember(self::RENDER_AS_USER);
-    }
-  }
-
-  /**
-   * @param int $level
-   *
-   * @return bool
-   */
-  private function shouldLoadHistory(int $level = 0):bool
-  {
-    if ($this->getUserValue('restorehistory') !== 'on') {
-      return false;
-    }
-    if ($this->request->getMethod() !== 'GET') {
-      return false;
-    }
-    $template = $this->parameterService->getParam('template');
-    if (empty($template)) {
-      return true;
-    }
-    $get = $this->request->get;
-    $historyData = $this->historyService->fetch($level);
-    foreach ($get as $key => $value) {
-      if ($key == '_route') {
-        continue;
-      }
-      if (($historyData[$key] ?? null) !== $value) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * @param mixed $a
-   *
-   * @param mixed $b
-   *
-   * @param mixed $c
-   *
-   * @param mixed $d
-   *
-   * @param mixed $e
-   *
-   * @param mixed $f
-   *
-   * @param mixed $g
-   *
-   * @return Http\Response
-   *
-   * @NoAdminRequired
-   * @NoGroupMemberRequired
-   * @NoCSRFRequired
-   */
-  public function post(mixed $a, mixed $b, mixed $c, mixed $d, mixed $e, mixed $f, mixed $g):Http\Response
-  {
-    $parts = [ $a, $b, $c, $d, $e, $f, $g ];
-    $request = implode('/', array_filter($parts));
-    if (!empty($request)) {
-      return self::grumble(
-        $this->l->t('Post to end-point "%s" not implemented.', $request));
-    } else {
-      return self::grumble(
-        $this->l->t('Post to base-url of app "%s" not allowed.', $this->appName()));
-    }
-  }
-
-  /**
-   * Load a page at the specified offset from the history. Returns an
-   * error if the entry cannot be found in the history.
-   *
-   * @param int $level
-   *
-   * @param string $renderAs
-   *
-   * @return Http\Response
-   *
-   * @NoAdminRequired
-   */
-  public function history(int $level = 0, string $renderAs = 'blank'):Http\Response
-  {
-    try {
-      $originalParams = $this->parameterService->getParams();
-      $this->parameterService->setParams($this->historyService->fetch($level));
-      $this->parameterService['originalRequestParameters'] = $originalParams;
-      $this->parameterService->setParam('renderAs', $renderAs);
-    } catch (OutOfBoundsException $e) {
-      return new DataResponse(
-        ['message' => $e->getMessage(),
-         'history' => ['size' => $this->historyService->size(),
-                       'position' => $this->historyService->position()] ],
-        Http::STATUS_NOT_FOUND);
-    }
-    return $this->loader(
-      $renderAs,
-      $this->parameterService['template'],
-      $this->parameterService['projectName'],
-      $this->parameterService['projectId'],
-      $this->parameterService['musicianId'],
-      historyAction: self::HISTORY_ACTION_LOAD,
-    );
-  }
 
   /**
    * Load a page and remembers the request parameters in the history.
@@ -230,34 +110,17 @@ class PageController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
+   * @AllowIFrameSelf
    */
-  public function remember(string $renderAs = self::RENDER_AS_USER):Http\Response
+  public function remember(string $renderAs):Http\Response
   {
-    $this->historyService->push($this->parameterService->getParams());
+    $this->historyService->save($this->request->getParams());
     return $this->loader(
-      $this->parameterService->getParam('renderAs', self::RENDER_AS_USER),
-      $this->parameterService['template'],
-      $this->parameterService['projectName'],
-      $this->parameterService['projectId'],
-      $this->parameterService['musicianId'],
-      historyAction: self::HISTORY_ACTION_PUSH,
-    );
-  }
-
-  /**
-   * @return Http\Response
-   *
-   * @NoAdminRequired
-   * @NoCSRFRequired
-   */
-  public function debug():Http\Response
-  {
-    return $this->loader(
-      self::RENDER_AS_USER,
-      'maintenance/debug', // template
-      $this->parameterService['projectName'],
-      $this->parameterService['projectId'],
-      $this->parameterService['musicianId'],
+      $renderAs,
+      $this->request['template'],
+      $this->request['projectName'],
+      $this->request['projectId'],
+      $this->request['musicianId'],
       historyAction: self::HISTORY_ACTION_PUSH,
     );
   }
@@ -280,6 +143,7 @@ class PageController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
+   * @AllowIFrameSelf
    */
   public function loader(
     string $renderAs,
@@ -289,15 +153,36 @@ class PageController extends Controller
     mixed $musicianId = null,
     string $historyAction = self::HISTORY_ACTION_PUSH,
   ) {
+    if ($renderAs != Constants::RENDER_AS_PARTS) {
+      throw new InvalidArgumentException($this->l->t('This controller can no longer serve front-page requests, in may only be accessed by the Vue frontend.'));
+    }
 
-    // Initial state injecton for JS
-    $this->publishInitialStateForUser($this->userId());
+    if ($historyAction != self::HISTORY_ACTION_PUSH) {
+      $this->logInfo('HISTORY ACTION ' . $historyAction);
+    }
 
-    $this->initialStateService->provideInitialState(
-      $this->appName,
-      'iFrameContentScript',
-      $this->assetService->getJSAsset('iframe-content-script'),
-    );
+    $template = $this->getTemplate($template, $renderAs);
+    $this->logDebug("Try load template ".$template);
+    /** @var IPageRenderer $renderer */
+    $renderer = $this->appContainer->get(RendererRegistration::TEMPLATE_PREFIX . $template);
+    if (empty($renderer)) {
+      // in principle this cannot happen has the DI container should already
+      // have issued a QueryNotFoundException.
+      throw new Exceptions\Exception(
+        $this->l->t('Template-renderer for template "%s" is empty.', [$template]),
+      );
+    }
+
+    $requiredPermissions = AuthorizationService::PERMISSION_FRONTEND|$renderer->requiredPermissions();
+
+    if (!$this->authorizationService->authorized(null, $requiredPermissions)) {
+      throw new Exceptions\NotAuthorizedException(
+        $this->userId(),
+        $this->authorizationService->getUserPermissions(),
+        $requiredPermissions,
+        $this->l->t('Access to the web frontend was denied for user "%s".', $this->userId()),
+      );
+    }
 
     // The most important ...
     $encrkey = $this->getAppEncryptionKey();
@@ -316,31 +201,6 @@ class PageController extends Controller
 
     $this->toolTipsService->debug(!!($debugMode & ConfigService::DEBUG_TOOLTIPS));
 
-    if (!$this->authorizationService->authorized(null, AuthorizationService::PERMISSION_FRONTEND)) {
-      return $this->templateResponse(
-        'errorpage',
-        [
-          'error' => 'notamember',
-          'userId' => $this->userId(),
-        ],
-        self::RENDER_AS_USER,
-      );
-    };
-
-    $template = $this->getTemplate($template, $renderAs);
-    $this->logDebug("Try load template ".$template);
-    try {
-      /** @var IPageRenderer $renderer */
-      $renderer = $this->appContainer->query('template:'.$template);
-      if (empty($renderer)) {
-        return self::response(
-          $this->l->t("Template-renderer for template `%s' is empty.", [$template]),
-          Http::INTERNAL_SERVER_ERROR);
-      }
-    } catch (\Throwable $t) {
-      return $this->exceptionResponse($t, $renderAs, __METHOD__);
-    }
-
     $templateParameters = [
       'template' => $template,
       'renderer' => $renderer,
@@ -357,14 +217,14 @@ class PageController extends Controller
       'appNameTag' => 'app-' . $this->appName,
 
       'configcheck' => $this->configCheck,
-      'orchestra' => $this->getConfigValue('orchestra'),
-      'wikinamespace' => $this->getAppValue('wikinamespace'),
+      ConfigService::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY),
+      ConfigService::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY),
       ConfigService::USER_GROUP_KEY => $this->groupId(),
       ConfigService::SHAREOWNER_KEY => $this->getConfigValue(ConfigService::SHAREOWNER_KEY),
       'sharedfolder' => $this->getConfigValue('sharedfolder'),
       'database' => $this->getConfigValue('database'),
       'groupadmin' => $this->isSubAdminOfGroup(),
-      self::RENDER_AS_USER => $this->userId(),
+      Constants::RENDER_AS_USER => $this->userId(),
       'expertMode' => $expertMode,
       'financeMode' => $financeMode,
       'showToolTips' => $showToolTips,
@@ -389,30 +249,22 @@ class PageController extends Controller
       'pagerows' => $pageRows,
     ];
 
-    // renderAs = admin, user, blank
-    // $renderAs = self::RENDER_AS_USER;
-    $response = $this->templateResponse(
+    $templateParameters['omitEnvelope'] = true;
+    $pageHtml = $this->templateResponse(
       $template,
       $templateParameters,
-      $renderAs,
-    );
+      Constants::RENDER_AS_BLANK,
+    )->render();
 
-    // @todo: we need this only for some site like DokuWiki and CMS
-    $policy = new ContentSecurityPolicy();
-    $policy->addAllowedChildSrcDomain('*');
-    $policy->addAllowedFrameDomain('*');
-    $response->setContentSecurityPolicy($policy);
-
-    $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
-
-    try {
-      $this->historyService->store();
-    } catch (Throwable $t) {
-      // log, but ignore otherwise
-      $this->logException($t);
-    }
-
-    return $response;
+    return self::dataResponse([
+      'template' => $template,
+      'defaultTemplateParameters' => $renderer->navigationItem($projectId, $projectName)['templateParameters'],
+      'headerHtml' => $renderer->headerText(), // actually html
+      'bodyHtml' => $pageHtml,
+      'cssPrefix' => $renderer->cssPrefix(),
+      'cssClass' => $renderer->cssClass(),
+      'historyAction' => $historyAction,
+    ]);
   }
 
   /**
@@ -424,50 +276,25 @@ class PageController extends Controller
    */
   private function getTemplate(?string $template, string $renderAs):string
   {
-    if ($template != 'maintenance/debug' && !$this->configCheck['summary']) {
-      return 'maintenance/configcheck';
+    // Replace colons back to path separators. All our template parameters are
+    // alpha-numeric with the exception that they man contain path separators
+    // (i.e. '/') which optionally are replaced by colons (i.e. ':') in order
+    // to avoid url en-/decoding. Here we need to convert back to path
+    // separators.
+    if (!$this->configCheck['summary']) {
+      return PageRenderer\ConfigCheck::TEMPLATE;
     }
-    if (empty($template) || $template == self::HOME_TEMPLATE) {
+    if (empty($template)) {
       $template = self::DEFAULT_TEMPLATE;
     }
-    if ($renderAs === self::RENDER_AS_USER) {
-      $blogMapper = \OC::$server->query(BlogMapper::class);
-      if ($blogMapper->notificationPending($this->userId())) {
-        $template = 'blog/blog';
-      }
-    }
-    return $template;
-  }
 
-  /**
-   * @param mixed $a
-   *
-   * @param mixed $b
-   *
-   * @param mixed $c
-   *
-   * @param mixed $d
-   *
-   * @param mixed $e
-   *
-   * @param mixed $f
-   *
-   * @param mixed $g
-   *
-   * @return Http\Response
-   *
-   * @NoAdminRequired
-   */
-  public function notFound(mixed $a, mixed $b, mixed $c, mixed $d, mixed $e, mixed $f, mixed $g):Http\Response
-  {
-    $parts = [ $a, $b, $c, $d, $e, $f, $g ];
-    $route = '/ajax';
-    foreach ($parts as $part) {
-      if (empty($part)) {
-        break;
-      }
-      $route .= '/'.$part;
+    /** @var BlogRenderer $blogRenderer */
+    $blogRenderer = $this->appContainer->get(PageRenderer\Blog::class);
+    if ($blogRenderer->notificationsPending()) {
+      $template = PageRenderer\BLOG::TEMPLATE;
     }
-    return self::response($this->l->t("Page `%s\' not found.", [$route]), Http::STATUS_NOT_FOUND);
+    $template = str_replace(':', Constants::PATH_SEP, $template);
+
+    return $template;
   }
 }

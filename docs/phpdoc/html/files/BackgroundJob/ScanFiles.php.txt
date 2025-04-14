@@ -25,6 +25,8 @@
 namespace OCA\CAFEVDB\BackgroundJob;
 
 use OC\Files\Utils\Scanner;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\BackgroundJob\TimedJob;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
@@ -40,7 +42,7 @@ use Psr\Log\LoggerInterface;
  * which is triggered by a JS timer via Ajax from the front-end in order to
  * get authenticated background jobs.
  */
-class ScanFiles extends \OC\BackgroundJob\TimedJob
+class ScanFiles extends TimedJob
 {
   /** Amount of users that should get scanned per execution */
   public const USERS_PER_SESSION = 500;
@@ -56,7 +58,9 @@ class ScanFiles extends \OC\BackgroundJob\TimedJob
     private IEventDispatcher $dispatcher,
     private LoggerInterface $logger,
     private IDBConnection $connection,
+    ITimeFactory $time,
   ) {
+    parent::__construct($time);
     // Run once per 10 minutes
     $this->setInterval(60 * 10);
   }

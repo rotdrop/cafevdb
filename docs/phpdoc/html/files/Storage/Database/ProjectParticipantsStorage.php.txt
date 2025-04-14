@@ -30,24 +30,15 @@ use DateTimeInterface;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
-// F I X M E: those are not public, but ...
-use OC\Files\Storage\Common as AbstractStorage;
-use OC\Files\Storage\PolyFill\CopyDirectory;
-
-use Icewind\Streams\CallbackWrapper;
-use Icewind\Streams\CountWrapper;
-use Icewind\Streams\IteratorDirectory;
-
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Service\ProjectService;
 
 /**
  * Storage implementation for data-base storage, including access to
@@ -90,7 +81,6 @@ class ProjectParticipantsStorage extends Storage
       try {
         $projectId = $this->participant->getProject()->getId();
         $musicianId = $this->participant->getMusician()->getId();
-        $this->clearDatabaseRepository();
 
         $this->getRootFolder(create: false);
 
@@ -121,6 +111,18 @@ class ProjectParticipantsStorage extends Storage
     return parent::findFiles($dirName, rootIsMandatory: false);
   }
 
+  /** {@inheritdoc} */
+  protected function getReadMeFactory():ReadMeFactoryInterface
+  {
+    if ($this->readMeFactory === null) {
+      $this->readMeFactory = clone $this->appContainer()->get(SkeletonReadMeFactory::class);
+      $skeletonPath = $this->projectService->getProjectSkeletonPaths(ProjectService::FOLDER_TYPE_PARTICIPANTS_TEMPLATE);
+      $skeletonPath .= self::PATH_SEPARATOR . $this->getDocumentsFolderName();
+      $this->readMeFactory->setSkeletonPath($skeletonPath);
+    }
+
+    return $this->readMeFactory;
+  }
 
   /**
    * {@inheritdoc}

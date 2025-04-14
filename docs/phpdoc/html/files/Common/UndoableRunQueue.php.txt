@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Common;
 
 use InvalidArgumentException;
 use Throwable;
+use Closure;
 
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;

@@ -54,7 +54,7 @@
     Menu
 </label>
 <aside class="phpdocumentor-column -three phpdocumentor-sidebar">
-                    <section class="phpdocumentor-sidebar__category">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
             <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="namespaces/oca.html" class="">OCA</a>
@@ -67,15 +67,15 @@
             </ul>
 
                         </section>
-                <section class="phpdocumentor-sidebar__category">
+                <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/cafevdb.html" class="">cafevdb</a>
+    <a href="packages/Application.html" class="">Application</a>
 </h4>
 
                         </section>
             
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
@@ -83,7 +83,7 @@
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
     </section>
 
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -indices">
         <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
     </section>
@@ -137,6 +137,9 @@ selection.</p>
 
 
 
+
+
+
 <h3 id="toc">
     Table of Contents
     <a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -158,7 +161,7 @@ selection.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#property_driverRanking">$driverRanking</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#property_driverRanking">$driverRanking</a>
     <span>
                         &nbsp;: array&lt;string|int, mixed&gt;            </span>
 </dt>
@@ -172,14 +175,13 @@ selection.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#method_open">open()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#method_open">open()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
     </dl>
-
 
 
 
@@ -211,9 +213,10 @@ selection.</p>
     :
     <span class="phpdocumentor-element-found-in__line">43</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Toolkit/Backend/ArchiveBackend.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
@@ -223,8 +226,11 @@ selection.</p>
 
     
         <section class="phpdocumentor-description"><p>Define a potentially configurable driver ranking. The one with the
+highest ranking will be picked first.
 highest ranking will be picked first.</p>
 </section>
+
+    
 
     
 
@@ -253,7 +259,7 @@ highest ranking will be picked first.</p>
     :
     <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/Toolkit/Backend/ArchiveBackend.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -264,6 +270,7 @@ highest ranking will be picked first.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -295,11 +302,14 @@ highest ranking will be picked first.</p>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Whether to also look at the contents of a file
 to determine its MIME-type if it could not be determined by its file
+extension.
 extension.</p>
 </section>
 
             </dd>
             </dl>
+
+    
 
     
 
@@ -418,14 +428,14 @@ extension.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#property_driverRanking">$driverRanking<a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html"></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#property_driverRanking">$driverRanking</a></li>
                                             </ul>
                 </li>
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#method_open">open()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Backend-ArchiveBackend.html#method_open">open()</a></li>
                                     </ul>
             </li>
                     </ul>

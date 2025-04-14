@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024 Claus-Justus Heine
+ * @copyright 2011-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,23 +26,33 @@ namespace OCA\CAFEVDB\Documents;
 
 use RuntimeException;
 use DateTimeImmutable;
+use DateTimeInterface;
 
 use clsTinyButStrong as OpenDocumentFillerBackend;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ExecutableFinder;
 
-use OCP\IL10N;
+use OCP\AppFramework\IAppContainer;
 use OCP\Files\File;
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ImagesService;
-use OCA\CAFEVDB\Service\Finance\FinanceService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCP\Files\IMimeTypeDetector;
+use OCP\IL10N;
+
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\ImagesService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Autofill for Libre-/Openoffice documents. */
 class OpenDocumentFiller
 {
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   /**
@@ -54,13 +64,18 @@ class OpenDocumentFiller
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected ConfigService $configService,
-    private UserStorage $userStorage,
-    private TemplateService $templateService,
-    private OpenDocumentFillerBackend $backend,
     private AnyToPdf $anyToPdf,
+    private ExecutableFinder $executableFinder,
+    private IMimeTypeDetector $mimeTypeDetector,
+    private ImagesService $imagesService,
+    private OpenDocumentFillerBackend $backend,
+    private TemplateService $templateService,
+    private UserStorage $userStorage,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    protected IAppContainer $appContainer,
   ) {
-    $this->di(\clsOpenTBS::class); // ??
+    $this->appContainer->get(\clsOpenTBS::class); // ??
     ob_start();
     $this->backend->NoErr = true;
     $this->backend->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
@@ -168,10 +183,17 @@ class OpenDocumentFiller
     // convert everything to a time-stamp and add the timezone-offset
     // to get correct dates and times.
     array_walk_recursive($this->backend->VarRef, function(&$value, $key) {
-      if ($value instanceof \DateTimeInterface) {
+      if ($value instanceof DateTimeInterface) {
         $stamp = $value->getTimestamp();
         $stamp += $value->getOffset();
+        $this->logInfo('REPLACE DATE BY TIMESTAMP ' . $key . ': ' . print_r($value, true) . ' -> ' . $stamp);
         $value = $stamp;
+      } elseif ($value === true) {
+        $value = 1;
+      } elseif ($value === false) {
+        $value = 0;
+      } elseif ($value === null) {
+        $value = '';
       }
     });
 
@@ -305,16 +327,13 @@ class OpenDocumentFiller
     ];
 
     // Logo
+    /** @var \OCP\Files\File */
     $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
-
-    $substitutions['org'][ConfigService::DOCUMENT_TEMPLATE_LOGO] = $this->userStorage->createDataUri($logo);
-
-    // $logoData = $logo->getContent();
-    // $logoImage = ImagesService::rasterize($logoData, 1200);
-    // $substitutions['org:'.ConfigService::DOCUMENT_TEMPLATE_LOGO] = 'data:'.$logoImage->mimeType().';base64,' . base64_encode($logoImage->data());
+    $substitutions['org'][ConfigService::DOCUMENT_TEMPLATE_LOGO] =
+      $this->imagesService->dataUriFromFile($logo, ImagesService::SVG_TEXT_TO_PATH);
 
     /** @var OrganizationalRolesService $rolesService */
-    $rolesService = $this->di(OrganizationalRolesService::class);
+    $rolesService = $this->appContainer->get(OrganizationalRolesService::class);
 
     foreach (OrganizationalRolesService::BOARD_MEMBERS as $boardMember) {
 
@@ -329,10 +348,7 @@ class OpenDocumentFiller
       $signature = $rolesService->{$boardMember . 'Signature'}();
 
       if (!empty($signature)) {
-        // if ($signature->mimeType() != 'image/png') {
-        //   $signature = ImagesService::rasterize($signature, 1200, 1200);
-        // }
-        $signature = 'data:'.$signature->mimeType().';base64,' . base64_encode($signature->data());
+        $signature = $this->imagesService->dataUriFromFile($signature, ImagesService::SVG_TEXT_TO_PATH);
       }
       $substitutions['org'][$boardMember]['signature'] = $signature;
       $substitutions['org'][$boardMember]['role'] = $this->l->t($boardMember);
@@ -345,7 +361,7 @@ class OpenDocumentFiller
     $bank = $this->getConfigValue('bankAccountBankName');
     if (empty($bank)) {
       /** @var FinanceService $financeService */
-      $financeService = $this->di(FinanceService::class);
+      $financeService = $this->appContainer->get(FinanceService::class);
       if (!empty($iban)) {
         $ibanInfo = $financeService->getIbanInfo($iban);
         $bank = $ibanInfo['bank'];
@@ -362,6 +378,27 @@ class OpenDocumentFiller
 
     // creditor identifier
     $substitutions['org']['CI'] = $this->getConfigValue('bankAccountCreditorIdentifier')??$this->l->t('unknown');
+
+    // tax exemption notices
+
+    $substitutions['org']['taxAuthorities'] = [
+      'exemptionNotices' => [],
+    ];
+
+    /** @var Repositories\TaxExemptionNoticesRepository $repository */
+    $repository = $this->getDatabaseRepository(Entities\TaxExemptionNotice::class);
+    foreach (TaxType::values() as $taxType) {
+      $notice = $repository->getLatestValid($taxType);
+      if ($notice === null) {
+        continue;
+      }
+      $noticeData = $notice->toArray();
+      if ($notice->getWrittenNotice()) {
+        $noticeData['writtenNotice'] = $notice->getWrittenNotice()->getData(Entities\FileData::DATA_FORMAT_URI);
+      }
+      $taxType = Util::dashesToCamelCase($taxType, dashes: ' -_');
+      $substitutions['org']['taxAuthorities']['exemptionNotices'][(string)$taxType] = $noticeData;
+    }
 
     return $substitutions;
   }

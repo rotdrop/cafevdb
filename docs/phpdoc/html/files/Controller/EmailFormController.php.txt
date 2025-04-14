@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,31 +24,31 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use \Mail_RFC822;
+use Throwable;
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\IAppContainer;
-use OCP\IRequest;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IURLGenerator;
+use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\IAppContainer;
 use OCP\Files\FileInfo;
 use OCP\IDateTimeFormatter;
-
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\ContactsService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\EmailForm\RecipientsFilter;
-use OCA\CAFEVDB\EmailForm\Composer;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
+use OCP\IRequest;
+use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\EmailForm\Composer;
+use OCA\CAFEVDB\EmailForm\RecipientsFilter;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\EmailAddressService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Controller class for the mass-email form */
 class EmailFormController extends Controller
@@ -64,13 +64,14 @@ class EmailFormController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    private IAppContainer $appContainer,
+    private ContactsService $contactsService,
+    private EmailAddressService $emailAddressService,
     private IURLGenerator $urlGenerator,
-    private RequestParameterService $parameterService,
+    private PHPMyEdit $pme,
     private PageNavigation $pageNavigation,
-    protected ConfigService $configService,
     private ProjectService $projectService,
-    private PHPMyEdit $pme
+    protected ConfigService $configService,
+    protected IAppContainer $appContainer,
   ) {
     parent::__construct($appName, $request);
     $this->l = $this->l10N();
@@ -105,24 +106,31 @@ class EmailFormController extends Controller
   ):DataResponse {
 
     // try to fetch filter information from the base-table if possible.
-    $idx = $this->parameterService['memberStatusFddIndex'];
-    $memberStatusFilter = $this->parameterService[$this->pme->cgiSysName('qf' . $idx . '_idx')];
+    $idx = $this->request['memberStatusFddIndex'];
+    $memberStatusFilter = $this->request[$this->pme->cgiSysName('qf' . $idx . '_idx')];
 
-    $idx = $this->parameterService['instrummentsFddIndex'];
-    $instrumentsFilter = $this->parameterService[$this->pme->cgiSysName('qf' . $idx . '_idx')];
+    $idx = $this->request['instrummentsFddIndex'];
+    $instrumentsFilter = $this->request[$this->pme->cgiSysName('qf' . $idx . '_idx')];
 
     $this->logInfo('MEMBER / INSTRUMENTS ' . print_r($memberStatusFilter, true) . ' / ' . print_r($instrumentsFilter, true));
-    $recipientsFilterCGI = $this->parameterService->getParam(RecipientsFilter::POST_TAG, []);
+    $recipientsFilterCGI = $this->request->getParam(RecipientsFilter::POST_TAG, []);
     if (!empty($instrumentsFilter)) {
       $recipientsFilterCGI['instrumentsFilter'] = $instrumentsFilter;
     }
     if (!empty($memberStatusFilter)) {
       $recipientsFilterCGI['memberStatusFilter'] = $memberStatusFilter;
     }
-    $this->parameterService->setParam(RecipientsFilter::POST_TAG, $recipientsFilterCGI);
+
+    $requestParameters = $this->request->getParams();
+    $requestParameters[RecipientsFilter::POST_TAG] = $recipientsFilterCGI;
 
     /** @var Composer $composer */
-    $composer = $this->appContainer->query(Composer::class);
+    try {
+      $composer = $this->appContainer->query(Composer::class);
+    } catch (Throwable $t) {
+      $this->logException($t);
+    }
+    $composer->bind($requestParameters);
     $recipientsFilter = $composer->getRecipientsFilter();
 
     $fileAttachments = $composer->fileAttachments();
@@ -143,7 +151,7 @@ class EmailFormController extends Controller
       'requesttoken' => \OCP\Util::callRegister(), // @todo: check
       'projectName' => $projectName,
       'projectId' => $projectId,
-      'wikinamespace' => $this->getAppValue('wikinamespace'),
+      ConfigService::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY),
       'bulkTransactionId' => $bulkTransactionId,
       // Provide enough data s.t. a form-reload will bump the user to the
       // form the email-dialog was opened from. Ideally, we intercept the
@@ -152,7 +160,7 @@ class EmailFormController extends Controller
       'formData' => [
         'projectName' => $projectName,
         'projectId' => $projectId,
-        'template' => $this->parameterService['template'],
+        'template' => $this->request['template'],
         // 'renderer' => ???? @todo check
         'bulkTransactionId' => $bulkTransactionId,
         'requesttoken' => \OCP\Util::callRegister(),
@@ -284,12 +292,15 @@ class EmailFormController extends Controller
       'projectName' => $projectName,
       'bulkTransactionId' => -1,
     ];
-    $requestData = array_merge($defaultData, $this->parameterService->getParam(Composer::POST_TAG, []));
+    $requestData = array_merge($defaultData, $this->request->getParam(Composer::POST_TAG, []));
     $projectId   = $requestData['projectId'];
     $projectName = $requestData['projectName'];
 
     /** @var Composer $composer */
     $composer = $this->appContainer->get(Composer::class);
+    if (!$composer->bound()) {
+      $composer->bind($this->request->getParams());
+    }
     $recipientsFilter = $composer->getRecipientsFilter();
 
     if (isset($requestData['singleItem'])) {
@@ -546,7 +557,7 @@ class EmailFormController extends Controller
             $draftParameters[Composer::POST_TAG]['messageDraftId'] =
               $requestData['messageDraftId'] = $draftId;
 
-            $requestParameters = $this->parameterService->getParams();
+            $requestParameters = $this->request->getParams();
 
             // Loading a draft message means that the project-relation of the
             // stored draft should be re-established. Unfortunately, it is stored
@@ -558,17 +569,15 @@ class EmailFormController extends Controller
 
             $requestParameters = Util::arrayMergeRecursive($requestParameters, $draftParameters);
 
+            // "reload" the composer and recipients filter
+            $composer->bind($requestParameters);
+
             // Update project name and id
             $projectId = $requestData['projectId'] = $requestParameters['projectId'];
             $projectName = $requestData['projectName'] = $requestParameters['projectName'];
 
             $requestData['bulkTransactionId'] = $requestParameters['bulkTransactionId'];
 
-            // install new request parameters
-            $this->parameterService->setParams($requestParameters);
-
-            // "reload" the composer and recipients filter
-            $composer->bind($this->parameterService);
 
             $requestData['errorStatus'] = $composer->errorStatus();
             $requestData['diagnostics'] = $composer->statusDiagnostics();
@@ -880,33 +889,22 @@ class EmailFormController extends Controller
    */
   public function contacts(string $operation):Response
   {
-    /** @var ContactsService */
-    $contactsService = $this->appContainer->query(ContactsService::class);
     switch ($operation) {
       case 'list':
         // Free-form recipients from Cc: or Bcc:
-        $freeForm  = $this->parameterService->getParam('freeFormRecipients', '');
+        $freeForm  = $this->request->getParam('freeFormRecipients', '');
 
-        // Convert the free-form input to an array (possibly)
-        $parser = new Mail_RFC822(null, null, null, false);
-        $recipients = $parser->parseAddressList($freeForm);
-        $parseError = $parser->parseError();
-        if ($parseError !== false) {
-          return self::grumble(
-            $this->l->t(
-              'Unable to parse email-recipients "%s".',
-              vsprintf($parseError['message'], $parseError['data'])
-            ));
+        try {
+          $freeForm = $this->emailAddressService->parseAddressString($freeForm);
         }
-        $freeForm = [];
-        foreach ($recipients as $emailRecord) {
-          $email = $emailRecord->mailbox.'@'.$emailRecord->host;
-          $name  = $emailRecord->personal;
-          $freeForm[$email] = $name;
+        catch (Exceptions\EnduserNotificationException $e) {
+          return self::grumble(
+            $this->l->t('Unable to parse email-recipients "%s".', $e->getMessage())
+          );
         }
 
         // Fetch all known address-book contacts with email
-        $bookContacts = $contactsService->emailContacts();
+        $bookContacts = $this->contactsService->emailContacts();
 
         $addressBookEmails = [];
         foreach ($bookContacts as $entry) {
@@ -969,7 +967,7 @@ class EmailFormController extends Controller
       case 'save':
         // Get some common post data, rest has to be handled by the
         // recipients and the sender class.
-        $addressBookCandidates = $this->parameterService->getParam('addressBookCandidates', []);
+        $addressBookCandidates = $this->request->getParam('addressBookCandidates', []);
 
         $formContacts = [];
         foreach ($addressBookCandidates as $record) {
@@ -991,7 +989,7 @@ class EmailFormController extends Controller
         }
         $failedContacts = [];
         foreach ($formContacts as $contact) {
-          if ($contactsService->addEmailContact($contact) === false) {
+          if ($this->contactsService->addEmailContact($contact) === false) {
             $failedContacts[] = $contact['display'];
           }
         }
@@ -1020,6 +1018,9 @@ class EmailFormController extends Controller
   public function attachment(string $source):DataResponse
   {
     $composer = $this->appContainer->query(Composer::class);
+    if (!$composer->bound()) {
+      $composer->bind($this->request->getParams());
+    }
     $uploadMaxFileSize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
     $postMaxSize = \OCP\Util::computerFileSize(ini_get('post_max_size'));
     $maxUploadFileSize = min($uploadMaxFileSize, $postMaxSize);
@@ -1027,7 +1028,7 @@ class EmailFormController extends Controller
 
     switch ($source) {
       case AttachmentOrigin::CLOUD:
-        $paths = $this->parameterService['paths'];
+        $paths = $this->request['paths'];
         if (empty($paths)) {
           return self::grumble($this->l->t('Attachment file-names were not submitted'));
         }

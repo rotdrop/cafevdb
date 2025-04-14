@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@ use Exception;
 use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Constants;
 
 /** Generate frontend HTML page with error information. */
 class ErrorService
@@ -56,7 +57,7 @@ class ErrorService
    */
   public function exceptionTemplate(
     Exception $e,
-    string $renderAs = self::RENDER_AS_BLANK,
+    string $renderAs = Constants::RENDER_AS_BLANK,
   ):TemplateResponse {
     $admin = implode(',', array_map(
       fn($contact) => $contact['name'] . ' <' . $contact['email'] . '>',

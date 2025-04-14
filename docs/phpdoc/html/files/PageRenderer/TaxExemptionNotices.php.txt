@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,25 +26,26 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use DateTime;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Table generator TaxExemptionNotice. */
 class TaxExemptionNotices extends PMETableViewBase
 {
+  use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\ParticipantFileFieldsTrait;
+  use FieldTraits\QueryFieldTrait;
 
   const TEMPLATE = 'tax-exemption-notices';
   const TABLE = 'TaxExemptionNotices';
@@ -62,20 +63,26 @@ class TaxExemptionNotices extends PMETableViewBase
    */
   private array $taxTypeNames;
 
-  /** @var UserStorage */
-  protected $userStorage;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $requesrt,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    UserStorage $userStorage,
+    ToolTipsService $toolTipsService,
+    protected UserStorage $userStorage,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(
+      self::TEMPLATE,
+      //
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $pageNavigation,
+      $toolTipsService,
+    );
 
     $this->userStorage = $userStorage;
 
@@ -84,6 +91,11 @@ class TaxExemptionNotices extends PMETableViewBase
     $this->taxTypeNames = [];
     foreach ($taxTypes as $tag) {
       $this->taxTypeNames[$tag] = $this->l->t($tag);
+    }
+
+    if (empty($this->projectId)) {
+      $this->projectId = (int)$this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0);
+      $this->projectName = $this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_KEY, '');
     }
   }
   // phpcs:enable
@@ -95,21 +107,12 @@ class TaxExemptionNotices extends PMETableViewBase
   }
 
   /** {@inheritdoc} */
-  public function headerText()
-  {
-    $header = $this->shortTitle();
-
-    return '<div class="' . $this->cssPrefix() . '-header-text">' . $header . '</div>';
-  }
-
-  /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
 
     $opts            = [];
-
 
     $opts['css']['postfix'] = [
       self::TEMPLATE,
@@ -289,9 +292,9 @@ class TaxExemptionNotices extends PMETableViewBase
           return '';
         }
 
-        $taxType = $row['qf' . $pme->fdn['tax_type']];
-        $assessmentPeriodStart = $row['qf' . $pme->fdn['assessment_period_start']];
-        $assessmentPeriodEnd = $row['qf' . $pme->fdn['assessment_period_end']];
+        $taxType = $row[$this->queryField('tax_type')];
+        $assessmentPeriodStart = $row[$this->queryField('assessment_period_start')];
+        $assessmentPeriodEnd = $row[$this->queryField('assessment_period_end')];
         $fileName = $this->getLegacyTaxExemptionNoticeFileName(
           $taxType,
           $assessmentPeriodStart,
@@ -322,25 +325,19 @@ class TaxExemptionNotices extends PMETableViewBase
           return $value;
         }
 
-        $taxType = $row['qf' . $pme->fdn['tax_type']];
-        $assessmentPeriodStart = $row['qf' . $pme->fdn['assessment_period_start']];
-        $assessmentPeriodEnd = $row['qf' . $pme->fdn['assessment_period_end']];
-
         /** @var Entities\DatabaseStorageFile $file */
         $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
 
         $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($file);
 
-        $dir = $this->getFinanceFolderPath()
-          . UserStorage::PATH_SEP . $this->getTaxAuthoritiesFolderName()
-          . UserStorage::PATH_SEP . $this->getTaxExemptionNoticesFolderName();
+        $dir = $this->getTaxExemptionNoticesPath();
 
         try {
           $filesAppLink = $this->userStorage->getFilesAppLink($dir, true);
           $filesAppTarget = md5($filesAppLink);
-          $filesAppLink = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
+          $filesAppLink = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget . '"
        title="'.$this->toolTipsService['page-renderer:upload:open-parent'].'"
-       class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
+       class="button operation open-parent tooltip-auto' . (empty($filesAppLink) ? ' disabled' : '') . '"
        ></a>';
         } catch (\OCP\Files\NotFoundException $e) {
           $this->logInfo('No file found for ' . $dir);
@@ -350,8 +347,8 @@ class TaxExemptionNotices extends PMETableViewBase
 '
           . $filesAppLink
           . '<a class="download-link ajax-download tooltip-auto inline-block clip-long-text"
-   title="'.$this->toolTipsService['tax-exemption-notices:written-notice'].'"
-   href="'.$downloadLink.'">' . $file->getName() . '</a>
+   title="' . $this->toolTipsService['page-renderer:tax-exemption-notices:written-notice'] . '"
+   href="' . $downloadLink . '">' . $file->getName() . '</a>
 </div>';
       },
     ];

@@ -28,46 +28,40 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Debit notes from destination accounts.
- *
- * @ORM\Entity
  */
+#[ORM\Entity]
 class SepaDebitNote extends SepaBulkTransaction
 {
   /**
    * @var \DateTimeImmutable
    *
    * Latest date for the pre-notification of the debitors
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $preNotificationDeadline;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object URI"})
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object URI'])]
   private $preNotificationEventUri;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object UID"})
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object UID'])]
   private $preNotificationEventUid;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object URI"})
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object URI'])]
   private $preNotificationTaskUri;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=true, options={"comment"="Cloud Calendar Object UID"})
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object UID'])]
   private $preNotificationTaskUid;
 
   /**

@@ -4,9 +4,17 @@
     display: flex;
     gap: var(--spacing-md);
 }
+
 .phpdocumentor-content > section:first-of-type {
-    width: 100%;
+    width: 75%;
     flex: 1 1 auto;
+}
+
+@media (min-width: 1900px) {
+    .phpdocumentor-content > section:first-of-type {
+        width: 100%;
+        flex: 1 1 auto;
+    }
 }
 
 .phpdocumentor .phpdocumentor-content__title {
@@ -116,6 +124,10 @@
 
 .phpdocumentor-table-of-contents .phpdocumentor-table-of-contents__entry > a {
     flex: 0 1 auto;
+}
+
+.phpdocumentor-table-of-contents .phpdocumentor-table-of-contents__entry > a.-deprecated {
+    text-decoration: line-through;
 }
 
 .phpdocumentor-table-of-contents .phpdocumentor-table-of-contents__entry > span {
@@ -260,4 +272,7 @@
 
 .phpdocumentor-tag-link {
     margin-right: var(--spacing-sm);
+}
+.phpdocumentor-uml-diagram svg {
+    cursor: zoom-in;
 }

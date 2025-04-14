@@ -24,12 +24,14 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use Throwable;
 use Exception;
 use RuntimeException;
 
-use \OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
+use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 use OCP\Files as CloudFiles;
+use OCP\Files\NotFoundException;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -62,9 +64,10 @@ trait ParticipantFieldsTrait
   use ParticipantFileFieldsTrait;
   use ParticipantFieldsCgiNameTrait;
   use SubstituteSQLFragmentTrait;
+  use MusicianFromRowTrait;
 
   /** @var UserStorage */
-  protected ?UserStorage $userStorage = null;
+  protected UserStorage $userStorage;
 
   /** @var ProjectParticipantFieldsService */
   protected ProjectParticipantFieldsService $participantFieldsService;
@@ -82,7 +85,7 @@ trait ParticipantFieldsTrait
   protected $expertMode;
 
   /** @var PHPMyEdit */
-  protected $pme;
+  protected PHPMyEdit $pme;
 
   /**
    * @var array
@@ -240,21 +243,20 @@ trait ParticipantFieldsTrait
           $extraFddBase['input'] = 'VSRH';
         }
 
-        list($fddBaseIndex, $keyFddName) = $this->makeJoinTableField(
+        list(, $keyFddName) = $this->makeJoinTableField(
           $fieldDescData, $tableName, 'option_key',
           Util::arrayMergeRecursive($extraFddBase, [ 'values' => ['encode' => 'BIN2UUID(%s)',], ])
         );
         $keyFdd = &$fieldDescData[$keyFddName];
 
-        list($absValueFddIndex, $valueFddName) = $this->makeJoinTableField(
+        list(, $valueFddName) = $this->makeJoinTableField(
           $fieldDescData, $tableName, 'option_value',
           Util::arrayMergeRecursive($extraFddBase, [ 'input' => 'VSRH', ])
         );
         $valueFdd = &$fieldDescData[$valueFddName];
-        $valueFddOffset = $absValueFddIndex - $fddBaseIndex;
 
         // @todo this would need more care.
-        /* list($deletedFddIndex, $deletedFddName) = */$this->makeJoinTableField(
+        /* list(, $deletedFddName) = */$this->makeJoinTableField(
           $fieldDescData, $tableName, 'deleted',
           Util::arrayMergeRecursive($extraFddBase, [
             'name' => $this->l->t('Deleted'),
@@ -300,6 +302,7 @@ trait ParticipantFieldsTrait
                 'cols' => 50,
               ];
               $fdd['css']['postfix'][] = 'hide-subsequent-lines';
+              $fdd['css']['postfix'][] = 'clip-long-text';
               $fdd['display|LF'] = [ 'popup' => 'data' ];
               $fdd['escape'] = false;
               break;
@@ -369,7 +372,7 @@ trait ParticipantFieldsTrait
                 unset($valueFdd['mask']);
 
                 // yet another field for the supporting documents
-                list($absInvoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
+                list(, $invoiceFddName) = $this->makeJoinTableField(
                   $fieldDescData, $tableName, 'supporting_document_id', [
                     'input' => 'SRH',
                     'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
@@ -379,8 +382,6 @@ trait ParticipantFieldsTrait
                       'orderby' => '$table.option_key ASC',
                     ],
                   ]);
-                // $invoiceFdd = &$fieldDescData[$invoiceFddName];
-                $invoiceFddOffset = $absInvoiceFddIndex - $fddBaseIndex;
 
                 // yet another field to support summing up totals
                 list($subTotalsIndex, $subTotalsName) = $this->makeJoinTableField(
@@ -410,24 +411,20 @@ trait ParticipantFieldsTrait
                 );
 
                 $viewCallback = function(
-                  $optionValue,
-                  $op,
-                  $k,
-                  $row,
-                  $recordId,
-                  $pme,
-                  $valueFddOffset,
+                  mixed $optionValue,
+                  string $op,
+                  int $k,
+                  array $row,
+                  array $recordId,
+                  PHPMyEdit $pme,
                 ) use (
                   $field,
-                  $invoiceFddOffset,
+                  $tableName,
                 ) {
                   $html = $this->moneyValue($optionValue);
 
-                  $keyFddIndex = $k - $valueFddOffset;
-                  $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
-
-                  $optionKey = $row['qf' . $keyFddIndex];
-                  $invoice = $row['qf' . $invoiceFddIndex];
+                  $optionKey = $row[$this->joinQueryField($tableName, 'option_key')];
+                  $invoice = $row[$this->joinQueryField($tableName, 'supporting_document_id')];
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
                   if (empty($optionKey)) {
@@ -465,21 +462,8 @@ trait ParticipantFieldsTrait
                   return $html;
                 };
 
-                $valueFdd['php|VDLF'] = function(
-                  $optionValue,
-                  $op,
-                  $k,
-                  $row,
-                  $recordId,
-                  $pme,
-                ) use (
-                  $field,
-                  $invoiceFddOffset,
-                  $valueFddOffset,
-                  $viewCallback,
-                ) {
-                  return $viewCallback($optionValue, $op, $k, $row, $recordId, $pme, $valueFddOffset);
-                };
+                // $valueFddOffset used here
+                $valueFdd['php|VDLF'] = $viewCallback;
 
                 $valueFdd['display|ACP']['postfix'] = function(
                   $op,
@@ -488,11 +472,10 @@ trait ParticipantFieldsTrait
                   $row,
                   $pme,
                 ) use (
+                  $tableName,
                   $field,
                   $defaultValue,
                   $defaultButton,
-                  $valueFddOffset,
-                  $invoiceFddOffset,
                 ) {
                   $html = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
                   if ($defaultValue !== '' && $defaultValue !== null) {
@@ -503,13 +486,9 @@ trait ParticipantFieldsTrait
                     return $html;
                   }
 
-                  $keyFddIndex = $k - $valueFddOffset;
-                  $valueFddIndex = $k;
-                  $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
-
-                  $optionValue = $row['qf' . $valueFddIndex];
-                  $optionKey = $row['qf' . $keyFddIndex];
-                  $invoice = $row['qf' . $invoiceFddIndex];
+                  $optionValue = $row[PHPMyEdit::QUERY_FIELD . $k];
+                  $optionKey = $row[$this->joinQueryField($tableName, 'option_key')];
+                  $invoice = $row[$this->joinQueryField($tableName, 'supporting_document_id')];
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
                   if (empty($optionKey)) {
@@ -533,7 +512,7 @@ trait ParticipantFieldsTrait
                     try {
                       $filesAppLink = $this->userStorage->getFilesAppLink($path, true);
                       break;
-                    } catch (\OCP\Files\NotFoundException $e) {
+                    } catch (NotFoundException $e) {
                       $this->logDebug('No file found for ' . $filesAppPath);
                       array_pop($pathChain);
                     }
@@ -605,7 +584,6 @@ trait ParticipantFieldsTrait
                   ],
                 ]);
                 $depositFdd = &$fieldDescData[$depositFddName];
-                $depositFddOffset = count($fieldDescData) - $fddBaseIndex;
 
                 $depositFdd['display|ACP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
                 if ($defaultValue !== '' && $defaultValue !== null) {
@@ -613,22 +591,7 @@ trait ParticipantFieldsTrait
                     str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ], [ 'hidden-text', 'defaultDeposit' ], $defaultButton);
                 }
 
-                $depositFdd['php|VDLF'] = function(
-                  $optionValue,
-                  $op,
-                  $k,
-                  $row,
-                  $recordId,
-                  $pme,
-                ) use (
-                  $field,
-                  $invoiceFddOffset,
-                  $depositFddOffset,
-                  $viewCallback,
-                ) {
-                  return $viewCallback($optionValue, $op, $k, $row, $recordId, $pme, $depositFddOffset);
-                };
-
+                $depositFdd['php|VDLF'] = $viewCallback;
                 break;
 
               case FieldType::DB_FILE:
@@ -734,7 +697,7 @@ trait ParticipantFieldsTrait
                       $html = '<a class="download-link ajax-download tooltip-auto"
    title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'"
    href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
-                    } catch (\OCP\Files\NotFoundException $e) {
+                    } catch (NotFoundException $e) {
                       $this->logException($e);
                       $html = '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileBase) . '</span>';
                     }
@@ -822,7 +785,7 @@ trait ParticipantFieldsTrait
                              class="download-link tooltip-auto">
   ' . $linkText . '
 </a>';
-                    } catch (\OCP\Files\NotFoundException $e) {
+                    } catch (NotFoundException $e) {
                       $this->logException($e);
                       $html = '<span class="error tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder "%s" could not be found on the server.', $subDir) . '</span>';
                     }
@@ -946,7 +909,7 @@ trait ParticipantFieldsTrait
                     $dataValue = ($dataType == FieldType::DATE)
                       ? $this->dateTimeFormatter()->formatDate($date, 'medium')
                       : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
-                  } catch (\Throwable $t) {
+                  } catch (Throwable $t) {
                     $this->logException($t);
                     // don't care
                   }
@@ -998,8 +961,8 @@ trait ParticipantFieldsTrait
                       $values[(string)$fieldDatum->getOptionKey()] = $fieldDatum->getOptionValue();
                     }
                   } else {
-                    $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
-                    $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+                    $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
+                    $optionValues = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
                     $values = array_combine($optionKeys, $optionValues);
                   }
 
@@ -1042,8 +1005,8 @@ trait ParticipantFieldsTrait
                       $values[(string)$fieldDatum->getOptionKey()] = $fieldDatum->getOptionValue();
                     }
                   } elseif (!empty($value)) {
-                    $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
-                    $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+                    $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
+                    $optionValues = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
                     $values = array_combine($optionKeys, $optionValues);
                   }
 
@@ -1071,7 +1034,7 @@ trait ParticipantFieldsTrait
                              class="download-link tooltip-auto">
   ' . $linkText . '
 </a>';
-                    } catch (\OCP\Files\NotFoundException $e) {
+                    } catch (NotFoundException $e) {
                       $this->logException($e);
                       $html = '<span class="error tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder "%s" could not be found on the server.', $subDir) . '</span>';
                     }
@@ -1098,8 +1061,8 @@ trait ParticipantFieldsTrait
               case FieldType::DB_FILE:
                 $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
                 $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
-                  $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
-                  $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+                  $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
+                  $optionValues = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
                   $values = array_combine($optionKeys, $optionValues);
                   $fieldId = $field->getId();
                   $subDir = $field->getName();
@@ -1120,8 +1083,8 @@ trait ParticipantFieldsTrait
                 };
                 $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
                   if (!empty($value)) {
-                    $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
-                    $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+                    $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
+                    $optionValues = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
                     $values = array_combine($optionKeys, $optionValues);
                     if (!empty($values)) {
                       list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
@@ -1217,8 +1180,15 @@ trait ParticipantFieldsTrait
                 $keyFdd['valueTitles'] = $valueTitles;
                 $keyFdd['valueData'] = $valueData;
                 $keyFdd['values2glue'] = '</span><br/><span>';
-                $keyFdd['display|LF'] = [
-                  'popup' => 'data',
+                $keyFdd['display|VDLF'] = [
+                  'popup' => function($data, $k, $row, $pme) use ($valueTitles, $valueData) {
+                    // $data is the field-id
+                    $optionKey = $row[$this->queryField($k)] ?? null;
+                    $tip = $valueTitles[$optionKey] ?? '';
+                    // $data = $valueData[$optionKey] ?? '';
+                    // $this->logInfo('TIPDATA ' . $tip . ' ' . $data);
+                    return $tip;
+                  },
                   'prefix' => '<div class="allowed-option-wrapper"><span>',
                   'postfix' => '</spans></div>',
                 ];
@@ -1398,7 +1368,7 @@ trait ParticipantFieldsTrait
             // $labelFdd = &$fieldDescData[$labelFddName];
 
             // yet another field for the supporting documents
-            list($absInvoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
+            list(, $invoiceFddName) = $this->makeJoinTableField(
               $fieldDescData, $tableName, 'supporting_document_id', [
                 'input' => 'SRH',
                 'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
@@ -1418,7 +1388,6 @@ trait ParticipantFieldsTrait
                   'orderby' => '$table.created DESC, $table.option_key ASC',
                 ],
               ]);
-            $invoiceFddOffset = $absInvoiceFddIndex - $fddBaseIndex;
 
             $viewClosure = function(
               $value,
@@ -1428,21 +1397,18 @@ trait ParticipantFieldsTrait
               $recordId,
               $pme,
             ) use (
+              $tableName,
               $field,
               $dataType,
-              $invoiceFddOffset,
             ) {
-              $keyFddIndex = $k;
-              $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
-
               // LF are actually both the same. $value will always just
               // come from the filter's $value2 array. The actual values
               // we need are in the description fields which are passed
-              // through the 'qf'.$k field in $row.
-              $values = array_filter(Util::explodeIndexed($row['qf' . $k]));
+              // through the PHPMyEdit::QUERY_FIELD . $k field in $row.
+              $values = array_filter(Util::explodeIndexed($row[$this->queryField($k)]));
               $options = self::fetchValueOptions($field, $values);
 
-              $invoices = Util::explodeIndexed($row['qf' . $invoiceFddIndex]);
+              $invoices = Util::explodeIndexed($row[$this->joinQueryField($tableName, 'supporting_document_id')]);
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
               switch ($dataType) {
@@ -1524,28 +1490,24 @@ trait ParticipantFieldsTrait
               $recordId,
               $pme,
             ) use (
+              $tableName,
               $field,
               $dataType,
-              $valueFddOffset,
-              $invoiceFddOffset,
             ) {
-              $keyFddIndex = $k - $valueFddOffset;
-              $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
-
               // $this->logInfo('VALUE '.$k.': '.$value);
-              // $this->logInfo('ROW '.$k.': '.$row['qf'.$k]);
-              // $this->logInfo('ROW IDX '.$k.': '.$row['qf'.$k.'_idx']);
+              // $this->logInfo('ROW '.$k.': '.$row[PHPMyEdit::QUERY_FIELD . $k]);
+              // $this->logInfo('ROW IDX '.$k.': '.$row[PHPMyEdit::QUERY_FIELD . $k . PHPMyEdit::QUERY_FIELD_IDX]);
 
               $fieldId = $field->getId();
               $multiplicity = FieldMultiplicity::RECURRING;
 
-              $value = $row['qf'.$k];
+              $value = $row[$this->queryField($k)];
               $values = Util::explodeIndexed($value);
 
               $options = [];
               $labelled = false;
               $options = self::fetchValueOptions($field, $values, $labelled);
-              $invoices = Util::explodeIndexed($row['qf' . $invoiceFddIndex]);
+              $invoices = Util::explodeIndexed($row[$this->joinQueryField($tableName, 'supporting_document_id')]);
 
               $generatorOption = $field->getManagementOption();
               $generatorClass = $generatorOption->getData();
@@ -1669,9 +1631,8 @@ trait ParticipantFieldsTrait
             $keyFdd = array_merge($keyFdd, [ 'mask' => null, ]);
 
             // generate a new group-definition field as yet another column
-            list($groupMemberFddIndex, $groupMemberFddName) = $this->makeJoinTableField(
+            list(, $groupMemberFddName) = $this->makeJoinTableField(
               $fieldDescData, $tableName, 'musician_id', $keyFdd);
-            $groupMemberFddOffset = $groupMemberFddIndex - $fddBaseIndex;
 
             // hide value field and tweak for view displays.
             $css[] = FieldMultiplicity::GROUPOFPEOPLE;
@@ -1713,6 +1674,10 @@ trait ParticipantFieldsTrait
 
             // new field, member selection
             $groupMemberFdd = &$fieldDescData[$groupMemberFddName];
+            $fieldId = $field->getId();
+            $fdAlias = 'fd_' . $fieldId;
+            $fd2Alias = 'fd2_' . $fieldId;
+            $fdgAlias = 'fdg_' . $fieldId;
             $groupMemberFdd = array_merge(
               $groupMemberFdd, [
                 'select' => 'M',
@@ -1726,31 +1691,31 @@ trait ParticipantFieldsTrait
                   'table' => "SELECT
    m1.id AS musician_id,
    CONCAT(
-     ".$this->musicianPublicNameSql('m1').",
-     IF(fd.deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
+     ".static::musicianPublicNameSql('m1').",
+     IF(" . $fdAlias . ".deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
    ) AS name,
    m1.sur_name AS sur_name,
    m1.first_name AS first_name,
    m1.nick_name AS nick_name,
    m1.display_name AS display_name,
-   fd.option_key AS group_id,
-   fdg.group_number AS group_number
+   " . $fdAlias . ".option_key AS group_id,
+   " . $fdgAlias . ".group_number AS group_number
 FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m1
   ON m1.id = pp.musician_id
-LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id
-     AND fd.project_id = $this->projectId
-     AND fd.field_id = $fieldId
-     ".($this->showDisabled ? '' : ' AND fd.deleted IS NULL')."
+LEFT JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
+  ON " . $fdAlias . ".musician_id = pp.musician_id
+     AND " . $fdAlias . ".project_id = $this->projectId
+     AND " . $fdAlias . ".field_id = $fieldId
+     ".($this->showDisabled ? '' : ' AND ' . $fdAlias . '.deleted IS NULL')."
 LEFT JOIN (SELECT
-    fd2.option_key AS group_id,
-    ROW_NUMBER() OVER (ORDER BY fd2.field_id) AS group_number
-    FROM ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd2
-    WHERE fd2.project_id = $this->projectId AND fd2.field_id = $fieldId
-    GROUP BY fd2.option_key
-  ) fdg
-  ON fdg.group_id = fd.option_key
+    " . $fd2Alias . ".option_key AS group_id,
+    ROW_NUMBER() OVER (ORDER BY " . $fd2Alias . ".field_id) AS group_number
+    FROM " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fd2Alias . "
+    WHERE " . $fd2Alias . ".project_id = $this->projectId AND " . $fd2Alias . ".field_id = $fieldId
+    GROUP BY " . $fd2Alias . ".option_key
+  ) " . $fdgAlias . "
+  ON " . $fdgAlias . ".group_id = " . $fdAlias . ".option_key
 WHERE pp.project_id = $this->projectId",
                   'column' => 'musician_id',
                   'description' => [
@@ -1784,9 +1749,8 @@ WHERE pp.project_id = $this->projectId",
                 $groupMemberFdd['display'],
                 [
                   'prefix' => '<span class="allowed-option money group service-fee"><span class="allowed-option-name money clip-long-text group">',
-                  'postfix' => function($op, $pos, $k, $row, $pme) use ($money, $groupMemberFddOffset) {
-                    $keyFddIndex = $k - $groupMemberFddOffset;
-                    $selectedKey = $row['qf'.$keyFddIndex];
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($money, $tableName) {
+                    $selectedKey = $row[$this->joinQueryField($tableName, 'option_key')];
                     $active = empty($selectedKey) ? '' : ' selected';
                     return '</span><span class="allowed-option-separator money">&nbsp;</span>'
                       .'<span class="allowed-option-value money">'.$money.'</span></span>';
@@ -1796,9 +1760,8 @@ WHERE pp.project_id = $this->projectId",
                 $groupMemberFdd['display'],
                 [
                   'prefix' => '<label class="'.implode(' ', $css).'">',
-                  'postfix' => function($op, $pos, $k, $row, $pme) use ($fieldData, $dataType, $groupMemberFddOffset) {
-                    $keyFddIndex = $k - $groupMemberFddOffset;
-                    $selectedKey = $row['qf'.$keyFddIndex];
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($fieldData, $dataType, $tableName) {
+                    $selectedKey = $row[$this->joinQueryField($tableName, 'option_key')];
                     $active = ($op == 'display' && empty($selectedKey)) ? '' : 'selected';
                     return $this->allowedOptionLabel('', $fieldData, $dataType, $active)
                       .'</label>';
@@ -1917,9 +1880,8 @@ WHERE pp.project_id = $this->projectId",
               ]);
 
             // generate a new group-definition field as yet another column
-            list($groupMemberFddIndex, $groupMemberFddName) = $this->makeJoinTableField(
+            list(, $groupMemberFddName) = $this->makeJoinTableField(
               $fieldDescData, $tableName, 'musician_id', $fddBase);
-            $groupMemberFddOffset = $groupMemberFddIndex - $fddBaseIndex;
 
             // compute group limits per group
             $dataOptionsData = $dataOptions->map(function($value) {
@@ -1932,6 +1894,12 @@ WHERE pp.project_id = $this->projectId",
 
             // new field, member selection
             $groupMemberFdd = &$fieldDescData[$groupMemberFddName];
+
+            $fieldId = $field->getId();
+            $fdAlias = 'fd_' . $fieldId;
+            $fd2Alias = 'fd2_' . $fieldId;
+            $fdgAlias = 'fdg_' . $fieldId;
+
             $groupMemberFdd = Util::arrayMergeRecursive(
               $groupMemberFdd, [
                 'select' => 'M',
@@ -1943,27 +1911,27 @@ WHERE pp.project_id = $this->projectId",
                   'table' => "SELECT
   m3.id AS musician_id,
   CONCAT(
-    ".$this->musicianPublicNameSql('m3').",
-    IF(fd.deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
+    ".static::musicianPublicNameSql('m3').",
+    IF(" . $fdAlias . ".deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
   ) AS name,
   m3.sur_name AS sur_name,
   m3.first_name AS first_name,
   m3.nick_name AS nick_name,
   m3.display_name AS display_name,
-  fd.option_key AS group_id,
+  " . $fdAlias . ".option_key AS group_id,
   do.label AS group_label,
   do.data AS group_data,
   do.limit AS group_limit
 FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m3
   ON m3.id = pp.musician_id
-LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id
-     AND fd.project_id = $this->projectId
-     AND fd.field_id = $fieldId
-     ".($this->showDisabled ? '' : ' AND fd.deleted IS NULL')."
+LEFT JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
+  ON " . $fdAlias . ".musician_id = pp.musician_id
+     AND " . $fdAlias . ".project_id = $this->projectId
+     AND " . $fdAlias . ".field_id = $fieldId
+     ".($this->showDisabled ? '' : ' AND ' . $fdAlias . '.deleted IS NULL')."
 LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE." do
-  ON do.field_id = fd.field_id AND do.key = fd.option_key
+  ON do.field_id = " . $fdAlias . ".field_id AND do.key = " . $fdAlias . ".option_key
 WHERE pp.project_id = $this->projectId",
                   'column' => 'musician_id',
                   'description' => [
@@ -1984,16 +1952,15 @@ WHERE pp.project_id = $this->projectId",
                 'valueData|ACP' => $valueData,
                 'values2|ACP' => $values2,
                 'mask' => null,
-                'display|LDV' => [
+                'display|FLDV' => [
                   'popup' => 'data:next',
                 ],
                 'display|ACP' => [
                   'prefix' => function($op, $pos, $k, $row, $pme) use ($css) {
                     return '<label class="'.implode(' ', $css).'">';
                   },
-                  'postfix' => function($op, $pos, $k, $row, $pme) use ($dataOptions, $dataType, $groupMemberFddOffset) {
-                    $keyFddIndex = $k - $groupMemberFddOffset;
-                    $selectedKey = $row['qf'.$keyFddIndex];
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($dataOptions, $dataType, $tableName) {
+                    $selectedKey = $row[$this->joinQueryField($tableName, 'option_key')];
                     $html = '';
                     foreach ($dataOptions as $dataOption) {
                       $key = $dataOption['key'];
@@ -2018,36 +1985,40 @@ WHERE pp.project_id = $this->projectId",
             // new field, data-popup
             $popupFdd = &$fieldDescData[$fddMemberNameName];
 
+            $fieldId = $field->getId();
+            $fdAlias = 'fd_pop_' . $fieldId;
+            $fd2Alias = 'fd2_pop_' . $fieldId;
+            $fdgAlias = 'fdg_pop_' . $fieldId;
+
             // data-popup field, this can be virtual as it is only used for displaying data
             $popupFdd = Util::arrayMergeRecursive(
               $popupFdd, [
                 'input' => 'VSRH',
                 'css'   => [ 'postfix' => array_merge($css, [ 'groupofpeople-popup', ]), ],
-                'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
+                'sql|LVFD' => '$join_col_fqn',
                 'values|LFDV' => [
                   'table' => "SELECT
-  m2.id AS musician_id,
-  CONCAT(
-    ".$this->musicianPublicNameSql('m2').",
-    IF(fd.deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
-  ) AS name,
-  m2.sur_name AS sur_name,
-  m2.first_name AS first_name,
-  m2.nick_name AS nick_name,
-  m2.display_name AS display_name,
-  fd.option_key AS group_id
-FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
-LEFT JOIN ".self::MUSICIANS_TABLE." m2
-  ON m2.id = pp.musician_id
-LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id
-     AND fd.project_id = pp.project_id
-     AND fd.field_id = $fieldId
-     ".($this->showDisabled ? '' : ' AND fd.deleted IS NULL')."
-WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
-                  'column' => 'name',
-                  'orderby' => '$table.group_id ASC, $table.display_name ASC, $table.sur_name ASC, $table.nick_name ASC, $table.first_name ASC',
-                  'join' => '$join_table.group_id = '.$this->joinTables[$tableName].'.option_key',
+  GROUP_CONCAT(DISTINCT
+    CONCAT(
+      " . static::musicianPublicNameSql('m2_pop', firstNameFirst: true) . ",
+      IF(" . $fdAlias . ".deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
+    )
+    ORDER BY m2_pop.display_name ASC, m2_pop.sur_name ASC, m2_pop.nick_name ASC, m2_pop.first_name ASC SEPARATOR  ', '
+  ) AS group_members,
+  GROUP_CONCAT(DISTINCT m2_pop.id) AS group_member_ids,
+  " . $fdAlias . ".option_key AS group_id
+FROM " . self::MUSICIANS_TABLE . " m2_pop
+INNER JOIN " . self::PROJECT_PARTICIPANTS_TABLE . " pp_pop
+  ON pp_pop.project_id = " . $this->projectId . " AND m2_pop.id = pp_pop.musician_id
+INNER JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
+  ON " . $fdAlias . ".field_id = " . $fieldId . "
+  AND " . $fdAlias . ".project_id = pp_pop.project_id
+  AND " . $fdAlias . ".musician_id = m2_pop.id
+  " . ($this->showDisabled ? '' : ' AND ' . $fdAlias . '.deleted IS NULL')."
+WHERE pp_pop.project_id = $this->projectId AND " . $fdAlias . ".field_id = $fieldId
+GROUP BY " . $fdAlias . ".option_key",
+                  'column' => 'group_members',
+                  'join' => 'FIND_IN_SET($main_table.musician_id, $join_table.group_member_ids)',
                 ],
               ]);
 
@@ -2138,7 +2109,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
             $value = ($dataType == FieldType::DATE)
               ? $this->dateTimeFormatter()->formatDate($date, 'medium')
               : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
-          } catch (\Throwable $t) {
+          } catch (Throwable $t) {
             // don't care
           }
         }
@@ -2207,7 +2178,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
             $optionValue = ($dataType == FieldType::DATE)
               ? $this->dateTimeFormatter()->formatDate($date, 'medium')
               : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
-          } catch (\Throwable $t) {
+          } catch (Throwable $t) {
             // ignore for now
           }
           break;
@@ -2252,7 +2223,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       try {
         $filesAppLink = $this->userStorage->getFilesAppLink($path, true);
         break;
-      } catch (\OCP\Files\NotFoundException $e) {
+      } catch (NotFoundException $e) {
         $this->logDebug('No file found for ' . $filesAppPath);
         array_pop($pathChain);
       }
@@ -2672,7 +2643,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     if (!empty($supportingDocument) && !($supportingDocument instanceof Entities\DatabaseStorageFile)) {
       try {
         $supportingDocument = $this->findEntity(Entities\DatabaseStorageFile::class, $supportingDocument);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $supportingDocument = null;
       }
     }

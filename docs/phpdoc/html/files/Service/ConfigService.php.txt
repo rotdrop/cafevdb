@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,24 +30,25 @@ use DateTimeZone;
 use NumberFormatter;
 use DateTimeImmutable;
 
-use OCP\IUser;
-use OCP\IGroup;
-use OCP\IConfig;
-use OCP\IUserSession;
-use OCP\IL10N;
-use OCP\IUserManager;
-use OCP\IGroupManager;
-use OCP\Group\ISubAdmin;
-use OCP\IURLGenerator;
-use OCP\L10N\IFactory as IL10NFactory;
-use OCP\IDateTimeZone;
-use OCP\Security\ISecureRandom;
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\Group\ISubAdmin;
+use OCP\IConfig;
 use OCP\IDateTimeFormatter;
+use OCP\IDateTimeZone;
+use OCP\IGroup;
+use OCP\IGroupManager;
+use OCP\IL10N;
+use OCP\IURLGenerator;
+use OCP\IUser;
+use OCP\IUserManager;
+use OCP\IUserSession;
+use OCP\L10N\IFactory as IL10NFactory;
+use OCP\Security\ISecureRandom;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\AppInfo\AppL10N;
+use OCA\CAFEVDB\Service\L10N\AppL10N;
+use OCA\CAFEVDB\Service\L10N\L10NFactory;
 use OCA\CAFEVDB\Exceptions;
 
 /**
@@ -76,7 +77,19 @@ class ConfigService
   const DEBUG_TOOLTIPS  = (1 << 5);
   const DEBUG_EMAILFORM = (1 << 6);
   const DEBUG_GEOCODING = (1 << 7);
-  const DEBUG_ALL       = self::DEBUG_GENERAL|self::DEBUG_QUERY|self::DEBUG_CSP|self::DEBUG_L10N|self::DEBUG_REQUEST|self::DEBUG_TOOLTIPS|self::DEBUG_EMAILFORM|self::DEBUG_GEOCODING;
+  const DEBUG_VUE       = (1 << 8);
+  const DEBUG_SMAPS     = (1 << 9);
+  const DEBUG_ALL       = self::DEBUG_GENERAL
+    |self::DEBUG_QUERY
+    |self::DEBUG_CSP
+    |self::DEBUG_L10N
+    |self::DEBUG_REQUEST
+    |self::DEBUG_TOOLTIPS
+    |self::DEBUG_EMAILFORM
+    |self::DEBUG_GEOCODING
+    |self::DEBUG_VUE
+    |self::DEBUG_SMAPS
+    ;
   const DEBUG_NONE      = 0;
 
   const DEFAULT_LOCALE = 'en_US';
@@ -107,8 +120,6 @@ class ConfigService
   const PROJECT_SKELETON_FOLDER = 'skeleton';
   const PROJECT_PARTICIPANTS_SKELETON_FOLDER = 'forename.surname';
   const PROJECT_MANAGEMENT_SKELETON_FOLDER = 'management';
-  const TAX_OFFICE_IN_TRAY_FOLDER = 'taxOfficeInTrayFolder';
-  const TAX_EXEMPTION_NOTICE_TEMPLATE = 'taxExcemptionNoticeTemplate';
 
   const CMS_CATEGORIES = [
     'preview',
@@ -163,51 +174,104 @@ class ConfigService
   const DOCUMENT_TYPE_TEMPLATE = 'template';
 
   const DOCUMENT_TEMPLATE_LOGO = 'logo';
+  const DOCUMENT_TEMPLATE_LOGO_NAME = 'orchestra logo';
   const DOCUMENT_TEMPLATE_SEAL = 'seal';
+  const DOCUMENT_TEMPLATE_SEAL_NAME = 'orchestra seal';
+  const DOCUMENT_TEMPLATE_STANDARD_LETTER = 'standardLetter';
+  const DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME = 'standard letter';
   const DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD = 'instrumentInsuranceRecord';
+  const DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME = 'instrument insurance record template';
   const DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE = 'projectDebitNoteMandateForm';
+  const DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME = 'project debit-note mandate';
   const DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE = 'generalDebitNoteMandateForm';
+  const DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME = 'general debit-note mandate';
   const DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE = 'memberDataUpdateForm';
+  const DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME = 'member data update';
+  const DOCUMENT_TEMPLATE_INVOICE = 'invoice';
+  const DOCUMENT_TEMPLATE_INVOICE_NAME = 'invoice';
+  const DOCUMENT_TEMPLATE_STANDARD_RECEIPT = 'standardReceipt';
+  const DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME = 'standard receipt';
+  const DOCUMENT_TEMPLATE_DONATION_RECEIPT = 'donationReceipt';
+  const DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME = 'donation receipt';
 
   /** @var Dedicated document-templates used in various places. */
   const DOCUMENT_TEMPLATES = [
     self::DOCUMENT_TEMPLATE_LOGO => [
-      'name' => 'orchestra logo',
+      'name' => self::DOCUMENT_TEMPLATE_LOGO_NAME,
       'type' => self::DOCUMENT_TYPE_CONSTANT,
       'folder' => null,
       'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_SEAL => [
-      'name' => 'orchestra seal',
+      'name' => self::DOCUMENT_TEMPLATE_SEAL_NAME,
       'type' => self::DOCUMENT_TYPE_CONSTANT,
       'folder' => null,
       'blank' => true,
     ],
+    self::DOCUMENT_TEMPLATE_STANDARD_LETTER => [
+      'name' => self::DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME,
+      'type' => self::DOCUMENT_TYPE_TEMPLATE,
+      'folder' => null,
+      'blank' => true,
+    ],
     self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE => [
-      'name' => 'project debit-note mandate',
+      'name' => self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
       'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE => [
-      'name' => 'general debit-note mandate',
+      'name' => self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
       'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE => [
-      'name' => 'member data update',
+      'name' => self::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME,
+      'type' => self::DOCUMENT_TYPE_TEMPLATE,
+      'folder' => self::FINANCE_FOLDER,
+      'blank' => true,
+    ],
+    self::DOCUMENT_TEMPLATE_INVOICE => [
+      'name' => self::DOCUMENT_TEMPLATE_INVOICE_NAME,
+      'type' => self::DOCUMENT_TYPE_TEMPLATE,
+      'folder' => self::FINANCE_FOLDER,
+      'blank' => true,
+    ],
+    self::DOCUMENT_TEMPLATE_STANDARD_RECEIPT => [
+      'name' => self::DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME,
+      'type' => self::DOCUMENT_TYPE_TEMPLATE,
+      'folder' => self::FINANCE_FOLDER,
+      'blank' => true,
+    ],
+    self::DOCUMENT_TEMPLATE_DONATION_RECEIPT => [
+      'name' => self::DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
       'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD => [
-      'name' => 'instrument insurance record template',
+      'name' => self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
       'blank' => false,
     ],
   ];
+
+  /** @return void */
+  protected static function documentsTemplatesTranslationHack():void
+  {
+    self::t(self::DOCUMENT_TEMPLATE_LOGO_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_SEAL_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_INVOICE_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME);
+  }
 
   /**
    * @var string
@@ -274,6 +338,15 @@ class ConfigService
   /** @var string */
   public const CLUB_MEMBER_PROJECT_ID_KEY = self::CLUB_MEMBERS_PROJECT_KEY . 'Id';
 
+  /** @var string */
+  public const WIKI_NAME_SPACE_KEY = 'wikinamespace';
+
+  /** @var string */
+  public const DEBUG_MODE_KEY = 'debugmode';
+
+  /** @var string */
+  public const ORCHESTRA_NAME_KEY = 'orchestra';
+
   /**
    * @var array
    *
@@ -308,8 +381,8 @@ class ConfigService
    */
   private $localeCountryNames = [];
 
-  /** @var IL10NFactory */
-  private IL10NFactory $l10NFactory;
+  /** @var L10NFactory */
+  private L10NFactory $l10NFactory;
 
   /** @var IURLGenerator */
   private IURLGenerator $urlGenerator;
@@ -331,6 +404,9 @@ class ConfigService
 
   /** @var IConfig */
   private IConfig $cloudConfig;
+
+  /** @var IUserSession */
+  private IUserSession $userSession;
 
   /**
    * {@inheritdoc}
@@ -356,7 +432,7 @@ class ConfigService
    */
   private function getL10NFactory():IL10NFactory
   {
-    return $this->l10NFactory ?? ($this->l10NFactory = $this->appContainer->get(IL10NFactory::class));
+    return $this->l10NFactory ?? ($this->l10NFactory = $this->appContainer->get(L10NFactory::class));
   }
 
   /**
@@ -453,7 +529,7 @@ class ConfigService
       return $this->getUserManager()->get($userId);
     }
     if (empty($this->user)) {
-      if (\OC::$CLI && empty($userSession->getUser()) && !empty($GLOBALS['cafevdb-user'])) {
+      if (\OC::$CLI && empty($this->userSession->getUser()) && !empty($GLOBALS['cafevdb-user'])) {
         $this->setUserId($GLOBALS['cafevdb-user']);
       } else {
         $this->user = $this->getUserSession()->getUser();
@@ -1009,30 +1085,58 @@ class ConfigService
   }
 
   /**
+   * Cache for self::getLocale().
+   */
+  private array $localeLanguageCache = [];
+
+  /**
    * Return the locale as string, e.g. de_DE.UTF-8.
    *
-   * @param string|null $lang
+   * @param string|null $lang Maybe be a short language string like 'de' or
+   * something up to a full-fledged locate symbold 'de_DE.UTF-8'. In the
+   * latter case this function is "idem potent" and just returns the given
+   * string. If $lang is null the cloud's idea about the language setting is
+   * used.
+   *
+   * @param bool $addEncoding Whether to add '.UTF-8' if not already presend
+   * in $lang
    *
    * @return string
    */
-  public function getLocale(?string $lang = null):string
+  public function getLocale(?string $lang = null, bool $addEncoding = false):string
   {
+    if (!empty($this->localeLanguageCache[$lang . $addEncoding])) {
+      return $this->localeLanguageCache[$lang . $addEncoding];
+    }
+
     if (empty($lang)) {
       $locale = $this->appContainer->get(Registration::USER_LOCALE);
       $this->logDebug('Locale seems to be ' . $locale);
       $this->logDebug('Language seems to be ' . $lang);
-      $lang = locale_get_primary_language($locale);
     } else {
-      $locale = $lang;
+      $primary = locale_get_primary_language($lang);
+      $region = locale_get_region($lang);
+      if (empty($region)) {
+        $locale = $primary . '_' . strtoupper($primary);
+      } else {
+        $locale = $lang;
+      }
     }
-    $primary = locale_get_primary_language($locale);
-    if ($primary == $locale) {
-      $locale = $lang.'_'.strtoupper($lang);
-    }
+
     if (strpos($locale, '.') === false) {
-      $locale .= '.UTF-8';
+      if ($addEncoding) {
+        $locale .= '.UTF-8';
+      }
+    } else {
+      if (!$addEncoding) {
+        $locale = locale_get_primary_language($locale) . '_' . locale_get_region($locale);
+      }
     }
+
+    $this->localeLanguageCache[$lang . $addEncoding] = $locale;
+
     $this->logDebug('Generated locale string: ' . $locale);
+
     return $locale;
   }
 

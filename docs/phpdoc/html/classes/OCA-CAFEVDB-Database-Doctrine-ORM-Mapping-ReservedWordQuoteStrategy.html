@@ -54,7 +54,7 @@
     Menu
 </label>
 <aside class="phpdocumentor-column -three phpdocumentor-sidebar">
-                    <section class="phpdocumentor-sidebar__category">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
             <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="namespaces/oca.html" class="">OCA</a>
@@ -67,15 +67,15 @@
             </ul>
 
                         </section>
-                <section class="phpdocumentor-sidebar__category">
+                <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/cafevdb.html" class="">cafevdb</a>
+    <a href="packages/Application.html" class="">Application</a>
 </h4>
 
                         </section>
             
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
@@ -83,7 +83,7 @@
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
     </section>
 
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -indices">
         <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
     </section>
@@ -116,6 +116,9 @@
             implements
                             <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\QuoteStrategy">QuoteStrategy</abbr>                    </span>
     
+            <span class="phpdocumentor-element__extends">
+            uses
+                            <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Internal\SQLResultCasing">SQLResultCasing</abbr>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -126,12 +129,13 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php"><a href="files/database-doctrine-orm-mapping-reservedwordquotestrategy.html"><abbr title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php">ReservedWordQuoteStrategy.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">33</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.33" class="phpdocumentor-element-found-in__source" data-line="33" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">A set of rules for determining the physical column, alias and table quotes</p>
+
 
 
 
@@ -159,6 +163,8 @@
 
                                     </dd>
                                             </dl>
+
+
 
 
 
@@ -191,69 +197,68 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getColumnAlias">getColumnAlias()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getColumnAlias">getColumnAlias()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: string    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getColumnName">getColumnName()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getColumnName">getColumnName()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: string    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getIdentifierColumnNames">getIdentifierColumnNames()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getIdentifierColumnNames">getIdentifierColumnNames()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getJoinColumnName">getJoinColumnName()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getJoinColumnName">getJoinColumnName()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: string    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getJoinTableName">getJoinTableName()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getJoinTableName">getJoinTableName()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: string    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getReferencedJoinColumnName">getReferencedJoinColumnName()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getReferencedJoinColumnName">getReferencedJoinColumnName()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: string    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getSequenceName">getSequenceName()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getSequenceName">getSequenceName()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: string    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getTableName">getTableName()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getTableName">getTableName()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: string    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getQuotedName">getQuotedName()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getQuotedName">getQuotedName()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 
     </dl>
-
 
 
 
@@ -281,32 +286,33 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php"><a href="files/database-doctrine-orm-mapping-reservedwordquotestrategy.html"><abbr title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php">ReservedWordQuoteStrategy.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">188</span>
+    <span class="phpdocumentor-element-found-in__line">193</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.193" class="phpdocumentor-element-found-in__source" data-line="193" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getColumnAlias</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$columnName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$counter</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">getColumnAlias</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$columnName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$counter</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$columnName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$counter</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -330,6 +336,12 @@
     
 
     
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -345,25 +357,26 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php"><a href="files/database-doctrine-orm-mapping-reservedwordquotestrategy.html"><abbr title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php">ReservedWordQuoteStrategy.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">59</span>
+    <span class="phpdocumentor-element-found-in__line">64</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getColumnName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fieldName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">getColumnName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fieldName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$fieldName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -387,6 +400,12 @@
     
 
     
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -402,19 +421,20 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php"><a href="files/database-doctrine-orm-mapping-reservedwordquotestrategy.html"><abbr title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php">ReservedWordQuoteStrategy.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">153</span>
+    <span class="phpdocumentor-element-found-in__line">158</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.153" class="phpdocumentor-element-found-in__source" data-line="153" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.158" class="phpdocumentor-element-found-in__source" data-line="158" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getIdentifierColumnNames</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">getIdentifierColumnNames</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -437,6 +457,12 @@
     
 
     
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -452,25 +478,26 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php"><a href="files/database-doctrine-orm-mapping-reservedwordquotestrategy.html"><abbr title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php">ReservedWordQuoteStrategy.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">107</span>
+    <span class="phpdocumentor-element-found-in__line">112</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getJoinColumnName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$joinColumn</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">getJoinColumnName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\JoinColumnMapping">JoinColumnMapping</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$joinColumn</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$joinColumn</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\JoinColumnMapping">JoinColumnMapping</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -494,6 +521,12 @@
     
 
     
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -509,25 +542,26 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php"><a href="files/database-doctrine-orm-mapping-reservedwordquotestrategy.html"><abbr title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php">ReservedWordQuoteStrategy.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">131</span>
+    <span class="phpdocumentor-element-found-in__line">136</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getJoinTableName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$association</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">getJoinTableName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ManyToManyOwningSideMapping">ManyToManyOwningSideMapping</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$association</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$association</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ManyToManyOwningSideMapping">ManyToManyOwningSideMapping</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -551,6 +585,12 @@
     
 
     
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -566,25 +606,26 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php"><a href="files/database-doctrine-orm-mapping-reservedwordquotestrategy.html"><abbr title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php">ReservedWordQuoteStrategy.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">119</span>
+    <span class="phpdocumentor-element-found-in__line">124</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.119" class="phpdocumentor-element-found-in__source" data-line="119" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getReferencedJoinColumnName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$joinColumn</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">getReferencedJoinColumnName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\JoinColumnMapping">JoinColumnMapping</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$joinColumn</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$joinColumn</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\JoinColumnMapping">JoinColumnMapping</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -608,6 +649,12 @@
     
 
     
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -623,19 +670,20 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php"><a href="files/database-doctrine-orm-mapping-reservedwordquotestrategy.html"><abbr title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php">ReservedWordQuoteStrategy.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">95</span>
+    <span class="phpdocumentor-element-found-in__line">100</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getSequenceName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$definition</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">getSequenceName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$definition</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -665,6 +713,12 @@
     
 
     
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -680,19 +734,20 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php"><a href="files/database-doctrine-orm-mapping-reservedwordquotestrategy.html"><abbr title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php">ReservedWordQuoteStrategy.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">73</span>
+    <span class="phpdocumentor-element-found-in__line">78</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getTableName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">getTableName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata">ClassMetadata</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform">AbstractPlatform</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$platform</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -731,6 +786,12 @@
                                             </dl>
 
     
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -746,9 +807,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php"><a href="files/database-doctrine-orm-mapping-reservedwordquotestrategy.html"><abbr title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php">ReservedWordQuoteStrategy.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php.txt"></a>
     </aside>
 
     
@@ -758,6 +819,7 @@
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -800,6 +862,8 @@
                                              
                                     </dd>
                                             </dl>
+
+    
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -920,15 +984,15 @@
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getColumnAlias">getColumnAlias()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getColumnName">getColumnName()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getIdentifierColumnNames">getIdentifierColumnNames()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getJoinColumnName">getJoinColumnName()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getJoinTableName">getJoinTableName()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getReferencedJoinColumnName">getReferencedJoinColumnName()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getSequenceName">getSequenceName()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getTableName">getTableName()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getQuotedName">getQuotedName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getColumnAlias">getColumnAlias()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getColumnName">getColumnName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getIdentifierColumnNames">getIdentifierColumnNames()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getJoinColumnName">getJoinColumnName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getJoinTableName">getJoinTableName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getReferencedJoinColumnName">getReferencedJoinColumnName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getSequenceName">getSequenceName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getTableName">getTableName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getQuotedName">getQuotedName()</a></li>
                                     </ul>
             </li>
                     </ul>

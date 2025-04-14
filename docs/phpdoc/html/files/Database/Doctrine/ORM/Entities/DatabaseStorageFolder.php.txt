@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use InvalidArgumentException;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
@@ -35,9 +37,8 @@ use OCA\CAFEVDB\Constants;
 
 /**
  * Folder entry for a database-backed file.
- *
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFoldersRepository")
  */
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFoldersRepository::class)]
 class DatabaseStorageFolder extends DatabaseStorageDirEntry
 {
   /** @var string */
@@ -45,16 +46,14 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
 
   /**
    * @var MusicianRowAccessToken
-   *
-   * @ORM\OneToOne(targetEntity="DatabaseStorage", mappedBy="root")
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorage::class, mappedBy: 'root')]
   protected $storage;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="DatabaseStorageDirEntry", cascade={"all"}, mappedBy="parent")
    */
+  #[ORM\OneToMany(targetEntity: DatabaseStorageDirEntry::class, cascade: ['all'], mappedBy: 'parent')]
   protected $directoryEntries;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
@@ -63,6 +62,21 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     $this->directoryEntries = new ArrayCollection;
   }
   // phpcs:enable
+
+  /**
+   * @param DatabaseStorage $storage
+   *
+   * @return DatabaseStorageFolder
+   */
+  public function setStorage(DatabaseStorage $storage):DatabaseStorageFolder
+  {
+    if (!$this->isRootFolder()) {
+      throw new InvalidArgumentException('The storage may only be set on the root entity.');
+    }
+    $this->storage = $storage;
+
+    return $this;
+  }
 
   /**
    * @param DatabaseStorageDirEntry $dirEntry

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
-
 /**
  * Type of projects.
  *
@@ -33,9 +31,21 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  * @method static EnumProjectTemporalType PERMANENT()
  * @method static EnumProjectTemporalType TEMPLATE()
  */
-class EnumProjectTemporalType extends EnumType
+class EnumProjectTemporalType extends AbstractEnumType
 {
   public const TEMPORARY = 'temporary';
   public const PERMANENT = 'permanent';
   public const TEMPLATE = 'template';
+
+  /**
+   * Just here in order to inject the enum values into the l10n framework.
+   *
+   * @return void
+   */
+  protected static function translationHack():void
+  {
+    self::t(self::TEMPORARY);
+    self::t(self::PERMANENT);
+    self::t(self::TEMPLATE);
+  }
 }

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,28 +29,31 @@ use DateTime;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\SimpleSharingService;
-use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
-use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 /** AJAX controller for projects. */
 class ProjectsController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use GetPrefixParamsTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
@@ -64,13 +67,11 @@ class ProjectsController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    private RequestParameterService $parameterService,
     protected ConfigService $configService,
     protected EntityManager $entityManager,
     protected PHPMyEdit $pme,
   ) {
     parent::__construct($appName, $request);
-
     $this->l = $this->l10N();
   }
 
@@ -83,7 +84,7 @@ class ProjectsController extends Controller
    */
   public function validate(string $topic):DataResponse
   {
-    $projectValues = $this->parameterService->getPrefixParams($this->pme->cgiDataName());
+    $projectValues = $this->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
       case 'name':
         $required = [
@@ -96,7 +97,7 @@ class ProjectsController extends Controller
             return self::grumble($this->l->t("The %s must not be empty.", [$subject]));
           }
         }
-        $control = $this->parameterService->getParam('control', 'name');
+        $control = $this->request->getParam('control', 'name');
         $record = $this->pme->getCGIRecordId();
         $projectId = $record['id']??null;
         $projectName = $projectValues['name'];
@@ -196,10 +197,10 @@ class ProjectsController extends Controller
   public function changeInstrumentation(string $instruments, string $voices):DataResponse
   {
     $instrumentsKey = str_replace('[]', '', $instruments);
-    $instruments = array_filter($this->parameterService[$instrumentsKey]??[]);
+    $instruments = array_filter($this->request[$instrumentsKey]??[]);
 
     $voicesKey = str_replace('[]', '', $voices);
-    $voices = array_filter($this->parameterService[$voicesKey]??[]);
+    $voices = array_filter($this->request[$voicesKey]??[]);
 
     $instrumentInfo =
       $this->getDatabaseRepository(Entities\Instrument::class)->describeALL();
@@ -403,6 +404,33 @@ class ProjectsController extends Controller
   const GET_PARTICIPANT_FIELDS = 'participant-fields';
 
   /**
+   * Return the list of calendar events.
+   */
+  const GET_CALENDAR_EVENTS = 'calendar-events';
+
+  /**
+   * Return the "event matrix", project events sorted by category with extra
+   * information.
+   */
+  const GET_EVENT_MATRIX = 'event-matrix';
+
+  /**
+   * Return all project indices as flat array.
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
+   */
+  public function getIndices()
+  {
+    /** @var ProjectService $projectService */
+    $projectService = $this->di(ProjectService::class);
+    /** @var Entities\Project $project */
+    $projectIds = $projectService->findProjectIds();
+    return self::dataResponse($projectIds);
+  }
+
+  /**
    * @param int $projectId Entity id.
    *
    * @param string $topic Major topic.
@@ -415,19 +443,31 @@ class ProjectsController extends Controller
    */
   public function get(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
+    if (!($projectId > 0)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Project-ids must be strictly positive: "%d".', $projectId),
+        httpStatusCode: Http::STATUS_NOT_FOUND,
+      );
+    }
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
     /** @var Entities\Project $project */
     $project = $projectService->findById($projectId);
     if (empty($project)) {
-      return self::grumble($this->l->t('Unable to find project with id "%d".', $projectId));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to find project with id "%d".', $projectId),
+        httpStatusCode: Http::STATUS_NOT_FOUND,
+      );
     }
     switch ($topic) {
       case '':
-        return self::dataResponse($this->flattenProject($project));
+        $data = $this->flattenProject($project);
+        $data['wikiPage'] = $projectService->projectWikiLink($project->getName());
+        return self::dataResponse($data);
+
       case self::GET_PARTICIPANT_FIELDS:
-        $multiplicity = $this->parameterService->getParam('multiplicity');
-        $type = $this->parameterService->getParam('type');
+        $multiplicity = $this->request->getParam('multiplicity');
+        $type = $this->request->getParam('type');
         $data = [];
         /** @var Entities\ProjectParticipantField $field */
         foreach ($project->getParticipantFields() as $field) {
@@ -450,6 +490,7 @@ class ProjectsController extends Controller
         }
         usort($data, fn($a, $b) => strcmp($a['name'], $b['name']));
         return self::dataResponse($data);
+
       case self::GET_PARTICIPANTS:
         $data = [];
         /** @var Entities\ProjectParticipant $participant */
@@ -465,6 +506,7 @@ class ProjectsController extends Controller
         }
         usort($data, fn($a, $b) => strcmp($a['publicName'], $b['publicName']));
         return self::dataResponse($data);
+
       case self::GET_PROJECT_SHARE:
         switch ($subTopic) {
           case ProjectService::FOLDER_TYPE_DOWNLOADS:
@@ -475,7 +517,43 @@ class ProjectsController extends Controller
           default:
             return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
         }
-        break;
+
+      case self::GET_CALENDAR_EVENTS:
+        $calendarEvents = [];
+        /** @var Entities\ProjectEvent $event */
+        foreach ($project->getCalendarEvents() as $event) {
+          $flatEvent = $event->toArray();
+          unset($flatEvent['project']);
+          $flatEvent['projectId'] = $project->getId();
+          unset($flatEvent['absenceField']);
+          $flatEvent['absenceFieldId'] = $event->getAbsenceField() ? $event->getAbsenceField()->getId() : null;
+          $calendarEvents[] = $flatEvent;
+        }
+        return self::dataResponse($calendarEvents);
+
+      case self::GET_EVENT_MATRIX:
+        /** @var EventsService $eventsService */
+        $eventsService = $this->di(EventsService::class);
+        $events = $eventsService->events($projectId);
+        $dfltIds = $eventsService->defaultCalendars();
+        $eventMatrix = $eventsService->eventMatrix($events, $dfltIds);
+        // provide also some meta-info in order to avoid further bloats to the initial-state data.
+        $data = [
+          'calendars' => ConfigService::CALENDARS,
+          'categories' => [
+            'C' => [
+              'recordAbsence' => $eventsService->getRecordAbsenceCategory(translate: false),
+              'projectRegistration' => $eventsService->getProjectRegistrationCategory(translate: false),
+            ],
+            'L10N' => [ // app-locale
+              'recordAbsence' => $eventsService->getRecordAbsenceCategory(translate: true),
+              'projectRegistration' => $eventsService->getProjectRegistrationCategory(translate: true),
+            ],
+          ],
+          'matrix' => $eventMatrix,
+        ];
+        return self::dataResponse($data);
+
       case self::GET_PROJECT_FOLDER:
         switch ($subTopic) {
           case '':
@@ -493,9 +571,10 @@ class ProjectsController extends Controller
           default:
             return self::grumble($this->l->t('Unknown folder type "%s".', $subTopic));
         }
+
       default:
+        return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
     }
-    return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
   }
 
   /**
@@ -619,9 +698,9 @@ class ProjectsController extends Controller
             if (empty($share)) {
               return self::grumble($this->l->t('Project "%s" does not have a participants download share.', $project->getName()));
             }
-            if (isset($this->parameterService['expirationDate'])) {
-              $expirationDate = $this->parameterService['expirationDate'];
-              $expirationDate = Util::dateTime($expirationDate);
+            if (isset($this->request['expirationDate'])) {
+              $expirationDate = $this->request['expirationDate'];
+              $expirationDate = self::convertToDateTime($expirationDate);
               /** @var SimpleSharingService $shareService */
               $shareService = $this->di(SimpleSharingService::class);
               $shareService->expireLinkShare($share, $expirationDate);
@@ -642,5 +721,59 @@ class ProjectsController extends Controller
         break;
     }
     return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
+  }
+
+  /**
+   * Search by project-id and name. Pattern may contain wildcards (* and %).
+   *
+   * @param string $pattern
+   *
+   * @param null|int $limit
+   *
+   * @param null|int $offset
+   *
+   * @param null|int $year
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
+   */
+  public function searchProjects(string $pattern, ?int $limit = null, ?int $offset = null, ?int $year = null):DataResponse
+  {
+    $repository = $this->getDatabaseRepository(Entities\Project::class);
+
+    if (empty($pattern)) {
+      $criteria = [];
+    } else {
+      $pattern = str_replace('*', '%', $pattern);
+
+      if (strpos($pattern, '%') === false) {
+        if ($pattern[0] != '^') {
+          $pattern = '%' . $pattern;
+        } else {
+          $pattern = substr($pattern, 1);
+        }
+        if (substr($pattern, -1) != '$') {
+          $pattern = $pattern . '%';
+        } else {
+          $pattern = substr($pattern, 0, -1);
+        }
+      }
+      $criteria = [
+        '(|name' => $pattern,
+        'id' => $pattern,
+        ')' => true,
+      ];
+      if ($year !== null) {
+        $criteria[] = [ 'year' => $year ];
+      }
+    }
+
+    $projects = $repository->findBy($criteria, [
+      'year' => 'DESC',
+      'name' => 'ASC',
+    ], $limit, $offset);
+
+    return self::dataResponse(array_map(fn($project) => $this->flattenProject($project), $projects));
   }
 }

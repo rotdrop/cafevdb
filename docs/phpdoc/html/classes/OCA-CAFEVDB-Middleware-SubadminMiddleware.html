@@ -54,7 +54,7 @@
     Menu
 </label>
 <aside class="phpdocumentor-column -three phpdocumentor-sidebar">
-                    <section class="phpdocumentor-sidebar__category">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
             <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="namespaces/oca.html" class="">OCA</a>
@@ -67,15 +67,15 @@
             </ul>
 
                         </section>
-                <section class="phpdocumentor-sidebar__category">
+                <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/cafevdb.html" class="">cafevdb</a>
+    <a href="packages/Application.html" class="">Application</a>
 </h4>
 
                         </section>
             
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
@@ -83,7 +83,7 @@
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
     </section>
 
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -indices">
         <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
     </section>
@@ -114,7 +114,7 @@
     
     
             <span class="phpdocumentor-element__extends">
-            Uses
+            uses
                             <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\ResponseTrait">ResponseTrait</abbr></a>                    </span>
     </h2>
 
@@ -126,15 +126,18 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Middleware/SubadminMiddleware.php"><a href="files/middleware-subadminmiddleware.html"><abbr title="Middleware/SubadminMiddleware.php">SubadminMiddleware.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">42</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/Middleware/SubadminMiddleware.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/Middleware/SubadminMiddleware.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Verifies whether an user has at least subadmin rights.</p>
 
+
     <section class="phpdocumentor-description"><p>To enforce use the <code class="prettyprint">@SubadminRequired</code> annotation</p>
 </section>
+
+
 
 
 
@@ -161,25 +164,25 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#property_appName">$appName</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#property_appName">$appName</a>
     <span>
                         &nbsp;: string            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#property_configService">$configService</a>
+    <a class="" href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#property_configService">$configService</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Service-ConfigService.html"><abbr title="\OCA\CAFEVDB\Service\ConfigService">ConfigService</abbr></a>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#property_l">$l</a>
+    <a class="" href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#property_l">$l</a>
     <span>
                         &nbsp;: <abbr title="\OCP\IL10N">IL10N</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#property_reflector">$reflector</a>
+    <a class="" href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#property_reflector">$reflector</a>
     <span>
                         &nbsp;: <abbr title="\OCP\AppFramework\Utility\IControllerMethodReflector">IControllerMethodReflector</abbr>            </span>
 </dt>
@@ -193,39 +196,39 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#method___construct">__construct()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#method___construct">__construct()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#method_afterException">afterException()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#method_afterException">afterException()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#method_beforeController">beforeController()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#method_beforeController">beforeController()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataDownloadResponse">dataDownloadResponse()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataDownloadResponse">dataDownloadResponse()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\DataDownloadResponse">DataDownloadResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataResponse">dataResponse()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataResponse">dataResponse()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionChainData">exceptionChainData()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionChainData">exceptionChainData()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
@@ -233,7 +236,7 @@
 post-processing.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionResponse">exceptionResponse()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionResponse">exceptionResponse()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\TemplateResponse">TemplateResponse</abbr>    </span>
 </dt>
@@ -242,37 +245,36 @@ works if a traditional &quot;errorpage.php&quot; file exists in the templates/
 directory.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_getResponseMessages">getResponseMessages()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_getResponseMessages">getResponseMessages()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_grumble">grumble()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_grumble">grumble()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_response">response()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_response">response()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_templateResponse">templateResponse()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_templateResponse">templateResponse()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\TemplateResponse">TemplateResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_valueResponse">valueResponse()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_valueResponse">valueResponse()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>    </span>
 </dt>
 
     </dl>
-
 
 
 
@@ -302,11 +304,12 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
@@ -316,6 +319,8 @@ directory.</dd>
 
     
     
+    
+
     
 
 </article>
@@ -336,11 +341,12 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Middleware/SubadminMiddleware.php"><a href="files/middleware-subadminmiddleware.html"><abbr title="Middleware/SubadminMiddleware.php">SubadminMiddleware.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/Middleware/SubadminMiddleware.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
@@ -350,6 +356,8 @@ directory.</dd>
 
     
     
+    
+
     
 
 </article>
@@ -370,11 +378,12 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Middleware/SubadminMiddleware.php"><a href="files/middleware-subadminmiddleware.html"><abbr title="Middleware/SubadminMiddleware.php">SubadminMiddleware.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/Middleware/SubadminMiddleware.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
@@ -384,6 +393,8 @@ directory.</dd>
 
     
     
+    
+
     
 
 </article>
@@ -404,11 +415,12 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Middleware/SubadminMiddleware.php"><a href="files/middleware-subadminmiddleware.html"><abbr title="Middleware/SubadminMiddleware.php">SubadminMiddleware.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/Middleware/SubadminMiddleware.php.txt"></a>
     </aside>
 
+    
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
@@ -418,6 +430,8 @@ directory.</dd>
 
     
     
+    
+
     
 
 </article>
@@ -443,9 +457,9 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Middleware/SubadminMiddleware.php"><a href="files/middleware-subadminmiddleware.html"><abbr title="Middleware/SubadminMiddleware.php">SubadminMiddleware.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Middleware/SubadminMiddleware.php.txt"></a>
     </aside>
 
     
@@ -455,6 +469,7 @@ directory.</dd>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -484,6 +499,8 @@ directory.</dd>
     
 
     
+
+    
 </article>
                     <article
         class="phpdocumentor-element
@@ -499,9 +516,9 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Middleware/SubadminMiddleware.php"><a href="files/middleware-subadminmiddleware.html"><abbr title="Middleware/SubadminMiddleware.php">SubadminMiddleware.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Middleware/SubadminMiddleware.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -512,6 +529,7 @@ directory.</dd>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
         <section class="phpdocumentor-description"><p>Return 403 page in case of an exception</p>
 </section>
 
@@ -543,6 +561,8 @@ directory.</dd>
     
 
     
+
+    
 </article>
                     <article
         class="phpdocumentor-element
@@ -558,9 +578,9 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Middleware/SubadminMiddleware.php"><a href="files/middleware-subadminmiddleware.html"><abbr title="Middleware/SubadminMiddleware.php">SubadminMiddleware.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/Middleware/SubadminMiddleware.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -571,6 +591,7 @@ directory.</dd>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
         <section class="phpdocumentor-description"><p>Check if the user is a sub-admin of the orchestra group.</p>
 </section>
 
@@ -595,6 +616,8 @@ directory.</dd>
     
 
     
+
+    
 </article>
                     <article
         class="phpdocumentor-element
@@ -610,9 +633,9 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">108</span>
+    <span class="phpdocumentor-element-found-in__line">120</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.108" class="phpdocumentor-element-found-in__source" data-line="108" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -622,6 +645,7 @@ directory.</dd>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -656,6 +680,8 @@ directory.</dd>
 
     
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataDownloadResponse">DataDownloadResponse</abbr></span>
@@ -676,9 +702,9 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">193</span>
+    <span class="phpdocumentor-element-found-in__line">222</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.193" class="phpdocumentor-element-found-in__source" data-line="193" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.222" class="phpdocumentor-element-found-in__source" data-line="222" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -688,6 +714,7 @@ directory.</dd>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -711,6 +738,8 @@ directory.</dd>
 
     
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span>
@@ -731,9 +760,9 @@ directory.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">171</span>
+    <span class="phpdocumentor-element-found-in__line">193</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.171" class="phpdocumentor-element-found-in__source" data-line="171" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.193" class="phpdocumentor-element-found-in__source" data-line="193" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert a potentially nested exception into a nested array to ease
@@ -745,6 +774,7 @@ post-processing.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -768,6 +798,8 @@ post-processing.</p>
 
     
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
@@ -788,9 +820,9 @@ post-processing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">150</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.150" class="phpdocumentor-element-found-in__source" data-line="150" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return an HTML error page, populated with the exception data. This only
@@ -799,10 +831,11 @@ directory.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">exceptionResponse</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$throwable</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$renderAs</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$method</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\TemplateResponse">TemplateResponse</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">exceptionResponse</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$throwable</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$renderAs</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$method</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$status</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">Http::STATUS_BAD_REQUEST</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\TemplateResponse">TemplateResponse</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -827,7 +860,18 @@ directory.</p>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$status</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">Http::STATUS_BAD_REQUEST</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Defaults to Http::STATUS_BAD_REQUEST</p>
+</section>
+
+            </dd>
             </dl>
+
+    
 
     
 
@@ -851,9 +895,9 @@ directory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">300</span>
+    <span class="phpdocumentor-element-found-in__line">329</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.300" class="phpdocumentor-element-found-in__source" data-line="300" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.329" class="phpdocumentor-element-found-in__source" data-line="329" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -863,6 +907,7 @@ directory.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -893,6 +938,8 @@ directory.</p>
                                     </dd>
                                             </dl>
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
@@ -913,9 +960,9 @@ directory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">271</span>
+    <span class="phpdocumentor-element-found-in__line">300</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.300" class="phpdocumentor-element-found-in__source" data-line="300" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -925,6 +972,7 @@ directory.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -979,6 +1027,8 @@ directory.</p>
                                     </dd>
                                             </dl>
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span>
@@ -999,9 +1049,9 @@ directory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">267</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.267" class="phpdocumentor-element-found-in__source" data-line="267" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -1011,6 +1061,7 @@ directory.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -1049,6 +1100,8 @@ directory.</p>
                                     </dd>
                                             </dl>
 
+    
+
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span>
@@ -1069,18 +1122,19 @@ directory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">73</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">templateResponse</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$templateName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$renderAs</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">&#039;blank&#039;</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10n</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\TemplateResponse">TemplateResponse</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">templateResponse</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$templateName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$renderAs</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">&#039;blank&#039;</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10n</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$preRender</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\TemplateResponse">TemplateResponse</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -1096,30 +1150,49 @@ directory.</p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                  = <span class="phpdocumentor-signature__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>Defaults to an empty array.</p>
+</section>
+
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$renderAs</span>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                  = <span class="phpdocumentor-signature__argument__default-value">&#039;blank&#039;</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>Defaults to 'blank'.</p>
+</section>
+
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$appName</span>
                 : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>If null use $this-&gt;appName or $this-&gt;appName().</p>
+</section>
+
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$l10n</span>
                 : <span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\OCP\IL10N">IL10N</abbr></span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>If null resulting in using $this-&gt;l.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$preRender</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether to immediately render the content.</p>
+</section>
+
             </dd>
             </dl>
+
+    
 
     
 
@@ -1143,9 +1216,9 @@ directory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">214</span>
+    <span class="phpdocumentor-element-found-in__line">243</span>
 
-            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#source-view.243" class="phpdocumentor-element-found-in__source" data-line="243" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -1155,6 +1228,7 @@ directory.</p>
 
     <div class="phpdocumentor-label-line">
         </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
@@ -1208,6 +1282,8 @@ directory.</p>
 
                                     </dd>
                                             </dl>
+
+    
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -1328,28 +1404,28 @@ directory.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#property_appName">$appName<a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#property_configService">$configService<a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#property_l">$l<a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#property_reflector">$reflector<a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html"></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#property_appName">$appName</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#property_configService">$configService</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#property_l">$l</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#property_reflector">$reflector</a></li>
                                             </ul>
                 </li>
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                            <li><a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#method___construct">__construct()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#method_afterException">afterException()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#method_beforeController">beforeController()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataDownloadResponse">dataDownloadResponse()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataResponse">dataResponse()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionChainData">exceptionChainData()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionResponse">exceptionResponse()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_getResponseMessages">getResponseMessages()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_grumble">grumble()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_response">response()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_templateResponse">templateResponse()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_valueResponse">valueResponse()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#method___construct">__construct()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#method_afterException">afterException()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Middleware-SubadminMiddleware.html#method_beforeController">beforeController()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataDownloadResponse">dataDownloadResponse()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataResponse">dataResponse()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionChainData">exceptionChainData()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_exceptionResponse">exceptionResponse()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_getResponseMessages">getResponseMessages()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_grumble">grumble()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_response">response()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_templateResponse">templateResponse()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_valueResponse">valueResponse()</a></li>
                                     </ul>
             </li>
                     </ul>

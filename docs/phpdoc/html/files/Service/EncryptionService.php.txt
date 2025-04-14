@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Service;
+
+use Throwable;
 
 use OCP\IConfig;
 use OCP\IUserSession;
@@ -93,10 +95,10 @@ class EncryptionService
     ConfigService::SHAREOWNER_KEY, // needed as calendar principal in the member's app
     ConfigService::SHARED_FOLDER, // needed by some listeners in order to bail out early
     ConfigService::PROJECT_PARTICIPANTS_FOLDER, // needed by some listeners in order to bail out early
-    'wikinamespace', // cloud-admin setting
+    ConfigService::WIKI_NAME_SPACE_KEY, // cloud-admin setting
     'cspfailuretoken', // for public post route
     'configlock', // better kept open
-    'orchestra', // used in the member's app for the front-page announcement
+    ConfigService::ORCHESTRA_NAME_KEY, // used in the member's app for the front-page announcement
     'orchestraLocale', // used in the member's app for consistent currencies etc.
     self::APP_ENCRYPTION_KEY_HASH_KEY,
   ];
@@ -120,6 +122,8 @@ class EncryptionService
   /** @var Crypto\AsymmetricCryptorInterface */
   private $userAsymmetricCryptor;
 
+  private $l;
+
   /** {@inheritdoc} */
   public function __construct(
     private string $appName,
@@ -140,7 +144,7 @@ class EncryptionService
 
     try {
       $userId = $userSession->getUser()->getUID();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       //$this->logException($t);
       $userId = null;
     }
@@ -149,14 +153,14 @@ class EncryptionService
     }
     try {
       $userPassword = $credentialsStore->getLoginCredentials()->getPassword();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t, 'Unable to obtain login-password for "' . $userId . '".');
       $userPassword = null;
     }
     if (!empty($userId) && !empty($userPassword)) {
       try {
         $this->bind($userId, $userPassword);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t, 'Unable to bind to "' . $userId . '".');
       }
     }
@@ -174,7 +178,7 @@ class EncryptionService
    */
   public function bind(string $userId, string $password):void
   {
-    $this->logDebug('BINDING TO ' . $userId . ' PW LEN ' . strlen($password));
+    // $this->logDebug('BINDING TO ' . $userId . ' PW LEN ' . strlen($password));
     $this->userId = $userId;
     $this->userPassword = $password;
     $this->initUserKeyPair();
@@ -236,7 +240,7 @@ class EncryptionService
 
   /**
    * Initialize the per-user public/private key pair, which
-   * inparticular is used to propagate the app's encryption key to all
+   * in particular is used to propagate the app's encryption key to all
    * relevant users.
    *
    * @param bool $forceNewKeyPair Generate a new key pair even if an
@@ -260,7 +264,7 @@ class EncryptionService
           // after all, this means that all values are unencrypted, so be graceful here
           $this->asymKeyService->initEncryptionKeyPair($this->userId, $this->userPassword, forceNewKeyPair: true);
         }
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         // give up
         $this->logException($t, 'User\'s "' . $this->userId . '" asymmetric key pair is broken and encryption key appears to be non-empty.');
       }
@@ -389,12 +393,21 @@ class EncryptionService
     // compare the user-key with the stored encryption key hash
     $sysDatabaseKeyHash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
     if (!$this->verifyHash($userDatabaseKey, $sysDatabaseKeyHash)) {
+      $failCount = 0;
+      for ($i = 0; $i < 1000; ++$i) {
+        $failCount += 1 - (int)$this->verifyHash($userDatabaseKey, $sysDatabaseKeyHash);
+      }
+      if ($failCount < 10) {
+        $this->logError('BOGUS HARDWARE OR SOFTWARE ' . $failCount);
+        return true;
+      }
       // Failed
       $this->appCryptor->setEncryptionKey(null);
-      throw new Exceptions\EncryptionKeyException($this->l->t('Failed to validate user encryption key.'));
+      throw new Exceptions\EncryptionKeyException($this->l->t('Failed to validate user encryption key. ' . $failCount . ' "' . $sysDatabaseKeyHash) . '"');
       $this->logError('Unable to validate HASH for encryption key.');
     } else {
       $this->logDebug('Encryption keys validated'.(empty($userDatabaseKey) ? ' (no encryption)' : '').'.');
+      // $this->logInfo($this->l->t('Validated user encryption key. ' . $sysDatabaseKeyHash));
     }
 
     return true;
@@ -602,7 +615,7 @@ class EncryptionService
       }
       try {
         $value = $this->appCryptor->decrypt($value);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         throw new Exceptions\DecryptionFailedException($this->l->t('Unable to decrypt value "%s" for "%s"', [$value, $key]), $t->getCode(), $t);
       }
       //$this->logInfo("Decrypted value for $key: ".$value);

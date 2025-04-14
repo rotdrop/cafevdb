@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,10 +24,11 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCP\IRequest;
 
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
@@ -36,14 +37,18 @@ use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
 
 /** TBD. */
 class SepaBulkTransactions extends PMETableViewBase
 {
+
   use FieldTraits\CryptoTrait;
+  use FieldTraits\FinanceModeNavigationItemTrait;
+  use FieldTraits\MusicianInProjectTrait;
+  use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\QueryFieldTrait;
 
   const TEMPLATE = 'sepa-bulk-transactions';
   const TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
@@ -161,16 +166,25 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   /** {@inheritdoc} */
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
+    ToolTipsService $toolTipsService,
+    //
     private FinanceService $financeService,
     private SepaBulkTransactionService $bulkTransactionService,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->bulkTransactionExpanded = $this->requestParameters['bulkTransactionExpanded'];
+    parent::__construct(
+      self::TEMPLATE,
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $pageNavigation,
+      $toolTipsService,
+    );
+    $this->bulkTransactionExpanded = $this->request['bulkTransactionExpanded'];
 
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
@@ -263,7 +277,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'name' => $this->l->t('Bookings'),
         ], [
           'id' => 'tab-all',
-          'tooltip' => $this->toolTipsService['pme-showall-tab'],
+          'tooltip' => $this->toolTipsService['page-renderer:tab:showall'],
           'name' => $this->l->t('Display all columns'),
         ],
       ],
@@ -279,8 +293,8 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       static $oddCompositePayment = true;
       static $oddBulkTransaction = false;
 
-      $bulkTransactionId = $row['qf'.$pme->fdn['id']];
-      // $compositePaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
+      $bulkTransactionId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn['id']];
+      // $compositePaymentId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
 
       $cssClasses = ['bulk-transaction'];
       if ($lastBulkTransactionId != $bulkTransactionId) {
@@ -308,8 +322,8 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       // $this->logInfo('DATA TRIGGER '.$op.' '.$step.' '.print_r($row, true));
       static $lastBulkTransactionId = -1;
 
-      $bulkTransactionId = $row['qf'.$pme->fdn['id']];
-      // $compositePaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
+      $bulkTransactionId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn['id']];
+      // $compositePaymentId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
 
       if ($lastBulkTransactionId != $bulkTransactionId) {
         if ($lastBulkTransactionId > 0) {
@@ -396,14 +410,14 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'column' => 'id',
           'join' => '$join_col_fqn = '.$this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.musician_id',
           'description' => [
-            'columns' => [ '$table.id', self::musicianPublicNameSql() ],
+            'columns' => [ '$table.id', static::musicianPublicNameSql() ],
             'divs' => [ ': ' ],
             'ifnull' => [ false, false ],
             'cast' => [ 'CHAR', false ],
           ],
           'filters' => (!$projectMode
                         ? null
-                        : parent::musicianInProjectSql($this->projectId)),
+                        : static::musicianInProjectSql($this->projectId)),
         ],
         'values2glue' => '<br/>',
         'display' => [
@@ -552,10 +566,10 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'php|LF' => [$this, 'bulkTransactionRowOnly'],
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
-            return empty($row['qf' . $k]) ? [] : [ 'readonly' => true ];
+            return empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? [] : [ 'readonly' => true ];
           },
           'postfix' => function($op, $pos, $k, $row, $pme) {
-            $checked = empty($row['qf' . $k]) ? '' : 'checked';
+            $checked = empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? '' : 'checked';
             return '<input id="pme-submit-date-lock"
   type="checkbox"
   ' . $checked . '
@@ -635,7 +649,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           if ($this->isBulkTransactionRow($row, $pme)) {
             return str_replace(',', '<br/>', Util::htmlEscape($value));
           }
-          $html = $pme->cellDisplay($k - 1, $row);
+          $html = $pme->cellDisplay($this->joinQueryFieldIndex(static::SENT_EMAILS_TABLE, 'message_id'), $row);
           return empty($html) ? Util::htmlEscape($value) : $html;
         },
       ]);
@@ -658,8 +672,8 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         $post = json_encode([
           'bulkTransactionId' => $recordId['id'],
           'requesttoken' => \OCP\Util::callRegister(),
-          'projectId' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
-          'projectName' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
+          'projectId' => $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
+          'projectName' => $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
         ]);
         $actions = [
           'download' => [
@@ -703,7 +717,7 @@ __EOT__;
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteTrigger' ];
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($submitIdx, $opts) {
-      if ($this->expertMode || empty($row['qf'.$submitIdx])) {
+      if ($this->expertMode || empty($row[PHPMyEdit::QUERY_FIELD . $submitIdx])) {
         $pme->options = $opts['options'];
       } else {
         $pme->options = 'LFV';
@@ -805,7 +819,7 @@ __EOT__;
    */
   private function isBulkTransactionRow(array $row, PHPMyEdit $pme)
   {
-    $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
+    $rowTag = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
     return str_starts_with($rowTag, self::ROW_TAG_PREFIX);
   }
 

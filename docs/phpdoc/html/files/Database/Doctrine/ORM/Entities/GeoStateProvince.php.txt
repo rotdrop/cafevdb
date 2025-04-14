@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,11 +34,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 /**
  * GeoStatesProvinces, localized first-level administrative regions, states,
  * provinces etc.
- *
- * @ORM\Table(name="GeoStatesProvinces")
- * @ORM\Entity
- * @Gedmo\Loggable(enabled=false)
  */
+#[ORM\Table(name: 'GeoStatesProvinces')]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\Loggable(enabled: false)]
 class GeoStateProvince implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -46,44 +46,38 @@ class GeoStateProvince implements \ArrayAccess
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
   private $countryIso;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=3, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 3, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
   private $code;
 
   /**
    * @var string
-   * @ORM\Id
    *
-   * @ORM\Column(type="string", length=2, nullable=false, options={"fixed":true, "collation"="ascii_general_ci"})
    */
+  #[ORM\Id]
+  #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private $target;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=1024, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $l10nName;
 
   /**
    * @var GeoCountry
-   *
-   * @ORM\ManyToOne(targetEntity="GeoCountry", inversedBy="statesProvinces", fetch="EAGER")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="country_iso", referencedColumnName="iso"),
-   *   @ORM\JoinColumn(name="target", referencedColumnName="target")
-   * )
    */
+  #[ORM\JoinColumn(name: 'country_iso', referencedColumnName: 'iso')]
+  #[ORM\JoinColumn(name: 'target', referencedColumnName: 'target')]
+  #[ORM\ManyToOne(targetEntity: GeoCountry::class, inversedBy: 'statesProvinces', fetch: 'EAGER')]
   private $country;
 
   /** {@inheritdoc} */

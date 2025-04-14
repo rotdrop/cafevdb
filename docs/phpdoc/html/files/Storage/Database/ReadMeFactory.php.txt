@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,13 +26,13 @@ namespace OCA\CAFEVDB\Storage\Database;
 
 use DateTime;
 
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
+use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
 use OCP\IL10N;
 
-use OCA\CAFEVDB\AppInfo\AppL10N;
+use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 use OCA\CAFEVDB\Service\AppMTimeService;
@@ -46,18 +46,29 @@ class ReadMeFactory extends AbstractReadMeFactory
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /**
+   * @var array<string, null|InMemoryFileNode>
+   *
+   * Remember the documents for the current request.
+   */
+  protected array $documentCache = [];
+
+  /**
+   * @param IAppContainer $appContainer
+   *
+   * @param IL10N $l
+   *
+   * @param AppL10N $appL10n
+   *
    * @param string $appName
    *
    * @param LoggerInterface $logger
    *
    * @param IConfig $cloudConfig
    *
-   * @param ContainerInterface $appContainer
-   *
    * @param ToolTipsService $toolTipsService
    */
   public function __construct(
-    ContainerInterface $appContainer,
+    IAppContainer $appContainer,
     IL10N $l,
     AppL10N $appL10n,
     protected string $appName,
@@ -77,18 +88,19 @@ class ReadMeFactory extends AbstractReadMeFactory
    */
   public function generateReadMe(DatabaseStorageFolder|EmptyDirectoryNode $parent, string $dirName):?InMemoryFileNode
   {
-    $storageId = $parent->getStorage()->getStorageId();
-    $content = $this->getDefaultReadMeContents($storageId, $dirName);
-    if (empty($content)) {
-      // no empty files
-      return null;
+    if (!isset($this->documentCache[$dirName])) {
+      $storageId = $parent->getStorage()->getStorageId();
+      $content = $this->getDefaultReadMeContents($storageId, $dirName);
+      if (empty($content)) {
+        $this->documentCache[$dirName] = null;
+      } else {
+        $updated = (new DateTime)->setTimestamp(
+          $this->cloudConfig->getAppValue($this->appName, AppMTimeService::L10N_MTIME_KEY, 1),
+        );
+        $this->documentCache[$dirName] = new InMemoryFileNode($parent, $this->getReadMeFileNames()[0], $content, self::MIME_TYPE, $updated);
+      }
     }
-    $updated = (new DateTime)->setTimestamp(
-      $this->cloudConfig->getAppValue($this->appName, AppMTimeService::L10N_MTIME_KEY, 1),
-    );
-    $node = new InMemoryFileNode($parent, $this->getReadMeFileNames()[0], $content, self::MIME_TYPE, $updated);
-
-    return $node;
+    return $this->documentCache[$dirName];
   }
 
   /**
@@ -126,7 +138,9 @@ class ReadMeFactory extends AbstractReadMeFactory
     $tooltipsKey = $this->getReadMeTooltipsKey($storageId, $dirName);
     $contents = $this->toolTipsService->fetch($tooltipsKey, escape: false);
 
-    $contents = str_replace(ToolTipsService::PARAGRAPH, '', $contents);
+    if ($contents !== null) {
+      $contents = str_replace(ToolTipsService::PARAGRAPH, '', $contents);
+    }
 
     return $contents;
   }

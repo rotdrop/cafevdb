@@ -55,7 +55,7 @@ class FileNodeListener implements IEventListener
    * @param IAppContainer $appContainer
    */
   public function __construct(
-    private IAppContainer $appContainer,
+    protected IAppContainer $appContainer,
   ) {
   }
 

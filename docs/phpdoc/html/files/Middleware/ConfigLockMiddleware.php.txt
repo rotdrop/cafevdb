@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,13 +24,16 @@
 
 namespace OCA\CAFEVDB\Middleware;
 
+use Exception;
+
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
-use OCP\AppFramework\Http;
 
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\ConfigService;
 
 /**
  * Deny all request while config-lock is active.
@@ -68,13 +71,13 @@ class ConfigLockMiddleware extends Middleware
    *
    * Return maintenance-mode response in case of an error.
    */
-  public function afterException($controller, $methodName, \Exception $exception)
+  public function afterException($controller, $methodName, Exception $exception)
   {
-    if ($exception instanceof Exceptions\ConfigLockedException) {
-      $response = $this->templateResponse('update.user', [], self::RENDER_AS_GUEST, appName: 'core');
-      $response->setStatus(Http::STATUS_LOCKED);
-      return $response;
+    if (!($exception instanceof Exceptions\ConfigLockedException)) {
+      throw $exception;
     }
-    throw $exception;
+    $response = $this->templateResponse('update.user', [], Constants::RENDER_AS_GUEST, appName: 'core');
+    $response->setStatus(Http::STATUS_LOCKED);
+    return $response;
   }
 }

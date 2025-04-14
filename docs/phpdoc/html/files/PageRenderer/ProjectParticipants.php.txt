@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,42 +28,46 @@ use InvalidArgumentException;
 
 use chillerlan\QRCode\QRCode;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Service\ContactsService;
-use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\Finance\FinanceService;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Storage\UserStorage;
-
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-
+use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Common\Functions;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /**Table generator for Instruments table. */
 class ProjectParticipants extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use FieldTraits\SepaAccountsTrait;
-  use FieldTraits\ParticipantFieldsTrait;
-  use FieldTraits\MusicianAvatarTrait;
-  use FieldTraits\ParticipantTotalFeesTrait;
-  use FieldTraits\MailingListsTrait;
-  use FieldTraits\MusicianEmailsTrait;
   use FieldTraits\AllProjectsTrait;
+  use FieldTraits\MailingListsTrait;
+  use FieldTraits\MusicianAvatarTrait;
+  use FieldTraits\MusicianEmailsTrait;
+  use FieldTraits\MusicianEnsureUserIdSlugTrait;
+  use FieldTraits\MusicianFromRowTrait;
+  use FieldTraits\MusicianGenderTrait;
+  use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\ParticipantFieldsTrait;
+  use FieldTraits\ParticipantTotalFeesTrait;
+  use FieldTraits\ProjectModeNavigationItemTrait;
+  use FieldTraits\QueryFieldTrait;
+  use FieldTraits\SepaAccountsTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
@@ -191,22 +195,30 @@ class ProjectParticipants extends PMETableViewBase
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-
-    private GeoCodingService $geoCodingService,
+    ToolTipsService $toolTipsService,
+    //
     private ContactsService $contactsService,
-    private PhoneNumberService $phoneNumberService,
     private FinanceService $financeService,
+    private GeoCodingService $geoCodingService,
     private InstrumentInsuranceService $insuranceService,
-    private ProjectParticipantFieldsService $participantFieldsService,
-    private ProjectService $projectService,
-    private UserStorage $userStorage,
+    private PhoneNumberService $phoneNumberService,
+    protected ProjectParticipantFieldsService $participantFieldsService,
+    protected ProjectService $projectService,
+    protected UserStorage $userStorage,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(
+      self::TEMPLATE,
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $pageNavigation,
+      $toolTipsService,
+    );
 
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
@@ -450,10 +462,10 @@ class ProjectParticipants extends PMETableViewBase
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
             $nickNamePlaceholder = $this->l->t('e.g. Cathy');
-            $firstName = $row['qf'.($k-1)];
+            $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'first_name')];
             $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
             $unlockedPlaceholder = $this->l->t('e.g. Cathy');
-            if (empty($row['qf'.$k])) {
+            if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
               return [
                 'placeholder' => $lockedPlaceholder,
                 'readonly' => true,
@@ -468,7 +480,7 @@ class ProjectParticipants extends PMETableViewBase
             }
           },
           'postfix' => function($op, $pos, $k, $row, $pme) {
-            $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+            $checked = empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? '' : 'checked="checked" ';
             return '<input id="pme-musician-nickname"
   '.$checked.'
   type="checkbox"
@@ -485,17 +497,17 @@ class ProjectParticipants extends PMETableViewBase
         'name'     => $this->l->t('Display-Name'),
         'tab'      => [ 'id' => 'tab-all' ],
         'css'      => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', 'musician-public-name' ], ],
-        'sql|LFVD' => parent::musicianPublicNameSql(),
+        'sql|LFVD' => static::musicianPublicNameSql(),
         'maxlen'   => 384,
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
             $displayNamePlaceholder = $this->l->t('e.g. Doe, Cathy');
-            $surName = $row['qf'.($k-3)];
-            $firstName = $row['qf'.($k-2)];
-            $nickName = $row['qf'.($k-1)];
+            $surName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'sur_name')];
+            $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'first_name')];
+            $nickName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'nick_name')];
             $lockedPlaceholder = $op == 'add' ? $displayNamePlaceholder : $surName.', '.($nickName?:$firstName);
             $unlockedPlaceholder = $this->l->t('e.g. Doe, Cathy');
-            if (empty($row['qf'.$k])) {
+            if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
               return [
                 'placeholder' => $lockedPlaceholder,
                 'readonly' => true,
@@ -512,7 +524,7 @@ class ProjectParticipants extends PMETableViewBase
             }
           },
           'postfix' => function($op, $pos, $k, $row, $pme) {
-            $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+            $checked = empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? '' : 'checked="checked" ';
             return '<input id="pme-musician-displayname"
   type="checkbox"
   '.$checked.'
@@ -545,8 +557,37 @@ class ProjectParticipants extends PMETableViewBase
         'css'      => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', 'musician-personal-public-name' ], ],
         'options'  => 'LFAVCPD',
         'input' => $this->pmeBare ? 'R' : 'HR', // handy for export
-        'sql' => parent::musicianPublicNameSql(firstNameFirst: true),
+        'sql' => static::musicianPublicNameSql(firstNameFirst: true),
         'maxlen'   => 384,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'gender', [
+        'name'    => strval($this->l->t('Gender')),
+        'tab'     => [ 'id' => [ 'musician' ], ],
+        'select'  => 'D',
+        'maxlen'  => 128,
+        'sort'    => true,
+        'options'  => 'LFAVCPD',
+        'input|LF' => $this->pmeBare ? 'R' : 'HR', // handy for export
+        'css'     => [ 'postfix' => [ 'gender', 'tooltip-wide', 'allow-empty' ], ],
+        'values2' => Types\EnumGender::getL10NValues($this->l),
+        'tooltip' => $this->toolTipsService['page-renderer:musicians:gender'],
+        'display|LF' => [
+          'popup' => function($cellData, int $k, array $row, PHPMyEdit $pme) {
+            if (!empty($cellData) || empty($row) || !empty($row[$this->queryField($k)])) {
+              return '';
+            }
+            $genderTypes = $this->guessGender($row);
+            if (!empty($genderTypes)) {
+              return $this->l->t('auto-detected gender: %s', implode(', ', $genderTypes));
+            }
+            return '';
+          }
+        ],
+        'display|CPVD' => [
+          'postfix' => fn(string $op, string $pos, int $k, array $row, PHPMyEdit $pme) => $this->genderDisplayPostfix($op, $k, $row),
+        ],
       ]);
 
     $this->makeJoinTableField(
@@ -561,9 +602,9 @@ class ProjectParticipants extends PMETableViewBase
         'sort'     => true,
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
-            $surName = $row['qf'.($k-4)];
-            $firstName = $row['qf'.($k-3)];
-            $nickName = $row['qf'.($k-2)];
+            $surName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'sur_name')];
+            $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'first_name')];
+            $nickName = $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'nick_name')];
             $placeHolder = $this->projectService->defaultUserIdSlug($surName, $firstName, $nickName);
             return [
               'placeholder' => $placeHolder,
@@ -664,9 +705,8 @@ class ProjectParticipants extends PMETableViewBase
             $html = '</div>
 '; // close dropdown-menu
 
-            $instrumentsIndex = $k - 2;
-            $instruments = Util::explode(',', $row['qf'.$instrumentsIndex]);
-            $instrumentNames = $pme->set_values($instrumentsIndex)['values'];
+            $instruments = Util::explode(',', $row[$this->joinQueryField(static::PROJECT_INSTRUMENTS_TABLE, 'instrument_id')]);
+            $instrumentNames = $pme->set_values($this->joinQueryFieldIndex(static::PROJECT_INSTRUMENTS_TABLE, 'instrument_id'))['values'];
 
             $templateParameters = [
               'instruments' => $instruments,
@@ -912,7 +952,7 @@ class ProjectParticipants extends PMETableViewBase
         'default' => null,
         'select'  => 'M',
         'input'   => 'SR',
-        'tooltip' => $this->toolTipsService['musician-instruments-disabled'],
+        'tooltip' => $this->toolTipsService['page-renderer:musicians:instruments-disabled'],
         'values2' => $this->instrumentInfo['byId'],
         'valueGroups' => $this->instrumentInfo['idGroups'],
         'filter' => [
@@ -939,8 +979,8 @@ class ProjectParticipants extends PMETableViewBase
         'select'  => 'D',
         'maxlen'  => 128,
         'css'     => ['postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
-        'values2' => $this->memberStatusNames,
-        'tooltip' => $this->toolTipsService['member-status'],
+        'values2' => Types\EnumMemberStatus::getL10NValues($this->l),
+        'tooltip' => $this->toolTipsService['page-renderer:musicians:member-status'],
       ]);
 
     // soft-deleted musician kept to keep the instrumentation for the old project
@@ -1170,7 +1210,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'remarks',
       [
         'tab'      => ['id' => 'musician'],
-        'name'     => $this->l->t('Remarks'),
+        'name'     => $this->l->t('General Remarks'),
         'maxlen'   => 65535,
         'css'      => ['postfix' => [ 'remarks', 'tooltip-top', 'squeeze-subsequent-lines', ], ],
         'textarea' => [
@@ -1184,6 +1224,11 @@ class ProjectParticipants extends PMETableViewBase
           'postfix' => '</div></div>',
         ],
         'escape' => false,
+        'display' => [
+          'attributes' => [ 'readonly' => true, 'disabled' => true, ],
+          'popup' => 'data',
+        ],
+        'tooltip' => $this->l->t('General, not project-specific remarks. The field cannot be changed from here.'),
       ]);
 
     $this->makeJoinTableField(
@@ -1298,8 +1343,8 @@ class ProjectParticipants extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
 
-      if (!empty($row[$this->queryField('deleted', $pme->fdd)])
-          || !empty($row[$this->joinQueryField(self::MUSICIANS_TABLE, 'deleted', $pme->fdd)])) {
+      if (!empty($row[$this->queryField('deleted')])
+          || !empty($row[$this->joinQueryField(self::MUSICIANS_TABLE, 'deleted')])) {
         // disable misc-checkboxes for soft-deleted musicians in order to
         // avoid sending them bulk-email.
         $pme->options = str_replace('M', '', $opts['options']);
@@ -1311,6 +1356,8 @@ class ProjectParticipants extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::OPERATION_LIST][PHPMyEdit::TRIGGER_PRE][] = [ $this, 'totalFeesPreFilterTrigger' ];
 
+    // The following are in order to aid the email form to extract
+    // pre-selected musiancs from the form-data.
     $opts['cgi']['persist']['memberStatusFddIndex'] = $memberStatusFddIndex;
     $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
 
@@ -1535,12 +1582,12 @@ class ProjectParticipants extends PMETableViewBase
     $post = [
       [
         'id' => 'miscinfo',
-        'tooltip' => $this->toolTipsService['page-renderer:miscinfo-tab'],
+        'tooltip' => $this->toolTipsService['page-renderer:tab:miscinfo'],
         'name' => $this->l->t('Miscinfo'),
       ],
       [
         'id' => 'tab-all',
-        'tooltip' => $this->toolTipsService['pme-showall-tab'],
+        'tooltip' => $this->toolTipsService['page-renderer:tab:showall'],
         'name' => $this->l->t('Display all columns'),
       ],
     ];

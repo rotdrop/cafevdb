@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,10 @@
 
 namespace OCA\CAFEVDB\Service\L10N;
 
-use Exception;
+use Throwable;
 
+use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\L10N\IFactory as IL10NFactory;
-
-use \Doctrine\ORM\Query\Expr\Join;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Translation;
@@ -37,6 +35,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationKey;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationLocation;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MissingTranslation;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Excpetions;
 
 /**
  * Runtime translation service for recording untranslated phrases in a
@@ -52,10 +51,11 @@ class TranslationService
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
+    L10NFactory $l10nFactory,
     protected EntityManager $entityManager,
-    IL10NFactory $l10nFactory,
+    protected IL10N $l,
     protected ILogger $logger,
+    string $appName,
   ) {
     $this->availableLanguages = array_values(
       array_filter(
@@ -90,7 +90,7 @@ class TranslationService
       try {
         $this->persist($translationKey);
         $this->flush();
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t);
       }
       $this->logDebug('Translation key for "'.$phrase.'" was empty, new id '.$translationKey->getId());
@@ -113,7 +113,7 @@ class TranslationService
       try {
         $this->persist($location);
         $this->flush();
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t);
       }
     }
@@ -129,13 +129,13 @@ class TranslationService
       try {
         $this->persist($missingLocale);
         $this->flush();
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t);
       }
     }
     try {
       $this->flush();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
     }
     $this->entityManager->resumeLogging();
@@ -155,7 +155,9 @@ class TranslationService
   public function recordTranslation(string $phrase, string $translatedPhrase, string $locale):bool
   {
     if (empty(Util::normalizeSpaces($translatedPhrase))) {
-      throw new Exception('Translation for %s is empty.', $phrase);
+      throw new Exceptions\TanslationException(
+        $this->l->t('Translation for %1$s is empty.', $phrase),
+      );
     }
     $this->setDataBaseRepository(TranslationKey::class);
     $translationKey = $this->findOneBy([ 'phrase' => $phrase ]);
@@ -164,7 +166,7 @@ class TranslationService
       try {
         $this->persist($translationKey);
         $this->flush();
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t);
         return false;
       }
@@ -189,7 +191,7 @@ class TranslationService
       try {
         $this->persist($translation);
         $this->flush();
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t);
         return false;
       }

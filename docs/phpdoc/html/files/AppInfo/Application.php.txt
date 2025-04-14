@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2014-2024 Claus-Justus Heine
+ * @copyright 2014-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,7 +47,6 @@ use OCP\AppFramework\App;
  * Navigation and settings depending on the group-membership
  *
  */
-use OCP\INavigationManager;
 use OCP\Settings\IManager as ISettingsManager;
 use OCP\IURLGenerator;
 
@@ -83,8 +82,6 @@ use OCA\CAFEVDB\Database\EntityManager;
 
 use OCA\CAFEVDB\Service\EventsService;
 
-use OCA\CAFEVDB\Middleware\SubadminMiddleware;
-use OCA\CAFEVDB\Middleware\GroupMemberMiddleware;
 use OCA\CAFEVDB\Middleware;
 
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
@@ -109,6 +106,8 @@ if ((include_once __DIR__ . '/../../vendor/autoload.php') === false) {
 class Application extends App implements IBootstrap
 {
   use \OCA\CAFEVDB\Toolkit\Traits\AppNameTrait;
+
+  public const APP_ROOT_FOLDER = 'appRootFolder';
 
   /** @var IAppContainer */
   protected static $appContainer;
@@ -156,24 +155,6 @@ class Application extends App implements IBootstrap
     $context->injectFn(function(
       $userId,
       AuthorizationService $authorizationService,
-      IURLGenerator $urlGenerator,
-      INavigationManager $navigationManager,
-    ) {
-      if ($authorizationService->authorized($userId, AuthorizationService::PERMISSION_FRONTEND)) {
-        $navigationManager->add([
-          'id' => $this->appName,
-          'name' => 'CAFeVDB',
-          'href' => $urlGenerator->linkToRoute(implode('.', [ $this->appName, 'page', 'index' ])),
-          'icon' => $urlGenerator->imagePath($this->appName, 'app.svg'),
-          'type' => 'link',
-          'order' => 1,
-        ]);
-      }
-    });
-
-    $context->injectFn(function(
-      $userId,
-      AuthorizationService $authorizationService,
       ISettingsManager $settingsManager,
     ) {
       if ($authorizationService->authorized($userId, AuthorizationService::PERMISSION_FRONTEND)) {
@@ -217,18 +198,23 @@ class Application extends App implements IBootstrap
       throw new Exception('Cannot include wrapped-autoload. Did you run install dependencies using composer?');
     }
 
+    $context->registerService(self::APP_ROOT_FOLDER, function($c) {
+      // ok, we are two levels below the top ...
+      return dirname(dirname(__DIR__));
+    });
+
     /* Doctrine DBAL needs a factory to be constructed. */
     $context->registerService(\OCA\CAFEVDB\Database\Connection::class, function($c) {
       return $c->query(EntityManager::class)->getConnection();
     });
 
     // Register Middleware
-    $context->registerServiceAlias('SubadminMiddleware', SubadminMiddleware::class);
-    $context->registerMiddleWare('SubadminMiddleware');
-    $context->registerServiceAlias('GroupMemberMiddleware', GroupMemberMiddleware::class);
-    $context->registerMiddleWare('GroupMemberMiddleware');
-    $context->registerMiddleWare(Middleware\CSPViolationReporting::class);
+    $context->registerMiddleWare(Middleware\ExceptionMiddleware::class); // must come first
+    $context->registerMiddleWare(Middleware\SubadminMiddleware::class);
+    $context->registerMiddleWare(Middleware\GroupMemberMiddleware::class);
+    $context->registerMiddleWare(Middleware\DebugModeMiddleware::class);
     $context->registerMiddleware(Middleware\ConfigLockMiddleware::class);
+    $context->registerMiddleware(Middleware\ContentSecurityPolicyMiddleware::class);
 
     // Register listeners
     ListenerRegistration::register($context);

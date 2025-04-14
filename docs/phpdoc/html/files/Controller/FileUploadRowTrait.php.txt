@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -89,7 +89,7 @@ trait FileUploadRowTrait
         return self::grumble($this->l->t('No file was uploaded. Unknown error'));
       }
 
-      $this->logDebug('PARAMETERS '.print_r($this->parameterService->getParams(), true));
+      $this->logDebug('PARAMETERS '.print_r($this->request->getParams(), true));
 
       $files = Util::transposeArray($this->request->files[$fileKey]);
       if (is_array($files[$optionKey]['name'])) {

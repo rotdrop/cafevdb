@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,6 @@ use OCP\Group\ISubAdmin as ISubAdminManager;
 use OCP\IUser;
 use OCP\IUserBackend;
 use OCP\IUserManager;
-use OCP\L10N\IFactory as IL10NFactory;
 use OCP\Security\Events\GenerateSecurePasswordEvent;
 use OCP\Security\ISecureRandom;
 use OCP\UserInterface;
@@ -89,8 +88,6 @@ class CloudAccountsService
    *
    * @param IAvatarManager $avatarManager
    *
-   * @param IL10NFactory $l10nFactory
-   *
    * @param IEventDispatcher $eventDispatcher
    *
    * @param ISecureRandom $secureRandom
@@ -112,7 +109,6 @@ class CloudAccountsService
     protected LoggerInterface $logger,
     protected CloudConfig $cloudConfig,
     protected IAvatarManager $avatarManager,
-    protected IL10NFactory $l10nFactory,
     protected IEventDispatcher $eventDispatcher,
     protected ISecureRandom $secureRandom,
     protected IUserManager $userManager,

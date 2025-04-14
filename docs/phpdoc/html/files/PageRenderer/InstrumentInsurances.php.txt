@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,27 +26,29 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use DateTime;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use IRequest;
 
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
-use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Common\Uuid;
-
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Common\Util;
 
 /** Render the instrument insurances of the club-members. */
 class InstrumentInsurances extends PMETableViewBase
 {
+  use FieldTraits\FinanceModeNavigationItemTrait;
+  use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
   const TEMPLATE = 'instrument-insurance';
@@ -101,16 +103,25 @@ class InstrumentInsurances extends PMETableViewBase
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
-    RequestParameterService $requestParameters,
     EntityManager $entityManager,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
     private InstrumentInsuranceService $insuranceService,
-    private ProjectService $projectService,
-    private UserStorage $userStorage,
+    protected ProjectService $projectService,
+    protected UserStorage $userStorage,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(
+      self::TEMPLATE,
+      //
+      $configService,
+      $entityManager,
+      $request,
+      $phpMyEdit,
+      $pageNavigation,
+      $toolTipsService,
+    );
 
     $this->showDisabled = true; // otherwise it is too confusing.
 
@@ -216,12 +227,12 @@ class InstrumentInsurances extends PMETableViewBase
         ],
         [
           'id' => 'miscinfo',
-          'tooltip' => $this->toolTipsService['page-renderer:miscinfo-tab'],
+          'tooltip' => $this->toolTipsService['page-renderer:tab:miscinfo'],
           'name' => $this->l->t('Miscellaneous Data'),
         ],
         [
           'id' => 'tab-all',
-          'tooltip' => $this->toolTipsService['pme-showall-tab'],
+          'tooltip' => $this->toolTipsService['page-renderer:tab:showall'],
           'name' => $this->l->t('Display all columns'),
         ],
       ],
@@ -266,18 +277,18 @@ class InstrumentInsurances extends PMETableViewBase
       'values' => [
         'table' => self::MUSICIANS_TABLE,
         'column' => 'id',
-        'description' => self::trivialDescription(self::musicianPublicNameSql()),
+        'description' => self::trivialDescription(static::musicianPublicNameSql()),
         'join' => ' $join_col_fqn = $main_table.instrument_holder_id',
-        // 'filters' => parent::musicianInProjectSql($this->projectId),
+        // 'filters' => static::musicianInProjectSql($this->projectId),
       ],
       'display' => [
         'prefix' => function($op, $pos, $k, $row, $pme) {
           $css = [ 'cell-wrapper' ];
           if ($op != 'add') {
-            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
-            $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
-            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id', $pme->fdd)];
-            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id')];
+            $billToParty = $row[$this->queryIndexField('bill_to_party_id')];
+            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id')];
+            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id')];
 
             empty($billToParty) && $billToParty = $instrumentHolder;
             empty($instrumentOwner) && $instrumentOwner = $instrumentHolder;
@@ -305,19 +316,19 @@ class InstrumentInsurances extends PMETableViewBase
       'values' => [
         'table' => self::MUSICIANS_TABLE,
         'column' => 'id',
-        'description' => self::trivialDescription(self::musicianPublicNameSql()),
+        'description' => self::trivialDescription(static::musicianPublicNameSql()),
         'join' => ' $join_col_fqn = $main_table.bill_to_party_id',
-        //'filters' => parent::musicianInProjectSql($this->projectId),
+        //'filters' => static::musicianInProjectSql($this->projectId),
       ],
       'display' => [
         'prefix' => function($op, $pos, $k, $row, $pme) {
           $css = [ 'cell-wrapper', 'tooltip-auto' ];
           $title = '';
           if ($op != 'add') {
-            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
-            $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
-            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id', $pme->fdd)];
-            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id')];
+            $billToParty = $row[$this->queryIndexField('bill_to_party_id')];
+            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id')];
+            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id')];
 
             empty($billToParty) && $billToParty = $instrumentHolder;
             empty($instrumentOwner) && $instrumentOwner = $instrumentHolder;
@@ -348,19 +359,19 @@ class InstrumentInsurances extends PMETableViewBase
       'values' => [
         'table' => self::MUSICIANS_TABLE,
         'column' => 'id',
-        'description' => self::trivialDescription(self::musicianPublicNameSql()),
+        'description' => self::trivialDescription(static::musicianPublicNameSql()),
         'join' => ' $join_col_fqn = $main_table.instrument_owner_id',
-        //'filters' => parent::musicianInProjectSql($this->projectId),
+        //'filters' => static::musicianInProjectSql($this->projectId),
       ],
       'display' => [
         'prefix' => function($op, $pos, $k, $row, $pme) {
           $css = [ 'cell-wrapper', 'tooltip-auto' ];
           $title = '';
           if ($op != 'add') {
-            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
-            $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
-            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id', $pme->fdd)];
-            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id')];
+            $billToParty = $row[$this->queryIndexField('bill_to_party_id')];
+            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id')];
+            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id')];
 
             empty($billToParty) && $billToParty = $instrumentHolder;
             empty($instrumentOwner) && $instrumentOwner = $instrumentHolder;
@@ -623,7 +634,7 @@ GROUP BY b.short_name',
       'nowrap' => true,
       'sort' => true,
       'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
-        $musicianId = $row[$this->queryField('instrument_holder_id', $pme->fdd)];
+        $musicianId = $row[$this->queryField('instrument_holder_id')];
         $annualFee = $this->insuranceService->insuranceFee($musicianId, null);
         $bval = $this->l->t(
           'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
@@ -719,7 +730,7 @@ GROUP BY b.short_name',
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
 
-      if (!empty($row[$this->queryField('deleted', $pme->fdd)])) {
+      if (!empty($row[$this->queryField('deleted')])) {
         // disable misc-checkboxes for soft-deleted musicians in order to
         // avoid sending them bulk-email.
         $pme->options = str_replace([ 'M', 'D' ], '', $opts['options']);

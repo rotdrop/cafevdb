@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Event as ORMEvent;
 
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
@@ -64,7 +64,7 @@ class DatabaseStorageFileEntityListener
   /**
    * {@inheritdoc}
    */
-  public function postUpdate(Entities\DatabaseStorageFile $dirEntry, ORMEvent\LifecycleEventArgs $eventArgs)
+  public function postUpdate(Entities\DatabaseStorageFile $dirEntry, ORMEvent\PostUpdateEventArgs $eventArgs)
   {
     $this->cleanupOrphans();
   }
@@ -72,7 +72,7 @@ class DatabaseStorageFileEntityListener
   /**
    * {@inheritdoc}
    */
-  public function postRemove(Entities\DatabaseStorageFile $dirEntry, ORMEvent\LifecycleEventArgs $eventArgs)
+  public function postRemove(Entities\DatabaseStorageFile $dirEntry, ORMEvent\PostRemoveEventArgs $eventArgs)
   {
     $this->cleanupOrphans();
   }
