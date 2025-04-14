@@ -1,24 +1,32 @@
 {
-    "tags": {
-        "allowUnknownTags": false
-    },
-    "source": {
-        "include": "src",
-        "includePattern": "\\.js$",
-        "excludePattern": "(node_module)"
-    },
-    "plugins": [
-        "plugins/markdown"
-    ],
-    "opts": {
-        "template": "node_modules/docdash",
-        "encoding": "utf8",
-        "destination": "build/artifacts/doc/jsdoc",
-        "recurse": true,
-        "verbose": true
-    },
-    "templates": {
-        "cleverLinks": false,
-        "monospaceLinks": false
-    }
+  "tags": {
+    "allowUnknownTags": false
+  },
+  "source": {
+    "include": "src",
+    "includePattern": "(\\.js|\\.ts)$",
+    "excludePattern": "(node_modules)"
+  },
+  "plugins": [
+    "plugins/markdown",
+    "node_modules/jsdoc-babel"
+  ],
+  "opts": {
+    "template": "node_modules/docdash",
+    "encoding": "utf8",
+    "destination": "build/artifacts/doc/jsdoc",
+    "recurse": true,
+    "verbose": true
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  },
+  "babel": {
+    "extensions": ["ts", "tsx"],
+    "ignore": ["**/*.(test|spec).ts"],
+    "babelrc": false,
+    "presets": [["@babel/preset-env", { "targets": { "node": true } }], "@babel/preset-typescript"],
+    "plugins": ["@babel/proposal-class-properties", "@babel/plugin-transform-object-rest-spread"]
+  }
 }
