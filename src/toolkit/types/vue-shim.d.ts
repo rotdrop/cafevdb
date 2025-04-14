@@ -82,7 +82,6 @@ declare module '@nextcloud/vue' {
     value: string|number;
   };
 
-  const NcActionCheckbox: Vue;
   const Tooltip: typeof VTooltip;
 
   const NcContent: Vue;
@@ -98,45 +97,45 @@ declare module '@nextcloud/vue' {
   const NcPasswordField: Vue;
   const NcPopover: Vue;
 
-  export {
-    NcActionButton,
-    NcActionCaption,
-    NcActionCheckbox,
-    NcActionInput,
-    NcActionLink,
-    NcActionRadio,
-    NcActionRouter,
-    NcActionSeparator,
-    NcActions,
-    NcActionTextEditable,
-    NcAppContent,
-    NcAppNavigation,
-    NcAppNavigationItem,
-    NcAppNavigationSettings,
-    NcAppSidebar,
-    NcAppSidebarTab,
-    NcButton,
-    NcCheckboxRadioSwitch,
-    NcColorPicker,
-    NcContent,
-    NcCounterBubble,
-    NcDateTimePicker,
-    NcDialog,
-    NcEllipsisedOption,
-    NcEmptyContent,
-    NcListItem,
-    NcListItemIcon,
-    NcModal,
-    NcPasswordField,
-    NcPopover,
-    NcProgressBar,
-    NcRichContenteditable,
-    NcRichText,
-    NcSelect,
-    NcSettingsSection,
-    NcTextField,
-    Tooltip,
-  }
+  // export {
+  //   NcActionButton,
+  //   NcActionCaption,
+  //   NcActionCheckbox,
+  //   NcActionInput,
+  //   NcActionLink,
+  //   NcActionRadio,
+  //   NcActionRouter,
+  //   NcActionSeparator,
+  //   NcActions,
+  //   NcActionTextEditable,
+  //   NcAppContent,
+  //   NcAppNavigation,
+  //   NcAppNavigationItem,
+  //   NcAppNavigationSettings,
+  //   NcAppSidebar,
+  //   NcAppSidebarTab,
+  //   NcButton,
+  //   NcCheckboxRadioSwitch,
+  //   NcColorPicker,
+  //   NcContent,
+  //   NcCounterBubble,
+  //   NcDateTimePicker,
+  //   NcDialog,
+  //   NcEllipsisedOption,
+  //   NcEmptyContent,
+  //   NcListItem,
+  //   NcListItemIcon,
+  //   NcModal,
+  //   NcPasswordField,
+  //   NcPopover,
+  //   NcProgressBar,
+  //   NcRichContenteditable,
+  //   NcRichText,
+  //   NcSelect,
+  //   NcSettingsSection,
+  //   NcTextField,
+  //   Tooltip,
+  // }
 }
 
 declare module '@nextcloud/vue';
@@ -144,7 +143,7 @@ declare module '@nextcloud/vue';
 declare module '@nextcloud/vue/dist/Directives/*.js' {
   import type { DirectiveOptions } from 'vue';
 
-  const DirectiveVue: DirectiveOptions<>;
+  const DirectiveVue: DirectiveOptions;
 
   export default DirectiveVue;
 }

@@ -23,7 +23,11 @@
 
 import type { GlobalState } from './globalstate.d.ts';
 
-export const globalState: GlobalState;
+declare global {
+  const globalState: GlobalState;
+}
+
+// export const globalState: GlobalState;
 
 export type TableLoadCallback = {
   callback(selector: string, parameters: any[], resizeCB: () => void):void,

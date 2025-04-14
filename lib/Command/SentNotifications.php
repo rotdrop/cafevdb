@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -67,14 +67,14 @@ class SentNotifications extends Command
   private array $imapMessages = [];
 
   /**
-   * @var array<sting, Entities\SentEmail>
+   * @var array<string, Entities\SentEmail>
    *
    * The SentEmail entities retrieved so far.
    */
   private array $sentEmails = [];
 
   /**
-   * @var array<string, Entities\CompositePayment
+   * @var array<string, Entities\CompositePayment>
    *
    * Payments with broken SentEmail links.
    */
