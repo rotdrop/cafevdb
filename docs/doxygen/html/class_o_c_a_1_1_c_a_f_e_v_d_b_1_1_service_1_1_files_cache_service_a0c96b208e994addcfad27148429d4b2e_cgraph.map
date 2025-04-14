@@ -1,0 +1,9 @@
+<map id="getFile" name="getFile">
+<area shape="rect" id="Node000001" title="Return the File holding the cached data for the given $node and $key or return null if there is no da..." alt="" coords="5,52,67,77"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_file.html#a12251d0c022e9e21c137a105ff683f13" title="Get id." alt="" coords="115,5,293,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,56,101,50,102,55,67,62"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#a7cdd1eab46005451803c4ac26af3a2bc" title="Potentially create and return a Folder&#45;node for storing cache&#45;data for the given $node." alt="" coords="151,84,257,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="67,68,138,81,137,87,66,73"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#a02ddedc6eab6faf0792f0fc372add21a" title="Return the top level cache folder, create it if it does not exist." alt="" coords="341,84,476,109"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="257,94,327,94,327,99,257,99"/>
+</map>

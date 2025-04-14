@@ -1,5 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note =
 [
+    [ "addPreNotificationEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#aa45d4ba53ddb22594f646450e4938787", null ],
     [ "addTransactionData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#aceea41102f7c182b5dcf827eb616ff5f", null ],
     [ "getDueDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#ac59eecbef9a8d94b3c0948ce371742d5", null ],
     [ "getDueEventUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a08f1479174c3370bd7e3286752b2c50d", null ],
@@ -8,6 +9,8 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "getPayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a873c9ac79309f9e2270f306925ffda85", null ],
     [ "getPayments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#ae8d8c6baf83b3e602ac4fcb4620f2dad", null ],
     [ "getPreNotificationDeadline", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a26b131f06dc63a27d372e7b0276ad224", null ],
+    [ "getPreNotificationEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#aa07f5968d9fa052af0a0b1bda5ef7313", null ],
+    [ "getPreNotificationEmails", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a14f1d9b1133f88391e758a4032980afe", null ],
     [ "getPreNotificationEventUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#aa6ac67df3cdf6a8c783d60fcfe307280", null ],
     [ "getPreNotificationEventUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a0ac5008fec2dcbaccdeae9f8fd74c164", null ],
     [ "getPreNotificationTaskUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a3a50e296ffdb73e6befabb00ce5ed8ba", null ],
@@ -25,6 +28,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setDueEventUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a510bdbfdd5247d9bb4df8cf03a49a209", null ],
     [ "setPayments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#aae567fb3f8fdc1414d3fd628cd224d8e", null ],
     [ "setPreNotificationDeadline", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a92355561aaafc6ca08579ced860a25e9", null ],
+    [ "setPreNotificationEmails", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#ae76f4ec2f772e5293901b67f7d0d15dc", null ],
     [ "setPreNotificationEventUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a507a616eabdd836c80eaec2b95552a9e", null ],
     [ "setPreNotificationEventUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#aca8778a2c7cb363ee9f7957de493f29e", null ],
     [ "setPreNotificationTaskUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a999235be0b6159dd58cac96a82ec235e", null ],
@@ -36,23 +40,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setSubmissionTaskUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a042bbb69def927dd30b1c87729c0548a", null ],
     [ "setSubmissionTaskUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a951324d968df496e734ecc49353f5a88", null ],
     [ "setSubmitDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a871220d595693ec53a364ee4b85e0974", null ],
-    [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
-    [ "$dueDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a43af8e382cc3584a9c627597bb50b8b2", null ],
-    [ "$dueEventUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a8f396fe9b9a54496900d18c87ddcf415", null ],
-    [ "$dueEventUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#aa98fed77e93707d04b57625a1332d27b", null ],
-    [ "$id", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a3587bd00e5602c1800515b6f9ffbebc5", null ],
-    [ "$payments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a2a6dc3dd0a143773a966cdeb37fd5c58", null ],
-    [ "$preNotificationDeadline", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#afc89e397edaecf8324042c4c5929c1fb", null ],
-    [ "$preNotificationEventUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#ab3c8a522d7deb651ba11acbef862de3c", null ],
-    [ "$preNotificationEventUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#aa7138da02dd611ce79bcfeade06ee138", null ],
-    [ "$preNotificationTaskUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a9e77560ac3ef71b0045fec2e8c738102", null ],
-    [ "$preNotificationTaskUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a39419b4722eaf060ff9c6920488da412", null ],
-    [ "$preUpdateValue", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#abd1ff190c2c105b5bb3fa350b120fca4", null ],
-    [ "$sepaTransactionData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a36faf4a0de69db3321a6d7ac9633b255", null ],
-    [ "$submissionDeadline", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a8fe2dfd40c341611813b0d8ef1f6da8a", null ],
-    [ "$submissionEventUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a2cacd3489976daa4e728e63a5be9ac10", null ],
-    [ "$submissionEventUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#aed6d43052c321633c24a2de337b81e2c", null ],
-    [ "$submissionTaskUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#afa44663dcfe129449a35cfec1307a557", null ],
-    [ "$submissionTaskUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a708e08510d00805d668484693d24eeae", null ],
-    [ "$submitDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#a2325b963a4715b9506b1752487499b17", null ]
+    [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html#afe55eae96aed06d16232a3b56fcf1ad3", null ]
 ];

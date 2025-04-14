@@ -1,6 +1,10 @@
 <map id="implode" name="implode">
-<area shape="rect" id="node1" title="Counter&#45;part to self::explode()." alt="" coords="221,55,288,80"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a77dcbf8345d8d173550c859774518f20" title="Dumps a string into a traditional hex dump for programmers, in a format similar to the output of the ..." alt="" coords="50,5,129,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ac076b416133f71e89ae0c7732436300d" title="Undo self::explodeIndexedMulti()." alt="" coords="19,55,160,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ae7d345a0cb6a0cc4e54913f819db998d" title="Shorten the given string by iteratively reducing the size of its camel&#45;case components until it fits ..." alt="" coords="5,104,173,129"/>
+<area shape="rect" id="Node000001" title="Counter&#45;part to self::explode()." alt="" coords="221,55,288,80"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="284,44,275,36,255,33,237,35,228,40,226,46,231,53,227,56,221,46,224,37,236,30,255,28,277,31,287,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a77dcbf8345d8d173550c859774518f20" title="Dumps a string into a traditional hex dump for programmers, in a format similar to the output of the ..." alt="" coords="50,5,129,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,55,173,45,128,31,130,26,174,39,209,50"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ac076b416133f71e89ae0c7732436300d" title="Undo self::explodeIndexedMulti()." alt="" coords="19,55,160,80"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="208,70,160,70,160,65,208,65"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ae7d345a0cb6a0cc4e54913f819db998d" title="Shorten the given string by iteratively reducing the size of its camel&#45;case components until it fits ..." alt="" coords="5,104,173,129"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="209,84,133,106,132,101,207,79"/>
 </map>

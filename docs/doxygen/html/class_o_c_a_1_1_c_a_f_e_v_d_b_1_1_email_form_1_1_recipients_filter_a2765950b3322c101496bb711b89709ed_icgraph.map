@@ -1,13 +1,11 @@
 <map id="instrumentsFilter" name="instrumentsFilter">
-<area shape="rect" id="Node000001" title=" " alt="" coords="634,31,752,57"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aa88d3b6470fc695c0e977cf6652e03ae" title="Fetch the instruments filter from the CGI parameters." alt="" coords="394,5,543,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="618,38,543,30,543,24,619,33"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a29389bb5db716e59f8a94e5083f8b58e" title="Substitute the recipients by the announcements mailing list if possible." alt="" coords="351,56,586,83"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="618,55,586,59,586,53,618,50"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1909f4b7f8129c7790cb75de2ffbe1e4" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="236,5,303,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="379,21,304,21,304,16,379,16"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a977b1615a5175561d17eebf08eca7a08" title=" " alt="" coords="143,5,188,32"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="220,21,188,21,188,16,220,16"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a5e6588671446c37e33137cae8265c389" title="{}" alt="" coords="5,5,95,32"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="127,21,95,21,95,16,127,16"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="499,31,617,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aa88d3b6470fc695c0e977cf6652e03ae" title="Fetch the instruments filter from the CGI parameters." alt="" coords="259,5,408,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="485,38,408,29,408,24,485,33"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a29389bb5db716e59f8a94e5083f8b58e" title="Substitute the recipients by the announcements mailing list if possible." alt="" coords="216,55,451,80"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="485,54,451,57,451,52,485,48"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1909f4b7f8129c7790cb75de2ffbe1e4" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="100,5,168,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="245,21,168,21,168,15,245,15"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aa9fbb471eda80cea3b104b21bbdb3b66" title=" " alt="" coords="5,5,52,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="86,21,52,21,52,15,86,15"/>
 </map>

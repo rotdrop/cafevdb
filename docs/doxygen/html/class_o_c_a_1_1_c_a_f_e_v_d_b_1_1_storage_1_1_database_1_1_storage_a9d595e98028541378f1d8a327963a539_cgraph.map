@@ -1,0 +1,16 @@
+<map id="is_file" name="is_file">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,31,61,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ad22e004288b7149fe24fb166f4cff9ee" title="{}" alt="" coords="109,31,172,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,41,96,41,96,46,62,46"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a7ec90cd17ef214d5fe4280b13d7c144a" title="Fetch the file entity corresponding to file&#45;name." alt="" coords="321,31,447,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="172,41,307,41,307,46,172,46"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a5f42b9146bcd5e088f0fbcde2f30ca07" title="{}" alt="" coords="220,56,273,81"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="173,48,207,57,206,62,172,53"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ab721841df814a2337039d39cc03da82a" title=" " alt="" coords="495,5,571,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="446,30,481,24,481,29,447,35"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#aa8e4fc68bcf28c10413b664b7d89ae81" title="Slightly modified pathinfo() function which also normalized directories before computing the componen..." alt="" coords="498,55,567,80"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="447,51,485,57,484,62,446,56"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self::PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="619,55,785,80"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="568,65,605,65,605,70,568,70"/>
+<area shape="poly" id="edge7_Node000007_Node000003" title=" " alt="" coords="273,61,307,55,308,60,274,66"/>
+</map>

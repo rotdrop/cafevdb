@@ -1,0 +1,21 @@
+<map id="filemtime" name="filemtime">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,57,80,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a7ec90cd17ef214d5fe4280b13d7c144a" title="Fetch the file entity corresponding to file&#45;name." alt="" coords="411,32,537,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,55,89,34,127,17,165,9,204,4,282,5,355,14,416,26,414,31,354,19,282,10,205,10,166,14,129,22,91,39,61,59"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a9d7ac9f8614357ce6b7358708b9ab040" title=" " alt="" coords="128,32,320,57"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="80,62,119,57,120,62,81,68"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a8eb3e49592d26a52be7e8987722d1aa3" title="Get the overall modification time of the entire storage as Unix time&#45;stamp." alt="" coords="132,131,316,156"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="64,81,94,99,129,117,150,124,148,129,127,122,91,104,61,85"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a5f42b9146bcd5e088f0fbcde2f30ca07" title="{}" alt="" coords="197,81,251,107"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="81,72,184,86,183,92,80,78"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ab721841df814a2337039d39cc03da82a" title=" " alt="" coords="628,7,704,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="536,34,614,24,615,29,537,39"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#aa8e4fc68bcf28c10413b664b7d89ae81" title="Slightly modified pathinfo() function which also normalized directories before computing the componen..." alt="" coords="631,56,701,81"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="537,50,618,60,617,65,536,55"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self::PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="752,56,919,81"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="701,66,738,66,738,71,701,71"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="320,42,398,42,398,47,320,47"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae5a252c76f3eca6363a55691f69dd932" title="Return the overall modification time of the entire storage." alt="" coords="368,131,580,156"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="316,141,354,141,354,146,316,146"/>
+<area shape="poly" id="edge10_Node000009_Node000002" title=" " alt="" coords="250,86,397,57,398,62,251,92"/>
+</map>

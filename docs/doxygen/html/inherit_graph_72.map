@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html" title="Service routines for fetching photos and images." alt="" coords="5,5,114,32"/>
+<area shape="rect" id="Node000000" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_i_card_backend.html" title="Bizarre single&#45;implementation interface ..." alt="" coords="5,5,111,31"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_musician_card_backend.html" title="Generate VCards from the musicians database." alt="" coords="159,5,312,31"/>
+<area shape="poly" id="edge295_Node000000_Node000001" title=" " alt="" coords="124,15,158,15,158,21,124,21"/>
 </map>

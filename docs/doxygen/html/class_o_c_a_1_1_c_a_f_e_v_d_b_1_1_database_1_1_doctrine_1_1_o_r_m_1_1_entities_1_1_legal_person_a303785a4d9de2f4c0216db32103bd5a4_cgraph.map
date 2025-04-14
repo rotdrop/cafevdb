@@ -1,0 +1,7 @@
+<map id="__construct" name="__construct">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,31,96,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_legal_person.html#ab099171b4fa491cd2d26050508bcb13f" title="Set the uid of the associated addressbook entry." alt="" coords="144,5,257,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,33,130,27,131,33,97,38"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_legal_person.html#a9f6baa62c9b3071d9b1a4a7f18da4164" title="Set musician." alt="" coords="155,55,247,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="97,48,142,55,141,60,96,53"/>
+</map>

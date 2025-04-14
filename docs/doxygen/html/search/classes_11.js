@@ -18,7 +18,7 @@ var searchData=
   ['userloggedouteventlistener_15',['UserLoggedOutEventListener',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_user_logged_out_event_listener.html',1,'OCA::CAFEVDB::Listener']]],
   ['userscopeservice_16',['UserScopeService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service.html',1,'OCA::CAFEVDB::Toolkit::Service']]],
   ['userstorage_17',['UserStorage',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html',1,'OCA::CAFEVDB::Storage']]],
-  ['util_18',['Util',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html',1,'Util'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html',1,'Util']]],
+  ['util_18',['util',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html',1,'Util'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html',1,'Util']]],
   ['uuid_19',['Uuid',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_uuid.html',1,'OCA::CAFEVDB::Common']]],
   ['uuidtype_20',['UuidType',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type.html',1,'OCA::CAFEVDB::Database::Doctrine::DBAL::Types']]]
 ];

@@ -1,5 +1,9 @@
 <map id="getFiles" name="getFiles">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,73,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ac4bb04636b9ff49d1eb1bce172994d36" title="Guard against undefined $this&#45;&gt;l." alt="" coords="121,5,159,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,16,105,16,105,21,73,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,55,73,80"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a87dfcaf2c7108c861a562438f8810971" title="Restore the environment variables previously overridden by setProcessEnvironment()." alt="" coords="121,5,304,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,54,121,39,148,32,150,37,122,45,74,59"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a56b766aecb57ccbad85c7b5383311091" title="Enforece UTF&#45;8 locale in the enviroment as otherwise some external helpers do not function correctly." alt="" coords="132,55,293,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,65,118,65,118,70,74,70"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ac4bb04636b9ff49d1eb1bce172994d36" title="Guard against undefined $this&#45;&gt;l." alt="" coords="193,104,232,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,75,122,89,180,105,179,110,121,94,73,80"/>
 </map>

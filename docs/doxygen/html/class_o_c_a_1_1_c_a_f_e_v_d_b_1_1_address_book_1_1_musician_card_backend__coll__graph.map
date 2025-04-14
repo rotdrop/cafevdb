@@ -1,5 +1,7 @@
 <map id="MusicianCardBackend" name="MusicianCardBackend">
-<area shape="rect" id="Node000001" title="Generate VCards from the musicians database." alt="" coords="5,80,158,107"/>
-<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_i_card_backend.html" title="Bizarre single&#45;implementation interface ..." alt="" coords="29,5,134,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,48,84,80,79,80,79,48"/>
+<area shape="rect" id="Node000001" title="Generate VCards from the musicians database." alt="" coords="43,93,196,119"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_i_card_backend.html" title="Bizarre single&#45;implementation interface ..." alt="" coords="5,5,111,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,41,113,91,109,94,72,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="135,5,229,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,43,130,94,126,91,163,40"/>
 </map>

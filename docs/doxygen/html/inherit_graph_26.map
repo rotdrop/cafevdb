@@ -1,3 +1,33 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html" title="This is the mass&#45;email composer class." alt="" coords="5,5,87,32"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,351,88,376"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers.html" title="Run various databse sanitizers on request." alt="" coords="151,5,287,31"/>
+<area shape="poly" id="edge24_Node000000_Node000001" title=" " alt="" coords="44,337,47,276,58,197,69,155,85,113,107,74,134,40,150,29,153,33,138,44,111,77,90,116,75,156,63,198,52,277,50,337"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_storage.html" title="Maintenance for the database file&#45;system backend." alt="" coords="158,55,281,80"/>
+<area shape="poly" id="edge25_Node000000_Node000002" title=" " alt="" coords="46,337,51,285,65,219,76,184,91,149,110,118,134,89,156,75,159,80,138,93,115,121,96,152,81,185,70,220,56,286,51,337"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_executive_board.html" title="Sanitize some stuff for the members of the management board:" alt="" coords="162,104,277,129"/>
+<area shape="poly" id="edge26_Node000000_Node000003" title=" " alt="" coords="48,336,56,293,72,240,97,186,114,161,134,139,161,123,163,128,138,143,118,164,101,188,77,242,61,295,54,337"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_gnu_cash_setup.html" title="GnuCash connectivity." alt="" coords="164,153,275,179"/>
+<area shape="poly" id="edge27_Node000000_Node000004" title=" " alt="" coords="52,336,62,302,79,263,103,222,134,188,162,173,165,177,138,192,107,226,84,265,67,304,57,338"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_hello_world.html" title="Test&#45;command in order to see if the abstract framework is functional." alt="" coords="177,203,262,228"/>
+<area shape="poly" id="edge28_Node000000_Node000005" title=" " alt="" coords="57,337,87,286,109,260,134,237,154,226,176,219,177,224,157,231,138,242,113,264,92,289,62,340"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_migrations.html" title="Database (and non&#45;database) migration management." alt="" coords="178,252,261,277"/>
+<area shape="poly" id="edge29_Node000000_Node000006" title=" " alt="" coords="68,338,98,311,135,286,177,270,179,275,137,291,101,316,71,342"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_participant_folders.html" title="Create all participant sub&#45;folder for each project." alt="" coords="156,301,283,327"/>
+<area shape="poly" id="edge30_Node000000_Node000007" title=" " alt="" coords="101,345,173,324,175,329,102,350"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_events.html" title="Create all participant sub&#45;folder for each project." alt="" coords="167,351,271,376"/>
+<area shape="poly" id="edge31_Node000000_Node000008" title=" " alt="" coords="102,361,167,361,167,366,102,366"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_folders.html" title="Create all participant sub&#45;folder for each project." alt="" coords="166,400,273,425"/>
+<area shape="poly" id="edge32_Node000000_Node000009" title=" " alt="" coords="102,376,175,397,173,402,101,381"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_recurring_receivables.html" title=" " alt="" coords="144,449,295,475"/>
+<area shape="poly" id="edge33_Node000000_Node000010" title=" " alt="" coords="72,384,101,410,137,434,167,447,165,452,135,439,98,414,68,388"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_sent_notifications.html" title="Database (and non&#45;database) migration management." alt="" coords="158,499,281,524"/>
+<area shape="poly" id="edge34_Node000000_Node000011" title=" " alt="" coords="62,387,92,436,113,462,138,484,161,496,158,501,134,488,109,466,88,440,57,390"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_tooltips_find.html" title="Search for tooltip&#45;tags in PHP code." alt="" coords="173,548,265,573"/>
+<area shape="poly" id="edge35_Node000000_Node000012" title=" " alt="" coords="57,389,68,422,84,461,107,500,138,533,155,544,174,551,172,556,152,549,134,537,103,503,79,463,63,424,52,390"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_tooltips_list.html" title="Command to list all registered tooltips." alt="" coords="175,597,263,623"/>
+<area shape="poly" id="edge36_Node000000_Node000013" title=" " alt="" coords="54,390,62,432,77,484,102,537,118,561,138,583,156,594,176,602,174,607,153,599,134,587,114,565,97,540,72,486,57,433,49,391"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_update_geo_coding_cache.html" title="Selectively update the GeoCoding cache from various remote sources." alt="" coords="136,647,303,672"/>
+<area shape="poly" id="edge37_Node000000_Node000014" title=" " alt="" coords="52,389,57,441,70,506,96,574,115,605,138,632,156,644,153,649,134,636,110,608,91,576,65,507,51,441,46,390"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_wiki_overview.html" title="Recreate the wiki overview pages." alt="" coords="168,696,271,721"/>
+<area shape="poly" id="edge38_Node000000_Node000015" title=" " alt="" coords="50,390,52,449,64,528,75,569,91,610,111,648,138,681,152,692,169,699,167,704,149,697,134,685,107,651,86,612,70,571,59,529,47,450,45,390"/>
 </map>

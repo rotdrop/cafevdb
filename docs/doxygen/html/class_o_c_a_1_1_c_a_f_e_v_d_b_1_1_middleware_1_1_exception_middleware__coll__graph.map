@@ -1,0 +1,5 @@
+<map id="ExceptionMiddleware" name="ExceptionMiddleware">
+<area shape="rect" id="Node000001" title="Turn an exception into a data response which can be parsed by the frontend if the controller method h..." alt="" coords="5,79,152,104"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="35,5,123,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,44,81,79,76,79,76,44"/>
+</map>

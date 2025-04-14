@@ -10,6 +10,7 @@ var hierarchy =
     [ "AbstractStorage", null, [
       [ "Storage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html", [
         [ "BankTransactionsStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_bank_transactions_storage.html", null ],
+        [ "DonationReceiptsStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_donation_receipts_storage.html", null ],
         [ "ProjectBalanceSupportingDocumentsStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_project_balance_supporting_documents_storage.html", null ],
         [ "ProjectParticipantsStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_project_participants_storage.html", null ],
         [ "TaxExemptionNoticesStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_tax_exemption_notices_storage.html", null ]
@@ -17,6 +18,7 @@ var hierarchy =
     ] ],
     [ "AnyToPdf", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_any_to_pdf.html", null ],
     [ "AppMTimeService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_app_m_time_service.html", null ],
+    [ "AppPasswordService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_password_service.html", null ],
     [ "AppStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html", null ],
     [ "AppStorageDisclosure", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage_disclosure.html", null ],
     [ "ArchiveService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html", null ],
@@ -47,11 +49,10 @@ var hierarchy =
     [ "CloudAccountsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_accounts_service.html", null ],
     [ "CloudUserConnectorService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html", null ],
     [ "Composer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html", null ],
+    [ "CompositePaymentEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_composite_payment_entity_listener.html", null ],
     [ "ConfigCheckService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html", null ],
     [ "ConfigService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html", null ],
-    [ "Connection", null, [
-      [ "Connection", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_connection.html", null ]
-    ] ],
+    [ "Constants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_constants.html", null ],
     [ "Constants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits_1_1_constants.html", [
       [ "Constants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_constants.html", null ]
     ] ],
@@ -69,10 +70,12 @@ var hierarchy =
           [ "DatabaseInconsistentValueException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_inconsistent_value_exception.html", null ],
           [ "DatabaseInvalidFieldException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_invalid_field_exception.html", null ],
           [ "DatabaseMigrationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_migration_exception.html", null ],
+          [ "DatabaseNotConnectedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_not_connected_exception.html", null ],
           [ "DatabaseReadonlyException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_readonly_exception.html", null ],
           [ "DatabaseTransactionNotActiveException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_transaction_not_active_exception.html", null ]
         ] ],
         [ "DatabaseStorageException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_storage_exception.html", null ],
+        [ "DecoratorException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_decorator_exception.html", null ],
         [ "EncryptionException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_exception.html", [
           [ "CannotDecryptException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_cannot_decrypt_exception.html", null ],
           [ "CannotEncryptException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_cannot_encrypt_exception.html", null ],
@@ -85,6 +88,7 @@ var hierarchy =
         [ "EnduserNotificationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html", null ],
         [ "MigrationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_migration_exception.html", null ],
         [ "MissingProjectsFolderException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_missing_projects_folder_exception.html", null ],
+        [ "NotAuthorizedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_not_authorized_exception.html", null ],
         [ "PhpSessionException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_php_session_exception.html", [
           [ "SessionStillOpenException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_session_still_open_exception.html", null ]
         ] ],
@@ -94,11 +98,11 @@ var hierarchy =
           [ "SanitizerNotImplementedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_not_implemented_exception.html", null ],
           [ "SanitizerNotNeededException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_not_needed_exception.html", null ]
         ] ],
-        [ "SubstitutionException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_substitution_exception.html", null ]
+        [ "SubstitutionException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_substitution_exception.html", null ],
+        [ "TranslationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_translation_exception.html", null ]
       ] ]
     ] ],
     [ "Countable", null, [
-      [ "RequestParameterService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_request_parameter_service.html", null ],
       [ "ToolTipsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html", null ]
     ] ],
     [ "CryptoFactoryInterface", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_crypto_factory_interface.html", [
@@ -107,9 +111,13 @@ var hierarchy =
     ] ],
     [ "DatabaseStorageFileEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_database_storage_file_entity_listener.html", null ],
     [ "DatabaseStorageUtil", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_storage_util.html", null ],
+    [ "DBALConnection", null, [
+      [ "Connection", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_connection.html", null ]
+    ] ],
     [ "DefaultValueBinder", null, [
       [ "PhpSpreadsheetValueBinder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_export_1_1_php_spreadsheet_value_binder.html", null ]
     ] ],
+    [ "EmailAddressService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_email_address_service.html", null ],
     [ "EmptyDirectoryNode", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_empty_directory_node.html", null ],
     [ "EncryptionService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html", null ],
     [ "EntityRepository", null, [
@@ -129,6 +137,7 @@ var hierarchy =
         [ "InstrumentFamiliesRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_instrument_families_repository.html", null ],
         [ "InstrumentInsurancesRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_instrument_insurances_repository.html", null ],
         [ "InstrumentsRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_instruments_repository.html", null ],
+        [ "InvoicesRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_invoices_repository.html", null ],
         [ "MusiciansRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_musicians_repository.html", null ],
         [ "ProjectEventsRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_events_repository.html", null ],
         [ "ProjectInstrumentationNumbersRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_ieba037c29b81c783ba29f7b802ae10ff.html", null ],
@@ -152,6 +161,7 @@ var hierarchy =
     [ "EventsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html", null ],
     [ "Factory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_factory.html", null ],
     [ "FakeL10N", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_fake_l10_n.html", null ],
+    [ "FilesCacheService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html", null ],
     [ "FinanceService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html", null ],
     [ "FontService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html", null ],
     [ "Formats", null, [
@@ -159,6 +169,7 @@ var hierarchy =
     ] ],
     [ "FuzzyInputService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_fuzzy_input_service.html", null ],
     [ "GeoCodingService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html", null ],
+    [ "GnuCashConnectorService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html", null ],
     [ "GroupFoldersService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html", [
       [ "GroupFoldersService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_group_folders_service.html", null ],
       [ "RequestService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_request_service.html", null ]
@@ -183,20 +194,49 @@ var hierarchy =
         [ "HaliteSymmetricStreamCryptor", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_symmetric_stream_cryptor.html", null ]
       ] ]
     ] ],
+    [ "IL10NFactory", null, [
+      [ "L10NFactory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n_1_1_l10_n_factory.html", null ]
+    ] ],
     [ "ImagesService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html", null ],
+    [ "ImapMessageFetcher", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_imap_message_fetcher.html", null ],
+    [ "IMAPService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_service.html", null ],
     [ "IMigration", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html", [
       [ "AbstractMigration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html", [
+        [ "AddDonationFlagToProjectPayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_donation_flag_to_project_payment.html", [
+          [ "Version20240214200000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240214200000.html", null ]
+        ] ],
+        [ "AddGenderToMusician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_gender_to_musician.html", [
+          [ "Version20240220160000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240220160000.html", null ]
+        ] ],
         [ "AddProjectRegistrationDeadline", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_project_registration_deadline.html", [
           [ "Version20230502230000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230502230000.html", null ]
         ] ],
         [ "AddRunCountToMigrationRecords", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_run_count_to_migration_records.html", [
           [ "Version20240122170000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240122170000.html", null ]
         ] ],
+        [ "CorrectLanguageField", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_correct_language_field.html", [
+          [ "Version20240221160000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240221160000.html", null ]
+        ] ],
         [ "CreateExplodeFunction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_explode_function.html", [
           [ "Version20240214010000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240214010000.html", null ]
         ] ],
+        [ "CreateGnuCashTables", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_gnu_cash_tables.html", [
+          [ "Version20240419120000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240419120000.html", null ]
+        ] ],
+        [ "CreateTableDonationReceipts", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_donation_receipts.html", [
+          [ "Version20240226203000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240226203000.html", null ]
+        ] ],
+        [ "CreateTableInvoices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_invoices.html", [
+          [ "Version20240218220000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240218220000.html", null ]
+        ] ],
+        [ "CreateTableLegalPersons", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_legal_persons.html", [
+          [ "Version20240218221000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240218221000.html", null ]
+        ] ],
         [ "CreateTaxExemptionNotices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_tax_exemption_notices.html", [
           [ "Version20240206153000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240206153000.html", null ]
+        ] ],
+        [ "CreateWebBrowserHistoryTables", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_web_browser_history_tables.html", [
+          [ "Version20250220160000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250220160000.html", null ]
         ] ],
         [ "DisableCloudAccountsByDefault", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_disable_cloud_accounts_by_default.html", [
           [ "Version20230823120000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230823120000.html", null ]
@@ -218,10 +258,16 @@ var hierarchy =
         ] ],
         [ "SanitizeDatabaseStorageIdentifiers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_sanitize_database_storage_identifiers.html", [
           [ "Version20240214013000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240214013000.html", null ]
+        ] ],
+        [ "SanitizeSentEmailAssociations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_sanitize_sent_email_associations.html", [
+          [ "Version20240301140000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240301140000.html", null ]
         ] ]
       ] ],
       [ "DecryptShareOwner", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_decrypt_share_owner.html", [
         [ "Version20230504190000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230504190000.html", null ]
+      ] ],
+      [ "Dummy", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_dummy.html", [
+        [ "Version20250210030000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250210030000.html", null ]
       ] ],
       [ "GroupSharedOrchestraFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_group_shared_orchestra_folder.html", [
         [ "Version20240121190000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240121190000.html", null ]
@@ -236,6 +282,20 @@ var hierarchy =
     ] ],
     [ "InstrumentationService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_instrumentation_service.html", null ],
     [ "InstrumentInsuranceService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_service.html", null ],
+    [ "InternalProxy", null, [
+      [ "DatabaseStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_b7b9bbebf107f328e2b9bcb8b9cd1c3f.html", null ],
+      [ "DatabaseStorageFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html", null ],
+      [ "EncryptedFile", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_6ef50b47521aceb1959204fca53f7eb5.html", null ],
+      [ "InsuranceBroker", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_08cae4ee1394191aa0263f1c3bbc79d3.html", null ],
+      [ "InsuranceRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_7a300d8dcaf38b73ff7a98844b1cd0b2.html", null ],
+      [ "Musician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_4045ad3d1799dd17c3639bac4a84c2a1.html", null ],
+      [ "Project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_ca19055342d984fd4c383245d0c57404.html", null ],
+      [ "ProjectParticipantField", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html", null ],
+      [ "ProjectParticipantFieldDataOption", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html", null ],
+      [ "WebBrowserHistoryData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_b3417d70ddf4f855a3e3b0302cc0542a.html", null ],
+      [ "WebBrowserHistoryEntry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8ded5e7c3b05b9cb209121064cc9ebe6.html", null ],
+      [ "WebBrowserHistoryState", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_70234111c966f814d7d8a6a9c30aa50f.html", null ]
+    ] ],
     [ "IProgressStatus", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html", [
       [ "AbstractProgressStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html", [
         [ "DatabaseProgressStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_database_progress_status.html", null ],
@@ -253,25 +313,33 @@ var hierarchy =
     ] ],
     [ "IRenderer", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html", [
       [ "IPageRenderer", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html", [
-        [ "PMETableViewBase", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html", [
-          [ "InstrumentFamilies", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html", null ],
-          [ "InstrumentInsurances", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_insurances.html", null ],
-          [ "Instruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html", null ],
-          [ "InsuranceBrokers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_brokers.html", null ],
-          [ "InsuranceRates", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_rates.html", null ],
-          [ "Musicians", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html", null ],
-          [ "ProjectInstrumentationNumbers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html", null ],
-          [ "ProjectParticipantFields", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html", null ],
-          [ "ProjectParticipants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html", null ],
-          [ "ProjectPayments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html", null ],
-          [ "Projects", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html", null ],
-          [ "SepaBankAccounts", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bank_accounts.html", null ],
-          [ "SepaBulkTransactions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html", null ],
-          [ "TaxExemptionNotices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_tax_exemption_notices.html", null ]
+        [ "AbstractPageRenderer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html", [
+          [ "Blog", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_blog.html", null ],
+          [ "ConfigCheck", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_config_check.html", null ],
+          [ "PMETableViewBase", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html", [
+            [ "DonationReceipts", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_donation_receipts.html", null ],
+            [ "InstrumentFamilies", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html", null ],
+            [ "InstrumentInsurances", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_insurances.html", null ],
+            [ "Instruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html", null ],
+            [ "InsuranceBrokers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_brokers.html", null ],
+            [ "InsuranceRates", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_rates.html", null ],
+            [ "Musicians", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html", [
+              [ "AddMusicians", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html", null ],
+              [ "AllMusicians", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_all_musicians.html", null ]
+            ] ],
+            [ "ProjectInstrumentationNumbers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html", null ],
+            [ "ProjectParticipantFields", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html", null ],
+            [ "ProjectParticipants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html", null ],
+            [ "ProjectPayments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html", null ],
+            [ "Projects", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html", null ],
+            [ "SepaBankAccounts", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bank_accounts.html", null ],
+            [ "SepaBulkTransactions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html", null ],
+            [ "TaxExemptionNotices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_tax_exemption_notices.html", null ]
+          ] ]
         ] ]
       ] ],
       [ "Renderer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html", [
-        [ "PMETableViewBase", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html", null ]
+        [ "AbstractPageRenderer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html", null ]
       ] ]
     ] ],
     [ "ISanitizer", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_sanitizer.html", [
@@ -307,10 +375,11 @@ var hierarchy =
     [ "MailingListsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html", null ],
     [ "MigrationsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html", null ],
     [ "MimeTypeService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html", null ],
+    [ "MusicianEmailAddressEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_musician_email_address_entity_listener.html", null ],
     [ "MusicianEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_musician_entity_listener.html", null ],
     [ "MusicianService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_musician_service.html", null ],
     [ "Navigation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_util_1_1_navigation.html", null ],
-    [ "OC_Calendar_App", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___app.html", null ],
+    [ "NumberFormatter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html", null ],
     [ "OC_Calendar_Object", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html", null ],
     [ "OpenDocumentFiller", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_open_document_filler.html", null ],
     [ "OrganizationalRolesService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html", null ],
@@ -320,6 +389,7 @@ var hierarchy =
     [ "PHPMailerUpstream", null, [
       [ "PHPMailer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_p_h_p_mailer.html", null ]
     ] ],
+    [ "ProblemReportService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_problem_report_service.html", null ],
     [ "ProgressStatusService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_progress_status_service.html", null ],
     [ "ProjectEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_project_entity_listener.html", null ],
     [ "ProjectEventEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_project_event_entity_listener.html", null ],
@@ -328,33 +398,6 @@ var hierarchy =
     [ "ProjectParticipantFieldEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_project_participant_field_entity_listener.html", null ],
     [ "ProjectParticipantFieldsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service.html", null ],
     [ "ProjectService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html", null ],
-    [ "Proxy", null, [
-      [ "CompositePayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html", null ],
-      [ "DatabaseStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_b7b9bbebf107f328e2b9bcb8b9cd1c3f.html", null ],
-      [ "DatabaseStorageFile", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_1077b41e053c851613b4aa2b20a2517b.html", null ],
-      [ "DatabaseStorageFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html", null ],
-      [ "EmailDraft", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_3b306e4c74cf2afd53d5b0c4c2213f62.html", null ],
-      [ "EncryptedFile", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_6ef50b47521aceb1959204fca53f7eb5.html", null ],
-      [ "EncryptedFileData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_08d7ef87d196e755ccd90cc330592d43.html", null ],
-      [ "GeoContinent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d7ff5af0866c1690f0030178026cd578.html", null ],
-      [ "Image", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d0defa97fb66a7c8d36d3fed3a953ecd.html", null ],
-      [ "Instrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8d7fc91133b5bb23314a9ee3679a224c.html", null ],
-      [ "InstrumentInsurance", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_044377ec73fec532eff87d782d0f968f.html", null ],
-      [ "InsuranceBroker", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_08cae4ee1394191aa0263f1c3bbc79d3.html", null ],
-      [ "InsuranceRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_7a300d8dcaf38b73ff7a98844b1cd0b2.html", null ],
-      [ "Musician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_4045ad3d1799dd17c3639bac4a84c2a1.html", null ],
-      [ "MusicianInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_fcab19ab1703b7a3ddb5348c0e79b5a0.html", null ],
-      [ "Project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_ca19055342d984fd4c383245d0c57404.html", null ],
-      [ "ProjectInstrumentationNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_5f9b0effdfab28a8315a7a6f368d0601.html", null ],
-      [ "ProjectParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html", null ],
-      [ "ProjectParticipantField", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html", null ],
-      [ "ProjectParticipantFieldDataOption", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html", null ],
-      [ "ProjectParticipantFieldDatum", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_32ecfb485eb888718d3bd8a01b150822.html", null ],
-      [ "ProjectPayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_0bcff1787a1aa68e85d1db95554b7d37.html", null ],
-      [ "SentEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_fff4b4367715f4fe3659936dabe9bf31.html", null ],
-      [ "SepaBankAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a5de61efc2f2d2909d49a031f34fda26.html", null ],
-      [ "SepaDebitMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_0cdd98cb4530645e5b8498a4de73709b.html", null ]
-    ] ],
     [ "QBMapper", null, [
       [ "Synchronized", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html", [
         [ "SynchronizedProgressStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized_1_1_synchronized_progress_status.html", null ]
@@ -362,7 +405,9 @@ var hierarchy =
     ] ],
     [ "ReadMeFactoryInterface", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory_interface.html", [
       [ "AbstractReadMeFactory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_abstract_read_me_factory.html", [
-        [ "ReadMeFactory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory.html", null ]
+        [ "ReadMeFactory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory.html", [
+          [ "SkeletonReadMeFactory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_skeleton_read_me_factory.html", null ]
+        ] ]
       ] ]
     ] ],
     [ "ReceivablesGeneratorFactory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_receivables_generator_factory.html", null ],
@@ -378,10 +423,9 @@ var hierarchy =
       [ "FilesScan", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_files_scan.html", null ]
     ] ],
     [ "SealService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_seal_service.html", null ],
-    [ "SentEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html", [
-      [ "SentEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_fff4b4367715f4fe3659936dabe9bf31.html", null ]
-    ] ],
+    [ "SentEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html", null ],
     [ "SentEmailDTO", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_sent_email_d_t_o.html", null ],
+    [ "SentEmailEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sent_email_entity_listener.html", null ],
     [ "SepaBulkTransactionEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html", null ],
     [ "SepaBulkTransactionService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html", null ],
     [ "SimpleSharingService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_simple_sharing_service.html", null ],
@@ -390,9 +434,6 @@ var hierarchy =
     ] ],
     [ "StorageUtil", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_storage_util.html", null ],
     [ "TemplateService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_template_service.html", null ],
-    [ "TimedJob", null, [
-      [ "ScanFiles", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_scan_files.html", null ]
-    ] ],
     [ "ToolTipsDataService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_data_service.html", null ],
     [ "TransformerInterface", null, [
       [ "Encryption", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_transformable_1_1_encryption.html", null ]
@@ -432,68 +473,59 @@ var hierarchy =
       [ "Application", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html", null ]
     ] ],
     [ "ArrayAccess", null, [
-      [ "CompositePayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html", [
-        [ "CompositePayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html", null ]
-      ] ],
+      [ "CompositePayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html", null ],
       [ "DatabaseStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage.html", [
         [ "DatabaseStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_b7b9bbebf107f328e2b9bcb8b9cd1c3f.html", null ]
       ] ],
       [ "DatabaseStorageDirEntry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_dir_entry.html", [
-        [ "DatabaseStorageFile", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_file.html", [
-          [ "DatabaseStorageFile", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_1077b41e053c851613b4aa2b20a2517b.html", null ]
-        ] ],
+        [ "DatabaseStorageFile", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_file.html", null ],
         [ "DatabaseStorageFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html", [
           [ "DatabaseStorageFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html", null ]
         ] ]
       ] ],
+      [ "DonationReceipt", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html", null ],
       [ "EmailAttachment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_email_attachment.html", null ],
-      [ "EmailDraft", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_email_draft.html", [
-        [ "EmailDraft", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_3b306e4c74cf2afd53d5b0c4c2213f62.html", null ]
-      ] ],
+      [ "EmailDraft", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_email_draft.html", null ],
       [ "EmailTemplate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_email_template.html", null ],
       [ "File", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_file.html", [
         [ "EncryptedFile", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html", [
           [ "EncryptedFile", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_6ef50b47521aceb1959204fca53f7eb5.html", null ]
         ] ],
-        [ "Image", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image.html", [
-          [ "Image", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d0defa97fb66a7c8d36d3fed3a953ecd.html", null ]
-        ] ]
+        [ "Image", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image.html", null ]
       ] ],
       [ "FileData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_file_data.html", [
-        [ "EncryptedFileData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file_data.html", [
-          [ "EncryptedFileData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_08d7ef87d196e755ccd90cc330592d43.html", null ]
-        ] ],
+        [ "EncryptedFileData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file_data.html", null ],
         [ "ImageFileData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image_file_data.html", null ]
       ] ],
-      [ "GeoContinent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_continent.html", [
-        [ "GeoContinent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d7ff5af0866c1690f0030178026cd578.html", null ]
-      ] ],
+      [ "GeoContinent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_continent.html", null ],
       [ "GeoCountry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_country.html", null ],
       [ "GeoPostalCode", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_postal_code.html", null ],
       [ "GeoPostalCodeTranslation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_postal_code_translation.html", null ],
       [ "GeoStateProvince", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_state_province.html", null ],
-      [ "Instrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html", [
-        [ "Instrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8d7fc91133b5bb23314a9ee3679a224c.html", null ]
-      ] ],
+      [ "GnuCashAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_account.html", null ],
+      [ "GnuCashBook", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_book.html", null ],
+      [ "GnuCashCommodity", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_commodity.html", null ],
+      [ "GnuCashSlot", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_slot.html", null ],
+      [ "GnuCashSplit", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_split.html", null ],
+      [ "GnuCashTransaction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_transaction.html", null ],
+      [ "Instrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html", null ],
       [ "InstrumentFamily", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html", null ],
-      [ "InstrumentInsurance", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html", [
-        [ "InstrumentInsurance", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_044377ec73fec532eff87d782d0f968f.html", null ]
-      ] ],
+      [ "InstrumentInsurance", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html", null ],
       [ "InsuranceBroker", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_broker.html", [
         [ "InsuranceBroker", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_08cae4ee1394191aa0263f1c3bbc79d3.html", null ]
       ] ],
       [ "InsuranceRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html", [
         [ "InsuranceRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_7a300d8dcaf38b73ff7a98844b1cd0b2.html", null ]
       ] ],
+      [ "Invoice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html", null ],
+      [ "LegalPerson", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_legal_person.html", null ],
       [ "Migration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_migration.html", null ],
       [ "MissingTranslation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_missing_translation.html", null ],
       [ "Musician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html", [
         [ "Musician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_4045ad3d1799dd17c3639bac4a84c2a1.html", null ]
       ] ],
       [ "MusicianEmailAddress", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_email_address.html", null ],
-      [ "MusicianInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html", [
-        [ "MusicianInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_fcab19ab1703b7a3ddb5348c0e79b5a0.html", null ]
-      ] ],
+      [ "MusicianInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html", null ],
       [ "MusicianRowAccessToken", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_row_access_token.html", null ],
       [ "Project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html", [
         [ "Project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_ca19055342d984fd4c383245d0c57404.html", null ]
@@ -504,46 +536,42 @@ var hierarchy =
         [ "ProjectCreatedEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_created_event.html", null ]
       ] ],
       [ "ProjectInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html", null ],
-      [ "ProjectInstrumentationNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrumentation_number.html", [
-        [ "ProjectInstrumentationNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_5f9b0effdfab28a8315a7a6f368d0601.html", null ]
-      ] ],
-      [ "ProjectParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html", [
-        [ "ProjectParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html", null ]
-      ] ],
+      [ "ProjectInstrumentationNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrumentation_number.html", null ],
+      [ "ProjectParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html", null ],
       [ "ProjectParticipantField", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html", [
         [ "ProjectParticipantField", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html", null ]
       ] ],
       [ "ProjectParticipantFieldDataOption", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_data_option.html", [
         [ "ProjectParticipantFieldDataOption", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html", null ]
       ] ],
-      [ "ProjectParticipantFieldDatum", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html", [
-        [ "ProjectParticipantFieldDatum", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_32ecfb485eb888718d3bd8a01b150822.html", null ]
-      ] ],
-      [ "ProjectPayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html", [
-        [ "ProjectPayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_0bcff1787a1aa68e85d1db95554b7d37.html", null ]
-      ] ],
+      [ "ProjectParticipantFieldDatum", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html", null ],
+      [ "ProjectPayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html", null ],
       [ "ProjectWebPage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_web_page.html", null ],
-      [ "SepaBankAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_account.html", [
-        [ "SepaBankAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a5de61efc2f2d2909d49a031f34fda26.html", null ]
-      ] ],
+      [ "SepaBankAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_account.html", null ],
       [ "SepaBulkTransaction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html", [
         [ "SepaBankTransfer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html", null ],
         [ "SepaDebitNote", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html", null ]
       ] ],
-      [ "SepaDebitMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html", [
-        [ "SepaDebitMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_0cdd98cb4530645e5b8498a4de73709b.html", null ]
-      ] ],
+      [ "SepaDebitMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html", null ],
       [ "TableFieldTranslation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_table_field_translation.html", null ],
       [ "TaxExemptionNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html", null ],
       [ "Translation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_translation.html", null ],
       [ "TranslationKey", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_translation_key.html", null ],
       [ "TranslationLocation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_translation_location.html", null ],
+      [ "WebBrowserHistoryData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html", [
+        [ "WebBrowserHistoryData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_b3417d70ddf4f855a3e3b0302cc0542a.html", null ]
+      ] ],
+      [ "WebBrowserHistoryEntry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html", [
+        [ "WebBrowserHistoryEntry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8ded5e7c3b05b9cb209121064cc9ebe6.html", null ]
+      ] ],
+      [ "WebBrowserHistoryState", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_state.html", [
+        [ "WebBrowserHistoryState", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_70234111c966f814d7d8a6a9c30aa50f.html", null ]
+      ] ],
       [ "IOptions", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_i_options.html", [
         [ "DefaultOptions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_default_options.html", [
           [ "Config", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_1_1_config.html", null ]
         ] ]
       ] ],
-      [ "RequestParameterService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_request_parameter_service.html", null ],
       [ "ToolTipsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html", null ]
     ] ],
     [ "ArrayObject", null, [
@@ -553,12 +581,14 @@ var hierarchy =
       [ "DatabaseSanitizers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers.html", null ],
       [ "DatabaseStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_storage.html", null ],
       [ "ExecutiveBoard", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_executive_board.html", null ],
+      [ "GnuCashSetup", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_gnu_cash_setup.html", null ],
       [ "HelloWorld", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_hello_world.html", null ],
       [ "Migrations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_migrations.html", null ],
       [ "ParticipantFolders", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_participant_folders.html", null ],
       [ "ProjectEvents", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_events.html", null ],
       [ "ProjectFolders", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_folders.html", null ],
       [ "RecurringReceivables", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_recurring_receivables.html", null ],
+      [ "SentNotifications", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_sent_notifications.html", null ],
       [ "TooltipsFind", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_tooltips_find.html", null ],
       [ "TooltipsList", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_tooltips_list.html", null ],
       [ "UpdateGeoCodingCache", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_update_geo_coding_cache.html", null ],
@@ -568,23 +598,23 @@ var hierarchy =
       [ "AdminSettingsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_admin_settings_controller.html", null ],
       [ "BackgroundJobController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_background_job_controller.html", null ],
       [ "BlogController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_blog_controller.html", null ],
+      [ "ConfigCheckController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_config_check_controller.html", null ],
       [ "ContactsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_contacts_controller.html", null ],
       [ "CryptoController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_crypto_controller.html", null ],
       [ "CspViolationController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_csp_violation_controller.html", null ],
+      [ "DocumentStorageUploadController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_document_storage_upload_controller.html", null ],
       [ "DownloadsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_downloads_controller.html", null ],
       [ "EmailFormController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html", null ],
-      [ "ImagesController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_images_controller.html", null ],
       [ "InstrumentInsuranceController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_instrument_insurance_controller.html", null ],
-      [ "LegacyEventsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html", null ],
       [ "MailMergeController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_mail_merge_controller.html", null ],
       [ "MailingListsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_mailing_lists_controller.html", null ],
       [ "MigrationsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_migrations_controller.html", null ],
       [ "MusicianValidationController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_musician_validation_controller.html", null ],
       [ "MusiciansController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_musicians_controller.html", null ],
       [ "PageController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_page_controller.html", null ],
-      [ "PaymentsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_payments_controller.html", null ],
       [ "PersonalSettingsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_personal_settings_controller.html", null ],
       [ "PmeTableController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_pme_table_controller.html", null ],
+      [ "ProblemReportController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_problem_report_controller.html", null ],
       [ "ProgressStatusController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_progress_status_controller.html", null ],
       [ "ProjectEventsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_events_controller.html", null ],
       [ "ProjectParticipantFieldsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_participant_fields_controller.html", null ],
@@ -593,10 +623,11 @@ var hierarchy =
       [ "ProjectsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_projects_controller.html", null ],
       [ "SepaBulkTransactionsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_sepa_bulk_transactions_controller.html", null ],
       [ "SepaDebitMandatesController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_sepa_debit_mandates_controller.html", null ],
-      [ "TaxExemptionNoticesController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_tax_exemption_notices_controller.html", null ],
       [ "ToolTipsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_tool_tips_controller.html", null ],
       [ "UploadsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_uploads_controller.html", null ],
-      [ "ValidationController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_validation_controller.html", null ]
+      [ "ValidationController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_validation_controller.html", null ],
+      [ "VueAppController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_vue_app_controller.html", null ],
+      [ "WebBrowserHistoryController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_web_browser_history_controller.html", null ]
     ] ],
     [ "Entity", null, [
       [ "Blog", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html", null ],
@@ -674,6 +705,7 @@ var hierarchy =
     [ "IEventListener", null, [
       [ "AfterEncryptionKeyPairChangedListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_after_encryption_key_pair_changed_listener.html", null ],
       [ "BeforeEncryptionKeyPairChangedListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_before_encryption_key_pair_changed_listener.html", null ],
+      [ "BeforeTemplateRenderedListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_before_template_rendered_listener.html", null ],
       [ "CalendarDeletedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_deleted_event_listener.html", null ],
       [ "CalendarObjectCreatedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_object_created_event_listener.html", null ],
       [ "CalendarObjectDeletedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_object_deleted_event_listener.html", null ],
@@ -698,14 +730,15 @@ var hierarchy =
       [ "SubAdminEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sub_admin_event_listener.html", null ],
       [ "TranslationNotFoundListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_translation_not_found_listener.html", null ],
       [ "UserLoggedInEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_user_logged_in_event_listener.html", null ],
-      [ "UserLoggedOutEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_user_logged_out_event_listener.html", null ]
+      [ "UserLoggedOutEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_user_logged_out_event_listener.html", null ],
+      [ "BeforeMessageLoggedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_listener_1_1_before_message_logged_event_listener.html", null ]
     ] ],
     [ "IIconSection", null, [
       [ "AdminSection", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_admin_section.html", null ],
       [ "PersonalSection", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_personal_section.html", null ]
     ] ],
     [ "IL10N", null, [
-      [ "AppL10N", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_app_l10_n.html", null ]
+      [ "AppL10N", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n_1_1_app_l10_n.html", null ]
     ] ],
     [ "IMountProvider", null, [
       [ "MountProvider", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_mount_provider.html", null ]
@@ -722,33 +755,42 @@ var hierarchy =
     ] ],
     [ "JsonSerializable", null, [
       [ "CompositePayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html", null ],
+      [ "DonationReceipt", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html", null ],
+      [ "Invoice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html", null ],
+      [ "LegalPerson", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_legal_person.html", null ],
       [ "Musician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html", null ],
       [ "ProjectPayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html", null ],
-      [ "TaxExemptionNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html", null ]
+      [ "TaxExemptionNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html", null ],
+      [ "IMAPMessage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_i_m_a_p_message.html", null ]
     ] ],
     [ "Middleware", null, [
-      [ "CSPViolationReporting", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_c_s_p_violation_reporting.html", null ],
       [ "ConfigLockMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_config_lock_middleware.html", null ],
+      [ "ContentSecurityPolicyMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_content_security_policy_middleware.html", null ],
+      [ "DebugModeMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_debug_mode_middleware.html", null ],
+      [ "ExceptionMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_exception_middleware.html", null ],
       [ "GroupMemberMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_group_member_middleware.html", null ],
       [ "SubadminMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_subadmin_middleware.html", null ]
     ] ],
     [ "OCSController", null, [
       [ "EncryptionController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_encryption_controller.html", null ],
-      [ "MaintenanceApiController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_maintenance_api_controller.html", null ],
-      [ "ProjectEventsApiController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_events_api_controller.html", null ]
+      [ "MaintenanceApiController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_maintenance_api_controller.html", null ]
     ] ],
     [ "PhpEnumType", null, [
       [ "EnumType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html", [
+        [ "AbstractEnumType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_enum_type.html", [
+          [ "EnumGender", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_gender.html", null ],
+          [ "EnumMemberStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_member_status.html", null ],
+          [ "EnumProjectTemporalType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_project_temporal_type.html", null ]
+        ] ],
         [ "EnumAccessPermission", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_access_permission.html", null ],
         [ "EnumAttachmentOrigin", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_attachment_origin.html", null ],
         [ "EnumDataTransformation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_data_transformation.html", null ],
         [ "EnumDirEntryType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_dir_entry_type.html", null ],
         [ "EnumFileType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_file_type.html", null ],
         [ "EnumGeographicalScope", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_geographical_scope.html", null ],
-        [ "EnumMemberStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_member_status.html", null ],
+        [ "EnumGnuCashSlotType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_gnu_cash_slot_type.html", null ],
         [ "EnumParticipantFieldDataType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_participant_field_data_type.html", null ],
         [ "EnumParticipantFieldMultiplicity", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_participant_field_multiplicity.html", null ],
-        [ "EnumProjectTemporalType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_project_temporal_type.html", null ],
         [ "EnumSepaTransaction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_sepa_transaction.html", null ],
         [ "EnumTaxType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_tax_type.html", null ],
         [ "EnumVCalendarType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_v_calendar_type.html", null ],
@@ -765,6 +807,7 @@ var hierarchy =
       [ "ReservedWordQuoteStrategy", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_reserved_word_quote_strategy.html", null ]
     ] ],
     [ "RuntimeException", null, [
+      [ "FilterFailedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_filter_failed_exception.html", null ],
       [ "UndoableRunQueueException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_undoable_run_queue_exception.html", null ]
     ] ],
     [ "ServerPlugin", null, [
@@ -783,13 +826,21 @@ var hierarchy =
     [ "SQLLogger", null, [
       [ "CloudLogger", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_logging_1_1_cloud_logger.html", null ]
     ] ],
+    [ "Stringable", null, [
+      [ "ClassMetadataDecorator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html", null ]
+    ] ],
+    [ "TemplateResponse", null, [
+      [ "PreRenderedTemplateResponse", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_pre_rendered_template_response.html", null ]
+    ] ],
     [ "TimedJob", null, [
       [ "CleanupExpiredDownloads", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_expired_downloads.html", null ],
+      [ "CleanupFilesCache", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_files_cache.html", null ],
       [ "CleanupProjectEvents", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_project_events.html", null ],
       [ "CleanupTemporaryFiles", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_temporary_files.html", null ],
       [ "LazyUpdateGeoCoding", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_lazy_update_geo_coding.html", [
         [ "BulkUpdateGeoCoding", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_bulk_update_geo_coding.html", null ]
       ] ],
+      [ "ScanFiles", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_scan_files.html", null ],
       [ "UpdateAppMTimes", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_update_app_m_times.html", null ]
     ] ],
     [ "UuidBinaryType", null, [

@@ -1,0 +1,9 @@
+<map id="IMAPMessage" name="IMAPMessage">
+<area shape="rect" id="Node000001" title=" " alt="" coords="138,152,246,177"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,123,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,40,184,150,180,154,82,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="147,5,237,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,45,195,152,189,152,189,45"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="261,5,459,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="342,43,300,85,248,130,213,154,210,150,245,126,296,81,338,39"/>
+</map>

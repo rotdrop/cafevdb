@@ -1,0 +1,5 @@
+<map id="isEncrypted" name="isEncrypted">
+<area shape="rect" id="Node000001" title="{Determines if the given data has been encrypted by this cryptor instance.A returned null means &quot;don&#39;..." alt="" coords="5,13,96,38"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_seal_service.html#af4bf4f6ed57c382915a7325df887b314" title="Loose check if the given $data may be a valid seal." alt="" coords="144,5,323,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,23,130,23,130,28,96,28"/>
+</map>

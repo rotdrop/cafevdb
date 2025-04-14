@@ -26,16 +26,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setSequence", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#afcfc8a3893d58791970cf1873181ad07", null ],
     [ "setWrittenMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a70bc2e360483b009b7c8483f8bb5a083", null ],
     [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
-    [ "$lastUsedDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a9fbb1ca94801753c42005aaa7ce48787", null ],
-    [ "$mandateDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a940977bb135ba8802259376ea80322c4", null ],
-    [ "$mandateReference", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#ae027a4f37ff609f421439c570dba022d", null ],
-    [ "$musician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a402a1261eca63ebf5ef4c4af11c1a648", null ],
-    [ "$nonRecurring", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#ad232efc971498d5db13775da56850640", null ],
-    [ "$payments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#aa127c323b47e91df8c19d3b9e08acedc", null ],
-    [ "$preNotificationBusinessDays", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a1f440315b4611265b4fa14a7a09318b4", null ],
-    [ "$preNotificationCalendarDays", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#ab9b51735f4492136a01437e9fa8424f1", null ],
-    [ "$project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a26a7d69cd5cc291d752925dd312b5d1c", null ],
-    [ "$sepaBankAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#acedc5eb8c4a4a17215c0b9ac4d19ace0", null ],
-    [ "$sequence", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a6a7105969841fb85263c66d024409c19", null ],
-    [ "$writtenMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#ad242946f289e9fbbc76c3aae8b0c79e2", null ]
+    [ "$project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a26a7d69cd5cc291d752925dd312b5d1c", null ]
 ];

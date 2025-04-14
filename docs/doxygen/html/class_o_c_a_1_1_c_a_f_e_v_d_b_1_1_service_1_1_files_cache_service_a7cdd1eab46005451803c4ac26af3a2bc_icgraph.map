@@ -1,0 +1,12 @@
+<map id="getNodeFolder" name="getNodeFolder">
+<area shape="rect" id="Node000001" title="Potentially create and return a Folder&#45;node for storing cache&#45;data for the given $node." alt="" coords="225,56,332,81"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#a0c96b208e994addcfad27148429d4b2e" title="Return the File holding the cached data for the given $node and $key or return null if there is no da..." alt="" coords="113,5,175,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="231,54,174,32,176,27,232,49"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#aa0a0df5b53698ee4f2ebc34ace533d8a" title="Store the given data in the cache directory using $key as file&#45;name." alt="" coords="14,55,54,80"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="211,71,54,70,54,65,211,66"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#a2c27a6a0c882ab99d00e7c0ac17b9733" title="Hash the content of $file and remove existing data if it does not match the stored hash." alt="" coords="111,107,177,132"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="233,89,179,109,177,104,231,84"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#a8f91e9115b51c72e48065b71ce06b745" title="Delete the cached data for the given $node and $key." alt="" coords="5,5,63,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,21,63,21,63,15,99,15"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="104,39,55,61,53,56,102,34"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="DonationReceiptsStorage" name="DonationReceiptsStorage">
+<area shape="rect" id="Node000001" title="Storage implementation for data&#45;base storage, including access to encrypted entities." alt="" coords="5,317,176,343"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html" title="Storage implementation for data&#45;base storage, including access to encrypted entities." alt="" coords="57,243,124,268"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,282,93,317,88,317,88,282"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="11,155,127,180"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="78,193,90,241,85,243,73,194"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory.html" title="Generate in&#45;memory README nodes." alt="" coords="152,155,267,180"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="184,190,108,245,105,240,181,186"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_abstract_read_me_factory.html" title="Abstract factory baseclass." alt="" coords="127,80,291,105"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="212,120,212,154,207,154,207,120"/>
+<area shape="rect" id="Node000006" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory_interface.html" title="Factory interface for generating in&#45;memory README nodes." alt="" coords="126,5,293,31"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="212,45,212,80,207,80,207,45"/>
+</map>

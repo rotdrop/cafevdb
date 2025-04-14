@@ -1,0 +1,7 @@
+<map id="nameProjectWebPages" name="nameProjectWebPages">
+<area shape="rect" id="Node000001" title="Set the name of all registered web&#45;pages to the canonical name, project name given." alt="" coords="5,60,164,85"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a3d0963e68bb313b163a73f2803c64600" title="Get name." alt="" coords="212,5,391,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,57,198,49,199,54,155,63"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#ab7bb543843040401661c023b701bb5f1" title="Get webPages." alt="" coords="212,84,391,139"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="157,83,199,90,198,96,156,88"/>
+</map>

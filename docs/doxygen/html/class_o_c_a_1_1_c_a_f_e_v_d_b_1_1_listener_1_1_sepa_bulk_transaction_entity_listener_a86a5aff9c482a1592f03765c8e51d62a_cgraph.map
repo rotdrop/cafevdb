@@ -1,0 +1,9 @@
+<map id="preUpdate" name="preUpdate">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,55,88,80"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html#a67dc75ef4673633d86839bca53c83997" title="Protect against re&#45;entrance when the preRemove() handler causes changes to the entity." alt="" coords="143,5,223,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,52,134,33,135,38,83,57"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html#a6ed592318d0e8460cf48f5d600ce7915" title="{}" alt="" coords="143,55,224,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="88,65,129,65,129,70,88,70"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html#ab5648c0b8a0e88c05df35f11d9b053b5" title="Protect against re&#45;entrance when the preRemove() handler causes changes to the entity." alt="" coords="136,104,231,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="83,78,135,97,134,102,82,83"/>
+</map>

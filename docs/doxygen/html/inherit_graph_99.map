@@ -1,3 +1,15 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_open_document_filler.html" title="Autofill for Libre&#45;/Openoffice documents." alt="" coords="5,5,146,32"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,129,93,155"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_config_lock_middleware.html" title="Deny all request while config&#45;lock is active." alt="" coords="173,5,328,31"/>
+<area shape="poly" id="edge441_Node000000_Node000001" title=" " alt="" coords="64,116,96,76,117,56,140,40,172,26,174,31,143,44,120,61,100,80,68,119"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_content_security_policy_middleware.html" title="Tweak the CSP header, in particular allow iframe access for &quot;local&quot; iframes if requested by the contr..." alt="" coords="141,55,360,80"/>
+<area shape="poly" id="edge442_Node000000_Node000002" title=" " alt="" coords="80,120,140,89,177,78,179,83,142,94,82,124"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_debug_mode_middleware.html" title="Sends CSP reports to a dedicated addresss for debugging." alt="" coords="171,104,330,129"/>
+<area shape="poly" id="edge443_Node000000_Node000003" title=" " alt="" coords="107,132,171,124,171,129,107,137"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_exception_middleware.html" title="Turn an exception into a data response which can be parsed by the frontend if the controller method h..." alt="" coords="177,153,324,179"/>
+<area shape="poly" id="edge444_Node000000_Node000004" title=" " alt="" coords="108,146,177,155,177,160,107,152"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_group_member_middleware.html" title="Verifies whether an user has at least subadmin rights." alt="" coords="165,203,336,228"/>
+<area shape="poly" id="edge445_Node000000_Node000005" title=" " alt="" coords="84,159,142,188,184,200,182,205,140,192,82,164"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_subadmin_middleware.html" title="Verifies whether an user has at least subadmin rights." alt="" coords="177,252,324,277"/>
+<area shape="poly" id="edge446_Node000000_Node000006" title=" " alt="" coords="69,164,100,202,120,221,143,237,178,251,176,256,140,242,117,225,96,206,64,168"/>
 </map>

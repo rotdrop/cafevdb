@@ -25,6 +25,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service =
     [ "updateVCalendarFromRequest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#abed0a7f84ce98b1f4ffb17422f83072a", null ],
     [ "updateVEventFromRequest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#af4064e41fe3647594fa8fd8166fb42d2", null ],
     [ "updateVTodoFromRequest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ac0cf311d5f87c7371ee0860d1e13c0bc", null ],
-    [ "validateRequest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#add55d063b245dd8cb32dba60c7d38b24", null ],
     [ "validateVTodoRequest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7878d1bc4f52ee6ec8617caa845e9e71", null ]
 ];

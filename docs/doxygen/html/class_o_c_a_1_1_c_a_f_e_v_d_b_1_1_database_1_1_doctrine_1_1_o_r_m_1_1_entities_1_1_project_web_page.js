@@ -9,10 +9,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setArticleName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_web_page.html#af7ff46368ea2182d607be6a7b3e3b96c", null ],
     [ "setCategoryId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_web_page.html#a3d73dac30a3a9483a1b250fe8cff5fbb", null ],
     [ "setPriority", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_web_page.html#a8f85e86a0294c2d785ad6c8561cf29fa", null ],
-    [ "setProject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_web_page.html#aec78c4546ef4c8c304ccda4d008c6b62", null ],
-    [ "$articleId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_web_page.html#aba79612a451b2a5598e040b876aa2907", null ],
-    [ "$articleName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_web_page.html#a46895197191da1769cb24443e67ba854", null ],
-    [ "$categoryId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_web_page.html#a406e679f78389ed06de6693550863a52", null ],
-    [ "$priority", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_web_page.html#a1db32954fc2c0afda0c070da35e2b2c3", null ],
-    [ "$project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_web_page.html#a26a7d69cd5cc291d752925dd312b5d1c", null ]
+    [ "setProject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_web_page.html#aec78c4546ef4c8c304ccda4d008c6b62", null ]
 ];

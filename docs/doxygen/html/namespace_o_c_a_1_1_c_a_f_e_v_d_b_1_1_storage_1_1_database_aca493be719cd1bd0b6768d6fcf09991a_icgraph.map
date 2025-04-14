@@ -1,0 +1,5 @@
+<map id="getDocumentsFolderName" name="getDocumentsFolderName">
+<area shape="rect" id="Node000001" title="Get the name of the per&#45;participant document folder." alt="" coords="249,20,428,45"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_project_participants_storage.html#a74e2a422a71e92aefaa4541ace5da299" title="{Extension point for sub&#45;classes in order to provide their own ReadMe factory.ReadMeFactoryInterface}" alt="" coords="5,5,201,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,35,202,35,202,30,235,30"/>
+</map>

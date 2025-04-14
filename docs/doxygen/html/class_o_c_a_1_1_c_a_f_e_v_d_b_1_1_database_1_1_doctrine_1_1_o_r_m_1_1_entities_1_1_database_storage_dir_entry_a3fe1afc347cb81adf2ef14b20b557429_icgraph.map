@@ -1,5 +1,7 @@
 <map id="isRootFolder" name="isRootFolder">
-<area shape="rect" id="Node000001" title=" " alt="" coords="138,5,233,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_dir_entry.html#a2ee306b3cf5ab89be63cfdef2db1000d" title=" " alt="" coords="5,5,90,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,21,90,21,90,16,122,16"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="232,41,328,67"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_dir_entry.html#a2ee306b3cf5ab89be63cfdef2db1000d" title=" " alt="" coords="52,5,137,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="218,45,137,29,138,24,219,39"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html#a81b67c9ee9c89443a168b57161393dc6" title=" " alt="" coords="5,55,184,125"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="219,68,185,75,184,70,218,63"/>
 </map>

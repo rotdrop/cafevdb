@@ -1,0 +1,8 @@
+<map id="addPreNotificationEmail" name="addPreNotificationEmail">
+<area shape="rect" id="Node000001" title="Add a new email to the list of pre&#45;notificiations." alt="" coords="5,20,168,45"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#a5687f36f39c8921fc7ae867f446ac5b3" title="Returns messageId." alt="" coords="423,5,601,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,30,409,30,409,35,168,35"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html#aa07f5968d9fa052af0a0b1bda5ef7313" title="Get the preNotificationEmail for the specified musician." alt="" coords="216,45,375,71"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="169,40,203,44,202,49,168,45"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="375,46,409,42,409,47,375,51"/>
+</map>

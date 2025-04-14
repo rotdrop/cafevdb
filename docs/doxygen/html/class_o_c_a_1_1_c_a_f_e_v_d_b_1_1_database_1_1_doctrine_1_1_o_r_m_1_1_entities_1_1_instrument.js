@@ -17,12 +17,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setProjectInstruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#ae2becd97351e58291e8694f84a4d5ee3", null ],
     [ "setSortOrder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#af41bffb8736fa02ae868dad10c7125b0", null ],
     [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
-    [ "$families", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#aec3bf8aa2474596b353d93fe07053f29", null ],
-    [ "$id", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#a3587bd00e5602c1800515b6f9ffbebc5", null ],
-    [ "$musicianInstruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#a447096b81ec98d531e2cd6db071cf5f5", null ],
-    [ "$name", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#a58551b63ba97fb35b928f11f36b1fac6", null ],
-    [ "$projectInstrumentationNumbers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#acec904ced1c5cefd076349c768cd06bc", null ],
-    [ "$projectInstruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#ab1fe2c9c6ac1d8c963f85be1d0fc1184", null ],
-    [ "$sortOrder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#aa027ee27139ee6bd257ae4f5fbdfbb89", null ],
     [ "$untranslatedName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#a086a27d789ef1b027c42f6a6bb0dfa7a", null ]
 ];

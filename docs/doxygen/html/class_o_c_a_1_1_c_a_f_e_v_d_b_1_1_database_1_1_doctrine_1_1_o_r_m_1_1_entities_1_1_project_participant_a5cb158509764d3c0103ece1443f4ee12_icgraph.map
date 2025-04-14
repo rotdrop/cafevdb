@@ -1,0 +1,7 @@
+<map id="getProject" name="getProject">
+<area shape="rect" id="Node000001" title="Get project." alt="" coords="308,64,389,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a50b40d1e3c4caa0ea5fe7dcca6e3e203" title="Set projectParticipant." alt="" coords="5,5,260,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="294,68,260,61,261,56,295,63"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#a8413454e6ddfb601e6585d9b45fc121b" title="Set projectParticipant." alt="" coords="35,85,231,154"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="295,90,232,103,231,97,294,85"/>
+</map>

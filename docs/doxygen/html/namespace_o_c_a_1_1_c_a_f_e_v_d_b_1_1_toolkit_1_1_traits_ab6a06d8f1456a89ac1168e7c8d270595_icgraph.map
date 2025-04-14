@@ -1,0 +1,14 @@
+<map id="logInfo" name="logInfo">
+<area shape="rect" id="Node000001" title="Log an informational message." alt="" coords="985,85,1047,111"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a3df413a5505fe78edb1fe26f42817d86" title=" " alt="" coords="755,5,937,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="972,84,917,63,919,58,973,79"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a89cc023810bad0773bc2699e1265c96c" title=" " alt="" coords="5,39,220,93"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="972,99,268,75,220,73,220,68,268,70,972,94"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a53e661a445d92119cf8033c6a394de7f" title="Parse a storage user input value and return its value in bytes." alt="" coords="797,136,895,161"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="973,113,891,138,889,133,971,108"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1f4cd024c04b5fd11c66259435da40ab" title="Return an array of required mime type mappings missing from this Nextcloud instance." alt="" coords="501,5,707,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="741,35,707,35,707,30,741,30"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#ab63abc381405369b014b433dded6a20c" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="268,5,453,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="488,35,454,35,454,30,488,30"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="255,50,221,54,220,49,254,44"/>
+</map>

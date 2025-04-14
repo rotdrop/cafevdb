@@ -1,0 +1,10 @@
+<map id="count" name="count">
+<area shape="rect" id="Node000001" title="Counts entities by a set of criteria." alt="" coords="7,52,62,77"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="9,53,3,44,6,34,17,28,35,25,56,29,65,37,61,41,54,34,35,31,19,33,10,37,8,43,13,51"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a28a64f0eb0f49382d6349b5ab65c4b23" title="Set and get the given name as the current database target entity." alt="" coords="110,52,269,77"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="62,62,96,62,96,67,62,67"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html#ae2b0e1dbe7640aefaf7d54c6a94d08fe" title="Public export of parent function." alt="" coords="317,5,546,60"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="269,52,302,47,303,52,269,57"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ae8292d652c1dc8225df1cd0630dbaf27" title="Set the given name as the current database target entity." alt="" coords="352,84,511,109"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="269,73,339,82,338,87,269,78"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="getFile" name="getFile">
+<area shape="rect" id="Node000001" title="Return the File holding the cached data for the given $node and $key or return null if there is no da..." alt="" coords="111,31,172,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#a8f91e9115b51c72e48065b71ce06b745" title="Delete the cached data for the given $node and $key." alt="" coords="5,5,63,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,36,62,27,64,22,98,30"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#aa0a0df5b53698ee4f2ebc34ace533d8a" title="Store the given data in the cache directory using $key as file&#45;name." alt="" coords="14,55,54,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="98,56,55,66,54,60,97,51"/>
+</map>

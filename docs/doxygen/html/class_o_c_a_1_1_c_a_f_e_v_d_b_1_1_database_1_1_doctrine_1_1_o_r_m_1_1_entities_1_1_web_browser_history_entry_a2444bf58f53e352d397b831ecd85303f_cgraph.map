@@ -1,0 +1,13 @@
+<map id="__construct" name="__construct">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,99,96,125"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#abca935c70e202b59da16888e8e65c519" title=" " alt="" coords="144,99,212,125"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,109,130,109,130,115,96,115"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#aafb49e3e395ddb439cc58c49eced0de6" title=" " alt="" coords="260,77,439,147"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="212,109,246,109,246,115,212,115"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#a25de72071f2c2518b9906a2bf6a58bc6" title="Add a user&#45;id or group&#45;id to the list of &quot;encryption identities&quot;, i.e." alt="" coords="487,5,665,75"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="438,81,473,70,474,75,440,86"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#ad40c766ec8aced9770fe6ae269a1e781" title=" " alt="" coords="545,99,607,125"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="439,109,531,109,531,115,439,115"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#afbf787ced76807989fb3093e1772c5a1" title=" " alt="" coords="541,149,611,174"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="440,129,528,148,527,153,439,134"/>
+</map>

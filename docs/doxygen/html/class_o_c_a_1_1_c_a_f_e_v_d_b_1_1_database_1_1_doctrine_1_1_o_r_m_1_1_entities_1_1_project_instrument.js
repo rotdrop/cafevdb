@@ -18,12 +18,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setProjectParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a50b40d1e3c4caa0ea5fe7dcca6e3e203", null ],
     [ "setSectionLeader", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a861b3fb8a0a090b407ba6830c223bffe", null ],
     [ "setVoice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#ac73a590e50ff687e2a25a2793a7e750a", null ],
-    [ "$instrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#ae1492cc115c8e75d59ee928e6389a6f7", null ],
-    [ "$instrumentationNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a1a2e826b359ae09b7fec559d091cbf75", null ],
-    [ "$musician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a38093df1a79163b66db3daeb0caf2f9f", null ],
-    [ "$musicianInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a624f0afbf0a6e6e0890b0085d1871bb9", null ],
-    [ "$project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a26a7d69cd5cc291d752925dd312b5d1c", null ],
-    [ "$projectParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a8410a0c6c915cbe0221630ea3c08e986", null ],
-    [ "$sectionLeader", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#af75e6c072e63b5e70220bee7c22cf95f", null ],
-    [ "$voice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a49211bb972d998bb8a7b21ea59976a11", null ]
+    [ "$voice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a55fe5127807996fed87efd2c30418b83", null ]
 ];

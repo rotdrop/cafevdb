@@ -1,0 +1,5 @@
+<map id="ContentSecurityPolicyMiddleware" name="ContentSecurityPolicyMiddleware">
+<area shape="rect" id="Node000001" title="Tweak the CSP header, in particular allow iframe access for &quot;local&quot; iframes if requested by the contr..." alt="" coords="5,79,224,104"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="71,5,159,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,44,117,79,112,79,112,44"/>
+</map>

@@ -10,6 +10,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service =
     [ "decryptConfigValues", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#acfd177d26300298d7c2758fe04ee615b", null ],
     [ "deleteAppValue", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a40b0e6098c85e4fe46be90feb5346f23", null ],
     [ "deleteConfigValue", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a4a5f07c964bfd3ef94b8dc177ef2538a", null ],
+    [ "documentsTemplatesTranslationHack", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#adde74d96260980c7792794bfc6177d19", null ],
     [ "encrypt", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a9027ef82dcfb0d54a78e1cfeab05b0e6", null ],
     [ "encryptConfigValues", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a241ca6802fbc0627ec7c9baee0d3fc35", null ],
     [ "encryptionKeyValid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a36f6754a5d7be1b744afc9c434e2448f", null ],
@@ -39,7 +40,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service =
     [ "getL10n", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7c1c3836d124a6882145c1136ab369ef", null ],
     [ "getL10NFactory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aca2f9f0cf0c4fc6751b4c7b9521f0f8b", null ],
     [ "getLanguage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ad50ea5d1877a5adc2e231dc935b7bffc", null ],
-    [ "getLocale", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ae705742d573e516c783122fb4a0e1aea", null ],
+    [ "getLocale", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a5a4b6b89baedb3e5b937bb2d558b0034", null ],
     [ "getSecureRandom", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a1a98a3b795fb6376cc24826460e80bf7", null ],
     [ "getSubAdminGroup", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8c408b160c3fecad5096a23d49209fa6", null ],
     [ "getSubAdminGroupId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aa2b39aa8d6ef6b2cf9db10c10954687b", null ],
@@ -71,5 +72,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service =
     [ "transliterate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aa2f4a6f1650343e99660cab994aec636", null ],
     [ "verifyHash", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#af2197000ac5cbb14eb16df8e2861dc70", null ],
     [ "$encryptionCache", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaed05a8ddbfba4943c739e336e8551f5", null ],
+    [ "$localeLanguageCache", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8631990295cb4fcda209bcb0b4a56841", null ],
     [ "$user", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a53d538621473eb122e15b5e5d609e2b1", null ]
 ];

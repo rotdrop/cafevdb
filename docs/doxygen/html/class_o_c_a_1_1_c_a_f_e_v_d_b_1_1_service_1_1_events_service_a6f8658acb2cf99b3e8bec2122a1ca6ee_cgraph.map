@@ -1,0 +1,7 @@
+<map id="ensureProjectRegistrationEvent" name="ensureProjectRegistrationEvent">
+<area shape="rect" id="Node000001" title="Ensure that the &quot;other&quot; calendar contains a project registration event if and only if the registratio..." alt="" coords="5,53,177,93"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a3d0963e68bb313b163a73f2803c64600" title="Get name." alt="" coords="243,5,422,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,56,229,47,230,52,178,61"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#af6fc4821e8b51340f180c7333c69abb7" title="Returns registrationStartDate." alt="" coords="225,84,440,139"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="178,84,212,89,211,95,177,89"/>
+</map>

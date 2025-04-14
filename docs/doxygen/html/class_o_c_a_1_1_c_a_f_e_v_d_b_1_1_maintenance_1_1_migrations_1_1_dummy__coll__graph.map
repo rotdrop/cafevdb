@@ -1,0 +1,5 @@
+<map id="Dummy" name="Dummy">
+<area shape="rect" id="Node000001" title="Dummy class in order to trigger the migration framework." alt="" coords="11,79,79,104"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html" title="Uni&#45;directional migrations for the orchestra DB." alt="" coords="5,5,84,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,44,47,79,42,79,42,44"/>
+</map>

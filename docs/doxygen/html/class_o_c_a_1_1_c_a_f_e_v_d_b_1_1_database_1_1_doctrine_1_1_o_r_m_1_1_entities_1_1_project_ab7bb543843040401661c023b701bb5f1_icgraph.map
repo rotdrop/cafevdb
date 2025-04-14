@@ -1,0 +1,9 @@
+<map id="getWebPages" name="getWebPages">
+<area shape="rect" id="Node000001" title="Get webPages." alt="" coords="241,99,344,124"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a01e2a55d103eb4cc20e0b7b402df4f58" title="Fetch fetch the article entities from the database." alt="" coords="7,5,192,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="247,96,166,63,168,58,249,91"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#af20cdbd13525d20db3a081f26015124e" title="Set the name of all registered web&#45;pages to the canonical name, project name given." alt="" coords="5,84,193,139"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="228,114,194,114,194,109,228,109"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5119cd5af05d89c9c6024dd2c2ff91b0" title="Fetch all articles known to the system." alt="" coords="9,163,189,217"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="249,132,168,165,166,160,247,127"/>
+</map>

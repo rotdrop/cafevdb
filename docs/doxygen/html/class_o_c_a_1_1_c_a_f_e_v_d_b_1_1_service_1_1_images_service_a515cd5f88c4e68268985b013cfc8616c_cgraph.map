@@ -1,0 +1,15 @@
+<map id="dataUriFromFile" name="dataUriFromFile">
+<area shape="rect" id="Node000001" title="Generate a data URI from the given file with caching." alt="" coords="5,42,120,67"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#a11c8fc1d6b1e1c6a54f9a87f476e4ece" title="Create a data&#45;uri from a data string." alt="" coords="537,42,655,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,39,184,23,278,9,384,3,437,5,490,12,525,21,557,34,555,39,523,26,489,17,437,10,384,8,279,14,185,28,112,44"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_file.html#ac06e9f7b10fca30eb41e41d4dc108b1c" title="Get mimeType." alt="" coords="311,27,489,82"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,52,297,52,297,57,120,57"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#aa2dddac5588be57828916e7e5b65c816" title="Generate SVG image data from a given file." alt="" coords="168,99,263,125"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="98,65,169,92,167,97,96,70"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="256,97,298,83,300,89,258,102"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#a785550a3227a71309fe9204dedfe6802" title="Return $data unmodified if it is an SVG&#45;image already, otherwise wrap a given image into an SVG eleme..." alt="" coords="331,106,469,131"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="263,111,318,113,318,118,263,116"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#ae9ae7650f5f90dc8050c267705dee550" title="Optimize a given SVG, cache the result and return the optimzed SVG as string." alt="" coords="360,155,440,181"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="253,122,311,141,348,152,346,157,310,146,251,127"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="447,103,489,91,548,70,550,75,490,96,449,108"/>
+</map>

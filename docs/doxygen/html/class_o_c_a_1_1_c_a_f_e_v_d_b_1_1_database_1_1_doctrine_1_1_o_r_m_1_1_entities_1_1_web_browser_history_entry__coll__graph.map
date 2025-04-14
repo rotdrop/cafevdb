@@ -1,0 +1,21 @@
+<map id="WebBrowserHistoryEntry" name="WebBrowserHistoryEntry">
+<area shape="rect" id="Node000001" title="Generic directory entry for a database&#45;backed file." alt="" coords="407,181,577,207"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="313,5,410,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="424,28,452,37,481,50,507,68,528,92,534,116,529,141,517,164,504,182,500,179,513,162,524,140,529,116,523,95,503,72,478,55,450,42,422,33"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_state.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="99,93,269,119"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="299,34,269,44,240,57,215,75,196,95,192,91,212,71,237,52,267,39,298,29"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="193,181,362,207"/>
+<area shape="poly" id="edge7_Node000006_Node000002" title=" " alt="" coords="352,44,285,182,281,180,348,42"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="346,93,513,119"/>
+<area shape="poly" id="edge10_Node000007_Node000002" title=" " alt="" coords="381,40,422,91,418,94,377,43"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,120,349,155,443,179,442,184,347,160,232,125"/>
+<area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="178,132,177,145,181,156,194,169,212,179,209,184,191,174,176,159,172,146,172,132"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,5,136,31"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="80,42,97,67,116,81,138,91,136,96,113,86,93,71,76,45"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="197,5,277,31"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="186,35,171,44,160,56,157,65,159,74,173,92,169,95,155,76,152,65,155,53,168,40,183,30"/>
+<area shape="poly" id="edge11_Node000007_Node000005" title=" " alt="" coords="271,35,336,67,397,91,395,96,334,72,269,40"/>
+<area shape="poly" id="edge6_Node000003_Node000006" title=" " alt="" coords="254,173,224,145,196,121,200,117,227,141,257,169"/>
+<area shape="poly" id="edge12_Node000001_Node000007" title=" " alt="" coords="453,127,465,141,488,180,484,182,461,144,449,131"/>
+<area shape="poly" id="edge9_Node000006_Node000007" title=" " alt="" coords="420,133,396,159,371,174,344,184,342,179,369,169,393,155,416,129"/>
+</map>

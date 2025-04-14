@@ -1,0 +1,11 @@
+<map id="delete" name="delete">
+<area shape="rect" id="Node000001" title="Delete the cached data for the given $node and $key." alt="" coords="5,52,63,77"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#a0c96b208e994addcfad27148429d4b2e" title="Return the File holding the cached data for the given $node and $key or return null if there is no da..." alt="" coords="111,52,172,77"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,62,97,62,97,67,63,67"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_file.html#a12251d0c022e9e21c137a105ff683f13" title="Get id." alt="" coords="220,5,399,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="172,56,206,50,207,55,173,62"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#a7cdd1eab46005451803c4ac26af3a2bc" title="Potentially create and return a Folder&#45;node for storing cache&#45;data for the given $node." alt="" coords="256,84,363,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="173,68,243,81,242,87,172,73"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#a02ddedc6eab6faf0792f0fc372add21a" title="Return the top level cache folder, create it if it does not exist." alt="" coords="447,84,581,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="363,94,433,94,433,99,363,99"/>
+</map>

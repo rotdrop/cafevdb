@@ -1,0 +1,23 @@
+var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt =
+[
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a095c5d389db211932136b53f25f39685", null ],
+    [ "__toString", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a7516ca30af0db3cdbf9a7739b48ce91d", null ],
+    [ "getDateOfReceipt", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a8776a82a1f3e66e124578d185e3216f1", null ],
+    [ "getDonation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a0da712c2a6f20fcdbf5a32fe4481be00", null ],
+    [ "getId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a12251d0c022e9e21c137a105ff683f13", null ],
+    [ "getMailingDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a4053191890669b119479682af795340b", null ],
+    [ "getMusician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#aabfc34e2707f9ad109ef4ce93abdf56f", null ],
+    [ "getNotificationMessage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a1cb2e62786ebf15ddc36cb591d93d7d6", null ],
+    [ "getProject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a5cb158509764d3c0103ece1443f4ee12", null ],
+    [ "getProjectParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a222dfbdf28e944d58d77dcba96c67a0c", null ],
+    [ "getSupportingDocument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#ac685963a742728143bc6a9f9da1ec7b2", null ],
+    [ "getTaxExemptionNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a7abca1090f14efac441151b5a433c23c", null ],
+    [ "jsonSerialize", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#ad402d8679325bc514874370f02b5c2ac", null ],
+    [ "setDonation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a9b9ee55e72ce6b5eda8c894ce9e0c7e3", null ],
+    [ "setId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#af8e956b8b0343ff7d1b955c26cb0c780", null ],
+    [ "setMailingDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#ac97e0e3bfb6bc71dd8e526dff17576b1", null ],
+    [ "setNotificationMessage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#ab746c3be8a804d9ef4bdcb15866f741f", null ],
+    [ "setSupportingDocument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a6d47bcc55b6b3917a8fe364af61ab527", null ],
+    [ "setTaxExemptionNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a746c8cc3ac3f773b787620609367ebb7", null ],
+    [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#afe55eae96aed06d16232a3b56fcf1ad3", null ]
+];

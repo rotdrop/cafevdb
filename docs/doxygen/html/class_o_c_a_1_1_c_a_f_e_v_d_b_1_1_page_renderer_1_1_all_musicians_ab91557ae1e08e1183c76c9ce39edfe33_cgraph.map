@@ -1,0 +1,7 @@
+<map id="render" name="render">
+<area shape="rect" id="Node000001" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,49,64,74"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="122,5,329,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,53,108,45,109,50,65,59"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aacd3616b156f66da2a7f9fab49c2f1b5" title=" " alt="" coords="112,70,339,125"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="65,64,99,71,98,76,64,69"/>
+</map>

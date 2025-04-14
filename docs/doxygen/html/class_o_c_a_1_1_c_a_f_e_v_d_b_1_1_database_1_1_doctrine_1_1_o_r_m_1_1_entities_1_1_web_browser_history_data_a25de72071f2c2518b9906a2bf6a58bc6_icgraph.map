@@ -1,0 +1,9 @@
+<map id="addEncryptionIdentity" name="addEncryptionIdentity">
+<area shape="rect" id="Node000001" title="Add a user&#45;id or group&#45;id to the list of &quot;encryption identities&quot;, i.e." alt="" coords="595,27,743,53"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#aafb49e3e395ddb439cc58c49eced0de6" title=" " alt="" coords="459,27,547,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="581,43,547,43,547,37,581,37"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#abca935c70e202b59da16888e8e65c519" title=" " alt="" coords="232,5,411,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="445,43,411,43,411,37,445,37"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#a2444bf58f53e352d397b831ecd85303f" title="{}" alt="" coords="5,5,184,75"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="218,43,184,43,184,37,218,37"/>
+</map>

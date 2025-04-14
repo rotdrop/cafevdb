@@ -1,0 +1,12 @@
+<map id="set" name="set">
+<area shape="rect" id="Node000001" title="Store the given data in the cache directory using $key as file&#45;name." alt="" coords="5,59,45,84"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#a0c96b208e994addcfad27148429d4b2e" title="Return the File holding the cached data for the given $node and $key or return null if there is no da..." alt="" coords="93,33,155,59"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="45,64,79,55,81,60,46,69"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#a7cdd1eab46005451803c4ac26af3a2bc" title="Potentially create and return a Folder&#45;node for storing cache&#45;data for the given $node." alt="" coords="239,84,345,109"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="46,71,225,88,225,93,45,76"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_file.html#a12251d0c022e9e21c137a105ff683f13" title="Get id." alt="" coords="203,5,381,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="155,41,189,38,189,44,155,46"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="156,54,203,70,229,78,227,83,202,75,154,59"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html#a02ddedc6eab6faf0792f0fc372add21a" title="Return the top level cache folder, create it if it does not exist." alt="" coords="429,84,564,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="345,94,415,94,415,99,345,99"/>
+</map>

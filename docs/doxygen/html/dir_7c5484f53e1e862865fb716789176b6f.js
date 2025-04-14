@@ -14,6 +14,7 @@ var dir_7c5484f53e1e862865fb716789176b6f =
     [ "InstrumentFamiliesRepository.php", "_instrument_families_repository_8php_source.html", null ],
     [ "InstrumentInsurancesRepository.php", "_instrument_insurances_repository_8php_source.html", null ],
     [ "InstrumentsRepository.php", "_instruments_repository_8php_source.html", null ],
+    [ "InvoicesRepository.php", "_invoices_repository_8php_source.html", null ],
     [ "LogEntriesRepository.php", "_log_entries_repository_8php_source.html", null ],
     [ "MusiciansRepository.php", "_musicians_repository_8php_source.html", null ],
     [ "ProjectEventsRepository.php", "_project_events_repository_8php_source.html", null ],

@@ -1,5 +1,5 @@
 <map id="NeverHardDelete" name="NeverHardDelete">
-<area shape="rect" id="Node000001" title="Inhibit hard deletion." alt="" coords="25,80,148,107"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,168,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,48,89,80,84,80,84,48"/>
+<area shape="rect" id="Node000001" title="Inhibit hard deletion." alt="" coords="25,79,148,104"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,168,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,44,89,79,84,79,84,44"/>
 </map>

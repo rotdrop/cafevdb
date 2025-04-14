@@ -1,0 +1,5 @@
+<map id="getRegistrationStartDate" name="getRegistrationStartDate">
+<area shape="rect" id="Node000001" title="Returns registrationStartDate." alt="" coords="248,20,415,45"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a6f8658acb2cf99b3e8bec2122a1ca6ee" title="Ensure that the &quot;other&quot; calendar contains a project registration event if and only if the registratio..." alt="" coords="5,5,200,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="234,35,200,35,200,30,234,30"/>
+</map>

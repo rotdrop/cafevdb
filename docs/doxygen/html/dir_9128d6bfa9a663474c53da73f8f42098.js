@@ -11,6 +11,7 @@ var dir_9128d6bfa9a663474c53da73f8f42098 =
     [ "Html2Text.php", "_html2_text_8php_source.html", null ],
     [ "IProgressStatus.php", "_i_progress_status_8php_source.html", null ],
     [ "IUndoable.php", "_i_undoable_8php_source.html", null ],
+    [ "NumberFormatter.php", "_number_formatter_8php_source.html", null ],
     [ "PHPMailer.php", "_p_h_p_mailer_8php_source.html", null ],
     [ "PlainFileProgressStatus.php", "_plain_file_progress_status_8php_source.html", null ],
     [ "UndoableFileRemove.php", "_undoable_file_remove_8php_source.html", null ],

@@ -1,21 +1,67 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,132,85,159"/>
-<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_exception.html" title="Exception class abstaction." alt="" coords="133,132,212,159"/>
-<area shape="poly" id="edge275_Node000000_Node000001" title=" " alt="" coords="100,143,132,143,132,148,100,148"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_exception.html" title="Transparent archive extraction exception." alt="" coords="295,56,418,83"/>
-<area shape="poly" id="edge276_Node000001_Node000002" title=" " alt="" coords="205,121,259,92,294,80,295,85,261,97,208,126"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_authorization_exception.html" title="Thrown to signal that somethings needs additional authorization." alt="" coords="279,107,434,133"/>
-<area shape="poly" id="edge280_Node000001_Node000006" title=" " alt="" coords="227,135,278,128,279,133,228,140"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception.html" title="This exception should provide an error message which informs an end&#45;user about an error." alt="" coords="260,157,453,184"/>
-<area shape="poly" id="edge281_Node000001_Node000007" title=" " alt="" coords="228,150,260,155,259,160,227,156"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_php_session_exception.html" title="Thrown if there is something wrong with the access to the PHP session." alt="" coords="282,208,431,235"/>
-<area shape="poly" id="edge282_Node000001_Node000008" title=" " alt="" coords="208,165,261,194,294,205,292,210,259,198,205,170"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_cannot_open_exception.html" title="Transparent archive extraction exception." alt="" coords="501,5,698,32"/>
-<area shape="poly" id="edge277_Node000002_Node000003" title=" " alt="" coords="433,51,532,30,533,35,434,56"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_not_open_exception.html" title="Transparent archive extraction exception." alt="" coords="512,56,687,83"/>
-<area shape="poly" id="edge278_Node000002_Node000004" title=" " alt="" coords="434,67,511,67,511,72,434,72"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_too_large_exception.html" title="Transparent archive extraction exception." alt="" coords="511,107,688,133"/>
-<area shape="poly" id="edge279_Node000002_Node000005" title=" " alt="" coords="434,83,533,103,532,109,433,88"/>
-<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_session_still_open_exception.html" title=" " alt="" coords="510,208,689,235"/>
-<area shape="poly" id="edge283_Node000008_Node000009" title=" " alt="" coords="447,219,509,219,509,224,447,224"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,703,124,728"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html" title="Base class for all of our repositories." alt="" coords="172,703,291,728"/>
+<area shape="poly" id="edge222_Node000000_Node000001" title=" " alt="" coords="138,713,172,713,172,718,138,718"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_composite_payments_repository.html" title="Database repository for CompositePayments entities." alt="" coords="343,5,550,31"/>
+<area shape="poly" id="edge223_Node000001_Node000002" title=" " alt="" coords="230,689,235,554,251,360,264,260,282,168,306,93,321,64,337,41,353,29,356,33,341,45,325,67,311,95,287,170,269,261,256,360,241,554,236,689"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_database_storage_dir_entries_repository.html" title="Database repository for DatabaseStorageDirEntry entities." alt="" coords="356,55,537,95"/>
+<area shape="poly" id="edge224_Node000001_Node000003" title=" " alt="" coords="231,689,238,566,256,391,270,302,287,220,309,152,322,126,337,106,354,91,357,96,341,109,327,129,314,154,292,221,275,303,261,392,244,566,236,689"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_database_storages_repository.html" title="Database repository for DatabaseStorages entities." alt="" coords="350,120,543,145"/>
+<area shape="poly" id="edge227_Node000001_Node000006" title=" " alt="" coords="231,689,239,574,257,414,271,332,289,258,310,197,323,173,337,155,351,143,355,148,341,159,327,176,315,199,294,259,277,333,263,415,245,575,237,689"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_email_drafts_repository.html" title=" " alt="" coords="369,169,524,195"/>
+<area shape="poly" id="edge228_Node000001_Node000007" title=" " alt="" coords="232,689,241,583,261,438,275,364,292,297,312,242,337,204,351,193,368,185,370,190,354,197,341,208,317,244,297,298,280,365,266,439,247,584,237,689"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_email_templates_repository.html" title=" " alt="" coords="357,219,536,244"/>
+<area shape="poly" id="edge229_Node000001_Node000008" title=" " alt="" coords="233,688,244,592,264,462,278,397,295,337,314,288,337,255,356,241,359,246,341,259,319,291,300,339,284,398,270,463,249,593,238,689"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_files_repository.html" title="Entity&#45;repository for file enitites." alt="" coords="390,268,503,293"/>
+<area shape="poly" id="edge230_Node000001_Node000009" title=" " alt="" coords="233,689,246,602,268,487,298,377,316,334,337,304,361,288,389,280,391,285,364,293,341,308,321,336,303,378,273,488,251,603,239,689"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_images_repository.html" title="Repository for images." alt="" coords="383,317,511,343"/>
+<area shape="poly" id="edge232_Node000001_Node000011" title=" " alt="" coords="229,689,232,622,246,531,260,483,279,436,304,392,337,353,358,339,382,331,383,336,360,344,340,357,308,395,284,438,265,485,252,532,238,622,235,689"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_instrument_families_repository.html" title="Repository for instrument families." alt="" coords="349,367,545,392"/>
+<area shape="poly" id="edge233_Node000001_Node000012" title=" " alt="" coords="231,688,237,629,253,552,267,511,285,472,308,435,337,403,356,390,359,394,340,407,312,438,289,474,272,513,258,554,242,630,236,689"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_instrument_insurances_repository.html" title="Repository for instrument insurances." alt="" coords="341,416,552,441"/>
+<area shape="poly" id="edge234_Node000001_Node000013" title=" " alt="" coords="233,689,242,639,260,574,290,508,312,478,337,452,357,439,360,444,340,456,316,482,295,511,265,576,247,640,238,690"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_instruments_repository.html" title="Repository for instruments." alt="" coords="369,465,524,491"/>
+<area shape="poly" id="edge235_Node000001_Node000014" title=" " alt="" coords="236,688,247,647,267,596,297,545,315,521,337,501,368,485,370,490,340,506,319,525,301,548,272,598,252,649,241,690"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_invoices_repository.html" title="Database repository for CompositePayments entities." alt="" coords="379,515,514,540"/>
+<area shape="poly" id="edge236_Node000001_Node000015" title=" " alt="" coords="240,688,254,657,275,619,303,582,337,550,357,540,378,532,380,537,359,545,340,555,307,585,280,622,259,659,245,691"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_musicians_repository.html" title="Repository for musicians." alt="" coords="375,564,519,589"/>
+<area shape="poly" id="edge237_Node000001_Node000016" title=" " alt="" coords="246,690,284,644,309,620,337,600,373,585,375,590,340,604,313,624,288,647,251,693"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_events_repository.html" title="Database repository for ProjectEvent entities." alt="" coords="363,613,530,639"/>
+<area shape="poly" id="edge238_Node000001_Node000017" title=" " alt="" coords="260,692,296,670,338,649,377,636,379,641,340,654,299,674,263,697"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_ieba037c29b81c783ba29f7b802ae10ff.html" title="Repositories for the required numbers of musicians per voice." alt="" coords="343,663,550,703"/>
+<area shape="poly" id="edge239_Node000001_Node000018" title=" " alt="" coords="304,702,343,696,344,701,304,707"/>
+<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_p7b1ebba4b277ad31000ac13bab6e65c6.html" title="Repository for extra fields data." alt="" coords="356,727,537,767"/>
+<area shape="poly" id="edge240_Node000001_Node000019" title=" " alt="" coords="305,723,356,731,355,736,304,729"/>
+<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_participant_fields_repository.html" title="Repository for per&#45;participant field definitions." alt="" coords="367,791,527,831"/>
+<area shape="poly" id="edge241_Node000001_Node000020" title=" " alt="" coords="263,733,299,756,340,777,371,789,369,794,338,782,296,760,260,738"/>
+<area shape="rect" id="Node000021" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_participants_repository.html" title="Repository for project participants." alt="" coords="349,856,544,881"/>
+<area shape="poly" id="edge242_Node000001_Node000021" title=" " alt="" coords="248,738,285,791,311,818,340,841,367,854,365,858,337,846,307,822,281,794,244,741"/>
+<area shape="rect" id="Node000022" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_payments_repository.html" title="Repository for ProjectPayment entities." alt="" coords="354,905,539,931"/>
+<area shape="poly" id="edge243_Node000001_Node000022" title=" " alt="" coords="243,740,256,775,277,816,305,857,340,892,361,903,358,908,337,896,301,861,272,819,252,777,238,742"/>
+<area shape="rect" id="Node000023" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_web_pages_repository.html" title="Repository for the per&#45;project web&#45;pages." alt="" coords="352,955,541,980"/>
+<area shape="poly" id="edge244_Node000001_Node000023" title=" " alt="" coords="240,741,250,785,270,840,299,895,318,920,340,941,359,952,356,957,337,945,314,923,294,898,265,842,245,787,235,742"/>
+<area shape="rect" id="Node000024" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_projects_repository.html" title="Entity repository for projects." alt="" coords="380,1004,513,1029"/>
+<area shape="poly" id="edge245_Node000001_Node000024" title=" " alt="" coords="237,741,245,794,263,862,276,898,293,932,314,963,340,991,359,1002,381,1010,379,1015,357,1007,337,995,310,967,288,935,271,900,257,864,240,796,232,742"/>
+<area shape="rect" id="Node000025" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sent_emails_repository.html" title="Augment with our FindLikeTrait." alt="" coords="371,1053,523,1079"/>
+<area shape="poly" id="edge246_Node000001_Node000025" title=" " alt="" coords="236,741,240,803,256,884,269,927,287,968,311,1007,340,1040,355,1050,372,1057,369,1062,352,1055,337,1044,306,1010,282,971,264,929,251,885,235,804,230,742"/>
+<area shape="rect" id="Node000026" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_bank_accounts_repository.html" title="@method Entities\SepaBankAccount find($id)" alt="" coords="347,1103,547,1128"/>
+<area shape="poly" id="edge247_Node000001_Node000026" title=" " alt="" coords="234,742,236,812,249,906,262,956,281,1005,307,1050,340,1089,356,1100,353,1105,337,1093,303,1053,277,1007,257,957,244,907,231,812,229,742"/>
+<area shape="rect" id="Node000027" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_bulk_transactions_repository.html" title="@method Entities\SepaBulkTransaction find($id)" alt="" coords="339,1152,555,1177"/>
+<area shape="poly" id="edge248_Node000001_Node000027" title=" " alt="" coords="238,741,250,831,272,951,302,1065,320,1109,341,1139,355,1150,352,1154,337,1143,316,1112,297,1067,266,952,245,832,233,742"/>
+<area shape="rect" id="Node000028" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html" title="@method Entities\SepaDebitMandate find($id)" alt="" coords="345,1201,548,1227"/>
+<area shape="poly" id="edge249_Node000001_Node000028" title=" " alt="" coords="238,741,248,840,268,975,282,1043,299,1105,318,1155,341,1188,355,1199,352,1203,337,1192,314,1157,294,1106,277,1044,263,976,243,841,232,742"/>
+<area shape="rect" id="Node000029" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_tax_exemption_notices_repository.html" title="Database repository for CompositePayments entities." alt="" coords="340,1251,553,1276"/>
+<area shape="poly" id="edge250_Node000001_Node000029" title=" " alt="" coords="237,742,246,850,265,999,279,1075,296,1144,317,1200,341,1238,355,1248,352,1253,337,1241,312,1202,291,1145,274,1076,260,1000,241,850,232,742"/>
+<area shape="rect" id="Node000030" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_translation_keys_repository.html" title="Repository of translatable strings." alt="" coords="357,1300,536,1325"/>
+<area shape="poly" id="edge251_Node000001_Node000030" title=" " alt="" coords="236,742,244,859,262,1023,276,1107,293,1183,315,1245,327,1269,341,1287,358,1300,355,1304,337,1291,323,1272,310,1247,288,1184,270,1108,257,1024,239,859,231,742"/>
+<area shape="rect" id="Node000031" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_translation_locations_repository.html" title="Repository for in&#45;source&#45;file location of to&#45;be&#45;translated strings." alt="" coords="344,1349,549,1375"/>
+<area shape="poly" id="edge252_Node000001_Node000031" title=" " alt="" coords="236,742,242,868,259,1047,272,1139,290,1222,313,1291,326,1317,341,1336,355,1347,351,1351,337,1340,322,1319,308,1293,285,1224,267,1140,253,1048,237,868,231,742"/>
+<area shape="rect" id="Node000032" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_translations_repository.html" title="Repository for translation entity." alt="" coords="369,1399,525,1424"/>
+<area shape="poly" id="edge253_Node000001_Node000032" title=" " alt="" coords="236,742,240,877,256,1071,269,1170,287,1261,311,1336,325,1364,341,1385,354,1396,369,1403,367,1408,351,1401,337,1389,320,1367,306,1338,282,1263,264,1171,250,1071,235,877,230,742"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_database_storage_files_repository.html" title="Database repository for DatabaseStorageDirEntry entities." alt="" coords="610,39,825,64"/>
+<area shape="poly" id="edge225_Node000003_Node000004" title=" " alt="" coords="551,63,610,58,610,64,552,69"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_database_storage_folders_repository.html" title="Database repository for DatabaseStorageDirEntry entities." alt="" coords="603,88,832,113"/>
+<area shape="poly" id="edge226_Node000003_Node000005" title=" " alt="" coords="551,82,603,87,602,93,551,88"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_encrypted_files_repository.html" title="Entity&#45;repository for encrypted file enitites." alt="" coords="631,268,803,293"/>
+<area shape="poly" id="edge231_Node000009_Node000010" title=" " alt="" coords="517,278,631,278,631,283,517,283"/>
 </map>

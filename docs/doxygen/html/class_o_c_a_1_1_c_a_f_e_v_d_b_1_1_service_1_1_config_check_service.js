@@ -1,6 +1,5 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service =
 [
-    [ "checkImapServer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a6e557176679d79fdf2ebf850c6cb6973", null ],
     [ "checkLinkSharedFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a20b43635a7671c9f1d5b7dbcd8bd30a9", null ],
     [ "checkProjectFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#aec2838830c5105258dbeb4f274c61c39", null ],
     [ "checkSharedAddressBook", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a199d8f64e9027573702d7e0b391192df", null ],

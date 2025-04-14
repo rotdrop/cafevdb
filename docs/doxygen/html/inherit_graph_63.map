@@ -1,5 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,157,32"/>
-<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_address_book_provider.html" title="Kind of factory for our musicians address book." alt="" coords="205,5,352,32"/>
-<area shape="poly" id="edge294_Node000000_Node000001" title=" " alt="" coords="172,16,204,16,204,21,172,21"/>
+<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html" title="Mis&#45;use the internal services of the groupfolders app in order to automatically generate group&#45;shared..." alt="" coords="5,31,149,56"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_group_folders_service.html" title="Toolkit forwarder service in order to have the app&#39;s L10N instance." alt="" coords="197,5,341,31"/>
+<area shape="poly" id="edge286_Node000000_Node000001" title=" " alt="" coords="163,29,197,25,198,30,163,35"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_request_service.html" title="Place server&#45;to&#45;server AJAX calls." alt="" coords="212,55,327,80"/>
+<area shape="poly" id="edge287_Node000000_Node000002" title=" " alt="" coords="164,51,212,58,212,63,163,57"/>
 </map>

@@ -1,3 +1,25 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_musician_service.html" title="General support service, kind of inconsequent glue between Doctrine\ORM and CAFEVDB\PageRenderer." alt="" coords="5,5,123,32"/>
+<area shape="rect" id="Node000000" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="5,155,87,180"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html" title="Default implementation for some methods." alt="" coords="135,155,261,180"/>
+<area shape="poly" id="edge427_Node000000_Node000001" title=" " alt="" coords="100,165,134,165,134,170,100,170"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html" title="Base for file&#45;system related IUndoable implementations." alt="" coords="309,129,501,155"/>
+<area shape="poly" id="edge428_Node000001_Node000002" title=" " alt="" coords="275,155,309,151,309,156,275,161"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_generic_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="344,179,467,204"/>
+<area shape="poly" id="edge437_Node000001_Node000011" title=" " alt="" coords="276,174,344,182,344,187,275,179"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename.html" title="Rename the given paths." alt="" coords="587,5,734,31"/>
+<area shape="poly" id="edge429_Node000002_Node000003" title=" " alt="" coords="430,118,482,78,514,57,548,40,586,27,588,32,550,44,517,62,485,82,433,122"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_replace.html" title="Replace one file by another, maintaining an undo history in the cloud." alt="" coords="587,55,734,80"/>
+<area shape="poly" id="edge430_Node000002_Node000004" title=" " alt="" coords="451,122,549,89,594,77,595,83,550,94,453,127"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_system_node_remove.html" title="Remove the given path which may either point to a file or folder." alt="" coords="549,104,772,129"/>
+<area shape="poly" id="edge431_Node000002_Node000005" title=" " alt="" coords="515,128,549,125,549,130,515,134"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_create.html" title="Create the given path as folder, remove the directory when undo is requested." alt="" coords="585,153,737,179"/>
+<area shape="poly" id="edge434_Node000002_Node000008" title=" " alt="" coords="515,150,585,156,584,162,515,155"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_rename.html" title="Rename the given paths." alt="" coords="579,203,742,228"/>
+<area shape="poly" id="edge435_Node000002_Node000009" title=" " alt="" coords="479,156,502,164,526,176,550,188,593,200,592,205,548,192,524,180,500,168,478,161"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_text_file_update.html" title="Update the content of the given text&#45;file with the given content." alt="" coords="578,252,743,277"/>
+<area shape="poly" id="edge436_Node000002_Node000010" title=" " alt="" coords="494,158,503,164,520,182,528,202,535,220,551,237,579,251,576,256,548,241,531,223,523,204,515,185,500,168,491,163"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_remove.html" title="Remove the given node, which must be a regular file." alt="" coords="828,80,975,105"/>
+<area shape="poly" id="edge432_Node000005_Node000006" title=" " alt="" coords="785,102,828,97,828,103,786,107"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_remove.html" title="Remove the given node, which must be a folder." alt="" coords="820,129,983,155"/>
+<area shape="poly" id="edge433_Node000005_Node000007" title=" " alt="" coords="786,127,820,131,820,136,786,133"/>
 </map>

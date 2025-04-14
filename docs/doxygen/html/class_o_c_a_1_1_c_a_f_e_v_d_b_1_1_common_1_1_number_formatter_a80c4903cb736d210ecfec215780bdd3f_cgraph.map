@@ -1,0 +1,5 @@
+<map id="currencyToWords" name="currencyToWords">
+<area shape="rect" id="Node000001" title="Convert the given currency value to words using the provided or the implied three letter currency cod..." alt="" coords="5,5,128,31"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html#aa0f07fdae0b7aabc971a8e4f14442e59" title="Work around some shortcomings of kwn/number&#45;to&#45;words for some known issues." alt="" coords="176,5,273,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,15,162,15,162,21,128,21"/>
+</map>

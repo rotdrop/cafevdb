@@ -1,11 +1,14 @@
 var dir_b2a75fba6b19aafaa483ce8d873283c2 =
 [
+    [ "AbstractEnumType.php", "_abstract_enum_type_8php_source.html", null ],
     [ "EnumAccessPermission.php", "_enum_access_permission_8php_source.html", null ],
     [ "EnumAttachmentOrigin.php", "_enum_attachment_origin_8php_source.html", null ],
     [ "EnumDataTransformation.php", "_enum_data_transformation_8php_source.html", null ],
     [ "EnumDirEntryType.php", "_enum_dir_entry_type_8php_source.html", null ],
     [ "EnumFileType.php", "_enum_file_type_8php_source.html", null ],
+    [ "EnumGender.php", "_enum_gender_8php_source.html", null ],
     [ "EnumGeographicalScope.php", "_enum_geographical_scope_8php_source.html", null ],
+    [ "EnumGnuCashSlotType.php", "_enum_gnu_cash_slot_type_8php_source.html", null ],
     [ "EnumMemberStatus.php", "_enum_member_status_8php_source.html", null ],
     [ "EnumParticipantFieldDataType.php", "_enum_participant_field_data_type_8php_source.html", null ],
     [ "EnumParticipantFieldMultiplicity.php", "_enum_participant_field_multiplicity_8php_source.html", null ],

@@ -1,0 +1,9 @@
+<map id="CreateGnuCashTables" name="CreateGnuCashTables">
+<area shape="rect" id="Node000001" title="Generate an empty set of GnuCash tables in order to connect a GnuCash book stored as SQL database to ..." alt="" coords="10,152,165,177"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240419120000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="5,225,169,251"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="90,191,90,225,85,225,85,191"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html" title="Abstract migration class, the derived classes have to fill AbstractMigration::$sql." alt="" coords="25,79,149,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,118,90,152,85,152,85,118"/>
+<area shape="rect" id="Node000003" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html" title="Uni&#45;directional migrations for the orchestra DB." alt="" coords="48,5,127,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="90,44,90,79,85,79,85,44"/>
+</map>

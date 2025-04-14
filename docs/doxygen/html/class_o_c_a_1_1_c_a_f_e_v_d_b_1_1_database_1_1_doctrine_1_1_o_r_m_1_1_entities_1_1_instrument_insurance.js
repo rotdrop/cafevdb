@@ -24,16 +24,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setManufacturer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a0305e64c7873ff142b1e5068a828112d", null ],
     [ "setObject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a8146cd71c6ca0fc46caf6f86e0eaa936", null ],
     [ "setStartOfInsurance", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a7f0485fdf716420cefa8038c132f0fea", null ],
-    [ "setYearOfConstruction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a116e547e7a7a786da4e8730194192146", null ],
-    [ "$accessory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a0ddfd930f3d067a2ba04e9c858f07bcd", null ],
-    [ "$billToParty", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#aa6e5b2f4e82c0875e5f171214356fefa", null ],
-    [ "$id", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a3587bd00e5602c1800515b6f9ffbebc5", null ],
-    [ "$instrumentHolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a0758a06079ab25d3d5487b39bbff099e", null ],
-    [ "$instrumentOwner", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a94cf6d8dafc4d61bcb36fed3c2e21b25", null ],
-    [ "$insuranceAmount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a37fed35fe1fb62c416d560c104a549fd", null ],
-    [ "$insuranceRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#afd5f4d644accd8db79a758f4fc96cf79", null ],
-    [ "$manufacturer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a7909069478ada40aad877ec9680aaa48", null ],
-    [ "$object", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a7a738ce0785e3124f0210c3f6ef469b0", null ],
-    [ "$startOfInsurance", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a02984907f5e0c6bbb0660f62dbd91ef5", null ],
-    [ "$yearOfConstruction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#ac3854c676271feb0028367bbd686b26c", null ]
+    [ "setYearOfConstruction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a116e547e7a7a786da4e8730194192146", null ]
 ];

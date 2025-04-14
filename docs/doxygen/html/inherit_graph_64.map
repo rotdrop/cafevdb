@@ -1,5 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_bulk_transaction_exporter.html" title="Extremely generic debit&#45;note exporter." alt="" coords="5,13,174,40"/>
-<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_aq_banking_bulk_transaction_exporter.html" title="Generate AqBanking data&#45;sets for submission to the bank." alt="" coords="222,5,400,48"/>
-<area shape="poly" id="edge295_Node000000_Node000001" title=" " alt="" coords="189,24,221,24,221,29,189,29"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,168,56"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_soft_deleteable_1_1_hard_delete_unused.html" title="Allow hard&#45;deletion of unused objects." alt="" coords="216,5,349,31"/>
+<area shape="poly" id="edge288_Node000000_Node000001" title=" " alt="" coords="181,28,215,24,216,29,182,34"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_soft_deleteable_1_1_never_hard_delete.html" title="Inhibit hard deletion." alt="" coords="221,55,344,80"/>
+<area shape="poly" id="edge289_Node000000_Node000002" title=" " alt="" coords="182,52,221,57,221,62,181,58"/>
 </map>

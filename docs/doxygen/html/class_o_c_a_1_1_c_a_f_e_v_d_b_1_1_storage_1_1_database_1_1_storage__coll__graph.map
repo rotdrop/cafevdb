@@ -1,11 +1,11 @@
 <map id="Storage" name="Storage">
-<area shape="rect" id="Node000001" title="Storage implementation for data&#45;base storage, including access to encrypted entities." alt="" coords="75,248,142,275"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,157,121,184"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,197,104,246,99,249,74,199"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory.html" title="Generate in&#45;memory README nodes." alt="" coords="145,157,259,184"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,197,124,249,120,245,176,193"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_abstract_read_me_factory.html" title="Abstract factory baseclass." alt="" coords="120,81,283,108"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="204,123,204,157,199,157,199,123"/>
-<area shape="rect" id="Node000005" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory_interface.html" title="Factory interface for generating in&#45;memory README nodes." alt="" coords="119,5,284,32"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="204,47,204,81,199,81,199,47"/>
+<area shape="rect" id="Node000001" title="Storage implementation for data&#45;base storage, including access to encrypted entities." alt="" coords="51,243,118,268"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,155,121,180"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,193,84,241,79,243,67,194"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory.html" title="Generate in&#45;memory README nodes." alt="" coords="146,155,261,180"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="178,190,102,245,99,240,175,186"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_abstract_read_me_factory.html" title="Abstract factory baseclass." alt="" coords="121,80,285,105"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="206,120,206,154,201,154,201,120"/>
+<area shape="rect" id="Node000005" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory_interface.html" title="Factory interface for generating in&#45;memory README nodes." alt="" coords="120,5,287,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="206,45,206,80,201,80,201,45"/>
 </map>

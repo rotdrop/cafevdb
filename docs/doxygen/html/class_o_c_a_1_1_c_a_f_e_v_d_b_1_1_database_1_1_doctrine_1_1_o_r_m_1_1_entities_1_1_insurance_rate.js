@@ -11,11 +11,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setGeographicalScope", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#a850db4218354c59a76965679d005a50e", null ],
     [ "setInstrumentInsurances", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#ad4663e6089c7d45f3f23b4b81222a0ec", null ],
     [ "setPolicyNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#a884a1cc63250436819ac3dcc0ebcc9b9", null ],
-    [ "setRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#a6fafb58c18a0f9b83f7d7207f8f42f5e", null ],
-    [ "$broker", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#ad9a5048afb563f1d963ebac7936f05fa", null ],
-    [ "$dueDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#a43af8e382cc3584a9c627597bb50b8b2", null ],
-    [ "$geographicalScope", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#a424d42001d32c21effef29ed106ad602", null ],
-    [ "$instrumentInsurances", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#af0a86765b967ec25ebdb820027166693", null ],
-    [ "$policyNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#a4a62ad74869ac2f24f355be58ef0b344", null ],
-    [ "$rate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#abd59438985aab830a82d1a56a772fc94", null ]
+    [ "setRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_insurance_rate.html#a6fafb58c18a0f9b83f7d7207f8f42f5e", null ]
 ];

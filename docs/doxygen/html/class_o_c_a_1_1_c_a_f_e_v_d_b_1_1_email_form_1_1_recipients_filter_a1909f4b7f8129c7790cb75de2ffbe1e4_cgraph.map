@@ -1,65 +1,65 @@
 <map id="execute" name="execute">
-<area shape="rect" id="Node000001" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="5,461,73,488"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ac721d278c1106843d05dc3b9176b5fb9" title=" " alt="" coords="121,5,296,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="39,461,45,378,59,255,83,132,99,83,119,49,131,38,134,42,123,52,104,85,88,133,65,256,50,378,44,461"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#abb68032ee09c309fa68ede14a34e348d" title=" " alt="" coords="373,56,467,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="39,461,45,386,59,276,70,220,83,169,99,127,119,99,145,80,174,66,206,57,238,51,301,49,358,54,357,60,301,54,238,57,207,62,176,71,148,85,123,103,104,130,88,171,75,221,64,277,50,386,44,461"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="579,157,667,184"/>
-<area shape="poly" id="edge16_Node000001_Node000004" title=" " alt="" coords="37,461,37,410,46,337,56,298,71,259,91,224,119,194,170,160,228,138,289,126,351,122,412,124,470,131,564,151,563,156,469,136,412,130,351,127,290,131,229,143,173,165,122,198,96,227,75,262,61,299,51,338,42,410,42,461"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="588,537,658,564"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="53,486,82,518,122,548,180,575,229,587,344,599,421,606,454,605,496,599,541,586,581,569,583,574,542,591,497,604,454,611,420,612,344,604,228,592,178,580,119,553,78,522,49,490"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a0835860e0bc6047f3eff6a9941dbbcf4" title=" " alt="" coords="566,385,680,412"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="56,459,85,440,120,423,176,406,235,395,353,383,462,382,550,388,550,393,461,388,353,388,236,400,178,411,122,428,88,444,59,463"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="750,436,909,463"/>
-<area shape="poly" id="edge35_Node000001_Node000007" title=" " alt="" coords="73,471,735,450,735,455,73,476"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a91325e5bf1c1dafd989c072cdd289f7e" title="Decode the check&#45;boxes which select the set of users we consider basically." alt="" coords="140,613,277,640"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="48,487,76,538,97,567,122,593,142,605,139,609,119,597,93,571,71,541,44,490"/>
-<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aa88d3b6470fc695c0e977cf6652e03ae" title="Fetch the instruments filter from the CGI parameters." alt="" coords="134,512,283,539"/>
-<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="74,482,148,505,146,510,72,487"/>
-<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a4cc3ae15ce5ef543b8c9775626cb9acc" title="Fill $this&#45;&gt;memberStatusNames with values." alt="" coords="125,664,292,691"/>
-<area shape="poly" id="edge17_Node000001_Node000013" title=" " alt="" coords="45,488,53,521,67,565,90,611,105,632,122,650,127,654,124,658,119,654,101,635,85,614,62,567,48,523,40,489"/>
-<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a3325d0555cf869086e12761d8a7dbfc8" title="Fetch the list of musicians for the given context (project/global)." alt="" coords="135,715,282,741"/>
-<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="44,488,48,529,60,587,84,648,101,676,123,701,126,704,123,708,119,705,97,679,79,650,55,588,43,530,38,489"/>
-<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a9ae6e956522f1d298f15c4b2a07f0bd7" title="Get the current filter." alt="" coords="344,411,496,437"/>
-<area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="72,464,120,453,228,438,328,428,329,433,229,444,121,459,74,469"/>
-<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab85bd7c01c06a6b1507047bfd28f941c" title="Load the history from the session data." alt="" coords="165,208,252,235"/>
-<area shape="poly" id="edge22_Node000001_Node000016" title=" " alt="" coords="39,461,44,421,57,365,81,305,98,277,119,251,149,232,151,237,122,255,102,280,86,307,62,367,49,422,44,462"/>
-<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a30a395e6e48481531a93ec374c412775" title="Compose a default history record for the initial state." alt="" coords="359,259,482,285"/>
-<area shape="poly" id="edge37_Node000001_Node000017" title=" " alt="" coords="40,460,48,429,63,389,86,348,101,329,119,314,145,298,173,286,231,270,290,263,343,262,343,268,290,268,232,275,174,291,147,303,122,318,105,333,90,351,68,391,53,431,45,462"/>
-<area shape="rect" id="Node000022" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a3b27a17301b2e6acb457bafbd268a6c6" title=" " alt="" coords="147,765,270,792"/>
-<area shape="poly" id="edge31_Node000001_Node000022" title=" " alt="" coords="43,488,44,538,54,609,64,647,78,685,98,720,123,751,135,761,132,765,119,755,93,723,74,687,59,649,49,610,39,538,37,489"/>
-<area shape="rect" id="Node000023" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#adc12d97d4d6b670014369f82669309c1" title="Push the current filter selection onto the undo&#45;history stack." alt="" coords="375,309,466,336"/>
-<area shape="poly" id="edge32_Node000001_Node000023" title=" " alt="" coords="43,460,69,406,91,376,119,352,148,338,179,327,243,314,305,310,359,312,359,318,305,315,244,319,181,332,150,343,122,357,95,380,73,409,47,462"/>
-<area shape="rect" id="Node000024" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a14e60602822b0301e2ece2c15c4e0d82" title="This function is called at the very start." alt="" coords="139,816,278,843"/>
-<area shape="poly" id="edge36_Node000001_Node000024" title=" " alt="" coords="45,488,53,554,69,649,93,742,107,778,123,802,127,807,124,811,119,806,102,780,88,744,64,650,48,555,39,489"/>
-<area shape="rect" id="Node000025" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a0eece8535c88d9bc8da320736157b53b" title="Store the history to somewhere, probably the session&#45;data." alt="" coords="162,867,255,893"/>
-<area shape="poly" id="edge38_Node000001_Node000025" title=" " alt="" coords="44,488,51,563,66,673,90,782,105,824,123,853,134,862,149,869,146,874,132,867,119,856,100,827,85,783,61,674,46,564,39,489"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="457,81,498,99,587,147,584,152,495,104,455,86"/>
-<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="589,158,582,149,587,139,600,133,623,131,647,133,660,140,658,144,646,138,623,136,602,138,590,143,588,148,593,155"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="681,410,758,429,757,434,680,415"/>
-<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="258,638,308,649,368,656,433,655,496,643,525,629,553,611,598,573,601,577,556,616,528,634,497,648,433,661,368,661,307,654,257,643"/>
-<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a37ce309e4090903297fa1c705634537d" title="The default user base." alt="" coords="361,715,479,741"/>
-<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="271,638,297,650,313,661,322,672,332,683,345,694,367,706,365,710,343,698,328,686,318,675,309,665,295,654,269,643"/>
-<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a180e59b5c87d178df0b6929526f2c38a" title=" " alt="" coords="563,715,683,741"/>
-<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="480,725,548,725,548,731,480,731"/>
-<area shape="poly" id="edge13_Node000011_Node000005" title=" " alt="" coords="283,527,572,545,572,550,283,532"/>
-<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a2765950b3322c101496bb711b89709ed" title=" " alt="" coords="361,563,479,589"/>
-<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="268,537,347,556,346,561,267,542"/>
-<area shape="poly" id="edge15_Node000012_Node000005" title=" " alt="" coords="480,566,572,554,573,560,480,571"/>
-<area shape="poly" id="edge20_Node000015_Node000005" title=" " alt="" coords="445,436,588,526,586,531,442,440"/>
-<area shape="poly" id="edge21_Node000015_Node000006" title=" " alt="" coords="496,412,550,405,551,410,497,417"/>
-<area shape="poly" id="edge23_Node000016_Node000004" title=" " alt="" coords="252,210,344,193,460,180,563,172,563,177,461,185,344,199,253,215"/>
-<area shape="poly" id="edge24_Node000016_Node000017" title=" " alt="" coords="253,229,347,252,346,257,252,234"/>
-<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a69438f7e0899945b1e31f677ce1251af" title="Validate the given history records, return false on error." alt="" coords="366,208,474,235"/>
-<area shape="poly" id="edge28_Node000016_Node000019" title=" " alt="" coords="252,219,350,219,350,224,252,224"/>
-<area shape="poly" id="edge27_Node000017_Node000004" title=" " alt="" coords="472,256,495,244,509,232,518,220,527,207,543,194,563,184,565,188,546,198,531,210,522,223,513,236,498,249,475,261"/>
-<area shape="poly" id="edge26_Node000017_Node000006" title=" " alt="" coords="472,284,498,295,554,333,599,373,596,377,551,338,495,300,470,288"/>
-<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a9ceb14e2f27e74da6d3f47217cafac78" title=" " alt="" coords="556,259,690,285"/>
-<area shape="poly" id="edge25_Node000017_Node000018" title=" " alt="" coords="482,269,540,269,540,275,482,275"/>
-<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aeeefa163256bf7669c5591e228f57850" title="Validate all history records." alt="" coords="544,208,702,235"/>
-<area shape="poly" id="edge29_Node000019_Node000020" title=" " alt="" coords="475,219,529,219,529,224,475,224"/>
-<area shape="rect" id="Node000021" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a356c7d5f6dcee2bfc20c2285237a341f" title="Validate one history entry." alt="" coords="754,208,905,235"/>
-<area shape="poly" id="edge30_Node000020_Node000021" title=" " alt="" coords="702,219,738,219,738,224,702,224"/>
-<area shape="poly" id="edge34_Node000023_Node000004" title=" " alt="" coords="465,312,495,295,505,283,512,271,518,246,524,220,531,207,543,194,563,181,566,186,546,198,535,210,529,222,523,247,517,273,510,286,498,299,467,316"/>
-<area shape="poly" id="edge33_Node000023_Node000005" title=" " alt="" coords="438,334,498,397,604,524,600,527,494,400,434,338"/>
+<area shape="rect" id="Node000001" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="5,459,73,484"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ac721d278c1106843d05dc3b9176b5fb9" title=" " alt="" coords="121,5,297,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="39,458,45,376,60,254,84,131,100,82,119,48,135,35,138,39,123,52,105,84,89,133,65,255,51,377,44,459"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#abb68032ee09c309fa68ede14a34e348d" title=" " alt="" coords="375,56,469,81"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="39,458,45,384,60,275,70,219,84,168,100,127,119,99,146,79,176,65,208,56,240,50,305,48,362,54,361,59,305,54,241,56,209,61,178,70,149,84,123,103,105,129,89,170,76,221,65,276,51,385,44,459"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="581,157,671,183"/>
+<area shape="poly" id="edge16_Node000001_Node000004" title=" " alt="" coords="37,458,38,408,46,335,56,296,71,257,92,222,120,192,172,158,231,136,293,124,357,120,419,123,477,131,572,151,570,156,476,136,418,129,357,126,294,129,232,141,175,162,123,196,96,225,76,260,61,297,51,336,43,408,43,458"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="591,535,661,560"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="53,482,82,514,123,545,181,571,230,584,346,595,422,603,456,602,498,595,546,582,588,564,590,568,547,587,499,601,456,607,422,608,345,601,229,589,179,576,120,550,78,518,49,486"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a0835860e0bc6047f3eff6a9941dbbcf4" title=" " alt="" coords="569,383,683,408"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="55,456,85,437,120,420,178,403,237,391,356,380,466,379,555,385,555,390,466,384,356,385,238,397,179,408,122,424,87,441,58,461"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="753,408,913,433"/>
+<area shape="poly" id="edge35_Node000001_Node000007" title=" " alt="" coords="73,467,498,443,740,426,740,431,499,449,74,472"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a91325e5bf1c1dafd989c072cdd289f7e" title="Decode the check&#45;boxes which select the set of users we consider basically." alt="" coords="141,611,278,636"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="48,483,76,534,97,564,123,589,146,603,143,608,120,593,93,567,71,537,44,485"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aa88d3b6470fc695c0e977cf6652e03ae" title="Fetch the instruments filter from the CGI parameters." alt="" coords="135,509,284,535"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="74,479,154,503,152,508,73,484"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a4cc3ae15ce5ef543b8c9775626cb9acc" title="Fill $this&#45;&gt;memberStatusNames with values." alt="" coords="126,660,293,685"/>
+<area shape="poly" id="edge17_Node000001_Node000013" title=" " alt="" coords="45,484,53,517,67,561,90,607,105,628,123,647,129,651,126,656,120,651,101,632,85,610,62,563,47,518,40,485"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a3325d0555cf869086e12761d8a7dbfc8" title="Fetch the list of musicians for the given context (project/global)." alt="" coords="135,709,283,735"/>
+<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="44,484,48,525,61,582,84,644,102,672,123,696,128,700,124,704,119,700,97,675,80,646,56,584,43,526,39,485"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a9ae6e956522f1d298f15c4b2a07f0bd7" title="Get the current filter." alt="" coords="345,408,499,433"/>
+<area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="73,460,121,450,230,435,331,425,332,430,231,440,122,455,74,465"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab85bd7c01c06a6b1507047bfd28f941c" title="Load the history from the session data." alt="" coords="165,205,253,231"/>
+<area shape="poly" id="edge22_Node000001_Node000016" title=" " alt="" coords="39,458,44,418,58,362,81,302,98,273,119,248,134,236,151,228,153,233,137,241,123,252,103,276,86,304,63,364,50,419,44,459"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a30a395e6e48481531a93ec374c412775" title="Compose a default history record for the initial state." alt="" coords="360,257,484,283"/>
+<area shape="poly" id="edge37_Node000001_Node000017" title=" " alt="" coords="40,458,48,427,63,386,86,344,102,325,120,309,146,293,174,281,233,265,293,259,346,259,346,265,293,265,234,271,176,286,148,298,123,313,105,329,91,347,68,388,53,428,46,459"/>
+<area shape="rect" id="Node000022" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a3b27a17301b2e6acb457bafbd268a6c6" title=" " alt="" coords="148,759,271,784"/>
+<area shape="poly" id="edge31_Node000001_Node000022" title=" " alt="" coords="43,484,45,533,55,604,65,642,79,680,98,715,123,745,137,755,134,760,119,749,94,718,74,682,59,643,49,605,39,534,38,485"/>
+<area shape="rect" id="Node000023" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#adc12d97d4d6b670014369f82669309c1" title="Push the current filter selection onto the undo&#45;history stack." alt="" coords="376,307,468,332"/>
+<area shape="poly" id="edge32_Node000001_Node000023" title=" " alt="" coords="43,457,69,403,91,373,120,349,149,334,181,323,245,310,308,307,363,309,362,314,308,312,246,315,182,328,151,339,123,354,95,377,73,406,47,460"/>
+<area shape="rect" id="Node000024" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a14e60602822b0301e2ece2c15c4e0d82" title="This function is called at the very start." alt="" coords="139,808,279,833"/>
+<area shape="poly" id="edge36_Node000001_Node000024" title=" " alt="" coords="45,484,54,549,70,643,93,735,108,771,123,795,129,800,126,804,119,798,103,773,88,737,65,644,48,550,39,485"/>
+<area shape="rect" id="Node000025" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a0eece8535c88d9bc8da320736157b53b" title="Store the history to somewhere, probably the session&#45;data." alt="" coords="163,857,256,883"/>
+<area shape="poly" id="edge38_Node000001_Node000025" title=" " alt="" coords="44,484,52,558,67,666,90,774,106,816,123,844,136,854,151,861,148,866,133,859,119,848,101,818,85,776,61,667,46,558,39,484"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="456,79,500,98,593,148,590,153,497,103,454,84"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="593,159,586,149,589,139,603,133,626,131,654,134,666,144,662,148,652,139,626,136,604,138,593,143,591,148,597,156"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="684,400,740,407,739,412,683,405"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="255,633,305,645,367,652,433,652,466,648,498,639,529,626,557,607,602,568,606,572,560,611,531,630,500,645,467,653,434,658,367,658,304,650,253,639"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a37ce309e4090903297fa1c705634537d" title="The default user base." alt="" coords="363,712,481,737"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="269,634,299,646,314,657,324,668,333,679,347,690,372,704,370,709,344,695,329,683,320,672,310,661,296,651,267,639"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a180e59b5c87d178df0b6929526f2c38a" title=" " alt="" coords="566,712,686,737"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="482,722,552,722,552,727,482,727"/>
+<area shape="poly" id="edge13_Node000011_Node000005" title=" " alt="" coords="284,524,577,542,577,547,284,529"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a2765950b3322c101496bb711b89709ed" title=" " alt="" coords="363,560,481,585"/>
+<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="264,532,356,554,354,559,263,537"/>
+<area shape="poly" id="edge15_Node000012_Node000005" title=" " alt="" coords="481,563,577,551,577,556,482,568"/>
+<area shape="poly" id="edge20_Node000015_Node000005" title=" " alt="" coords="445,431,594,525,591,530,442,436"/>
+<area shape="poly" id="edge21_Node000015_Node000006" title=" " alt="" coords="499,409,554,401,555,407,499,414"/>
+<area shape="poly" id="edge23_Node000016_Node000004" title=" " alt="" coords="253,208,345,194,567,172,568,177,346,199,254,213"/>
+<area shape="poly" id="edge24_Node000016_Node000017" title=" " alt="" coords="254,226,357,251,355,257,253,231"/>
+<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a69438f7e0899945b1e31f677ce1251af" title="Validate the given history records, return false on error." alt="" coords="367,208,477,233"/>
+<area shape="poly" id="edge28_Node000016_Node000019" title=" " alt="" coords="254,216,354,217,354,222,254,221"/>
+<area shape="poly" id="edge27_Node000017_Node000004" title=" " alt="" coords="474,255,497,244,512,232,521,220,530,207,545,194,567,183,570,188,548,199,534,211,525,223,515,236,500,248,476,260"/>
+<area shape="poly" id="edge26_Node000017_Node000006" title=" " alt="" coords="470,280,500,293,558,332,604,371,600,375,555,336,497,298,468,285"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a9ceb14e2f27e74da6d3f47217cafac78" title=" " alt="" coords="559,257,693,283"/>
+<area shape="poly" id="edge25_Node000017_Node000018" title=" " alt="" coords="484,267,545,267,545,273,484,273"/>
+<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aeeefa163256bf7669c5591e228f57850" title="Validate all history records." alt="" coords="547,208,705,233"/>
+<area shape="poly" id="edge29_Node000019_Node000020" title=" " alt="" coords="477,218,533,218,533,223,477,223"/>
+<area shape="rect" id="Node000021" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a356c7d5f6dcee2bfc20c2285237a341f" title="Validate one history entry." alt="" coords="758,208,909,233"/>
+<area shape="poly" id="edge30_Node000020_Node000021" title=" " alt="" coords="706,218,744,218,744,223,706,223"/>
+<area shape="poly" id="edge34_Node000023_Node000004" title=" " alt="" coords="467,309,497,293,508,282,514,270,520,246,526,220,533,207,545,195,567,181,570,185,548,199,538,210,531,222,525,247,519,272,512,285,500,297,469,314"/>
+<area shape="poly" id="edge33_Node000023_Node000005" title=" " alt="" coords="438,330,501,395,608,522,604,526,497,398,435,334"/>
 </map>

@@ -1,15 +1,11 @@
 <map id="registerMimeTypeMappings" name="registerMimeTypeMappings">
-<area shape="rect" id="Node000001" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="5,47,186,73"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1b1d06b8849380605b6a83ff72dd8689" title=" " alt="" coords="234,47,382,73"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,57,218,57,218,63,186,63"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="430,5,590,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="382,45,414,40,415,45,383,50"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8e67cfd6a09d264ed60634dd794bb30" title="Log an informational message." alt="" coords="430,72,590,115"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="383,70,415,75,414,80,382,75"/>
-<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="638,72,799,115"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="590,91,623,91,623,96,590,96"/>
-<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="847,39,1007,81"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="798,78,831,73,831,78,799,83"/>
-<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="847,105,1007,148"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="799,103,831,109,831,114,798,109"/>
+<area shape="rect" id="Node000001" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="5,45,187,70"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1f4cd024c04b5fd11c66259435da40ab" title="Return an array of required mime type mappings missing from this Nextcloud instance." alt="" coords="235,45,436,70"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,55,221,55,221,60,187,60"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a3df413a5505fe78edb1fe26f42817d86" title=" " alt="" coords="484,45,663,70"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="436,55,470,55,470,60,436,60"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="711,5,872,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="660,42,697,37,697,42,661,47"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab6a06d8f1456a89ac1168e7c8d270595" title="Log an informational message." alt="" coords="711,69,872,109"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="661,67,697,73,697,78,660,73"/>
 </map>

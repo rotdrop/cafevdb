@@ -1,0 +1,9 @@
+<map id="DatabaseNotConnectedException" name="DatabaseNotConnectedException">
+<area shape="rect" id="Node000001" title="Thrown when EntityManager::getConnection() is called when there is no connection." alt="" coords="5,225,225,251"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="47,152,183,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,191,118,225,113,225,113,191"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="75,79,155,104"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="118,118,118,152,113,152,113,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="61,5,169,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="118,44,118,79,113,79,113,44"/>
+</map>

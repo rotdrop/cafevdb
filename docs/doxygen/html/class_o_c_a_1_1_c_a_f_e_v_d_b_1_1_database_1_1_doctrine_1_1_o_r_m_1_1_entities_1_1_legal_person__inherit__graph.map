@@ -1,0 +1,7 @@
+<map id="LegalPerson" name="LegalPerson">
+<area shape="rect" id="Node000001" title="A &quot;LegalPerson&quot; is either a musician from our database or an address&#45;book entry." alt="" coords="82,79,177,104"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,123,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,39,121,77,117,80,82,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="147,5,245,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,43,142,80,138,77,174,39"/>
+</map>

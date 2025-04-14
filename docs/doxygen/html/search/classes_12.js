@@ -19,5 +19,16 @@ var searchData=
   ['version20240122170000_16',['Version20240122170000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240122170000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
   ['version20240206153000_17',['Version20240206153000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240206153000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
   ['version20240214010000_18',['Version20240214010000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240214010000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
-  ['version20240214013000_19',['Version20240214013000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240214013000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]]
+  ['version20240214013000_19',['Version20240214013000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240214013000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['version20240214200000_20',['Version20240214200000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240214200000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['version20240218220000_21',['Version20240218220000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240218220000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['version20240218221000_22',['Version20240218221000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240218221000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['version20240220160000_23',['Version20240220160000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240220160000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['version20240221160000_24',['Version20240221160000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240221160000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['version20240226203000_25',['Version20240226203000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240226203000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['version20240301140000_26',['Version20240301140000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240301140000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['version20240419120000_27',['Version20240419120000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240419120000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['version20250210030000_28',['Version20250210030000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250210030000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['version20250220160000_29',['Version20250220160000',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250220160000.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['vueappcontroller_30',['VueAppController',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_vue_app_controller.html',1,'OCA::CAFEVDB::Controller']]]
 ];

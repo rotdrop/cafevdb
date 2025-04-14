@@ -1,0 +1,8 @@
+<map id="getMimeType" name="getMimeType">
+<area shape="rect" id="Node000001" title="Get mimeType." alt="" coords="501,13,601,38"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#a515cd5f88c4e68268985b013cfc8616c" title="Generate a data URI from the given file with caching." alt="" coords="5,5,216,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="488,25,453,24,264,24,216,25,216,20,264,19,453,19,488,20"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#aa2dddac5588be57828916e7e5b65c816" title="Generate SVG image data from a given file." alt="" coords="264,33,453,73"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="488,37,454,42,453,37,487,32"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="250,44,216,40,217,35,251,39"/>
+</map>

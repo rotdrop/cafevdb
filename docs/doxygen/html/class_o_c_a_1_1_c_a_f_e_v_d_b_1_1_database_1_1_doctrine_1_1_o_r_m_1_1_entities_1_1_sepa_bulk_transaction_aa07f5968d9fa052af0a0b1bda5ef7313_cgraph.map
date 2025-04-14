@@ -1,0 +1,5 @@
+<map id="getPreNotificationEmail" name="getPreNotificationEmail">
+<area shape="rect" id="Node000001" title="Get the preNotificationEmail for the specified musician." alt="" coords="5,20,164,45"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sent_email.html#a5687f36f39c8921fc7ae867f446ac5b3" title="Returns messageId." alt="" coords="212,5,391,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,30,198,30,198,35,164,35"/>
+</map>
