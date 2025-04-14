@@ -382,7 +382,8 @@ pre-php-docs: app-toolkit
 phpdoc: pre-php-docs $(PHPDOC_HTML)/index.html
 
 $(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH)
-	rm -rf $(PHPDOC_HTML)/*
+	rm -rf $(PHPDOC_HTML)
+	mkdir -p $(PHPDOC_HTML)
 	$(PHPDOC) run \
  $(PHPDOC_TEMPLATE) \
  --force \
@@ -408,7 +409,7 @@ $(GH_PAGES_DOXYGEN_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(DOXYGEN_HTML)/index
 	cp -a $(DOXYGEN_HTML)/. $(GH_PAGES_DOXYGEN_HTML)/.
 
 $(DOXYGEN_HTML)/index.html: doc/doxygen/Doxyfile $(APP_BUILD_HASH)
-	rm -rf $(DOXYGEN_HTML)/*
+	rm -rf $(DOXYGEN_HTML)
 	mkdir -p $(DOXYGEN_HTML)
 	cd doc/doxygen && doxygen
 
@@ -422,7 +423,7 @@ $(GH_PAGES_JSDOC_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(JSDOC_HTML)/index.htm
 	cp -a $(JSDOC_HTML)/. $(GH_PAGES_JSDOC_HTML)/.
 
 $(JSDOC_HTML)/index.html: doc/jsdoc/jsdoc.json $(APP_BUILD_HASH)
-	rm -rf $(JSDOC_HTML)/*
+	rm -rf $(JSDOC_HTML)
 	mkdir -p $(JSDOC_HTML)
 	$(NPM) run generate-docs
 
