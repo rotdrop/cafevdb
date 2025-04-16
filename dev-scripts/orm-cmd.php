@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -95,16 +95,7 @@ try {
     echo "The process control (PCNTL) extensions are required in case you want to interrupt long running commands - see http://php.net/manual/en/book.pcntl.php" . PHP_EOL;
   }
 
-  $application = new Application(
-    \OC::$server->getConfig(),
-    \OC::$server->get(\OCP\EventDispatcher\IEventDispatcher::class),
-    \OC::$server->getRequest(),
-    \OC::$server->get(\Psr\Log\LoggerInterface::class),
-    \OC::$server->get(\OC\MemoryInfo::class),
-    \OC::$server->get(\OCP\App\IAppManager::class),
-  );
-  // $application->loadCommands(new ArgvInput(), new ConsoleOutput());
-  // $application->run();
+  $application = \OCP\Server::get(Application::class);
 } catch (Exception $ex) {
   exceptionHandler($ex);
 } catch (Error $ex) {

@@ -95,16 +95,7 @@ try {
     echo "The process control (PCNTL) extensions are required in case you want to interrupt long running commands - see http://php.net/manual/en/book.pcntl.php" . PHP_EOL;
   }
 
-  $application = new Application(
-    \OC::$server->getConfig(),
-    \OC::$server->get(\OCP\EventDispatcher\IEventDispatcher::class),
-    \OC::$server->getRequest(),
-    \OC::$server->get(\Psr\Log\LoggerInterface::class),
-    \OC::$server->query(\OC\MemoryInfo::class),
-    \OC::$server->query(\OCP\App\IAppManager::class),
-  );
-  // $application->loadCommands(new ArgvInput(), new ConsoleOutput());
-  // $application->run();
+  $application = \OCP\Server::get(Application::class);
 } catch (Exception $ex) {
   exceptionHandler($ex);
 } catch (Error $ex) {
