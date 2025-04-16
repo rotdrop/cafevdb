@@ -863,15 +863,15 @@ class EntityManager extends EntityManagerDecorator
    *
    * Then just move the modified entity on to the ordinary persister.
    *
-   * @param mixed $entity The entity instance to persist.
+   * @param object $entity The entity instance to persist.
    *
-   * @return mixed The persisted entity (actually the argument $entity).
+   * @return void
    *
    * @todo This unfortunately does not hack similar problems with
    * cascade="persist". There the "stock" persist operation seemingly
    * still causes problems.
    */
-  public function persist(mixed $entity):mixed
+  public function persist(object $entity):void
   {
     $meta = $this->getClassMetadata(get_class($entity));
     if ($meta->containsForeignIdentifier) {
@@ -926,7 +926,7 @@ class EntityManager extends EntityManagerDecorator
       }
 
     }
-    return parent::persist($entity);
+    parent::persist($entity);
   }
 
   /**
@@ -1209,10 +1209,10 @@ class EntityManager extends EntityManagerDecorator
   /**
    * {@inheritdoc}
    */
-  public function flush($entity = null)
+  public function flush():void
   {
     $this->executePreFlushActions();
-    parent::flush($entity);
+    parent::flush();
     $this->executePreFlushActions(); // in case the pre-flush handlers added to the list ...
   }
 

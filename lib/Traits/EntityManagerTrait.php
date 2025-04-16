@@ -224,16 +224,16 @@ trait EntityManagerTrait
    * NOTE: The persist operation always considers entities that are not yet known to
    * this EntityManager as NEW. Do not pass detached entities to the persist operation.
    *
-   * @param mixed $entity The instance to make managed and persistent.
+   * @param object $entity The instance to make managed and persistent.
    *
-   * @return mixed
+   * @return void
    *
    * @throws ORMInvalidArgumentException
    * @throws ORMException
    */
-  protected function persist(mixed $entity)
+  protected function persist(object $entity):void
   {
-    return $this->entityManager->persist($entity);
+    $this->entityManager->persist($entity);
   }
 
   /**
