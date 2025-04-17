@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 
 use Stringable;
+use ReflectionClass;
 
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
@@ -88,97 +89,97 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
   // Things ain't that simple, we must implement all methods.
 
   /** {@inheritdoc} */
-  public function getName()
+  public function getName():string
   {
     return $this->metaData->getName();
   }
 
   /** {@inheritdoc} */
-  public function getIdentifier()
+  public function getIdentifier():array
   {
     return $this->metaData->getIdentifier();
   }
 
   /** {@inheritdoc} */
-  public function getReflectionClass()
+  public function getReflectionClass():ReflectionClass
   {
     return $this->metaData->getReflectionClass();
   }
 
   /** {@inheritdoc} */
-  public function isIdentifier($fieldName)
+  public function isIdentifier(string $fieldName):bool
   {
     return $this->metaData->isIdentifier($fieldName);
   }
 
   /** {@inheritdoc} */
-  public function hasField($fieldName)
+  public function hasField(string $fieldName):bool
   {
     return $this->metaData->hasField($fieldName);
   }
 
   /** {@inheritdoc} */
-  public function hasAssociation($fieldName)
+  public function hasAssociation(string $fieldName):bool
   {
     return $this->metaData->hasAssociation($fieldName);
   }
 
   /** {@inheritdoc} */
-  public function isSingleValuedAssociation($fieldName)
+  public function isSingleValuedAssociation(string $fieldName):bool
   {
     return $this->metaData->isSingleValuedAssociation($fieldName);
   }
 
   /** {@inheritdoc} */
-  public function isCollectionValuedAssociation($fieldName)
+  public function isCollectionValuedAssociation(string $fieldName):bool
   {
     return $this->metaData->isCollectionValuedAssociation($fieldName);
   }
 
   /** {@inheritdoc} */
-  public function getFieldNames()
+  public function getFieldNames():array
   {
     return $this->metaData->getFieldNames();
   }
 
   /** {@inheritdoc} */
-  public function getIdentifierFieldNames()
+  public function getIdentifierFieldNames():array
   {
     return $this->metaData->getIdentifierFieldNames();
   }
 
   /** {@inheritdoc} */
-  public function getAssociationNames()
+  public function getAssociationNames():array
   {
     return $this->metaData->getAssociationNames();
   }
 
   /** {@inheritdoc} */
-  public function getTypeOfField($fieldName)
+  public function getTypeOfField(string $fieldName):string|null
   {
     return $this->metaData->getTypeOfField($fieldName);
   }
 
   /** {@inheritdoc} */
-  public function getAssociationTargetClass($assocName)
+  public function getAssociationTargetClass(string $assocName):string|null
   {
     return $this->metaData->getAssociationTargetClass($assocName);
   }
 
   /** {@inheritdoc} */
-  public function isAssociationInverseSide($assocName)
+  public function isAssociationInverseSide(string $assocName):bool
   {
     return $this->metaData->isAssociationInverseSide($assocName);
   }
 
   /** {@inheritdoc} */
-  public function getAssociationMappedByTargetField($assocName)
+  public function getAssociationMappedByTargetField(string $assocName):string
   {
     return $this->metaData->getAssociationMappedByTargetField($assocName);
   }
 
   /** {@inheritdoc} */
-  public function getIdentifierValues($object)
+  public function getIdentifierValues(object $object):array
   {
     return $this->metaData->getIdentifierValues($object);
   }
