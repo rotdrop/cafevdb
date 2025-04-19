@@ -255,7 +255,7 @@ const loadPMETableFiltered = function(form, formData, ids) {
       filterData[name] = value;
     }
   }
-  Object.extend(formData, filterData);
+  Object.assign(formData, filterData);
 
   return loadPMETable(form, formData);
 };
