@@ -23,5 +23,4 @@
  */
 namespace OCA\CAFEVDB\Templates;
 
-// Issue the main part. The method will echo itself
 echo $this->inc('pme-table', []);
