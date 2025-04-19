@@ -510,7 +510,7 @@ const updateNavigationItems = async () => {
     const response: AxiosResponse<{ navigation: NavigationItem[] }> = await axios.post(
       url, {
         projectId: currentProjectId.value,
-        projectName: currentProjectName.value,
+        projectName: route.params.projectName || currentProjectName.value,
       },
     )
     const newNavigationItems = response.data?.navigation
