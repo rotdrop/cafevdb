@@ -134,12 +134,11 @@ $routes = [
     ],
     [
       'name' => 'vueApp#index',
-      'url' => '/p/{template}/{projectId}/{projectName}',
+      'url' => '/p/{template}/{projectName}',
       'verb' => 'GET',
       'requirements' => [ 'template' => '.+' ],
       'postfix' => 'front',
       'defaults' => [
-        'projectId' => null,
         'projectName' => null,
       ],
     ],
