@@ -689,7 +689,7 @@ export default defineStore(storeId, () => {
       currentHistoryKey: currentHistoryKey.value,
       currentHistoryState: { ...currentHistoryState.value },
       requestData: { ...requestData },
-      currentPostData: { ...currentHistoryState.value.post },
+      currentPostData: { ...(currentHistoryState.value?.post || {}) },
       routerHistory: { ...routerHistory.value },
       routerHistoryKeys: [...routerHistoryKeys.value],
       windowHistoryState: window?.history?.state,
