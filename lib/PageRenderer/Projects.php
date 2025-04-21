@@ -1098,14 +1098,10 @@ class Projects extends PMETableViewBase
    */
   private function templateEditButton(int $projectId, string $projectName, string $template):string
   {
-    $post = [
-      'template' => $template,
-      'projectName' => $projectName,
-      'projectId' => $projectId,
-    ];
+    $url = $this->urlGenerator()->linkToRoute($this->appName() . '.vueApp.indexfront', compact('template', 'projectName'));
+    $post = compact('template', 'projectId', 'projectName');
     $json = htmlspecialchars(json_encode($post));
     $post = http_build_query($post, '', '&');
-    $url = $this->urlGenerator()->linkToRoute($this->appName() . '.vueApp.index', compact('template', 'projectId', 'projectName'));
     $html = '<a class="button button-use-icon edit tooltip-top nav"
    href="' . $url . '"
    data-post="' . $post . '" data-json=\'' . $json . '\'

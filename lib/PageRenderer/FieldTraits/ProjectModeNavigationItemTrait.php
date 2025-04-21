@@ -51,12 +51,12 @@ trait ProjectModeNavigationItemTrait
     $items = ($this->projectId > 0)
       ? array_merge(
         [
-          PageRenderer\ProjectParticipants::navigationItem($this->projectId),
-          PageRenderer\ProjectParticipantFields::navigationItem($this->projectId),
-          PageRenderer\ProjectInstrumentationNumbers::navigationItem($this->projectId),
-          PageRenderer\ProjectPayments::navigationItem($this->projectId),
-          PageRenderer\SepaBankAccounts::navigationItem($this->projectId),
-          PageRenderer\SepaBulkTransactions::navigationItem($this->projectId),
+          PageRenderer\ProjectParticipants::navigationItem($this->projectId, $this->projectName),
+          PageRenderer\ProjectParticipantFields::navigationItem($this->projectId, $this->projectName),
+          PageRenderer\ProjectInstrumentationNumbers::navigationItem($this->projectId, $this->projectName),
+          PageRenderer\ProjectPayments::navigationItem($this->projectId, $this->projectName),
+          PageRenderer\SepaBankAccounts::navigationItem($this->projectId, $this->projectName),
+          PageRenderer\SepaBulkTransactions::navigationItem($this->projectId, $this->projectName),
         ],
         ($this->projectId == $this->getConfigValue(ConfigService::CLUB_MEMBER_PROJECT_ID_KEY, 0)
          ? [
@@ -68,7 +68,7 @@ trait ProjectModeNavigationItemTrait
         ($this->projectId == $this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0)
          ? [
            PageRenderer\TaxExemptionNotices::navigationItem(),
-           PageRenderer\DonationReceipts::navigationItem($this->projectId)
+           PageRenderer\DonationReceipts::navigationItem($this->projectId, $this->projectName)
          ]
          : []),
         [

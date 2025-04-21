@@ -51,6 +51,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 /** Abstract table generator for Musicians table. */
 abstract class Musicians extends PMETableViewBase
 {
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\AllProjectsTrait;
   use FieldTraits\MailingListsTrait;
   use FieldTraits\MusicianAvatarTrait;

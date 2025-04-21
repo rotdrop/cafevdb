@@ -182,10 +182,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   protected $musicianId;
 
   /** @var ?int */
-  protected $projectId;
+  protected ?int $projectId;
 
   /** @var ?string */
-  protected $projectName;
+  protected ?string $projectName;
 
   /** @var int */
   protected $membersProjectId;

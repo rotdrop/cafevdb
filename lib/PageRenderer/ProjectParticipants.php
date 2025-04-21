@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use InvalidArgumentException;
-
 use chillerlan\QRCode\QRCode;
 
 use OCP\IRequest;
@@ -64,6 +62,7 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
@@ -189,9 +188,6 @@ class ProjectParticipants extends PMETableViewBase
     ],
   ];
 
-  /** @var Entities\Project */
-  private ?Entities\Project $project;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
@@ -220,13 +216,7 @@ class ProjectParticipants extends PMETableViewBase
       $toolTipsService,
     );
 
-    if ($this->projectId > 0) {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-      $this->projectName = $this->project->getName();
-    } elseif (!empty($this->projectName)) {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->findOneBy([ 'name' => $this->projectName ]);
-      $this->projectId = $this->project->getId();
-    }
+    $this->findProject(enforce: true);
 
     $this->pme->overrideLabel('Add', $this->l->t('Add Musician'));
   }
@@ -249,7 +239,6 @@ class ProjectParticipants extends PMETableViewBase
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
     $instruments     = $this->instruments;
     $expertMode      = $this->expertMode;
 
@@ -260,10 +249,6 @@ class ProjectParticipants extends PMETableViewBase
       self::CSS_TAG_SHOW_HIDE_DISABLED,
       self::CSS_TAG_PROJECT_PARTICIPANT_FIELDS_DISPLAY,
     ];
-
-    if (empty($projectName) || empty($this->projectId)) {
-      throw new InvalidArgumentException($this->l->t('Project-id and/or -name must be given (%1$s / %2$s)', [ $projectName, $this->projectId ]));
-    }
 
     $opts['filters']['AND'] = [
       '$table.project_id = '.$this->projectId,

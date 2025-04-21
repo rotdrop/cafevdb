@@ -45,6 +45,7 @@ class TaxExemptionNotices extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\ParticipantFileFieldsTrait;
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
 
   const TEMPLATE = 'tax-exemption-notices';
@@ -97,6 +98,8 @@ class TaxExemptionNotices extends PMETableViewBase
       $this->projectId = (int)$this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0);
       $this->projectName = $this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_KEY, '');
     }
+
+    $this->findProject(enforce: false);
   }
   // phpcs:enable
 

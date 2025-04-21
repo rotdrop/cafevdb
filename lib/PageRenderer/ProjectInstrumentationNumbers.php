@@ -39,7 +39,9 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 /**Table generator for Instruments table. */
 class ProjectInstrumentationNumbers extends PMETableViewBase
 {
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
+
   const TEMPLATE = 'project-instrumentation-numbers';
   const TABLE = self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE;
 
@@ -104,6 +106,8 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     if ($this->listOperation()) {
       $this->pme->overrideLabel('Add', $this->l->t('New Voice'));
     }
+
+    $this->findProject(enforce: false);
   }
   // phpcs:enable
 

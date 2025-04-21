@@ -24,11 +24,10 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use InvalidArgumentException;
-
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\AuthorizationService;
@@ -44,10 +43,10 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 /**Table generator for Musicians table. */
 class AddMusicians extends Musicians
 {
-  const TEMPLATE = parent::ADD_TEMPLATE;
+  use FieldTraits\ProjectEntityTrait;
+  use FieldTraits\ProjectModeNavigationItemTrait;
 
-  /** @var Entities\Project */
-  private Entities\Project $project;
+  const TEMPLATE = parent::ADD_TEMPLATE;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -83,13 +82,7 @@ class AddMusicians extends Musicians
       $phoneNumberService,
     );
 
-    if (!($this->projectId > 0)) {
-      throw InvalidArgumentException($this->l->t('Required request parameter "projectId" is not set.'));
-    }
-    $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-    if (empty($this->projectName)) {
-      $this->projectName = $this->project->getName();
-    }
+    $this->findProject(enforce: true);
   }
 
   /** {@inheritdoc} */
@@ -98,30 +91,11 @@ class AddMusicians extends Musicians
     return parent::commonShortTitle() ?? $this->l->t("Add musicians to the project `%s'", [ $this->projectName ]);
   }
 
-  /*** {@inheritdoc} */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
-  {
-    return array_merge(
-      parent::navigationItem($projectId, $projectName), [
-        'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
-      ]);
-  }
-
-  /** {@inheritdoc} */
-  public function navigationItems():array
-  {
-    return [
-      Projects::navigationItem(),
-      ProjectParticipants::navigationItem($this->projectId),
-      ProjectInstrumentationNumbers::navigationItem($this->projectId),
-      Instruments::navigationItem(),
-    ];
-  }
-
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
     ['opts' => $opts, 'joinTables' => $joinTables] = parent::generatePMEOptions();
+    $this->logInfo('JOIN TABLES ' . print_r($joinTables, true));
 
     $bval = strval($this->l->t('Add to %s', [ $this->projectName ]));
     $tip  = strval($this->toolTipsService['page-renderer:musicians:register']);
@@ -150,10 +124,12 @@ class AddMusicians extends Musicians
 
     $surNamePos = array_search('sur_name', array_keys($opts['fdd']));
     $opts['fdd'] = array_merge(
-      array_slice($opts['fdd'], 0, $surNamePos - 1),
-      $addMusiciansFdd,
+      array_slice($opts['fdd'], 0, $surNamePos),
+      [ 'add_musicians' => $addMusiciansFdd ],
       array_slice($opts['fdd'], $surNamePos - 1),
     );
+
+    $this->logInfo('FDD ARRAY ' . print_r(array_keys($opts['fdd']), true));
 
     ++$opts['cgi']['persist']['memberStatusFddIndex'];
     ++$opts['cgi']['persist']['instrummentsFddIndex'];

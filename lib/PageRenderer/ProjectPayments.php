@@ -57,6 +57,7 @@ class ProjectPayments extends PMETableViewBase
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
   use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ParticipantFileFieldsTrait;
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
@@ -74,9 +75,6 @@ class ProjectPayments extends PMETableViewBase
 
   /** @var array */
   private $compositePaymentExpanded = [];
-
-  /** @var Entities\Project */
-  private ?Entities\Project $project;
 
   protected $joinStructure = [
     self::TABLE => [
@@ -323,9 +321,9 @@ WHERE dsf.id IS NOT NULL',
       $pageNavigation,
     );
     $this->compositePaymentExpanded = $this->request['compositePaymentExpanded'];
-    if ($this->projectId > 0) {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-    }
+
+    $this->findProject(enforce: false);
+
     $this->initCrypto();
   }
 
@@ -335,16 +333,6 @@ WHERE dsf.id IS NOT NULL',
     return !empty($this->project)
       ? $this->l->t('Payments for project "%s"', $this->project->getName())
       : $this->l->t('Payments for all projects');
-  }
-
-  /*** {@inheritdoc} */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
-  {
-    return array_merge(
-      parent::navigationItem($projectId, $projectName), [
-        'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
-        'permissions' => AuthorizationService::PERMISSION_FRONTEND|AuthorizationService::PERMISSION_FINANCE,
-      ]);
   }
 
   /**

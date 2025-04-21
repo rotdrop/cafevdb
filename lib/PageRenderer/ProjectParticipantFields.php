@@ -52,6 +52,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 /**Table generator for Instruments table. */
 class ProjectParticipantFields extends PMETableViewBase
 {
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
@@ -163,6 +164,8 @@ class ProjectParticipantFields extends PMETableViewBase
       $pageNavigation,
       $toolTipsService,
     );
+
+    $this->findProject(enforce: false);
   }
   // phpcs:enable
 
