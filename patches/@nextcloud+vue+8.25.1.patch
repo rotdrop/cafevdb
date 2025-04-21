@@ -1,5 +1,5 @@
 diff --git a/node_modules/@nextcloud/vue/dist/Components/NcActionLink.cjs b/node_modules/@nextcloud/vue/dist/Components/NcActionLink.cjs
-index 713d541..58a8729 100644
+index f612f4b..384ce5d 100644
 --- a/node_modules/@nextcloud/vue/dist/Components/NcActionLink.cjs
 +++ b/node_modules/@nextcloud/vue/dist/Components/NcActionLink.cjs
 @@ -64,7 +64,7 @@ const _sfc_main = {
@@ -12,7 +12,7 @@ index 713d541..58a8729 100644
    }), _vm.name ? _c("span", { staticClass: "action-link__longtext-wrapper" }, [_c("strong", { staticClass: "action-link__name" }, [_vm._v(" " + _vm._s(_vm.name) + " ")]), _c("br"), _c("span", { staticClass: "action-link__longtext", domProps: { "textContent": _vm._s(_vm.text) } })]) : _vm.isLongText ? _c("span", { staticClass: "action-link__longtext", domProps: { "textContent": _vm._s(_vm.text) } }) : _c("span", { staticClass: "action-link__text" }, [_vm._v(_vm._s(_vm.text))]), _vm._e()], 2)]);
  };
 diff --git a/node_modules/@nextcloud/vue/dist/Components/NcActionLink.mjs b/node_modules/@nextcloud/vue/dist/Components/NcActionLink.mjs
-index 1f2fb04..28de19c 100644
+index 4427f1d..0cadf27 100644
 --- a/node_modules/@nextcloud/vue/dist/Components/NcActionLink.mjs
 +++ b/node_modules/@nextcloud/vue/dist/Components/NcActionLink.mjs
 @@ -63,7 +63,7 @@ const _sfc_main = {
@@ -24,31 +24,50 @@ index 1f2fb04..28de19c 100644
      return [_c("span", { staticClass: "action-link__icon", class: [_vm.isIconUrl ? "action-link__icon--url" : _vm.icon], style: { backgroundImage: _vm.isIconUrl ? `url(${_vm.icon})` : null }, attrs: { "aria-hidden": "true" } })];
    }), _vm.name ? _c("span", { staticClass: "action-link__longtext-wrapper" }, [_c("strong", { staticClass: "action-link__name" }, [_vm._v(" " + _vm._s(_vm.name) + " ")]), _c("br"), _c("span", { staticClass: "action-link__longtext", domProps: { "textContent": _vm._s(_vm.text) } })]) : _vm.isLongText ? _c("span", { staticClass: "action-link__longtext", domProps: { "textContent": _vm._s(_vm.text) } }) : _c("span", { staticClass: "action-link__text" }, [_vm._v(_vm._s(_vm.text))]), _vm._e()], 2)]);
  };
-diff --git a/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-BntAj6H-.css b/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-BntAj6H-.css
-index 5037aac..42de66e 100644
---- a/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-BntAj6H-.css
-+++ b/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-BntAj6H-.css
+diff --git a/node_modules/@nextcloud/vue/dist/Components/NcModal.cjs b/node_modules/@nextcloud/vue/dist/Components/NcModal.cjs
+index 843ddc4..0799e6e 100644
+--- a/node_modules/@nextcloud/vue/dist/Components/NcModal.cjs
++++ b/node_modules/@nextcloud/vue/dist/Components/NcModal.cjs
+@@ -559,7 +559,11 @@ const __default__ = {
+         trap.deactivate();
+       }
+       this.focusTrap = focusTrap$1.createFocusTrap([contentContainer, ...this.additionalTrapElements], options);
+-      this.focusTrap.activate();
++      try {
++        this.focusTrap.activate();
++      } catch(error) {
++        console.error('Unable to activate focus trap', { error });
++      }
+     },
+     clearFocusTrap() {
+       if (!this.focusTrap) {
+diff --git a/node_modules/@nextcloud/vue/dist/Components/NcModal.mjs b/node_modules/@nextcloud/vue/dist/Components/NcModal.mjs
+index 1dff045..8187140 100644
+--- a/node_modules/@nextcloud/vue/dist/Components/NcModal.mjs
++++ b/node_modules/@nextcloud/vue/dist/Components/NcModal.mjs
+@@ -556,7 +556,11 @@ const __default__ = {
+         trap.deactivate();
+       }
+       this.focusTrap = createFocusTrap([contentContainer, ...this.additionalTrapElements], options);
+-      this.focusTrap.activate();
++      try {
++        this.focusTrap.activate();
++      } catch(error) {
++        console.error('Unable to activate focus trap', { error });
++      }
+     },
+     clearFocusTrap() {
+       if (!this.focusTrap) {
+diff --git a/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-Dun97zcC.css b/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-Dun97zcC.css
+index ffea28e..5174238 100644
+--- a/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-Dun97zcC.css
++++ b/node_modules/@nextcloud/vue/dist/assets/NcAppSidebar-Dun97zcC.css
 @@ -173,7 +173,7 @@
    flex-direction: row;
  }
- .app-sidebar .app-sidebar-header--compact.app-sidebar-header--with-figure .app-sidebar-header__info .app-sidebar-header__figure[data-v-a6baa268] {
+ .app-sidebar .app-sidebar-header--compact.app-sidebar-header--with-figure .app-sidebar-header__info .app-sidebar-header__figure[data-v-478c9d0b] {
 -  --figure-size: calc($desc-height + var(--app-sidebar-padding));
 +  --figure-size: calc(8px + var(--app-sidebar-padding));
    z-index: 2;
    width: var(--figure-size);
    height: var(--figure-size);
-diff --git a/node_modules/@nextcloud/vue/dist/assets/NcColorPicker-C1DuuANb.css b/node_modules/@nextcloud/vue/dist/assets/NcColorPicker-C1DuuANb.css
-index 213c0a2..99dab17 100644
---- a/node_modules/@nextcloud/vue/dist/assets/NcColorPicker-C1DuuANb.css
-+++ b/node_modules/@nextcloud/vue/dist/assets/NcColorPicker-C1DuuANb.css
-@@ -80,8 +80,8 @@
-   height: 30px;
- }
- [data-v-d877eef3]  .vc-chrome-active-color {
--  width: calc(var(--default-clickable-area) - 10 px);
--  height: calc(var(--default-clickable-area) - 10 px);
-+  width: calc(var(--default-clickable-area) - 10px);
-+  height: calc(var(--default-clickable-area) - 10px);
-   border-radius: 17px;
- }
- [data-v-d877eef3]  .vc-chrome-body {
