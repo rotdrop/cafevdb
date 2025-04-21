@@ -61,6 +61,9 @@ class MigrationsService
   /** @var null|array */
   private ?array $unappliedMigrations = null;
 
+  /** @var null|array */
+  private ?array $appliedMigrations = null;
+
   // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected EntityManager $entityManager,
@@ -112,6 +115,19 @@ class MigrationsService
     }
     $this->ensureMigrationsAreLoaded();
     return array_map(fn($className) => $this->appContainer->get($className)->description(), $this->unappliedMigrations);
+  }
+
+  /**
+   * @return array All applied migrations. The migration classes are
+   * instatiated using depency injection with the app-container.
+   */
+  public function getApplied():array
+  {
+    if (!$this->entityManager->connected()) {
+      return [];
+    }
+    $this->ensureMigrationsAreLoaded();
+    return array_map(fn($className) => $this->appContainer->get($className)->description(), $this->appliedMigrations);
   }
 
   /**
@@ -239,6 +255,9 @@ class MigrationsService
     if ($this->unappliedMigrations === null) {
       $this->unappliedMigrations = $this->findUnappliedMigrations(self::MIGRATIONS_FOLDER);
     }
+    if ($this->appliedMigrations === null) {
+      $this->appliedMigrations = $this->findAppliedMigrations(self::MIGRATIONS_FOLDER);
+    }
   }
 
   /** @return void */
@@ -311,17 +330,50 @@ ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS run_count INT DEFAULT 1 NOT NULL
    *
    * @param string $directory
    *
+   * @param bool $onlyNewer Return only unapplied migrations which are newer
+   * than the most recent applied migration. This is the default.
+   *
    * @return array
    */
-  protected function findUnappliedMigrations(string $directory):array
+  protected function findUnappliedMigrations(string $directory, bool $onlyNewer = false):array
   {
     $allMigrations = $this->findMigrations($directory);
     $latestVersion = $this->findLatestVersion();
-    return empty($latestVersion)
-      ? $allMigrations
-      : array_filter($allMigrations, function($version) use ($latestVersion) {
-        return $version > $latestVersion;
-      }, ARRAY_FILTER_USE_KEY);
+    if (empty($latestVersion)) {
+      return $allMigrations;
+    }
+    if ($onlyNewer) {
+      return array_filter(
+        $allMigrations,
+        fn(string $version) => $version > $latestVersion,
+        ARRAY_FILTER_USE_KEY,
+      );
+    }
+    $recordedMigrations = $this->getDatabaseRepository(Entities\Migration::class)->findBy([], [ 'version' => 'INDEX' ]);
+    $this->logInfo('RECORDED MIGRATIONS ' . print_r(array_keys($recordedMigrations), true));
+    return array_filter(
+      $allMigrations,
+      fn(string $version) => empty($recordedMigrations[$version]),
+      ARRAY_FILTER_USE_KEY,
+    );
+  }
+
+  /**
+   * Find all applied migrations.
+   *
+   * @param string $directory
+   *
+   * @return array
+   */
+  protected function findAppliedMigrations(string $directory):array
+  {
+    $allMigrations = $this->findMigrations($directory);
+    $recordedMigrations = $this->getDatabaseRepository(Entities\Migration::class)->findBy([], [ 'version' => 'INDEX' ]);
+    return array_filter(
+      $allMigrations,
+      fn(string $version) => !empty($recordedMigrations[$version]),
+      ARRAY_FILTER_USE_KEY,
+    );
   }
 
   /**
