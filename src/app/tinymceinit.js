@@ -36,6 +36,29 @@ const myPostProcessCallback = function(e) {
   e.content = e.content.replace(/^<p>(((?!<p>)[\s\S])*)<\/p>$/g, '$1');
 };
 
+const replaceImageSource = (editor, src, id) => {
+  if (!window.fetch || !src || !src.match(/^https?:\/\//)) {
+    return;
+  }
+  fetch(src).then(function(response) {
+    response.arrayBuffer().then(function(body) {
+      let url;
+      const ctype = response.headers.get('content-type');
+      const u8Buf = new Uint8Array(body);
+      let latinBuf = '';
+      u8Buf.forEach(function(byte) { latinBuf += String.fromCharCode(byte); });
+      if (ctype && latinBuf) {
+        url = 'data:' + ctype + ';base64,' + btoa(latinBuf);
+        $(editor.getBody()).find('img[data-img-id="' + id + '"]').attr({
+          src: url,
+          'data-mce-src': url,
+          'data-img-id': null,
+        });
+      }
+    });
+  });
+};
+
 const myConfig = {
   // auto_focus: 'mce_0',
   // theme_advanced_resizing: true,
@@ -67,6 +90,25 @@ const myConfig = {
     // editor.on('init', function(event) {
     //   alert('editor is shown');
     // });
+    editor.on('PastePostProcess', function(event) {
+      console.info('PastPostProcess Event', { event });
+      $(event.node).find('img').each(function() {
+        const id = 'i' + Date.now();
+
+        // No referrer for privacy
+        this.referrerPolicy = 'no-referrer';
+
+        // Need an attribute to find the image element after paste
+        this.setAttribute('data-img-id', id);
+
+        // Replace the 'src' with data: URI after the image has been loaded
+        // This way if we fetch the image again the browser will fetch it from cache
+        this.onload = function() {
+          this.onload = null;
+          replaceImageSource(editor, this.src, id);
+        };
+      });
+    });
   },
   init_instance_callback(inst) {
 
