@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\ConversionException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\AssociationMapping;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\PersistentCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Proxy\Proxy;
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
@@ -232,7 +233,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
    * @param object $entity The current $entity which must be the owning side
    * of the association.
    *
-   * @param array $association The association mapping of the current field
+   * @param AssociationMapping $association The association mapping of the current field
    * (the field itself is not needed here).
    *
    * @param object $targetEntity The target-entity which must be the inverse
@@ -244,7 +245,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
    */
   private function updateInverseSide(
     object $entity,
-    array $association,
+    AssociationMapping $association,
     object $targetEntity,
     ClassMetadataInterface $targetMeta,
   ):void {
