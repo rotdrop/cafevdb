@@ -33,7 +33,6 @@ const attachWindowResizeHandler = () => {
   $(window)
     .off('resize.' + appName)
     .on('resize.' + appName, function(event) {
-      console.info('WINDOW RESIZE HANDLER', event);
       if (!globalState.windowResizeTimeout) {
         const delay = 50;
         const width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
