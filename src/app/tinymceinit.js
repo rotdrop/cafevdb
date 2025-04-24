@@ -124,7 +124,7 @@ const myConfig = {
     const $mceContainer = $(inst.getContainer());
     console.debug($mceContainer);
     const $ambientContainer = $mceContainer.closest('.resize-target, .ui-dialog-content');
-    console.info('TINY AMBIENT CONTAINER', $ambientContainer);
+    // console.info('TINY AMBIENT CONTAINER', $ambientContainer);
     mceWindow.globalState = {
       oldWidth: [-1, -1],
       oldHeight: [-1, -1],
