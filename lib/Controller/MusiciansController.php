@@ -224,7 +224,7 @@ class MusiciansController extends Controller
    *
    * @return array
    */
-  private function getFlatMusician(Entities\Musician $musician, array $only = null):array
+  private function getFlatMusician(Entities\Musician $musician, ?array $only = null):array
   {
     return array_merge(
       [

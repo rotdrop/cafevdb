@@ -41,7 +41,7 @@ class Connection extends DBALConnection
     array $params,
     Driver $driver,
     Configuration $config = null,
-    EventManager $eventManager = null,
+    ?EventManager $eventManager = null,
   ) {
     parent::__construct($params, $driver, $config, $eventManager);
   }

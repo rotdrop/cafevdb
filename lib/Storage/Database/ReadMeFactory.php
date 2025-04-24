@@ -112,7 +112,7 @@ class ReadMeFactory extends AbstractReadMeFactory
    *
    * @return string
    */
-  protected function getReadMeTooltipsKey(string $storageId, string $dirName = null):?string
+  protected function getReadMeTooltipsKey(string $storageId, ?string $dirName = null):?string
   {
     if (!empty($dirName)) {
       $storageId .= Constants::PATH_SEP . trim($dirName, Constants::PATH_SEP);
