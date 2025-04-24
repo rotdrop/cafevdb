@@ -578,6 +578,14 @@ export default defineStore(storeId, () => {
       return;
     }
 
+    if (pendingHistoryAction.value && pendingHistoryAction.value !== transition) {
+      logger.error('PENDING HISTORY ACTION DOES NOT MATCH ACTUAL TRANSITION', {
+        pendingHistoryAction: pendingHistoryAction.value,
+        transition,
+      });
+      // reset ...
+      clearHistoryAction();
+    }
     // TODO: is this still needed?
     if (pendingHistoryAction.value === 'replace' && key !== currentHistoryKey.value && currentHistoryKey.value !== 'initial') {
       logger.trace('EXPLICIT HISTORY REPLACE REQUESTED, BUT CURRENT HISTORY IS GONE', {
@@ -588,17 +596,10 @@ export default defineStore(storeId, () => {
       });
       cancelHistoryAction();
     }
-    if (pendingHistoryAction.value && pendingHistoryAction.value !== transition) {
-      logger.error('PENDING HISTORY ACTION DOES NOT MATCH ACTUAL TRANSITION', {
-        pendingHistoryAction: pendingHistoryAction.value,
-        transition,
-      });
-      // reset ...
-      cancelHistoryAction();
-    }
     if (!pendingHistoryAction.value) {
       if (transition !== HistoryActionUnknown) {
         pendingHistoryAction.value = transition;
+        pendingHistoryData.value = {};
       } else if (key === pendingHistoryKey.value) {
         // replace action from RouterLink
         pendingHistoryAction.value = HistoryActionReplace;
