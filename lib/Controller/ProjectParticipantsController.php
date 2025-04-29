@@ -34,23 +34,24 @@ use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Storage\AppStorage;
-use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Storage\AppStorage;
+use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /** AJAX end-points for project participants */
 class ProjectParticipantsController extends Controller
@@ -102,6 +103,8 @@ class ProjectParticipantsController extends Controller
    *
    * @return Response
    *
+   * @todo Throw exceptions< s.t. the middleware error reporting code can do its work.
+   *
    * @NoAdminRequired
    */
   public function addMusicians(int $projectId, ?int $musicianId = null):Response
@@ -132,11 +135,23 @@ class ProjectParticipantsController extends Controller
 
     $numRecords = count($musicianIds);
     if ($numRecords == 0) {
-      return self::grumble($this->l->t('Missing Musician Ids'));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Missing Musician Ids'),
+        0,
+        null,
+        httpStatusCode: Http::STATUS_BAD_REQUEST,
+        context: [ 'template' => 'add-musicians' ],
+      );
     }
 
     if (empty($projectId) || $projectId <= 0) {
-      return self::grumble($this->l->t('Missing Project Id'));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Missing Project Id'),
+        0,
+        null,
+        httpStatusCode: Http::STATUS_BAD_REQUEST,
+        context: [ 'template' => 'add-musicians' ],
+      );
     }
 
     $result = $this->projectService->addMusicians($musicianIds, $projectId);
@@ -155,11 +170,21 @@ class ProjectParticipantsController extends Controller
 
       foreach ($failedMusicians as $id => $failures) {
         foreach ($failures as $failure) {
-          $messages[] = ' '.$failure['notice'];
+          $messages[] = $failure['notice'];
         }
       }
 
-      return self::grumble([ 'message' => $messages ]);
+      throw new Exceptions\EnduserNotificationException(
+        join(' ', $messages),
+        0,
+        null,
+        httpStatusCode: Http::STATUS_BAD_REQUEST,
+        context: [
+          'messages' => $messages,
+          'template' => 'add-musicians',
+        ],
+      );
+      // return self::grumble([ 'message' => $messages ]);
 
     } else {
 

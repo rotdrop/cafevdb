@@ -2227,7 +2227,11 @@ Whatever.',
         'id' => $id,
         'notice' => $this->l->t(
           'Adding the musician with id %d failed with exception %s',
-          [ $id, $t->getMessage(), ]),
+          [ $id, $t->getMessage(), ]
+        )
+        . ' || ' . $t->getFile()
+        . ':' . $t->getLine()
+        . ' || ' . $t->getTraceAsString(),
       ];
       return false;
     }
