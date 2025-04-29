@@ -179,6 +179,7 @@ import type { AxiosResponse } from 'axios'
 import type { LoadPartsData } from '../types/ajax/page-load-response.ts'
 import { loadTranslations, translate as t } from '@nextcloud/l10n'
 import { useRouter, useRoute } from 'vue-router/composables'
+import { isNavigationFailure, NavigationFailureType } from 'vue-router'
 import { dokuWikiSection, dokuWikiUrl, dokuWikiUrlTarget } from '../util/doku-wiki.ts'
 import { AppError } from '../types/errors.ts'
 import Console from '../util/console.ts'
@@ -193,7 +194,7 @@ const appError = ref<null | AppError>(null) // any cannot be avoided here
 const errorHandler = <E extends AppError>(error: E) => {
   appError.value = error
   showAppError.value = true
-  logger.error('LEGACY WRAPPER ERROR')
+  logger.error('LEGACY WRAPPER ERROR', { error })
 }
 const errorHandlerProvider = useErrorHandlerStore()
 
@@ -531,12 +532,30 @@ watch(
       if (!props.noLegacyReload) {
         await loadLegacy()
       } else {
-        logger.info('NO LOAD FLAG ACTIVE, SKIPPING PAGE LOAD')
+        logger.info('NO LOAD FLAG ACTIVE, SKIPPING PAGE LOAD', { currentRoute })
         // keep current post data, this is just for updating the hash value in window.location
         const hash = scheduleHistoryReplace(currentHistoryState.value.post)
         // remove no-load from the display URL
-        await synchronizeHistoryState(hash)
-        logger.info('SYNCHRONIZED BROWSER HISTORY STATE WITH COMPONENT STATE', window.location, props.hash, props.noLegacyReload)
+        try {
+          await synchronizeHistoryState(hash)
+          logger.info('SYNCHRONIZED BROWSER HISTORY STATE WITH COMPONENT STATE', {
+            location: window.location,
+            props,
+          })
+        } catch (error) {
+          if (isNavigationFailure(error, NavigationFailureType.duplicated)) {
+            // ignore bug log
+            logger.error('Duplicated navigation trying to remove no-load flag', { error })
+          } else {
+            errorHandler(
+              new AppError(
+                { component: COMPONENT_NAME },
+                t(appName, 'Error synchronizing history state for template "{template}".', { template: props.template }),
+                { cause: error },
+              ),
+            )
+          }
+        }
       }
       releaseHistoryMutationLock()
     }
