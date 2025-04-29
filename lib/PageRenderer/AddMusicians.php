@@ -95,6 +95,8 @@ class AddMusicians extends Musicians
   public function render(bool $execute = true):void
   {
     ['opts' => $opts, 'joinTables' => $joinTables] = parent::generatePMEOptions();
+    $opts['cgi']['persist']['projectId'] = $this->projectId;
+
     $this->logInfo('JOIN TABLES ' . print_r($joinTables, true));
 
     $bval = strval($this->l->t('Add to %s', [ $this->projectName ]));
