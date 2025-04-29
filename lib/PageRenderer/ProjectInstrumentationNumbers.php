@@ -95,12 +95,12 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     parent::__construct(
       self::TEMPLATE,
       //
-      $configService,
-      $entityManager,
-      $request,
-      $pageNavigation,
-      $phpMyEdit,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     if ($this->listOperation()) {
