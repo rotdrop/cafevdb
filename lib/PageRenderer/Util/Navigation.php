@@ -28,7 +28,6 @@ use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Database\Legacy\PME\IOptions as PMEOptions;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service\ToolTipsService;
@@ -47,7 +46,6 @@ class Navigation
     protected IL10N $l,
     protected ILogger $logger,
     protected ToolTipsService $toolTipsService,
-    protected PMEOptions $pmeOptions,
   ) {
   }
   // phpcs:enable
