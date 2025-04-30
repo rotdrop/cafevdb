@@ -1047,7 +1047,7 @@ class SepaBankAccounts extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::OPERATION_LIST][PHPMyEdit::TRIGGER_PRE][] = [ $this, 'totalFeesPreFilterTrigger' ];
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($execute) {
       $this->execute($opts);

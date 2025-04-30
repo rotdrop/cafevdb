@@ -720,7 +720,7 @@ __EOT__;
       return true;
     };
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($execute) {
       $this->execute($opts);

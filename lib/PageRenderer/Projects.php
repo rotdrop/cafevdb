@@ -129,7 +129,7 @@ class Projects extends PMETableViewBase
     );
 
     if (!($this->projectId > 0)) {
-      $this->projectId = $this->pmeRecordId['id']??null;
+      $this->projectId = $this->pmeRecordId['id'] ?? null;
     }
     if ($this->projectId > 0) {
       $this->project = $this->projectService->findById($this->projectId);
@@ -186,6 +186,7 @@ class Projects extends PMETableViewBase
     $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
+    $instrumentInfo  = $this->getInstrumentInfo();
 
     $opts            = [];
 
@@ -285,7 +286,7 @@ class Projects extends PMETableViewBase
       $yearValues[] = $year;
     }
 
-    $yearIdx = count($opts['fdd']);
+    // $yearIdx = count($opts['fdd']);
     $opts['fdd']['year'] = [
       'name'     => $this->l->t('year'),
       'select'   => 'N',
@@ -417,7 +418,7 @@ class Projects extends PMETableViewBase
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].'.instrument_id',
         ],
-        'valueGroups' => $this->instrumentInfo['idGroups'],
+        'valueGroups' => $instrumentInfo['idGroups'],
         'filter' => [
           'having' => true,
         ],
@@ -426,7 +427,7 @@ class Projects extends PMETableViewBase
     // Blow up the value-groups for the voices ... actually does not
     // matter too much, this is just a lookup table.
     $voicesValueGroups = [];
-    foreach ($this->instrumentInfo['idGroups'] as $instrumentId => $groupName) {
+    foreach ($instrumentInfo['idGroups'] as $instrumentId => $groupName) {
       for ($i = 0; $i < 32; ++$i) {
         $voicesValueGroups[$instrumentId . self::JOIN_KEY_SEP . $i] = $groupName;
       }
@@ -478,8 +479,8 @@ class Projects extends PMETableViewBase
 '; // close dropdown-menu
 
             if ($op == 'add') {
-              $instruments = array_keys($this->instruments);
-              $instrumentNames = $this->instruments;
+              $instruments = array_keys($instrumentInfo['byId']);
+              $instrumentNames = $instrumentInfo['byId'];
             } else {
               $instruments = Util::explode(
                 ',',
@@ -1062,7 +1063,7 @@ class Projects extends PMETableViewBase
       return $this->projectActionMenu($projectId, $projectName, overview: true, direction: 'left');
     };
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($this->projectId > 0) {
       $opts['buttons'] = $this->pageNavigation->prependTableButtons(buttons: []);

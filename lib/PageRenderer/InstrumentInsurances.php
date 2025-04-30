@@ -472,7 +472,7 @@ GROUP BY b.short_name',
       'values2'  => $this->scopeNames,
     ];
 
-    $instrumentValues = array_values($this->instruments);
+    $instrumentValues = array_values($this->getInstrumentInfo()['byId']);
     $opts['fdd']['object'] = [
       'tab'      => [ 'id' => [ 'item', 'overview' ]],
       'name'     => $this->l->t('Insured Object'),
@@ -740,7 +740,7 @@ GROUP BY b.short_name',
       return true;
     };
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($execute) {
       $this->execute($opts);

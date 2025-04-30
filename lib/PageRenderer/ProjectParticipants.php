@@ -239,8 +239,9 @@ class ProjectParticipants extends PMETableViewBase
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
-    $instruments     = $this->instruments;
     $expertMode      = $this->expertMode;
+    $instrumentInfo  = $this->getInstrumentInfo();
+    $instruments     = $instrumentInfo['byId'];
 
     $opts            = [];
 
@@ -632,7 +633,7 @@ class ProjectParticipants extends PMETableViewBase
         'orderby'     => '$table.sort_order ASC',
         'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
       ],
-      'valueGroups' => $this->instrumentInfo['idGroups'],
+      'valueGroups' => $instrumentInfo['idGroups'],
     ];
     $fdd['values|VDPC'] = array_merge($fdd['values'], [
       'filters' => '$table.id IN (SELECT DISTINCT instrument_id
@@ -917,7 +918,7 @@ class ProjectParticipants extends PMETableViewBase
         'orderby'     => '$table.sort_order ASC',
         'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians'], ],
       ],
-      'valueGroups' => $this->instrumentInfo['idGroups'],
+      'valueGroups' => $instrumentInfo['idGroups'],
       'filter' => [
         'having' => true,
       ],
@@ -938,8 +939,8 @@ class ProjectParticipants extends PMETableViewBase
         'select'  => 'M',
         'input'   => 'SR',
         'tooltip' => $this->toolTipsService['page-renderer:musicians:instruments-disabled'],
-        'values2' => $this->instrumentInfo['byId'],
-        'valueGroups' => $this->instrumentInfo['idGroups'],
+        'values2' => $instrumentInfo['byId'],
+        'valueGroups' => $instrumentInfo['idGroups'],
         'filter' => [
           'having' => true,
           // 'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,

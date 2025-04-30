@@ -36,7 +36,6 @@ use OCP\IRequest;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
-use OCA\CAFEVDB\Database\Doctrine\ORM;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -154,6 +153,14 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   protected const PME_NAVIGATION_NO_MULTI = 'GUD';
   protected const PME_NAVIGATION_MULTI = 'GUDM';
 
+  protected const PERSISTENT_CGI_KEYS = [
+    'template',
+    'musicianId',
+    'projectId',
+    'projectName',
+    'recordsPerPage',
+  ];
+
   /** @var IL10N */
   protected IL10N $l;
 
@@ -174,9 +181,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
 
   /** @var bool */
   protected $filterVisibility;
-
-  /** @var array default PHPMyEdit options */
-  protected $pmeOptions;
 
   /** @var ?int */
   protected $musicianId;
@@ -235,34 +239,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
    */
   protected $joinTables = null;
 
-  /**
-   * @var array
-   *
-   * Fetched from the database at construction.
-   */
-  protected $instrumentInfo;
-
-  /**
-   * @var array
-   *
-   * Fetched from the database at construction.
-   */
-  protected $instruments;
-
-  /**
-   * @var array
-   *
-   * Fetched from the database at construction.
-   */
-  protected $groupedInstruments;
-
-  /**
-   * @var array
-   *
-   * Fetched from the database at construction.
-   */
-  protected $instrumentFamilies;
-
   /** {@inheritdoc} */
   protected function __construct(
     protected string $template,
@@ -290,49 +266,67 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     // this is done by the legacy code itself.
     $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
-    $this->defaultFDD = $this->createDefaultFDD();
-
     $cgiDefault = [
-      'template' => fn($value):string => (string)($value ?? 'blog'),
       'musicianId' => fn($value):?int => $value === null ? null : (int)$value,
       'projectId' => fn($value):?int => $value === null ? null : (int)$value,
       'projectName' => fn($value):string => (string)($value ?? ''),
       'recordsPerPage' => fn($value):int => (int)($value ?? $this->getUserValue('pagerows', 20)),
     ];
 
-    $this->pmeOptions = [
+    foreach ($cgiDefault as $key => $default) {
+      $this->{lcFirst($key)} = $default($this->request[$key] ?? null);
+    }
+
+    $this->defaultFDD = $this->createDefaultFDD();
+  }
+
+  /**
+   * Fetch instruments info, @see OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository.
+   *
+   * @return array
+   */
+  protected function getInstrumentInfo():array
+  {
+    return $this->getDatabaseRepository(Entities\Instrument::class)->describeALL();
+  }
+
+  /**
+   * Create the base options array for phpMyEdit.
+   *
+   * @return array
+   */
+  protected function generateBasePMEOptions():array
+  {
+    $pmeOptions = [
       'cgi' => [ 'persist' => [] ],
       'display' => [],
       'css' => [ 'postfix' => [], ],
       'navigation' => self::PME_NAVIGATION_NO_MULTI,
     ];
 
-    foreach ($cgiDefault as $key => $default) {
-      $this->pmeOptions['cgi']['persist'][$key] =
-        $this->{lcFirst($key)} = $default($this->request[$key] ?? null);
+    foreach (self::PERSISTENT_CGI_KEYS as $key) {
+      $pmeOptions['cgi']['persist'][$key] = $this->{lcFirst($key)};
     }
 
-    $this->pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';
+    $pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';
 
-    $this->pmeOptions['cgi']['append'][$this->pme->cgiSysName('fl')] = $this->filterVisibility;
+    $pmeOptions['cgi']['append'][$this->pme->cgiSysName('fl')] = $this->filterVisibility;
 
-    $this->template = $template; // overwrite with child-class supplied value
+    $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['*']['pre'][] = [ $this, 'preTrigger' ];
 
-    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['*']['pre'][] = [ $this, 'preTrigger' ];
+    //$pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] = [ __CLASS__, 'suspendLoggingTrigger' ];
+    $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['after'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['after'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['copy']['after'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['delete']['after'][] = [ __CLASS__, 'resumeLoggingTrigger' ];
 
-    //$this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] = [ __CLASS__, 'suspendLoggingTrigger' ];
-    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['after'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['after'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['copy']['after'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['delete']['after'][] = [ __CLASS__, 'resumeLoggingTrigger' ];
+    $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['copy']['before'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['before'][] = [ $this, 'beforeAnythingTrimAnything' ];
 
-    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['copy']['before'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['before'][] = [ $this, 'beforeAnythingTrimAnything' ];
-
-    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['before'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['delete']['before'][] = function(
+    $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['before'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['delete']['before'][] = function(
         $pme,
         $op,
         $step,
@@ -344,7 +338,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
         return true;
       };
 
-    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['after'][] = function($pme) {
+    $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['after'][] = function($pme) {
       $pme->message = $this->l->n(
         '%n data field affected',
         '%n data fields affected',
@@ -352,7 +346,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       return true;
     };
 
-    $this->pmeOptions['display']['postfix'] = function($pme) {
+    $pmeOptions['display']['postfix'] = function($pme) {
       $html = '';
       $html .= $this->pme->htmlHiddenSys('reloadOuterForm', $this->reloadOuterForm);
       if (!$this->expertMode) {
@@ -383,16 +377,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       return $html;
     };
 
-    // @todo: the following should be done only on demand and is
-    // somewhat chaotic.
-
-    // List of instruments
-    $this->instrumentInfo =
-      $this->getDatabaseRepository(ORM\Entities\Instrument::class)->describeALL();
-    $this->instruments = $this->instrumentInfo['byId'];
-    $this->groupedInstruments = $this->instrumentInfo['nameGroups'];
-    $this->instrumentFamilies =
-      $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class)->values();
+    return $pmeOptions;
   }
 
   /**
@@ -405,7 +390,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     $multiplicities = array_values(DBTypes\EnumParticipantFieldMultiplicity::toArray());
     $result = [];
     foreach ($multiplicities as $tag) {
-      $slug = 'extra field '.$tag;
+      $slug = 'extra field ' . $tag;
       $result[$tag] = $this->l->t($slug);
     }
     return $result;
@@ -582,13 +567,13 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   }
 
   /**
-   * @param array $opts Options to be merged in the default options.
+   * @param array $opts Options to be merged into the default options.
    *
    * @return array Merged options array.
    */
   protected function mergeDefaultOptions(array $opts):array
   {
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
     if ($this->pmeBare) {
       // disable all navigation buttons, probably for html export
       $opts['navigation'] = 'N'; // no navigation
@@ -612,7 +597,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   }
 
   /**
-   * The following maybe does not belong her, but gives some outdated
+   * The following maybe does not belong here, but gives some outdated
    * docs for the field definitions (fdd).
    *
    * Field definitions

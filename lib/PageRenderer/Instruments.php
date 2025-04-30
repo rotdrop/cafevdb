@@ -365,29 +365,12 @@ GROUP BY $columns[1]",
         return true;
       };
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($execute) {
       $this->execute($opts);
     } else {
       $this->pme->setOptions($opts);
     }
-  }
-
-  /**
-   * Convert an array of ids to an array of names.
-   *
-   * @param array $instrumentIds
-   *
-   * @return array
-   */
-  public function instrumentNames(array $instrumentIds)
-  {
-    $byId = $this->instrumentInfo['byId'];
-    $result = [];
-    foreach ($instrumentIds as $id) {
-      $result[$id] = empty($byId[$id]) ? $this->l->t('unknown') : $byId[$id];
-    }
-    return $result;
   }
 }

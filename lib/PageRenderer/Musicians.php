@@ -156,7 +156,7 @@ abstract class Musicians extends PMETableViewBase
     );
 
     if (empty($this->musicianId)) {
-      $this->musicianId = $this->pmeRecordId['id']??null;
+      $this->musicianId = $this->pmeRecordId['id'] ?? null;
     }
 
 
@@ -301,6 +301,8 @@ abstract class Musicians extends PMETableViewBase
         ],
       ],
     ];
+
+    $instrumentInfo = $this->getInstrumentInfo();
 
     /*
      *
@@ -597,7 +599,7 @@ abstract class Musicians extends PMETableViewBase
         'orderby'     => '$table.sort_order ASC',
         'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
       ],
-      'valueGroups' => $this->instrumentInfo['idGroups'],
+      'valueGroups' => $instrumentInfo['idGroups'],
       'filter' => [
         'having' => true,
       ],
@@ -639,8 +641,8 @@ abstract class Musicians extends PMETableViewBase
         'select'  => 'M',
         'input'   => 'SR',
         'tooltip' => $this->toolTipsService['page-renderer:musicians:instruments-disabled'],
-        'values2' => $this->instrumentInfo['byId'],
-        'valueGroups' => $this->instrumentInfo['idGroups'],
+        'values2' => $instrumentInfo['byId'],
+        'valueGroups' => $instrumentInfo['idGroups'],
         'filter' => [
           'having' => true,
           // 'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,

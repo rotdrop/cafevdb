@@ -138,6 +138,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $template       = $this->template;
     $projectId      = $this->projectId;
     $projectMode    = $this->projectId > 0;
+    $instrumentInfo = $this->getInstrumentInfo();
 
     $opts            = [];
 
@@ -281,8 +282,8 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'join' => false, // [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
         'filters' => '$table.id in (SELECT instrument_id FROM $main_table)',
       ],
-      //'values2|AVCPDLF' => $this->instrumentInfo['byId'],
-      'valueGroups' => $this->instrumentInfo['idGroups'],
+      //'values2|AVCPDLF' => $instrumentInfo['byId'],
+      'valueGroups' => $instrumentInfo['idGroups'],
     ];
     $this->addSlug('instrument', $opts['fdd']['instrument_id']);
 
@@ -459,7 +460,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     // @todo: here we need still delete triggers etc.
     // go
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($execute) {
       $this->execute($opts);

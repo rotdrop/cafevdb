@@ -1533,7 +1533,7 @@ WHERE dsf.id IS NOT NULL',
       return $this->actionMenu($rec['id'], $row, $pme);
     };
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     $opts['buttons'] = $this->pageNavigation->prependTableButtons(buttons: []);
     foreach (['C', 'P', 'D', 'V'] as $operationMode) {
