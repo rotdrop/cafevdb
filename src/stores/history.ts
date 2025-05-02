@@ -469,10 +469,16 @@ export default defineStore(storeId, () => {
     let promise: Promise<void>;
     let count = 0;
     do {
-      logger.debug(3, 'ATTEMPT TO AQUIRE MUTATION LOCK', ++count);
+      logger.debug(3, 'ATTEMPT TO AQUIRE MUTATION LOCK', {
+        count: ++count,
+        mutationLock,
+      });
       await (promise = mutationLock.promise);
     } while (promise !== mutationLock.promise);
-    logger.debug(3, 'AQUIRED MUTATION LOCK');
+    logger.debug(3, 'AQUIRED MUTATION LOCK', {
+      count,
+      mutationLock,
+    });
     return mutationLock = Promise.withResolvers<void>();
   };
 
