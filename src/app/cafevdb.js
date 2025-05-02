@@ -32,8 +32,6 @@ import {
 import {
   backGroundPromise as toolTipsBackgroundPromise,
   rejectBackgroundPromise as rejectToolTipsBackgroundPromise,
-  getMarkCount,
-  setMarkCount,
 } from './jquery-cafevdb-tooltips.js';
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import * as BusEvents from '../event-bus-events.ts';
@@ -405,7 +403,6 @@ const toolTipsInit = function(containerSel) {
 
   console.debug('tooltips container', containerSel, container.length);
 
-  setMarkCount(0);
   const timestamp = Date.now();
 
   for (const toolTipSpec of toolTipSelectors) {
@@ -448,8 +445,6 @@ const toolTipsInit = function(containerSel) {
     });
 
   console.timeEnd('TOOLTIPS');
-
-  console.info('SKIPPED MARKED', getMarkCount());
 };
 
 export {
@@ -467,8 +462,3 @@ export {
   toolTipsInit,
   toolTipsEnabled,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,15 +88,9 @@ const unregisterBackgroundJob = function() {
   }
 };
 
-let markCount = 0;
-
-const getMarkCount = () => markCount;
-const setMarkCount = (value) => { markCount = value; };
-
 const markElement = function($element, timestamp) {
   if (timestamp !== false) {
     if ($element.data(appName + '-tooltip-timestamp') === timestamp) {
-      markCount++;
       return false;
     }
     $element.data(appName + '-tooltip-timestamp', timestamp);
@@ -318,11 +312,4 @@ export {
   backGroundCount,
   backGroundPromise,
   rejectBackgroundPromise,
-  setMarkCount,
-  getMarkCount,
 };
-
-// Local Variables: ***
-// indent-tabs-mode: nil ***
-// js-indent-level: 2 ***
-// End: ***
