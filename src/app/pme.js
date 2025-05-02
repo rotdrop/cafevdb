@@ -197,7 +197,10 @@ const tableLoadCallback = function(template, selector, parameters, resizeReadyCB
  */
 const pmeSubmitOuterForm = function(outerSelector, options) {
 
-  console.warn('SUBMIT OUTER FORM, NEEDS MORE WORK WITH VUE');
+  console.debug('SUBMIT OUTER FORM, NEEDS MORE WORK WITH VUE', {
+    outerSelector,
+    options,
+  });
 
   outerSelector = pmeSelector(outerSelector);
   options = Object.assign({ keepLocked: false, keepBusy: false, discard: false }, options);
@@ -229,7 +232,10 @@ const pmeSubmitOuterForm = function(outerSelector, options) {
   } else {
     // submit the outer form
     // $outerForm.submit();
-    console.warn('PSEUDO SUBMIT ON', $outerForm, outerSelector);
+    console.warn('PSEUDO SUBMIT ON', {
+      $outerForm,
+      outerSelector,
+    });
     pseudoSubmit($outerForm, $(), outerSelector, 'pme');
   }
 };
@@ -989,7 +995,7 @@ const pmeTableDialogOpen = async function(tableOptions, post) {
                       pageBusyIcon(false);
                       tableDialogLoadIndicator(dialogHolder, false);
                     }
-                    console.info('RESOLVING PME TABLE DIALOG PROMISE');
+                    console.debug('RESOLVING PME TABLE DIALOG PROMISE');
                     resolveOpenDialog(true);
                   });
                   pmeTweaks(dialogHolder);
