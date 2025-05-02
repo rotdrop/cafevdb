@@ -93,7 +93,7 @@ $.fn.cafevDialog = function(argument, ...rest) {
       $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#app-content, #app-content-vue');
     }
   } else {
-    console.info('CAFEVDB DIALOG FORWARD', {
+    console.debug('CAFEVDB DIALOG FORWARD', {
       argument,
       ...rest,
     });
