@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use DateTimeImmutable;
 use DateTimeInterface;
 use InvalidArgumentException;
 
@@ -317,6 +318,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->encryptedFiles = new ArrayCollection();
 
     $this->memberStatus = Types\EnumMemberStatus::REGULAR();
+
+    $this->setUpdated(new DateTimeImmutable());
+    $this->setCreated(new DateTimeImmutable());
   }
 
   /** {@inheritdoc} */
