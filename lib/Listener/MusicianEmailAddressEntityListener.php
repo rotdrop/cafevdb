@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,15 +24,15 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
-
-use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress as Entity;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\EmailAddressService;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
 /**
  * Entity listener for musician email address records
@@ -100,7 +100,7 @@ class MusicianEmailAddressEntityListener
       );
     }
     $entity->setAddress(array_key_first($addressList));
-    $entity->getMusician()>getEmailAddresses()->set($entity->getAddress(), $entity);
+    $entity->getMusician()->getEmailAddresses()->set($entity->getAddress(), $entity);
     $this->entityManager->dispatchEvent(new Events\PrePersistMusicianEmail($entity));
   }
 
