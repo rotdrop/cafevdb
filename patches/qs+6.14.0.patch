@@ -1,0 +1,13 @@
+diff --git a/node_modules/qs/lib/parse.js b/node_modules/qs/lib/parse.js
+index d25be00..5f7f322 100644
+--- a/node_modules/qs/lib/parse.js
++++ b/node_modules/qs/lib/parse.js
+@@ -129,7 +129,7 @@ var parseValues = function parseQueryStringValues(str, options) {
+         }
+ 
+         var existing = has.call(obj, key);
+-        if (existing && options.duplicates === 'combine') {
++        if (existing && (options.duplicates === 'combine' || part.indexOf('[]=') > -1)) {
+             obj[key] = utils.combine(obj[key], val);
+         } else if (!existing || options.duplicates === 'last') {
+             obj[key] = val;
