@@ -64,7 +64,7 @@ $.fn.elements = function() {
  */
 $.fn.cafevDialog = function(argument, ...rest) {
   if (rest.length === 0 && typeof argument === 'object' && argument !== null) {
-    console.info('CAFEVDB DIALOG OPEN', {
+    console.debug('CAFEVDB DIALOG OPEN', {
       argument,
       ...rest,
     });
