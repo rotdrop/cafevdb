@@ -381,7 +381,7 @@ class ProjectParticipants extends PMETableViewBase
       'name'     => $this->l->t('Project-Id'),
       'input'    => ($expertMode ? 'R' : 'RH'),
       'select'   => 'T',
-      'options'  => 'LACPDV',
+      'options'  => 'LFACPDV',
       'maxlen'   => 5,
       'align'    => 'right',
       'default'  => '0',
@@ -392,8 +392,8 @@ class ProjectParticipants extends PMETableViewBase
       'tab'      => [ 'id' => 'miscinfo' ],
       'name'     => $this->l->t('Musician-Id'),
       'input'    => ($expertMode ? 'R' : 'RH'),
-      'select'   => 'T',
-      'options'  => 'LACPDV',
+      'select'   => 'M',
+      'options'  => 'LFACPDV',
       'maxlen'   => 5,
       'align'    => 'right',
       'default'  => '0',
@@ -523,14 +523,15 @@ class ProjectParticipants extends PMETableViewBase
       ]);
 
     // soft-deletion
-    $opts['fdd']['deleted'] = array_merge(
+    $opts['fdd']['deleted'] = Util::arrayMergeRecursive(
       $this->defaultFDD['deleted'], [
         'name' => $this->l->t('Deleted'),
         'tab'  => [ 'id' => 'tab-all' ],
+        'options' => 'LFACPDV',
         'dateformat' => 'medium',
         'timeformat' => 'short',
         'maxlen' => 19,
-        'input' => ($this->showDisabled ? 'T' : 'RH'),
+        'input' => ($this->showDisabled ? '' : 'RH'),
       ]
     );
     Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'date');
@@ -1263,7 +1264,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'tab'      => [ 'id' => 'miscinfo' ],
         'name'     => 'UUID',
-        'options'  => 'LAVCPDR',
+        'options'  => 'LFAVCPDR',
         'css'      => [ 'postfix' => [ 'musician-uuid', 'clip-long-text', 'tiny-width', ], ],
         'sql'      => 'BIN2UUID($join_col_fqn)',
         'display|LVF' => ['popup' => 'data'],

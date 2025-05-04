@@ -97,7 +97,7 @@ class AddMusicians extends Musicians
     ['opts' => $opts, 'joinTables' => $joinTables] = parent::generatePMEOptions();
     $opts['cgi']['persist']['projectId'] = $this->projectId;
 
-    $this->logInfo('JOIN TABLES ' . print_r($joinTables, true));
+    $this->logDebug('JOIN TABLES ' . print_r($joinTables, true));
 
     $bval = strval($this->l->t('Add to %s', [ $this->projectName ]));
     $tip  = strval($this->toolTipsService['page-renderer:musicians:register']);
@@ -131,7 +131,7 @@ class AddMusicians extends Musicians
       array_slice($opts['fdd'], $surNamePos - 1),
     );
 
-    $this->logInfo('FDD ARRAY ' . print_r(array_keys($opts['fdd']), true));
+    $this->logDebug('FDD ARRAY ' . print_r(array_keys($opts['fdd']), true));
 
     ++$opts['cgi']['persist']['memberStatusFddIndex'];
     ++$opts['cgi']['persist']['instrummentsFddIndex'];

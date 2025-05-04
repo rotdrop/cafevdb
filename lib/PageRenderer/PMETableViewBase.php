@@ -699,6 +699,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       'deleted' => [
         'name' => $this->l->t('Revoked'),
         'input' => $this->expertMode ? '' : 'R',
+        'select'=> 'T',
         'maxlen' => 10,
         'sort' => true,
         'css' => [ 'postfix' => [ 'revocation-date', 'date',  'show-disabled-shown', 'hide-disabled-hidden', ], ],
