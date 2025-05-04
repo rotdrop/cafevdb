@@ -350,7 +350,7 @@ ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS run_count INT DEFAULT 1 NOT NULL
       );
     }
     $recordedMigrations = $this->getDatabaseRepository(Entities\Migration::class)->findBy([], [ 'version' => 'INDEX' ]);
-    $this->logInfo('RECORDED MIGRATIONS ' . print_r(array_keys($recordedMigrations), true));
+    $this->logDebug('RECORDED MIGRATIONS ' . print_r(array_keys($recordedMigrations), true));
     return array_filter(
       $allMigrations,
       fn(string $version) => empty($recordedMigrations[$version]),
