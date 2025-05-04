@@ -34,6 +34,7 @@ import {
 } from 'vue';
 import { useRoute } from 'vue-router/composables';
 import { isNavigationFailure, NavigationFailureType } from 'vue-router';
+import { v4 as uuidv4 } from 'uuid'
 
 import axios, { type AxiosResponse } from '@nextcloud/axios';
 import moment from '@nextcloud/moment';
@@ -954,30 +955,31 @@ export default defineStore(storeId, () => {
         // function.
         const resolved = router.resolve(entry.path);
         const params = sanitizePostData(Object.assign({}, entry.post, resolved.location.params))
+        const hash = entry.hash;
+        const force = uuidv4();
         const location = {
           name: resolved.route.name!, // @todo error handling for route.name
           params,
+          query: { hash, [force]: 'force' },
         }
         try {
           scheduleHistoryReplace(params);
           await router.replace(location);
+          delete location.query[force];
+          scheduleHistoryReplace(params);
+          await router.replace(location);
         } catch (error) {
-          if (isNavigationFailure(error, NavigationFailureType.duplicated)) {
-            logger.debug('Finish history action after duplicated navigation during history replace.', { error });
-            finishHistoryAction(error.to, error.from);
-          } else {
-            errorHandler(
-              new HistoryStoreMutationError(
-                t(appName, 'Unable to replace the current view.'),
-              ),
-            );
-          }
+          errorHandler(
+            new HistoryStoreMutationError(
+              t(appName, 'Unable to replace the current view.'),
+            ),
+          );
         }
         releaseMutationLock();
         return;
       }
 
-      // To there is at least on additional state. Just install the
+      // To there is at least one additional state. Just install the
       // post-data and path into the current history state.
       currentHistoryState.value.path = entry.path;
       currentHistoryState.value.replaceHash(entry);
@@ -1043,10 +1045,6 @@ export default defineStore(storeId, () => {
         );
       }
     } else {
-      const currentState = {
-        state: window.history.state,
-        url: window.location.href,
-      }
       try {
         // push the final state throught the vue-router to avoid a reload by go(0)
         logger.debug('PUSH FINAL STATE AS REQUESTED POS IS LAST ONE', { entry: { ...chain[posKey] } });
@@ -1054,38 +1052,25 @@ export default defineStore(storeId, () => {
         const resolved = router.resolve(entry.path);
         const params = sanitizePostData(Object.assign({}, entry.post, resolved.location.params));
         const hash = entry.hash;
+        const force = uuidv4();
         const location = {
           name: resolved.route.name!, // @todo error handling
           params,
-          query: { hash },
+          query: { hash, [force]: 'force' },
         }
+        // push replace combo in order to avoid duplicated navigation exceptions.
         scheduleHistoryPush(params);
         await router.push(location);
+        delete location.query[force];
+        scheduleHistoryPush(params);
+        await router.replace(location);
       } catch (error) {
-        if (isNavigationFailure(error, NavigationFailureType.duplicated)) {
-          // Insist on our potentially tweaked history state
-          window.history.replaceState(currentState.state, '', currentState.url);
-          // here we need to push anyway, otherwise we get out of sync
-          const entry = chain[posKey];
-          const key = (+currentHistoryKey.value + 0.001).toFixed(3);
-          const url = generateAppUrl(entry.path.replace(/^\/+/, ''));
-          const state = window.history.state;
-          state.key = key;
-          window.history.pushState(state, '', url);
-          logger.debug('Finish history action after duplicated navigation during history replace.', {
-            error,
-            currentState,
-            newState: { state, url },
-          });
-          finishHistoryAction(error.to, error.from);
-        } else {
-          errorHandler(
-            new HistoryStoreMutationError(
-              t(appName, 'Unable to push the desired view.'),
-              { cause: error },
-            ),
-          );
-        }
+        errorHandler(
+          new HistoryStoreMutationError(
+            t(appName, 'Unable to push the desired view.'),
+            { cause: error },
+          ),
+        );
       }
     }
     releaseMutationLock();
