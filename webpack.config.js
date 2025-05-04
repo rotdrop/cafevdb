@@ -130,6 +130,7 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: 'css/[name]-[contenthash].css',
+      ignoreOrder: true,
     }),
     new CssoWebpackPlugin(
       {
