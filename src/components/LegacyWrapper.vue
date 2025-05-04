@@ -219,7 +219,7 @@ const props = withDefaults(defineProps<{
   navButtonSize: 'large',
 })
 
-logger.info('PROPS AT START', { ...props })
+logger.debug('PROPS AT START', { ...props })
 
 // handle tooltips
 
@@ -246,11 +246,11 @@ const legacyCssClass = ref('')
 const loading = ref(true)
 const shortTitle = ref(props.template)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let loadingPromise = Promise.resolve(true) as Promise<any> // reactivity not needed
+let loadingPromise = Promise.resolve(true) as Promise<any> // used to serialize load requests
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let exposedLoadingPromise = Promise.resolve(true) as Promise<any>
 const pageLoadTrigger = ref(false)
 let previousHash = null as null|string // reactivity not needed
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const legacyHtmlLoaded = ref(false)
 
 // *** former computed properties
 
@@ -301,13 +301,17 @@ const reloadPage = async () => {
       return
     }
   }
+  const { promise, resolve } = Promise.withResolvers()
+  exposedLoadingPromise = promise
   await aquireHistoryMutationLock()
   await loadLegacy()
   releaseHistoryMutationLock()
+  logger.debug('RESOLVE LOADING PROMISE', { promise, resolve })
+  resolve(undefined)
 }
 
 const onUserManualPopup = () => {
-  logger.info('USER MANUAL POPUP')
+  logger.debug('USER MANUAL POPUP')
   return asyncEmit(WIKI_POPUP, {
     wikiPage: wikiManualSection.value,
     popupTitle: t(appName, 'User Manual: {section}', { section: shortTitle.value }, 0, { escape: false }),
@@ -321,7 +325,8 @@ const synchronizeHistoryState = (hash: string) => {
     params: { ...currentRoute.params },
     query: { ...currentRoute.query, hash },
   }
-  logger.info('REPLACE ROUTE TO SYNC BROWSER HISTORY', { target: { ...target } })
+  delete target.query['no-reload']
+  logger.debug('REPLACE ROUTE TO SYNC BROWSER HISTORY', { target: { ...target } })
   return router.replace(target)
 }
 
@@ -351,12 +356,29 @@ const updateLegacyRoute = async (post: TemplatePostData, action: 'push'|'replace
     },
   }
   if (htmlBody) {
-    logger.info('INSTALL NEW HTML')
+    logger.debug('INSTALL NEW HTML')
     legacyBodyHtml.value = htmlBody
   }
   target.query.hash = scheduleHistoryAction(action, post)
-  return router[action](target)
+  try {
+    await router[action](target)
+  } catch (error) {
+    if (isNavigationFailure(error, NavigationFailureType.duplicated)) {
+      // ignore bug log
+      logger.error('Duplicated navigation trying to remove no-load flag', { error })
+    } else {
+      errorHandler(
+        new AppError(
+          { component: COMPONENT_NAME },
+          t(appName, 'Error updating legacy route from {template} to {newTemplate}.', { template: props.template, newTemplate: post.template || '' }),
+          { cause: error },
+        ),
+      )
+    }
+  }
 }
+
+const getPageLoadPromise = () => exposedLoadingPromise
 
 const nextFrame = () => {
   return new Promise(resolve => requestAnimationFrame(() => {
@@ -375,13 +397,9 @@ const doLoadLegacy = async () => {
   const projectKey = props.templateParameters?.projectName
     || props.templateParameters.projectId
     || 0
-  logger.info('BEFORE SET CURRENT PROJECT', { projectKey })
   await appData.setCurrentProject(projectKey)
-  logger.info('AFTER SET CURRENT PROJECT', { projectKey })
-  logger.debug('REQUESTING PAGE CLEANUP')
   await asyncEmit(LEGACY_PAGE_CLEANUP)
-  logger.debug('AFTER PAGE CLEANUP')
-  logger.info('HISTORY STATE AT ENTRY', { ...currentHistoryState.value })
+  logger.debug('HISTORY STATE AT ENTRY', { ...currentHistoryState.value })
   // const historyAppData = { ...currentHistoryState.value.post }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const post: TemplatePostData = {
@@ -391,7 +409,7 @@ const doLoadLegacy = async () => {
   // TODO: when chaning template, post-data exception project-id, project-name, musician-id should probably be cleared ...
   Object.assign(post, currentHistoryState.value.post, { ...post /* spread is necessary here */ })
   // Object.assign(historyAppData, post)
-  logger.info('POST including history state', {
+  logger.debug('POST including history state', {
     post,
     currentHistoryState: { ...currentHistoryState.value, post: { ...currentHistoryState.value.post } },
   })
@@ -412,16 +430,16 @@ const doLoadLegacy = async () => {
     legacyCssClass.value = data.cssClass
     await nextTick()
     await nextFrame()
-    logger.info('RUN READY CALLBACKS', legacyHtmlContainer.value)
+    logger.debug('RUN READY CALLBACKS', legacyHtmlContainer.value)
     await asyncEmit(LEGACY_PAGE_FINALIZE)
-    logger.info('AFTER RUN READY CALLBACKS')
+    logger.debug('AFTER RUN READY CALLBACKS')
     const titleProvider = document.getElementById(globalState.PHPMyEdit.pmePrefix + '-short-title')
     if (titleProvider) {
       shortTitle.value = titleProvider.textContent || ''
     }
     const responseTemplate = data.template?.replace(/%2F|\//, ':') || props.template
     if (responseTemplate !== props.template) {
-      logger.info('TEMPLATE HAS CHANGED, SYNC HISTORY', responseTemplate, props.template)
+      logger.debug('TEMPLATE HAS CHANGED, SYNC HISTORY', responseTemplate, props.template)
       const post: TemplatePostData = {
         template: responseTemplate,
         ...data.defaultTemplateParameters,
@@ -435,7 +453,7 @@ const doLoadLegacy = async () => {
       post: { ...post },
       e,
     })
-    await loadTranslations('logreader', () => logger.info('LOGREADER L10N'))
+    await loadTranslations('logreader', () => logger.debug('LOGREADER L10N'))
     errorHandler(
       new AppError(
         { component: COMPONENT_NAME },
@@ -448,26 +466,20 @@ const doLoadLegacy = async () => {
 }
 
 const loadLegacy = async () => {
-  logger.info('VUE APP LOAD PAGE LOADING', props.template, props.templateParameters, props.hash)
+  logger.debug('VUE APP LOAD PAGE LOADING', props.template, props.templateParameters, props.hash)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let promise: Promise<any>
   do {
-    logger.info('BEFORE AWAIT PROMISE IN LOOP', { loadingPromise })
+    logger.debug('BEFORE AWAIT PROMISE IN LOOP', { loadingPromise })
     await (promise = loadingPromise)
-    logger.info('AFTER AWAIT PROMISE IN LOOP', { promise, loadingPromise })
+    logger.debug('AFTER AWAIT PROMISE IN LOOP', { promise, loadingPromise })
   } while (promise !== loadingPromise)
-  logger.info('BEFORE DO LOAD LEGACY()')
+  logger.debug('BEFORE DO LOAD LEGACY()')
   await (loadingPromise = doLoadLegacy())
-  logger.info('AFTER AWAIT PAGE LOAD', props.template, props.templateParameters, props.hash)
+  logger.debug('AFTER AWAIT PAGE LOAD', props.template, props.templateParameters, props.hash)
 }
 
 // *** watchers
-watch(legacyHtmlLoaded, (value, oldValue) => {
-  logger.info('Legacy HTML Loaded Watcher', value, oldValue)
-  if (value) {
-    legacyHtmlLoaded.value = false
-  }
-})
 watch(
   () => props.templateParameters?.projectId,
   async (value, oldValue) => {
@@ -475,8 +487,7 @@ watch(
       // protect against change between null, undefined and possibly 0
       return
     }
-    logger.info('PROJECT ID CHANGED', value, oldValue)
-    logger.info('TRIGGER PAGE LOAD')
+    logger.debug('PROJECT ID CHANGED, TRIGGER PAGE LOAD', value, oldValue)
     pageLoadTrigger.value = true
     await appData.setCurrentProject(value)
   },
@@ -488,8 +499,7 @@ watch(
       // protect against change between null, undefined and possibly 0
       return
     }
-    logger.info('PROJECT NAME CHANGED', value, oldValue)
-    logger.info('TRIGGER PAGE LOAD')
+    logger.debug('PROJECT NAME CHANGED, TRIGGER PAGE LOAD', value, oldValue)
     pageLoadTrigger.value = true
     await appData.setCurrentProject(value)
   },
@@ -497,48 +507,50 @@ watch(
 watch(
   () => props.template,
   (...args) => {
-    logger.info('TEMPLATE CHANGE', ...args)
-    logger.info('TRIGGER PAGE LOAD')
+    logger.debug('TEMPLATE CHANGE, TRIGGER PAGE LOAD', ...args)
     pageLoadTrigger.value = true
   },
 )
 watch(
   () => props.hash,
   (value, oldValue) => {
-    logger.info('POST DATA HASH CHANGE', value, oldValue, props.hash)
+    logger.debug('POST DATA HASH CHANGE', value, oldValue, props.hash)
     if (value !== previousHash) {
       previousHash = value
-      logger.info('TRIGGER PAGE LOAD')
+      logger.debug('TRIGGER PAGE LOAD')
       pageLoadTrigger.value = true
     } else {
-      logger.info('NEW HASH EQUAL TO PREVIOUS AFTER LOAD HASH, DO NOT TRIGGER PAGE LOAD')
+      logger.debug('NEW HASH EQUAL TO PREVIOUS AFTER LOAD HASH, DO NOT TRIGGER PAGE LOAD')
     }
   },
 )
 watch(
   () => props.noLegacyReload,
   (value, oldValue) => {
-    logger.info('NO LEGACY RELOAD CHANGE', value, oldValue, pageLoadTrigger.value)
+    logger.debug('NO LEGACY RELOAD CHANGE', value, oldValue, pageLoadTrigger.value)
   },
 )
 watch(
   pageLoadTrigger,
   async (...args) => {
-    logger.info('PAGE LOAD TRIGGER CHANGE', ...args)
+    logger.debug('PAGE LOAD TRIGGER CHANGE', ...args)
     if (pageLoadTrigger.value) {
+      const { promise, resolve } = Promise.withResolvers()
+      exposedLoadingPromise = promise
+      logger.debug('EXPOSED LOADING PROMISE', { promise, resolve })
       await aquireHistoryMutationLock()
       pageLoadTrigger.value = false
       appError.value = null
       if (!props.noLegacyReload) {
         await loadLegacy()
       } else {
-        logger.info('NO LOAD FLAG ACTIVE, SKIPPING PAGE LOAD', { currentRoute })
+        logger.debug('NO LOAD FLAG ACTIVE, SKIPPING PAGE LOAD', { currentRoute })
         // keep current post data, this is just for updating the hash value in window.location
         const hash = scheduleHistoryReplace(currentHistoryState.value.post)
         // remove no-load from the display URL
         try {
           await synchronizeHistoryState(hash)
-          logger.info('SYNCHRONIZED BROWSER HISTORY STATE WITH COMPONENT STATE', {
+          logger.debug('SYNCHRONIZED BROWSER HISTORY STATE WITH COMPONENT STATE', {
             location: window.location,
             props,
           })
@@ -558,6 +570,8 @@ watch(
         }
       }
       releaseHistoryMutationLock()
+      logger.debug('RESOLVE LOADING PROMISE', { promise, resolve })
+      resolve(undefined)
     }
   },
 )
@@ -566,7 +580,7 @@ watch(
 const legacyPageLoadHandler = asyncSubscribe(
   LEGACY_PAGE_LOAD,
   async (eventData) => {
-    logger.info('LEGACY PAGE LOAD CALLED', eventData)
+    logger.debug('LEGACY PAGE LOAD CALLED', eventData)
     appError.value = null
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const params: Record<string, any> = {
@@ -600,7 +614,7 @@ const legacyPageLoadHandler = asyncSubscribe(
         return await router.replace(target)
       } catch (e) {
         console.info('ROUTER ERROR', { e })
-        return router.go(0)
+        router.go(0)
       }
     } else {
       target.query.hash = scheduleHistoryPush(post)
@@ -608,14 +622,14 @@ const legacyPageLoadHandler = asyncSubscribe(
       if (currentRoute.query.hash === target.query.hash) {
         target.query.hash = '-'
       }
-      return router.push(target)
+      await router.push(target)
     }
   },
 )
 const legacyPmeHistoryUpdateHandler = asyncSubscribe(
   LEGACY_PME_UPDATE,
   (eventData) => {
-    logger.info('LEGACY PME HISTORY UPDATE', eventData)
+    logger.debug('LEGACY PME HISTORY UPDATE', eventData)
     return updateLegacyRoute(eventData.post, eventData.action, eventData.htmlBody)
   },
 )
@@ -665,6 +679,10 @@ onUnmounted(() => {
   asyncUnSubscribe(LEGACY_PAGE_LOAD, legacyPageLoadHandler)
   asyncUnSubscribe(LEGACY_PME_UPDATE, legacyPmeHistoryUpdateHandler)
   asyncUnSubscribe(LEGACY_SANITIZE_POST_DATA, legacyPostMetaDataHandler)
+})
+
+defineExpose({
+  getPageLoadPromise,
 })
 
 </script>
