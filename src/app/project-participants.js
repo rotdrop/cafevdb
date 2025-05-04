@@ -240,11 +240,12 @@ const loadPMETableFiltered = function(form, formData, ids) {
   }
 
   const pmeSys = PHPMyEdit.sys('');
-  let filterData = {};
+  let filterData = {
+    [pmeSys + 'fl']: 1,
+  };
   for (let idx = 0; idx < ids.length; ++idx) {
     const indices = (typeof ids[idx] === 'object') ? ids[idx] : { 0: ids[idx] };
     for (const keyIndex in indices) {
-      const name = pmeSys + 'qf' + keyIndex + '_idx[' + idx + ']';
       const value = indices[keyIndex];
       if (value === -1) {
         filterData = {};
@@ -252,7 +253,14 @@ const loadPMETableFiltered = function(form, formData, ids) {
       }
       // console.info('FILTER NAME', name);
       // console.info('FILTER VALUE', value);
-      filterData[name] = value;
+      // filterData[pmeSys + 'qf' + keyIndex + '_idx[' + idx + ']'] = value;
+      const filterKey = pmeSys + 'qf' + keyIndex + '_idx';
+      const currentValue = filterData[filterKey] || [];
+      if (currentValue.indexOf(value) === -1) {
+        currentValue.push(value);
+        currentValue.sort();
+      }
+      filterData[filterKey] = currentValue;
     }
   }
   Object.assign(formData, filterData);

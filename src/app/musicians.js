@@ -95,37 +95,33 @@ const addMusicians = function($form, post) {
         // ProjectParticipants.loadProjectParticipants(form);
       });
     })
-    .done(function(data) {
+    .done(async (data) => {
       if (!Ajax.validateResponse(data, ['musicians'])) {
         // Load the underlying base-view in any case in order to go "back" ...
         ProjectParticipants.loadProjectParticipants($form);
         return;
       }
-      console.log(data);
-      // Notification.messages(data.message);
+      console.debug(data);
       if (data.musicians.length === 1) {
         // open single person change dialog
         const musicianId = data.musicians[0];
-        // alert('data: '+CAFEVDB.print_r(musician, true));
-        ProjectParticipants.loadProjectParticipants(
+        ProjectParticipants.personalRecordDialog(
+          musicianId, {
+            projectId,
+            projectName,
+            initialValue: 'Change',
+            modified: false,
+          },
+        );
+        await ProjectParticipants.loadProjectParticipants(
           $form,
           undefined,
-          function() {
-            Notification.messages(data.message);
-            ProjectParticipants.personalRecordDialog(
-              musicianId, {
-                projectId,
-                projectName,
-                initialValue: 'Change',
-                modified: true,
-              });
-          });
+        );
       } else {
         // load the instrumentation table, initially restricted to the new musicians
-        ProjectParticipants.loadProjectParticipants($form, data.musicians, function() {
-          Notification.messages(data.message);
-        });
+        await ProjectParticipants.loadProjectParticipants($form, data.musicians);
       }
+      Notification.messages(data.message);
     });
 };
 
@@ -297,7 +293,7 @@ const contactValidation = function(container) {
           const message = Array.isArray(data.message)
             ? data.message.join('<br>')
             : data.message;
-          if (message !== '') {
+          if (message) {
             Dialogs.alert(
               message,
               t(appName, 'Email Validation'),
