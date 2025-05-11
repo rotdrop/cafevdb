@@ -1,5 +1,5 @@
 diff --git a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
-index c4f7083..3e33f06 100644
+index 3ce622d..393bef9 100644
 --- a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
 +++ b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
 @@ -18,6 +18,7 @@ import useCalendarObjectsStore from '../store/calendarObjects.js'
@@ -10,7 +10,7 @@ index c4f7083..3e33f06 100644
  
  /**
   * This is a mixin for the editor. It contains common Vue stuff, that is
-@@ -405,10 +406,20 @@ export default {
+@@ -423,10 +424,20 @@ export default {
  					params,
  				})
  			} catch (error) {
@@ -34,7 +34,7 @@ index c4f7083..3e33f06 100644
  		},
  		/**
  		 * Closes the editor and returns to normal calendar-view without running any action.
-@@ -960,4 +971,7 @@ export default {
+@@ -979,4 +990,7 @@ export default {
  			next(false)
  		}
  	},
@@ -1012,7 +1012,7 @@ index 0000000..c4f7083
 +	},
 +}
 diff --git a/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js b/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js
-index a175f62..f112507 100644
+index 8c01319..6354d0e 100644
 --- a/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js
 +++ b/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js
 @@ -588,7 +588,10 @@ export default defineStore('calendarObjectInstance', {
