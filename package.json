@@ -41,7 +41,7 @@
     "@iframe-resizer/jquery": "^5.4.4",
     "@iframe-resizer/parent": "^5.4.4",
     "@nextcloud/app-calendar": "github:rotdrop/nextcloud-app-calendar.git#production/cafevdb/stable5.2",
-    "@nextcloud/app-logreader": "github:nextcloud/logreader#stable30",
+    "@nextcloud/app-logreader": "github:nextcloud/logreader#stable31",
     "@nextcloud/auth": "^2.1.0",
     "@nextcloud/axios": "^2.4.0",
     "@nextcloud/browser-storage": "^0.4.0",
