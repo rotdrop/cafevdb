@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -1191,7 +1191,11 @@ class MailingListsService
       $sharingService = $this->di(SimpleSharingService::class);
 
       if ($node) {
-        $url = $sharingService->linkShare($node, $shareOwnerUid, sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE);
+        ['dav' => $url,] = $sharingService->linkShare(
+          $node,
+          $shareOwnerUid,
+          sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE,
+        );
         if (empty($url)) {
           return null;
         }
@@ -1223,11 +1227,11 @@ class MailingListsService
       $baseTemplatePath = $this->templateFolderPath(MailingListsService::TEMPLATE_TYPE_UNSPECIFIC);
       $baseFolderShareUri = $this->ensureTemplateFolder($baseTemplatePath);
       $templateFolderBase = basename($templateFolderPath);
-      $folderShareUri = $baseFolderShareUri . '/download?path=/' . $templateFolderBase;
+      $folderShareUri = $baseFolderShareUri . '/' . $templateFolderBase;
     } else {
       $templateFolderPath = $folderName;
       $baseFolderShareUri = $this->ensureTemplateFolder($templateFolderPath);
-      $folderShareUri = $baseFolderShareUri . '/download?path=/';
+      $folderShareUri = $baseFolderShareUri;
     }
 
     /** @var UserStorage $userStorage */
@@ -1250,7 +1254,7 @@ class MailingListsService
           continue;
       }
       $nodeBase = $pathInfo['basename'];
-      $templateUri = $folderShareUri . '&files=' . $nodeBase;
+      $templateUri = $folderShareUri . '/' . $nodeBase;
       try {
         $result = $this->setMessageTemplate($listId, $template, $templateUri);
       } catch (\Throwable $t) {

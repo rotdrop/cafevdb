@@ -2498,7 +2498,7 @@ Störung.';
       if (empty($downloadFile)) {
         $downloadFile = $this->userStorage->putContent($downloadPath, $data);
       }
-      $shareLink = $this->simpleSharingService->linkShare(
+      ['files_sharing' => $shareLink,] = $this->simpleSharingService->linkShare(
         $downloadFile,
         $this->shareOwnerId(),
         sharePerms: \OCP\Constants::PERMISSION_READ,

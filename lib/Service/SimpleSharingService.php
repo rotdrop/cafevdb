@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,7 +70,10 @@ class SimpleSharingService
    * @param bool $noCreate Do not create a new share, but return an existing
    * share if it exists.
    *
-   * @return null|string The absolute URL for the share or null.
+   * @return null|array The absolute URLs for the share or null.
+   * ```
+   * [ 'files_sharing': URL, 'webdav' => DAV_URL ]
+   * ```
    */
   public function linkShare(
     FileSystemNode $node,
@@ -78,7 +81,7 @@ class SimpleSharingService
     int $sharePerms = \OCP\Constants::PERMISSION_CREATE,
     mixed $expirationDate = null,
     bool $noCreate = false,
-  ) {
+  ):?array {
     $this->logDebug('shared folder id ' . $node->getId());
 
     $shareType = IShare::TYPE_LINK;
@@ -113,9 +116,14 @@ class SimpleSharingService
 
       // check permissions
       if ($share->getPermissions() === $sharePerms) {
-        $url = $this->urlGenerator()->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $share->getToken()]);
-        $this->logInfo('Reuse existing link-share ' . $url);
-        return $url;
+        $token = $share->getToken();
+        $filesSharing = $this->urlGenerator()->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
+        $dav = $this->urlGenerator()->getAbsoluteURL('/public.php/dav/files/' . $token);
+        $this->logInfo('Reuse existing link-share ' . $filesSharing . ' || ' . $dav);
+        return [
+          'files_sharing' => $filesSharing,
+          'dav' => $dav,
+        ];
       }
     }
 
@@ -139,11 +147,16 @@ class SimpleSharingService
       return null;
     }
 
-    $url = $this->urlGenerator()->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $share->getToken()]);
+    $token = $share->getToken();
+    $filesSharing = $this->urlGenerator()->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
+    $dav = $this->urlGenerator()->getAbsoluteURL('/public.php/dav/files/' . $token);
 
-    $this->logInfo('Created new link-share ' . $url);
+    $this->logInfo('Created new link-share ' . $filesSharing . ' || ' . $dav);
 
-    return $url;
+    return [
+      'files_sharing' => $filesSharing,
+      'dav' => $dav,
+    ];
   }
 
   /**

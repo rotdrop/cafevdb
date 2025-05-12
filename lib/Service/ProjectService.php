@@ -957,7 +957,7 @@ class ProjectService
       }
 
       // try to create or use the folder and share it by a public link
-      $url = $sharingService->linkShare(
+      ['files_sharing' => $url,] = $sharingService->linkShare(
         $node,
         $shareOwnerUid,
         sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE,

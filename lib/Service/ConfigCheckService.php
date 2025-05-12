@@ -899,7 +899,7 @@ class ConfigCheckService
       // Now it should exist as directory and $node should contain its file-info
 
       if ($node) {
-        $url = $this->sharingService->linkShare($node, $userId);
+        ['files_sharing' => $url,] = $this->sharingService->linkShare($node, $userId);
         if (empty($url)) {
           return null;
         }
