@@ -38,7 +38,7 @@
                           :reset-action="resetAction"
                           :searchable="true"
                           v-on="$listeners"
-                          @search="findContacts"
+                          @search="nextcloudSelectSearch"
   >
     <template #option="option">
       <NcEllipsisedOption v-tooltip="contactAddressPopup(option)"
@@ -209,7 +209,10 @@ const getValueKeys = () => {
   return result
 }
 
-const findContacts = async (query: string, contactUids: string[]) => {
+const nextcloudSelectSearch = (query: string) => findContacts(query)
+
+const findContacts = async (query: string, contactUids?: string[]) => {
+  logger.info('FIND CONTACTS', { query, contactUids })
   query = typeof query === 'string' ? encodeURI(query) : ''
   if (query !== '') {
     query = '/' + query
@@ -226,6 +229,7 @@ const findContacts = async (query: string, contactUids: string[]) => {
   }
   if (contactUids !== undefined) {
     if (contactUids.length === 0) {
+      logger.info('EMPTY UIDS', { contactUids })
       return true
     }
     params.contactUids = contactUids

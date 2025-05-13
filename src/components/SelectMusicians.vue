@@ -38,7 +38,7 @@
                           :reset-state="initialValObjects"
                           :searchable="props.searchable"
                           v-on="$listeners"
-                          @search="findMusicians"
+                          @search="nextcloudSelectSearch"
   >
     <template #option="option">
       <NcEllipsisedOption v-tooltip="musicianAddressPopup(option)"
@@ -266,6 +266,8 @@ const getValueIds = () => {
   // logger.info('GET VALUE IDS', result)
   return result
 }
+
+const nextcloudSelectSearch = (query: string) => findMusicians(query)
 
 const findMusicians = async (query: string, musicianIds: number[]) => {
   query = typeof query === 'string' ? encodeURI(query) : ''
