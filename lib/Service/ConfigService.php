@@ -632,7 +632,12 @@ class ConfigService
     if (empty($userId) || empty($groupId)) {
       return false;
     }
-    return $this->getGroupManager()->isInGroup($userId, $groupId);
+    try {
+      return $this->getGroupManager()->isInGroup($userId, $groupId);
+    } catch (Throwable $t) {
+      $this->logException($t);
+      return false;
+    }
   }
 
   /**
