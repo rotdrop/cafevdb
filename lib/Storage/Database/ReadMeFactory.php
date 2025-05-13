@@ -108,9 +108,9 @@ class ReadMeFactory extends AbstractReadMeFactory
    *
    * @param string $storageId
    *
-   * @param string $dirName
+   * @param null|string $dirName
    *
-   * @return string
+   * @return null|string
    */
   protected function getReadMeTooltipsKey(string $storageId, ?string $dirName = null):?string
   {
@@ -129,11 +129,11 @@ class ReadMeFactory extends AbstractReadMeFactory
    *
    * @param string $storageId
    *
-   * @param string $dirName
+   * @param null|string $dirName
    *
-   * @return string
+   * @return null|string
    */
-  protected function getDefaultReadMeContents(string $storageId, string $dirName = null):?string
+  protected function getDefaultReadMeContents(string $storageId, ?string $dirName = null):?string
   {
     $tooltipsKey = $this->getReadMeTooltipsKey($storageId, $dirName);
     $contents = $this->toolTipsService->fetch($tooltipsKey, escape: false);
