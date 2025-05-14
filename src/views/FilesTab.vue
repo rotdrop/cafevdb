@@ -221,7 +221,7 @@ type MusicianModel = {
 }
 
 const MailMergeDataset = 'dataset'
-const MailMergeDownload = 'downlaod'
+const MailMergeDownload = 'download'
 const MailMergeCloud = 'cloud'
 type MailMergeOperations = typeof MailMergeDataset
   | typeof MailMergeDownload
