@@ -25,6 +25,7 @@ import Vue from 'vue';
 import { appName } from './config.ts';
 import getInitialState from './toolkit/util/initial-state.ts';
 import { basename } from 'path';
+import { getCurrentUser } from '@nextcloud/auth';
 import { generateFilePath } from '@nextcloud/router';
 import { emit } from '@nextcloud/event-bus';
 import { showInfo, showSuccess } from '@nextcloud/dialogs';
@@ -296,8 +297,8 @@ class SupportingDocumentEntry implements Entry {
       source,
       id: fileid,
       mtime: new Date(),
-      owner: null,
-      permissions: Permission.ALL,
+      owner: getCurrentUser()?.uid || null,
+      permissions: Permission.ALL & ~Permission.SHARE,
       root: folder?.root || 'this must not happen',
       attributes: {
         'mount-type': 'cafevdb-database',
@@ -340,7 +341,7 @@ class SupportingDocumentEntry implements Entry {
       source,
       id: fileid,
       mtime: new Date(),
-      owner: null,
+      owner: getCurrentUser()?.uid || null,
       permissions: Permission.ALL & ~Permission.SHARE,
       root: folder?.root || 'this must not happen',
       attributes: {
