@@ -28,13 +28,26 @@ import { basename } from 'path';
 import { generateFilePath } from '@nextcloud/router';
 import { emit } from '@nextcloud/event-bus';
 import { showInfo, showSuccess } from '@nextcloud/dialogs';
-import { addNewFileMenuEntry, getNewFileMenuEntries, registerFileAction, FileAction, Node, Folder, FileType, Permission, View } from '@nextcloud/files';
+import {
+  FileAction,
+  FileType,
+  Folder,
+  Node,
+  Permission,
+  View,
+  addNewFileMenuEntry,
+  getNewFileMenuEntries,
+  registerFileAction,
+} from '@nextcloud/files';
 import type { Entry } from '@nextcloud/files';
-import { action as sidebarAction } from '../../files/src/actions/sidebarAction.ts';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import axios from '@nextcloud/axios';
 import logoSvg from '../img/cafevdb.svg?raw';
 import type { FilesInitialState } from './types/initial-state.d.ts';
+import Console from './util/console.ts'
+
+const COMPONENT_NAME = 'CAFEVDB-FILES-HOOKS';
+const logger = new Console(COMPONENT_NAME)
 
 declare global {
   interface Window {
@@ -161,7 +174,32 @@ registerFileAction(new FileAction({
     if ((node.permissions & Permission.READ) !== 0) {
       window.OCA?.Files?.Sidebar?.setActiveTab?.(appName + '-mailmerge');
 
-      return sidebarAction.exec(node, view, dir);
+      // borrowed from ../files/src/actions/sidebarAction.ts
+      try {
+        // If the sidebar is already open for the current file, do nothing
+        if (window.OCA.Files.Sidebar.file === node.path) {
+          logger.debug('Sidebar already open for this file', { node })
+          return null
+        }
+        // Open sidebar and set active tab to sharing by default
+        window.OCA.Files.Sidebar.setActiveTab('sharing')
+
+        // TODO: migrate Sidebar to use a Node instead
+        await window.OCA.Files.Sidebar.open(node.path)
+
+        // Silently update current fileid
+        window.OCP?.Files?.Router?.goToRoute(
+          null,
+          { view: view.id, fileid: String(node.fileid) },
+          { ...window.OCP.Files.Router.query, dir, opendetails: 'true' },
+          true,
+        )
+
+        return null
+      } catch (error) {
+        logger.error('Error while opening sidebar', { error })
+        return false
+      }
     }
     return null;
   },
@@ -261,11 +299,15 @@ class SupportingDocumentEntry implements Entry {
       owner: null,
       permissions: Permission.ALL,
       root: folder?.root || 'this must not happen',
+      attributes: {
+        'mount-type': 'cafevdb-database',
+      },
     });
 
     showSuccess(t('files', 'Created new folder "{name}"', { name: basename(source) }));
     emit('files:node:created', newFolder);
-    emit('files:node:rename', newFolder);
+    // emit('files:node:rename', newFolder);
+    // emit('files:node:renamed', newFolder);
   }
 
   private async supportingDocumentHandler(folder: Folder, content: Node[]) {
@@ -299,13 +341,17 @@ class SupportingDocumentEntry implements Entry {
       id: fileid,
       mtime: new Date(),
       owner: null,
-      permissions: Permission.ALL,
+      permissions: Permission.ALL & ~Permission.SHARE,
       root: folder?.root || 'this must not happen',
+      attributes: {
+        'mount-type': 'cafevdb-database',
+      },
     });
 
     showSuccess(t('files', 'Created new folder "{name}"', { name: basename(source) }));
     emit('files:node:created', newFolder);
-    emit('files:node:rename', newFolder);
+    // emit('files:node:rename', newFolder);
+    // emit('files:node:renamed', newFolder);
   }
 
 }
