@@ -68,7 +68,7 @@ class TaxExemptionNotices extends PMETableViewBase
   public function __construct(
     ConfigService $configService,
     EntityManager $entityManager,
-    IRequest $requesrt,
+    IRequest $request,
     PHPMyEdit $phpMyEdit,
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
@@ -77,15 +77,13 @@ class TaxExemptionNotices extends PMETableViewBase
     parent::__construct(
       self::TEMPLATE,
       //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavivatrion: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
-
-    $this->userStorage = $userStorage;
 
     $taxTypes = array_values(Types\EnumTaxType::toArray());
 

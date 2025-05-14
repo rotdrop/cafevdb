@@ -313,12 +313,12 @@ WHERE dsf.id IS NOT NULL',
     parent::__construct(
       self::TEMPLATE,
       //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $toolTipsService,
-      $pageNavigation,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
     $this->compositePaymentExpanded = $this->request['compositePaymentExpanded'];
 

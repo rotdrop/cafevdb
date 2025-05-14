@@ -43,12 +43,13 @@ use OCA\CAFEVDB\Storage\UserStorage;
 /** Table generator for DonationReceipt entities. */
 class DonationReceipts extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ParticipantFileFieldsTrait;
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
   public const TEMPLATE = 'donation-receipts';
   public const TABLE = 'DonationReceipts';
@@ -129,7 +130,6 @@ class DonationReceipts extends PMETableViewBase
     ],
   ];
 
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
     EntityManager $entityManager,
@@ -137,14 +137,21 @@ class DonationReceipts extends PMETableViewBase
     PHPMyEdit $phpMyEdit,
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
+    //
     protected UserStorage $userStorage,
   ) {
-    parent::__construct(self::TEMPLATE, $configService, $request, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    parent::__construct(
+      self::TEMPLATE,
+      //
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
+    );
 
-    $this->userStorage = $userStorage;
-    if ($this->projectId > 0) {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-    }
+    $this->findProject(enforce: false);
   }
   // phpcs:enable
 
@@ -857,7 +864,12 @@ class DonationReceipts extends PMETableViewBase
     $amountColumn = $table === null ? '$join_col_fqn' : $table . '.amount';
     $table = $table ?? '$join_table';
 
-    return 'SUM(IF(' . $table . '.is_donation, ' . $amountColumn . ', 0))';
+    return 'CAST(
+  SUM(IF(' . $table . '.is_donation, ' . $amountColumn . ', 0))
+  /
+  COUNT(DISTINCT ' . $this->joinTables[self::PROJECT_PARTICIPANTS_TABLE] . '.project_id)
+  AS DECIMAL(7, 2)
+)';
   }
 
   /**
@@ -870,7 +882,12 @@ class DonationReceipts extends PMETableViewBase
     $amountColumn = $table === null ? '$join_col_fqn' : $table . '.amount';
     $table = $table ?? '$join_table';
 
-    return 'SUM(IF(NOT ' . $table . '.is_donation, ' . $amountColumn . ', 0))';
+    return 'CAST(
+  SUM(IF(NOT ' . $table . '.is_donation, ' . $amountColumn . ', 0))
+  /
+  COUNT(DISTINCT ' . $this->joinTables[self::PROJECT_PARTICIPANTS_TABLE] . '.project_id)
+  AS DECIMAL(7, 2)
+)';
   }
 
   /**
