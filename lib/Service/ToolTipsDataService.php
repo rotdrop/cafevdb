@@ -1509,6 +1509,8 @@ the individual table views.'),
             PageRenderer\Projects::TEMPLATE => self::t('All Projects'),
             PageRenderer\SepaBankAccounts::TEMPLATE => self::t('Create Bulk Transactions'),
             PageRenderer\SepaBulkTransactions::TEMPLATE => self::t('Issued Bulk Transactions'),
+            PageRenderer\TaxExemptionNotices::TEMPLATE => self::t('Tax Excemption Notices'),
+            PageRenderer\DonationReceipts::TEMPLATE => self::t('Donation Receipts'),
           ],
           'tooltips' => [
             PageRenderer\AllMusicians::TEMPLATE => self::t('Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.'),
