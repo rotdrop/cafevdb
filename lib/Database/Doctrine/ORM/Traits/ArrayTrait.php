@@ -81,6 +81,9 @@ trait ArrayTrait
   /** @return array */
   public function toArray():array
   {
+    if (empty($this->keys)) {
+      $this->arrayCTOR();
+    }
     $result = [];
     foreach ($this->keys as $key) {
       $result[$key] = $this->offsetGet($key);
