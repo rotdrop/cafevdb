@@ -107,7 +107,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    * null the donation receipt must not be deleted.
    */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $mailingDate;
+  private $mailingDate = null;
 
   /**
    * @var string
@@ -118,7 +118,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    */
   #[ORM\JoinColumn(name: 'notification_message_id', referencedColumnName: 'message_id', nullable: true)]
   #[ORM\OneToOne(targetEntity: SentEmail::class, inversedBy: 'donationReceipt')]
-  private SentEmail $notificationMessage;
+  private ?SentEmail $notificationMessage = null;
 
   /** {@inheritdoc} */
   public function __construct()
@@ -270,7 +270,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    */
   public function getNotificationMessage():?SentEmail
   {
-    return $this->taxExemptionNotice;
+    return $this->notificationMessage;
   }
 
   /**
@@ -327,7 +327,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
   /** {@inheritdoc} */
   public function jsonSerialize():array
   {
-    $this->toArray();
+    return $this->toArray();
   }
 
   /** {@inheritdoc} */

@@ -369,7 +369,7 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   /** {@inheritdoc} */
   public function jsonSerialize():array
   {
-    $this->toArray();
+    return $this->toArray();
   }
 
   /** {@inheritdoc} */
