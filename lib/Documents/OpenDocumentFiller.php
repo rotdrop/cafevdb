@@ -348,7 +348,7 @@ class OpenDocumentFiller
       $signature = $rolesService->{$boardMember . 'Signature'}();
 
       if (!empty($signature)) {
-        $signature = $this->imagesService->dataUriFromFile($signature, ImagesService::SVG_TEXT_TO_PATH);
+        $signature = $this->imagesService->generateDataUri($signature->data(), $signature->dataMimeType());
       }
       $substitutions['org'][$boardMember]['signature'] = $signature;
       $substitutions['org'][$boardMember]['role'] = $this->l->t($boardMember);

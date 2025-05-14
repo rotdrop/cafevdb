@@ -300,7 +300,7 @@ EOD;
    *
    * @return string
    */
-  private function generateDataUri(string $data, ?string $mimeType = null):string
+  public function generateDataUri(string $data, ?string $mimeType = null):string
   {
     if ($mimeType === null) {
       $mimeType = $this->mimeTypeDetector->detectString($data);

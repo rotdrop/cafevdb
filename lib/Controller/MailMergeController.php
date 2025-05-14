@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,38 +29,35 @@ namespace OCA\CAFEVDB\Controller;
 
 use ZipStream\ZipStream;
 
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\IAppContainer;
+use OCP\Contacts\IManager as IContactsManager;
+use OCP\Files\File;
+use OCP\Files\FileInfo;
+use OCP\Files\Folder;
+use OCP\Files\Node;
+use OCP\IAddressBook;
+use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 
-use OCP\Files\Node;
-use OCP\Files\File;
-use OCP\Files\Folder;
-use OCP\Files\FileInfo;
-
-use OCP\Contacts\IManager as IContactsManager;
-use OCP\IAddressBook;
-
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\UserStorage;
-
-use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Common\Util;
 
 /**
  * Make the stored personal data accessible for the web-interface. This is
@@ -70,8 +67,8 @@ use OCA\CAFEVDB\Common\Util;
 class MailMergeController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
   /**
@@ -89,16 +86,17 @@ class MailMergeController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    protected ?string $userId,
-    protected ILogger $logger,
-    protected EntityManager $entityManager,
-    protected ConfigService $configService,
-    private OrganizationalRolesService $rolesService,
-    private InstrumentInsuranceService $insuranceService,
     private FinanceService $financeService,
-    private OpenDocumentFiller $documentFiller,
-    private UserStorage $storage,
     private IContactsManager $contactsManager,
+    private ImagesService $imagesService,
+    private InstrumentInsuranceService $insuranceService,
+    private OpenDocumentFiller $documentFiller,
+    private OrganizationalRolesService $rolesService,
+    private UserStorage $storage,
+    protected ?string $userId,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    protected ILogger $logger,
   ) {
     parent::__construct($appName, $request);
 
@@ -219,11 +217,13 @@ class MailMergeController extends Controller
         $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
         $templateData['sender'] = $this->flattenMusician($sender, only: []); // just the address data, no fancy things
         $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
+
         $signature = $this->rolesService->dedicatedBoardMemberSignature(
           OrganizationalRolesService::BOARD_MEMBER_ROLE, $senderId
         );
         if (!empty($signature)) {
-          $signature = 'data:'.$signature->mimeType().';base64,' . base64_encode($signature->data());
+          /** @var \OCP\Image $signature */
+          $signature = $this->imagesService->generateDataUri($signature->data(), $signature->dataMimeType());
         }
         $templateData['sender']['signature'] = $signature;
       }
