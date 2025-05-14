@@ -171,7 +171,7 @@ usort($localeOptions, fn($a, $b) => strcmp($a['name'], $b['name']));
         <input class="cafevdb-password-show" type="checkbox" id="cafevdb-dbpassword-show" name="dbpassword-show" />
         <label class="cafevdb-password-show" for="cafevdb-dbpassword-show"><?php echo $l->t('show');?></label>
       </div>
-      <input id="button" type="button" title="<?php echo $toolTips['test-dbpassword']; ?>" value="<?php echo $l->t('Test Database Password');?>" />
+      <input id="database-password-test-button" class="button" type="button" title="<?php echo $toolTips['test-dbpassword']; ?>" value="<?php echo $l->t('Test Database Password');?>" />
       <div class="statusmessage" id="dbteststatus"></div>
     </fieldset>
     <fieldset id="dbtesting">

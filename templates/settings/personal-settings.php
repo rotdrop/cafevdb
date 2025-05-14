@@ -201,7 +201,7 @@ namespace OCA\CAFEVDB;
         <input class="cafevdb-password-show" type="checkbox" id="userkey-show" name="userkey-show" />
         <label class="cafevdb-password-show" for="userkey-show"><?php echo $l->t('show');?></label>
       </div>
-      <input id="button" type="button" value="<?php echo $l->t('Set Encryption Key');?>" />
+      <input id="encryptionkey-button" class="button" type="button" value="<?php echo $l->t('Set Encryption Key');?>" />
     </fieldset>
     <div class="statusmessage changed"><?php echo $l->t('The encryption key has been set successfully.');?></div>
     <div class="statusmessage error"><?php echo $l->t('Unable to set the encryption key.');?></div>

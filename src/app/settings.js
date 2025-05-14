@@ -128,7 +128,7 @@ const afterLoad = function(container) {
   showPassword(encryptionKey);
   showPassword(loginPassword);
 
-  $('#userkey #button').click(function() {
+  $('#userkey input.button').click(function() {
     // We allow empty keys, meaning no encryption
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
@@ -355,7 +355,7 @@ const afterLoad = function(container) {
 
     // test password
     simpleSetValueHandler(
-      $(`fieldset.${appName}_dbpassword #button`), 'click', $(`fieldset.${appName}_dbpassword .statusmessage`), {
+      $(`fieldset.${appName}_dbpassword input.button`), 'click', $(`fieldset.${appName}_dbpassword .statusmessage`), {
         success(element, data, value) {
           // $(`fieldset.${appName}_dbpassword input[name="dbpassword"]`).val('');
           // $(`fieldset.${appName}_dbpassword input[name="dbpassword-clone"]`).val('');
@@ -781,7 +781,7 @@ const afterLoad = function(container) {
       // 'show password' checkbox
       const password = container.find('#emailpassword');
       showPassword(password);
-      const passwordChange = container.find('#button');
+      const passwordChange = container.find('input.button');
 
       passwordChange.on('click', function() {
         const value = password.val();

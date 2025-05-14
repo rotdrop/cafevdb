@@ -106,7 +106,8 @@ use OCA\CAFEVDB\Common\Util;
             <?php echo $l->t('show');?>
           </label>
         </div>
-        <input id="button"
+        <input id="email-password-button"
+               class="button"
                type="button"
                value="<?php echo $l->t('Change email password');?>"
         />
