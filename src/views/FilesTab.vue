@@ -38,7 +38,7 @@
                           :disabled="senderId <= 0"
                           :close-after-click="true"
                           :title="t(appId, 'Download Merged Document')"
-                          @click="mailMergeHandlerHelper(MailMergeDownload)"
+                          @click="mailMergeHandlerHelper(MailMergeDownload)($event)"
           >
             {{ t(appId, 'download locally') }}
           </NcActionButton>
@@ -46,7 +46,7 @@
                           :close-after-click="true"
                           :disabled="senderId <= 0"
                           :title="t(appId, 'Merge Document into Cloud')"
-                          @click="mailMergeHandlerHelper(MailMergeCloud)"
+                          @click="mailMergeHandlerHelper(MailMergeCloud)($event)"
           >
             <template #icon>
               <CloudUploadIcon />
@@ -57,7 +57,7 @@
                           :close-after-click="true"
                           :disabled="senderId <= 0"
                           :title="t(appId, 'Download Replacement Data')"
-                          @click="mailMergeHandlerHelper(MailMergeDataset)"
+                          @click="mailMergeHandlerHelper(MailMergeDataset)($event)"
           >
             <template #icon>
               <CodeJsonIcon />
