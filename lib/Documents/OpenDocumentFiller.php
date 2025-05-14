@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ImagesService;
@@ -175,7 +176,7 @@ class OpenDocumentFiller
 
     unset($fillData['now']); // the cache is just for this request, so "now" from the first call is good enough
     unset($fillData['date']); // the cache is just for this request, so "now" from the first call is good enough
-    $templateDataHash = md5(json_encode($fillData));
+    $templateDataHash = md5(json_encode($fillData, JSON_PARTIAL_OUTPUT_ON_ERROR));
 
     $this->backend->LoadTemplate($templateFile->fopen('r'), OPENTBS_ALREADY_UTF8);
 
@@ -186,7 +187,7 @@ class OpenDocumentFiller
       if ($value instanceof DateTimeInterface) {
         $stamp = $value->getTimestamp();
         $stamp += $value->getOffset();
-        $this->logInfo('REPLACE DATE BY TIMESTAMP ' . $key . ': ' . print_r($value, true) . ' -> ' . $stamp);
+        $this->logDebug('REPLACE DATE BY TIMESTAMP ' . $key . ': ' . print_r($value, true) . ' -> ' . $stamp);
         $value = $stamp;
       } elseif ($value === true) {
         $value = 1;
@@ -197,12 +198,12 @@ class OpenDocumentFiller
       }
     });
 
-    // do a serialize - unserialize
     $fileHash = $templateFile->getEtag();
 
     if (empty($this->cache[$fileHash][$templateDataHash])) {
 
-      $this->backend->VarRef = json_decode(json_encode($this->backend->VarRef), true);
+      // do a serialize - unserialize
+      $this->backend->VarRef = json_decode(json_encode($this->backend->VarRef, JSON_PARTIAL_OUTPUT_ON_ERROR), true);
 
       // Do an opportunistic block-merge for every key with is an array
       foreach ($this->backend->VarRef as $key => $value) {

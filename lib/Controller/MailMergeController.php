@@ -27,6 +27,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use InvalidArgumentException;
+
 use ZipStream\ZipStream;
 
 use OCP\AppFramework\Controller;
@@ -269,6 +271,8 @@ class MailMergeController extends Controller
             }
             $fileData = json_encode($fillData);
             return $this->dataDownloadResponse($fileData, $filledFileName, 'application/json');
+          default:
+            throw new InvalidArgumentException('Unknown operation: "' . $operation . '".');
         }
       } else {
 
@@ -325,6 +329,8 @@ class MailMergeController extends Controller
             } else {
               $paymentData = $this->financeService->generatePaymentMailMergeData($compositePayment);
             }
+          } else {
+            $paymentData = [];
           }
           $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
           $recipientTemplateData = array_merge(
@@ -354,10 +360,12 @@ class MailMergeController extends Controller
               if (!empty($blocks)) {
                 $fillData['__blocks__'] = $blocks;
               }
-              $fileData = json_encode($fillData);
+              $fileData = json_encode($fillData, JSON_PARTIAL_OUTPUT_ON_ERROR);
               $filledFileName = pathinfo($fileName, PATHINFO_FILENAME) . '.' . 'json';
               $mimeType = 'application/json';
               break;
+            default:
+              throw new InvalidArgumentException('Unknown operation: "' . $operation . '".');
           }
 
           $filledFile = pathinfo($filledFileName);
