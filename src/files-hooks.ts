@@ -182,8 +182,8 @@ registerFileAction(new FileAction({
           logger.debug('Sidebar already open for this file', { node })
           return null
         }
-        // Open sidebar and set active tab to sharing by default
-        window.OCA.Files.Sidebar.setActiveTab('sharing')
+        // Open sidebar and set active tab to our mailmerge tool
+        window.OCA.Files.Sidebar.setActiveTab(appName + '-mailmerge')
 
         // TODO: migrate Sidebar to use a Node instead
         await window.OCA.Files.Sidebar.open(node.path)
