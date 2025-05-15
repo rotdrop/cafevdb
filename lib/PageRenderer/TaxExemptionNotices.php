@@ -81,7 +81,7 @@ class TaxExemptionNotices extends PMETableViewBase
       entityManager: $entityManager,
       request: $request,
       pme: $phpMyEdit,
-      pageNavivatrion: $pageNavigation,
+      pageNavigation: $pageNavigation,
       toolTipsService: $toolTipsService,
     );
 
