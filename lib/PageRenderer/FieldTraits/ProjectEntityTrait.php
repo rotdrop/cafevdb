@@ -81,6 +81,6 @@ trait ProjectEntityTrait
       }
     }
 
-    return $this->project;
+    return $this->project ?? null;
   }
 }
