@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 202-2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -510,7 +510,7 @@ Störung.';
    */
   public function bind(
     array $requestParameters,
-    RecipientsFilter $recipientsFilter = null,
+    ?RecipientsFilter $recipientsFilter = null,
   ):void {
     $this->requestParameters = $requestParameters;
 
@@ -521,7 +521,7 @@ Störung.';
 
     $this->recipients = $this->recipientsFilter->selectedRecipients();
 
-    $template = $this->requestParameters['emailTemplate'];
+    $template = $this->requestParameters['emailTemplate'] ?? null;
 
     $this->cgiData = $this->requestParameters[self::POST_TAG] ?? [];
 
@@ -570,10 +570,6 @@ Störung.';
     }
 
     $this->setSubjectTag();
-
-    // First initialize defaults, will be overriden based on
-    // form-submit data in $this->execute()
-    $this->setDefaultTemplate();
 
     $this->draftId = $this->cgiValue('messageDraftId', 0);
 
@@ -626,6 +622,7 @@ Störung.';
     $this->submitted = $this->cgiValue('formStatus', '') == 'submitted';
 
     if (!$this->submitted) {
+      $this->setDefaultTemplate();
       // Leave everything at default state, except for an optional
       // initial template and subject
       $initialTemplate = $this->cgiValue('storedMessagesSelector');
@@ -3519,7 +3516,7 @@ Störung.';
     $customHeaders = [
       'SENDER-CLOUD-USER' => $this->encrypt($this->userId()),
     ];
-    if ($this->projectid > 0) {
+    if ($this->projectId > 0) {
       $customHeaders['PROJECT-ID'] = $this->projectId;
       $customHeaders['PROJECT-NAME'] = $this->projectName;
     }
@@ -3894,7 +3891,7 @@ Störung.';
    *
    * @return bool Execution status.
    */
-  public function validateTemplate(string $template = null):bool
+  public function validateTemplate(?string $template = null):bool
   {
     if (empty($template)) {
       $template = $this->messageText();
