@@ -225,15 +225,16 @@ EOD;
           array_pop($throwArgv);
           array_push($throwArgv, $svgoConfig);
         }
-      }
-    } else {
-      try {
-        $svgOptimizer = SvgOptimizerService::fromString($data)->optimize();
-        $data = $svgOptimizer->getContent();
-      } catch (Throwable $t) {
-        $throwArgv = [
-          SvgOptimizerService::class,
-        ];
+      } elseif (false) {
+        // The PHP optimizer does not work ATM.
+        try {
+          $svgOptimizer = SvgOptimizerService::fromString($data)->optimize();
+          $data = $svgOptimizer->getContent();
+        } catch (Throwable $t) {
+          $throwArgv = [
+            SvgOptimizerService::class,
+          ];
+        }
       }
     }
     if ($throwArgv) {
