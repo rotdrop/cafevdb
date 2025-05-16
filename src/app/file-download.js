@@ -51,10 +51,10 @@ const download = function(url, post, options) {
     done(url) { console.info('DONE downloading', url); },
     fail(data) {},
     always() {
-      setBusyIndicators(true, undefined, false);
+      setBusyIndicators(false, undefined, false);
     },
     setup() {
-      setBusyIndicators(false, undefined, false);
+      setBusyIndicators(true, undefined, false);
     },
     errorMessage(url, data) {
       let message = data.message || [t(appName, 'unknown error')];
