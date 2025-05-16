@@ -28,7 +28,7 @@
 namespace OCA\CAFEVDB\Controller;
 
 use InvalidArgumentException;
-
+use Throwable;
 use ZipStream\ZipStream;
 
 use OCP\AppFramework\Controller;
@@ -417,7 +417,7 @@ class MailMergeController extends Controller
             return $this->dataDownloadResponse($fileData, $rootDirectory . '.zip', 'application/zip');
         }
       }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       return self::dataResponse([
         'message' => $this->l->t('Exception: "%s"', $t->getMessage()),
