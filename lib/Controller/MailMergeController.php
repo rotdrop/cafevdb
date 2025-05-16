@@ -94,7 +94,7 @@ class MailMergeController extends Controller
     private InstrumentInsuranceService $insuranceService,
     private OpenDocumentFiller $documentFiller,
     private OrganizationalRolesService $rolesService,
-    private UserStorage $storage,
+    private UserStorage $userStorage,
     protected ?string $userId,
     protected ConfigService $configService,
     protected EntityManager $entityManager,
