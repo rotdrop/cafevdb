@@ -320,6 +320,7 @@ class OpenDocumentFiller
         'name2' => $this->getConfigValue('streetAddressName02'),
         'street' => $this->getConfigValue('streetAddressStreet'),
         'streetNumber' => $this->getConfigValue('streetAddressHouseNumber'),
+        'streetAndNumber' => $this->getConfigValue('streetAddressStreet') . ' ' . $this->getConfigValue('streetAddressHouseNumber'),
         'city' => $this->getConfigValue('streetAddressCity'),
         'postalCode' => $this->getConfigValue('streetAddressZIP'),
         'country' => $this->getConfigValue('streetAddressCountry'),
