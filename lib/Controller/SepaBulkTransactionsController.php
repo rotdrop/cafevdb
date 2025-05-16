@@ -796,7 +796,7 @@ class SepaBulkTransactionsController extends Controller
       $participantsRepository = $this->getDatabaseRepository(Entities\ProjectParticipant::class);
       throw new Exceptions\EnduserNotificationException(
         message: $this->l->t('Unable to schedule the bank transactions.'),
-        previous: t,
+        previous: $t,
       );
     }
 
@@ -869,7 +869,7 @@ class SepaBulkTransactionsController extends Controller
     } catch (\Throwable $t) {
       throw new Exceptions\EnduserNotificationException(
         message: $this->l->t('Unable to export the bulktransaction with id "%d".', $bulkTransactionId),
-        previous: t,
+        previous: $t,
       );
     }
 
