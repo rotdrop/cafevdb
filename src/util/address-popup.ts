@@ -61,8 +61,12 @@ export const contactNameFromContact = (option: Contact) => {
 };
 
 export const contactAddressPopup = (option: Contact) => {
-  const name = contactNameFromContact(option);
   const additionalInfo: string[] = [];
+  let displayName = contactNameFromContact(option);
+  if (option.ORG && option.ORG.length > 0) {
+    additionalInfo.push('c/o ' + displayName);
+    displayName = option.ORG;
+  }
   let emails: string[] = [];
   if (option.EMAIL) {
     for (const email of option.EMAIL as any[]) {
@@ -89,7 +93,7 @@ export const contactAddressPopup = (option: Contact) => {
   if (book) {
     additionalInfo.push('[' + book + ']');
   }
-  const content = `<h4>${name}</h4>`
+  const content = `<h4>${displayName}</h4>`
     + additionalInfo.join('<br/>');
   return addressPopup(content);
 };

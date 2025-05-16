@@ -43,6 +43,7 @@ export interface Contact {
   EMAIL?: string[] | { value: string }[],
   informalDisplayName?: string,
   ADR?: string[] | { value: string }[],
+  ORG?: string,
 }
 
 export interface Musician {
