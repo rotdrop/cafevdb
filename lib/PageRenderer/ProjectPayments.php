@@ -1118,7 +1118,10 @@ WHERE dsf.id IS NOT NULL',
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE, 'name');
+      $opts['fdd'], self::COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE, 'name', [
+        'input' => 'HR',
+      ],
+    );
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id', [
@@ -1261,7 +1264,9 @@ WHERE dsf.id IS NOT NULL',
     );
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::SPLIT_DATABASE_STORAGE_ENTRIES_TABLE, 'name');
+      $opts['fdd'], self::SPLIT_DATABASE_STORAGE_ENTRIES_TABLE, 'name', [
+        'input' => 'HR',
+      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BULK_TRANSACTIONS_TABLE, 'created',
