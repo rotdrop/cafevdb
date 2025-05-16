@@ -331,7 +331,7 @@ class OpenDocumentFiller
     /** @var \OCP\Files\File */
     $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
     $substitutions['org'][ConfigService::DOCUMENT_TEMPLATE_LOGO] =
-      $this->imagesService->dataUriFromFile($logo, ImagesService::SVG_TEXT_TO_PATH);
+      $this->imagesService->dataUriFromFile($logo, ImagesService::SVG_TEXT_TO_PATH|ImagesService::SVG_OPTIMIZE);
 
     /** @var OrganizationalRolesService $rolesService */
     $rolesService = $this->appContainer->get(OrganizationalRolesService::class);
