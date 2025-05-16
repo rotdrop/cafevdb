@@ -112,7 +112,7 @@ class PHPMailer extends PHPMailerUpstream
       }
 
       if ($this->progressCallback !== null) {
-        $this->progressCallback($this->mimeDataSent, $this->mimeMessageTotalSize);
+          ($this->progressCallback)($this->mimeDataSent, $this->mimeMessageTotalSize);
       }
     };
     $this->SMTPDebug = 1;
