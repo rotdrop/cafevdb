@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
@@ -793,9 +794,10 @@ class SepaBulkTransactionsController extends Controller
       $accountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
       $debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
       $participantsRepository = $this->getDatabaseRepository(Entities\ProjectParticipant::class);
-      $this->logException($t);
-
-      return self::grumble($this->exceptionChainData($t));
+      throw new Exceptions\EnduserNotificationException(
+        message: $this->l->t('Unable to schedule the bank transactions.'),
+        previous: t,
+      );
     }
 
     // report back the generated bulk-transactions, as these are the
@@ -865,8 +867,10 @@ class SepaBulkTransactionsController extends Controller
     try {
       $exportFile = $this->bulkTransactionService->generateTransactionData($bulkTransaction, $project, $format);
     } catch (\Throwable $t) {
-      $this->logException($t);
-      return self::grumble($this->exceptionChainData($t));
+      throw new Exceptions\EnduserNotificationException(
+        message: $this->l->t('Unable to export the bulktransaction with id "%d".', $bulkTransactionId),
+        previous: t,
+      );
     }
 
     return new RedirectResponse(
