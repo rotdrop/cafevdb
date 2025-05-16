@@ -104,14 +104,15 @@ class FilesCacheService
       ];
       try {
         $nodeFolder = $this->filesCacheFolder->get($nodeId);
+        $this->fileCacheFolders[$nodeId][self::NODE_KEY] = $nodeFolder;
       } catch (FileNotFoundException $e) {
         $nodeFolder = $this->filesCacheFolder->newFolder($nodeId);
+        $this->fileCacheFolders[$nodeId][self::NODE_KEY] = $nodeFolder;
         if ($node instanceof File) {
           $hash = hash(self::CACHE_HASH_ALGORITHM, $node->getContent());
           $this->set($node, self::FILE_HASH_KEY, $hash);
         }
       }
-      $this->fileCacheFolders[$nodeId][self::NODE_KEY] = $nodeFolder;
     }
     return $this->fileCacheFolders[$nodeId][self::NODE_KEY];
   }
