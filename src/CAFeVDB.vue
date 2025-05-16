@@ -240,6 +240,8 @@
     <ImageUploadTemplate :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
     <FileUploadTemplate :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
     <CloudFileSystemOperations :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
+    <ProgressWrapperTemplate />
+    <MusicianAddressViewTemplate />
   </NcContent>
 </template>
 <script setup lang="ts">
@@ -282,6 +284,8 @@ import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/compon
 import ImageUploadTemplate from './components/oc-template/ImageUploadTemplate.vue'
 import FileUploadTemplate from './components/oc-template/FileUploadTemplate.vue'
 import CloudFileSystemOperations from './components/oc-template/CloudFileSystemOperations.vue'
+import ProgressWrapperTemplate from './components/oc-template/ProgressWrapperTemplate.vue'
+import MusicianAddressViewTemplate from './components/oc-template/MusicianAddressViewTemplate.vue'
 import axios from '@nextcloud/axios'
 import generateAppUrl from './toolkit/util/generate-url.ts'
 import { storeToRefs } from 'pinia'
