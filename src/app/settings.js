@@ -35,7 +35,7 @@ import { setPersonalUrl, setAppUrl, getUrl } from './settings-urls.js';
 import fileDownload from './file-download.js';
 import { makePlaceholder as selectPlaceholder } from './select-utils.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
-import { updateCreditsTimer } from './personal-settings.js';
+import personalSettingsAfterLoad, { updateCreditsTimer } from './personal-settings.js';
 import { showInfo } from '@nextcloud/dialogs';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
@@ -158,7 +158,9 @@ const afterLoad = function(container) {
         $.get(url)
           .done((data) => {
             $('#personal-settings-container').replaceWith(data);
+            console.info('CALL AFTER LOAD');
             afterLoad($('#personal-settings-container'));
+            personalSettingsAfterLoad();
           })
           .fail((xhr, textStatus, errorThrown) => {
             Ajax.handleError(xhr, textStatus, errorThrown);

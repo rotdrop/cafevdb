@@ -226,8 +226,6 @@ const documentReady = function() {
   console.info('PERSONAL INIT');
 };
 
-export default documentReady;
-
 /****************************************************************************
  * Credits list
  *
@@ -267,7 +265,4 @@ export const updateCreditsTimer = function() {
 
 };
 
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+export default documentReady;
