@@ -312,6 +312,10 @@ class ContactsService
       $entity
         ->setSurName($parts[0])
         ->setFirstName($parts[1]);
+      // set the user-id slug ....
+      $slugSurName = strtolower(str_replace(' ', '-', $parts[0]));
+      $slugFirstName = strtolower(str_replace(' ', '-', $parts[1]));
+      $entity->setUserIdSlug($this->transliterate($slugFirstName) . '.' . $this->transliterate($slugSurName));
     }
 
     // in principle FN would be the displayName
@@ -391,7 +395,7 @@ class ContactsService
         $address = explode(';', $address);
 
         $poBox = $address[0]; // or so it seems ...
-        $this->logInfo('POBOX ' . $poBox);
+        // $this->logInfo('POBOX ' . $poBox);
         $entity['addressSupplement'] = $address[1];
         $street = Util::normalizeSpaces($address[2]);
         // if the first word or the last word of the street start with a
