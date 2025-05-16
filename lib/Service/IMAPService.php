@@ -229,7 +229,7 @@ class IMAPService
   /**
    * @return void
    */
-  public function disconnet():void
+  public function disconnect():void
   {
     if (!empty($this->client)) {
       try {
