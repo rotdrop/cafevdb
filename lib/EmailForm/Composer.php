@@ -426,9 +426,6 @@ Störung.';
   private $executionStatus; // false on error
   private $diagnostics; // mixed, depends on operation
 
-  /** @var OrganizationalRolesService */
-  private $organizationalRolesService;
-
   /** @var int */
   private $progressToken;
 
@@ -478,7 +475,7 @@ Störung.';
     private EmailAddressService $emailAddressService,
     private EventsService $eventsService,
     private IMAPService $imapService,
-    private OrganizationalRolesService $organizationRolesService,
+    private OrganizationalRolesService $organizationalRolesService,
     private ProgressStatusService $progressStatusService,
     private ProjectParticipantFieldsService $participantFieldsService,
     private RecipientsFilter $recipientsFilter,
