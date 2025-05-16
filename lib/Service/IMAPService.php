@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Closure;
 use DoesNotExistException;
 use Throwable;
 
