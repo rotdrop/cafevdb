@@ -5681,7 +5681,10 @@ Störung.';
   private function formatExceptionMessage(\Throwable $throwable):string
   {
     return $this->l->t('code %1$d, %2$s:%3$d -- %4$s', [
-      $throwable->getCode(), $throwable->getFile(), $throwable->getLine(), $throwable->getMessage()
+      $throwable->getCode(),
+      $throwable->getFile(),
+      $throwable->getLine(),
+      $throwable->getMessage(),
     ]);
   }
 }
