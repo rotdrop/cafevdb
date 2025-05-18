@@ -103,7 +103,7 @@ class Composer
   private const DO_NOT_REPLY_SENDER = 'do-not-reply';
 
   public const DIAGNOSTICS_STAGE = 'stage';
-  public const DIAGNOSTICS_CAPTION = 'caption'; // appears not to be displayed?
+  public const DIAGNOSTICS_CAPTION = 'caption';
   public const DIAGNOSTICS_TOTAL_COUNT = 'TotalCount';
   public const DIAGNOSTICS_TOTAL_PAYLOAD = 'TotalPayload';
   public const DIAGNOSTICS_FAILED_COUNT = 'FailedCount';
@@ -621,8 +621,8 @@ Störung.';
     // then we use the form data, otherwise the defaults.
     $this->submitted = $this->cgiValue('formStatus', '') == 'submitted';
 
+    $this->setDefaultTemplate();
     if (!$this->submitted) {
-      $this->setDefaultTemplate();
       // Leave everything at default state, except for an optional
       // initial template and subject
       $initialTemplate = $this->cgiValue('storedMessagesSelector');
@@ -1660,7 +1660,7 @@ Störung.';
         }
         try {
           return $prefix.call_user_func($handler, $variable, $data);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           if (!is_array($failures)) {
             throw $t;
           }
@@ -1794,7 +1794,7 @@ Störung.';
     $customHeaders = [
       'SENDER-CLOUD-USER' => $this->encrypt($this->userId()),
     ];
-    if ($this->projectid > 0) {
+    if ($this->projectId > 0) {
       $customHeaders['PROJECT-ID'] = $this->projectId;
       $customHeaders['PROJECT-NAME'] = $this->projectName;
     }
@@ -1922,7 +1922,11 @@ Störung.';
         }
       }
 
-      $mimeMsg = $this->composeAndSend($messageTemplate, $recipients);
+      $mimeMsg = $this->composeAndSend(
+        $messageTemplate,
+        $recipients,
+        customHeaders: $customHeaders,
+      );
       if (!empty($mimeMsg['message'])) {
         $this->copyToSentFolder($mimeMsg['message']);
         $this->recordMessageDiagnostics($mimeMsg['message']);
@@ -1935,7 +1939,7 @@ Störung.';
     try {
       $this->flush();
       $this->entityManager->commit();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();
@@ -2157,7 +2161,7 @@ Störung.';
               try {
                 $fileData = $insuranceService->musicianOverviewLetter($insuranceOverview);
                 $mimeType = 'application/pdf';
-              } catch (\Throwable $t) {
+              } catch (Throwable $t) {
                 $this->logException($t);
                 $fileData = $t->getMessage() . ' / ' . $t->getTraceAsString();
                 $mimeType = 'text/plain';
@@ -2691,17 +2695,21 @@ Störung.';
     bool $doNotReply = false,
     bool $allowDuplicates = false,
   ) {
+    $this->logInfo('CUSTOM HEADERS ' . print_r($customHeaders, true));
+
     // Construct an array for the data-base log
     $logMessage = new SentEmailDTO;
     $logMessage->recipients = $eMails;
 
     $customHeaders = array_merge($customHeaders, self::HEADER_MARKER);
-    foreach ($customHeaders as $key => &$value) {
-      if (!str_starts_with($value, self::HEADER_TAG)) {
-        $value = self::HEADER_TAG . '-' . $value;
+    foreach ($customHeaders as $key => $value) {
+      if (!str_starts_with($key, self::HEADER_TAG)) {
+        unset($customHeaders[$key]);
+        $customHeaders[self::HEADER_TAG . '-' . $key] = $value;
       }
     }
-    unset($value);
+
+    $this->logInfo('CUSTOM HEADERS TWEAKED ' . print_r($customHeaders, true));
 
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
@@ -2867,12 +2875,21 @@ Störung.';
         );
       }
 
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       // popup an alert and abort the form-processing
 
       $this->executionStatus = false;
-      $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = $this->formatExceptionMessage($t);
-
+      $logEntry = $this->logException(
+        $t,
+        message: $t->getMessage(),
+        returnLogEntry: true,
+        shift: PHP_INT_MIN,
+      );
+      array_walk_recursive($logEntry, fn(&$value) => $value = str_replace(\OC::$SERVERROOT, '', $value));
+      $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = [
+        'message' => $this->formatExceptionMessage($t),
+        'logEntry' => $logEntry,
+      ];
       return false;
     }
 
@@ -2883,9 +2900,8 @@ Störung.';
     }
 
     // install custom message id if given
-    if (!empty($messageId)) {
-      $phpMailer->MessageID = $messageId;
-    }
+    $phpMailer->MessageID = $messageId;
+
     if (!empty($references)) {
       if (is_array($references)) {
         // install the bidirectional "reference" relationships into the
@@ -2921,7 +2937,7 @@ Störung.';
 
     // Finally the point of no return. Send it out!!!
     try {
-      // PHPMailer does only throw \Exception(), but sets the code in order to
+      // PHPMailer does only throws \Exception(), but sets the code in order to
       // distinguish between fatal and not fatal errors.
       try {
         $phpMailer->Send();
@@ -2949,10 +2965,19 @@ Störung.';
       $sentEmail->setMessageId($phpMailer->getLastMessageID());
       $this->persist($sentEmail);
       // $this->flush(); // nope, first references between sent emails need to be installed
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->executionStatus = false;
-      $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = $this->formatExceptionMessage($t);
-      $this->logException($t);
+      $logEntry = $this->logException(
+        $t,
+        message: $t->getMessage(),
+        returnLogEntry: true,
+        shift: PHP_INT_MIN, // do not decorate with prefix
+      );
+      array_walk_recursive($logEntry, fn(&$value) => $value = str_replace(\OC::$SERVERROOT, '', $value));
+      $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = [
+        'message' => $this->formatExceptionMessage($t),
+        'logEntry' => $logEntry,
+      ];
       return false;
     }
 
@@ -3023,13 +3048,23 @@ Störung.';
       ]);
       $this->imapService->connect(
         function($current, $total) use ($progressStatus) {
-          $progressStatus->update($current, $total);
+          $progressStatus->update((int)$current, (int)$total);
         },
         self::PROGRESS_CHUNK_SIZE,
       );
     } catch (Throwable $t) {
       $this->executionStatus = false;
-      $this->diagnostics[self::DIAGNOSTICS_COPY_TO_SENT]['login'] = $t->getMessage();
+      $logEntry = $this->logException(
+        $t,
+        message: $t->getMessage(),
+        returnLogEntry: true,
+        shift: PHP_INT_MIN, // do not decorate with prefix
+      );
+      array_walk_recursive($logEntry, fn(&$value) => $value = str_replace(\OC::$SERVERROOT, '', $value));
+      $this->diagnostics[self::DIAGNOSTICS_COPY_TO_SENT]['login'] = [
+        'message' => $this->formatExceptionMessage($t),
+        'logEntry' => $logEntry,
+      ];
       $this->imapService->disconnect();
       return false;
     }
@@ -3039,8 +3074,16 @@ Störung.';
       $this->imapService->disconnect();
     } catch (Throwable $t) {
       $this->executionStatus = false;
+      $logEntry = $this->logException(
+        $t,
+        message: $t->getMessage(),
+        returnLogEntry: true,
+        shift: PHP_INT_MIN, // do not decorate with prefix
+      );
+      array_walk_recursive($logEntry, fn(&$value) => $value = str_replace(\OC::$SERVERROOT, '', $value));
       $this->diagnostics[self::DIAGNOSTICS_COPY_TO_SENT]['copy'] = [
-        'Sent' => $t->getMessage(),
+        'message' => $this->formatExceptionMessage($t),
+        'logEntry' => $logEntry,
       ];
       $this->imapService->disconnect();
       return false;
@@ -3064,29 +3107,17 @@ Störung.';
    * @return bool|Entities\SentEmail
    */
   private function sentEmail(
-    ?SentEmailDTO $logMessage,
-    ?string $messageId = null,
-    bool $allowDuplicates = false,
+    SentEmailDTO $logMessage,
+    string $messageId,
+    bool $allowDuplicates,
   ) {
-    if (empty($messageId) && empty($logMessage)) {
+    if (empty($messageId)) {
       return false;
     }
 
-    if (!empty($messageId)) {
-      $sentEmail = $this->getDatabaseRepository(Entities\SentEmail::class)->find($messageId);
-    }
-    if (empty($sentEmail)) {
-      /** @var Entities\SentEmail $sentEmail */
-      $sentEmail = new Entities\SentEmail;
-      if (!empty($messageId)) {
-        $sentEmail->setMessageId($messageId);
-        $this->persist($sentEmail);
-      }
-    }
-
-    if (empty($logMessage)) {
-      return $sentEmail;
-    }
+    /** @var Entities\SentEmail $sentEmail */
+    $sentEmail = new Entities\SentEmail;
+    $sentEmail->setMessageId($messageId);
 
     // Construct one MD5 for recipients subject and html-text
     $bulkRecipients = array_map(function($pair) {
@@ -3114,31 +3145,36 @@ Störung.';
 
     if ($allowDuplicates !== true) {
 
-      $duplicates = $this->getDatabaseRepository(Entities\SentEmail::class)->findBy([
-        'bulkRecipientsHash' => $sentEmail->getBulkRecipientsHash(),
-        'subjectHash' => $sentEmail->getSubjectHash(),
-        'htmlBodyHash' => $sentEmail->getHtmlBodyHash(),
-      ]);
+      $duplicates = $this->getDatabaseRepository(Entities\SentEmail::class)->findBy(
+        [
+          'bulkRecipientsHash' => $sentEmail->getBulkRecipientsHash(),
+          'subjectHash' => $sentEmail->getSubjectHash(),
+          'htmlBodyHash' => $sentEmail->getHtmlBodyHash(),
+        ],
+        orderBy: [ 'created' => 'DESC' ],
+      );
 
-      $loggedDates = [];
-      $loggedUsers = [];
+      $flatDuplicates = [];
       /** @var Entities\SentEmail $duplicate */
       foreach ($duplicates as $duplicate) {
-        $loggedDates[] = $duplicate->getCreated();
-        $loggedUsers[] = $duplicate->getCreatedBy();
+        $flatDuplicates[] = [
+          'dateTime' => $duplicate->getCreated(),
+          'userId' => $duplicate->getCreatedBy(),
+        ];
       }
 
       if (!empty($duplicates)) {
         $this->executionStatus = false;
         $this->diagnostics[self::DIAGNOSTICS_DUPLICATES][] = [
-          'dates' => $loggedDates,
-          'authors' => $loggedUsers,
+          'duplicates' => $flatDuplicates,
           'text' => $logMessage->message,
           'recipients' => $bulkRecipients
         ];
         return false;
       }
     }
+
+    // $this->persist($sentEmail);
 
     if (!empty($this->bulkTransaction)) {
       $sentEmail->setSepaBulkTransaction($this->bulkTransaction);
@@ -3200,12 +3236,12 @@ Störung.';
     $logMessage->recipients = $eMails;
 
     $customHeaders = array_merge($customHeaders, self::HEADER_MARKER);
-    foreach ($customHeaders as $key => &$value) {
-      if (!str_starts_with($value, self::HEADER_TAG)) {
-        $value = self::HEADER_TAG . '-' . $value;
+    foreach ($customHeaders as $key => $value) {
+      if (!str_starts_with($key, self::HEADER_TAG)) {
+        unset($customHeaders[$key]);
+        $customHeaders[self::HEADER_TAG . '-' . $key] = $value;
       }
     }
-    unset($value);
 
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
@@ -3348,12 +3384,21 @@ Störung.';
           $attachment['mimeType']
         );
       }
-    } catch (\Throwable $t) {
-      $this->logException($t);
+    } catch (Throwable $t) {
       // popup an alert and abort the form-processing
 
       $this->executionStatus = false;
-      $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = $this->formatExceptionMessage($t);
+      $logEntry = $this->logException(
+        $t,
+        message: $t->getMessage(),
+        returnLogEntry: true,
+        shift: PHP_INT_MIN,
+      );
+      array_walk_recursive($logEntry, fn(&$value) => $value = str_replace(\OC::$SERVERROOT, '', $value));
+      $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = [
+        'message' => $this->formatExceptionMessage($t),
+        'logEntry' => $logEntry,
+      ];
 
       return null;
     }
@@ -3386,11 +3431,19 @@ Störung.';
     // Finally the point of no return. Send it out!!! Well. PRE-send it out ...
     try {
       $phpMailer->preSend();
-    } catch (\Throwable $t) {
-      $this->logException($t);
+    } catch (Throwable $t) {
       $this->executionStatus = false;
-      $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = $this->formatExceptionMessage($t);
-
+      $logEntry = $this->logException(
+        $t,
+        message: $t->getMessage(),
+        returnLogEntry: true,
+        shift: PHP_INT_MIN,
+      );
+      array_walk_recursive($logEntry, fn(&$value) => $value = str_replace(\OC::$SERVERROOT, '', $value));
+      $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = [
+        'message' => $this->formatExceptionMessage($t),
+        'logEntry' => $logEntry,
+      ];
       return null;
     }
 
@@ -3731,7 +3784,7 @@ Störung.';
 
       try {
         $headers = get_headers($share);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $headers = null;
       }
       if ($headers && count($headers) > 0) {
@@ -3857,12 +3910,16 @@ Störung.';
       return [];
     }
 
-    $brokenRecipients = [];
+    $parsedRecipients = [];
     try {
       $parsedRecipients = $this->emailAddressService->parseAddressString($freeForm);
     } catch (Exceptions\EnduserNotificationException $e) {
-      $this->logDebug("Parse-error on email address list: " . $e->getMessage());
-      $this->diagnostics[self::DIAGNOSTICS_ADDRESS_VALIDATION][$header] = [ $e->getMessage() ];
+      $this->logDebug("Parse-error on email address list: " . $e->getMessage(), [ 'exception' => $e]);
+      if (!isset($this->diagnostics[self::DIAGNOSTICS_ADDRESS_VALIDATION][$header])) {
+        $this->diagnostics[self::DIAGNOSTICS_ADDRESS_VALIDATION][$header] = [];
+      }
+      $this->diagnostics[self::DIAGNOSTICS_ADDRESS_VALIDATION][$header][] = $e->getMessage();
+
       $this->executionStatus = false;
       return false;
     }
@@ -3871,7 +3928,7 @@ Störung.';
     foreach ($parsedRecipients as $email => $displayName) {
       $recipients[] = [
         'email' => $email,
-        'name' => $name,
+        'name' => $displayName,
       ];
     }
 
@@ -4034,7 +4091,7 @@ Störung.';
       }
       $result = Util::strftime($dateFormat, $stamp, tz: $this->getTimezone(), locale: $this->getLocale());
       return $result;
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
     }
   }
@@ -4164,7 +4221,7 @@ Störung.';
           $dateFormat = $arg[2]?:'long';
           $stamp = strtotime($dateString);
           return $formatter->formatTime($stamp, $dateFormat);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
         }
       },
@@ -4174,7 +4231,7 @@ Störung.';
           $dateFormat = $arg[2]?:'long';
           $stamp = strtotime($dateString);
           return $this->formatDateTime($stamp, $dateFormat);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
         }
       },
@@ -4491,9 +4548,7 @@ Störung.';
       return null;
     }
 
-    $templateName = $template->getTag();
-
-    if ($templateName !== self::DEFAULT_TEMPLATE_NAME && !empty($template['subject'])) {
+    if ($templateIdentifier !== self::DEFAULT_TEMPLATE_NAME && !empty($template['subject'])) {
       $this->cgiData['subject'] = $template['subject'];
     }
 
@@ -4650,7 +4705,7 @@ Störung.';
     $draft->setAutoGenerated(false);
     try {
       $this->flush();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Could not clear auto-generated flag of draft %s, "%s".', [
         $draftId, $draft->getSubject(), ]);
       $this->executionStatus = false;
@@ -4668,7 +4723,7 @@ Störung.';
    */
   public function deleteDraft(?int $draftId = null):bool
   {
-    $draftId = $draftId??$this->draftId;
+    $draftId = $draftId ?? $this->draftId;
     if ($draftId > 0) {
       // detach any attachnments for later clean-up
       if (!$this->detachTemporaryFiles($draftId)) {
@@ -4678,7 +4733,9 @@ Störung.';
       try {
         $this->setDatabaseRepository(Entities\EmailDraft::class);
         $this->remove($draftId, true);
-      } catch (\Throwable $t) {
+      } catch (Exceptions\DatabaseEntityNotFoundException) {
+        $this->logDebug('Draft with id ' . $draftId . ' not found, cannot delete.');
+      } catch (Throwable $t) {
         $this->entityManager->reopen();
         $this->clearDatabaseRepository();
         $this->logException($t);
@@ -4697,7 +4754,7 @@ Störung.';
   }
 
   /**
-   * Delte old draft-messages which still have the autoGenerated flag set to
+   * Delete old draft-messages which still have the autoGenerated flag set to
    * on.
    *
    * @param int $age Age in seconds from now. Deleted are drafts with the
@@ -4741,7 +4798,7 @@ Störung.';
       $tmpFiles = $this
         ->getDatabaseRepository(Entities\EmailAttachment::class)
         ->findBy([ 'draft' => null ]);
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t(
         'Cleaning temporary files failed: %s', $t->getMessage());
       return $this->executionStatus = false;
@@ -4774,7 +4831,7 @@ Störung.';
       if (empty($file)) {
         try {
           $this->forgetTemporaryFile($fileName);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logException($t, 'Unable to remove temporary file.');
         }
       }
@@ -4801,7 +4858,7 @@ Störung.';
            ->getQuery()
            ->execute();
       $this->flush();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t(
         'Detaching temporary file attachments from draft %d failed: %s',
@@ -4844,7 +4901,7 @@ Störung.';
       }
       $this->persist($attachment);
       $this->flush();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       return $this->executionStatus = false;
     }
@@ -4868,7 +4925,7 @@ Störung.';
           ->findOneBy([ 'fileName' => $tmpFile ]);
       }
       $this->remove($tmpFile, true);
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t(
         'Cleaning temporary files failed: %s', $t->getMessage());
       return $this->executionStatus = false;
@@ -4913,7 +4970,7 @@ Störung.';
         $fileRecord['tmp_name'] = $tmpFilePath;
         $fileRecord['origin'] = $origin;
 
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t);
         $tmpFile->delete();
         $this->forgetTemporaryFile($tmpFilePath);
@@ -5215,7 +5272,7 @@ Störung.';
       ini_set('user_agent', 'Orgacloud/1.0');
       try {
         $headers = get_headers($href);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $headers = null;
       }
       ini_set('user_agent', $originalUserAgent);
@@ -5674,11 +5731,11 @@ Störung.';
   /**
    * Compose a "readable" message from a thrown exception.
    *
-   * @param \Throwable $throwable The caught exception.
+   * @param Throwable $throwable The caught exception.
    *
    * @return string
    */
-  private function formatExceptionMessage(\Throwable $throwable):string
+  private function formatExceptionMessage(Throwable $throwable):string
   {
     return $this->l->t('code %1$d, %2$s:%3$d -- %4$s', [
       $throwable->getCode(),

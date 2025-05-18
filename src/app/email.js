@@ -750,8 +750,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           if (data.caption !== undefined) {
             debugText += '<div class="error caption">' + data.caption + '</div>';
           }
+          if (!Array.isArray(data.message)) {
+            data.message = [data.message || ''];
+          }
           if (data.message !== undefined) {
-            debugText += data.message;
+            debugText += data.message.join(' ');
           }
           debugOutput.html(debugText);
           validateUnlock();
@@ -778,7 +781,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           sentEmailsSelector.html(requestData.sentEmailOptions);
           SelectUtils.deselectAll(sentEmailsSelector);
           if (data.message !== undefined && data.caption !== undefined) {
-            Dialogs.alert(data.message, data.caption, undefined, true, true);
+            Dialogs.info(data.message, data.caption, undefined, true, true);
+            $('body').find('.modal-wrapper--small')
+              .toggleClass('.modal-wrapper--small', false)
+              .toggleClass('.modal-wrapper--large', true);
           }
           break;
         case 'cancel':
@@ -1690,7 +1696,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       if ($attachmentRows.filter(':visible').length > 0) {
         $attachmentRows.removeClass('show-selectable').addClass('hidden');
       } else {
-        $attachmentRows.addClass('svhow-selectable').removeClass('hidden');
+        $attachmentRows.addClass('show-selectable').removeClass('hidden');
       }
       panelHolder.trigger('resize', { position: 'bottom' });
     });
