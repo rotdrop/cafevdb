@@ -28,6 +28,7 @@
            :has-previous="false"
            :has-next="false"
            :name="t(appName, 'An Error Occurred')"
+           container="#body-user"
            @update:show="$emit('update:open', false)"
   >
     <template #default>
