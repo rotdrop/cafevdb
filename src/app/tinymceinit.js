@@ -79,6 +79,8 @@ const myConfig = {
   // document_base_url: OC.appswebroots[appName] + '/3rdparty/tinymce',
   suffix: '.min',
   promotion: false,
+  branding: false,
+  license_key: 'gpl',
 
   setup(editor) {
     console.debug('tinyMCE::setup()');
