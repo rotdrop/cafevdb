@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,9 +25,9 @@
 namespace OCA\CAFEVDB\Service;
 
 use Closure;
-use DoesNotExistException;
 use Throwable;
 
+use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Exception;
@@ -102,7 +102,7 @@ class IMAPService
 
   private string $imapHost;
 
-  private int $imapPort;
+  private string $imapPort;
 
   private string $imapSecurity;
 
@@ -213,7 +213,7 @@ class IMAPService
       'username' => $this->imapUser,
       'password' => $this->imapPassword,
       'hostspec' => $this->imapHost,
-      'port' => $this->imapPort,
+      'port' => (int)$this->imapPort,
       'secure' => $imapSecurity,
       'timeout' => 20,
       'context' => $context,
@@ -307,15 +307,21 @@ class IMAPService
   {
     $this->connect();
     if (in_array($mailbox, self::SPECIAL_USE_ATTRIBUTES)) {
+      $this->fetchMailboxes();
       $folder = $this->specialUseMailboxes[$mailbox] ?? null;
       if (empty($folder)) {
         throw new DoesNotExistException($this->l->t('Special-use mailbox "%1$s" does not seem to exist on the server.', $mailbox));
       }
       $this->client->append(
-        $folder['mailbox'],
+        $folder,
         [
-          'data' => $mimeMessage,
-          'flags' => Horde_Imap_Client::FLAG_SEEN|Horde_Imap_Client::FLAG_RECENT,
+          [
+            'data' => $mimeMessage,
+            'flags' => [
+              Horde_Imap_Client::FLAG_SEEN,
+              Horde_Imap_Client::FLAG_RECENT,
+            ],
+          ],
         ],
       );
     }

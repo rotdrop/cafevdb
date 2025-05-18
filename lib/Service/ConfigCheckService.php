@@ -218,7 +218,7 @@ class ConfigCheckService
     $imapService->setAccount($host, $port, $secure, $user, $password);
     try {
       $imapService->connect();
-      $imapService->disconnet();
+      $imapService->disconnect();
       return true;
     } catch (Throwable $t) {
       $this->logException($t, 'Unable to connect to ' . $secure . '://' . urlencode($user) . ':' . 'XXXX@' . $host . ':' . $port);
