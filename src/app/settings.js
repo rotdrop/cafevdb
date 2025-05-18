@@ -762,24 +762,24 @@ const afterLoad = function(container) {
       heightStyle: 'content',
     });
 
+    $('#emailuser').blur(function(event) {
+      const name = $(this).attr('name');
+      const value = $(this).val();
+      $.post(
+        setAppUrl(name), { value })
+        .fail(function(xhr, status, errorThrown) {
+          Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
+        })
+        .done(function(data) {
+          Notification.messages(data.message);
+        });
+      return false;
+    });
+
     {
-      const container = emailContainer.find('fieldset.emailuser');
-
-      $('#emailuser').blur(function(event) {
-        const name = $(this).attr('name');
-        const value = $(this).val();
-        $.post(
-          setAppUrl(name), { value })
-          .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
-          })
-          .done(function(data) {
-            Notification.messages(data.message);
-          });
-        return false;
-      });
-
       // Email-Password
+      const container = emailContainer.find('fieldset.emailpassword');
+
       // 'show password' checkbox
       const password = container.find('#emailpassword');
       showPassword(password);
@@ -802,7 +802,7 @@ const afterLoad = function(container) {
         }
         return false;
       });
-    } // fieldset emailuser
+    } // fieldset emailpassword
 
     { // eslint-disable-line
       // const container = form.find('#emaildistribute');
