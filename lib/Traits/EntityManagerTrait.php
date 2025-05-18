@@ -26,13 +26,13 @@ namespace OCA\CAFEVDB\Traits;
 
 use Throwable;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository as BaseEntityRepository;
-
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator as ClassMetadata;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository as BaseEntityRepository;
 
 /**
  * Database EntityManager short-cuts.
@@ -152,6 +152,7 @@ trait EntityManagerTrait
    *
    * @throws ORMInvalidArgumentException
    * @throws ORMException
+   * @throws Exceptions\DatabaseEntityNotFoundException
    */
   protected function remove(
     mixed $entity,
@@ -170,6 +171,9 @@ trait EntityManagerTrait
       //
       // $entity = $this->entityManager->getReference($this->entityClassName, $key);
       $entity = $this->entityManager->find($this->entityClassName, $key);
+      if (empty($entity)) {
+        throw new Exceptions\DatabaseEntityNotFoundException($this->entityClassName);
+      }
     }
     if ($soft && !$hard && method_exists($entity, 'isDeleted') && $entity->isDeleted()) {
       return;
