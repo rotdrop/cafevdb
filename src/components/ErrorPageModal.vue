@@ -35,7 +35,7 @@
       <h2 :id="errorPageHeadingId" class="error-page-heading">
         {{ heading }}
       </h2>
-      <ErrorPage :error="error" />
+      <ErrorPage :error="error" :initial-view="initialView" />
     </template>
   </NcModal>
 </template>
@@ -56,8 +56,10 @@ import type { NextcloudExceptionLogEntry } from '../types/ajax/php-exception-res
 withDefaults(defineProps<{
   error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>,
   heading?: string,
+  initialView?: 'summary'|'details'|'report',
 }>(), {
   heading: t(appName, 'Sorry, an Error Occurred'),
+  initialView: 'summary',
 })
 
 const errorPageHeadingId = ref<string>(uuidv4())

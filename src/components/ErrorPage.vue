@@ -25,6 +25,7 @@
   <div class="container">
     <ul class="flex-container flex-column">
       <NcListItem v-if="envelopeError"
+                  ref="envelopeErrorItem"
                   bold
                   :active="true"
                   class="envelope-error"
@@ -187,6 +188,7 @@ import { AppError } from '../types/errors.ts'
 import {
   computed,
   onBeforeMount,
+  onMounted,
   ref,
   watch,
 } from 'vue'
@@ -229,9 +231,12 @@ import Console, { stackTraceOptions } from '../util/console.ts'
 const COMPONENT_NAME = 'ErrorPage'
 const logger = new Console(COMPONENT_NAME)
 
-const props = defineProps <{
+const props = withDefaults(defineProps <{
   error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>,
-}>()
+  initialView?: 'summary'|'details'|'report',
+}>(), {
+  initialView: 'summary',
+})
 
 const tooltipKeys = [
   'error-page:problem-report:cancel',
@@ -293,7 +298,8 @@ const envelopeErrorMessage = computed(() =>
     ? makeErrorMessage(envelopeError.value)
     : '')
 
-const showProblemReport = ref(false)
+const detailsModalOpen = ref(props.initialView === 'details')
+const showProblemReport = ref(props.initialView === 'report')
 const submitted = ref(false)
 const userComment = ref('')
 const substitutions = ref<Record<string, string>>({})
@@ -332,7 +338,7 @@ const serializedError = removeStack(serializeError(props.error, { useToJSON: fal
 logger.debug('SERIALIZED ERROR', { serializedError, origError: props.error })
 const systemErrorString = ref(JSON.stringify(serializedError, undefined, 2))
 
-const stackTrace = ref<null|array<StackFrame> >(null)
+const stackTrace = ref<null|Array<StackFrame> >(null)
 watch(stackTrace, (value) => {
   if (Array.isArray(value)) {
     serializedError.stack = value
@@ -368,7 +374,6 @@ ${systemErrorString.value}
 `,
 )
 
-const detailsModalOpen = ref(false)
 const translationsLoaded = ref(false)
 
 loadTranslations('logreader', () => false)
@@ -443,6 +448,20 @@ const parseStackTrace = async () => {
 }
 
 onBeforeMount(parseStackTrace)
+
+const envelopeErrorItem = ref(null)
+
+watch(detailsModalOpen, () => {
+  if (!detailsModalOpen.value && !showProblemReport.value && envelopeErrorItem.value) {
+    envelopeErrorItem.value.$refs.actions.openMenu()
+  }
+})
+
+onMounted(() => {
+  if (envelopeErrorItem.value && props.initialView === 'summary') {
+    envelopeErrorItem.value.$refs.actions.openMenu()
+  }
+})
 
 </script>
 <style scoped lang="scss">
