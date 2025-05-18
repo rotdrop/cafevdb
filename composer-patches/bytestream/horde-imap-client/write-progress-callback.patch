@@ -13,7 +13,7 @@
 +            $pos = 0;
 +            $oldPos = $pos;
 +            $mode = 'write';
-+            $this->_progressCallback($mode, $pos, $size);
++            ($this->_progressCallback)($mode, $pos, $size);
 +        }
 +
          if (rewind($data)) {
@@ -28,7 +28,7 @@
 +                if (is_callable($this->_progressCallback)) {
 +                    $pos += $written;
 +                    if (feof($data) || $pos >= $oldPos + $chunkSize) {
-+                        $this->_progressCallback($mode, $pos, $size);
++                        ($this->_progressCallback)($mode, $pos, $size);
 +                        $oldPos = $pos;
 +                    }
 +                }

@@ -13,7 +13,7 @@
 +    /**
 +     * A user supplied progress callback, called like
 +     *
-+     * $this->_progressCallback($mode, $bytesTransferred, $bytesToTransfer)
++     * ($this->_progressCallback)($mode, $bytesTransferred, $bytesToTransfer)
 +     *
 +     * If _chunkSize is 0 or smaller than the total transfer size the progress
 +     * callback will only be called at the end of the transfer. The callback
@@ -55,7 +55,7 @@
 +        $pos = 0;
 +        $mode = 'read';
 +        if (is_callable($this->_progressCallback)) {
-+            $this->_progressCallback($mode, $pos, $size);
++            ($this->_progressCallback)($mode, $pos, $size);
 +        }
 +        $chunkSize = $this->_chunkSize ?? $size;
 +        $data = '';
@@ -68,7 +68,7 @@
 +            $data .= $chunkData;
 +            $pos += $chunkSize;
 +            if (is_callable($this->_progressCallback)) {
-+                $this->_progressCallback($mode, $pos, $size);
++                ($this->_progressCallback)($mode, $pos, $size);
 +            }
          }
          return $data;
@@ -85,7 +85,7 @@
 +        $pos = 0;
 +        $mode = 'write';
 +        if (is_callable($this->_progressCallback)) {
-+            $this->_progressCallback($mode, $pos, $size);
++            ($this->_progressCallback)($mode, $pos, $size);
 +        }
 +        $chunkSize = $this->_chunkSize ?? $size;
 +        while ($pos < $size) {
@@ -99,7 +99,7 @@
 +            }
 +            $pos += $chunkSize;
 +            if (is_callable($this->_progressCallback)) {
-+                $this->_progressCallback($mode, $pos, $size);
++                ($this->_progressCallback)($mode, $pos, $size);
              }
 -            throw new Client\Exception('Error writing data to socket');
          }
