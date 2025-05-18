@@ -27,7 +27,7 @@ import globalState from './globalstate.js';
 import * as Dialogs from './dialogs.js';
 import { isPlainObject } from 'is-plain-object';
 import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
-import { emit as asyncEmit } from '../services/async-event-bus.ts';
+import { emit as asyncEmit, hasSubscriptions } from '../services/async-event-bus.ts';
 import { LEGACY_AJAX_ERROR } from '../event-bus-events.ts';
 import l10nHttpStatus from '@http-util/status-i18n';
 import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
@@ -113,17 +113,53 @@ const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) 
         failData.message = [failData.message];
       }
     }
-
-    const eventData = {
-      xhr,
-      message: failData.message?.join(' '),
-    };
-    if (failData.html) {
-      eventData.html = failData.html;
+    if (hasSubscriptions(LEGACY_AJAX_ERROR)) {
+      let message = failData.message?.join(' ') || '';
+      let html = failData.html || '';
+      if (!html && message.startsWith('<')) {
+        html = message;
+        message = '';
+        const $caption = $(html).find('.caption');
+        if ($caption.length > 0) {
+          message = $caption.text();
+        }
+      }
+      const eventData = {
+        xhr,
+        message,
+        html,
+      };
+      await asyncEmit(LEGACY_AJAX_ERROR, eventData);
+      console.info('RUNNING CLEANUP HOOKS', callbacks);
+      callbacks.cleanup(failData);
+    } else {
+      // no Vue code available, must use legacy code ...
+      if (failData.error && decodedStatus !== t(appName, failData.error)) {
+        info += ': '
+          + '<span class="bold error toastify name">'
+          + t(appName, failData.error)
+          + '</span>';
+      }
+      if (failData.message) {
+        for (const msg of failData.message) {
+          info += '<div class="' + appName + ' error toastify">' + msg + '</div>';
+        }
+      }
+      let exceptionData = failData;
+      if (exceptionData.exception !== undefined) {
+        info += '<div class="exception error name"><pre>' + exceptionData.exception + '</pre></div>'
+          + '<div class="exception error trace"><pre>' + exceptionData.trace + '</pre></div>';
+        while ((exceptionData = exceptionData.previous) != null) {
+          info += '<div class="bold error toastify">' + exceptionData.message + '</div>';
+          info += '<div class="exception error name"><pre>' + exceptionData.exception + '</pre></div>'
+            + '<div class="exception error trace"><pre>' + exceptionData.trace + '</pre></div>';
+        }
+      }
+      if (failData.info) {
+        info += '<div class="' + appName + ' error-page">' + failData.info + '</div>';
+      }
+      Dialogs.alert(info, caption, function() { callbacks.cleanup(failData); }, true, true);
     }
-    await asyncEmit(LEGACY_AJAX_ERROR, eventData);
-    console.info('RUNNING CLEANUP HOOKS', callbacks);
-    callbacks.cleanup(failData);
     break;
   }
   case HttpStatusCodes.PRECONDITION_FAILED:
