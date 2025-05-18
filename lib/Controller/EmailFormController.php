@@ -794,6 +794,9 @@ class EmailFormController extends Controller
     ?int $bulkTransactionId,
   ):DataResponse {
     $recipientsFilter = $this->appContainer->query(RecipientsFilter::class);
+    if (!$recipientsFilter->bound()) {
+      $recipientsFilter->bind($this->request->getParams());
+    }
 
     $filterHistory = $recipientsFilter->filterHistory();
 
