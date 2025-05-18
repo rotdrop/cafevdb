@@ -23,21 +23,7 @@
 
 import { AxiosError } from 'axios';
 import { isAxiosError } from '../../toolkit/types/axios-type-guards.ts';
-
-// A NC log entry instance
-export interface NextcloudLogEntry {
-  app: string,
-  level: number,
-  message: string, // JSON
-  method: string, // POST, GET, ...
-  remoteAddr: string, // network address
-  reqId: string, // unique NC request id
-  time: string, // time string
-  url: string, // request URL
-  user: string, // user issuing the request
-  userAgent: string, // client id, e.g web browser
-  version: string, // Nextcloud verion
-}
+import type { ILogEntry as NextcloudLogEntry } from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts'
 
 export const isNextcloudLogEntry = (data: any): data is NextcloudLogEntry =>
   (!!data
