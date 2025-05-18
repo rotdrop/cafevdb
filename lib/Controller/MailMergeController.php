@@ -29,7 +29,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use InvalidArgumentException;
 use Throwable;
-use ZipStream\ZipStream;
+use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
