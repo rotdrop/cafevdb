@@ -86,14 +86,16 @@ class MailingListsService
 
   const SUBSCRIPTION_SELF_LINK = 'self_link';
 
-  const TEMPLATE_FILE_PREFIX = 'list:';
-  const TEMPLATE_FILE_ADMIN = 'admin:';
-  const TEMPLATE_FILE_MEMBER = 'member:';
-  const TEMPLATE_FILE_USER = 'user';
-  const TEMPLATE_FILE_RCPTS = [
-    self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_ADMIN,
-    self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_MEMBER,
-    self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_USER,
+  const TEMPLATE_MAILMAN_SEPARATOR = ':';
+  const TEMPLATE_FILE_SEPARATOR = '_';
+  const TEMPLATE_MAILMAN_PREFIX = 'list' . self::TEMPLATE_MAILMAN_SEPARATOR;
+  const TEMPLATE_MAILMAN_ADMIN = 'admin' . self::TEMPLATE_MAILMAN_SEPARATOR;
+  const TEMPLATE_MAILMAN_MEMBER = 'member' . self::TEMPLATE_MAILMAN_SEPARATOR;
+  const TEMPLATE_MAILMAN_USER = 'user' . self::TEMPLATE_MAILMAN_SEPARATOR;
+  const TEMPLATE_MAILMAN_RCPTS = [
+    self::TEMPLATE_MAILMAN_PREFIX . self::TEMPLATE_MAILMAN_ADMIN,
+    self::TEMPLATE_MAILMAN_PREFIX . self::TEMPLATE_MAILMAN_MEMBER,
+    self::TEMPLATE_MAILMAN_PREFIX . self::TEMPLATE_MAILMAN_USER,
   ];
 
   const STATUS_SUBSCRIBED = 'subscribed';
@@ -1249,8 +1251,9 @@ class MailingListsService
           continue;
       }
       $pathInfo = pathinfo($node->getPath());
-      $template = $pathInfo['filename'];
-      if (!str_starts_with($template, MailingListsService::TEMPLATE_FILE_PREFIX)) {
+      $template = str_replace(self::TEMPLATE_FILE_SEPARATOR, self::TEMPLATE_MAILMAN_SEPARATOR, $pathInfo['filename']);
+      // the following check will also allow files still containing colons.
+      if (!str_starts_with($template, MailingListsService::TEMPLATE_MAILMAN_PREFIX)) {
           continue;
       }
       $nodeBase = $pathInfo['basename'];

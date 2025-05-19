@@ -47,10 +47,14 @@ function documentReady() {
     return false;
   });
 
+  let migrationDialogActive = false;
+
   const handleMigrations = function() {
-    if ($container.find('.config-check').length <= 0) {
+    if ($container.find('.config-check').length <= 0 || migrationDialogActive) {
       return;
     }
+
+    migrationDialogActive = true;
 
     setBusyIndicators(true, $container, false);
 
@@ -59,11 +63,13 @@ function documentReady() {
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown, function() {
           setBusyIndicators(false, $container, false);
+          migrationDialogActive = false;
         });
       })
       .done(function(data) {
         setBusyIndicators(false, $container, false);
         if (data.migrations.length <= 0) {
+          migrationDialogActive = false;
           return;
         }
         let migrationList = '<dl class="migrations-list">';
@@ -80,6 +86,7 @@ function documentReady() {
           t(appName, 'Data Migration'),
           function(confirmation) {
             if (confirmation !== true) {
+              migrationDialogActive = false;
               return;
             }
             setBusyIndicators(true, $container, false);
@@ -87,6 +94,7 @@ function documentReady() {
               .fail(function(xhr, status, errorThrown) {
                 Ajax.handleError(xhr, status, errorThrown, function() {
                   setBusyIndicators(false, $container, false);
+                  migrationDialogActive = false;
                 });
               })
               .done(function(data) {
@@ -106,6 +114,7 @@ function documentReady() {
                     console.error('TOAST ERROR', toast, e);
                   }
                 }, second);
+                migrationDialogActive = false;
                 setTimeout(() => {
                   clearInterval(notifier);
                   setBusyIndicators(false, $container, false);

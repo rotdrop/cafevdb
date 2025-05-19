@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright , 2021, 2022, 2024,  Claus-Justus Heine
+ * @copyright , 2021, 2022, 2024, 2025,  Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -149,9 +149,13 @@ class MailingListsAutoResponsesListener implements IEventListener
           continue;
         }
       }
-      $template = pathinfo($nodePath, PATHINFO_FILENAME);
+      $template = str_replace(
+        MailingListsService::TEMPLATE_FILE_SEPARATOR,
+        MailingListsService::TEMPLATE_MAILMAN_SEPARATOR,
+        pathinfo($nodePath, PATHINFO_FILENAME),
+      );
       // first look at the base name, it must start with one of the known prefixes.
-      if (!str_starts_with($template, MailingListsService::TEMPLATE_FILE_PREFIX)) {
+      if (!str_starts_with($template, MailingListsService::TEMPLATE_MAILMAN_PREFIX)) {
         unset($nodes[$key]);
         continue;
       }
@@ -212,7 +216,11 @@ class MailingListsAutoResponsesListener implements IEventListener
           $lists = [ $configService->getConfigValue('announcementsMailingList'), ];
         }
 
-        $template = pathinfo($nodeBase, PATHINFO_FILENAME);
+        $template = str_replace(
+          MailingListsService::TEMPLATE_FILE_SEPARATOR,
+          MailingListsService::TEMPLATE_MAILMAN_SEPARATOR,
+          pathinfo($nodeBase, PATHINFO_FILENAME),
+        );
 
         try {
           if ($key == self::DEL_KEY) {
@@ -253,8 +261,3 @@ class MailingListsAutoResponsesListener implements IEventListener
     return substr($path, strlen($folderPrefix));
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
