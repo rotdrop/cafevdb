@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Listener;
 
+use Throwable;
+
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Files\Events\Node\NodeWrittenEvent;
@@ -140,7 +142,7 @@ class MailingListsAutoResponsesListener implements IEventListener
         // Can ony use plain text files for the autoresponses.
         try {
           $eventMimeType = $node->getMimetype();
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           // ignore
           $eventMimeType = null;
         }
@@ -237,8 +239,8 @@ class MailingListsAutoResponsesListener implements IEventListener
             }
           }
           break;
-        } catch (\Throwable $t) {
-          $this->logError('Unable to modify template ' . $template);
+        } catch (Throwable $t) {
+          $this->logException($t, 'Unable to modify template ' . $template);
         }
       }
     }
