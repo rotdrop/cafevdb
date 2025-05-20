@@ -54,18 +54,19 @@
     <command>OCA\CAFEVDB\Command\DatabaseStorage</command>
     <command>OCA\CAFEVDB\Command\ExecutiveBoard</command>
     <command>OCA\CAFEVDB\Command\FilesScan</command>
+    <command>OCA\CAFEVDB\Command\GnuCashSetup</command>
     <command>OCA\CAFEVDB\Command\HelloWorld</command>
     <command>OCA\CAFEVDB\Command\Migrations</command>
     <command>OCA\CAFEVDB\Command\ParticipantFolders</command>
     <command>OCA\CAFEVDB\Command\ProjectEvents</command>
     <command>OCA\CAFEVDB\Command\ProjectFolders</command>
     <command>OCA\CAFEVDB\Command\RecurringReceivables</command>
+    <command>OCA\CAFEVDB\Command\SanitizeFilenames</command>
     <command>OCA\CAFEVDB\Command\SentNotifications</command>
     <command>OCA\CAFEVDB\Command\TooltipsFind</command>
     <command>OCA\CAFEVDB\Command\TooltipsList</command>
     <command>OCA\CAFEVDB\Command\UpdateGeoCodingCache</command>
     <command>OCA\CAFEVDB\Command\WikiOverview</command>
-    <command>OCA\CAFEVDB\Command\GnuCashSetup</command>
   </commands>
   <background-jobs>
     <job>OCA\CAFEVDB\BackgroundJob\CleanupTemporaryFiles</job>
