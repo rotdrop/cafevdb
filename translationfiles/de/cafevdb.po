@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-05-19 17:13+0200\n"
-"PO-Revision-Date: 2025-05-19 17:18+0200\n"
+"POT-Creation-Date: 2025-05-20 09:56+0200\n"
+"PO-Revision-Date: 2025-05-20 09:58+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -739,8 +739,8 @@ msgstr ""
 #: lib/Command/ProjectEvents.php:336
 #, php-format
 msgid ""
-"Would hard-remove soft-deleted event \"%1$s@%2$s\" from project "
-"\"%3$s\" (dry-run)"
+"Would hard-remove soft-deleted event \"%1$s@%2$s\" from project \"%3$s\" "
+"(dry-run)"
 msgstr ""
 "Würde den als inaktiv markierten Termin \"%1$s@%2$s\" endgültig vom Projekt "
 "\"%2$s\" entfernen (Trockenübung)."
@@ -815,8 +815,8 @@ msgstr ""
 #: lib/Command/ProjectEvents.php:475
 #, php-format
 msgid ""
-"Would split non-repeating multi-day event \"%1$s@%2$s\" of project "
-"\"%3$s\" (dry-run)."
+"Would split non-repeating multi-day event \"%1$s@%2$s\" of project \"%3$s\" "
+"(dry-run)."
 msgstr ""
 "Würde den nicht-wiederholenden mehrtägigen Termin \"%1$s@%2$s\" für das "
 "Projekt \"%3$s\" in einen wiederholenden eintägigen Termin aufteilen "
@@ -872,8 +872,8 @@ msgstr ""
 #: lib/Command/ProjectEvents.php:603
 #, php-format
 msgid ""
-"Would delete unregistered event \"%1$s@%2$s\" with project-category "
-"\"%3$s\" (dry-run)."
+"Would delete unregistered event \"%1$s@%2$s\" with project-category \"%3$s\" "
+"(dry-run)."
 msgstr ""
 "Würde den beim Projekt \"%3$s\" nicht-registrieren Termin \"%1$s@%2$s\" mit "
 "Projekt-Kategorie \"%3$s\" löschen (Trockenübung)."
@@ -881,8 +881,8 @@ msgstr ""
 #: lib/Command/ProjectEvents.php:610
 #, php-format
 msgid ""
-"Will delete unregistered event \"%1$s@%2$s\" with project-category "
-"\"%3$s\" (dry-run)."
+"Will delete unregistered event \"%1$s@%2$s\" with project-category \"%3$s\" "
+"(dry-run)."
 msgstr ""
 "Lösche den beim Projekt \"%3$s\" nicht-registrieren Termin \"%1$s@%2$s\" mit "
 "Projekt-Kategorie \"%3$s\".<\n"
@@ -5500,7 +5500,7 @@ msgstr "Einige Dateispeicher ids aufräumen."
 msgid ""
 "Replace \"%1$s\" by \"%2$s\" in the filenames for the mailing list auto-"
 "response templates."
-msgstr "Ersetze \\\"%1$s\\\" durch \\\"%2$s\\\" in den Dateinamen für die automatischen Antworten der Mailinglisten."
+msgstr "Ersetze \"%1$s\" durch \"%2$s\" in den Dateinamen für die automatischen Antworten der Mailinglisten."
 
 #: lib/Maintenance/Migrations/SanitizeSentEmailAssociations.php:66
 msgid "Sanitize the sent-email connectivity."
@@ -5676,11 +5676,13 @@ msgstr "inkonsistente Spendenbeträge"
 msgid "consistency checks passed"
 msgstr "Konsistenztests waren erfolgreich"
 
+#. TRANSLATORS src/views/FilesTab.vue:143
 #: lib/PageRenderer/DonationReceipts.php:552
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:196
 #: lib/PageRenderer/ProjectParticipantFields.php:320
 #: lib/PageRenderer/ProjectPayments.php:553
 #: lib/PageRenderer/SepaBulkTransactions.php:369
+#: specialVueFakeDummyForL10nScript.js:5721
 msgid "Project"
 msgstr "Projekt"
 
@@ -5813,9 +5815,12 @@ msgid "Next Total Insurance Amount from %s"
 msgstr "Gesamtversicherungssumme ab %s"
 
 #. TRANSLATORS src/components/AdminSettings.vue:207
+#. TRANSLATORS src/views/FilesTab.vue:77
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:97
 #: lib/Service/CloudUserConnectorService.php:397
 #: specialVueFakeDummyForL10nScript.js:1499
+#: specialVueFakeDummyForL10nScript.js:5705
+#: specialVueFakeDummyForL10nScript.js:5717
 msgid "Musicians"
 msgstr "Personen"
 
@@ -6308,12 +6313,16 @@ msgstr "Versicherungs-Anbieter"
 msgid "Short Name"
 msgstr "Kurzbezeichnung"
 
+#. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:29
 #: lib/PageRenderer/InsuranceBrokers.php:168
 #: lib/PageRenderer/ProjectParticipants.php:425
+#: specialVueFakeDummyForL10nScript.js:5350
 msgid "Name"
 msgstr "Name"
 
+#. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:59
 #: lib/PageRenderer/InsuranceBrokers.php:176
+#: specialVueFakeDummyForL10nScript.js:5356
 msgid "Address"
 msgstr "Adresse"
 
@@ -6495,8 +6504,10 @@ msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:113
+#. TRANSLATORS src/components/ProjectEventsListing.vue:82
 #: lib/PageRenderer/PME/Config.php:64 lib/PageRenderer/PMETableViewBase.php:646
 #: specialVueFakeDummyForL10nScript.js:3349
+#: specialVueFakeDummyForL10nScript.js:4306
 msgid "Em@il"
 msgstr "Em@il"
 
@@ -7191,7 +7202,8 @@ msgstr "Plakate"
 msgid "Copy of %s"
 msgstr "Kopie von %s"
 
-#: lib/PageRenderer/Projects.php:1110
+#. TRANSLATORS src/components/ProjectEventsListing.vue:263
+#: lib/PageRenderer/Projects.php:1110 specialVueFakeDummyForL10nScript.js:4332
 msgid "edit"
 msgstr "bearbeiten"
 
@@ -7414,8 +7426,9 @@ msgstr "Einreichungsdatum"
 msgid "Pre-Notification"
 msgstr "Vorankündigung"
 
+#. TRANSLATORS src/views/FilesTab.vue:94
 #: lib/PageRenderer/SepaBulkTransactions.php:610
-#: templates/emailform/form.php:36
+#: specialVueFakeDummyForL10nScript.js:5709 templates/emailform/form.php:36
 #: templates/emailform/part.emailform.composer.php:125
 msgid "Recipients"
 msgstr "Empfänger*innen"
@@ -9090,8 +9103,8 @@ msgid ""
 "banktransaction, either bank transfers or debit notes.\n"
 "\n"
 "The data format is CSV, in order to transfer the data to the bank the "
-"command-line tool `aqbanking-cli` from the [AqBanking](https://www."
-"aquamaniac.de/rdm/projects/aqbanking) software-suite has to be used.\n"
+"command-line tool `aqbanking-cli` from the [AqBanking](https://"
+"www.aquamaniac.de/rdm/projects/aqbanking) software-suite has to be used.\n"
 "\n"
 "Please note that the files listed here are read-only. They are generated by "
 "the [%1$s-app](%2$s). Each project has an entry in the side-bar menu which "
@@ -11841,8 +11854,8 @@ msgid ""
 "to add a page to the project which has not been created by hitting the `+'-"
 "button above, but was created directly in the CMS backend. When linking "
 "articles from the `trashbin' category then those articles will automatically "
-"moved to the `preview' category; this is some not-so-hidden undelete feature."
-"z"
+"moved to the `preview' category; this is some not-so-hidden undelete "
+"feature.z"
 msgstr ""
 "Verknüpft eine bestehende Veranstaltungsankündigung mit dem\n"
 "Projekt. Nützlich, falls man ohne Verwendung des `+'-Knopfes im\n"
@@ -13534,6 +13547,7 @@ msgstr "unzugänglich"
 #: specialVueFakeDummyForL10nScript.js:1285
 #: specialVueFakeDummyForL10nScript.js:1354
 #: specialVueFakeDummyForL10nScript.js:1409
+#: specialVueFakeDummyForL10nScript.js:5660
 #: src/toolkit/util/settings-sync.ts:66 src/toolkit/util/settings-sync.ts:107
 #: src/toolkit/util/settings-sync.ts:186 src/toolkit/util/settings-sync.ts:304
 msgid "reason unknown"
@@ -13741,7 +13755,9 @@ msgid "No recryption requests are pending."
 msgstr "Keine Neuverschlüsselungs-Anfragen anhängig."
 
 #. TRANSLATORS src/components/AdminSettings.vue:208
+#. TRANSLATORS src/views/FilesTab.vue:133
 #: specialVueFakeDummyForL10nScript.js:1501
+#: specialVueFakeDummyForL10nScript.js:5719
 msgid "e.g. Jane Doe"
 msgstr "z.B. Maximiliane Musterfrau"
 
@@ -13751,7 +13767,9 @@ msgid "Restrict User Selection to Project"
 msgstr "Benutzerauswahl auf ein Projekt einschränken"
 
 #. TRANSLATORS src/components/AdminSettings.vue:220
+#. TRANSLATORS src/views/FilesTab.vue:144
 #: specialVueFakeDummyForL10nScript.js:1505
+#: specialVueFakeDummyForL10nScript.js:5723
 msgid "e.g. Auvergne2019"
 msgstr "z.B. Auvergne2019"
 
@@ -13878,7 +13896,9 @@ msgid "Active page when the history was saved."
 msgstr "Aktive Seite zum Zeitpunkt des Speicherns des Browserverlaufs."
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:68
+#. TRANSLATORS src/components/ProjectEventsListing.vue:148
 #: specialVueFakeDummyForL10nScript.js:1733
+#: specialVueFakeDummyForL10nScript.js:4318
 msgid "Toggle Details"
 msgstr "Details ein- oder ausblenden"
 
@@ -14135,12 +14155,16 @@ msgid "Tooltips"
 msgstr "Kontext-Hilfe"
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:82
+#. TRANSLATORS src/components/ProjectEventsListing.vue:106
 #: specialVueFakeDummyForL10nScript.js:2709
+#: specialVueFakeDummyForL10nScript.js:4310
 msgid "Manual (other tab or window)"
 msgstr "Handbuch (anderes Fenster/Tab)"
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:87
-#: specialVueFakeDummyForL10nScript.js:2711 templates/emailform/form.php:62
+#. TRANSLATORS src/components/ProjectEventsListing.vue:114
+#: specialVueFakeDummyForL10nScript.js:2711
+#: specialVueFakeDummyForL10nScript.js:4312 templates/emailform/form.php:62
 msgid "Manual (popup)"
 msgstr "Handbuch (dieses Fenster, Popup)"
 
@@ -14249,6 +14273,260 @@ msgstr "Gewinn-/Verlustrechung"
 #: templates/emailform/part.emailform.composer.php:267
 msgid "Project Events"
 msgstr "Projekt-Termine"
+
+#: specialVueFakeDummyForL10nScript.js:3962
+msgid "Unable to export selected events."
+msgstr "Kann die ausgewählten Termine nicht exportieren."
+
+#: specialVueFakeDummyForL10nScript.js:4119
+msgid "Unable to modify the absence field."
+msgstr "Kann das Abwesenheitsfeld nicht modifizieren."
+
+#: specialVueFakeDummyForL10nScript.js:4162
+msgid "Unable to detach events from the project."
+msgstr "Kann die Termine nicht vom Projekt lösen."
+
+#: specialVueFakeDummyForL10nScript.js:4239
+msgid "Unable to delete events."
+msgstr "Kann die Termine nicht löschen."
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:26
+#: specialVueFakeDummyForL10nScript.js:4296
+msgid "{name} - Appointments"
+msgstr "{name} - Termine"
+
+#: specialVueFakeDummyForL10nScript.js:4296
+msgid "Appointments"
+msgstr "Termine"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:36
+#: specialVueFakeDummyForL10nScript.js:4298
+msgid "create a new appointment"
+msgstr "Einen neuen Termin erstellen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:57
+#: specialVueFakeDummyForL10nScript.js:4300
+msgid "mark all events"
+msgstr "alle Termine markieren"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:66
+#: specialVueFakeDummyForL10nScript.js:4302
+msgid "unmark all events"
+msgstr "alle Markierungen entfernen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:75
+#: specialVueFakeDummyForL10nScript.js:4304
+msgid "open email editor"
+msgstr "Termin-Editor öffnen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:85
+#: specialVueFakeDummyForL10nScript.js:4308
+msgid "export events"
+msgstr "Termine exportieren"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:120
+#: specialVueFakeDummyForL10nScript.js:4314
+msgid "reload the project appointments"
+msgstr "Projekt-Termine neu laden"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:133
+#: specialVueFakeDummyForL10nScript.js:4316
+msgid "no events"
+msgstr "keine Termine"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:170
+#: specialVueFakeDummyForL10nScript.js:4320
+msgid "detached"
+msgstr "losgelöst"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:206
+#: specialVueFakeDummyForL10nScript.js:4322
+msgid "act only on this event"
+msgstr "nur dieser Termin"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:216
+#: specialVueFakeDummyForL10nScript.js:4324
+msgid "act on the event series"
+msgstr "Terminserie"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:226
+#: specialVueFakeDummyForL10nScript.js:4326
+msgid "act on all related events"
+msgstr "alle zugehörigen Termine"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:239
+#. TRANSLATORS: The expression in the sourcecode was
+#. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::RECORD_ABSENCE_CATEGORY = 'record absence';
+#: specialVueFakeDummyForL10nScript.js:4328 lib/Service/EventsService.php:1203
+#, php-format
+msgid "record absence"
+msgstr "Abwesenheit erfassen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:253
+#: specialVueFakeDummyForL10nScript.js:4330
+msgid "mark for download / em@il"
+msgstr "markieren für Em@il / Export"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:274
+#: specialVueFakeDummyForL10nScript.js:4334
+#: specialVueFakeDummyForL10nScript.js:4336
+msgid "open in calendar-app"
+msgstr "in der Kalender-App öffnen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:295
+#: specialVueFakeDummyForL10nScript.js:4338
+#: templates/fragments/projects/project-mailing-list.php:114
+msgid "delete"
+msgstr "löschen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:306
+#: specialVueFakeDummyForL10nScript.js:4340
+msgid "detach from project"
+msgstr "vom Projekt lösen"
+
+#. TRANSLATORS src/components/ProjectEventsListing.vue:317
+#: specialVueFakeDummyForL10nScript.js:4342
+msgid "reattach to project"
+msgstr "mit dem Projekt verknüpfen"
+
+#: specialVueFakeDummyForL10nScript.js:4585
+#: specialVueFakeDummyForL10nScript.js:4885
+msgid "** everybody **"
+msgstr "*** alle ***"
+
+#. TRANSLATORS src/components/SelectContacts.vue:45
+#. TRANSLATORS src/components/SelectMusicians.vue:45
+#. TRANSLATORS src/components/SettingsSelectGroup.vue:47
+#. TRANSLATORS src/components/SettingsSelectUsers.vue:60
+#: specialVueFakeDummyForL10nScript.js:4696
+#: specialVueFakeDummyForL10nScript.js:4698
+#: specialVueFakeDummyForL10nScript.js:4700
+#: specialVueFakeDummyForL10nScript.js:4702
+#: specialVueFakeDummyForL10nScript.js:4953
+#: specialVueFakeDummyForL10nScript.js:4955
+#: specialVueFakeDummyForL10nScript.js:4957
+#: specialVueFakeDummyForL10nScript.js:4959
+#: specialVueFakeDummyForL10nScript.js:5190
+#: specialVueFakeDummyForL10nScript.js:5192
+#: specialVueFakeDummyForL10nScript.js:5194
+#: specialVueFakeDummyForL10nScript.js:5196
+#: specialVueFakeDummyForL10nScript.js:5298
+#: specialVueFakeDummyForL10nScript.js:5300
+#: specialVueFakeDummyForL10nScript.js:5302
+#: specialVueFakeDummyForL10nScript.js:5304
+msgid "undefined"
+msgstr "nicht definiert"
+
+#: specialVueFakeDummyForL10nScript.js:5050
+msgid "Permanent"
+msgstr "Permanent"
+
+#. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:39
+#: specialVueFakeDummyForL10nScript.js:5352 templates/settings.php:67
+msgid "Email"
+msgstr "Email"
+
+#. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:47
+#: specialVueFakeDummyForL10nScript.js:5354
+msgid "Phone"
+msgstr "Telefon"
+
+#. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:75
+#: specialVueFakeDummyForL10nScript.js:5358
+msgid "Propability"
+msgstr "Wahrscheinlichkeit"
+
+#: specialVueFakeDummyForL10nScript.js:5499
+msgid "Required."
+msgstr "Benötigt."
+
+#: specialVueFakeDummyForL10nScript.js:5642
+msgid "File download failed for {fileName}."
+msgstr "Laden der Datei {fileName} ist fehlgeschlagen."
+
+#: specialVueFakeDummyForL10nScript.js:5678
+msgid "no response received from {ajaxUrl}"
+msgstr "keine Antwort von {ajaxUrl} erhalten"
+
+#: specialVueFakeDummyForL10nScript.js:5682
+msgid "Could not perform mail-merge: {message}"
+msgstr "Konnte die Vorlage nicht ausfüllen: {message}"
+
+#. TRANSLATORS src/views/FilesTab.vue:31
+#: specialVueFakeDummyForL10nScript.js:5689
+msgid "Mail merge operations"
+msgstr "Serienbrief-Operation"
+
+#. TRANSLATORS src/views/FilesTab.vue:40
+#: specialVueFakeDummyForL10nScript.js:5691
+msgid "Download Merged Document"
+msgstr "Ausgefüllte Vorlage laden"
+
+#. TRANSLATORS src/views/FilesTab.vue:43
+#: specialVueFakeDummyForL10nScript.js:5693
+msgid "download locally"
+msgstr "lokal laden"
+
+#. TRANSLATORS src/views/FilesTab.vue:48
+#: specialVueFakeDummyForL10nScript.js:5695
+msgid "Merge Document into Cloud"
+msgstr "Ergebnis in der Cloud speichern"
+
+#. TRANSLATORS src/views/FilesTab.vue:54
+#: specialVueFakeDummyForL10nScript.js:5697
+msgid "save to cloud"
+msgstr "in die Cloud speichern"
+
+#. TRANSLATORS src/views/FilesTab.vue:59
+#: specialVueFakeDummyForL10nScript.js:5699
+msgid "Download Replacement Data"
+msgstr "Ersetzungs-Datensatz laden"
+
+#. TRANSLATORS src/views/FilesTab.vue:65
+#: specialVueFakeDummyForL10nScript.js:5701
+msgid "download data"
+msgstr "Daten laden"
+
+#. TRANSLATORS src/views/FilesTab.vue:72
+#: specialVueFakeDummyForL10nScript.js:5703
+msgid "Sender"
+msgstr "Absender*in"
+
+#. TRANSLATORS src/views/FilesTab.vue:80
+#: specialVueFakeDummyForL10nScript.js:5707
+msgid "e.g. John Doe"
+msgstr "z.B. Max Mustermann"
+
+#. TRANSLATORS src/views/FilesTab.vue:106
+#: specialVueFakeDummyForL10nScript.js:5711
+msgid "Musician's Datebase"
+msgstr "Musiker-Datenbank"
+
+#. TRANSLATORS src/views/FilesTab.vue:115
+#: specialVueFakeDummyForL10nScript.js:5713
+msgid "Addressbooks"
+msgstr "Adressbücher"
+
+#. TRANSLATORS src/views/FilesTab.vue:125
+#: specialVueFakeDummyForL10nScript.js:5715
+msgid "Enter Address"
+msgstr "Anschrift eingeben"
+
+#. TRANSLATORS src/views/FilesTab.vue:154
+#: specialVueFakeDummyForL10nScript.js:5725
+#: templates/settings/share-settings.php:103
+msgid "Contacts"
+msgstr "Kontakte"
+
+#. TRANSLATORS src/views/FilesTab.vue:155
+#: specialVueFakeDummyForL10nScript.js:5727
+msgid "e.g. Bilbo Baggins"
+msgstr "z.B. Bilbo Beutlin"
+
+#. TRANSLATORS src/views/FilesTab.vue:167
+#: specialVueFakeDummyForL10nScript.js:5729
+msgid "Address-Books"
+msgstr "Adressbücher"
 
 #: src/app/ajax.js:84 src/toolkit/util/ajax.js:223
 msgid "Operation cancelled by user."
@@ -16902,10 +17180,6 @@ msgstr "schließen"
 msgid "reopen"
 msgstr "wieder öffnen"
 
-#: templates/fragments/projects/project-mailing-list.php:114
-msgid "delete"
-msgstr "löschen"
-
 #: templates/fragments/projects/project-posters.php:46
 msgid "Project Posters and related Marketing Media"
 msgstr "Projekt-Plakate und sonstige Werbe-Medien"
@@ -17696,8 +17970,8 @@ msgstr "Optionale Bankleitzahl des Orchesterkontos"
 
 #: templates/settings/orchestra-settings.php:183
 msgid ""
-"IBAN or number of the orchestra's bank account. If this is a account number,"
-"then please first enter the BLZ"
+"IBAN or number of the orchestra's bank account. If this is a account "
+"number,then please first enter the BLZ"
 msgstr ""
 "IBAN oder Kontonummer des Orchesterkontos. Falls eine Kontonummer\n"
 "angegeben wird, muss die Bankleitzahl zuerst angegeben werden"
@@ -18006,10 +18280,6 @@ msgstr "#Minuten"
 msgid "Default Duration for Events"
 msgstr "Voreinstellung Termin-Dauer"
 
-#: templates/settings/share-settings.php:103
-msgid "Contacts"
-msgstr "Kontakte"
-
 #: templates/settings/share-settings.php:106
 #: templates/settings/share-settings.php:109
 msgid "addressbook"
@@ -18202,10 +18472,6 @@ msgstr "Orchester"
 #: templates/settings.php:66
 msgid "Sharing"
 msgstr "Sharing"
-
-#: templates/settings.php:67
-msgid "Email"
-msgstr "Email"
 
 #: templates/settings.php:68
 msgid "CMS"
@@ -19091,13 +19357,6 @@ msgid "project registration"
 msgstr "Projekt-Anmeldung"
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::RECORD_ABSENCE_CATEGORY = 'record absence';
-#: lib/Service/EventsService.php:1203
-#, php-format
-msgid "record absence"
-msgstr "Abwesenheit erfassen"
-
-#. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::TEMPLATE_DIR_MAILING_LISTS = 'mailing-lists';
 #: lib/Service/MailingListsService.php:1130
 #, php-format
@@ -19162,138 +19421,6 @@ msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr "Zeigt einfach alle Spalten an."
-
-#~ msgid "Unable to export selected events."
-#~ msgstr "Kann die ausgewählten Termine nicht exportieren."
-
-#~ msgid "Unable to modify the absence field."
-#~ msgstr "Kann das Abwesenheitsfeld nicht modifizieren."
-
-#~ msgid "Unable to detach events from the project."
-#~ msgstr "Kann die Termine nicht vom Projekt lösen."
-
-#~ msgid "Unable to delete events."
-#~ msgstr "Kann die Termine nicht löschen."
-
-#~ msgid "{name} - Appointments"
-#~ msgstr "{name} - Termine"
-
-#~ msgid "Appointments"
-#~ msgstr "Termine"
-
-#~ msgid "create a new appointment"
-#~ msgstr "Einen neuen Termin erstellen"
-
-#~ msgid "mark all events"
-#~ msgstr "alle Termine markieren"
-
-#~ msgid "unmark all events"
-#~ msgstr "alle Markierungen entfernen"
-
-#~ msgid "open email editor"
-#~ msgstr "Termin-Editor öffnen"
-
-#~ msgid "export events"
-#~ msgstr "Termine exportieren"
-
-#~ msgid "reload the project appointments"
-#~ msgstr "Projekt-Termine neu laden"
-
-#~ msgid "no events"
-#~ msgstr "keine Termine"
-
-#~ msgid "detached"
-#~ msgstr "losgelöst"
-
-#~ msgid "act only on this event"
-#~ msgstr "nur dieser Termin"
-
-#~ msgid "act on the event series"
-#~ msgstr "Terminserie"
-
-#~ msgid "act on all related events"
-#~ msgstr "alle zugehörigen Termine"
-
-#~ msgid "mark for download / em@il"
-#~ msgstr "markieren für Em@il / Export"
-
-#~ msgid "open in calendar-app"
-#~ msgstr "in der Kalender-App öffnen"
-
-#~ msgid "detach from project"
-#~ msgstr "vom Projekt lösen"
-
-#~ msgid "reattach to project"
-#~ msgstr "mit dem Projekt verknüpfen"
-
-#~ msgid "** everybody **"
-#~ msgstr "*** alle ***"
-
-#~ msgid "undefined"
-#~ msgstr "nicht definiert"
-
-#~ msgid "Permanent"
-#~ msgstr "Permanent"
-
-#~ msgid "Phone"
-#~ msgstr "Telefon"
-
-#~ msgid "Propability"
-#~ msgstr "Wahrscheinlichkeit"
-
-#~ msgid "Required."
-#~ msgstr "Benötigt."
-
-#~ msgid "File download failed for {fileName}."
-#~ msgstr "Laden der Datei {fileName} ist fehlgeschlagen."
-
-#~ msgid "no response received from {ajaxUrl}"
-#~ msgstr "keine Antwort von {ajaxUrl} erhalten"
-
-#~ msgid "Could not perform mail-merge: {message}"
-#~ msgstr "Konnte die Vorlage nicht ausfüllen: {message}"
-
-#~ msgid "Mail merge operations"
-#~ msgstr "Serienbrief-Operation"
-
-#~ msgid "Download Merged Document"
-#~ msgstr "Ausgefüllte Vorlage laden"
-
-#~ msgid "download locally"
-#~ msgstr "lokal laden"
-
-#~ msgid "Merge Document into Cloud"
-#~ msgstr "Ergebnis in der Cloud speichern"
-
-#~ msgid "save to cloud"
-#~ msgstr "in die Cloud speichern"
-
-#~ msgid "Download Replacement Data"
-#~ msgstr "Ersetzungs-Datensatz laden"
-
-#~ msgid "download data"
-#~ msgstr "Daten laden"
-
-#~ msgid "Sender"
-#~ msgstr "Absender*in"
-
-#~ msgid "e.g. John Doe"
-#~ msgstr "z.B. Max Mustermann"
-
-#~ msgid "Musician's Datebase"
-#~ msgstr "Musiker-Datenbank"
-
-#~ msgid "Addressbooks"
-#~ msgstr "Adressbücher"
-
-#~ msgid "Enter Address"
-#~ msgstr "Anschrift eingeben"
-
-#~ msgid "e.g. Bilbo Baggins"
-#~ msgstr "z.B. Bilbo Beutlin"
-
-#~ msgid "Address-Books"
-#~ msgstr "Adressbücher"
 
 #, php-format
 #~ msgid ""
@@ -19895,8 +20022,8 @@ msgstr "Zeigt einfach alle Spalten an."
 
 #~ msgid "There is already a directory or file with the name \"{dirName}\"."
 #~ msgstr ""
-#~ "Es gibt bereits ein Verzeichnis oder eine Datei mit dem Namen "
-#~ "\"{dirName}\"."
+#~ "Es gibt bereits ein Verzeichnis oder eine Datei mit dem Namen \"{dirName}"
+#~ "\"."
 
 #, php-format
 #~ msgid ""
@@ -21040,8 +21167,8 @@ msgstr "Zeigt einfach alle Spalten an."
 
 #~ msgid ""
 #~ "Save the current email for later re-usal in the data-base.\n"
-#~ "An email template can contain per-member substitutions with the syntax "
-#~ "${MEMBER::VARIABLE},\n"
+#~ "An email template can contain per-member substitutions with the syntax $"
+#~ "{MEMBER::VARIABLE},\n"
 #~ "where VARIABLE is one of VORNAME, NAME, EMAIL, TELEFON_1, TELEFON_2, "
 #~ "STRASSE, PLZ, STADT and LAND.\n"
 #~ "There is also one global (i.e. not per-member) substitution ${GLOAB$this-"
@@ -21050,8 +21177,8 @@ msgstr "Zeigt einfach alle Spalten an."
 #~ "greetings."
 #~ msgstr ""
 #~ "Speichert den aktuellen Text als Vorlage in der Datenbank.\n"
-#~ "Eine Vorlage kann Platzhalter für Mitgliedsdaten enthalten in der Form "
-#~ "${MEMBER::VARIABLE},\n"
+#~ "Eine Vorlage kann Platzhalter für Mitgliedsdaten enthalten in der Form $"
+#~ "{MEMBER::VARIABLE},\n"
 #~ "wobei VARIABLE eines der Schlüsselwörter VORNAME, NAME, EMAIL, TELEFON_1, "
 #~ "TELEFON_2, STRASSE, PLZ, STADT, LAND und GEBURTSTAG\n"
 #~ "sein kann. Es gibt auch eine ``globale'' Variable ${GLOBAL::ORGANIZER},\n"
