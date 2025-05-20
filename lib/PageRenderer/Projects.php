@@ -794,14 +794,18 @@ class Projects extends PMETableViewBase
           try {
             // fetch the basic list-info from the lists-server
             $listInfo = $this->listsService->getListInfo($value);
-            $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
-            if (empty($this->listsService->getListConfig($value, 'emergency'))) {
-              $l10nStatus = $this->l->t($status = 'active');
+            if (empty($listInfo)) {
+                $l10nStatus = $this->l->t($status = 'unset');
             } else {
-              $l10nStatus = $this->l->t($status = 'closed');
+                $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
+                if (empty($this->listsService->getListConfig($value, 'emergency'))) {
+                    $l10nStatus = $this->l->t($status = 'active');
+                } else {
+                    $l10nStatus = $this->l->t($status = 'closed');
+                }
+                $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
+                // $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
             }
-            $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
-            // $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
           } catch (Throwable $t) {
             $this->logException($t, 'Unable to communicate with mailing list server.');
             $l10nStatus = $this->l->t($status = 'unknown');
