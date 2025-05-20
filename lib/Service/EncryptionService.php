@@ -398,7 +398,10 @@ class EncryptionService
         $failCount += 1 - (int)$this->verifyHash($userDatabaseKey, $sysDatabaseKeyHash);
       }
       if ($failCount < 10) {
-        $this->logError('BOGUS HARDWARE OR SOFTWARE ' . $failCount);
+        $this->logError(
+          'BOGUS HARDWARE OR SOFTWARE ' . $failCount,
+          [ 'exception' => new Exceptions\EncryptionException('BOGUS HARDWARE OR SOFTWARE ' . $failCount) ],
+        );
         return true;
       }
       // Failed
