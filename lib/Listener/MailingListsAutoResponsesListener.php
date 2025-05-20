@@ -240,7 +240,7 @@ class MailingListsAutoResponsesListener implements IEventListener
           }
           break;
         } catch (Throwable $t) {
-          $this->logException($t, 'Unable to modify template ' . $template);
+          $this->logException($t, 'Unable to modify template "' . $template . '" for list "' . $list . '".');
         }
       }
     }
