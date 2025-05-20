@@ -26,26 +26,28 @@ namespace OCA\CAFEVDB\Listener;
 
 use Throwable;
 
+use GuzzleHttp\Exception\ClientException;
+
+use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\Files\Events\Node\NodeWrittenEvent;
 use OCP\Files\Events\Node\NodeCopiedEvent;
-use OCP\Files\Events\Node\NodeRenamedEvent;
-use OCP\Files\Events\Node\NodeDeletedEvent;
-use OCP\Files\Events\Node\NodeTouchedEvent;
 use OCP\Files\Events\Node\NodeCreatedEvent;
-use OCP\IUser;
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
-use OCP\IUserSession;
+use OCP\Files\Events\Node\NodeDeletedEvent;
+use OCP\Files\Events\Node\NodeRenamedEvent;
+use OCP\Files\Events\Node\NodeTouchedEvent;
+use OCP\Files\Events\Node\NodeWrittenEvent;
 use OCP\Files\IRootFolder;
-use OCP\AppFramework\IAppContainer;
+use OCP\IL10N;
+use OCP\IUser;
+use OCP\IUserSession;
+use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
@@ -58,12 +60,12 @@ class MailingListsAutoResponsesListener implements IEventListener
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const EVENT = [
-    NodeRenamedEvent::class,
     NodeCopiedEvent::class,
-    NodeWrittenEvent::class,
-    NodeDeletedEvent::class,
-    NodeTouchedEvent::class,
     NodeCreatedEvent::class,
+    NodeDeletedEvent::class,
+    NodeRenamedEvent::class,
+    NodeTouchedEvent::class,
+    NodeWrittenEvent::class,
   ];
 
   const PROJECTS = MailingListsService::TEMPLATE_TYPE_PROJECTS;
@@ -196,6 +198,10 @@ class MailingListsAutoResponsesListener implements IEventListener
         return;
       }
 
+
+      $templateFolderPath = null;
+
+      // determine list-type, announcements, projects
       foreach ([self::ANNOUNCEMENTS, self::PROJECTS] as $listType) {
         $templateFolderPath = $listsService->templateFolderPath($this->l->t($listType));
         $folderPath = $userFolder . $templateFolderPath;
@@ -217,19 +223,26 @@ class MailingListsAutoResponsesListener implements IEventListener
         } else {
           $lists = [ $configService->getConfigValue('announcementsMailingList'), ];
         }
+        break;
+      }
 
-        $template = str_replace(
-          MailingListsService::TEMPLATE_FILE_SEPARATOR,
-          MailingListsService::TEMPLATE_MAILMAN_SEPARATOR,
-          pathinfo($nodeBase, PATHINFO_FILENAME),
-        );
+      if (empty($templateFolderPath)) {
+        $this->logError('Unable to determine the template folder path for template file "' . $nodePath . '".');
+        continue;
+      }
 
+      $template = str_replace(
+        MailingListsService::TEMPLATE_FILE_SEPARATOR,
+        MailingListsService::TEMPLATE_MAILMAN_SEPARATOR,
+        pathinfo($nodeBase, PATHINFO_FILENAME),
+      );
+
+      foreach ($lists as $list) {
+        // try each list in turn but do not bail out on certain types of errors like "not found".
         try {
           if ($key == self::DEL_KEY) {
-            foreach ($lists as $list) {
-              $listsService->setMessageTemplate($list, $template, null);
-              $this->logInfo('Removed ' . $template . ' from list ' . $list);
-            }
+            $listsService->setMessageTemplate($list, $template, null);
+            $this->logInfo('Removed ' . $template . ' from list ' . $list);
           } else {
             $templateFolderBase = basename($templateFolderPath);
             $templateUri = $baseFolderShareUri . '/download?path=/' . $templateFolderBase . '&files=' . $nodeBase;
@@ -238,9 +251,12 @@ class MailingListsAutoResponsesListener implements IEventListener
               $this->logInfo('Added ' . $template . ' to list ' . $list . ', URI ' . $templateUri);
             }
           }
-          break;
         } catch (Throwable $t) {
-          $this->logException($t, 'Unable to modify template "' . $template . '" for list "' . $list . '".');
+          if (($t instanceof ClientException) && $t->getCode() == 404) {
+            $this->logException($t, 'Mailing-list "' . $list . '" probably does not exist on the server.');
+          } else {
+            $this->logException($t, 'Unable to modify template "' . $template . '" for list "' . $list . '".');
+          }
         }
       }
     }
