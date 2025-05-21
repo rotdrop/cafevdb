@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Constants;
 
 /**
  * Listen to renamed and deleted events in order to keep the
@@ -245,7 +246,7 @@ class MailingListsAutoResponsesListener implements IEventListener
             $this->logInfo('Removed ' . $template . ' from list ' . $list);
           } else {
             $templateFolderBase = basename($templateFolderPath);
-            $templateUri = $baseFolderShareUri . '/download?path=/' . $templateFolderBase . '&files=' . $nodeBase;
+            $templateUri = $baseFolderShareUri . Constants::PATH_SEP . $templateFolderBase . Constants::PATH_SEP . $nodeBase;
             foreach ($lists as $list) {
               $listsService->setMessageTemplate($list, $template, $templateUri);
               $this->logInfo('Added ' . $template . ' to list ' . $list . ', URI ' . $templateUri);
