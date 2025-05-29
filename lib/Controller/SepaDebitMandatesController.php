@@ -34,8 +34,9 @@ use OCP\AppFramework\Http\Response;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\IRequest;
 
+use OCA\BAV\Service\BAV as BankAccountValidator;
+
 use OCA\CAFEVDB\Common;
-use OCA\CAFEVDB\Common\BankAccountValidator;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;

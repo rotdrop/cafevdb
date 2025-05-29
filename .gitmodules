@@ -1,13 +1,6 @@
-[submodule "3rdparty/bav"]
-	path = 3rdparty/bav
-	url = git@github.com:rotdrop/bav.git
-	branch = occonf
 [submodule "3rdparty/html2text"]
 	path = 3rdparty/html2text
 	url = https://github.com/mtibben/html2text.git
-[submodule "3rdparty/php-index"]
-	path = 3rdparty/php-index
-	url = https://github.com/bav-php/php-index
 [submodule "3rdparty/php-openssl-cryptor"]
 	path = 3rdparty/php-openssl-cryptor
 	url = https://github.com/ioncube/php-openssl-cryptor.git

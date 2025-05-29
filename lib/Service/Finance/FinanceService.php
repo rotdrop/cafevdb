@@ -24,15 +24,16 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use DateTimeImmutable as DateTime;
 use InvalidArgumentException;
 use RuntimeException;
 
 use Cmixin\BusinessDay;
-use DateTimeImmutable as DateTime;
 use DateTimeInterface;
 use PHP_IBAN;
 
-use OCA\CAFEVDB\Common\BankAccountValidator;
+use OCA\BAV\Service\BAV as BankAccountValidator;
+
 use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
