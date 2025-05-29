@@ -79,7 +79,7 @@ class FilesScan extends \OCA\Files\Command\Scan
   protected function configure():void
   {
     parent::configure();
-    $this->setName('cafevdb:files-scan');
+    $this->setName($this->appName . ':files-scan');
   }
 
   /** {@inheritdoc} */

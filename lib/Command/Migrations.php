@@ -96,7 +96,7 @@ class Migrations extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:migrations')
+      ->setName($this->appName . ':migrations')
       ->setDescription($this->l->t('Manage migrations of the "%s" private database.', $this->appName))
       ->addOption(
         self::ACTION_LIST,

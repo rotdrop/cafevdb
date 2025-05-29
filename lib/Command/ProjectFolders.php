@@ -67,7 +67,7 @@ class ProjectFolders extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:projects:folders')
+      ->setName($this->appName . ':projects:folders')
       ->setDescription('Ensure all or selected project-folders exist.')
       ->addOption(
         'folder',

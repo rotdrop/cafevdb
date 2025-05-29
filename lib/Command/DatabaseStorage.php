@@ -64,7 +64,7 @@ class DatabaseStorage extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:storage:database')
+      ->setName($this->appName . ':storage:database')
       ->setDescription('Maintenance for DB File-System Backend')
       ->addOption(
         'list-storages',

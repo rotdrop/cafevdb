@@ -79,7 +79,7 @@ class ProjectEvents extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:projects:events')
+      ->setName($this->appName . ':projects:events')
       ->setDescription('Ensure consistency of the registered project events.')
       ->addOption(
         'calendar',

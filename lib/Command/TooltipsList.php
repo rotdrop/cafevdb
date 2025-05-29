@@ -52,7 +52,7 @@ class TooltipsList extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:tooltips-list')
+      ->setName($this->appName . ':tooltips-list')
       ->setDescription('List the registered tooltips.');
   }
 

@@ -73,7 +73,7 @@ class SanitizeFilenames extends \OCA\Files\Command\SanitizeFilenames
   protected function configure():void
   {
     parent::configure();
-    $this->setName('cafevdb:sanitize-filenames');
+    $this->setName($this->appName . ':sanitize-filenames');
   }
 
   /** {@inheritdoc} */

@@ -112,7 +112,7 @@ class ExecutiveBoard extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:executiveboard')
+      ->setName($this->appName . ':executiveboard')
       ->setDescription('Ensure the members of the executive board have the necessary access rights.')
       ->addOption(
         'dry',

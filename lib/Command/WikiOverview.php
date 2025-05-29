@@ -60,7 +60,7 @@ class WikiOverview extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:wiki:generate:overview')
+      ->setName($this->appName . ':wiki:generate:overview')
       ->setDescription('Generate the wiki overview page')
       ;
   }

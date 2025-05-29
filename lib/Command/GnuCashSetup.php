@@ -76,7 +76,7 @@ class GnuCashSetup extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:gnucash:setup')
+      ->setName($this->appName . ':gnucash:setup')
       ->setDescription($this->l->t('Establish the connectivity to a given GnuCash MySQL/MariaDB storage.'))
       ->addOption(
         self::OPTION_DRY_RUN,

@@ -87,7 +87,7 @@ class RecurringReceivables extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:projects:participants:receivables')
+      ->setName($this->appName . ':projects:participants:receivables')
       ->setDescription('Manage recurring receivables like insurance fees.')
       ->addOption(
         'project',

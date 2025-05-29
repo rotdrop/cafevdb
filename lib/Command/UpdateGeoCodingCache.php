@@ -63,7 +63,7 @@ class UpdateGeoCodingCache extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:geo-coding:update')
+      ->setName($this->appName . ':geo-coding:update')
       ->setDescription('Update geo-coding cache')
       ->addOption(
         'limit',

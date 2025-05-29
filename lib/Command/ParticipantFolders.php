@@ -66,7 +66,7 @@ class ParticipantFolders extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:projects:participants:generate-folders')
+      ->setName($this->appName . ':projects:participants:generate-folders')
       ->setDescription($this->l->t('Ensure all or selected participant-folders exist.'))
       ->addOption(
         'user',
