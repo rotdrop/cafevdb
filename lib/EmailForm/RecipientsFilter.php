@@ -97,7 +97,7 @@ class RecipientsFilter
   private const SESSION_HISTORY_KEY = 'filterHistory';
   private const HISTORY_KEYS = [
     self::BASIC_RECIPIENTS_SET_KEY,
-    'memberStatusFilter',
+    'participationStatusFilter',
     'instrumentsFilter',
     'selectedRecipients'
   ];
@@ -124,7 +124,7 @@ class RecipientsFilter
   private $instrumentsFilter; // Current instrument filter
   private $userBase;    // Select from either project members and/or
   // all musicians w/o project-members
-  private $memberFilter;// passive, regular, soloist, conductor, temporary
+  private $participationStatusFilter;// passive, regular, soloist, conductor, temporary
   private $emailRecs;   // Copy of email records from CGI env
   private $emailKey;    // Key for EmailsRecs into _POST or _GET
 
@@ -157,7 +157,7 @@ class RecipientsFilter
   private $frozen;      // Only allow the preselected recipients (i.e. for debit notes)
 
   // Form elements
-  private $memberStatusNames;
+  private $participationStatusNames;
 
   private $cgiData;   // copy of cgi-data
   private $submitted; // form has been submitted
@@ -307,8 +307,8 @@ class RecipientsFilter
 
     $this->remapEmailRecords();
     $this->determineUserBase();
-    $this->getMemberStatusNames();
-    $this->initMemberStatusFilter();
+    $this->getParticiationStatusNames();
+    $this->initParticiationStatusFilter();
     $this->getInstrumentsFromDB();
     $this->fetchInstrumentsFilter();
     $this->getMusiciansFromDB();
@@ -324,9 +324,9 @@ class RecipientsFilter
           && !$this->announcementsMailingList() && !$this->projectMailingList()
           && ($previousRecipientSet[self::EXCEPT_PROJECT_KEY] != $this->recipientsExceptProject())) {
         // if in project mode and not using a mailing list and posting to/not
-        // to the non-participants has changed then reset the member-status
+        // to the non-participants has changed then reset the participation-status
         // filter.
-        $this->memberFilter = $this->defaultByStatus();
+        $this->participationStatusFilter = $this->defaultByParticipationStatus();
       }
       // add the current selection to the history if it is different
       // from the previous filter selection (i.e.: no-ops like
@@ -372,7 +372,7 @@ class RecipientsFilter
 
     $filter = [
       self::BASIC_RECIPIENTS_SET_KEY => $this->basicRecipientsSet(),
-      'memberStatusFilter' => $this->defaultByStatus(),
+      'participationStatusFilter' => $this->defaultByParticipationStatus(),
       'instrumentsFilter' => [],
       'selectedRecipients' => array_intersect(
         $this->emailRecs,
@@ -624,7 +624,7 @@ class RecipientsFilter
    * Form an associative array with the keys
    * - name (full name)
    * - email
-   * - status (MemberStatus)
+   * - status (ParticiationStatus)
    * - dbdata (data as returned from the DB for variable substitution)
    * The function fills $this->eMails, $this->eMailsDpy
    *
@@ -645,7 +645,7 @@ class RecipientsFilter
     if ($this->frozen && $this->projectId > 0) {
       $criteria[] = [ 'id' => $this->emailRecs ];
     }
-    $criteria[] = [ '!memberStatus' => $this->memberStatusBlackList() ];
+    $criteria[] = [ '!participationStatus' => $this->participationStatusBlackList() ];
 
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
 
@@ -674,7 +674,8 @@ class RecipientsFilter
 
             }
           } else {
-            $isParticipant = $this->projectId > 0 && $musician->isMemberOf($this->projectId);
+            $participant = !empty($this->project) ? $musician->getProjectParticipantOf($this->project) : null;
+            $isParticipant = !empty($participant);
             $isNonParticipant = $this->projectId > 0 && !$isParticipant;
             $userBase = 0;
             if ($isParticipant) {
@@ -682,10 +683,15 @@ class RecipientsFilter
             } elseif ($isNonParticipant) {
               $userBase |= self::MUSICIANS_EXCEPT_PROJECT;
             }
+            if ($isParticipant) {
+              $status = $participant->getParticipationStatus();
+            } else {
+              $status = $musician->getDefaultParticipationStatus();
+            }
             $emailRecord = [
               'email'   => $emailVal,
               'name'    => $displayName,
-              'status'  => $musician['memberStatus'],
+              'status'  => $status,
               'project' => $this->projectId ?? 0,
               'participant' => $isParticipant,
               'userBase' => $userBase,
@@ -815,35 +821,35 @@ class RecipientsFilter
   }
 
   /**
-   * @return array The default by-member-status filter as positive list.
+   * @return array The default by-participation-status filter as positive list.
    */
-  private function defaultByStatus():array
+  private function defaultByParticipationStatus():array
   {
     if ($this->frozen) {
-      if (!$this->memberStatusNames) {
-        $this->memberStatusNames = [];
+      if (!$this->participationStatusNames) {
+        $this->participationStatusNames = [];
       }
-      return array_keys($this->memberStatusNames);
+      return array_keys($this->participationStatusNames);
     }
-    $byStatusDefault = [ 'regular' ];
+    $byStatusDefault = [ DBTypes\EnumParticipationStatus::REGULAR ];
     if ($this->projectId > 0 && !$this->recipientsExceptProject()) {
-      $byStatusDefault[] = DBTypes\EnumMemberStatus::PASSIVE;
-      $byStatusDefault[] = DBTypes\EnumMemberStatus::TEMPORARY;
+      $byStatusDefault[] = DBTypes\EnumParticipationStatus::PASSIVE;
+      $byStatusDefault[] = DBTypes\EnumParticipationStatus::TEMPORARY;
     }
     return $byStatusDefault;
   }
 
   /**
-   * Fill $this->memberStatusNames with values.
+   * Fill $this->participationStatusNames with values.
    *
    * @return void
    */
-  private function getMemberStatusNames():void
+  private function getParticiationStatusNames():void
   {
-    $memberStatus = DBTypes\EnumMemberStatus::toArray();
-    foreach ($memberStatus as $tag) {
-      if (!isset($this->memberStatusNames[$tag])) {
-        $this->memberStatusNames[$tag] = $this->l->t('member status '.$tag);
+    $participationStatus = DBTypes\EnumParticipationStatus::toArray();
+    foreach ($participationStatus as $tag) {
+      if (!isset($this->participationStatusNames[$tag])) {
+        $this->participationStatusNames[$tag] = $this->l->t('member status '.$tag);
       }
     }
   }
@@ -854,18 +860,18 @@ class RecipientsFilter
    *
    * @return void
    */
-  private function initMemberStatusFilter():void
+  private function initParticiationStatusFilter():void
   {
-    $this->memberFilter = $this->cgiValue(
-      'memberStatusFilter',
-      $this->submitted ? [] : $this->defaultByStatus());
+    $this->participationStatusFilter = $this->cgiValue(
+      'participationStatusFilter',
+      $this->submitted ? [] : $this->defaultByParticipationStatus());
   }
 
   /** @return array Form a SQL filter expression for the member status. */
-  private function memberStatusBlackList():array
+  private function participationStatusBlackList():array
   {
-    $allStatusFlags = array_keys($this->memberStatusNames);
-    $statusBlackList = array_diff($allStatusFlags, $this->memberFilter);
+    $allStatusFlags = array_keys($this->participationStatusNames);
+    $statusBlackList = array_diff($allStatusFlags, $this->participationStatusFilter);
     return $statusBlackList;
   }
 
@@ -1046,16 +1052,16 @@ class RecipientsFilter
    * @return The current value of the member status filter or its initial
    * value.
    */
-  public function memberStatusFilter():array
+  public function participationStatusFilter():array
   {
-    $memberStatus = $this->memberFilter;
-    $memberStatus = array_flip($memberStatus);
+    $participationStatus = $this->participationStatusFilter;
+    $participationStatus = array_flip($participationStatus);
     $result = [];
-    foreach ($this->memberStatusNames as $tag => $name) {
+    foreach ($this->participationStatusNames as $tag => $name) {
       $result[] =  [
         'value' => $tag,
         'name' => $name,
-        'flags' => isset($memberStatus[$tag]) ? PageNavigation::SELECTED : 0,
+        'flags' => isset($participationStatus[$tag]) ? PageNavigation::SELECTED : 0,
       ];
     }
     return $result;
@@ -1349,9 +1355,9 @@ class RecipientsFilter
     if (!empty($this->instrumentsFilter)) {
       return false;
     }
-    $defaultByStatus = $this->defaultByStatus();
-    $memberFilter = $this->memberFilter ?? [];
-    if (array_diff($defaultByStatus, $memberFilter) !== array_diff($memberFilter, $defaultByStatus)) {
+    $defaultByParticipationStatus = $this->defaultByParticipationStatus();
+    $participationStatusFilter = $this->participationStatusFilter ?? [];
+    if (array_diff($defaultByParticipationStatus, $participationStatusFilter) !== array_diff($participationStatusFilter, $defaultByParticipationStatus)) {
       return false;
     }
 
@@ -1399,9 +1405,9 @@ class RecipientsFilter
       return false;
     }
 
-    $defaultByStatus = $this->defaultByStatus();
-    $memberFilter = $this->memberFilter ?? [];
-    if (array_intersect($memberFilter, $defaultByStatus) !== $defaultByStatus) {
+    $defaultByParticipationStatus = $this->defaultByParticipationStatus();
+    $participationStatusFilter = $this->participationStatusFilter ?? [];
+    if (array_intersect($participationStatusFilter, $defaultByParticipationStatus) !== $defaultByParticipationStatus) {
       // intentionally not for the list as less than the default status type
       // were addressed
       $this->logInfo('MEMBER FILTER INCOMPATIBLE');

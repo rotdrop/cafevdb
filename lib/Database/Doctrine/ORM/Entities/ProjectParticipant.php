@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,21 +24,17 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Events;
-
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
-
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-
-use OCA\CAFEVDB\Database\EntityManager;
 
 /**
  * Entity for project participants.
@@ -76,6 +72,12 @@ class ProjectParticipant implements \ArrayAccess
    */
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => '0', 'comment' => 'Participant has confirmed the registration.'])]
   private $registration = '0';
+
+  /**
+   * @var Types\EnumParticipationStatus
+   */
+  #[ORM\Column(type: 'EnumParticipationStatus', nullable: false, options: ['default' => 'regular'])]
+  private $participationStatus;
 
   /**
    * @var Collection
@@ -120,6 +122,7 @@ class ProjectParticipant implements \ArrayAccess
     $this->projectInstruments = new ArrayCollection();
     $this->musician = $musician;
     $this->project = $project;
+    $this->participationStatus = $musician ? $musician->getDefaultParticipationStatus() : Types\ParticipationStatus::REGULAR();
   }
   // phpcs:enable
 
@@ -193,6 +196,30 @@ class ProjectParticipant implements \ArrayAccess
   public function getRegistration()
   {
     return $this->registration;
+  }
+
+  /**
+   * Set participationStatus.
+   *
+   * @param string|Types\EnumParticipationStatus $participationStatus
+   *
+   * @return ProjectParticipant
+   */
+  public function setParticipationStatus(string|Types\EnumParticipationStatus $participationStatus):ProjectParticipant
+  {
+    $this->participationStatus = $participationStatus;
+
+    return $this;
+  }
+
+  /**
+   * Get participationStatus.
+   *
+    * @return Types\EnumParticipationStatus
+   */
+  public function getParticipationStatus():Types\EnumParticipationStatus
+  {
+    return $this->participationStatus;
   }
 
   /**

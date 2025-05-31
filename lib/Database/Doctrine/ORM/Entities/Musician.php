@@ -30,18 +30,17 @@ use InvalidArgumentException;
 
 use GenderDetector;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Musician
@@ -212,10 +211,10 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $emailAddresses;
 
   /**
-   * @var Types\EnumMemberStatus|null
+   * @var Types\EnumParticipationStatus|null
    */
-  #[ORM\Column(type: 'EnumMemberStatus', nullable: false, options: ['default' => 'regular'])]
-  private $memberStatus;
+  #[ORM\Column(type: 'EnumParticipationStatus', nullable: false, options: ['default' => 'regular'])]
+  private $defaultParticipationStatus;
 
   /**
    * @var string|null
@@ -251,13 +250,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => 1])]
   private $cloudAccountDisabled;
-
-  /**
-   * @var LegalPerson
-   */
-  // #[ORM\JoinColumn(name: 'legal_person_id', referencedColumnName: 'id', nullable: true)]
-  #[ORM\OneToOne(targetEntity: LegalPerson::class, mappedBy: 'musician', cascade: ['remove'], orphanRemoval: true)]
-  private $legalPerson;
 
   #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'musician', cascade: ['remove'], orphanRemoval: true)]
   #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
@@ -316,8 +308,10 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
     $this->encryptedFiles = new ArrayCollection();
+    $this->invoices = new ArrayCollection();
+    $this->originatedInvoices = new ArrayCollection();
 
-    $this->memberStatus = Types\EnumMemberStatus::REGULAR();
+    $this->defaultParticipationStatus = Types\EnumParticipationStatus::REGULAR();
 
     $this->setUpdated(new DateTimeImmutable());
     $this->setCreated(new DateTimeImmutable());
@@ -799,27 +793,27 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set memberStatus.
+   * Set participationStatus.
    *
-   * @param string|EnumMemberStatus $memberStatus
+   * @param string|Types\EnumParticipationStatus $participationStatus
    *
    * @return Musician
    */
-  public function setMemberStatus($memberStatus):Musician
+  public function setDefaultParticipationStatus($participationStatus):Musician
   {
-    $this->memberStatus = new Types\EnumMemberStatus($memberStatus);
+    $this->defaultParticipationStatus = new Types\EnumParticipationStatus($participationStatus);
 
     return $this;
   }
 
   /**
-   * Get memberStatus.
+   * Get participationStatus.
    *
-   * @return EnumMemberStatus
+   * @return EnumParticipationStatus
    */
-  public function getMemberStatus():Types\EnumMemberStatus
+  public function getDefaultParticipationStatus():Types\EnumParticipationStatus
   {
-    return $this->memberStatus;
+    return $this->defaultParticipationStatus;
   }
 
   /**
@@ -1035,7 +1029,8 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Return the project-participant entity for the given project or null
+   * Return the project-participant entity for the given project or null if
+   * $this is not a participant.
    *
    * @param int|Project $projectOrId
    *
@@ -1398,6 +1393,54 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * Set organization.
+   *
+   * @param string|null $organization
+   *
+   * @return Musician
+   */
+  public function setOrganization(?string $organization):Musician
+  {
+    $this->organization = $organization;
+
+    return $this;
+  }
+
+  /**
+   * Get organization.
+   *
+   * @return string
+   */
+  public function getOrganization():?string
+  {
+    return $this->organization;
+  }
+
+  /**
+   * Set addressBookUri.
+   *
+   * @param string|null $addressBookUri
+   *
+   * @return Musician
+   */
+  public function setAddressBookUri(?string $addressBookUri):Musician
+  {
+    $this->addressBookUri = $addressBookUri;
+
+    return $this;
+  }
+
+  /**
+   * Get addressBookUri.
+   *
+   * @return string
+   */
+  public function getAddressBookUri():?string
+  {
+    return $this->addressBookUri;
+  }
+
+  /**
    * Set rowAccessToken.
    *
    * @param string|null $rowAccessToken
@@ -1414,35 +1457,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Get rowAccessToken.
    *
-   * @return LegalPerson
+   * @return null|MusicianRowAccessToken
    */
   public function getRowAccessToken():?MusicianRowAccessToken
   {
     return $this->rowAccessToken;
-  }
-
-  /**
-   * Set legalPerson.
-   *
-   * @param string|null $legalPerson
-   *
-   * @return Musician
-   */
-  public function setLegalPerson(?LegalPerson $legalPerson):Musician
-  {
-    $this->legalPerson = $legalPerson;
-
-    return $this;
-  }
-
-  /**
-   * Get legalPerson.
-   *
-   * @return MusicianLegalPerson
-   */
-  public function getLegalPerson():?LegalPerson
-  {
-    return $this->legalPerson;
   }
 
   /**
@@ -1454,7 +1473,10 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function usage():int
   {
-    return $this->payments->count() + $this->projectParticipation->count();
+    return $this->payments->count()
+      + $this->projectParticipation->count()
+      + $this->invoices->count()
+      + $this->originatedInvoices->count();
   }
 
   /** {@inheritdoc} */

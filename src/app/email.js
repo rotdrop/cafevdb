@@ -219,9 +219,9 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
     return;
   }
 
-  const $memberStatusFilter = fieldset.find('#member-status-filter');
-  $memberStatusFilter.selectize(selectizeOptions);
-  // $memberStatusFilter.chosen();
+  const $participationStatusFilter = fieldset.find('#participation-status-filter');
+  $participationStatusFilter.selectize(selectizeOptions);
+  // $participationStatusFilter.chosen();
 
   const $instrumentsFilter = fieldset.find('#instruments-filter');
   $instrumentsFilter.selectize(selectizeOptions);
@@ -286,8 +286,8 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   const noMissingLabel = fieldset.find('.missing-email-addresses.label.empty');
   const instrumentsFilter = fieldset.find('.instruments-filter.' + appPrefix('container'));
   const instrumentsSelect = instrumentsFilter.find('select');
-  const memberStatusFilter = fieldset.find('.member-status-filter.' + appPrefix('container'));
-  const memberStatusSelect = memberStatusFilter.find('select');
+  const participationStatusFilter = fieldset.find('.participation-status-filter.' + appPrefix('container'));
+  const participationStatusSelect = participationStatusFilter.find('select');
   const filterHistoryInput = fieldset.find('#recipients-filter-history');
   const debugOutput = form.find('#emailformdebug');
   const busyIndicator = fieldset.find('.busy-indicator');
@@ -350,7 +350,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
             'missingEmailAddresses',
             'filterHistory',
             'instrumentsFilter',
-            'memberStatusFilter',
+            'participationStatusFilter',
           ];
         if (!ajaxValidateResponse(data, requiredResponse)) {
           parameters.cleanup();
@@ -391,8 +391,8 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
           // update the instruments filter
           SelectUtils.replaceOptions(instrumentsSelect, data.instrumentsFilter);
 
-          // update the member-status filter
-          SelectUtils.replaceOptions(memberStatusSelect, data.memberStatusFilter);
+          // update the participation-status filter
+          SelectUtils.replaceOptions(participationStatusSelect, data.participationStatusFilter);
 
           resize = true;
         }
@@ -478,7 +478,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     });
 
   // Member status filter
-  memberStatusFilter
+  participationStatusFilter
     .off('change')
     .on('change', function(event) {
       readonlyFilterControls(true);

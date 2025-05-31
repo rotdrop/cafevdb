@@ -133,7 +133,7 @@ class AddMusicians extends Musicians
 
     $this->logDebug('FDD ARRAY ' . print_r(array_keys($opts['fdd']), true));
 
-    ++$opts['cgi']['persist']['memberStatusFddIndex'];
+    ++$opts['cgi']['persist']['participationStatusFddIndex'];
     ++$opts['cgi']['persist']['instrummentsFddIndex'];
 
     //$key = PHPMyEdit::QUERY_FIELD . $projectsIdx;

@@ -659,16 +659,16 @@ abstract class Musicians extends PMETableViewBase
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
      */
-    $memberStatusFddIndex = count($opts['fdd']);
-    $opts['fdd']['member_status'] = [
-      'name'    => strval($this->l->t('Email Status')),
+    $participationStatusFddIndex = count($opts['fdd']);
+    $opts['fdd']['default_participation_status'] = [
+      'name'    => strval($this->l->t('Default Email Status')),
       'tab'     => [ 'id' => [ 'orchestra' ] ],
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
       'css'     => [ 'postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
-      'values2' => Types\EnumMemberStatus::getL10NValues($this->l),
-      'tooltip' => $this->toolTipsService['page-renderer:musicians:member-status'],
+      'values2' => Types\EnumParticipationStatus::getL10NValues($this->l),
+      'tooltip' => $this->toolTipsService['page-renderer:musicians:participation-status'],
     ];
 
     $opts['fdd']['cloud_account_deactivated'] = [
@@ -1042,7 +1042,7 @@ abstract class Musicians extends PMETableViewBase
 
     // The following are in order to aid the email form to extract
     // pre-selected musiancs from the form-data.
-    $opts['cgi']['persist']['memberStatusFddIndex'] = $memberStatusFddIndex;
+    $opts['cgi']['persist']['participationStatusFddIndex'] = $participationStatusFddIndex;
     $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
 
     return [ 'opts' => $opts, 'joinTables' => $joinTables ];

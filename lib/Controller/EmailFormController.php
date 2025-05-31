@@ -106,19 +106,19 @@ class EmailFormController extends Controller
   ):DataResponse {
 
     // try to fetch filter information from the base-table if possible.
-    $idx = $this->request['memberStatusFddIndex'];
-    $memberStatusFilter = $this->request[$this->pme->cgiSysName('qf' . $idx . '_idx')];
+    $idx = $this->request['participationStatusFddIndex'];
+    $participationStatusFilter = $this->request[$this->pme->cgiSysName('qf' . $idx . '_idx')];
 
     $idx = $this->request['instrummentsFddIndex'];
     $instrumentsFilter = $this->request[$this->pme->cgiSysName('qf' . $idx . '_idx')];
 
-    $this->logInfo('MEMBER / INSTRUMENTS ' . print_r($memberStatusFilter, true) . ' / ' . print_r($instrumentsFilter, true));
+    $this->logInfo('MEMBER / INSTRUMENTS ' . print_r($participationStatusFilter, true) . ' / ' . print_r($instrumentsFilter, true));
     $recipientsFilterCGI = $this->request->getParam(RecipientsFilter::POST_TAG, []);
     if (!empty($instrumentsFilter)) {
       $recipientsFilterCGI['instrumentsFilter'] = $instrumentsFilter;
     }
-    if (!empty($memberStatusFilter)) {
-      $recipientsFilterCGI['memberStatusFilter'] = $memberStatusFilter;
+    if (!empty($participationStatusFilter)) {
+      $recipientsFilterCGI['participationStatusFilter'] = $participationStatusFilter;
     }
 
     $requestParameters = $this->request->getParams();
@@ -187,7 +187,7 @@ class EmailFormController extends Controller
       // Needed for the recipient selection
       'recipientsFormData' => $recipientsFilter->formData(),
       'filterHistory' => $recipientsFilter->filterHistory(),
-      'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
+      'participationStatusFilter' => $recipientsFilter->participationStatusFilter(),
       'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
       'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
       'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
@@ -514,7 +514,7 @@ class EmailFormController extends Controller
               // Needed for the recipient selection
               'recipientsFormData' => $recipientsFilter->formData(),
               'filterHistory' => $filterHistory,
-              'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
+              'participationStatusFilter' => $recipientsFilter->participationStatusFilter(),
               'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
               'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
               'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
@@ -637,7 +637,7 @@ class EmailFormController extends Controller
               // Needed for the recipient selection
               'recipientsFormData' => $recipientsFilter->formData(),
               'filterHistory' => $filterHistory,
-              'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
+              'participationStatusFilter' => $recipientsFilter->participationStatusFilter(),
               'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
               'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
               'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
@@ -817,7 +817,7 @@ class EmailFormController extends Controller
         // Needed for the recipient selection
         'recipientsFormData' => $recipientsFilter->formData(),
         'filterHistory' => $filterHistory,
-        'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
+        'participationStatusFilter' => $recipientsFilter->participationStatusFilter(),
         'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
         'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
         'emailRecipientsChoices' => $recipientsFilter->emailRecipientsChoices(),
@@ -840,7 +840,7 @@ class EmailFormController extends Controller
         'contents' => $contents,
         // remaining parameter are expected by JS code and need to be there
         'instrumentsFilter' => '',
-        'memberStatusFilter' => '',
+        'participationStatusFilter' => '',
         'recipientsOptions' => '',
         'missingEmailAddresses' => '',
         'filterHistory' => '',
@@ -862,9 +862,9 @@ class EmailFormController extends Controller
       ],
     )->render();
 
-    $memberStatusFilter = $this->templateResponse(
-      'emailform/part.member-status-filter', [
-        'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
+    $participationStatusFilter = $this->templateResponse(
+      'emailform/part.participation-status-filter', [
+        'participationStatusFilter' => $recipientsFilter->participationStatusFilter(),
       ],
     )->render();
 
@@ -875,7 +875,7 @@ class EmailFormController extends Controller
       'missingEmailAddresses' => $missingEmailAddresses,
       'filterHistory' => $filterHistory,
       'instrumentsFilter' => $instrumentsFilter,
-      'memberStatusFilter' => $memberStatusFilter,
+      'participationStatusFilter' => $participationStatusFilter,
       // remaining parameter is expected by JS code and needs to be there
       'contents' => '',
     ]);

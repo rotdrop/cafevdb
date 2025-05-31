@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus;
 use OCA\CAFEVDB\Events\PostPersistMusicianEmail;
 
 /**

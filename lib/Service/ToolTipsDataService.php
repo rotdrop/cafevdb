@@ -396,7 +396,7 @@ give you the choice to select any musician as recipient.'),
               'database' => self::t('Post to the musicians registered in the database. Unless instrument-filters are active or specific recipients are explicitly selected the global announcement mailing list should be preferred for @all emails.'),
             ],
 
-            'member-status' => self::t('Select recipients by member status. Normally, conductors and soloists
+            'participation-status' => self::t('Select recipients by member status. Normally, conductors and soloists
 are excluded from receiving mass-email. Please be careful when modifying the default selection!'),
             'apply' => self::t('Apply the currently selected instruments as filter. At your option,
 -you can also simply double-click inside the boxed filter-region in order to activate your filter-choice.'),
@@ -512,7 +512,7 @@ make sure that the musicians are also automatically added to the
             ],
           ],
 
-          'member-status' => self::t('A flag which indicates not so much social or functional status, but
+          'participation-status' => self::t('A flag which indicates not so much social or functional status, but
 default behaviour for mass-emails as follows
 <br/>
 <dl>

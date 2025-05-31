@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@
  *
  * ProjectId:   project Id if in project mode, otherwise -1
  *
- * EmailRecipientsChoices, MemberStatusFilter, InstrumentsFilter
+ * EmailRecipientsChoices, ParticipantStatusFilter, InstrumentsFilter
  * array suitable to be fed int o Navigation::selectOptions()
  *
  * MissingEmailAdresses: flat array of musician without email, displayed
@@ -253,24 +253,24 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
     <div class="spacer"></div>
   <?php } /* !($projectId > 0 && $frozen) */ ?>
   <div class="cafevdb-email-form <?php p($rowClass); ?> flex-container flex-justify-full flex-start">
-    <span class="member-status-filter <?php p($containerClass); ?> left vmiddle tooltip-right"
-          title="<?php echo $toolTips['emailform:recipients:filter:member-status']; ?>"
+    <span class="participation-status-filter <?php p($containerClass); ?> left vmiddle tooltip-right"
+          title="<?php echo $toolTips['emailform:recipients:filter:participation-status']; ?>"
     >
       <span class="label top">
-        <label for="member-status-filter"
+        <label for="participation-status-filter"
                >
           <?php echo $l->t('Recipient-Status'); ?>
         </label>
       </span>
-      <select id="member-status-filter"
+      <select id="participation-status-filter"
               multiple="multiple"
-              size="<?php echo count($memberStatusFilter); ?>"
-              class="member-status-filter"
+              size="<?php echo count($participationStatusFilter); ?>"
+              class="participation-status-filter"
               data-placeholder="<?php echo $l->t('Select Members by Status'); ?>"
-              name="emailRecipients[memberStatusFilter][]"
+              name="emailRecipients[participationStatusFilter][]"
               <?php p($filterReadonly); ?>
       >
-        <?php echo $this->inc('emailform/part.member-status-filter', []); ?>
+        <?php echo $this->inc('emailform/part.participation-status-filter', []); ?>
       </select>
     </span>
     <span class="instruments-filter <?php p($containerClass); ?> right vmiddle tooltip-left"

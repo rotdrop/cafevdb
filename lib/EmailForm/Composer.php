@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus as MemberStatus;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -2780,8 +2780,8 @@ Störung.';
             $phpMailer->addBCC($recipient['email'], $recipient['name']);
           } else {
             // open recipients list is requested, still some recipients are hidden.
-            if ($recipient['status'] == MemberStatus::CONDUCTOR ||
-                $recipient['status'] == MemberStatus::SOLOIST) {
+            if ($recipient['status'] == ParticipationStatus::CONDUCTOR ||
+                $recipient['status'] == ParticipationStatus::SOLOIST) {
               $phpMailer->addBCC($recipient['email'], $recipient['name']);
             } else {
               $phpMailer->addAddress($recipient['email'], $recipient['name']);
@@ -3291,8 +3291,8 @@ Störung.';
           $phpMailer->addBCC($recipient['email'], $recipient['name']);
         } else {
           // open recipients list is requested, still some recipients are hidden.
-          if ($recipient['status'] == MemberStatus::CONDUCTOR ||
-              $recipient['status'] == MemberStatus::SOLOIST) {
+          if ($recipient['status'] == ParticipationStatus::CONDUCTOR ||
+              $recipient['status'] == ParticipationStatus::SOLOIST) {
             $phpMailer->addBCC($recipient['email'], $recipient['name']);
           } else {
             $phpMailer->addAddress($recipient['email'], $recipient['name']);

@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus as MemberStatus;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Exceptions;
 
@@ -2102,6 +2102,7 @@ Whatever.',
 
       // The musician exists and is not already registered, so add it.
       $participant = new Entities\ProjectParticipant(musician: $musician, project: $project);
+
       $this->persist($participant);
       $musician->getProjectParticipation()->set($project->getId(), $participant);
       $project->getParticipants()->set($musician->getId(), $participant);
@@ -2409,6 +2410,12 @@ Whatever.',
    */
   public function ensureMailingListSubscription(Entities\ProjectParticipant $participant):?bool
   {
+    $participationStatus = $participant->getParticipationStatus();
+    if ($participationStatus == ParticipationStatus::ASSOCIATE) {
+      // this is intended to flag something like a business relation -> no mailing list.
+      return null;
+    }
+
     $listId = $participant->getProject()->getMailingListId();
     $musician = $participant->getMusician();
     $principalEmail = $musician->getEmail();
@@ -2424,10 +2431,10 @@ Whatever.',
     }
 
     $displayName = $participant->getPublicName(firstNameFirst: true);
-    $memberStatus = $participant->getMusician()->getMemberStatus();
-    $deliveryStatus = ($memberStatus == MemberStatus::CONDUCTOR
-        || $memberStatus == MemberStatus::SOLOIST
-      || $memberStatus == MemberStatus::TEMPORARY)
+    $deliveryStatus = ($participationStatus == ParticipationStatus::CONDUCTOR
+        || $participationStatus == ParticipationStatus::ASSOCIATE
+        || $participationStatus == ParticipationStatus::SOLOIST
+      || $participationStatus == ParticipationStatus::TEMPORARY)
       ? MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER
       : MailingListsService::DELIVERY_STATUS_ENABLED;
 

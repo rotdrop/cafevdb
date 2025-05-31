@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2023, 2025 Claus-Justus Heine
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
  */
 
 /**
- * @param array $memberStatusFilter
+ * @param array $participationStatusFilter
  *
  * @file PHP snippet to render the member status filter
  */
@@ -32,4 +32,4 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
-echo PageNavigation::selectOptions($memberStatusFilter);
+echo PageNavigation::selectOptions($participationStatusFilter);

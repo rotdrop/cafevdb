@@ -952,22 +952,32 @@ class ProjectParticipants extends PMETableViewBase
      *
      **************************************************************************
      *
-     * member-status from the musicians table
+     * participation-status from the musicians table
      *
      */
 
-    /* Make "Status" a set, 'soloist','conductor','noemail', where in
-     * general the first two imply the last.
-     */
-    list($memberStatusFddIndex,) = $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'member_status',
+    $participationStatusFddIndex = count($opts['fdd']);
+    $opts['fdd']['participation_status'] = [
+      'name'    => strval($this->l->t('Email Status')),
+      // 'tab'     => [ 'id' => [ 'orchestra' ] ],
+      'select'  => 'D',
+      'maxlen'  => 128,
+      'sort'    => true,
+      'css'     => [ 'postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
+      'values2' => Types\EnumParticipationStatus::getL10NValues($this->l),
+      'tooltip' => $this->toolTipsService['page-renderer:musicians:participation-status'],
+    ];
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'default_participation_status',
       [
         'name'    => $this->l->t('Email Status'),
         'select'  => 'D',
         'maxlen'  => 128,
+        'input'   => 'HR',
         'css'     => ['postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
-        'values2' => Types\EnumMemberStatus::getL10NValues($this->l),
-        'tooltip' => $this->toolTipsService['page-renderer:musicians:member-status'],
+        'values2' => Types\EnumParticipationStatus::getL10NValues($this->l),
+        'tooltip' => $this->toolTipsService['page-renderer:musicians:participation-status'],
       ]);
 
     // soft-deleted musician kept to keep the instrumentation for the old project
@@ -1345,7 +1355,7 @@ class ProjectParticipants extends PMETableViewBase
 
     // The following are in order to aid the email form to extract
     // pre-selected musiancs from the form-data.
-    $opts['cgi']['persist']['memberStatusFddIndex'] = $memberStatusFddIndex;
+    $opts['cgi']['persist']['participationStatusFddIndex'] = $participationStatusFddIndex;
     $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
 
     $opts = $this->mergeDefaultOptions($opts);
