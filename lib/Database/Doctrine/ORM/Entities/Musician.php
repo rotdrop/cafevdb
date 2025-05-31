@@ -305,6 +305,23 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
   protected ?DateTimeInterface $updated;
 
+  /**
+   * @var string
+   *
+   * If non null then this is the URI of an address-book which is the primary source
+   * of the contact data.
+   */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
+  private $addressBookUri;
+
+  /**
+   * @var string
+   *
+   * If non null then this contact refers to an organization.
+   */
+  #[ORM\Column(type: 'string', length: 1024, nullable: true)]
+  private $organization;
+
   /** {@inheritdoc} */
   public function __construct()
   {
