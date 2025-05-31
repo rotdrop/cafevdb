@@ -288,6 +288,18 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $encryptedFiles;
 
   /**
+   * @var Collection
+   */
+  #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'debitor', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+  private $invoices;
+
+  /**
+   * @var Collection
+   */
+  #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'originator', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+  private $originatedInvoices;
+
+  /**
    * @var null|DateTimeImmutable
    */
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]

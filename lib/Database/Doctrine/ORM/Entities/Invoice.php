@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -62,8 +62,8 @@ class Invoice implements JsonSerializable, ArrayAccess
    *
    * The victim of the invoice issued.
    */
-  #[ORM\ManyToOne(targetEntity: LegalPerson::class, inversedBy: 'invoices')]
-  private LegalPerson $debitor;
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'invoices')]
+  private Musician $debitor;
 
   /**
    * @var LegalPerson
@@ -72,8 +72,8 @@ class Invoice implements JsonSerializable, ArrayAccess
    * to tie address-fields to convenience methods of the LegalPerson entity,
    * so better use it here.
    */
-  #[ORM\ManyToOne(targetEntity: LegalPerson::class, inversedBy: 'originatedInvoices')]
-  private LegalPerson $originator;
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'originatedInvoices')]
+  private Musician $originator;
 
   /**
    * @var \DateTimeImmutable

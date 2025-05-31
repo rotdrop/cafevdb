@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -155,7 +155,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    *
    * @param CompositePayment $donation
    *
-   * @return LegalPerson
+   * @return DonationReceipt
    */
   public function setDonation(CompositePayment $donation):DonationReceipt
   {
@@ -179,7 +179,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    *
    * @param TaxExemptionNotice $taxExemptionNotice
    *
-   * @return LegalPerson
+   * @return DonationReceipt
    */
   public function setTaxExemptionNotice(TaxExemptionNotice $taxExemptionNotice):DonationReceipt
   {
@@ -251,7 +251,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    *
    * @param null|SentEmail $notificationMessage
    *
-   * @return LegalPerson
+   * @return DonationReceipt
    */
   public function setNotificationMessage(?SentEmail $notificationMessage):DonationReceipt
   {
