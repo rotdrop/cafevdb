@@ -573,6 +573,21 @@ class ContactsService
     if ($musician['language']) {
       $vcard->add('LANG', $musician['language']);
     }
+    $gender = null;
+    switch ((string)$musician['gender']) {
+      case EnumGender::MALE:
+        $gender = 'M';
+        break;
+      case EnumGender::FEMALE:
+        $gender = 'F';
+        break;
+      case EnumGender::DIVERSE:
+        $gender = 'O';
+        break;
+    }
+    if ($gender) {
+      $vcard->add('GENDER', $gender);
+    }
     if ($musician->getEmail()) {
       $vcard->add('EMAIL', $musician->getEmail());
     }
