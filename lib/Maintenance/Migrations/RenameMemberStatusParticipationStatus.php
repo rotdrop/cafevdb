@@ -25,7 +25,10 @@
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
 /**
- * Was a "stupid" idea, so drop it again ...
+ * Rename the misleading "member_status" column to "participant_status".
+ *
+ * Really, these flags just control the amount of noise the person receives
+ * from the orchestra. It just has nothing to do with a club membership.
  */
 class RenameMemberStatusParticipationStatus extends AbstractMigration
 {
