@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2022-2024 Claus-Justus Heine
+ * @copyright 2020, 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,8 +50,16 @@ class ProjectInstrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
-  const UNVOICED = 0;
+  public const UNVOICED = 0;
+  public const NOT_AN_INSTRUMENT_FAMILY = 'not an instrument';
+  public const NON_INSTRUMENT_ASSOCIATE = 'associate';
+  public const NON_INSTRUMENT_BUSINESS_PARTNER = 'business partner';
+  public const NON_INSTRUMENTS = [
+    self::NON_INSTRUMENT_ASSOCIATE,
+    self::NON_INSTRUMENT_BUSINESS_PARTNER,
+  ];
 
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
@@ -325,5 +333,12 @@ class ProjectInstrument implements \ArrayAccess
       $name .= '@' . $this->project->getName();
     }
     return $name;
+  }
+
+  /** @return void */
+  protected static function translationHack():void
+  {
+    self::t(self::NON_INSTRUMENT_ASSOCIATE);
+    self::t(self::NON_INSTRUMENT_BUSINESS_PARTNER);
   }
 }
