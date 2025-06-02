@@ -89,7 +89,6 @@ class ProjectParticipantEntityListener
     $field = 'registration';
     if ($event->hasChangedField($field)) {
       $oldValue = $event->getOldValue($field);
-      $this->entityManager->dispatchEvent(new Events\PreChangeRegistrationConfirmation($this, !empty($oldValue), !empty($event->getNewValue($field))));
       $this->entityManager->dispatchEvent(
         new Events\PreChangeRegistrationConfirmation(
           $entity,
