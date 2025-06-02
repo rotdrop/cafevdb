@@ -199,6 +199,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var IEventDispatcher */
   protected $eventDispatcher;
 
+  /** @var null|GedmoTranslatableListener */
+  protected ?Listeners\GedmoTranslatableListener $translatable = null;
+
   /**
    * @var array
    *
@@ -735,7 +738,7 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($transformableListener);
 
     // translatable
-    $translatableListener = $this->appContainer->get(Listeners\GedmoTranslatableListener::class);
+    $this->translatable = $translatableListener = $this->appContainer->get(Listeners\GedmoTranslatableListener::class);
     // current translation locale should be set from session or hook later into the listener
     // most important, before entity manager is flushed
     $localeCode = $this->l->getLocaleCode();
@@ -1342,6 +1345,31 @@ class EntityManager extends EntityManagerDecorator
   public function getDataTransformer(string $key):Transformable\Transformer\TransformerInterface
   {
     return $this->transformerPool[$key] ?? null;
+  }
+
+  /**
+   * Set the locale for the translatable Listeners*
+   *
+   * @param null|string $locale A locale like de_DE (i.e. with language and
+   * region). If null the default locale of the translatable listener is used.
+   *
+   * @return string
+   */
+  public function setTranslatableLocale(?string $locale):string
+  {
+    if ($locale === null) {
+      $locale = ConfigService::DEFAULT_LOCALE;
+    }
+    if (strpos($locale, '_') === false) {
+      $locale = $locale . '_' . strtoupper($locale);
+    }
+    $oldLocale = $this->translatable->getTranslatableLocale();
+    $this->translatable->setTranslatableLocale($locale);
+    $this->getConfiguration()->setDefaultQueryHint(
+      Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
+      $locale
+    );
+    return $oldLocale;
   }
 
   /**
