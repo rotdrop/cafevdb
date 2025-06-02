@@ -645,7 +645,12 @@ class RecipientsFilter
     if ($this->frozen && $this->projectId > 0) {
       $criteria[] = [ 'id' => $this->emailRecs ];
     }
-    $criteria[] = [ '!participationStatus' => $this->participationStatusBlackList() ];
+    if ($this->projectId <= 0) {
+      $criteria[] = [ '!defaultParticipationStatus' => $this->participationStatusBlackList() ];
+    } elseif (($this->userBase & self::MUSICIANS_EXCEPT_PROJECT) == 0) {
+      $criteria[] = [ 'projectParticipation.project' => $this->projectId ];
+      $criteria[] = [ '!projectParticipation.participationStatus' => $this->participationStatusBlackList() ];
+    }
 
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
 
@@ -846,12 +851,7 @@ class RecipientsFilter
    */
   private function getParticiationStatusNames():void
   {
-    $participationStatus = DBTypes\EnumParticipationStatus::toArray();
-    foreach ($participationStatus as $tag) {
-      if (!isset($this->participationStatusNames[$tag])) {
-        $this->participationStatusNames[$tag] = $this->l->t('member status '.$tag);
-      }
-    }
+    $this->participationStatusNames = DBTypes\EnumParticipationStatus::getL10NValues($this->l);
   }
 
   /**

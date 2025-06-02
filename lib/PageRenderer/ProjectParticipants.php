@@ -963,7 +963,7 @@ class ProjectParticipants extends PMETableViewBase
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
-      'css'     => [ 'postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
+      'css'     => [ 'postfix' => [ 'participation-status', 'tooltip-wide', ], ],
       'values2' => Types\EnumParticipationStatus::getL10NValues($this->l),
       'tooltip' => $this->toolTipsService['page-renderer:musicians:participation-status'],
     ];
@@ -975,7 +975,7 @@ class ProjectParticipants extends PMETableViewBase
         'select'  => 'D',
         'maxlen'  => 128,
         'input'   => 'HR',
-        'css'     => ['postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
+        'css'     => ['postfix' => [ 'participation-status', 'tooltip-wide', ], ],
         'values2' => Types\EnumParticipationStatus::getL10NValues($this->l),
         'tooltip' => $this->toolTipsService['page-renderer:musicians:participation-status'],
       ]);

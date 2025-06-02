@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,6 +35,21 @@ abstract class AbstractEnumType extends EnumType
 {
   use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
+  public const L10N_TAG = 'ENUM';
+  public const L10N_SEP = ': ';
+
+  /** {@inheritdoc} */
+  public static function toArray()
+  {
+    $class = static::class;
+    if (!isset(static::$cache[$class])) {
+      parent::toArray();
+      $remove = [ self::L10N_SEP, static::L10N_TAG ];
+      static::$cache[$class] = array_diff(static::$cache[$class], $remove);
+    }
+    return static::$cache[$class];
+  }
+
   /**
    * @param IL10N $l
    *
@@ -45,7 +60,13 @@ abstract class AbstractEnumType extends EnumType
     $values = array_values(static::toArray());
     return array_combine(
       $values,
-      array_map(fn(string $value) => $l->t($value), $values),
+      array_map(
+        function(string $value) use ($l) {
+          $l10nValue = $l->t(static::L10N_TAG . self::L10N_SEP . $value);
+          return ($l10nValue === $value) ? $l->t($value) : $l10nValue;
+        },
+        $values,
+      ),
     );
   }
 }

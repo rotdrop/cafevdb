@@ -37,15 +37,15 @@ class RenameMemberStatusParticipationStatus extends AbstractMigration
       "ALTER TABLE Musicians
   CHANGE COLUMN IF EXISTS
     member_status default_participation_status
-    enum('associate','conductor','passive','regular','soloist','temporary')
+    enum('associated','conductor','passive','regular','soloist','temporary')
     DEFAULT 'regular'
     NOT NULL
-    COMMENT 'enum(associate,conductor,passive,regular,soloist,temporary)(DC2Type:EnumParticipationStatus)'",
+    COMMENT 'enum(associated,conductor,passive,regular,soloist,temporary)(DC2Type:EnumParticipationStatus)'",
       "ALTER TABLE ProjectParticipants
   ADD COLUMN IF NOT EXISTS
-    participation_status enum('associate','conductor','passive','regular','soloist','temporary')
+    participation_status enum('associated','conductor','passive','regular','soloist','temporary')
    DEFAULT NULL
-   COMMENT 'enum(associate,conductor,passive,regular,soloist,temporary)(DC2Type:EnumParticipationStatus)'",
+   COMMENT 'enum(associated,conductor,passive,regular,soloist,temporary)(DC2Type:EnumParticipationStatus)'",
     ],
     self::TRANSACTIONAL => [
       "UPDATE ProjectParticipants pp
@@ -73,7 +73,7 @@ class RenameMemberStatusParticipationStatus extends AbstractMigration
   CHANGE COLUMN
     participation_status
     participation_status
-    enum('associate','conductor','passive','regular','soloist','temporary')
+    enum('associated','conductor','passive','regular','soloist','temporary')
     DEFAULT 'regular'
     NOT NULL
     COMMENT 'enum(associate,conductor,passive,regular,soloist,temporary)(DC2Type:EnumParticipationStatus)'",

@@ -28,6 +28,6 @@ namespace OCA\CAFEVDB\Maintenance\Migrations;
  * Wrapper class which gives the migration a proper sequence number and
  * redirects to the actual implementation.
  */
-class Version20250601120000 extends EnsureNotAnInstrumentBusynessRelation
+class Version20250601120000 extends EnsureNotAnInstrumentBusinessRelation
 {
 }

@@ -31,7 +31,7 @@ use OCA\CAFEVDB\Exceptions;
 
 /**
  * Ensure that a virtual "not-an-instrument" instrument family exists and add
- * one virtual "busyness relation" instrument.
+ * a virtual "business relation" and an "associate" non-instrument.
  *
  * Why: while the status of person could be tracked by the
  * participation-status "associated" we also use the instrument-field in order
@@ -42,12 +42,12 @@ use OCA\CAFEVDB\Exceptions;
  * time provides payed-services for the orchestra we mis-use the instrument
  * field and duplicate this id.
  */
-class EnsureNotAnInstrumentBusynessRelation extends AbstractMigration
+class EnsureNotAnInstrumentBusinessRelation extends AbstractMigration
 {
   /** {@inheritdoc} */
   public function description():string
   {
-    return $this->l->t('Ensure a virtual "busy relation" "not-an-instrument" instrument');
+    return $this->l->t('Ensure a virtual "business relation" "not-an-instrument" instrument');
   }
 
   /** {@inheritdoc} */

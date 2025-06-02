@@ -2411,7 +2411,7 @@ Whatever.',
   public function ensureMailingListSubscription(Entities\ProjectParticipant $participant):?bool
   {
     $participationStatus = $participant->getParticipationStatus();
-    if ($participationStatus == ParticipationStatus::ASSOCIATE) {
+    if ($participationStatus == ParticipationStatus::ASSOCIATED) {
       // this is intended to flag something like a business relation -> no mailing list.
       return null;
     }
@@ -2432,7 +2432,7 @@ Whatever.',
 
     $displayName = $participant->getPublicName(firstNameFirst: true);
     $deliveryStatus = ($participationStatus == ParticipationStatus::CONDUCTOR
-        || $participationStatus == ParticipationStatus::ASSOCIATE
+        || $participationStatus == ParticipationStatus::ASSOCIATED
         || $participationStatus == ParticipationStatus::SOLOIST
       || $participationStatus == ParticipationStatus::TEMPORARY)
       ? MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER

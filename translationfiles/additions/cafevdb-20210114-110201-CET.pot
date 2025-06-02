@@ -88,31 +88,6 @@ msgstr ""
 msgid "Instruments which were formerly known to be played by the respective musican but which are disabled for whatever reason. Re-enable by simply adding them again to the list of the musician's instruments."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:163
-#, php-format
-msgid "member status conductor"
-msgstr ""
-
-#: lib/PageRenderer/PMETableViewBase.php:163
-#, php-format
-msgid "member status passive"
-msgstr ""
-
-#: lib/PageRenderer/PMETableViewBase.php:163
-#, php-format
-msgid "member status regular"
-msgstr ""
-
-#: lib/PageRenderer/PMETableViewBase.php:163
-#, php-format
-msgid "member status soloist"
-msgstr ""
-
-#: lib/PageRenderer/PMETableViewBase.php:163
-#, php-format
-msgid "member status temporary"
-msgstr ""
-
 #: lib/Service/ToolTipsService.php:777
 #, php-format
 msgid "Project specific remarks for this musician. Please check first if there is a special field for the things you want to note"
