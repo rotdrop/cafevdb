@@ -394,13 +394,15 @@ class EncryptionService
     $sysDatabaseKeyHash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
     if (!$this->verifyHash($userDatabaseKey, $sysDatabaseKeyHash)) {
       $failCount = 0;
-      for ($i = 0; $i < 1000; ++$i) {
+      $numberOfTests = 1000;
+      for ($i = 0; $i < $numberOfTests; ++$i) {
         $failCount += 1 - (int)$this->verifyHash($userDatabaseKey, $sysDatabaseKeyHash);
       }
       if ($failCount < 10) {
+        $msg = 'BOGUS HARDWARE OR SOFTWARE, VERIFY HASH FAIELD ' . $failCount . ' TIMES OUT OF ' . $numberOfTests . ' TIMES.';
         $this->logError(
-          'BOGUS HARDWARE OR SOFTWARE ' . $failCount,
-          [ 'exception' => new Exceptions\EncryptionException('BOGUS HARDWARE OR SOFTWARE ' . $failCount) ],
+          $msg,
+          [ 'exception' => new Exceptions\EncryptionException($msg) ],
         );
         return true;
       }
