@@ -927,60 +927,63 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     });
 };
 
-const myDocumentReady = function() {
+const tableLoadCallback = {
+  callback(selector, parameters, resizeCB) {
 
-  PHPMyEdit.addTableLoadCallback('project-participants', {
-    callback(selector, parameters, resizeCB) {
+    if (parameters.reason === 'tabChange') {
+      resizeCB();
+      return;
+    }
 
-      if (parameters.reason === 'tabChange') {
-        resizeCB();
-        return;
+    if (parameters.reason === 'dialogClose') {
+      resizeCB();
+      return;
+    }
+
+    const container = $(selector);
+    pmeExportMenu(selector);
+    SepaDebitMandate.popupInit(selector);
+    container.find('#sepa-bank-accounts-show-deleted').on('change', function(event) {
+      const $sepaTable = container.find('td.pme-value.sepa-bank-accounts table');
+      if ($(this).prop('checked')) {
+        $sepaTable.addClass('show-deleted').removeClass('hide-deleted');
+      } else {
+        $sepaTable.removeClass('show-deleted').addClass('hide-deleted');
       }
+      resizeCB();
+      return false;
+    });
 
-      if (parameters.reason === 'dialogClose') {
-        resizeCB();
-        return;
-      }
+    myReady(selector, parameters, resizeCB);
 
-      const container = $(selector);
-      pmeExportMenu(selector);
-      SepaDebitMandate.popupInit(selector);
-      container.find('#sepa-bank-accounts-show-deleted').on('change', function(event) {
-        const $sepaTable = container.find('td.pme-value.sepa-bank-accounts table');
-        if ($(this).prop('checked')) {
-          $sepaTable.addClass('show-deleted').removeClass('hide-deleted');
-        } else {
-          $sepaTable.removeClass('show-deleted').addClass('hide-deleted');
-        }
-        resizeCB();
+    $(':button.musician-instrument-insurance')
+      .off('click')
+      .on('click', function(event) {
+        event.preventDefault();
+        const values = $(this).attr('name');
+
+        CAFEVDB.formSubmit(generateAppUrl(''), values, 'post');
+
         return false;
       });
 
-      myReady(selector, parameters, resizeCB);
+    container.find('.cloud-avatar').imagesLoaded(resizeCB);
+  },
+  context: {},
+  parameters: [],
+};
 
-      $(':button.musician-instrument-insurance')
-        .off('click')
-        .on('click', function(event) {
-          event.preventDefault();
-          const values = $(this).attr('name');
+const myDocumentReady = function() {
 
-          CAFEVDB.formSubmit(generateAppUrl(''), values, 'post');
-
-          return false;
-        });
-
-      container.find('.cloud-avatar').imagesLoaded(resizeCB);
-    },
-    context: {},
-    parameters: [],
-  });
+  PHPMyEdit.addTableLoadCallback('project-participants', tableLoadCallback);
+  PHPMyEdit.addTableLoadCallback('project-associates', tableLoadCallback);
 
   CAFEVDB.addReadyCallback(function() {
-    if ($('div#' + appPrefix('page-body') + '.project-participants').length > 0) {
+    const $pageBody = $('div#' + appPrefix('page-body'));
+    if ($pageBody.hasClass('project-participants') || $pageBody.hasClass('project-associates')) {
       myReady();
     }
   });
-
 };
 
 export {

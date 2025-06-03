@@ -2178,6 +2178,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
                 return is_numeric($value) ? $value : "'".addslashes($value)."'";
               }, is_array($values) ? $values : [ $values ]);
               $joinCondition .= 'IN (' . implode(self::VALUES_SEP, $values) . ')';
+            } elseif (!empty($joinTableValue['!value'])) {
+              $values = $joinTableValue['!value'];
+              $values = array_map(function($value) {
+                return is_numeric($value) ? $value : "'".addslashes($value)."'";
+              }, is_array($values) ? $values : [ $values ]);
+              $joinCondition .= 'NOT IN (' . implode(self::VALUES_SEP, $values) . ')';
             } elseif (!empty($joinTableValue['condition'])) {
               $joinCondition .= $joinTableValue['condition'];
             } elseif (!empty($joinTableValue['self'])) {

@@ -41,6 +41,7 @@ class Registration
     AddMusicians::TEMPLATE => AddMusicians::class,
     Projects::TEMPLATE => Projects::class,
     ProjectParticipants::TEMPLATE => ProjectParticipants::class,
+    ProjectAssociates::TEMPLATE => ProjectAssociates::class,
     ProjectInstrumentationNumbers::TEMPLATE => ProjectInstrumentationNumbers::class,
     ProjectPayments::TEMPLATE => ProjectPayments::class,
     SepaBankAccounts::TEMPLATE => SepaBankAccounts::class,

@@ -118,6 +118,16 @@
         </template>
       </NcActionButton>
       <NcActionSeparator v-if="financeMode" />
+      <NcActionRouter v-tooltip="tooltips['project-action:business-contacts']"
+                      :to="toProjectRouteData('project-associates')"
+                      :name="t(appId, 'Business Contacts / Associates')"
+                      exact
+                      @click="closeMenu"
+      >
+        <template #icon>
+          <ProjectAssociatesIcon />
+        </template>
+      </NcActionRouter>
       <NcActionRouter v-tooltip="tooltips['project-action:sepa-bank-accounts']"
                       :to="toProjectRouteData('sepa-bank-accounts')"
                       :name="t(appId, 'Debit Mandates')"
@@ -166,6 +176,7 @@ import { translate as t } from '@nextcloud/l10n'
 
 import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
+import ProjectAssociatesIcon from 'vue-material-design-icons/Handshake.vue'
 import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
 import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import ProjectFolderIcon from 'vue-material-design-icons/Folder.vue'

@@ -32,10 +32,10 @@ use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDisplayContext as DisplayContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -50,10 +50,14 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Exceptions;
 
-/**Table generator for Instruments table. */
-class ProjectParticipants extends PMETableViewBase
+/**
+ * (Legal-)persons associated to a project, primarily for organizing financial
+ * affairs and in order to keep things together. This table view refers also
+ * to the ProjectParticipants table as well as the ProjectParticipants view
+ * does, but comes with a reduced set of fields.
+ */
+class ProjectAssociates extends PMETableViewBase
 {
   use FieldTraits\AllProjectsTrait;
   use FieldTraits\MailingListsTrait;
@@ -66,19 +70,19 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
   use FieldTraits\ProjectEntityTrait;
-  use FieldTraits\ProjectModeNavigationItemTrait;
+  use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  const TEMPLATE = 'project-participants';
+  const TEMPLATE = 'project-associates';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
 
   private const EXTRA_VOICES = 2;
   private const INSERT_VOICES = 8;
 
   /**
-   * Join table structure. All update are handled in
+   * Join table structure. All updates are handled in
    * parent::beforeUpdateDoUpdateAll().
    */
   protected $joinStructure = [
@@ -98,7 +102,7 @@ class ProjectParticipants extends PMETableViewBase
     ],
     self::PROJECT_INSTRUMENTS_TABLE => [
       'entity' => Entities\ProjectInstrument::class,
-      'flags' => self::JOIN_GROUP_BY,
+      // 'flags' => self::JOIN_GROUP_BY,
       'identifier' => [
         'project_id' => 'project_id',
         'musician_id' => 'musician_id',
@@ -229,13 +233,13 @@ class ProjectParticipants extends PMETableViewBase
   public function shortTitle()
   {
     if ($this->deleteOperation()) {
-      return $this->l->t('Remove the musician from %s?', [ $this->projectName ]);
+      return $this->l->t('Remove the person from %s?', [ $this->projectName ]);
     } elseif ($this->viewOperation()) {
-      return $this->l->t('Display of all stored data for the shown musician.');
+      return $this->l->t('Display of all stored data for the shown person.');
     } elseif ($this->changeOperation()) {
-      return $this->l->t('Edit the data of the displayed musician.');
+      return $this->l->t('Edit the data of the displayed person.');
     }
-    return $this->l->t('Instrumentation for Project "%s"', [ $this->projectName ]);
+    return $this->l->t('Business Contacts and Associates for Project "%s"', [ $this->projectName ]);
   }
 
   /** {@inheritdoc} */
@@ -244,24 +248,11 @@ class ProjectParticipants extends PMETableViewBase
     $template        = $this->template;
     $expertMode      = $this->expertMode;
     $instrumentInfo  = $this->getInstrumentInfo();
-    $instruments     = $instrumentInfo['byId'];
 
-    // $instrumentsFilter = array_keys(array_filter(
-    //   $instrumentInfo['idGroups'],
-    //   fn(string $families) =>
-    //   !empty(array_diff(explode(',', $families), [ $this->l->t(Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY) ])),
-    // ));
-    $notInstrumentsFilter = array_keys(array_filter(
+    $instrumentsFilter = array_keys(array_filter(
       $instrumentInfo['idGroups'],
       fn(string $families) => !empty(in_array($this->l->t(Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY), explode(',', $families))),
     ));
-
-    // $this->joinStructure[self::PROJECT_INSTRUMENTS_TABLE]['filter'] = [
-    //   'instrument_id' => [ 'value' => $instrumentsFilter, ],
-    // ];
-    $this->joinStructure[self::PROJECT_INSTRUMENTS_TABLE]['filter'] = [
-      'instrument_id' => [ '!value' => $notInstrumentsFilter, ],
-    ];
 
     $opts            = [];
 
@@ -271,11 +262,11 @@ class ProjectParticipants extends PMETableViewBase
       self::CSS_TAG_PROJECT_PARTICIPANT_FIELDS_DISPLAY,
     ];
 
-    $opts['filters']['AND'] = [
-      '$table.project_id = '.$this->projectId,
+    $opts[PHPMyEdit::OPT_FILTERS]['AND'] = [
+      '$table.project_id = ' . $this->projectId,
     ];
     if (!$this->showDisabled) {
-      $opts['filters']['AND'][] = '$table.deleted IS NULL';
+      $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = '$table.deleted IS NULL';
     }
 
     // Number of records to display on the screen
@@ -297,14 +288,12 @@ class ProjectParticipants extends PMETableViewBase
 
     // Name of field which is the unique key
     $opts['key'] = [ 'project_id' => 'int', 'musician_id' => 'int' ];
-    $opts['groupby_fields'] = array_merge(array_keys($opts['key']), [ 'participation_status' ]);
+    $opts['groupby_fields'] = array_keys($opts['key']);
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
-      $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice'),
-      '-' . $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'section_leader'),
       $this->joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
+      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'organization'),
       $this->joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
       $this->joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
       $this->joinTableFieldName(self::MUSICIANS_TABLE, 'nick_name'),
@@ -325,7 +314,7 @@ class ProjectParticipants extends PMETableViewBase
     $export = $this->pageNavigation->tableExportButton();
     $opts['buttons'] = $this->pageNavigation->prependTableButton($export, true);
 
-    $participantFields = $this->project->getParticipantFields(DisplayContext::PARTICIPANTS);
+    $participantFields = $this->project->getParticipantFields(DisplayContext::ASSOCIATES);
 
     // count number of finance fields
     $extraFinancial = 0;
@@ -440,13 +429,20 @@ class ProjectParticipants extends PMETableViewBase
 
     $this->defineJoinStructure($opts);
 
-    $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = 'NOT $table.participation_status = "' . ParticipationStatus::ASSOCIATED . '"';
-    // $projectInstrumentsJoin =  $this->joinTables[self::PROJECT_INSTRUMENTS_TABLE];
-    // $opts[PHPMyEdit::OPT_HAVING]['AND'] = [
-    //   '(NOT participation_status = "' . ParticipationStatus::ASSOCIATED . '")',
-    //   // $projectInstrumentsJoin . '.instrument_id IN ("' . implode('","', $instrumentsFilter) . '")',
-    //   '(NOT ' . $projectInstrumentsJoin . '.instrument_id IN ("' . implode('","', $notInstrumentsFilter) . '"))',
-    // ];
+    $projectInstrumentsJoin =  $this->joinTables[self::PROJECT_INSTRUMENTS_TABLE];
+    $opts[PHPMyEdit::OPT_FILTERS]['OR'] = [
+      '$table.participation_status = "' . ParticipationStatus::ASSOCIATED . '"',
+      $projectInstrumentsJoin . '.instrument_id IN ("' . implode('","', $instrumentsFilter) . '")',
+    ];
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'organization',
+      [
+        'name'     => $this->l->t('Organization'),
+        'tab'      => [ 'id' => 'tab-all' ],
+        'input|LF' => $this->pmeBare ? '' : 'H',
+        'maxlen'   => 384,
+      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'sur_name',
@@ -642,7 +638,8 @@ class ProjectParticipants extends PMETableViewBase
 
     $fdd = [
       'tab'         => [ 'id' => [ 'instrumentation' ] ],
-      'name'        => $this->l->t('Project Instrument'),
+      'name'        => $this->l->t('Role (Instrument)'),
+      // 'input'    => ($expertMode ? 'R' : 'RH'),
       'css'         => [
         'postfix' => [
           'project-instruments',
@@ -651,8 +648,11 @@ class ProjectParticipants extends PMETableViewBase
         ],
       ],
       'display|LVF' => ['popup' => 'data'],
-      'sql|VDCP'    => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+      'sql|LFVDCP'    => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
       'select'      => 'M',
+      'filter' => [
+        'having' => true,
+      ],
       'values' => [
         'column'      => 'id',
         'description' => [
@@ -666,12 +666,12 @@ class ProjectParticipants extends PMETableViewBase
       'valueGroups' => $instrumentInfo['idGroups'],
     ];
     $fdd['values|VDPC'] = array_merge($fdd['values'], [
-      'filters' => '$table.id IN (SELECT DISTINCT instrument_id
+      PHPMyEdit::OPT_FILTERS => '$table.id IN (SELECT DISTINCT instrument_id
   FROM '.self::MUSICIAN_INSTRUMENTS_TABLE.' mi
   WHERE $record_id[project_id] = '.$this->projectId.' AND $record_id[musician_id] = mi.musician_id)',
     ]);
     $fdd['values|LFV'] = array_merge($fdd['values'], [
-      'filters' => '$table.id IN (SELECT DISTINCT instrument_id
+      PHPMyEdit::OPT_FILTERS => '$table.id IN (SELECT DISTINCT instrument_id
   FROM '.self::PROJECT_INSTRUMENTS_TABLE.' pi
   WHERE '.$this->projectId.' = pi.project_id)',
     ]);
@@ -680,29 +680,13 @@ class ProjectParticipants extends PMETableViewBase
     list($instrumentsFddIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
 
-    // kind of a hack, in principle this should go to the global join structure
-    // $this->joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
-
-    $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
-      'tab'         => [ 'id' => [ 'instrumentation' ] ],
-      'name'        => $this->l->t('Instrument Sort Order'),
-      'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-      'input'       => 'HRS',
-      'select'      => 'M',
-      'sort'     => true,
-      'values' => [
-        'column' => 'sort_order',
-        'orderby' => '$table.sort_order ASC',
-        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
-      ],
-    ];
-
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'voice',
       [
         'tab'      => [ 'id' => 'instrumentation' ],
         'name'     => $this->l->t('Voice'),
         'default'  => 0, // keep in sync with ProjectInstrumentationNumbers
+        'input' => 'RH',
         'select'   => 'M',
         'css'      => [
           'postfix' => [
@@ -711,37 +695,6 @@ class ProjectParticipants extends PMETableViewBase
             'instrument-voice',
             'select-wide',
           ],
-        ],
-        'display|CAP' => [
-          'prefix' => function($op, $when, $k, $row, $pme) {
-            return '<div class="cell-wrapper">
-  <div class="dropdown-menu">';
-          },
-          'postfix' => function($op, $when, $k, $row, $pme) {
-            $html = '</div>
-'; // close dropdown-menu
-
-            $instruments = Util::explode(',', $row[$this->joinQueryField(static::PROJECT_INSTRUMENTS_TABLE, 'instrument_id')]);
-            $instrumentNames = $pme->set_values($this->joinQueryFieldIndex(static::PROJECT_INSTRUMENTS_TABLE, 'instrument_id'))['values'];
-
-            $templateParameters = [
-              'instruments' => $instruments,
-              'dataName' => $pme->cgiDataName($this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
-              'inputLabel' => function($instrument) use ($instrumentNames) {
-                return $instrumentNames[$instrument];
-              },
-              'toolTips' => $this->toolTipsService,
-              'toolTipSlug' => $this->toolTipSlug('instrument-voice-request'),
-            ];
-
-            $template = $this->templateResponse(
-              'fragments/instrument-voices',
-              $templateParameters,
-            );
-            $html .= $template->render();
-
-            return $html;
-          },
         ],
         'sql|VD' => "GROUP_CONCAT(DISTINCT
   IF(\$join_col_fqn > 0,
@@ -761,222 +714,6 @@ class ProjectParticipants extends PMETableViewBase
     NULL
   )
   ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
-        'values|CP' => [
-          'table' => "SELECT
-  CONCAT(pi.instrument_id,'".self::JOIN_KEY_SEP."', IF(n.seq <= GREATEST(" . self::EXTRA_VOICES . ", MAX(pin.voice)), n.seq, '?')) AS value,
-  pi.project_id,
-  pi.musician_id,
-  i.id AS instrument_id,
-  i.name,
-  COALESCE(ft.content, i.name) AS l10n_name,
-  i.sort_order,
-  GROUP_CONCAT(IF(pin.voice = n.seq, pin.quantity, NULL)) AS quantity,
-  MAX(pin.voice) AS number_of_voices,
-  n.seq
-  FROM " . self::PROJECT_INSTRUMENTS_TABLE . " pi
-  LEFT JOIN ".self::INSTRUMENTS_TABLE." i
-    ON i.id = pi.instrument_id
-  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
-    ON ft.locale = '".($this->getTranslationLanguage())."'
-      AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
-      AND ft.field = 'name'
-      AND ft.foreign_key = i.id
-  LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
-    ON pin.instrument_id = pi.instrument_id AND pin.project_id = pi.project_id
-  JOIN " . self::SEQUENCE_TABLE . " n
-    ON n.seq <= (" . self::EXTRA_VOICES . " + 1 + pin.voice)
-    AND n.seq >= 1
-    AND n.seq <= (1+(SELECT GREATEST(" . self::EXTRA_VOICES . ", MAX(pin2.voice)) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2))
-  WHERE
-    pi.project_id = \$record_id[project_id]
-  GROUP BY
-    pi.project_id, pi.musician_id, pi.instrument_id, n.seq
-  HAVING (NOT pi.instrument_id IN ('" . implode("','", $notInstrumentsFilter) . "'))
-  ORDER BY
-    i.sort_order ASC, n.seq ASC",
-          'column' => 'value',
-          'description' => [
-            'columns' => [ '$table.l10n_name', 'IF($table.seq <= GREATEST(' . self::EXTRA_VOICES . ', $table.number_of_voices), $table.seq, \'?\')' ],
-            'divs' => ' ',
-          ],
-          'titles' => 'IF($table.seq > GREATEST(' . self::EXTRA_VOICES . ', $table.number_of_voices),
-  "' . $this->toolTipsService['page-renderer:participants:voice:define-new'] . '",
-  NULL
-)',
-          'orderby' => '$table.sort_order ASC, $table.seq ASC',
-          'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
-          //'join' => '$join_table.musician_id = $main_table.musician_id AND $join_table.project_id = $main_table.project_id',
-          'join' => false,
-        ],
-        'values2|LF' => [ '0' => $this->l->t('n/a') ] + array_combine(range(1, self::INSERT_VOICES), range(1, self::INSERT_VOICES)),
-        'align|LF' => 'center',
-        'tooltip|CAP' => $this->toolTipsService['page-renderer:participants:voice'],
-      ]);
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'section_leader',
-      [
-       'name|LF' => ' &alpha;',
-       'name|CAPVD' => $this->l->t("Section Leader"),
-       'tab' => [ 'id' => 'instrumentation' ],
-       'css'      => [ 'postfix' => [ 'section-leader', 'tooltip-top', ], ],
-       'default' => false,
-       'options'  => 'LAVCPDF',
-       'select' => 'C',
-       'maxlen' => '1',
-       'sort' => true,
-       'escape' => false,
-       'sql|CAPDV' => "GROUP_CONCAT(
-  DISTINCT
-  IF(".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader IS NULL
-     OR ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader = 0,
-    NULL,
-    CONCAT_WS(
-      '".self::JOIN_KEY_SEP."',
-      CONCAT_WS('".self::COMP_KEY_SEP."',
-        ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id,
-        ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice
-      ),
-      ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader)
-  )
-  ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
-       'display|LF' => [ 'popup' => function($data) {
-         return $this->toolTipsService['section-leader-mark'];
-       }],
-       'values|CAPDV' => [
-         'table' => "SELECT
-  CONCAT_WS('".self::JOIN_KEY_SEP."', CONCAT_WS('".self::COMP_KEY_SEP."', pi.instrument_id, pi.voice), 1) AS value,
-  pi.project_id,
-  pi.musician_id,
-  pi.instrument_id,
-  pi.voice,
-  MAX(pin.voice) AS voices,
-  i.name,
-  COALESCE(ft.content, i.name) AS l10n_name,
-  i.sort_order
-  FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
-  LEFT JOIN ".self::INSTRUMENTS_TABLE." i
-    ON i.id = pi.instrument_id
-  LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
-    ON pin.project_id = pi.project_id AND pin.instrument_id = pi.instrument_id
-  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
-    ON ft.locale = '".($this->getTranslationLanguage())."'
-      AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
-      AND ft.field = 'name'
-      AND ft.foreign_key = i.id
-  WHERE
-    pi.project_id = $this->projectId
-  GROUP BY pi.instrument_id, pi.musician_id
-  HAVING ((MAX(pin.voice) = 0 OR pi.voice > 0)
-    AND (NOT pi.instrument_id IN ('" . implode("','", $notInstrumentsFilter) . "')))",
-         'column' => 'value',
-         'description' => [ 'l10n_name', 'IF($table.voice = 0, \'\', CONCAT(\' \', $table.voice))' ],
-         'orderby' => '$table.sort_order',
-         'filters' => '$record_id[project_id] = project_id AND $record_id[musician_id] = musician_id',
-         'join' => false, //'$join_table.project_id = $main_table.project_id AND $join_table.musician_id = $main_table.musician_id',
-       ],
-       'values2|LF' => [ 0 => '', 1 => '&alpha;' ],
-       'align|LF' => 'center',
-       'tooltip|LFVD' => $this->toolTipsService['page-renderer:participants:section-leader:view'],
-       'tooltip|CAP' => $this->toolTipsService['page-renderer:participants:section-leader'],
-      ]);
-
-    // @todo
-    // Replace by registration status
-    // - preliminary
-    //   just entered in the instrumentation table with or without communication
-    // - application
-    //   written and potentially signed application
-    // - accepted
-    //   participant has been accepted by the organizers and receives an email
-    $opts['fdd']['registration'] = [
-      // 'name|LF' => ' &#10004;',
-      // 'name|CAPDV' => $this->l->t("Participation"),
-      'name' => $this->l->t("Participation"),
-      'tab' => [ 'id' => [ 'project', 'instrumentation' ] ],
-      'options'  => 'LAVCPDF',
-      'select' => 'O',
-      'maxlen' => '1',
-      'sort' => true,
-      'escape' => false,
-      'sql'  => 'IFNULL($join_col_fqn, 0)',
-      'sqlw' => 'IF($val_qas = "", 0, 1)',
-      'values2' => [ 0 => $this->l->t('tentatively'), 1 => $this->l->t('confirmed'), ],
-      'valueTitles' => [
-        0 => $this->toolTipsService['page-renderer:participants:registration:tentatively'],
-        1 => $this->toolTipsService['page-renderer:participants:registration:confirmed'],
-      ],
-      // 'values2|ACP' => [ 0 => $this->l->t('tentatively'), 1 => $this->l->t('confirmed'), ],
-      // 'values2|DV' => [ 0 => $this->l->t('tentatively'), 1 => $this->l->t('confirmed'), ],
-      // 'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
-      // 'values2|LF' => [
-      // 0 => '',
-      // 1 => '&#10004;'
-      // ],
-      'tooltip' => $this->toolTipsService['page-renderer:participants:registration'],
-      'display|LF' => [
-        'popup' => function($data) {
-          return $this->toolTipsService['page-renderer:participants:registration'];
-        },
-      ],
-      'css'      => [ 'postfix' => [ 'registration', 'tooltip-top', 'align-center', ], ],
-    ];
-
-    $fdd = [
-      'name' => $this->l->t('All Instruments'),
-      'tab'  => [ 'id' => [ 'musician', 'instrumentation' ] ],
-      'css'  => [
-        'postfix' => [
-          'musician-instruments',
-          'tooltip-top',
-          'no-chosen',
-          'selectize',
-          'drag-drop',
-          'select-wide',
-        ],
-      ],
-      'display|LVF' => ['popup' => 'data'],
-      'sql'         => 'GROUP_CONCAT(DISTINCT
-  IF('.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL)
-  ORDER BY '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
-      'select'      => 'M',
-      'values' => [
-        'column'      => 'id',
-        'description' => [
-          'columns' => [ 'l10n_name', ],
-          'cast' => [ false ],
-          'ifnull' => [ false ],
-        ],
-        'orderby'     => '$table.sort_order ASC',
-        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians'], ],
-      ],
-      'valueGroups' => $instrumentInfo['idGroups'],
-      'filter' => [
-        'having' => true,
-      ],
-    ];
-    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
-
-    // Use $fdd defined above after tweaking its values
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
-        'name'    => $this->l->t('Disabled Instruments'),
-        'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
-        'css'     => [ 'postfix' => [ 'selectize', 'no-chosen', ], ],
-        'sql'     => 'GROUP_CONCAT(DISTINCT IF($join_col_fqn IS NULL, NULL, $join_table.instrument_id))',
-        'default' => null,
-        'select'  => 'M',
-        'input'   => 'SR',
-        'tooltip' => $this->toolTipsService['page-renderer:musicians:instruments-disabled'],
-        'values2' => $instrumentInfo['byId'],
-        'valueGroups' => $instrumentInfo['idGroups'],
-        'filter' => [
-          'having' => true,
-          // 'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
-        ],
       ]);
 
     /*
@@ -989,8 +726,9 @@ class ProjectParticipants extends PMETableViewBase
 
     $participationStatusFddIndex = count($opts['fdd']);
     $opts['fdd']['participation_status'] = [
-      'name'    => strval($this->l->t('Email Status')),
+      'name'    => strval($this->l->t('Participation Status')),
       // 'tab'     => [ 'id' => [ 'orchestra' ] ],
+      // 'input'    => ($expertMode ? 'R' : 'RH'),
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
@@ -1115,20 +853,6 @@ class ProjectParticipants extends PMETableViewBase
     $allProjectsFieldGenerator($opts['fdd']);
 
     $emailFieldGenerator($opts['fdd']);
-
-    $opts['fdd']['project_mailing_list'] = $this->projectListSubscriptionControls(override: [
-      'sql' => $this->joinTables[self::MUSICIANS_TABLE] . '.email',
-      'tab' => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
-      'css' => [ 'postfix' => [ 'project-mailing-list', ], ],
-      'name' => $this->l->t('Project Mailing List'),
-    ]);
-
-    $opts['fdd']['announcements_mailing_list'] = $this->announcementsSubscriptionControls(override: [
-      'sql' => $this->joinTables[self::MUSICIANS_TABLE] . '.email',
-      'tab' => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
-      'css' => [ 'postfix' => [ 'announcements-mailing-list', ], ],
-      'name' => $this->l->t('Announcements List'),
-    ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'mobile_phone',
@@ -1361,10 +1085,6 @@ class ProjectParticipants extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'ensureUserIdSlug' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateRemoveDependentVoices' ];
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateCheckParticipationStatus' ];
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'extractInstrumentRanking' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'cleanupParticipantFields' ];
 
@@ -1461,36 +1181,6 @@ class ProjectParticipants extends PMETableViewBase
     $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'after');
 
     return true;
-  }
-
-  /**
-   * When removing an instrument any pending voice(s) have to be removed, too.
-   *
-   * @param PHPMyEdit $pme The phpMyEdit instance.
-   *
-   * @param string $op The operation, 'insert', 'update' etc.
-   *
-   * @param string $step 'before' or 'after'.
-   *
-   * @param array $oldValues Self-explanatory.
-   *
-   * @param array $changed Set of changed fields, may be modified by the callback.
-   *
-   * @param null|array $newValues Set of new values, which may also be modified.
-   *
-   * @return bool If returning @c false the operation will be terminated
-   */
-  public function beforeUpdateCheckParticipationStatus(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
-  {
-    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
-
-    $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
-
-    throw new Exceptions\EnduserNotificationException('BLAH');
-
-    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');
-
-    return false;
   }
 
   /**

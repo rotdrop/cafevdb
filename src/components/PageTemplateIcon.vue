@@ -39,6 +39,7 @@ import InstrumentsIcon from 'vue-material-design-icons/Trumpet.vue'
 import ProjectOverviewIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ProjectParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
+import ProjectAssociatesIcon from 'vue-material-design-icons/Handshake.vue'
 import ProjectPaymentsIcon from 'vue-material-design-icons/Cash.vue'
 import ProjectsIcon from 'vue-material-design-icons/ListBox.vue'
 import SepaBankAccountsIcon from 'vue-material-design-icons/AccountCash.vue'
@@ -58,6 +59,7 @@ const icon = computed(() => {
   case 'project-overview': return ProjectOverviewIcon
   case 'project-participant-fields': return ProjectParticipantFieldsIcon
   case 'project-participants': return ProjectParticipantsIcon
+  case 'project-associates': return ProjectAssociatesIcon
   case 'project-payments': return ProjectPaymentsIcon
   case 'projects': return ProjectsIcon
   case 'sepa-bank-accounts': return SepaBankAccountsIcon

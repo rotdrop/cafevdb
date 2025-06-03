@@ -52,6 +52,7 @@ trait ProjectModeNavigationItemTrait
       ? array_merge(
         [
           PageRenderer\ProjectParticipants::navigationItem($this->projectId, $this->projectName),
+          PageRenderer\ProjectAssociates::navigationItem($this->projectId, $this->projectName),
           PageRenderer\ProjectParticipantFields::navigationItem($this->projectId, $this->projectName),
           PageRenderer\ProjectInstrumentationNumbers::navigationItem($this->projectId, $this->projectName),
           PageRenderer\ProjectPayments::navigationItem($this->projectId, $this->projectName),
