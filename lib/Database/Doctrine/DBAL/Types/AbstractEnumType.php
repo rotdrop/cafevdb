@@ -62,8 +62,9 @@ abstract class AbstractEnumType extends EnumType
       $values,
       array_map(
         function(string $value) use ($l) {
-          $l10nValue = $l->t(static::L10N_TAG . self::L10N_SEP . $value);
-          return ($l10nValue === $value) ? $l->t($value) : $l10nValue;
+          $prefix = static::L10N_TAG . self::L10N_SEP;
+          $l10nValue = $l->t($prefix . $value);
+          return ($l10nValue === $value || $l10nValue === $prefix . $value) ? $l->t($value) : $l10nValue;
         },
         $values,
       ),

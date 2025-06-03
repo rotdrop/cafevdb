@@ -950,6 +950,17 @@ __EOT__;
       ],
     ];
 
+    $opts['fdd']['display_context'] = [
+      'name' => $this->l->t('Context'),
+      'css' => [ 'postfix' => [ 'display-context', 'allow-empty' ], ],
+      'select' => 'O',
+      'values2' => Types\EnumDisplayContext::getL10NValues($this->l),
+      'default' => null,
+      'sort' => true,
+      'align' => 'center',
+      'tooltip' => $this->toolTipsService['page-renderer:participant-fields:display-context'],
+    ];
+
     $opts['fdd']['participant_access'] = [
       'name' => $this->l->t('Participant Access'),
       'tab' => [ 'id' => 'access' ],

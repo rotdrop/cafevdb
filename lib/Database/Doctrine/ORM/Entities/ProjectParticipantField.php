@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener as TranslatableListener;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDisplayContext as DisplayContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -166,6 +167,15 @@ class ProjectParticipantField implements \ArrayAccess
   private $displayOrder = null;
 
   /**
+   * @var null|string
+   *
+   * If non-null show the field only in the respective view, either
+   * "participants" or "associates". If null show the field in either view.
+   */
+  #[ORM\Column(type: 'EnumDisplayContext', nullable: false, options: ['default' => 'unrestricted'])]
+  private DisplayContext $displayContext;
+
+  /**
    * @var bool|null
    */
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => '0'])]
@@ -202,6 +212,7 @@ class ProjectParticipantField implements \ArrayAccess
     $this->fieldData = new ArrayCollection();
     $this->dataOptions = new ArrayCollection();
     $this->participantAccess = Types\EnumAccessPermission::NONE();
+    $this->displayContext = DisplayContext::UNRESTRICTED();
   }
   // phpcs:enable
 
@@ -457,6 +468,34 @@ class ProjectParticipantField implements \ArrayAccess
   public function getDisplayOrder()
   {
     return $this->displayOrder;
+  }
+
+  /**
+   * Set displayContext.
+   *
+   * @param null|string|DisplayContext $displayContext On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
+   *
+   * @return ProjectParticipantField
+   */
+  public function setDisplayContext(null|string|DisplayContext $displayContext):?ProjectParticipantField
+  {
+    if ($displayContext === null) {
+      $this->displayContext = null;
+    } elseif ((string)$displayContext !== ((string)$this->displayContext ?? '')) {
+      $this->displayContext = new DisplayContext($displayContext);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Get displayContext.
+   *
+   * @return DisplayContext
+   */
+  public function getDisplayContext():DisplayContext
+  {
+    return $this->displayContext;
   }
 
   /**
@@ -723,13 +762,15 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set participantAccess.
    *
-   * @param null|string|Types\EnumAccessPermission $participantAccess On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
+   * @param string|Types\EnumAccessPermission $participantAccess On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
    *
    * @return ProjectParticipantField
    */
-  public function setParticipantAccess(mixed $participantAccess):ProjectParticipantField
+  public function setParticipantAccess(string|Types\EnumAccessPermission $participantAccess):ProjectParticipantField
   {
-    $this->participantAccess = $participantAccess;
+    if ((string)$participantAccess !== (string)$this->participantAccess ?? '') {
+      $this->participantAccess = new Types\EnumAccessPermission($participantAccess);
+    }
 
     return $this;
   }
@@ -737,9 +778,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get participantAccess.
    *
-   * @return null|string|Types\EnumAccessPermission
+   * @return Types\EnumAccessPermission
    */
-  public function getParticipantAccess():mixed
+  public function getParticipantAccess():Types\EnumAccessPermission
   {
     return $this->participantAccess;
   }

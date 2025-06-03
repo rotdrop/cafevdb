@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -426,14 +426,24 @@ class Project implements \ArrayAccess
   /**
    * Get participantFields.
    *
+   * @param string|Types\EnumDisplayContext $displayContext
+   *
    * @return Collection
    */
-  public function getParticipantFields():Collection
-  {
+  public function getParticipantFields(
+    string|Types\EnumDisplayContext $displayContext = Types\EnumDisplayContext::UNRESTRICTED,
+  ):Collection {
     // trigger load
     $this->participantFields->count();
     // sorting during load does not work when using Translatable
-    return $this->participantFields->matching(Criteria::create()->orderBy(['tab' => 'ASC', 'displayOrder' => 'DESC']));
+    $fields = $this->participantFields->matching(Criteria::create()->orderBy(['tab' => 'ASC', 'displayOrder' => 'DESC']));
+    if ($displayContext != Types\EnumDisplayContext::UNRESTRICTED) {
+      $fields = $fields->filter(function(ProjectParticipantField $field) use ($displayContext) {
+        $context = $field->getDisplayContext();
+        return $context == Types\EnumDisplayContext::UNRESTRICTED || $context == $displayContext;
+      });
+    }
+    return $fields;
   }
 
   /**
