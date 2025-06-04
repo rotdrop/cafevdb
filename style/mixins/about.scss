@@ -1,0 +1,58 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2013, 2021, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@mixin about($appNameTag) {
+
+  div.#{$appNameTag}.about {
+    a:link {
+      color:CornFlowerBlue;
+      /* text-decoration:underline; */
+      font-weight:bold;
+    }
+
+    a:visited {
+      color:CornFlowerBlue;
+      /* text-decoration:underline; */
+      font-weight:bold;
+    }
+
+    a:hover {
+      color:CornFlowerBlue;
+      /* text-decoration:underline; */
+      font-style:italic;
+      font-weight:bold;
+    }
+
+    div.product.credits.intro {
+      padding:1em;
+      font-style:italic;
+    }
+
+    div.product.credits.list ul {
+      list-style-type:circle;
+      list-style-position:inside;
+      list-style-image:none;
+      list-style-image:url('../img/listitems/info1.svg');
+    }
+  }
+}
