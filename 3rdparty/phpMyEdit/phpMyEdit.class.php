@@ -470,7 +470,11 @@ class phpMyEdit
 
 	private function key_record_where()
 	{
-		return '('.implode(' AND ', $this->key_record_where_parts(groupByWhere: false)).')';
+
+		return '('
+			. implode(' AND ', $this->key_record_where_parts(groupByWhere: false))
+			. ' AND (' . $this->get_SQL_where_from_query_opts(onlyGlobal: true) . ')'
+			. ')';
 	}
 
 	private function key_record_query_data($key_rec, $sysName = 'rec')
@@ -1932,9 +1936,9 @@ class phpMyEdit
 		return $join_clause;
 	} /* }}} */
 
-	function get_SQL_where_from_query_opts($text = false) /* {{{ */
+	function get_SQL_where_from_query_opts($text = false, $onlyGlobal = false) /* {{{ */
 	{
-		$qp = $this->query_opts;
+		$qp = $onlyGlobal ? [] : $this->query_opts;
 		$where = array();
 		foreach ($qp as $k => $ov) {
 
@@ -2872,9 +2876,7 @@ EOT;
 						break;
 					}
 					if ($attributeValue === true) {
-						$readonly = $this->display['readonly'];
-					} else if ($attributeValue == false) {
-						$readonly = false;
+						$htmlFragment .= ' ' . $this->display['readonly'];
 					}
 					break;
 				case 'disabled':
@@ -5791,8 +5793,6 @@ EOT;
 
 		$postfix = $this->css['postfix'];
 		$formCssClass = $this->getCSSclass($formCssSelector, null, null, $postfix, $row);
-
-		$this->logInfo('FORM SELECTOR ' . $formCssClass . ' ' . $formCssSelector);
 
 		$this->form_begin($formCssClass);
 		echo '<div class="'.$this->getCSSclass('navigation-container', 'up').'">'."\n";
