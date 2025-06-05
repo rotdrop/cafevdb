@@ -33,7 +33,7 @@ import {
   watch,
 } from 'vue';
 import { useRoute } from 'vue-router/composables';
-import { isNavigationFailure, NavigationFailureType } from 'vue-router';
+import { NavigationFailureType } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid'
 
 import axios, { type AxiosResponse } from '@nextcloud/axios';
