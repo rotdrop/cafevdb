@@ -83,7 +83,10 @@ class MusicianCardBackend implements ICardBackend
   public function getCard(string $name):MusicianCard
   {
     $uuid = $this->getUuidFromUri($name);
-    $musician = $this->musiciansRepository->findOneBy([ 'uuid' => $uuid ]);
+    $musician = $this->musiciansRepository->findOneBy([
+      'uuid' => $uuid,
+      'address_book_uri' => null,
+    ]);
     if (empty($musician)) {
       throw new SabreNotFoundException;
     }
@@ -105,11 +108,14 @@ class MusicianCardBackend implements ICardBackend
     }
 
     if (empty($pattern)) {
-      $musicians = $this->musiciansRepository->findAll();
+      $musicians = $this->musiciansRepository->findBy([ 'address_book_uri' => null ]);
     } else {
       $empty = true;
       $likePattern = '%' . $pattern . '%';
-      $criteria = [ [ '(|' => true ] ];
+      $criteria = [
+        'address_book_uri' => null,
+        [ '(|' => true ],
+      ];
       if (array_search('FN', $properties) !== false) {
         $empty = false;
         $criteria[] = [ 'displayName' => $likePattern ];
@@ -160,7 +166,7 @@ class MusicianCardBackend implements ICardBackend
   {
     // to appear in the contacts app, this must really return everything
     // as search is only by client in the presented contacts
-    $musicians = $this->musiciansRepository->findAll();
+    $musicians = $this->musiciansRepository->findBy([ 'address_book_uri' => null ]);
     $vCards = [];
     foreach ($musicians as $musician) {
       $vCards[] = $this->entryToCard($musician);
@@ -196,7 +202,10 @@ class MusicianCardBackend implements ICardBackend
   /** {@inheritdoc} */
   public function getLastModified(?string $uri = null):int
   {
-    $criteria = empty($uri) ? [] : [ 'uuid' => $this->getUuidFromUri($uri) ];
+    $criteria = [ [ 'address_book_uri' => null ] ];
+    if (empty($uri)) {
+      $criteria[] = [ 'uuid' => $this->getUuidFromUri($uri) ];
+    }
     $info = $this->musiciansRepository->fetchLastModifiedDate($criteria);
     return (empty($info) || empty($info['lastModified'])) ? 0 : strtotime($info['lastModified']);
   }
