@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020-2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -81,7 +81,7 @@ class ProjectInstrumentationNumbersRepository extends EntityRepository
       'count(pi.instrument) AS registered',
       'count(pp.registration) AS confirmed' ])
       ->leftJoin('pin.instrument', 'i')
-      ->leftJoin('pin.instruments', 'pi')
+      ->leftJoin('pin.projectInstruments', 'pi')
       ->leftJoin(
         Entities\ProjectParticipant::class, 'pp',
         Query\Expr\Join::WITH,
