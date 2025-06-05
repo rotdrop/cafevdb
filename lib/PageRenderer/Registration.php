@@ -100,6 +100,13 @@ class Registration
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService, $projectService);
     });
 
+    $context->registerService('export:' . ProjectAssociates::TEMPLATE, function($c) {
+      $renderer = $c->query(self::TEMPLATE_PREFIX . ProjectAssociates::TEMPLATE);
+      $fontService = $c->query(FontService::class);
+      $projectService = $c->query(\OCA\CAFEVDB\Service\ProjectService::class);
+      return new Export\PMETableSpreadsheetExporter($renderer, $fontService, $projectService);
+    });
+
     $context->registerService('export:' . SepaBankAccounts::TEMPLATE, function($c) {
       $renderer = $c->query(self::TEMPLATE_PREFIX . SepaBankAccounts::TEMPLATE);
       $fontService = $c->query(FontService::class);

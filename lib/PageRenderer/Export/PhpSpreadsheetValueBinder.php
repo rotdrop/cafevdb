@@ -83,9 +83,9 @@ class PhpSpreadsheetValueBinder extends PhpSpreadSheet\Cell\DefaultValueBinder i
             // Set value
             $cell->setValueExplicit($monetary['amount'], PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
             // Set style
-            $format = PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE;
-            //$format = '#.##0,00 [$€];[ROT]-#.##0,00 [$€]';
-            $format = '#,##0.00 [$€]';
+            // $format = PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_EUR_INTEGER;
+            // $format = '#.##0,00 [$€];[ROT]-#.##0,00 [$€]';
+            // $format = '#,##0.00 [$€]';
             $format = '#,##0.00 [$€];[RED]-#,##0.00 [$€]';
             $cell->getWorksheet()->getStyle($cell->getCoordinate())
               ->getNumberFormat()->setFormatCode($format);

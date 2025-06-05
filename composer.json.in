@@ -34,7 +34,7 @@
     "mpdf/mpdf": "^8.0",
     "paragonie/halite": "^5",
     "phpmailer/phpmailer": "^6.3.0",
-    "phpoffice/phpspreadsheet": "^1.21.0",
+    "phpoffice/phpspreadsheet": "^4.0.0",
     "setasign/fpdf": "*",
     "spatie/temporary-directory": "^1.3",
     "symfony/var-dumper": "^5.2",
