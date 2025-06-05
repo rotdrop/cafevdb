@@ -44,7 +44,10 @@ trait BackedEnumTrait
   }
 
   /**
-   * @return array<string, string|int> The caes
+   * @return array<string, string|int> The cases of the enum as array
+   * ```
+   * [ NAME => VALUE, ... ]
+   * ```
    */
   public static function array(): array
   {
