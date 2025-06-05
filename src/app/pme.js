@@ -2145,6 +2145,11 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
       if ($input.is('select')) {
         refreshSelectWidget($input);
       }
+      const mceInstance = $input.data('mceInstance');
+      if (mceInstance) {
+        mceInstance.mode.set(locked ? 'readonly' : 'design');
+        mceInstance.getBody().setAttribute('contenteditable', !locked);
+      }
       return false;
     });
 

@@ -161,9 +161,15 @@ const myConfig = {
     });
 
     console.debug('Resolve mceDeferred');
-    const mceElement = $('#' + inst.id);
-    mceElement.data('mceDeferred').resolve(inst.id);
-    mceElement.removeData('mceDeferred');
+    const $mceElement = $('#' + inst.id);
+    $mceElement.data('mceDeferred').resolve(inst.id);
+    $mceElement.removeData('mceDeferred');
+    $mceElement.data('mceInstance', inst);
+    if ($mceElement.prop('disabled') || $mceElement.prop('readonly')) {
+      console.info('MCE', inst);
+      inst.mode.set('readonly');
+      inst.getBody().setAttribute('contenteditable', false);
+    }
   },
 
   // spellchecker_rpc_url: OC.filePath(appName, '3rdparty/js/tinymce/plugins/spellchecker', 'rpc.php'),
