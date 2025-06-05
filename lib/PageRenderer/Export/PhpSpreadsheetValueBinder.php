@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -62,7 +62,7 @@ class PhpSpreadsheetValueBinder extends PhpSpreadSheet\Cell\DefaultValueBinder i
    *
    * @return bool
    */
-  public function bindValue(PhpSpreadsheet\Cell\Cell $cell, mixed $value = null)
+  public function bindValue(PhpSpreadsheet\Cell\Cell $cell, mixed $value):bool
   {
     // sanitize UTF-8 strings
     if (is_string($value)) {

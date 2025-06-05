@@ -237,15 +237,15 @@ class Navigation
   <option '
     .'title="'.$this->toolTipsService['pme-export-excel'].'" '
     .'value="EXCEL">'.$this->l->t('Excel Export').'</option>
-  <option '
+  <!-- <option '
     .'title="'.$this->toolTipsService['pme-export-pdf'].'" '
-    .'value="PDF">'.$this->l->t('PDF Export').'</option>
+    .'value="PDF">'.$this->l->t('PDF Export').'</option> -->
   <option '
     .'title="'.$this->toolTipsService['pme-export-csv'].'" '
     .'value="CSV">'.$this->l->t('CSV Export').'</option>
-  <option '
+  <!-- <option '
     .'title="'.$this->toolTipsService['pme-export-html'].'" '
-    .'value="HTML">'.$this->l->t('HTML Export').'</option>
+    .'value="HTML">'.$this->l->t('HTML Export').'</option> -->
 </select></span>';
 
     $button = ['code' => $data];
