@@ -353,7 +353,6 @@ const openProjectEvents = (event: MouseEvent) => {
     name: PROJECT_EVENTS_LISTING_NAME,
     params: {
       ...currentRoute.params,
-      eventsProjectId: props.projectId,
       eventsProjectName: props.projectName,
     },
     query: currentRoute.query,
