@@ -307,7 +307,6 @@ class ProjectService
   {
     $projectId = ($projectOrId instanceof Entities\Project) ? $projectOrId['id'] : $projectOrId;
 
-
     $balanceData = $this->getDatabaseRepository(Entities\ProjectInstrumentationNumber::class)
                         ->fetchInstrumentationBalance($projectId);
 
