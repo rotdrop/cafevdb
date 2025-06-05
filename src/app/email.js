@@ -1640,7 +1640,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
       asyncEmit(
         PROJECT_EVENTS_LISTING, {
-          projectId: projectId(),
           projectName: projectName(),
         },
       ).then(() => {
