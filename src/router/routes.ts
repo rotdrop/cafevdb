@@ -22,6 +22,7 @@
 import { appName } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
 import calendarRoutes from './calendar-routes.ts';
+import addContactsToProjectsRoute from './add-contacts-to-project.ts';
 import type { RouteConfig } from 'vue-router';
 
 // import Console from '../util/console.ts';
@@ -46,7 +47,10 @@ const routes: RouteConfig[] = [
     component: () => import('../components/LegacyWrapperRouterReactivity.vue'),
     name: 'legacy-page',
     props: true,
-    children: calendarRoutes,
+    children: [
+      addContactsToProjectsRoute,
+      calendarRoutes,
+    ],
   },
 ];
 

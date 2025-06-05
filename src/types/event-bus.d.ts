@@ -25,6 +25,7 @@ import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import { jqXHR } from '@types/jquery/misc.d.ts';
 
 import {
+  ADD_CONTACTS_TO_PROJECT,
   APP_SETTINGS_POPUP,
   EMAIL_POPUP,
   GET_VUE_COMPONENT,
@@ -82,6 +83,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
 
   export interface EventArgs {
     // mapping of 'event name' => 'event type'
+    [ADD_CONTACTS_TO_PROJECT]: { projectName: string },
     [APP_SETTINGS_POPUP]: Callbacks,
     [EMAIL_POPUP]: { projectId?: number, projectName?: string, reopen?: boolean, post?: Record<string, any> },
     [GET_VUE_COMPONENT]: {

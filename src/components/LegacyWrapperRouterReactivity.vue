@@ -52,7 +52,12 @@ import {
 } from 'vue-router/composables'
 import type { Route } from 'vue-router'
 import Console from '../util/console.ts'
-import { PROJECT_EVENTS_LISTING } from '../event-bus-events.ts'
+import {
+  PROJECT_EVENTS_LISTING,
+  ADD_CONTACTS_TO_PROJECT,
+} from '../event-bus-events.ts'
+import { PROJECT_EVENTS_LISTING_NAME } from '../router/calendar-routes.ts'
+import { ADD_CONTACTS_TO_PROJECT_NAME } from '../router/add-contacts-to-project.ts'
 import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
 import { sanitizeTemplateParams } from '../util/legacy-post-data.ts'
 
@@ -74,16 +79,40 @@ const router = useRouter()
 logger.debug('BEFORE ROUTE ENTER', { ...currentRoute }, { ...window?.history?.state })
 
 asyncSubscribe(PROJECT_EVENTS_LISTING, async (event) => {
-  const name = 'ProjectEventsListing'
-  const params = {
-    eventsProjectName: '' + event.projectName,
+  const location = {
+    name: PROJECT_EVENTS_LISTING_NAME,
+    params: {
+      ...currentRoute.params,
+      eventsProjectName: '' + event.projectName,
+    },
+    query: currentRoute.query,
   }
-  const query = currentRoute.query
   try {
-    return await router.push({ name, params, query })
+    return await router.push(location)
   } catch (error) {
     logger.error('ROUTE PUSH FAILED', {
       error,
+      location,
+      currentRoute: { ...currentRoute },
+    })
+  }
+})
+
+asyncSubscribe(ADD_CONTACTS_TO_PROJECT, async (event) => {
+  const location = {
+    name: ADD_CONTACTS_TO_PROJECT_NAME,
+    params: {
+      ...currentRoute.params,
+      addContactsProjectName: '' + event.projectName,
+    },
+    query: currentRoute.query,
+  }
+  try {
+    return await router.push(location)
+  } catch (error) {
+    logger.error('ROUTE PUSH FAILED', {
+      error,
+      location,
       currentRoute: { ...currentRoute },
     })
   }

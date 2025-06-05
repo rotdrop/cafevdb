@@ -26,6 +26,7 @@ import { appPrefix } from './config.ts';
 export const appEventName = <T extends string>(tag: T) => appPrefix(tag, '::');
 
 // app events
+export const ADD_CONTACTS_TO_PROJECT = appEventName('add-contacts-to-project');
 export const APP_SETTINGS_POPUP = appEventName('app-settings-popup');
 export const EMAIL_POPUP = appEventName('email-popup');
 export const HISTORY_GO_REQUEST = appEventName('history-go-request');

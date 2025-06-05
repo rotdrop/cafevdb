@@ -106,7 +106,7 @@ class ContactsController extends Controller
   ):DataResponse {
 
     // $this->logInfo('SEARCH: ' . $pattern . ' / ' . print_r(array_filter(compact('limit', 'offset')), true));
-    $searchProperties = [ 'FN', 'EMAIL' ];
+    $searchProperties = [ 'FN', 'EMAIL', 'ORG' ];
     $searchOptions = array_filter(compact('limit', 'offset'));
     $searchOptions['types'] = true;
 
@@ -127,7 +127,8 @@ class ContactsController extends Controller
         $addressBookResults = $addressBook->search(
           $pattern,
           searchProperties: $searchProperties,
-          options: $searchOptions);
+          options: $searchOptions,
+        );
         foreach ($addressBookResults as $contact) {
           $contact['addressbook-key'] = $addressBook->getKey();
           $result[] = $contact;

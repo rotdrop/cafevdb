@@ -450,6 +450,7 @@ class ContactsService
       $entity->setAddressSupplement('c/o ' . $publicName);
       $entity->setDisplayName($value);
     }
+    $entity->setOrganization($value);
 
     $value = $cardData['CATEGORIES'] ?? null;
     if (!empty($value)) {

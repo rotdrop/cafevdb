@@ -174,32 +174,30 @@ const calendarAppRoutes: RouteConfig[] = [
 
 export const PROJECT_EVENTS_LISTING_NAME = 'ProjectEventsListing';
 
-const projectEventRoutes: RouteConfig[] = [
-  {
-    path: 'events/:eventsProjectName',
-    name: PROJECT_EVENTS_LISTING_NAME,
-    component: ProjectEventsListing,
-    props: route => ({ projectName: route.params.eventsProjectName }),
-    beforeEnter: <V extends Vue>(to: Route, from: Route, next: NavigationGuardNext<V>) => {
-      logger.info('BEFORE PROJECT EVENTS LISTING ENTER', {
-        to,
-        from,
-      });
-      // preserve the post-data hash
-      if (from.query.hash && !to.query.hash) {
-        const target = {
-          name: to.name!,
-          params: to.params,
-          query: Object.assign({}, to.query || {}, { hash: from.query.hash }),
-          replace: to.transition === 'replace',
-        }
-        next(target);
-      } else {
-        next();
+const projectEventsRoute: RouteConfig = {
+  path: 'events/:eventsProjectName',
+  name: PROJECT_EVENTS_LISTING_NAME,
+  component: ProjectEventsListing,
+  props: route => ({ projectName: route.params.eventsProjectName }),
+  beforeEnter: <V extends Vue>(to: Route, from: Route, next: NavigationGuardNext<V>) => {
+    logger.info('BEFORE PROJECT EVENTS LISTING ENTER', {
+      to,
+      from,
+    });
+    // preserve the post-data hash
+    if (from.query.hash && !to.query.hash) {
+      const target = {
+        name: to.name!,
+        params: to.params,
+        query: Object.assign({}, to.query || {}, { hash: from.query.hash }),
+        replace: to.transition === 'replace',
       }
-    },
-    children: calendarAppRoutes,
+      next(target);
+    } else {
+      next();
+    }
   },
-];
+  children: calendarAppRoutes,
+};
 
-export default projectEventRoutes;
+export default projectEventsRoute;
