@@ -1496,6 +1496,9 @@ form.pme-form {
       &.lock-unlock {
         background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/unlock.svg');
       }
+      &.top-zero {
+        top: 0;
+      }
     }
 
     &:checked + label.pme-input-lock {
@@ -1546,6 +1549,13 @@ form.pme-form {
   }
 
   td.pme-value {
+
+    &.maximize {
+      width: 100%;
+      .flex-container > * {
+        flex-grow: 1;
+      }
+    }
 
     /* Hacks for some select stylers. The unhacked select is left as is. */
     &.select-wide {
