@@ -30,7 +30,7 @@
       <NcActionSeparator v-show="false" />
     </NcActions>
     <NcActions ref="actions"
-               :class="{ positioned }"
+               :class="[{ positioned }, appName + '-project-actions']"
                :force-menu="true"
                force-semantic-type="menu"
                :open.sync="open"
@@ -38,13 +38,14 @@
                @closed="closeMenu"
     >
       <NcActionCaption v-if="showProjectName"
-                       class="project-actions project-name"
+                       :class="[ appName + '-project-actions', 'project-name']"
                        :name="projectName"
       />
       <NcActionSeparator v-if="showProjectName" />
       <NcActionButton v-if="enableOverviewItem"
                       v-tooltip="tooltips['project-infopage']"
-                      :name="t(appId, 'Project Overview')"
+                      :class="[appName + '-project-actions']"
+                      :name="t(appName, 'Project Overview')"
                       @click="openProjectOverview"
       >
         <template #icon>
@@ -53,8 +54,9 @@
       </NcActionButton>
       <NcActionSeparator v-if="enableOverviewItem" />
       <NcActionRouter v-tooltip="tooltips['project-action:project-participants']"
+                      :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('project-participants')"
-                      :name="t(appId, 'Participants')"
+                      :name="t(appName, 'Participants')"
                       exact
                       @click="closeMenu"
       >
@@ -63,7 +65,8 @@
         </template>
       </NcActionRouter>
       <NcActionLink v-tooltip="tooltips['project-action:project-instrumentation-numbers']"
-                    :name="t(appId, 'Instrumentation Numbers')"
+                    :class="[appName + '-project-actions']"
+                    :name="t(appName, 'Instrumentation Numbers')"
                     :href="getRouteHref(toProjectRouteData('project-instrumentation-numbers'))"
                     @click="openInstrumentationNumbers"
       >
@@ -72,7 +75,8 @@
         </template>
       </NcActionLink>
       <NcActionLink v-tooltip="tooltips['project-action:participant-fields']"
-                    :name="t(appId, 'Participant Fields')"
+                    :class="[appName + '-project-actions']"
+                    :name="t(appName, 'Participant Fields')"
                     :href="getRouteHref(toProjectRouteData('project-participant-fields'))"
                     @click="openParticipantFields"
       >
@@ -82,7 +86,8 @@
       </NcActionLink>
       <NcActionSeparator />
       <NcActionLink v-tooltip="tooltips['project-action:files']"
-                    :name="t(appId, 'Project Files')"
+                    :class="[appName + '-project-actions']"
+                    :name="t(appName, 'Project Files')"
                     :href="projectFolderLink"
                     :target="projectFolderLinkTarget"
                     @click="closeMenu"
@@ -92,7 +97,8 @@
         </template>
       </NcActionLink>
       <NcActionLink v-tooltip="tooltips['project-action:wiki']"
-                    :name="t(appId, 'Project Notes')"
+                    :class="[appName + '-project-actions']"
+                    :name="t(appName, 'Project Notes')"
                     :href="projectNotesLink"
                     @click="openProjectNotes"
       >
@@ -101,7 +107,8 @@
         </template>
       </NcActionLink>
       <NcActionLink v-tooltip="tooltips['project-action:events']"
-                    :name="t(appId, 'Events')"
+                    :class="[appName + '-project-actions']"
+                    :name="t(appName, 'Events')"
                     :href="projectEventsLink"
                     @click="openProjectEvents"
       >
@@ -110,7 +117,8 @@
         </template>
       </NcActionLink>
       <NcActionButton v-tooltip="tooltips['project-action:email']"
-                      :name="t(appId, 'Em@il')"
+                      :class="[appName + '-project-actions']"
+                      :name="t(appName, 'Em@il')"
                       @click="openProjectEmail"
       >
         <template #icon>
@@ -119,8 +127,9 @@
       </NcActionButton>
       <NcActionSeparator v-if="financeMode" />
       <NcActionRouter v-tooltip="tooltips['project-action:business-contacts']"
+                      :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('project-associates')"
-                      :name="t(appId, 'Business Contacts / Associates')"
+                      :name="t(appName, 'Business Contacts / Associates')"
                       exact
                       @click="closeMenu"
       >
@@ -129,8 +138,9 @@
         </template>
       </NcActionRouter>
       <NcActionRouter v-tooltip="tooltips['project-action:sepa-bank-accounts']"
+                      :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('sepa-bank-accounts')"
-                      :name="t(appId, 'Debit Mandates')"
+                      :name="t(appName, 'Debit Mandates')"
                       exact
                       @click="closeMenu"
       >
@@ -139,8 +149,9 @@
         </template>
       </NcActionRouter>
       <NcActionRouter v-tooltip="tooltips['project-action:payments']"
+                      :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('project-payments')"
-                      :name="t(appId, 'Payments')"
+                      :name="t(appName, 'Payments')"
                       exact
                       @click="closeMenu"
       >
@@ -149,7 +160,8 @@
         </template>
       </NcActionRouter>
       <NcActionLink v-tooltip="tooltips['project-action:financial-balance']"
-                    :name="t(appId, 'Financial Balance')"
+                    :class="[appName + '-project-actions']"
+                    :name="t(appName, 'Financial Balance')"
                     :href="financialBalanceLink"
                     :target="financialBalanceLinkTarget"
                     @click="closeMenu"
@@ -171,7 +183,7 @@ import {
   NcActionSeparator,
 } from '@nextcloud/vue'
 import globalState from '../app/globalstate.js'
-import { appName as appId } from '../config.ts'
+import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
 
 import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
@@ -286,7 +298,7 @@ watch(open, (state, oldState) => {
     // logger.info('WATCHER CLOSE MENU')
     // this.closeMenu()
   }
-  logger.info('OPEN CHANGED', state, oldState)
+  logger.info('OPEN CHANGED', { state, oldState })
 })
 watch(() => props.projectId, async (newValue/*, oldValue */) => {
   await syncProjectData(newValue)
@@ -342,7 +354,7 @@ const openProjectNotes = (event: MouseEvent) => {
   closeNavigation()
   asyncEmit(BusEvents.WIKI_POPUP, {
     wikiPage: project.value!.wikiPage,
-    popupTitle: t(appId, 'Project Wiki for {projectName}', { projectName: props.projectName }),
+    popupTitle: t(appName, 'Project Wiki for {projectName}', { projectName: props.projectName }),
   })
 }
 const openProjectEvents = (event: MouseEvent) => {
@@ -496,8 +508,8 @@ onMounted(() => {
   }
 }
 </style>
-<style lang="scss">
-.project-actions.project-name.app-navigation-caption {
+<style lang="scss" scoped>
+.#{$appName}-project-actions.project-name.app-navigation-caption {
   font-weight: bold;
   color: blue;
   font-style: italic;
@@ -514,5 +526,17 @@ onMounted(() => {
   text-align: center;
   font-size: large;
   font-weight: bold;
+}
+.#{$appName}-project-actions::v-deep {
+  .action-link__longtext-wrapper, .action-router__longtext-wrapper {
+    br {
+      display:none;
+    }
+    .action-link__longtext, .action-router__longtext {
+      &:empty {
+        display:none;
+      }
+    }
+  }
 }
 </style>
