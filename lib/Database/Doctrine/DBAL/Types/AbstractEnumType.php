@@ -38,6 +38,8 @@ abstract class AbstractEnumType extends EnumType
   public const L10N_TAG = 'ENUM';
   public const L10N_SEP = ': ';
 
+  protected static array $l10nCache = [];
+
   /** {@inheritdoc} */
   public static function toArray()
   {
@@ -57,17 +59,23 @@ abstract class AbstractEnumType extends EnumType
    */
   public static function getL10NValues(IL10N $l): array
   {
-    $values = array_values(static::toArray());
-    return array_combine(
-      $values,
-      array_map(
-        function(string $value) use ($l) {
-          $prefix = static::L10N_TAG . self::L10N_SEP;
-          $l10nValue = $l->t($prefix . $value);
-          return ($l10nValue === $value || $l10nValue === $prefix . $value) ? $l->t($value) : $l10nValue;
-        },
+    $class = static::class;
+    $locale = $l->getLocaleCode();
+    if (empty(static::$l10nCache[$class][$locale])) {
+      $values = array_values(static::toArray());
+      empty(static::$l10nCache[$class]) && static::$l10nCache[$class] = [];
+      static::$l10nCache[$class][$locale] = array_combine(
         $values,
-      ),
-    );
+        array_map(
+          function(string $value) use ($l) {
+            $prefix = static::L10N_TAG . self::L10N_SEP;
+            $l10nValue = $l->t($prefix . $value);
+            return ($l10nValue === $value || $l10nValue === $prefix . $value) ? $l->t($value) : $l10nValue;
+          },
+          $values,
+        ),
+      );
+    }
+    return static::$l10nCache[$class][$locale];
   }
 }

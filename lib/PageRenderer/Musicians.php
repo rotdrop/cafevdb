@@ -51,15 +51,16 @@ use OCA\CAFEVDB\Storage\UserStorage;
 /** Abstract table generator for Musicians table. */
 abstract class Musicians extends PMETableViewBase
 {
-  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\AllProjectsTrait;
+  use FieldTraits\InstrumentsTrait;
   use FieldTraits\MailingListsTrait;
   use FieldTraits\MusicianAvatarTrait;
   use FieldTraits\MusicianEmailsTrait;
-  use FieldTraits\MusicianFromRowTrait;
   use FieldTraits\MusicianEnsureUserIdSlugTrait;
+  use FieldTraits\MusicianFromRowTrait;
   use FieldTraits\MusicianGenderTrait;
   use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
 
@@ -104,24 +105,6 @@ abstract class Musicians extends PMETableViewBase
         'instrument_holder_id' => 'id',
       ],
       'column' => 'bill_to_party_id',
-      'flags' => self::JOIN_READONLY,
-    ],
-    // self::MUSICIAN_PHOTO_JOIN_TABLE => [
-    //   'entity' => Entities\MusicianPhoto::class,
-    //   'flags' => self::JOIN_READONLY,
-    //   'identifier' => [
-    //     'owner_id' => 'id',
-    //     'image_id' => false,
-    //   ],
-    //   'column' => 'image_id',
-    // ],
-    self::PROJECT_PARTICIPANTS_TABLE => [
-      'entity' => Entities\ProjectParticipant::class,
-      'identifier' => [
-        'project_id' => false,
-        'musician_id' => 'id',
-      ],
-      'column' => 'project_id',
       'flags' => self::JOIN_READONLY,
     ],
   ];
@@ -179,15 +162,15 @@ abstract class Musicians extends PMETableViewBase
   protected function commonShortTitle():?string
   {
     if ($this->deleteOperation()) {
-      return $this->l->t('Remove all data of the displayed musician?');
+      return $this->l->t('Remove all data of the displayed person?');
     } elseif ($this->copyOperation()) {
       return $this->l->t('Copy the displayed musician?');
     } elseif ($this->viewOperation()) {
-      return $this->l->t('Display of all stored personal data for the shown musician.');
+      return $this->l->t('Display of all stored personal data for the shown person.');
     } elseif ($this->changeOperation()) {
-      return $this->l->t('Edit the personal data of the displayed musician.');
+      return $this->l->t('Edit the data of the displayed person.');
     } elseif ($this->addOperation()) {
-      return $this->l->t('Add a new musician to the data-base.');
+      return $this->l->t('Add a new person to the data-base.');
     }
     return null;
   }
@@ -257,10 +240,6 @@ abstract class Musicians extends PMETableViewBase
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = 'id';
 
-    if (!$this->showDisabled) {
-      $opts['filters']['AND'][] = '$table.deleted IS NULL';
-    }
-
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
@@ -271,6 +250,10 @@ abstract class Musicians extends PMETableViewBase
 
     // needed early as otherwise the add_operation() etc. does not work.
     $this->pme->setOptions($opts);
+
+    if (!$this->showDisabled) {
+      $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = '$table.deleted IS NULL';
+    }
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '5';
@@ -303,6 +286,7 @@ abstract class Musicians extends PMETableViewBase
     ];
 
     $instrumentInfo = $this->getInstrumentInfo();
+    $instrumentsFilter = array_keys($this->getNonInstruments());
 
     /*
      *
@@ -356,6 +340,15 @@ abstract class Musicians extends PMETableViewBase
       switch ($table) {
         case self::INSTRUMENTS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+          list($select, $join) = explode('FROM ' . $table . ' t', $joinInfo['sql']);
+          $joinInfo['sql'] = $select
+            . 'FROM ' . $table . ' t
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+ON t.id = __t2.instrument_id
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
+ON __t2.instrument_family_id = __t3.id
+' . $join . '
+WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"';
           break;
         default:
           break;
@@ -586,8 +579,12 @@ abstract class Musicians extends PMETableViewBase
       ],
       'display|LVF' => ['popup' => 'data'],
       'sql'         => 'GROUP_CONCAT(DISTINCT
-  IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL)
-  ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
+  IF(
+    ' . $joinTables[self::MUSICIAN_INSTRUMENTS_TABLE] . '.deleted IS NOT NULL,
+    NULL,
+    $join_col_fqn
+  )
+  ORDER BY ' . $joinTables[self::MUSICIAN_INSTRUMENTS_TABLE] . '.ranking ASC, $order_by)',
       'select'      => 'M',
       'values' => [
         'column'      => 'id',
@@ -596,7 +593,7 @@ abstract class Musicians extends PMETableViewBase
           'cast' => [ false ],
           'ifnull' => [ false ],
         ],
-        'orderby'     => '$table.sort_order ASC',
+        'orderby' => '$table.sort_order ASC',
         'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
       ],
       'valueGroups' => $instrumentInfo['idGroups'],
@@ -612,7 +609,7 @@ abstract class Musicians extends PMETableViewBase
         ],
       ],
     ];
-    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
+    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL AND $table.id NOT IN ("' . implode('","', $instrumentsFilter) . '")']);
 
     list($instrumentsFddIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);

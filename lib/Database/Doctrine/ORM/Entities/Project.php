@@ -426,21 +426,21 @@ class Project implements \ArrayAccess
   /**
    * Get participantFields.
    *
-   * @param string|Types\EnumDisplayContext $displayContext
+   * @param string|Types\EnumParticipationContext $participationContext
    *
    * @return Collection
    */
   public function getParticipantFields(
-    string|Types\EnumDisplayContext $displayContext = Types\EnumDisplayContext::UNRESTRICTED,
+    string|Types\EnumParticipationContext $participationContext = Types\EnumParticipationContext::UNRESTRICTED,
   ):Collection {
     // trigger load
     $this->participantFields->count();
     // sorting during load does not work when using Translatable
     $fields = $this->participantFields->matching(Criteria::create()->orderBy(['tab' => 'ASC', 'displayOrder' => 'DESC']));
-    if ($displayContext != Types\EnumDisplayContext::UNRESTRICTED) {
-      $fields = $fields->filter(function(ProjectParticipantField $field) use ($displayContext) {
-        $context = $field->getDisplayContext();
-        return $context == Types\EnumDisplayContext::UNRESTRICTED || $context == $displayContext;
+    if ($participationContext != Types\EnumParticipationContext::UNRESTRICTED) {
+      $fields = $fields->filter(function(ProjectParticipantField $field) use ($participationContext) {
+        $context = $field->getParticipationContext();
+        return $context == Types\EnumParticipationContext::UNRESTRICTED || $context == $participationContext;
       });
     }
     return $fields;

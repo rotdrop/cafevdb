@@ -47,6 +47,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 class InstrumentInsurances extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;
+  use FieldTraits\InstrumentsTrait;
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;

@@ -120,6 +120,8 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   const DATABASE_STORAGES_TABLE = 'DatabaseStorages';
   const DATABASE_STORAGE_DIR_ENTRIES_TABLE = 'DatabaseStorageDirEntries';
   const INSTRUMENTS_TABLE = 'Instruments';
+  const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
+  const INSTRUMENT_FAMILIES_JOIN_TABLE = 'instrument_instrument_family';
   const INSTRUMENT_INSURANCES_TABLE = 'InstrumentInsurances';
   const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
   const COMPOSITE_PAYMENTS_TABLE = 'CompositePayments';
@@ -278,16 +280,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     }
 
     $this->defaultFDD = $this->createDefaultFDD();
-  }
-
-  /**
-   * Fetch instruments info, @see OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository.
-   *
-   * @return array
-   */
-  protected function getInstrumentInfo():array
-  {
-    return $this->getDatabaseRepository(Entities\Instrument::class)->describeALL();
   }
 
   /**
@@ -1397,6 +1389,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
                     // treat this as autoincrement or otherwise auto-generated ids
                     continue;
                   }
+                  if ($meta->hasAssociation($key)) {
+                    $entityName = $meta->getAssociationMapping($key)['targetEntity'];
+                    $value = $this->entityManager->getReference($entityName, $value);
+                  }
                   $entity[$key] = $value;
                 }
                 $needPersist = true;
@@ -1503,6 +1499,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           $this->debug('Entity not found, creating');
           $entity = new $entityClass;
           foreach ($entityId as $key => $value) {
+            if ($meta->hasAssociation($key)) {
+              $entityName = $meta->getAssociationMapping($key)['targetEntity'];
+              $value = $this->entityManager->getReference($entityName, $value);
+            }
             $entity[$key] = $value;
           }
         }
@@ -1842,6 +1842,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $this->debug('GENERATE NEW ENTITY OF CLASS ' . $entityClass);
               $entity = new $entityClass;
               foreach ($entityId as $key => $value) {
+                if ($meta->hasAssociation($key)) {
+                  $entityName = $meta->getAssociationMapping($key)['targetEntity'];
+                  $value = $this->entityManager->getReference($entityName, $value);
+                }
                 $entity[$key] = $value;
               }
               $needPersist = true;
@@ -1911,6 +1915,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
         $entity = new $entityClass;
         foreach ($entityId as $key => $value) {
           $this->debug('TRY SET ID ' . $key . ' => ' . $value);
+          if ($meta->hasAssociation($key)) {
+            $entityName = $meta->getAssociationMapping($key)['targetEntity'];
+            $value = $this->entityManager->getReference($entityName, $value);
+          }
           $entity[$key] = $value;
         }
         foreach ($changeSet as $column => $field) {
@@ -2581,11 +2589,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       $l10nJoins[] = $l10nJoin;
     }
     $table = explode(self::VALUES_TABLE_SEP, $joinInfo['table'])[0];
+
     $query = 'SELECT t.*'
       . ', '
-      . implode(', ', $l10nFields).'
-  FROM '.$table.' t
-'.implode('', $l10nJoins);
+      . implode(', ', $l10nFields) . '
+  FROM ' . $table . ' t
+' . implode('', $l10nJoins);
     if ($onlyTranslated) {
       array_map(fn($field) => 'l10n_'.$field.' IS NOT NULL', $fields);
       $query .= ' WHERE '

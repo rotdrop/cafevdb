@@ -47,8 +47,6 @@ class Instruments extends PMETableViewBase
 
   const TEMPLATE = 'instruments';
   const TABLE = self::INSTRUMENTS_TABLE;
-  private const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
-  private const INSTRUMENT_FAMILIES_JOIN_TABLE = 'instrument_instrument_family';
   private const TRANSLATIONS_TABLE = self::FIELD_TRANSLATIONS_TABLE;
 
   /**

@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -50,7 +52,6 @@ class ProjectParticipant implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\SoftDeleteableEntity;
-  use CAFEVDB\Traits\UnusedTrait;
   use CAFEVDB\Traits\GetByUuidTrait;
 
   /**
@@ -100,7 +101,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * Link in the project instruments, may be more than one per participant.
    */
-  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'projectParticipant', cascade: ['all'])]
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'projectParticipant', cascade: ['all'], orphanRemoval: true)]
   private $projectInstruments;
 
   /**
@@ -207,8 +208,11 @@ class ProjectParticipant implements \ArrayAccess
    */
   public function setParticipationStatus(string|Types\EnumParticipationStatus $participationStatus):ProjectParticipant
   {
-    $this->participationStatus = $participationStatus;
-
+    if ($this->participationStatus != $participationStatus) {
+      $this->participationStatus = is_string($participationStatus)
+        ? new Types\EnumParticipationStatus($participationStatus)
+        : $participationStatus;
+    }
     return $this;
   }
 
@@ -239,11 +243,107 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Get projectInstruments.
    *
+   * @param null|string|InstrumentFamily $family Restrict to instruments which belong to the
+   * InstrumentFamily (or given family name). Default \null.
+   *
+   * @param bool $complement Invert the search and return all instruments not
+   * belonging to $family. Default \false.
+   *
    * @return Collection
    */
-  public function getProjectInstruments():Collection
+  public function getProjectInstruments(null|string|InstrumentFamily $family = null, bool $complement = false):Collection
   {
-    return $this->projectInstruments;
+    if ($family !== null) {
+      // complicated ...
+      $familyName = ($family instanceof InstrumentFamily) ? $family->getFamily() : $family;
+      $partitions = $this->projectInstruments->partition(
+        fn(mixed $key, ProjectInstrument $projectInstrument)
+        =>
+        $projectInstrument->getInstrument()
+                          ->getFamilies()
+                          ->exists(fn(mixed $key, InstrumentFamily $thisFamily)
+                                   =>
+                                   $thisFamily->getFamily() == $familyName
+                                   || $thisFamily->getUntranslatedFamily() == $familyName));
+      return $complement ? $partitions[1] : $partitions[0];
+    } else {
+      return $this->projectInstruments;
+    }
+  }
+
+  /**
+   * @return Collection The not-an-instruments instruments (i.e. special
+   * roles) of the participant.
+   */
+  public function getNonInstruments():Collection
+  {
+    return $this->getProjectInstruments(ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY);
+  }
+
+  /**
+   * @return Collection Return the real musical instruments of the participant.
+   */
+  public function getRealInstruments():Collection
+  {
+    return $this->getProjectInstruments(ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY, complement: true);
+  }
+
+  /**
+   * @param MusicianInstrument $musicianInstrument
+   *
+   * @param int $voice
+   *
+   * @return ProjectParticipant
+   */
+  public function addProjectInstrument(MusicianInstrument $musicianInstrument, int $voice = ProjectInstrument::UNVOICED):ProjectParticipant
+  {
+    $musician = $musicianInstrument->getMusician();
+    $instrument = $musicianInstrument->getInstrument();
+    if ($this->projectInstruments->exists(fn(mixed $key, ProjectInstrument $projectInstrument)
+                                          =>
+                                          $projectInstrument->getMusician() == $musician
+                                          && $projectInstrument->getInstrument() == $instrument
+                                          && $projectInstrument->getVoice() == $voice)) {
+      return $this;
+    }
+    $projectInstrument = new ProjectInstrument($this, $musicianInstrument, $voice);
+    $instrumentationNumbers = $this->project->getInstrumentationNumbers()->matching(DBUtil::criteriaWhere([
+      'project' => $this->project,
+      'instrument' => $instrument,
+      'voice' => $voice,
+    ]));
+    if ($instrumentationNumbers->isEmpty()) {
+      $instrumentationNumber = new ProjectInstrumentationNumber(
+        project: $this->project,
+        instrument: $instrument,
+        voice: $voice,
+      );
+    } else {
+      $instrumentationNumber = $instrumentationNumbers->first();
+    }
+    $instrumentationNumber->getProjectInstruments()->set($musician->getId(), $projectInstrument);
+    $projectInstrument->setInstrumentationNumber($instrumentationNumber);
+
+    return $this;
+  }
+
+  /**
+   * Remove the given instrument.
+   *
+   * @param ProjectInstrument $projectInstrument
+   *
+   * @return ProjectParticipant
+   */
+  public function removeProjectInstrument(ProjectInstrument $projectInstrument):ProjectParticipant
+  {
+    $this->projectInstruments->removeElement($projectInstrument);
+    $this->musician->getProjectInstruments()->removeElement($projectInstrument);
+    $this->project->getParticipantInstruments()->removeElement($projectInstrument);
+    $projectInstrument->getInstrumentationNumber()->getProjectInstruments()->removeElement($projectInstrument);
+    $projectInstrument->getMusicianInstrument()->getProjectInstruments()->removeElement($projectInstrument);
+    $projectInstrument->getMusicianInstrument()->getInstrument()->getProjectInstruments()->removeElement($projectInstrument);
+
+    return $this;
   }
 
   /**
@@ -346,18 +446,115 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
+   * Determine if $this is only an associated member or business contact
+   * without double-role as musician.
+   *
+   * @return bool
+   */
+  public function isOnlyAssociated():bool
+  {
+    if ($this->participationStatus == ParticipationStatus::ASSOCIATED) {
+      return true;
+    }
+    // in principle this should just have hacked it, but continue ...
+    if (!$this->getNonInstruments()->isEmpty() && $this->getRealInstruments()->isEmpty()) {
+      // this is in principle a bug: the participation status should have been
+      // set to 'associated' by other parts of the code.
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Determine if $this is only a musician without double-role as associated
+   * member or business contact.
+   *
+   * @return bool
+   */
+  public function isOnlyMusician():bool
+  {
+    if ($this->participationStatus != ParticipationStatus::ASSOCIATED) {
+      return true;
+    }
+    // in principle this should just have hacked it, but continue ...
+    if ($this->getNonInstruments()->isEmpty() && !$this->getRealInstruments()->isEmpty()) {
+      // this is in principle a bug: the participation status should have been
+      // set to 'associated' by other parts of the code.
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Return the participation context of the participant.
+   *
+   * @return ParticipationContext
+   */
+  public function getParticipationContext():ParticipationContext
+  {
+    if ($this->isOnlyAssociated()) {
+      return ParticipationContext::ASSOCIATES();
+    }
+    if ($this->isOnlyMusician()) {
+      return ParticipationContext::PARTICIPANTS();
+    }
+    return ParticipationContext::UNRESTRICTED();
+  }
+
+  /**
    * Return the number of "serious" items which "use" this entity. For
-   * project participant this is (for now) the number of payments. In
+   * project participant this includces the number of payments. In
    * the long run: only open payments/receivables should count.
+   *
+   * If a participation context is given the usage in incremented by the
+   * number of instruments/roles configured for the complementary context.
+   *
+   * @param string|ParticipationContext $participationContext
    *
    * @return int
    */
-  public function usage():int
+  public function usage(string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED):int
   {
-    return $this->payments->count();
+    $usage = $this->payments->count();
+    switch ($participationContext) {
+      case ParticipationContext::ASSOCIATES:
+        $usage += (int)$this->isOnlyMusician();
+        break;
+      case ParticipationContext::PARTICIPANTS:
+        $usage += (int)$this->isOnlyAssociated();
+        break;
+      case ParticipationContext::UNRESTRICTED:
+      default:
+        break;
+    }
+    return $usage;
   }
 
-    /** {@inheritdoc} */
+  /**
+   * Return a boolean to indicate that this entity is no longer used.
+   *
+   * @param string|ParticipationContext $participationContext
+   *
+   * @return bool
+   */
+  public function unused(string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED):bool
+  {
+    return $this->usage($participationContext) == 0;
+  }
+
+  /**
+   * Return a boolean to indicate that this field is used.
+   *
+   * @param string|ParticipationContext $participationContext
+   *
+   * @return bool
+   */
+  public function inUse(string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED):bool
+  {
+    return !$this->unused($participationContext);
+  }
+
+  /** {@inheritdoc} */
   public function __toString():string
   {
     $musicianName = ($this->musician instanceof Musician)

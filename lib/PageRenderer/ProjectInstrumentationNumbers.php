@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 /**Table generator for Instruments table. */
 class ProjectInstrumentationNumbers extends PMETableViewBase
 {
+  use FieldTraits\InstrumentsTrait;
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
 

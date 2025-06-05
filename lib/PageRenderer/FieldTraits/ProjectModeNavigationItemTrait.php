@@ -92,9 +92,9 @@ trait ProjectModeNavigationItemTrait
     return array_values(
       array_filter(
         $items,
-        fn($item) => ($item['template'] != self::TEMPLATE
+        fn($item) => ($item['template'] != static::TEMPLATE
                       && ($item['template'] != PageRenderer\InstrumentFamilies::TEMPLATE
-                          || self::TEMPLATE == PageRenderer\Instruments::TEMPLATE)),
+                          || static::TEMPLATE == PageRenderer\Instruments::TEMPLATE)),
       )
     );
   }

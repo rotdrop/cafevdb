@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 /**
  * ProjectInstruments
@@ -46,6 +47,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'ProjectInstruments')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\ProjectInstrumentEntityListener'])]
 class ProjectInstrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -61,54 +63,62 @@ class ProjectInstrument implements \ArrayAccess
     self::NON_INSTRUMENT_BUSINESS_PARTNER,
   ];
 
+  /** @var Project */
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $project;
 
+  /** @var Musician */
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $musician;
 
+  /** @var Instrument */
   #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $instrument;
 
-  /**
-   * @var int|null
-   */
+  /** @var int */
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '0', 'comment' => 'Voice specification if applicable, set to 0 if separation by voice is not needed'])]
   #[ORM\Id]
   private $voice = self::UNVOICED;
 
-  /**
-   * @var bool
-   */
+  /** @var bool */
   #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => '0'])]
   private $sectionLeader = false;
 
+  /** @var ProjectParticipant */
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', onDelete: 'cascade')]
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', onDelete: 'cascade')]
   #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
+  /** @var MusicianInstrument */
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id')]
   #[ORM\JoinColumn(name: 'instrument_id', referencedColumnName: 'instrument_id')]
   #[ORM\ManyToOne(targetEntity: MusicianInstrument::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
   private $musicianInstrument;
 
+  /** @var ProjectInstrumentationNumber */
+  #[ORM\ManyToOne(targetEntity: ProjectInstrumentationNumber::class, inversedBy: 'projectInstruments', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id')]
   #[ORM\JoinColumn(name: 'instrument_id', referencedColumnName: 'instrument_id')]
   #[ORM\JoinColumn(name: 'voice', referencedColumnName: 'voice')]
-  #[ORM\ManyToOne(targetEntity: ProjectInstrumentationNumber::class, inversedBy: 'instruments', fetch: 'EXTRA_LAZY')]
   private $instrumentationNumber;
 
   /** {@inheritdoc} */
-  public function __construct(?Project $project = null, ?Musician $musician = null, ?Instrument $instrument = null, int $voice = self::UNVOICED)
-  {
+  public function __construct(
+    ?ProjectParticipant $projectParticipant = null,
+    ?MusicianInstrument $musicianInstrument = null,
+    int $voice = self::UNVOICED,
+  ) {
     $this->arrayCTOR();
-    $this->project = $project;
-    $this->musician = $musician;
-    $this->instrument = $instrument;
+    if ($projectParticipant !== null) {
+      $this->setProjectParticipant($projectParticipant);
+    }
+    if ($musicianInstrument !== null) {
+      $this->setMusicianInstrument($musicianInstrument);
+    }
     $this->voice = $voice;
   }
 
@@ -131,7 +141,7 @@ class ProjectInstrument implements \ArrayAccess
    *
    * @return int
    */
-  public function getProject()
+  public function getProject():Project
   {
     return $this->project;
   }
@@ -167,7 +177,7 @@ class ProjectInstrument implements \ArrayAccess
    *
    * @return ProjectInstrument
    */
-  public function setInstrument(mixed $instrument):ProjectInstrument
+  public function setInstrument(int|Instrument $instrument):ProjectInstrument
   {
     $this->instrument = $instrument;
 
@@ -177,9 +187,9 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Get instrument.
    *
-   * @return int
+   * @return Instrument
    */
-  public function getInstrument()
+  public function getInstrument():Instrument
   {
     return $this->instrument;
   }
@@ -203,7 +213,7 @@ class ProjectInstrument implements \ArrayAccess
    *
    * @return int|null
    */
-  public function getVoice()
+  public function getVoice():int
   {
     return $this->voice;
   }
@@ -235,11 +245,11 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Set instrumentationNumber.
    *
-   * @param null|ProjectInstrumentationNumber $instrumentationNumber
+   * @param ProjectInstrumentationNumber $instrumentationNumber
    *
    * @return ProjectInstrument
    */
-  public function setInstrumentationNumber(?ProjectInstrumentationNumber $instrumentationNumber):ProjectInstrument
+  public function setInstrumentationNumber(ProjectInstrumentationNumber $instrumentationNumber):ProjectInstrument
   {
     $this->instrumentationNumber = $instrumentationNumber;
 
@@ -249,31 +259,34 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Get instrumentationNumber.
    *
-   * @return ProjectInstrumentationNumber
+   * @return null|ProjectInstrumentationNumber
    */
-  public function getInstrumentationNumber():ProjectInstrumentationNumber
+  public function getInstrumentationNumber():?ProjectInstrumentationNumber
   {
-    return $this->instrumentationNumber;
+    return $this->instrumentationNumber ?? null;
   }
 
   /**
-   * Set projectParticipant.
+   * Set the principal parent entity.
    *
    * @param null|ProjectParticipant $projectParticipant
    *
    * @return ProjectInstrument
    */
-  public function setProjectParticipant(?ProjectParticipant $projectParticipant):ProjectInstrument
+  public function setProjectParticipant(ProjectParticipant $projectParticipant):ProjectInstrument
   {
     $this->projectParticipant = $projectParticipant;
 
-    if (!empty($this->projectParticipant)) {
-      if (empty($this->project)) {
-        $this->project = $this->projectParticipant->getProject();
-      }
-      if (empty($this->musician)) {
-        $this->musician = $this->projectParticipant->getMusician();
-      }
+    $this->project = $this->projectParticipant->getProject();
+    $this->musician = $this->projectParticipant->getMusician();
+    if (!$projectParticipant->getProjectInstruments()->contains($this)) {
+      $projectParticipant->getProjectInstruments()->add($this);
+    }
+    if (!$this->musician->getProjectInstruments()->contains($this)) {
+      $this->musician->getProjectInstruments()->add($this);
+    }
+    if (!$this->project->getParticipantInstruments()->contains($this)) {
+      $this->project->getParticipantInstruments()->add($this);
     }
 
     return $this;
@@ -286,27 +299,27 @@ class ProjectInstrument implements \ArrayAccess
    */
   public function getProjectParticipant():?ProjectParticipant
   {
-    return $this->projectParticipant;
+    return $this->projectParticipant ?? null;
   }
 
   /**
    * Set musicianInstrument.
    *
-   * @param null|MusicianInstrument $musicianInstrument
+   * @param MusicianInstrument $musicianInstrument
    *
    * @return ProjectInstrument
    */
-  public function setMusicianInstrument(?MusicianInstrument $musicianInstrument):ProjectInstrument
+  public function setMusicianInstrument(MusicianInstrument $musicianInstrument):ProjectInstrument
   {
     $this->musicianInstrument = $musicianInstrument;
 
-    if (!empty($this->musicianInstrument)) {
-      if (empty($this->instrument)) {
-        $this->instrument = $this->musicianInstrument->getInstrument();
-      }
-      if (empty($this->musician)) {
-        $this->musician = $this->musicianInstrument->getMusician();
-      }
+    $this->instrument = $this->musicianInstrument->getInstrument();
+    $this->musician = $this->musicianInstrument->getMusician();
+    if (!$this->instrument->getProjectInstruments()->contains($this)) {
+      $this->instrument->getProjectInstruments()->add($this);
+    }
+    if (!$this->musician->getProjectInstruments()->contains($this)) {
+      $this->musician->getProjectInstruments()->add($this);
     }
 
     return $this;
@@ -315,11 +328,32 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Get musicianInstrument.
    *
-   * @return int
+   * @return null|MusicianInstrument
    */
-  public function getMusicianInstrument()
+  public function getMusicianInstrument():?MusicianInstrument
   {
-    return $this->musicianInstrument;
+    return $this->musicianInstrument ?? null;
+  }
+
+  /**
+   * Convenience forward to MusicianInstrument::getName().
+   *
+   * @return string
+   */
+  public function getName():string
+  {
+    return $this->musicianInstrument->getName();
+  }
+
+  /**
+   * Check whether this is not a real instrument, but belongs to
+   * ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY.
+   *
+   * @return bool
+   */
+  public function isNotAnInstrument():bool
+  {
+    return $this->instrument->isNotAnInstrument();
   }
 
   /** {@inheritdoc} */

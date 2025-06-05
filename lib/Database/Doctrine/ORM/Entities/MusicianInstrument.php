@@ -51,49 +51,53 @@ class MusicianInstrument implements \ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
 
-  /**
-   * @var Musician
-   */
+  /** @var Musician */
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'instruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $musician;
 
-  /**
-   * @var Instrument
-   */
+  /** @var Instrument */
   #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'musicianInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $instrument;
 
-  /**
-   * @var Collection
-   */
+  /** @var Collection */
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'musicianInstrument')]
   private $projectInstruments;
 
-  /**
-   * @var int
-   */
+  /** @var int */
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '1', 'comment' => 'Ranking of the instrument w.r.t. to the given musician (lower is better)'])]
   private $ranking = 1;
 
   /** {@inheritdoc} */
-  public function __construct()
+  public function __construct(?Musician $musician = null, ?Instrument $instrument = null, ?int $ranking = null)
   {
     $this->arrayCTOR();
     $this->projectInstruments = new ArrayCollection();
+    if ($musician !== null) {
+      $this->musician = $musician;
+    }
+    if ($instrument !== null) {
+      $this->instrument = $instrument;
+    }
+    if ($ranking !== null) {
+      $this->ranking = $ranking;
+    }
   }
 
   /**
    * Set musician.
    *
-   * @param null|int|Musician $musician
+   * @param Musician $musician
    *
    * @return MusicianInstrument
    */
-  public function setMusician(mixed $musician):MusicianInstrument
+  public function setMusician(Musician $musician):MusicianInstrument
   {
     $this->musician = $musician;
+    if (!$this->musician->getInstruments()->contains($this)) {
+      $this->musician->getInstruments()->add($this);
+    }
 
     return $this;
   }
@@ -105,7 +109,7 @@ class MusicianInstrument implements \ArrayAccess
    */
   public function getMusician():?Musician
   {
-    return $this->musician;
+    return $this->musician ?? null;
   }
 
   /**
@@ -115,9 +119,12 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return MusicianInstrument
    */
-  public function setInstrument($instrument):MusicianInstrument
+  public function setInstrument(Instrument $instrument):MusicianInstrument
   {
     $this->instrument = $instrument;
+    if (!$this->instrument->getMusicianInstruments()->contains($this)) {
+      $this->instrument->getMusicianInstruments()->add($this);
+    }
 
     return $this;
   }
@@ -129,7 +136,17 @@ class MusicianInstrument implements \ArrayAccess
    */
   public function getInstrument():?Instrument
   {
-    return $this->instrument;
+    return $this->instrument ?? null;
+  }
+
+  /**
+   * Convenience forward to Instrument::getName().
+   *
+   * @return string
+   */
+  public function getName():string
+  {
+    return $this->instrument->getName();
   }
 
   /**
@@ -178,6 +195,17 @@ class MusicianInstrument implements \ArrayAccess
   public function getProjectInstruments():Collection
   {
     return $this->projectInstruments;
+  }
+
+  /**
+   * Check whether this is not a real instrument, but belongs to
+   * ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY.
+   *
+   * @return bool
+   */
+  public function isNotAnInstrument():bool
+  {
+    return $this->instrument->isNotAnInstrument();
   }
 
   /**

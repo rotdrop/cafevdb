@@ -251,7 +251,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => 1])]
   private $cloudAccountDisabled;
 
-  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'musician', cascade: ['remove'], orphanRemoval: true)]
+  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'musician', indexBy: 'instrument_id', cascade: ['remove', 'persist'], orphanRemoval: true)]
   #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
   private $instruments;
 
@@ -828,9 +828,13 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setDefaultParticipationStatus($participationStatus):Musician
+  public function setDefaultParticipationStatus(string|Types\EnumParticipationStatus $participationStatus):Musician
   {
-    $this->defaultParticipationStatus = new Types\EnumParticipationStatus($participationStatus);
+    if ($this->defaultParticipationStatus != $participationStatus) {
+      $this->defaultParticipationStatus = is_string($participationStatus)
+        ? new Types\EnumParticipationStatus($participationStatus)
+        : $participationStatus;
+    }
 
     return $this;
   }
@@ -990,11 +994,70 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Get instruments.
    *
+   * @param null|string|InstrumentFamily $family Restrict to instruments which belong to the
+   * InstrumentFamily (or given family name).
+   *
+   * @param bool $complement Invert the search and return all instruments not
+   * belonging to $family. Default \false.
+   *
    * @return Collection
    */
-  public function getInstruments():Collection
+  public function getInstruments(null|string|InstrumentFamily $family = null, bool $complement = false):Collection
   {
-    return $this->instruments;
+    if ($family !== null) {
+      // complicated ...
+      $familyName = ($family instanceof InstrumentFamily) ? $family->getFamily() : $family;
+      $partitions = $this->instruments->partition(
+        fn(mixed $key, MusicianInstrument $instrument)
+        =>
+        $instrument->getInstrument()
+                   ->getFamilies()
+                   ->exists(fn(mixed $key, InstrumentFamily $thisFamily)
+                            =>
+                            $thisFamily->getFamily() == $familyName
+                            || $thisFamily->getUntranslatedFamily() == $familyName));
+      return $complement ? $partitions[1] : $partitions[0];
+    } else {
+      return $this->instruments;
+    }
+  }
+
+  /**
+   * @return Collection The not-an-instruments instruments (i.e. special
+   * roles) of the participant.
+   */
+  public function getNonInstruments():Collection
+  {
+    return $this->getInstruments(ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY);
+  }
+
+  /**
+   * @return Collection Return the real musical instruments of the participant.
+   */
+  public function getRealInstruments():Collection
+  {
+    return $this->getInstruments(ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY, complement: true);
+  }
+
+  /**
+   * Adds the given instrument to the list of the musician's instruments if it
+   * is not yet there.
+   *
+   * @param Instrument $instrument
+   *
+   * @param null|int $ranking
+   *
+   * @return Musician
+   */
+  public function addInstrument(Instrument $instrument, ?int $ranking = null):Musician
+  {
+    if ($this->instruments->containsKey($instrument->getId())) {
+      return $this; // gracefule no-op.
+    }
+    $musicianInstrument = new MusicianInstrument($this, $instrument, $ranking);
+    $this->instruments->set($instrument->getId(), $musicianInstrument);
+
+    return $this;
   }
 
   /**

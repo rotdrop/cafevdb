@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Service\MusicianService;
  */
 trait MusicianFromRowTrait
 {
+  use InstrumentsTrait;
   use QueryFieldTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;

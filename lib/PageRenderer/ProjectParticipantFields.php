@@ -954,7 +954,7 @@ __EOT__;
       'name' => $this->l->t('Context'),
       'css' => [ 'postfix' => [ 'display-context', 'allow-empty' ], ],
       'select' => 'O',
-      'values2' => Types\EnumDisplayContext::getL10NValues($this->l),
+      'values2' => Types\EnumParticipationContext::getL10NValues($this->l),
       'default' => null,
       'sort' => true,
       'align' => 'center',

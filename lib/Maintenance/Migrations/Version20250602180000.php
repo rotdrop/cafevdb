@@ -28,6 +28,6 @@ namespace OCA\CAFEVDB\Maintenance\Migrations;
  * Wrapper class which gives the migration a proper sequence number and
  * redirects to the actual implementation.
  */
-class Version20250602180000 extends AddDisplayContextToProjectParticipantFields
+class Version20250602180000 extends AddParticipationContextToProjectParticipantFields
 {
 }

@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDisplayContext as DisplayContext;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
@@ -57,9 +57,11 @@ use OCA\CAFEVDB\Storage\UserStorage;
  * to the ProjectParticipants table as well as the ProjectParticipants view
  * does, but comes with a reduced set of fields.
  */
-class ProjectAssociates extends PMETableViewBase
+class ProjectAssociates extends ProjectParticipants
 {
   use FieldTraits\AllProjectsTrait;
+  use FieldTraits\FinanceModeNavigationItemTrait;
+  use FieldTraits\InstrumentsTrait;
   use FieldTraits\MailingListsTrait;
   use FieldTraits\MusicianAvatarTrait;
   use FieldTraits\MusicianEmailsTrait;
@@ -70,7 +72,6 @@ class ProjectAssociates extends PMETableViewBase
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
   use FieldTraits\ProjectEntityTrait;
-  use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
@@ -195,40 +196,6 @@ class ProjectAssociates extends PMETableViewBase
     ],
   ];
 
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(
-    ConfigService $configService,
-    EntityManager $entityManager,
-    IRequest $request,
-    PHPMyEdit $phpMyEdit,
-    PageNavigation $pageNavigation,
-    ToolTipsService $toolTipsService,
-    //
-    private ContactsService $contactsService,
-    private FinanceService $financeService,
-    private GeoCodingService $geoCodingService,
-    private InstrumentInsuranceService $insuranceService,
-    private PhoneNumberService $phoneNumberService,
-    protected ProjectParticipantFieldsService $participantFieldsService,
-    protected ProjectService $projectService,
-    protected UserStorage $userStorage,
-  ) {
-    parent::__construct(
-      self::TEMPLATE,
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
-    );
-
-    $this->findProject(enforce: true);
-
-    $this->pme->overrideLabel('Add', $this->l->t('Add Musician'));
-  }
-  // phpcs:enable
-
   /** {@inheritdoc} */
   public function shortTitle()
   {
@@ -248,11 +215,7 @@ class ProjectAssociates extends PMETableViewBase
     $template        = $this->template;
     $expertMode      = $this->expertMode;
     $instrumentInfo  = $this->getInstrumentInfo();
-
-    $instrumentsFilter = array_keys(array_filter(
-      $instrumentInfo['idGroups'],
-      fn(string $families) => !empty(in_array($this->l->t(Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY), explode(',', $families))),
-    ));
+    $instrumentsFilter = array_keys($this->getNonInstruments());
 
     $opts            = [];
 
@@ -261,13 +224,6 @@ class ProjectAssociates extends PMETableViewBase
       self::CSS_TAG_SHOW_HIDE_DISABLED,
       self::CSS_TAG_PROJECT_PARTICIPANT_FIELDS_DISPLAY,
     ];
-
-    $opts[PHPMyEdit::OPT_FILTERS]['AND'] = [
-      '$table.project_id = ' . $this->projectId,
-    ];
-    if (!$this->showDisabled) {
-      $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = '$table.deleted IS NULL';
-    }
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
@@ -314,7 +270,7 @@ class ProjectAssociates extends PMETableViewBase
     $export = $this->pageNavigation->tableExportButton();
     $opts['buttons'] = $this->pageNavigation->prependTableButton($export, true);
 
-    $participantFields = $this->project->getParticipantFields(DisplayContext::ASSOCIATES);
+    $participantFields = $this->project->getParticipantFields(ParticipationContext::ASSOCIATES);
 
     // count number of finance fields
     $extraFinancial = 0;
@@ -415,9 +371,27 @@ class ProjectAssociates extends PMETableViewBase
       switch ($table) {
         case self::INSTRUMENTS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+          list($select, $join) = explode('FROM ' . self::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
+          $joinInfo['sql'] = $select
+            . 'FROM ' . self::INSTRUMENTS_TABLE . ' t
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+ON t.id = __t2.instrument_id
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
+ON __t2.instrument_family_id = __t3.id
+' . $join . '
+WHERE __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"';
           break;
         case self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians':
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+          list($select, $join) = explode('FROM ' . self::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
+          $joinInfo['sql'] = $select
+            . 'FROM ' . self::INSTRUMENTS_TABLE . ' t
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+ON t.id = __t2.instrument_id
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
+ON __t2.instrument_family_id = __t3.id
+' . $join . '
+WHERE __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"';
           break;
         case self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'label');
@@ -427,13 +401,13 @@ class ProjectAssociates extends PMETableViewBase
       }
     });
 
-    $this->defineJoinStructure($opts);
-
-    $projectInstrumentsJoin =  $this->joinTables[self::PROJECT_INSTRUMENTS_TABLE];
-    $opts[PHPMyEdit::OPT_FILTERS]['OR'] = [
-      '$table.participation_status = "' . ParticipationStatus::ASSOCIATED . '"',
-      $projectInstrumentsJoin . '.instrument_id IN ("' . implode('","', $instrumentsFilter) . '")',
+    $this->joinStructure[self::PROJECT_INSTRUMENTS_TABLE]['filter'] = [
+      'instrument_id' => [ 'value' => $instrumentsFilter ],
     ];
+    $this->joinStructure[self::INSTRUMENTS_TABLE]['filter'] = [
+      'id' => [ 'value' => $instrumentsFilter ],
+    ];
+    $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'organization',
@@ -638,7 +612,7 @@ class ProjectAssociates extends PMETableViewBase
 
     $fdd = [
       'tab'         => [ 'id' => [ 'instrumentation' ] ],
-      'name'        => $this->l->t('Role (Instrument)'),
+      'name'        => $this->l->t('Role'),
       // 'input'    => ($expertMode ? 'R' : 'RH'),
       'css'         => [
         'postfix' => [
@@ -649,7 +623,7 @@ class ProjectAssociates extends PMETableViewBase
       ],
       'display|LVF' => ['popup' => 'data'],
       'sql|LFVDCP'    => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
-      'select'      => 'M',
+      'select'      => 'D',
       'filter' => [
         'having' => true,
       ],
@@ -663,17 +637,27 @@ class ProjectAssociates extends PMETableViewBase
         'orderby'     => '$table.sort_order ASC',
         'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
       ],
-      'valueGroups' => $instrumentInfo['idGroups'],
+      // 'valueGroups' => $instrumentInfo['idGroups'], not needed here
     ];
     $fdd['values|VDPC'] = array_merge($fdd['values'], [
       PHPMyEdit::OPT_FILTERS => '$table.id IN (SELECT DISTINCT instrument_id
-  FROM '.self::MUSICIAN_INSTRUMENTS_TABLE.' mi
-  WHERE $record_id[project_id] = '.$this->projectId.' AND $record_id[musician_id] = mi.musician_id)',
+  FROM ' . self::MUSICIAN_INSTRUMENTS_TABLE . ' mi
+  WHERE '
+      . '$record_id[project_id] = ' . $this->projectId
+      . ' AND '
+      . '$record_id[musician_id] = mi.musician_id'
+      . ' AND '
+      . 'mi.instrument_id IN ("' . implode('","', $instrumentsFilter) . '")'
+      .')',
     ]);
     $fdd['values|LFV'] = array_merge($fdd['values'], [
       PHPMyEdit::OPT_FILTERS => '$table.id IN (SELECT DISTINCT instrument_id
-  FROM '.self::PROJECT_INSTRUMENTS_TABLE.' pi
-  WHERE '.$this->projectId.' = pi.project_id)',
+  FROM ' . self::PROJECT_INSTRUMENTS_TABLE . ' pi
+  WHERE '
+      . $this->projectId . ' = pi.project_id'
+      . ' AND '
+      . 'pi.instrument_id IN ("' . implode('","', $instrumentsFilter) . '")'
+      . ')',
     ]);
 
     // Use $fdd defined above after tweaking its values
@@ -714,6 +698,65 @@ class ProjectAssociates extends PMETableViewBase
     NULL
   )
   ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+      ]);
+
+    $musicianInstrumentsJoin = $this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE];
+
+    $fdd = [
+      'name' => $this->l->t('Possible Roles'),
+      'tab'  => [ 'id' => [ 'musician', 'instrumentation' ] ],
+      'css'  => [
+        'postfix' => [
+          'musician-instruments',
+          'tooltip-top',
+          'no-chosen',
+          'selectize',
+          'drag-drop',
+          'select-wide',
+        ],
+      ],
+      'display|LVF' => ['popup' => 'data'],
+      'sql'         => 'GROUP_CONCAT(DISTINCT
+  IF(' . $musicianInstrumentsJoin . '.deleted IS NOT NULL, NULL, $join_col_fqn)
+  ORDER BY '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
+      'select'      => 'M',
+      'values' => [
+        'column'      => 'id',
+        'description' => [
+          'columns' => [ 'l10n_name', ],
+          'cast' => [ false ],
+          'ifnull' => [ false ],
+        ],
+        'orderby'     => '$table.sort_order ASC',
+        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians'], ],
+      ],
+      'valueGroups' => $instrumentInfo['idGroups'],
+      'filter' => [
+        'having' => true,
+      ],
+    ];
+    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
+
+    // Use $fdd defined above after tweaking its values
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
+        'name'    => $this->l->t('Disabled Roles'),
+        'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
+        'css'     => [ 'postfix' => [ 'selectize', 'no-chosen', ], ],
+        'sql'     => 'GROUP_CONCAT(DISTINCT IF($join_col_fqn IS NULL, NULL, $join_table.instrument_id))',
+        'default' => null,
+        'select'  => 'M',
+        'input'   => 'SR',
+        'tooltip' => $this->toolTipsService['page-renderer:musicians:instruments-disabled'],
+        'values2' => $instrumentInfo['byId'],
+        'valueGroups' => $instrumentInfo['idGroups'],
+        'filter' => [
+          'having' => true,
+          // 'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
+        ],
       ]);
 
     /*
@@ -964,11 +1007,11 @@ class ProjectAssociates extends PMETableViewBase
         'tab'      => ['id' => 'musician'],
         'name'     => $this->l->t('General Remarks'),
         'maxlen'   => 65535,
-        'css'      => ['postfix' => [ 'remarks', 'tooltip-top', 'squeeze-subsequent-lines', ], ],
+        'css'      => ['postfix' => [ 'remarks', 'tooltip-top', 'squeeze-subsequent-lines', 'maximize', ], ],
         'textarea' => [
           'css' => 'wysiwyg-editor',
           'rows' => 5,
-          'cols' => 50,
+          'cols' => 66,
         ],
         'display|LF' => [
           'popup' => 'data',
@@ -977,8 +1020,24 @@ class ProjectAssociates extends PMETableViewBase
         ],
         'escape' => false,
         'display' => [
-          'attributes' => [ 'readonly' => true, 'disabled' => true, ],
+          'attributes' => [ 'readonly' => true, ],
           'popup' => 'data',
+        ],
+        'display|ACP' => [
+          'attributes' => [ 'readonly' => true, ],
+          'popup' => 'data',
+          'prefix' => '<div class="flex-container" style="position:relative;">',
+          'postfix' => function($op, $pos, $k, $row, $pme) {
+            $checked = 'checked="checked" ';
+            return '<input id="pme-musician-remarks"
+  ' . $checked . '
+  type="checkbox"
+  class="pme-input pme-input-lock lock-unlock top-zero"/>
+<label class="pme-input pme-input-lock lock-unlock top-zero"
+       title="' . $this->toolTipsService['pme:input:lock:unlock'].'"
+       for="pme-musician-remarks"></label>
+</div>';
+          },
         ],
         'tooltip' => $this->l->t('General, not project-specific remarks. The field cannot be changed from here.'),
       ]);
@@ -1085,6 +1144,8 @@ class ProjectAssociates extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'ensureUserIdSlug' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
+    // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
+    // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateCheckParticipationStatus' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'cleanupParticipantFields' ];
 
@@ -1110,6 +1171,20 @@ class ProjectAssociates extends PMETableViewBase
     $opts['cgi']['persist']['participationStatusFddIndex'] = $participationStatusFddIndex;
     $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
 
+    $opts[PHPMyEdit::OPT_FILTERS]['AND'] = [
+      '$table.project_id = ' . $this->projectId,
+    ];
+    if (!$this->showDisabled) {
+      $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = '$table.deleted IS NULL';
+    }
+
+    $projectInstrumentsJoin =  $this->joinTables[self::PROJECT_INSTRUMENTS_TABLE];
+    $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = '('
+      . '$table.participation_status = "' . ParticipationStatus::ASSOCIATED . '"'
+      . ' OR '
+      . $projectInstrumentsJoin . '.instrument_id IN ("' . implode('","', $instrumentsFilter) . '")'
+      . ')';
+
     $opts = $this->mergeDefaultOptions($opts);
 
     if ($execute) {
@@ -1117,283 +1192,6 @@ class ProjectAssociates extends PMETableViewBase
     } else {
       $this->pme->setOptions($opts);
     }
-  }
-
-  /**
-   * When removing an instrument any pending voice(s) have to be removed, too.
-   *
-   * @param PHPMyEdit $pme The phpMyEdit instance.
-   *
-   * @param string $op The operation, 'insert', 'update' etc.
-   *
-   * @param string $step 'before' or 'after'.
-   *
-   * @param array $oldValues Self-explanatory.
-   *
-   * @param array $changed Set of changed fields, may be modified by the callback.
-   *
-   * @param null|array $newValues Set of new values, which may also be modified.
-   *
-   * @return bool If returning @c false the operation will be terminated
-   */
-  public function beforeUpdateRemoveDependentVoices(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
-  {
-    // sanitize instrumentation numbers
-    $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
-    $voicesColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
-
-    $debugColumns = [ $instrumentsColumn, $voicesColumn ];
-    $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'before');
-
-    // [ProjectInstruments:instrument_id] => 3 [ProjectInstruments:voice] => 5:1
-
-    foreach (['old', 'new'] as $dataSet) {
-      $dataArray = $dataSet . 'Values';
-      ${$dataSet . 'Instruments'} = Util::explode(',', ${$dataArray}[$instrumentsColumn]??'');
-      ${$dataSet . 'Voices'} =  Util::explodeIndexedMulti(${$dataArray}[$voicesColumn]??'', null, ',', self::JOIN_KEY_SEP);
-
-      // Add the zero "unvoice" to the voices if no other voices are configured
-      foreach (${$dataSet . 'Instruments'} as $instrument) {
-        if (empty(${$dataSet . 'Voices'}[$instrument])) {
-          ${$dataSet . 'Voices'}[$instrument] = [ 0 ];
-        }
-      }
-
-      // Remove any voice for which no instrument is configured in the
-      // respective data set
-      foreach (${$dataSet . 'Voices'} as $instrument => $voices) {
-        if (array_search($instrument, ${$dataSet . 'Instruments'}) === false) {
-          $this->debug('REMOVE VOICES ' . implode(',', $voices) . ' FOR INSTRUMENT ' . $instrument);
-          unset(${$dataSet . 'Voices'}[$instrument]);
-        }
-      }
-
-      // implode things again, instruments remains unchanged
-      ${$dataArray}[$voicesColumn] = Util::implodeIndexedMulti(${$dataSet . 'Voices'}, ',', self::JOIN_KEY_SEP);
-    }
-
-    // recompute changeset
-    Util::unsetValue($changed, $voicesColumn);
-    if ($oldValues[$voicesColumn] !== $newValues[$voicesColumn]) {
-      $changed[] = $voicesColumn;
-    }
-
-    $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'after');
-
-    return true;
-  }
-
-  /**
-   * Make sure at least a dummy instrumentation number exists when
-   * adding people to project instruments.
-   *
-   * @param PHPMyEdit $pme The phpMyEdit instance.
-   *
-   * @param string $op The operation, 'insert', 'update' etc.
-   *
-   * @param string $step 'before' or 'after'.
-   *
-   * @param array $oldValues Self-explanatory.
-   *
-   * @param array $changed Set of changed fields, may be modified by the callback.
-   *
-   * @param null|array $newValues Set of new values, which may also be modified.
-   *
-   * @return bool If returning @c false the operation will be terminated
-   */
-  public function beforeUpdateEnsureInstrumentationNumbers(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
-  {
-    $voiceField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
-    $instrumentField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
-
-    // $debugColumns = [ $instrumentField, $voiceField, ];
-    // $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'before');
-
-    if (array_search($voiceField, $changed) === false
-        && array_search($instrumentField, $changed) === false) {
-      // nothing to do
-      $this->debug('UNCHANGED INSTRUMENTS');
-      return true;
-    }
-
-    // only the new values should matter ...
-    $instrumentVoices = [];
-    $instruments = Util::explode(',', $newValues[$instrumentField]);
-    foreach ($instruments as $instrument) {
-      $instrumentVoices[$instrument] = [ 0 ];
-    }
-    $voiceValues = Util::explodeIndexedMulti($newValues[$voiceField]);
-
-    $this->debug('VOICE VALUES '.print_r($voiceValues, true));
-
-    foreach ($instrumentVoices as $instrument => &$voices) {
-      $voices = array_merge($voices, $voiceValues[$instrument]??[]);
-    }
-    unset($voices); // break reference
-
-    $this->debug('VOICES '.print_r($instrumentVoices, true));
-
-    $instrumentationNumbers = $this->project->getInstrumentationNumbers();
-    foreach ($instrumentVoices as $instrumentId => $voices) {
-      foreach ($voices as $voice) {
-        if (!$instrumentationNumbers->exists(function($dummy, Entities\ProjectInstrumentationNumber $instrumentationNumber) use ($instrumentId, $voice) {
-          return ($instrumentationNumber->getInstrument()->getId() == $instrumentId
-                  &&
-                  $instrumentationNumber->getVoice() == $voice);
-        })) {
-          $instrumentationNumber = (new Entities\ProjectInstrumentationNumber)
-                                 ->setProject($this->project)
-                                 ->setInstrument($instrumentId)
-                                 ->setVoice($voice)
-                                 ->setQuantity(0);
-          $this->persist($instrumentationNumber);
-          $this->flush();
-        }
-      }
-    }
-
-    // $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'after');
-
-    return true;
-  }
-
-  /**
-   * Translate the tab-name to an id if the name is set in the tab
-   * definitions of the table. This is needed by the
-   * ParticipantFieldsTrait in order to move extra-fields to the
-   * correct tab.
-   *
-   * @param string $idOrName
-   *
-   * @return string
-   */
-  protected function tableTabId(string $idOrName):string
-  {
-    $dflt = $this->defaultTableTabs(true);
-    foreach ($dflt as $tab) {
-      if ($idOrName === $tab['name'] || $idOrName === $this->l->t($tab['id'])) {
-        return $tab['id'];
-      }
-    }
-    return $idOrName;
-  }
-
-  /**
-   * Export the default tabs family. Extra-tabs are inserted after the
-   * personal data and before the misc-tab. The finance tab comes
-   * before the personal data.
-   *
-   * @param bool $useFinanceTab
-   *
-   * @param array $extraTabs
-   *
-   * @return array
-   */
-  private function defaultTableTabs(bool $useFinanceTab = false, array $extraTabs = []):array
-  {
-    $pre = [
-      [
-        'id' => 'instrumentation',
-        'default' => true,
-        'tooltip' => $this->toolTipsService['project-instrumentation-tab'],
-        'name' => $this->l->t('Instrumentation related data'),
-      ],
-      [
-        'id' => 'project',
-        'tooltip' => $this->toolTipsService['project-metadata-tab'],
-        'name' => $this->l->t('Project related data'),
-      ],
-    ];
-    $finance = [
-      [
-        'id' => 'finance',
-        'tooltip' => $this->toolTipsService['project-finance-tab'],
-        'name' => $this->l->t('Finance related data'),
-      ],
-    ];
-    $personal = [
-      // [
-      //   'id' => 'file-attachments',
-      //   'tooltip' => $this->toolTipsService['project-file-attachments-tab'],
-      //   'name' => $this->l->t('Project file attachments'),
-      // ],
-      [
-        'id' => 'contactdata',
-        'tooltip' => $this->toolTipsService['project-contactdata-tab'],
-        'name' => $this->l->t('Contact Information'),
-      ],
-      [
-        'id' => 'musician',
-        'tooltip' => $this->toolTipsService['project-personaldata-tab'],
-        'name' => $this->l->t('Personal data'),
-      ],
-    ];
-    $post = [
-      [
-        'id' => 'miscinfo',
-        'tooltip' => $this->toolTipsService['page-renderer:tab:miscinfo'],
-        'name' => $this->l->t('Miscinfo'),
-      ],
-      [
-        'id' => 'tab-all',
-        'tooltip' => $this->toolTipsService['page-renderer:tab:showall'],
-        'name' => $this->l->t('Display all columns'),
-      ],
-    ];
-    if ($useFinanceTab) {
-      return array_merge($pre, $finance, $personal, $extraTabs, $post);
-    } else {
-      return array_merge($pre, $personal, $extraTabs, $post);
-    }
-  }
-
-  /**
-   * Export the description for the table tabs.
-   *
-   * @param mixed $participantFields
-   *
-   * @param bool $useFinanceTab
-   *
-   * @return array
-   */
-  private function tableTabs(mixed $participantFields = false, bool $useFinanceTab = false):array
-  {
-    $dfltTabs = $this->defaultTableTabs($useFinanceTab);
-
-    if (!is_iterable($participantFields)) {
-      $this->logInfo('UNITERABLE PART FIELDS');
-      return $dfltTabs;
-    }
-
-    $extraTabs = [];
-    /** @var Entities\ProjectParticipantField $field */
-    foreach ($participantFields as $field) {
-      $extraTab = $field['tab'] ?: ProjectParticipantFieldsService::defaultTabId($field->getMultiplicity(), $field->getDataType());
-      if (empty($extraTab)) {
-        continue;
-      }
-
-      foreach ($dfltTabs as $tab) {
-        if ($extraTab == $tab['id']
-            || $extraTab == $this->l->t($tab['id'])
-            || $extraTab == $tab['name']
-            || $extraTab == $this->l->t($tab['name'])) {
-          $extraTab = null;
-          break;
-        }
-      }
-      if (!empty($extraTab)) {
-        $newTab = [
-          'id' => $extraTab,
-          'name' => $this->l->t($extraTab),
-          'tooltip' => $this->toolTipsService['participant-fields-extra-tab'],
-        ];
-        $dfltTabs[] = $newTab;
-        $extraTabs[] = $newTab;
-      }
-    }
-
-    return $this->defaultTableTabs($useFinanceTab, $extraTabs);
   }
 
   /**
@@ -1417,7 +1215,7 @@ class ProjectAssociates extends PMETableViewBase
   {
     $entity = $this->legacyRecordToEntity($pme->rec);
 
-    $this->projectService->deleteProjectParticipant($entity);
+    $this->projectService->deleteProjectParticipant($entity, ParticipationContext::ASSOCIATES());
 
     $changed = []; // disable PME delete query
 

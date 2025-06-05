@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,25 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 class InstrumentsRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
+
+  /**
+   * Return a collection of non-instruments, that is, instruments which belong
+   * to the family Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY.
+   *
+   * @param null|array $only If not empty restrict to the given instrument names.
+   *
+   * @return array<int, Entities\Instrument> The found instruments indexed by id.
+   */
+  public function findNonInstruments(?array $only = null)
+  {
+    $criteria = [
+      'families.family' => Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY,
+    ];
+    if (!empty($only)) {
+      $criteria['name'] = $only;
+    }
+    return $this->findBy($criteria, orderBy: [ 'id' => 'INDEX' ]);
+  }
 
   /**
    * Find an instrument by its name.
@@ -102,8 +121,3 @@ class InstrumentsRepository extends EntityRepository
     ];
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

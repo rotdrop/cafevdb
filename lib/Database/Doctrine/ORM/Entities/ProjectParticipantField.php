@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener as TranslatableListener;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDisplayContext as DisplayContext;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -172,8 +172,8 @@ class ProjectParticipantField implements \ArrayAccess
    * If non-null show the field only in the respective view, either
    * "participants" or "associates". If null show the field in either view.
    */
-  #[ORM\Column(type: 'EnumDisplayContext', nullable: false, options: ['default' => 'unrestricted'])]
-  private DisplayContext $displayContext;
+  #[ORM\Column(type: 'EnumParticipationContext', nullable: false, options: ['default' => 'unrestricted'])]
+  private ParticipationContext $participationContext;
 
   /**
    * @var bool|null
@@ -212,7 +212,7 @@ class ProjectParticipantField implements \ArrayAccess
     $this->fieldData = new ArrayCollection();
     $this->dataOptions = new ArrayCollection();
     $this->participantAccess = Types\EnumAccessPermission::NONE();
-    $this->displayContext = DisplayContext::UNRESTRICTED();
+    $this->participationContext = ParticipationContext::UNRESTRICTED();
   }
   // phpcs:enable
 
@@ -471,31 +471,31 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set displayContext.
+   * Set participationContext.
    *
-   * @param null|string|DisplayContext $displayContext On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
+   * @param null|string|ParticipationContext $participationContext On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
    *
    * @return ProjectParticipantField
    */
-  public function setDisplayContext(null|string|DisplayContext $displayContext):?ProjectParticipantField
+  public function setParticipationContext(null|string|ParticipationContext $participationContext):?ProjectParticipantField
   {
-    if ($displayContext === null) {
-      $this->displayContext = null;
-    } elseif ((string)$displayContext !== ((string)$this->displayContext ?? '')) {
-      $this->displayContext = new DisplayContext($displayContext);
+    if ($participationContext === null) {
+      $this->participationContext = null;
+    } elseif ((string)$participationContext !== ((string)$this->participationContext ?? '')) {
+      $this->participationContext = new ParticipationContext($participationContext);
     }
 
     return $this;
   }
 
   /**
-   * Get displayContext.
+   * Get participationContext.
    *
-   * @return DisplayContext
+   * @return ParticipationContext
    */
-  public function getDisplayContext():DisplayContext
+  public function getParticipationContext():ParticipationContext
   {
-    return $this->displayContext;
+    return $this->participationContext;
   }
 
   /**

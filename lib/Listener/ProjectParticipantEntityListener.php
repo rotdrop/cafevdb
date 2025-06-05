@@ -35,12 +35,15 @@ use OCP\IGroupManager;
 use OCP\IUserManager;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant as Entity;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 
 /**
  * Entity listener for project participation.
@@ -86,6 +89,39 @@ class ProjectParticipantEntityListener
    */
   public function preUpdate(Entity $entity, ORMEvent\PreUpdateEventArgs $event)
   {
+    $this->l = $this->appContainer->get(IL10N::class);
+    $field = 'participationStatus';
+    if ($event->hasChangedField($field)) {
+      $participationStatus = (string)$event->getNewValue($field);
+      switch ($participationStatus) {
+        case ParticipationStatus::PASSIVE:
+          // confirmed partiticipants must not be "passive"
+          if ($entity->getRegistration()) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t(
+                'Confirmed project participants cannot have a participation status of "%s".',
+                ParticipationStatus::getL10NValues($this->l)[$participationStatus],
+              ),
+            );
+          }
+          break;
+        case ParticipationStatus::ASSOCIATED:
+          // participants playing real instruments must not be associated
+          $realInstruments = $entity->getRealInstruments();
+          if (!$realInstruments->isEmpty()) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t(
+                'The participation-status cannot be set to "%1$s" as long as the participant is registered to perform with real instruments (%2$s)',
+                [
+                  ParticipationStatus::getL10NValues($this->l)[$participationStatus],
+                  implode(', ', array_map(fn(Entities\ProjectInstrument $instrument) => $instrument->getInstrument()->getName(), $realInstruments->toArray())),
+                ],
+              ),
+            );
+          }
+          break;
+      }
+    }
     $field = 'registration';
     if ($event->hasChangedField($field)) {
       $oldValue = $event->getOldValue($field);

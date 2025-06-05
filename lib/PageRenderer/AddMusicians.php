@@ -26,8 +26,11 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use OCP\IRequest;
 
-use OCA\CAFEVDB\Database\EntityManager;
+
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\AuthorizationService;
@@ -47,6 +50,8 @@ class AddMusicians extends Musicians
   use FieldTraits\ProjectModeNavigationItemTrait;
 
   const TEMPLATE = parent::ADD_TEMPLATE;
+
+  protected null|string|ParticipationContext $participationContext = null;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -83,19 +88,88 @@ class AddMusicians extends Musicians
     );
 
     $this->findProject(enforce: true);
+    $this->participationContext = $this->request['participationContext'] ?? null;
   }
 
   /** {@inheritdoc} */
   public function shortTitle()
   {
-    return parent::commonShortTitle() ?? $this->l->t("Add musicians to the project `%s'", [ $this->projectName ]);
+    $shortTitle = parent::commonShortTitle();
+    if ($shortTitle === null) {
+      $shortTitle = $this->participationContext == ParticipationContext::ASSOCIATES
+        ? $this->l->t('Add business partners and associates to "%s"', $this->projectName)
+        : $this->l->t('Add musicians to "%s"', $this->projectName);
+    }
+    return $shortTitle;
   }
 
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
+    $this->joinStructure = array_merge(
+      $this->joinStructure,
+      [
+        self::PROJECT_PARTICIPANTS_TABLE => [
+          'entity' => Entities\ProjectParticipant::class,
+          'identifier' => [
+            'project_id' => [
+              'value' => $this->projectId,
+            ],
+            'musician_id' => 'id',
+          ],
+          'column' => 'musician_id',
+          'flags' => self::JOIN_READONLY,
+        ],
+        self::PROJECT_INSTRUMENTS_TABLE => [
+          'entity' => Entities\ProjectInstrument::class,
+          'identifier' => [
+            'project_id' => [
+              'value' => $this->projectId,
+            ],
+            'musician_id' => 'id',
+            'voice' => false,
+            'instrument_id' => false,
+          ],
+          'column' => 'instrument_id',
+          'flags' => self::JOIN_READONLY,
+        ],
+        self::INSTRUMENT_FAMILIES_JOIN_TABLE . self::VALUES_TABLE_SEP . 'project' => [
+          'entity' => null,
+          'identifier' => [
+            'instrument_id' => [
+              'table' => self::PROJECT_INSTRUMENTS_TABLE,
+              'column' => 'instrument_id',
+            ],
+            'instrument_family_id' => false,
+          ],
+          'column' => 'instrument_id',
+          'flags' => self::JOIN_READONLY,
+        ],
+        self::INSTRUMENT_FAMILIES_TABLE . self::VALUES_TABLE_SEP . 'project' => [
+          'entity' => Entities\InstrumentFamily::class,
+          'sql' => 'SELECT
+  __t1.instrument_id AS instrument_id,
+  GROUP_CONCAT(DISTINCT __t2.family) AS family
+FROM ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t1
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t2
+ON __t1.instrument_family_id = __t2.id
+  AND __t2.family = "' . Entities\ProjectINstrument::NOT_AN_INSTRUMENT_FAMILY . '"
+GROUP BY __t1.instrument_id',
+          'identifier' => [
+            'instrument_id' => [
+              'table' => self::PROJECT_INSTRUMENTS_TABLE,
+              'column' => 'instrument_id',
+            ],
+          ],
+          'column' => 'instrument_id',
+          'flags' => self::JOIN_READONLY,
+        ],
+      ],
+    );
+    $this->logInfo('JOIN STRUCTURE ' . print_r($this->joinStructure, true));
     ['opts' => $opts, 'joinTables' => $joinTables] = parent::generatePMEOptions();
     $opts['cgi']['persist']['projectId'] = $this->projectId;
+    $opts['cgi']['persist']['participationContext'] = $this->participationContext;
 
     $this->logDebug('JOIN TABLES ' . print_r($joinTables, true));
 
@@ -136,10 +210,40 @@ class AddMusicians extends Musicians
     ++$opts['cgi']['persist']['participationStatusFddIndex'];
     ++$opts['cgi']['persist']['instrummentsFddIndex'];
 
-    //$key = PHPMyEdit::QUERY_FIELD . $projectsIdx;
+    // Filter out already registered musicians
+    $opts[PHPMyEdit::OPT_HAVING]['AND'] = [];
+
     $projectsJoin = $joinTables[self::PROJECT_PARTICIPANTS_TABLE];
-    $projectIds = "GROUP_CONCAT(DISTINCT {$projectsJoin}.project_id)";
-    $opts[PHPMyEdit::OPT_HAVING]['AND'] = "($projectIds IS NULL OR NOT FIND_IN_SET('{$this->projectId}', $projectIds))";
+    $instrumentFamiliesJoin = $joinTables[self::INSTRUMENT_FAMILIES_TABLE . self::VALUES_TABLE_SEP . 'project'];
+    $instrumentFamily = "COALESCE($instrumentFamiliesJoin.family, '')";
+    $participationStatus = "{$projectsJoin}.participation_status";
+    $associated = ParticipationStatus::ASSOCIATED;
+    $notAnInstrumentFamily = Entities\ProjectINstrument::NOT_AN_INSTRUMENT_FAMILY;
+    if ($this->participationContext == ParticipationContext::ASSOCIATES) {
+      // INCLUDE IF
+      // - not registered
+      // -   OR NOT (associated OR not-an-instrument)
+      //
+      // Note that due to "LEFT JOIN" participation_status and instrumentFamily
+      // will be NULL for all not-registered musicians.
+      $opts[PHPMyEdit::OPT_HAVING]['AND'] = ''
+        . "({$projectsJoin}.project_id IS NULL OR NOT {$projectsJoin}.project_id = {$this->projectId})"
+        . " OR NOT "
+        . "($participationStatus = '$associated' OR $instrumentFamily = '$notAnInstrumentFamily')";
+    } else {
+      // INCLUDE IF
+      // - not registered
+      // -   OR associated
+      // -   OR only not-an-instrument
+      //
+      // Note that due to "LEFT JOIN" participation_status and instrumentFamily
+      // will be NULL for all not-registered musicians.
+      $opts[PHPMyEdit::OPT_HAVING]['AND'] = ''
+        . "({$projectsJoin}.project_id IS NULL OR NOT {$projectsJoin}.project_id = {$this->projectId})"
+        . " OR "
+        . "($participationStatus = '$associated' OR $instrumentFamily = '$notAnInstrumentFamily')";
+    }
+
     $opts['misc']['css']['minor'] = [ 'bulkcommit', 'tooltip-right' ];
     $opts['labels']['Misc'] = strval($this->l->t('Add all to %s', $this->projectName));
 

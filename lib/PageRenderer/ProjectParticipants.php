@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDisplayContext as DisplayContext;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -56,6 +56,7 @@ use OCA\CAFEVDB\Exceptions;
 class ProjectParticipants extends PMETableViewBase
 {
   use FieldTraits\AllProjectsTrait;
+  use FieldTraits\InstrumentsTrait;
   use FieldTraits\MailingListsTrait;
   use FieldTraits\MusicianAvatarTrait;
   use FieldTraits\MusicianEmailsTrait;
@@ -73,6 +74,8 @@ class ProjectParticipants extends PMETableViewBase
 
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
+
+  protected static ParticipationContext $participationContext;
 
   private const EXTRA_VOICES = 2;
   private const INSERT_VOICES = 8;
@@ -200,17 +203,17 @@ class ProjectParticipants extends PMETableViewBase
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
     //
-    private ContactsService $contactsService,
-    private FinanceService $financeService,
-    private GeoCodingService $geoCodingService,
-    private InstrumentInsuranceService $insuranceService,
-    private PhoneNumberService $phoneNumberService,
+    protected ContactsService $contactsService,
+    protected FinanceService $financeService,
+    protected GeoCodingService $geoCodingService,
+    protected InstrumentInsuranceService $insuranceService,
+    protected PhoneNumberService $phoneNumberService,
     protected ProjectParticipantFieldsService $participantFieldsService,
     protected ProjectService $projectService,
     protected UserStorage $userStorage,
   ) {
     parent::__construct(
-      self::TEMPLATE,
+      static::TEMPLATE,
       $configService,
       $entityManager,
       $request,
@@ -251,10 +254,7 @@ class ProjectParticipants extends PMETableViewBase
     //   fn(string $families) =>
     //   !empty(array_diff(explode(',', $families), [ $this->l->t(Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY) ])),
     // ));
-    $notInstrumentsFilter = array_keys(array_filter(
-      $instrumentInfo['idGroups'],
-      fn(string $families) => !empty(in_array($this->l->t(Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY), explode(',', $families))),
-    ));
+    $notInstrumentsFilter = array_keys($this->getNonInstruments());
 
     // $this->joinStructure[self::PROJECT_INSTRUMENTS_TABLE]['filter'] = [
     //   'instrument_id' => [ 'value' => $instrumentsFilter, ],
@@ -325,7 +325,7 @@ class ProjectParticipants extends PMETableViewBase
     $export = $this->pageNavigation->tableExportButton();
     $opts['buttons'] = $this->pageNavigation->prependTableButton($export, true);
 
-    $participantFields = $this->project->getParticipantFields(DisplayContext::PARTICIPANTS);
+    $participantFields = $this->project->getParticipantFields(ParticipationContext::PARTICIPANTS);
 
     // count number of finance fields
     $extraFinancial = 0;
@@ -426,9 +426,27 @@ class ProjectParticipants extends PMETableViewBase
       switch ($table) {
         case self::INSTRUMENTS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+          list($select, $join) = explode('FROM ' . self::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
+          $joinInfo['sql'] = $select
+            . 'FROM ' . self::INSTRUMENTS_TABLE . ' t
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+ON t.id = __t2.instrument_id
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
+ON __t2.instrument_family_id = __t3.id
+' . $join . '
+WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"';
           break;
         case self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians':
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+          list($select, $join) = explode('FROM ' . self::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
+          $joinInfo['sql'] = $select
+            . 'FROM ' . self::INSTRUMENTS_TABLE . ' t
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+ON t.id = __t2.instrument_id
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
+ON __t2.instrument_family_id = __t3.id
+' . $join . '
+WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"';
           break;
         case self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'label');
@@ -441,12 +459,6 @@ class ProjectParticipants extends PMETableViewBase
     $this->defineJoinStructure($opts);
 
     $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = 'NOT $table.participation_status = "' . ParticipationStatus::ASSOCIATED . '"';
-    // $projectInstrumentsJoin =  $this->joinTables[self::PROJECT_INSTRUMENTS_TABLE];
-    // $opts[PHPMyEdit::OPT_HAVING]['AND'] = [
-    //   '(NOT participation_status = "' . ParticipationStatus::ASSOCIATED . '")',
-    //   // $projectInstrumentsJoin . '.instrument_id IN ("' . implode('","', $instrumentsFilter) . '")',
-    //   '(NOT ' . $projectInstrumentsJoin . '.instrument_id IN ("' . implode('","', $notInstrumentsFilter) . '"))',
-    // ];
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'sur_name',
@@ -922,6 +934,8 @@ class ProjectParticipants extends PMETableViewBase
       'css'      => [ 'postfix' => [ 'registration', 'tooltip-top', 'align-center', ], ],
     ];
 
+    $musicianInstrumentsJoin = $this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE];
+
     $fdd = [
       'name' => $this->l->t('All Instruments'),
       'tab'  => [ 'id' => [ 'musician', 'instrumentation' ] ],
@@ -937,7 +951,7 @@ class ProjectParticipants extends PMETableViewBase
       ],
       'display|LVF' => ['popup' => 'data'],
       'sql'         => 'GROUP_CONCAT(DISTINCT
-  IF('.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL)
+  IF(' . $musicianInstrumentsJoin . '.deleted IS NOT NULL, NULL, $join_col_fqn)
   ORDER BY '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
       'select'      => 'M',
       'values' => [
@@ -1240,11 +1254,11 @@ class ProjectParticipants extends PMETableViewBase
         'tab'      => ['id' => 'musician'],
         'name'     => $this->l->t('General Remarks'),
         'maxlen'   => 65535,
-        'css'      => ['postfix' => [ 'remarks', 'tooltip-top', 'squeeze-subsequent-lines', ], ],
+        'css'      => ['postfix' => [ 'remarks', 'tooltip-top', 'squeeze-subsequent-lines', 'maximize' ], ],
         'textarea' => [
           'css' => 'wysiwyg-editor',
           'rows' => 5,
-          'cols' => 50,
+          'cols' => 66,
         ],
         'display|LF' => [
           'popup' => 'data',
@@ -1255,6 +1269,22 @@ class ProjectParticipants extends PMETableViewBase
         'display' => [
           'attributes' => [ 'readonly' => true, 'disabled' => true, ],
           'popup' => 'data',
+        ],
+        'display|ACP' => [
+          'attributes' => [ 'readonly' => true, ],
+          'popup' => 'data',
+          'prefix' => '<div class="flex-container" style="position:relative;">',
+          'postfix' => function($op, $pos, $k, $row, $pme) {
+            $checked = 'checked="checked" ';
+            return '<input id="pme-musician-remarks"
+  ' . $checked . '
+  type="checkbox"
+  class="pme-input pme-input-lock lock-unlock top-zero"/>
+<label class="pme-input pme-input-lock lock-unlock top-zero"
+       title="' . $this->toolTipsService['pme:input:lock:unlock'].'"
+       for="pme-musician-remarks"></label>
+</div>';
+          },
         ],
         'tooltip' => $this->l->t('General, not project-specific remarks. The field cannot be changed from here.'),
       ]);
@@ -1361,9 +1391,9 @@ class ProjectParticipants extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'ensureUserIdSlug' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
+    // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateRemoveDependentVoices' ];
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateCheckParticipationStatus' ];
+    // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateCheckParticipationStatus' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'extractInstrumentRanking' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'cleanupParticipantFields' ];
@@ -1464,7 +1494,8 @@ class ProjectParticipants extends PMETableViewBase
   }
 
   /**
-   * When removing an instrument any pending voice(s) have to be removed, too.
+   * Forbid changing the participation status to "passive" or "associated" if the
+   * participant is registered to perform with real instruments.
    *
    * @param PHPMyEdit $pme The phpMyEdit instance.
    *
@@ -1484,13 +1515,47 @@ class ProjectParticipants extends PMETableViewBase
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
-    $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+    if (!in_array('participation_status', $changed)) {
+      return true;
+    }
 
-    throw new Exceptions\EnduserNotificationException('BLAH');
+    $participationStatus = $newValues['participation_status'];
+
+    if ($participationStatus == ParticipationStatus::PASSIVE && $newValues['registration'] == 1) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t(
+          'Confirmed project participants cannot have a participation status of "%s".',
+          ParticipationStatus::getL10NValues($this->l)[$participationStatus],
+        ),
+      );
+      // Util::unsetValue($changed, 'participant_status');
+      // $newValues['participant_status'] = $oldValues['participant_status'];
+    }
+
+    if ($participationStatus == ParticipationStatus::ASSOCIATED) {
+      $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+      $instruments = Util::explode(',', $newValues[$instrumentsColumn] ?? '');
+      $nonInstruments = array_keys($this->getNonInstruments());
+      $realInstruments = array_diff($instruments, $nonInstruments);
+      if (!empty($realInstruments)) {
+        $realInstrumentNames = array_values(array_intersect_key($this->getInstrumentInfo()['byId'], array_fill_keys($realInstruments, true)));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t(
+            'The participation-status cannot be set to "%1$s" as long as the participant is registered to perform with real instruments (%2$s)',
+            [
+              ParticipationStatus::getL10NValues($this->l)[$participationStatus],
+              implode(', ', $realInstrumentNames),
+            ],
+          ),
+        );
+        // Util::unsetValue($changed, 'participant_status');
+        // $newValues['participant_status'] = $oldValues['participant_status'];
+      }
+    }
 
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');
 
-    return false;
+    return true;
   }
 
   /**
@@ -1510,14 +1575,16 @@ class ProjectParticipants extends PMETableViewBase
    * @param null|array $newValues Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated
+   *
+   * @todo See if this can be moved to an Entity-Listener
    */
   public function beforeUpdateEnsureInstrumentationNumbers(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     $voiceField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
     $instrumentField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
 
-    // $debugColumns = [ $instrumentField, $voiceField, ];
-    // $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'before');
+    $debugColumns = [ $instrumentField, $voiceField, ];
+    $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'before');
 
     if (array_search($voiceField, $changed) === false
         && array_search($instrumentField, $changed) === false) {
@@ -1562,9 +1629,37 @@ class ProjectParticipants extends PMETableViewBase
       }
     }
 
-    // $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'after');
+    $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'after');
 
     return true;
+  }
+
+  /**
+   * This is a phpMyEdit before-SOMETHING trigger.
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @param string $op The operation, 'insert', 'update' etc.
+   *
+   * @param string $step 'before' or 'after'.
+   *
+   * @param array $oldValues Self-explanatory.
+   *
+   * @param array $changed Set of changed fields, may be modified by the callback.
+   *
+   * @param null|array $newValues Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated
+   */
+  public function beforeDeleteTrigger(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
+  {
+    $entity = $this->legacyRecordToEntity($pme->rec);
+
+    $this->projectService->deleteProjectParticipant($entity, ParticipationContext::PARTICIPANTS());
+
+    $changed = []; // disable PME delete query
+
+    return true; // but run further triggers if appropriate
   }
 
   /**
@@ -1666,7 +1761,7 @@ class ProjectParticipants extends PMETableViewBase
    *
    * @return array
    */
-  private function tableTabs(mixed $participantFields = false, bool $useFinanceTab = false):array
+  protected function tableTabs(mixed $participantFields = false, bool $useFinanceTab = false):array
   {
     $dfltTabs = $this->defaultTableTabs($useFinanceTab);
 
@@ -1704,33 +1799,5 @@ class ProjectParticipants extends PMETableViewBase
     }
 
     return $this->defaultTableTabs($useFinanceTab, $extraTabs);
-  }
-
-  /**
-   * This is a phpMyEdit before-SOMETHING trigger.
-   *
-   * @param PHPMyEdit $pme The phpMyEdit instance.
-   *
-   * @param string $op The operation, 'insert', 'update' etc.
-   *
-   * @param string $step 'before' or 'after'.
-   *
-   * @param array $oldValues Self-explanatory.
-   *
-   * @param array $changed Set of changed fields, may be modified by the callback.
-   *
-   * @param null|array $newValues Set of new values, which may also be modified.
-   *
-   * @return bool If returning @c false the operation will be terminated
-   */
-  public function beforeDeleteTrigger(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
-  {
-    $entity = $this->legacyRecordToEntity($pme->rec);
-
-    $this->projectService->deleteProjectParticipant($entity);
-
-    $changed = []; // disable PME delete query
-
-    return true; // but run further triggers if appropriate
   }
 }

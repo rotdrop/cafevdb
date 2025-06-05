@@ -50,7 +50,8 @@ use OCA\CAFEVDB\Storage\UserStorage;
 /**Table generator for Projects table. */
 class Projects extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
+  use FieldTraits\InstrumentsTrait;
+  use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const TEMPLATE = 'projects';

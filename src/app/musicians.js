@@ -82,14 +82,14 @@ const getMusician = async function(musicianId) {
 const addMusicians = function($form, post) {
   const projectId = $form.find('input[name="projectId"]').val();
   const projectName = $form.find('input[name="projectName"]').val();
+  const participationContext = $form.find('input[name="participationContext"]').val();
   if (typeof post === 'undefined') {
     post = $form.serialize();
   }
 
   // Open the change-musician dialog with the newly
   // added musician in case of success.
-  $.post(generateAppUrl('projects/participants/add-musicians'),
-    post)
+  $.post(generateAppUrl('projects/participants/add-musicians'), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {
         // ProjectParticipants.loadProjectParticipants(form);
@@ -111,6 +111,7 @@ const addMusicians = function($form, post) {
             projectName,
             initialValue: 'Change',
             modified: false,
+            template: 'project-' + participationContext,
           },
         );
         await ProjectParticipants.loadProjectParticipants(
@@ -847,12 +848,14 @@ const ready = function(container) {
     .on('click', debounce(function(event) {
       const projectId = $form.find('input[name="projectId"]').val();
       const projectName = $form.find('input[name="projectName"]').val();
+      const participationContext = $form.find('input[name="participationContext"]').val();
       const musicianId = $(this).data('musician-id');
 
       addMusicians($form, {
         projectId,
         projectName,
         musicianId,
+        participationContext,
       });
       return false;
     }));

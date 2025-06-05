@@ -456,7 +456,7 @@ class EntityManager extends EntityManagerDecorator
       Types\EnumAccessPermission::class => 'enum',
       Types\EnumDataTransformation::class => 'enum',
       Types\EnumDirEntryType::class => 'enum',
-      Types\EnumDisplayContext::class => 'enum',
+      Types\EnumParticipationContext::class => 'enum',
       Types\EnumFileType::class => 'enum',
       Types\EnumGender::class => 'enum',
       Types\EnumGeographicalScope::class => 'enum',

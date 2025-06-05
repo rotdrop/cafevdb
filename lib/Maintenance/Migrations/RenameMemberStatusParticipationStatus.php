@@ -76,7 +76,7 @@ class RenameMemberStatusParticipationStatus extends AbstractMigration
     enum('associated','conductor','passive','regular','soloist','temporary')
     DEFAULT 'regular'
     NOT NULL
-    COMMENT 'enum(associate,conductor,passive,regular,soloist,temporary)(DC2Type:EnumParticipationStatus)'",
+    COMMENT 'enum(associated,conductor,passive,regular,soloist,temporary)(DC2Type:EnumParticipationStatus)'",
     ];
     return parent::execute();
   }

@@ -35,7 +35,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
  *
  * @todo This should rather be specified per project.
  */
-class EnumDisplayContext extends AbstractEnumType
+class EnumParticipationContext extends AbstractEnumType
 {
   public const ASSOCIATES = 'associates';
   public const PARTICIPANTS = 'participants';

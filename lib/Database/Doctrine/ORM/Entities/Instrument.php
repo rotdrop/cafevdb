@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -76,7 +76,7 @@ class Instrument implements \ArrayAccess
   #[ORM\JoinTable]
   #[ORM\JoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
   #[ORM\InverseJoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
-  #[ORM\ManyToMany(targetEntity: InstrumentFamily::class, inversedBy: 'instruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToMany(targetEntity: InstrumentFamily::class, inversedBy: 'instruments', indexBy: 'family', fetch: 'EXTRA_LAZY')]
   private $families;
 
   #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
@@ -274,6 +274,21 @@ class Instrument implements \ArrayAccess
   public function getProjectInstrumentationNumbers():Collection
   {
     return $this->projectInstrumentationNumbers;
+  }
+
+  /**
+   * Check whether this is not a real instrument, but belongs to
+   * ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY.
+   *
+   * @return bool
+   */
+  public function isNotAnInstrument():bool
+  {
+    return $this->families->exists(
+      fn(mixed $key, InstrumentFamily $family)
+      =>
+      $family->getFamily() == ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY
+      || $family->getUntranslatedFamily() == ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY);
   }
 
   /**

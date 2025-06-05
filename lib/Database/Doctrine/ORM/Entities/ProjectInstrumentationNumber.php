@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,13 +70,20 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    * @var ProjectInstrument This is a list of registered instances.
    */
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'instrumentationNumber', fetch: 'EXTRA_LAZY', indexBy: 'musician_id')]
-  private $instruments;
+  private $projectInstruments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct()
+  public function __construct(?Project $project = null, ?Instrument $instrument = null, int $voice = ProjectInstrument::UNVOICED)
   {
     $this->arrayCTOR();
-    $this->instruments = new ArrayCollection();
+    $this->projectInstruments = new ArrayCollection();
+    if ($project !== null) {
+      $this->project = $project;
+    }
+    if ($instrument !== null) {
+      $this->instrument = $instrument;
+    }
+    $this->voice = $voice;
   }
   // phpcs:enable
 
@@ -177,15 +184,15 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   }
 
   /**
-   * Set instruments
+   * Set projectInstruments
    *
-   * @param Collection $instruments
+   * @param Collection $projectInstruments
    *
    * @return ProjectInstrumentationNumber
    */
-  public function setInstruments(Collection $instruments):ProjectInstrumentationNumber
+  public function setProjectProjectInstruments(Collection $projectInstruments):ProjectInstrumentationNumber
   {
-    $this->instruments = $instruments;
+    $this->projectInstruments = $projectInstruments;
 
     return $this;
   }
@@ -195,8 +202,8 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    *
    * @return int
    */
-  public function getInstruments():Collection
+  public function getProjectInstruments():Collection
   {
-    return $this->instruments;
+    return $this->projectInstruments;
   }
 }

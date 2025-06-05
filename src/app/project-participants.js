@@ -51,12 +51,16 @@ import {
   classSelector as pmeClassSelector,
   token as pmeToken,
 } from './pme-selectors.js';
+// import { ADD_CONTACTS_TO_PROJECT } from '../event-bus-events.ts';
+// import { emit as asyncEmit } from '../services/async-event-bus.ts';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participant-fields-display.scss');
 require('project-participants.scss');
 
 const selectedOptionsKey = '_pp_selectedOptions';
+
+let participationContext;
 
 /**
  * Open a dialog in order to edit the personal reccords of one
@@ -126,7 +130,7 @@ const myPersonalRecordDialog = function(record, options) {
     record = { id: record.musicianId };
   } else if (options.projectId > 0) {
     tableOptions.table = 'ProjectParticipants';
-    tableOptions.template = 'project-participants';
+    tableOptions.template = options.template || 'project-participants';
     tableOptions.templateRenderer = templateRenderer(tableOptions.template);
 
     // the proper record id is an object { project_id, musician_id }.
@@ -165,10 +169,11 @@ const validateInstrumentChoices = function(options) {
   const errorCB = options.fail;
 
   Notification.hide();
+  const instrumentValues = SelectUtils.selected(selectMusicianInstrument);
   $
     .post(ajaxScript, {
       recordId: pmeRec(container),
-      instrumentValues: SelectUtils.selected(selectMusicianInstrument),
+      instrumentValues: Array.isArray(instrumentValues) ? instrumentValues : [instrumentValues],
     })
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, errorCB);
@@ -294,6 +299,7 @@ const myLoadMusicians = function(form, ids, projectMode) {
   }
   const template = projectMode ? 'add-musicians' : 'all-musicians';
   const inputTweak = {
+    participationContext,
     template,
     templateRenderer: templateRenderer(template),
   };
@@ -311,12 +317,9 @@ const myLoadMusicians = function(form, ids, projectMode) {
  * all musicians @b not yet registered for the project.
  *
  * @param {jQuery} form The current PME form.
- *
- * @param {Function} afterLoadCallback An optional callback executed after
- * the PME table has been loaded.
  */
-const myLoadAddMusicians = function(form, afterLoadCallback) {
-  myLoadMusicians(form, [], true, afterLoadCallback);
+const myLoadAddMusicians = function(form) {
+  myLoadMusicians(form, [], true);
 };
 
 /**
@@ -335,7 +338,7 @@ const myLoadProjectParticipants = async function(form, musicians, afterLoadCallb
   // const projectName = form.find('input[name="projectName"]').val();
   // const projectId = form.find('input[name="projectId"]').val();
 
-  const template = 'project-participants';
+  const template = 'project-' + (form.find('input[name="participationContext"]').val() || 'participants');
   const inputTweak = {
     template,
     templateRenderer: templateRenderer(template),
@@ -888,7 +891,15 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     .addClass(pmeToken('custom')).prop('disabled', false)
     .off('click').on('click', function(event) {
 
-      myLoadAddMusicians($(this.form));
+      console.info('PAGE TEMPLATE', { participationContext });
+      const $form = $(this.form);
+      // if (participationContext === 'project-associates') {
+      //   const projectName = $form.find('input[name="projectName"]').val();
+      //   asyncEmit(ADD_CONTACTS_TO_PROJECT, { projectName });
+      // } else {
+      //   myLoadAddMusicians($form);
+      // }
+      myLoadAddMusicians($form);
 
       return false;
     });
@@ -981,6 +992,8 @@ const myDocumentReady = function() {
   CAFEVDB.addReadyCallback(function() {
     const $pageBody = $('div#' + appPrefix('page-body'));
     if ($pageBody.hasClass('project-participants') || $pageBody.hasClass('project-associates')) {
+      participationContext = $pageBody.hasClass('project-participants') ? 'participants' : 'associates';
+      console.info('SET PAGE TEMPLATE', { participationContext });
       myReady();
     }
   });

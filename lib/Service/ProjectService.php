@@ -24,39 +24,39 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Throwable;
-use Exception;
-use RuntimeException;
-use InvalidArgumentException;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Exception;
+use InvalidArgumentException;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\SystemTag\ISystemTag;
 use OCP\SystemTag\ISystemTagManager;
 use OCP\SystemTag\TagAlreadyExistsException;
 use OCP\SystemTag\TagNotFoundException;
+use RuntimeException;
+use Throwable;
 
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Common;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
-use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
-
+use OCA\CAFEVDB\PageRenderer;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo\Service\RPC as WebPagesRPC;
-
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common;
-use OCA\CAFEVDB\Events;
-use OCA\CAFEVDB\Constants;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -2009,8 +2009,7 @@ Whatever.',
    *
    * @param int $projectId The project-id for the destination project.
    *
-   * @todo Perhaps allow project-entities, i.e. "mixed $project"
-   * instead of "int $projectId".
+   * @param string|ParticipationContext $participationContext Either project-participants or project-associates.
    *
    * @return array
    * ```
@@ -2024,9 +2023,15 @@ Whatever.',
    *   ],
    * ]
    * ```
+   *
+   * @todo Perhaps allow project-entities, i.e. "mixed $project"
+   * instead of "int $projectId".
    */
-  public function addMusicians(array $musicianIds, int $projectId)
-  {
+  public function addMusicians(
+    array $musicianIds,
+    int $projectId,
+    string|ParticipationContext $participationContext,
+  ):array  {
     $project = $this->repository->find($projectId);
     if (empty($project)) {
       throw new Exception($this->l->t('Unabled to retrieve project with id %d', $projectId));
@@ -2038,7 +2043,7 @@ Whatever.',
     ];
     foreach ($musicianIds as $id) {
       $status = null;
-      if ($this->addOneMusician($id, $project, $status)) {
+      if ($this->addOneMusician($id, $project, $participationContext, $status)) {
         $statusReport['added'][$id] = $status;
       } else {
         $statusReport['failed'][$id] = $status;
@@ -2056,14 +2061,21 @@ Whatever.',
    *
    * @param Entities\Project $project Database entity.
    *
+   * @param string|ParticipationContext $participationContext Either
+   * ParticipationContext::PARTICIPANTS or ParticipationContext::ASSOCIATES
+   *
    * @param array $status Status array by reference.
    *
    * @return bool Execution status.
    *
    * @see Repositories\MusiciansRepository::find()
    */
-  private function addOneMusician(mixed $id, Entities\Project $project, ?array &$status):bool
-  {
+  private function addOneMusician(
+    mixed $id,
+    Entities\Project $project,
+    string|ParticipationContext $participationContext,
+    ?array &$status,
+  ):bool {
     $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
 
     $status = [];
@@ -2083,50 +2095,91 @@ Whatever.',
     $musicianName = $musician->getPublicName(firstNameFirst: true);
 
     // check for already registered
-    $exists = $project->getParticipants()->exists(function($key, Entities\ProjectParticipant $participant) use ($musician) {
-      return $participant->getMusician()->getId() == $musician->getId();
-    });
+    // @todo: check for participationContext
+    $participant = $musician->getProjectParticipantOf($project);
+    $exists = !empty($participant);
     if ($exists) {
-      $status[$id][] = [
-        'id' => $id,
-        'notice' => $this->l->t(
-          'The musician %s is already registered with project %s.',
-          [ $musicianName, $project['name'] ]),
-      ];
-      $this->logInfo('MUSICIAN EXISTS');
-      return false;
+      // "exists" is ok if the the participationContext differs
+      $participantParticipationContext = $participant->getParticipationContext();
+      if ($participantParticipationContext == ParticipationContext::UNRESTRICTED
+          || $participantParticipationContext == $participationContext) {
+        $status[] = [
+          'id' => $id,
+          'notice' => $this->l->t(
+            'The musician %s is already registered with project %s.',
+            [ $musicianName, $project['name'] ]),
+        ];
+        $this->logInfo('MUSICIAN EXISTS');
+        return false;
+      }
     }
 
     $this->entityManager->beginTransaction();
     try {
 
-      // The musician exists and is not already registered, so add it.
-      $participant = new Entities\ProjectParticipant(musician: $musician, project: $project);
+      if (empty($participant)) {
+        // The musician exists and is not already registered, so add it.
+        $participant = new Entities\ProjectParticipant(musician: $musician, project: $project);
+        $this->persist($participant);
 
-      $this->persist($participant);
-      $musician->getProjectParticipation()->set($project->getId(), $participant);
-      $project->getParticipants()->set($musician->getId(), $participant);
+        $musician->getProjectParticipation()->set($project->getId(), $participant);
+        $project->getParticipants()->set($musician->getId(), $participant);
+        $birth = true;
+      } else {
+        $birth = false;
+      }
 
-      // Try to make a likely default choice for the project instrument.
       $instrumentationNumbers = $project->getInstrumentationNumbers();
 
-      $musicianInstruments = $musician->getInstruments();
-      if ($musicianInstruments->isEmpty()) {
-        $status[] = [
-          'id' => $id,
-          'notice' => $this->l->t('The musician %s does not play any instrument.', $musicianName),
-        ];
-      } else {
+      if ($participationContext == ParticipationContext::ASSOCIATES) {
 
+        if ($birth) {
+          // just add a "business contact" "instrument"
+          $participant->setParticipationStatus(ParticipationStatus::ASSOCIATED);
+        }
+
+        $musicianInstruments = $musician->getNonInstruments();
+        if ($musicianInstruments->isEmpty()) {
+          // add the default non instruments
+          $nonInstruments = $this->getDatabaseRepository(Entities\Instrument::class)
+            ->findNonInstruments(Entities\ProjectInstrument::NON_INSTRUMENTS);
+          foreach ($nonInstruments as $instrument) {
+            $musician->addInstrument($instrument, ranking: 0x7fffffff);
+          }
+          $this->persist($musician);
+          $this->flush();
+        }
+        $musicianInstruments = $musician->getNonInstruments();
+
+        if ($musicianInstruments->isEmpty()) {
+          throw new Exceptions\EnduserNotificationException('NO INSTRUMENTS');
+        }
+
+        $ranking = PHP_INT_MIN;
+        /** @var Entities\MusicianInstrument $musicanInstrument */
+        foreach ($musicianInstruments as $musicianInstrument) {
+          $thisRanking = $musicianInstrument->getRanking();
+          if ($thisRanking <= $ranking) {
+            continue;
+          }
+          $ranking = $thisRanking;
+
+          $bestInstrument = [
+            'instrument' => $musicianInstrument,
+            'voice' => Entities\ProjectInstrument::UNVOICED,
+          ];
+        }
+
+      } else { // $participationContext
+        // Try to make a likely default choice for the project instrument.
+        $musicianInstruments = $musician->getInstruments();
         // first find one instrument with best ranking
         $bestInstrument = null;
         $ranking = PHP_INT_MIN;
         /** @var Entities\MusicianInstrument $musicianInstrument */
         foreach ($musicianInstruments as $musicianInstrument) {
           $instrumentId = $musicianInstrument->getInstrument()->getId();
-          $numbers =  $instrumentationNumbers->filter(function(Entities\ProjectInstrumentationNumber $number) use ($instrumentId) {
-            return $number->getInstrument()->getId() == $instrumentId;
-          });
+          $numbers = $instrumentationNumbers->filter(fn(Entities\ProjectInstrumentationNumber $number) => $number->getInstrument()->getId() == $instrumentId);
           if ($numbers->isEmpty()) {
             continue;
           }
@@ -2159,33 +2212,40 @@ Whatever.',
           }
 
           $bestInstrument = [
-            'instrument' => $musicianInstrument->getInstrument(),
+            'instrument' => $musicianInstrument,
             'voice' => $voice,
           ];
         }
 
-        if (empty($bestInstrument)) {
+        // Enable the cloud account when adding to the club-members or management project
+        if ($project->getType() == ProjectType::PERMANENT) {
+          $musician->setCloudAccountDisabled(null);
+        }
+
+      } // $participationContext
+
+      if (empty($bestInstrument)) {
+        if ($musicianInstruments->isEmpty()) {
+          $status[] = [
+            'id' => $id,
+            'notice' => $this->l->t('The musician %s does not play any instrument.', $musicianName),
+          ];
+        } else {
           $status[] = [
             'id' => $id,
             'notice' => $this->l->t(
               'The musician %s does not play any instrument registered in the instrumentation list for the project %s.',
               [ $musicianName, $project->getName(), ]),
           ];
-        } else {
-          $projectInstrument = new Entities\ProjectInstrument(
-            $project, $musician, $bestInstrument['instrument'], $bestInstrument['voice'],
-          );
-          $this->persist($projectInstrument);
         }
-      }
-
-      // $now = new DateTimeImmutable;
-      // $musician->setUpdated($now); // should we?
-      // $project->setUpdated($now); // should we?
-
-      // Enable the cloud account when adding to the club-members or management project
-      if ($project->getType() == ProjectType::PERMANENT) {
-        $musician->setCloudAccountDisabled(null);
+      } else {
+        $status[] = [
+          'id' => $id,
+          'notice' => $this->l->t(
+            'Selecting "%1$s" as instrument of the musician %2$s for the project "%3$s".',
+            [ $bestInstrument['instrument']->getName(), $musicianName, $project->getName(), ]),
+        ];
+        $participant->addProjectInstrument($bestInstrument['instrument'], $bestInstrument['voice']);
       }
 
       $this->flush();
@@ -2229,10 +2289,8 @@ Whatever.',
         'notice' => $this->l->t(
           'Adding the musician with id %d failed with exception %s',
           [ $id, $t->getMessage(), ]
-        )
-        . ' || ' . $t->getFile()
-        . ':' . $t->getLine()
-        . ' || ' . $t->getTraceAsString(),
+        ) . $participant->getParticipationStatus(),
+        'exception' => $t,
       ];
       return false;
     }
@@ -3242,16 +3300,49 @@ Whatever.',
    *
    * @param Entities\ProjectParticipant $participant The victim.
    *
+   * @param string|ParticipationContext $participationContext If \null just
+   * delete the participant. If refered from
+   * PageRenderer\ProjectParticipants::TEMPLATE then remove non-virtual
+   * instruments and delete the participant if no instruments/roles from the
+   * Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY remain. If
+   * $participationContext == ParticipationContext::ASSOCIATES then do it
+   * vice-versa, remover the virtual instruments and then remove the
+   * participant if no real instruments remain.
+   *
    * @return void
+   *
+   * @todo Take project associates and business partners into account.
    */
-  public function deleteProjectParticipant(Entities\ProjectParticipant $participant):void
-  {
+  public function deleteProjectParticipant(
+    Entities\ProjectParticipant $participant,
+    string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED,
+  ):void {
     $publicName = $participant->getPublicName();
     $this->entityManager->beginTransaction();
     try {
-      /** @var Entities\ProjectParticipant $participant */
-      $this->remove($participant, true); // this should be soft-delete
-      if ($participant->unused()) {
+      switch ($participationContext) {
+        case ParticipationContext::PARTICIPANTS:
+          $removeList = $participant->getRealInstruments();
+          break;
+        case ParticipationContext::ASSOCIATES:
+          $removeList = $participant->getNonInstruments();
+          break;
+        case ParticipationContext::UNRESTRICTED:
+        default:
+          $removeList = $participant->getProjectInstruments();
+          break;
+      }
+      /** @var Entities\ProjectInstrument $projectInstrument */
+      foreach ($removeList as $projectInstrument) {
+        $this->logInfo('REMOVING ' . $projectInstrument->getInstrument()->getName());
+        $participant->removeProjectInstrument($projectInstrument);
+      }
+      $this->flush();
+
+      if ($participant->unused($participationContext)) {
+        $this->remove($participant, true); // this should be soft-delete
+      }
+      if ($participant->unused($participationContext)) {
         $this->logInfo('Project participant ' . $participant->getPublicName() . ' is unused, issuing hard-delete');
 
         // For now rather cascade manually. Could also use ORM, of course ...
@@ -3272,9 +3363,12 @@ Whatever.',
           )
         );
       }
-      $this->entityManager->registerPostCommitAction(
-        new Common\GenericUndoable(fn() => $this->ensureMailingListUnsubscription($participant))
-      );
+      if ($participant->getParticipationContext() == ParticipationContext::ASSOCIATES) {
+        // associates and business-partners have no place on the mailing list.
+        $this->entityManager->registerPostCommitAction(
+          new Common\GenericUndoable(fn() => $this->ensureMailingListUnsubscription($participant)),
+        );
+      }
       $this->entityManager->commit();
     } catch (Throwable $t) {
       $this->logException($t);

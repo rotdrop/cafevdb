@@ -27,24 +27,24 @@ namespace OCA\CAFEVDB\Maintenance\Migrations;
 /**
  * Remember the id of a mailing list.
  */
-class AddDisplayContextToProjectParticipantFields extends AbstractMigration
+class AddParticipationContextToProjectParticipantFields extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
       "ALTER TABLE ProjectParticipantFields
-  ADD COLUMN IF NOT EXISTS display_context
+  ADD COLUMN IF NOT EXISTS participation_context
     enum('associates','participants','unrestricted')
     DEFAULT 'unrestricted'
     NOT NULL
-    COMMENT 'enum(associates,participants,unrestricted)(DC2Type:EnumDisplayContext)'",
+    COMMENT 'enum(associates,participants,unrestricted)(DC2Type:EnumParticipationContext)'",
     ],
     self::TRANSACTIONAL => [
       "UPDATE ProjectParticipantFields ppf
   INNER JOIN ProjectEvents pe
   ON ppf.id = pe.absence_field_id
-  SET ppf.display_context = 'participants'",
+  SET ppf.participation_context = 'participants'",
       "UPDATE ProjectParticipantFields ppf
-  SET ppf.display_context = 'participants'
+  SET ppf.participation_context = 'participants'
   WHERE ppf.tab = 'Absence'",
     ],
   ];
@@ -52,6 +52,6 @@ class AddDisplayContextToProjectParticipantFields extends AbstractMigration
   /** {@inheritdoc} */
   public function description():string
   {
-    return $this->l->t('Add a display_context field to the extra participant fields table.');
+    return $this->l->t('Add a participation_context field to the extra participant fields table.');
   }
 }
