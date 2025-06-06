@@ -470,11 +470,9 @@ class phpMyEdit
 
 	private function key_record_where()
 	{
-
-		return '('
-			. implode(' AND ', $this->key_record_where_parts(groupByWhere: false))
-			. ' AND (' . $this->get_SQL_where_from_query_opts(onlyGlobal: true) . ')'
-			. ')';
+		$conditions = $this->key_record_where_parts(groupByWhere: false);
+		$conditions[] = $this->get_SQL_where_from_query_opts(onlyGlobal: true);
+		return '(' . implode(' AND ', array_filter($conditions)) . ')';
 	}
 
 	private function key_record_query_data($key_rec, $sysName = 'rec')
