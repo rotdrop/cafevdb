@@ -33,12 +33,11 @@ use Exception;
  *
  */
 
+use OCP\AppFramework\App;
+use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
-use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\IAppContainer;
-
-use OCP\AppFramework\App;
 
 /*
  *
@@ -47,11 +46,11 @@ use OCP\AppFramework\App;
  * Navigation and settings depending on the group-membership
  *
  */
-use OCP\Settings\IManager as ISettingsManager;
 use OCP\IURLGenerator;
+use OCP\Settings\IManager as ISettingsManager;
 
-use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\AssetService;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Settings\PersonalSection;
 
@@ -59,17 +58,18 @@ use OCA\CAFEVDB\Settings\PersonalSection;
  *
  **********************************************************
  *
- * Events and listeners
+ * Services and listeners.
  *
  */
 
+use OCP\EventDispatcher\IEventDispatcher;
+
+use OCA\CAFEVDB\AddressBook\Registration as AddressBookRegistration;
+use OCA\CAFEVDB\Crypto\Registration as CryptoRegistration;
 use OCA\CAFEVDB\Listener\Registration as ListenerRegistration;
 use OCA\CAFEVDB\PageRenderer\Registration as PageRendererRegistration;
 use OCA\CAFEVDB\Service\Registration as ServiceRegistration;
-use OCA\CAFEVDB\Crypto\Registration as CryptoRegistration;
 use OCA\CAFEVDB\Storage\Database\Registration as StorageRegistration;
-
-use OCP\EventDispatcher\IEventDispatcher;
 
 /*
  *
@@ -77,14 +77,11 @@ use OCP\EventDispatcher\IEventDispatcher;
  *
  */
 
-use OCA\CAFEVDB\Service\DatabaseService;
+use OCA\CAFEVDB\AddressBook\ContactsAddressBook;
 use OCA\CAFEVDB\Database\EntityManager;
-
-use OCA\CAFEVDB\Service\EventsService;
-
 use OCA\CAFEVDB\Middleware;
-
-use OCA\CAFEVDB\AddressBook\AddressBookProvider;
+use OCA\CAFEVDB\Service\DatabaseService;
+use OCA\CAFEVDB\Service\EventsService;
 
 /*
  *
@@ -95,6 +92,7 @@ use OCA\CAFEVDB\AddressBook\AddressBookProvider;
  */
 
 use OCP\Files\Config\IMountProviderCollection;
+
 use OCA\CAFEVDB\Storage\Database\MountProvider as DatabaseMountProvider;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -167,8 +165,7 @@ class Application extends App implements IBootstrap
       \OCP\Contacts\IManager $contactsManager
     ) {
       $contactsManager->register(function() use ($contactsManager) {
-        $provider = $this->getContainer()->query(AddressBookProvider::class);
-        $addressBook = $provider->getContactsAddressBook();
+        $addressBook = $this->getContainer()->get(ContactsAddressBook::class);
         if (!empty($addressBook)) {
           $contactsManager->registerAddressBook($addressBook);
         }
@@ -230,6 +227,8 @@ class Application extends App implements IBootstrap
 
     // Register crypto implementation
     CryptoRegistration::register($context);
+
+    AddressBookRegistration::register($context);
 
     $context->registerNotifierService(\OCA\CAFEVDB\Notifications\Notifier::class);
   }

@@ -40,36 +40,37 @@ class Registration
    */
   public static function register(IRegistrationContext $context):void
   {
+    // The PostProjectUpdatedEvent is actually used in the cafevdbmembers app.
+    // self::registerListener($context, PostProjectUpdatedEventListener::class);
+    self::registerListener($context, AfterEncryptionKeyPairChangedListener::class);
+    self::registerListener($context, BeforeEncryptionKeyPairChangedListener::class);
+    self::registerListener($context, BeforeTemplateRenderedListener::class);
+    self::registerListener($context, CalendarDeletedEventListener::class);
     self::registerListener($context, CalendarDeletedEventListener::class);
     self::registerListener($context, CalendarObjectCreatedEventListener::class);
     self::registerListener($context, CalendarObjectDeletedEventListener::class);
-    self::registerListener($context, CalendarObjectUpdatedEventListener::class);
     self::registerListener($context, CalendarObjectMovedEventListener::class);
-    self::registerListener($context, CalendarDeletedEventListener::class);
+    self::registerListener($context, CalendarObjectUpdatedEventListener::class);
     self::registerListener($context, CalendarUpdatedEventListener::class);
-    self::registerListener($context, PasswordUpdatedEventListener::class);
-    self::registerListener($context, ProjectDeletedEventListener::class);
-    self::registerListener($context, PreProjectUpdatedEventListener::class);
-    // The PostProjectUpdatedEvent is actually used in the cafevdbmembers app.
-    // self::registerListener($context, PostProjectUpdatedEventListener::class);
-    self::registerListener($context, UserLoggedInEventListener::class);
-    self::registerListener($context, UserLoggedOutEventListener::class);
-    self::registerListener($context, TranslationNotFoundListener::class);
+    self::registerListener($context, ContactsCardEventListener::class);
     self::registerListener($context, FileNodeListener::class);
-    self::registerListener($context, ParticipantFieldCloudFolderListener::class);
-    self::registerListener($context, BeforeEncryptionKeyPairChangedListener::class);
-    self::registerListener($context, AfterEncryptionKeyPairChangedListener::class);
-    self::registerListener($context, SubAdminEventListener::class);
+    self::registerListener($context, FilesHooksListener::class);
+    self::registerListener($context, GroupMembershipListener::class);
+    self::registerListener($context, LoadAdditionalScriptsEventListener::class);
     self::registerListener($context, MailingListsAutoResponsesListener::class);
     self::registerListener($context, MailingListsEmailChangedListener::class);
     self::registerListener($context, MailingListsRegistrationConfirmationListener::class);
-    self::registerListener($context, FilesHooksListener::class);
     self::registerListener($context, MusicianEmailPersistanceListener::class);
-    self::registerListener($context, SepaBulkTransactionSubmittedListener::class);
+    self::registerListener($context, ParticipantFieldCloudFolderListener::class);
+    self::registerListener($context, PasswordUpdatedEventListener::class);
+    self::registerListener($context, PreProjectUpdatedEventListener::class);
+    self::registerListener($context, ProjectDeletedEventListener::class);
     self::registerListener($context, SepaBulkTransactionAnnouncedListener::class);
-    self::registerListener($context, GroupMembershipListener::class);
-    self::registerListener($context, LoadAdditionalScriptsEventListener::class);
-    self::registerListener($context, BeforeTemplateRenderedListener::class);
+    self::registerListener($context, SepaBulkTransactionSubmittedListener::class);
+    self::registerListener($context, SubAdminEventListener::class);
+    self::registerListener($context, TranslationNotFoundListener::class);
+    self::registerListener($context, UserLoggedInEventListener::class);
+    self::registerListener($context, UserLoggedOutEventListener::class);
   }
 
   /**
