@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-06-05 22:33+0200\n"
-"PO-Revision-Date: 2025-06-05 22:56+0200\n"
+"POT-Creation-Date: 2025-06-06 07:40+0200\n"
+"PO-Revision-Date: 2025-06-06 07:43+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2577,7 +2577,7 @@ msgstr ""
 "wie vor für die Finanzbuchhaltung benötigt."
 
 #: lib/Controller/PersonalSettingsController.php:916
-#: lib/Service/ProjectService.php:2911
+#: lib/Service/ProjectService.php:2910
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr "Konnte das Projekt \"%s\" mit der Id \"%d\" nicht löschen."
@@ -2594,7 +2594,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr "Projekt \"%s\" (%d) zu \"%s\" umbenannt."
 
 #: lib/Controller/PersonalSettingsController.php:950
-#: lib/Service/ProjectService.php:3175
+#: lib/Service/ProjectService.php:3174
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -5364,7 +5364,9 @@ msgstr ""
 #: lib/Maintenance/Migrations/AddParticipationContextToProjectParticipantFields.php:55
 msgid ""
 "Add a participation_context field to the extra participant fields table."
-msgstr "Füge ein neues Feld \"participation_context\" zu der Definitions-Tabelle der Personendaten hinzu"
+msgstr ""
+"Füge ein neues Feld \"participation_context\" zu der Definitions-Tabelle der "
+"Personendaten hinzu"
 
 #: lib/Maintenance/Migrations/AddProjectRegistrationDeadline.php:42
 msgid "Add an optional project registration start and deadline."
@@ -5882,37 +5884,47 @@ msgid "project participants for %s"
 msgstr "Projekt-Teilnehmende für %s"
 
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:103
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:325
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:332
 #: lib/PageRenderer/Instruments.php:258
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:255
 msgid "Instrument"
 msgstr "Instrument"
 
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:107
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:109
+#, php-format
+msgid "project associates for %s"
+msgstr "Geschäftspartner und Assoziierte für %s"
+
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:110
+#: lib/PageRenderer/ProjectAssociates.php:615
+msgid "Role"
+msgstr "Rolle"
+
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:114
 msgid "SEPA bank accounts"
 msgstr "SEPA Bankkonten"
 
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:110
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:117
 #, php-format
 msgid "Table export for table \"%s\" not yet implemented."
 msgstr ""
 "Die Exportfunktion der Tabelle %s ist leider noch nicht eingerichtet, tut "
 "uns leid."
 
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:300
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:307
 msgid "Missing Musicians"
 msgstr "Fehlende Personen"
 
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:326
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:333
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:351
 msgid "Required"
 msgstr "Benötigt"
 
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:327
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:334
 msgid "Not Registered"
 msgstr "Nicht Registriert"
 
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:328
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:335
 msgid "Not Confirmed"
 msgstr "Nicht Bestätigt"
 
@@ -6577,7 +6589,7 @@ msgstr "Sprache"
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:113
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:121
 #. TRANSLATORS src/components/ProjectEventsListing.vue:82
 #: lib/PageRenderer/PME/Config.php:64 lib/PageRenderer/PMETableViewBase.php:638
 #: specialVueFakeDummyForL10nScript.js:3506
@@ -6773,10 +6785,6 @@ msgstr "Körperschaft"
 msgid "First Name"
 msgstr "Vorname"
 
-#: lib/PageRenderer/ProjectAssociates.php:615
-msgid "Role"
-msgstr "Rolle"
-
 #: lib/PageRenderer/ProjectAssociates.php:671
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:299
 #: lib/PageRenderer/ProjectParticipants.php:716
@@ -6828,7 +6836,7 @@ msgstr "Neue Stimme"
 msgid "Instrumentation Numbers for `%s'"
 msgstr "Besetzungszahlen für `%s'"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:66
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:69
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:121
 #: lib/Service/ToolTipsDataService.php:1507
 #: specialVueFakeDummyForL10nScript.js:3496
@@ -7296,12 +7304,12 @@ msgstr "nicht erzeugen"
 msgid "Public Downloads"
 msgstr "Öffentliche Freigabe"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:75
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:79
 #: lib/PageRenderer/Projects.php:888 specialVueFakeDummyForL10nScript.js:3498
 msgid "Participant Fields"
 msgstr "Personen-Daten"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:57
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:59
 #: lib/PageRenderer/Projects.php:951 lib/Service/ToolTipsDataService.php:1509
 #: specialVueFakeDummyForL10nScript.js:3494
 msgid "Participants"
@@ -8651,16 +8659,16 @@ msgstr ""
 "Vielfachheit von \"%1$s\" auf \"%2s\" ist deshalb nur noch für Tesxt- oder\n"
 "HTML-Felder möglich, aber der Datetyp ist \"%3$s\"."
 
-#: lib/Service/ProjectService.php:507
+#: lib/Service/ProjectService.php:506
 msgid "templates"
 msgstr "Vorlagen"
 
-#: lib/Service/ProjectService.php:718
+#: lib/Service/ProjectService.php:717
 #, php-format
 msgid "Unable to ensure existence of folder \"%s\"."
 msgstr "Kann nicht sicherstellen, dass der Ordner \"%s\" existiert."
 
-#: lib/Service/ProjectService.php:984
+#: lib/Service/ProjectService.php:983
 #, php-format
 msgid ""
 "Unable set expiration date for the public download link \"%1$s\" for the "
@@ -8669,19 +8677,19 @@ msgstr ""
 "Das Verfallsdatum für die Projekt-Freigabe \"%1$s\" für das Projekt\n"
 "\"%2$s\" konnte nicht gesetzt werden."
 
-#: lib/Service/ProjectService.php:994
+#: lib/Service/ProjectService.php:993
 #, php-format
 msgid "Unable to create the public donwload link for the project \"%s\"."
 msgstr ""
 "Konnte den Freigabe-Link für den Teilnehmenden-Download-Ordner für das "
 "Projekt \"%s\" nicht erstellen."
 
-#: lib/Service/ProjectService.php:1411
+#: lib/Service/ProjectService.php:1410
 #, php-format
 msgid "Projects of %s"
 msgstr "Projekte von %s"
 
-#: lib/Service/ProjectService.php:1475
+#: lib/Service/ProjectService.php:1474
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -8741,75 +8749,75 @@ msgstr ""
 "Was auch immer."
 
 #. TRANSLATORS src/components/ErrorPage.vue:166
-#: lib/Service/ProjectService.php:1655 specialVueFakeDummyForL10nScript.js:2209
+#: lib/Service/ProjectService.php:1654 specialVueFakeDummyForL10nScript.js:2209
 msgid "Preview"
 msgstr "Vorschau"
 
-#: lib/Service/ProjectService.php:1657 lib/Service/ProjectService.php:1712
-#: lib/Service/ProjectService.php:1885 lib/Service/ProjectService.php:1930
-#: lib/Service/ProjectService.php:1990 lib/Settings/PersonalForm.php:304
+#: lib/Service/ProjectService.php:1656 lib/Service/ProjectService.php:1711
+#: lib/Service/ProjectService.php:1884 lib/Service/ProjectService.php:1929
+#: lib/Service/ProjectService.php:1989 lib/Settings/PersonalForm.php:304
 msgid "Rehearsals"
 msgstr "Proben"
 
-#: lib/Service/ProjectService.php:1659
+#: lib/Service/ProjectService.php:1658
 msgid "Archive"
 msgstr "Archiv"
 
-#: lib/Service/ProjectService.php:1661
+#: lib/Service/ProjectService.php:1660
 msgid "Trashbin"
 msgstr "Mülltonne"
 
-#: lib/Service/ProjectService.php:1706
+#: lib/Service/ProjectService.php:1705
 msgid "Empty project."
 msgstr "Fehlendes Projekt."
 
-#: lib/Service/ProjectService.php:1733
+#: lib/Service/ProjectService.php:1732
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr "Kann die Web-Seiten für \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:1758
+#: lib/Service/ProjectService.php:1757
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr "Kann Web-Page %s nicht anlegen."
 
-#: lib/Service/ProjectService.php:1779
+#: lib/Service/ProjectService.php:1778
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr "Kann den Artikel \"%s\" nicht verknüpfen."
 
-#: lib/Service/ProjectService.php:1823
+#: lib/Service/ProjectService.php:1822
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 "Konnte die Web-Seite %d vom Projekt mit der Id %d leider nicht entfernen."
 
-#: lib/Service/ProjectService.php:1867
+#: lib/Service/ProjectService.php:1866
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr "Konnte die Web-Seite %d nicht vom Projekt %d entkoppeln\""
 
-#: lib/Service/ProjectService.php:2037
+#: lib/Service/ProjectService.php:2036
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr "Konnte das Projekt mit der Id %d nicht laden"
 
-#: lib/Service/ProjectService.php:2089
+#: lib/Service/ProjectService.php:2088
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr "Kann die Daten für die Musiker:Innen-Id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:2109
+#: lib/Service/ProjectService.php:2108
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr "Die Person %s ist bereits für das Projekt %s registriert."
 
-#: lib/Service/ProjectService.php:2231
+#: lib/Service/ProjectService.php:2230
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr "DiePerson %s scheint kein einziges Instrument zu spielen."
 
-#: lib/Service/ProjectService.php:2237
+#: lib/Service/ProjectService.php:2236
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
@@ -8818,68 +8826,68 @@ msgstr ""
 "Die Person \"%s\" spielt kein einziges Instrument, das in der\n"
 "Besetzungstabelle für das Projekt \"%s\" aufgeführt ist."
 
-#: lib/Service/ProjectService.php:2245
+#: lib/Service/ProjectService.php:2244
 #, php-format
 msgid ""
 "Selecting \"%1$s\" as instrument of the musician %2$s for the project "
 "\"%3$s\"."
 msgstr "Wähle \"%1$s\" als Instrument von %2$s für das Projekt \"%3$s\"."
 
-#: lib/Service/ProjectService.php:2290
+#: lib/Service/ProjectService.php:2289
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr "Person mit id \"%d\" konnte nicht hinzugefügt werden, Fehler \"%s\""
 
-#: lib/Service/ProjectService.php:2301
+#: lib/Service/ProjectService.php:2300
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr "Die Person %s wurde zum Projekt %s hinzugefügt."
 
-#: lib/Service/ProjectService.php:2357
+#: lib/Service/ProjectService.php:2356
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 "Konnte den Email-Verteiler \"%1$s\" für das Projekt \"%2$s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2423
+#: lib/Service/ProjectService.php:2422
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr "Konnte den Email-Verteiler \"%s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2567
+#: lib/Service/ProjectService.php:2566
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr "Kann die Person \"%s\" nicht vom Projekt-Email-Verteiler abmelden."
 
-#: lib/Service/ProjectService.php:2592
+#: lib/Service/ProjectService.php:2591
 #, php-format
 msgid "Unable to fetch the project for id \"%s\"."
 msgstr "Kann das Projekt zur id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:2669
+#: lib/Service/ProjectService.php:2668
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 "Konnte die Daten-Infrastruktur (Dateiordner, Wiki, Web-Seiten) für das "
 "Projekt mit der Id \"%d\" nicht erzeugen."
 
-#: lib/Service/ProjectService.php:2710
+#: lib/Service/ProjectService.php:2709
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr "Konnte kein Projekt \"%s\" erzeugen."
 
-#: lib/Service/ProjectService.php:2740
+#: lib/Service/ProjectService.php:2739
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr "Konnte das zu löschende Projekt mit der Id %d nicht finden."
 
-#: lib/Service/ProjectService.php:3255
+#: lib/Service/ProjectService.php:3254
 msgid "Project not found."
 msgstr "Projekt nicht gefunden."
 
-#: lib/Service/ProjectService.php:3288
+#: lib/Service/ProjectService.php:3287
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
@@ -8889,11 +8897,11 @@ msgstr ""
 "verfassen von Serienbriefen zu vereinfachen. Idealerweise hat das Bild einen "
 "transparenten Hintergrund und eine Auflösung von mindestens 600 DPI."
 
-#: lib/Service/ProjectService.php:3294
+#: lib/Service/ProjectService.php:3293
 msgid "Validation of projects not yet implemented."
 msgstr "Validierung von Projekten ist noch nicht implementiert."
 
-#: lib/Service/ProjectService.php:3376
+#: lib/Service/ProjectService.php:3375
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr "Kann \"%1$s\" nicht vom Projekt austragen."
@@ -14410,42 +14418,42 @@ msgstr "Zeile {line}"
 msgid "Project Wiki for {projectName}"
 msgstr "Wiki Projekt-Seite für {projectName}"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:47
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:48
 #: specialVueFakeDummyForL10nScript.js:3492
 msgid "Project Overview"
 msgstr "Projekt-Übersicht"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:85
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:90
 #: specialVueFakeDummyForL10nScript.js:3500
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:95
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:101
 #: specialVueFakeDummyForL10nScript.js:3502
 msgid "Project Notes"
 msgstr "Projekt-Notizen"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:104
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:111
 #: specialVueFakeDummyForL10nScript.js:3504
 msgid "Events"
 msgstr "Termine"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:123
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:132
 #: specialVueFakeDummyForL10nScript.js:3508
 msgid "Business Contacts / Associates"
 msgstr "Geschäftskontakte und Assoziierte"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:133
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:143
 #: specialVueFakeDummyForL10nScript.js:3510
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:143
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:154
 #: specialVueFakeDummyForL10nScript.js:3512
 msgid "Payments"
 msgstr "Zahlungen"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:152
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:164
 #: specialVueFakeDummyForL10nScript.js:3514
 msgid "Financial Balance"
 msgstr "Gewinn-/Verlustrechung"
@@ -19620,21 +19628,21 @@ msgstr "abwartend"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_SKELETON_FOLDER = 'skeleton';
-#: lib/Service/ProjectService.php:593
+#: lib/Service/ProjectService.php:592
 #, php-format
 msgid "skeleton"
 msgstr "Skelett"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_MANAGEMENT_SKELETON_FOLDER = 'management';
-#: lib/Service/ProjectService.php:600
+#: lib/Service/ProjectService.php:599
 #, php-format
 msgid "management"
 msgstr "Verwaltung"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER = 'forename.surname';
-#: lib/Service/ProjectService.php:613 lib/Service/ProjectService.php:658
+#: lib/Service/ProjectService.php:612 lib/Service/ProjectService.php:657
 #, php-format
 msgid "forename.surname"
 msgstr "vorname.nachname"

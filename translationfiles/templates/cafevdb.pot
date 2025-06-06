@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-06-05 22:57+0200\n"
+"POT-Creation-Date: 2025-06-06 07:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2272,7 +2272,7 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:916
-#: lib/Service/ProjectService.php:2911
+#: lib/Service/ProjectService.php:2910
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr ""
@@ -2287,7 +2287,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:950
-#: lib/Service/ProjectService.php:3175
+#: lib/Service/ProjectService.php:3174
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -5261,35 +5261,45 @@ msgid "project participants for %s"
 msgstr ""
 
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:103
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:325
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:332
 #: lib/PageRenderer/Instruments.php:258
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:255
 msgid "Instrument"
 msgstr ""
 
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:107
-msgid "SEPA bank accounts"
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:109
+#, php-format
+msgid "project associates for %s"
 msgstr ""
 
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:110
+#: lib/PageRenderer/ProjectAssociates.php:615
+msgid "Role"
+msgstr ""
+
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:114
+msgid "SEPA bank accounts"
+msgstr ""
+
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:117
 #, php-format
 msgid "Table export for table \"%s\" not yet implemented."
 msgstr ""
 
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:300
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:307
 msgid "Missing Musicians"
 msgstr ""
 
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:326
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:333
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:351
 msgid "Required"
 msgstr ""
 
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:327
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:334
 msgid "Not Registered"
 msgstr ""
 
-#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:328
+#: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:335
 msgid "Not Confirmed"
 msgstr ""
 
@@ -5950,7 +5960,7 @@ msgstr ""
 msgid "Instrument Insurance"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:113
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:121
 #. TRANSLATORS src/components/ProjectEventsListing.vue:82
 #: lib/PageRenderer/PME/Config.php:64
 #: lib/PageRenderer/PMETableViewBase.php:638
@@ -6131,10 +6141,6 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:615
-msgid "Role"
-msgstr ""
-
 #: lib/PageRenderer/ProjectAssociates.php:671
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:299
 #: lib/PageRenderer/ProjectParticipants.php:716
@@ -6184,7 +6190,7 @@ msgstr ""
 msgid "Instrumentation Numbers for `%s'"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:66
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:69
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:121
 #: lib/Service/ToolTipsDataService.php:1507
 #: specialVueFakeDummyForL10nScript.js:3496
@@ -6647,13 +6653,13 @@ msgstr ""
 msgid "Public Downloads"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:75
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:79
 #: lib/PageRenderer/Projects.php:888
 #: specialVueFakeDummyForL10nScript.js:3498
 msgid "Participant Fields"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:57
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:59
 #: lib/PageRenderer/Projects.php:951
 #: lib/Service/ToolTipsDataService.php:1509
 #: specialVueFakeDummyForL10nScript.js:3494
@@ -7889,33 +7895,33 @@ msgid ""
 "actual data-type is \"%3$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:507
+#: lib/Service/ProjectService.php:506
 msgid "templates"
 msgstr ""
 
-#: lib/Service/ProjectService.php:718
+#: lib/Service/ProjectService.php:717
 #, php-format
 msgid "Unable to ensure existence of folder \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:984
+#: lib/Service/ProjectService.php:983
 #, php-format
 msgid ""
 "Unable set expiration date for the public download link \"%1$s\" for the "
 "project \"%2$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:994
+#: lib/Service/ProjectService.php:993
 #, php-format
 msgid "Unable to create the public donwload link for the project \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1411
+#: lib/Service/ProjectService.php:1410
 #, php-format
 msgid "Projects of %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1475
+#: lib/Service/ProjectService.php:1474
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -7946,154 +7952,154 @@ msgid ""
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:166
-#: lib/Service/ProjectService.php:1655
+#: lib/Service/ProjectService.php:1654
 #: specialVueFakeDummyForL10nScript.js:2209
 msgid "Preview"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1657
-#: lib/Service/ProjectService.php:1712
-#: lib/Service/ProjectService.php:1885
-#: lib/Service/ProjectService.php:1930
-#: lib/Service/ProjectService.php:1990
+#: lib/Service/ProjectService.php:1656
+#: lib/Service/ProjectService.php:1711
+#: lib/Service/ProjectService.php:1884
+#: lib/Service/ProjectService.php:1929
+#: lib/Service/ProjectService.php:1989
 #: lib/Settings/PersonalForm.php:304
 msgid "Rehearsals"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1659
+#: lib/Service/ProjectService.php:1658
 msgid "Archive"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1661
+#: lib/Service/ProjectService.php:1660
 msgid "Trashbin"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1706
+#: lib/Service/ProjectService.php:1705
 msgid "Empty project."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1733
+#: lib/Service/ProjectService.php:1732
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1758
+#: lib/Service/ProjectService.php:1757
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1779
+#: lib/Service/ProjectService.php:1778
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1823
+#: lib/Service/ProjectService.php:1822
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1867
+#: lib/Service/ProjectService.php:1866
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2037
+#: lib/Service/ProjectService.php:2036
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2089
+#: lib/Service/ProjectService.php:2088
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2109
+#: lib/Service/ProjectService.php:2108
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2231
+#: lib/Service/ProjectService.php:2230
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2237
+#: lib/Service/ProjectService.php:2236
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
 "instrumentation list for the project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2245
+#: lib/Service/ProjectService.php:2244
 #, php-format
 msgid ""
 "Selecting \"%1$s\" as instrument of the musician %2$s for the project "
 "\"%3$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2290
+#: lib/Service/ProjectService.php:2289
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2301
+#: lib/Service/ProjectService.php:2300
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2357
+#: lib/Service/ProjectService.php:2356
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2423
+#: lib/Service/ProjectService.php:2422
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2567
+#: lib/Service/ProjectService.php:2566
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2592
+#: lib/Service/ProjectService.php:2591
 #, php-format
 msgid "Unable to fetch the project for id \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2669
+#: lib/Service/ProjectService.php:2668
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2710
+#: lib/Service/ProjectService.php:2709
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2740
+#: lib/Service/ProjectService.php:2739
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr ""
 
-#: lib/Service/ProjectService.php:3255
+#: lib/Service/ProjectService.php:3254
 msgid "Project not found."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3288
+#: lib/Service/ProjectService.php:3287
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
 "background and a resolution of 600 DPI or more."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3294
+#: lib/Service/ProjectService.php:3293
 msgid "Validation of projects not yet implemented."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3376
+#: lib/Service/ProjectService.php:3375
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr ""
@@ -12368,42 +12374,42 @@ msgstr ""
 msgid "Project Wiki for {projectName}"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:47
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:48
 #: specialVueFakeDummyForL10nScript.js:3492
 msgid "Project Overview"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:85
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:90
 #: specialVueFakeDummyForL10nScript.js:3500
 msgid "Project Files"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:95
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:101
 #: specialVueFakeDummyForL10nScript.js:3502
 msgid "Project Notes"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:104
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:111
 #: specialVueFakeDummyForL10nScript.js:3504
 msgid "Events"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:123
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:132
 #: specialVueFakeDummyForL10nScript.js:3508
 msgid "Business Contacts / Associates"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:133
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:143
 #: specialVueFakeDummyForL10nScript.js:3510
 msgid "Debit Mandates"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:143
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:154
 #: specialVueFakeDummyForL10nScript.js:3512
 msgid "Payments"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:152
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:164
 #: specialVueFakeDummyForL10nScript.js:3514
 msgid "Financial Balance"
 msgstr ""
@@ -17298,21 +17304,21 @@ msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_SKELETON_FOLDER = 'skeleton';
-#: lib/Service/ProjectService.php:593
+#: lib/Service/ProjectService.php:592
 #, php-format
 msgid "skeleton"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_MANAGEMENT_SKELETON_FOLDER = 'management';
-#: lib/Service/ProjectService.php:600
+#: lib/Service/ProjectService.php:599
 #, php-format
 msgid "management"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER = 'forename.surname';
-#: lib/Service/ProjectService.php:613 lib/Service/ProjectService.php:658
+#: lib/Service/ProjectService.php:612 lib/Service/ProjectService.php:657
 #, php-format
 msgid "forename.surname"
 msgstr ""
