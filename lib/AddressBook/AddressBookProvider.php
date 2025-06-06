@@ -110,6 +110,8 @@ class AddressBookProvider implements IAddressBookProvider
    */
   public function getAddressBookInAddressBookHome(string $principalUri, string $uri): ?ExternalAddressBook
   {
+    // $this->logInfo('PRINCIPAL AND URI ' . $principalUri . ' URI ' . $uri);
+    // PRINCIPAL AND URI principals/users/claus URI cafevdb-musicians
     list(,,$userId) = explode('/', $principalUri . '//');
     // $this->logInfo('in group ' . $userId . ' ' . ($this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_ADDRESSBOOK) ? 'yes' : 'no'));
 

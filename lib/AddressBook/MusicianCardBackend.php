@@ -85,7 +85,7 @@ class MusicianCardBackend implements ICardBackend
     $uuid = $this->getUuidFromUri($name);
     $musician = $this->musiciansRepository->findOneBy([
       'uuid' => $uuid,
-      'address_book_uri' => null,
+      'addressBookUri' => null,
     ]);
     if (empty($musician)) {
       throw new SabreNotFoundException;
@@ -108,12 +108,12 @@ class MusicianCardBackend implements ICardBackend
     }
 
     if (empty($pattern)) {
-      $musicians = $this->musiciansRepository->findBy([ 'address_book_uri' => null ]);
+      $musicians = $this->musiciansRepository->findBy([ 'addressBookUri' => null ]);
     } else {
       $empty = true;
       $likePattern = '%' . $pattern . '%';
       $criteria = [
-        'address_book_uri' => null,
+        'addressBookUri' => null,
         [ '(|' => true ],
       ];
       if (array_search('FN', $properties) !== false) {
@@ -166,7 +166,7 @@ class MusicianCardBackend implements ICardBackend
   {
     // to appear in the contacts app, this must really return everything
     // as search is only by client in the presented contacts
-    $musicians = $this->musiciansRepository->findBy([ 'address_book_uri' => null ]);
+    $musicians = $this->musiciansRepository->findBy([ 'addressBookUri' => null ]);
     $vCards = [];
     foreach ($musicians as $musician) {
       $vCards[] = $this->entryToCard($musician);
@@ -177,7 +177,7 @@ class MusicianCardBackend implements ICardBackend
   /** {@inheritdoc} */
   public function getUriFromUuid($uuid)
   {
-    return 'musician-'.$uuid.'.vcf';
+    return 'musician-' . $uuid . '.vcf';
   }
 
   /** {@inheritdoc} */
@@ -202,9 +202,9 @@ class MusicianCardBackend implements ICardBackend
   /** {@inheritdoc} */
   public function getLastModified(?string $uri = null):int
   {
-    $criteria = [ [ 'address_book_uri' => null ] ];
-    if (empty($uri)) {
-      $criteria[] = [ 'uuid' => $this->getUuidFromUri($uri) ];
+    $criteria = [ 'addressBookUri' => null ];
+    if (!empty($uri)) {
+      $criteria['uuid'] = $this->getUuidFromUri($uri);
     }
     $info = $this->musiciansRepository->fetchLastModifiedDate($criteria);
     return (empty($info) || empty($info['lastModified'])) ? 0 : strtotime($info['lastModified']);
