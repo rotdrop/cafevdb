@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,6 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Dialogs from './dialogs.js';
 import { widget as selectWidget } from './select-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
-import mergician from 'mergician';
 
 /**
  * Brief UI check for invalid input elements.
@@ -59,6 +58,7 @@ function checkInvalidInputs(container, options, labelCallback, afterDialog) {
     labelCallback($input) {
       return $input.closest('tr').find('td.' + pmeToken('key')).html();
     },
+    beforeDialog($invalidInputs) {},
     afterDialog($invalidInputs) {},
     timeout: 5000,
   };
@@ -76,7 +76,8 @@ function checkInvalidInputs(container, options, labelCallback, afterDialog) {
     options.afterDialog = afterDialog;
   }
 
-  options = mergician({}, defaultOptions, options || {});
+  options = { ...defaultOptions, ...(options || {}) };
+  console.info('OPTIONS', options);
 
   const cleanup = options.cleanup;
   labelCallback = options.labelCallback;
@@ -99,95 +100,97 @@ function checkInvalidInputs(container, options, labelCallback, afterDialog) {
     return true;
   });
 
-  if (invalidInputs.length !== 0) {
-    $.fn.cafevTooltip.remove();
-    const highlightInvalid = function(afterDialog) {
-      for (const input of invalidInputs) {
-        const $input = $(input);
-        let $effectInput = $input;
-        let $tooltipInput = $input;
-        if (!$input.is(':visible') && $input.is('select')) {
-          $effectInput = selectWidget($input);
-          $tooltipInput = selectWidget($input);
-        } else {
-          // selectize moves the "required" property to its own input
-          const $selectize = $input.closest('.selectize-control');
-          if ($selectize.length > 0) {
-            $effectInput = $input.parent();
-            $tooltipInput = $selectize;
-          }
-        }
+  if (invalidInputs.length === 0) {
+    return true;
+  }
 
-        if ($effectInput.is(':visible')) {
-          $tooltipInput.cafevTooltip('enable');
-          $effectInput.effect(
-            'highlight',
-            {},
-            options.timeout,
-            function() {
-              if (afterDialog) {
-                if (!CAFEVDB.toolTipsEnabled()) {
-                  $tooltipInput.cafevTooltip('disable');
-                }
-                cleanup();
-              }
-            });
-          if (afterDialog) {
-            $tooltipInput.cafevTooltip('show');
-          }
-        }
-      }
-      if (afterDialog) {
-        options.afterDialog(invalidInputs);
-      }
-    };
-    const invalidInfo = [];
+  $.fn.cafevTooltip.remove();
+  const highlightInvalid = function(afterDialog) {
     for (const input of invalidInputs) {
       const $input = $(input);
+      let $effectInput = $input;
+      let $tooltipInput = $input;
+      if (!$input.is(':visible') && $input.is('select')) {
+        $effectInput = selectWidget($input);
+        $tooltipInput = selectWidget($input);
+      } else {
+        // selectize moves the "required" property to its own input
+        const $selectize = $input.closest('.selectize-control');
+        if ($selectize.length > 0) {
+          $effectInput = $input.parent();
+          $tooltipInput = $selectize;
+        }
+      }
 
-      // use either a special label callback or the relevant label or the placeholder.
-      let label = labelCallback($input);
-      if (!label) {
-        const id = $input.attr('id');
-        label = container.find('label[for="' + id + '"]').html();
+      if ($effectInput.is(':visible')) {
+        $tooltipInput.cafevTooltip('enable');
+        $effectInput.effect(
+          'highlight',
+          {},
+          options.timeout,
+          function() {
+            if (afterDialog) {
+              if (!CAFEVDB.toolTipsEnabled()) {
+                $tooltipInput.cafevTooltip('disable');
+              }
+              cleanup();
+            }
+          });
+        if (afterDialog) {
+          $tooltipInput.cafevTooltip('show');
+        }
       }
-      if (!label) {
-        label = $input.attr('placeholder');
-      }
-      if (!label) {
-        label = $input.closest('label').html();
-      }
-      if (!label) {
-        label = $input.attr('name');
-      }
-      if (!label) {
-        label = t(appName, 'Unknown input element');
-      }
-      const value = $input.val();
-      invalidInfo.push('<li class="' + appName + ' invalid-form-input">'
-                       + label
-                       + ', '
-                       + (value
-                         ? t(appName, 'invalid data "{value}"', { value })
-                         : t(appName, 'no or invalid data'))
-                       + '</li>');
     }
-    highlightInvalid();
-    Dialogs.alert(
-      '<div class="' + appName + ' invalid-form-input">'
-        + t(appName, 'The following required fields are empty or contain otherwise invalid data:')
-        + '<ul class="' + appName + ' invalid-form-input">'
-        + invalidInfo.join('\n')
-        + '</ul>'
-        + t(appName, 'Please add the missing data!')
-        + '</div>',
-      t(appName, 'Missing Input Data'),
-      () => highlightInvalid(true),
-      true,
-      true);
-    return false;
+    if (afterDialog) {
+      options.afterDialog(invalidInputs);
+    }
+  };
+  const invalidInfo = [];
+  for (const input of invalidInputs) {
+    const $input = $(input);
+
+    // use either a special label callback or the relevant label or the placeholder.
+    let label = labelCallback($input);
+    if (!label) {
+      const id = $input.attr('id');
+      label = container.find('label[for="' + id + '"]').html();
+    }
+    if (!label) {
+      label = $input.attr('placeholder');
+    }
+    if (!label) {
+      label = $input.closest('label').html();
+    }
+    if (!label) {
+      label = $input.attr('name');
+    }
+    if (!label) {
+      label = t(appName, 'Unknown input element');
+    }
+    const value = $input.val();
+    invalidInfo.push('<li class="' + appName + ' invalid-form-input">'
+      + label
+      + ', '
+      + (value
+        ? t(appName, 'invalid data "{value}"', { value })
+        : t(appName, 'no or invalid data'))
+      + '</li>');
   }
-  return true;
+  options.beforeDialog(invalidInputs);
+  highlightInvalid();
+  Dialogs.alert(
+    '<div class="' + appName + ' invalid-form-input">'
+      + t(appName, 'The following required fields are empty or contain otherwise invalid data:')
+      + '<ul class="' + appName + ' invalid-form-input">'
+      + invalidInfo.join('\n')
+      + '</ul>'
+      + t(appName, 'Please add the missing data!')
+      + '</div>',
+    t(appName, 'Missing Input Data'),
+    () => highlightInvalid(true),
+    true,
+    true);
+  return false;
 }
 
 export default checkInvalidInputs;

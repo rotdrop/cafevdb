@@ -580,10 +580,21 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
           allButtons.prop('disabled', true);
           const cleanup = () => {
             allButtons.prop('disabled', false);
+            unblockTableDialog(container);
+            tableDialogLoadIndicator(container, false);
           };
 
           if (!checkInvalidInputs(container, {
             cleanup,
+            beforeDialog($invalidInputs) {
+              const $closestRows = $invalidInputs.closest('tr.pme-row');
+              let minTab = 'all';
+              if ($closestRows.length === 1) {
+                const tabs = $closestRows.attr('class').matchAll(/tab-(\d+)/g).toArray().map(match => match[1]);
+                minTab = Math.min(...tabs);
+              }
+              container.find('[data-tab-index=' + minTab + ']').click();
+            },
             afterDialog($invalidInputs) {
               cleanup();
             },
@@ -644,6 +655,15 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
       // Brief front-end-check for empty required fields.
       if (!checkInvalidInputs(container, {
         cleanup,
+        beforeDialog($invalidInputs) {
+          const $closestRows = $invalidInputs.closest('tr.pme-row');
+          let minTab = 'all';
+          if ($closestRows.length === 1) {
+            const tabs = $closestRows.attr('class').matchAll(/tab-(\d+)/g).toArray().map(match => match[1]);
+            minTab = Math.min(...tabs);
+          }
+          container.find('[data-tab-index=' + minTab + ']').click();
+        },
         afterDialog($invalidInputs) {
           cleanup();
         },
