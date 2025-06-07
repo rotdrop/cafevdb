@@ -2006,7 +2006,7 @@ Whatever.',
    *
    * @param array $musicianIds Flat array of the data-base keys for Entities\Musician.
    *
-   * @param int $projectId The project-id for the destination project.
+   * @param int|Entities\Project $projectOrId The project-id for the destination project.
    *
    * @param string|ParticipationContext $participationContext Either project-participants or project-associates.
    *
@@ -2028,12 +2028,16 @@ Whatever.',
    */
   public function addMusicians(
     array $musicianIds,
-    int $projectId,
+    int|Entities\Project $projectOrId,
     string|ParticipationContext $participationContext,
-  ):array  {
-    $project = $this->repository->find($projectId);
-    if (empty($project)) {
-      throw new Exception($this->l->t('Unabled to retrieve project with id %d', $projectId));
+  ):array {
+    if (!($projectOrId instanceof Entities\Project)) {
+      $project = $this->repository->find($projectOrId);
+      if (empty($project)) {
+        throw new Exception($this->l->t('Unabled to retrieve project with id %d', $projectOrId));
+      }
+    } else {
+      $project = $projectOrId;
     }
 
     $statusReport = [
@@ -2075,12 +2079,15 @@ Whatever.',
     string|ParticipationContext $participationContext,
     ?array &$status,
   ):bool {
-    $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
-
     $status = [];
 
     /** @var Entities\Musician $musician */
-    $musician = $musiciansRepository->find($id);
+    if ($id instanceof Entities\Musician) {
+      $musician = $id;
+    } else {
+      $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
+      $musician = $musiciansRepository->find($id);
+    }
     if (empty($musician)) {
       $status[] = [
         'id' => $id,
@@ -2142,8 +2149,14 @@ Whatever.',
           // add the default non instruments
           $nonInstruments = $this->getDatabaseRepository(Entities\Instrument::class)
             ->findNonInstruments(Entities\ProjectInstrument::NON_INSTRUMENTS);
+          /** @var Entities\Instrument $instrument */
           foreach ($nonInstruments as $instrument) {
-            $musician->addInstrument($instrument, ranking: 0x7fffffff);
+            $ranking = 0x7fffffff;
+            if ($musician->getOrganization()
+                && $instrument->getUntranslatedName() == Entities\ProjectInstrument::NON_INSTRUMENT_BUSINESS_PARTNER) {
+              $ranking -= 1;
+            }
+            $musician->addInstrument($instrument, ranking: $ranking);
           }
           $this->persist($musician);
           $this->flush();
