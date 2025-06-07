@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,12 +26,17 @@ namespace OCA\CAFEVDB\Service;
 
 use Exception;
 
-use \Sabre\DAV\PropPatch as SabrePropPatch;
+use Sabre\DAV\PropPatch as SabrePropPatch;
 
+use OCP\AppFramework\IAppContainer;
+use OCP\Contacts\IManager as AddressBookManager;
+use OCP\IL10N;
 use OCP\IAddressBook;
+use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 
-use OCA\DAV\CardDAV\CardDavBackend;
 use OCA\DAV\CardDAV\AddressBook;
+use OCA\DAV\CardDAV\CardDavBackend;
 
 /**
  * @todo: replace the stuff below by more persistent APIs. As it
@@ -42,19 +47,21 @@ use OCA\DAV\CardDAV\AddressBook;
  */
 class CardDavService
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\GetUserTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var int */
-  private $contactsUserId;
+  /** @var null|string */
+  private ?string $addressBookUserId;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected ConfigService $configService,
-    private \OCP\Contacts\IManager $addressBookManager,
+    private AddressBookManagerd $addressBookManager,
     private CardDavBackend $cardDavBackend,
+    protected IL10N $l,
+    protected LoggerInterface $logger,
+    protected IUserSession $userSession,
   ) {
-    $this->contactsUserId = $this->userId();
-    $this->l = $this->l10n();
+    $this->addressBookUserId = $this->getUserId();
   }
   // phpcs:enable
 
@@ -71,7 +78,7 @@ class CardDavService
    */
   public function createAddressBook(string $uri, ?string $displayName = null, ?string $userId = null)
   {
-    empty($userId) && ($userId = $this->userId());
+    empty($userId) && ($userId = $this->getUserId());
     empty($displayName) && ($displayName = $uri);
     $principal = "principals/users/$userId";
 
@@ -163,6 +170,33 @@ class CardDavService
   }
 
   /**
+   * Get a addressBook with the given uri. If the address-book is shared the
+   * uri is tweak to match the NC-style "..._shared_by_..." uri.
+   *
+   * @param string $uri A string in the form PRINCIPAL_URI/ADDRESS_BOOK_URI,
+   * e.g. cameratashareholder/general
+   *
+   * @return null|IAddressBook
+   */
+  public function addressBookByUri(string $uri):?IAddressBook
+  {
+    if ($this->addressBookUserId != $this->getUserId()) {
+      $this->refreshAddressBookManager();
+    }
+    list($principal, $addressBookUri) = explode('/', $uri);
+    if ($principal != $this->getUserId()) {
+      $addressBookUri .= '_shared_by_' . $principal;
+    }
+    /** @var IAddressBook $addressBook */
+    foreach ($this->addressBookManager->getUserAddressBooks() as $addressBook) {
+      if ($addressBookUri === $addressBook) {
+        return $addressBook;
+      }
+    }
+    return null;
+  }
+
+  /**
    * Get a addressBook with the given display name.
    *
    * @param string $displayName
@@ -171,7 +205,7 @@ class CardDavService
    */
   public function addressBookByName(string $displayName):?IAddressBook
   {
-    if ($this->contactsUserId != $this->userId()) {
+    if ($this->addressBookUserId != $this->getUserId()) {
       $this->refreshAddressBookManager();
     }
     foreach ($this->addressBookManager->getUserAddressBooks() as $addressBook) {
@@ -191,13 +225,67 @@ class CardDavService
    */
   public function addressBookById(int $id):?IAddressBook
   {
-    if ($this->contactsUserId != $this->userId()) {
+    if ($this->addressBookUserId != $this->getUserId()) {
       $this->refreshAddressBookManager();
     }
     foreach ($this->addressBookManager->getUserAddressBooks() as $addressBook) {
       if ((int)$id === (int)$addressBook->getKey()) {
         return $addressBook;
       }
+    }
+    return null;
+  }
+
+  /**
+   * Get the uri of the original addressbook.
+   *
+   * @param int $id Numeric calendar id.
+   *
+   * @return null|string Calendar URI.
+   */
+  public function addressBookPrincipalUri(int $id):?string
+  {
+    $addressBookInfo = $this->cardDavBackend->getAddressBookById($id);
+    if (!empty($addressBookInfo)) {
+      return $addressBookInfo['principaluri'];
+    }
+    return null;
+  }
+
+  /**
+   * Get principal, shared and original uri from the addressBook id, as well as
+   * the owner-user-id.
+   *
+   * @param int $id Numeric addressBook id.
+   *
+   * @return null|array
+   * ```
+   * [
+   *   'principaluri' => principals/users/OWNER_ID,
+   *   'owneruri' => URI_AS_SEEN_BY_OWNER,
+   *   'shareuri' => URI_AS_SEEN_BY_CURRENT_USER,
+   *   'ownerid' => OWNER_USER_ID,
+   *   'userid' => CURRENT_USER_ID,
+   * ]
+   * ```
+   *
+   * @bug Users inernal APIs. The NC PHP API is just too incomplete.
+   */
+  public function addressBookUris(int $id):?array
+  {
+    $addressBookInfo = $this->cardDavBackend->getAddressBookById($id);
+    if (!empty($addressBookInfo)) {
+      [,,$ownerId] = explode('/', $addressBookInfo['principaluri']);
+      $userUri = ($ownerId != $this->addressBookUserId)
+        ? $addressBookInfo['uri'] . '_shared_by_' . $ownerId
+        : $addressBookInfo['uri'];
+      return [
+        'principaluri' => $addressBookInfo['principaluri'],
+        'owneruri' => $addressBookInfo['uri'],
+        'shareuri' => $userUri,
+        'ownerid' => $ownerId,
+        'userid' => $this->addressBookUserId,
+      ];
     }
     return null;
   }
@@ -214,7 +302,7 @@ class CardDavService
     $this->addressBookManager->clear();
     $urlGenerator = \OC::$server->getURLGenerator();
     \OC::$server->query(\OCA\DAV\CardDAV\ContactsManager::class)->setupContactsProvider(
-      $this->addressBookManager, $this->userId(), $urlGenerator);
-    $this->contactsUserId = $this->userId();
+      $this->addressBookManager, $this->getUserId(), $urlGenerator);
+    $this->addressBookUserId = $this->getUserId();
   }
 }
