@@ -44,6 +44,8 @@ define('OC_CONSOLE', 1);
  * @param Throwable $exception
  *
  * @return void
+ *
+ * @SuppressWarnings(PHPMD.ExitExpression)
  */
 function exceptionHandler(Throwable $exception):void
 {
@@ -155,7 +157,6 @@ function getPassword(?string $prompt = null, bool $stars = false)
   return $password;
 }
 
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
 
 $appDir = __DIR__ . '/..';
@@ -165,7 +166,6 @@ if (getenv('CAFEVDB_USER') !== false) {
 } else {
   $cafevDbUser = $user['name'];
 }
-$GLOBALS['cafevdb-user'] = $cafevDbUser;
 
 $authenticated = false;
 $passwordMethod = 'file';
@@ -213,7 +213,13 @@ if (empty($cafevDbPassword)) {
   exit(1);
 }
 
-$encryptionService = \OC::$server->query(EncryptionService::class);
+$userManager = \OC::$server->get(\OCP\IUserManager::class);
+$userSession = \OC::$server->get(\OCP\IUserSession::class);
+
+$user = $userManager->get($cafevDbUser);
+$userSession->setUser($user);
+
+$encryptionService = \OC::$server->get(EncryptionService::class);
 $encryptionService->bind($cafevDbUser, $cafevDbPassword);
 
 /*
