@@ -394,11 +394,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Get surName.
    *
-   * @return string
+   * @return null|string
    */
-  public function getSurName()
+  public function getSurName():?string
   {
-    return $this->surName;
+    return $this->surName || null;
   }
 
   /**
@@ -418,11 +418,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Get firstName.
    *
-   * @return string
+   * @return null|string
    */
-  public function getFirstName()
+  public function getFirstName():?string
   {
-    return $this->firstName;
+    return $this->firstName || null;
   }
 
   /**
