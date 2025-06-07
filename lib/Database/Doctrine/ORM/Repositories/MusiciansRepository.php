@@ -85,9 +85,9 @@ class MusiciansRepository extends EntityRepository
   /**
    * @param mixed $uuid
    *
-   * @return Entities\Musician
+   * @return null|Entities\Musician
    */
-  public function findIdByUUID(mixed $uuid)
+  public function findIdByUUID(mixed $uuid):?Entities\Musician
   {
     $query = $this->generateIdQuery([ 'uuid' => $uuid ]);
     return $query->getSingleScalarResult();
@@ -109,9 +109,9 @@ class MusiciansRepository extends EntityRepository
   /**
    * @param mixed $uuid
    *
-   * @return Entities\Musician
+   * @return null|Entities\Musician
    */
-  public function findByUUID(mixed $uuid)
+  public function findByUUID(mixed $uuid):?Entities\Musician
   {
     return $this->findOneBy([ 'uuid' => $uuid ]);
   }
@@ -119,9 +119,9 @@ class MusiciansRepository extends EntityRepository
   /**
    * @param string $userId
    *
-   * @return Entities\Musician
+   * @return null|Entities\Musician
    */
-  public function findByUserId(string $userId)
+  public function findByUserId(string $userId):?Entities\Musician
   {
     return $this->findOneBy([ 'userIdSlug' => $userId ]);
   }

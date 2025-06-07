@@ -73,6 +73,37 @@ class InstrumentsRepository extends EntityRepository
   }
 
   /**
+   * Return instrument names as flat array.
+   *
+   * @param null|array $only Only instruments belonging to these family names.
+   *
+   * @param null|array $exclude Exclude instrument belonging to these families.
+   *
+   * @return array<int, string>
+   */
+  public function findNames(?array $only = null, ?array $exclude = null):array
+  {
+    $qb = $this->createQueryBuilder('i');
+    $qb->select('i.name AS instrument')
+      ->where($qb->expr()->isNull('i.deleted'));
+    if (!empty($only) || !empty($exclude)) {
+      $qb->leftJoin('i.families', 'if');
+      if (!empty($only)) {
+        $qb->andWhere($qb->expr()->in('if.family', ':only'))
+          ->setParameter('only', $only);
+      }
+      if (!empty($exclude)) {
+        $qb->andWhere($qb->expr()->notIn('if.family', ':exclude'))
+          ->setParameter('exclude', $exclude);
+      }
+    }
+    $qb->orderBy('i.sortOrder', 'ASC')
+      ->addOrderBy('i.name', 'ASC');
+
+    return $qb->getQuery()->getResult('COLUMN_HYDRATOR');
+  }
+
+  /**
    * Prepare ofor grouping select options by instrument family.
    *
    * @param bool $useEntities Use full entites instead of mere names in the

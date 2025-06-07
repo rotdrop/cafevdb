@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /** Entity repository for projects. */
@@ -181,5 +182,39 @@ class ProjectsRepository extends EntityRepository
       ->getQuery()
       ->getResult('COLUMN_HYDRATOR');
     return $projectIds;
+  }
+
+  /**
+   * Find project names, return as flat array.
+   *
+   * @param null|string|ProjectType $onlyType If given restrict to this type. Default \null.
+   *
+   * @param  null|string|ProjectType $excludeType If given exclude projects of this type. Defaults to ProjectType::TEMPLATE.
+   *
+   * @return array<int, string>
+   */
+  public function findNames(
+    null|string|ProjectType $onlyType = null,
+    null|string|ProjectType $excludeType = ProjectType::TEMPLATE,
+  ): array {
+    $criteria = [ 'deleted' => null ];
+    if ($onlyType !== null) {
+      $criteria[] = [ 'type' => $onlyType ];
+    }
+    if ($excludeType !== null) {
+      $criteria[] = [ '!type' => $excludeType ];
+    }
+    $queryParts = $this->prepareFindBy(
+      $criteria,
+      [ 'year' => 'DESC', 'name' => 'ASC' ],
+    );
+
+    /** @var ORM\QueryBuilder */
+    $qb = $this->generateFindBySelect($queryParts, [ 'mainTable.name' ]);
+    $qb = $this->generateFindByWhere($qb, $queryParts);
+
+    $query = $qb->getQuery();
+
+    return $query->getResult('COLUMN_HYDRATOR');
   }
 }
