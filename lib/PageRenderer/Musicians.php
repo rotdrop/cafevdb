@@ -898,6 +898,16 @@ WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMIL
 
     $musicianAvatarFieldGenerator($opts['fdd']);
 
+    $opts['fdd']['address_book_uri'] = [
+      'tab'      => [ 'id' => 'miscinfo' ],
+      'name'     => $this->l->t('Address Book'),
+      'css'      => [ 'postfix' => [ 'address-book-uri', ], ],
+      'input'    => 'R',
+      'select'   => 'T',
+      'maxlen'   => 128,
+      'sort'     => true,
+    ];
+
     $opts['fdd']['vcard'] = [
       'tab' => ['id' => 'miscinfo'],
       'input' => 'V',
