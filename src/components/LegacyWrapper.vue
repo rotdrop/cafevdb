@@ -356,6 +356,10 @@ const updateLegacyRoute = async (post: TemplatePostData, action: 'push'|'replace
       'no-reload': '1',
     },
   }
+  if (currentRoute.query['no-reload']) {
+    // try to improve error recovery.
+    target.query['no-reload'] = '' + +currentRoute.query['no-reload'] + 1
+  }
   if (htmlBody) {
     logger.debug('INSTALL NEW HTML')
     legacyBodyHtml.value = htmlBody
@@ -366,7 +370,7 @@ const updateLegacyRoute = async (post: TemplatePostData, action: 'push'|'replace
   } catch (error) {
     if (isNavigationFailure(error, NavigationFailureType.duplicated)) {
       // ignore bug log
-      logger.error('Duplicated navigation trying to remove no-load flag', { error })
+      logger.error('Duplicated navigation trying to add no-load flag', { error, currentRoute, target })
     } else {
       errorHandler(
         new AppError(
