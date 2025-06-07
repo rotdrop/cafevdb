@@ -501,7 +501,7 @@ class MailMergeController extends Controller
           /** @var ContactsService $contactsService */
           $contactsService = $this->di(ContactsService::class);
 
-          $entities[] = $contactsService->importCardData($contact);
+          $entities[] = $contactsService->importCardData(null, $contact);
         }
       }
     }

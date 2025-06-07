@@ -205,7 +205,7 @@ class ContactsService
   }
 
   /**
-   * @param string $cardUri
+   * @param null|string $cardUri
    *
    * @param VCard $vCard
    *
@@ -213,7 +213,7 @@ class ContactsService
    *
    * @return array
    */
-  public function flattenVCard(string $cardUri, VCard $vCard, bool $withTypes = true):array
+  public function flattenVCard(?string $cardUri, VCard $vCard, bool $withTypes = true):array
   {
     $result = [
       'URI' => $cardUri,
@@ -282,32 +282,56 @@ class ContactsService
    *
    * CATEGORIES are used to code instruments and project membership.
    *
+   * @param null|Entities\Musician $entity If given update the given entity
+   * from the card-data, otherwise create a new entity.
+   *
    * @param VCard $vCard Serialized vCard data.
+   *
+   * @param bool $preferWork
    *
    * @return null|Entities\Musician entity.
    *
    * @bug Looks complicated like hell. Simplify?
    */
-  public function importVCard(VCard $vCard):?Entities\Musician
+  public function importVCard(null|Entities\Musician $entity, VCard $vCard, bool $preferWork = true):?Entities\Musician
   {
-    $cardData = $this->flattenVCard($vCard->URI ?? null, $vCard, withType: true);
-    return $this->importCardData($cardData);
+    $cardData = $this->flattenVCard($vCard->URI ?? null, $vCard, withTypes: true);
+    return $this->importCardData($entity, $cardData, $preferWork);
   }
 
   /**
+   * @param null|Entities\Musician $entity If given update the given entity
+   * from the card-data, otherwise create a new entity.
+   *
    * @param array $cardData
    *
    * @param bool $preferWork
    *
    * @return null|Entities\Musician
    */
-  public function importCardData(array $cardData, bool $preferWork = true):?Entities\Musician
+  public function importCardData(null|Entities\Musician $entity, array $cardData, bool $preferWork = true):?Entities\Musician
   {
     // $version = $cardData['VERSION'];
-    $entity = new Entities\Musician();
+    if ($entity === null) {
+      $entity = new Entities\Musician();
+    }
+
+    // in principle FN would be the displayName
+    $value = $cardData['FN'];
+    if (!empty($value)) {
+      $entity->setDisplayName(Util::normalizeSpaces($value));
+    }
+
+    if (empty($cardData['N']) && !empty($cardData['FN'])) {
+      $parts = explode(' ', $entity->getDisplayName());
+      $surName = array_pop($parts);
+      $firstName = implode(' ', $parts);
+      $cardData['N'] = $surName . ';' . $firstName;
+    }
+
     if (!empty($cardData['N'])) {
-        // we honour only surname and prename, and give a damn in
-        // particular on title madness.
+      // we honour only surname and prename, and give a damn in
+      // particular on title madness.
       $parts = explode(';', $cardData['N']);
       $entity
         ->setSurName($parts[0])
@@ -316,12 +340,6 @@ class ContactsService
       $slugSurName = strtolower(str_replace(' ', '-', $parts[0]));
       $slugFirstName = strtolower(str_replace(' ', '-', $parts[1]));
       $entity->setUserIdSlug($this->transliterate($slugFirstName) . '.' . $this->transliterate($slugSurName));
-    }
-
-    // in principle FN would be the displayName
-    $value = $cardData['FN'];
-    if (!empty($value)) {
-      $entity->setDisplayName($value);
     }
 
     foreach (($cardData['TEL'] ?? []) as $tel) {
@@ -377,6 +395,8 @@ class ContactsService
       $entity['updated'] = new DateTimeImmutable($value);
     }
 
+    $isWorkAddress = false;
+
     // [ADR] => Array ( [0] => Array ( [type] => home [value] => ;;Seestraße 70;Leonberg;;71229;Germany ) )
     $typed = false;
     foreach (($cardData['ADR'] ?? []) as $addr) {
@@ -390,6 +410,7 @@ class ContactsService
               && empty($entity['street'])
               && empty($entity['city'])
               && empty($entity['postalCode']))) {
+        $isWorkAddress = $work;
 
         $address = Util::normalizeSpaces($address); // unicode
         $address = explode(';', $address);
@@ -445,34 +466,48 @@ class ContactsService
 
     // use organization as name if provided and move the name to the address supplement
     $value = $cardData['ORG'] ?? null;
-    if (empty($entity->getAddressSupplement()) && !empty($value)) {
+    $entity->setOrganization($value);
+
+    if (!$isWorkAddress && empty($entity->getAddressSupplement()) && !empty($value)) {
       $publicName = $entity->getPublicName(firstNameFirst: true);
       $entity->setAddressSupplement('c/o ' . $publicName);
-      $entity->setDisplayName($value);
     }
-    $entity->setOrganization($value);
 
     $value = $cardData['CATEGORIES'] ?? null;
     if (!empty($value)) {
-      $instrumentsRepository = $this->getDatabaseRepository(Entities\Instrument::class);
-      $instrumentsInfo = $instrumentsRepository->describeAll(useEntities: true);
-      $instruments = $instrumentsInfo['byId'];
       $categories = explode(',', $value);
-      $musicianInstruments = [];
-      /** @var Entities\Instrument $instrument */
-      foreach ($instruments as $instrument) {
-        if (array_search($instrument, $categories)) {
-            $musicianInstruments[] = $instrument;
+      $instrumentsRepository = $this->getDatabaseRepository(Entities\Instrument::class);
+      $instrumentCategories = $instrumentsRepository->findNames();
+      $instrumentCategories = array_intersect($categories, $instrumentCategories);
+      $musicianInstruments = $entity->getInstruments()
+        ->map(fn(Entities\MusicianInstrument $instrument) => $instrument->getName())
+        ->toArray();
+      $missingInstruments = array_diff($instrumentCategories, $musicianInstruments);
+      $excessInstruments = array_diff($musicianInstruments, $instrumentCategories);
+      $this->logInfo('INSTRUMENTS ' . print_r(compact('musicianInstruments', 'missingInstruments', 'excessInstruments'), true));
+      if (!empty($missingInstruments)) {
+        $instruments = $instrumentsRepository->findBy(
+          [ 'name' => $missingInstruments ],
+          orderBy: [ 'name' => 'INDEX' ],
+        );
+        foreach ($missingInstruments as $instrumentName) {
+          $instrument = $instruments[$instrumentName];
+          if (empty($instrument)) {
+            continue;
+                  }
+          $entity->addInstrument($instrument);
         }
       }
-      // now we need to convert to "MusicianInstrument"
-      $musicianInstruments = array_map(
-        fn($instrument) => (new Entities\MusicianInstrument)
-        ->setMusician($entity)
-        ->setInstrument($instrument),
-        $musicianInstruments);
-
-      $entity['instruments'] = new ArrayCollection($musicianInstruments);
+      $excessInstruments = $entity->getInstruments()
+        ->filter(fn(Entities\MusicianInstrument $instrument) => in_array($instrument->getName(), $excessInstruments));
+      /** @var Entities\MusicianInstrument $musicianInstrument */
+      foreach ($excessInstruments as $musicianInstrument) {
+        $this->remove($musicianInstrument); // soft if in use
+        if ($musicianInstrument->unused()) {
+          $this->remove($musicianInstrument);
+          $entity->getInstruments()->remove($musicianInstrument);
+        }
+      }
     }
 
     $value = $cardData['GENDER'] ?? null;
