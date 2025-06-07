@@ -461,7 +461,19 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     } catch (Throwable $t) {
       $this->logException($t, 'Rolling back SQL transaction ...');
       $this->pme->rollBack();
-      throw new Exception($this->l->t('SQL Transaction failed: %s', $t->getMessage()), (int)$t->getCode(), $t);
+      if ($t instanceof Exceptions\DatabaseLegacyException) {
+        $context = [
+          'sql' => $t->getSql(),
+          'pmeLine' => $t->getPmeLine(),
+        ];
+      } else {
+        $context = null;
+      }
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('SQL Transaction failed: %s', $t->getMessage()),
+        previous: $t,
+        context: $context,
+      );
     }
   }
 
