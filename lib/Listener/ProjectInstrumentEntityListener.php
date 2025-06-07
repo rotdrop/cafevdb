@@ -59,9 +59,9 @@ class ProjectInstrumentEntityListener
   /**
    * {@inheritdoc}
    *
-   * Ensure there is also an ProjectInstrumentationNumber entity for the given
-   * ProjectInstrument entity and adjust the participation status of the
-   * musician if necessary.
+   * Adjust the participation status if necessary.
+   *
+   * @todo Check that this works.
    */
   public function prePersist($entity, ORMEvent\PrePersistEventArgs $event)
   {
@@ -81,7 +81,7 @@ class ProjectInstrumentEntityListener
    *
    * Possibly adjust the participation status.
    */
-  public function preRemove($entity, ORMEvent\PreREmoveEventArgs $event)
+  public function preRemove($entity, ORMEvent\PreRemoveEventArgs $event)
   {
     if (!$entity->isNotAnInstrument()) {
       $participant = $entity->getProjectParticipant();
