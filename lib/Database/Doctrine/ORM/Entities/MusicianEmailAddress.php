@@ -56,7 +56,7 @@ class MusicianEmailAddress implements \ArrayAccess
   /**
    * @var Musician
    */
-  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'emailAddresses', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'emailAddresses', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $musician;
 
