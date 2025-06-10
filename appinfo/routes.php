@@ -390,8 +390,8 @@ $routes = [
      * Project Participants
      */
     [
-      'name' => 'project_participants#change_instruments',
-      'url' => '/projects/participants/change-instruments/{context}',
+      'name' => 'project_participants#validate_instruments_selection',
+      'url' => '/projects/participants/validate/instruments/{context}',
       'verb' => 'POST',
     ],
     [
