@@ -603,7 +603,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
 
         // save current instruments
         const failureData = {
-          oldInstruments: $self.data(selectedOptionsKey),
+          oldInstruments: [...$self.data(selectedOptionsKey)],
         };
         $self.data(selectedOptionsKey, SelectUtils.selected($self));
 
@@ -641,12 +641,14 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     lockOther(true);
 
     const fail = (data) => {
-      // failure case
-
       const oldInstruments = data.oldInstruments || $self.data(selectedOptionsKey);
+      console.error('ERROR SELECTING INSTRUMENTS', {
+        data,
+        instruments: $self.data(selectedOptionsKey),
+        oldInstruments,
+      });
 
-      console.info('SELECTED MUSICIAN INSTRUMENTS', $self.data(selectedOptionsKey));
-
+      // failure case
       SelectUtils.selected($self, oldInstruments);
 
       // Reenable, otherwise the value will not be submitted
@@ -669,7 +671,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
         console.debug('IN DONE HOOK', $self.data(selectedOptionsKey));
         // save current instruments
         const failureData = {
-          oldInstruments: $self.data(selectedOptionsKey),
+          oldInstruments: [...$self.data(selectedOptionsKey)],
         };
         $self.data(selectedOptionsKey, SelectUtils.selected($self));
         console.info('IN DONE HOOK', $self.data(selectedOptionsKey));

@@ -836,7 +836,7 @@ const ready = function(container) {
       done() {
         // save current instruments
         const failureData = {
-          oldInstruments: $self.data(selectedOptionsKey),
+          oldInstruments: [...$self.data(selectedOptionsKey)],
         };
         $self.data(selectedOptionsKey, selectedValues($self));
         // submit the form with the "right" button,
