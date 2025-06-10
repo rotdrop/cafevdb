@@ -83,14 +83,6 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * @var Collection
    *
-   * Link to payments
-   */
-  #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'projectParticipant')]
-  private $payments;
-
-  /**
-   * @var Collection
-   *
    * Link to extra fields data
    */
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, indexBy: 'option_key', mappedBy: 'projectParticipant', cascade: ['persist'], fetch: 'EXTRA_LAZY')]

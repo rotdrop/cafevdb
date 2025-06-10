@@ -122,6 +122,12 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   private $payments;
 
   /**
+   * @var InvoiceItems
+   */
+  #[ORM\OneToMany(targetEntity: InvoiceItem::class, mappedBy: 'receivable')]
+  private $invoiceItems;
+
+  /**
    * @var DatabaseStorageFile
    *
    * Optional. ATM only used for particular auto-generated monetary fields.
@@ -134,6 +140,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   {
     $this->arrayCTOR();
     $this->payments = new ArrayCollection();
+    $this->invoiceItems = new ArrayCollection();
   }
 
   /**
@@ -388,6 +395,30 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   }
 
   /**
+   * Set invoiceItems.
+   *
+   * @param null|Collection $invoiceItems
+   *
+   * @return InvoiceItemsParticipantInvoiceItemssData
+   */
+  public function setInvoiceItems(?Collection $invoiceItems):ProjectParticipantFieldDatum
+  {
+    $this->invoiceItems = $invoiceItems;
+
+    return $this;
+  }
+
+  /**
+   * Get invoiceItems.
+   *
+   * @return InvoiceItems
+   */
+  public function getInvoiceItems():?Collection
+  {
+    return $this->invoiceItems;
+  }
+
+  /**
    * The amount to pay for this service-fee option.
    *
    * Only meaningful if
@@ -504,6 +535,25 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   }
 
   /**
+   * The amount already invoiced as stored in the InvoiceItem entities. Should
+   * typically be 0 (no invoice) or equal to the total amount.
+   *
+   * Only meaningful if this is a monetary field.
+   *
+   * @return float
+   */
+  public function amountInvoiced():float
+  {
+    // sum up the values of all related invoice items
+    $amount = 0.0;
+    /** @var InvoiceItem $item */
+    foreach ($this->invoiceItems as $item) {
+      $amount += $item->getAmount();
+    }
+    return $amount;
+  }
+
+  /**
    * Suggestion for a reference field for debit notes or money
    * transfers. Constructed from the labels of the associated
    * ProjectParticipantField and ProjectParticipantFieldDataOption
@@ -534,7 +584,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    */
   public function usage():int
   {
-    return $this->payments->count();
+    return $this->payments->count() + $this->invoiceItems->count();
   }
 
   /**

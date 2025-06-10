@@ -172,6 +172,12 @@ class SentEmail
   #[ORM\OneToOne(targetEntity: DonationReceipt::class, mappedBy: 'notificationMessage')]
   private $donationReceipt;
 
+  /**
+   * @var Invoice
+   */
+  #[ORM\OneToOne(targetEntity: Invoice::class, mappedBy: 'notificationEmail')]
+  private $invoice;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
@@ -562,5 +568,29 @@ class SentEmail
   public function getDonationReceipt():DonationReceipt
   {
     return $this->donationReceipt;
+  }
+
+  /**
+   * Sets $invoice
+   *
+   * @param Invoice $invoice
+   *
+   * @return SentEmail $this
+   */
+  public function setInvoice(Invoice $invoice):SentEmail
+  {
+    $this->invoice = $invoice;
+
+    return $this;
+  }
+
+  /**
+   * Returns invoices.
+   *
+   * @return Invoice
+   */
+  public function getInvoice():Invoice
+  {
+    return $this->invoice;
   }
 }

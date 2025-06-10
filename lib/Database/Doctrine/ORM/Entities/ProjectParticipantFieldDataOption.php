@@ -141,12 +141,19 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'receivableOption')]
   private $payments;
 
+  /**
+   * @var ProjectPayment
+   */
+  #[ORM\OneToMany(targetEntity: InvoiceItem::class, mappedBy: 'receivableOption')]
+  private $invoiceItems;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->__wakeup();
     $this->fieldData = new ArrayCollection();
     $this->payments = new ArrayCollection();
+    $this->invoiceItems = new ArrayCollection();
     $this->key = null;
     $this->field = null;
   }
@@ -416,6 +423,30 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   }
 
   /**
+   * Set invoiceItems.
+   *
+   * @param Collection $invoiceItems
+   *
+   * @return ProjectParticipantInvoiceItemsOption
+   */
+  public function setInvoiceItems(Collection $invoiceItems):ProjectParticipantFieldDataOption
+  {
+    $this->invoiceItems = $invoiceItems;
+
+    return $this;
+  }
+
+  /**
+   * Get invoiceItems.
+   *
+   * @return Collection
+   */
+  public function getInvoiceItems():Collection
+  {
+    return $this->invoiceItems;
+  }
+
+  /**
    * Filter field-data by musician.
    *
    * @param Musician $musician
@@ -440,7 +471,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    */
   public function usage():int
   {
-    return $this->fieldData->count() + $this->payments->count();
+    return $this->fieldData->count() + $this->payments->count() + $this->invoiceItems->count();
   }
 
   /** @return bool Whether this field links to the cloud-file-systen. */

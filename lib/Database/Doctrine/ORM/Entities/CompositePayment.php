@@ -43,8 +43,7 @@ use OCA\CAFEVDB\Common\Util;
 /**
  * CompositePayments collect a couple of ProjectPayments of the same
  * Musician. In GnuCash this would be a "split transactions". The transaction
- * parts are ProjectPayment entities. Composite-payments may contain payments
- * for different projects.
+ * parts are ProjectPayment entities.
  */
 #[ORM\Table(name: 'CompositePayments')]
 #[ORM\UniqueConstraint(columns: ['pre_notification_message_id'])]
@@ -173,7 +172,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
 
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
-  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
   /**
@@ -205,7 +204,6 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   {
     $this->arrayCTOR();
     $this->projectPayments = new ArrayCollection;
-    $this->balanceDocumentsFolders = new ArrayCollection;
   }
 
   /**

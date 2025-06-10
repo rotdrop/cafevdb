@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,46 +24,118 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use Closure;
 use DateTimeInterface;
-use JsonSerializable;
-use ArrayAccess;
+use UnexpectedValueException;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
+
+use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Common\Util;
 
 /**
- * Record notices of tax exemption from the corporate income tax (or other
- * taxes).
+ * Invoices collects a couple of InvoiceItems of the same Musician.
  */
 #[ORM\Table(name: 'Invoices')]
-#[ORM\UniqueConstraint(columns: ['notification_message_id'])]
+#[ORM\UniqueConstraint(columns: ['notification_email_id'])]
+#[ORM\UniqueConstraint(columns: ['invoice_number'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InvoicesRepository::class)]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[ORM\HasLifecycleCallbacks]
-class Invoice implements JsonSerializable, ArrayAccess
+class Invoice implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
-  use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\FactoryTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\TimestampableEntity;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // filename of supporting document.
 
   /**
    * @var int
    */
-  #[ORM\Column(type: 'string', nullable: false)]
+  #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'NONE')]
-  private string $id;
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+  private $id;
 
   /**
-   * @var LegalPerson
+   * @var float
    *
-   * The victim of the invoice issued.
+   * The total amount for the bank transaction. This must equal the
+   * sum of the self::$invoiceItems collection.
+   *
+   * @todo If this is always the sum and thus can be computed, why then this
+   * field?
    */
-  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'invoices')]
-  private Musician $debitor;
+  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: false, options: ['default' => '0.00'])]
+  private $amount = '0.00';
+
+  /**
+   * @var \DateTimeImmutable|null
+   */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
+  private $dueDate;
+
+  /**
+   * @var \DateTimeImmutable|null
+   */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
+  private $balancedDate;
+
+  /**
+   * @var string
+   * Subject of the bank transaction.
+   */
+  #[ORM\Column(type: 'string', length: 255, nullable: false)]
+  private $invoiceNumber;
+
+  /**
+   * @var string
+   * Subject of the bank transaction.
+   */
+  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
+  private $subject;
+
+  /**
+   * @var Collection
+   */
+  #[ORM\OneToMany(targetEntity: InvoiceItem::class, mappedBy: 'invoice', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
+  private $invoiceItems;
+
+  /**
+   * @var SepaBulkTransaction
+   *
+   * There may be an associated debit-note. If so: this it is.
+   */
+  #[ORM\ManyToOne(targetEntity: SepaBulkTransaction::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')] // Promote any changes to the sepa transaction.
+  #[Gedmo\Timestampable(on: ['update', 'create', 'delete'], timestampField: 'updated')]
+  private $sepaTransaction = null;
+
+  /**
+   * @var SepaBankAccount
+   *
+   * The bank account used for this payment.
+   */
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'bank_account_sequence', referencedColumnName: 'sequence', nullable: true)]
+  #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  private $sepaBankAccount;
+
+  /**
+   * @var SepaDebitMandate
+   *
+   * The debit-mandate used for this payment, if any.
+   */
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'debit_mandate_sequence', referencedColumnName: 'sequence', nullable: true)]
+  #[ORM\ManyToOne(targetEntity: SepaDebitMandate::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  private $sepaDebitMandate;
 
   /**
    * @var LegalPerson
@@ -76,27 +148,29 @@ class Invoice implements JsonSerializable, ArrayAccess
   private Musician $originator;
 
   /**
-   * @var \DateTimeImmutable
+   * @var Musician
    */
-  #[ORM\Column(type: 'date_immutable')]
-  private DateTimeInterface $dueDate;
+  #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'invoices', fetch: 'EXTRA_LAZY')]
+  private $debitor;
 
   /**
-   * @var float
-   *
-   * The total amount invoiced.
+   * @var Project
    */
-  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: false)]
-  private string $amount;
+  #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'invoices', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+  private $project;
+
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, fetch: 'EXTRA_LAZY')]
+  private $projectParticipant;
 
   /**
-   * @var string
-   *
-   * Purpose of the invoice. A polite text for the notification of the
-   * debitor.
+   * @var DatabaseStorageFolder
    */
-  #[ORM\Column(type: 'string', length: 4096, nullable: false)]
-  private string $purpose;
+  #[ORM\ManyToOne(targetEntity: DatabaseStorageFolder::class, fetch: 'EXTRA_LAZY')]
+  private $balanceDocumentsFolder;
 
   /**
    * @var DatabaseStorageFile
@@ -105,52 +179,103 @@ class Invoice implements JsonSerializable, ArrayAccess
   private DatabaseStorageFile $writtenInvoice;
 
   /**
-   * @var string
+   * @var SentEmail
    *
-   * The email communicating the invoice to the debitor.
+   * Pre notification email sent out to the recipients.
    */
-  #[ORM\JoinColumn(name: 'notification_message_id', referencedColumnName: 'message_id', nullable: true)]
-  #[ORM\OneToOne(targetEntity: SentEmail::class)]
-  private SentEmail $notificationMessage;
+  #[ORM\JoinColumn(name: 'notification_email_id', referencedColumnName: 'message_id', nullable: true)]
+  #[ORM\OneToOne(targetEntity: SentEmail::class, inversedBy: 'invoice')]
+  private $notificationEmail;
 
   /** {@inheritdoc} */
   public function __construct()
   {
-    $this->__wakeup();
-  }
-
-  /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return LegalPerson
-   */
-  public function setId(int $id):LegalPerson
-  {
-    $this->id = $id;
-
-    return $this;
+    $this->arrayCTOR();
+    $this->invoiceItems = new ArrayCollection;
   }
 
   /**
    * Get id.
    *
-   * @return null|int
+   * @return int
    */
-  public function getId():?int
+  public function getId()
   {
     return $this->id;
   }
 
   /**
-   * Set debitor.
+   * Set invoiceItems.
    *
-   * @param LegalPerson $debitor
+   * @param Collection $invoiceItems
    *
    * @return Invoice
    */
-  public function setDebitor(LegalPerson $debitor):Invoice
+  public function setInvoiceItems(Collection $invoiceItems):Invoice
+  {
+    $this->invoiceItems = $invoiceItems;
+
+    return $this;
+  }
+
+  /**
+   * Get invoiceItems.
+   *
+   * @return Collection
+   */
+  public function getInvoiceItems():Collection
+  {
+    return $this->invoiceItems;
+  }
+
+  /**
+   * Set amount.
+   *
+   * @param float|null $amount
+   *
+   * @return InvoiceItem
+   */
+  public function setAmount(?float $amount):Invoice
+  {
+    $this->amount = $amount;
+
+    return $this;
+  }
+
+  /**
+   * Get amount.
+   *
+   * @return float
+   */
+  public function getAmount():float
+  {
+    return $this->amount;
+  }
+
+  /**
+   * Return the sum of the amounts of the individual payments, which
+   * should sum up to $this->amount, of course.
+   *
+   * @return float
+   */
+  public function sumInvoiceItemsAmount():float
+  {
+    $totalAmount = 0.0;
+    /** @var InvoiceItem $invoiceItem */
+    foreach ($this->invoiceItems as $invoiceItem) {
+      $totalAmount += $invoiceItem->getAmount();
+    }
+    return $totalAmount;
+  }
+
+  /**
+   * Set debitor.
+   *
+   * @param null|int|Musician $debitor
+   *
+   * @return Invoice
+   */
+  public function setDebitor($debitor):Invoice
   {
     $this->debitor = $debitor;
 
@@ -160,9 +285,9 @@ class Invoice implements JsonSerializable, ArrayAccess
   /**
    * Get debitor.
    *
-   * @return null|LegalPerson
+   * @return Musician
    */
-  public function getDebitor():?LegalPerson
+  public function getDebitor():?Musician
   {
     return $this->debitor;
   }
@@ -192,22 +317,71 @@ class Invoice implements JsonSerializable, ArrayAccess
   }
 
   /**
+   * Set project.
+   *
+   * @param null|int|Project $project
+   *
+   * @return Invoice
+   */
+  public function setProject($project):Invoice
+  {
+    $this->project = $project;
+
+    return $this;
+  }
+
+  /**
+   * Get project.
+   *
+   * @return Project
+   */
+  public function getProject():?Project
+  {
+    return $this->project;
+  }
+
+  /**
+   * Set projectParticipant.
+   *
+   * @param null|ProjectParticipant $projectParticipant
+   *
+   * @return Invoice
+   */
+  public function setProjectParticipant(?ProjectParticipant $projectParticipant):Invoice
+  {
+    $this->projectParticipant = $projectParticipant;
+
+    return $this;
+  }
+
+  /**
+   * Get projectParticipant.
+   *
+   * @return ProjectParticipant
+   */
+  public function getProjectParticipant():?ProjectParticipant
+  {
+    return $this->projectParticipant;
+  }
+
+  /**
    * Set dueDate.
    *
-   * @param null|string|DateTimeInterface $dueDate
+   * @param \DateTime|null $dueDate
    *
-   * @return InsuranceRate
+   * @return Invoice
    */
-  public function setDueDate($dueDate):Invoice
+  public function setDueDate($dueDate = null):Invoice
   {
     $this->dueDate = self::convertToDateTime($dueDate);
+
     return $this;
   }
 
   /**
    * Get dueDate.
    *
-   * @return DateTimeInterface
+   * @return \DateTime|null
    */
   public function getDueDate():?DateTimeInterface
   {
@@ -215,47 +389,332 @@ class Invoice implements JsonSerializable, ArrayAccess
   }
 
   /**
-   * Set amount.
+   * Set balancedDate.
    *
-   * @param float|null $amount
-   *
-   * @return ProjectPayment
-   */
-  public function setAmount(?float $amount):Invoice
-  {
-    $this->amount = $amount;
-
-    return $this;
-  }
-
-  /**
-   * Get amount.
-   *
-   * @return float
-   */
-  public function getAmount():?float
-  {
-    return $this->amount;
-  }
-
-  /**
-   * @return null|string
-   */
-  public function getPurpose():?string
-  {
-    return $this->purpose;
-  }
-
-  /**
-   * @param string $purpose
+   * @param \DateTime|null $balancedDate
    *
    * @return Invoice
    */
-  public function setPurpose(string $purpose):Invoice
+  public function setBalancedDate($balancedDate = null):Invoice
   {
-    $this->purpose = $purpose;
+    $this->balancedDate = self::convertToDateTime($balancedDate);
 
     return $this;
+  }
+
+  /**
+   * Get balancedDate.
+   *
+   * @return \DateTime|null
+   */
+  public function getBalancedDate():?DateTimeInterface
+  {
+    return $this->balancedDate;
+  }
+
+  /**
+   * Set subject.
+   *
+   * @param null|string $subject
+   *
+   * @return Invoice
+   */
+  public function setSubject(?string $subject):Invoice
+  {
+    $this->subject = $subject;
+
+    return $this;
+  }
+
+  /**
+   * Get subject.
+   *
+   * @return null|string
+   */
+  public function getSubject():?string
+  {
+    return $this->subject;
+  }
+
+  /**
+   * Set invoiceNumber.
+   *
+   * @param null|string $invoiceNumber
+   *
+   * @return Invoice
+   */
+  public function setInvoiceNumber(?string $invoiceNumber):Invoice
+  {
+    $this->invoiceNumber = $invoiceNumber;
+
+    return $this;
+  }
+
+  /**
+   * Get invoiceNumber.
+   *
+   * @return null|string
+   */
+  public function getInvoiceNumber():?string
+  {
+    return $this->invoiceNumber;
+  }
+
+  /**
+   * Set debitNote.
+   *
+   * @param SepaDebitNote|null $debitNote
+   *
+   * @return Invoice
+   */
+  public function setDebitNote($debitNote):Invoice
+  {
+    $this->debitNote = $debitNote;
+
+    return $this;
+  }
+
+  /**
+   * Get debitNote.
+   *
+   * @return SepaDebitNote|null
+   */
+  public function getDebitNote()
+  {
+    return $this->debitNote;
+  }
+
+  /**
+   * Set sepaBankAccount.
+   *
+   * @param string|null $sepaBankAccount
+   *
+   * @return Invoice
+   */
+  public function setSepaBankAccount(?SepaBankAccount $sepaBankAccount):Invoice
+  {
+    $this->sepaBankAccount = $sepaBankAccount;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaBankAccount.
+   *
+   * @return SepaBankAccount|null
+   */
+  public function getSepaBankAccount():?SepaBankAccount
+  {
+    return $this->sepaBankAccount;
+  }
+
+  /**
+   * Set sepaDebitMandate.
+   *
+   * @param string|null $sepaDebitMandate
+   *
+   * @return Invoice
+   */
+  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate):Invoice
+  {
+    $this->sepaDebitMandate = $sepaDebitMandate;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaDebitMandate.
+   *
+   * @return SepaDebitMandate|null
+   */
+  public function getSepaDebitMandate():?SepaDebitMandate
+  {
+    return $this->sepaDebitMandate;
+  }
+
+  /**
+   * Set sepaTransaction.
+   *
+   * @param string|null $sepaTransaction
+   *
+   * @return Invoice
+   */
+  public function setSepaTransaction(?SepaBulkTransaction $sepaTransaction):Invoice
+  {
+    $this->sepaTransaction = $sepaTransaction;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaTransaction.
+   *
+   * @return SepaTransaction|null
+   */
+  public function getSepaTransaction():?SepaBulkTransaction
+  {
+    return $this->sepaTransaction;
+  }
+
+  /**
+   * Set notificationMessageId.
+   *
+   * @param null|string $notificationMessageId
+   *
+   * @return Invoice
+   */
+  public function setNotificationMessageId(?string $notificationMessageId):Invoice
+  {
+    $this->notificationMessageId = $notificationMessageId;
+
+    return $this;
+  }
+
+  /**
+   * Get notificationMessageId.
+   *
+   * @return null|string
+   */
+  public function getNotificationMessageId():?string
+  {
+    return $this->notificationMessageId;
+  }
+
+  /**
+   * Set notificationEmail.
+   *
+   * @param null|SentEmail $notificationEmail
+   *
+   * @return Invoice
+   */
+  public function setNotificationEmail(?SentEmail $notificationEmail):Invoice
+  {
+    if ($notificationEmail !== null) {
+      $notificationEmail->setInvoice($this); // we are the owner ...
+    }
+    $this->notificationEmail = $notificationEmail;
+
+    return $this;
+  }
+
+  /**
+   * Get notificationEmail.
+   *
+   * @return null|SentEmail
+   */
+  public function getNotificationEmail():?SentEmail
+  {
+    return $this->notificationEmail;
+  }
+
+  /**
+   * Set donationReceipt.
+   *
+   * @param null|string $donationReceipt
+   *
+   * @return Invoice
+   */
+  public function setDonationReceipt(?string $donationReceipt):Invoice
+  {
+    $this->donationReceipt = $donationReceipt;
+
+    return $this;
+  }
+
+  /**
+   * Get donationReceipt.
+   *
+   * @return null|string
+   */
+  public function getDonationReceipt()
+  {
+    return $this->donationReceipt;
+  }
+
+  /**
+   * Set supportingDocument.
+   *
+   * @param null|DatabaseStorageFile $supportingDocument
+   *
+   * @return Invoice
+   */
+  public function setSupportingDocument(?DatabaseStorageFile $supportingDocument):Invoice
+  {
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
+      $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+      $this->balanceDocumentsFolder->removeDocument($this->supportingDocument->getFile(), $fileName);
+    }
+
+    $this->supportingDocument = $supportingDocument;
+
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
+      $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+      $this->balanceDocumentsFolder->addDocument($this->supportingDocument->getFile(), $fileName);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Get supportingDocument.
+   *
+   * @return null|DatabaseStorageFile
+   */
+  public function getSupportingDocument():?DatabaseStorageFile
+  {
+    return $this->supportingDocument;
+  }
+
+  /**
+   * Set balanceDocumentsFolder.
+   *
+   * @param DatabaseStorageFolder $balanceDocumentsFolder
+   *
+   * @return InvoiceItem
+   */
+  public function setBalanceDocumentsFolder(?DatabaseStorageFolder $balanceDocumentsFolder):Invoice
+  {
+    if (!empty($this->balanceDocumentsFolder)) {
+      /** @var InvoiceItem $part */
+      foreach ($this->invoiceItems as $part) {
+        if ($part->getBalanceDocumentsFolder() == $this->balanceDocumentsFolder) {
+          $part->setBalanceDocumentsFolder(null);
+        }
+      }
+      if (!empty($this->supportingDocument)) {
+        $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+
+        $this->balanceDocumentsFolder->removeDocument($this->supportingDocument->getFile(), $fileName);
+      }
+    }
+
+    $this->balanceDocumentsFolder = $balanceDocumentsFolder;
+
+    if (!empty($this->balanceDocumentsFolder)) {
+      if (!empty($this->supportingDocument)) {
+        $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+        $this->balanceDocumentsFolder->addDocument($this->supportingDocument->getFile(), $fileName);
+      }
+
+      /** @var InvoiceItem $part */
+      foreach ($this->invoiceItems as $part) {
+        if (empty($part->getBalanceDocumentsFolder())) {
+          $part->setBalanceDocumentsFolder($this->balanceDocumentsFolder);
+        }
+      }
+    }
+
+    return $this;
+  }
+
+  /**
+   * Get balanceDocumentsFolder.
+   *
+   * @return ?DatabaseStorageFolder
+   */
+  public function getBalanceDocumentsFolder():?DatabaseStorageFolder
+  {
+    return $this->balanceDocumentsFolder;
   }
 
   /**
@@ -279,22 +738,16 @@ class Invoice implements JsonSerializable, ArrayAccess
   }
 
   /**
-   * @return null|SentEmail
-   */
-  public function getNotificationMessage():?DatabaseStorageFile
-  {
-    return $this->notificationMessage;
-  }
-
-  /**
-   * @param null|SentEmail $notificationMessage
+   * Update the stored payment-subject by calling
+   * Invoice::generateSubject().
+   *
+   * @param null|Closure $transliterate See generateSubject().
    *
    * @return Invoice
    */
-  public function setNotificationMessage(?DatabaseStorageFile $notificationMessage):Invoice
+  public function updateSubject(?Closure $transliterate = null):Invoice
   {
-    $this->notificationMessage = $notificationMessage;
-
+    $this->subject = $this->generateSubject($transliterate);
     return $this;
   }
 
@@ -304,13 +757,9 @@ class Invoice implements JsonSerializable, ArrayAccess
     return $this->toArray();
   }
 
-  /** {@inheritdoc} */
+    /** {@inheritdoc} */
   public function __toString():string
   {
-    return 'invoice('
-      . $this->assessmentPeriodStart . '-' . $this->assessmentPeriodEnd
-      . '@'
-      . $this->taxType . ' tax'
-      . ')';
+    return 'invoice of ' . $this->amount . ' € due at ' . $this->dueDate->format('Y-m-d') . ' by ' . $this->debitor->getPublicName(true);
   }
 }

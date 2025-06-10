@@ -142,6 +142,9 @@ class Project implements \ArrayAccess
   #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'project')]
   private $payments;
 
+  #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'project')]
+  private $invoices;
+
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'project')]
   private $participantInstruments;
 
@@ -173,6 +176,7 @@ class Project implements \ArrayAccess
     $this->sepaDebitMandates = new ArrayCollection();
     $this->compositePayments = new ArrayCollection();
     $this->payments = new ArrayCollection();
+    $this->invoices = new ArrayCollection();
     $this->sentEmail = new ArrayCollection();
   }
 
@@ -591,6 +595,30 @@ class Project implements \ArrayAccess
   }
 
   /**
+   * Set invoices.
+   *
+   * @param Collection $invoices
+   *
+   * @return Project
+   */
+  public function setInvoices(Collection $invoices):Project
+  {
+    $this->invoices = $invoices;
+
+    return $this;
+  }
+
+  /**
+   * Get invoices.
+   *
+   * @return Collection
+   */
+  public function getInvoices():Collection
+  {
+    return $this->invoices;
+  }
+
+  /**
    * Set sentEmail.
    *
    * @param Collection $sentEmail
@@ -720,7 +748,7 @@ class Project implements \ArrayAccess
    */
   public function usage():int
   {
-    return $this->payments->count();
+    return $this->payments->count() + $this->invoices->count();
   }
 
   /** {@inheritdoc} */
