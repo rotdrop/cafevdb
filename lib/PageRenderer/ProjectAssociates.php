@@ -982,6 +982,17 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'po_box',
+      [
+        'name'     => $this->l->t('P.O. Box '),
+        'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
+        'css'      => [ 'postfix' => [ 'musician-address', 'po-box', ], ],
+        'maxlen'   => 128,
+        'size'     => 11,
+        'input|LF' => ($expertMode || $this->pmeBare) ? '' : 'H',
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'postal_code',
       [
         'name'     => $this->l->t('Postal Code'),

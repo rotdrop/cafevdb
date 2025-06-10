@@ -208,6 +208,7 @@ GROUP BY __t1.instrument_id',
     if ($this->participationContext == ParticipationContext::PARTICIPANTS && !$this->pmeBare) {
       $opts['fdd']['organization']['input|LF'] = 'RH';
       $opts['fdd']['job_title']['input|LF'] = 'RH';
+      $opts['fdd']['po_box']['input|LF'] = 'RH';
     }
 
     $this->logDebug('FDD ARRAY ' . print_r(array_keys($opts['fdd']), true));

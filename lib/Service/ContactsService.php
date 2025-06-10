@@ -537,7 +537,7 @@ class ContactsService
         $address = Util::normalizeSpaces($address); // unicode
         $address = explode(';', $address);
 
-        $poBox = $address[0]; // or so it seems ...
+        $poBox = $address[0];
         // $this->logInfo('POBOX ' . $poBox);
         $entityValues['addressSupplement'] = $address[1];
         $street = Util::normalizeSpaces($address[2]);
@@ -558,14 +558,7 @@ class ContactsService
           $streetNumber = '';
         }
 
-        // Special hack for po-box only addresses. The musican's entity does
-        // not support po-box addresses (and this is left for later ...) so we
-        // tweak the po-box case into the steet-adress.
-        if (empty($street) && !empty($poBox)) {
-          $street = $this->l->t('PO Box');
-          $streetNumber = $poBox;
-        }
-
+        $entityValues['poBox'] = $poBox;
         $entityValues['street'] = $street;
         $entityValues['streetNumber'] = $streetNumber;
         $entityValues['city'] = $address[3];
@@ -774,8 +767,8 @@ class ContactsService
 
     $vCard->add(
       'ADR', [
-        '', // PO box
-        $musician['addressSupplement'], // address extension (appartment nr. and such)
+        $musician['poBox'], // PO box
+        $musician['addressSupplement'], // address extension (appartment nr., c/o and such)
         $musician['street'] . ' ' . $musician['streetNumber'], // street
         $musician['city'], // city
       '', // province

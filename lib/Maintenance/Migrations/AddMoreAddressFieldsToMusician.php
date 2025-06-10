@@ -25,21 +25,22 @@
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
 /**
- * Remember the id of a mailing list.
+ * Add title field to musicians table.
  */
-class AddOrganizationAddressbookUriToMusicians extends AbstractMigration
+class AddMoreAddressFieldsToMusician extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      "ALTER TABLE Musicians
-  ADD COLUMN IF NOT EXISTS address_book_uri VARCHAR(255) DEFAULT NULL,
-  ADD COLUMN IF NOT EXISTS organization VARCHAR(1024) DEFAULT NULL",
+      "ALTER TABLE Musicians ADD COLUMN IF NOT EXISTS job_title VARCHAR(255) DEFAULT NULL",
+      "ALTER TABLE Musicians ADD COLUMN IF NOT EXISTS organization VARCHAR(255) DEFAULT NULL",
+      "ALTER TABLE Musicians ADD COLUMN IF NOT EXISTS address_book_uri VARCHAR(255) DEFAULT NULL",
+      "ALTER TABLE Musicians ADD COLUMN IF NOT EXISTS po_box VARCHAR(128) DEFAULT NULL",
     ],
   ];
 
   /** {@inheritdoc} */
   public function description():string
   {
-    return $this->l->t('Add an organization and address_book_uri field to the Musicians table.');
+    return $this->l->t('Add more address fields to the musician entity for the sake of vCard synchronization and in order to support business contacts.');
   }
 }

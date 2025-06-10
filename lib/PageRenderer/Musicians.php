@@ -789,7 +789,18 @@ GROUP BY t.id';
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Street Number'),
       'css'      => ['postfix' => [ 'musician-address', 'street-number', 'duplicates-indicator', $addCSS, ], ],
-      'input|LF' => $expertMode ? '' : 'H',
+      'input|LF' => ($expertMode || $this->pmeBare) ? '' : 'H',
+      'select'   => 'T',
+      'size'     => 11,
+      'maxlen'   => 32,
+      'sort'     => true,
+    ];
+
+    $opts['fdd']['po_box'] = [
+      'tab'      => ['id' => 'contact'],
+      'name'     => $this->l->t('P.O. Box'),
+      'css'      => ['postfix' => [ 'musician-address', 'po-box', 'duplicates-indicator', $addCSS, ], ],
+      'input|LF' => ($expertMode || $this->pmeBare) ? '' : 'H',
       'select'   => 'T',
       'size'     => 11,
       'maxlen'   => 32,

@@ -167,10 +167,22 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * @var string
    *
-   * Additional address information, like "Appartment 200" or c/o.
+   * Additional address information, like "Appartment 200" or c/o. If
+   * Musician::organization is not null then an address-supplement starting
+   * with 'c/o' indicates that the given street-address is a private @home
+   * address. This affects the VCard export and the default address format of
+   *  mail-merge operations.
    */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $addressSupplement;
+
+  /**
+   * @var string
+   *
+   * po-box component for the sake of supporting business contacts.
+   */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
+  private $poBox;
 
   /**
    * @var string
@@ -541,6 +553,30 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getAddressSupplement()
   {
     return $this->addressSupplement;
+  }
+
+  /**
+   * Set poBox.
+   *
+   * @param null|string $poBox
+   *
+   * @return Musician
+   */
+  public function setPoBox(?string $poBox):Musician
+  {
+    $this->poBox = $poBox;
+
+    return $this;
+  }
+
+  /**
+   * Get poBox.
+   *
+   * @return string
+   */
+  public function getPoBox()
+  {
+    return $this->poBox;
   }
 
   /**
