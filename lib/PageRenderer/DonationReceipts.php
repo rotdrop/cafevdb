@@ -130,6 +130,7 @@ class DonationReceipts extends PMETableViewBase
     ],
   ];
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
     EntityManager $entityManager,
