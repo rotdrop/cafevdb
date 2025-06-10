@@ -215,6 +215,8 @@ class ProjectParticipantEntityListener
     if (!empty($this->preCommitActions[$entityId])) {
       return;
     }
+    $this->preCommitActions[$entityId] = true;
+
     /** @var IConfig $cloudConfig */
     $cloudConfig = $this->appContainer->get(IConfig::class);
 
@@ -256,34 +258,36 @@ class ProjectParticipantEntityListener
       'userManager',
     ]);
 
-    $this->preCommitActions[$entityId] = new GenericUndoable(
-      function() use ($closureArguments) {
-        extract($closureArguments);
-        $previousStatus = [
-          'orchestraGroup' => $orchestraGroup->inGroup($user),
-          'managementGroup' => $managementGroup->inGroup($user),
-        ];
-        if ($remove) {
-          $managementGroup->removeUser($user);
-        } else {
-          $managementGroup->addUser($user);
-          $orchestraGroup->addUser($user);
-        }
-        return $previousStatus;
-      },
-      function(array $previousStatus) use ($closureArguments) {
-        extract($closureArguments);
-        foreach ($previousStatus as $groupKey => $status) {
-          /** @var IGroup $group */
-          $group = $closureArguments[$groupKey];
-          if ($status && !$group->inGroup($user)) {
-            $group->addUser($user);
+    $this->entityManager->registerPostCommitAction(
+      new GenericUndoable(
+        function() use ($closureArguments) {
+          extract($closureArguments);
+          $previousStatus = [
+            'orchestraGroup' => $orchestraGroup->inGroup($user),
+            'managementGroup' => $managementGroup->inGroup($user),
+          ];
+          if ($remove) {
+            $managementGroup->removeUser($user);
+          } else {
+            $managementGroup->addUser($user);
+            $orchestraGroup->addUser($user);
           }
-          if (!$status && $group->inGroup($user)) {
-            $group->removeUser($user);
+          return $previousStatus;
+        },
+        function(array $previousStatus) use ($closureArguments) {
+          extract($closureArguments);
+          foreach ($previousStatus as $groupKey => $status) {
+            /** @var IGroup $group */
+            $group = $closureArguments[$groupKey];
+            if ($status && !$group->inGroup($user)) {
+              $group->addUser($user);
+            }
+            if (!$status && $group->inGroup($user)) {
+              $group->removeUser($user);
+            }
           }
-        }
-      },
+        },
+      ),
     );
   }
 
