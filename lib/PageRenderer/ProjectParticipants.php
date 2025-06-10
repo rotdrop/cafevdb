@@ -468,6 +468,16 @@ GROUP BY t.id';
       [
         'name'     => $this->l->t('Organization'),
         'tab'      => [ 'id' => 'musician' ],
+        'input'    => $this->pmeBare ? '' : 'RH',
+        'maxlen'   => 384,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'job_title',
+      [
+        'name'     => $this->l->t('Job-Title'),
+        'tab'      => [ 'id' => 'musician' ],
+        'input'    => $this->pmeBare ? '' : 'RH',
         'maxlen'   => 384,
       ]);
 

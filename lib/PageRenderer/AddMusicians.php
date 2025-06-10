@@ -205,6 +205,11 @@ GROUP BY __t1.instrument_id',
       array_slice($opts['fdd'], $surNamePos - 1),
     );
 
+    if ($this->participationContext == ParticipationContext::PARTICIPANTS && !$this->pmeBare) {
+      $opts['fdd']['organization']['input|LF'] = 'RH';
+      $opts['fdd']['job_title']['input|LF'] = 'RH';
+    }
+
     $this->logDebug('FDD ARRAY ' . print_r(array_keys($opts['fdd']), true));
 
     ++$opts['cgi']['persist']['participationStatusFddIndex'];

@@ -368,6 +368,14 @@ GROUP BY t.id';
       'sort'     => true,
     ];
 
+    $opts['fdd']['job_title'] = [
+      'name'     => $this->l->t('Job-Title'),
+      'tab'      => [ 'id' => 'contact' ],
+      'maxlen'   => 384,
+      'select'   => 'T',
+      'sort'     => true,
+    ];
+
     $opts['fdd']['sur_name'] = [
       'tab'      => [ 'id' => 'contact' ],
       'name'     => $this->l->t('Surname'),

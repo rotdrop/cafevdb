@@ -592,9 +592,13 @@ class ContactsService
     }
 
     if (!$keepExisting || empty($entity->getOrganization())) {
-      // use organization as name if provided and move the name to the address supplement
       $value = $cardData['ORG'] ?? null;
       $entity->setOrganization($value);
+    }
+
+    if (!$keepExisting || empty($entity->getJobTitle())) {
+      $value = $cardData['TITLE'] ?? null;
+      $entity->setJobTitle($value);
     }
 
     if (!$isWorkAddress && empty($entity->getAddressSupplement()) && !empty($value)) {
@@ -680,7 +684,7 @@ class ContactsService
   public function export(Entities\Musician $musician, string $version = self::VCARD_VERSION):?VCard
   {
     /** @var Entities\Musician $musician */
-    $textProperties = [ 'FN', 'N', 'CATEGORIES', 'ADR', 'NOTE', 'ORG' ];
+    $textProperties = [ 'FN', 'N', 'CATEGORIES', 'ADR', 'NOTE', 'ORG', 'TITLE' ];
     $uuid = (string)($musician->getUuid() ? $musician->getUuid() : $this->generateUUID());
     $categories = [ $this->appName() ];
     /** @var Entities\MusicianInstrument $musicianInstrument */
@@ -712,6 +716,9 @@ class ContactsService
     }
     if ($musician->getOrganization()) {
       $vCard->add('ORG', $musician->getOrganization());
+    }
+    if ($musician->getJobTitle()) {
+      $vCard->add('TITLE', $musician->getJobTitle());
     }
     if ($musician->getLanguage()) {
       $vCard->add('LANG', $musician->getLanguage(), $baseParameters);

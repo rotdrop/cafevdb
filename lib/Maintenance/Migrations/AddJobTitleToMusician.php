@@ -27,11 +27,11 @@ namespace OCA\CAFEVDB\Maintenance\Migrations;
 /**
  * Add title field to musicians table.
  */
-class AddTitleToMusician extends AbstractMigration
+class AddJobTitleToMusician extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      "ALTER TABLE Musicians ADD COLUMN IF NOT EXISTS title VARCHAR(255) DEFAULT NULL",
+      "ALTER TABLE Musicians ADD COLUMN IF NOT EXISTS job_title VARCHAR(255) DEFAULT NULL",
       "ALTER TABLE Musicians CHANGE organization organization VARCHAR(255) DEFAULT NULL",
     ],
   ];
@@ -39,6 +39,6 @@ class AddTitleToMusician extends AbstractMigration
   /** {@inheritdoc} */
   public function description():string
   {
-    return $this->l->t('Add a title field to the musician entity for the sake of vCard synchronization.');
+    return $this->l->t('Add a job-title field to the musician entity for the sake of vCard synchronization.');
   }
 }

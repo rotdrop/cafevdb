@@ -423,6 +423,14 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'job_title',
+      [
+        'name'     => $this->l->t('Job-Title'),
+        'tab'      => [ 'id' => 'musician' ],
+        'maxlen'   => 384,
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'sur_name',
       [
         'name'     => $this->l->t('Name'),
