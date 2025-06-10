@@ -1195,7 +1195,8 @@ class EntityManager extends EntityManagerDecorator
    */
   private function checkForRollbackOnly():void
   {
-    if ($this->getConnection()->isRollbackOnly()) {
+    $connection = $this->getConnection();
+    if ($connection && $connection->isTransactionActive() && $connection->isRollbackOnly()) {
       throw new Exceptions\DatabaseRollbackOnlyException(
         $this->l->t('The connection is marked for rollback only.'),
         previous: $this->transactionExceptions[0] ?? null,
