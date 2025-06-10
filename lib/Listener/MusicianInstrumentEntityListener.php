@@ -24,20 +24,15 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
-
-use OCP\IL10N;
-use Psr\Log\LoggerInterface as ILogger;
 use OCP\AppFramework\IAppContainer;
 use OCP\IAddressBook;
+use OCP\IL10N;
+use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianInstrument as Entity;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Service\CardDavService;
+use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Event\LifecycleEventArgs;
 
 /**
  * Addressbook integration: the instrument name is also a category in the
@@ -51,69 +46,28 @@ class MusicianInstrumentEntityListener
   public function __construct(
     protected ILogger $logger,
     protected IAppContainer $appContainer,
-    protected EntityManager $entityManager,
   ) {
   }
   // phpcs:enable
 
-  /**
-   * {@inheritdoc}
-   *
-   * Inject the instrument name as vCard category if there is a link to an address-book.
-   */
-  public function postPersist($entity, ORMEvent\PostPersistEventArgs $event)
+  /** {@inheritdoc} */
+  #[ORM\PrePersist]
+  #[ORM\PreRemove]
+  #[ORM\PreUpdate]
+  public function synchronizeContact(Entity $entity, LifecycleEventArgs $eventArgs)
   {
     $musician = $entity->getMusician();
-    $addressBookUri = $musician->getAddressBookUri();
-    if ($addressBookUri == null) {
+    if (empty($musician)) {
+      $this->logError('Musician is NULL.');
       return;
     }
-    $contact = $this->findContact($addressBookUri, $musician->getUuid());
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * Possibly adjust the participation status.
-   */
-  public function postRemove($entity, ORMEvent\PreRemoveEventArgs $event)
-  {
-    if ($entity->getMusician()->getAddressBookUri() === null) {
+    if (empty($musician->getAddressBookUri())) {
       return;
     }
-    // @todo: remove the instrument from the categories
-  }
-
-  /**
-   * Search for a contact with UID == $uuid.
-   *
-   * @param string $addressBookUri
-   *
-   * @param string|Uuid $uuid
-   *
-   * @return null|array
-   */
-  private function findContact(string $addressBookUri, string|Uuid $uuid):?array
-  {
-    /** @var CardDavService $cardDavService */
-    $cardDavService = $this->appContainer->get(CardDavService::class);
-    /** @var IAddressBook $addressBook */
-    $addressBook = $cardDavService->getAddressBooksByUri($addressBookUri);
-    if ($addressBook === null) {
-      return nujll;
+    /** @var ContactsService $contactsService */
+    $contactsService = $this->appContainer->get(ContactsService::class);
+    if (!$contactsService->registerContactSynchronization($musician)) {
+      $this->logError('Contacts-synchronization could not be registered for ' . $musician->getPublicName());
     }
-    $result = $addressBook->search(
-      pattern: (string)$uuid,
-      searchProperties: [ 'UID' ],
-      options: [
-        'types' => true,
-        'wildcard' => false,
-      ],
-    );
-    $this->logInfo('SEARCH CONTACT RESULTS ' . print_r($result, true));
-    if (count($result) !== 1) {
-      return null;
-    }
-    return $result[0];
   }
 }

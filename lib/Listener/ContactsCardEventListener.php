@@ -34,6 +34,7 @@ use Sabre\VObject\Property;
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+use OCP\IAddressBook;
 use Psr\Log\LoggerInterface;
 
 use OCA\DAV\Events\CardCreatedEvent;
@@ -42,14 +43,16 @@ use OCA\DAV\Events\CardMovedEvent;
 use OCA\DAV\Events\CardUpdatedEvent;
 
 use OCA\CAFEVDB\Common\Functions;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\VCalendarService;
-use OCA\CAFEVDB\Service\ContactsService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\CardDavService;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\VCalendarService;
 
 /**
  * Act on newly created events and tasks.
@@ -67,6 +70,17 @@ class ContactsCardEventListener implements IEventListener
     CardMovedEvent::class,
     CardUpdatedEvent::class,
   ];
+
+  /**
+   * @var array
+   *
+   * In order to avoid ping-pong the handler runs only once per contact in
+   * each request. This might be neccessary as we may modify the linked
+   * musician entities here which in turn may trigger modifications of the
+   * contact; we also may modify the given contact here which then would
+   * recurse into this handler.
+   */
+  private array $alreadyHandled = [];
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -95,7 +109,6 @@ class ContactsCardEventListener implements IEventListener
       if (!$this->entityManager->bound()) {
         throw new UnexpectedValueException('The entity manager is not bound.');
       }
-      $this->entityManager->beginTransaction();
       // https://localhost/nextcloud-git-31/remote.php/dav/addressbooks/users/claus/general_shared_by_cameratashareholder/
       // $this->logInfo('Got event ' . Functions\dump($event));
       // created, deleted, updated:
@@ -168,7 +181,11 @@ class ContactsCardEventListener implements IEventListener
             } else {
               $addressBookUri = null;
             }
+            $this->entityManager->beginTransaction();
             $musician->setAddressBookUri($addressBookUri);
+            $this->flush();
+            $this->entityManager->commit();
+
             // @todo: change the UUID?
           }
           break;
@@ -188,7 +205,10 @@ class ContactsCardEventListener implements IEventListener
               'addressBookUri' => $addressBookUri,
             ]);
           if ($musician !== null) {
+            $this->entityManager->beginTransaction();
             $musician->setAddressBookUri(null);
+            $this->flush();
+            $this->entityManager->commit();
           }
           break;
         case CardCreatedEvent::class:
@@ -206,12 +226,22 @@ class ContactsCardEventListener implements IEventListener
           list(,,$addressBookOwner) = explode('/', $addressBookData['principaluri']);
           $addressBookUri = $addressBookOwner . '/' . $addressBookData['uri'];
           $cardData = $event->getCardData();
+          $cardUri = $cardData['uri'];
+          if (!empty($this->alreadyHandled[$addressBookUri][$cardUri])) {
+            $this->logInfo('Avoid event recursion ' . $addressBookUri . '->' . $cardUri);
+            break;
+          }
+          if (empty($this->alreadyHandled[$addressBookUri])) {
+            $this->alreadyHandled[$addressBookUri] = [];
+          }
+          $this->alreadyHandled[$addressBookUri][$cardUri] = true;
+
+          $this->entityManager->beginTransaction();
+
           /** @var VCard $vCard */
           $vCard = VObject\Reader::read($cardData['carddata']);
           $categories = VCalendarService::getCategories($vCard);
-          $instrumentCategories = $this->getDatabaseRepository(Entities\Instrument::class)->findNames();
           $projectCategories = $this->getDatabaseRepository(Entities\Project::class)->findNames();
-          $instrumentCategories = array_intersect($categories, $instrumentCategories);
           $projectCategories = array_intersect($categories, $projectCategories);
           $musician = $this->getDatabaseRepository(Entities\Musician::class)->findByUUID((string)$vCard->UID);
           if ($musician === null) {
@@ -247,16 +277,29 @@ class ContactsCardEventListener implements IEventListener
             }
           } else {
             $this->logInfo('FOUND MUSICIAN WITH ID ' . $musician->getId());
-            // should sync ... question is if this should be destructive or
-            // just add new instruments and add to new projects ...
             if (in_array($appName, $categories)) {
+
+              // we actually may change parts of the contact, so clear the etag
+              $event->clearEtag();
+
               $organization = (string)$vCard->ORG;
+              $preferWork = !empty($organization);
+
+              // if this re-establishes a previously broken link, then we
+              // should try an intelligent merge ... instead we give the data
+              // stored in our database precedence.
+              $keepExisting = empty($musician->getAddressBookUri());
 
               // Generate a matching musician entity. Instruments will be
               // correct, but project-participation has to be established.
               /** @var ContactsService $contactsService */
               $contactsService = $this->appContainer->get(ContactsService::class);
-              $contactsService->importVCard($musician, $vCard, preferWork: !empty($organization));
+              $contactsService->importVCard(
+                $musician,
+                $vCard,
+                preferWork: $preferWork,
+                keepExisting: $keepExisting,
+              );
               $musician->setAddressBookUri($addressBookUri);
 
               $musicianProjects = $musician
@@ -288,13 +331,32 @@ class ContactsCardEventListener implements IEventListener
                 }
               }
 
-              $excessProjects = array_diff(array_keys($musicianProjects), $projectCategories);
-              if (!empty($excessProjects)) {
+              if ($keepExisting) {
+                $addressBook = $contactsService->addressBookByUri($addressBookUri);
+                if (!empty($addressBook)) {
+                  $contactCard = $contactsService->findMusicianContact($musician);
+                  if (empty($contactCard)) {
+                    $this->logError(
+                      'Broken address-book link for musician "' . $musician->getPublicName(). '"'
+                      . ', addressbook "' . $musician->getAddressBookUri() . '"'
+                      . ', uuid "' . $musician->getUuid() . '".',
+                    );
+                  } else {
+                    $newCard = $contactsService->mergeMusician($contactCard, $musician);
+                    $addressBook->createOrUpdate($newCard);
+                  }
+                } else {
+                  $this->logError('CANNOT FIND ADDRESSBOOK ' . $addressBookUri);
+                }
+              } else {
+                $excessProjects = array_diff(array_keys($musicianProjects), $projectCategories);
+                if (!empty($excessProjects)) {
                 /** @var ProjectService $projectService */
-                $projectService = $this->appContainer->get(ProjectService::class);
-                foreach ($excessProjects as $projectName) {
-                  $projectId = $musicianProjects[$projectName];
-                  $projectService->deleteProjectParticipant($musician->getProjectParticipantOf($projectId));
+                  $projectService = $this->appContainer->get(ProjectService::class);
+                  foreach ($excessProjects as $projectName) {
+                    $projectId = $musicianProjects[$projectName];
+                    $projectService->deleteProjectParticipant($musician->getProjectParticipantOf($projectId));
+                  }
                 }
               }
 
@@ -305,15 +367,15 @@ class ContactsCardEventListener implements IEventListener
               // @todo: change the UUID?
             }
           }
+          $this->flush();
+          $this->entityManager->commit();
           break;
       }
-      $this->flush();
-      $this->entityManager->commit();
     } catch (Throwable $t) {
       if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();
       }
-      $this->logException($t);
+      $this->entityManager->pushTransactionException($t);
     }
   }
 

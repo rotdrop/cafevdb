@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2024 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,18 +26,20 @@ namespace OCA\CAFEVDB\Listener;
 
 use Throwable;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
-
+use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\AppFramework\IAppContainer;
 
+use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\CloudUserConnectorService;
-use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
+use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Event\LifecycleEventArgs;
 
 /**
  * An entity listener. The task is to manage changes in user-id and email
@@ -78,8 +80,10 @@ class MusicianEntityListener
   /**
    * {@inheritdoc}
    */
+  #[ORM\PreUpdate]
   public function preUpdate(Entities\Musician $musician, ORMEvent\PreUpdateEventArgs $event)
   {
+    $this->logInfo('CHGSET ' . print_r($event->getEntityChangeSet(), true));
     $musicianId = $musician->getId();
     $field = 'userIdSlug';
     if ($event->hasChangedField($field)) {
@@ -128,6 +132,7 @@ class MusicianEntityListener
   /**
    * {@inheritdoc}
    */
+  #[ORM\PostUpdate]
   public function postUpdate(Entities\Musician $musician, ORMEvent\PostUpdateEventArgs $event)
   {
     $musicianId = $musician->getId();
@@ -151,6 +156,27 @@ class MusicianEntityListener
       $cloudConnectorService = $this->appContainer->get(CloudUserConnectorService::class);
       $cloudConnectorService->synchronizeCloud();
       unset($this->preUpdateValues[$musicianId][$field]);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Remove should in principle not be neccessary as soft-deletion shoujld
+   * trigger the pre-update hook which already will break the addressbook
+   * link.
+   */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
+  public function synchronizeContact(Entities\Musician $musician, LifecycleEventArgs $eventArgs)
+  {
+    if (empty($musician->getAddressBookUri())) {
+      return;
+    }
+    /** @var ContactsService $contactsService */
+    $contactsService = $this->appContainer->get(ContactsService::class);
+    if (!$contactsService->registerContactSynchronization($musician)) {
+      $this->logError('Contacts-synchronization could not be registered for ' . $musician->getPublicName());
     }
   }
 }

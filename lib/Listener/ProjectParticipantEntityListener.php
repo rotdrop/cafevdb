@@ -26,15 +26,16 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
-use OCP\IL10N;
-use Psr\Log\LoggerInterface as ILogger;
 use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
 use OCP\IGroup;
 use OCP\IGroupManager;
+use OCP\IL10N;
 use OCP\IUserManager;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant as Entity;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -42,8 +43,8 @@ use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 
 /**
  * Entity listener for project participation.
@@ -200,7 +201,8 @@ class ProjectParticipantEntityListener
   /**
    * Register a pre-commit action with undo in order to add / remove the
    * cloud-account of a newly registered executive board member to the
-   * respective cloud user groups.
+   * respective cloud user groups. Also sync a linked address book entry if
+   * present.
    *
    * @param Entity $entity
    *
@@ -211,8 +213,16 @@ class ProjectParticipantEntityListener
    */
   private function registerPreCommitAction(Entity $entity, bool $remove):void
   {
+    /** @var ContactsService $contactsService */
+    $contactsService = $this->appContainer->get(ContactsService::class);
+    $musician = $entity->getMusician();
+    if (!$contactsService->registerContactSynchronization($musician)) {
+      $this->logError('Contacts-synchronization could not be registered for ' . $musician->getPublicName());
+    }
+
     $entityId = self::entityId($entity);
     if (!empty($this->preCommitActions[$entityId])) {
+      // avoid recursion
       return;
     }
     $this->preCommitActions[$entityId] = true;
@@ -246,7 +256,7 @@ class ProjectParticipantEntityListener
 
     /** @var IUserManager $userManager */
     $userManager = $this->appContainer->get(IUserManager::class);
-    $userId = $entity->getMusician()->getUserIdSlug();
+    $userId = $musician->getUserIdSlug();
     $user = $userManager->get($userId);
 
     $closureArguments = compact([
