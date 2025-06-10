@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Crypto;
 
 use DateTime;
+use Throwable;
 
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
@@ -137,9 +138,10 @@ class AsymmetricKeyService
 
     try {
       $keyPair = $forceNewKeyPair ? null : $this->keyStorage->getKeyPair($ownerId, $keyPassphrase);
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t, $this->l->t('Unable to retrieve old key-pair for "%s".', [ $ownerId ]));
       $keyPair = [];
+      throw new Exceptions\EnduserNotificationException('DEBUG: IGNORE FAILED KEYPAIR REQUESTS');
     }
     if (empty($keyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG]) || empty($keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG])) {
 
@@ -149,7 +151,7 @@ class AsymmetricKeyService
         if (!empty($loginPassword)) {
           try {
             $oldKeyPair = $this->keyStorage->getKeyPair($ownerId, $loginPassword);
-          } catch (\Throwable $t) {
+          } catch (Throwable $t) {
             $this->logException($t, 'Unable to fetch old encryption key pair for "' . $ownerId . '".');
           }
         }
