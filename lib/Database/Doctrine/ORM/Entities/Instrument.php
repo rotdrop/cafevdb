@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Table(name: 'Instruments')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository::class)]
 #[Gedmo\TranslationEntity(class: 'TableFieldTranslation')]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[ORM\HasLifecycleCallbacks]
 class Instrument implements \ArrayAccess
 {

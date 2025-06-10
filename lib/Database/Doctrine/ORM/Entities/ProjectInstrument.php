@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 #[ORM\Table(name: 'ProjectInstruments')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\ProjectInstrumentEntityListener'])]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\ProjectInstrumentEntityListener::class])]
 class ProjectInstrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;

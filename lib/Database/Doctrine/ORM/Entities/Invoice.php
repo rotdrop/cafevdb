@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'Invoices')]
 #[ORM\UniqueConstraint(columns: ['notification_message_id'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InvoicesRepository::class)]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[ORM\HasLifecycleCallbacks]
 class Invoice implements JsonSerializable, ArrayAccess
 {

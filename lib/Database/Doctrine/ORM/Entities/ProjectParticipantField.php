@@ -56,8 +56,8 @@ use OCA\CAFEVDB\Database\EntityManager;
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\TranslationEntity(class: 'TableFieldTranslation')]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\ProjectParticipantFieldEntityListener'])]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\ProjectParticipantFieldEntityListener::class])]
 class ProjectParticipantField implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;

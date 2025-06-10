@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ use OCA\CAFEVDB\Common\Util;
 #[ORM\Table(name: 'CompositePayments')]
 #[ORM\UniqueConstraint(columns: ['pre_notification_message_id'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\CompositePaymentsRepository::class)]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\CompositePaymentEntityListener'])]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\CompositePaymentEntityListener::class])]
 #[ORM\HasLifecycleCallbacks]
 class CompositePayment implements \ArrayAccess, \JsonSerializable
 {

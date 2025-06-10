@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Common\Uuid;
 #[ORM\UniqueConstraint(columns: ['project_id', 'calendar_uri', 'event_uri', 'recurrence_id'])]
 #[ORM\UniqueConstraint(columns: ['project_id', 'calendar_id', 'event_uri', 'recurrence_id'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectEventsRepository::class)]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\ProjectEventEntityListener'])]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\ProjectEventEntityListener::class])]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\SoftDeleteable(fieldName: 'deleted')]
 class ProjectEvent implements \ArrayAccess

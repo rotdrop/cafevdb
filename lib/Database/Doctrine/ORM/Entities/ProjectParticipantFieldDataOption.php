@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -54,8 +54,8 @@ use OCA\CAFEVDB\Database\EntityManager;
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\TranslationEntity(class: 'TableFieldTranslation', idToString: ['key' => 'BIN2UUID(%s)'])]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\ProjectParticipantFieldDataOptionEntityListener'])]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\ProjectParticipantFieldDataOptionEntityListener::class])]
 class ProjectParticipantFieldDataOption implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;

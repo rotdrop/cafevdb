@@ -42,8 +42,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Table(name: 'MusicianInstruments', options: ['comment' => 'Join-table Musicians -> Instruments'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\MusicianInstrumentEntityListener'])]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\MusicianInstrumentEntityListener::class])]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 class MusicianInstrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;

@@ -51,9 +51,9 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  */
 #[ORM\Table(name: 'Musicians')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository::class)]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\MusicianEntityListener'])]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\MusicianEntityListener::class])]
 class Musician implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -339,7 +339,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * in the given organization.
    */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private $title;
+  private $jobTitle;
 
   /** {@inheritdoc} */
   public function __construct()
@@ -1529,7 +1529,31 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function getOrganization():?string
   {
-    return $this->organization;
+    return $this->organization ?? null;
+  }
+
+  /**
+   * Set jobTitle.
+   *
+   * @param string|null $jobTitle
+   *
+   * @return Musician
+   */
+  public function setJobTitle(?string $jobTitle):Musician
+  {
+    $this->jobTitle = $jobTitle;
+
+    return $this;
+  }
+
+  /**
+   * Get jobTitle.
+   *
+   * @return string
+   */
+  public function getJobTitle():?string
+  {
+    return $this->jobTitle ?? null;
   }
 
   /**

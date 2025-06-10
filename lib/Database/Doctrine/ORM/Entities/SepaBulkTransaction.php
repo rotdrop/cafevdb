@@ -51,7 +51,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 #[ORM\DiscriminatorMap([null => 'SepaBulkTransaction', 'debit_note' => 'SepaDebitNote', 'bank_transfer' => 'SepaBankTransfer'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\SepaBulkTransactionEntityListener'])]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\SepaBulkTransactionEntityListener::class])]
 class SepaBulkTransaction implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;

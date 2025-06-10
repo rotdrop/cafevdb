@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(columns: ['tax_type', 'assessment_period_start', 'assessment_period_end'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TaxExemptionNoticesRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\NeverHardDelete')]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\NeverHardDelete::class)]
 class TaxExemptionNotice implements JsonSerializable, ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;

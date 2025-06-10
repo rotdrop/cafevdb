@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  */
 #[ORM\Table(name: 'MusicianEmailAddresses')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener'])]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener::class])]
 #[ORM\HasLifecycleCallbacks]
 class MusicianEmailAddress implements \ArrayAccess
 {

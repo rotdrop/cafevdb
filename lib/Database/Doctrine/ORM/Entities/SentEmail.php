@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 #[ORM\Table(name: 'SentEmails')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SentEmailsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\SentEmailEntityListener'])]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\SentEmailEntityListener::class])]
 class SentEmail
 {
   use CAFEVDB\Traits\ArrayTrait;

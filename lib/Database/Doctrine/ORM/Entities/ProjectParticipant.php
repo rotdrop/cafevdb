@@ -44,8 +44,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Table(name: 'ProjectParticipants')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener'])]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener::class])]
 class ProjectParticipant implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
