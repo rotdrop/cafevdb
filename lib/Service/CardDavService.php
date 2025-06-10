@@ -55,7 +55,7 @@ class CardDavService
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    private AddressBookManagerd $addressBookManager,
+    private AddressBookManager $addressBookManager,
     private CardDavBackend $cardDavBackend,
     protected IL10N $l,
     protected LoggerInterface $logger,
@@ -82,7 +82,7 @@ class CardDavService
     empty($displayName) && ($displayName = $uri);
     $principal = "principals/users/$userId";
 
-    $addressBook = $this->cardDavBackend->getAddressBooksByUri($principal, $uri);
+    $addressBook = $this->cardDavBackend->getAddressBooskByUri($principal, $uri);
     if (!empty($addressBook)) {
       $this->logError("Got addressbook " . print_r($addressBook, true));
       return $addressBook['id'];
@@ -167,33 +167,6 @@ class CardDavService
       return false;
     }
     return true;
-  }
-
-  /**
-   * Get a addressBook with the given uri. If the address-book is shared the
-   * uri is tweak to match the NC-style "..._shared_by_..." uri.
-   *
-   * @param string $uri A string in the form PRINCIPAL_URI/ADDRESS_BOOK_URI,
-   * e.g. cameratashareholder/general
-   *
-   * @return null|IAddressBook
-   */
-  public function addressBookByUri(string $uri):?IAddressBook
-  {
-    if ($this->addressBookUserId != $this->getUserId()) {
-      $this->refreshAddressBookManager();
-    }
-    list($principal, $addressBookUri) = explode('/', $uri);
-    if ($principal != $this->getUserId()) {
-      $addressBookUri .= '_shared_by_' . $principal;
-    }
-    /** @var IAddressBook $addressBook */
-    foreach ($this->addressBookManager->getUserAddressBooks() as $addressBook) {
-      if ($addressBookUri === $addressBook) {
-        return $addressBook;
-      }
-    }
-    return null;
   }
 
   /**
