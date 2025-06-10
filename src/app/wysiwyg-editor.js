@@ -113,7 +113,7 @@ const addEditor = function(selector, initCallback) {
                 elementConfig.inline = true;
               }
               if ($editorElement.prop('disabled') || $editorElement.prop('readonly')) {
-                elementConfig.readonly = 1; // does not seem to work ..
+                elementConfig.readonly = true; // does not seem to work ..
               }
               $editorElement.tinymce({ ...mceConfig, ...elementConfig });
               const mceDeferredTimer = setTimeout(function() { mceDeferred.reject('timeout'); }, mceDeferredTimeout);
