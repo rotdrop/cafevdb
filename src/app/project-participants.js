@@ -167,23 +167,33 @@ const validateInstrumentChoices = function(options) {
   const ajaxScript = options.validationUrl;
   const finalizeCB = options.done;
   const errorCB = options.fail;
+  const participationContext = options.participationContext;
 
   Notification.hide();
   const instrumentValues = SelectUtils.selected(selectMusicianInstrument);
+  const postData = {
+    recordId: pmeRec(container),
+    instrumentValues: Array.isArray(instrumentValues) ? instrumentValues : [instrumentValues],
+  };
+  switch (participationContext) {
+  case 'associates':
+    postData.only = 'not an instrument';
+    break;
+  case 'participants':
+    postData.exclude = 'not an instrument';
+    break;
+  }
   $
-    .post(ajaxScript, {
-      recordId: pmeRec(container),
-      instrumentValues: Array.isArray(instrumentValues) ? instrumentValues : [instrumentValues],
-    })
+    .post(ajaxScript, postData)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, errorCB);
     })
     .done(function(data) {
-      if (!Ajax.validateResponse(data, ['message'], errorCB)) {
+      if (!Ajax.validateResponse(data, ['messages'], errorCB)) {
         return;
       }
       finalizeCB();
-      Notification.messages(data.message);
+      Notification.messages(data.messages);
     });
 };
 
@@ -473,7 +483,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
 
     if (doSubmitOuterForm) {
       // selected project instruments affect voices and section-leader:
-      PHPMyEdit.submitOuterForm(selector);
+      PHPMyEdit.submitOuterFormNoThrow(selector);
     } else {
       PHPMyEdit.tableDialogLoadIndicator(container, false);
       PHPMyEdit.tableDialogLock(container, false);
@@ -518,7 +528,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
 
     if (doSubmitOuterForm) {
       // selected project instruments affect voices and section-leader:
-      PHPMyEdit.submitOuterForm(selector);
+      PHPMyEdit.submitOuterFormNoThrow(selector);
     } else {
       PHPMyEdit.tableDialogLoadIndicator(container, false);
       PHPMyEdit.tableDialogLock(container, false);
@@ -562,34 +572,49 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     lockOther(true);
 
     console.info('SELECTED INSTRUMENTS', $self.data(selectedOptionsKey));
+
+    const fail = (data) => {
+      const oldInstruments = data.oldInstruments || $self.data(selectedOptionsKey);
+      console.error('ERROR SELECTING INSTRUMENTS', {
+        data,
+        instruments: $self.data(selectedOptionsKey),
+        oldInstruments,
+      });
+
+      // failure case
+      SelectUtils.selected($self, oldInstruments);
+
+      // Reenable, otherwise the value will not be submitted
+      lockOther(false);
+
+      PHPMyEdit.tableDialogLoadIndicator(container, false);
+      PHPMyEdit.tableDialogLock(container, false);
+    };
+
     validateInstrumentChoices({
       container,
       selectElement: selectProjectInstruments,
-      validationUrl: generateAppUrl('projects/participants/change-instruments/project'),
+      validationUrl: generateAppUrl('projects/participants/validate/instruments/project'),
+      participationContext,
       done() {
         console.info('SELECTED PROJECT INSTRUMENTS', $self.data(selectedOptionsKey));
         // Reenable, otherwise the value will not be submitted
         lockOther(false);
 
         // save current instruments
+        const failureData = {
+          oldInstruments: $self.data(selectedOptionsKey),
+        };
         $self.data(selectedOptionsKey, SelectUtils.selected($self));
 
         // selected project instruments affect voices and section-leader:
-        PHPMyEdit.submitOuterForm(selector);
+        PHPMyEdit.submitOuterForm(selector)
+          .then(
+            (result) => console.info('RELOAD COMPLETED', { result }),
+            (error) => fail({ error, ...failureData }),
+          );
       },
-      fail(data) {
-        console.info('SELECTED INSTRUMENTS', $self.data(selectedOptionsKey));
-        const oldInstruments = data.oldInstruments || $self.data(selectedOptionsKey);
-
-        // failure case
-        SelectUtils.selected($self, oldInstruments);
-
-        // Reenable, otherwise the value will not be submitted
-        lockOther(false);
-
-        PHPMyEdit.tableDialogLoadIndicator(container, false);
-        PHPMyEdit.tableDialogLock(container, false);
-      },
+      fail,
     });
 
     return false;
@@ -615,17 +640,37 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     };
     lockOther(true);
 
+    const fail = (data) => {
+      // failure case
+
+      const oldInstruments = data.oldInstruments || $self.data(selectedOptionsKey);
+
+      console.info('SELECTED MUSICIAN INSTRUMENTS', $self.data(selectedOptionsKey));
+
+      SelectUtils.selected($self, oldInstruments);
+
+      // Reenable, otherwise the value will not be submitted
+      lockOther(false);
+
+      PHPMyEdit.tableDialogLoadIndicator(container, false);
+      PHPMyEdit.tableDialogLock(container, false);
+    };
+
     console.info('SELECTED MUSICIAN INSTRUMENTS', $self.data(selectedOptionsKey));
     validateInstrumentChoices({
       container,
       selectElement: selectMusicianInstruments,
-      validationUrl: generateAppUrl('projects/participants/change-instruments/musician'),
+      validationUrl: generateAppUrl('projects/participants/validate/instruments/musician'),
+      participationContext,
       done() {
         // Reenable, otherwise the value will not be submitted
         lockOther(false);
 
-        console.info('IN DONE HOOK', $self.data(selectedOptionsKey));
+        console.debug('IN DONE HOOK', $self.data(selectedOptionsKey));
         // save current instruments
+        const failureData = {
+          oldInstruments: $self.data(selectedOptionsKey),
+        };
         $self.data(selectedOptionsKey, SelectUtils.selected($self));
         console.info('IN DONE HOOK', $self.data(selectedOptionsKey));
 
@@ -634,23 +679,13 @@ const myReady = function(selector, dialogParameters, resizeCB) {
         // entered by the user. The form-submit
         // will then also reload with an up to date
         // list of instruments
-        PHPMyEdit.submitOuterForm(selector);
+        PHPMyEdit.submitOuterForm(selector)
+          .then(
+            (result) => console.info('RELOAD COMPLETED', { result }),
+            (error) => fail({ error, ...failureData }),
+          );
       },
-      fail(data) {
-        // failure case
-
-        const oldInstruments = data.oldInstruments || $self.data(selectedOptionsKey);
-
-        console.info('SELECTED MUSICIAN INSTRUMENTS', $self.data(selectedOptionsKey));
-
-        SelectUtils.selected($self, oldInstruments);
-
-        // Reenable, otherwise the value will not be submitted
-        lockOther(false);
-
-        PHPMyEdit.tableDialogLoadIndicator(container, false);
-        PHPMyEdit.tableDialogLock(container, false);
-      },
+      fail,
     });
 
     return false;
@@ -893,7 +928,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
 
       console.info('PAGE TEMPLATE', { participationContext });
       const $form = $(this.form);
-      // if (participationContext === 'project-associates') {
+      // if (participationContext === 'associates') {
       //   const projectName = $form.find('input[name="projectName"]').val();
       //   asyncEmit(ADD_CONTACTS_TO_PROJECT, { projectName });
       // } else {
@@ -1005,4 +1040,5 @@ export {
   myLoadProjectParticipants as loadProjectParticipants,
   myPersonalRecordDialog as personalRecordDialog,
   myLoadMusicians as loadMusicians,
+  validateInstrumentChoices,
 };

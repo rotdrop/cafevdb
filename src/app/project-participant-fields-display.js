@@ -26,7 +26,7 @@ import { appName } from '../config.ts';
 import * as Ajax from './ajax.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as Dialogs from './dialogs.js';
-import { submitOuterForm, tableDialogLoadIndicator } from './pme.js';
+import { submitOuterFormNoThrow, tableDialogLoadIndicator } from './pme.js';
 import { confirmedReceivablesUpdate } from './project-participant-fields.js';
 import pageBusyIcon from './busy-icon.js';
 import generateAppUrl from './generate-url.js';
@@ -286,7 +286,7 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
         .find('td.pme-value')
         .on('pme:upload-done pme:upload-deleted', '.file-upload-row', function(event) {
           $container.trigger('pmedialog:changed');
-          submitOuterForm(ambientContainerSelector);
+          submitOuterFormNoThrow(ambientContainerSelector);
         });
     }
   }

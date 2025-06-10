@@ -55,6 +55,7 @@ require('sepa-bank-accounts.scss');
 require('musicians.scss');
 
 const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);
+const selectedOptionsKey = '_m_selectedOptions';
 
 /**
  * Get an array representation for one musician.
@@ -800,6 +801,60 @@ const ready = function(container) {
   const $container = PHPMyEdit.container(container);
 
   contactValidation($container);
+
+  const selectMusicianInstruments = container.find('.pme-value select.musician-instruments');
+
+  selectMusicianInstruments.data(
+    selectedOptionsKey,
+    selectedValues(selectMusicianInstruments),
+  );
+
+  selectMusicianInstruments.on('change', function(event) {
+    const $self = $(this);
+
+    PHPMyEdit.tableDialogLock(container, true);
+    PHPMyEdit.tableDialogLoadIndicator(container, true);
+
+    const fail = (data) => {
+      // failure case
+
+      const oldInstruments = data.oldInstruments || $self.data(selectedOptionsKey);
+
+      console.info('SELECTED MUSICIAN INSTRUMENTS', $self.data(selectedOptionsKey));
+
+      selectedValues($self, oldInstruments);
+
+      PHPMyEdit.tableDialogLoadIndicator(container, false);
+      PHPMyEdit.tableDialogLock(container, false);
+    };
+
+    ProjectParticipants.validateInstrumentChoices({
+      container: $container,
+      selectElement: selectMusicianInstruments,
+      validationUrl: generateAppUrl('projects/participants/validate/instruments/musician'),
+      participationContext: 'participants',
+      done() {
+        // save current instruments
+        const failureData = {
+          oldInstruments: $self.data(selectedOptionsKey),
+        };
+        $self.data(selectedOptionsKey, selectedValues($self));
+        // submit the form with the "right" button,
+        // i.e. save any possible changes already
+        // entered by the user. The form-submit
+        // will then also reload with an up to date
+        // list of instruments
+        PHPMyEdit.submitOuterForm($container)
+          .then(
+            (result) => console.info('RELOAD COMPLETED', { result }),
+            (error) => fail({ error, ...failureData }),
+          );
+      },
+      fail,
+    });
+
+    return false;
+  });
 
   rejectDecryptionPromise();
   console.time('DECRYPTION PROMISE');

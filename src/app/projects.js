@@ -500,7 +500,7 @@ const pmeFormInit = function(containerSel) {
         })
         .done(function(data, textStatus, request) {
           updateLinkShareControls($this, data);
-          PHPMyEdit.submitOuterForm($container.closest(pmeFormSelector));
+          PHPMyEdit.submitOuterFormNoThrow($container.closest(pmeFormSelector));
           setBusyIndicators(false, $container, false);
         });
       return false;
@@ -523,7 +523,7 @@ const pmeFormInit = function(containerSel) {
         })
         .done(function(data, textStatus, request) {
           updateLinkShareControls($this, data);
-          PHPMyEdit.submitOuterForm($container.closest(pmeFormSelector));
+          PHPMyEdit.submitOuterFormNoThrow($container.closest(pmeFormSelector));
           setBusyIndicators(false, $container, true);
         });
       return false;
@@ -550,7 +550,7 @@ const pmeFormInit = function(containerSel) {
         })
         .done(function(data, textStatus, request) {
           updateLinkShareControls($this, data);
-          PHPMyEdit.submitOuterForm($container.closest(pmeFormSelector));
+          PHPMyEdit.submitOuterFormNoThrow($container.closest(pmeFormSelector));
           setBusyIndicators(false, $container, true);
         });
       return false;

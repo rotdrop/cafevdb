@@ -193,7 +193,7 @@ const tableLoadCallback = function(template, selector, parameters, resizeReadyCB
  * @param {object} options Further options. Currently:
  * @param {boolean} options.keepLocked Do not destroy "locking" modal
  * planes.
- * @param {boolean} options.keepBusy Do not reset the busy indicators.
+ * @returns {Promise}
  */
 const pmeSubmitOuterForm = function(outerSelector, options) {
 
@@ -227,8 +227,10 @@ const pmeSubmitOuterForm = function(outerSelector, options) {
 
   const button = $outerForm.find(pmeSysNameSelectors('input', submitNames)).first();
   if (button.length > 0) {
-    console.warn('TRIGGER APPLY BUTTON CLICK', button);
-    button.trigger('click');
+    console.debug('TRIGGER APPLY BUTTON CLICK', button);
+    const { promise, resolve, reject } = Promise.withResolvers();
+    button.trigger('click', [{ resolve, reject }]);
+    return promise;
   } else {
     // submit the outer form
     // $outerForm.submit();
@@ -236,8 +238,30 @@ const pmeSubmitOuterForm = function(outerSelector, options) {
       $outerForm,
       outerSelector,
     });
-    pseudoSubmit($outerForm, $(), outerSelector, 'pme');
+    return pseudoSubmit($outerForm, $(), outerSelector, 'pme');
   }
+};
+
+/**
+ * Submit the base form in order to synchronize any changes caused by
+ * the dialog form. Like pmeSubmitOuterForm() but does not throw an
+ * error on failure.
+ *
+ * @param {string} outerSelector The CSS selector identifying the form
+ * to reload.
+ *
+ * @param {object} options Further options. Currently:
+ * @param {boolean} options.keepLocked Do not destroy "locking" modal
+ * planes.
+ *
+ * @returns {void}
+ */
+const pmeSubmitOuterFormNoThrow = function(outerSelector, options) {
+  pmeSubmitOuterForm(outerSelector, options)
+    .then(
+      (result) => console.info('RELOADING OUTER FORM COMPLETED', { result }),
+      (error) => console.error('SUBMIT OUTER FORM', { error }),
+    );
 };
 
 const deferKey = pmePrefix + '-submitdefer';
@@ -445,10 +469,16 @@ const tableDialogReload = function(options, callback, triggerData) {
         unblockTableDialog(container);
         tableDialogLoadIndicator(container, false);
         container.data(pmeToken('reloading'), false);
+        if (typeof triggerData.reject === 'function') {
+          triggerData.reject({ xhr, status, errorThrown });
+        }
       })
       .done(function(htmlContent, historyAction, post) {
         tableDialogReplace(container, htmlContent, options, callback, triggerData);
         container.data(pmeToken('reloading'), false);
+        if (typeof triggerData.resolve === 'function') {
+          triggerData.resolve('reloaded');
+        }
       });
   });
 };
@@ -546,6 +576,9 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
         tableDialogReload(options, changeCallback, triggerData);
       } else {
         container.dialog('close');
+        if (typeof triggerData.resolve === 'function') {
+          triggerData.resolve('cancelled');
+        }
       }
 
       return false;
@@ -597,6 +630,9 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
             },
             afterDialog($invalidInputs) {
               cleanup();
+              if (typeof triggerData.resolve === 'function') {
+                triggerData.resolve('invalid'); // not reject
+              }
             },
             timeout: 10000, // animation timeout
           })) {
@@ -666,6 +702,9 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
         },
         afterDialog($invalidInputs) {
           cleanup();
+          if (typeof triggerData.resolve === 'function') {
+            triggerData.resolve('invalid'); // not reject
+          }
         },
         timeout: 10000, // animation timeout
       })) {
@@ -704,6 +743,9 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
           .fail(function(xhr, status, errorThrown) {
             unblockTableDialog(container);
             cleanup();
+            if (typeof triggerData.reject === 'function') {
+              triggerData.reject({ xhr, status, errorThrown });
+            }
           })
           .done(function(htmlContent, historyAction, post) {
             const op = $(htmlContent).find(pmeSysNameSelector('input', 'op_name'));
@@ -746,6 +788,9 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
               } else {
                 tableDialogLoadIndicator(container, false);
                 pageBusyIcon(false);
+              }
+              if (typeof triggerData.resolve === 'function') {
+                triggerData.resolve('deleted');
               }
             }
             allButtons.prop('disabled', false);
@@ -1149,7 +1194,7 @@ const pseudoSubmitPost = function(form, element, resetFilter) {
  * @param {boolean} resetFilter Bool, post a sw=Clear string in addition,
  * causing PHPMyEdit to reset the filter.
  *
- * @returns {boolean}
+ * @returns {Promise}
  */
 const pseudoSubmit = function(form, element, selector, resetFilter) {
 
@@ -2220,6 +2265,7 @@ export {
   pmeSelectInputSelector as selectInputSelector,
   pmeSelector as selector,
   pmeSubmitOuterForm as submitOuterForm,
+  pmeSubmitOuterFormNoThrow as submitOuterFormNoThrow,
   pmeSys as sys,
   pmeSysNameSelector as sysNameSelector,
   pmeTableDialogOpen as tableDialogOpen,

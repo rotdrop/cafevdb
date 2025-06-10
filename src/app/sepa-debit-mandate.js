@@ -1816,7 +1816,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
       ? function(event) {
         event.stopImmediatePropagation();
         $(ambientContainerSelector).trigger('pmedialog:changed');
-        PHPMyEdit.submitOuterForm(ambientContainerSelector);
+        PHPMyEdit.submitOuterFormNoThrow(ambientContainerSelector);
       }
       : function() {};
     $pmeTable

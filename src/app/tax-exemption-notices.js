@@ -119,7 +119,7 @@ const pmeFormInit = function(containerSel, parameters, resizeCB) {
         $(this).on('pme:upload-done pme:upload-deleted', (event) => {
           event.stopImmediatePropagation();
           $(ambientContainerSelector).trigger('pmedialog:changed');
-          PHPMyEdit.submitOuterForm(ambientContainerSelector);
+          PHPMyEdit.submitOuterFormNoThrow(ambientContainerSelector);
         });
       }
     });
