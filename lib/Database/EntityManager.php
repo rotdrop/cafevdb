@@ -219,6 +219,15 @@ class EntityManager extends EntityManagerDecorator
    */
   protected static $wrappedManagers = [];
 
+  /**
+   * @var array<int, Throwable>
+   *
+   * In order to make the real exceptions visible exceptions can be remembered
+   * vie pushTransactionExceptions() and retrieved later in the top level
+   * code.
+   */
+  protected array $transactionExceptions = [];
+
   /** {@inheritdoc} */
   public function __construct(
     protected string $appName,
@@ -949,7 +958,7 @@ class EntityManager extends EntityManagerDecorator
    *
    * The callables need to run "stand-alone" without parameters.
    *
-   * @param callable|IUndoable $action Action to register.
+   * @param Closure|IUndoable $action Action to register.
    *
    * @param null|callable $undo The associated undo-action. If $actionm
    * instanceof IUndoable then the $undo action is ignored. It should rather
@@ -959,14 +968,14 @@ class EntityManager extends EntityManagerDecorator
    * @return UndoableRunQueue  Return the run-queue for  easy chaining
    * via UndoableRunQueue::register().
    */
-  public function registerPreCommitAction($action, ?callable $undo = null):UndoableRunQueue
+  public function registerPreCommitAction(Closure|IUndoable $action, ?Closure $undo = null):UndoableRunQueue
   {
     if (!$this->isOwnTransactionActive()) {
       throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot register pre-commit actions.'));
     }
     $level = $this->getOwnTransactionNestingLevel() - 1;
     $actions = $this->preCommitActions[$level];
-    if (is_callable($action)) {
+    if ($action instanceof Closure) {
       $actions->register(new GenericUndoable($action, $undo));
     } elseif ($action instanceof IUndoable) {
       $actions->register($action);
@@ -995,6 +1004,7 @@ class EntityManager extends EntityManagerDecorator
     if (!empty($actions) && !$actions->active()) {
       $actions->executeActions();
     }
+    $this->checkForRollbackOnly();
   }
 
   /**
@@ -1106,6 +1116,9 @@ class EntityManager extends EntityManagerDecorator
     } else {
       $this->preCommitActions[$level]->clearActionQueue();
     }
+    if ($this->transactionNestingLevel == 1) {
+      $this->transactionExceptions = [];
+    }
   }
 
   /**
@@ -1129,6 +1142,7 @@ class EntityManager extends EntityManagerDecorator
    */
   public function commit():void
   {
+    $this->checkForRollbackOnly();
     // execute all remaining pre-flush action
     $this->executePreFlushActions();
     // execute all pre-commit action of the current level
@@ -1175,6 +1189,39 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * @return void
+   *
+   * @throws Exceptions\DatabaseRollbackOnlyException
+   */
+  private function checkForRollbackOnly():void
+  {
+    if ($this->getConnection()->isRollbackOnly()) {
+      throw new Exceptions\DatabaseRollbackOnlyException(
+        $this->l->t('The connection is marked for rollback only.'),
+        previous: $this->transactionExceptions[0] ?? null,
+      );
+    }
+  }
+
+  /**
+   * @param Throwable $exception
+   *
+   * @return void
+   */
+  public function pushTransactionException(Throwable $exception):void
+  {
+    $this->transactionExceptions[] = $exception;
+  }
+
+  /**
+   * @return array<int, Throwable>
+   */
+  public function getTransactionExceptions():ArrayAdapter
+  {
+    return $this->transactionExceptions;
+  }
+
+  /**
    * @param callable|IUndoable $action The action to be registered.
    *
    * @param null|callable $undo The undo action if $action is a mere callable.
@@ -1209,6 +1256,7 @@ class EntityManager extends EntityManagerDecorator
   public function executePreFlushActions()
   {
     $this->preFlushActions->executeActions();
+    $this->checkForRollbackOnly();
   }
 
   /**
