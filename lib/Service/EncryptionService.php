@@ -399,7 +399,7 @@ class EncryptionService
         $failCount += 1 - (int)$this->verifyHash($userDatabaseKey, $sysDatabaseKeyHash);
       }
       if ($failCount < 10) {
-        $msg = 'BOGUS HARDWARE OR SOFTWARE, VERIFY HASH FAIELD ' . $failCount . ' TIMES OUT OF ' . $numberOfTests . ' TIMES.';
+        $msg = 'BOGUS HARDWARE OR SOFTWARE, VERIFY HASH FAILED ' . $failCount . ' TIMES OUT OF ' . $numberOfTests . ' TIMES.';
         $this->logError(
           $msg,
           [ 'exception' => new Exceptions\EncryptionException($msg) ],
