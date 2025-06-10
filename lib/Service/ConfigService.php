@@ -47,9 +47,9 @@ use OCP\L10N\IFactory as IL10NFactory;
 use OCP\Security\ISecureRandom;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
-use OCA\CAFEVDB\Exceptions;
 
 /**
  * Configuration do-it-all class.
