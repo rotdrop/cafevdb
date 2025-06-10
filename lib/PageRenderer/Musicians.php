@@ -59,6 +59,7 @@ abstract class Musicians extends PMETableViewBase
   use FieldTraits\MusicianEnsureUserIdSlugTrait;
   use FieldTraits\MusicianFromRowTrait;
   use FieldTraits\MusicianGenderTrait;
+  use FieldTraits\MusicianInstrumentsRankingTrait;
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
@@ -340,15 +341,17 @@ abstract class Musicians extends PMETableViewBase
       switch ($table) {
         case self::INSTRUMENTS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
-          list($select, $join) = explode('FROM ' . $table . ' t', $joinInfo['sql']);
+          list($select, $join) = explode(' FROM ' . $table . ' t', $joinInfo['sql']);
           $joinInfo['sql'] = $select
-            . 'FROM ' . $table . ' t
+            . ', GROUP_CONCAT(DISTINCT __t3.family ORDER BY __t3.family ASC) AS families'
+            . ' FROM ' . $table . ' t
 INNER JOIN ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
 ON t.id = __t2.instrument_id
 INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id
 ' . $join . '
-WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"';
+WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
+GROUP BY t.id';
           break;
         default:
           break;
@@ -356,6 +359,14 @@ WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMIL
     });
 
     $joinTables = $this->defineJoinStructure($opts);
+
+    $opts['fdd']['organization'] = [
+      'name'     => $this->l->t('Organization'),
+      'tab'      => [ 'id' => 'contact' ],
+      'maxlen'   => 384,
+      'select'   => 'T',
+      'sort'     => true,
+    ];
 
     $opts['fdd']['sur_name'] = [
       'tab'      => [ 'id' => 'contact' ],
@@ -658,12 +669,12 @@ WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMIL
      */
     $participationStatusFddIndex = count($opts['fdd']);
     $opts['fdd']['default_participation_status'] = [
-      'name'    => strval($this->l->t('Default Email Status')),
+      'name'    => strval($this->l->t('Default Status')),
       'tab'     => [ 'id' => [ 'orchestra' ] ],
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
-      'css'     => [ 'postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
+      'css'     => [ 'postfix' => [ 'participation-status', 'tooltip-wide', ], ],
       'values2' => Types\EnumParticipationStatus::getL10NValues($this->l),
       'tooltip' => $this->toolTipsService['page-renderer:musicians:participation-status'],
     ];

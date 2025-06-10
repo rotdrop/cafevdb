@@ -153,7 +153,7 @@ class AddMusicians extends Musicians
 FROM ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t1
 INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t2
 ON __t1.instrument_family_id = __t2.id
-  AND __t2.family = "' . Entities\ProjectINstrument::NOT_AN_INSTRUMENT_FAMILY . '"
+  AND __t2.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
 GROUP BY __t1.instrument_id',
           'identifier' => [
             'instrument_id' => [
@@ -166,7 +166,7 @@ GROUP BY __t1.instrument_id',
         ],
       ],
     );
-    $this->logInfo('JOIN STRUCTURE ' . print_r($this->joinStructure, true));
+    // $this->logInfo('JOIN STRUCTURE ' . print_r($this->joinStructure, true));
     ['opts' => $opts, 'joinTables' => $joinTables] = parent::generatePMEOptions();
     $opts['cgi']['persist']['projectId'] = $this->projectId;
     $opts['cgi']['persist']['participationContext'] = $this->participationContext;
@@ -226,22 +226,26 @@ GROUP BY __t1.instrument_id',
       //
       // Note that due to "LEFT JOIN" participation_status and instrumentFamily
       // will be NULL for all not-registered musicians.
-      $opts[PHPMyEdit::OPT_HAVING]['AND'] = ''
-        . "({$projectsJoin}.project_id IS NULL OR NOT {$projectsJoin}.project_id = {$this->projectId})"
+      $opts[PHPMyEdit::OPT_HAVING]['AND'] = '('
+        . "({$projectsJoin}.project_id IS NULL)"
+        . " OR "
+        . "(NOT {$projectsJoin}.project_id = {$this->projectId})"
         . " OR NOT "
-        . "($participationStatus = '$associated' OR $instrumentFamily = '$notAnInstrumentFamily')";
+        . "($participationStatus = '$associated' OR $instrumentFamily = '$notAnInstrumentFamily')"
+        . ")";
     } else {
       // INCLUDE IF
       // - not registered
-      // -   OR associated
-      // -   OR only not-an-instrument
-      //
-      // Note that due to "LEFT JOIN" participation_status and instrumentFamily
-      // will be NULL for all not-registered musicians.
-      $opts[PHPMyEdit::OPT_HAVING]['AND'] = ''
-        . "({$projectsJoin}.project_id IS NULL OR NOT {$projectsJoin}.project_id = {$this->projectId})"
+      // - OR associated
+      $opts[PHPMyEdit::OPT_HAVING]['AND'] = '('
+        . "({$projectsJoin}.project_id IS NULL)"
         . " OR "
-        . "($participationStatus = '$associated' OR $instrumentFamily = '$notAnInstrumentFamily')";
+        . "(NOT {$projectsJoin}.project_id = {$this->projectId})"
+        . " OR "
+        . "($participationStatus = '$associated')"
+        // . " OR "
+        // . "($instrumentFamily = '$notAnInstrumentFamily')"
+        . ")";
     }
 
     $opts['misc']['css']['minor'] = [ 'bulkcommit', 'tooltip-right' ];

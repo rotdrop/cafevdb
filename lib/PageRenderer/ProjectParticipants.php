@@ -63,6 +63,7 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\MusicianEnsureUserIdSlugTrait;
   use FieldTraits\MusicianFromRowTrait;
   use FieldTraits\MusicianGenderTrait;
+  use FieldTraits\MusicianInstrumentsRankingTrait;
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
@@ -434,7 +435,8 @@ ON t.id = __t2.instrument_id
 INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id
 ' . $join . '
-WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"';
+WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
+GROUP BY t.id';
           break;
         case self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians':
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
@@ -446,7 +448,8 @@ ON t.id = __t2.instrument_id
 INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id
 ' . $join . '
-WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"';
+WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
+GROUP BY t.id';
           break;
         case self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'label');
@@ -459,6 +462,14 @@ WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMIL
     $this->defineJoinStructure($opts);
 
     $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = 'NOT $table.participation_status = "' . ParticipationStatus::ASSOCIATED . '"';
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'organization',
+      [
+        'name'     => $this->l->t('Organization'),
+        'tab'      => [ 'id' => 'musician' ],
+        'maxlen'   => 384,
+      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'sur_name',
@@ -945,11 +956,17 @@ WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMIL
           'tooltip-top',
           'no-chosen',
           'selectize',
-          'drag-drop',
-          'select-wide',
         ],
       ],
       'display|LVF' => ['popup' => 'data'],
+      'display|ACP' => [
+        'attributes' => [
+          'data-selectize-options' => [
+            'create' => false,
+            'plugins' => [ 'drag_drop', ],
+          ],
+        ],
+      ],
       'sql'         => 'GROUP_CONCAT(DISTINCT
   IF(' . $musicianInstrumentsJoin . '.deleted IS NOT NULL, NULL, $join_col_fqn)
   ORDER BY '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
@@ -1003,7 +1020,7 @@ WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMIL
 
     $participationStatusFddIndex = count($opts['fdd']);
     $opts['fdd']['participation_status'] = [
-      'name'    => strval($this->l->t('Email Status')),
+      'name'    => strval($this->l->t('Status')),
       // 'tab'     => [ 'id' => [ 'orchestra' ] ],
       'select'  => 'D',
       'maxlen'  => 128,
@@ -1016,7 +1033,6 @@ WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMIL
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'default_participation_status',
       [
-        'name'    => $this->l->t('Email Status'),
         'select'  => 'D',
         'maxlen'  => 128,
         'input'   => 'HR',

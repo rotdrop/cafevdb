@@ -872,53 +872,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   }
 
   /**
-   * The ranking of the mussician's instruments is implicitly stored
-   * in the order of the instrument ids. Change the coressponding
-   * field to include the ranking explicitly.
-   *
-   * @param PHPMyEdit $pme The phpMyEdit instance.
-   *
-   * @param string $op The operation, 'insert', 'update' etc.
-   *
-   * @param string $step 'before' or 'after'.
-   *
-   * @param array $oldValues Self-explanatory.
-   *
-   * @param array $changed Set of changed fields, may be modified by the callback.
-   *
-   * @param null|array $newValues Set of new values, which may also be modified.
-   *
-   * @return bool If returning @c false the operation will be terminated
-   */
-  public function extractInstrumentRanking(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
-  {
-    $keyField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
-    $rankingField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'ranking');
-
-    $this->debug('FIELDS: ' . $keyField . ' / ' . $rankingField);
-    $this->debugPrintValues($oldValues, $changed, $newValues, [ $keyField, $rankingField ]);
-
-    foreach (['old', 'new'] as $dataSet) {
-      $keys = Util::explode(self::VALUES_SEP, Util::removeSpaces(${$dataSet.'Values'}[$keyField ] ?? ''));
-      $ranking = [];
-      foreach ($keys as $key) {
-        $ranking[] = $key.self::JOIN_KEY_SEP.(count($ranking)+1);
-      }
-      ${$dataSet.'Values'}[$rankingField] = implode(self::VALUES_SEP, $ranking);
-    }
-
-    // as the ordering is implied by the ordering of keys the ranking
-    // changes whenever the keys change.
-    if (array_search($keyField, $changed) !== false) {
-      $changed[] = $rankingField;
-    }
-
-    $this->debugPrintValues($oldValues, $changed, $newValues, [ $keyField, $rankingField ], 'after');
-
-    return true;
-  }
-
-  /**
    * Find the recursion end-point for a nested join description.
    *
    * @param array $joinInfo

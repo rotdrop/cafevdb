@@ -68,6 +68,7 @@ class ProjectAssociates extends ProjectParticipants
   use FieldTraits\MusicianEnsureUserIdSlugTrait;
   use FieldTraits\MusicianFromRowTrait;
   use FieldTraits\MusicianGenderTrait;
+  use FieldTraits\MusicianInstrumentsRankingTrait;
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
@@ -371,27 +372,31 @@ class ProjectAssociates extends ProjectParticipants
       switch ($table) {
         case self::INSTRUMENTS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
-          list($select, $join) = explode('FROM ' . self::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
+          list($select, $join) = explode(' FROM ' . self::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
           $joinInfo['sql'] = $select
-            . 'FROM ' . self::INSTRUMENTS_TABLE . ' t
+            . ', GROUP_CONCAT(DISTINCT __t3.family ORDER BY __t3.family ASC) AS families'
+            . ' FROM ' . self::INSTRUMENTS_TABLE . ' t
 INNER JOIN ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
 ON t.id = __t2.instrument_id
 INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id
 ' . $join . '
-WHERE __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"';
+WHERE __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
+GROUP BY t.id';
           break;
         case self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians':
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
-          list($select, $join) = explode('FROM ' . self::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
+          list($select, $join) = explode(' FROM ' . self::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
           $joinInfo['sql'] = $select
-            . 'FROM ' . self::INSTRUMENTS_TABLE . ' t
+            . ', GROUP_CONCAT(DISTINCT __t3.family ORDER BY __t3.family ASC) AS families'
+            . ' FROM ' . self::INSTRUMENTS_TABLE . ' t
 INNER JOIN ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
 ON t.id = __t2.instrument_id
 INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id
 ' . $join . '
-WHERE __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"';
+WHERE __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
+GROUP BY t.id';
           break;
         case self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'label');
@@ -414,7 +419,6 @@ WHERE __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . 
       [
         'name'     => $this->l->t('Organization'),
         'tab'      => [ 'id' => 'tab-all' ],
-        'input|LF' => $this->pmeBare ? '' : 'H',
         'maxlen'   => 384,
       ]);
 
@@ -711,11 +715,17 @@ WHERE __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . 
           'tooltip-top',
           'no-chosen',
           'selectize',
-          'drag-drop',
-          'select-wide',
         ],
       ],
       'display|LVF' => ['popup' => 'data'],
+      'display|ACP' => [
+        'attributes' => [
+          'data-selectize-options' => [
+            'create' => false,
+            'plugins' => [ 'drag_drop', ],
+          ],
+        ],
+      ],
       'sql'         => 'GROUP_CONCAT(DISTINCT
   IF(' . $musicianInstrumentsJoin . '.deleted IS NOT NULL, NULL, $join_col_fqn)
   ORDER BY '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
@@ -1158,6 +1168,7 @@ WHERE __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
     // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
     // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateCheckParticipationStatus' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'extractInstrumentRanking' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'cleanupParticipantFields' ];
 
