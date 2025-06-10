@@ -66,8 +66,8 @@ const exceptionTitleText = computed(() => {
 
   &__message {
     margin-inline-start: 6px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
   }
 
   &__trace {
