@@ -75,7 +75,15 @@ class SentEmail
    * @var string
    */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
-  #[Gedmo\Slug(fields: ['bulkRecipients'], updatable: true, unique: false, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler', options: [new Gedmo\SlugHandlerOption(name: 'algorithm', value: 'md5')])])]
+  #[Gedmo\Slug(
+    fields: ['bulkRecipients'],
+    updatable: true,
+    unique: false,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\HashHandler::class,
+    options: [ 'algorithm' => 'md5' ],
+  )]
   private $bulkRecipientsHash;
 
   /**
@@ -100,7 +108,15 @@ class SentEmail
    * @var string
    */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
-  #[Gedmo\Slug(fields: ['subject'], updatable: true, unique: false, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler', options: [new Gedmo\SlugHandlerOption(name: 'algorithm', value: 'md5')])])]
+  #[Gedmo\Slug(
+    fields: ['subject'],
+    updatable: true,
+    unique: false,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\HashHandler::class,
+    options: [ 'algorithm' => 'md5' ],
+  )]
   private $subjectHash;
 
   /**
@@ -113,7 +129,15 @@ class SentEmail
    * @var string
    */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
-  #[Gedmo\Slug(fields: ['htmlBody'], updatable: true, unique: false, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler', options: [new Gedmo\SlugHandlerOption(name: 'algorithm', value: 'md5')])])]
+  #[Gedmo\Slug(
+    fields: ['htmlBody'],
+    updatable: true,
+    unique: false,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\HashHandler::class,
+    options: [ 'algorithm' => 'md5' ],
+  )]
   private $htmlBodyHash;
 
   /**

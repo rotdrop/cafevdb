@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use DateTimeImmutable;
 use DateTimeInterface;
 use InvalidArgumentException;
+use Exception;
 
 use GenderDetector;
 
@@ -116,7 +117,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * the slug generator. It will just remove empty fields.
    */
   #[ORM\Column(type: 'string', length: 256, unique: true, nullable: true, options: ['collation' => 'ascii_bin'])]
-  #[Gedmo\Slug(fields: ['firstName', 'nickName', 'surName'], separator: '.', unique: true, updatable: true, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler', options: [new Gedmo\SlugHandlerOption(name: 'separator', value: '-'), new Gedmo\SlugHandlerOption(name: 'preferred', value: [1, 2])])])]
+  #[Gedmo\Slug(
+    fields: ['firstName', 'nickName', 'surName'],
+    separator: '.',
+    unique: true,
+    updatable: true,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\LoginNameSlugHandler::class,
+    options: [ 'separator' => '-', 'preferred' => [1, 2] ],
+  )]
   private $userIdSlug;
 
   /**
@@ -386,6 +396,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function setSurName(?string $surName):Musician
   {
+    if ($surName == 1) {
+      throw new Exception('BLAH');
+    }
     $this->surName = $surName;
 
     return $this;
@@ -398,7 +411,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function getSurName():?string
   {
-    return $this->surName || null;
+    return $this->surName ?? null;
   }
 
   /**
@@ -422,7 +435,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function getFirstName():?string
   {
-    return $this->firstName || null;
+    return $this->firstName ?? null;
   }
 
   /**
@@ -676,10 +689,12 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function setPrincipalEmailAddress(?MusicianEmailAddress $principalEmailAddress):Musician
   {
     if (empty($principalEmailAddress)) {
+      \OC::$server->get(\Psr\Log\LoggerInterface::class)->info('DELETING PRINCIPAL EMAIL ADDRESS', [ 'exception' => new Exception('NO EMAIL') ]);
       $this->email = null;
     } else {
       $this->email = $principalEmailAddress->getAddress();
       $this->emailAddresses->set($this->email, $principalEmailAddress);
+      \OC::$server->get(\Psr\Log\LoggerInterface::class)->info('SET EMAIL TO ' . $this->email);
     }
 
     return $this;
@@ -690,7 +705,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function getPrincipalEmailAddress():?MusicianEmailAddress
   {
-    return $this->emailAddresses->get($this->email);
+    return $this->email === null ? null : $this->emailAddresses->get($this->email);
   }
 
   /**
@@ -1554,6 +1569,54 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getRowAccessToken():?MusicianRowAccessToken
   {
     return $this->rowAccessToken;
+  }
+
+  /**
+   * Set invoices.
+   *
+   * @param Collection $invoices
+   *
+   * @return Musician
+   */
+  public function setInvoices(Collection $invoices):Musician
+  {
+    $this->invoices = $invoices;
+
+    return $this;
+  }
+
+  /**
+   * Get invoices.
+   *
+   * @return Collection
+   */
+  public function getInvoices():Collection
+  {
+    return $this->invoices;
+  }
+
+  /**
+   * Set originatedInvoices.
+   *
+   * @param Collection $originatedInvoices
+   *
+   * @return Musician
+   */
+  public function setOriginatedInvoices(Collection $originatedInvoices):Musician
+  {
+    $this->originatedInvoices = $originatedInvoices;
+
+    return $this;
+  }
+
+  /**
+   * Get originatedInvoices.
+   *
+   * @return Collection
+   */
+  public function getOriginatedInvoices():Collection
+  {
+    return $this->originatedInvoices;
   }
 
   /**
