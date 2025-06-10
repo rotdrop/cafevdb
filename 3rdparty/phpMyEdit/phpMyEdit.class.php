@@ -4615,7 +4615,7 @@ EOT;
 		}
 	} /* }}} */
 
-	function display_buttons($position, $row = false) /* {{{ */
+	function display_buttons($position, $row = null) /* {{{ */
 	{
 		$ret = '';
 		$nav_fnc = 'nav_'.$position;
@@ -4643,7 +4643,7 @@ EOT;
 		return $ret;
 	} /* }}} */
 
-	function display_button($name, $position = 'up', $row = false) /* {{{ */
+	function display_button($name, $position = 'up', $row = null) /* {{{ */
 	{
 		$disabledControls = [];
 		if (is_array($name)) {
@@ -5771,7 +5771,7 @@ EOT;
 			}
 		}
 
-		$row = false;
+		$row = null;
 		if (!$this->add_operation()) {
 			$qparts = [];
 			$qparts[self::QPARTS_TYPE]	  = self::QPARTS_SELECT;
@@ -5784,7 +5784,7 @@ EOT;
 			$res = $this->myquery($this->get_SQL_query($qparts), __LINE__);
 			$row = $this->sql_fetch($res);
 			if (!$row) {
-				$row = false; // ensure boolean value
+				$row = null;
 			}
 			$this->exec_data_triggers($trigger, $row);
 		}
