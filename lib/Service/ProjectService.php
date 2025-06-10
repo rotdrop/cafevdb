@@ -2171,7 +2171,7 @@ Whatever.',
         /** @var Entities\MusicianInstrument $musicanInstrument */
         foreach ($musicianInstruments as $musicianInstrument) {
           $thisRanking = $musicianInstrument->getRanking();
-          if ($thisRanking <= $ranking) {
+          if ($thisRanking >= $ranking) {
             continue;
           }
           $ranking = $thisRanking;
@@ -2183,6 +2183,22 @@ Whatever.',
         }
 
       } else { // $participationContext
+        // Make sure the participation status is neither passive nor associate.
+        $participationStatus = $participant->getParticipationStatus();
+        switch ($participationStatus) {
+          case ParticipationStatus::ASSOCIATED:
+          case ParticipationStatus::PASSIVE:
+            $defaultStatus = $musician->getDefaultParticipationStatus();
+            switch ($defaultStatus) {
+              case ParticipationStatus::ASSOCIATED:
+              case ParticipationStatus::PASSIVE:
+                $defaultStatus = ParticipationStatus::REGULAR;
+                break;
+            }
+            $participant->setParticipationStatus($defaultStatus);
+            break;
+        }
+
         // Try to make a likely default choice for the project instrument.
         $musicianInstruments = $musician->getInstruments();
         // first find one instrument with best ranking
@@ -2196,7 +2212,7 @@ Whatever.',
             continue;
           }
           $thisRanking = $musicianInstrument->getRanking();
-          if ($thisRanking <= $ranking) {
+          if ($thisRanking >= $ranking) {
             continue;
           }
           $ranking = $thisRanking;
