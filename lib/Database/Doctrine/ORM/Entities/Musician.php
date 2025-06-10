@@ -329,8 +329,17 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * If non null then this contact refers to an organization.
    */
-  #[ORM\Column(type: 'string', length: 1024, nullable: true)]
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $organization;
+
+  /**
+   * @var string
+   *
+   * If organization is non-NULL then this attribute may refere to the title
+   * in the given organization.
+   */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
+  private $title;
 
   /** {@inheritdoc} */
   public function __construct()
