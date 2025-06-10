@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 /**
  * Playing around with PHP enums, this is the first use in this project.
  */
-enum EnumChangeInstrumentsContext: string
+enum EnumValidateInstrumentsContext: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
 

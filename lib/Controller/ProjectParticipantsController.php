@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use InvalidArgumentException;
 use RuntimeException;
+use UnexpectedValueException;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -93,8 +94,6 @@ class ProjectParticipantsController extends Controller
   ) {
     parent::__construct($appName, $request);
     $this->l = $this->l10N();
-
-    $this->setDatabaseRepository(Entities\ProjectParticipant::class);
   }
 
   /**
@@ -220,54 +219,90 @@ class ProjectParticipantsController extends Controller
   }
 
   /**
-   * This actually only validates the submitted changes, but does not save them yet.
+   * Validate the instrument selection for the current project participant or musician.
    *
-   * @param string $context Either of 'musician' or 'project'.
+   * @param string|EnumValidateInstrumentsContext $context Either of 'musician' or 'project'.
    *
-   * @param array $recordId TBD.
+   * @param array $recordId The database record id of the project participant.
    *
-   * @param array $instrumentValues TBD.
+   * @param array $instrumentValues The is of the selected instruments.
+   *
+   * @param null|string $only If non-empty restrict to instruments of this family.
+   *
+   * @param null|string $exclude It non-empty exclude instrumets of this family.
    *
    * @return Response
    *
    * @NoAdminRequired
    */
-  public function changeInstruments(string $context, array $recordId = [], array $instrumentValues = []):Response
-  {
-    $contextCase = EnumChangeInstrumentsContext::tryFrom($context);
+  public function validateInstrumentsSelection(
+    string|EnumValidateInstrumentsContext $context,
+    array $recordId = [],
+    array $instrumentValues = [],
+    ?string $only = null,
+    ?string $exclude = null,
+  ):Response {
+    $contextCase = EnumValidateInstrumentsContext::tryFrom($context);
     if ($contextCase === null) {
       throw new InvalidArgumentException(
         $this->l->t(
           'Invalid context specified, expected one of "%1$s", got "%2$s".',
           [
-            implode('", "', EnumChangeInstrumentsContext::values()),
+            implode('", "', EnumValidateInstrumentsContext::values()),
             $context,
           ],
         ),
       );
     }
 
-    $this->logDebug($context.' / '.print_r($recordId, true).' / '.print_r($instrumentValues, true));
+    $this->logDebug($context . ' / ' . print_r($recordId, true) . ' / ' . print_r($instrumentValues, true));
     if (empty($instrumentValues)) {
       $instrumentValues = [];
     }
 
-    if (empty($recordId['projectId']) || empty($recordId['musicianId'])) {
-      return self::grumble($this->l->t(
-        "Project- or musician-id is missing (%s/%s)",
-        [ $recordId['projectId'], $recordId['musicianId'], ]
-      ));
-    }
+    if ($contextCase == EnumValidateInstrumentsContext::MUSICIAN && empty($recordId['projectId'])) {
+      if (empty($recordId['id'])) {
+        throw new InvalidArgumentException($this->l->t("Musician-id is missing"));
+      }
+      /** @var Entities\Musician $musician */
+      $musician = $this->getDatabaseRepository(Entities\Musician::class)->find([ 'id' => $recordId['id'] ]);
+      if (empty($musician)) {
+        throw new UnexpectedValueException($this->l->t("Unable to fetch the musicican with given key %s from the database.", print_r($recordId, true)));
+      }
+    } else {
+      if (empty($recordId['projectId']) || empty($recordId['musicianId'])) {
+        throw new InvalidArgumentException(
+          $this->l->t(
+            "Project- or musician-id is missing (%s/%s)",
+            [ $recordId['projectId'], $recordId['musicianId'], ]
+          ),
+        );
+      }
 
-    /** @var Entities\ProjectParticipant $projectParticipant */
-    $projectParticipant = $this->find([ 'project' => $recordId['projectId'], 'musician' => $recordId['musicianId'] ]);
-    if (empty($projectParticipant)) {
-      return self::grumble($this->l->t("Unable to fetch project-participant with given key %s", print_r($recordId, true)));
+      /** @var Entities\ProjectParticipant $projectParticipant */
+      $projectParticipant = $this->getDatabaseRepository(Entities\ProjectParticipant::class)->find([
+        'project' => $recordId['projectId'],
+        'musician' => $recordId['musicianId'],
+      ]);
+      if (empty($projectParticipant)) {
+        throw new UnexpectedValueException(
+          $this->l->t("Unable to fetch the project-participant with given key %s", print_r($recordId, true)),
+        );
+      }
+
+      $projectInstruments = [];
+      foreach ($projectParticipant['projectInstruments'] as $projectInstrument) {
+        $projectInstruments[$projectInstrument['instrument']['id']] = $projectInstrument;
+      }
+
+      $musician = $projectParticipant->getMusician();
     }
 
     $musicianInstruments = [];
+    $family = $only ? $only : ($exclude ? $exclude : null);
+    $complement = !empty($exclude);
     /** @var Entities\MusicianInstrument $musicianInstrument */
-    foreach ($projectParticipant->getMusician()->getInstruments() as $musicianInstrument) {
+    foreach ($musician->getInstruments($family, $complement) as $musicianInstrument) {
       if ($musicianInstrument->isDeleted()) {
         // already deleted instruments must be omitted here, otherwise the
         // checks below hinder the undeletion.
@@ -285,100 +320,118 @@ class ProjectParticipantsController extends Controller
       return (($rankingA === $rankingB) ? 0 : (($rankingA <= $rankingB) ? -1 : 1));
     });
 
-    $projectInstruments = [];
-    foreach ($projectParticipant['projectInstruments'] as $projectInstrument) {
-      $projectInstruments[$projectInstrument['instrument']['id']] = $projectInstrument;
-    }
-
     $allInstruments = [];
     foreach ($this->getDatabaseRepository(Entities\Instrument::class)->findAll() as $instrument) {
       $allInstruments[$instrument['id']] = $instrument;
     }
 
+    $messages = [];
     switch ($contextCase) {
-      case EnumChangeInstrumentsContext::MUSICIAN:
-        $message   = [];
-
+      case EnumValidateInstrumentsContext::MUSICIAN:
         // This should be cheap as most musicians only play very few instruments
         foreach (array_diff(array_keys($musicianInstruments), $instrumentValues) as $removedId) {
 
-          if (isset($projectInstruments[$removedId])) {
-            return self::grumble($this->l->t(
-              'Denying the attempt to remove the instrument %s because it is used in the current project.',
-              $projectInstruments[$removedId]['instrument']['name']
-            ));
+          if (!empty($projectParticipant)) {
+            if (isset($projectInstruments[$removedId])) {
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t(
+                  'Denying the attempt to remove the instrument %s because it is used in the current project.',
+                  $projectInstruments[$removedId]['instrument']['name'],
+                ),
+                httpStatusCode: Http::STATUS_BAD_REQUEST,
+                context: $projectInstruments,
+              );
+            }
           }
 
           if ($musicianInstruments[$removedId]->usage() > 0) {
             // soft-delete works, but we still want to dis-allow
             // deleting instrument used in _this_ project.
-            $message[] = $this->l->t(
+            $messages[] = $this->l->t(
               'Just marking the instrument "%1$s" as disabled because it is still used in %2$d other contexts.',
-              [ $musicianInstruments['instrument']['name'], $musicianInstruments[$removedId]->usage() ]);
+              [
+                $musicianInstruments[$removedId]['instrument']['name'],
+                $musicianInstruments[$removedId]->usage(),
+              ],
+            );
           }
 
-          $message[] = $this->l->t(
+          $messages[] = $this->l->t(
             'Removing instrument "%1$s" from the list of instruments played by %2$s.',
-            [ $musicianInstruments[$removedId]['instrument']['name'],
-              $projectParticipant['musician']['firstName'] ]);
-
+            [
+              $musicianInstruments[$removedId]['instrument']['name'],
+              $musician->getPublicName(firstNameFirst: true),
+            ]);
         }
 
         foreach (array_diff($instrumentValues, array_keys($musicianInstruments)) as $addedId) {
           if (!isset($allInstruments[$addedId])) {
-            return self::grumble($this->l->t(
-              'Denying the attempt to add an unknown instrument (id = %s)',
-              $addedId
-            ));
+            throw new InvalidArgumentException(
+              $this->l->t(
+                'Denying the attempt to add an unknown instrument (id = %s)',
+                $addedId
+              ),
+            );
           }
-          $message[] = $this->l->t(
-            'Adding instrument "%s" to the list of instruments played by "%s"',
-            [ $allInstruments[$addedId]['name'],
-              $projectParticipant['musician']['firstName'] ]);
+          $messages[] = $this->l->t(
+            'Adding instrument "%1$s" to the list of instruments played by "%2$s"',
+            [
+              $allInstruments[$addedId]['name'],
+              $musician->getPublicName(firstNameFirst: true),
+            ],
+          );
         }
 
         // see if the primary instrument has been changed
         if (count($instrumentValues) > 1
             && $instrumentValues[0] != (array_keys($musicianInstruments)[0]??0)) {
-          $message[] = $this->l->t(
+          $messages[] = $this->l->t(
             'Setting "%1$s" as the primary instrument of %2$s.',
-            [ $allInstruments[$instrumentValues[0]]['name'], $projectParticipant['musician']['firstName'], ]);
+            [
+              $allInstruments[$instrumentValues[0]]['name'],
+              $musician->getPublicName(firstNameFirst: true),
+            ],
+          );
         }
 
         // all ok
-        return self::response($message);
+        return self::response($messages);
 
-      case EnumChangeInstrumentsContext::PROJECT:
-
-        $message   = [];
+      case EnumValidateInstrumentsContext::PROJECT:
 
         // removing instruments should be just fine
         foreach (array_diff(array_keys($instrumentValues, $projectInstruments)) as $addedId) {
 
           if (!isset($allInstruments[$addedId])) {
-            return self::grumble($this->l->t(
-              'Denying the attempt to add an unknown instrument (id = %s).',
-              $addedId
-            ));
+            throw new InvalidArgumentException(
+              $this->l->t(
+                'Denying the attempt to add an unknown instrument (id = %s).',
+                $addedId
+              ),
+            );
           }
 
           if (!isset($musicianInstruments[$addedId])) {
             // should not happen unless the UI is broken
-            return self::grumble(
+            throw new InvalidArgumentException(
               $this->l->t(
                 'Denying the attempt to add the instrument %s because %s cannot play it.',
-                [ $allInstruments['name'],
-                  $projectParticipant['musician']['firstName'] ]));
+                [
+                  $allInstruments['name'],
+                  $projectParticipant['musician']['firstName'],
+                ],
+              ),
+            );
           }
 
-          $message[] = $this->l->t(
+          $messages[] = $this->l->t(
             'Adding instrument "%1$s" to the list of project-instruments of %s.',
             [ $allInstruments[$addedId]['name'],
               $projectParticipant['musician']['firstName'] ]);
         }
 
         // all ok
-        return self::response(implode('; ', $message));
+        return self::response($messages);
     }
   }
 
