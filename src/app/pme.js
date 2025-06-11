@@ -469,14 +469,14 @@ const tableDialogReload = function(options, callback, triggerData) {
         unblockTableDialog(container);
         tableDialogLoadIndicator(container, false);
         container.data(pmeToken('reloading'), false);
-        if (typeof triggerData.reject === 'function') {
+        if (typeof triggerData?.reject === 'function') {
           triggerData.reject({ xhr, status, errorThrown });
         }
       })
       .done(function(htmlContent, historyAction, post) {
         tableDialogReplace(container, htmlContent, options, callback, triggerData);
         container.data(pmeToken('reloading'), false);
-        if (typeof triggerData.resolve === 'function') {
+        if (typeof triggerData?.resolve === 'function') {
           triggerData.resolve('reloaded');
         }
       });
@@ -576,7 +576,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
         tableDialogReload(options, changeCallback, triggerData);
       } else {
         container.dialog('close');
-        if (typeof triggerData.resolve === 'function') {
+        if (typeof triggerData?.resolve === 'function') {
           triggerData.resolve('cancelled');
         }
       }
@@ -630,7 +630,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
             },
             afterDialog($invalidInputs) {
               cleanup();
-              if (typeof triggerData.resolve === 'function') {
+              if (typeof triggerData?.resolve === 'function') {
                 triggerData.resolve('invalid'); // not reject
               }
             },
@@ -702,7 +702,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
         },
         afterDialog($invalidInputs) {
           cleanup();
-          if (typeof triggerData.resolve === 'function') {
+          if (typeof triggerData?.resolve === 'function') {
             triggerData.resolve('invalid'); // not reject
           }
         },
@@ -743,7 +743,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
           .fail(function(xhr, status, errorThrown) {
             unblockTableDialog(container);
             cleanup();
-            if (typeof triggerData.reject === 'function') {
+            if (typeof triggerData?.reject === 'function') {
               triggerData.reject({ xhr, status, errorThrown });
             }
           })
@@ -789,7 +789,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
                 tableDialogLoadIndicator(container, false);
                 pageBusyIcon(false);
               }
-              if (typeof triggerData.resolve === 'function') {
+              if (typeof triggerData?.resolve === 'function') {
                 triggerData.resolve('deleted');
               }
             }
