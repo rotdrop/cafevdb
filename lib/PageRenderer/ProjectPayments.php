@@ -84,25 +84,39 @@ class ProjectPayments extends PMETableViewBase
     self::MUSICIANS_TABLE => [
       'entity' => Entities\Musician::class,
       'sql' => 'SELECT
-  __t1.*,
-  GROUP_CONCAT(
+  __t1.*,'
+      . '
+  JSON_ARRAYAGG(
     DISTINCT
-    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)))
+    IF(__t4.id IS NULL OR COALESCE(__t2.option_value, __t3.data) IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)))
     ORDER BY __t2.project_id ASC, __t4.id ASC
-  ) AS receivable_keys,
-  GROUP_CONCAT(
-    DISTINCT
-    IF(__t4.id IS NULL,
-       NULL,
-       CONCAT_WS("' . self::JOIN_KEY_SEP . '", CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)), COALESCE(__t2.option_value, __t3.data, "undefined"))
-    )
-    ORDER BY __t2.project_id ASC, __t4.id ASC
-  ) AS receivable_values,
-  GROUP_CONCAT(
-    DISTINCT
-    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::JOIN_KEY_SEP . '", CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)), __t4.data_type))
-    ORDER BY __t2.project_id ASC, __t4.id ASC
-  ) AS receivable_data_types
+  ) AS receivable_keys,'
+      .'
+  JSON_OBJECTAGG(
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
+    IF(__t4.data_type = "' . FieldType::LIABILITIES . '", COALESCE(-1 * __t2.option_value, -1 * __t3.data), COALESCE(__t2.option_value, __t3.data))
+  ) AS receivable_values,'
+      . '
+  JSON_OBJECTAGG(
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
+    __t2.deposit
+  ) AS receivable_deposits,'
+      . '
+  JSON_OBJECTAGG(
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
+    __t4.data_type
+  ) AS receivable_data_types,'
+      . '
+  JSON_OBJECTAGG(
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
+    __t4.due_date
+  ) AS receivable_due_dates,'
+      . '
+  JSON_OBJECTAGG(
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
+    __t4.deposit_due_date
+  ) AS receivable_deposit_due_dates'
+      .'
 FROM ' . self::MUSICIANS_TABLE . ' __t1
 LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . ' __t2
 ON __t2.musician_id = __t1.id
@@ -325,6 +339,10 @@ WHERE dsf.id IS NOT NULL',
     $this->findProject(enforce: false);
 
     $this->initCrypto();
+
+    if ($this->listOperation()) {
+      $this->pme->overrideLabel('Add', $this->l->t('New Payment'));
+    }
   }
 
   /** {@inheritdoc} */
@@ -1089,7 +1107,7 @@ WHERE dsf.id IS NOT NULL',
           $filesAppAnchor = '
 <a href="' . $filesAppLink . '"
    data-parent-link="' . Util::htmlEscape($filesAppParentLink) . '"
-   target=" . $filesAppTarget . "
+   target="' . $filesAppTarget . '"
    title="' . $this->toolTipsService['page-renderer:project-payments:project-balance:open'] . '"
    class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
 ></a>';

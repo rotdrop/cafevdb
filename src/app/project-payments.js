@@ -234,46 +234,6 @@ const actionMenu = function(containerSel) {
     });
 };
 
-const musicianReceivableKeys = ($musicianOption) => {
-  let keys = $musicianOption.data('keys');
-  if (!Array.isArray(keys)) {
-    keys = keys.split(',');
-    $musicianOption.data('keys', keys);
-  }
-  return keys;
-};
-
-const musicianReceivableTypes = ($musicianOption) => {
-  let dataTypes = $musicianOption.data('dataTypes');
-  if (typeof dataTypes === 'string') {
-    const valueObject = {};
-    for (const part of dataTypes.split(',')) {
-      const [key, value] = part.split(':');
-      valueObject[key] = value;
-    }
-    dataTypes = valueObject;
-    $musicianOption.data('dataTypes', dataTypes);
-  }
-  return dataTypes;
-};
-
-const musicianReceivableValues = ($musicianOption) => {
-  let values = $musicianOption.data('values');
-  if (typeof values === 'string') {
-    const dataTypes = musicianReceivableTypes($musicianOption);
-    const valueObject = {};
-    for (const part of values.split(',')) {
-      const [key, value] = part.split(':');
-      if (value !== 'undefined') {
-        valueObject[key] = dataTypes[key] === 'liabilities' ? -value : +value;
-      }
-    }
-    values = valueObject;
-    $musicianOption.data('values', values);
-  }
-  return values;
-};
-
 const ready = function(selector, pmeParameters, resizeCB) {
 
   const $container = $(selector);
@@ -314,7 +274,8 @@ const ready = function(selector, pmeParameters, resizeCB) {
         const $receivableOptions = $receivables.find('option');
         if (musicianId !== '') {
           const $musicianOption = SelectUtils.optionByValue($this, musicianId);
-          const allowedOptionKeys = musicianReceivableKeys($musicianOption);
+          const musicianData = $musicianOption.data();
+          const allowedOptionKeys = musicianData.keys;
           $receivableOptions.each(function(index) {
             const $option = $(this);
             if ($option.val() !== '') {
@@ -325,7 +286,7 @@ const ready = function(selector, pmeParameters, resizeCB) {
           if (receivableKey !== '') {
             const $amountInput = findByName($container, ppAmountName);
             if (!(+$amountInput.val()) || $amountInput.hasClass('auto-filled')) {
-              const value = musicianReceivableValues($musicianOption)?.[receivableKey] || '';
+              const value = musicianData.values?.[receivableKey] || '';
               $amountInput.val(value);
               $amountInput.addClass('auto-filled');
             }
@@ -347,16 +308,17 @@ const ready = function(selector, pmeParameters, resizeCB) {
           $musiciansOptions.each(function(index) {
             const $option = $(this);
             if ($option.val() !== '') {
-              $option.prop('disabled', musicianReceivableKeys($option).indexOf(receivableKey) < 0);
+              $option.prop('disabled', $option.data('keys').indexOf(receivableKey) < 0);
             }
             if ($option.is(':selected') && !$option.prop('disabled')) {
               $selectedMusician = $option;
             }
           });
           if ($selectedMusician) {
+            const musicianData = $selectedMusician.data();
             const $amountInput = findByName($container, ppAmountName);
             if (!(+$amountInput.val()) || $amountInput.hasClass('auto-filled')) {
-              const value = musicianReceivableValues($selectedMusician)?.[receivableKey];
+              const value = musicianData.values?.[receivableKey];
               if (value) {
                 $amountInput.val(value);
                 $amountInput.addClass('auto-filled');
