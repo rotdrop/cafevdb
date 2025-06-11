@@ -202,10 +202,14 @@ class MailMergeController extends Controller
         $fileName = $templateName; // ok for testing
       }
       if (empty($fileName)) {
-        return self::grumble($this->l->t('Unable to map the given template name "%s" to an existing template file.', $templateName));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Unable to map the given template name "%s" to an existing template file.', $templateName),
+        );
       }
     } else {
-      return self::grumble($this->l->t('Either a file-name or the name of a dedicated template have to be spicified.'));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Either a file-name or the name of a dedicated template have to be spicified.'),
+      );
     }
 
     try {
