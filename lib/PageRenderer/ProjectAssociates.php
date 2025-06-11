@@ -1058,13 +1058,13 @@ GROUP BY t.id';
           'prefix' => '<div class="flex-container" style="position:relative;">',
           'postfix' => function($op, $pos, $k, $row, $pme) {
             $checked = 'checked="checked" ';
-            return '<input id="pme-musician-remarks"
+            return '  <input id="pme-musician-remarks"
   ' . $checked . '
-  type="checkbox"
-  class="pme-input pme-input-lock lock-unlock top-zero"/>
-<label class="pme-input pme-input-lock lock-unlock top-zero"
-       title="' . $this->toolTipsService['pme:input:lock:unlock'].'"
-       for="pme-musician-remarks"></label>
+    type="checkbox"
+    class="pme-input pme-input-lock lock-unlock top-zero"/>
+  <label class="pme-input pme-input-lock lock-unlock top-zero"
+         title="' . $this->toolTipsService['pme:input:lock:unlock'].'"
+         for="pme-musician-remarks"></label>
 </div>';
           },
         ],
