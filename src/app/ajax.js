@@ -340,11 +340,20 @@ const ajaxFailData = function(xhr, textStatus, errorThrown) {
     xhr,
     parsed: false,
   };
+  const ct = xhr.getResponseHeader('content-type') || '';
+  if (!xhr.responseJSON && xhr.responseText && ct.indexOf('json') > -1) {
+    // this can happen during file-download as then jquery is forced
+    // to 'binary' mode and responseJSON is not set.
+    try {
+      xhr.responseJSON = JSON.parse(xhr.responseText);
+    } catch (e) {
+      console.error('Unable to parse as JSON', { ct, text: xhr.responseText });
+    }
+  }
   if (xhr.responseJSON) {
     Object.assign(data, xhr.responseJSON);
     data.parsed = true;
   } else {
-    const ct = xhr.getResponseHeader('content-type') || '';
     if (ct.indexOf('html') > -1) {
       console.debug('html response', xhr, xhr.status, textStatus, errorThrown);
       data.message = t(
