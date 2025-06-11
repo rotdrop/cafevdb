@@ -166,6 +166,10 @@ class ProjectParticipantFields extends PMETableViewBase
     );
 
     $this->findProject(enforce: false);
+
+    if ($this->listOperation()) {
+      $this->pme->overrideLabel('Add', $this->l->t('New Table Field'));
+    }
   }
   // phpcs:enable
 
@@ -950,15 +954,15 @@ __EOT__;
       ],
     ];
 
-    $opts['fdd']['display_context'] = [
+    $opts['fdd']['participation_context'] = [
       'name' => $this->l->t('Context'),
-      'css' => [ 'postfix' => [ 'display-context', 'allow-empty' ], ],
+      'css' => [ 'postfix' => [ 'participation-context', 'allow-empty' ], ],
       'select' => 'O',
       'values2' => Types\EnumParticipationContext::getL10NValues($this->l),
-      'default' => null,
+      'default' => Types\EnumParticipationContext::UNRESTRICTED,
       'sort' => true,
       'align' => 'center',
-      'tooltip' => $this->toolTipsService['page-renderer:participant-fields:display-context'],
+      'tooltip' => $this->toolTipsService['page-renderer:participant-fields:participation-context'],
     ];
 
     $opts['fdd']['participant_access'] = [
