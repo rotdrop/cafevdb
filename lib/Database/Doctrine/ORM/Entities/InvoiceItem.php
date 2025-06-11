@@ -80,7 +80,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
   #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDatum::class, inversedBy: 'invoiceItems')]
   #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id', nullable: false)]
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
-  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'receivable_key', referencedColumnName: 'option_key', nullable: false)]
   private $receivable;
 
@@ -105,17 +105,17 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
   /**
    * @var Project
    */
-  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'payments', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Project::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   private $project;
 
   /**
    * @var Musician
    */
-  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
-  private $musician;
+  #[ORM\ManyToOne(targetEntity: Musician::class, fetch: 'EXTRA_LAZY')]
+  private $debitor;
 
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
-  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
@@ -232,27 +232,27 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set musician.
+   * Set debitor.
    *
-   * @param null|int|Musician $musician
+   * @param null|int|Musician $debitor
    *
    * @return InvoiceItem
    */
-  public function setMusician(mixed $musician):InvoiceItem
+  public function setDebitor(mixed $debitor):InvoiceItem
   {
-    $this->musician = $musician;
+    $this->debitor = $debitor;
 
     return $this;
   }
 
   /**
-   * Get musician.
+   * Get debitor.
    *
    * @return Musician
    */
-  public function getMusician():?Musician
+  public function getDebitor():?Musician
   {
-    return $this->musician;
+    return $this->debitor;
   }
 
   /**

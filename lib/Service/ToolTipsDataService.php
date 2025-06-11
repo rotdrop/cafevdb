@@ -588,6 +588,10 @@ This setting is meant to support a project in the planning phase: one may enter 
             'access' => self::t('Configure access-restrictions for the field. In particular determine whether this field is visible by the respective participant in the associated members cloud-app.'),
           ],
 
+          'participation-context' => self::t('If the field makes only sensor for musicians but not for business-partners or
+associates (or vice versa) then the field can be hidden in either the
+associates or participants view.'),
+
           'participant-access' => self::t('Define whether this field is visible or even writable by the respective participant in the associated member\'s cloud-app.'),
 
           'readers' => self::t('Members of these Cloud user-groups are allowed to view the
@@ -1503,6 +1507,7 @@ the individual table views.'),
             PageRenderer\Instruments::TEMPLATE => self::t('Musical Instruments'),
             PageRenderer\InsuranceBrokers::TEMPLATE => self::t('Insurance Brokers'),
             PageRenderer\InsuranceRates::TEMPLATE => self::t('Insurance Rates'),
+            PageRenderer\Invoices::TEMPLATE => self::t('Invoices'),
             PageRenderer\ProjectAssociates::TEMPLATE => self::t('Business Partners'),
             PageRenderer\ProjectInstrumentationNumbers::TEMPLATE => self::t('Instrumentation Numbers'),
             PageRenderer\ProjectParticipantFields::TEMPLATE => self::t('Project Participant-Fields'),
@@ -1522,6 +1527,7 @@ if something has changed in the orchestra app.'),
             PageRenderer\InstrumentInsurances::TEMPLATE => self::t('Display a table with an overview about the current state of the member\'s instrument insurances.'),
             PageRenderer\InsuranceBrokers::TEMPLATE => self::t('Display a table with the insurance brokers.'),
             PageRenderer\InsuranceRates::TEMPLATE => self::t('Display a table with the insurance rates for the individual instrument insurances.'),
+            PageRenderer\Invoices::TEMPLATE => self::t('Display a table with the sent-out invoices.'),
             PageRenderer\ProjectInstrumentationNumbers::TEMPLATE => self::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.'),
             PageRenderer\ProjectParticipantFields::TEMPLATE => self::t('Add additional data-fields to the instrumenation table for the project.'),
             PageRenderer\ProjectParticipants::TEMPLATE => self::t('Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.'),

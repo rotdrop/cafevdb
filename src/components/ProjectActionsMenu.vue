@@ -159,6 +159,17 @@
           <span class="font-currency-symbol">{{ globalState.currencySymbol }}</span>
         </template>
       </NcActionRouter>
+      <NcActionRouter v-tooltip="tooltips['project-action:invoices']"
+                      :class="[appName + '-project-actions']"
+                      :to="toProjectRouteData('invoices')"
+                      :name="t(appName, 'Invoices')"
+                      exact
+                      @click="closeMenu"
+      >
+        <template #icon>
+          <InvoicesIcon />
+        </template>
+      </NcActionRouter>
       <NcActionLink v-tooltip="tooltips['project-action:financial-balance']"
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Financial Balance')"
@@ -190,6 +201,7 @@ import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 import ProjectAssociatesIcon from 'vue-material-design-icons/Handshake.vue'
 import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
+import InvoicesIcon from 'vue-material-design-icons/InvoiceMultiple.vue'
 import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import ProjectFolderIcon from 'vue-material-design-icons/Folder.vue'
 import ProjectNotesIcon from 'vue-material-design-icons/MessageBulleted.vue'

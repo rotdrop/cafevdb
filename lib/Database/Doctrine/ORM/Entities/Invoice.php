@@ -65,6 +65,23 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   private $id;
 
   /**
+   * @var Musician
+   *
+   * This will -- must be -- a member of the executive borad. But the plan is
+   * to tie address-fields to convenience methods of the Musician entity,
+   * so better use it here.
+   */
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'originatedInvoices')]
+  private Musician $originator;
+
+  /**
+   * @var Musician
+   */
+  #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'invoices', fetch: 'EXTRA_LAZY')]
+  private $debitor;
+
+  /**
    * @var float
    *
    * The total amount for the bank transaction. This must equal the
@@ -122,7 +139,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * The bank account used for this payment.
    */
-  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'bank_account_sequence', referencedColumnName: 'sequence', nullable: true)]
   #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $sepaBankAccount;
@@ -132,27 +149,10 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * The debit-mandate used for this payment, if any.
    */
-  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'debit_mandate_sequence', referencedColumnName: 'sequence', nullable: true)]
   #[ORM\ManyToOne(targetEntity: SepaDebitMandate::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $sepaDebitMandate;
-
-  /**
-   * @var LegalPerson
-   *
-   * This will -- must be -- a member of the executive borad. But the plan is
-   * to tie address-fields to convenience methods of the LegalPerson entity,
-   * so better use it here.
-   */
-  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'originatedInvoices')]
-  private Musician $originator;
-
-  /**
-   * @var Musician
-   */
-  #[ORM\JoinColumn(nullable: false)]
-  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'invoices', fetch: 'EXTRA_LAZY')]
-  private $debitor;
 
   /**
    * @var Project
@@ -295,11 +295,11 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * Set originator.
    *
-   * @param LegalPerson $originator
+   * @param Musician $originator
    *
    * @return Invoice
    */
-  public function setOriginator(LegalPerson $originator):Invoice
+  public function setOriginator(Musician $originator):Invoice
   {
     $this->originator = $originator;
 
@@ -309,9 +309,9 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * Get originator.
    *
-   * @return null|LegalPerson
+   * @return null|Musician
    */
-  public function getOriginator():?LegalPerson
+  public function getOriginator():?Musician
   {
     return $this->originator;
   }
@@ -632,40 +632,6 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set supportingDocument.
-   *
-   * @param null|DatabaseStorageFile $supportingDocument
-   *
-   * @return Invoice
-   */
-  public function setSupportingDocument(?DatabaseStorageFile $supportingDocument):Invoice
-  {
-    if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
-      $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
-      $this->balanceDocumentsFolder->removeDocument($this->supportingDocument->getFile(), $fileName);
-    }
-
-    $this->supportingDocument = $supportingDocument;
-
-    if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
-      $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
-      $this->balanceDocumentsFolder->addDocument($this->supportingDocument->getFile(), $fileName);
-    }
-
-    return $this;
-  }
-
-  /**
-   * Get supportingDocument.
-   *
-   * @return null|DatabaseStorageFile
-   */
-  public function getSupportingDocument():?DatabaseStorageFile
-  {
-    return $this->supportingDocument;
-  }
-
-  /**
    * Set balanceDocumentsFolder.
    *
    * @param DatabaseStorageFolder $balanceDocumentsFolder
@@ -681,21 +647,20 @@ class Invoice implements \ArrayAccess, \JsonSerializable
           $part->setBalanceDocumentsFolder(null);
         }
       }
-      if (!empty($this->supportingDocument)) {
-        $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+      // if (!empty($this->supportingDocument)) {
+      //   $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
 
-        $this->balanceDocumentsFolder->removeDocument($this->supportingDocument->getFile(), $fileName);
-      }
+      //   $this->balanceDocumentsFolder->removeDocument($this->supportingDocument->getFile(), $fileName);
+      // }
     }
 
     $this->balanceDocumentsFolder = $balanceDocumentsFolder;
 
     if (!empty($this->balanceDocumentsFolder)) {
-      if (!empty($this->supportingDocument)) {
-        $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
-        $this->balanceDocumentsFolder->addDocument($this->supportingDocument->getFile(), $fileName);
-      }
-
+      // if (!empty($this->supportingDocument)) {
+      //   $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+      //   $this->balanceDocumentsFolder->addDocument($this->supportingDocument->getFile(), $fileName);
+      // }
       /** @var InvoiceItem $part */
       foreach ($this->invoiceItems as $part) {
         if (empty($part->getBalanceDocumentsFolder())) {

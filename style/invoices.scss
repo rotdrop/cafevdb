@@ -1,0 +1,130 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.pme-form.invoices.pme- {
+
+  &list {
+    tr.pme-row {
+
+      &.invoice:not(.following-hidden,.invoice-item) td {
+        font-weight:bold;
+      }
+
+      &.invoice {
+        &.following-hidden {
+          &.odd:not(:hover) td {
+            background:#B7CEEC;
+          }
+          &.even:not(:hover) td {
+            background:#C6DEFF;
+          }
+          &.first ~ tr.pme-row.invoice.following {
+            display:none;
+          }
+        }
+        &:not(.invoice-item) {
+          td.instrumentation-id {
+            padding-right:1em;
+          }
+        }
+      }
+
+      &.invoice-item {
+        &.odd:not(:hover) td {
+          background:#bfdeb9;
+        }
+        &.even:not(:hover) td {
+          background:#f6ffda;
+        }
+        &:hover td {
+          background:#96b183;
+        }
+        td.instrumentation-id {
+          padding-left:1em;
+        }
+      }
+    }
+  }
+  &list, &view, &copy, &add, &copyadd, &change, &delete {
+    .dropdown-content {
+      li[data-operation="donation-receipt:download"] .menu-icon {
+        background-image: url('@mdi/svg/svg/receipt-text-plus-outline.svg');
+      }
+      li[data-operation="donation-receipt:email"] .menu-icon {
+        background-image: url('@mdi/svg/svg/receipt-text-send-outline.svg');
+      }
+      li[data-operation="standard-receipt:download"] .menu-icon {
+        background-image: url('@mdi/svg/svg/receipt-outline.svg');
+      }
+      li[data-operation="standard-receipt:email"] .menu-icon {
+        background-image: url('@mdi/svg/svg/receipt-send-outline.svg');
+      }
+      li[data-operation="payment:download-data"] .menu-icon {
+        background-image: url('@mdi/svg/svg/code-json.svg');
+      }
+    }
+    td.pme- {
+      &cell, &value {
+        .operation {
+          display:inline-block;
+          background-repeat:no-repeat;
+          background-size: 20px 20px;
+          background-position: center;
+          width:24px;
+          height:24px;
+          min-height:unset;
+          margin:0;
+          vertical-align:middle;
+          padding:4px;
+          margin-right:0.5em;
+          &.open-parent {
+            background-image:url('../../../core/img/filetypes/folder-external.svg');
+          }
+        }
+        .flex-container {
+        }
+      }
+    }
+  }
+  &list, &view, &delete {
+    td.pme- {
+      &cell, &value {
+        .flex-container {
+          > .pme-cell-content {
+            overflow: hidden;
+          }
+          .pme-cell-squeezer {
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* GnuCash dark green #bfdeb9 */
+/* GnuCash light green #f6ffda */
+/* GnuCash open split (yellow?) #ffef98 */
+/* GnuCash header dark green #96b183 */
+/* GnuCash splits in open transaction #ede7d3 */

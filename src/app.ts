@@ -32,6 +32,7 @@ import { documentReady as configCheckDocumentReady } from './app/configcheck.js'
 import { documentReady as donationReceiptsReady } from './app/donation-receipts.js';
 import { documentReady as emailDocumentReady } from './app/email.js';
 import { documentReady as insurancesDocumentReady } from './app/insurance.js';
+import { documentReady as invoicesReady } from './app/invoices.js';
 import { documentReady as musiciansDocumentReady } from './app/musicians.js';
 import { documentReady as pageDocumentReady } from './app/page.js';
 import { documentReady as phpMyEditDocumentReady } from './app/pme.js';
@@ -69,6 +70,7 @@ onDocumentLoaded(() => {
   sepaBulkTransactionsDocumentReady();
   sepaDebitMandatesDocumentReady();
   insurancesDocumentReady();
+  invoicesReady();
   projectPaymentsReady();
   taxExemptionNoticesReady();
   donationReceiptsReady();

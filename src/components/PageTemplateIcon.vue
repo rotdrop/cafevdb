@@ -36,6 +36,7 @@ import HomeIcon from 'vue-material-design-icons/Home.vue'
 import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
 import InstrumentInsuranceIcon from 'vue-material-design-icons/ShieldAccount.vue'
 import InstrumentsIcon from 'vue-material-design-icons/Trumpet.vue'
+import InvoicesIcon from 'vue-material-design-icons/InvoiceMultiple.vue'
 import ProjectOverviewIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ProjectParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
 import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
@@ -55,6 +56,7 @@ const icon = computed(() => {
   case 'home': return HomeIcon
   case 'instrument-insurance': return InstrumentInsuranceIcon
   case 'instruments': return InstrumentsIcon
+  case 'invoices': return InvoicesIcon
   case 'project-instrumentation-numbers': return InstrumentationNumbersIcon
   case 'project-overview': return ProjectOverviewIcon
   case 'project-participant-fields': return ProjectParticipantFieldsIcon

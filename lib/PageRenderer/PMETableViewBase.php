@@ -105,34 +105,36 @@ abstract class PMETableViewBase extends AbstractPageRenderer
    */
   protected const JOIN_SINGLE_VALUED = 0x10;
 
-  const MUSICIANS_TABLE = 'Musicians';
-  const MUSICIAN_EMAILS_TABLE = 'MusicianEmailAddresses';
-  const PROJECTS_TABLE = 'Projects';
-  const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
-  const SEPA_BANK_ACCOUNTS_TABLE = 'SepaBankAccounts';
-  const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
-  const SEPA_BULK_TRANSACTIONS_TABLE = 'SepaBulkTransactions';
-  const SEPA_BULK_TRANSACTION_DATA_TABLE = 'SepaBulkTransactionData';
-  const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
-  const PROJECT_PARTICIPANT_FIELDS_TABLE = 'ProjectParticipantFields';
-  const PROJECT_PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
-  const PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE = 'ProjectParticipantFieldsDataOptions';
+  const COMPOSITE_PAYMENTS_TABLE = 'CompositePayments';
   const DATABASE_STORAGES_TABLE = 'DatabaseStorages';
   const DATABASE_STORAGE_DIR_ENTRIES_TABLE = 'DatabaseStorageDirEntries';
+  const DONATION_RECEIPTS_TABLE = 'DonationReceipts';
+  const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
+  const FILES_TABLE = 'Files';
   const INSTRUMENTS_TABLE = 'Instruments';
-  const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
   const INSTRUMENT_FAMILIES_JOIN_TABLE = 'instrument_instrument_family';
+  const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
   const INSTRUMENT_INSURANCES_TABLE = 'InstrumentInsurances';
-  const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
-  const COMPOSITE_PAYMENTS_TABLE = 'CompositePayments';
-  const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
-  const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
+  const INVOICES_TABLE = 'Invoices';
+  const INVOICE_ITEMS_TABLE = 'InvoiceItems';
+  const MUSICIANS_TABLE = 'Musicians';
+  const MUSICIAN_EMAILS_TABLE = 'MusicianEmailAddresses';
   const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstruments';
   const MUSICIAN_PHOTO_JOIN_TABLE = 'MusicianPhoto';
-  const TAX_EXEMPTION_NOTICES_TABLE = 'TaxExemptionNotices';
-  const DONATION_RECEIPTS_TABLE = 'DonationReceipts';
-  const FILES_TABLE = 'Files';
+  const PROJECTS_TABLE = 'Projects';
+  const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
+  const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
+  const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
+  const PROJECT_PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
+  const PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE = 'ProjectParticipantFieldsDataOptions';
+  const PROJECT_PARTICIPANT_FIELDS_TABLE = 'ProjectParticipantFields';
+  const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
   const SENT_EMAILS_TABLE = 'SentEmails';
+  const SEPA_BANK_ACCOUNTS_TABLE = 'SepaBankAccounts';
+  const SEPA_BULK_TRANSACTIONS_TABLE = 'SepaBulkTransactions';
+  const SEPA_BULK_TRANSACTION_DATA_TABLE = 'SepaBulkTransactionData';
+  const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
+  const TAX_EXEMPTION_NOTICES_TABLE = 'TaxExemptionNotices';
 
   const VALUES_SEP = ',';
   const JOIN_FIELD_NAME_SEPARATOR = ':';
@@ -466,11 +468,17 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           'sql' => $t->getSql(),
           'pmeLine' => $t->getPmeLine(),
         ];
+        // $extraMesssage = '; ' .  $this->l->t(
+        //   'SQL-querey at %1$s: "%2$s".',
+        //   [ 'phpMyEdit.php:' . $t->getPmeLine, $t->getSql() ],
+        // );
+        $extraMesssage = '';
       } else {
         $context = null;
+        $extraMesssage = '';
       }
       throw new Exceptions\EnduserNotificationException(
-        $this->l->t('SQL Transaction failed: %s', $t->getMessage()),
+        $this->l->t('SQL Transaction failed: %s', $t->getMessage()) . $extraMesssage,
         previous: $t,
         context: $context,
       );

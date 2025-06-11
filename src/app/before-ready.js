@@ -30,6 +30,7 @@ import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as Musicians from './musicians.js';
 import * as Projects from './projects.js';
 import * as ProjectPayments from './project-payments.js';
+import * as Invoices from './invoices.js';
 import * as PHPMyEdit from './pme.js';
 import * as Dialogs from './dialogs.js';
 import { tweaks as pmeTweaks /* , unTweak as pmeUnTweak */ } from './pme-tweaks.js';
@@ -277,6 +278,24 @@ const documentReady = function() {
         break;
       default:
         ProjectPayments.backgroundDecryption(selector);
+        resizeCB();
+        break;
+      }
+    },
+    context: CAFEVDB,
+    parameters: [],
+  });
+
+  PHPMyEdit.addTableLoadCallback('invoices', {
+    callback(selector, parameters, resizeCB) {
+
+      switch (parameters.reason) {
+      case 'dialogOpen':
+      case 'dialogClose':
+        Invoices.ready(selector, parameters, resizeCB);
+        break;
+      default:
+        Invoices.backgroundDecryption(selector);
         resizeCB();
         break;
       }
