@@ -126,6 +126,8 @@ class MailMergeController extends Controller
    *
    * @param array $compositePaymentIds
    *
+   * @param array $invoiceIds
+   *
    * @param string $operation
    *
    * @param null|int $limit
@@ -145,6 +147,7 @@ class MailMergeController extends Controller
     array $contactKeys = [],
     array $addressBookUris = [],
     array $compositePaymentIds = [],
+    array $invoiceIds = [],
     string $operation = self::OPERATION_DOWNLOAD,
     ?int $limit = null,
     ?int $offset = null,
@@ -166,7 +169,9 @@ class MailMergeController extends Controller
       $sender = $musiciansRepository->find($senderId);
     }
     if (empty($sender)) {
-      return self::grumble($this->l->t('Unable to determine the sender given its id "%s"', $senderId));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to determine the sender given its id "%s"', $senderId),
+      );
     }
 
     $senderId = $sender->getId();
@@ -238,7 +243,7 @@ class MailMergeController extends Controller
         $templateData['project'] = $this->flattenProject($project);
       }
 
-      $noRecipients = $limit === 0 || (empty($recipientIds) && empty($contactKeys) && empty($compositePaymentIds));
+      $noRecipients = $limit === 0 || (empty($recipientIds) && empty($contactKeys) && empty($compositePaymentIds) && empty($invoiceIds));
 
       // fill also some financial tax exemption notice abbreviations ...
       $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.corporateIncomeTax';
@@ -288,6 +293,14 @@ class MailMergeController extends Controller
               limit: $limit,
               offset: $offset,
             );
+        } elseif (!empty($invoiceIds)) {
+          $recipients = $this
+            ->getDatabaseRepository(Entities\Invoice::class)
+            ->findBy(
+              [ 'id' => $invoiceIds, ],
+              limit: $limit,
+              offset: $offset,
+            );
         } else {
           if (count($recipientIds) == 1 && reset($recipientIds) == 0) {
             $criteria = [];
@@ -333,6 +346,11 @@ class MailMergeController extends Controller
             } else {
               $paymentData = $this->financeService->generatePaymentMailMergeData($compositePayment);
             }
+          } elseif ($recipient instanceof Entities\Invoice) {
+            /** @var Entities\Invoice $invoice */
+            $invoice = $recipient;
+            $recipient = $invoice->getDebitor();
+            $paymentData = $this->financeService->generateInvoiceMailMergeData($invoice);
           } else {
             $paymentData = [];
           }
@@ -422,13 +440,17 @@ class MailMergeController extends Controller
         }
       }
     } catch (Throwable $t) {
-      $this->logException($t);
-      return self::dataResponse([
-        'message' => $this->l->t('Exception: "%s"', $t->getMessage()),
-        'exception' => $this->exceptionChainData($t),
-        'conversions' => $mailMergeCount,
-        'failingRecipient' => $recipientSlug,
-      ], Http::STATUS_BAD_REQUEST);
+      if ($t instanceof Exceptions\EnduserNotificationException) {
+        throw $t;
+      }
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Exception during mail-merge: "%s"', $t->getMessage()),
+        context: [
+          'conversions' => $mailMergeCount,
+          'failingRecipient' => $recipientSlug,
+        ],
+        previous: $t,
+      );
     }
   }
 
