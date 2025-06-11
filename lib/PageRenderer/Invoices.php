@@ -114,17 +114,7 @@ class Invoices extends PMETableViewBase
   JSON_OBJECTAGG(
     IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
     __t4.data_type
-  ) AS receivable_data_types,'
-      . '
-  JSON_OBJECTAGG(
-    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
-    __t4.due_date
-  ) AS receivable_due_dates,'
-      . '
-  JSON_OBJECTAGG(
-    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
-    __t4.deposit_due_date
-  ) AS receivable_deposit_due_dates'
+  ) AS receivable_data_types'
       . '
 FROM ' . self::MUSICIANS_TABLE . ' __t1
 LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . ' __t2
@@ -513,7 +503,7 @@ WHERE dsf.id IS NOT NULL',
       'name'     => $this->l->t('Invoice Id'),
       'select'   => 'T',
       'align'    => 'right',
-      'input'    => 'R',
+      'input'    => 'RH',
       'input|A' => 'RH',
       'options'  => 'LFAVCPD',
       'maxlen'   => 11,
@@ -530,6 +520,9 @@ WHERE dsf.id IS NOT NULL',
         return $html;
       },
     ];
+
+    $boardMember = $this->orgaRolesService->getBoardMember($this->userId());
+    $defaultOriginatorId = $boardMember ? $boardMember->getMusician()->getId() : null;
 
     $opts['fdd']['debitor_id'] = [
       'name'     => $this->l->t('Debitor-Musician-Id'),
@@ -598,6 +591,7 @@ WHERE dsf.id IS NOT NULL',
                         ? null
                         : '$table.id = ' . $this->projectId),
         ],
+        'php|LF' => [$this, 'compositeRowOnly'],
       ]);
     if (!$projectMode) {
       $opts['fdd'][$projectIdKey]['values|DVFL'] = $opts['fdd'][$projectIdKey]['values'];
@@ -618,31 +612,46 @@ WHERE dsf.id IS NOT NULL',
         'input' => 'VHR',
       ]);
 
-    $boardMember = $this->orgaRolesService->getBoardMember($this->userId());
-    $defaultAuthor = $boardMember ? $boardMember->getMusician()->getId() : null;
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE . self::VALUES_TABLE_SEP . 'originator', 'id',
-      [
-        'name' => $this->l->t('Author'),
-        'css' => [ 'postfix' => [ 'originator-id', 'allow-empty' ], ],
-        'select' => 'D',
-        'input' => 'M',
-        'input|C' => 'R',
-        // 'select|C' => null, // 'T',
-        // 'sql|C' => static::musicianPublicNameSql(),
-        'default' => $defaultAuthor,
-        'values' => [
-          'description' => [
-            'columns' => [ static::musicianPublicNameSql() ],
-            'divs' => [],
-            'ifnull' => [ false, false ],
-            'cast' => [ false ],
-          ],
-          // Only executive boad memebers can be registered as originators.
-          'filters' => static::musicianInProjectSql($this->getExecutiveBoardProjectId()),
+    $opts['fdd']['originator_id'] = [
+      'name' => $this->l->t('Author'),
+      'css' => [ 'postfix' => [ 'originator-id', 'default-readonly', 'allow-empty', 'tab-invoice-readwrite', 'tab-transaction-readwrite', 'tab-all-readwrite' ], ],
+      'select' => 'D',
+      'input' => 'M',
+      // 'input|C' => 'R',
+      // 'select|C' => null, // 'T',
+      // 'sql|C' => static::musicianPublicNameSql(),
+      'default' => $defaultOriginatorId,
+      'values' => [
+        'column' => 'id',
+        'description' => [
+          'columns' => [ static::musicianPublicNameSql() ],
+          'divs' => [],
+          'ifnull' => [ false, false ],
+          'cast' => [ false ],
         ],
-      ]);
+        // Only executive boad memebers can be registered as originators.
+        'filters' => static::musicianInProjectSql($this->getExecutiveBoardProjectId()),
+        'join' => [ 'reference' => $this->joinTables[self::MUSICIANS_TABLE . self::VALUES_TABLE_SEP . 'originator'], ],
+      ],
+      'display|ACP' => [
+        'attributes' => [ 'readonly' => true ],
+        'popup' => 'data',
+        'prefix' => '<div class="flex-container">',
+        'postfix' => function($op, $pos, $k, $row, $pme) {
+          $checked = 'checked="checked" ';
+          return '  <input id="pme-invoice-originator-lock"
+    ' . $checked . '
+    type="checkbox"
+    class="pme-input pme-input-lock lock-unlock"/>
+  <label class="pme-input pme-input-lock lock-unlock"
+         style="margin:auto 0;position:relative!important;"
+         title="' . $this->toolTipsService['pme:input:lock:unlock'].'"
+         for="pme-invoice-originator-lock"></label>
+</div>';
+        },
+      ],
+      'php|LF' => [$this, 'compositeRowOnly'],
+    ];
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'id',
@@ -665,15 +674,14 @@ WHERE dsf.id IS NOT NULL',
           'data' => [
             'keys' => 'receivable_keys',
             'values' => 'receivable_values',
-            'due-dates' => 'receivable_due_dates',
             'deposits' => 'receivable_deposits',
-            'deposit-due-dates' => 'receivable_deposit_due_dates',
             'data-types' => 'receivable_data_types',
           ],
           'filters' => (!$projectMode
                         ? null
                         : static::musicianInProjectSql($this->projectId)),
         ],
+        'php|LF' => [$this, 'compositeRowOnly'],
       ]);
 
     $this->makeJoinTableField(
@@ -708,6 +716,7 @@ WHERE dsf.id IS NOT NULL',
        for="pme-invoice-number-lock"></label>';
         },
       ],
+      'php|LF' => [$this, 'compositeRowOnly'],
     ];
 
     $opts['fdd']['amount'] = array_merge(
@@ -724,12 +733,29 @@ WHERE dsf.id IS NOT NULL',
       $opts['fdd'], self::INVOICE_ITEMS_TABLE, 'amount',
       Util::arrayMergeRecursive(
         $this->defaultFDD['money'], [
-          'sql|LF' => 'IF($join_table.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%", $main_table.amount, $join_col_fqn)',
+          'sql|LF' => 'IF(
+  $join_table.row_tag LIKE "' . self::ROW_TAG_PREFIX . '%",
+  IF(
+    NOT $main_table.amount = $join_table.total_amount,
+    CONCAT_WS("' . self::JOIN_KEY_SEP . '", $main_table.amount, $join_table.total_amount),
+    $main_table.amount
+  ),
+  $join_col_fqn
+)',
+          'mask' => null,
           'css' => [ 'postfix' => [ 'validate-non-zero' ], ],
           'sql' => '$join_col_fqn',
           'name' => $this->l->t('Amount'),
           'input' => 'M',
           'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
+            $values = explode(self::JOIN_KEY_SEP, $value);
+            if (count($values) == 2) {
+              $sign = $values[0] > $values[1] ? '+' : '';
+              return '<span class="invoice total-amount">' . $this->moneyValue($values[0]) . '</span>'
+                . '<span class="text-fill"> (</span>'
+                . '<span class="invoice imbalance">' . $sign . $this->moneyValue($values[0] - $values[1]) . '</span>'
+                . '<span class="text-fill"> )</span>';
+            }
             return $this->moneyValue($value);
           },
         ]));
@@ -775,13 +801,30 @@ WHERE dsf.id IS NOT NULL',
         'name' => $this->l->t('Due Date'),
         'css'  => [ 'postfix' => [ 'due-date', ], ],
         'input' => 'M',
+        'input|LF' => 'H',
       ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'due_date',
+      Util::arrayMergeRecursive(
+        $this->defaultFDD['date'], [
+          'tab' => [ 'id' => 'invoice' ],
+          'name|LF' => $this->l->t('Due Date'),
+          'name' => $this->l->t('Item Due Date'),
+          'sql|LF' => 'IF(' . $this->joinTables[self::INVOICE_ITEMS_TABLE] . '.row_tag LIKE "' . self::ROW_TAG_PREFIX . '%", $main_table.due_date, $join_col_fqn)',
+          'sql' => '$join_col_fqn',
+          'input|LFDV' => '',
+          'input|APC' => 'RH',
+        ],
+      ),
+    );
 
     $opts['fdd']['balanced_date'] = Util::arrayMergeRecursive($this->defaultFDD['date'], [
         'tab' => [ 'id' => 'invoice' ],
         'name' => $this->l->t('Balanced Date'),
         'css'  => [ 'postfix' => [ 'balanced-date', ], ],
         'input' => '',
+        'php|LF' => [$this, 'compositeRowOnly'],
       ]);
 
     $opts['fdd']['subject'] = [
@@ -1429,16 +1472,21 @@ WHERE dsf.id IS NOT NULL',
         }
 
         $receivableKeyIndex = $this->joinQueryFieldIndex(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key');
-        $amountIndex = $this->queryFieldIndex('amount');
 
-        $paymentsAmountIndex = $this->joinQueryFieldIndex(self::INVOICE_ITEMS_TABLE, 'amount');
+        $amountIndex = $this->queryFieldIndex('amount');
+        $invoiceItemsAmountIndex = $this->joinQueryFieldIndex(self::INVOICE_ITEMS_TABLE, 'amount');
+
+        $dueDateIndex = $this->queryFieldIndex('due_date');
+        $invoiceItemsDueDateIndex = $this->joinQueryFieldIndex(self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'due_date');
+
+        $balancedDateIndex = $this->queryFieldIndex('balanced_date');
+
         $subjectIndex = $this->joinQueryFieldIndex(self::INVOICE_ITEMS_TABLE, 'subject');
         $debitorIdIndex = $this->joinQueryFieldIndex(self::MUSICIANS_TABLE, 'id');
         $paymentsIdIndex = $this->joinQueryFieldIndex(self::INVOICE_ITEMS_TABLE, 'id');
         $subjectIndex = $this->queryFieldIndex('subject');
         $paymentsSubjectIndex = $this->joinQueryFieldIndex(self::INVOICE_ITEMS_TABLE, 'subject');
         $imbalanceIndex = $this->joinQueryFieldIndex(self::INVOICE_ITEMS_TABLE, 'imbalance');
-        $isDonationIndex = $this->joinQueryFieldIndex(self::INVOICE_ITEMS_TABLE, 'is_donation');
         $supportingDocumentIndex = $this->queryFieldIndex('supporting_document_id');
         $compositeBalanceDocumentsFolderIdIndex = $this->queryFieldIndex('balance_documents_folder_id');
 
@@ -1446,7 +1494,11 @@ WHERE dsf.id IS NOT NULL',
           $this->debug('COMPOSITE ROW');
           $pme->fdd[$receivableKeyIndex]['input'] = 'HR';
           $pme->fdd[$amountIndex]['input'] = 'M';
-          $pme->fdd[$paymentsAmountIndex]['input'] = 'HR';
+          $pme->fdd[$invoiceItemsAmountIndex]['input'] = 'HR';
+          $pme->fdd[$dueDateIndex]['input'] = 'M';
+          $pme->fdd[$dueDateIndex]['sql'] = '';
+          $pme->fdd[$invoiceItemsDueDateIndex]['input'] = 'HR';
+          $pme->fdd[$balancedDateIndex]['input'] = '';
           $pme->fdd[$paymentsIdIndex]['input'] = 'M';
           $pme->fdd[$paymentsIdIndex]['select'] = 'M';
           $pme->fdd[$paymentsIdIndex]['valueData'] = [
@@ -1459,7 +1511,6 @@ WHERE dsf.id IS NOT NULL',
           $pme->fdd[$paymentsSubjectIndex]['input'] = 'HR';
           $pme->fdd[$balanceDocumentsFolderIdIndex]['input'] = 'R';
           $pme->fdd[$compositeBalanceDocumentsFolderIdIndex]['input'] = '';
-          $pme->fdd[$isDonationIndex]['input'] = 'R';
 
           if ($this->copyOperation()) {
             $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
@@ -1472,7 +1523,7 @@ WHERE dsf.id IS NOT NULL',
               $rowIndex = PHPMyEdit::QUERY_FIELD . $index;
               list($row[$rowIndex],) = explode(self::VALUES_SEP, $row[$rowIndex]);
             }
-            foreach ([$paymentsAmountIndex, $paymentsSubjectIndex] as $index) {
+            foreach ([$invoiceItemsAmountIndex, $paymentsSubjectIndex] as $index) {
               $rowIndex = PHPMyEdit::QUERY_FIELD . $index;
               $row[$rowIndex] = null;
             }
@@ -1485,7 +1536,11 @@ WHERE dsf.id IS NOT NULL',
           $pme->fdd[$subjectIndex]['input'] = 'HR';
           $pme->fdd[$paymentsSubjectIndex]['input'] = 'M';
           $pme->fdd[$amountIndex]['input'] = 'HR';
-          $pme->fdd[$paymentsAmountIndex]['input'] = 'M';
+          $pme->fdd[$invoiceItemsAmountIndex]['input'] = 'M';
+          $pme->fdd[$balancedDateIndex]['input'] = 'HR';
+          $pme->fdd[$dueDateIndex]['input'] = 'VR';
+          $pme->fdd[$dueDateIndex]['sql'] = '$column';
+          $pme->fdd[$invoiceItemsDueDateIndex]['input'] = 'VR';
           $pme->fdd[$imbalanceIndex]['input'] = 'HR';
           $pme->fdd[$debitorIdIndex]['input'] = 'R';
           $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
@@ -1600,13 +1655,14 @@ WHERE dsf.id IS NOT NULL',
       'invoiceId' => $id,
       'debitorName' => $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')],
       'debitorId' => $row[$this->queryField('debitor_id')],
-      'isDonation' => $row[$this->joinQueryField(self::INVOICE_ITEMS_TABLE, 'is_donation')],
+      'originatorName' => $row[$this->queryField('originator_id')],
+      'originatorId' => $row[$this->queryIndexField('originator_id')],
       'amount' => $row[$this->queryField('amount')],
       'appLocale' => $this->appLocale(),
       'projectId' => $row[$this->queryField('project_id')],
     ];
     return $this->templateResponse(
-      'fragments/invoice-items/action-menu',
+      'fragments/invoices/action-menu',
       $templateParameters,
     )->render();
   }
@@ -1711,12 +1767,9 @@ WHERE dsf.id IS NOT NULL',
       return true;
     }
 
-    $oldValues['is_donation'] = $oldValues['is_donation'] ?? 0;
-    $newValues['is_donation'] = $newValues['is_donation'] ?? 0;
-
     $compositeKey = $newValues[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')]??null;
     $rowTagKey = $this->joinTableFieldName(self::INVOICE_ITEMS_TABLE, 'row_tag');
-    $paymentIdKey = $this->joinTableFieldName(self::INVOICE_ITEMS_TABLE, 'id');
+    $invoiceItemIdKey = $this->joinTableFieldName(self::INVOICE_ITEMS_TABLE, 'id');
 
     $debitorId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
     $oldValues['debitor_id'] =
@@ -1728,15 +1781,15 @@ WHERE dsf.id IS NOT NULL',
       $this->joinStructure[self::INVOICE_ITEMS_TABLE]['flags'] |= self::JOIN_SINGLE_VALUED;
 
       // determine our payments id
-      $paymentId = $newValues[$rowTagKey] ?? $newValues[$paymentIdKey];
-      if (empty($paymentId)) {
-        $paymentId = 0; // flag key generation
-        $newValues[$paymentIdKey] = $newValues[$rowTagKey] = $paymentId;
+      $invoiceItemId = $newValues[$rowTagKey] ?? $newValues[$invoiceItemIdKey];
+      if (empty($invoiceItemId)) {
+        $invoiceItemId = 0; // flag key generation
+        $newValues[$invoiceItemIdKey] = $newValues[$rowTagKey] = $invoiceItemId;
       } else {
-        $newValues[$paymentIdKey] =
+        $newValues[$invoiceItemIdKey] =
           $newValues[$rowTagKey] =
-          $oldValues[$paymentIdKey] =
-          $oldValues[$rowTagKey] = $paymentId;
+          $oldValues[$invoiceItemIdKey] =
+          $oldValues[$rowTagKey] = $invoiceItemId;
       }
 
       $this->logInfo('COMPOSITE ' . $compositeKey);
@@ -1748,7 +1801,7 @@ WHERE dsf.id IS NOT NULL',
         3
       );
 
-      $dataSets = $paymentId === 0 ? [ 'new' ] : [ 'old', 'new' ];
+      $dataSets = $invoiceItemId === 0 ? [ 'new' ] : [ 'old', 'new' ];
       foreach ($dataSets as $dataSet) {
         ${$dataSet . 'Values'} = array_merge(
           ${$dataSet . 'Values'}, [
@@ -1762,14 +1815,14 @@ WHERE dsf.id IS NOT NULL',
         // index all values by the key in order to please the
         // PMETableViewBase::beforeUpdateDoUpdateAll() machine
         foreach (${$dataSet . 'Values'} as $key => &$value) {
-          if ($key == $paymentIdKey || $key == $rowTagKey) {
+          if ($key == $invoiceItemIdKey || $key == $rowTagKey) {
             continue;
           }
           if (empty($value)) {
             continue;
           }
           if (str_starts_with($key, self::INVOICE_ITEMS_TABLE . self::JOIN_KEY_SEP)) {
-            $value = $paymentId . self::JOIN_KEY_SEP . $value;
+            $value = $invoiceItemId . self::JOIN_KEY_SEP . $value;
           }
         }
       }
@@ -1793,7 +1846,7 @@ WHERE dsf.id IS NOT NULL',
       // "row_tag" is used as "column" in $this->joinStructure, so transfer
       // the InvoiceItems ids to that field.
       foreach (['newValues', 'oldValues'] as $dataSet) {
-        ${$dataSet}[$rowTagKey] = ${$dataSet}[$paymentIdKey];
+        ${$dataSet}[$rowTagKey] = ${$dataSet}[$invoiceItemIdKey];
       }
 
       $unsetTags = [];
@@ -1867,9 +1920,7 @@ WHERE dsf.id IS NOT NULL',
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
-    $newValues['is_donation'] = $newValues['is_donation'] ?? 0;
-
-    $paymentIdKey = $this->joinTableFieldName(self::INVOICE_ITEMS_TABLE, 'id');
+    $invoiceItemIdKey = $this->joinTableFieldName(self::INVOICE_ITEMS_TABLE, 'id');
     $rowTagKey = $this->joinTableFieldName(self::INVOICE_ITEMS_TABLE, 'row_tag');
 
     $amountKey = $this->joinTableFieldName(self::INVOICE_ITEMS_TABLE, 'amount');
@@ -1884,8 +1935,8 @@ WHERE dsf.id IS NOT NULL',
       $oldValues = $newValues;
 
       // flag key generation
-      $oldValues[$paymentIdKey] = $oldValues[$rowTagKey] = '';
-      $newValues[$paymentIdKey] = $newValues[$rowTagKey] = 0;
+      $oldValues[$invoiceItemIdKey] = $oldValues[$rowTagKey] = '';
+      $newValues[$invoiceItemIdKey] = $newValues[$rowTagKey] = 0;
 
       $changed = [];
       $changed[] = $amountKey;
@@ -1942,21 +1993,21 @@ WHERE dsf.id IS NOT NULL',
 
     // "row_tag" is used as "column" in $this->joinStructure, so transfer
     // the InvoiceItems ids to that field.
-    $paymentId =
-      $newValues[$paymentIdKey] =
+    $invoiceItemId =
+      $newValues[$invoiceItemIdKey] =
       $newValues[$rowTagKey] = 0;
 
     // index all values by the key in order to please the
     // PMETableViewBase::beforeUpdateDoUpdateAll() machine
     foreach ($newValues as $key => &$value) {
-      if ($key == $paymentIdKey || $key == $rowTagKey) {
+      if ($key == $invoiceItemIdKey || $key == $rowTagKey) {
         continue;
       }
       if (empty($value)) {
           continue;
       }
       if (strpos($key, self::INVOICE_ITEMS_TABLE . self::JOIN_KEY_SEP) === 0) {
-        $value = $paymentId . self::JOIN_KEY_SEP . $value;
+        $value = $invoiceItemId . self::JOIN_KEY_SEP . $value;
       }
     }
     unset($value); // break reference

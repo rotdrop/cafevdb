@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2025 Claus-Justus Heine
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -30,21 +30,20 @@ $numberFormatter = new NumberFormatter($appLocale);
 $l10nAmount = $numberFormatter->formatCurrency($amount);
 
 $routes = [
-  'donation-receipt:download' => '#',
-  'donation-receipt:email' => '#',
-  'standard-receipt:download' => '#',
-  'standard-receipt:email' => '#',
+  'invoice:download' => '#',
+  'invoice:email' => '#',
 ];
 
 echo $this->inc('fragments/action-menu/menu', [
-  'contextMenuTitle' => $compositePaymentId . ' - ' . $debitorName . ' - ' . $l10nAmount,
-  'menuItemTemplate' => 'fragments/project-payments/action-items',
+  'contextMenuTitle' => $invoiceId . ' - ' . $debitorName . ' - ' . $l10nAmount,
+  'menuItemTemplate' => 'fragments/invoices/action-items',
   'routes' => $routes,
   'menuData' => [
-    'composite-payment-id' => $compositePaymentId,
+    'invoice-id' => $invoiceId,
+    'originator-name' => $originatorName,
+    'originator-id' => $originatorId,
     'debitor-name' => $debitorName,
     'debitor-id' => $debitorId,
-    'is-donation' => $isDonation,
     'project-id' => $projectId,
   ],
 ]);

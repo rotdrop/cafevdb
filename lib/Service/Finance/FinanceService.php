@@ -372,6 +372,65 @@ class FinanceService
   }
 
   /**
+   * Generate mail-merge data for invoices. The actual merging has
+   * then to be performed by the MailMergeController.
+   *
+   * @param Entities\Invoice $invoice
+   *
+   * @return array
+   */
+  public function generateInvoiceMailMergeData(
+    Entities\Invoice $invoice,
+  ):array {
+    $invoiceItems = $invoice->getInvoiceItems();
+
+    $locale = $this->appLocale();
+
+    /** @var NumberFormatter $numberFormatter */
+    $numberFormatter = new NumberFormatter($locale);
+
+    // now compose the dataset for the document template engine
+    $amount = $invoice->getAmount();
+    $templateData = [
+      'originator' => $this->flattenMusician($invoice->getOriginator()),
+      'recipient' => $this->flattenMusician($invoice->getDebitor()),
+      'invoice' => [
+        // amount need not be the donation amount
+        'amount' => $amount,
+        'dueDate' => $invoice->getDueDate(),
+        'l10n' => [
+          'locale' => $locale,
+          'amount' => $numberFormatter->formatCurrency($amount),
+          'amountText' => $numberFormatter->currencyToWords($amount),
+          'absAmount' => $numberFormatter->formatCurrency($amount),
+          'absAmountText' => $numberFormatter->currencyToWords($amount),
+        ],
+        'items' => [],
+      ],
+    ];
+
+    /** @var Entities\InvoiceItem $item */
+    foreach ($invoiceItems as $item) {
+      $value = $item->getAmount();
+      $templateData['invoice']['items'][] = [
+        'amount' => $value,
+        'isIncome' => (int)($value > 0),
+        'dueDate' => $item->getReceivable()->getField()->getDueDate(),
+        'subject' => $item->getSubject(),
+        'l10n' => [
+          'locale' => $this->appLocale(),
+          'amount' => $numberFormatter->formatCurrency($value),
+          'amountText' => $numberFormatter->currencyToWords($value),
+          'absAmount' => $numberFormatter->formatCurrency(abs($value)),
+          'absAmountText' => $numberFormatter->currencyToWords(abs($value)),
+        ],
+      ];
+    }
+
+    return $templateData;
+  }
+
+  /**
    * Generate mail-merge data for donation receipts. The actual merging has
    * then to be performed by the MailMergeController.
    *

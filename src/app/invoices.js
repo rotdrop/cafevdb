@@ -49,6 +49,7 @@ import {
 } from './lazy-decryption.js';
 import formatDate from '../util/formatDate.js';
 
+require('./jquery-readonly.js');
 require('invoices.scss');
 require('project-participant-fields-display.scss');
 
@@ -157,34 +158,22 @@ const actionMenu = function(containerSel) {
     const operation = $this.data('operation');
 
     switch (operation) {
-    case 'donation-receipt:download':
+    case 'invoice:download':
       fileDownload(
         generateAppUrl('documents/mail-merge'), {
-          templateName: 'donationReceipt',
+          templateName: 'invoice',
           ...postData,
         },
         $menu,
       );
       break;
-    case 'donation-receipt:email':
+    case 'invoice:email':
       showError(t(appName, 'Unimplemented operation: {operation}', { operation }), { timeout: TOAST_PERMANENT_TIMEOUT });
       break;
-    case 'standard-receipt:download':
+    case 'invoice:download-data':
       fileDownload(
         generateAppUrl('documents/mail-merge'), {
-          templateName: 'standardReceipt',
-          ...postData,
-        },
-        $menu,
-      );
-      break;
-    case 'standard-receipt:email':
-      showError(t(appName, 'Unimplemented operation: {operation}', { operation }), { timeout: TOAST_PERMANENT_TIMEOUT });
-      break;
-    case 'payment:download-data':
-      fileDownload(
-        generateAppUrl('documents/mail-merge'), {
-          templateName: 'standardReceipt',
+          templateName: 'invoice',
           ...postData,
           operation: 'dataset',
         },
@@ -400,9 +389,9 @@ const ready = function(selector, pmeParameters, resizeCB) {
           }
           if (debitorIds.length > 1) {
             Dialogs.alert(
-              t(appName, 'Too many Musicians'),
-              t(appName, 'Internal error: splits of invoices cannot belong to different musicians ({musicians}).',
-                { musicians: debitorIds.join(', ') }),
+              t(appName, 'Too many Debitors'),
+              t(appName, 'Internal error: splits of invoices cannot belong to different debitors ({debitors}).',
+                { debitors: debitorIds.join(', ') }),
               false, true);
           }
           const projectId = projectIds[0];
