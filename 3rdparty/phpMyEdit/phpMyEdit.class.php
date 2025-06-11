@@ -2432,11 +2432,15 @@ class phpMyEdit
 						];
 					} else {
 						$afilter = addslashes($m);
+						if (!is_numeric($afilter)) {
+							// this in principle should be validated earlier ...
+							$afilter = "'$afilter'";
+						}
 						$qo[$k] = [
 							'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
 							'fqnTemplate' => '%s',
 							'oper' => $mc,
-							'value' => "'$afilter'",
+							'value' => "$afilter",
 						];
 					}
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l .'='.rawurlencode($m);
