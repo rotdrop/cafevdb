@@ -21,10 +21,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@keyframes invoiceinternalimbalance {
+  50% {
+    opacity: 0;
+  }
+}
+
 .pme-form.invoices.pme- {
 
   &list {
     tr.pme-row {
+
+      span.invoice.imbalance {
+        color:red;
+        font-weight: bold;
+        font-style: italic;
+        animation: invoiceinternalimbalance 5s linear infinite;
+      }
 
       &.invoice:not(.following-hidden,.invoice-item) td {
         font-weight:bold;
