@@ -201,8 +201,8 @@ SELECT
   __t2.project_id AS project_ids,
   __t2.musician_id,
   __t2.composite_payment_id
-FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
-      'entity' => Entities\ProjectPayment::class,
+FROM " . self::PROJECT_PAYMENTS_TABLE . " __t2",
+     'entity' => Entities\ProjectPayment::class,
       'identifier' => [
         'id' => false,
       ],
@@ -545,7 +545,11 @@ WHERE dsf.id IS NOT NULL',
       'sort'     => true,
     ];
 
-    $joinTables = $this->defineJoinStructure($opts);
+    if ($this->projectMode) {
+      $this->joinStructure[self::PROJECT_PAYMENTS_TABLE]['sql'] .= '
+WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this->projectId;
+    }
+    $this->defineJoinStructure($opts);
 
     $opts['fdd']['sepa_transaction_id'] = [
       'name'     => $this->l->t('Bulk-Transaction Id'),
@@ -889,13 +893,25 @@ WHERE dsf.id IS NOT NULL',
       AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
       AND ppfotr.field = "label"
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
-  LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
+  INNER JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppfo.field_id = ppf.id
+      AND ppf.data_type IN ("' . FieldType::RECEIVABLES . '","' . FieldType::LIABILITIES . '")'
+          . ($projectMode
+             ? '
+      AND ppf.project_id = ' . $this->projectId
+             : '')
+          . '
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
     ON ppftr.locale = "'.($this->getTranslationLanguage()).'"
       AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
       AND ppftr.field = "name"
-      AND ppftr.foreign_key = ppf.id',
+      AND ppftr.foreign_key = ppf.id
+  LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.' ppfd
+    ON ppfd.option_key = ppfo.key
+  WHERE ppfo.deleted IS NULL
+    AND NOT ppfo.key = CAST("\0" AS BINARY(16))
+    AND (ppfd.option_value IS NOT NULL OR ppfo.data IS NOT NULL)
+  GROUP BY ppfo.key',
           // 'encode' => 'BIN2UUID(%s)',
           'description' => '$table.display_label',
           'join' => ('$join_table.field_id = '
@@ -911,13 +927,7 @@ WHERE dsf.id IS NOT NULL',
   "'.$this->l->t('Single Options').'",
   $table.field_name)',
           'orderby' => '$table.sort_field ASC, $table.display_label ASC',
-          'filters' => ('$table.deleted IS NULL'
-                        . ' AND $table.data_type IN ('
-                        . "   '" . FieldType::RECEIVABLES . "',"
-                        . "   '" . FieldType::LIABILITIES . "'"
-                        . " )"
-                        . ' AND NOT $table.key = CAST(\'\0\' AS BINARY(16))'
-                        . ($projectMode ? ' AND $table.project_id = '.$this->projectId : '')),
+          'filters' => '1',
         ],
         'values2glue' => '<br/>',
         'display' => [
@@ -940,6 +950,7 @@ WHERE dsf.id IS NOT NULL',
         },
       ]);
 
+    // @todo: should be much more efficient to move the filters into the sub-query.
     // Restrict the choices to the receivables of the actual musician.
     $opts['fdd'][$compositeKeyKey]['values|C'] = $opts['fdd'][$compositeKeyKey]['values'];
     $musicianReceivableFilter = $opts['fdd'][$compositeKeyKey]['values|C']['filters'] .=
@@ -1030,7 +1041,7 @@ WHERE dsf.id IS NOT NULL',
     ];
 
     $opts['fdd']['balance_documents_folder_id'] = [
-      'name' => $this->l->t('Composite Project Balance'),
+      'name' => $this->l->t('Financial Project Balance'),
       'tab' => [ 'id' => 'booking' ],
       'css' => [
         'postfix' => [
@@ -1545,7 +1556,8 @@ WHERE dsf.id IS NOT NULL',
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteDoDeleteSubPayments' ];
 
     if ($projectMode) {
-      $opts['filters'] = 'FIND_IN_SET('.$this->projectId.', '.$joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_ids)';
+      // $opts[PHPMyEdit::OPT_FILTERS] = 'FIND_IN_SET('.$this->projectId.', '.$joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_ids)';
+      $opts[PHPMyEdit::OPT_FILTERS] = '$table.project_id = ' . $this->projectId;
     }
 
     $opts['display']['custom_navigation'] = function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme):string {

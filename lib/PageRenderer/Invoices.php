@@ -50,6 +50,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;
 
 /** Table generator for Instruments table. */
 class Invoices extends PMETableViewBase
@@ -180,12 +181,12 @@ GROUP BY __t1.id',
   GROUP_CONCAT(DISTINCT __t1.project_id) AS project_ids,
   __t1.debitor_id,
   __t1.invoice_id
-FROM ".self::INVOICE_ITEMS_TABLE." __t1
+FROM " . self::INVOICE_ITEMS_TABLE . " __t1
 GROUP BY __t1.invoice_id
 UNION
 SELECT
   __t2.id AS row_tag,
-  CONCAT_WS('".self::COMP_KEY_SEP."', __t2.project_id, __t2.field_id, BIN2UUID(__t2.receivable_key)) AS receivable_composite_key,
+  CONCAT_WS('" . self::COMP_KEY_SEP . "', __t2.project_id, __t2.field_id, BIN2UUID(__t2.receivable_key)) AS receivable_composite_key,
   __t2.id,
   __t2.amount,
   __t2.amount AS total_amount,
@@ -198,7 +199,7 @@ SELECT
   __t2.project_id AS project_ids,
   __t2.debitor_id,
   __t2.invoice_id
-FROM ".self::INVOICE_ITEMS_TABLE." __t2",
+FROM " . self::INVOICE_ITEMS_TABLE . " __t2",
       'entity' => Entities\InvoiceItem::class,
       'identifier' => [
         'id' => false,
@@ -546,7 +547,11 @@ WHERE dsf.id IS NOT NULL',
       'sort'     => true,
     ];
 
-    $joinTables = $this->defineJoinStructure($opts);
+    if ($this->projectMode) {
+      $this->joinStructure[self::INVOICE_ITEMS_TABLE]['sql'] .= '
+WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this->projectId;
+    }
+    $this->defineJoinStructure($opts);
 
     $opts['fdd']['sepa_transaction_id'] = [
       'name'     => $this->l->t('Bulk-Transaction Id'),
@@ -617,6 +622,7 @@ WHERE dsf.id IS NOT NULL',
       'css' => [ 'postfix' => [ 'originator-id', 'default-readonly', 'allow-empty', 'tab-invoice-readwrite', 'tab-transaction-readwrite', 'tab-all-readwrite' ], ],
       'select' => 'D',
       'input' => 'M',
+      'sort' => true,
       // 'input|C' => 'R',
       // 'select|C' => null, // 'T',
       // 'sql|C' => static::musicianPublicNameSql(),
@@ -692,18 +698,24 @@ WHERE dsf.id IS NOT NULL',
 
     $opts['fdd']['invoice_number'] = [
       'name'     => $this->l->t('Invoice Number'),
-      'input'    => 'M',
+      'input'    => '', // 'M', automatically determined.
       'select'   => 'T',
       'options'  => 'LACPDV',
-      'default'  => $this->l->t('automatically determined'),
+      'default'  => null,
       'maxlen'   => 255,
       'sort'     => true,
       'display' => [
-        'attributes' => [ 'readonly' => true, ],
+        'attributes' => [
+          'readonly' => true,
+          'placeholder' => $this->l->t('automatically determined'),
+        ],
         'popup' => 'data',
       ],
       'display|ACP' => [
-        'attributes' => [ 'readonly' => true, ],
+        'attributes' => [
+          'readonly' => true,
+          'placeholder' => $this->l->t('automatically determined'),
+        ],
         'popup' => 'data',
         'postfix' => function($op, $pos, $k, $row, $pme) {
           $checked = 'checked="checked" ';
@@ -766,7 +778,7 @@ WHERE dsf.id IS NOT NULL',
         $this->defaultFDD['money'], [
           'sql' => '$main_table.amount - $join_table.total_amount',
           'css' => [ 'postfix' => [ 'tooltip-auto', ] ],
-          'name' => $this->l->t('Imbalance'),
+          'name' => $this->l->t('Inconsistency'),
           'input|LF' => 'VHR',
           'input' => 'VR',
           'options' => 'LFCDV',
@@ -990,19 +1002,31 @@ WHERE dsf.id IS NOT NULL',
   ppf.multiplicity AS multiplicity,
   ppf.due_date AS due_date,
   ppf.deposit_due_date AS deposit_due_date
-  FROM '.self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE.' ppfo
-  LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppfotr
-    ON ppfotr.locale = "'.($this->getTranslationLanguage()).'"
-      AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
+  FROM ' . self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE . ' ppfo
+  LEFT JOIN ' . self::FIELD_TRANSLATIONS_TABLE . ' ppfotr
+    ON ppfotr.locale = "' . ($this->getTranslationLanguage()) . '"
+      AND ppfotr.object_class = "' . addslashes(Entities\ProjectParticipantFieldDataOption::class) . '"
       AND ppfotr.field = "label"
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
-  LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
+  INNER JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppfo.field_id = ppf.id
+      AND ppf.data_type IN ("' . FieldType::RECEIVABLES . '","' . FieldType::LIABILITIES . '")'
+          . ($projectMode
+             ? '
+      AND ppf.project_id = ' . $this->projectId
+             : '')
+          . '
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
     ON ppftr.locale = "'.($this->getTranslationLanguage()).'"
       AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
       AND ppftr.field = "name"
-      AND ppftr.foreign_key = ppf.id',
+      AND ppftr.foreign_key = ppf.id
+  LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.' ppfd
+    ON ppfd.option_key = ppfo.key
+  WHERE ppfo.deleted IS NULL
+    AND NOT ppfo.key = CAST("\0" AS BINARY(16))
+    AND (ppfd.option_value IS NOT NULL OR ppfo.data IS NOT NULL)
+  GROUP BY ppfo.key',
           // 'encode' => 'BIN2UUID(%s)',
           'description' => '$table.display_label',
           'join' => ('$join_table.field_id = '
@@ -1018,13 +1042,7 @@ WHERE dsf.id IS NOT NULL',
   "'.$this->l->t('Single Options').'",
   $table.field_name)',
           'orderby' => '$table.sort_field ASC, $table.display_label ASC',
-          'filters' => ('$table.deleted IS NULL'
-                        . ' AND $table.data_type IN ('
-                        . "   '" . FieldType::RECEIVABLES . "',"
-                        . "   '" . FieldType::LIABILITIES . "'"
-                        . " )"
-                        . ' AND NOT $table.key = CAST(\'\0\' AS BINARY(16))'
-                        . ($projectMode ? ' AND $table.project_id = '.$this->projectId : '')),
+          'filters' => '1',
           'data' => 'JSON_OBJECT(
   "receivableKey", BIN2UUID($table.key)
   , "dueDate", $table.due_date
@@ -1062,8 +1080,87 @@ WHERE dsf.id IS NOT NULL',
       . ($projectMode ? ' AND ppfd.project_id = '.$this->projectId : '')
       . ')';
 
+    $opts['fdd']['written_invoice_id'] = [
+      'tab' => [ 'id' => [ 'invoice', ] ],
+      'css' => [ 'postfix' => [ 'written-invoice', ], ],
+      'name' => $this->l->t('Written Invoice'),
+      'input|ALF' => 'HR',
+      'options' => 'LFACDPV',
+      'php|CP' => function($value, $action, $k, $row, $recordId, $pme) {
+
+        if ($pme->hidden($k)) {
+          return '';
+        }
+
+        $debitorId = $row[$this->queryField('debitor_id')];
+        /** @var Entities\Musician $musician */
+        $musician = $this->findEntity(Entities\Musician::class, $debitorId);
+        $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $musician->getUserIdSlug());
+
+        return '<div class="file-upload-wrapper">
+  <table class="file-upload">'
+          . $this->dbFileUploadRowHtml(
+            $value,
+            fieldId: $debitorId,
+            optionKey: $recordId['id'],
+            subDir: $this->getSupportingDocumentsFolderName() . UserStorage::PATH_SEP . $this->getBankTransactionsFolderName(),
+            fileBase: $fileName,
+            overrideFileName: true,
+            musician: $musician,
+            project: null,
+          )
+          . '
+  </table>
+</div>';
+      },
+      'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
+
+        $debitorId = $row[$this->queryField('debitor_id')];
+        /** @var Entities\Musician $musician */
+        $musician = $this->findEntity(Entities\Musician::class, $debitorId);
+
+        if (!empty($value)) {
+
+          /** @var Entities\DatabaseStorageFile $file */
+          $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
+          if (empty($file)) {
+            $this->logError('File not found for musician "' . $musician->getPublicName(). ' file-id ' . $value);
+            return $value;
+          }
+
+          $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($file);
+
+
+          $subDirPrefix =
+            UserStorage::PATH_SEP . $this->getDocumentsFolderName()
+            . UserStorage::PATH_SEP . $this->getSupportingDocumentsFolderName()
+            . UserStorage::PATH_SEP . $this->getBankTransactionsFolderName();
+
+          $project = $this->project ?? $this->ensureProject($row[$this->queryField('project_id')]);
+          $participantFolder = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
+          try {
+            $filesAppTarget = md5($this->userStorage->getFilesAppLink($participantFolder));
+            $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
+            $filesAppLink = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
+       title="'.$this->toolTipsService['page-renderer:upload:open-parent'].'"
+       class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
+       ></a>';
+          } catch (\OCP\Files\NotFoundException $e) {
+            $this->logInfo('No file found for ' . $participantFolder . $subDirPrefix);
+            $filesAppLink = '';
+          }
+          return $filesAppLink
+            . '<a class="download-link ajax-download tooltip-auto"
+   title="'.$this->toolTipsService['project-payments:payment:document'].'"
+   href="'.$downloadLink.'">' . $file->getName() . '</a>';
+        } else {
+          return $value;
+        }
+      },
+    ];
+
     $opts['fdd']['balance_documents_folder_id'] = [
-      'name' => $this->l->t('Composite Project Balance'),
+      'name' => $this->l->t('Financial Project Balance'),
       'tab' => [ 'id' => 'invoice' ],
       'css' => [
         'postfix' => [
@@ -1487,7 +1584,7 @@ WHERE dsf.id IS NOT NULL',
         $subjectIndex = $this->queryFieldIndex('subject');
         $paymentsSubjectIndex = $this->joinQueryFieldIndex(self::INVOICE_ITEMS_TABLE, 'subject');
         $imbalanceIndex = $this->joinQueryFieldIndex(self::INVOICE_ITEMS_TABLE, 'imbalance');
-        $supportingDocumentIndex = $this->queryFieldIndex('supporting_document_id');
+        $writtenInvoiceIndex = $this->queryFieldIndex('written_invoice_id');
         $compositeBalanceDocumentsFolderIdIndex = $this->queryFieldIndex('balance_documents_folder_id');
 
         if ($this->isCompositeRowTag($rowTag)) {
@@ -1513,7 +1610,7 @@ WHERE dsf.id IS NOT NULL',
           $pme->fdd[$compositeBalanceDocumentsFolderIdIndex]['input'] = '';
 
           if ($this->copyOperation()) {
-            $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
+            $pme->fdd[$writtenInvoiceIndex]['input'] = 'HR';
             $pme->fdd[$receivableKeyIndex]['select'] = 'D';
             $pme->fdd[$receivableKeyIndex]['input'] = 'M';
             $pme->fdd[$paymentsIdIndex]['input'] = 'RH';
@@ -1543,7 +1640,7 @@ WHERE dsf.id IS NOT NULL',
           $pme->fdd[$invoiceItemsDueDateIndex]['input'] = 'VR';
           $pme->fdd[$imbalanceIndex]['input'] = 'HR';
           $pme->fdd[$debitorIdIndex]['input'] = 'R';
-          $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
+          $pme->fdd[$writtenInvoiceIndex]['input'] = 'HR';
           $pme->fdd[$compositeBalanceDocumentsFolderIdIndex]['input'] = 'HR';
 
           $pme->fdd[$balanceDocumentsFolderIdIndex]['name'] = $this->l->t('Project Balance');
@@ -1590,7 +1687,8 @@ WHERE dsf.id IS NOT NULL',
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteDoDeleteSubPayments' ];
 
     if ($projectMode) {
-      $opts['filters'] = 'FIND_IN_SET('.$this->projectId.', '.$joinTables[self::INVOICE_ITEMS_TABLE].'.project_ids)';
+      // $opts['filters'] = 'FIND_IN_SET('.$this->projectId.', '.$joinTables[self::INVOICE_ITEMS_TABLE].'.project_ids)';
+      $opts[PHPMyEdit::OPT_FILTERS] = '$table.project_id = ' . $this->projectId;
     }
 
     $opts['display']['custom_navigation'] = function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme):string {
@@ -1830,7 +1928,7 @@ WHERE dsf.id IS NOT NULL',
 
       $unsetTags = [];
       // handled on the composite-level
-      $unsetTags[] = 'supporting_document_id';
+      $unsetTags[] = 'written_invoice_id';
 
       // handled on the composite-level
       $unsetTags[] = 'balance_document_folder_id';
@@ -1850,9 +1948,9 @@ WHERE dsf.id IS NOT NULL',
       }
 
       $unsetTags = [];
-      // remove supporting_document_id as it is handled separately by direct
+      // remove written_invoice_id as it is handled separately by direct
       // db manipulation.
-      $unsetTags[] = 'supporting_document_id';
+      $unsetTags[] = 'written_invoice_id';
 
       // handled on the split-level
       $unsetTags[] = $this->joinTableFieldName(self::INVOICE_ITEMS_TABLE, 'balance_documents_folder_id');
@@ -1882,6 +1980,14 @@ WHERE dsf.id IS NOT NULL',
       if (array_key_exists($key, $oldValues) !== array_key_exists($key, $newValues)
           || ($oldValues[$key]??null) !== ($newValues[$key]??null)) {
         $changed[] = $key;
+      }
+    }
+
+    $field = 'invoice_number';
+    if (empty($newValues[$field])) {
+      $newValues[$field] = null;
+      if (!in_array($field, $changed)) {
+        $changed[] = $field;
       }
     }
 
@@ -2172,7 +2278,7 @@ WHERE dsf.id IS NOT NULL',
     if ($this->isCompositeRow($row, $pme)) {
       $receivables = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . $k.'_idx']);
       // $receivables must contain at least one element.
-      $supportingDocument = $row[$this->queryField('supporting_document_id')];
+      $supportingDocument = $row[$this->queryField('written_invoice_id')];
       $supportingDocuments = [];
       if (!empty($supportingDocument) || count($receivables) > 1) {
         $userIdSlug = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'user_id_slug')];
