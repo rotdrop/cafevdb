@@ -31,6 +31,7 @@ class CreateTableInvoicesV2 extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
+      "DROP TABLE IF EXISTS invoice_receivable",
       "DROP TABLE IF EXISTS InvoiceItems",
       "DROP TABLE IF EXISTS Invoices",
       "CREATE TABLE Invoices(
