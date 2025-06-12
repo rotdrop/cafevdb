@@ -25,20 +25,21 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Closure;
+use DateTimeImmutable;
 use DateTimeInterface;
 use UnexpectedValueException;
 
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
-
-use OCA\CAFEVDB\Events;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;
 
 /**
  * Invoices collects a couple of InvoiceItems of the same Musician.
@@ -48,13 +49,23 @@ use OCA\CAFEVDB\Common\Util;
 #[ORM\UniqueConstraint(columns: ['invoice_number'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InvoicesRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 class Invoice implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // filename of supporting document.
+
+  public const INVOICE_NUMBER_SEPARATOR = '-';
+  /**
+   * @var array
+   *
+   * The fields which are using in order to autogenerate the slug field.
+   */
+  public const INVOICE_NUMBER_FIELDS = [ 'project', 'balanceDocumentsFolder' ];
 
   /**
    * @var int
@@ -63,6 +74,24 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
+
+  /**
+   * @var string
+   * Subject of the bank transaction.
+   */
+  #[ORM\Column(type: 'string', length: 255, nullable: false)]
+  #[Gedmo\Slug(
+    fields: [], // self-referencing. Does it work?
+    updatable: true,
+    unique: true,
+    uniqueInitialSuffix: true,
+    // style: 'camel',
+    separator: '/',
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\InvoiceNumberHandler::class,
+  )]
+  private $invoiceNumber;
 
   /**
    * @var Musician
@@ -109,13 +138,6 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    * @var string
    * Subject of the bank transaction.
    */
-  #[ORM\Column(type: 'string', length: 255, nullable: false)]
-  private $invoiceNumber;
-
-  /**
-   * @var string
-   * Subject of the bank transaction.
-   */
   #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $subject;
 
@@ -157,8 +179,8 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * @var Project
    */
-  #[ORM\JoinColumn(nullable: false)]
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'invoices', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+  #[ORM\JoinColumn(nullable: false)]
   private $project;
 
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
@@ -266,6 +288,20 @@ class Invoice implements \ArrayAccess, \JsonSerializable
       $totalAmount += $invoiceItem->getAmount();
     }
     return $totalAmount;
+  }
+
+  /**
+   * Check whether the data is internally consistent, in particular if the
+   * invoice items sum up to the total sum.
+   *
+   * @return bool
+   */
+  public function isConsistent():bool
+  {
+    if ($this->amount != $this->sumInvoiceItemsAmount()) {
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -557,30 +593,6 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set notificationMessageId.
-   *
-   * @param null|string $notificationMessageId
-   *
-   * @return Invoice
-   */
-  public function setNotificationMessageId(?string $notificationMessageId):Invoice
-  {
-    $this->notificationMessageId = $notificationMessageId;
-
-    return $this;
-  }
-
-  /**
-   * Get notificationMessageId.
-   *
-   * @return null|string
-   */
-  public function getNotificationMessageId():?string
-  {
-    return $this->notificationMessageId;
-  }
-
-  /**
    * Set notificationEmail.
    *
    * @param null|SentEmail $notificationEmail
@@ -608,30 +620,6 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set donationReceipt.
-   *
-   * @param null|string $donationReceipt
-   *
-   * @return Invoice
-   */
-  public function setDonationReceipt(?string $donationReceipt):Invoice
-  {
-    $this->donationReceipt = $donationReceipt;
-
-    return $this;
-  }
-
-  /**
-   * Get donationReceipt.
-   *
-   * @return null|string
-   */
-  public function getDonationReceipt()
-  {
-    return $this->donationReceipt;
-  }
-
-  /**
    * Set balanceDocumentsFolder.
    *
    * @param DatabaseStorageFolder $balanceDocumentsFolder
@@ -647,20 +635,20 @@ class Invoice implements \ArrayAccess, \JsonSerializable
           $part->setBalanceDocumentsFolder(null);
         }
       }
-      // if (!empty($this->supportingDocument)) {
-      //   $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+      if (!empty($this->writteninvoice)) {
+        $fileName = $this->getPaymentRecordFileName($this, $this->writteninvoice->getExtension());
 
-      //   $this->balanceDocumentsFolder->removeDocument($this->supportingDocument->getFile(), $fileName);
-      // }
+        $this->balanceDocumentsFolder->removeDocument($this->writteninvoice->getFile(), $fileName);
+      }
     }
 
     $this->balanceDocumentsFolder = $balanceDocumentsFolder;
 
     if (!empty($this->balanceDocumentsFolder)) {
-      // if (!empty($this->supportingDocument)) {
-      //   $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
-      //   $this->balanceDocumentsFolder->addDocument($this->supportingDocument->getFile(), $fileName);
-      // }
+      if (!empty($this->writteninvoice)) {
+        $fileName = $this->getPaymentRecordFileName($this, $this->writteninvoice->getExtension());
+        $this->balanceDocumentsFolder->addDocument($this->writteninvoice->getFile(), $fileName);
+      }
       /** @var InvoiceItem $part */
       foreach ($this->invoiceItems as $part) {
         if (empty($part->getBalanceDocumentsFolder())) {
@@ -722,7 +710,69 @@ class Invoice implements \ArrayAccess, \JsonSerializable
     return $this->toArray();
   }
 
+  /**
+   * Generate a suitable invoice number from the project and possibly the
+   * supporting documents folder sequence number.
+   *
+   * @return string
+   */
+  public function generateInvoiceNumber():string
+  {
+    if ($this->balanceDocumentsFolder) {
+      $invoiceNumber = $this->balanceDocumentsFolder->getName();
+    } else {
+      $invoiceNumber = $this->project->getName();
+      if ($this->project->getType() == ProjectType::PERMANENT) {
+        $invoiceNumber .= self::INVOICE_NUMBER_SEPARATOR . (new DateTimeImmutable)->format('Y');
+      }
+      $invoiceNumber .= self::INVOICE_NUMBER_SEPARATOR . 'XXX';
+    }
+
+    return $invoiceNumber;
+  }
+
+  /**
+   * Return a "usage" count to tag the invoice undeleteable after it has been
+   * issued. It can be revoked (soft deleted) then but it will stay in the
+   * database.
+   *
+   * @return int
+   */
+  public function usage():int
+  {
+    $usageCount = 0;
+    if (!empty($this->notificationEmail)) {
+      ++$usageCount;
+    }
+    if (!empty($this->sepaTransaction) && $this->sepaTransaction->getSubmitDate() !== null) {
+      // has been used by a debit-note
+      ++$usageCount;
+    }
+    return $usageCount;
+  }
+
     /** {@inheritdoc} */
+  #[ORM\PreFlush]
+  public function preFlush(Event\PreFlushEventArgs $event)
+  {
+    // if (!$this->inUse()) {
+    //   $this->invoiceNumber = SluggableListener::PLACEHOLDER_SLUG;
+    // }
+  }
+
+  /** {@inheritdoc} */
+  #[ORM\PreUpdate]
+  public function preUpate(Event\PreUpdateEventArgs $event)
+  {
+    if ($this->inUse()) {
+      // forbid changing the invoice number if the invoice has already been sent out or attached
+      if ($event->hasChangedField('invoiceNumber')) {
+        $event->setNewValue('invoiceNumber', $event->getOldValue('invoiceNumber'));
+      }
+    }
+  }
+
+  /** {@inheritdoc} */
   public function __toString():string
   {
     return 'invoice of ' . $this->amount . ' € due at ' . $this->dueDate->format('Y-m-d') . ' by ' . $this->debitor->getPublicName(true);
