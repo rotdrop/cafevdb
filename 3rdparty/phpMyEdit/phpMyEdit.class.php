@@ -2747,7 +2747,7 @@ class phpMyEdit
 					}
 				}
 			}
-			$this->cur_tab = $this->get_sys_cgi_var('cur_tab', $this->cur_tab);
+			$this->cur_tab = $this->get_sys_cgi_var('cur_tab', $this->cur_tab) ?? 0;
 
 			//error_log(print_r($this->tab_names, true));
 
