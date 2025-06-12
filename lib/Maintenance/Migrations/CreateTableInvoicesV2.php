@@ -52,6 +52,7 @@ class CreateTableInvoicesV2 extends AbstractMigration
     subject VARCHAR(1024) NOT NULL,
     created DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
     updated DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
+    deleted DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
     INDEX IDX_93594DC33DA3F86F(originator_id),
     INDEX IDX_93594DC372757D19(debitor_id),
     INDEX IDX_93594DC3D5560045(sepa_transaction_id),
