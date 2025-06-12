@@ -371,6 +371,16 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * Enable query logging.
+   *
+   * @return void
+   */
+  public function enableLogging():void
+  {
+    $this->sqlLogger->enable(true);
+  }
+
+  /**
    * @return null|string The user-id of the currently logged-in user
    * if known.
    */
