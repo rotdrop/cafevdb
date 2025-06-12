@@ -1114,7 +1114,7 @@ GROUP BY t.id';
      *
      */
 
-    $monetary = $this->participantFieldsService->monetaryFields($this->project);
+    $monetary = $this->participantFieldsService->monetaryFields($this->project, ParticipationContext::PARTICIPANTS);
     if ($monetary->count() > 0 || ($this->projectId == $this->membersProjectId)) {
       $this->makeTotalFeesField($opts['fdd'], $monetary, $financeTab);
     }

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission as AccessPermission;
@@ -186,14 +187,18 @@ class ProjectParticipantFieldsService
    *
    * @param Entities\Project $project
    *
+   * @param string|Types\EnumParticipationContext $participationContext
+   *
    * @return iterable
    */
-  public function monetaryFields(Entities\Project $project):iterable
-  {
+  public function monetaryFields(
+    Entities\Project $project,
+    string|ParticipationContext $participationConext = ParticipationContext::UNRESTRICTED,
+  ):iterable {
     // "matching" cannot work as our quasi-enums are objects which are not
     // singletons. "matching" uses === which only yields true for objects if
     // their refer to the same instance.
-    return $project->getParticipantFields()->filter(function($field) {
+    return $project->getParticipantFields($participationConext)->filter(function($field) {
       switch ($field->getDataType()) {
         case DataType::RECEIVABLES:
         case DataType::LIABILITIES:
