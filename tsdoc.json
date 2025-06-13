@@ -1,0 +1,37 @@
+{
+	"tags":
+	{
+		"allowUnknownTags" : true
+	},
+	"plugins":[
+		 "plugins/markdown"
+		,"/var/www/dev1/htdocs/nextcloud-git-31/apps/cafevdb/node_modules/tsdoc/template/plugins/TSDoc.js"
+	],
+	"opts":
+	{
+		"template"	:"/var/www/dev1/htdocs/nextcloud-git-31/apps/cafevdb/node_modules/tsdoc/template",
+		"recurse"	:"true"
+	},
+	"templates" : {
+		"cleverLinks"     : false,
+		"monospaceLinks"  : false
+	},
+	"source":
+	{
+		"includePattern": "(\\.d)?\\.ts$"
+	},
+	"markdown"  : {
+		"parser"   : "gfm",
+		"hardwrap" : true
+	},
+	"tsdoc":{
+		"source"		:"/var/www/dev1/htdocs/nextcloud-git-31/apps/cafevdb/src/",
+		"destination"	:"/var/www/dev1/htdocs/nextcloud-git-31/apps/cafevdb/docs",
+		"tutorials"		:"",
+		"systemName"	: "cafevdb",
+		"footer"		: "",
+		"copyright"		: "cafevdb Copyright © 2025 claus.",
+		"outputSourceFiles" : true,
+		"commentsOnly": true
+	}
+}
