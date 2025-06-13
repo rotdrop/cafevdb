@@ -415,9 +415,9 @@ const ready = function(selector, pmeParameters, resizeCB) {
       });
 
     // upload supporting document(s)
-    const debitorId = findByName($container, pmeData('Musicians:id')).val();
+    const debitorId = findByName($container, pmeData('debitor_id')).val();
     $container
-      .find('tr.supporting-document td.pme-value .file-upload-row')
+      .find('tr.written-invoice td.pme-value .file-upload-row')
       .each(function() {
         initFileUploadRow.call(
           this,
