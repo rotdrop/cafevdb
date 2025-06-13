@@ -35,10 +35,11 @@ $routes = [
 ];
 
 echo $this->inc('fragments/action-menu/menu', [
-  'contextMenuTitle' => $invoiceId . ' - ' . $debitorName . ' - ' . $l10nAmount,
+  'contextMenuTitle' => $invoiceNumber . ' - ' . $debitorName . ' - ' . $l10nAmount,
   'menuItemTemplate' => 'fragments/invoices/action-items',
   'routes' => $routes,
   'menuData' => [
+    'invoice-number' => $invoiceNumber,
     'invoice-id' => $invoiceId,
     'originator-name' => $originatorName,
     'originator-id' => $originatorId,
