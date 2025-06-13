@@ -79,7 +79,7 @@ const Template = {
 	},
 	// From stackoverflow.com/questions/1408289/best-way-to-do-variable-interpolation-in-javascript
 	_build(o) {
-		const data = this.elem.attr('type') === 'text/template' ? this.elem.html() : this.elem.get(0).outerHTML
+	  const data = (this.elem.data('type') === 'text/template' || this.elem.attr('type') === 'text/template') ? this.elem.html() : this.elem.get(0).outerHTML
 		try {
 			return data.replace(/{([^{}]*)}/g,
 				function(a, b) {

@@ -20,7 +20,7 @@
  -
  -->
 <template>
-  <component :is="'script'" id="progressWrapperTemplate" type="text/template">
+  <div v-show="false" id="progressWrapperTemplate" data-type="text/template">
     <div id="{wrapperId}" class="progress-wrapper">
       <div class="caption">
         {caption}
@@ -31,7 +31,7 @@
         </span>
       </div>
     </div>
-  </component>
+  </div>
 </template>
 <script lang="ts" setup>
 </script>

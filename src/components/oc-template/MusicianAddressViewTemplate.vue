@@ -20,7 +20,7 @@
  -
  -->
 <template>
-  <component :is="'script'" id="musicianAddressViewTemplate" type="text/template">
+  <div v-show="false" id="musicianAddressViewTemplate" data-type="text/template">
     <div class="musician-address-view" data-id="{id}">
       <table>
         <thead>
@@ -81,7 +81,7 @@
         </tbody>
       </table>
     </div>
-  </component>
+  </div>
 </template>
 <script lang="ts" setup>
 import { appName } from '../../config.ts'

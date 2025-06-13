@@ -20,7 +20,7 @@
  -
  -->
 <template>
-  <component :is="'script'" id="fileUploadTemplate" type="text/template">
+  <div v-show="false" id="fileUploadTemplate" data-type="text/template">
     <div id="{wrapperId}" class="file-upload-wrapper">
       <form class="float hidden {formClass}" enctype="multipart/form-data">
         <input class="file-upload-start"
@@ -41,7 +41,7 @@
         <div class="uploadprogressbar" />
       </div>
     </div>
-  </component>
+  </div>
 </template>
 <script lang="ts" setup>
 defineProps({

@@ -20,7 +20,7 @@
  -
  -->
 <template>
-  <component :is="'script'" id="imageUploadTemplate" type="text/template">
+  <div v-show="false" id="imageUploadTemplate" data-type="text/template">
     <form id="{formId}" class="float hidden" enctype="multipart/form-data">
       <input type="hidden" name="ownerId" value="{ownerId}">
       <input type="hidden" name="imageId" value="{imageId}">
@@ -42,7 +42,7 @@
              :name="uploadName"
       >
     </form>
-  </component>
+  </div>
 </template>
 <script lang="ts" setup>
 defineProps({
