@@ -59,7 +59,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // filename of supporting document.
 
-  public const INVOICE_NUMBER_SEPARATOR = '-';
+  public const INVOICE_NUMBER_SEPARATOR = '/';
   /**
    * @var array
    *
@@ -86,7 +86,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
     unique: true,
     uniqueInitialSuffix: true,
     // style: 'camel',
-    separator: '/',
+    separator: self::INVOICE_NUMBER_SEPARATOR,
   )]
   #[Gedmo\SlugHandler(
     class: CAFEVDB\Listeners\Sluggable\InvoiceNumberHandler::class,
@@ -121,6 +121,14 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: false, options: ['default' => '0.00'])]
   private $amount = '0.00';
+
+  /**
+   * @var \DateTimeImmutable|null
+   *
+   * This should be set to the date of the actual sending out of the invoice.
+   */
+  #[ORM\Column(type: 'date_immutable', nullable: false, options: ['default' => 'CURRENT_DATE'])]
+  private $invoiceDate;
 
   /**
    * @var \DateTimeImmutable|null
@@ -198,7 +206,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    * @var DatabaseStorageFile
    */
   #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
-  private DatabaseStorageFile $writtenInvoice;
+  private ?DatabaseStorageFile $writtenInvoice;
 
   /**
    * @var SentEmail
@@ -398,6 +406,30 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   public function getProjectParticipant():?ProjectParticipant
   {
     return $this->projectParticipant;
+  }
+
+  /**
+   * Set invoiceDate.
+   *
+   * @param \DateTime|null $invoiceDate
+   *
+   * @return Invoice
+   */
+  public function setInvoiceDate($invoiceDate = null):Invoice
+  {
+    $this->invoiceDate = self::convertToDateTime($invoiceDate);
+
+    return $this;
+  }
+
+  /**
+   * Get invoiceDate.
+   *
+   * @return \DateTime|null
+   */
+  public function getInvoiceDate():?DateTimeInterface
+  {
+    return $this->invoiceDate;
   }
 
   /**
@@ -675,7 +707,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   public function getWrittenInvoice():?DatabaseStorageFile
   {
-    return $this->writtenInvoice;
+    return $this->writtenInvoice ?? null;
   }
 
   /**
@@ -744,6 +776,9 @@ class Invoice implements \ArrayAccess, \JsonSerializable
     if (!empty($this->notificationEmail)) {
       ++$usageCount;
     }
+    if (!empty($this->writtenInvoice)) {
+      ++$usageCount;
+    }
     if (!empty($this->sepaTransaction) && $this->sepaTransaction->getSubmitDate() !== null) {
       // has been used by a debit-note
       ++$usageCount;
@@ -755,9 +790,6 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   #[ORM\PreFlush]
   public function preFlush(Event\PreFlushEventArgs $event)
   {
-    // if (!$this->inUse()) {
-    //   $this->invoiceNumber = SluggableListener::PLACEHOLDER_SLUG;
-    // }
   }
 
   /** {@inheritdoc} */

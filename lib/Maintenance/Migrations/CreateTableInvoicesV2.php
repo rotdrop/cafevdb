@@ -46,6 +46,7 @@ class CreateTableInvoicesV2 extends AbstractMigration
     written_invoice_id INT DEFAULT NULL,
     notification_email_id VARCHAR(256) DEFAULT NULL COLLATE `ascii_bin`,
     amount NUMERIC(7, 2) DEFAULT '0.00' NOT NULL,
+    invoice_date DATE DEFAULT CURRENT_DATE NOT NULL COMMENT '(DC2Type:date_immutable)',
     due_date DATE DEFAULT NULL COMMENT '(DC2Type:date_immutable)',
     balanced_date DATE DEFAULT NULL COMMENT '(DC2Type:date_immutable)',
     invoice_number VARCHAR(255) NOT NULL,
