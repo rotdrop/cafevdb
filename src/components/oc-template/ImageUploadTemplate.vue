@@ -20,8 +20,16 @@
  -
  -->
 <template>
-  <div v-show="false" id="imageUploadTemplate" data-type="text/template">
-    <form id="{formId}" class="float hidden" enctype="multipart/form-data">
+  <component :is="'script'"
+             id="imageUploadTemplate"
+             ref="outer"
+             type="text/template"
+  >
+    <form id="{formId}"
+          ref="inner"
+          class="float hidden"
+          enctype="multipart/form-data"
+    >
       <input type="hidden" name="ownerId" value="{ownerId}">
       <input type="hidden" name="imageId" value="{imageId}">
       <input type="hidden" name="joinTable" value="{joinTable}">
@@ -42,9 +50,10 @@
              :name="uploadName"
       >
     </form>
-  </div>
+  </component>
 </template>
 <script lang="ts" setup>
+import { onMounted, ref } from 'vue'
 defineProps({
   uploadMaxFileSize: {
     type: Number,
@@ -59,4 +68,7 @@ defineProps({
     default: 'imagefile',
   },
 })
+const inner = ref<null|HTMLElement>(null)
+const outer = ref<null|HTMLScriptElement>(null)
+onMounted(() => { outer.value!.innerHTML = inner.value!.outerHTML })
 </script>

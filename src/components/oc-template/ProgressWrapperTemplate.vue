@@ -20,8 +20,12 @@
  -
  -->
 <template>
-  <div v-show="false" id="progressWrapperTemplate" data-type="text/template">
-    <div id="{wrapperId}" class="progress-wrapper">
+  <component :is="'script'"
+             id="progressWrapperTemplate"
+             ref="outer"
+             type="text/template"
+  >
+    <div id="{wrapperId}" ref="inner" class="progress-wrapper">
       <div class="caption">
         {caption}
       </div>
@@ -31,7 +35,12 @@
         </span>
       </div>
     </div>
-  </div>
+  </component>
 </template>
 <script lang="ts" setup>
+import { onMounted, ref } from 'vue'
+
+const inner = ref<null|HTMLElement>(null)
+const outer = ref<null|HTMLScriptElement>(null)
+onMounted(() => { outer.value!.innerHTML = inner.value!.outerHTML })
 </script>

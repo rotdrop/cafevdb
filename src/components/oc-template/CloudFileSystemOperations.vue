@@ -20,38 +20,81 @@
  -
  -->
 <template>
-  <div v-show="false" id="imageUploadTemplate" data-type="text/template">
-    <div id="{wrapperId}" class="file-upload-wrapper">
-      <form class="float hidden {formClass}" enctype="multipart/form-data">
-        <input class="file-upload-start"
-               type="file"
-               accept="{accept}"
-               name="{uploadName}"
-        >
-        <input type="hidden" name="uploadName" value="{uploadName}">
-        <!-- eslint-disable-next-line vue/html-quotes -->
-        <input type="hidden" name="data" value='{uploadData}'>
-        <input type="hidden" name="requesttoken" value="{requestToken}">
-        <input type="hidden" name="MAX_FILE_SIZE" :value="uploadMaxFileSize">
-        <input type="hidden" class="max_human_file_size" :value="uploadMaxHumanFileSize">
-        <input type="hidden" name="projectId" value="{projectId}">
-        <input type="hidden" name="musicianId" value="{musicianId}">
-      </form>
-      <div class="uploadprogresswrapper">
-        <div class="uploadprogressbar" />
-      </div>
-    </div>
-  </div>
+  <!-- eslint-disable vue/no-v-text-v-html-on-component, vue/no-v-html -->
+  <component :is="'script'"
+             id="cloudFileSystemOperations"
+             ref="outer"
+             type="text/html"
+             v-html="template"
+  />
 </template>
 <script lang="ts" setup>
-defineProps({
-  uploadMaxFileSize: {
-    type: Number,
-    required: true,
-  },
-  uploadMaxHumanFileSize: {
-    type: String,
-    required: true,
-  },
+import { appName } from '../../config.ts'
+import { translate as t } from '@nextcloud/l10n'
+import { computed } from 'vue'
+import useTooltipsStore from '../../stores/tooltips.ts'
+
+const modes = ['copy', 'move', 'link']
+const tooltipsProvider = useTooltipsStore()
+tooltipsProvider.provideTooltips(modes.map(mode => 'cloud-file-system-operations:' + mode))
+const hints = tooltipsProvider.tooltipsData
+
+const modeData = computed<Record<string, { name: string, hint: string }> >(() => {
+  console.info('UPDATE MODEDATE', { hints, currentHints: { ...hints } })
+  const result = {}
+  for (const mode of modes) {
+    result[mode] = { name: t(appName, mode), hint: hints['cloud-file-system-operations:' + mode] }
+  }
+  return result
 })
+
+const inputHtml = (mode: string, modeData: { name: string, hint: string }) => {
+  console.info('CALL INPUT HTML', { mode, modeData: { ...modeData } })
+  return `<input id = "{widgetCssClass}-${mode}-control"
+       type="radio"
+       class="radio {widgetCssClass} {widgetCssClass}-input {${mode}CssClass}"
+       value="${mode}"
+       name="{widgetRadioName}"
+       {${mode}Disabled}
+       {${mode}Selected}
+/>
+<label for="{widgetCssClass}-${mode}-control"
+       class="{widgetCssClass} {widgetCssClass}-label tooltip-auto"
+       title="${modeData.hint}"
+>
+  ${modeData.name}
+</label>`
+}
+
+const template = computed<string>(() => {
+  let result = `
+<div ref="inner" class="{widgetCssClass}-wrapper {widgetCssClass} {operations}">
+  <div class="{widgetCssClass} {widgetCssClass}-file-list font-monospace">
+    {files}
+  </div>
+  <div class="{widgetCssClass} {widgetCssClass}-controls">`
+  for (const [mode, data] of Object.entries(modeData.value)) {
+    result += inputHtml(mode, data)
+  }
+  result += `
+  </div>
+</div>`
+  console.info('UPDATED TEMPLATE', { result })
+  return result
+})
+
+// const inner = ref<null|HTMLElement>(null)
+// const outer = ref<null|HTMLScriptElement>(null)
+
+// watch(modeData, async () => {
+//   await nextTick()
+//   if (outer.value && inner.value) {
+//     outer.value.innerHTML = inner.value.outerHTML
+//   }
+//   console.info('INNER OUTER WATCHER', { outerInner: outer.value?.innerHTML, innerOuter: inner.value?.outerHTML })
+// })
+
+// onMounted(() => {
+//   // outer.value!.innerHTML = inner.value!.outerHTML
+// })
 </script>

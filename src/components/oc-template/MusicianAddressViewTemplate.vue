@@ -20,9 +20,13 @@
  -
  -->
 <template>
-  <div v-show="false" id="musicianAddressViewTemplate" data-type="text/template">
-    <div class="musician-address-view" data-id="{id}">
-      <table>
+  <component :is="'script'"
+             id="musicianAddressViewTemplate"
+             ref="outer"
+             type="text/template"
+  >
+    <div ref="inner" class="musician-address-view" data-id="{id}">
+      <table ref="outer">
         <thead>
           <tr class="personalPublicName musician-address-header">
             <th class="tag">
@@ -81,9 +85,14 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </component>
 </template>
 <script lang="ts" setup>
+import { onMounted, ref } from 'vue'
 import { appName } from '../../config.ts'
 import { translate as t } from '@nextcloud/l10n'
+
+const inner = ref<null|HTMLElement>(null)
+const outer = ref<null|HTMLScriptElement>(null)
+onMounted(() => { outer.value!.innerHTML = inner.value!.outerHTML })
 </script>

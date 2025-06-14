@@ -20,8 +20,12 @@
  -
  -->
 <template>
-  <div v-show="false" id="fileUploadTemplate" data-type="text/template">
-    <div id="{wrapperId}" class="file-upload-wrapper">
+  <component :is="'script'"
+             id="fileUploadTemplate"
+             ref="outer"
+             type="text/template"
+  >
+    <div id="{wrapperId}" ref="inner" class="file-upload-wrapper">
       <form class="float hidden {formClass}" enctype="multipart/form-data">
         <input class="file-upload-start"
                type="file"
@@ -41,9 +45,10 @@
         <div class="uploadprogressbar" />
       </div>
     </div>
-  </div>
+  </component>
 </template>
 <script lang="ts" setup>
+import { onMounted, ref } from 'vue'
 defineProps({
   uploadMaxFileSize: {
     type: Number,
@@ -54,4 +59,8 @@ defineProps({
     required: true,
   },
 })
+
+const inner = ref<null|HTMLElement>(null)
+const outer = ref<null|HTMLScriptElement>(null)
+onMounted(() => { outer.value!.innerHTML = inner.value!.outerHTML })
 </script>

@@ -239,7 +239,7 @@
     </form>
     <ImageUploadTemplate :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
     <FileUploadTemplate :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
-    <CloudFileSystemOperations :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
+    <CloudFileSystemOperations />
     <ProgressWrapperTemplate />
     <MusicianAddressViewTemplate />
   </NcContent>
