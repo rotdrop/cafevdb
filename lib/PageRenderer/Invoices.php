@@ -181,7 +181,7 @@ GROUP BY __t1.id',
   GROUP_CONCAT(DISTINCT __t1.project_id) AS project_ids,
   __t1.debitor_id,
   __t1.invoice_id
-FROM " . self::INVOICE_ITEMS_TABLE . " __t1
+FROM " . self::INVOICE_ITEMS_TABLE . " __t1@WHERE_PLACEHOLDER_T1@
 GROUP BY __t1.invoice_id
 UNION
 SELECT
@@ -199,7 +199,7 @@ SELECT
   __t2.project_id AS project_ids,
   __t2.debitor_id,
   __t2.invoice_id
-FROM " . self::INVOICE_ITEMS_TABLE . " __t2",
+FROM " . self::INVOICE_ITEMS_TABLE . " __t2@WHERE_PLACEHOLDER_T2@",
       'entity' => Entities\InvoiceItem::class,
       'identifier' => [
         'id' => false,
@@ -391,6 +391,7 @@ WHERE dsf.id IS NOT NULL',
     // up the table by joining self::INVOICE_ITEMS_TABLE.
     if ($projectMode) {
       $opts['sort_field'] = [
+        '-invoice_date',
         '-due_date',
         'project_id',
         'debitor_id',
@@ -485,6 +486,10 @@ WHERE dsf.id IS NOT NULL',
             'tooltip' => $this->l->t('General invoice data'),
             'name' => $this->l->t('Invoice Data'),
           ], [
+            'id' => 'documents',
+            'tooltip' => $this->toolTipsService['page-renderer:invoices:documents'],
+            'name' => $this->l->t('Documents'),
+          ], [
             'id' => 'transaction',
             'tooltip' => $this->l->t('Bulk-transaction data'),
             'name' => $this->l->t('Bank Transaction'),
@@ -547,10 +552,18 @@ WHERE dsf.id IS NOT NULL',
       'sort'     => true,
     ];
 
-    if ($this->projectMode) {
-      $this->joinStructure[self::INVOICE_ITEMS_TABLE]['sql'] .= '
-WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this->projectId;
-    }
+    $invoiceItemsPlaceHolder = [
+      '@WHERE_PLACEHOLDER_T1@',
+      '@WHERE_PLACEHOLDER_T2@',
+    ];
+    $invoiceItemsReplacement = $projectMode
+      ? [ ' WHERE __t1.project_id = ' . $this->projectId, ' WHERE __t2.project_id = ' . $this->projectId, ]
+    : [ '', '' ];
+    $this->joinStructure[self::INVOICE_ITEMS_TABLE]['sql'] = str_replace(
+      $invoiceItemsPlaceHolder,
+      $invoiceItemsReplacement,
+      $this->joinStructure[self::INVOICE_ITEMS_TABLE]['sql'],
+    );
     $this->defineJoinStructure($opts);
 
     $opts['fdd']['sepa_transaction_id'] = [
@@ -664,12 +677,13 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
       [
         'name' => $this->l->t('Debitor'),
         'css' => [ 'postfix' => [ 'debitor-id', 'allow-empty' ], ],
-        'select' => 'D',
+        'select|AFL' => 'D',
         'input' => 'M',
         'input|C' => 'R',
+        'select|CVD' => 'T',
         // 'select|C' => null, // 'T',
-        // 'sql|C' => static::musicianPublicNameSql(),
-        'default|C' => $this->musicianId, // ???
+        'sql' => static::musicianPublicNameSql(),
+        // 'default|C' => $this->musicianId, // ???
         'values' => [
           'description' => [
             'columns' => [ static::musicianPublicNameSql() ],
@@ -801,9 +815,21 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
             'postfix' => null,
             'popup' => 'tooltip',
           ],
-          'tooltip' => $this->toolTipsService['invoice-items:imbalance'],
+          'tooltip' => $this->toolTipsService['invoices:invoice-items:imbalance'],
         ]
     ));
+
+    // This in principle should be set to the date of the actual sending-out
+    // of the invoice.
+    $opts['fdd']['invoice_date'] = Util::arrayMergeRecursive(
+      $this->defaultFDD['date'], [
+        'tab' => [ 'id' => 'invoice' ],
+        'name' => $this->l->t('Invoice Date'),
+        'css'  => [ 'postfix' => [ 'invoice-date', ], ],
+        'input' => 'M',
+        // 'input|LF' => 'H',
+        'tooltip' => $this->toolTipsService['invoices:invoice-date'],
+      ]);
 
     // The default should be initialized in JS from either the minimum of the
     // due dates of the registered items.
@@ -863,6 +889,7 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
         'tab' => [ 'id' => 'invoice' ],
         'name' => $this->l->t('Subject'),
         'input'  => 'M',
+        'input|LF' => 'HR',
         'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
         'sql|LF' => 'IF($join_table.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%", REPLACE($main_table.subject, \'; \', \'<br/>\'), $join_col_fqn)',
         'sql' => '$join_col_fqn',
@@ -954,7 +981,7 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
   , "fieldId", $table.field_id
   , "receivableKey", BIN2UUID($table.receivable_key)
   , "amount", $table.amount
-  , "dueDate", $table.due_date
+  , "dueDate<", $table.due_date
   , "depositDueDate", $table.deposit_due_date
 )',
           'groups' => 'IF($table.multiplicity IN ("'.
@@ -1081,87 +1108,89 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
       . ')';
 
     $opts['fdd']['written_invoice_id'] = [
-      'tab' => [ 'id' => [ 'invoice', ] ],
-      'css' => [ 'postfix' => [ 'written-invoice', ], ],
-      'name' => $this->l->t('Written Invoice'),
-      'input|ALF' => 'HR',
+      'name' => $this->l->t('Local Copy'),
+      'tab' => [ 'id' => 'documents' ],
+      'input|A' => 'HR',
+      'css'      => [ 'postfix' => [ 'local-copy', 'written-invoice', ], ],
       'options' => 'LFACDPV',
       'php|CP' => function($value, $action, $k, $row, $recordId, $pme) {
 
-        if ($pme->hidden($k)) {
+        if ($pme->hidden($k) || empty($row)) {
           return '';
         }
 
-        $debitorId = $row[$this->queryField('debitor_id')];
-        /** @var Entities\Musician $musician */
-        $musician = $this->findEntity(Entities\Musician::class, $debitorId);
-        $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $musician->getUserIdSlug());
+        $invoiceNumber = $row[$this->queryField('invoice_number')];
+        $musicianName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
+        $projectName = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'name')];
+
+        $fileName = $this->getLegacyInvoiceFileName(
+          $invoiceNumber,
+          $musicianName,
+          $projectName,
+        );
+
+        $dir = $this->getInvoicesPath();
+        $invoiceDate = $row[$this->queryField('invoice_date')];
+        $year = substr($invoiceDate, 0, 4);
+        $dir .= UserStorage::PATH_SEP . $year;
+
+        $this->logInfo('INVOICE PATH ' . $dir . UserStorage::PATH_SEP . $fileName);
 
         return '<div class="file-upload-wrapper">
   <table class="file-upload">'
           . $this->dbFileUploadRowHtml(
             $value,
-            fieldId: $debitorId,
+            fieldId: $recordId['id'],
             optionKey: $recordId['id'],
-            subDir: $this->getSupportingDocumentsFolderName() . UserStorage::PATH_SEP . $this->getBankTransactionsFolderName(),
-            fileBase: $fileName,
+            subDir: null,
+            fileBase: $dir . UserStorage::PATH_SEP . $fileName,
             overrideFileName: true,
-            musician: $musician,
+            musician: null,
             project: null,
+            inputValueName: 'written_invoice_id',
           )
           . '
   </table>
 </div>';
       },
       'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
-
-        $debitorId = $row[$this->queryField('debitor_id')];
-        /** @var Entities\Musician $musician */
-        $musician = $this->findEntity(Entities\Musician::class, $debitorId);
-
-        if (!empty($value)) {
-
-          /** @var Entities\DatabaseStorageFile $file */
-          $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
-          if (empty($file)) {
-            $this->logError('File not found for musician "' . $musician->getPublicName(). ' file-id ' . $value);
-            return $value;
-          }
-
-          $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($file);
-
-
-          $subDirPrefix =
-            UserStorage::PATH_SEP . $this->getDocumentsFolderName()
-            . UserStorage::PATH_SEP . $this->getSupportingDocumentsFolderName()
-            . UserStorage::PATH_SEP . $this->getBankTransactionsFolderName();
-
-          $project = $this->project ?? $this->ensureProject($row[$this->queryField('project_id')]);
-          $participantFolder = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
-          try {
-            $filesAppTarget = md5($this->userStorage->getFilesAppLink($participantFolder));
-            $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
-            $filesAppLink = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
-       title="'.$this->toolTipsService['page-renderer:upload:open-parent'].'"
-       class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
-       ></a>';
-          } catch (\OCP\Files\NotFoundException $e) {
-            $this->logInfo('No file found for ' . $participantFolder . $subDirPrefix);
-            $filesAppLink = '';
-          }
-          return $filesAppLink
-            . '<a class="download-link ajax-download tooltip-auto"
-   title="'.$this->toolTipsService['project-payments:payment:document'].'"
-   href="'.$downloadLink.'">' . $file->getName() . '</a>';
-        } else {
+        if (empty($value)) {
           return $value;
         }
+
+        /** @var Entities\DatabaseStorageFile $file */
+        $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
+
+        $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($file);
+        $invoiceDate = $row[$this->queryField('invoice_date')];
+        $year = substr($invoiceDate, 0, 4);
+        $dir = $this->getInvoicesPath()
+          . UserStorage::PATH_SEP . $year;
+
+        try {
+          $filesAppLink = $this->userStorage->getFilesAppLink($dir, true);
+          $filesAppTarget = md5($filesAppLink);
+          $filesAppLink = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
+       title="'.$this->toolTipsService['page-renderer:upload:open-parent'].'"
+       class="button operation open-parent tooltip-auto' . (empty($filesAppLink) ? ' disabled' : '') . '"
+       ></a>';
+        } catch (\OCP\Files\NotFoundException $e) {
+          $this->logInfo('No file found for ' . $dir);
+          $filesAppLink = '';
+        }
+        return '<div class="flex-container">
+'
+          . $filesAppLink
+          . '<a class="download-link ajax-download tooltip-auto inline-block clip-long-text"
+   title="' . $this->toolTipsService['page-renderer:invoices:supporting-document'] . '"
+   href="' . $downloadLink . '">' . $file->getName() . '</a>
+</div>';
       },
     ];
 
     $opts['fdd']['balance_documents_folder_id'] = [
       'name' => $this->l->t('Financial Project Balance'),
-      'tab' => [ 'id' => 'invoice' ],
+      'tab' => [ 'id' => 'documents' ],
       'css' => [
         'postfix' => [
           'allow-empty',
@@ -1274,7 +1303,7 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
     $this->makeJoinTableField(
       $opts['fdd'], self::INVOICE_ITEMS_TABLE, 'balance_documents_folder_id', [
         'name' => $this->l->t('Parts Project Balances'),
-        'tab' => [ 'id' => 'invoice' ],
+        'tab' => [ 'id' => 'documents' ],
         'css' => [
           'postfix' => [
             'allow-empty',
@@ -1421,7 +1450,7 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
       array_merge(
         $this->defaultFDD['date'], [
           'tab' => [ 'id' => [ 'transaction' ] ],
-          'name' => $this->l->t('Bulk Transaction'),
+          'name' => $this->l->t('Bank Transaction'),
           'input' => 'R',
           'options' => 'LFVD',
           'css'  => [ 'postfix' => [ 'bulk-transaction', ], ],
@@ -1439,7 +1468,7 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
       $opts['fdd'], self::SEPA_BULK_TRANSACTIONS_TABLE, 'submit_date',
       array_merge(
         $this->defaultFDD['date'], [
-          'name' => $this->l->t('Filing Date'),
+          'name' => $this->l->t('Date of Bank Transaction'),
           'input' => 'R',
           'options' => 'LFVD',
           'css'  => [ 'postfix' => [ 'date-of-submission', ], ],
@@ -1573,6 +1602,7 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
         $amountIndex = $this->queryFieldIndex('amount');
         $invoiceItemsAmountIndex = $this->joinQueryFieldIndex(self::INVOICE_ITEMS_TABLE, 'amount');
 
+        $invoiceDateIndex = $this->queryFieldIndex('invoice_date');
         $dueDateIndex = $this->queryFieldIndex('due_date');
         $invoiceItemsDueDateIndex = $this->joinQueryFieldIndex(self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'due_date');
 
@@ -1592,6 +1622,8 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
           $pme->fdd[$receivableKeyIndex]['input'] = 'HR';
           $pme->fdd[$amountIndex]['input'] = 'M';
           $pme->fdd[$invoiceItemsAmountIndex]['input'] = 'HR';
+          $pme->fdd[$invoiceDateIndex]['input'] = 'M';
+          $pme->fdd[$invoiceDateIndex]['sql'] = '';
           $pme->fdd[$dueDateIndex]['input'] = 'M';
           $pme->fdd[$dueDateIndex]['sql'] = '';
           $pme->fdd[$invoiceItemsDueDateIndex]['input'] = 'HR';
@@ -1635,6 +1667,8 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
           $pme->fdd[$amountIndex]['input'] = 'HR';
           $pme->fdd[$invoiceItemsAmountIndex]['input'] = 'M';
           $pme->fdd[$balancedDateIndex]['input'] = 'HR';
+          $pme->fdd[$invoiceDateIndex]['input'] = 'VR';
+          $pme->fdd[$invoiceDateIndex]['sql'] = '$column';
           $pme->fdd[$dueDateIndex]['input'] = 'VR';
           $pme->fdd[$dueDateIndex]['sql'] = '$column';
           $pme->fdd[$invoiceItemsDueDateIndex]['input'] = 'VR';
@@ -1723,7 +1757,7 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
   }
 
   /**
-   * @param int $id Composite payment id.
+   * @param int $id Database entity id.
    *
    * @param array $row
    *
@@ -1751,6 +1785,7 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
       'direction' => $direction,
       'dropDirection' => $dropDirection,
       'invoiceId' => $id,
+      'invoiceNumber' => $row[$this->queryField('invoice_number')],
       'debitorName' => $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')],
       'debitorId' => $row[$this->queryField('debitor_id')],
       'originatorName' => $row[$this->queryField('originator_id')],

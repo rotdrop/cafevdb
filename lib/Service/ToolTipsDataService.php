@@ -473,6 +473,14 @@ invited to have a look, but please do not change anything unless you know what y
 to zero (but don\'t) in order to have a donation which is a waiving of reimbursement.'),
           'amount-waived' => self::t('If non-zero then this amount must be negativ and sum up to zero with the proper donation
 amount. In this case this donation is a waiving of reimbursement'),
+          'written-notice' => self::t('Local copy of the donation receipt sent-out via snail-mail the donator.'),
+        ],
+
+        'invoices' => [
+          'written-invoice' => self::t('Local copy of the invoice sent-out either by email or snail-mail to the debitor.'),
+          'invoice-items' => [
+            'imbalance' => self::t('This is the difference between invoiced amount and the sum of the amount of the individual invoice items and thus must be 0. If not, the invoice data has to be corrected.'),
+          ],
         ],
 
         'add-musicians' => [
