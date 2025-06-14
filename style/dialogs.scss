@@ -128,7 +128,7 @@ $full-screen-zindex: 9000;
   box-sizing:border-box;
 }
 
-.oc-dialog {
+.nc-generic-dialog {
 
   @include errorDialogs($appNameTag);
 

@@ -103,12 +103,18 @@ const cloudFilePickerDialog = function(options) {
           const templateParameters = {
             operations: uploadModes.join(' '),
             files: uploadFiles.map(
-              (info) => `<span class="file-node tooltip-auto tooltip-wide"
-      title="${escapeHtml(info.dir + '/' + info.base)}"
+              (info) => {
+                const dir = escapeHtml(info.dir).replace(/\/+$/, '');
+                const base = escapeHtml(info.base).replace(/^\/+/, '');
+                return `
+<span class="file-node tooltip-auto tooltip-wide flex-container"
+      title="${dir + '/' + base}"
 >
-  <span class="dirname">${escapeHtml(info.dir)}/</span>
-  <span class="basename">${escapeHtml(info.base)}</span>
-</span>`).join(''),
+  <span class="dirname">${dir}</span>
+  <span class="separator">/</span>
+  <span class="basename">${base}</span>
+  </span>`;
+              }).join(''),
             widgetCssClass: 'cloud-file-system-operations',
             widgetRadioName: 'cloudFileSystemOperations',
           };
