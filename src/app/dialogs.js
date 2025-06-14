@@ -27,11 +27,88 @@
 
 import $ from './jquery.js';
 import { appName } from '../config.ts';
+import { DialogBuilder } from '@nextcloud/dialogs';
 
 require('dialogs.scss');
 
-const alert = function(text, title, callback, modal, allowHtml) {
-  return OC.dialogs.message(
+const YES_NO_BUTTONS = 70;
+const OK_BUTTONS = 71;
+
+/* eslint-disable n/no-callback-literal */
+
+const getLegacyButtons = function(buttons, callback) {
+  const buttonList = [];
+
+  switch (typeof buttons === 'object' ? buttons.type : buttons) {
+  case YES_NO_BUTTONS:
+    buttonList.push({
+      label: buttons?.cancel ?? t('core', 'No'),
+      callback: () => {
+        callback._clicked = true;
+        callback(false);
+      },
+    });
+    buttonList.push({
+      label: buttons?.confirm ?? t('core', 'Yes'),
+      type: 'primary',
+      callback: () => {
+        callback._clicked = true;
+        callback(true);
+      },
+    });
+    break;
+  case OK_BUTTONS:
+    buttonList.push({
+      label: buttons?.confirm ?? t('core', 'OK'),
+      type: 'primary',
+      callback: () => {
+        callback._clicked = true;
+        callback(true);
+      },
+    });
+    break;
+  default:
+    console.error('Invalid call to OC.dialogs');
+    break;
+  }
+  return buttonList;
+};
+
+const message = function(content, title, dialogType, buttons, callback = () => {}, modal, allowHtml, subTitle) {
+  const builder = (new DialogBuilder())
+    .setName(title)
+    .setSubName(subTitle || '')
+    .setText(allowHtml ? '' : content)
+    .setButtons(getLegacyButtons(buttons, callback));
+
+  switch (dialogType) {
+  case 'alert':
+    builder.setSeverity('warning');
+    break;
+  case 'notice':
+    builder.setSeverity('info');
+    break;
+  default:
+    break;
+  }
+
+  const dialog = builder.build();
+
+  console.info('DIALOG', { dialog });
+
+  if (allowHtml) {
+    dialog.setHTML(content);
+  }
+
+  return dialog.show().then(() => {
+    if (!callback._clicked) {
+      callback(false);
+    }
+  });
+};
+
+const alert = function(text, title, callback, modal, allowHtml, subTitle) {
+  return message(
     text,
     title,
     'alert',
@@ -39,11 +116,12 @@ const alert = function(text, title, callback, modal, allowHtml) {
     callback,
     modal,
     allowHtml,
+    subTitle,
   );
 };
 
-const info = function(text, title, callback, modal, allowHtml) {
-  return OC.dialogs.message(
+const info = function(text, title, callback, modal, allowHtml, subTitle) {
+  return message(
     text,
     title,
     'info',
@@ -51,10 +129,11 @@ const info = function(text, title, callback, modal, allowHtml) {
     callback,
     modal,
     allowHtml,
+    subTitle,
   );
 };
 
-const confirm = function(text, title, options, modal, allowHtml) {
+const confirm = function(text, title, options, modal, allowHtml, subTitle) {
   const defaultOptions = {
     callback() {},
     modal: false,
@@ -86,8 +165,10 @@ const confirm = function(text, title, options, modal, allowHtml) {
   }
   options.buttons.confirmClasses = classes;
 
+  console.debug('CONFIRM TEXT', { text, title, subTitle, options, modal, allowHtml });
+
   return new Promise((resolve, reject) =>
-    OC.dialogs.message(
+    message(
       text,
       title,
       'notice',
@@ -99,6 +180,7 @@ const confirm = function(text, title, options, modal, allowHtml) {
       },
       options.modal,
       options.allowHtml,
+      subTitle,
     ).then(() => {
       $('body').find('.oc-dialog-buttonrow.twobuttons').each(function() {
         const $buttonRow = $(this);
