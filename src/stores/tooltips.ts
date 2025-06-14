@@ -29,6 +29,7 @@ import {
   reactive,
   ref,
   watch,
+  set as vueSet,
 } from 'vue';
 import { tooltips } from '../util/tooltips.ts';
 import Console from '../util/console.ts';
@@ -57,7 +58,7 @@ export default defineStore(storeId, () => {
     const pending: string[] = [];
     for (const key of keys) {
       if (tooltipsData[key] === undefined) {
-        tooltipsData[key] = '';
+        vueSet(tooltipsData, key, '');
         pending.push(key);
       }
     }
@@ -80,32 +81,32 @@ export default defineStore(storeId, () => {
     () => {
       for (const key of failedKeys.value) {
         if (tooltipsData[key] !== undefined) {
-          tooltipsData[key] = failedTooltipMessage(key);
+          vueSet(tooltipsData, key, failedTooltipMessage(key));
         }
       }
     },
   );
 
-  watch(() => pendingKeys, async () =>
-    {
+  watch(() => pendingKeys, async () => {
       if (pendingKeys.value.length === 0) {
         loading.value = false;
         return;
       }
-      await lock;
       const requestedTooltips = [...pendingKeys.value];
+      await lock;
       pendingKeys.value = [];
-      logger.debug('PENDING KEYS CHANGED', { requestedTooltips });
       const newTooltips = await tooltips(requestedTooltips);
       for (const [key, tooltip] of Object.entries(newTooltips)) {
         if (!tooltip) {
           failedKeys.value.push(key);
-          tooltipsData[key] = failedTooltipMessage(key);
+          // tooltipsData[key] = failedTooltipMessage(key);
+          vueSet(tooltipsData, key, failedTooltipMessage(key));
         } else {
-          tooltipsData[key] = tooltip;
+          // tooltipsData[key] = tooltip;
+          vueSet(tooltipsData, key, tooltip);
         }
       }
-      logger.debug('TOOLTIPS AFTER FETCHING', tooltipsData);
+      logger.debug('TOOLTIPS AFTER FETCHING', { tooltips: { ...tooltipsData } });
     },
     { deep: true },
   );
