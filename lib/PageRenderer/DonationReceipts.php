@@ -665,7 +665,7 @@ class DonationReceipts extends PMETableViewBase
 '
           . $filesAppLink
           . '<a class="download-link ajax-download tooltip-auto inline-block clip-long-text"
-   title="' . $this->toolTipsService['page-renderer:donation-receipts:supporting-document'] . '"
+   title="' . $this->toolTipsService['page-renderer:donation-receipts:written-notice'] . '"
    href="' . $downloadLink . '">' . $file->getName() . '</a>
 </div>';
       },
