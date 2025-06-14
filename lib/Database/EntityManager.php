@@ -1077,6 +1077,10 @@ class EntityManager extends EntityManagerDecorator
    */
   public function isTransactionActive():bool
   {
+    if ($this->entityManager === null) {
+      return false;
+    }
+    $connection = $this->entityManager->getConnection();
     return $this->entityManager->getConnection()->isTransactionActive();
   }
 
@@ -1402,7 +1406,7 @@ class EntityManager extends EntityManagerDecorator
    *
    * @return null|Transformable\Transformer\TransformerInterface
    */
-  public function getDataTransformer(string $key):Transformable\Transformer\TransformerInterface
+  public function getDataTransformer(string $key):?Transformable\Transformer\TransformerInterface
   {
     return $this->transformerPool[$key] ?? null;
   }
