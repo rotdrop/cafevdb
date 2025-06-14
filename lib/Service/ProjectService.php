@@ -145,7 +145,7 @@ class ProjectService
         $this->logError('GET ' . print_r($request->get, true));
       }
       $this->repository = null;
-      $this->logException($t);
+      $this->logException($t, 'Database connection error in ProjectService constructor');
     }
     $this->l = $this->l10n();
 
