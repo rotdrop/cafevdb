@@ -24,13 +24,15 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
+use Throwable;
 
-use OCA\CAFEVDB\Maintenance\IMigration;
-use OCA\CAFEVDB\Database\EntityManager;
+use OCP\IL10N;
+use Psr\Log\LoggerInterface as ILogger;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Maintenance\IMigration;
 
 /**
  * Abstract migration class, the derived classes have to fill
@@ -88,7 +90,8 @@ abstract class AbstractMigration implements IMigration
         }
         $statement->execute();
       }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
+      $this->logError('Structural query failed: "' . print_r($sql, true) . '".');
       throw new Exceptions\DatabaseMigrationException($this->l->t('Structural part of migration "%s" failed.', $this->description()), $t->getCode(), $t);
     }
 
@@ -108,7 +111,8 @@ abstract class AbstractMigration implements IMigration
         if ($connection->isTransactionActive()) {
           $connection->commit();
         }
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
+        $this->logError('Transactional query failed: "' . print_r($sql, true) . '".');
         if ($connection->isTransactionActive()) {
           try {
             $connection->rollBack();
