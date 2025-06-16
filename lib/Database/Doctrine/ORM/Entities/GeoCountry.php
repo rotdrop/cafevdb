@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * GeoCountries
+ * GeoCountries. This table records L10N country names for an ISO country
+ * code, given the translation target which also is a 2 character language
+ * code, so the translation in l10nName should in principle correspond to the
+ * locate TARGET_ISO, (e.g. en_UK).
  */
 #[ORM\Table(name: 'GeoCountries')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
@@ -53,6 +56,7 @@ class GeoCountry implements \ArrayAccess
   /**
    * @var string
    *
+    * Translation target ISO code.
    */
   #[ORM\Id]
   #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
