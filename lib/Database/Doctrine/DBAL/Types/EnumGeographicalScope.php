@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
-
 /**
  * Geographical scope for insurances.
  *
@@ -37,10 +35,8 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  *
  * @todo Perhaps should be renamed to "COUNTRY/CONTINENT/WORLD"
  */
-class EnumGeographicalScope extends EnumType
+class EnumGeographicalScope extends AbstractEnumType
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
-
   public const DOMESTIC = 'Domestic';
   public const CONTINENT = 'Continent';
   public const GERMANY = 'Germany';

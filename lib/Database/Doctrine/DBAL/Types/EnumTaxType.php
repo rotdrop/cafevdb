@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,21 +24,21 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
-
 /**
- * Tax types.
+ * Tax types. FIXME: the difference between VAT and "Sales Tax" is not clean
+ * and IMHO in Germany there is no difference; there is "Sales Tax" ==
+ * "Umsatzsteuer" and this is it.
  *
  * @method static EnumTaxType CORPORATE_INCOME()
  * @method static EnumTaxType SALES()
+ * @method static EnumTaxType TRADE()
  * @method static EnumTaxType VAT()
  */
-class EnumTaxType extends EnumType
+class EnumTaxType extends AbstractEnumType
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
-
   public const CORPORATE_INCOME = 'corporate income tax';
   public const SALES = 'sales tax';
+  public const TRADE = 'trade tax';
   public const VAT = 'VAT';
 
   /**
@@ -50,6 +50,7 @@ class EnumTaxType extends EnumType
   {
     self::t(self::CORPORATE_INCOME);
     self::t(self::SALES);
+    self::t(self::TRADE);
     self::t(self::VAT);
   }
 }
