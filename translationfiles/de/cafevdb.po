@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-06-15 01:13+0200\n"
-"PO-Revision-Date: 2025-06-14 12:09+0200\n"
+"POT-Creation-Date: 2025-06-16 01:40+0200\n"
+"PO-Revision-Date: 2025-06-16 02:01+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -616,7 +616,7 @@ msgstr "angewendet"
 msgid "pending"
 msgstr "ausstehend"
 
-#: lib/Command/Migrations.php:365 lib/PageRenderer/DonationReceipts.php:526
+#: lib/Command/Migrations.php:365 lib/PageRenderer/DonationReceipts.php:547
 #: lib/PageRenderer/ProjectParticipants.php:1033
 msgid "Status"
 msgstr "Status"
@@ -1303,15 +1303,15 @@ msgid "Missing in DB"
 msgstr "Fehlt in der DB"
 
 #: lib/Command/SentNotifications.php:262
-#: lib/PageRenderer/DonationReceipts.php:475
+#: lib/PageRenderer/DonationReceipts.php:496
 #: lib/PageRenderer/ProjectPayments.php:710
 msgid "Date of Receipt"
 msgstr "Eingangsdatum"
 
 #: lib/Command/SentNotifications.php:263
-#: lib/PageRenderer/DonationReceipts.php:452
+#: lib/PageRenderer/DonationReceipts.php:473
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1579
-#: lib/PageRenderer/Invoices.php:869 lib/PageRenderer/Invoices.php:890
+#: lib/PageRenderer/Invoices.php:910 lib/PageRenderer/Invoices.php:931
 #: lib/PageRenderer/ProjectPayments.php:715
 #: lib/PageRenderer/ProjectPayments.php:736
 #: lib/PageRenderer/SepaBulkTransactions.php:516
@@ -2143,7 +2143,7 @@ msgstr "Fehler während der Serienbrief-Erstellung: \"%s\""
 #. TRANSLATORS: folder-name
 #: lib/Controller/MailMergeController.php:471
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1541
-#: lib/PageRenderer/Invoices.php:491
+#: lib/PageRenderer/Invoices.php:500
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:65
 msgid "Documents"
 msgstr "Dokumente"
@@ -4771,7 +4771,7 @@ msgstr "Option"
 
 #: lib/EmailForm/Composer.php:1039 lib/EmailForm/Composer.php:1061
 #: lib/EmailForm/Composer.php:1487 lib/EmailForm/Composer.php:1539
-#: lib/PageRenderer/Invoices.php:750 lib/PageRenderer/ProjectPayments.php:653
+#: lib/PageRenderer/Invoices.php:759 lib/PageRenderer/ProjectPayments.php:653
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
 
@@ -4793,8 +4793,8 @@ msgstr "Fehlbetrag"
 
 #: lib/EmailForm/Composer.php:1042
 #: lib/PageRenderer/InstrumentInsurances.php:616
-#: lib/PageRenderer/Invoices.php:839 lib/PageRenderer/Invoices.php:850
-#: lib/PageRenderer/PMETableViewBase.php:704
+#: lib/PageRenderer/Invoices.php:880 lib/PageRenderer/Invoices.php:891
+#: lib/PageRenderer/PMETableViewBase.php:708
 msgid "Due Date"
 msgstr "Fälligkeit"
 
@@ -5350,19 +5350,19 @@ msgid "Unable to bind encryption service for user \"%s\"."
 msgstr ""
 "Kann den Verschlüsselungs-Service für den Benutzer \"%s\" nicht einrichten."
 
-#: lib/Maintenance/Migrations/AbstractMigration.php:92
+#: lib/Maintenance/Migrations/AbstractMigration.php:95
 #, php-format
 msgid "Structural part of migration \"%s\" failed."
 msgstr "Der strukturelle Teil der Datenmigration \"%s\" ist fehlgeschlagen."
 
-#: lib/Maintenance/Migrations/AbstractMigration.php:116
+#: lib/Maintenance/Migrations/AbstractMigration.php:120
 #: lib/Maintenance/Migrations/EnsureNotAnInstrumentBusinessRelation.php:115
 #: lib/Maintenance/Migrations/SanitizeSentEmailAssociations.php:103
 #, php-format
 msgid "Rollback of Migration \"%s\" failed."
 msgstr "Die Datenmigration \"%s\" konnte nicht rückgängig gemacht werden."
 
-#: lib/Maintenance/Migrations/AbstractMigration.php:119
+#: lib/Maintenance/Migrations/AbstractMigration.php:123
 #: lib/Maintenance/Migrations/EnsureNotAnInstrumentBusinessRelation.php:121
 #: lib/Maintenance/Migrations/SanitizeSentEmailAssociations.php:105
 #, php-format
@@ -5446,6 +5446,10 @@ msgstr ""
 msgid "Provide a table modelling legal persons."
 msgstr ""
 "Eine Tabelle zur Verfügung stellen, die juristische Personen modelliert."
+
+#: lib/Maintenance/Migrations/CreateTableTaxationStatutorySources.php:89
+msgid "Provide a table for taxation statutory sources."
+msgstr "Eine Tabelle mit rechtlichen Grundlagen für Besteuerung erstellen."
 
 #: lib/Maintenance/Migrations/CreateTaxExemptionNotices.php:59
 msgid "Provide a table for recording tax exemption notices."
@@ -5689,31 +5693,31 @@ msgstr "Alle zu %s"
 msgid "Overview over all registered musicians"
 msgstr "Übersicht über alle Personen"
 
-#: lib/PageRenderer/DonationReceipts.php:162
+#: lib/PageRenderer/DonationReceipts.php:183
 #: lib/Service/ToolTipsDataService.php:1512
 msgid "Donation Receipts"
 msgstr "Zuwendungsbestätigungen"
 
-#: lib/PageRenderer/DonationReceipts.php:289
-#: lib/PageRenderer/DonationReceipts.php:397
+#: lib/PageRenderer/DonationReceipts.php:310
+#: lib/PageRenderer/DonationReceipts.php:418
 msgid "Payment"
 msgstr "Zahlung"
 
-#: lib/PageRenderer/DonationReceipts.php:293
+#: lib/PageRenderer/DonationReceipts.php:314
 #: lib/PageRenderer/ProjectPayments.php:967
 msgid "Supporting Document"
 msgstr "Beleg"
 
-#: lib/PageRenderer/DonationReceipts.php:297
+#: lib/PageRenderer/DonationReceipts.php:318
 #: lib/PageRenderer/InstrumentInsurances.php:232
 #: lib/PageRenderer/Musicians.php:281
 #: lib/PageRenderer/ProjectParticipantFields.php:272
 msgid "Miscellaneous Data"
 msgstr "Verschiedenes"
 
-#: lib/PageRenderer/DonationReceipts.php:301
+#: lib/PageRenderer/DonationReceipts.php:322
 #: lib/PageRenderer/InstrumentInsurances.php:237
-#: lib/PageRenderer/Invoices.php:499 lib/PageRenderer/Musicians.php:284
+#: lib/PageRenderer/Invoices.php:508 lib/PageRenderer/Musicians.php:284
 #: lib/PageRenderer/ProjectParticipantFields.php:277
 #: lib/PageRenderer/ProjectParticipants.php:1794
 #: lib/PageRenderer/ProjectPayments.php:495
@@ -5723,7 +5727,7 @@ msgstr "Verschiedenes"
 msgid "Display all columns"
 msgstr "Alles anzeigen"
 
-#: lib/PageRenderer/DonationReceipts.php:329
+#: lib/PageRenderer/DonationReceipts.php:350
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:177
 #: lib/PageRenderer/InstrumentInsurances.php:272
 #: lib/PageRenderer/ProjectPayments.php:619
@@ -5732,8 +5736,8 @@ msgstr "Alles anzeigen"
 msgid "Musician"
 msgstr "Person"
 
-#: lib/PageRenderer/DonationReceipts.php:359
-#: lib/PageRenderer/DonationReceipts.php:365 lib/PageRenderer/Invoices.php:709
+#: lib/PageRenderer/DonationReceipts.php:380
+#: lib/PageRenderer/DonationReceipts.php:386 lib/PageRenderer/Invoices.php:718
 #: lib/PageRenderer/Musicians.php:542
 #: lib/PageRenderer/ProjectAssociates.php:594
 #: lib/PageRenderer/ProjectParticipants.php:645
@@ -5741,12 +5745,12 @@ msgstr "Person"
 msgid "User Id"
 msgstr "Benutzerkennung"
 
-#: lib/PageRenderer/DonationReceipts.php:396
+#: lib/PageRenderer/DonationReceipts.php:417
 #: lib/PageRenderer/ProjectPayments.php:505
 msgid "Payment Id"
 msgstr "Zahlungs-Id"
 
-#: lib/PageRenderer/DonationReceipts.php:489 lib/PageRenderer/Invoices.php:774
+#: lib/PageRenderer/DonationReceipts.php:510 lib/PageRenderer/Invoices.php:783
 #: lib/PageRenderer/ProjectParticipantFields.php:2031
 #: lib/PageRenderer/ProjectPayments.php:668
 #: lib/PageRenderer/SepaBankAccounts.php:1083
@@ -5754,20 +5758,20 @@ msgstr "Zahlungs-Id"
 msgid "Amount"
 msgstr "Betrag"
 
-#: lib/PageRenderer/DonationReceipts.php:502
+#: lib/PageRenderer/DonationReceipts.php:523
 msgid "Amount Waived"
 msgstr "Verzichtsbetrag"
 
-#: lib/PageRenderer/DonationReceipts.php:538
+#: lib/PageRenderer/DonationReceipts.php:559
 msgid "inconsistent donation"
 msgstr "inkonsistente Spendenbeträge"
 
-#: lib/PageRenderer/DonationReceipts.php:539
+#: lib/PageRenderer/DonationReceipts.php:560
 msgid "consistency checks passed"
 msgstr "Konsistenztests waren erfolgreich"
 
 #. TRANSLATORS src/views/FilesTab.vue:143
-#: lib/PageRenderer/DonationReceipts.php:553 lib/PageRenderer/Invoices.php:590
+#: lib/PageRenderer/DonationReceipts.php:574 lib/PageRenderer/Invoices.php:599
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:197
 #: lib/PageRenderer/ProjectParticipantFields.php:324
 #: lib/PageRenderer/ProjectPayments.php:575
@@ -5776,48 +5780,48 @@ msgstr "Konsistenztests waren erfolgreich"
 msgid "Project"
 msgstr "Projekt"
 
-#: lib/PageRenderer/DonationReceipts.php:583 lib/PageRenderer/Invoices.php:622
+#: lib/PageRenderer/DonationReceipts.php:604 lib/PageRenderer/Invoices.php:631
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:237
 #: lib/PageRenderer/ProjectPayments.php:605
 msgid "Project Name"
 msgstr "Projekt-Name"
 
-#: lib/PageRenderer/DonationReceipts.php:590 lib/PageRenderer/Invoices.php:629
+#: lib/PageRenderer/DonationReceipts.php:611 lib/PageRenderer/Invoices.php:638
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:244
 #: lib/PageRenderer/ProjectPayments.php:612
 msgid "Project Year"
 msgstr "Projekt-Jahr"
 
-#: lib/PageRenderer/DonationReceipts.php:595 lib/PageRenderer/Invoices.php:1111
+#: lib/PageRenderer/DonationReceipts.php:616 lib/PageRenderer/Invoices.php:1152
 msgid "Local Copy"
 msgstr "Lokale Kopie"
 
-#: lib/PageRenderer/DonationReceipts.php:678
+#: lib/PageRenderer/DonationReceipts.php:699
 msgid "Tax Exemption Notice"
 msgstr "Freistellungsbescheid"
 
-#: lib/PageRenderer/DonationReceipts.php:706
+#: lib/PageRenderer/DonationReceipts.php:727
 msgid "Mailing Date"
 msgstr "Versanddatum"
 
-#: lib/PageRenderer/DonationReceipts.php:715
+#: lib/PageRenderer/DonationReceipts.php:736
 msgid "Invalidated"
 msgstr "Löschdatum"
 
-#: lib/PageRenderer/DonationReceipts.php:730 lib/PageRenderer/Musicians.php:989
+#: lib/PageRenderer/DonationReceipts.php:751 lib/PageRenderer/Musicians.php:989
 #: lib/PageRenderer/ProjectAssociates.php:1147
 #: lib/PageRenderer/ProjectParticipants.php:1402
 #: lib/PageRenderer/Projects.php:1019
-#: lib/PageRenderer/TaxExemptionNotices.php:376
+#: lib/PageRenderer/TaxExemptionNotices.php:444
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
 #. TRANSLATORS: Textual description of HTTP status code 201, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: lib/PageRenderer/DonationReceipts.php:743
+#: lib/PageRenderer/DonationReceipts.php:764
 #: lib/PageRenderer/Musicians.php:1002
 #: lib/PageRenderer/ProjectAssociates.php:1159
 #: lib/PageRenderer/ProjectParticipants.php:1414
-#: lib/PageRenderer/TaxExemptionNotices.php:389 src/toolkit/util/ajax.js:38
+#: lib/PageRenderer/TaxExemptionNotices.php:457 src/toolkit/util/ajax.js:38
 msgid "Created"
 msgstr "Erzeugt"
 
@@ -6042,6 +6046,8 @@ msgstr "Nicht unterstützte Vielfachheit / Daten-Typ Kombination: %s / %s"
 #: lib/PageRenderer/ProjectParticipantFields.php:380
 #: lib/PageRenderer/ProjectParticipants.php:590
 #: lib/PageRenderer/Projects.php:323
+#: lib/PageRenderer/TaxExemptionNotices.php:253
+#: lib/PageRenderer/TaxationStatutorySources.php:279
 msgid "Deleted"
 msgstr "Gelöscht"
 
@@ -6210,7 +6216,7 @@ msgid "SEPA Bank Accounts"
 msgstr "SEPA Bankverbindungen"
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:185
-#: lib/PageRenderer/Invoices.php:1501 lib/PageRenderer/ProjectPayments.php:1353
+#: lib/PageRenderer/Invoices.php:1542 lib/PageRenderer/ProjectPayments.php:1353
 #: lib/PageRenderer/SepaBankAccounts.php:623
 #: lib/PageRenderer/SepaBankAccounts.php:701
 #: lib/PageRenderer/SepaBulkTransactions.php:450
@@ -6219,7 +6225,7 @@ msgid "Fetching decrypted values in the background."
 msgstr "Entschlüssele Werte im Hintergrund."
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:187
-#: lib/PageRenderer/Invoices.php:1503 lib/PageRenderer/ProjectPayments.php:1355
+#: lib/PageRenderer/Invoices.php:1544 lib/PageRenderer/ProjectPayments.php:1355
 #: lib/PageRenderer/SepaBankAccounts.php:625
 #: lib/PageRenderer/SepaBankAccounts.php:703
 #: lib/PageRenderer/SepaBulkTransactions.php:452
@@ -6447,141 +6453,150 @@ msgstr "Bereich"
 msgid "Rate"
 msgstr "Rate"
 
-#: lib/PageRenderer/Invoices.php:343
+#: lib/PageRenderer/Invoices.php:352
 msgid "New Invoice"
 msgstr "Neue Rechnung"
 
-#: lib/PageRenderer/Invoices.php:351
+#: lib/PageRenderer/Invoices.php:360
 #, php-format
 msgid "Invoicing for project \"%s\""
 msgstr "Rechnungsstellung für das Projekt \"%s\""
 
-#: lib/PageRenderer/Invoices.php:352
+#: lib/PageRenderer/Invoices.php:361
 msgid "Invoicing for all projects"
 msgstr "Rechnungsstellung für alle Projekte"
 
-#: lib/PageRenderer/Invoices.php:486
+#: lib/PageRenderer/Invoices.php:495
 msgid "General invoice data"
 msgstr "Allgemeine Rechnungsdaten"
 
-#: lib/PageRenderer/Invoices.php:487
+#: lib/PageRenderer/Invoices.php:496
 msgid "Invoice Data"
 msgstr "Rechnungsdaten"
 
-#: lib/PageRenderer/Invoices.php:494 lib/PageRenderer/ProjectPayments.php:490
+#: lib/PageRenderer/Invoices.php:503 lib/PageRenderer/ProjectPayments.php:490
 msgid "Bulk-transaction data"
 msgstr "Sammelauftragsddaten"
 
-#: lib/PageRenderer/Invoices.php:495 lib/PageRenderer/Invoices.php:1453
+#: lib/PageRenderer/Invoices.php:504 lib/PageRenderer/Invoices.php:1494
 #: lib/PageRenderer/ProjectPayments.php:491
 msgid "Bank Transaction"
 msgstr "Bankauftrag"
 
-#: lib/PageRenderer/Invoices.php:509
+#: lib/PageRenderer/Invoices.php:518
 msgid "Invoice Id"
 msgstr "Rechnungs Id"
 
-#: lib/PageRenderer/Invoices.php:534
+#: lib/PageRenderer/Invoices.php:543
 msgid "Debitor-Musician-Id"
 msgstr "Schuldner-Personen-Id"
 
-#: lib/PageRenderer/Invoices.php:545 lib/PageRenderer/ProjectAssociates.php:348
+#: lib/PageRenderer/Invoices.php:554 lib/PageRenderer/ProjectAssociates.php:348
 #: lib/PageRenderer/ProjectParticipants.php:403
 #: lib/PageRenderer/ProjectPayments.php:538
 msgid "Project-Id"
 msgstr "Projekt-Id"
 
-#: lib/PageRenderer/Invoices.php:570 lib/PageRenderer/ProjectPayments.php:555
+#: lib/PageRenderer/Invoices.php:579 lib/PageRenderer/ProjectPayments.php:555
 msgid "Bulk-Transaction Id"
 msgstr "Sammelauftrags-Id"
 
-#: lib/PageRenderer/Invoices.php:634
+#: lib/PageRenderer/Invoices.php:643
 msgid "Author"
 msgstr "Urheber*in"
 
-#: lib/PageRenderer/Invoices.php:678
+#: lib/PageRenderer/Invoices.php:687
 msgid "Debitor"
 msgstr "Schuldner"
 
-#: lib/PageRenderer/Invoices.php:714
+#: lib/PageRenderer/Invoices.php:723
 msgid "Invoice Number"
 msgstr "Rechnungsnummer"
 
-#: lib/PageRenderer/Invoices.php:724 lib/PageRenderer/Invoices.php:731
+#: lib/PageRenderer/Invoices.php:733 lib/PageRenderer/Invoices.php:740
 msgid "automatically determined"
 msgstr "wird automatisch ermittelt"
 
-#: lib/PageRenderer/Invoices.php:795
+#: lib/PageRenderer/Invoices.php:800
+msgid "Sales Tax"
+msgstr "Umsatzsteuer"
+
+#: lib/PageRenderer/Invoices.php:822
+#: lib/PageRenderer/TaxationStatutorySources.php:261
+msgid "Legal Basis"
+msgstr "Rechtsgrundlage"
+
+#: lib/PageRenderer/Invoices.php:836
 msgid "Inconsistency"
 msgstr "Inkonsistenz"
 
-#: lib/PageRenderer/Invoices.php:827
+#: lib/PageRenderer/Invoices.php:868
 msgid "Invoice Date"
 msgstr "Rechnungsdatum"
 
-#: lib/PageRenderer/Invoices.php:851
+#: lib/PageRenderer/Invoices.php:892
 msgid "Item Due Date"
 msgstr "Fälligkeit (Unterpunkt)"
 
-#: lib/PageRenderer/Invoices.php:862
+#: lib/PageRenderer/Invoices.php:903
 msgid "Balanced Date"
 msgstr "Zahlungseingang"
 
 #. TRANSLATORS: folder-name
-#: lib/PageRenderer/Invoices.php:917 lib/PageRenderer/Invoices.php:1007
+#: lib/PageRenderer/Invoices.php:958 lib/PageRenderer/Invoices.php:1048
 #: lib/PageRenderer/ProjectPayments.php:781
 #: lib/PageRenderer/ProjectPayments.php:867
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:99
 msgid "Receivables"
 msgstr "Forderungen"
 
-#: lib/PageRenderer/Invoices.php:991 lib/PageRenderer/Invoices.php:1069
+#: lib/PageRenderer/Invoices.php:1032 lib/PageRenderer/Invoices.php:1110
 #: lib/PageRenderer/ProjectPayments.php:851
 #: lib/PageRenderer/ProjectPayments.php:927
 msgid "Single Options"
 msgstr "Einfachauswahl"
 
-#: lib/PageRenderer/Invoices.php:994 lib/PageRenderer/ProjectPayments.php:854
+#: lib/PageRenderer/Invoices.php:1035 lib/PageRenderer/ProjectPayments.php:854
 msgid "Operations"
 msgstr "Operationen"
 
-#: lib/PageRenderer/Invoices.php:995 lib/PageRenderer/ProjectPayments.php:855
+#: lib/PageRenderer/Invoices.php:1036 lib/PageRenderer/ProjectPayments.php:855
 msgid "Add a new Receivable"
 msgstr "Eine neue Forderung hinzufügen"
 
-#: lib/PageRenderer/Invoices.php:1192 lib/PageRenderer/ProjectPayments.php:1044
+#: lib/PageRenderer/Invoices.php:1233 lib/PageRenderer/ProjectPayments.php:1044
 msgid "Financial Project Balance"
 msgstr "Gewinn-/Verlustrechung"
 
-#: lib/PageRenderer/Invoices.php:1305 lib/PageRenderer/ProjectPayments.php:1157
+#: lib/PageRenderer/Invoices.php:1346 lib/PageRenderer/ProjectPayments.php:1157
 msgid "Parts Project Balances"
 msgstr "Projekt-Bilanz Teilzahlungen"
 
-#: lib/PageRenderer/Invoices.php:1471
+#: lib/PageRenderer/Invoices.php:1512
 msgid "Date of Bank Transaction"
 msgstr "Datum des Bankauftrags"
 
-#: lib/PageRenderer/Invoices.php:1482 lib/PageRenderer/ProjectPayments.php:1334
+#: lib/PageRenderer/Invoices.php:1523 lib/PageRenderer/ProjectPayments.php:1334
 #: lib/PageRenderer/SepaBulkTransactions.php:428
 msgid "IBAN"
 msgstr "IBAN"
 
-#: lib/PageRenderer/Invoices.php:1544 lib/PageRenderer/ProjectPayments.php:1396
+#: lib/PageRenderer/Invoices.php:1585 lib/PageRenderer/ProjectPayments.php:1396
 #: lib/PageRenderer/SepaBankAccounts.php:808
 #: lib/PageRenderer/SepaBulkTransactions.php:490
 msgid "Mandate Reference"
 msgstr "Mandatsreferenz"
 
-#: lib/PageRenderer/Invoices.php:1552 lib/PageRenderer/ProjectPayments.php:1404
+#: lib/PageRenderer/Invoices.php:1593 lib/PageRenderer/ProjectPayments.php:1404
 msgid "Message-ID"
 msgstr "Message-ID"
 
-#: lib/PageRenderer/Invoices.php:1570 lib/PageRenderer/ProjectPayments.php:1422
+#: lib/PageRenderer/Invoices.php:1611 lib/PageRenderer/ProjectPayments.php:1422
 msgid "Payments resulting from direct debit transfers cannot be changed."
 msgstr ""
 "Zahlung, die von Lastschriften herrühren, können nicht geändert werden."
 
-#: lib/PageRenderer/Invoices.php:1680 lib/PageRenderer/ProjectPayments.php:1515
+#: lib/PageRenderer/Invoices.php:1728 lib/PageRenderer/ProjectPayments.php:1515
 msgid "Project Balance"
 msgstr "Projekt-Bilanz"
 
@@ -6766,6 +6781,7 @@ msgstr "Stadt"
 #: lib/PageRenderer/Musicians.php:833
 #: lib/PageRenderer/ProjectAssociates.php:1019
 #: lib/PageRenderer/ProjectParticipants.php:1274
+#: lib/PageRenderer/TaxationStatutorySources.php:212
 msgid "Country"
 msgstr "Land"
 
@@ -6793,44 +6809,44 @@ msgstr "Adressbuch"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:121
 #. TRANSLATORS src/components/ProjectEventsListing.vue:82
-#: lib/PageRenderer/PME/Config.php:64 lib/PageRenderer/PMETableViewBase.php:658
+#: lib/PageRenderer/PME/Config.php:64 lib/PageRenderer/PMETableViewBase.php:661
 #: specialVueFakeDummyForL10nScript.js:3513
 #: specialVueFakeDummyForL10nScript.js:4474
 msgid "Em@il"
 msgstr "Em@il"
 
-#: lib/PageRenderer/PMETableViewBase.php:337
+#: lib/PageRenderer/PMETableViewBase.php:339
 msgid "%n data field affected"
 msgid_plural "%n data fields affected"
 msgstr[0] "%n Daten-Feld betroffen"
 msgstr[1] "%n Daten-Felder betroffen"
 
-#: lib/PageRenderer/PMETableViewBase.php:349
+#: lib/PageRenderer/PMETableViewBase.php:351
 msgid "Query Log"
 msgstr "Abfrage-Protokoll"
 
-#: lib/PageRenderer/PMETableViewBase.php:481
+#: lib/PageRenderer/PMETableViewBase.php:484
 #, php-format
 msgid "SQL Transaction failed: %s"
 msgstr "SQL Transaktion fehlgeschlagen: %s"
 
-#: lib/PageRenderer/PMETableViewBase.php:671
+#: lib/PageRenderer/PMETableViewBase.php:674
 msgid "Fees"
 msgstr "Beiträge"
 
-#: lib/PageRenderer/PMETableViewBase.php:671
+#: lib/PageRenderer/PMETableViewBase.php:674
 msgid "expenses negative"
 msgstr "Ausgaben negativ"
 
-#: lib/PageRenderer/PMETableViewBase.php:712
+#: lib/PageRenderer/PMETableViewBase.php:716
 msgid "Revoked"
 msgstr "Entwertung"
 
-#: lib/PageRenderer/PMETableViewBase.php:723
+#: lib/PageRenderer/PMETableViewBase.php:727
 msgid "birthday"
 msgstr "Geburtstag"
 
-#: lib/PageRenderer/PMETableViewBase.php:986
+#: lib/PageRenderer/PMETableViewBase.php:990
 #, php-format
 msgid ""
 "Table \"%s\": missing identifier for field \"%s\" and grouping field \"%s\" "
@@ -6839,8 +6855,8 @@ msgstr ""
 "Tabelle \"%s\": fehlender Id-Wert für Datenbank-Feld \"%s\" und das "
 "Gruppierungsfeld \"%s\" ist bereits belegt."
 
-#: lib/PageRenderer/PMETableViewBase.php:1029
-#: lib/PageRenderer/PMETableViewBase.php:1632
+#: lib/PageRenderer/PMETableViewBase.php:1033
+#: lib/PageRenderer/PMETableViewBase.php:1636
 #, php-format
 msgid ""
 "Identifier column \"%s\" for single-valued join-table \"%s\" contains more "
@@ -6850,10 +6866,10 @@ msgstr ""
 "mehr als einen Schlüssel: \"%s\" / \"%s\".\n"
 "\n"
 
-#: lib/PageRenderer/PMETableViewBase.php:1046
-#: lib/PageRenderer/PMETableViewBase.php:1420
-#: lib/PageRenderer/PMETableViewBase.php:1656
-#: lib/PageRenderer/PMETableViewBase.php:1875
+#: lib/PageRenderer/PMETableViewBase.php:1050
+#: lib/PageRenderer/PMETableViewBase.php:1424
+#: lib/PageRenderer/PMETableViewBase.php:1660
+#: lib/PageRenderer/PMETableViewBase.php:1879
 #, php-format
 msgid ""
 "Field \"%s.%s\": nested multi-value join tables with unexpected pivot-"
@@ -6862,20 +6878,20 @@ msgstr ""
 "Feld \"%s.%s\": geschachtelte Multi-Key Verknüpfungstabelle mit unerwarteter "
 "Pivot-Spalte: %s."
 
-#: lib/PageRenderer/PMETableViewBase.php:1128
+#: lib/PageRenderer/PMETableViewBase.php:1132
 #, php-format
 msgid ""
 "Inconsistent removal request for \"%1$s\" (%3$s), major key \"%2$s\" (%4$s)."
 msgstr ""
 "Inkonsistenter Löschversuch für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" (%4$s)."
 
-#: lib/PageRenderer/PMETableViewBase.php:1157
+#: lib/PageRenderer/PMETableViewBase.php:1161
 msgid ""
 "Inconsistent add request for \"%1$s\" (%3$%s), major key \"%2$s\" (%4$s)."
 msgstr ""
 "Inkonsistenter Einfüge-Versuch für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" (%4$s)."
 
-#: lib/PageRenderer/PMETableViewBase.php:1186
+#: lib/PageRenderer/PMETableViewBase.php:1190
 #, php-format
 msgid ""
 "Inconsistent remaining data for \"%1$s\" (%3$s), major key \"%2$s\" (%4$s)."
@@ -6883,19 +6899,19 @@ msgstr ""
 "Inkonsistente verbleibende Daten für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" "
 "(%4$s)."
 
-#: lib/PageRenderer/PMETableViewBase.php:1212
-#: lib/PageRenderer/PMETableViewBase.php:1730
+#: lib/PageRenderer/PMETableViewBase.php:1216
+#: lib/PageRenderer/PMETableViewBase.php:1734
 #, php-format
 msgid "No value for identifier field \"%s / %s\"."
 msgstr "Fehlender Wert für Id-Feld: \"%s / %s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:1239
+#: lib/PageRenderer/PMETableViewBase.php:1243
 #, php-format
 msgid "Unmable to find master entity for key \"%s\"."
 msgstr "Kann die Haupt-Entität zum Schlüssel \"%s\" nicht finden."
 
-#: lib/PageRenderer/PMETableViewBase.php:1413
-#: lib/PageRenderer/PMETableViewBase.php:1868
+#: lib/PageRenderer/PMETableViewBase.php:1417
+#: lib/PageRenderer/PMETableViewBase.php:1872
 #, php-format
 msgid ""
 "Adding a new entity \"%1$s\" resulted in an inconsistent value for the "
@@ -6905,17 +6921,17 @@ msgstr ""
 "inkonsistenten Daten für die Spalte \"%2$s\",\n"
 "der fest eingestellte Wert war \"%3$s\", der neue Wert ist \"%4$s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:1435
+#: lib/PageRenderer/PMETableViewBase.php:1439
 #, php-format
 msgid "Unable to find entity in table %s given id %s"
 msgstr "Kann die Entität in Tabelle %s zur id %s nicht finden"
 
-#: lib/PageRenderer/PMETableViewBase.php:1507
+#: lib/PageRenderer/PMETableViewBase.php:1511
 #, php-format
 msgid "Change-set %s should be empty."
 msgstr "Änderungen-Menge %s muss leer sein."
 
-#: lib/PageRenderer/PMETableViewBase.php:1617
+#: lib/PageRenderer/PMETableViewBase.php:1621
 #, php-format
 msgid ""
 "Missing identifier for field \"%s\" and grouping field \"%s\" already set."
@@ -6923,33 +6939,36 @@ msgstr ""
 "Fehlender Id-Wert für Datenbank-Feld \"%s\" und das Gruppierungsfeld \"%s\" "
 "ist bereits belegt."
 
-#: lib/PageRenderer/PMETableViewBase.php:1706
+#: lib/PageRenderer/PMETableViewBase.php:1710
 #, php-format
 msgid "Inconsistent add request for \"%1$s\", major key \"%2$s\"."
 msgstr "Inkonsistenter Einfüge-Versuch für \"%1$s\", Haupt-Id \"%2$s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:1749
+#: lib/PageRenderer/PMETableViewBase.php:1753
 msgid "Master entity is unset."
 msgstr "Hauptentität ist nicht angegeben."
 
-#: lib/PageRenderer/PMETableViewBase.php:1958
+#: lib/PageRenderer/PMETableViewBase.php:1962
 #, php-format
 msgid "Remaining change-set %s must be empty"
 msgstr "Es dürften keine geänderten Felder (%s) übrig bleiben. "
 
-#: lib/PageRenderer/PMETableViewBase.php:2174
+#: lib/PageRenderer/PMETableViewBase.php:2178
 #, php-format
 msgid "Unknown column description: \"%s\""
 msgstr "Unbekannte Spalten-Beschreibung: \"%s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:2328
+#: lib/PageRenderer/PMETableViewBase.php:2332
 msgid "Table-name not specified"
 msgstr "Tabellen-Name wurde nicht angegeben"
 
-#: lib/PageRenderer/PMETableViewBase.php:2403
+#: lib/PageRenderer/PMETableViewBase.php:2409
 #, php-format
-msgid "Master join-table field for %s not found."
-msgstr "Haupt-Verknüpfungstabelle für %s konnte nicht gefunden werden."
+msgid ""
+"Master join-table field for %1$s not found, avalaible fields: \"%2$s\", "
+"missing \"%3$s\"."
+msgstr ""
+"Haupt-Verknüpfungstabelle für \"%1$s\" konnte nicht gefunden werden: \"%2$s\""
 
 #: lib/PageRenderer/ProjectAssociates.php:204
 #, php-format
@@ -7183,6 +7202,7 @@ msgid "name of new tab"
 msgstr "z.B. NeueKarte"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:958
+#: lib/PageRenderer/TaxExemptionNotices.php:210
 msgid "Context"
 msgstr "Kontext"
 
@@ -7706,7 +7726,7 @@ msgid "Recipients"
 msgstr "Empfänger*innen"
 
 #: lib/PageRenderer/SepaBulkTransactions.php:613
-#: lib/PageRenderer/TaxExemptionNotices.php:194
+#: lib/PageRenderer/TaxExemptionNotices.php:261
 msgid "From"
 msgstr "Von"
 
@@ -7735,50 +7755,66 @@ msgstr ""
 msgid "Data inconsistency in bulk-transaction payments: %d / %d"
 msgstr "Inkonsistente Daten bei den Buchungen für den Sammelauftrag: %d / %d"
 
-#: lib/PageRenderer/TaxExemptionNotices.php:107
+#: lib/PageRenderer/TaxExemptionNotices.php:116
 msgid "Tax Exemption Notices"
 msgstr "Freistellungsbescheide"
 
-#: lib/PageRenderer/TaxExemptionNotices.php:183
-msgid "Type"
-msgstr "Art"
+#: lib/PageRenderer/TaxExemptionNotices.php:238
+msgid "Tax Types"
+msgstr "Steuer"
 
-#: lib/PageRenderer/TaxExemptionNotices.php:200
-#: lib/PageRenderer/TaxExemptionNotices.php:215
+#: lib/PageRenderer/TaxExemptionNotices.php:267
+#: lib/PageRenderer/TaxExemptionNotices.php:282
 msgid "YYYY"
 msgstr "JJJJ"
 
-#: lib/PageRenderer/TaxExemptionNotices.php:209
+#: lib/PageRenderer/TaxExemptionNotices.php:276
 msgid "To"
 msgstr "Bis"
 
-#: lib/PageRenderer/TaxExemptionNotices.php:224
+#: lib/PageRenderer/TaxExemptionNotices.php:291
 msgid "Tax Office"
 msgstr "Finanzamt"
 
-#: lib/PageRenderer/TaxExemptionNotices.php:233
+#: lib/PageRenderer/TaxExemptionNotices.php:300
 msgid "Tax Number"
 msgstr "Steuernummer"
 
-#: lib/PageRenderer/TaxExemptionNotices.php:244
+#: lib/PageRenderer/TaxExemptionNotices.php:311
 msgid "Issued at"
 msgstr "Ausstellungsdatum"
 
-#: lib/PageRenderer/TaxExemptionNotices.php:249
+#: lib/PageRenderer/TaxExemptionNotices.php:316
 msgid "Membership Fees"
 msgstr "Mitgliedsbeiträge"
 
-#: lib/PageRenderer/TaxExemptionNotices.php:266
+#: lib/PageRenderer/TaxExemptionNotices.php:333
 msgid "Beneficiary Purpose"
 msgstr "Begünstigter Zweck"
 
-#: lib/PageRenderer/TaxExemptionNotices.php:286
+#: lib/PageRenderer/TaxExemptionNotices.php:353
 msgid "Written Notice"
 msgstr "Kopie des Bescheids"
 
-#: lib/PageRenderer/TaxExemptionNotices.php:361
+#: lib/PageRenderer/TaxExemptionNotices.php:429
 msgid "Invalid Since"
 msgstr "Ablaufdatum"
+
+#: lib/PageRenderer/TaxationStatutorySources.php:121
+msgid "Taxation Statutory Sources"
+msgstr "Rechtsgrundlagen für Besteuerungen bzw. Freistellungen"
+
+#: lib/PageRenderer/TaxationStatutorySources.php:222
+msgid "Tax Type"
+msgstr "Steuer"
+
+#: lib/PageRenderer/TaxationStatutorySources.php:240
+msgid "Tax Rate"
+msgstr "Steuersaz"
+
+#: lib/PageRenderer/TaxationStatutorySources.php:269
+msgid "Hint"
+msgstr "Hinweise"
 
 #: lib/PageRenderer/Util/Navigation.php:228
 msgid "Export Table"
@@ -11908,7 +11944,7 @@ msgstr ""
 
 #: lib/Service/ToolTipsDataService.php:1170
 #: lib/Service/ToolTipsDataService.php:1217
-#: lib/Service/ToolTipsDataService.php:1539
+#: lib/Service/ToolTipsDataService.php:1540
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
@@ -12966,10 +13002,14 @@ msgid "Issued Bulk Transactions"
 msgstr "Sammelaufträge"
 
 #: lib/Service/ToolTipsDataService.php:1527
+msgid "Taxation Legal Basis"
+msgstr "Rechtsgrundlagen Besteuerung"
+
+#: lib/Service/ToolTipsDataService.php:1528
 msgid "Tax Excemption Notices"
 msgstr "Freistellungsbescheide"
 
-#: lib/Service/ToolTipsDataService.php:1530
+#: lib/Service/ToolTipsDataService.php:1531
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
@@ -12977,7 +13017,7 @@ msgstr ""
 "Alle Personen anzeigen, die in der Datenbank gespeichert sind. Es gibt dabei "
 "ausführliche Such- und Auswahlfunktionalität."
 
-#: lib/Service/ToolTipsDataService.php:1531
+#: lib/Service/ToolTipsDataService.php:1532
 msgid ""
 "Simplistic blog page with follow apps, used primarily to display hints\n"
 "if something has changed in the orchestra app."
@@ -12985,7 +13025,7 @@ msgstr ""
 "Einfacher Blog mit Antwortmöglichkeit, primär, um Änderungen in der\n"
 "Orchestersoftware zu kommunizieren."
 
-#: lib/Service/ToolTipsDataService.php:1533
+#: lib/Service/ToolTipsDataService.php:1534
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
@@ -12993,14 +13033,14 @@ msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/Service/ToolTipsDataService.php:1534
+#: lib/Service/ToolTipsDataService.php:1535
 msgid ""
 "Display the list of instrument families and add or change them as needed."
 msgstr ""
 "Tabelle mit allen derzeit gespeicherten Instrumenten; weitere Instrumente "
 "können hier einfach hinzugefügt werden."
 
-#: lib/Service/ToolTipsDataService.php:1535
+#: lib/Service/ToolTipsDataService.php:1536
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
@@ -13008,12 +13048,12 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die "
 "Instrumentensammelversicherungen an."
 
-#: lib/Service/ToolTipsDataService.php:1536
+#: lib/Service/ToolTipsDataService.php:1537
 msgid "Display a table with the insurance brokers."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsanbieter an."
 
-#: lib/Service/ToolTipsDataService.php:1537
+#: lib/Service/ToolTipsDataService.php:1538
 msgid ""
 "Display a table with the insurance rates for the individual instrument "
 "insurances."
@@ -13021,7 +13061,7 @@ msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsraten der\n"
 "Instrumenten-Sammelversicherungen an."
 
-#: lib/Service/ToolTipsDataService.php:1538
+#: lib/Service/ToolTipsDataService.php:1539
 msgid ""
 "Display a table with the sent-out invoices and support for issuing new "
 "invoices."
@@ -13029,11 +13069,11 @@ msgstr ""
 "Zeigt eine Tabelle mit den ausgestellten Rechnungen an mit der Möglichkeit, "
 "neue Rechnungen zu stellen."
 
-#: lib/Service/ToolTipsDataService.php:1540
+#: lib/Service/ToolTipsDataService.php:1541
 msgid "Add additional data-fields to the instrumenation table for the project."
 msgstr "Definition der Personen-Daten für das Projekt."
 
-#: lib/Service/ToolTipsDataService.php:1541
+#: lib/Service/ToolTipsDataService.php:1542
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
@@ -13043,7 +13083,7 @@ msgstr ""
 "Daten wie Email, Adresse usw. können hier geändert werden. Projektbezogene "
 "Daten können allerdings nur in der Ansicht `Kurz-Besetzung' geändert werden."
 
-#: lib/Service/ToolTipsDataService.php:1542
+#: lib/Service/ToolTipsDataService.php:1543
 msgid ""
 "Detailed display of business partners or otherwise project related (legal) "
 "persons."
@@ -13051,15 +13091,15 @@ msgstr ""
 "Ansicht von Geschäftspartner*innen oder anderen (juristischen) Personen mit "
 "Projektbezug."
 
-#: lib/Service/ToolTipsDataService.php:1543
+#: lib/Service/ToolTipsDataService.php:1544
 msgid "A table holding the various payments of participants."
 msgstr "Daten-Tabelle mit allen Zahlungen der Teilnehmenden."
 
-#: lib/Service/ToolTipsDataService.php:1544
+#: lib/Service/ToolTipsDataService.php:1545
 msgid "Overview over all known projects (start-page)."
 msgstr "Alle gespeicherten Projekte anzeigen; Startseite der `Camerata App'."
 
-#: lib/Service/ToolTipsDataService.php:1545
+#: lib/Service/ToolTipsDataService.php:1546
 msgid ""
 "Display a table with the bank accounts of the project participants,\n"
 "with the possibility to issued money transfers as well as debit-notes\n"
@@ -13069,7 +13109,7 @@ msgstr ""
 "inklusive der Möglichkeit, Bankeinzüge und Überweisungen zu\n"
 "initiieren."
 
-#: lib/Service/ToolTipsDataService.php:1548
+#: lib/Service/ToolTipsDataService.php:1549
 msgid ""
 "A table holding all bulk bank-transactions issued from the orchestra-"
 "software."
@@ -13077,7 +13117,22 @@ msgstr ""
 "Eine Tabelle mit allen Sammelaufträgen, die aus der Musizierenden-DB heraus "
 "erzeugt wurden."
 
-#: lib/Service/ToolTipsDataService.php:1551 lib/Service/ToolTipsService.php:989
+#: lib/Service/ToolTipsDataService.php:1550
+msgid ""
+"Taxation statutory sources table, used for invoicing and donation receipts."
+msgstr ""
+"Rechtsgrundlagen für Besteuerung bzw. Freistellung davon, wird in der\n"
+"Rechnungsstellung und bei den Zuwendungsbstätigungen verwendet."
+
+#: lib/Service/ToolTipsDataService.php:1551
+msgid ""
+"Tax exemption notices give the legal basis for donation receipts and "
+"omitting sales taxes in invoices."
+msgstr ""
+"Freistellungsbescheide legen die rechtlichen Grundlagen für\n"
+"Zuwendungsbestätigungen und für Umsatzsteuersätze bei Rechnungen."
+
+#: lib/Service/ToolTipsDataService.php:1554 lib/Service/ToolTipsService.php:989
 #, php-format
 msgid ""
 "An image file with the orchestra logo -- preferably in SVG format. The logo "
@@ -13087,7 +13142,7 @@ msgstr ""
 "Logo kann in Dokumentenvorlagen eingesetzt werden, indem man den\n"
 "\"[LOGO]\"-Platzhalter verwendet."
 
-#: lib/Service/ToolTipsDataService.php:1552
+#: lib/Service/ToolTipsDataService.php:1555
 msgid ""
 "A fillable PDF form for debit-mandates bound to special projects. The app is "
 "able to auto-fill form-fields with the names \"projectName\", "
@@ -13104,7 +13159,7 @@ msgstr ""
 "entsprechend erzeugt werden. Vorausgefüllte Mandate können aus der\n"
 "Teilnehmenden- und Musizierenden-Ansicht heraus herunter geladen werden."
 
-#: lib/Service/ToolTipsDataService.php:1554
+#: lib/Service/ToolTipsDataService.php:1557
 msgid ""
 "A fillable PDF form for debit-mandates not bound to special projects. The "
 "app is able to auto-fill form-fields with the names \"bankAccountOwner\", "
@@ -13122,7 +13177,7 @@ msgstr ""
 "werden. Vorausgefüllte Mandate können aus der Musizierenden- und\n"
 "Vereinsmitglieds-Ansicht heraus herunter geladen werden."
 
-#: lib/Service/ToolTipsDataService.php:1556
+#: lib/Service/ToolTipsDataService.php:1559
 msgid ""
 "A fillable form in order to collect address updates and for renewal of debit-"
 "mandates."
@@ -13130,7 +13185,7 @@ msgstr ""
 "Ein Formular um Adress-Aktualisierungen zu melden und um Lastschriftmandate "
 "zu erneuern."
 
-#: lib/Service/ToolTipsDataService.php:1558
+#: lib/Service/ToolTipsDataService.php:1561
 msgid ""
 "An office document with variable substitutions \"[PLACEHOLDER]\" used to "
 "communicate the\n"
@@ -13140,19 +13195,19 @@ msgstr ""
 "im Stil \"[PLATZHALTER]\" um die jährlichen Versicherungsbeiträge an die "
 "betreffenden Personen zu kommunizieren."
 
-#: lib/Service/ToolTipsDataService.php:1561
+#: lib/Service/ToolTipsDataService.php:1564
 msgid "Delete this document template from the server"
 msgstr "Diese Dokumentenvorlage vom Server löschen"
 
-#: lib/Service/ToolTipsDataService.php:1564
+#: lib/Service/ToolTipsDataService.php:1567
 msgid "Choose a template file from the cloud storage."
 msgstr "Dokumentenvorlage-Datei aus der \"Cloud\" auswählen"
 
-#: lib/Service/ToolTipsDataService.php:1565
+#: lib/Service/ToolTipsDataService.php:1568
 msgid "Upload a document template from your computer or mobile."
 msgstr "Eine Dokumentenvorlage von Ihrem Computer oder Mobilgerät laden."
 
-#: lib/Service/ToolTipsDataService.php:1569
+#: lib/Service/ToolTipsDataService.php:1572
 msgid ""
 "Test the form-filling features with a test-data-set. The file-format of the "
 "generated download remains the same as of the original template."
@@ -13160,7 +13215,7 @@ msgstr ""
 "Das automatische Ausfüllen der Dokumentenvorlage mit einem Beispiel-"
 "Datensatz testen. Das Dateiformat bleibt dabei das der Vorlage."
 
-#: lib/Service/ToolTipsDataService.php:1570
+#: lib/Service/ToolTipsDataService.php:1573
 msgid ""
 "Test the form-filling features with a test-data-set and convert the "
 "generated file to PDF, providing a fillable PDF-form if the original "
@@ -13171,7 +13226,7 @@ msgstr ""
 "Vorlage ausfüllbare Formularfelder enthält, wird ein ausfüllbares PDF-"
 "Dokument erstellt."
 
-#: lib/Service/ToolTipsDataService.php:1571
+#: lib/Service/ToolTipsDataService.php:1574
 msgid ""
 "Just download the test-data set as JSON data for inspection and for "
 "debugging."
@@ -13179,26 +13234,26 @@ msgstr ""
 "Den Test-Datensatz im JSON herunterladen. Zur Illustration und zur "
 "Fehlersuche."
 
-#: lib/Service/ToolTipsDataService.php:1575
+#: lib/Service/ToolTipsDataService.php:1578
 msgid "Select the sender from the members of the executive board."
 msgstr "Den Absender aus dem Orga-Team auswählen."
 
-#: lib/Service/ToolTipsDataService.php:1577
+#: lib/Service/ToolTipsDataService.php:1580
 msgid "Select the recipients for the mail-merge."
 msgstr "Die Empfänger*innen für den Serienbrief auswählen."
 
-#: lib/Service/ToolTipsDataService.php:1578
+#: lib/Service/ToolTipsDataService.php:1581
 msgid "Select recipients from the one of the cloud's address-books."
 msgstr "Empfänger:innen aus einem der Adressbücherauswählen."
 
-#: lib/Service/ToolTipsDataService.php:1580
+#: lib/Service/ToolTipsDataService.php:1583
 msgid ""
 "Optionally select a project to provide more context information for the mail-"
 "merge operation."
 msgstr ""
 "Optional ein Projekt auswählen, um mehr Kontext-Informationen zu erzeugen."
 
-#: lib/Service/ToolTipsDataService.php:1581
+#: lib/Service/ToolTipsDataService.php:1584
 msgid ""
 "Preferred for one-time merges or for testing. Just download to your local "
 "computer."
@@ -13206,7 +13261,7 @@ msgstr ""
 "Vorzugsweise für einmalige Vorlagen-Ersetzungen oder zu Testzwecken. Einfach "
 "die ausgefüllte Vorlage herunterladen auf den eigenen Computer."
 
-#: lib/Service/ToolTipsDataService.php:1582
+#: lib/Service/ToolTipsDataService.php:1585
 msgid ""
 "Preferred for mass-mail-merges and when the substituted template does not "
 "need to be post-processed."
@@ -13214,7 +13269,7 @@ msgstr ""
 "Vorzugsweise bei \"echten\" Massen-Serien-Briefen und wenn die ausgefüllten "
 "Vorlagen nicht mehr weiter bearbeitet werden müssen."
 
-#: lib/Service/ToolTipsDataService.php:1583
+#: lib/Service/ToolTipsDataService.php:1586
 msgid ""
 "Download the data-set which would be substituted into the document. This is "
 "primarily meant for debuggin."
@@ -13223,11 +13278,11 @@ msgstr ""
 "Ggf. nützlich beim Entwurf neuer Vorlagen, oder falls das Ergebnis anders "
 "aussieht als erwartet."
 
-#: lib/Service/ToolTipsDataService.php:1588
+#: lib/Service/ToolTipsDataService.php:1591
 msgid "Test data-base passphrase."
 msgstr "Datenbank-Passwort testen"
 
-#: lib/Service/ToolTipsDataService.php:1590
+#: lib/Service/ToolTipsDataService.php:1593
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
@@ -13237,7 +13292,7 @@ msgstr ""
 "Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
 "Test erfolgreich absolviert wurde."
 
-#: lib/Service/ToolTipsDataService.php:1594
+#: lib/Service/ToolTipsDataService.php:1597
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -13245,7 +13300,7 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/Service/ToolTipsDataService.php:1596
+#: lib/Service/ToolTipsDataService.php:1599
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
@@ -13254,7 +13309,7 @@ msgstr ""
 "noch\n"
 "die Höhe der Außenstände angegeben."
 
-#: lib/Service/ToolTipsDataService.php:1598
+#: lib/Service/ToolTipsDataService.php:1601
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -13263,7 +13318,7 @@ msgstr ""
 "Besetzungstabelle eintragen; die Soll-Besetzungszahlen werden\n"
 "allerdings nicht angepasst."
 
-#: lib/Service/ToolTipsDataService.php:1600
+#: lib/Service/ToolTipsDataService.php:1603
 msgid "Change to another WYSIWYG editor."
 msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 
@@ -13394,19 +13449,19 @@ msgid "DebitMandates"
 msgstr "LastschriftMandate"
 
 #. TRANSLATORS: file-name
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:238
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:245
 #, php-format
 msgid "TaxExemptionNotice-%1$s-%2$04d-%3$04d"
 msgstr "FreistellungsBescheid-%1$s-%2$04d-%3$04d"
 
 #. TRANSLATORS: file-name
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:290
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:297
 #, php-format
 msgid "DonationReceipt-%1$d-%2$s-%3$s"
 msgstr "ZuwendungsBestätigung-%1$d-%2$s-%3$s"
 
 #. TRANSLATORS: file-name
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:321
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:328
 #, php-format
 msgid "invoice-%1$s-%2$s-%3$s"
 msgstr "Rechnung-%1$s-%2$s-%3$s"
@@ -13417,20 +13472,17 @@ msgstr "Rechnung-%1$s-%2$s-%3$s"
 #: lib/Storage/Database/ProjectParticipantsStorage.php:455
 #: lib/Storage/Database/TaxExemptionNoticesStorage.php:126
 #: lib/Storage/Database/TaxExemptionNoticesStorage.php:191
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:428
 msgid "Root-folder does not exist."
 msgstr "Das Wurzel-Verzeichnis existiert nicht."
 
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:443
 #: lib/Storage/Database/TaxExemptionNoticesStorage.php:239
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:332
 #, php-format
 msgid "Unable to find database entity for path \"%s\"."
 msgstr "Kann die Datenbank-Entität zum Pfad \"%s\" nicht finden."
 
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:448
 #: lib/Storage/Database/TaxExemptionNoticesStorage.php:244
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:337
 #, php-format
 msgid "Path \"%s\" is a directory."
 msgstr "Der Pfad \"%s\" gehört zu einem Verzeichnis."
@@ -13515,30 +13567,6 @@ msgstr "Kann die Kopie des Freistellungsbescheids \"%s\" nicht hinzu fügen."
 #, php-format
 msgid "Tax exemption notice \"%s\" has no hard-copy attached."
 msgstr "Zum Freistellungsbescheid \"%s\" gibt es keine Dokumenten-Kopie."
-
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:368
-#, php-format
-msgid ""
-"Generated name \"%1$s\" differs from target name \"%2$s\" after updating "
-"entity \"%3$s\"."
-msgstr ""
-"Der automatisch erzeugte Name \"%1s\" unterscheidet sich vom\n"
-"beabsichtigten Ziel-Namen \"%2$s\" nachdem die Datenbank-Entität \"%3$s\"\n"
-"akualisiert wurde."
-
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:386
-msgid "Unable to update \"%$1s\" from value-set \"%2$s\"."
-msgstr "Kann \"%1$s\" nicht mittels der Werte \"%2$s\" aktualisieren."
-
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:408
-#, php-format
-msgid "Path \"%s\" seems to be invalid."
-msgstr "Der Dateipfad \"%s\" scheint ungültig zu sein."
-
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:416
-#, php-format
-msgid "Unable to find a matching entity for the given path \"%s\"."
-msgstr "Kann die Datenbank-Entität zum Pfad \"%s\" nicht finden."
 
 #: lib/Storage/DatabaseStorageUtil.php:107
 #, php-format
@@ -15190,7 +15218,7 @@ msgstr "Ja"
 msgid "OK"
 msgstr "Fein"
 
-#: src/app/dialogs.js:214 src/toolkit/util/dialogs.js:105
+#: src/app/dialogs.js:213 src/toolkit/util/dialogs.js:105
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
@@ -19123,7 +19151,7 @@ msgstr "BLZ"
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::EUROPE = 'Europe';
 #: lib/PageRenderer/InstrumentInsurances.php:120
 #: lib/PageRenderer/InsuranceRates.php:67
-#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:60
+#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:56
 #, php-format
 msgid "Europe"
 msgstr "Europa"
@@ -19132,7 +19160,7 @@ msgstr "Europa"
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::GERMANY = 'Germany';
 #: lib/PageRenderer/InstrumentInsurances.php:120
 #: lib/PageRenderer/InsuranceRates.php:67
-#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:59
+#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:55
 #, php-format
 msgid "Germany"
 msgstr "Deutschland"
@@ -19161,7 +19189,7 @@ msgstr "Projekt-Lastschriftmandat auswählen"
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::WORLD = 'World';
 #: lib/PageRenderer/InstrumentInsurances.php:120
 #: lib/PageRenderer/InsuranceRates.php:67
-#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:61
+#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:57
 #, php-format
 msgid "World"
 msgstr "Welt"
@@ -19635,14 +19663,14 @@ msgstr "divers"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::DOMESTIC = 'Domestic';
-#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:57
+#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:53
 #, php-format
 msgid "Domestic"
 msgstr "Inland"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::CONTINENT = 'Continent';
-#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:58
+#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:54
 #, php-format
 msgid "Continent"
 msgstr "Kontinent"
@@ -19753,8 +19781,15 @@ msgid "sales tax"
 msgstr "Umsatzsteuer"
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::VAT = 'VAT';
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::TRADE = 'trade tax';
 #: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:53
+#, php-format
+msgid "trade tax"
+msgstr "Gewerbesteuer"
+
+#. TRANSLATORS: The expression in the sourcecode was
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::VAT = 'VAT';
+#: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:54
 #, php-format
 msgid "VAT"
 msgstr "MwSt"
@@ -19883,6 +19918,27 @@ msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr "Zeigt einfach alle Spalten an."
+
+#, php-format
+#~ msgid ""
+#~ "Generated name \"%1$s\" differs from target name \"%2$s\" after updating "
+#~ "entity \"%3$s\"."
+#~ msgstr ""
+#~ "Der automatisch erzeugte Name \"%1s\" unterscheidet sich vom\n"
+#~ "beabsichtigten Ziel-Namen \"%2$s\" nachdem die Datenbank-Entität "
+#~ "\"%3$s\"\n"
+#~ "akualisiert wurde."
+
+#~ msgid "Unable to update \"%$1s\" from value-set \"%2$s\"."
+#~ msgstr "Kann \"%1$s\" nicht mittels der Werte \"%2$s\" aktualisieren."
+
+#, php-format
+#~ msgid "Path \"%s\" seems to be invalid."
+#~ msgstr "Der Dateipfad \"%s\" scheint ungültig zu sein."
+
+#, php-format
+#~ msgid "Unable to find a matching entity for the given path \"%s\"."
+#~ msgstr "Kann die Datenbank-Entität zum Pfad \"%s\" nicht finden."
 
 #~ msgid "move"
 #~ msgstr "verschieben"
