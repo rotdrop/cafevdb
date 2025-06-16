@@ -135,6 +135,8 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   const SEPA_BULK_TRANSACTION_DATA_TABLE = 'SepaBulkTransactionData';
   const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
   const TAX_EXEMPTION_NOTICES_TABLE = 'TaxExemptionNotices';
+  const TAX_EXEMPTION_ITEMS_TABLE = 'TaxExemptionItems';
+  const TAXATION_STATUTORY_SOURCES_TABLE = 'TaxationStatutorySources';
 
   const VALUES_SEP = ',';
   const JOIN_FIELD_NAME_SEPARATOR = ':';
@@ -468,6 +470,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           'sql' => $t->getSql(),
           'pmeLine' => $t->getPmeLine(),
         ];
+        $this->logError('Legacy phpMyEdit error at line ' . $t->getPmeLine() . ', SQL: ' . $t->getSql());
         // $extraMesssage = '; ' .  $this->l->t(
         //   'SQL-querey at %1$s: "%2$s".',
         //   [ 'phpMyEdit.php:' . $t->getPmeLine, $t->getSql() ],
@@ -2146,7 +2149,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $mainTableColumn = $joinTableValue['column']?: 'id';
               $joinCondition .= '= '.$joinTables[$joinTableValue['table']].'.'.self::COL_QUOTE.$mainTableColumn.self::COL_QUOTE;
               $group = $grouped[$joinTableValue['table']];
-              $groupOrderBy = array_merge($groupOrderBy, $orderBy[$joinTableValue['table']]);
+              $groupOrderBy = array_merge($groupOrderBy, $orderBy[$joinTableValue['table']] ?? []);
             } elseif (array_key_exists('value', $joinTableValue)
                        && ($joinTableValue['value'] === null || $joinTableValue['value'] === false)) {
               $joinCondition = $joinColumn . ' IS NULL';
@@ -2400,7 +2403,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
           if ($joinIndex === false) {
             $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
-            throw new Exception($this->l->t("Master join-table field for %s not found.", $table));
+            throw new Exception(
+              $this->l->t(
+                'Master join-table field for %1$s not found, avalaible fields: "%2$s", missing "%3$s".',
+                [ $table, implode('", "', array_keys($fieldDescriptionData)), $masterFieldName ],
+              )
+            );
           }
           if (isset($fieldDescriptionData[$masterFieldName]['values']['join']['reference'])) {
             $joinIndex = $fieldDescriptionData[$masterFieldName]['values']['join']['reference'];
@@ -2609,6 +2617,72 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   AND $table.object_class = "'.addslashes($joinInfo['entity']).'"',
       ],
     ];
+  }
+
+  /**
+   * Generate an SQL fragment for the sake of haveing translated enum values
+   * available in the legacy code.
+   *
+   * @param string $enumClass
+   *
+   * @return string SQL fragment.
+   */
+  protected function makeEnumTranslationsTable(string $enumClass):string
+  {
+    $l10nValues = $enumClass::getL10NValues($this->l);
+    $selects = [];
+    foreach ($l10nValues as $value => $l10nValue) {
+      $selects[] = "SELECT '{$value}' AS value, '{$l10nValue}' AS l10n_value";
+    }
+    $union = implode('
+UNION
+', $selects);
+
+    return $union;
+  }
+
+  /**
+   * Generate an SQL fragment for the sake of haveing translated enum values
+   * available in the legacy code.
+   *
+   * - l10n_FIELD -- translated field will fallback translation to original value
+   *
+   * @param array $joinInfo Join desciption, see PMETableViewBase::defineJoinStructure().
+   *
+   * @param array $fields FIELDNAME => ENUM_CLASS array
+   *
+   * @return string SQL fragment.
+   */
+  protected function makeEnumTranslationsJoin(array $joinInfo, array $fields):string
+  {
+    $mainTableAlias = '_enum_main_table';
+    $l10nFields = [];
+    $enumSelects = [];
+    foreach ($fields as $field => $enumClass) {
+      $l10nValues = $enumClass::getL10NValues($this->l);
+      $selects = [];
+      foreach ($l10nValues as $value => $l10nValue) {
+        $selects[] = "SELECT '{$value}' AS value, '{$l10nValue}' AS l10n_value";
+      }
+      $alias = "`_enum_table_{$field}`";
+      $union = implode('
+UNION
+', $selects);
+      $enumSelects[] = "LEFT JOIN (
+{$union}
+) {$alias}
+ON {$mainTableAlias}.`{$field}` = {$alias}.value
+";
+      $l10nFields[] = "{$alias}.l10n_value AS `l10n_{$field}`";
+    }
+    list($table,) = explode(self::VALUES_TABLE_SEP, $joinInfo['table']);
+
+    $query = "SELECT {$mainTableAlias}.*,
+  " . implode(', ', $l10nFields) . "
+  FROM " . $table . " {$mainTableAlias}
+" . implode($enumSelects);
+
+    return $query;
   }
 
   /**
