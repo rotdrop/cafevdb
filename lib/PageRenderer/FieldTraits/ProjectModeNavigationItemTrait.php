@@ -70,7 +70,8 @@ trait ProjectModeNavigationItemTrait
         ($this->projectId == $this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0)
          ? [
            PageRenderer\TaxExemptionNotices::navigationItem(),
-           PageRenderer\DonationReceipts::navigationItem($this->projectId, $this->projectName)
+           PageRenderer\DonationReceipts::navigationItem($this->projectId, $this->projectName),
+           PageRenderer\TaxationStatutorySources::navigationItem(),
          ]
          : []),
         [

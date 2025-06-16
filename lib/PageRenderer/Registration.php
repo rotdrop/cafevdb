@@ -55,6 +55,7 @@ class Registration
     Projects::TEMPLATE => Projects::class,
     SepaBankAccounts::TEMPLATE => SepaBankAccounts::class,
     SepaBulkTransactions::TEMPLATE => SepaBulkTransactions::class,
+    TaxationStatutorySources::TEMPLATE => TaxationStatutorySources::class,
     TaxExemptionNotices::TEMPLATE => TaxExemptionNotices::class,
   ];
 

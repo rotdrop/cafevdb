@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Navigation;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller\DownloadsController;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
@@ -246,7 +247,15 @@ FROM " . self::INVOICE_ITEMS_TABLE . " __t2@WHERE_PLACEHOLDER_T2@",
       'column' => 'key',
       'encode' => 'BIN2UUID(%s)',
     ],
-
+    // legal justification for sales tax rate
+    self::TAXATION_STATUTORY_SOURCES_TABLE => [
+      'entity' => Entities\TaxationStatutorySource::class,
+      'identifier' => [
+        'id' => 'taxation_statutory_source_id',
+      ],
+      'column' => 'id',
+      'flags' => self::JOIN_READONLY,
+    ],
     // link the balance directories via their parent_id for the composite invoice item
     self::COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE => [
       'entity' => Entities\DatabaseStorageFolder::class,
@@ -785,6 +794,38 @@ WHERE dsf.id IS NOT NULL',
             return $this->moneyValue($value);
           },
         ]));
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::TAXATION_STATUTORY_SOURCES_TABLE, 'id', [
+        'name' => $this->l->t('Sales Tax'),
+        'css' => [ 'postfix' => [ 'sales-tax' ], ],
+        'php|LF' => [$this, 'compositeRowOnly'],
+        'sql|LF' => '$join_table.rate * 100',
+        'select|LFVD' => 'N',
+        'select' => 'D',
+        'align' => 'right',
+        'mask|LFVD' => '%d%%',
+        'input' => 'M',
+        'values|ACP' => [
+          'description' => [
+            'columns' => [ '$table.rate * 100', '$table.law' ],
+            'ifnull' => false,
+            'cast' => false,
+            'divs' => [ '%, ' ],
+          ],
+          PHPMyEdit::OPT_FILTERS => [ '$table.tax_type = "' . TaxType::SALES . '"' ],
+        ],
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::TAXATION_STATUTORY_SOURCES_TABLE, 'law', [
+        'name' => $this->l->t('Legal Basis'),
+        'css' => [ 'postfix' => [ 'statutory-source' ], ],
+        'php|LF' => [$this, 'compositeRowOnly'],
+        'select' => 'T',
+        'input' => 'HR',
+        'input|LFVD' => 'R',
+      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::INVOICE_ITEMS_TABLE, 'imbalance',
@@ -1617,6 +1658,9 @@ WHERE dsf.id IS NOT NULL',
         $writtenInvoiceIndex = $this->queryFieldIndex('written_invoice_id');
         $compositeBalanceDocumentsFolderIdIndex = $this->queryFieldIndex('balance_documents_folder_id');
 
+        $taxationStatutorySourcesIndex = $this->joinQueryFieldIndex(self::TAXATION_STATUTORY_SOURCES_TABLE, 'id');
+        $taxationStatutorySourcesLawIndex = $this->joinQueryFieldIndex(self::TAXATION_STATUTORY_SOURCES_TABLE, 'law');
+
         if ($this->isCompositeRowTag($rowTag)) {
           $this->debug('COMPOSITE ROW');
           $pme->fdd[$receivableKeyIndex]['input'] = 'HR';
@@ -1640,6 +1684,8 @@ WHERE dsf.id IS NOT NULL',
           $pme->fdd[$paymentsSubjectIndex]['input'] = 'HR';
           $pme->fdd[$balanceDocumentsFolderIdIndex]['input'] = 'R';
           $pme->fdd[$compositeBalanceDocumentsFolderIdIndex]['input'] = '';
+          $pme->fdd[$taxationStatutorySourcesIndex]['input'] = 'M';
+          $pme->fdd[$taxationStatutorySourcesLawIndex]['input|LFVD'] = 'R';
 
           if ($this->copyOperation()) {
             $pme->fdd[$writtenInvoiceIndex]['input'] = 'HR';
@@ -1676,6 +1722,8 @@ WHERE dsf.id IS NOT NULL',
           $pme->fdd[$debitorIdIndex]['input'] = 'R';
           $pme->fdd[$writtenInvoiceIndex]['input'] = 'HR';
           $pme->fdd[$compositeBalanceDocumentsFolderIdIndex]['input'] = 'HR';
+          $pme->fdd[$taxationStatutorySourcesIndex]['input'] = 'HR';
+          $pme->fdd[$taxationStatutorySourcesLawIndex]['input|LFVD'] = 'HR';
 
           $pme->fdd[$balanceDocumentsFolderIdIndex]['name'] = $this->l->t('Project Balance');
         }
@@ -1975,6 +2023,9 @@ WHERE dsf.id IS NOT NULL',
       }
     } else {
       // Composite payment
+
+      $newValues['taxation_statutory_source_id'] =
+        $newValues[$this->joinTableFieldName(self::TAXATION_STATUTORY_SOURCES_TABLE, 'id')];
 
       // "row_tag" is used as "column" in $this->joinStructure, so transfer
       // the InvoiceItems ids to that field.

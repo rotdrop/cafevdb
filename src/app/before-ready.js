@@ -268,6 +268,14 @@ const documentReady = function() {
     parameters: [],
   });
 
+  PHPMyEdit.addTableLoadCallback('taxation-statutory-sources', {
+    callback(selector, parameters, resizeCB) {
+      resizeCB();
+    },
+    context: CAFEVDB,
+    parameters: [],
+  });
+
   PHPMyEdit.addTableLoadCallback('project-payments', {
     callback(selector, parameters, resizeCB) {
 

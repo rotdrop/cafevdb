@@ -77,7 +77,7 @@ function documentReady() {
           migrationList += `<dt class="migration-version">${version}</dt><dd class="migration-description">${description}</dd>`;
         }
         migrationList += '</dl>';
-        Dialogs.info(
+        Dialogs.confirm(
           t(appName, 'Data-migrations need to be performed before proceeding to the orchestra app.')
             + '<p>'
             + migrationList

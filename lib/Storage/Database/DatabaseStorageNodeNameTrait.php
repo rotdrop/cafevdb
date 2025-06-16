@@ -218,7 +218,7 @@ trait DatabaseStorageNodeNameTrait
   /**
    * PME-legacy.
    *
-   * @param string|Types\EnumTaxType $taxType
+   * @param array $taxTypes
    *
    * @param int $assessmentPeriodStart
    *
@@ -229,14 +229,21 @@ trait DatabaseStorageNodeNameTrait
    * @return string
    */
   protected function getLegacyTaxExemptionNoticeFileName(
-    string|Types\EnumTaxType $taxType,
+    array $taxTypes,
     int $assessmentPeriodStart,
     int $assessmentPeriodEnd,
     ?string $extension = null,
   ):string {
+    $taxTypes = array_map(
+      fn(string|Types\EnumTaxType $taxType)
+      =>
+      Util::dashesToCamelCase($this->getAppL10n()->t((string)$taxType), true, '_-. '),
+      $taxTypes,
+    );
+    sort($taxTypes); // by l10name
     // TRANSLATORS: file-name
     $fileName =  $this->getAppL10n()->t('TaxExemptionNotice-%1$s-%2$04d-%3$04d', [
-      Util::dashesToCamelCase($this->getAppL10n()->t((string)$taxType), true, '_-. '),
+      implode('-', $taxTypes),
       $assessmentPeriodStart,
       $assessmentPeriodEnd,
     ]);
@@ -260,7 +267,7 @@ trait DatabaseStorageNodeNameTrait
     ?string $extension = null,
   ):string {
     return $this->getLegacyTaxExemptionNoticeFileName(
-      $taxExemptionNotice->getTaxType(),
+      $taxExemptionNotice->getTaxTypes(),
       $taxExemptionNotice->getAssessmentPeriodStart(),
       $taxExemptionNotice->getAssessmentPeriodEnd(),
       $extension,

@@ -28,8 +28,10 @@ use Closure;
 use DateTimeImmutable;
 use DateTimeInterface;
 use UnexpectedValueException;
+use InvalidArgumentException;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -207,6 +209,13 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
   private ?DatabaseStorageFile $writtenInvoice;
+
+  /**
+   * The legal reason for the taxation (sales tax)
+   */
+  #[ORM\ManyToOne(targetEntity: TaxationStatutorySource::class, inversedBy: 'invoices', cascade: ['persist'])]
+  #[ORM\JoinColumn(nullable: false)]
+  private TaxationStatutorySource $taxationStatutorySource;
 
   /**
    * @var SentEmail
@@ -718,6 +727,35 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   public function setWrittenInvoice(?DatabaseStorageFile $writtenInvoice):Invoice
   {
     $this->writtenInvoice = $writtenInvoice;
+
+    return $this;
+  }
+
+  /**
+   * @return null|TaxationStatutorySource
+   */
+  public function getTaxationStatutorySource():?TaxationStatutorySource
+  {
+    return $this->taxationStatutorySource ?? null;
+  }
+
+  /**
+   * @param TaxationStatutorySource $TaxationStatutorySource
+   *
+   * @return TaxExemptionNotice
+   */
+  public function setTaxationStatutorySource(TaxationStatutorySource $taxationStatutorySource):Invoice
+  {
+    if ($taxationStatutorySource->getTaxType() != Types\EnumTaxType::SALES) {
+      throw new InvalidArgumentException(
+        'The tax-type has to be "'
+        . Types\EnumTaxType::SALES
+        . '", not "'
+        . $taxationStatutorySource->getTaxType()
+        . '".',
+      );
+    }
+    $this->taxationStatutorySource = $taxationStatutorySource;
 
     return $this;
   }

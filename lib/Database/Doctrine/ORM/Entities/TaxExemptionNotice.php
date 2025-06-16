@@ -40,7 +40,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  * taxes).
  */
 #[ORM\Table(name: 'TaxExemptionNotices')]
-#[ORM\UniqueConstraint(columns: ['tax_type', 'assessment_period_start', 'assessment_period_end'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TaxExemptionNoticesRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\NeverHardDelete::class)]
@@ -50,19 +49,21 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\SoftDeleteableEntity;
 
+  // Notice -> Items -> JoinTable -> TaxationSources
+  // Notice.item1, Notice.item2
+
   /**
    * @var int
    */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private ?int $id = null;
+  private int $id;
 
-  /**
-   * @var Types\EnumTaxType
-   */
-  #[ORM\Column(type: 'EnumTaxType', nullable: false, options: ['default' => 'corporate income tax'])]
-  private ?Types\EnumTaxType $taxType;
+  #[ORM\ManyToMany(targetEntity: TaxationStatutorySource::class, inversedBy: 'taxExemptionNotices', cascade: ['persist'])]
+  #[ORM\JoinTable(name: 'TaxExemptionItems')]
+  #[ORM\JoinColumn(nullable: false)]
+  private Collection $taxationStatutorySources;
 
   /**
    * @var int
@@ -140,6 +141,7 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   {
     $this->__wakeup();
     $this->donationReceipts = new ArrayCollection;
+    $this->taxationStatutorySources = new ArrayCollection;
   }
 
   /**
@@ -163,25 +165,33 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
    */
   public function getId():?int
   {
-    return $this->id;
+    return $this->id ?? null;
   }
 
   /**
-   * @return null|Types\EnumTaxType
+   * @return array
    */
-  public function getTaxType():?Types\EnumTaxType
+  public function getTaxTypes():array
   {
-    return $this->taxType;
+    return $this->taxationStatutorySources->map(fn(TaxationStatutorySource $item) => $item->getTaxType())->toArray();
   }
 
   /**
-   * @param Types\EnumTaxType $taxType
+   * @return Collection
+   */
+  public function getTaxationStatutorySources():Collection
+  {
+    return $this->taxationStatutorySources;
+  }
+
+  /**
+   * @param Collection $TaxationStatutorySources
    *
    * @return TaxExemptionNotice
    */
-  public function setTaxType(Types\EnumTaxType $taxType):TaxExemptionNotice
+  public function setTaxationStatutorySources(Collection $taxationStatutorySources):TaxExemptionNotice
   {
-    $this->taxType = $taxType;
+    $this->taxationStatutorySources = $taxationStatutorySources;
 
     return $this;
   }
@@ -369,7 +379,12 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   /** {@inheritdoc} */
   public function jsonSerialize():array
   {
-    return $this->toArray();
+    $array = $this->toArray();
+    // short cut, in particular of mail merge
+    $array['taxType'] = $this->taxationStatutorySource->getTaxType();
+    $array['law'] = $this->taxationStatutorySource->getLaw();
+
+    return $array;
   }
 
   /** {@inheritdoc} */
@@ -378,7 +393,7 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
     return 'notice('
       . $this->assessmentPeriodStart . '-' . $this->assessmentPeriodEnd
       . '@'
-      . $this->taxType . ' tax'
+      . implode('-', array_map(fn(Types\EnumTaxType $type) => $type. ' tax', $this->getTaxTypes()))
       . ')';
   }
 }

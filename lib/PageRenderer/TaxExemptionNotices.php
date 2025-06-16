@@ -30,6 +30,7 @@ use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -56,13 +57,28 @@ class TaxExemptionNotices extends PMETableViewBase
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\TaxExemptionNotice::class,
     ],
+    self::TAX_EXEMPTION_ITEMS_TABLE => [
+      'entity' => null,
+      'identifier' => [
+        'tax_exemption_notice_id' => 'id',
+        'taxation_statutory_source_id' => false,
+      ],
+      'column' => 'tax_exemption_notice_id',
+      'flags' => self::JOIN_READONLY,
+    ],
+    self::TAXATION_STATUTORY_SOURCES_TABLE => [
+      'table' => self::TAXATION_STATUTORY_SOURCES_TABLE,
+      'entity' => Entities\TaxationStatutorySource::class,
+      'identifier' => [
+        'id' => [
+          'table' => self::TAX_EXEMPTION_ITEMS_TABLE,
+          'column' => 'taxation_statutory_source_id',
+        ],
+      ],
+      'column' => 'id',
+      'association' => 'taxationStatutorySources',
+    ],
   ];
-
-  /**
-   * @var array<int, string>
-   * The translated names of the tax types.
-   */
-  private array $taxTypeNames;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -84,13 +100,6 @@ class TaxExemptionNotices extends PMETableViewBase
       pageNavigation: $pageNavigation,
       toolTipsService: $toolTipsService,
     );
-
-    $taxTypes = array_values(Types\EnumTaxType::toArray());
-
-    $this->taxTypeNames = [];
-    foreach ($taxTypes as $tag) {
-      $this->taxTypeNames[$tag] = $this->l->t($tag);
-    }
 
     if (empty($this->projectId)) {
       $this->projectId = (int)$this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0);
@@ -143,7 +152,10 @@ class TaxExemptionNotices extends PMETableViewBase
     $opts['key_type'] = 'int';
 
     // Sorting field(s)
-    $opts['sort_field'] = [ 'tax_type', 'assessment_period_start' ];
+    $opts['sort_field'] = [
+      // 'tax_type',
+      'assessment_period_start',
+    ];
 
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
@@ -179,14 +191,69 @@ class TaxExemptionNotices extends PMETableViewBase
       'sort'     => true,
     ];
 
-    $opts['fdd']['tax_type'] = [
-      'name'     => $this->l->t('Type'),
-      'css'      => [ 'postfix' => [ 'tax-type', ], ],
-      'input'    => 'M',
-      'select'   => 'D',
-      'sort'     => $sort,
-      'values2'  => $this->taxTypeNames,
-    ];
+    // add some translations for enum values
+    array_walk($this->joinStructure, function(&$joinInfo, $table) {
+      switch ($table) {
+        case self::TAXATION_STATUTORY_SOURCES_TABLE:
+          $joinInfo['sql'] = $this->makeEnumTranslationsJoin($joinInfo, [ 'tax_type' => TaxType::class ]);
+          break;
+        default:
+          break;
+      }
+    });
+
+    // define join tables
+    $this->defineJoinStructure($opts);
+
+    list(, $fieldName) = $this->makeJoinTableField(
+      $opts['fdd'], self::TAXATION_STATUTORY_SOURCES_TABLE, 'id', [
+        'name' => $this->l->t('Context'),
+        'css'      => [ 'postfix' => [ 'taxation-statutoryx-sources', 'squeeze-subsequent-lines', 'clip-long-text',  ], ],
+        'display|LVFD' => [ 'popup' => 'data' ],
+        'sort' => true,
+        'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
+        'filter' => [
+          'having' => true,
+        ],
+        'select' => 'M',
+        'values' => [
+          'description' => [
+            'columns' => [ 'l10n_tax_type', 'law' ],
+            'divs' => [ ' (', ")" ],
+            'ifnull' => [ false, false ],
+            'cast' => [ false, false ],
+          ],
+          'orderby' => '$description ASC',
+        ],
+        'values2glue' => ',<br/>',
+        'display|LF' => [
+          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+          'popup' => 'data',
+        ],
+      ]);
+
+    list(, $fieldName) = $this->makeJoinTableField(
+      $opts['fdd'], self::TAXATION_STATUTORY_SOURCES_TABLE, 'tax_type', [
+        'name' => $this->l->t('Tax Types'),
+        'css' => [ 'postfix' => [ 'tax-types', ], ],
+        'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
+        'select' => 'M',
+        'input' => 'HR',
+      ]);
+
+    $opts['fdd'][$fieldName]['values|ACP'] = array_merge(
+      $opts['fdd'][$fieldName]['values'],
+      [ 'filters' => '$table.deleted IS NULL' ]);
+
+    if ($this->showDisabled) {
+      // soft-deletion
+      $opts['fdd']['deleted'] = array_merge(
+        $this->defaultFDD['deleted'], [
+          'name' => $this->l->t('Deleted'),
+        ]
+      );
+    }
 
     $yearAutocomplete = range((new DateTime)->format('Y')-10, (new DateTime)->format('Y'), 1);
 
@@ -293,11 +360,12 @@ class TaxExemptionNotices extends PMETableViewBase
           return '';
         }
 
-        $taxType = $row[$this->queryField('tax_type')];
+        $taxTypes = $row[$this->joinQueryField(self::TAXATION_STATUTORY_SOURCES_TABLE, 'tax_type')];
+        $taxTypes = explode(',', $taxTypes);
         $assessmentPeriodStart = $row[$this->queryField('assessment_period_start')];
         $assessmentPeriodEnd = $row[$this->queryField('assessment_period_end')];
         $fileName = $this->getLegacyTaxExemptionNoticeFileName(
-          $taxType,
+          $taxTypes,
           $assessmentPeriodStart,
           $assessmentPeriodEnd,
         );

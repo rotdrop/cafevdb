@@ -94,6 +94,27 @@ class DonationReceipts extends PMETableViewBase
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
+    self::TAX_EXEMPTION_ITEMS_TABLE => [
+      'entity' => null,
+      'identifier' => [
+        'tax_exemption_notice_id' => 'tax_exemption_notice_id',
+        'taxation_statutory_source_id' => false,
+      ],
+      'column' => 'tax_exemption_notice_id',
+      'flags' => self::JOIN_READONLY,
+    ],
+    self::TAXATION_STATUTORY_SOURCES_TABLE => [
+      'table' => self::TAXATION_STATUTORY_SOURCES_TABLE,
+      'entity' => Entities\TaxationStatutorySource::class,
+      'identifier' => [
+        'id' => [
+          'table' => self::TAX_EXEMPTION_ITEMS_TABLE,
+          'column' => 'taxation_statutory_source_id',
+        ],
+      ],
+      'column' => 'id',
+      'flags' => self::JOIN_READONLY,
+    ],
     self::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'identifier' => [
@@ -686,7 +707,7 @@ class DonationReceipts extends PMETableViewBase
         'values' => [
           'description' => [
             'columns' => [
-              'tax_type',
+              // 'tax_type',
               'tax_office',
               'assessment_period_start',
               'assessment_period_end',
