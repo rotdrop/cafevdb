@@ -603,7 +603,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
 
         // save current instruments
         const failureData = {
-          oldInstruments: [...$self.data(selectedOptionsKey)],
+          oldInstruments: [...($self.data(selectedOptionsKey) || [])],
         };
         $self.data(selectedOptionsKey, SelectUtils.selected($self));
 
@@ -671,7 +671,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
         console.debug('IN DONE HOOK', $self.data(selectedOptionsKey));
         // save current instruments
         const failureData = {
-          oldInstruments: [...$self.data(selectedOptionsKey)],
+          oldInstruments: [...($self.data(selectedOptionsKey) || [])],
         };
         $self.data(selectedOptionsKey, SelectUtils.selected($self));
         console.info('IN DONE HOOK', $self.data(selectedOptionsKey));
