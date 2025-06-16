@@ -2164,6 +2164,9 @@ WHERE dsf.id IS NOT NULL',
     $debitorId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
     $newValues['debitor_id'] = $debitorId;
 
+    $newValues['taxation_statutory_source_id'] =
+      $newValues[$this->joinTableFieldName(self::TAXATION_STATUTORY_SOURCES_TABLE, 'id')];
+
     if (($newValues[$amountKey]??null) === null) {
       $newValues[$amountKey] = $newValues['amount'];
     } else {
