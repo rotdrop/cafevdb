@@ -244,6 +244,8 @@ class TaxationStatutorySources extends PMETableViewBase
       'sort'   => true,
       'default' => 0,
       'align' => 'right',
+      'sql|LFVD' => '$column * 100',
+      'mask|LFVD' => '%d%%',
       'display|ACP' => [
         'attributes' => [
           'step' => '0.01',
@@ -270,6 +272,29 @@ class TaxationStatutorySources extends PMETableViewBase
       'select' => 'T',
       'maxlen' => 1024,
       'sort'   => true,
+    ];
+
+    $opts['fdd']['law_text'] = [
+      'name' => $this->l->t('Wording of the Law'),
+      'input' => 'VR',
+      'sql' => '$table.law',
+      'sort' => false,
+      'php'   =>  function($value, $op, $field, $row, $recordId, $pme) {
+        $country = $row[$this->queryField('country')];
+        switch ($country) {
+          case 'DE':
+            $abbreviation = array_pop(explode(' ', $value));
+            $link = sprintf(
+              'https://www.gesetze-im-internet.de/cgi-bin/htsearch?method=and&suche=suchen&config=Titel_bmjhome2005&words=%s',
+              $abbreviation,
+            );
+            $target = md5($this->appName() . self::TEMPLATE . 'Wording of the Law');
+            return '<a href="' . $link . '" target="' . $target . '">www.gesetze-im-internet.de</a>';
+          default:
+            break;
+        }
+        return $value;
+      },
     ];
 
     if ($this->showDisabled) {
