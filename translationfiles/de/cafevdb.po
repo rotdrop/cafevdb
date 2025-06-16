@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-06-16 01:40+0200\n"
-"PO-Revision-Date: 2025-06-16 02:01+0200\n"
+"POT-Creation-Date: 2025-06-16 09:39+0200\n"
+"PO-Revision-Date: 2025-06-16 09:41+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -4794,7 +4794,7 @@ msgstr "Fehlbetrag"
 #: lib/EmailForm/Composer.php:1042
 #: lib/PageRenderer/InstrumentInsurances.php:616
 #: lib/PageRenderer/Invoices.php:880 lib/PageRenderer/Invoices.php:891
-#: lib/PageRenderer/PMETableViewBase.php:708
+#: lib/PageRenderer/PMETableViewBase.php:707
 msgid "Due Date"
 msgstr "Fälligkeit"
 
@@ -6047,7 +6047,7 @@ msgstr "Nicht unterstützte Vielfachheit / Daten-Typ Kombination: %s / %s"
 #: lib/PageRenderer/ProjectParticipants.php:590
 #: lib/PageRenderer/Projects.php:323
 #: lib/PageRenderer/TaxExemptionNotices.php:253
-#: lib/PageRenderer/TaxationStatutorySources.php:279
+#: lib/PageRenderer/TaxationStatutorySources.php:304
 msgid "Deleted"
 msgstr "Gelöscht"
 
@@ -6522,7 +6522,7 @@ msgid "Sales Tax"
 msgstr "Umsatzsteuer"
 
 #: lib/PageRenderer/Invoices.php:822
-#: lib/PageRenderer/TaxationStatutorySources.php:261
+#: lib/PageRenderer/TaxationStatutorySources.php:263
 msgid "Legal Basis"
 msgstr "Rechtsgrundlage"
 
@@ -6838,15 +6838,15 @@ msgstr "Beiträge"
 msgid "expenses negative"
 msgstr "Ausgaben negativ"
 
-#: lib/PageRenderer/PMETableViewBase.php:716
+#: lib/PageRenderer/PMETableViewBase.php:715
 msgid "Revoked"
 msgstr "Entwertung"
 
-#: lib/PageRenderer/PMETableViewBase.php:727
+#: lib/PageRenderer/PMETableViewBase.php:726
 msgid "birthday"
 msgstr "Geburtstag"
 
-#: lib/PageRenderer/PMETableViewBase.php:990
+#: lib/PageRenderer/PMETableViewBase.php:989
 #, php-format
 msgid ""
 "Table \"%s\": missing identifier for field \"%s\" and grouping field \"%s\" "
@@ -6855,8 +6855,8 @@ msgstr ""
 "Tabelle \"%s\": fehlender Id-Wert für Datenbank-Feld \"%s\" und das "
 "Gruppierungsfeld \"%s\" ist bereits belegt."
 
-#: lib/PageRenderer/PMETableViewBase.php:1033
-#: lib/PageRenderer/PMETableViewBase.php:1636
+#: lib/PageRenderer/PMETableViewBase.php:1032
+#: lib/PageRenderer/PMETableViewBase.php:1635
 #, php-format
 msgid ""
 "Identifier column \"%s\" for single-valued join-table \"%s\" contains more "
@@ -6866,10 +6866,10 @@ msgstr ""
 "mehr als einen Schlüssel: \"%s\" / \"%s\".\n"
 "\n"
 
-#: lib/PageRenderer/PMETableViewBase.php:1050
-#: lib/PageRenderer/PMETableViewBase.php:1424
-#: lib/PageRenderer/PMETableViewBase.php:1660
-#: lib/PageRenderer/PMETableViewBase.php:1879
+#: lib/PageRenderer/PMETableViewBase.php:1049
+#: lib/PageRenderer/PMETableViewBase.php:1423
+#: lib/PageRenderer/PMETableViewBase.php:1659
+#: lib/PageRenderer/PMETableViewBase.php:1878
 #, php-format
 msgid ""
 "Field \"%s.%s\": nested multi-value join tables with unexpected pivot-"
@@ -6878,20 +6878,20 @@ msgstr ""
 "Feld \"%s.%s\": geschachtelte Multi-Key Verknüpfungstabelle mit unerwarteter "
 "Pivot-Spalte: %s."
 
-#: lib/PageRenderer/PMETableViewBase.php:1132
+#: lib/PageRenderer/PMETableViewBase.php:1131
 #, php-format
 msgid ""
 "Inconsistent removal request for \"%1$s\" (%3$s), major key \"%2$s\" (%4$s)."
 msgstr ""
 "Inkonsistenter Löschversuch für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" (%4$s)."
 
-#: lib/PageRenderer/PMETableViewBase.php:1161
+#: lib/PageRenderer/PMETableViewBase.php:1160
 msgid ""
 "Inconsistent add request for \"%1$s\" (%3$%s), major key \"%2$s\" (%4$s)."
 msgstr ""
 "Inkonsistenter Einfüge-Versuch für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" (%4$s)."
 
-#: lib/PageRenderer/PMETableViewBase.php:1190
+#: lib/PageRenderer/PMETableViewBase.php:1189
 #, php-format
 msgid ""
 "Inconsistent remaining data for \"%1$s\" (%3$s), major key \"%2$s\" (%4$s)."
@@ -6899,19 +6899,19 @@ msgstr ""
 "Inkonsistente verbleibende Daten für \"%1$s\" (%3$s), Haupt-Id \"%2$s\" "
 "(%4$s)."
 
-#: lib/PageRenderer/PMETableViewBase.php:1216
-#: lib/PageRenderer/PMETableViewBase.php:1734
+#: lib/PageRenderer/PMETableViewBase.php:1215
+#: lib/PageRenderer/PMETableViewBase.php:1733
 #, php-format
 msgid "No value for identifier field \"%s / %s\"."
 msgstr "Fehlender Wert für Id-Feld: \"%s / %s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:1243
+#: lib/PageRenderer/PMETableViewBase.php:1242
 #, php-format
 msgid "Unmable to find master entity for key \"%s\"."
 msgstr "Kann die Haupt-Entität zum Schlüssel \"%s\" nicht finden."
 
-#: lib/PageRenderer/PMETableViewBase.php:1417
-#: lib/PageRenderer/PMETableViewBase.php:1872
+#: lib/PageRenderer/PMETableViewBase.php:1416
+#: lib/PageRenderer/PMETableViewBase.php:1871
 #, php-format
 msgid ""
 "Adding a new entity \"%1$s\" resulted in an inconsistent value for the "
@@ -6921,17 +6921,17 @@ msgstr ""
 "inkonsistenten Daten für die Spalte \"%2$s\",\n"
 "der fest eingestellte Wert war \"%3$s\", der neue Wert ist \"%4$s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:1439
+#: lib/PageRenderer/PMETableViewBase.php:1438
 #, php-format
 msgid "Unable to find entity in table %s given id %s"
 msgstr "Kann die Entität in Tabelle %s zur id %s nicht finden"
 
-#: lib/PageRenderer/PMETableViewBase.php:1511
+#: lib/PageRenderer/PMETableViewBase.php:1510
 #, php-format
 msgid "Change-set %s should be empty."
 msgstr "Änderungen-Menge %s muss leer sein."
 
-#: lib/PageRenderer/PMETableViewBase.php:1621
+#: lib/PageRenderer/PMETableViewBase.php:1620
 #, php-format
 msgid ""
 "Missing identifier for field \"%s\" and grouping field \"%s\" already set."
@@ -6939,30 +6939,30 @@ msgstr ""
 "Fehlender Id-Wert für Datenbank-Feld \"%s\" und das Gruppierungsfeld \"%s\" "
 "ist bereits belegt."
 
-#: lib/PageRenderer/PMETableViewBase.php:1710
+#: lib/PageRenderer/PMETableViewBase.php:1709
 #, php-format
 msgid "Inconsistent add request for \"%1$s\", major key \"%2$s\"."
 msgstr "Inkonsistenter Einfüge-Versuch für \"%1$s\", Haupt-Id \"%2$s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:1753
+#: lib/PageRenderer/PMETableViewBase.php:1752
 msgid "Master entity is unset."
 msgstr "Hauptentität ist nicht angegeben."
 
-#: lib/PageRenderer/PMETableViewBase.php:1962
+#: lib/PageRenderer/PMETableViewBase.php:1961
 #, php-format
 msgid "Remaining change-set %s must be empty"
 msgstr "Es dürften keine geänderten Felder (%s) übrig bleiben. "
 
-#: lib/PageRenderer/PMETableViewBase.php:2178
+#: lib/PageRenderer/PMETableViewBase.php:2177
 #, php-format
 msgid "Unknown column description: \"%s\""
 msgstr "Unbekannte Spalten-Beschreibung: \"%s\"."
 
-#: lib/PageRenderer/PMETableViewBase.php:2332
+#: lib/PageRenderer/PMETableViewBase.php:2331
 msgid "Table-name not specified"
 msgstr "Tabellen-Name wurde nicht angegeben"
 
-#: lib/PageRenderer/PMETableViewBase.php:2409
+#: lib/PageRenderer/PMETableViewBase.php:2408
 #, php-format
 msgid ""
 "Master join-table field for %1$s not found, avalaible fields: \"%2$s\", "
@@ -7812,9 +7812,13 @@ msgstr "Steuer"
 msgid "Tax Rate"
 msgstr "Steuersaz"
 
-#: lib/PageRenderer/TaxationStatutorySources.php:269
+#: lib/PageRenderer/TaxationStatutorySources.php:271
 msgid "Hint"
 msgstr "Hinweise"
+
+#: lib/PageRenderer/TaxationStatutorySources.php:278
+msgid "Wording of the Law"
+msgstr "Gesetzestext"
 
 #: lib/PageRenderer/Util/Navigation.php:228
 msgid "Export Table"

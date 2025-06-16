@@ -1379,6 +1379,7 @@ OC.L10N.register(
     "Tax Type" : "Steuer",
     "Tax Rate" : "Steuersaz",
     "Hint" : "Hinweise",
+    "Wording of the Law" : "Gesetzestext",
     "Export Table" : "Exportieren",
     "LibreOffice Export" : "ODS Export",
     "Excel Export" : "\"Excel\" Export",
