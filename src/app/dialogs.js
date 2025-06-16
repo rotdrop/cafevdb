@@ -74,10 +74,12 @@ const getLegacyButtons = function(buttons, callback) {
   return buttonList;
 };
 
-const message = function(content, title, dialogType, buttons, callback = () => {}, modal, allowHtml, subTitle) {
+const message = function(content, title, dialogType, buttons, callback = () => {}, modal, allowHtml) {
+
+  console.info('MESSAGE', { content, title, dialogType, buttons, callback, modal, allowHtml });
+
   const builder = (new DialogBuilder())
     .setName(title)
-    .setSubName(subTitle || '')
     .setText(allowHtml ? '' : content)
     .setButtons(getLegacyButtons(buttons, callback));
 
@@ -107,7 +109,7 @@ const message = function(content, title, dialogType, buttons, callback = () => {
   });
 };
 
-const alert = function(text, title, callback, modal, allowHtml, subTitle) {
+const alert = function(text, title, callback, modal, allowHtml) {
   return message(
     text,
     title,
@@ -116,11 +118,10 @@ const alert = function(text, title, callback, modal, allowHtml, subTitle) {
     callback,
     modal,
     allowHtml,
-    subTitle,
   );
 };
 
-const info = function(text, title, callback, modal, allowHtml, subTitle) {
+const info = function(text, title, callback, modal, allowHtml) {
   return message(
     text,
     title,
@@ -129,11 +130,10 @@ const info = function(text, title, callback, modal, allowHtml, subTitle) {
     callback,
     modal,
     allowHtml,
-    subTitle,
   );
 };
 
-const confirm = function(text, title, options, modal, allowHtml, subTitle) {
+const confirm = function(text, title, options, modal, allowHtml) {
   const defaultOptions = {
     callback() {},
     modal: false,
@@ -165,7 +165,7 @@ const confirm = function(text, title, options, modal, allowHtml, subTitle) {
   }
   options.buttons.confirmClasses = classes;
 
-  console.debug('CONFIRM TEXT', { text, title, subTitle, options, modal, allowHtml });
+  console.debug('CONFIRM TEXT', { text, title, options, modal, allowHtml });
 
   return new Promise((resolve, reject) =>
     message(
@@ -180,7 +180,6 @@ const confirm = function(text, title, options, modal, allowHtml, subTitle) {
       },
       options.modal,
       options.allowHtml,
-      subTitle,
     ).then(() => {
       $('body').find('.oc-dialog-buttonrow.twobuttons').each(function() {
         const $buttonRow = $(this);
