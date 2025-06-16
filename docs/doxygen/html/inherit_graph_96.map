@@ -1,5 +1,15 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,139,31"/>
-<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html" title="Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL." alt="" coords="187,5,277,31"/>
-<area shape="poly" id="edge439_Node000000_Node000001" title=" " alt="" coords="152,15,186,15,186,21,152,21"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,132,93,159"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_config_lock_middleware.html" title="Deny all request while config&#45;lock is active." alt="" coords="173,5,326,32"/>
+<area shape="poly" id="edge491_Node000000_Node000001" title=" " alt="" coords="65,117,96,78,116,58,139,42,171,28,173,33,142,46,120,62,100,82,69,121"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_content_security_policy_middleware.html" title="Tweak the CSP header, in particular allow iframe access for &quot;local&quot; iframes if requested by the contr..." alt="" coords="141,56,358,83"/>
+<area shape="poly" id="edge492_Node000000_Node000002" title=" " alt="" coords="83,121,140,92,176,81,178,86,142,97,85,126"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_debug_mode_middleware.html" title="Sends CSP reports to a dedicated addresss for debugging." alt="" coords="171,107,328,133"/>
+<area shape="poly" id="edge493_Node000000_Node000003" title=" " alt="" coords="108,135,170,127,170,133,108,141"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_exception_middleware.html" title="Turn an exception into a data response which can be parsed by the frontend if the controller method h..." alt="" coords="177,157,322,184"/>
+<area shape="poly" id="edge494_Node000000_Node000004" title=" " alt="" coords="108,150,176,159,176,164,108,155"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_group_member_middleware.html" title="Verifies whether an user has at least subadmin rights." alt="" coords="165,208,334,235"/>
+<area shape="poly" id="edge495_Node000000_Node000005" title=" " alt="" coords="85,165,142,194,178,205,176,210,140,198,83,169"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_subadmin_middleware.html" title="Verifies whether an user has at least subadmin rights." alt="" coords="177,259,322,285"/>
+<area shape="poly" id="edge496_Node000000_Node000006" title=" " alt="" coords="69,170,100,209,120,228,142,244,177,259,175,264,139,249,116,232,96,213,65,173"/>
 </map>

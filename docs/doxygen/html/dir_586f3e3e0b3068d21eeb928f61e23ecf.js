@@ -5,6 +5,7 @@ var dir_586f3e3e0b3068d21eeb928f61e23ecf =
     [ "AssetTrait.php", "_asset_trait_8php_source.html", null ],
     [ "AuthenticatedCommandTrait.php", "_toolkit_2_traits_2_authenticated_command_trait_8php_source.html", null ],
     [ "AuthTokenTrait.php", "_auth_token_trait_8php_source.html", null ],
+    [ "BackedEnumTrait.php", "_backed_enum_trait_8php_source.html", null ],
     [ "CloudAdminTrait.php", "_cloud_admin_trait_8php_source.html", null ],
     [ "Constants.php", "_toolkit_2_traits_2_constants_8php_source.html", null ],
     [ "DateTimeTrait.php", "_date_time_trait_8php_source.html", null ],

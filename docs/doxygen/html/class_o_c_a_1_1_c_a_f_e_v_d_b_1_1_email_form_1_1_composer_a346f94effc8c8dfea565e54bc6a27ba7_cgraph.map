@@ -1,0 +1,11 @@
+<map id="setDefaultTemplate" name="setDefaultTemplate">
+<area shape="rect" id="Node000001" title="Install a default email text if no tempalte is given." alt="" coords="5,31,140,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a983520de1e3cc2a8f002055bf82ad3a8" title="Take the text supplied by $contents and store it in the DB EmailTemplates table with tag $templateNam..." alt="" coords="188,31,291,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,41,172,41,172,47,140,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a016db532796f0e82eb53352cd95baf70" title=" " alt="" coords="339,5,438,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="291,33,323,27,324,32,292,38"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ad647aec9f224f570e5c79be0a9ddd3d1" title=" " alt="" coords="357,56,420,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="292,50,342,59,341,64,291,55"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a35115d6c4451757ebad296254ead1c5a" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="486,56,557,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="421,67,471,67,471,72,421,72"/>
+</map>

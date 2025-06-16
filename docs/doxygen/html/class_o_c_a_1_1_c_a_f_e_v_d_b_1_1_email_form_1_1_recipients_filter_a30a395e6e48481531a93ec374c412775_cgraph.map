@@ -1,12 +1,12 @@
 <map id="setDefaultHistory" name="setDefaultHistory">
-<area shape="rect" id="Node000001" title="Compose a default history record for the initial state." alt="" coords="5,55,129,80"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a9ceb14e2f27e74da6d3f47217cafac78" title=" " alt="" coords="177,5,312,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,52,184,32,185,37,114,57"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a0835860e0bc6047f3eff6a9941dbbcf4" title=" " alt="" coords="187,55,302,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="130,65,174,65,174,70,130,70"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="200,128,289,153"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="100,78,201,120,199,125,98,83"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="360,55,520,80"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="302,65,346,65,346,70,302,70"/>
-<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="215,129,209,120,212,110,225,104,245,101,269,105,279,114,276,118,267,110,245,107,226,109,216,113,214,119,220,126"/>
+<area shape="rect" id="Node000001" title="Compose a default history record for the initial state." alt="" coords="5,56,129,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a9ceb14e2f27e74da6d3f47217cafac78" title=" " alt="" coords="203,5,337,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,53,198,34,200,39,124,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a27731ed4d08c3c842f0121956d34f60f" title=" " alt="" coords="177,56,363,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="129,67,161,67,161,72,129,72"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="226,131,314,157"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="106,81,218,122,216,127,105,86"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="411,56,570,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="363,67,395,67,395,72,363,72"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="235,132,229,122,233,112,247,106,270,104,294,107,307,113,304,118,293,112,270,109,249,111,237,116,235,121,240,129"/>
 </map>

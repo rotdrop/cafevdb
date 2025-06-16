@@ -1,0 +1,13 @@
+<map id="getApplied" name="getApplied">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,56,88,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a926abdf64e718f3405a12bcdaa87be51" title="Ensure all unapplied migrations are loaded." alt="" coords="136,56,318,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,67,120,67,120,72,88,72"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#ac1ff8d0fc167a3979c6485a888ffccc0" title="Find all applied migrations." alt="" coords="374,5,519,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="287,53,370,33,371,39,289,58"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#af398c267dc84e9a97bf2a48a46871dcf" title=" " alt="" coords="574,56,677,83"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="319,67,559,67,559,72,319,72"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a8790e3d69231a1f8acfab9ca1a1e4d3c" title="Find all unapplied migrations." alt="" coords="366,107,526,133"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="289,81,371,100,370,105,287,86"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="497,30,562,49,560,54,496,35"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="496,103,560,85,562,90,497,109"/>
+</map>

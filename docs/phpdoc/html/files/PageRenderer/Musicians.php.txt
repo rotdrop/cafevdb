@@ -52,13 +52,16 @@ use OCA\CAFEVDB\Storage\UserStorage;
 abstract class Musicians extends PMETableViewBase
 {
   use FieldTraits\AllProjectsTrait;
+  use FieldTraits\InstrumentsTrait;
   use FieldTraits\MailingListsTrait;
   use FieldTraits\MusicianAvatarTrait;
   use FieldTraits\MusicianEmailsTrait;
-  use FieldTraits\MusicianFromRowTrait;
   use FieldTraits\MusicianEnsureUserIdSlugTrait;
+  use FieldTraits\MusicianFromRowTrait;
   use FieldTraits\MusicianGenderTrait;
+  use FieldTraits\MusicianInstrumentsRankingTrait;
   use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
 
@@ -105,24 +108,6 @@ abstract class Musicians extends PMETableViewBase
       'column' => 'bill_to_party_id',
       'flags' => self::JOIN_READONLY,
     ],
-    // self::MUSICIAN_PHOTO_JOIN_TABLE => [
-    //   'entity' => Entities\MusicianPhoto::class,
-    //   'flags' => self::JOIN_READONLY,
-    //   'identifier' => [
-    //     'owner_id' => 'id',
-    //     'image_id' => false,
-    //   ],
-    //   'column' => 'image_id',
-    // ],
-    self::PROJECT_PARTICIPANTS_TABLE => [
-      'entity' => Entities\ProjectParticipant::class,
-      'identifier' => [
-        'project_id' => false,
-        'musician_id' => 'id',
-      ],
-      'column' => 'project_id',
-      'flags' => self::JOIN_READONLY,
-    ],
   ];
 
   /** {@inheritdoc} */
@@ -155,7 +140,7 @@ abstract class Musicians extends PMETableViewBase
     );
 
     if (empty($this->musicianId)) {
-      $this->musicianId = $this->pmeRecordId['id']??null;
+      $this->musicianId = $this->pmeRecordId['id'] ?? null;
     }
 
 
@@ -178,15 +163,15 @@ abstract class Musicians extends PMETableViewBase
   protected function commonShortTitle():?string
   {
     if ($this->deleteOperation()) {
-      return $this->l->t('Remove all data of the displayed musician?');
+      return $this->l->t('Remove all data of the displayed person?');
     } elseif ($this->copyOperation()) {
       return $this->l->t('Copy the displayed musician?');
     } elseif ($this->viewOperation()) {
-      return $this->l->t('Display of all stored personal data for the shown musician.');
+      return $this->l->t('Display of all stored personal data for the shown person.');
     } elseif ($this->changeOperation()) {
-      return $this->l->t('Edit the personal data of the displayed musician.');
+      return $this->l->t('Edit the data of the displayed person.');
     } elseif ($this->addOperation()) {
-      return $this->l->t('Add a new musician to the data-base.');
+      return $this->l->t('Add a new person to the data-base.');
     }
     return null;
   }
@@ -256,10 +241,6 @@ abstract class Musicians extends PMETableViewBase
     // GROUP BY clause, if needed.
     $opts['groupby_fields'] = 'id';
 
-    if (!$this->showDisabled) {
-      $opts['filters']['AND'][] = '$table.deleted IS NULL';
-    }
-
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
@@ -270,6 +251,10 @@ abstract class Musicians extends PMETableViewBase
 
     // needed early as otherwise the add_operation() etc. does not work.
     $this->pme->setOptions($opts);
+
+    if (!$this->showDisabled) {
+      $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = '$table.deleted IS NULL';
+    }
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '5';
@@ -300,6 +285,9 @@ abstract class Musicians extends PMETableViewBase
         ],
       ],
     ];
+
+    $instrumentInfo = $this->getInstrumentInfo();
+    $instrumentsFilter = array_keys($this->getNonInstruments());
 
     /*
      *
@@ -353,6 +341,17 @@ abstract class Musicians extends PMETableViewBase
       switch ($table) {
         case self::INSTRUMENTS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+          list($select, $join) = explode(' FROM ' . $table . ' t', $joinInfo['sql']);
+          $joinInfo['sql'] = $select
+            . ', GROUP_CONCAT(DISTINCT __t3.family ORDER BY __t3.family ASC) AS families'
+            . ' FROM ' . $table . ' t
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+ON t.id = __t2.instrument_id
+INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
+ON __t2.instrument_family_id = __t3.id
+' . $join . '
+WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
+GROUP BY t.id';
           break;
         default:
           break;
@@ -360,6 +359,22 @@ abstract class Musicians extends PMETableViewBase
     });
 
     $joinTables = $this->defineJoinStructure($opts);
+
+    $opts['fdd']['organization'] = [
+      'name'     => $this->l->t('Organization'),
+      'tab'      => [ 'id' => 'contact' ],
+      'maxlen'   => 384,
+      'select'   => 'T',
+      'sort'     => true,
+    ];
+
+    $opts['fdd']['job_title'] = [
+      'name'     => $this->l->t('Job-Title'),
+      'tab'      => [ 'id' => 'contact' ],
+      'maxlen'   => 384,
+      'select'   => 'T',
+      'sort'     => true,
+    ];
 
     $opts['fdd']['sur_name'] = [
       'tab'      => [ 'id' => 'contact' ],
@@ -583,8 +598,12 @@ abstract class Musicians extends PMETableViewBase
       ],
       'display|LVF' => ['popup' => 'data'],
       'sql'         => 'GROUP_CONCAT(DISTINCT
-  IF('.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL)
-  ORDER BY '.$joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
+  IF(
+    ' . $joinTables[self::MUSICIAN_INSTRUMENTS_TABLE] . '.deleted IS NOT NULL,
+    NULL,
+    $join_col_fqn
+  )
+  ORDER BY ' . $joinTables[self::MUSICIAN_INSTRUMENTS_TABLE] . '.ranking ASC, $order_by)',
       'select'      => 'M',
       'values' => [
         'column'      => 'id',
@@ -593,10 +612,10 @@ abstract class Musicians extends PMETableViewBase
           'cast' => [ false ],
           'ifnull' => [ false ],
         ],
-        'orderby'     => '$table.sort_order ASC',
+        'orderby' => '$table.sort_order ASC',
         'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
       ],
-      'valueGroups' => $this->instrumentInfo['idGroups'],
+      'valueGroups' => $instrumentInfo['idGroups'],
       'filter' => [
         'having' => true,
       ],
@@ -609,7 +628,7 @@ abstract class Musicians extends PMETableViewBase
         ],
       ],
     ];
-    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
+    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL AND $table.id NOT IN ("' . implode('","', $instrumentsFilter) . '")']);
 
     list($instrumentsFddIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
@@ -638,8 +657,8 @@ abstract class Musicians extends PMETableViewBase
         'select'  => 'M',
         'input'   => 'SR',
         'tooltip' => $this->toolTipsService['page-renderer:musicians:instruments-disabled'],
-        'values2' => $this->instrumentInfo['byId'],
-        'valueGroups' => $this->instrumentInfo['idGroups'],
+        'values2' => $instrumentInfo['byId'],
+        'valueGroups' => $instrumentInfo['idGroups'],
         'filter' => [
           'having' => true,
           // 'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
@@ -656,16 +675,16 @@ abstract class Musicians extends PMETableViewBase
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
      */
-    $memberStatusFddIndex = count($opts['fdd']);
-    $opts['fdd']['member_status'] = [
-      'name'    => strval($this->l->t('Email Status')),
+    $participationStatusFddIndex = count($opts['fdd']);
+    $opts['fdd']['default_participation_status'] = [
+      'name'    => strval($this->l->t('Default Status')),
       'tab'     => [ 'id' => [ 'orchestra' ] ],
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
-      'css'     => [ 'postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
-      'values2' => Types\EnumMemberStatus::getL10NValues($this->l),
-      'tooltip' => $this->toolTipsService['page-renderer:musicians:member-status'],
+      'css'     => [ 'postfix' => [ 'participation-status', 'tooltip-wide', ], ],
+      'values2' => Types\EnumParticipationStatus::getL10NValues($this->l),
+      'tooltip' => $this->toolTipsService['page-renderer:musicians:participation-status'],
     ];
 
     $opts['fdd']['cloud_account_deactivated'] = [
@@ -770,7 +789,18 @@ abstract class Musicians extends PMETableViewBase
       'tab'      => ['id' => 'contact'],
       'name'     => $this->l->t('Street Number'),
       'css'      => ['postfix' => [ 'musician-address', 'street-number', 'duplicates-indicator', $addCSS, ], ],
-      'input|LF' => $expertMode ? '' : 'H',
+      'input|LF' => ($expertMode || $this->pmeBare) ? '' : 'H',
+      'select'   => 'T',
+      'size'     => 11,
+      'maxlen'   => 32,
+      'sort'     => true,
+    ];
+
+    $opts['fdd']['po_box'] = [
+      'tab'      => ['id' => 'contact'],
+      'name'     => $this->l->t('P.O. Box'),
+      'css'      => ['postfix' => [ 'musician-address', 'po-box', 'duplicates-indicator', $addCSS, ], ],
+      'input|LF' => ($expertMode || $this->pmeBare) ? '' : 'H',
       'select'   => 'T',
       'size'     => 11,
       'maxlen'   => 32,
@@ -897,6 +927,16 @@ abstract class Musicians extends PMETableViewBase
       ]);
 
     $musicianAvatarFieldGenerator($opts['fdd']);
+
+    $opts['fdd']['address_book_uri'] = [
+      'tab'      => [ 'id' => 'miscinfo' ],
+      'name'     => $this->l->t('Address Book'),
+      'css'      => [ 'postfix' => [ 'address-book-uri', ], ],
+      'input'    => 'R',
+      'select'   => 'T',
+      'maxlen'   => 128,
+      'sort'     => true,
+    ];
 
     $opts['fdd']['vcard'] = [
       'tab' => ['id' => 'miscinfo'],
@@ -1039,7 +1079,7 @@ abstract class Musicians extends PMETableViewBase
 
     // The following are in order to aid the email form to extract
     // pre-selected musiancs from the form-data.
-    $opts['cgi']['persist']['memberStatusFddIndex'] = $memberStatusFddIndex;
+    $opts['cgi']['persist']['participationStatusFddIndex'] = $participationStatusFddIndex;
     $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
 
     return [ 'opts' => $opts, 'joinTables' => $joinTables ];

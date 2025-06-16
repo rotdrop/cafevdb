@@ -1,0 +1,8 @@
+<map id="getColumnValue" name="getColumnValue">
+<area shape="rect" id="Node000001" title="Fetch the value of a column, recursing into associations." alt="" coords="5,43,122,69"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#afc1808a55d8d17d9fa30cfbde05f7119" title="Compute a mapping which includes also hidden columns which are introduced through associations." alt="" coords="170,5,308,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,41,158,33,159,38,123,46"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#ad452b57a4016de6f8649da035530a76f" title=" " alt="" coords="211,80,267,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="123,66,196,82,195,87,122,71"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="209,81,203,71,207,62,219,55,239,53,260,56,271,62,268,67,258,61,239,59,221,61,211,65,209,71,213,78"/>
+</map>

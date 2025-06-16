@@ -1,0 +1,7 @@
+<map id="restoreProjectWikiPage" name="restoreProjectWikiPage">
+<area shape="rect" id="Node000001" title="Restore the wiki page to the given or lastest version." alt="" coords="5,31,164,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a1c163989440acd9e9821cddc718447ab" title=" " alt="" coords="212,5,322,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,30,196,26,197,31,164,36"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#af41e3612124ad9e93c88bc039e6584a3" title="Lazy getter for WikiRPC." alt="" coords="230,56,304,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,52,215,60,214,65,164,58"/>
+</map>

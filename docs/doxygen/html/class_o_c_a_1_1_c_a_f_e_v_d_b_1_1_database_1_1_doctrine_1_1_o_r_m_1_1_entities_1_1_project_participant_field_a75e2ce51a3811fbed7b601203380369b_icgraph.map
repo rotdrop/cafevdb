@@ -1,0 +1,7 @@
+<map id="getParticipationContext" name="getParticipationContext">
+<area shape="rect" id="Node000001" title="Get participationContext." alt="" coords="494,21,651,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a230a07923c294c4be56b2ee782123ae7" title="Get participantFields." alt="" coords="261,5,446,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="478,37,447,37,447,32,478,32"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service.html#a18bc01d7970328dde4ac1d857413ee2f" title="Fetch all generator fields for the given project." alt="" coords="5,5,213,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="245,37,213,37,213,32,245,32"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="getFromRoute" name="getFromRoute">
+<area shape="rect" id="Node000001" title="GET from a Cloud route." alt="" coords="5,5,110,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service.html#a3428c5f555aaee3633897e6387aa152d" title="Send to to a Cloud route." alt="" coords="158,5,277,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,16,142,16,142,21,110,21"/>
+</map>

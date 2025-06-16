@@ -1,0 +1,5 @@
+<map id="groupShareObject" name="groupShareObject">
+<area shape="rect" id="Node000001" title="Share an object between the members of the specified group." alt="" coords="187,5,312,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a7a4d9fc23f25b2fc46a13d7d0219fc24" title="Check for the existence of the shared folder and create it when not found." alt="" coords="5,5,139,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,21,139,21,139,16,171,16"/>
+</map>

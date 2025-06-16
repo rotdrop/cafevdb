@@ -1,0 +1,7 @@
+<map id="beforeDeleteSimplyDoDelete" name="beforeDeleteSimplyDoDelete">
+<area shape="rect" id="Node000001" title="This trigger simply deletes the given entity and prevents the legacy PHPMyEdit class to do the deleti..." alt="" coords="274,63,464,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a7d8b34fc0c961eb85894f3710b004a65" title="Sub&#45;payment aware delete." alt="" coords="12,5,219,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="267,62,219,54,220,49,268,57"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html#a7d8b34fc0c961eb85894f3710b004a65" title="Sub&#45;payment aware delete." alt="" coords="5,88,226,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="268,95,226,102,226,97,267,90"/>
+</map>

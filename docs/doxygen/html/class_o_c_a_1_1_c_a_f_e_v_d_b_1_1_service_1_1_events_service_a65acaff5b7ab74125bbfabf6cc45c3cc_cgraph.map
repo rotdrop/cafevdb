@@ -1,9 +1,23 @@
 <map id="onProjectUpdated" name="onProjectUpdated">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,99,132,124"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#af21741991f3f923a2c6932f3545629bf" title=" " alt="" coords="180,5,344,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,96,181,63,183,68,102,101"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#a56d8b5b6d841cbdb23634f7a6e19fd64" title=" " alt="" coords="180,84,344,139"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="132,109,166,109,166,114,132,114"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#aa36d0ad33bee7c190d64f0bfcb4ecb79" title=" " alt="" coords="180,163,344,217"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="102,122,183,155,181,160,100,127"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,357,131,384"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a01da57a5398426d6331c35796d471f07" title="Get all components of a given type from a VCalendar object and return them as flat array." alt="" coords="179,5,400,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,357,73,302,89,222,103,178,122,135,146,94,177,58,180,55,184,59,181,62,151,97,127,137,108,180,94,224,78,303,73,357"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ab280ff38a117e881c18075805c4dd50f" title="Return the category list for the given object." alt="" coords="182,72,397,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="69,356,78,312,98,249,130,183,151,152,177,125,181,121,184,126,180,129,155,155,134,185,103,251,83,313,74,357"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#af21741991f3f923a2c6932f3545629bf" title=" " alt="" coords="208,139,371,197"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="73,356,110,286,140,244,177,207,192,197,195,201,180,211,144,247,114,289,77,358"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#a56d8b5b6d841cbdb23634f7a6e19fd64" title=" " alt="" coords="208,221,371,280"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="84,355,125,323,177,290,193,282,195,287,180,294,128,327,87,359"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#aa36d0ad33bee7c190d64f0bfcb4ecb79" title=" " alt="" coords="208,304,371,363"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="130,358,192,347,193,352,131,363"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a3f6ea1f79e76a9712fe0dd4dd221e680" title=" " alt="" coords="185,387,394,429"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="131,379,170,385,170,390,130,384"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d" title=" " alt="" coords="183,453,396,496"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="89,382,129,411,180,439,194,445,192,450,177,444,127,415,86,387"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ad13d1d67b2cf64476789ff3e3bf2a802" title=" " alt="" coords="239,520,340,547"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="78,383,116,443,145,477,180,506,201,516,225,523,223,528,199,521,177,510,142,481,112,446,74,386"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a72a7419a45e317c5c17d513c0f12fc71" title=" " alt="" coords="182,571,397,613"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="76,383,88,418,110,465,140,514,159,537,180,557,185,560,182,564,177,561,155,541,136,518,105,468,83,420,71,385"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#afc403f39a368a0b656f85737cb75cf71" title=" " alt="" coords="185,637,394,680"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="74,384,83,430,101,495,133,564,155,596,181,623,184,626,181,631,177,627,150,599,128,566,96,496,77,431,69,385"/>
 </map>

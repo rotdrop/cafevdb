@@ -1,9 +1,9 @@
 <map id="getFileStream" name="getFileStream">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,55,108,80"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a87dfcaf2c7108c861a562438f8810971" title="Restore the environment variables previously overridden by setProcessEnvironment()." alt="" coords="156,5,339,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,52,183,32,185,37,107,57"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a56b766aecb57ccbad85c7b5383311091" title="Enforece UTF&#45;8 locale in the enviroment as otherwise some external helpers do not function correctly." alt="" coords="167,55,328,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,65,153,65,153,70,108,70"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ac4bb04636b9ff49d1eb1bce172994d36" title="Guard against undefined $this&#45;&gt;l." alt="" coords="228,104,267,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="107,77,215,106,214,111,106,83"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,56,108,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a87dfcaf2c7108c861a562438f8810971" title="Restore the environment variables previously overridden by setProcessEnvironment()." alt="" coords="156,5,338,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,53,179,34,180,39,109,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a56b766aecb57ccbad85c7b5383311091" title="Enforece UTF&#45;8 locale in the enviroment as otherwise some external helpers do not function correctly." alt="" coords="167,56,327,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,67,151,67,151,72,108,72"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ac4bb04636b9ff49d1eb1bce172994d36" title="Guard against undefined $this&#45;&gt;l." alt="" coords="228,107,266,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="109,80,213,109,212,114,107,85"/>
 </map>

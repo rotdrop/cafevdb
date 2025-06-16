@@ -1,0 +1,7 @@
+<map id="isEventRecurring" name="isEventRecurring">
+<area shape="rect" id="Node000001" title="Determine if the given event is recurring or not." alt="" coords="514,13,635,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ac5d3ee95ab400f9d66012e7a9bc45fc8" title="Use the EventIterator to generate all siblings of a recurring event." alt="" coords="245,5,466,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="498,29,467,29,467,24,498,24"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ab266e1b2f40afdf180bc9de4f3a06708" title="Export the given events in ICAL format." alt="" coords="5,5,197,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="229,29,197,29,197,24,229,24"/>
+</map>

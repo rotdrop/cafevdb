@@ -1,12 +1,14 @@
 <map id="escapeDelimiter" name="escapeDelimiter">
-<area shape="rect" id="Node000001" title="Escape delimiters in the given value." alt="" coords="336,55,452,80"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9d61dd42fc39a8ffa123b80bab2bf94f" title="Counter&#45;part to self::explode()." alt="" coords="221,55,288,80"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="322,70,288,70,288,65,322,65"/>
-<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="278,44,271,36,255,33,240,35,233,40,231,46,236,53,231,56,226,46,229,37,239,30,255,28,274,32,282,40"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a77dcbf8345d8d173550c859774518f20" title="Dumps a string into a traditional hex dump for programmers, in a format similar to the output of the ..." alt="" coords="50,5,129,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="207,55,173,45,128,31,130,26,174,39,209,50"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ac076b416133f71e89ae0c7732436300d" title="Undo self::explodeIndexedMulti()." alt="" coords="19,55,160,80"/>
-<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="208,70,160,70,160,65,208,65"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ae7d345a0cb6a0cc4e54913f819db998d" title="Shorten the given string by iteratively reducing the size of its camel&#45;case components until it fits ..." alt="" coords="5,104,173,129"/>
-<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="209,84,133,106,132,101,207,79"/>
+<area shape="rect" id="Node000001" title="Escape delimiters in the given value." alt="" coords="600,56,716,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9d61dd42fc39a8ffa123b80bab2bf94f" title="Counter&#45;part to self::explode()." alt="" coords="486,56,552,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="585,72,553,72,553,67,585,67"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="542,43,534,37,519,35,505,37,498,41,496,47,500,54,495,57,491,47,493,38,503,32,519,29,536,32,545,39"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a77dcbf8345d8d173550c859774518f20" title="Dumps a string into a traditional hex dump for programmers, in a format similar to the output of the ..." alt="" coords="316,5,393,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="470,57,437,47,393,33,394,28,439,41,472,52"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ac076b416133f71e89ae0c7732436300d" title="Undo self::explodeIndexedMulti()." alt="" coords="284,56,424,83"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="470,72,425,72,425,67,470,67"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ae7d345a0cb6a0cc4e54913f819db998d" title="Shorten the given string by iteratively reducing the size of its camel&#45;case components until it fits ..." alt="" coords="271,107,438,133"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="472,87,439,97,402,109,401,103,437,92,470,82"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#a682f408b8701d4939af7dc4af6c25868" title="When removing an instrument any pending voice(s) have to be removed, too." alt="" coords="5,40,223,99"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="269,72,223,72,223,67,269,67"/>
 </map>

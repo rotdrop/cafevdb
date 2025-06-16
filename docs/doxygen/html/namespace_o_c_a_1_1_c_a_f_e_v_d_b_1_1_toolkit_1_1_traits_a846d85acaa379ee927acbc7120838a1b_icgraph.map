@@ -1,7 +1,7 @@
 <map id="getUserTopLevelFolder" name="getUserTopLevelFolder">
-<area shape="rect" id="Node000001" title="Return the name top&#45;level folder as Folder instance." alt="" coords="319,5,475,31"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a510047f7a8e00f4170c35b5718362afc" title=" " alt="" coords="144,5,271,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="305,21,271,21,271,15,305,15"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#aaa0723a3775ff5b7be892002c8baa295" title="Borrowed and enhanced from OC\Files\Template\TemplateManager.php." alt="" coords="5,5,96,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="130,21,96,21,96,15,130,15"/>
+<area shape="rect" id="Node000001" title="Return the name top&#45;level folder as Folder instance." alt="" coords="317,5,472,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a510047f7a8e00f4170c35b5718362afc" title=" " alt="" coords="143,5,269,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="301,21,270,21,270,16,301,16"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#aaa0723a3775ff5b7be892002c8baa295" title="Borrowed and enhanced from OC\Files\Template\TemplateManager.php." alt="" coords="5,5,95,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="127,21,95,21,95,16,127,16"/>
 </map>

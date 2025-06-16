@@ -28,6 +28,7 @@ var dir_5194e5fea318fda12687127c23f8aba1 =
     [ "globalstate.js", "globalstate_8js_source.html", null ],
     [ "iframe-resize.js", "iframe-resize_8js_source.html", null ],
     [ "insurance.js", "insurance_8js_source.html", null ],
+    [ "invoices.js", "invoices_8js_source.html", null ],
     [ "jquery-cafevdb-tooltips.js", "jquery-cafevdb-tooltips_8js_source.html", null ],
     [ "jquery-datetimepicker.js", "jquery-datetimepicker_8js_source.html", null ],
     [ "jquery-extensions.js", "jquery-extensions_8js_source.html", null ],

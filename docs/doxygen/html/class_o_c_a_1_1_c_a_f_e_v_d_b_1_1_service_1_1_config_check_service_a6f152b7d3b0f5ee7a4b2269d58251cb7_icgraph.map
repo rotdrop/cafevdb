@@ -1,5 +1,9 @@
 <map id="sharedFolderExists" name="sharedFolderExists">
-<area shape="rect" id="Node000001" title="We require that the share&#45;owner owns a directory shared with the orchestra group." alt="" coords="136,5,271,31"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#acc6554d7a33fcab6ab9e472cb191d322" title="Return an array with necessary configuration items, being either true or false, depending the checks ..." alt="" coords="5,5,88,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,21,88,21,88,15,122,15"/>
+<area shape="rect" id="Node000001" title="We require that the share&#45;owner owns a directory shared with the orchestra group." alt="" coords="187,56,320,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#aec2838830c5105258dbeb4f274c61c39" title="Check for existence of the project folder and create it when not found." alt="" coords="5,5,139,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,54,122,35,123,30,189,49"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a7a4d9fc23f25b2fc46a13d7d0219fc24" title="Check for the existence of the shared folder and create it when not found." alt="" coords="5,56,139,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,72,139,72,139,67,171,67"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#acc6554d7a33fcab6ab9e472cb191d322" title="Return an array with necessary configuration items, being either true or false, depending the checks ..." alt="" coords="31,107,113,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="189,90,114,111,112,106,187,85"/>
 </map>

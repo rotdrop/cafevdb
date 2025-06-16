@@ -1,4 +1,30 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status =
 [
-    [ "__call", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a5234e2ee74d02ed9cdf5e867d1492795", null ]
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a095c5d389db211932136b53f25f39685", null ],
+    [ "__call", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a5234e2ee74d02ed9cdf5e867d1492795", null ],
+    [ "__toString", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a7516ca30af0db3cdbf9a7739b48ce91d", null ],
+    [ "getAssessmentPeriodEnd", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#acf570fdea04abe8ab8c16578a35137c5", null ],
+    [ "getAssessmentPeriodStart", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a4f29315d7d8c1bd2304ab15a36bbea56", null ],
+    [ "getBeneficiaryPurpose", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#afb73f7907cab80625bc032bcbd9d45bb", null ],
+    [ "getDateIssued", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#ae8490d22ddd067e00d3a15773d6db1ac", null ],
+    [ "getDonationReceipts", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#ab1ee8d0a93b4adc02b3dc9cdde9875d5", null ],
+    [ "getId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a12251d0c022e9e21c137a105ff683f13", null ],
+    [ "getMembershipFeesAreDonations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a845922924138dee9484274a0fe8fa4a7", null ],
+    [ "getTaxationStatutorySources", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a9b644e149df05b998ea724f8a59fbd6e", null ],
+    [ "getTaxNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#ad15c45d99400ee08fb10d577ffd5c2eb", null ],
+    [ "getTaxOffice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a090229650db5026123467e36d473e88e", null ],
+    [ "getTaxTypes", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a0a46307ca4fae620ab3b3237a637810a", null ],
+    [ "getWrittenNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a3d3ae6218fba4879c56233747a0325ea", null ],
+    [ "jsonSerialize", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#ad402d8679325bc514874370f02b5c2ac", null ],
+    [ "setAssessmentPeriodEnd", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a7727574d2bc1e416b5b1bc251ff9605c", null ],
+    [ "setAssessmentPeriodStart", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#ac460212a3af5737879f229147432dda5", null ],
+    [ "setBeneficiaryPurpose", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a706f6473cfdc003434e419afece48aa0", null ],
+    [ "setDateIssued", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a59547b009c54c64d8c52a6d9336dd8ec", null ],
+    [ "setDonationReceipts", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#abd269102824501accb20c490a8d33794", null ],
+    [ "setId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#af8e956b8b0343ff7d1b955c26cb0c780", null ],
+    [ "setMembershipFeesAreDonations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#ac2c9b13456c7dee0b7982b56ee0e22b3", null ],
+    [ "setTaxationStatutorySources", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a9c9a9237133e36ac41a031fdabdf3090", null ],
+    [ "setTaxNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#affa3df8bc6701158fd95cde9c794d9ac", null ],
+    [ "setTaxOffice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#ae71c1f7a2d48731670d719bdc0ca760f", null ],
+    [ "setWrittenNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html#a3fbbecd118806bbe50e1ea923915598b", null ]
 ];

@@ -1,13 +1,13 @@
 <map id="appName" name="appName">
-<area shape="rect" id="Node000001" title=" " alt="" coords="340,31,419,56"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a12530ef8e22b2cc5507292bf7e1bc876" title=" " alt="" coords="203,5,290,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="326,36,290,29,291,24,327,31"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4167b989314b05549bce7f65826543c0" title="Mangle the name in order to avoid conflicts in the PHP session data." alt="" coords="201,55,292,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="327,55,293,62,292,57,326,50"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ada797ee3eeda9ea75094061187d85fda" title="Check whether the given key is present in the session data." alt="" coords="16,5,143,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="189,53,123,33,124,28,191,48"/>
-<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ab880ca126bbb1f650f17cd02ca6da0a3" title="Fetch something from the session&#45;data." alt="" coords="5,55,153,80"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="188,70,154,70,154,65,188,65"/>
-<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aafe133d9bc19c4c5b0e5061448fd49ab" title="Store something in the session&#45;data." alt="" coords="14,104,145,129"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="191,87,124,106,123,101,189,81"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="338,31,415,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a12530ef8e22b2cc5507292bf7e1bc876" title=" " alt="" coords="202,5,288,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="322,36,288,30,289,24,323,31"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4167b989314b05549bce7f65826543c0" title="Mangle the name in order to avoid conflicts in the PHP session data." alt="" coords="201,56,290,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="323,57,291,63,290,58,322,52"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ada797ee3eeda9ea75094061187d85fda" title="Check whether the given key is present in the session data." alt="" coords="16,5,142,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="185,54,125,35,126,30,186,49"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ab880ca126bbb1f650f17cd02ca6da0a3" title="Fetch something from the session&#45;data." alt="" coords="5,56,153,83"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="185,72,153,72,153,67,185,67"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aafe133d9bc19c4c5b0e5061448fd49ab" title="Store something in the session&#45;data." alt="" coords="14,107,144,133"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="186,90,126,109,125,103,185,85"/>
 </map>

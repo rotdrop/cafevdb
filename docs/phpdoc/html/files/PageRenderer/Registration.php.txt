@@ -36,24 +36,27 @@ class Registration
   public const TEMPLATE_PREFIX = 'template:';
 
   private const LEGACY_TEMPLATES = [
-    ConfigCheck::TEMPLATE => ConfigCheck::class,
-    AllMusicians::TEMPLATE => AllMusicians::class,
     AddMusicians::TEMPLATE => AddMusicians::class,
-    Projects::TEMPLATE => Projects::class,
-    ProjectParticipants::TEMPLATE => ProjectParticipants::class,
-    ProjectInstrumentationNumbers::TEMPLATE => ProjectInstrumentationNumbers::class,
-    ProjectPayments::TEMPLATE => ProjectPayments::class,
-    SepaBankAccounts::TEMPLATE => SepaBankAccounts::class,
-    SepaBulkTransactions::TEMPLATE => SepaBulkTransactions::class,
-    InstrumentInsurances::TEMPLATE => InstrumentInsurances::class,
-    ProjectParticipantFields::TEMPLATE => ProjectParticipantFields::class,
-    Instruments::TEMPLATE => Instruments::class,
+    AllMusicians::TEMPLATE => AllMusicians::class,
+    Blog::TEMPLATE => Blog::class,
+    ConfigCheck::TEMPLATE => ConfigCheck::class,
+    DonationReceipts::TEMPLATE => DonationReceipts::class,
     InstrumentFamilies::TEMPLATE => InstrumentFamilies::class,
+    InstrumentInsurances::TEMPLATE => InstrumentInsurances::class,
+    Instruments::TEMPLATE => Instruments::class,
     InsuranceBrokers::TEMPLATE => InsuranceBrokers::class,
     InsuranceRates::TEMPLATE => InsuranceRates::class,
+    Invoices::TEMPLATE => Invoices::class,
+    ProjectAssociates::TEMPLATE => ProjectAssociates::class,
+    ProjectInstrumentationNumbers::TEMPLATE => ProjectInstrumentationNumbers::class,
+    ProjectParticipantFields::TEMPLATE => ProjectParticipantFields::class,
+    ProjectParticipants::TEMPLATE => ProjectParticipants::class,
+    ProjectPayments::TEMPLATE => ProjectPayments::class,
+    Projects::TEMPLATE => Projects::class,
+    SepaBankAccounts::TEMPLATE => SepaBankAccounts::class,
+    SepaBulkTransactions::TEMPLATE => SepaBulkTransactions::class,
+    TaxationStatutorySources::TEMPLATE => TaxationStatutorySources::class,
     TaxExemptionNotices::TEMPLATE => TaxExemptionNotices::class,
-    DonationReceipts::TEMPLATE => DonationReceipts::class,
-    Blog::TEMPLATE => Blog::class,
   ];
 
   /**
@@ -94,6 +97,13 @@ class Registration
 
     $context->registerService('export:' . ProjectParticipants::TEMPLATE, function($c) {
       $renderer = $c->query(self::TEMPLATE_PREFIX . ProjectParticipants::TEMPLATE);
+      $fontService = $c->query(FontService::class);
+      $projectService = $c->query(\OCA\CAFEVDB\Service\ProjectService::class);
+      return new Export\PMETableSpreadsheetExporter($renderer, $fontService, $projectService);
+    });
+
+    $context->registerService('export:' . ProjectAssociates::TEMPLATE, function($c) {
+      $renderer = $c->query(self::TEMPLATE_PREFIX . ProjectAssociates::TEMPLATE);
       $fontService = $c->query(FontService::class);
       $projectService = $c->query(\OCA\CAFEVDB\Service\ProjectService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService, $projectService);

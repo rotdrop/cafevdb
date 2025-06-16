@@ -242,6 +242,34 @@ class MountProvider implements IMountProvider
           return MountProvider::MOUNT_TYPE;
         }
       };
+
+      $storage = $this->storageFactory->getInvoicesStorage();
+      $bulkLoadStorageIds[] = $storage->getId();
+
+      $mounts[] = new class(
+        storage: $storage,
+        mountpoint: UserStorage::PATH_SEP . implode(
+          UserStorage::PATH_SEP,
+          [ $userId, 'files', $this->getInvoicesPath(), ],
+        ),
+        mountId: null,
+        loader: $loader,
+        mountProvider: MountProvider::class,
+        mountOptions: [
+          'filesystem_check_changes' => 1,
+          'readonly' => false,
+          'previews' => true,
+          'enable_sharing' => false, // cannot work, mount needs DB access
+          'authenticated' => true,
+        ]
+      ) extends MountPoint
+      {
+        /** {@inheritdoc} */
+        public function getMountType()
+        {
+          return MountProvider::MOUNT_TYPE;
+        }
+      };
     }
 
     try {

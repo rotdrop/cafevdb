@@ -743,7 +743,8 @@ trait ConfigTrait
   }
 
   /**
-   * @return null|string Return the full path to the financial balances folder
+   * @return null|string Return the full path to the folder storing tax
+   * exemption notices.
    */
   protected function getTaxExemptionNoticesPath():?string
   {
@@ -756,7 +757,8 @@ trait ConfigTrait
   }
 
   /**
-   * @return null|string Return the full path to the financial balances folder
+   * @return null|string Return the full path to the folder containing sent-out
+   * donationreceipts.
    */
   protected function getDonationReceiptsPath():?string
   {
@@ -766,6 +768,20 @@ trait ConfigTrait
     }
     $donationReceiptsFolder = $this->appL10n()->t('donation-receipts');
     return $taxAuthoritiesFolder . Constants::PATH_SEP . $donationReceiptsFolder;
+  }
+
+  /**
+   * @return null|string Return the full path to the folder containing
+   * sent-out invoices.
+   */
+  protected function getInvoicesPath():?string
+  {
+    $financeFolder = $this->getFinanceFolderPath();
+    if (empty($financeFolder)) {
+      return null;
+    }
+    $invoicesFolder = $this->appL10n()->t('invoices');
+    return $financeFolder . Constants::PATH_SEP . $invoicesFolder;
   }
 
   /**

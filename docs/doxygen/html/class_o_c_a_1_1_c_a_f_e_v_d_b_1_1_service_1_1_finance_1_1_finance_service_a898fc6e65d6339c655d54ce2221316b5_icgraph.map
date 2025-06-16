@@ -1,0 +1,5 @@
+<map id="sepaTranslit" name="sepaTranslit">
+<area shape="rect" id="Node000001" title="Convert an UTF&#45;8 encoded string to something simpler, with transliteration of special characters." alt="" coords="265,5,357,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a188aec4fba3f836df99eb11408747ce4" title="The &quot;SEPA mandat reference&quot; must be unique per mandate, consist more or less of alpha&#45;numeric charact..." alt="" coords="5,5,217,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="249,21,217,21,217,16,249,16"/>
+</map>

@@ -1,7 +1,5 @@
 <map id="WebBrowserHistoryData" name="WebBrowserHistoryData">
-<area shape="rect" id="Node000001" title="Generic directory entry for a database&#45;backed file." alt="" coords="27,93,193,119"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,103,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,41,104,91,100,94,67,44"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="127,5,207,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="154,44,120,94,116,91,150,41"/>
+<area shape="rect" id="Node000001" title="Generic directory entry for a database&#45;backed file." alt="" coords="5,80,171,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="40,5,136,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,48,91,80,85,80,85,48"/>
 </map>

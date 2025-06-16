@@ -728,7 +728,7 @@ class Storage extends AbstractStorage
   }
 
   /** {@inheritdoc} */
-  public function writeStream(string $path, $stream, int $size = null): int
+  public function writeStream(string $path, $stream, ?int $size = null): int
   {
     // $this->logInfo('WRITE STREAM ' . $path);
 

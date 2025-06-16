@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -69,9 +69,9 @@ trait UuidTrait
    *
    * @return \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface
    */
-  public function getUuid():UuidInterface
+  public function getUuid():?UuidInterface
   {
-    return $this->uuid;
+    return $this->uuid ?? null;
   }
 
   /**

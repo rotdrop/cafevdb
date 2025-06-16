@@ -1,31 +1,31 @@
 <map id="getEntityManager" name="getEntityManager">
-<area shape="rect" id="Node000001" title="Public export of parent function." alt="" coords="588,216,712,241"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a3435ec579db5b0ae00575b8f516a8e24" title="Ban a SEPA&#45;mandate (timeout, withdrawn, erroneous data etc.)." alt="" coords="308,9,540,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="633,205,594,148,568,117,538,89,500,66,503,62,542,85,572,113,598,145,637,202"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a5592d318f18909a8b81537a3dce08164" title="Delete the given mandate if it is not used." alt="" coords="5,5,260,60"/>
-<area shape="poly" id="edge15_Node000001_Node000003" title=" " alt="" coords="625,208,587,173,539,140,430,110,244,63,245,57,431,105,541,136,590,168,629,204"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_images_repository.html#a9c87ed6646d36ad79c36d3d6daeca656" title="Find images for the given &quot;using&quot; entity class." alt="" coords="319,151,529,205"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="578,215,529,204,530,199,579,210"/>
-<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a28a64f0eb0f49382d6349b5ab65c4b23" title="Set and get the given name as the current database target entity." alt="" coords="343,245,505,285"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="575,243,506,254,505,249,574,238"/>
-<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_bulk_transactions_repository.html#a69dc357aa9cce8f801221dadfdd273a2" title="Test whether the given obrject URI is tied to a SepaBulkTransaction entity." alt="" coords="314,309,534,378"/>
-<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="620,252,541,299,516,311,514,306,539,294,617,247"/>
-<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_web_pages_repository.html#a7beca857a9256c414d23d82cc4aaf0c3" title=" " alt="" coords="327,402,521,471"/>
-<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="640,255,602,322,575,359,542,392,523,405,520,401,538,388,571,356,598,319,635,252"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="294,38,260,37,260,32,294,32"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_images_repository.html#ae9058a484b4d2461ac8fb60b4c761db8" title="Find the first or only image for the given using entity." alt="" coords="15,84,250,139"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="305,154,250,141,251,136,306,148"/>
-<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa2c090f15ee2bc4eb276cbb84b839c45" title="Counts entities by a set of criteria." alt="" coords="55,187,211,227"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="329,249,210,225,211,220,330,244"/>
-<area shape="rect" id="Node000008" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a53ac2b252066fd57152201418ca9a238" title="Finds an entity by its primary key / identifier." alt="" coords="42,252,223,277"/>
-<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="329,267,224,267,224,262,329,262"/>
-<area shape="rect" id="Node000009" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a711b32acbac8d6e5019df0087ccf7fdb" title="Finds all entities in the repository." alt="" coords="55,302,211,342"/>
-<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="330,286,211,309,210,304,329,281"/>
-<area shape="rect" id="Node000010" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a9e8702ec38e941341a0d5251897e36c3" title="Finds entities by a set of criteria." alt="" coords="55,366,211,406"/>
-<area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="331,288,310,299,295,312,286,327,278,342,262,356,237,368,212,377,210,372,235,364,258,352,273,338,282,324,291,309,306,294,328,283"/>
-<area shape="rect" id="Node000011" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad38fcff61d5b7940cf9b4911e16b1e39" title="Finds a single entity by a set of criteria." alt="" coords="55,430,211,470"/>
-<area shape="poly" id="edge11_Node000006_Node000011" title=" " alt="" coords="331,284,310,299,298,313,291,327,287,358,282,389,275,405,262,420,238,435,212,445,210,440,236,431,258,416,271,402,277,388,282,357,286,326,293,310,306,295,328,280"/>
-<area shape="rect" id="Node000012" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad9829bdefbdf3098ba512082b136ab4e" title="Select all elements from a selectable that match the expression and return a new collection containin..." alt="" coords="55,494,211,534"/>
-<area shape="poly" id="edge12_Node000006_Node000012" title=" " alt="" coords="331,283,310,299,294,321,286,343,285,366,287,389,289,413,287,437,279,461,262,484,239,500,212,510,210,505,236,496,258,480,275,458,282,436,283,413,282,390,280,366,281,342,289,318,306,295,328,279"/>
-<area shape="poly" id="edge7_Node000007_Node000007" title=" " alt="" coords="183,176,165,169,133,166,104,168,87,173,81,179,84,186,79,188,76,178,84,168,103,163,133,161,166,163,185,171"/>
+<area shape="rect" id="Node000001" title="Public export of parent function." alt="" coords="586,224,709,251"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a3435ec579db5b0ae00575b8f516a8e24" title="Ban a SEPA&#45;mandate (timeout, withdrawn, erroneous data etc.)." alt="" coords="307,9,538,68"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="630,212,592,153,566,121,536,93,502,71,505,66,540,89,570,117,596,150,634,209"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a5592d318f18909a8b81537a3dce08164" title="Delete the given mandate if it is not used." alt="" coords="5,5,259,64"/>
+<area shape="poly" id="edge15_Node000001_Node000003" title=" " alt="" coords="623,215,585,178,537,145,247,67,249,62,539,140,588,174,626,211"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_images_repository.html#a9c87ed6646d36ad79c36d3d6daeca656" title="Find images for the given &quot;using&quot; entity class." alt="" coords="318,155,527,213"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="573,222,527,211,528,206,574,217"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a28a64f0eb0f49382d6349b5ab65c4b23" title="Set and get the given name as the current database target entity." alt="" coords="341,253,504,296"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="571,253,505,264,504,259,571,247"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_bulk_transactions_repository.html#a69dc357aa9cce8f801221dadfdd273a2" title="Test whether the given obrject URI is tied to a SepaBulkTransaction entity." alt="" coords="313,320,532,395"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="617,262,539,310,517,322,514,317,537,306,614,257"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_web_pages_repository.html#a7beca857a9256c414d23d82cc4aaf0c3" title=" " alt="" coords="326,419,518,493"/>
+<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="637,266,600,336,573,375,540,409,520,423,517,418,536,405,569,371,596,333,633,264"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="291,40,259,39,259,34,291,34"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_images_repository.html#ae9058a484b4d2461ac8fb60b4c761db8" title="Find the first or only image for the given using entity." alt="" coords="15,88,249,147"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="302,159,249,147,250,142,303,154"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa2c090f15ee2bc4eb276cbb84b839c45" title="Counts entities by a set of criteria." alt="" coords="54,195,210,237"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="326,258,210,234,211,229,327,253"/>
+<area shape="rect" id="Node000008" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a53ac2b252066fd57152201418ca9a238" title="Finds an entity by its primary key / identifier." alt="" coords="42,261,222,288"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="326,277,223,277,223,272,326,272"/>
+<area shape="rect" id="Node000009" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a711b32acbac8d6e5019df0087ccf7fdb" title="Finds all entities in the repository." alt="" coords="54,312,210,355"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="327,297,211,320,210,315,326,291"/>
+<area shape="rect" id="Node000010" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a9e8702ec38e941341a0d5251897e36c3" title="Finds entities by a set of criteria." alt="" coords="54,379,210,421"/>
+<area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="328,299,308,310,293,324,285,339,276,354,260,369,236,381,211,390,209,385,234,376,257,364,272,351,280,336,289,321,305,306,326,295"/>
+<area shape="rect" id="Node000011" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad38fcff61d5b7940cf9b4911e16b1e39" title="Finds a single entity by a set of criteria." alt="" coords="54,445,210,488"/>
+<area shape="poly" id="edge11_Node000006_Node000011" title=" " alt="" coords="329,296,308,310,296,325,289,340,285,371,281,403,274,420,260,435,237,451,211,461,209,456,235,446,257,431,269,417,276,402,280,371,284,338,292,322,305,306,326,292"/>
+<area shape="rect" id="Node000012" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad9829bdefbdf3098ba512082b136ab4e" title="Select all elements from a selectable that match the expression and return a new collection containin..." alt="" coords="54,512,210,555"/>
+<area shape="poly" id="edge12_Node000006_Node000012" title=" " alt="" coords="328,295,309,310,292,333,285,356,284,380,286,404,288,428,286,453,278,478,261,502,237,519,211,529,209,524,235,514,257,498,274,475,281,452,282,428,280,404,278,380,279,355,287,331,305,306,325,291"/>
+<area shape="poly" id="edge7_Node000007_Node000007" title=" " alt="" coords="180,182,162,176,132,173,104,175,87,180,81,186,83,193,78,195,75,185,85,175,103,170,132,168,163,170,182,177"/>
 </map>

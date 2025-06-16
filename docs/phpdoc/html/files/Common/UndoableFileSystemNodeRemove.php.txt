@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -129,8 +129,9 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
         throw $e;
       }
     }
-    if ($startTime + 1 < $this->timeFactory->getTime()) {
-      time_sleep_until($startTime + 1);
+    $minimumEndTime = $startTime + 1;
+    if ($this->timeFactory->getTime() < $minimumEndTime) {
+      time_sleep_until($minimumEndTime);
     }
     $endTime = $this->timeFactory->getTime();
     $this->doneInterval = [ $startTime, $endTime ];

@@ -1,13 +1,11 @@
 <map id="__construct" name="__construct">
-<area shape="rect" id="Node000001" title="{}" alt="" coords="5,84,96,109"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html#a2c46956a30b29141fd3b93833d3f94e2" title="Add the given musician to the list of owners." alt="" coords="193,20,274,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,81,143,54,179,43,180,48,145,59,80,86"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_file_data.html#a82215dfbeae848c7d04f1596c1ebd1d0" title="Set data." alt="" coords="144,69,323,124"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="96,94,130,94,130,99,96,99"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_file.html#a0b7feca9a4a78e5d4e484d09193b7011" title="Set FileData." alt="" coords="144,148,323,203"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="82,107,158,140,156,145,80,112"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a12251d0c022e9e21c137a105ff683f13" title="Get id." alt="" coords="371,5,549,60"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="274,30,357,30,357,35,274,35"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_file_data.html#afcd80471eaac62ec3dcdcc89b19f8a12" title="Set file." alt="" coords="371,148,549,203"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="323,173,357,173,357,178,323,178"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,63,95,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html#a2c46956a30b29141fd3b93833d3f94e2" title="Add the given musician to the list of owners." alt="" coords="192,25,272,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,64,176,47,177,52,96,69"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_file.html#a0b7feca9a4a78e5d4e484d09193b7011" title="Set FileData." alt="" coords="143,80,321,139"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="96,82,128,88,127,93,95,87"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a12251d0c022e9e21c137a105ff683f13" title="Get id." alt="" coords="369,5,547,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="273,35,353,34,353,39,273,41"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_file_data.html#afcd80471eaac62ec3dcdcc89b19f8a12" title="Set file." alt="" coords="369,88,547,147"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="322,110,353,111,353,116,321,115"/>
 </map>

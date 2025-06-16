@@ -16,6 +16,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setPostalCode", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_postal_code.html#ad0b0634490baba140896e1881259aebc", null ],
     [ "setStateProvince", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_postal_code.html#aff69c59bad9026fe3c53e6bd349eb72c", null ],
     [ "setTranslations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_postal_code.html#a47c51144a3d960dceee18aeeb4b179e6", null ],
-    [ "$country", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_postal_code.html#abd87a2daf3e779f9a73504167dc8b3db", null ],
-    [ "$stateProvince", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_postal_code.html#a64021c090655c227c710f2e0cd0e7610", null ]
+    [ "$country", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_postal_code.html#a1437a5f6eb157f0eb267a26e0ad4f1ba", null ],
+    [ "$stateProvince", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_postal_code.html#a29718954e29eb3fbb0d85471a2ff282e", null ]
 ];

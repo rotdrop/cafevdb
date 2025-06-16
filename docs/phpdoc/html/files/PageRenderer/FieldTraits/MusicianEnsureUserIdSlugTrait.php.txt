@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;
 
 /**
  * Provide an SQL snippets for use in conditionals in order to determine
@@ -54,15 +55,20 @@ trait MusicianEnsureUserIdSlugTrait
   public function ensureUserIdSlug(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
   {
     $tag = 'user_id_slug';
+
+    $this->debugPrintValues($oldValues, $changed, $newValues, [ 'tag' ], 'before');
+
     if (!empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)])) {
       $tag = $this->joinTableFieldName(static::MUSICIANS_TABLE, $tag);
     }
     if (empty($newValues[$tag])) {
       // force regeneration by setting the slug to a "magic" value.
-      $newValues[$tag] = \Gedmo\Sluggable\SluggableListener::PLACEHOLDER_SLUG;
+      $newValues[$tag] = SluggableListener::PLACEHOLDER_SLUG;
       $changed[] = $tag;
       $changed = array_values(array_unique($changed));
     }
+
+    $this->debugPrintValues($oldValues, $changed, $newValues, [ 'tag' ], 'after');
 
     return true;
   }

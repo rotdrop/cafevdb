@@ -209,7 +209,7 @@ class MusicianValidationController extends Controller
         }
 
         $result = [
-          'message' => $messages,
+          'message' => $messages ?? null,
           'email' => $email,
         ];
 

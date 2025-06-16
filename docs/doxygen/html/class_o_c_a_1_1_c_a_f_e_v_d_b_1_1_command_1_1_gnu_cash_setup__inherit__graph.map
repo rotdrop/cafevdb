@@ -1,5 +1,5 @@
 <map id="GnuCashSetup" name="GnuCashSetup">
-<area shape="rect" id="Node000001" title="GnuCash connectivity." alt="" coords="5,79,116,104"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="19,5,102,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,44,63,79,58,79,58,44"/>
+<area shape="rect" id="Node000001" title="GnuCash connectivity." alt="" coords="5,80,116,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="20,5,101,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,48,63,80,58,80,58,48"/>
 </map>

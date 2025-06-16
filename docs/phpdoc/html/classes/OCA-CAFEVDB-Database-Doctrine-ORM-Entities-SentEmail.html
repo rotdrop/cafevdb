@@ -156,7 +156,7 @@
         #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\EntityListeners">EntityListeners</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        [&#039;\OCA\CAFEVDB\Listener\SentEmailEntityListener&#039;]
+        [\OCA\CAFEVDB\Listener\SentEmailEntityListener::class]
     </dd>
     </dl>
                     <dl class="phpdocumentor-argument-list">
@@ -254,6 +254,12 @@
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_htmlBodyHash">$htmlBodyHash</a>
     <span>
                         &nbsp;: string            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_invoice">$invoice</a>
+    <span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -395,6 +401,13 @@
 <dd>Returns htmlBodyHash.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getInvoice">getInvoice()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a>    </span>
+</dt>
+<dd>Returns invoices.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getMessageId">getMessageId()</a>
     <span>
                                 &nbsp;: string    </span>
@@ -533,6 +546,13 @@
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SentEmail">SentEmail</abbr></a>    </span>
 </dt>
 <dd>Sets htmlBodyHash.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_setInvoice">setInvoice()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SentEmail">SentEmail</abbr></a>    </span>
+</dt>
+<dd>Sets $invoice</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_setMessageId">setMessageId()</a>
@@ -760,9 +780,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">90</span>
+    <span class="phpdocumentor-element-found-in__line">98</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
     
@@ -924,8 +944,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         <dd class="phpdocumentor-argument-list__entry">
         $unique: false
     </dd>
+    </dl>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation\SlugHandler">SlugHandler</abbr>]
+    </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        $handlers: [new \OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation\SlugHandler(class: &#039;OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler&#039;, options: [new \OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation\SlugHandlerOption(name: &#039;algorithm&#039;, value: &#039;md5&#039;)])]
+        $class: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler::class
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $options: [&#039;algorithm&#039; =&gt; &#039;md5&#039;]
     </dd>
     </dl>
             </section>
@@ -948,9 +976,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">84</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
     
@@ -1002,9 +1030,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">142</span>
+    <span class="phpdocumentor-element-found-in__line">166</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.166" class="phpdocumentor-element-found-in__source" data-line="166" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
     
@@ -1056,9 +1084,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">148</span>
+    <span class="phpdocumentor-element-found-in__line">172</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
     
@@ -1110,9 +1138,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">109</span>
+    <span class="phpdocumentor-element-found-in__line">125</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
     
@@ -1167,9 +1195,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">115</span>
+    <span class="phpdocumentor-element-found-in__line">131</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
     
@@ -1220,8 +1248,70 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         <dd class="phpdocumentor-argument-list__entry">
         $unique: false
     </dd>
+    </dl>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation\SlugHandler">SlugHandler</abbr>]
+    </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        $handlers: [new \OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation\SlugHandler(class: &#039;OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler&#039;, options: [new \OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation\SlugHandlerOption(name: &#039;algorithm&#039;, value: &#039;md5&#039;)])]
+        $class: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler::class
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $options: [&#039;algorithm&#039; =&gt; &#039;md5&#039;]
+    </dd>
+    </dl>
+            </section>
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_invoice">
+        $invoice
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_invoice" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">178</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a></span>
+    <span class="phpdocumentor-signature__name">$invoice</span>
+    </code>
+
+    
+    
+    
+
+    
+    <section class="phpdocumentor-attributes">
+        <h5 class="phpdocumentor-elements__header" id="attributes">
+            Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_invoice#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h5>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\OneToOne">OneToOne</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $targetEntity: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice::class
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $mappedBy: &#039;notificationEmail&#039;
     </dd>
     </dl>
             </section>
@@ -1403,9 +1493,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">129</span>
+    <span class="phpdocumentor-element-found-in__line">153</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.153" class="phpdocumentor-element-found-in__source" data-line="153" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
     
@@ -1437,7 +1527,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         $mappedBy: &#039;referencing&#039;
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
-        $indexBy: &#039;messageId&#039;
+        $indexBy: &#039;message_id&#039;
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
         $cascade: [&#039;persist&#039;]
@@ -1474,9 +1564,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">122</span>
+    <span class="phpdocumentor-element-found-in__line">146</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.122" class="phpdocumentor-element-found-in__source" data-line="122" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.146" class="phpdocumentor-element-found-in__source" data-line="146" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
     
@@ -1545,9 +1635,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">160</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
     
@@ -1599,9 +1689,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">96</span>
+    <span class="phpdocumentor-element-found-in__line">104</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
     
@@ -1653,9 +1743,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">110</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.110" class="phpdocumentor-element-found-in__source" data-line="110" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
     
@@ -1706,8 +1796,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         <dd class="phpdocumentor-argument-list__entry">
         $unique: false
     </dd>
+    </dl>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation\SlugHandler">SlugHandler</abbr>]
+    </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        $handlers: [new \OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation\SlugHandler(class: &#039;OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler&#039;, options: [new \OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation\SlugHandlerOption(name: &#039;algorithm&#039;, value: &#039;md5&#039;)])]
+        $class: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler::class
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $options: [&#039;algorithm&#039; =&gt; &#039;md5&#039;]
     </dd>
     </dl>
             </section>
@@ -1735,9 +1833,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">152</span>
+    <span class="phpdocumentor-element-found-in__line">182</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.152" class="phpdocumentor-element-found-in__source" data-line="152" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.182" class="phpdocumentor-element-found-in__source" data-line="182" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
     
@@ -1845,9 +1943,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">394</span>
+    <span class="phpdocumentor-element-found-in__line">424</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.394" class="phpdocumentor-element-found-in__source" data-line="394" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.424" class="phpdocumentor-element-found-in__source" data-line="424" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns bcc.</p>
@@ -1885,9 +1983,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">226</span>
+    <span class="phpdocumentor-element-found-in__line">256</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.226" class="phpdocumentor-element-found-in__source" data-line="226" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.256" class="phpdocumentor-element-found-in__source" data-line="256" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns bulkRecipients.</p>
@@ -1925,9 +2023,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">250</span>
+    <span class="phpdocumentor-element-found-in__line">280</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.280" class="phpdocumentor-element-found-in__source" data-line="280" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns bulkRecipientsHash.</p>
@@ -1965,9 +2063,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">370</span>
+    <span class="phpdocumentor-element-found-in__line">400</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.370" class="phpdocumentor-element-found-in__source" data-line="370" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.400" class="phpdocumentor-element-found-in__source" data-line="400" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns cc.</p>
@@ -2005,9 +2103,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">514</span>
+    <span class="phpdocumentor-element-found-in__line">544</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.514" class="phpdocumentor-element-found-in__source" data-line="514" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.544" class="phpdocumentor-element-found-in__source" data-line="544" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns compositePayments.</p>
@@ -2045,9 +2143,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">202</span>
+    <span class="phpdocumentor-element-found-in__line">232</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.202" class="phpdocumentor-element-found-in__source" data-line="202" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.232" class="phpdocumentor-element-found-in__source" data-line="232" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns createdBy.</p>
@@ -2085,9 +2183,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">538</span>
+    <span class="phpdocumentor-element-found-in__line">568</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.538" class="phpdocumentor-element-found-in__source" data-line="538" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.568" class="phpdocumentor-element-found-in__source" data-line="568" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns donationReceipts.</p>
@@ -2125,9 +2223,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">274</span>
+    <span class="phpdocumentor-element-found-in__line">304</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.274" class="phpdocumentor-element-found-in__source" data-line="274" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.304" class="phpdocumentor-element-found-in__source" data-line="304" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns htmlBody.</p>
@@ -2165,9 +2263,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">298</span>
+    <span class="phpdocumentor-element-found-in__line">328</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.298" class="phpdocumentor-element-found-in__source" data-line="298" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.328" class="phpdocumentor-element-found-in__source" data-line="328" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns htmlBodyHash.</p>
@@ -2197,6 +2295,46 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getInvoice">
+        getInvoice()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getInvoice" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">592</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.592" class="phpdocumentor-element-found-in__source" data-line="592" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Returns invoices.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getInvoice</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getMessageId">
         getMessageId()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getMessageId" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2205,9 +2343,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">178</span>
+    <span class="phpdocumentor-element-found-in__line">208</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.208" class="phpdocumentor-element-found-in__source" data-line="208" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns messageId.</p>
@@ -2245,9 +2383,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">466</span>
+    <span class="phpdocumentor-element-found-in__line">496</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.466" class="phpdocumentor-element-found-in__source" data-line="466" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.496" class="phpdocumentor-element-found-in__source" data-line="496" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns project.</p>
@@ -2285,9 +2423,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">442</span>
+    <span class="phpdocumentor-element-found-in__line">472</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.442" class="phpdocumentor-element-found-in__source" data-line="442" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.472" class="phpdocumentor-element-found-in__source" data-line="472" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns referencedBy.</p>
@@ -2325,9 +2463,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">418</span>
+    <span class="phpdocumentor-element-found-in__line">448</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.418" class="phpdocumentor-element-found-in__source" data-line="418" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.448" class="phpdocumentor-element-found-in__source" data-line="448" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns referencing.</p>
@@ -2365,9 +2503,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">490</span>
+    <span class="phpdocumentor-element-found-in__line">520</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.490" class="phpdocumentor-element-found-in__source" data-line="490" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.520" class="phpdocumentor-element-found-in__source" data-line="520" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns sepaBulkTransactions.</p>
@@ -2405,9 +2543,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">322</span>
+    <span class="phpdocumentor-element-found-in__line">352</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.322" class="phpdocumentor-element-found-in__source" data-line="322" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.352" class="phpdocumentor-element-found-in__source" data-line="352" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns subject.</p>
@@ -2445,9 +2583,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">346</span>
+    <span class="phpdocumentor-element-found-in__line">376</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.346" class="phpdocumentor-element-found-in__source" data-line="346" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.376" class="phpdocumentor-element-found-in__source" data-line="376" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns subjectHash.</p>
@@ -2485,9 +2623,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">95</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2535,9 +2673,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">101</span>
+    <span class="phpdocumentor-element-found-in__line">104</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2581,9 +2719,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">114</span>
+    <span class="phpdocumentor-element-found-in__line">117</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2634,9 +2772,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">127</span>
+    <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.127" class="phpdocumentor-element-found-in__source" data-line="127" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2680,9 +2818,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">382</span>
+    <span class="phpdocumentor-element-found-in__line">412</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.382" class="phpdocumentor-element-found-in__source" data-line="382" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.412" class="phpdocumentor-element-found-in__source" data-line="412" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets bcc.</p>
@@ -2734,9 +2872,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">214</span>
+    <span class="phpdocumentor-element-found-in__line">244</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets bulkRecipients.</p>
@@ -2788,9 +2926,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">268</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.268" class="phpdocumentor-element-found-in__source" data-line="268" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets bulkRecipientsHash.</p>
@@ -2842,9 +2980,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">358</span>
+    <span class="phpdocumentor-element-found-in__line">388</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.358" class="phpdocumentor-element-found-in__source" data-line="358" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.388" class="phpdocumentor-element-found-in__source" data-line="388" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets cc.</p>
@@ -2896,9 +3034,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">502</span>
+    <span class="phpdocumentor-element-found-in__line">532</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.502" class="phpdocumentor-element-found-in__source" data-line="502" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.532" class="phpdocumentor-element-found-in__source" data-line="532" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets $compositePayment</p>
@@ -2950,9 +3088,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">190</span>
+    <span class="phpdocumentor-element-found-in__line">220</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.190" class="phpdocumentor-element-found-in__source" data-line="190" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets createdBy.</p>
@@ -3004,9 +3142,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">526</span>
+    <span class="phpdocumentor-element-found-in__line">556</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.526" class="phpdocumentor-element-found-in__source" data-line="526" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.556" class="phpdocumentor-element-found-in__source" data-line="556" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets $donationReceipt</p>
@@ -3058,9 +3196,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">262</span>
+    <span class="phpdocumentor-element-found-in__line">292</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets htmlBody.</p>
@@ -3112,9 +3250,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">286</span>
+    <span class="phpdocumentor-element-found-in__line">316</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.286" class="phpdocumentor-element-found-in__source" data-line="286" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.316" class="phpdocumentor-element-found-in__source" data-line="316" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets htmlBodyHash.</p>
@@ -3158,6 +3296,60 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setInvoice">
+        setInvoice()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_setInvoice" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">580</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.580" class="phpdocumentor-element-found-in__source" data-line="580" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Sets $invoice</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setInvoice</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$invoice</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SentEmail">SentEmail</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$invoice</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SentEmail">SentEmail</abbr></a></span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>$this</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setMessageId">
         setMessageId()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_setMessageId" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3166,9 +3358,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">166</span>
+    <span class="phpdocumentor-element-found-in__line">196</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.166" class="phpdocumentor-element-found-in__source" data-line="166" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.196" class="phpdocumentor-element-found-in__source" data-line="196" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets messageId.</p>
@@ -3220,9 +3412,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">454</span>
+    <span class="phpdocumentor-element-found-in__line">484</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.454" class="phpdocumentor-element-found-in__source" data-line="454" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.484" class="phpdocumentor-element-found-in__source" data-line="484" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets project.</p>
@@ -3274,9 +3466,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">430</span>
+    <span class="phpdocumentor-element-found-in__line">460</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.430" class="phpdocumentor-element-found-in__source" data-line="430" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.460" class="phpdocumentor-element-found-in__source" data-line="460" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets referencedBy.</p>
@@ -3328,9 +3520,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">406</span>
+    <span class="phpdocumentor-element-found-in__line">436</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.406" class="phpdocumentor-element-found-in__source" data-line="406" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.436" class="phpdocumentor-element-found-in__source" data-line="436" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets referencing.</p>
@@ -3382,9 +3574,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">478</span>
+    <span class="phpdocumentor-element-found-in__line">508</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.478" class="phpdocumentor-element-found-in__source" data-line="478" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.508" class="phpdocumentor-element-found-in__source" data-line="508" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets sepaBulkTransaction.</p>
@@ -3436,9 +3628,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">310</span>
+    <span class="phpdocumentor-element-found-in__line">340</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.310" class="phpdocumentor-element-found-in__source" data-line="310" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.340" class="phpdocumentor-element-found-in__source" data-line="340" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets subject.</p>
@@ -3490,9 +3682,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SentEmail.php"><a href="files/database-doctrine-orm-entities-sentemail.html"><abbr title="Database/Doctrine/ORM/Entities/SentEmail.php">SentEmail.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">334</span>
+    <span class="phpdocumentor-element-found-in__line">364</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.334" class="phpdocumentor-element-found-in__source" data-line="334" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.364" class="phpdocumentor-element-found-in__source" data-line="364" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SentEmail.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets subjectHash.</p>
@@ -3631,9 +3823,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">139</span>
+    <span class="phpdocumentor-element-found-in__line">142</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.139" class="phpdocumentor-element-found-in__source" data-line="139" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
     
@@ -3687,9 +3879,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/ArrayTrait.php"><a href="files/database-doctrine-orm-traits-arraytrait.html"><abbr title="Database/Doctrine/ORM/Traits/ArrayTrait.php">ArrayTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">149</span>
+    <span class="phpdocumentor-element-found-in__line">152</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.149" class="phpdocumentor-element-found-in__source" data-line="149" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.152" class="phpdocumentor-element-found-in__source" data-line="152" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/ArrayTrait.php.txt"></a>
     </aside>
 
     
@@ -3845,6 +4037,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_donationReceipt">$donationReceipt</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_htmlBody">$htmlBody</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_htmlBodyHash">$htmlBodyHash</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_invoice">$invoice</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_messageId">$messageId</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_project">$project</a></li>
@@ -3871,6 +4064,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getDonationReceipt">getDonationReceipt()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getHtmlBody">getHtmlBody()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getHtmlBodyHash">getHtmlBodyHash()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getInvoice">getInvoice()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getMessageId">getMessageId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getProject">getProject()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getReferencedBy">getReferencedBy()</a></li>
@@ -3891,6 +4085,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_setDonationReceipt">setDonationReceipt()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_setHtmlBody">setHtmlBody()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_setHtmlBodyHash">setHtmlBodyHash()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_setInvoice">setInvoice()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_setMessageId">setMessageId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_setProject">setProject()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_setReferencedBy">setReferencedBy()</a></li>

@@ -22,16 +22,16 @@ class InsuranceBroker extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Insura
     
 
     private const LAZY_OBJECT_PROPERTY_SCOPES = [
-        "\0".parent::class."\0".'address' => [parent::class, 'address', null],
-        "\0".parent::class."\0".'insuranceRates' => [parent::class, 'insuranceRates', null],
-        "\0".parent::class."\0".'keys' => [parent::class, 'keys', null],
-        "\0".parent::class."\0".'longName' => [parent::class, 'longName', null],
-        "\0".parent::class."\0".'shortName' => [parent::class, 'shortName', null],
-        'address' => [parent::class, 'address', null],
-        'insuranceRates' => [parent::class, 'insuranceRates', null],
-        'keys' => [parent::class, 'keys', null],
-        'longName' => [parent::class, 'longName', null],
-        'shortName' => [parent::class, 'shortName', null],
+        "\0".parent::class."\0".'address' => [parent::class, 'address', null, 16],
+        "\0".parent::class."\0".'insuranceRates' => [parent::class, 'insuranceRates', null, 16],
+        "\0".parent::class."\0".'keys' => [parent::class, 'keys', null, 16],
+        "\0".parent::class."\0".'longName' => [parent::class, 'longName', null, 16],
+        "\0".parent::class."\0".'shortName' => [parent::class, 'shortName', null, 16],
+        'address' => [parent::class, 'address', null, 16],
+        'insuranceRates' => [parent::class, 'insuranceRates', null, 16],
+        'keys' => [parent::class, 'keys', null, 16],
+        'longName' => [parent::class, 'longName', null, 16],
+        'shortName' => [parent::class, 'shortName', null, 16],
     ];
 
     public function __isInitialized(): bool

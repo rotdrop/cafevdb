@@ -1,9 +1,9 @@
 <map id="addToEntry" name="addToEntry">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,69,93,95"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#a25de72071f2c2518b9906a2bf6a58bc6" title="Add a user&#45;id or group&#45;id to the list of &quot;encryption identities&quot;, i.e." alt="" coords="177,5,325,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,67,140,39,169,31,170,36,142,45,77,72"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#ad40c766ec8aced9770fe6ae269a1e781" title=" " alt="" coords="141,55,360,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="94,79,127,79,127,85,94,85"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#afbf787ced76807989fb3093e1772c5a1" title=" " alt="" coords="161,134,340,203"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="81,92,158,126,156,131,79,97"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,72,93,99"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#a25de72071f2c2518b9906a2bf6a58bc6" title="Add a user&#45;id or group&#45;id to the list of &quot;encryption identities&quot;, i.e." alt="" coords="176,5,323,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,69,140,41,165,34,166,39,142,47,78,74"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#ad40c766ec8aced9770fe6ae269a1e781" title=" " alt="" coords="141,56,358,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="93,83,125,83,125,88,93,88"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#afbf787ced76807989fb3093e1772c5a1" title=" " alt="" coords="160,139,338,213"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="82,97,153,129,150,134,80,102"/>
 </map>

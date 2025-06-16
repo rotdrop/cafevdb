@@ -1,0 +1,17 @@
+<map id="updateVCalendarFromRequest" name="updateVCalendarFromRequest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,107,206,133"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#af4064e41fe3647594fa8fd8166fb42d2" title=" " alt="" coords="254,69,436,96"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,103,240,96,240,102,196,109"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ac0cf311d5f87c7371ee0860d1e13c0bc" title="Update task from request." alt="" coords="257,132,433,159"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="206,128,241,132,241,137,206,133"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aabb41dada7b7f42283e1fe61bab0a887" title="Add one or multiple participans to the given VTodo or VEvent." alt="" coords="513,5,624,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="393,66,504,34,505,39,395,71"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ae752a1150511a5891f344e73105d901d" title="Add one or multiple relations to the given VTodo or VEvent." alt="" coords="520,56,617,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="436,75,505,70,505,76,436,80"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a349505932cfde0b222b7d7ea55fdcf19" title="Add one or multiple alarms to the given VTodo or VEvent." alt="" coords="484,107,653,133"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="429,94,470,101,469,106,428,99"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a682d9e191e5fe8147d2e34456ab59e29" title=" " alt="" coords="701,107,881,133"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="654,117,686,117,686,123,654,123"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7878d1bc4f52ee6ec8617caa845e9e71" title="Validate the given request&#45;data which is an associative array." alt="" coords="492,157,645,184"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="434,153,477,158,476,163,433,158"/>
+</map>

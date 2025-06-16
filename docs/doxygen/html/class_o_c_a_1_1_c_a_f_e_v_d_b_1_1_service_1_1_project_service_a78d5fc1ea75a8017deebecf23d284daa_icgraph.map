@@ -1,0 +1,7 @@
+<map id="attachProjectWebPage" name="attachProjectWebPage">
+<area shape="rect" id="Node000001" title="Attach an existing web page to the project." alt="" coords="227,31,381,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a52d4fc47080c37ce1920cfe57464a005" title="Search through the list of all projects and attach those with a matching name." alt="" coords="5,5,179,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,36,179,32,180,26,212,30"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#aa12038eee638ba2641be398e1bfac394" title="Create and add a new web&#45;page." alt="" coords="15,56,169,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,58,170,63,169,57,211,52"/>
+</map>

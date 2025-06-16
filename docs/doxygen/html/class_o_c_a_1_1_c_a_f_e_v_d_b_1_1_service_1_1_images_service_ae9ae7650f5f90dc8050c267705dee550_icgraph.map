@@ -1,7 +1,7 @@
 <map id="svgToSvg" name="svgToSvg">
-<area shape="rect" id="Node000001" title="Optimize a given SVG, cache the result and return the optimzed SVG as string." alt="" coords="311,5,391,31"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#aa2dddac5588be57828916e7e5b65c816" title="Generate SVG image data from a given file." alt="" coords="168,5,263,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="297,21,263,21,263,15,297,15"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#a515cd5f88c4e68268985b013cfc8616c" title="Generate a data URI from the given file with caching." alt="" coords="5,5,120,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="154,21,120,21,120,15,154,15"/>
+<area shape="rect" id="Node000001" title="Optimize a given SVG, cache the result and return the optimzed SVG as string." alt="" coords="309,5,388,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#aa2dddac5588be57828916e7e5b65c816" title="Generate SVG image data from a given file." alt="" coords="168,5,261,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="293,21,262,21,262,16,293,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html#a515cd5f88c4e68268985b013cfc8616c" title="Generate a data URI from the given file with caching." alt="" coords="5,5,120,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="152,21,120,21,120,16,152,16"/>
 </map>

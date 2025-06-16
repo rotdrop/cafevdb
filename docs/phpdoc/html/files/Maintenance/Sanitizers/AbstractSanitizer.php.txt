@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,10 +56,8 @@ abstract class AbstractSanitizer implements ISanitizer
    */
   public function __construct(
     protected EntityManager $entityManager,
-    protected ?ILogger $logger = null,
+    protected ILogger $logger,
   ) {
-    $this->entityManager = $entityManager;
-    $this->logger = $logger;
     $this->entity = null;
   }
 

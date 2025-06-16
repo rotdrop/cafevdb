@@ -1,9 +1,9 @@
 <map id="sessionKeyExists" name="sessionKeyExists">
-<area shape="rect" id="Node000001" title="Check whether the given key is present in the session data." alt="" coords="5,5,132,31"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4167b989314b05549bce7f65826543c0" title="Mangle the name in order to avoid conflicts in the PHP session data." alt="" coords="180,5,271,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,15,166,15,166,21,132,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a10f42c7875a6151887519547ff045907" title=" " alt="" coords="319,5,397,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="271,15,305,15,305,21,271,21"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="445,5,547,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="397,15,432,15,432,21,397,21"/>
+<area shape="rect" id="Node000001" title="Check whether the given key is present in the session data." alt="" coords="5,5,132,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4167b989314b05549bce7f65826543c0" title="Mangle the name in order to avoid conflicts in the PHP session data." alt="" coords="180,5,269,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,16,164,16,164,21,132,21"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a10f42c7875a6151887519547ff045907" title=" " alt="" coords="317,5,394,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="270,16,302,16,302,21,270,21"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="442,5,543,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="395,16,426,16,426,21,395,21"/>
 </map>

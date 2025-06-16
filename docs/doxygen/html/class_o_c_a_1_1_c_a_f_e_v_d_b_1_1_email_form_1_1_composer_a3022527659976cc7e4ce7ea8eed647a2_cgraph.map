@@ -1,0 +1,36 @@
+<map id="preComposeValidation" name="preComposeValidation">
+<area shape="rect" id="Node000001" title="Pre&#45;message construction validation." alt="" coords="5,208,157,235"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a099a1eac786c0fc2c4d7b8c3108b7d13" title=" " alt="" coords="236,5,358,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,206,101,173,126,128,160,82,203,42,220,32,223,37,206,46,164,85,131,131,106,175,90,208"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a1dc30339bb1489c3f4a9586dff31066d" title=" " alt="" coords="251,56,342,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="90,206,134,151,167,119,203,92,235,79,237,83,206,97,170,123,138,154,94,209"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#aa7c51513462cc05bd28c79540a6d374a" title="Return the calendar attachment data." alt="" coords="233,107,360,133"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="99,205,145,174,204,143,221,136,223,141,206,148,148,179,102,210"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a8d6568d7a87ba2a132aa630bb5fd5f4f" title=" " alt="" coords="470,335,585,361"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="101,233,147,265,206,295,270,314,336,328,455,342,454,348,335,333,268,320,204,300,144,269,98,237"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a56fae4bd1b4337dfe78d90b051c93a01" title="Return the file attachment data." alt="" coords="241,157,353,184"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="141,205,225,185,226,190,142,210"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#afce9302bd8ab508408cc457cb24786e5" title=" " alt="" coords="256,208,338,235"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="157,219,240,219,240,224,157,224"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ad647aec9f224f570e5c79be0a9ddd3d1" title=" " alt="" coords="265,259,328,285"/>
+<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="142,233,250,259,249,264,141,238"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a3985e2723a7cdac4576e7163d9bfc943" title="Validate a comma separated list of email address from the Cc: or Bcc: input." alt="" coords="205,360,389,387"/>
+<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="95,233,140,284,171,314,206,339,231,352,229,357,203,344,168,318,136,288,91,237"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a467acba2036c37acd425db67c68abcfa" title="Validates the given template, i.e." alt="" coords="237,411,356,437"/>
+<area shape="poly" id="edge16_Node000001_Node000011" title=" " alt="" coords="90,234,106,268,131,312,164,357,206,397,224,406,221,411,203,401,160,361,126,315,101,270,86,236"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a35115d6c4451757ebad296254ead1c5a" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="492,132,563,159"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="359,30,390,42,452,80,502,119,499,124,449,84,388,46,357,34"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="343,78,390,92,479,124,477,129,388,97,342,84"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="361,124,477,137,476,142,361,130"/>
+<area shape="poly" id="edge9_Node000007_Node000003" title=" " alt="" coords="353,162,477,148,477,153,354,167"/>
+<area shape="poly" id="edge11_Node000008_Node000003" title=" " alt="" coords="338,208,388,193,477,162,479,167,390,199,339,213"/>
+<area shape="poly" id="edge13_Node000009_Node000003" title=" " alt="" coords="328,264,358,256,388,244,449,207,499,167,502,171,452,211,390,249,360,261,330,269"/>
+<area shape="poly" id="edge15_Node000010_Node000006" title=" " alt="" coords="389,361,454,353,455,359,390,366"/>
+<area shape="poly" id="edge17_Node000011_Node000006" title=" " alt="" coords="355,407,388,396,436,371,455,364,457,369,438,376,390,401,356,413"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a8e77623277f1542549bfd7ae557512eb" title="Return true if this email needs per&#45;namespace substitutions." alt="" coords="437,385,618,412"/>
+<area shape="poly" id="edge18_Node000011_Node000012" title=" " alt="" coords="357,415,421,408,422,413,357,420"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a016db532796f0e82eb53352cd95baf70" title=" " alt="" coords="478,436,577,463"/>
+<area shape="poly" id="edge19_Node000011_Node000013" title=" " alt="" coords="357,428,463,440,462,445,357,433"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a858b467638cc7c967dd04b9fb1272c73" title="Replace all variables of the given namespace in $this&#45;&gt;messageContents." alt="" coords="454,487,601,513"/>
+<area shape="poly" id="edge20_Node000011_Node000014" title=" " alt="" coords="335,435,438,472,461,479,460,484,436,477,333,440"/>
+</map>

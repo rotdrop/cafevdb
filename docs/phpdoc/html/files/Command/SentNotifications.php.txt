@@ -104,7 +104,7 @@ class SentNotifications extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:emails')
+      ->setName($this->appName . ':emails')
       ->setDescription($this->l->t('Consistency checks for sent emails for bank transactions and donation receipts.'))
       ->addOption(
         self::ACTION_LIST_MISSING,

@@ -1,0 +1,9 @@
+<map id="changeFolderManager" name="changeFolderManager">
+<area shape="rect" id="Node000001" title=" " alt="" coords="375,31,524,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a3f43811af00573cb21e27cb201c49623" title=" " alt="" coords="166,5,308,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="360,36,308,30,309,24,360,31"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#af683f3e3910aa34f238c4336211d1a77" title=" " alt="" coords="147,56,327,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="360,57,328,61,327,56,360,52"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ab6b826e4a8edcd655850277fbb5e9e74" title="Create a shared folder and set appropriate permissions." alt="" coords="5,5,99,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="150,21,99,21,99,16,150,16"/>
+</map>

@@ -52,6 +52,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 /**Table generator for Instruments table. */
 class ProjectParticipantFields extends PMETableViewBase
 {
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
@@ -163,6 +164,12 @@ class ProjectParticipantFields extends PMETableViewBase
       $pageNavigation,
       $toolTipsService,
     );
+
+    $this->findProject(enforce: false);
+
+    if ($this->listOperation()) {
+      $this->pme->overrideLabel('Add', $this->l->t('New Table Field'));
+    }
   }
   // phpcs:enable
 
@@ -947,6 +954,17 @@ __EOT__;
       ],
     ];
 
+    $opts['fdd']['participation_context'] = [
+      'name' => $this->l->t('Context'),
+      'css' => [ 'postfix' => [ 'participation-context', 'allow-empty' ], ],
+      'select' => 'O',
+      'values2' => Types\EnumParticipationContext::getL10NValues($this->l),
+      'default' => Types\EnumParticipationContext::UNRESTRICTED,
+      'sort' => true,
+      'align' => 'center',
+      'tooltip' => $this->toolTipsService['page-renderer:participant-fields:participation-context'],
+    ];
+
     $opts['fdd']['participant_access'] = [
       'name' => $this->l->t('Participant Access'),
       'tab' => [ 'id' => 'access' ],
@@ -1058,7 +1076,7 @@ __EOT__;
         return true;
       };
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($execute) {
       $this->execute($opts);

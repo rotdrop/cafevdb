@@ -1,5 +1,5 @@
 <map id="GnuCashSlot" name="GnuCashSlot">
-<area shape="rect" id="Node000001" title="Link to the Gnucash accounts table." alt="" coords="5,79,105,104"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="7,5,104,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,44,58,79,53,79,53,44"/>
+<area shape="rect" id="Node000001" title="Link to the Gnucash accounts table." alt="" coords="5,80,105,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="7,5,103,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,48,58,80,52,80,52,48"/>
 </map>

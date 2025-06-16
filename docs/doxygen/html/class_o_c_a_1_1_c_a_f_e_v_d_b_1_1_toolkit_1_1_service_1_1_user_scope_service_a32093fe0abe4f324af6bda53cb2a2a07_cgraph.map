@@ -1,9 +1,9 @@
 <map id="deleteAuthCookie" name="deleteAuthCookie">
-<area shape="rect" id="Node000001" title="Delete the token and its cookie, e.g." alt="" coords="5,45,131,70"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a53fd119ff90cc9e9a546accd6bd9f9e2" title="Delete any auth token secured with the given passphrase." alt="" coords="179,37,340,77"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,55,165,55,165,60,131,60"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="388,5,549,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="340,42,374,37,375,42,341,48"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="388,69,549,109"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="341,67,375,72,374,78,340,72"/>
+<area shape="rect" id="Node000001" title="Delete the token and its cookie, e.g." alt="" coords="5,47,130,73"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a53fd119ff90cc9e9a546accd6bd9f9e2" title="Delete any auth token secured with the given passphrase." alt="" coords="178,39,338,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,57,162,57,162,63,130,63"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="386,5,546,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="338,45,370,39,371,45,339,50"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="386,72,546,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="339,70,371,75,370,81,338,75"/>
 </map>

@@ -1,5 +1,9 @@
 <map id="Blog" name="Blog">
-<area shape="rect" id="Node000001" title="Cloud blog entity." alt="" coords="9,79,57,104"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,61,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="36,44,36,79,31,79,31,44"/>
+<area shape="rect" id="Node000001" title="Cloud blog entity." alt="" coords="105,155,152,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html" title="Record notices of tax exemption from the corporate income tax (or other taxes)." alt="" coords="58,80,200,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,122,132,154,126,154,126,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,122,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,42,120,78,116,81,83,45"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="146,5,242,32"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="175,45,142,81,138,78,171,42"/>
 </map>

@@ -1,6 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service =
 [
-    [ "addMusicians", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ad7649755ec5bf3198bd8340efd060932", null ],
+    [ "addMusicians", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a51d796fce622f954ee61caf9dc0c2956", null ],
     [ "attachMatchingWebPages", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a52d4fc47080c37ce1920cfe57464a005", null ],
     [ "attachProjectWebPage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a78d5fc1ea75a8017deebecf23d284daa", null ],
     [ "createProjectWebPage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#aa12038eee638ba2641be398e1bfac394", null ],
@@ -45,5 +45,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service =
     [ "webPagesRPC", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5bc5d043588dd30488680d5e78bf67eb", null ],
     [ "wikiRPC", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#af41e3612124ad9e93c88bc039e6584a3", null ],
     [ "yearFromName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a1b821b06262e293620923b69b7133e56", null ],
-    [ "$skeletonPaths", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a81b10d37877e822b67b051000850018e", null ]
+    [ "$skeletonPaths", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#aa0719faa57a8905efb311bca6cc2250a", null ]
 ];

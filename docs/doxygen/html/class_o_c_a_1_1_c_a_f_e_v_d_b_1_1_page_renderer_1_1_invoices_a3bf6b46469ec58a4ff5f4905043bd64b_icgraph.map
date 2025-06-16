@@ -1,0 +1,7 @@
+<map id="selectiveRowDisplay" name="selectiveRowDisplay">
+<area shape="rect" id="Node000001" title=" " alt="" coords="193,31,337,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a8a3cf7d60bc6cf8338f547e086c93839" title="Print only the values for the component row." alt="" coords="5,5,145,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,35,145,31,145,25,177,30"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#ab89a5c45478d6ecd92794a6aab30c72f" title="Print only the values for the composite row." alt="" coords="7,56,143,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="178,58,143,63,143,58,177,53"/>
+</map>

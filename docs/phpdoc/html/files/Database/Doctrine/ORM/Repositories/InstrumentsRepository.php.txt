@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,25 @@ class InstrumentsRepository extends EntityRepository
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
 
   /**
+   * Return a collection of non-instruments, that is, instruments which belong
+   * to the family Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY.
+   *
+   * @param null|array $only If not empty restrict to the given instrument names.
+   *
+   * @return array<int, Entities\Instrument> The found instruments indexed by id.
+   */
+  public function findNonInstruments(?array $only = null)
+  {
+    $criteria = [
+      'families.family' => Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY,
+    ];
+    if (!empty($only)) {
+      $criteria['name'] = $only;
+    }
+    return $this->findBy($criteria, orderBy: [ 'id' => 'INDEX' ]);
+  }
+
+  /**
    * Find an instrument by its name.
    *
    * @param string $name
@@ -51,6 +70,37 @@ class InstrumentsRepository extends EntityRepository
   public function findAll():array
   {
     return $this->findBy(['deleted' => null], [ 'sortOrder' => 'ASC']);
+  }
+
+  /**
+   * Return instrument names as flat array.
+   *
+   * @param null|array $only Only instruments belonging to these family names.
+   *
+   * @param null|array $exclude Exclude instrument belonging to these families.
+   *
+   * @return array<int, string>
+   */
+  public function findNames(?array $only = null, ?array $exclude = null):array
+  {
+    $qb = $this->createQueryBuilder('i');
+    $qb->select('i.name AS instrument')
+      ->where($qb->expr()->isNull('i.deleted'));
+    if (!empty($only) || !empty($exclude)) {
+      $qb->leftJoin('i.families', 'if');
+      if (!empty($only)) {
+        $qb->andWhere($qb->expr()->in('if.family', ':only'))
+          ->setParameter('only', $only);
+      }
+      if (!empty($exclude)) {
+        $qb->andWhere($qb->expr()->notIn('if.family', ':exclude'))
+          ->setParameter('exclude', $exclude);
+      }
+    }
+    $qb->orderBy('i.sortOrder', 'ASC')
+      ->addOrderBy('i.name', 'ASC');
+
+    return $qb->getQuery()->getResult('COLUMN_HYDRATOR');
   }
 
   /**
@@ -102,8 +152,3 @@ class InstrumentsRepository extends EntityRepository
     ];
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

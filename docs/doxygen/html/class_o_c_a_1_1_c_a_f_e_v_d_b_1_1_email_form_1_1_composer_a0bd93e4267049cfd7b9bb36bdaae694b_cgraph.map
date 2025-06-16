@@ -1,0 +1,5 @@
+<map id="sentEmails" name="sentEmails">
+<area shape="rect" id="Node000001" title="Return a list of previously sent emails related to the current project." alt="" coords="5,5,92,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a2d844a225351b80afb7da14fee0e6edc" title=" " alt="" coords="140,5,278,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,16,124,16,124,21,92,21"/>
+</map>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 #[ORM\Table(name: 'SentEmails')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SentEmailsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\SentEmailEntityListener'])]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\SentEmailEntityListener::class])]
 class SentEmail
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -75,7 +75,15 @@ class SentEmail
    * @var string
    */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
-  #[Gedmo\Slug(fields: ['bulkRecipients'], updatable: true, unique: false, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler', options: [new Gedmo\SlugHandlerOption(name: 'algorithm', value: 'md5')])])]
+  #[Gedmo\Slug(
+    fields: ['bulkRecipients'],
+    updatable: true,
+    unique: false,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\HashHandler::class,
+    options: [ 'algorithm' => 'md5' ],
+  )]
   private $bulkRecipientsHash;
 
   /**
@@ -100,7 +108,15 @@ class SentEmail
    * @var string
    */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
-  #[Gedmo\Slug(fields: ['subject'], updatable: true, unique: false, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler', options: [new Gedmo\SlugHandlerOption(name: 'algorithm', value: 'md5')])])]
+  #[Gedmo\Slug(
+    fields: ['subject'],
+    updatable: true,
+    unique: false,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\HashHandler::class,
+    options: [ 'algorithm' => 'md5' ],
+  )]
   private $subjectHash;
 
   /**
@@ -113,7 +129,15 @@ class SentEmail
    * @var string
    */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
-  #[Gedmo\Slug(fields: ['htmlBody'], updatable: true, unique: false, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler', options: [new Gedmo\SlugHandlerOption(name: 'algorithm', value: 'md5')])])]
+  #[Gedmo\Slug(
+    fields: ['htmlBody'],
+    updatable: true,
+    unique: false,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\HashHandler::class,
+    options: [ 'algorithm' => 'md5' ],
+  )]
   private $htmlBodyHash;
 
   /**
@@ -126,7 +150,7 @@ class SentEmail
   /**
    * @var Collection
    */
-  #[ORM\OneToMany(targetEntity: SentEmail::class, mappedBy: 'referencing', indexBy: 'messageId', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: SentEmail::class, mappedBy: 'referencing', indexBy: 'message_id', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   #[ORM\OrderBy(['bulkRecipients' => 'ASC'])]
   private $referencedBy;
 
@@ -147,6 +171,12 @@ class SentEmail
    */
   #[ORM\OneToOne(targetEntity: DonationReceipt::class, mappedBy: 'notificationMessage')]
   private $donationReceipt;
+
+  /**
+   * @var Invoice
+   */
+  #[ORM\OneToOne(targetEntity: Invoice::class, mappedBy: 'notificationEmail')]
+  private $invoice;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
@@ -538,5 +568,29 @@ class SentEmail
   public function getDonationReceipt():DonationReceipt
   {
     return $this->donationReceipt;
+  }
+
+  /**
+   * Sets $invoice
+   *
+   * @param Invoice $invoice
+   *
+   * @return SentEmail $this
+   */
+  public function setInvoice(Invoice $invoice):SentEmail
+  {
+    $this->invoice = $invoice;
+
+    return $this;
+  }
+
+  /**
+   * Returns invoices.
+   *
+   * @return Invoice
+   */
+  public function getInvoice():Invoice
+  {
+    return $this->invoice;
   }
 }

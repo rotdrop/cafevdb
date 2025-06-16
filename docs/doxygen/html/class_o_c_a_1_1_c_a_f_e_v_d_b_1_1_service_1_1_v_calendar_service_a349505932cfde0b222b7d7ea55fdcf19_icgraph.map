@@ -1,5 +1,7 @@
 <map id="addVAlarmsFromRequest" name="addVAlarmsFromRequest">
-<area shape="rect" id="node1" title="Add one or multiple alarms to the given VTodo or VEvent." alt="" coords="480,5,651,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#af29ef0e454ee9f357ef918f183c5d001" title=" " alt="" coords="252,5,432,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a6d34de3f2dd321a10c7d917bac13dd27" title=" " alt="" coords="5,5,204,31"/>
+<area shape="rect" id="Node000001" title="Add one or multiple alarms to the given VTodo or VEvent." alt="" coords="484,5,653,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#af4064e41fe3647594fa8fd8166fb42d2" title=" " alt="" coords="254,5,436,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="469,21,437,21,437,16,469,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#abed0a7f84ce98b1f4ffb17422f83072a" title=" " alt="" coords="5,5,206,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="238,21,206,21,206,16,238,16"/>
 </map>

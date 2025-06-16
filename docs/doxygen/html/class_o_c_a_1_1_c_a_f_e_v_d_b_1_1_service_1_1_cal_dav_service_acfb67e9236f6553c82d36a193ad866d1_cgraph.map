@@ -1,0 +1,15 @@
+<map id="restoreCalendarObject" name="restoreCalendarObject">
+<area shape="rect" id="Node000001" title="Restore the given calendar object from the trashbin." alt="" coords="5,81,157,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#abcd98e2faa0452813888b33a9bf8a834" title="Fetch an event object by its local URI." alt="" coords="205,81,334,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,92,189,92,189,97,157,97"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a4c3fe95c05e0336bd680f99f5c5dd013" title="Adds the given calendar data to the cache." alt="" coords="442,5,536,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="296,78,381,41,426,29,427,34,383,47,299,83"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a066227513f488f5afb478d0b30576d2a" title="Fetch an object from the calendar object cache." alt="" coords="435,56,542,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="334,85,419,75,420,80,335,90"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ab2479c65f5ff410c3580f54e5ba6ee88" title="Convert an object UID to its local URI." alt="" coords="442,107,536,133"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="335,99,427,110,426,116,334,105"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d" title=" " alt="" coords="382,157,595,200"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="300,106,383,143,401,149,399,154,381,148,298,111"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#afd08da0f2d0c21a2bc9d5d5ae56f7907" title="Get the uri of the original calendar." alt="" coords="643,107,781,133"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="536,117,627,117,627,123,536,123"/>
+</map>

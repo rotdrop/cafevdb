@@ -1,9 +1,9 @@
 <map id="getPublicName" name="getPublicName">
-<area shape="rect" id="Node000001" title="Get the cooked display&#45;name, taking nick&#45;name into account and just using $displayName if that set." alt="" coords="149,55,260,80"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a7516ca30af0db3cdbf9a7739b48ce91d" title="{}" alt="" coords="13,5,94,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,53,92,33,94,28,153,48"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#add9856818e0644c7c822ef37b80cf1b5" title="Compose initials from the public display name." alt="" coords="14,55,93,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,70,93,70,93,65,135,65"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#ad402d8679325bc514874370f02b5c2ac" title="{}" alt="" coords="5,104,101,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="153,87,94,106,92,101,151,82"/>
+<area shape="rect" id="Node000001" title="Get the cooked display&#45;name, taking nick&#45;name into account and just using $displayName if that set." alt="" coords="149,56,259,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a7516ca30af0db3cdbf9a7739b48ce91d" title="{}" alt="" coords="13,5,93,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,53,93,35,94,30,148,48"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#add9856818e0644c7c822ef37b80cf1b5" title="Compose initials from the public display name." alt="" coords="14,56,92,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="133,72,92,72,92,67,133,67"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#ad402d8679325bc514874370f02b5c2ac" title="{}" alt="" coords="5,107,101,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="148,91,96,109,94,104,147,86"/>
 </map>

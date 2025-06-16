@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -69,7 +69,7 @@ class SepaDebitMandatesRepository extends EntityRepository
     $mandate = $this->findOneBy($idOrReference);
     if (!empty($mandate) && !$mandate->isDeleted()) {
       $this->setDeletedAt(new DateTimeImmutable);
-      $this->getEntityManager()->flush($mandate);
+      $this->getEntityManager()->flush();
     }
     return $mandate;
   }
@@ -96,7 +96,7 @@ class SepaDebitMandatesRepository extends EntityRepository
       if (empty($usage['lastUsed'])) {
         // second removal should really remove it
         $this->getEntityManager()->remove($mandate);
-        $this->getEntityManager()->flush($mandate);
+        $this->getEntityManager()->flush();
       }
     }
     if ($softDeleteable) {

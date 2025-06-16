@@ -1,0 +1,9 @@
+<map id="navigation" name="navigation">
+<area shape="rect" id="Node000001" title="Set table&#45;navigation enable/disable." alt="" coords="451,47,531,73"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aacd3616b156f66da2a7f9fab49c2f1b5" title=" " alt="" coords="259,47,403,73"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="435,63,404,63,404,57,435,57"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,5,211,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="243,50,211,45,212,39,243,44"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_all_musicians.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,72,211,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="243,76,212,81,211,75,243,70"/>
+</map>

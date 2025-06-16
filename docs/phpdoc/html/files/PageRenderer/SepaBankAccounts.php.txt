@@ -53,6 +53,7 @@ class SepaBankAccounts extends PMETableViewBase
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
   use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
   use FieldTraits\QueryFieldTrait;
@@ -183,9 +184,6 @@ class SepaBankAccounts extends PMETableViewBase
     ],
   ];
 
-  /** @var Entities\Project */
-  private ?Entities\Project $project = null;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
@@ -209,11 +207,10 @@ class SepaBankAccounts extends PMETableViewBase
       $pageNavigation,
       $toolTipsService,
     );
+
+    $this->findProject(enforce: false);
+
     $this->initCrypto();
-    if ($this->projectId > 0) {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-      $this->projectName = $this->project->getName();
-    }
   }
   // phpcs:enable
 
@@ -1050,7 +1047,7 @@ class SepaBankAccounts extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::OPERATION_LIST][PHPMyEdit::TRIGGER_PRE][] = [ $this, 'totalFeesPreFilterTrigger' ];
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($execute) {
       $this->execute($opts);

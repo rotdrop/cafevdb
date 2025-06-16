@@ -1,0 +1,15 @@
+<map id="removeProjectInstrument" name="removeProjectInstrument">
+<area shape="rect" id="Node000001" title="Remove the given instrument." alt="" coords="5,128,173,155"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a6caae56e91c2a7d40e0dd8537095c22a" title="Get instrumentationNumber." alt="" coords="221,5,461,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,125,229,84,231,89,126,130"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a235d6d4fc3b7d3b4bb372e0c9abcee3e" title="Get musicianInstrument." alt="" coords="240,104,442,179"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,139,224,139,224,144,173,144"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a578e8c33654a919b7bee8fa4f37323b9" title="Get projectInstruments." alt="" coords="266,203,416,229"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="124,153,221,188,251,196,250,201,220,193,122,158"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a84e9f3642ab6b2fd223989f118488128" title="Get family." alt="" coords="526,104,714,163"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="415,199,460,188,525,166,526,171,462,193,416,205"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a3b3ec75dc4a258baf0bf6e5d1fdc11ec" title="Get instrument." alt="" coords="514,187,726,245"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="416,213,499,213,499,219,416,219"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a75d345793cef1ab09b64fb72df18d8d1" title="Get the untranslated family name." alt="" coords="509,269,731,344"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="386,227,495,263,493,268,384,233"/>
+</map>

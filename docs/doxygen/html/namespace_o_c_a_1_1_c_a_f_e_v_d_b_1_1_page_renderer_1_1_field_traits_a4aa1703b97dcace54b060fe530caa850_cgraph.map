@@ -1,7 +1,7 @@
 <map id="renderMusicianAvatarField" name="renderMusicianAvatarField">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,181,31"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a1b3379967ad757922543f6343e198a69" title=" " alt="" coords="229,5,312,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,15,215,15,215,21,181,21"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a60e93dffe75e2628bf0656cecf5a20ab" title=" " alt="" coords="360,5,475,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="312,15,346,15,346,21,312,21"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,181,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a1b3379967ad757922543f6343e198a69" title=" " alt="" coords="229,5,310,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,16,213,16,213,21,181,21"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a60e93dffe75e2628bf0656cecf5a20ab" title=" " alt="" coords="358,5,471,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="310,16,343,16,343,21,310,21"/>
 </map>

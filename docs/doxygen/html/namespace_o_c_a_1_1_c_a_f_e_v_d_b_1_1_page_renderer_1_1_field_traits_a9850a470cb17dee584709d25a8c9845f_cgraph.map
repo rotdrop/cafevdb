@@ -1,7 +1,7 @@
 <map id="navigationItems" name="navigationItems">
-<area shape="rect" id="Node000001" title="{}" alt="" coords="5,45,120,70"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html#ad3020415b8d3447a61266472185fbe46" title="Return the navigation item for this renderer." alt="" coords="168,5,415,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,47,154,42,155,47,121,52"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#ad3020415b8d3447a61266472185fbe46" title="{Return the navigation item for this renderer.[ &#39;template&#39; =&gt; TEMPLATE, &#39;tooltip&#39; =&gt; TOOLTIP,..." alt="" coords="188,69,395,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="121,63,174,70,174,76,120,68"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,47,119,73"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html#ad3020415b8d3447a61266472185fbe46" title="Return the navigation item for this renderer." alt="" coords="167,5,413,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,49,151,44,152,50,119,54"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#ad3020415b8d3447a61266472185fbe46" title="{Return the navigation item for this renderer.[ &#39;template&#39; =&gt; TEMPLATE, &#39;tooltip&#39; =&gt; TOOLTIP,..." alt="" coords="187,72,392,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="119,66,172,73,171,79,119,71"/>
 </map>

@@ -1,5 +1,9 @@
 <map id="beforeUpdateDoUpdateAll" name="beforeUpdateDoUpdateAll">
-<area shape="rect" id="Node000001" title="Before update&#45;trigger which ideally should update all data such that nothing remains to do for phpMyE..." alt="" coords="260,13,435,38"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,5,212,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="246,28,212,28,212,23,246,23"/>
+<area shape="rect" id="Node000001" title="Before update&#45;trigger which ideally should update all data such that nothing remains to do for phpMyE..." alt="" coords="299,104,472,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#aa653839a82469b91dfa417e6cea4f18a" title="Remap the input values in order to satisfy the data&#45;model:" alt="" coords="25,5,231,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="326,101,220,67,222,62,328,96"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html#aa653839a82469b91dfa417e6cea4f18a" title="Remap the input values in order to satisfy the data&#45;model:" alt="" coords="5,88,251,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="283,120,251,120,251,115,283,115"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="25,171,231,213"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="327,138,251,161,211,173,210,168,250,156,325,133"/>
 </map>

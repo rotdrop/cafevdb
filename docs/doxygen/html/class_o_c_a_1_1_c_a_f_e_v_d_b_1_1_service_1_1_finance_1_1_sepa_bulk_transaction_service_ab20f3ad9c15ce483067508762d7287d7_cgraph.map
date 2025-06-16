@@ -1,0 +1,7 @@
+<map id="removeBulkTransaction" name="removeBulkTransaction">
+<area shape="rect" id="Node000001" title="Remove the given bulk&#45;transaction if it is essentially unused." alt="" coords="5,31,164,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#a140fb83fcab1cc3efcefcfb1c2819e86" title=" " alt="" coords="212,5,370,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,32,196,28,196,33,164,37"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#a8a85d3ae55e994be5e0e98756465e81f" title="Make a backup&#45;copy of the associated calendar entries in order to restore them after failed database ..." alt="" coords="216,56,366,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,51,200,56,200,61,164,56"/>
+</map>

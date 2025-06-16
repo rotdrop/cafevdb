@@ -1,10 +1,10 @@
 <map id="remove" name="remove">
-<area shape="rect" id="Node000001" title="Delete the given mandate if it is not used." alt="" coords="5,56,71,81"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a3435ec579db5b0ae00575b8f516a8e24" title="Ban a SEPA&#45;mandate (timeout, withdrawn, erroneous data etc.)." alt="" coords="126,5,169,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="65,53,112,31,115,36,67,58"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html#ae2b0e1dbe7640aefaf7d54c6a94d08fe" title="Public export of parent function." alt="" coords="224,16,453,71"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="71,63,210,51,210,57,71,69"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a797cbefa38da929fb4dac2e9ef8b64ae" title="Fetch usage information about the given identifier." alt="" coords="119,107,176,132"/>
-<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="67,79,108,98,106,103,65,84"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="169,18,211,24,210,29,169,23"/>
+<area shape="rect" id="Node000001" title="Delete the given mandate if it is not used." alt="" coords="5,56,70,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a3435ec579db5b0ae00575b8f516a8e24" title="Ban a SEPA&#45;mandate (timeout, withdrawn, erroneous data etc.)." alt="" coords="125,5,167,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,53,109,33,112,37,69,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html#ae2b0e1dbe7640aefaf7d54c6a94d08fe" title="Public export of parent function." alt="" coords="222,15,450,73"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="70,64,206,52,207,58,70,69"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a797cbefa38da929fb4dac2e9ef8b64ae" title="Fetch usage information about the given identifier." alt="" coords="118,107,174,133"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="69,81,105,98,102,103,67,86"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="168,19,207,24,206,29,167,24"/>
 </map>

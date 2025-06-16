@@ -12,6 +12,7 @@ var dir_0ff164efcd794d03b196bcf3d2ed306b =
     [ "ProjectEvents.php", "_project_events_8php_source.html", null ],
     [ "ProjectFolders.php", "_project_folders_8php_source.html", null ],
     [ "RecurringReceivables.php", "_recurring_receivables_8php_source.html", null ],
+    [ "SanitizeFilenames.php", "_sanitize_filenames_8php_source.html", null ],
     [ "SentNotifications.php", "_sent_notifications_8php_source.html", null ],
     [ "TooltipsFind.php", "_tooltips_find_8php_source.html", null ],
     [ "TooltipsList.php", "_tooltips_list_8php_source.html", null ],

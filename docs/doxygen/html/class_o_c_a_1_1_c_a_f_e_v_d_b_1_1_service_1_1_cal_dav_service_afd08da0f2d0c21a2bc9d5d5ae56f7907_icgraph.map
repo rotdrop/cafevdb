@@ -1,6 +1,13 @@
 <map id="calendarPrincipalUri" name="calendarPrincipalUri">
-<area shape="rect" id="node1" title="Get the uri of the original calendar." alt="" coords="343,31,481,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ab2479c65f5ff410c3580f54e5ba6ee88" title="Convert an object UID to its local URI." alt="" coords="200,31,295,56"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a1a333660bc649269f9583a2985635564" title="Remove the given calendar object." alt="" coords="5,5,152,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#abcd98e2faa0452813888b33a9bf8a834" title="Fetch an event object by its local URI." alt="" coords="13,55,144,80"/>
+<area shape="rect" id="Node000001" title="Get the uri of the original calendar." alt="" coords="590,56,728,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ab2479c65f5ff410c3580f54e5ba6ee88" title="Convert an object UID to its local URI." alt="" coords="424,31,518,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="575,61,518,53,519,48,576,55"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ad3092c80bf312f1cb05374dad1a9e53b" title="Move the given object, given by its local URI relative to the old calendar, to the given new calendar..." alt="" coords="399,81,542,108"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="575,83,543,88,543,82,575,78"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a1a333660bc649269f9583a2985635564" title="Remove the given calendar object." alt="" coords="205,5,351,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="408,39,351,31,352,26,409,33"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#abcd98e2faa0452813888b33a9bf8a834" title="Fetch an event object by its local URI." alt="" coords="213,56,342,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="409,55,343,63,343,58,408,49"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#acfb67e9236f6553c82d36a193ad866d1" title="Restore the given calendar object from the trashbin." alt="" coords="5,56,157,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="198,72,157,72,157,67,198,67"/>
 </map>

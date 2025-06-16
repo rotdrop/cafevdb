@@ -1,5 +1,9 @@
 <map id="getCalendarId" name="getCalendarId">
-<area shape="rect" id="node1" title=" " alt="" coords="191,31,293,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a7853db49da0ae926e24a1fd616616682" title=" " alt="" coords="7,5,141,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#aff411c6e4c5d5f5cbe8342b529297363" title=" " alt="" coords="5,55,143,80"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="225,72,327,99"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a6f8658acb2cf99b3e8bec2122a1ca6ee" title="Ensure that the &quot;other&quot; calendar contains a project registration event if and only if the registratio..." alt="" coords="5,5,177,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="216,69,160,51,161,46,218,64"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ac6edede4ce08a8617f8ea03fc0404710" title=" " alt="" coords="9,72,173,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,88,174,88,174,83,209,83"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#aff411c6e4c5d5f5cbe8342b529297363" title=" " alt="" coords="23,123,159,149"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="211,106,143,125,142,119,209,101"/>
 </map>

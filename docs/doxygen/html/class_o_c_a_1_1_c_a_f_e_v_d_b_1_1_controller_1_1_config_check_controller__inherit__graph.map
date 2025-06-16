@@ -1,5 +1,5 @@
 <map id="ConfigCheckController" name="ConfigCheckController">
-<area shape="rect" id="Node000001" title="Endpoint for returning the config&#45;check results." alt="" coords="5,79,160,104"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="43,5,122,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,44,85,79,80,79,80,44"/>
+<area shape="rect" id="Node000001" title="Endpoint for returning the config&#45;check results." alt="" coords="5,80,159,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="43,5,121,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,48,85,80,79,80,79,48"/>
 </map>

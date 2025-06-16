@@ -1,0 +1,9 @@
+<map id="getVEventSiblings" name="getVEventSiblings">
+<area shape="rect" id="Node000001" title="Use the EventIterator to generate all siblings of a recurring event." alt="" coords="5,80,134,107"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a01da57a5398426d6331c35796d471f07" title="Get all components of a given type from a VCalendar object and return them as flat array." alt="" coords="188,5,410,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,77,181,57,206,50,207,55,182,63,117,82"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7a304fb17fd89d3a9ab0517d50bb7ab3" title="Return the &quot;master&quot; wrapped object, where the VCalendar object here is rather not an entire calendar,..." alt="" coords="199,72,398,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="134,91,184,91,184,96,134,96"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a9cf53613b1df4a77e0905d0b2f30a969" title="Determine if the given event is recurring or not." alt="" coords="182,139,416,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="117,105,182,124,207,131,206,137,181,129,116,110"/>
+</map>

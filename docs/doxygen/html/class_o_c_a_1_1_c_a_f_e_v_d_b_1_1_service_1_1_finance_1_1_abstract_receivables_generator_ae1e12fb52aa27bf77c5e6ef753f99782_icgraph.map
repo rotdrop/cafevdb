@@ -1,4 +1,8 @@
 <map id="updateOne" name="updateOne">
-<area shape="rect" id="Node000001" title="Update just the given receivable and participant." alt="" coords="5,29,91,55"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="61,18,57,11,48,8,40,10,36,14,38,29,32,29,31,12,37,5,48,3,60,6,66,15"/>
+<area shape="rect" id="Node000001" title="Update just the given receivable and participant." alt="" coords="441,29,525,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="508,16,500,10,483,8,468,10,459,14,458,20,462,28,457,30,452,21,455,11,466,5,483,3,502,5,511,12"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_abstract_receivables_generator.html#a7c7c0760274d64c721cd76d76b7c20de" title="{Update the amount to invoice for the bound service&#45;fee field.array&lt;string, int&gt; [ &#160;&#39;added&#39; =&gt; #ADDED..." alt="" coords="271,29,393,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="425,45,393,45,393,40,425,40"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_manually_generated_receivables_generator.html#ae1e12fb52aa27bf77c5e6ef753f99782" title="{Update just the given receivable and participant.array&lt;string, int&gt; [ &#39;added&#39; =&gt; #ADDED,..." alt="" coords="5,13,223,72"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="256,45,223,45,223,40,256,40"/>
 </map>

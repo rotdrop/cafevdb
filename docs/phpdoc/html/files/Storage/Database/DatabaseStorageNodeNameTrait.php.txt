@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024, Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2025, Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,11 +27,11 @@ namespace OCA\CAFEVDB\Storage\Database;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\AppInfo\Application;
-use OCA\CAFEVDB\Service\Registration;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Service\Registration;
 
 /**
  * Actually just provide some path names, translated with the app's configured
@@ -218,7 +218,7 @@ trait DatabaseStorageNodeNameTrait
   /**
    * PME-legacy.
    *
-   * @param string|Types\EnumTaxType $taxType
+   * @param array $taxTypes
    *
    * @param int $assessmentPeriodStart
    *
@@ -229,14 +229,21 @@ trait DatabaseStorageNodeNameTrait
    * @return string
    */
   protected function getLegacyTaxExemptionNoticeFileName(
-    string|Types\EnumTaxType $taxType,
+    array $taxTypes,
     int $assessmentPeriodStart,
     int $assessmentPeriodEnd,
     ?string $extension = null,
   ):string {
+    $taxTypes = array_map(
+      fn(string|Types\EnumTaxType $taxType)
+      =>
+      Util::dashesToCamelCase($this->getAppL10n()->t((string)$taxType), true, '_-. '),
+      $taxTypes,
+    );
+    sort($taxTypes); // by l10name
     // TRANSLATORS: file-name
     $fileName =  $this->getAppL10n()->t('TaxExemptionNotice-%1$s-%2$04d-%3$04d', [
-      Util::dashesToCamelCase($this->getAppL10n()->t((string)$taxType), true, '_-. '),
+      implode('-', $taxTypes),
       $assessmentPeriodStart,
       $assessmentPeriodEnd,
     ]);
@@ -260,7 +267,7 @@ trait DatabaseStorageNodeNameTrait
     ?string $extension = null,
   ):string {
     return $this->getLegacyTaxExemptionNoticeFileName(
-      $taxExemptionNotice->getTaxType(),
+      $taxExemptionNotice->getTaxTypes(),
       $taxExemptionNotice->getAssessmentPeriodStart(),
       $taxExemptionNotice->getAssessmentPeriodEnd(),
       $extension,
@@ -299,9 +306,40 @@ trait DatabaseStorageNodeNameTrait
   }
 
   /**
+   * PME-legacy.
+   *
+   * @param string $invoiceNumber
+   *
+   * @param string $projectName
+   *
+   * @param string $musicianName
+   *
+   * @param null|string $extension
+   *
+   * @return string
+   */
+  protected function getLegacyinvoiceFileName(
+    string $invoiceNumber,
+    string $musicianName,
+    string $projectName,
+    ?string $extension = null,
+  ):string {
+    // TRANSLATORS: file-name
+    $fileName =  $this->getAppL10n()->t('invoice-%1$s-%2$s-%3$s', [
+      str_replace(Constants::PATH_SEPARATOR, '-', $invoiceNumber),
+      Util::dashesToCamelCase($musicianName, true, '_-. ,'),
+      $projectName,
+    ]);
+    if (!empty($extension)) {
+      $fileName .= '.' . $extension;
+    }
+    return $fileName;
+  }
+
+  /**
    * Generate a file-name for the given donation.
    *
-   * @param Entities\CompositePayment $doonation
+   * @param Entities\DonationReceipt $donation
    *
    * @param null|string $extension
    *
@@ -315,6 +353,27 @@ trait DatabaseStorageNodeNameTrait
       $donation->getId(),
       $donation->getMusician()->getPublicName(firstNameFirst: true),
       $donation->getProject()->getName(),
+      $extension,
+    );
+  }
+
+  /**
+   * Generate a file-name for the given donation.
+   *
+   * @param Entities\Invoice $donation
+   *
+   * @param null|string $extension
+   *
+   * @return string
+   */
+  protected function getInvoiceFileName(
+    Entities\Invoice $invoice,
+    ?string $extension = null,
+  ):string {
+    return $this->getLegacyInvoiceFileName(
+      $invoice->getInvoiceNumber(),
+      $invoice->getDebitor()->getPublicName(firstNameFirst: true),
+      $invoice->getProject()->getName(),
       $extension,
     );
   }

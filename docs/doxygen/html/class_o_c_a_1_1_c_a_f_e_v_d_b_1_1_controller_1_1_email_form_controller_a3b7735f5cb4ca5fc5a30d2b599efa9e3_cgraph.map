@@ -1,5 +1,9 @@
 <map id="storedEmailOptions" name="storedEmailOptions">
-<area shape="rect" id="Node000001" title="Regenerate the stored&#45;email options after updating drafts or templates." alt="" coords="5,13,141,38"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a30ead6103e6fb25a10628774c18ed36a" title="Export an option array suitable to load stored email messages, currently templates and message drafts..." alt="" coords="189,5,376,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,23,176,23,176,28,142,28"/>
+<area shape="rect" id="Node000001" title="Regenerate the stored&#45;email options after updating drafts or templates." alt="" coords="5,47,141,73"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a30ead6103e6fb25a10628774c18ed36a" title="Export an option array suitable to load stored email messages, currently templates and message drafts..." alt="" coords="189,39,374,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,57,173,57,173,63,141,63"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a8c51518ac57ca5c9bdf846051ac17f0a" title=" " alt="" coords="429,5,614,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="374,44,413,39,414,44,375,50"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a771ab1f79b7a4747ccd2ff0a69164a43" title=" " alt="" coords="422,72,621,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="375,70,407,75,406,80,374,76"/>
 </map>

@@ -1,0 +1,5 @@
+<map id="updateParticipant" name="updateParticipant">
+<area shape="rect" id="Node000001" title="{Update the amount to invoice for the bound service&#45;fee field.array&lt;string, int&gt; [ &#160;&#39;added&#39; =&gt; #ADDED..." alt="" coords="271,21,393,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_manually_generated_receivables_generator.html#ae1e12fb52aa27bf77c5e6ef753f99782" title="{Update just the given receivable and participant.array&lt;string, int&gt; [ &#39;added&#39; =&gt; #ADDED,..." alt="" coords="5,5,223,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,37,223,37,223,32,256,32"/>
+</map>

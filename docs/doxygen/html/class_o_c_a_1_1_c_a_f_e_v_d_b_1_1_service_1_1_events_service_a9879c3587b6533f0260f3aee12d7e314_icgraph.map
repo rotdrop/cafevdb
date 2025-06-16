@@ -1,0 +1,5 @@
+<map id="getProjectEvent" name="getProjectEvent">
+<area shape="rect" id="Node000001" title="Fetch one specific event and just return the database entity." alt="" coords="138,5,252,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a860420d7add97f86ebda19e41f74e7aa" title="Fetch one specific event and convert start and end to DateTime, also determine allDay." alt="" coords="5,5,90,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,21,90,21,90,16,122,16"/>
+</map>

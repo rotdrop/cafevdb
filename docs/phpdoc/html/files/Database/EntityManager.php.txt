@@ -199,6 +199,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var IEventDispatcher */
   protected $eventDispatcher;
 
+  /** @var null|GedmoTranslatableListener */
+  protected ?Listeners\GedmoTranslatableListener $translatable = null;
+
   /**
    * @var array
    *
@@ -215,6 +218,15 @@ class EntityManager extends EntityManagerDecorator
    * there is probably always only one ...).
    */
   protected static $wrappedManagers = [];
+
+  /**
+   * @var array<int, Throwable>
+   *
+   * In order to make the real exceptions visible exceptions can be remembered
+   * vie pushTransactionExceptions() and retrieved later in the top level
+   * code.
+   */
+  protected array $transactionExceptions = [];
 
   /** {@inheritdoc} */
   public function __construct(
@@ -359,6 +371,16 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * Enable query logging.
+   *
+   * @return void
+   */
+  public function enableLogging():void
+  {
+    $this->sqlLogger->enable(true);
+  }
+
+  /**
    * @return null|string The user-id of the currently logged-in user
    * if known.
    */
@@ -453,17 +475,19 @@ class EntityManager extends EntityManagerDecorator
       Types\EnumAccessPermission::class => 'enum',
       Types\EnumDataTransformation::class => 'enum',
       Types\EnumDirEntryType::class => 'enum',
+      Types\EnumParticipationContext::class => 'enum',
       Types\EnumFileType::class => 'enum',
       Types\EnumGender::class => 'enum',
       Types\EnumGeographicalScope::class => 'enum',
+      Types\EnumGnuCashSlotType::class => 'enum',
       Types\EnumMemberStatus::class => 'enum',
       Types\EnumParticipantFieldDataType::class => 'enum',
       Types\EnumParticipantFieldMultiplicity::class => 'enum',
+      Types\EnumParticipationStatus::class => 'enum',
       Types\EnumProjectTemporalType::class => 'enum',
       Types\EnumSepaTransaction::class => 'enum',
       Types\EnumTaxType::class => 'enum',
       Types\EnumVCalendarType::class => 'enum',
-      Types\EnumGnuCashSlotType::class => 'enum',
       // Ramsey\UuidType::class => null,
       // Ramsey\UuidBinaryType::class => 'binary',
       // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
@@ -734,7 +758,7 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($transformableListener);
 
     // translatable
-    $translatableListener = $this->appContainer->get(Listeners\GedmoTranslatableListener::class);
+    $this->translatable = $translatableListener = $this->appContainer->get(Listeners\GedmoTranslatableListener::class);
     // current translation locale should be set from session or hook later into the listener
     // most important, before entity manager is flushed
     $localeCode = $this->l->getLocaleCode();
@@ -863,15 +887,15 @@ class EntityManager extends EntityManagerDecorator
    *
    * Then just move the modified entity on to the ordinary persister.
    *
-   * @param mixed $entity The entity instance to persist.
+   * @param object $entity The entity instance to persist.
    *
-   * @return mixed The persisted entity (actually the argument $entity).
+   * @return void
    *
    * @todo This unfortunately does not hack similar problems with
    * cascade="persist". There the "stock" persist operation seemingly
    * still causes problems.
    */
-  public function persist(mixed $entity):mixed
+  public function persist(object $entity):void
   {
     $meta = $this->getClassMetadata(get_class($entity));
     if ($meta->containsForeignIdentifier) {
@@ -926,7 +950,7 @@ class EntityManager extends EntityManagerDecorator
       }
 
     }
-    return parent::persist($entity);
+    parent::persist($entity);
   }
 
   /**
@@ -944,7 +968,7 @@ class EntityManager extends EntityManagerDecorator
    *
    * The callables need to run "stand-alone" without parameters.
    *
-   * @param callable|IUndoable $action Action to register.
+   * @param Closure|IUndoable $action Action to register.
    *
    * @param null|callable $undo The associated undo-action. If $actionm
    * instanceof IUndoable then the $undo action is ignored. It should rather
@@ -954,14 +978,14 @@ class EntityManager extends EntityManagerDecorator
    * @return UndoableRunQueue  Return the run-queue for  easy chaining
    * via UndoableRunQueue::register().
    */
-  public function registerPreCommitAction($action, ?callable $undo = null):UndoableRunQueue
+  public function registerPreCommitAction(Closure|IUndoable $action, ?Closure $undo = null):UndoableRunQueue
   {
     if (!$this->isOwnTransactionActive()) {
       throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot register pre-commit actions.'));
     }
     $level = $this->getOwnTransactionNestingLevel() - 1;
     $actions = $this->preCommitActions[$level];
-    if (is_callable($action)) {
+    if ($action instanceof Closure) {
       $actions->register(new GenericUndoable($action, $undo));
     } elseif ($action instanceof IUndoable) {
       $actions->register($action);
@@ -990,6 +1014,7 @@ class EntityManager extends EntityManagerDecorator
     if (!empty($actions) && !$actions->active()) {
       $actions->executeActions();
     }
+    $this->checkForRollbackOnly();
   }
 
   /**
@@ -1052,6 +1077,10 @@ class EntityManager extends EntityManagerDecorator
    */
   public function isTransactionActive():bool
   {
+    if ($this->entityManager === null) {
+      return false;
+    }
+    $connection = $this->entityManager->getConnection();
     return $this->entityManager->getConnection()->isTransactionActive();
   }
 
@@ -1101,6 +1130,9 @@ class EntityManager extends EntityManagerDecorator
     } else {
       $this->preCommitActions[$level]->clearActionQueue();
     }
+    if ($this->transactionNestingLevel == 1) {
+      $this->transactionExceptions = [];
+    }
   }
 
   /**
@@ -1124,6 +1156,7 @@ class EntityManager extends EntityManagerDecorator
    */
   public function commit():void
   {
+    $this->checkForRollbackOnly();
     // execute all remaining pre-flush action
     $this->executePreFlushActions();
     // execute all pre-commit action of the current level
@@ -1170,6 +1203,40 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * @return void
+   *
+   * @throws Exceptions\DatabaseRollbackOnlyException
+   */
+  private function checkForRollbackOnly():void
+  {
+    $connection = $this->getConnection();
+    if ($connection && $connection->isTransactionActive() && $connection->isRollbackOnly()) {
+      throw new Exceptions\DatabaseRollbackOnlyException(
+        $this->l->t('The connection is marked for rollback only.'),
+        previous: $this->transactionExceptions[0] ?? null,
+      );
+    }
+  }
+
+  /**
+   * @param Throwable $exception
+   *
+   * @return void
+   */
+  public function pushTransactionException(Throwable $exception):void
+  {
+    $this->transactionExceptions[] = $exception;
+  }
+
+  /**
+   * @return array<int, Throwable>
+   */
+  public function getTransactionExceptions():ArrayAdapter
+  {
+    return $this->transactionExceptions;
+  }
+
+  /**
    * @param callable|IUndoable $action The action to be registered.
    *
    * @param null|callable $undo The undo action if $action is a mere callable.
@@ -1204,15 +1271,16 @@ class EntityManager extends EntityManagerDecorator
   public function executePreFlushActions()
   {
     $this->preFlushActions->executeActions();
+    $this->checkForRollbackOnly();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function flush($entity = null)
+  public function flush():void
   {
     $this->executePreFlushActions();
-    parent::flush($entity);
+    parent::flush();
     $this->executePreFlushActions(); // in case the pre-flush handlers added to the list ...
   }
 
@@ -1338,9 +1406,34 @@ class EntityManager extends EntityManagerDecorator
    *
    * @return null|Transformable\Transformer\TransformerInterface
    */
-  public function getDataTransformer(string $key):Transformable\Transformer\TransformerInterface
+  public function getDataTransformer(string $key):?Transformable\Transformer\TransformerInterface
   {
     return $this->transformerPool[$key] ?? null;
+  }
+
+  /**
+   * Set the locale for the translatable Listeners*
+   *
+   * @param null|string $locale A locale like de_DE (i.e. with language and
+   * region). If null the default locale of the translatable listener is used.
+   *
+   * @return string
+   */
+  public function setTranslatableLocale(?string $locale):string
+  {
+    if ($locale === null) {
+      $locale = ConfigService::DEFAULT_LOCALE;
+    }
+    if (strpos($locale, '_') === false) {
+      $locale = $locale . '_' . strtoupper($locale);
+    }
+    $oldLocale = $this->translatable->getTranslatableLocale();
+    $this->translatable->setTranslatableLocale($locale);
+    $this->getConfiguration()->setDefaultQueryHint(
+      Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
+      $locale
+    );
+    return $oldLocale;
   }
 
   /**

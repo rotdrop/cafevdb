@@ -9,9 +9,10 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "getDonationReceipts", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#ab1ee8d0a93b4adc02b3dc9cdde9875d5", null ],
     [ "getId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a12251d0c022e9e21c137a105ff683f13", null ],
     [ "getMembershipFeesAreDonations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a845922924138dee9484274a0fe8fa4a7", null ],
+    [ "getTaxationStatutorySources", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a9b644e149df05b998ea724f8a59fbd6e", null ],
     [ "getTaxNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#ad15c45d99400ee08fb10d577ffd5c2eb", null ],
     [ "getTaxOffice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a090229650db5026123467e36d473e88e", null ],
-    [ "getTaxType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a733f8cfa0733ed262979f010ca9b2605", null ],
+    [ "getTaxTypes", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a0a46307ca4fae620ab3b3237a637810a", null ],
     [ "getWrittenNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a3d3ae6218fba4879c56233747a0325ea", null ],
     [ "jsonSerialize", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#ad402d8679325bc514874370f02b5c2ac", null ],
     [ "setAssessmentPeriodEnd", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a7727574d2bc1e416b5b1bc251ff9605c", null ],
@@ -21,8 +22,8 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setDonationReceipts", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#abd269102824501accb20c490a8d33794", null ],
     [ "setId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#af8e956b8b0343ff7d1b955c26cb0c780", null ],
     [ "setMembershipFeesAreDonations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#ac2c9b13456c7dee0b7982b56ee0e22b3", null ],
+    [ "setTaxationStatutorySources", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a9c9a9237133e36ac41a031fdabdf3090", null ],
     [ "setTaxNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#affa3df8bc6701158fd95cde9c794d9ac", null ],
     [ "setTaxOffice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#ae71c1f7a2d48731670d719bdc0ca760f", null ],
-    [ "setTaxType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a8d89661211d7ada8b1598d26a74d8cb4", null ],
     [ "setWrittenNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a3fbbecd118806bbe50e1ea923915598b", null ]
 ];

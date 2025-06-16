@@ -1,0 +1,16 @@
+<map id="beforeUpdateCheckParticipationStatus" name="beforeUpdateCheckParticipationStatus">
+<area shape="rect" id="Node000001" title="Forbid changing the participation status to &quot;passive&quot; or &quot;associated&quot; if the participant is registere..." alt="" coords="5,151,215,193"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a0160798c24d6bddc98d5192235a59982" title=" " alt="" coords="269,60,518,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,148,262,112,287,105,288,110,264,117,166,153"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a0bef3dc2eedd594dab3a84b15d183c36" title="A preg_explode() wrapper with some extra features." alt="" coords="306,151,482,193"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="215,169,291,169,291,175,215,175"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="263,217,525,260"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="204,191,286,211,285,216,203,197"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a709d772c597d8bc18d170300a8cabbb7" title=" " alt="" coords="588,5,763,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="507,57,573,44,574,49,508,62"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a586e3ce7bc155a85dae0bbe3149e4181" title="Be noisy if debugging is enabled." alt="" coords="573,72,778,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="519,84,557,86,557,91,519,89"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="341,151,339,141,348,132,366,126,394,124,424,126,442,133,440,138,423,132,394,129,367,131,350,136,344,142,346,149"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a33027424113469f92dd6e70bcd90953f" title="Un&#45;escape delimiters in the given value." alt="" coords="588,151,763,193"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="482,169,572,169,572,175,482,175"/>
+</map>

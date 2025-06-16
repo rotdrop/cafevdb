@@ -32,6 +32,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service =
     [ "templateFolderPath", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#adf33bfd785d7a66f647d26ea66770ab2", null ],
     [ "translationHack", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a4785a5297f434973cc0bbef2a45c32c5", null ],
     [ "unsubscribe", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#adb5ee6484051ff49357847bc6b203409", null ],
-    [ "$listIdByFqdn", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a7d5d48fe6899b6abaf75909b7577fecc", null ],
-    [ "$selfLinkBySubscription", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a1953bcd23782987365bc559d0e491c31", null ]
+    [ "$listIdByFqdn", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ab06f865462a4e562794a25612e599c92", null ],
+    [ "$selfLinkBySubscription", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ac87a390e06f328efa0776e3ee8e0e051", null ]
 ];

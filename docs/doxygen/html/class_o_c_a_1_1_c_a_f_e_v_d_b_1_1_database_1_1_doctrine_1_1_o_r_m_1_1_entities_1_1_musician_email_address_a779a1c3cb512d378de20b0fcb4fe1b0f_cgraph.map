@@ -1,7 +1,7 @@
 <map id="__construct" name="__construct">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,96,56"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_email_address.html#abb1f89123095fec07a54823d664d49ae" title="Set the email address." alt="" coords="146,5,234,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,32,132,26,133,31,97,38"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_email_address.html#af8edf80cab80ad212b3ef897fe7e3cc9" title=" " alt="" coords="144,55,236,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="97,48,131,54,130,60,96,54"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,95,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_email_address.html#abb1f89123095fec07a54823d664d49ae" title="Set the email address." alt="" coords="145,5,232,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,33,129,27,130,32,95,38"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_email_address.html#af8edf80cab80ad212b3ef897fe7e3cc9" title=" " alt="" coords="143,56,234,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="95,50,128,56,127,61,95,55"/>
 </map>

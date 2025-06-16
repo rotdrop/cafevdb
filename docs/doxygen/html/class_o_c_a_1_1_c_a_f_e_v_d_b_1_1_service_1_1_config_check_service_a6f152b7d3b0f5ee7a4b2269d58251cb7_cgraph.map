@@ -1,0 +1,7 @@
+<map id="sharedFolderExists" name="sharedFolderExists">
+<area shape="rect" id="Node000001" title="We require that the share&#45;owner owns a directory shared with the orchestra group." alt="" coords="5,31,139,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#af645e42743654289e03a7f7aac7f7294" title="Check whether the shared object exists." alt="" coords="187,5,318,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,32,171,27,172,33,139,37"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a68d96928eccd8ec709df328b328c05b3" title="Return true if the share&#45;owner exists and belongs to the orchestra user group (and only to this group..." alt="" coords="188,56,316,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="139,51,173,56,172,61,139,56"/>
+</map>

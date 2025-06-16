@@ -15,10 +15,12 @@ var dir_e2c3e1d0aad77febd6e1cddd8a51891c =
     [ "Instruments.php", "_instruments_8php_source.html", null ],
     [ "InsuranceBrokers.php", "_insurance_brokers_8php_source.html", null ],
     [ "InsuranceRates.php", "_insurance_rates_8php_source.html", null ],
+    [ "Invoices.php", "_invoices_8php_source.html", null ],
     [ "IPageRenderer.php", "_i_page_renderer_8php_source.html", null ],
     [ "IRenderer.php", "_i_renderer_8php_source.html", null ],
     [ "Musicians.php", "_musicians_8php_source.html", null ],
     [ "PMETableViewBase.php", "_p_m_e_table_view_base_8php_source.html", null ],
+    [ "ProjectAssociates.php", "_project_associates_8php_source.html", null ],
     [ "ProjectInstrumentationNumbers.php", "_project_instrumentation_numbers_8php_source.html", null ],
     [ "ProjectParticipantFields.php", "_project_participant_fields_8php_source.html", null ],
     [ "ProjectParticipants.php", "_project_participants_8php_source.html", null ],
@@ -28,5 +30,6 @@ var dir_e2c3e1d0aad77febd6e1cddd8a51891c =
     [ "Renderer.php", "_renderer_8php_source.html", null ],
     [ "SepaBankAccounts.php", "_sepa_bank_accounts_8php_source.html", null ],
     [ "SepaBulkTransactions.php", "_sepa_bulk_transactions_8php_source.html", null ],
+    [ "TaxationStatutorySources.php", "_taxation_statutory_sources_8php_source.html", null ],
     [ "TaxExemptionNotices.php", "_tax_exemption_notices_8php_source.html", null ]
 ];

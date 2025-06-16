@@ -1,7 +1,11 @@
 <map id="MusicianCardBackend" name="MusicianCardBackend">
-<area shape="rect" id="Node000001" title="Generate VCards from the musicians database." alt="" coords="43,93,196,119"/>
-<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_i_card_backend.html" title="Bizarre single&#45;implementation interface ..." alt="" coords="5,5,111,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,41,113,91,109,94,72,44"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="135,5,229,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,43,130,94,126,91,163,40"/>
+<area shape="rect" id="Node000001" title="Generate VCards from the musicians database." alt="" coords="5,248,158,275"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_i_card_backend.html" title="Bizarre single&#45;implementation interface ..." alt="" coords="8,157,112,184"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="69,199,81,247,76,248,64,200"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_musicians_repository.html" title="Repository for musicians." alt="" coords="136,157,280,184"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,195,101,250,98,245,176,191"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html" title="Base class for all of our repositories." alt="" coords="149,81,267,108"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="211,123,211,157,206,157,206,123"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="149,5,267,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="211,47,211,81,206,81,206,47"/>
 </map>

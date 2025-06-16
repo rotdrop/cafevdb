@@ -1,0 +1,9 @@
+<map id="getProjectInstruments" name="getProjectInstruments">
+<area shape="rect" id="Node000001" title="Get projectInstruments." alt="" coords="5,104,155,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a84e9f3642ab6b2fd223989f118488128" title="Get family." alt="" coords="220,5,408,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,101,214,67,216,72,121,106"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a3b3ec75dc4a258baf0bf6e5d1fdc11ec" title="Get instrument." alt="" coords="208,88,420,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="155,115,192,115,192,120,155,120"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a75d345793cef1ab09b64fb72df18d8d1" title="Get the untranslated family name." alt="" coords="203,171,425,245"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="118,129,203,162,201,167,116,134"/>
+</map>

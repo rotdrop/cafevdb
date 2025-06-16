@@ -1,0 +1,14 @@
+<map id="participationStatusFilter" name="participationStatusFilter">
+<area shape="rect" id="Node000001" title=" " alt="" coords="496,56,655,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1909f4b7f8129c7790cb75de2ffbe1e4" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="99,5,166,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="533,51,493,34,448,21,369,12,291,10,166,17,166,12,291,4,370,6,449,16,494,29,535,46"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a48c6c4eaef21561d782425ccdb23730f" title="Get the current filter." alt="" coords="246,31,416,57"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="480,62,417,55,417,50,481,57"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a910aa3e7f9d48a7dafaa20c94c17e566" title=" " alt="" coords="240,81,423,108"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="481,82,423,88,423,83,480,76"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a29389bb5db716e59f8a94e5083f8b58e" title="Substitute the recipients by the announcements mailing list if possible." alt="" coords="214,132,448,159"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="531,92,449,123,406,134,405,129,448,117,529,87"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aa9fbb471eda80cea3b104b21bbdb3b66" title=" " alt="" coords="5,5,51,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,21,51,21,51,16,83,16"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="230,34,166,26,167,20,231,29"/>
+</map>

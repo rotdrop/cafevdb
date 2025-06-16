@@ -1,7 +1,9 @@
 <map id="getProject" name="getProject">
-<area shape="rect" id="Node000001" title="Get project." alt="" coords="308,64,389,89"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a50b40d1e3c4caa0ea5fe7dcca6e3e203" title="Set projectParticipant." alt="" coords="5,5,260,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="294,68,260,61,261,56,295,63"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#a8413454e6ddfb601e6585d9b45fc121b" title="Set projectParticipant." alt="" coords="35,85,231,154"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="295,90,232,103,231,97,294,85"/>
+<area shape="rect" id="Node000001" title="Get project." alt="" coords="555,67,635,93"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a8413454e6ddfb601e6585d9b45fc121b" title="Set the principal parent entity." alt="" coords="254,5,507,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="539,71,507,64,508,59,540,66"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#a8413454e6ddfb601e6585d9b45fc121b" title="Set projectParticipant." alt="" coords="283,88,478,163"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="540,94,479,107,478,102,539,89"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a858693df385e90259d79a6dc17cf9974" title="{}" alt="" coords="5,5,206,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="238,37,206,37,206,32,238,32"/>
 </map>

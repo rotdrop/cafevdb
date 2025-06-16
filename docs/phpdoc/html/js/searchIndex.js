@@ -441,6 +441,16 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-AddressBook-MusicianCardBackend.html#property_contactsService"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\AddressBook\\Registration",
+            "name": "Registration",
+            "summary": "Dependency\u0020injection\u0020for\u0020the\u0020contacts\u0020addressbook.",
+            "url": "classes/OCA-CAFEVDB-AddressBook-Registration.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\AddressBook\\Registration\u003A\u003Aregister\u0028\u0029",
+            "name": "register",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-AddressBook-Registration.html#method_register"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\AppInfo\\Application",
             "name": "Application",
             "summary": "\u007B\u0040inheritdoc\u007D",
@@ -1371,6 +1381,51 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Command-RecurringReceivables.html#property_logger"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames",
+            "name": "SanitizeFilenames",
+            "summary": "Authenticated\u0020sanitize\u002Dfilenames\u0020which\u0020is\u0020thus\u0020also\u0020able\u0020to\u0020scan\u0020the\u0020database\u002Dbacked\u0020mounts",
+            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003Aconfigure\u0028\u0029",
+            "name": "configure",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method_configure"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003Aexecute\u0028\u0029",
+            "name": "execute",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#method_execute"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003A\u0024appName",
+            "name": "appName",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_appName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003A\u0024l",
+            "name": "l",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_l"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003A\u0024userManager",
+            "name": "userManager",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_userManager"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003A\u0024userSession",
+            "name": "userSession",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_userSession"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Command\\SanitizeFilenames\u003A\u003A\u0024appContainer",
+            "name": "appContainer",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Command-SanitizeFilenames.html#property_appContainer"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Command\\SentNotifications",
             "name": "SentNotifications",
             "summary": "Database\u0020\u0028and\u0020non\u002Ddatabase\u0029\u0020migration\u0020management.",
@@ -1735,26 +1790,6 @@ Search.appendIndex(
             "name": "appContainer",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Common-AbstractUndoable.html#property_appContainer"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\BankAccountValidator",
-            "name": "BankAccountValidator",
-            "summary": "A\u0020small\u0020wrapper\u0020class\u0020which\u0020makes\u0020sure\u0020BAV\u0020uses\u0020the\u0020correct\u0020configuration.",
-            "url": "classes/OCA-CAFEVDB-Common-BankAccountValidator.html"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\BankAccountValidator\u003A\u003A__construct\u0028\u0029",
-            "name": "__construct",
-            "summary": "Construct\u0020\\malkusch\\bav\\BAV\u0020from\u0020a\u0020PDO\u0020configuration.",
-            "url": "classes/OCA-CAFEVDB-Common-BankAccountValidator.html#method___construct"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\BankAccountValidator\u003A\u003AgenerateConfiguration\u0028\u0029",
-            "name": "generateConfiguration",
-            "summary": "Generate\u0020a\u0020suitable\u0020default\u0020configuration\u0020for\u0020\\malkusch\\bav\\BAV.",
-            "url": "classes/OCA-CAFEVDB-Common-BankAccountValidator.html#method_generateConfiguration"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Common\\BankAccountValidator\u003A\u003A\u0024cloudConfig",
-            "name": "cloudConfig",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Common-BankAccountValidator.html#property_cloudConfig"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Common\\DatabaseProgressStatus",
             "name": "DatabaseProgressStatus",
@@ -3486,20 +3521,25 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-CryptoController.html#property_financeService"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CryptoController\u003A\u003A\u0024logger",
-            "name": "logger",
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CryptoController\u003A\u003A\u0024entityManager",
+            "name": "entityManager",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-CryptoController.html#property_logger"
+            "url": "classes/OCA-CAFEVDB-Controller-CryptoController.html#property_entityManager"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\CryptoController\u003A\u003A\u0024appContainer",
             "name": "appContainer",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-CryptoController.html#property_appContainer"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CryptoController\u003A\u003A\u0024entityManager",
-            "name": "entityManager",
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CryptoController\u003A\u003A\u0024l",
+            "name": "l",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-CryptoController.html#property_entityManager"
+            "url": "classes/OCA-CAFEVDB-Controller-CryptoController.html#property_l"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\CryptoController\u003A\u003A\u0024logger",
+            "name": "logger",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-CryptoController.html#property_logger"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\CspViolationController",
             "name": "CspViolationController",
@@ -3600,6 +3640,11 @@ Search.appendIndex(
             "name": "FINANCE_TOPIC_DONATION_RECEIPTS",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-DocumentStorageUploadController.html#constant_FINANCE_TOPIC_DONATION_RECEIPTS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\DocumentStorageUploadController\u003A\u003AFINANCE_TOPIC_INVOICES",
+            "name": "FINANCE_TOPIC_INVOICES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-DocumentStorageUploadController.html#constant_FINANCE_TOPIC_INVOICES"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\DocumentStorageUploadController\u003A\u003ATOPICS",
             "name": "TOPICS",
@@ -3856,6 +3901,21 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-EncryptionController.html#property_l"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumValidateInstrumentsContext",
+            "name": "EnumValidateInstrumentsContext",
+            "summary": "Playing\u0020around\u0020with\u0020PHP\u0020enums,\u0020this\u0020is\u0020the\u0020first\u0020use\u0020in\u0020this\u0020project.",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumValidateInstrumentsContext.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumValidateInstrumentsContext\u003A\u003AMUSICIAN",
+            "name": "MUSICIAN",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumValidateInstrumentsContext.html#enumcase_MUSICIAN"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\EnumValidateInstrumentsContext\u003A\u003APROJECT",
+            "name": "PROJECT",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-EnumValidateInstrumentsContext.html#enumcase_PROJECT"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\FileUploadRowTrait",
             "name": "FileUploadRowTrait",
             "summary": "Handle\u0020PME\u0020file\u002Duplaod\u0020row.\u0020The\u0020controller\u0020must\u0020make\u0020sure\u0020to\u0020define\u0020all\u0020ingredients.",
@@ -4051,55 +4111,60 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#constant_OPERATION_DATASET"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024userId",
-            "name": "userId",
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024financeService",
+            "name": "financeService",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_userId"
+            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_financeService"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024logger",
-            "name": "logger",
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024contactsManager",
+            "name": "contactsManager",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_logger"
+            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_contactsManager"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024entityManager",
-            "name": "entityManager",
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024imagesService",
+            "name": "imagesService",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_entityManager"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024configService",
-            "name": "configService",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_configService"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024rolesService",
-            "name": "rolesService",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_rolesService"
+            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_imagesService"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024insuranceService",
             "name": "insuranceService",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_insuranceService"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024financeService",
-            "name": "financeService",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_financeService"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024documentFiller",
             "name": "documentFiller",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_documentFiller"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024storage",
-            "name": "storage",
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024rolesService",
+            "name": "rolesService",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_storage"
+            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_rolesService"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024contactsManager",
-            "name": "contactsManager",
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024userStorage",
+            "name": "userStorage",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_contactsManager"
+            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_userStorage"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024userId",
+            "name": "userId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_userId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024configService",
+            "name": "configService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_configService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024entityManager",
+            "name": "entityManager",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_entityManager"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\MailMergeController\u003A\u003A\u0024logger",
+            "name": "logger",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Controller-MailMergeController.html#property_logger"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\MaintenanceApiController",
             "name": "MaintenanceApiController",
@@ -4916,10 +4981,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Controller-ProjectParticipantsController.html#method_addMusicians"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Controller\\ProjectParticipantsController\u003A\u003AchangeInstruments\u0028\u0029",
-            "name": "changeInstruments",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Controller-ProjectParticipantsController.html#method_changeInstruments"
+            "fqsen": "\\OCA\\CAFEVDB\\Controller\\ProjectParticipantsController\u003A\u003AvalidateInstrumentsSelection\u0028\u0029",
+            "name": "validateInstrumentsSelection",
+            "summary": "Validate\u0020the\u0020instrument\u0020selection\u0020for\u0020the\u0020current\u0020project\u0020participant\u0020or\u0020musician.",
+            "url": "classes/OCA-CAFEVDB-Controller-ProjectParticipantsController.html#method_validateInstrumentsSelection"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Controller\\ProjectParticipantsController\u003A\u003Afiles\u0028\u0029",
             "name": "files",
@@ -7161,10 +7226,30 @@ Search.appendIndex(
             "summary": "Abstract\u0020base\u0020class\u0020for\u0020providing\u0020some\u0020common\u0020services.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractEnumType.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractEnumType\u003A\u003AtoArray\u0028\u0029",
+            "name": "toArray",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractEnumType.html#method_toArray"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractEnumType\u003A\u003AgetL10NValues\u0028\u0029",
             "name": "getL10NValues",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractEnumType.html#method_getL10NValues"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractEnumType\u003A\u003AL10N_TAG",
+            "name": "L10N_TAG",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractEnumType.html#constant_L10N_TAG"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractEnumType\u003A\u003AL10N_SEP",
+            "name": "L10N_SEP",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractEnumType.html#constant_L10N_SEP"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\AbstractEnumType\u003A\u003A\u0024l10nCache",
+            "name": "l10nCache",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-AbstractEnumType.html#property_l10nCache"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumAccessPermission",
             "name": "EnumAccessPermission",
@@ -7526,6 +7611,81 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipantFieldMultiplicity.html#constant_GROUPSOFPEOPLE"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationContext",
+            "name": "EnumParticipationContext",
+            "summary": "Display\u0020context\u0020of\u0020ProjectParticipantFields.\u0020Some\u0020may\u0020only\u0020be\u0020relevant\u0020to\nreal\u0020participants,\u0020other\u0020fields\u0020may\u0020only\u0020be\u0020relevant\u0020for\u0020business\u0020contacts\n\/\u0020associated\u0020\u0028legal\u0029\u0020persons.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationContext\u003A\u003AtranslationHack\u0028\u0029",
+            "name": "translationHack",
+            "summary": "Just\u0020here\u0020in\u0020order\u0020to\u0020inject\u0020the\u0020enum\u0020values\u0020into\u0020the\u0020l10n\u0020framework.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#method_translationHack"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationContext\u003A\u003AASSOCIATES",
+            "name": "ASSOCIATES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#constant_ASSOCIATES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationContext\u003A\u003APARTICIPANTS",
+            "name": "PARTICIPANTS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#constant_PARTICIPANTS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationContext\u003A\u003AUNRESTRICTED",
+            "name": "UNRESTRICTED",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#constant_UNRESTRICTED"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationContext\u003A\u003AL10N_TAG",
+            "name": "L10N_TAG",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#constant_L10N_TAG"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationStatus",
+            "name": "EnumParticipationStatus",
+            "summary": "Participation\u0020status\u0020enum\u0020for\u0020musicians.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationStatus.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationStatus\u003A\u003AtranslationHack\u0028\u0029",
+            "name": "translationHack",
+            "summary": "Just\u0020here\u0020in\u0020order\u0020to\u0020inject\u0020the\u0020enum\u0020values\u0020into\u0020the\u0020l10n\u0020framework.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationStatus.html#method_translationHack"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationStatus\u003A\u003AASSOCIATED",
+            "name": "ASSOCIATED",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationStatus.html#constant_ASSOCIATED"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationStatus\u003A\u003ACONDUCTOR",
+            "name": "CONDUCTOR",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationStatus.html#constant_CONDUCTOR"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationStatus\u003A\u003APASSIVE",
+            "name": "PASSIVE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationStatus.html#constant_PASSIVE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationStatus\u003A\u003AREGULAR",
+            "name": "REGULAR",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationStatus.html#constant_REGULAR"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationStatus\u003A\u003ASOLOIST",
+            "name": "SOLOIST",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationStatus.html#constant_SOLOIST"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationStatus\u003A\u003ATEMPORARY",
+            "name": "TEMPORARY",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationStatus.html#constant_TEMPORARY"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumParticipationStatus\u003A\u003AL10N_TAG",
+            "name": "L10N_TAG",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationStatus.html#constant_L10N_TAG"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumProjectTemporalType",
             "name": "EnumProjectTemporalType",
             "summary": "Type\u0020of\u0020projects.",
@@ -7568,7 +7728,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumTaxType",
             "name": "EnumTaxType",
-            "summary": "Tax\u0020types.",
+            "summary": "Tax\u0020types.\u0020FIXME\u003A\u0020the\u0020difference\u0020between\u0020VAT\u0020and\u0020\u0022Sales\u0020Tax\u0022\u0020is\u0020not\u0020clean\nand\u0020IMHO\u0020in\u0020Germany\u0020there\u0020is\u0020no\u0020difference\u003B\u0020there\u0020is\u0020\u0022Sales\u0020Tax\u0022\u0020\u003D\u003D\n\u0022Umsatzsteuer\u0022\u0020and\u0020this\u0020is\u0020it.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumTaxType.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumTaxType\u003A\u003AtranslationHack\u0028\u0029",
@@ -7585,6 +7745,11 @@ Search.appendIndex(
             "name": "SALES",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumTaxType.html#constant_SALES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumTaxType\u003A\u003ATRADE",
+            "name": "TRADE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumTaxType.html#constant_TRADE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\DBAL\\Types\\EnumTaxType\u003A\u003AVAT",
             "name": "VAT",
@@ -7833,7 +7998,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment",
             "name": "CompositePayment",
-            "summary": "CompositePayments\u0020collect\u0020a\u0020couple\u0020of\u0020ProjectPayments\u0020of\u0020the\u0020same\nMusician.\u0020In\u0020GnuCash\u0020this\u0020would\u0020be\u0020a\u0020\u0022split\u0020transactions\u0022.\u0020The\u0020transaction\nparts\u0020are\u0020ProjectPayment\u0020entities.\u0020Composite\u002Dpayments\u0020may\u0020contain\u0020payments\nfor\u0020different\u0020projects.",
+            "summary": "CompositePayments\u0020collect\u0020a\u0020couple\u0020of\u0020ProjectPayments\u0020of\u0020the\u0020same\nMusician.\u0020In\u0020GnuCash\u0020this\u0020would\u0020be\u0020a\u0020\u0022split\u0020transactions\u0022.\u0020The\u0020transaction\nparts\u0020are\u0020ProjectPayment\u0020entities.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment\u003A\u003A__construct\u0028\u0029",
@@ -9218,7 +9383,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\GeoCountry",
             "name": "GeoCountry",
-            "summary": "GeoCountries",
+            "summary": "GeoCountries.\u0020This\u0020table\u0020records\u0020L10N\u0020country\u0020names\u0020for\u0020an\u0020ISO\u0020country\ncode,\u0020given\u0020the\u0020translation\u0020target\u0020which\u0020also\u0020is\u0020a\u00202\u0020character\u0020language\ncode,\u0020so\u0020the\u0020translation\u0020in\u0020l10nName\u0020should\u0020in\u0020principle\u0020correspond\u0020to\u0020the\nlocate\u0020TARGET_ISO,\u0020\u0028e.g.\u0020en_UK\u0029.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-GeoCountry.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\GeoCountry\u003A\u003A__construct\u0028\u0029",
@@ -10586,6 +10751,11 @@ Search.appendIndex(
             "summary": "Get\u0020projectInstrumentationNumbers.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Instrument.html#method_getProjectInstrumentationNumbers"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument\u003A\u003AisNotAnInstrument\u0028\u0029",
+            "name": "isNotAnInstrument",
+            "summary": "Check\u0020whether\u0020this\u0020is\u0020not\u0020a\u0020real\u0020instrument,\u0020but\u0020belongs\u0020to\nProjectInstrument\u003A\u003ANOT_AN_INSTRUMENT_FAMILY.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Instrument.html#method_isNotAnInstrument"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument\u003A\u003Ausage\u0028\u0029",
             "name": "usage",
             "summary": "Get\u0020the\u0020usage\u0020count,\u0020i.e.\u0020the\u0020number\u0020of\u0020entity\u0020instances\u0020which\u0020\u0020use\u0020this\u0020instrument.",
@@ -11068,7 +11238,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice",
             "name": "Invoice",
-            "summary": "Record\u0020notices\u0020of\u0020tax\u0020exemption\u0020from\u0020the\u0020corporate\u0020income\u0020tax\u0020\u0028or\u0020other\ntaxes\u0029.",
+            "summary": "Invoices\u0020collects\u0020a\u0020couple\u0020of\u0020InvoiceItems\u0020of\u0020the\u0020same\u0020Musician.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A__construct\u0028\u0029",
@@ -11076,15 +11246,40 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method___construct"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetId\u0028\u0029",
-            "name": "setId",
-            "summary": "Set\u0020id.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setId"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetId\u0028\u0029",
             "name": "getId",
             "summary": "Get\u0020id.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetInvoiceItems\u0028\u0029",
+            "name": "setInvoiceItems",
+            "summary": "Set\u0020invoiceItems.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setInvoiceItems"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetInvoiceItems\u0028\u0029",
+            "name": "getInvoiceItems",
+            "summary": "Get\u0020invoiceItems.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getInvoiceItems"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetAmount\u0028\u0029",
+            "name": "setAmount",
+            "summary": "Set\u0020amount.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setAmount"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetAmount\u0028\u0029",
+            "name": "getAmount",
+            "summary": "Get\u0020amount.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getAmount"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsumInvoiceItemsAmount\u0028\u0029",
+            "name": "sumInvoiceItemsAmount",
+            "summary": "Return\u0020the\u0020sum\u0020of\u0020the\u0020amounts\u0020of\u0020the\u0020individual\u0020payments,\u0020which\nshould\u0020sum\u0020up\u0020to\u0020\u0024this\u002D\u003Eamount,\u0020of\u0020course.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_sumInvoiceItemsAmount"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AisConsistent\u0028\u0029",
+            "name": "isConsistent",
+            "summary": "Check\u0020whether\u0020the\u0020data\u0020is\u0020internally\u0020consistent,\u0020in\u0020particular\u0020if\u0020the\ninvoice\u0020items\u0020sum\u0020up\u0020to\u0020the\u0020total\u0020sum.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_isConsistent"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetDebitor\u0028\u0029",
             "name": "setDebitor",
@@ -11106,6 +11301,36 @@ Search.appendIndex(
             "summary": "Get\u0020originator.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getOriginator"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetProject\u0028\u0029",
+            "name": "setProject",
+            "summary": "Set\u0020project.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setProject"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetProject\u0028\u0029",
+            "name": "getProject",
+            "summary": "Get\u0020project.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getProject"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetProjectParticipant\u0028\u0029",
+            "name": "setProjectParticipant",
+            "summary": "Set\u0020projectParticipant.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setProjectParticipant"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetProjectParticipant\u0028\u0029",
+            "name": "getProjectParticipant",
+            "summary": "Get\u0020projectParticipant.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getProjectParticipant"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetInvoiceDate\u0028\u0029",
+            "name": "setInvoiceDate",
+            "summary": "Set\u0020invoiceDate.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setInvoiceDate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetInvoiceDate\u0028\u0029",
+            "name": "getInvoiceDate",
+            "summary": "Get\u0020invoiceDate.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getInvoiceDate"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetDueDate\u0028\u0029",
             "name": "setDueDate",
             "summary": "Set\u0020dueDate.",
@@ -11116,25 +11341,95 @@ Search.appendIndex(
             "summary": "Get\u0020dueDate.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getDueDate"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetAmount\u0028\u0029",
-            "name": "setAmount",
-            "summary": "Set\u0020amount.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setAmount"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetBalancedDate\u0028\u0029",
+            "name": "setBalancedDate",
+            "summary": "Set\u0020balancedDate.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setBalancedDate"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetAmount\u0028\u0029",
-            "name": "getAmount",
-            "summary": "Get\u0020amount.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getAmount"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetBalancedDate\u0028\u0029",
+            "name": "getBalancedDate",
+            "summary": "Get\u0020balancedDate.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getBalancedDate"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetPurpose\u0028\u0029",
-            "name": "getPurpose",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getPurpose"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetSubject\u0028\u0029",
+            "name": "setSubject",
+            "summary": "Set\u0020subject.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setSubject"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetPurpose\u0028\u0029",
-            "name": "setPurpose",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setPurpose"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetSubject\u0028\u0029",
+            "name": "getSubject",
+            "summary": "Get\u0020subject.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getSubject"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetInvoiceNumber\u0028\u0029",
+            "name": "setInvoiceNumber",
+            "summary": "Set\u0020invoiceNumber.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setInvoiceNumber"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetInvoiceNumber\u0028\u0029",
+            "name": "getInvoiceNumber",
+            "summary": "Get\u0020invoiceNumber.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getInvoiceNumber"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetDebitNote\u0028\u0029",
+            "name": "setDebitNote",
+            "summary": "Set\u0020debitNote.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setDebitNote"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetDebitNote\u0028\u0029",
+            "name": "getDebitNote",
+            "summary": "Get\u0020debitNote.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getDebitNote"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetSepaBankAccount\u0028\u0029",
+            "name": "setSepaBankAccount",
+            "summary": "Set\u0020sepaBankAccount.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setSepaBankAccount"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetSepaBankAccount\u0028\u0029",
+            "name": "getSepaBankAccount",
+            "summary": "Get\u0020sepaBankAccount.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getSepaBankAccount"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetSepaDebitMandate\u0028\u0029",
+            "name": "setSepaDebitMandate",
+            "summary": "Set\u0020sepaDebitMandate.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setSepaDebitMandate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetSepaDebitMandate\u0028\u0029",
+            "name": "getSepaDebitMandate",
+            "summary": "Get\u0020sepaDebitMandate.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getSepaDebitMandate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetSepaTransaction\u0028\u0029",
+            "name": "setSepaTransaction",
+            "summary": "Set\u0020sepaTransaction.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setSepaTransaction"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetSepaTransaction\u0028\u0029",
+            "name": "getSepaTransaction",
+            "summary": "Get\u0020sepaTransaction.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getSepaTransaction"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetNotificationEmail\u0028\u0029",
+            "name": "setNotificationEmail",
+            "summary": "Set\u0020notificationEmail.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setNotificationEmail"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetNotificationEmail\u0028\u0029",
+            "name": "getNotificationEmail",
+            "summary": "Get\u0020notificationEmail.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getNotificationEmail"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetBalanceDocumentsFolder\u0028\u0029",
+            "name": "setBalanceDocumentsFolder",
+            "summary": "Set\u0020balanceDocumentsFolder.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setBalanceDocumentsFolder"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetBalanceDocumentsFolder\u0028\u0029",
+            "name": "getBalanceDocumentsFolder",
+            "summary": "Get\u0020balanceDocumentsFolder.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getBalanceDocumentsFolder"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetWrittenInvoice\u0028\u0029",
             "name": "getWrittenInvoice",
@@ -11146,175 +11441,330 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setWrittenInvoice"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetNotificationMessage\u0028\u0029",
-            "name": "getNotificationMessage",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgetTaxationStatutorySource\u0028\u0029",
+            "name": "getTaxationStatutorySource",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getNotificationMessage"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_getTaxationStatutorySource"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetNotificationMessage\u0028\u0029",
-            "name": "setNotificationMessage",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AsetTaxationStatutorySource\u0028\u0029",
+            "name": "setTaxationStatutorySource",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setNotificationMessage"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_setTaxationStatutorySource"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AupdateSubject\u0028\u0029",
+            "name": "updateSubject",
+            "summary": "Update\u0020the\u0020stored\u0020payment\u002Dsubject\u0020by\u0020calling\nInvoice\u003A\u003AgenerateSubject\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_updateSubject"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AjsonSerialize\u0028\u0029",
             "name": "jsonSerialize",
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_jsonSerialize"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AgenerateInvoiceNumber\u0028\u0029",
+            "name": "generateInvoiceNumber",
+            "summary": "Generate\u0020a\u0020suitable\u0020invoice\u0020number\u0020from\u0020the\u0020project\u0020and\u0020possibly\u0020the\nsupporting\u0020documents\u0020folder\u0020sequence\u0020number.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_generateInvoiceNumber"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003Ausage\u0028\u0029",
+            "name": "usage",
+            "summary": "Return\u0020a\u0020\u0022usage\u0022\u0020count\u0020to\u0020tag\u0020the\u0020invoice\u0020undeleteable\u0020after\u0020it\u0020has\u0020been\nissued.\u0020It\u0020can\u0020be\u0020revoked\u0020\u0028soft\u0020deleted\u0029\u0020then\u0020but\u0020it\u0020will\u0020stay\u0020in\u0020the\ndatabase.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_usage"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003ApreFlush\u0028\u0029",
+            "name": "preFlush",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_preFlush"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003ApreUpate\u0028\u0029",
+            "name": "preUpate",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method_preUpate"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A__toString\u0028\u0029",
             "name": "__toString",
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method___toString"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AINVOICE_NUMBER_SEPARATOR",
+            "name": "INVOICE_NUMBER_SEPARATOR",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#constant_INVOICE_NUMBER_SEPARATOR"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003AINVOICE_NUMBER_FIELDS",
+            "name": "INVOICE_NUMBER_FIELDS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#constant_INVOICE_NUMBER_FIELDS"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024id",
             "name": "id",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_id"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024debitor",
-            "name": "debitor",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024invoiceNumber",
+            "name": "invoiceNumber",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_debitor"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_invoiceNumber"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024originator",
             "name": "originator",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_originator"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024dueDate",
-            "name": "dueDate",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024debitor",
+            "name": "debitor",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_dueDate"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_debitor"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024amount",
             "name": "amount",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_amount"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024purpose",
-            "name": "purpose",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024invoiceDate",
+            "name": "invoiceDate",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_purpose"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_invoiceDate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024dueDate",
+            "name": "dueDate",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_dueDate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024balancedDate",
+            "name": "balancedDate",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_balancedDate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024subject",
+            "name": "subject",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_subject"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024invoiceItems",
+            "name": "invoiceItems",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_invoiceItems"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024sepaTransaction",
+            "name": "sepaTransaction",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_sepaTransaction"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024sepaBankAccount",
+            "name": "sepaBankAccount",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_sepaBankAccount"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024sepaDebitMandate",
+            "name": "sepaDebitMandate",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_sepaDebitMandate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024project",
+            "name": "project",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_project"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024projectParticipant",
+            "name": "projectParticipant",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_projectParticipant"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024balanceDocumentsFolder",
+            "name": "balanceDocumentsFolder",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_balanceDocumentsFolder"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024writtenInvoice",
             "name": "writtenInvoice",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_writtenInvoice"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024notificationMessage",
-            "name": "notificationMessage",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024taxationStatutorySource",
+            "name": "taxationStatutorySource",
+            "summary": "The\u0020legal\u0020reason\u0020for\u0020the\u0020taxation\u0020\u0028sales\u0020tax\u0029",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_taxationStatutorySource"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A\u0024notificationEmail",
+            "name": "notificationEmail",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_notificationMessage"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#property_notificationEmail"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson",
-            "name": "LegalPerson",
-            "summary": "A\u0020\u0022LegalPerson\u0022\u0020is\u0020either\u0020a\u0020musician\u0020from\u0020our\u0020database\u0020or\u0020an\u0020address\u002Dbook\nentry.\u0020This\u0020entity\u0020is\u0020a\u0020thin\u0020join\u002Dtable\u0020like\u0020entity\u0020which\u0020joins\u0020persons\neither\u0020to\u0020musicians\u0020or\u0020to\u0020addressbook\u0020entries.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem",
+            "name": "InvoiceItem",
+            "summary": "InvoiceItems\u0020\u002D\u0020very\u0020similar\u0020to\u0020ProjectPayment.\u0020In\u0020the\u0020case\u0020of\u0020a\u0020successful\ndebit\u0020mandate\u0020there\u0020could\/should\u0020be\u0020a\u00201\u002D1\u0020correspondence.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003A__construct\u0028\u0029",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
             "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method___construct"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method___construct"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AsetId\u0028\u0029",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AsetId\u0028\u0029",
             "name": "setId",
             "summary": "Set\u0020id.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_setId"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_setId"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AgetId\u0028\u0029",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AgetId\u0028\u0029",
             "name": "getId",
             "summary": "Get\u0020id.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_getId"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_getId"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AsetMusician\u0028\u0029",
-            "name": "setMusician",
-            "summary": "Set\u0020musician.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_setMusician"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AsetInvoice\u0028\u0029",
+            "name": "setInvoice",
+            "summary": "Set\u0020invoice.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_setInvoice"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AgetMusician\u0028\u0029",
-            "name": "getMusician",
-            "summary": "Get\u0020musician.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_getMusician"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AgetInvoice\u0028\u0029",
+            "name": "getInvoice",
+            "summary": "Get\u0020invoice.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_getInvoice"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AsetContactUuid\u0028\u0029",
-            "name": "setContactUuid",
-            "summary": "Set\u0020the\u0020uid\u0020of\u0020the\u0020associated\u0020addressbook\u0020entry.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_setContactUuid"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AsetProjectParticipant\u0028\u0029",
+            "name": "setProjectParticipant",
+            "summary": "Set\u0020projectParticipant.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_setProjectParticipant"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AgetContactUuid\u0028\u0029",
-            "name": "getContactUuid",
-            "summary": "Get\u0020contact.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_getContactUuid"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AgetProjectParticipant\u0028\u0029",
+            "name": "getProjectParticipant",
+            "summary": "Get\u0020projectParticipant.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_getProjectParticipant"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AsetContact\u0028\u0029",
-            "name": "setContact",
-            "summary": "Set\u0020the\u0020uid\u0020of\u0020the\u0020associated\u0020addressbook\u0020entry.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_setContact"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AsetProject\u0028\u0029",
+            "name": "setProject",
+            "summary": "Set\u0020project.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_setProject"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AgetContact\u0028\u0029",
-            "name": "getContact",
-            "summary": "Get\u0020contact.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_getContact"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AgetProject\u0028\u0029",
+            "name": "getProject",
+            "summary": "Get\u0020project.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_getProject"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AsetInvoices\u0028\u0029",
-            "name": "setInvoices",
-            "summary": "Set\u0020the\u0020associated\u0020invoices\u0020collection.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_setInvoices"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AsetDebitor\u0028\u0029",
+            "name": "setDebitor",
+            "summary": "Set\u0020debitor.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_setDebitor"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AgetInvoices\u0028\u0029",
-            "name": "getInvoices",
-            "summary": "Get\u0020invoices.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_getInvoices"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AgetDebitor\u0028\u0029",
+            "name": "getDebitor",
+            "summary": "Get\u0020debitor.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_getDebitor"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AsetInvoicesOriginated\u0028\u0029",
-            "name": "setInvoicesOriginated",
-            "summary": "Set\u0020the\u0020associated\u0020originatedInvoices\u0020collection.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_setInvoicesOriginated"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AsetAmount\u0028\u0029",
+            "name": "setAmount",
+            "summary": "Set\u0020amount.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_setAmount"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AgetInvoicesOriginated\u0028\u0029",
-            "name": "getInvoicesOriginated",
-            "summary": "Get\u0020originatedInvoices.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_getInvoicesOriginated"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AgetAmount\u0028\u0029",
+            "name": "getAmount",
+            "summary": "Get\u0020amount.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_getAmount"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003AjsonSerialize\u0028\u0029",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AsetSubject\u0028\u0029",
+            "name": "setSubject",
+            "summary": "Set\u0020subject.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_setSubject"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AgetSubject\u0028\u0029",
+            "name": "getSubject",
+            "summary": "Get\u0020subject.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_getSubject"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AsetIsDonation\u0028\u0029",
+            "name": "setIsDonation",
+            "summary": "Set\u0020isDonation.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_setIsDonation"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AgetIsDonation\u0028\u0029",
+            "name": "getIsDonation",
+            "summary": "Get\u0020isDonation.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_getIsDonation"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AsetReceivable\u0028\u0029",
+            "name": "setReceivable",
+            "summary": "Set\u0020receivable.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_setReceivable"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AgetReceivable\u0028\u0029",
+            "name": "getReceivable",
+            "summary": "Get\u0020receivable.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_getReceivable"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AsetReceivableOption\u0028\u0029",
+            "name": "setReceivableOption",
+            "summary": "Set\u0020receivableOption.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_setReceivableOption"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AgetReceivableOption\u0028\u0029",
+            "name": "getReceivableOption",
+            "summary": "Get\u0020receivableOption.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_getReceivableOption"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AsetBalanceDocumentsFolder\u0028\u0029",
+            "name": "setBalanceDocumentsFolder",
+            "summary": "Set\u0020balanceDocumentsFolder.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_setBalanceDocumentsFolder"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AgetBalanceDocumentsFolder\u0028\u0029",
+            "name": "getBalanceDocumentsFolder",
+            "summary": "Get\u0020balanceDocumentsFolder.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_getBalanceDocumentsFolder"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003AjsonSerialize\u0028\u0029",
             "name": "jsonSerialize",
             "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method_jsonSerialize"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#method_jsonSerialize"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003A__toString\u0028\u0029",
-            "name": "__toString",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#method___toString"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003A\u0024id",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003A\u0024id",
             "name": "id",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#property_id"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#property_id"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003A\u0024musician",
-            "name": "musician",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003A\u0024amount",
+            "name": "amount",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#property_musician"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#property_amount"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003A\u0024contactUuid",
-            "name": "contactUuid",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003A\u0024subject",
+            "name": "subject",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#property_contactUuid"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#property_subject"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003A\u0024invoices",
-            "name": "invoices",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003A\u0024receivable",
+            "name": "receivable",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#property_invoices"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#property_receivable"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003A\u0024originatedInvoices",
-            "name": "originatedInvoices",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003A\u0024receivableOption",
+            "name": "receivableOption",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#property_originatedInvoices"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#property_receivableOption"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LegalPerson\u003A\u003A\u0024contact",
-            "name": "contact",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003A\u0024invoice",
+            "name": "invoice",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-LegalPerson.html#property_contact"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#property_invoice"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003A\u0024project",
+            "name": "project",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#property_project"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003A\u0024debitor",
+            "name": "debitor",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#property_debitor"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003A\u0024projectParticipant",
+            "name": "projectParticipant",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#property_projectParticipant"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InvoiceItem\u003A\u003A\u0024balanceDocumentsFolder",
+            "name": "balanceDocumentsFolder",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InvoiceItem.html#property_balanceDocumentsFolder"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\LogEntry",
             "name": "LogEntry",
@@ -11531,6 +11981,16 @@ Search.appendIndex(
             "summary": "Get\u0020addressSupplement.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getAddressSupplement"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetPoBox\u0028\u0029",
+            "name": "setPoBox",
+            "summary": "Set\u0020poBox.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setPoBox"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetPoBox\u0028\u0029",
+            "name": "getPoBox",
+            "summary": "Get\u0020poBox.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getPoBox"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetPostalCode\u0028\u0029",
             "name": "setPostalCode",
             "summary": "Set\u0020postalCode.",
@@ -11631,15 +12091,15 @@ Search.appendIndex(
             "summary": "Remove\u0020the\u0020given\u0020email\u0020address.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_removeEmailAddress"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetMemberStatus\u0028\u0029",
-            "name": "setMemberStatus",
-            "summary": "Set\u0020memberStatus.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setMemberStatus"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetDefaultParticipationStatus\u0028\u0029",
+            "name": "setDefaultParticipationStatus",
+            "summary": "Set\u0020participationStatus.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setDefaultParticipationStatus"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetMemberStatus\u0028\u0029",
-            "name": "getMemberStatus",
-            "summary": "Get\u0020memberStatus.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getMemberStatus"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetDefaultParticipationStatus\u0028\u0029",
+            "name": "getDefaultParticipationStatus",
+            "summary": "Get\u0020participationStatus.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getDefaultParticipationStatus"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetGender\u0028\u0029",
             "name": "setGender",
@@ -11696,6 +12156,21 @@ Search.appendIndex(
             "summary": "Get\u0020instruments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getInstruments"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetNonInstruments\u0028\u0029",
+            "name": "getNonInstruments",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getNonInstruments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetRealInstruments\u0028\u0029",
+            "name": "getRealInstruments",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getRealInstruments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AaddInstrument\u0028\u0029",
+            "name": "addInstrument",
+            "summary": "Adds\u0020the\u0020given\u0020instrument\u0020to\u0020the\u0020list\u0020of\u0020the\u0020musician\u0027s\u0020instruments\u0020if\u0020it\nis\u0020not\u0020yet\u0020there.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_addInstrument"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetProjectInstruments\u0028\u0029",
             "name": "setProjectInstruments",
             "summary": "Set\u0020projectInstruments.",
@@ -11723,7 +12198,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetProjectParticipantOf\u0028\u0029",
             "name": "getProjectParticipantOf",
-            "summary": "Return\u0020the\u0020project\u002Dparticipant\u0020entity\u0020for\u0020the\u0020given\u0020project\u0020or\u0020null",
+            "summary": "Return\u0020the\u0020project\u002Dparticipant\u0020entity\u0020for\u0020the\u0020given\u0020project\u0020or\u0020null\u0020if\n\u0024this\u0020is\u0020not\u0020a\u0020participant.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getProjectParticipantOf"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetProjectParticipantFieldsData\u0028\u0029",
@@ -11851,6 +12326,36 @@ Search.appendIndex(
             "summary": "Get\u0020userIdSlug.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getUserIdSlug"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetOrganization\u0028\u0029",
+            "name": "setOrganization",
+            "summary": "Set\u0020organization.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setOrganization"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetOrganization\u0028\u0029",
+            "name": "getOrganization",
+            "summary": "Get\u0020organization.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getOrganization"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetJobTitle\u0028\u0029",
+            "name": "setJobTitle",
+            "summary": "Set\u0020jobTitle.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setJobTitle"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetJobTitle\u0028\u0029",
+            "name": "getJobTitle",
+            "summary": "Get\u0020jobTitle.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getJobTitle"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetAddressBookUri\u0028\u0029",
+            "name": "setAddressBookUri",
+            "summary": "Set\u0020addressBookUri.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setAddressBookUri"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetAddressBookUri\u0028\u0029",
+            "name": "getAddressBookUri",
+            "summary": "Get\u0020addressBookUri.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getAddressBookUri"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetRowAccessToken\u0028\u0029",
             "name": "setRowAccessToken",
             "summary": "Set\u0020rowAccessToken.",
@@ -11861,15 +12366,25 @@ Search.appendIndex(
             "summary": "Get\u0020rowAccessToken.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getRowAccessToken"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetLegalPerson\u0028\u0029",
-            "name": "setLegalPerson",
-            "summary": "Set\u0020legalPerson.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setLegalPerson"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetInvoices\u0028\u0029",
+            "name": "setInvoices",
+            "summary": "Set\u0020invoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setInvoices"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetLegalPerson\u0028\u0029",
-            "name": "getLegalPerson",
-            "summary": "Get\u0020legalPerson.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getLegalPerson"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetInvoices\u0028\u0029",
+            "name": "getInvoices",
+            "summary": "Get\u0020invoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AsetOriginatedInvoices\u0028\u0029",
+            "name": "setOriginatedInvoices",
+            "summary": "Set\u0020originatedInvoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setOriginatedInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003AgetOriginatedInvoices\u0028\u0029",
+            "name": "getOriginatedInvoices",
+            "summary": "Get\u0020originatedInvoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getOriginatedInvoices"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003Ausage\u0028\u0029",
             "name": "usage",
@@ -11956,6 +12471,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_addressSupplement"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024poBox",
+            "name": "poBox",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_poBox"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024country",
             "name": "country",
             "summary": "",
@@ -11996,10 +12516,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_emailAddresses"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024memberStatus",
-            "name": "memberStatus",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024defaultParticipationStatus",
+            "name": "defaultParticipationStatus",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_memberStatus"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_defaultParticipationStatus"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024remarks",
             "name": "remarks",
@@ -12015,11 +12535,6 @@ Search.appendIndex(
             "name": "cloudAccountDisabled",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_cloudAccountDisabled"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024legalPerson",
-            "name": "legalPerson",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_legalPerson"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024instruments",
             "name": "instruments",
@@ -12071,10 +12586,35 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_encryptedFiles"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024invoices",
+            "name": "invoices",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_invoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024originatedInvoices",
+            "name": "originatedInvoices",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_originatedInvoices"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024updated",
             "name": "updated",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_updated"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024addressBookUri",
+            "name": "addressBookUri",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_addressBookUri"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024organization",
+            "name": "organization",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_organization"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician\u003A\u003A\u0024jobTitle",
+            "name": "jobTitle",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_jobTitle"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianEmailAddress",
             "name": "MusicianEmailAddress",
@@ -12156,6 +12696,11 @@ Search.appendIndex(
             "summary": "Get\u0020instrument.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianInstrument.html#method_getInstrument"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument\u003A\u003AgetName\u0028\u0029",
+            "name": "getName",
+            "summary": "Convenience\u0020forward\u0020to\u0020Instrument\u003A\u003AgetName\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianInstrument.html#method_getName"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument\u003A\u003AsetRanking\u0028\u0029",
             "name": "setRanking",
             "summary": "Set\u0020ranking.",
@@ -12175,6 +12720,11 @@ Search.appendIndex(
             "name": "getProjectInstruments",
             "summary": "Get\u0020projectInstruments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianInstrument.html#method_getProjectInstruments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument\u003A\u003AisNotAnInstrument\u0028\u0029",
+            "name": "isNotAnInstrument",
+            "summary": "Check\u0020whether\u0020this\u0020is\u0020not\u0020a\u0020real\u0020instrument,\u0020but\u0020belongs\u0020to\nProjectInstrument\u003A\u003ANOT_AN_INSTRUMENT_FAMILY.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianInstrument.html#method_isNotAnInstrument"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument\u003A\u003Ausage\u0028\u0029",
             "name": "usage",
@@ -12441,6 +12991,16 @@ Search.appendIndex(
             "summary": "Get\u0020compositePayments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getCompositePayments"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project\u003A\u003AsetInvoices\u0028\u0029",
+            "name": "setInvoices",
+            "summary": "Set\u0020invoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project\u003A\u003AgetInvoices\u0028\u0029",
+            "name": "getInvoices",
+            "summary": "Get\u0020invoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getInvoices"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project\u003A\u003AsetSentEmail\u0028\u0029",
             "name": "setSentEmail",
             "summary": "Set\u0020sentEmail.",
@@ -12580,6 +13140,11 @@ Search.appendIndex(
             "name": "payments",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_payments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project\u003A\u003A\u0024invoices",
+            "name": "invoices",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_invoices"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project\u003A\u003A\u0024participantInstruments",
             "name": "participantInstruments",
@@ -12853,7 +13418,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument\u003A\u003AsetProjectParticipant\u0028\u0029",
             "name": "setProjectParticipant",
-            "summary": "Set\u0020projectParticipant.",
+            "summary": "Set\u0020the\u0020principal\u0020parent\u0020entity.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrument.html#method_setProjectParticipant"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument\u003A\u003AgetProjectParticipant\u0028\u0029",
@@ -12871,15 +13436,50 @@ Search.appendIndex(
             "summary": "Get\u0020musicianInstrument.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrument.html#method_getMusicianInstrument"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument\u003A\u003AgetName\u0028\u0029",
+            "name": "getName",
+            "summary": "Convenience\u0020forward\u0020to\u0020MusicianInstrument\u003A\u003AgetName\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrument.html#method_getName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument\u003A\u003AisNotAnInstrument\u0028\u0029",
+            "name": "isNotAnInstrument",
+            "summary": "Check\u0020whether\u0020this\u0020is\u0020not\u0020a\u0020real\u0020instrument,\u0020but\u0020belongs\u0020to\nProjectInstrument\u003A\u003ANOT_AN_INSTRUMENT_FAMILY.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrument.html#method_isNotAnInstrument"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument\u003A\u003A__toString\u0028\u0029",
             "name": "__toString",
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrument.html#method___toString"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument\u003A\u003AtranslationHack\u0028\u0029",
+            "name": "translationHack",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrument.html#method_translationHack"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument\u003A\u003AUNVOICED",
             "name": "UNVOICED",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrument.html#constant_UNVOICED"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument\u003A\u003ANOT_AN_INSTRUMENT_FAMILY",
+            "name": "NOT_AN_INSTRUMENT_FAMILY",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrument.html#constant_NOT_AN_INSTRUMENT_FAMILY"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument\u003A\u003ANON_INSTRUMENT_ASSOCIATE",
+            "name": "NON_INSTRUMENT_ASSOCIATE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrument.html#constant_NON_INSTRUMENT_ASSOCIATE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument\u003A\u003ANON_INSTRUMENT_BUSINESS_PARTNER",
+            "name": "NON_INSTRUMENT_BUSINESS_PARTNER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrument.html#constant_NON_INSTRUMENT_BUSINESS_PARTNER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument\u003A\u003ANON_INSTRUMENTS",
+            "name": "NON_INSTRUMENTS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrument.html#constant_NON_INSTRUMENTS"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument\u003A\u003A\u0024project",
             "name": "project",
@@ -12971,15 +13571,15 @@ Search.appendIndex(
             "summary": "Get\u0020quantity.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html#method_getQuantity"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber\u003A\u003AsetInstruments\u0028\u0029",
-            "name": "setInstruments",
-            "summary": "Set\u0020instruments",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html#method_setInstruments"
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber\u003A\u003AsetProjectProjectInstruments\u0028\u0029",
+            "name": "setProjectProjectInstruments",
+            "summary": "Set\u0020projectInstruments",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html#method_setProjectProjectInstruments"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber\u003A\u003AgetInstruments\u0028\u0029",
-            "name": "getInstruments",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber\u003A\u003AgetProjectInstruments\u0028\u0029",
+            "name": "getProjectInstruments",
             "summary": "Get\u0020instruments.",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html#method_getInstruments"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html#method_getProjectInstruments"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber\u003A\u003A\u0024project",
             "name": "project",
@@ -13001,10 +13601,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html#property_quantity"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber\u003A\u003A\u0024instruments",
-            "name": "instruments",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber\u003A\u003A\u0024projectInstruments",
+            "name": "projectInstruments",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html#property_instruments"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html#property_projectInstruments"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant",
             "name": "ProjectParticipant",
@@ -13046,6 +13646,16 @@ Search.appendIndex(
             "summary": "Get\u0020registration.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getRegistration"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AsetParticipationStatus\u0028\u0029",
+            "name": "setParticipationStatus",
+            "summary": "Set\u0020participationStatus.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_setParticipationStatus"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AgetParticipationStatus\u0028\u0029",
+            "name": "getParticipationStatus",
+            "summary": "Get\u0020participationStatus.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getParticipationStatus"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AsetProjectInstruments\u0028\u0029",
             "name": "setProjectInstruments",
             "summary": "Set\u0020projectInstruments.",
@@ -13055,6 +13665,26 @@ Search.appendIndex(
             "name": "getProjectInstruments",
             "summary": "Get\u0020projectInstruments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getProjectInstruments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AgetNonInstruments\u0028\u0029",
+            "name": "getNonInstruments",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getNonInstruments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AgetRealInstruments\u0028\u0029",
+            "name": "getRealInstruments",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getRealInstruments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AaddProjectInstrument\u0028\u0029",
+            "name": "addProjectInstrument",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_addProjectInstrument"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AremoveProjectInstrument\u0028\u0029",
+            "name": "removeProjectInstrument",
+            "summary": "Remove\u0020the\u0020given\u0020instrument.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_removeProjectInstrument"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AsetParticipantFieldsData\u0028\u0029",
             "name": "setParticipantFieldsData",
@@ -13096,10 +13726,35 @@ Search.appendIndex(
             "summary": "Get\u0020the\u0020cooked\u0020display\u002Dname,\u0020taking\u0020nick\u002Dname\u0020into\u0020account\u0020and\njust\u0020using\u0020\u0024displayName\u0020if\u0020that\u0020set.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getPublicName"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AisOnlyAssociated\u0028\u0029",
+            "name": "isOnlyAssociated",
+            "summary": "Determine\u0020if\u0020\u0024this\u0020is\u0020only\u0020an\u0020associated\u0020member\u0020or\u0020business\u0020contact\nwithout\u0020double\u002Drole\u0020as\u0020musician.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_isOnlyAssociated"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AisOnlyMusician\u0028\u0029",
+            "name": "isOnlyMusician",
+            "summary": "Determine\u0020if\u0020\u0024this\u0020is\u0020only\u0020a\u0020musician\u0020without\u0020double\u002Drole\u0020as\u0020associated\nmember\u0020or\u0020business\u0020contact.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_isOnlyMusician"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AgetParticipationContext\u0028\u0029",
+            "name": "getParticipationContext",
+            "summary": "Return\u0020the\u0020participation\u0020context\u0020of\u0020the\u0020participant.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getParticipationContext"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003Ausage\u0028\u0029",
             "name": "usage",
-            "summary": "Return\u0020the\u0020number\u0020of\u0020\u0022serious\u0022\u0020items\u0020which\u0020\u0022use\u0022\u0020this\u0020entity.\u0020For\nproject\u0020participant\u0020this\u0020is\u0020\u0028for\u0020now\u0029\u0020the\u0020number\u0020of\u0020payments.\u0020In\nthe\u0020long\u0020run\u003A\u0020only\u0020open\u0020payments\/receivables\u0020should\u0020count.",
+            "summary": "Return\u0020the\u0020number\u0020of\u0020\u0022serious\u0022\u0020items\u0020which\u0020\u0022use\u0022\u0020this\u0020entity.\u0020For\nproject\u0020participant\u0020this\u0020includces\u0020the\u0020number\u0020of\u0020payments.\u0020In\nthe\u0020long\u0020run\u003A\u0020only\u0020open\u0020payments\/receivables\u0020should\u0020count.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_usage"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003Aunused\u0028\u0029",
+            "name": "unused",
+            "summary": "Return\u0020a\u0020boolean\u0020to\u0020indicate\u0020that\u0020this\u0020entity\u0020is\u0020no\u0020longer\u0020used.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_unused"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003AinUse\u0028\u0029",
+            "name": "inUse",
+            "summary": "Return\u0020a\u0020boolean\u0020to\u0020indicate\u0020that\u0020this\u0020field\u0020is\u0020used.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_inUse"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003A__toString\u0028\u0029",
             "name": "__toString",
@@ -13121,10 +13776,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_registration"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003A\u0024payments",
-            "name": "payments",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003A\u0024participationStatus",
+            "name": "participationStatus",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_payments"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_participationStatus"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003A\u0024participantFieldsData",
             "name": "participantFieldsData",
@@ -13240,6 +13895,16 @@ Search.appendIndex(
             "name": "getDisplayOrder",
             "summary": "Get\u0020displayOrder.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html#method_getDisplayOrder"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField\u003A\u003AsetParticipationContext\u0028\u0029",
+            "name": "setParticipationContext",
+            "summary": "Set\u0020participationContext.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html#method_setParticipationContext"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField\u003A\u003AgetParticipationContext\u0028\u0029",
+            "name": "getParticipationContext",
+            "summary": "Get\u0020participationContext.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html#method_getParticipationContext"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField\u003A\u003AsetName\u0028\u0029",
             "name": "setName",
@@ -13456,6 +14121,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html#property_displayOrder"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField\u003A\u003A\u0024participationContext",
+            "name": "participationContext",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html#property_participationContext"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField\u003A\u003A\u0024encrypted",
             "name": "encrypted",
             "summary": "",
@@ -13596,6 +14266,16 @@ Search.appendIndex(
             "summary": "Get\u0020payments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDataOption.html#method_getPayments"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption\u003A\u003AsetInvoiceItems\u0028\u0029",
+            "name": "setInvoiceItems",
+            "summary": "Set\u0020invoiceItems.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDataOption.html#method_setInvoiceItems"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption\u003A\u003AgetInvoiceItems\u0028\u0029",
+            "name": "getInvoiceItems",
+            "summary": "Get\u0020invoiceItems.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDataOption.html#method_getInvoiceItems"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption\u003A\u003AgetMusicianFieldData\u0028\u0029",
             "name": "getMusicianFieldData",
             "summary": "Filter\u0020field\u002Ddata\u0020by\u0020musician.",
@@ -13680,6 +14360,11 @@ Search.appendIndex(
             "name": "payments",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDataOption.html#property_payments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption\u003A\u003A\u0024invoiceItems",
+            "name": "invoiceItems",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDataOption.html#property_invoiceItems"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum",
             "name": "ProjectParticipantFieldDatum",
@@ -13791,6 +14476,16 @@ Search.appendIndex(
             "summary": "Get\u0020payments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#method_getPayments"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003AsetInvoiceItems\u0028\u0029",
+            "name": "setInvoiceItems",
+            "summary": "Set\u0020invoiceItems.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#method_setInvoiceItems"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003AgetInvoiceItems\u0028\u0029",
+            "name": "getInvoiceItems",
+            "summary": "Get\u0020invoiceItems.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#method_getInvoiceItems"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003AamountPayable\u0028\u0029",
             "name": "amountPayable",
             "summary": "The\u0020amount\u0020to\u0020pay\u0020for\u0020this\u0020service\u002Dfee\u0020option.",
@@ -13805,6 +14500,11 @@ Search.appendIndex(
             "name": "amountPaid",
             "summary": "The\u0020amount\u0020already\u0020paid\u0020as\u0020stored\u0020in\u0020the\u0020ProjectPayment\u0020entities.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#method_amountPaid"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003AamountInvoiced\u0028\u0029",
+            "name": "amountInvoiced",
+            "summary": "The\u0020amount\u0020already\u0020invoiced\u0020as\u0020stored\u0020in\u0020the\u0020InvoiceItem\u0020entities.\u0020Should\ntypically\u0020be\u00200\u0020\u0028no\u0020invoice\u0029\u0020or\u0020equal\u0020to\u0020the\u0020total\u0020amount.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#method_amountInvoiced"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003ApaymentReference\u0028\u0029",
             "name": "paymentReference",
@@ -13875,6 +14575,11 @@ Search.appendIndex(
             "name": "payments",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#property_payments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003A\u0024invoiceItems",
+            "name": "invoiceItems",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#property_invoiceItems"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003A\u0024supportingDocument",
             "name": "supportingDocument",
@@ -14316,6 +15021,16 @@ Search.appendIndex(
             "summary": "Returns\u0020donationReceipts.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getDonationReceipt"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SentEmail\u003A\u003AsetInvoice\u0028\u0029",
+            "name": "setInvoice",
+            "summary": "Sets\u0020\u0024invoice",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_setInvoice"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SentEmail\u003A\u003AgetInvoice\u0028\u0029",
+            "name": "getInvoice",
+            "summary": "Returns\u0020invoices.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method_getInvoice"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SentEmail\u003A\u003A\u0024messageId",
             "name": "messageId",
             "summary": "",
@@ -14395,6 +15110,11 @@ Search.appendIndex(
             "name": "donationReceipt",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_donationReceipt"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SentEmail\u003A\u003A\u0024invoice",
+            "name": "invoice",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_invoice"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount",
             "name": "SepaBankAccount",
@@ -15086,6 +15806,141 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TableFieldTranslation.html#method___construct"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource",
+            "name": "TaxationStatutorySource",
+            "summary": "A\u0020table\u0020for\u0020recording\u0020possible\u0020tax\u0020excemption\u0020reasons\u0020and\u0020their\u0020legal\njustification\u0020\u0028link\u0020to\u0020the\u0020corresponding\u0020law,\u0020given\u0020country\u0029.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AgetId\u0028\u0029",
+            "name": "getId",
+            "summary": "Get\u0020id.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AsetTaxType\u0028\u0029",
+            "name": "setTaxType",
+            "summary": "Set\u0020taxType\u0020as\u0020a\u0020fraction\u0020between\u00200\u0020and\u00201\u0020\u0028not\u0020the\u0020percentage\u0029",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setTaxType"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AgetTaxType\u0028\u0029",
+            "name": "getTaxType",
+            "summary": "Get\u0020taxType.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getTaxType"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AsetRate\u0028\u0029",
+            "name": "setRate",
+            "summary": "Set\u0020rate\u0020as\u0020a\u0020fraction\u0020between\u00200\u0020and\u00201\u0020\u0028not\u0020the\u0020percentage\u0029",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setRate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AgetRate\u0028\u0029",
+            "name": "getRate",
+            "summary": "Get\u0020rate.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getRate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AsetCountry\u0028\u0029",
+            "name": "setCountry",
+            "summary": "Set\u0020country\u0020of\u0020validity\u0020two\u002Dletter\u0020code.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setCountry"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AgetCountry\u0028\u0029",
+            "name": "getCountry",
+            "summary": "Get\u0020country.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getCountry"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AsetLaw\u0028\u0029",
+            "name": "setLaw",
+            "summary": "Set\u0020law\u0020as\u0020abbreviated\u0020text.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setLaw"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AgetLaw\u0028\u0029",
+            "name": "getLaw",
+            "summary": "Get\u0020law.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getLaw"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AsetHint\u0028\u0029",
+            "name": "setHint",
+            "summary": "Set\u0020hint.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setHint"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AgetHint\u0028\u0029",
+            "name": "getHint",
+            "summary": "Get\u0020hint.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getHint"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AgetTaxExemptionNotices\u0028\u0029",
+            "name": "getTaxExemptionNotices",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getTaxExemptionNotices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AsetTaxExemptionNotices\u0028\u0029",
+            "name": "setTaxExemptionNotices",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setTaxExemptionNotices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AgetInvoices\u0028\u0029",
+            "name": "getInvoices",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AsetInvoices\u0028\u0029",
+            "name": "setInvoices",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setInvoices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003Ausage\u0028\u0029",
+            "name": "usage",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_usage"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003AjsonSerialize\u0028\u0029",
+            "name": "jsonSerialize",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_jsonSerialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A\u0024id",
+            "name": "id",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_id"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A\u0024taxType",
+            "name": "taxType",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_taxType"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A\u0024rate",
+            "name": "rate",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_rate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A\u0024country",
+            "name": "country",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_country"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A\u0024law",
+            "name": "law",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_law"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A\u0024hint",
+            "name": "hint",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_hint"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A\u0024taxExemptionNotices",
+            "name": "taxExemptionNotices",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_taxExemptionNotices"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A\u0024invoices",
+            "name": "invoices",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_invoices"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxExemptionNotice",
             "name": "TaxExemptionNotice",
             "summary": "Record\u0020notices\u0020of\u0020tax\u0020exemption\u0020from\u0020the\u0020corporate\u0020income\u0020tax\u0020\u0028or\u0020other\ntaxes\u0029.",
@@ -15106,15 +15961,20 @@ Search.appendIndex(
             "summary": "Get\u0020id.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_getId"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxExemptionNotice\u003A\u003AgetTaxType\u0028\u0029",
-            "name": "getTaxType",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxExemptionNotice\u003A\u003AgetTaxTypes\u0028\u0029",
+            "name": "getTaxTypes",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_getTaxType"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_getTaxTypes"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxExemptionNotice\u003A\u003AsetTaxType\u0028\u0029",
-            "name": "setTaxType",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxExemptionNotice\u003A\u003AgetTaxationStatutorySources\u0028\u0029",
+            "name": "getTaxationStatutorySources",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_setTaxType"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_getTaxationStatutorySources"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxExemptionNotice\u003A\u003AsetTaxationStatutorySources\u0028\u0029",
+            "name": "setTaxationStatutorySources",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_setTaxationStatutorySources"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxExemptionNotice\u003A\u003AgetAssessmentPeriodStart\u0028\u0029",
             "name": "getAssessmentPeriodStart",
@@ -15221,10 +16081,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_id"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxExemptionNotice\u003A\u003A\u0024taxType",
-            "name": "taxType",
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxExemptionNotice\u003A\u003A\u0024taxationStatutorySources",
+            "name": "taxationStatutorySources",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_taxType"
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_taxationStatutorySources"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxExemptionNotice\u003A\u003A\u0024assessmentPeriodStart",
             "name": "assessmentPeriodStart",
@@ -15976,6 +16836,46 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Listeners-Sluggable-HashHandler.html#property_sluggable"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Listeners\\Sluggable\\InvoiceNumberHandler",
+            "name": "InvoiceNumberHandler",
+            "summary": "Gedmo\u0020slug\u002Dhandler\u0020which\u0020converts.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Listeners-Sluggable-InvoiceNumberHandler.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Listeners\\Sluggable\\InvoiceNumberHandler\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Listeners-Sluggable-InvoiceNumberHandler.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Listeners\\Sluggable\\InvoiceNumberHandler\u003A\u003AonChangeDecision\u0028\u0029",
+            "name": "onChangeDecision",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Listeners-Sluggable-InvoiceNumberHandler.html#method_onChangeDecision"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Listeners\\Sluggable\\InvoiceNumberHandler\u003A\u003ApostSlugBuild\u0028\u0029",
+            "name": "postSlugBuild",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Listeners-Sluggable-InvoiceNumberHandler.html#method_postSlugBuild"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Listeners\\Sluggable\\InvoiceNumberHandler\u003A\u003AonSlugCompletion\u0028\u0029",
+            "name": "onSlugCompletion",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Listeners-Sluggable-InvoiceNumberHandler.html#method_onSlugCompletion"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Listeners\\Sluggable\\InvoiceNumberHandler\u003A\u003AhandlesUrlization\u0028\u0029",
+            "name": "handlesUrlization",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Listeners-Sluggable-InvoiceNumberHandler.html#method_handlesUrlization"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Listeners\\Sluggable\\InvoiceNumberHandler\u003A\u003Avalidate\u0028\u0029",
+            "name": "validate",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Listeners-Sluggable-InvoiceNumberHandler.html#method_validate"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Listeners\\Sluggable\\InvoiceNumberHandler\u003A\u003A\u0024sluggable",
+            "name": "sluggable",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Listeners-Sluggable-InvoiceNumberHandler.html#property_sluggable"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Listeners\\Sluggable\\LoginNameSlugHandler",
             "name": "LoginNameSlugHandler",
             "summary": "Gedmo\u0020slug\u002Dhandler\u0020which\u0020converts.",
@@ -16406,6 +17306,31 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Mapping-ReservedWordQuoteStrategy.html#method_getColumnAlias"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment",
+            "name": "CompositePayment",
+            "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment\u003A\u003A__load\u0028\u0029",
+            "name": "__load",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method___load"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment\u003A\u003A__isInitialized\u0028\u0029",
+            "name": "__isInitialized",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method___isInitialized"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment\u003A\u003A__serialize\u0028\u0029",
+            "name": "__serialize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method___serialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment\u003A\u003ALAZY_OBJECT_PROPERTY_SCOPES",
+            "name": "LAZY_OBJECT_PROPERTY_SCOPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\DatabaseStorage",
             "name": "DatabaseStorage",
             "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
@@ -16430,6 +17355,31 @@ Search.appendIndex(
             "name": "LAZY_OBJECT_PROPERTY_SCOPES",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorage.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\DatabaseStorageFile",
+            "name": "DatabaseStorageFile",
+            "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\DatabaseStorageFile\u003A\u003A__load\u0028\u0029",
+            "name": "__load",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method___load"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\DatabaseStorageFile\u003A\u003A__isInitialized\u0028\u0029",
+            "name": "__isInitialized",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method___isInitialized"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\DatabaseStorageFile\u003A\u003A__serialize\u0028\u0029",
+            "name": "__serialize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method___serialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\DatabaseStorageFile\u003A\u003ALAZY_OBJECT_PROPERTY_SCOPES",
+            "name": "LAZY_OBJECT_PROPERTY_SCOPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\DatabaseStorageFolder",
             "name": "DatabaseStorageFolder",
@@ -16481,6 +17431,31 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFile.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument",
+            "name": "Instrument",
+            "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Instrument.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument\u003A\u003A__load\u0028\u0029",
+            "name": "__load",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Instrument.html#method___load"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument\u003A\u003A__isInitialized\u0028\u0029",
+            "name": "__isInitialized",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Instrument.html#method___isInitialized"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument\u003A\u003A__serialize\u0028\u0029",
+            "name": "__serialize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Instrument.html#method___serialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument\u003A\u003ALAZY_OBJECT_PROPERTY_SCOPES",
+            "name": "LAZY_OBJECT_PROPERTY_SCOPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Instrument.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InsuranceBroker",
             "name": "InsuranceBroker",
             "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
@@ -16531,6 +17506,31 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InsuranceRate.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice",
+            "name": "Invoice",
+            "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A__load\u0028\u0029",
+            "name": "__load",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method___load"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A__isInitialized\u0028\u0029",
+            "name": "__isInitialized",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method___isInitialized"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003A__serialize\u0028\u0029",
+            "name": "__serialize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#method___serialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Invoice\u003A\u003ALAZY_OBJECT_PROPERTY_SCOPES",
+            "name": "LAZY_OBJECT_PROPERTY_SCOPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician",
             "name": "Musician",
             "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
@@ -16556,6 +17556,31 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument",
+            "name": "MusicianInstrument",
+            "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianInstrument.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument\u003A\u003A__load\u0028\u0029",
+            "name": "__load",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianInstrument.html#method___load"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument\u003A\u003A__isInitialized\u0028\u0029",
+            "name": "__isInitialized",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianInstrument.html#method___isInitialized"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument\u003A\u003A__serialize\u0028\u0029",
+            "name": "__serialize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianInstrument.html#method___serialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument\u003A\u003ALAZY_OBJECT_PROPERTY_SCOPES",
+            "name": "LAZY_OBJECT_PROPERTY_SCOPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianInstrument.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project",
             "name": "Project",
             "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
@@ -16580,6 +17605,56 @@ Search.appendIndex(
             "name": "LAZY_OBJECT_PROPERTY_SCOPES",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber",
+            "name": "ProjectInstrumentationNumber",
+            "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber\u003A\u003A__load\u0028\u0029",
+            "name": "__load",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html#method___load"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber\u003A\u003A__isInitialized\u0028\u0029",
+            "name": "__isInitialized",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html#method___isInitialized"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber\u003A\u003A__serialize\u0028\u0029",
+            "name": "__serialize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html#method___serialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber\u003A\u003ALAZY_OBJECT_PROPERTY_SCOPES",
+            "name": "LAZY_OBJECT_PROPERTY_SCOPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectInstrumentationNumber.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant",
+            "name": "ProjectParticipant",
+            "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003A__load\u0028\u0029",
+            "name": "__load",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method___load"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003A__isInitialized\u0028\u0029",
+            "name": "__isInitialized",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method___isInitialized"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003A__serialize\u0028\u0029",
+            "name": "__serialize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method___serialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant\u003A\u003ALAZY_OBJECT_PROPERTY_SCOPES",
+            "name": "LAZY_OBJECT_PROPERTY_SCOPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField",
             "name": "ProjectParticipantField",
@@ -16630,6 +17705,131 @@ Search.appendIndex(
             "name": "LAZY_OBJECT_PROPERTY_SCOPES",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDataOption.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum",
+            "name": "ProjectParticipantFieldDatum",
+            "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003A__load\u0028\u0029",
+            "name": "__load",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#method___load"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003A__isInitialized\u0028\u0029",
+            "name": "__isInitialized",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#method___isInitialized"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003A__serialize\u0028\u0029",
+            "name": "__serialize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#method___serialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum\u003A\u003ALAZY_OBJECT_PROPERTY_SCOPES",
+            "name": "LAZY_OBJECT_PROPERTY_SCOPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SentEmail",
+            "name": "SentEmail",
+            "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SentEmail\u003A\u003A__load\u0028\u0029",
+            "name": "__load",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method___load"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SentEmail\u003A\u003A__isInitialized\u0028\u0029",
+            "name": "__isInitialized",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method___isInitialized"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SentEmail\u003A\u003A__serialize\u0028\u0029",
+            "name": "__serialize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#method___serialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SentEmail\u003A\u003ALAZY_OBJECT_PROPERTY_SCOPES",
+            "name": "LAZY_OBJECT_PROPERTY_SCOPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount",
+            "name": "SepaBankAccount",
+            "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003A__load\u0028\u0029",
+            "name": "__load",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method___load"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003A__isInitialized\u0028\u0029",
+            "name": "__isInitialized",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method___isInitialized"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003A__serialize\u0028\u0029",
+            "name": "__serialize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method___serialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount\u003A\u003ALAZY_OBJECT_PROPERTY_SCOPES",
+            "name": "LAZY_OBJECT_PROPERTY_SCOPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitMandate",
+            "name": "SepaDebitMandate",
+            "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitMandate\u003A\u003A__load\u0028\u0029",
+            "name": "__load",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method___load"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitMandate\u003A\u003A__isInitialized\u0028\u0029",
+            "name": "__isInitialized",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method___isInitialized"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitMandate\u003A\u003A__serialize\u0028\u0029",
+            "name": "__serialize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#method___serialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaDebitMandate\u003A\u003ALAZY_OBJECT_PROPERTY_SCOPES",
+            "name": "LAZY_OBJECT_PROPERTY_SCOPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaDebitMandate.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource",
+            "name": "TaxationStatutorySource",
+            "summary": "DO\u0020NOT\u0020EDIT\u0020THIS\u0020FILE\u0020\u002D\u0020IT\u0020WAS\u0020CREATED\u0020BY\u0020DOCTRINE\u0027S\u0020PROXY\u0020GENERATOR",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A__load\u0028\u0029",
+            "name": "__load",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method___load"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A__isInitialized\u0028\u0029",
+            "name": "__isInitialized",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method___isInitialized"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003A__serialize\u0028\u0029",
+            "name": "__serialize",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method___serialize"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\TaxationStatutorySource\u003A\u003ALAZY_OBJECT_PROPERTY_SCOPES",
+            "name": "LAZY_OBJECT_PROPERTY_SCOPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#constant_LAZY_OBJECT_PROPERTY_SCOPES"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Proxies\\__CG__\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\WebBrowserHistoryData",
             "name": "WebBrowserHistoryData",
@@ -16841,6 +18041,11 @@ Search.appendIndex(
             "summary": "Repository\u0020for\u0020instruments.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Repositories\\InstrumentsRepository\u003A\u003AfindNonInstruments\u0028\u0029",
+            "name": "findNonInstruments",
+            "summary": "Return\u0020a\u0020collection\u0020of\u0020non\u002Dinstruments,\u0020that\u0020is,\u0020instruments\u0020which\u0020belong\nto\u0020the\u0020family\u0020Entities\\ProjectInstrument\u003A\u003ANOT_AN_INSTRUMENT_FAMILY.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#method_findNonInstruments"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Repositories\\InstrumentsRepository\u003A\u003AfindByName\u0028\u0029",
             "name": "findByName",
             "summary": "Find\u0020an\u0020instrument\u0020by\u0020its\u0020name.",
@@ -16851,10 +18056,20 @@ Search.appendIndex(
             "summary": "Sort\u0020by\u0020configured\u0020sorting\u0020column\u0020and\u0020omit\u0020disabled\u0020entries.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#method_findAll"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Repositories\\InstrumentsRepository\u003A\u003AfindNames\u0028\u0029",
+            "name": "findNames",
+            "summary": "Return\u0020instrument\u0020names\u0020as\u0020flat\u0020array.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#method_findNames"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Repositories\\InstrumentsRepository\u003A\u003AdescribeAll\u0028\u0029",
             "name": "describeAll",
             "summary": "Prepare\u0020ofor\u0020grouping\u0020select\u0020options\u0020by\u0020instrument\u0020family.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#method_describeAll"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Repositories\\InvoiceItemsRepository",
+            "name": "InvoiceItemsRepository",
+            "summary": "Database\u0020repository\u0020for\u0020CompositePayments\u0020entities.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InvoiceItemsRepository.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Repositories\\InvoicesRepository",
             "name": "InvoicesRepository",
@@ -17051,6 +18266,11 @@ Search.appendIndex(
             "summary": "Return\u0020all\u0020project\u0020ids",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-ProjectsRepository.html#method_findProjectIds"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Repositories\\ProjectsRepository\u003A\u003AfindNames\u0028\u0029",
+            "name": "findNames",
+            "summary": "Find\u0020project\u0020names,\u0020return\u0020as\u0020flat\u0020array.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-ProjectsRepository.html#method_findNames"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Repositories\\ProjectsRepository\u003A\u003AALIAS",
             "name": "ALIAS",
             "summary": "",
@@ -17135,6 +18355,11 @@ Search.appendIndex(
             "name": "usage",
             "summary": "Fetch\u0020usage\u0020information\u0020about\u0020the\u0020given\u0020identifier.",
             "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-SepaDebitMandatesRepository.html#method_usage"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Repositories\\TaxationStatutorySourcesRepository",
+            "name": "TaxationStatutorySourcesRepository",
+            "summary": "Database\u0020repository\u0020for\u0020TaxationStaturoySource\u0020entities.",
+            "url": "classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-TaxationStatutorySourcesRepository.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Repositories\\TaxExemptionNoticesRepository",
             "name": "TaxExemptionNoticesRepository",
@@ -17621,6 +18846,11 @@ Search.appendIndex(
             "summary": "Resume\u0020query\u0020logging.",
             "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#method_resumeLogging"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003AenableLogging\u0028\u0029",
+            "name": "enableLogging",
+            "summary": "Enable\u0020query\u0020logging.",
+            "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#method_enableLogging"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003AgetUserId\u0028\u0029",
             "name": "getUserId",
             "summary": "",
@@ -17766,6 +18996,21 @@ Search.appendIndex(
             "summary": "Rollback\u0020the\u0020currently\u0020failed\u0020transactions,\u0020afterwards\u0020executed\u0020the\nundo\u002Dqueues\u0020of\u0020the\u0020callback\u002Dqueues\u003A",
             "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#method_rollback"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003AcheckForRollbackOnly\u0028\u0029",
+            "name": "checkForRollbackOnly",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#method_checkForRollbackOnly"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003ApushTransactionException\u0028\u0029",
+            "name": "pushTransactionException",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#method_pushTransactionException"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003AgetTransactionExceptions\u0028\u0029",
+            "name": "getTransactionExceptions",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#method_getTransactionExceptions"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003AregisterPreFlushAction\u0028\u0029",
             "name": "registerPreFlushAction",
             "summary": "",
@@ -17815,6 +19060,11 @@ Search.appendIndex(
             "name": "getDataTransformer",
             "summary": "Return\u0020the\u0020data\u002Dtransformer\u0020for\u0020the\u0020given\u0020key.",
             "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#method_getDataTransformer"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003AsetTranslatableLocale\u0028\u0029",
+            "name": "setTranslatableLocale",
+            "summary": "Set\u0020the\u0020locale\u0020for\u0020the\u0020translatable\u0020Listeners\u002A",
+            "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#method_setTranslatableLocale"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003ArecryptEntityList\u0028\u0029",
             "name": "recryptEntityList",
@@ -17936,6 +19186,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#property_eventDispatcher"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003A\u0024translatable",
+            "name": "translatable",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#property_translatable"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003A\u0024databaseAccess",
             "name": "databaseAccess",
             "summary": "",
@@ -17945,6 +19200,11 @@ Search.appendIndex(
             "name": "wrappedManagers",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#property_wrappedManagers"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003A\u0024transactionExceptions",
+            "name": "transactionExceptions",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Database-EntityManager.html#property_transactionExceptions"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Database\\EntityManager\u003A\u003A\u0024appName",
             "name": "appName",
@@ -18788,7 +20048,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\Composer\u003A\u003AcleanDrafts\u0028\u0029",
             "name": "cleanDrafts",
-            "summary": "Delte\u0020old\u0020draft\u002Dmessages\u0020which\u0020still\u0020have\u0020the\u0020autoGenerated\u0020flag\u0020set\u0020to\non.",
+            "summary": "Delete\u0020old\u0020draft\u002Dmessages\u0020which\u0020still\u0020have\u0020the\u0020autoGenerated\u0020flag\u0020set\u0020to\non.",
             "url": "classes/OCA-CAFEVDB-EmailForm-Composer.html#method_cleanDrafts"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\Composer\u003A\u003AcleanTemporaries\u0028\u0029",
@@ -19291,11 +20551,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-EmailForm-Composer.html#property_diagnostics"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\Composer\u003A\u003A\u0024organizationalRolesService",
-            "name": "organizationalRolesService",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-EmailForm-Composer.html#property_organizationalRolesService"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\Composer\u003A\u003A\u0024progressToken",
             "name": "progressToken",
             "summary": "",
@@ -19351,10 +20606,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-EmailForm-Composer.html#property_imapService"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\Composer\u003A\u003A\u0024organizationRolesService",
-            "name": "organizationRolesService",
+            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\Composer\u003A\u003A\u0024organizationalRolesService",
+            "name": "organizationalRolesService",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-EmailForm-Composer.html#property_organizationRolesService"
+            "url": "classes/OCA-CAFEVDB-EmailForm-Composer.html#property_organizationalRolesService"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\Composer\u003A\u003A\u0024progressStatusService",
             "name": "progressStatusService",
@@ -19468,7 +20723,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AfetchMusicians\u0028\u0029",
             "name": "fetchMusicians",
-            "summary": "Form\u0020an\u0020associative\u0020array\u0020with\u0020the\u0020keys\n\u002D\u0020name\u0020\u0028full\u0020name\u0029\n\u002D\u0020email\n\u002D\u0020status\u0020\u0028MemberStatus\u0029\n\u002D\u0020dbdata\u0020\u0028data\u0020as\u0020returned\u0020from\u0020the\u0020DB\u0020for\u0020variable\u0020substitution\u0029\nThe\u0020function\u0020fills\u0020\u0024this\u002D\u003EeMails,\u0020\u0024this\u002D\u003EeMailsDpy",
+            "summary": "Form\u0020an\u0020associative\u0020array\u0020with\u0020the\u0020keys\n\u002D\u0020name\u0020\u0028full\u0020name\u0029\n\u002D\u0020email\n\u002D\u0020status\u0020\u0028ParticiationStatus\u0029\n\u002D\u0020dbdata\u0020\u0028data\u0020as\u0020returned\u0020from\u0020the\u0020DB\u0020for\u0020variable\u0020substitution\u0029\nThe\u0020function\u0020fills\u0020\u0024this\u002D\u003EeMails,\u0020\u0024this\u002D\u003EeMailsDpy",
             "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#method_fetchMusicians"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AgetMusiciansFromDB\u0028\u0029",
@@ -19486,25 +20741,25 @@ Search.appendIndex(
             "summary": "Fetch\u0020the\u0020instruments\u0020filter\u0020from\u0020the\u0020CGI\u0020parameters.",
             "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#method_fetchInstrumentsFilter"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AdefaultByStatus\u0028\u0029",
-            "name": "defaultByStatus",
+            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AdefaultByParticipationStatus\u0028\u0029",
+            "name": "defaultByParticipationStatus",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#method_defaultByStatus"
+            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#method_defaultByParticipationStatus"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AgetMemberStatusNames\u0028\u0029",
-            "name": "getMemberStatusNames",
-            "summary": "Fill\u0020\u0024this\u002D\u003EmemberStatusNames\u0020with\u0020values.",
-            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#method_getMemberStatusNames"
+            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AgetParticiationStatusNames\u0028\u0029",
+            "name": "getParticiationStatusNames",
+            "summary": "Fill\u0020\u0024this\u002D\u003EparticipationStatusNames\u0020with\u0020values.",
+            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#method_getParticiationStatusNames"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AinitMemberStatusFilter\u0028\u0029",
-            "name": "initMemberStatusFilter",
+            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AinitParticiationStatusFilter\u0028\u0029",
+            "name": "initParticiationStatusFilter",
             "summary": "Get\u0020the\u0020current\u0020filter.\u0020Default\u0020value,\u0020after\u0020form\u0020submission,\u0020initial\nsetting\u0020otherwise.",
-            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#method_initMemberStatusFilter"
+            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#method_initParticiationStatusFilter"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AmemberStatusBlackList\u0028\u0029",
-            "name": "memberStatusBlackList",
+            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AparticipationStatusBlackList\u0028\u0029",
+            "name": "participationStatusBlackList",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#method_memberStatusBlackList"
+            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#method_participationStatusBlackList"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AdefaultUserBase\u0028\u0029",
             "name": "defaultUserBase",
@@ -19536,10 +20791,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#property_filterHistory"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AmemberStatusFilter\u0028\u0029",
-            "name": "memberStatusFilter",
+            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003A\u0024participationStatusFilter",
+            "name": "participationStatusFilter",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#method_memberStatusFilter"
+            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#property_participationStatusFilter"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003AgetUserBase\u0028\u0029",
             "name": "getUserBase",
@@ -19786,11 +21041,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#property_userBase"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003A\u0024memberFilter",
-            "name": "memberFilter",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#property_memberFilter"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003A\u0024emailRecs",
             "name": "emailRecs",
             "summary": "",
@@ -19856,10 +21106,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#property_frozen"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003A\u0024memberStatusNames",
-            "name": "memberStatusNames",
+            "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003A\u0024participationStatusNames",
+            "name": "participationStatusNames",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#property_memberStatusNames"
+            "url": "classes/OCA-CAFEVDB-EmailForm-RecipientsFilter.html#property_participationStatusNames"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\EmailForm\\RecipientsFilter\u003A\u003A\u0024cgiData",
             "name": "cgiData",
@@ -20506,6 +21756,36 @@ Search.appendIndex(
             "summary": "Thrown\u0020if\u0020a\u0020field\u0020has\u0020an\u0020incompatible\u0020type\u0020for\u0020the\u0020operation.",
             "url": "classes/OCA-CAFEVDB-Exceptions-DatabaseInvalidFieldException.html"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\DatabaseLegacyException",
+            "name": "DatabaseLegacyException",
+            "summary": "Legacy\u0020PHPMyEdit\u0020exception,\u0020no\u0020prepared\u0020statements,\u0020just\u0020plain\u0020SQL\u0020and\u0020a\nline\u0020number.",
+            "url": "classes/OCA-CAFEVDB-Exceptions-DatabaseLegacyException.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\DatabaseLegacyException\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Exceptions-DatabaseLegacyException.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\DatabaseLegacyException\u003A\u003AgetSql\u0028\u0029",
+            "name": "getSql",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Exceptions-DatabaseLegacyException.html#method_getSql"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\DatabaseLegacyException\u003A\u003AgetPmeLine\u0028\u0029",
+            "name": "getPmeLine",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Exceptions-DatabaseLegacyException.html#method_getPmeLine"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\DatabaseLegacyException\u003A\u003A\u0024sql",
+            "name": "sql",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Exceptions-DatabaseLegacyException.html#property_sql"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\DatabaseLegacyException\u003A\u003A\u0024pmeLine",
+            "name": "pmeLine",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Exceptions-DatabaseLegacyException.html#property_pmeLine"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\DatabaseMigrationException",
             "name": "DatabaseMigrationException",
             "summary": "Thrown\u0020during\u0020database\u0020migrations.",
@@ -20520,6 +21800,11 @@ Search.appendIndex(
             "name": "DatabaseReadonlyException",
             "summary": "Thrown\u0020when\u0020trying\u0020to\u0020mute\u0020data\u0020which\u0020should\u0020not\u0020be\u0020muted.",
             "url": "classes/OCA-CAFEVDB-Exceptions-DatabaseReadonlyException.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\DatabaseRollbackOnlyException",
+            "name": "DatabaseRollbackOnlyException",
+            "summary": "Maybe\u0020thrown\u0020if\u0020\u0022rollback\u002Donly\u0022\u0020is\u0020detected.",
+            "url": "classes/OCA-CAFEVDB-Exceptions-DatabaseRollbackOnlyException.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Exceptions\\DatabaseStorageException",
             "name": "DatabaseStorageException",
@@ -21166,6 +22451,46 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Listener-CompositePaymentEntityListener.html#property_entityManager"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ContactsCardEventListener",
+            "name": "ContactsCardEventListener",
+            "summary": "Act\u0020on\u0020newly\u0020created\u0020events\u0020and\u0020tasks.",
+            "url": "classes/OCA-CAFEVDB-Listener-ContactsCardEventListener.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ContactsCardEventListener\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-ContactsCardEventListener.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ContactsCardEventListener\u003A\u003Ahandle\u0028\u0029",
+            "name": "handle",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Listener-ContactsCardEventListener.html#method_handle"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ContactsCardEventListener\u003A\u003AisAddressBookGroupWritable\u0028\u0029",
+            "name": "isAddressBookGroupWritable",
+            "summary": "Check\u0020if\u0020the\u0020given\u0020share\u002Dinfo\u0020indicates\u0020that\u0020the\u0020address\u002Dbook\u0020is\u0020group\nwritable\u0020by\u0020the\u0020given\u0020gid\u003A\n\u0060\u0060\u0060\n\u005B\n\u0020\u0020\u0022href\u0022\u0020\u003D\u003E\u0020\u0022principal\u003Aprincipals\/groups\/camerata\u0022\n\u0020\u0020\u0022commonName\u0022\u0020\u003D\u003E\u0020\u0022camerata\u0022\n\u0020\u0020\u0022status\u0022\u0020\u003D\u003E\u00201\n\u0020\u0020\u0022readOnly\u0022\u0020\u003D\u003E\u0020false\n\u0020\u0020\u0022\u007Bhttp\u003A\/\/owncloud.org\/ns\u007Dprincipal\u0022\u0020\u003D\u003E\u0020\u0022principals\/groups\/camerata\u0022\n\u0020\u0020\u0022\u007Bhttp\u003A\/\/owncloud.org\/ns\u007Dgroup\u002Dshare\u0022\u0020\u003D\u003E\u0020true\n\u005D,\n\u0060\u0060\u0060",
+            "url": "classes/OCA-CAFEVDB-Listener-ContactsCardEventListener.html#method_isAddressBookGroupWritable"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ContactsCardEventListener\u003A\u003AgetAddressBookUri\u0028\u0029",
+            "name": "getAddressBookUri",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-ContactsCardEventListener.html#method_getAddressBookUri"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ContactsCardEventListener\u003A\u003AEVENT",
+            "name": "EVENT",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-ContactsCardEventListener.html#constant_EVENT"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ContactsCardEventListener\u003A\u003A\u0024alreadyHandled",
+            "name": "alreadyHandled",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-ContactsCardEventListener.html#property_alreadyHandled"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ContactsCardEventListener\u003A\u003A\u0024appContainer",
+            "name": "appContainer",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-ContactsCardEventListener.html#property_appContainer"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Listener\\DatabaseStorageFileEntityListener",
             "name": "DatabaseStorageFileEntityListener",
             "summary": "An\u0020entity\u0020listener.\u0020The\u0020task\u0020is\u0020to\u0020remove\u0020orphaned\u0020files\nentities.\u0020\u0022orphaned\u0022\u0020means\u0020they\u0020are\u0020no\u0020longer\u0020referenced\u0020from\nDatabaseStorageFile\u0020entities.",
@@ -21596,6 +22921,11 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Listener-MusicianEntityListener.html#method_postUpdate"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\MusicianEntityListener\u003A\u003AsynchronizeContact\u0028\u0029",
+            "name": "synchronizeContact",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Listener-MusicianEntityListener.html#method_synchronizeContact"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Listener\\MusicianEntityListener\u003A\u003A\u0024preUpdateValues",
             "name": "preUpdateValues",
             "summary": "",
@@ -21615,6 +22945,31 @@ Search.appendIndex(
             "name": "entityManager",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Listener-MusicianEntityListener.html#property_entityManager"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\MusicianInstrumentEntityListener",
+            "name": "MusicianInstrumentEntityListener",
+            "summary": "Addressbook\u0020integration\u003A\u0020the\u0020instrument\u0020name\u0020is\u0020also\u0020a\u0020category\u0020in\u0020the\naddressbook\u0020entry.",
+            "url": "classes/OCA-CAFEVDB-Listener-MusicianInstrumentEntityListener.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\MusicianInstrumentEntityListener\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-MusicianInstrumentEntityListener.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\MusicianInstrumentEntityListener\u003A\u003AsynchronizeContact\u0028\u0029",
+            "name": "synchronizeContact",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Listener-MusicianInstrumentEntityListener.html#method_synchronizeContact"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\MusicianInstrumentEntityListener\u003A\u003A\u0024logger",
+            "name": "logger",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-MusicianInstrumentEntityListener.html#property_logger"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\MusicianInstrumentEntityListener\u003A\u003A\u0024appContainer",
+            "name": "appContainer",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-MusicianInstrumentEntityListener.html#property_appContainer"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Listener\\ParticipantFieldCloudFolderListener",
             "name": "ParticipantFieldCloudFolderListener",
@@ -21981,6 +23336,41 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Listener-ProjectEventEntityListener.html#property_entityManager"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ProjectInstrumentEntityListener",
+            "name": "ProjectInstrumentEntityListener",
+            "summary": "Entity\u0020listener\u0020for\u0020project\u0020participation.",
+            "url": "classes/OCA-CAFEVDB-Listener-ProjectInstrumentEntityListener.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ProjectInstrumentEntityListener\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-ProjectInstrumentEntityListener.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ProjectInstrumentEntityListener\u003A\u003AprePersist\u0028\u0029",
+            "name": "prePersist",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Listener-ProjectInstrumentEntityListener.html#method_prePersist"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ProjectInstrumentEntityListener\u003A\u003ApreRemove\u0028\u0029",
+            "name": "preRemove",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Listener-ProjectInstrumentEntityListener.html#method_preRemove"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ProjectInstrumentEntityListener\u003A\u003A\u0024logger",
+            "name": "logger",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-ProjectInstrumentEntityListener.html#property_logger"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ProjectInstrumentEntityListener\u003A\u003A\u0024appContainer",
+            "name": "appContainer",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-ProjectInstrumentEntityListener.html#property_appContainer"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\ProjectInstrumentEntityListener\u003A\u003A\u0024entityManager",
+            "name": "entityManager",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Listener-ProjectInstrumentEntityListener.html#property_entityManager"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Listener\\ProjectParticipantEntityListener",
             "name": "ProjectParticipantEntityListener",
             "summary": "Entity\u0020listener\u0020for\u0020project\u0020participation.",
@@ -22013,7 +23403,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Listener\\ProjectParticipantEntityListener\u003A\u003AregisterPreCommitAction\u0028\u0029",
             "name": "registerPreCommitAction",
-            "summary": "Register\u0020a\u0020pre\u002Dcommit\u0020action\u0020with\u0020undo\u0020in\u0020order\u0020to\u0020add\u0020\/\u0020remove\u0020the\ncloud\u002Daccount\u0020of\u0020a\u0020newly\u0020registered\u0020executive\u0020board\u0020member\u0020to\u0020the\nrespective\u0020cloud\u0020user\u0020groups.",
+            "summary": "Register\u0020a\u0020pre\u002Dcommit\u0020action\u0020with\u0020undo\u0020in\u0020order\u0020to\u0020add\u0020\/\u0020remove\u0020the\ncloud\u002Daccount\u0020of\u0020a\u0020newly\u0020registered\u0020executive\u0020board\u0020member\u0020to\u0020the\nrespective\u0020cloud\u0020user\u0020groups.\u0020Also\u0020sync\u0020a\u0020linked\u0020address\u0020book\u0020entry\u0020if\npresent.",
             "url": "classes/OCA-CAFEVDB-Listener-ProjectParticipantEntityListener.html#method_registerPreCommitAction"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Listener\\ProjectParticipantEntityListener\u003A\u003AentityId\u0028\u0029",
@@ -22215,6 +23605,11 @@ Search.appendIndex(
             "name": "unlockEntity",
             "summary": "Protect\u0020against\u0020re\u002Dentrance\u0020when\u0020the\u0020preRemove\u0028\u0029\u0020handler\u0020causes\u0020changes\u0020to\u0020the\u0020entity.",
             "url": "classes/OCA-CAFEVDB-Listener-SepaBulkTransactionEntityListener.html#method_unlockEntity"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Listener\\SepaBulkTransactionEntityListener\u003A\u003AscheduleCreateTransactionData\u0028\u0029",
+            "name": "scheduleCreateTransactionData",
+            "summary": "Schedule\u0020a\u0020pre\u002Dcommit\u0020action\u0020in\u0020order\u0020to\u0020update\u0020the\u0020transaction\u0020data.",
+            "url": "classes/OCA-CAFEVDB-Listener-SepaBulkTransactionEntityListener.html#method_scheduleCreateTransactionData"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Listener\\SepaBulkTransactionEntityListener\u003A\u003ApreUpdate\u0028\u0029",
             "name": "preUpdate",
@@ -22591,6 +23986,36 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-AddGenderToMusician.html#property_sql"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\AddMoreAddressFieldsToMusician",
+            "name": "AddMoreAddressFieldsToMusician",
+            "summary": "Add\u0020title\u0020field\u0020to\u0020musicians\u0020table.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-AddMoreAddressFieldsToMusician.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\AddMoreAddressFieldsToMusician\u003A\u003Adescription\u0028\u0029",
+            "name": "description",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-AddMoreAddressFieldsToMusician.html#method_description"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\AddMoreAddressFieldsToMusician\u003A\u003A\u0024sql",
+            "name": "sql",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-AddMoreAddressFieldsToMusician.html#property_sql"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\AddParticipationContextToProjectParticipantFields",
+            "name": "AddParticipationContextToProjectParticipantFields",
+            "summary": "Remember\u0020the\u0020id\u0020of\u0020a\u0020mailing\u0020list.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-AddParticipationContextToProjectParticipantFields.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\AddParticipationContextToProjectParticipantFields\u003A\u003Adescription\u0028\u0029",
+            "name": "description",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-AddParticipationContextToProjectParticipantFields.html#method_description"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\AddParticipationContextToProjectParticipantFields\u003A\u003A\u0024sql",
+            "name": "sql",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-AddParticipationContextToProjectParticipantFields.html#property_sql"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\AddProjectRegistrationDeadline",
             "name": "AddProjectRegistrationDeadline",
             "summary": "Change\u0020participantAccess\u0020field\u0020to\u0020enum.",
@@ -22696,6 +24121,21 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-CreateTableInvoices.html#property_sql"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\CreateTableInvoicesV2",
+            "name": "CreateTableInvoicesV2",
+            "summary": "Remember\u0020the\u0020id\u0020of\u0020a\u0020mailing\u0020list.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-CreateTableInvoicesV2.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\CreateTableInvoicesV2\u003A\u003Adescription\u0028\u0029",
+            "name": "description",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-CreateTableInvoicesV2.html#method_description"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\CreateTableInvoicesV2\u003A\u003A\u0024sql",
+            "name": "sql",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-CreateTableInvoicesV2.html#property_sql"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\CreateTableLegalPersons",
             "name": "CreateTableLegalPersons",
             "summary": "Remember\u0020the\u0020id\u0020of\u0020a\u0020mailing\u0020list.",
@@ -22710,6 +24150,31 @@ Search.appendIndex(
             "name": "sql",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-CreateTableLegalPersons.html#property_sql"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\CreateTableTaxationStatutorySources",
+            "name": "CreateTableTaxationStatutorySources",
+            "summary": "Remember\u0020the\u0020id\u0020of\u0020a\u0020mailing\u0020list.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-CreateTableTaxationStatutorySources.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\CreateTableTaxationStatutorySources\u003A\u003Adescription\u0028\u0029",
+            "name": "description",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-CreateTableTaxationStatutorySources.html#method_description"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\CreateTableTaxationStatutorySources\u003A\u003Aexecute\u0028\u0029",
+            "name": "execute",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-CreateTableTaxationStatutorySources.html#method_execute"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\CreateTableTaxationStatutorySources\u003A\u003AINITIAL_SOURCES",
+            "name": "INITIAL_SOURCES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-CreateTableTaxationStatutorySources.html#constant_INITIAL_SOURCES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\CreateTableTaxationStatutorySources\u003A\u003A\u0024sql",
+            "name": "sql",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-CreateTableTaxationStatutorySources.html#property_sql"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\CreateTaxExemptionNotices",
             "name": "CreateTaxExemptionNotices",
@@ -22791,6 +24256,21 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-DisableCloudAccountsByDefault.html#property_sql"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\DropTableLegalPersons",
+            "name": "DropTableLegalPersons",
+            "summary": "Was\u0020a\u0020\u0022stupid\u0022\u0020idea,\u0020so\u0020drop\u0020it\u0020again\u0020.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-DropTableLegalPersons.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\DropTableLegalPersons\u003A\u003Adescription\u0028\u0029",
+            "name": "description",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-DropTableLegalPersons.html#method_description"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\DropTableLegalPersons\u003A\u003A\u0024sql",
+            "name": "sql",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-DropTableLegalPersons.html#property_sql"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Dummy",
             "name": "Dummy",
             "summary": "Dummy\u0020class\u0020in\u0020order\u0020to\u0020trigger\u0020the\u0020migration\u0020framework.",
@@ -22815,6 +24295,21 @@ Search.appendIndex(
             "name": "l",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Dummy.html#property_l"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\EnsureNotAnInstrumentBusinessRelation",
+            "name": "EnsureNotAnInstrumentBusinessRelation",
+            "summary": "Ensure\u0020that\u0020a\u0020virtual\u0020\u0022not\u002Dan\u002Dinstrument\u0022\u0020instrument\u0020family\u0020exists\u0020and\u0020add\na\u0020virtual\u0020\u0022business\u0020relation\u0022\u0020and\u0020an\u0020\u0022associate\u0022\u0020non\u002Dinstrument.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-EnsureNotAnInstrumentBusinessRelation.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\EnsureNotAnInstrumentBusinessRelation\u003A\u003Adescription\u0028\u0029",
+            "name": "description",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-EnsureNotAnInstrumentBusinessRelation.html#method_description"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\EnsureNotAnInstrumentBusinessRelation\u003A\u003Aexecute\u0028\u0029",
+            "name": "execute",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-EnsureNotAnInstrumentBusinessRelation.html#method_execute"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\GroupSharedOrchestraFolder",
             "name": "GroupSharedOrchestraFolder",
@@ -22851,10 +24346,15 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-GroupSharedOrchestraFolder.html#constant_SHARED_KEEP_OLD_SUFFIX"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\GroupSharedOrchestraFolder\u003A\u003ASHARE_TYPES",
-            "name": "SHARE_TYPES",
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\GroupSharedOrchestraFolder\u003A\u003AUPDATE_SHARE_TYPES",
+            "name": "UPDATE_SHARE_TYPES",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-GroupSharedOrchestraFolder.html#constant_SHARE_TYPES"
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-GroupSharedOrchestraFolder.html#constant_UPDATE_SHARE_TYPES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\GroupSharedOrchestraFolder\u003A\u003ACLEAN_SHARE_TYPES",
+            "name": "CLEAN_SHARE_TYPES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-GroupSharedOrchestraFolder.html#constant_CLEAN_SHARE_TYPES"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\GroupSharedOrchestraFolder\u003A\u003A\u0024userId",
             "name": "userId",
@@ -23041,6 +24541,26 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-ProjectEventsAddAbsenceFields.html#property_sql"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\RenameMemberStatusParticipationStatus",
+            "name": "RenameMemberStatusParticipationStatus",
+            "summary": "Rename\u0020the\u0020misleading\u0020\u0022member_status\u0022\u0020column\u0020to\u0020\u0022participant_status\u0022.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-RenameMemberStatusParticipationStatus.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\RenameMemberStatusParticipationStatus\u003A\u003Adescription\u0028\u0029",
+            "name": "description",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-RenameMemberStatusParticipationStatus.html#method_description"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\RenameMemberStatusParticipationStatus\u003A\u003Aexecute\u0028\u0029",
+            "name": "execute",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-RenameMemberStatusParticipationStatus.html#method_execute"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\RenameMemberStatusParticipationStatus\u003A\u003A\u0024sql",
+            "name": "sql",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-RenameMemberStatusParticipationStatus.html#property_sql"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\SanitizeDatabaseStorageIdentifiers",
             "name": "SanitizeDatabaseStorageIdentifiers",
             "summary": "Change\u0020participantAccess\u0020field\u0020to\u0020enum.",
@@ -23055,6 +24575,46 @@ Search.appendIndex(
             "name": "sql",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-SanitizeDatabaseStorageIdentifiers.html#property_sql"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\SanitizeMailmanTemplateFiles",
+            "name": "SanitizeMailmanTemplateFiles",
+            "summary": "Avoid\u0020characters\u0020which\u0020are\u0020illegal\u0020on\u0020certain\u0020operating\u0020systems,\ni.e.\u0020replace\u0020colons\u0020by\u0020dashes.\u0020The\u0020MailingListAutoResponsesListener\u0020in\nprinciple\u0020should\u0020reconfigure\u0020the\u0020lists\u0020automatically\u0020after\u0020the\u0020files\u0020got\nrenamed.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-SanitizeMailmanTemplateFiles.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\SanitizeMailmanTemplateFiles\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-SanitizeMailmanTemplateFiles.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\SanitizeMailmanTemplateFiles\u003A\u003Adescription\u0028\u0029",
+            "name": "description",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-SanitizeMailmanTemplateFiles.html#method_description"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\SanitizeMailmanTemplateFiles\u003A\u003Aexecute\u0028\u0029",
+            "name": "execute",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-SanitizeMailmanTemplateFiles.html#method_execute"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\SanitizeMailmanTemplateFiles\u003A\u003A\u0024l",
+            "name": "l",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-SanitizeMailmanTemplateFiles.html#property_l"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\SanitizeMailmanTemplateFiles\u003A\u003A\u0024logger",
+            "name": "logger",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-SanitizeMailmanTemplateFiles.html#property_logger"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\SanitizeMailmanTemplateFiles\u003A\u003A\u0024mailingListsService",
+            "name": "mailingListsService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-SanitizeMailmanTemplateFiles.html#property_mailingListsService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\SanitizeMailmanTemplateFiles\u003A\u003A\u0024userStorage",
+            "name": "userStorage",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-SanitizeMailmanTemplateFiles.html#property_userStorage"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\SanitizeSentEmailAssociations",
             "name": "SanitizeSentEmailAssociations",
@@ -23195,6 +24755,46 @@ Search.appendIndex(
             "name": "Version20250220160000",
             "summary": "Wrapper\u0020class\u0020which\u0020gives\u0020the\u0020migration\u0020a\u0020proper\u0020sequence\u0020number\u0020and\nredirects\u0020to\u0020the\u0020actual\u0020implementation.",
             "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20250220160000.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20250519130000",
+            "name": "Version20250519130000",
+            "summary": "Wrapper\u0020class\u0020which\u0020gives\u0020the\u0020migration\u0020a\u0020proper\u0020sequence\u0020number\u0020and\nredirects\u0020to\u0020the\u0020actual\u0020implementation.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20250519130000.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20250530143000",
+            "name": "Version20250530143000",
+            "summary": "Wrapper\u0020class\u0020which\u0020gives\u0020the\u0020migration\u0020a\u0020proper\u0020sequence\u0020number\u0020and\nredirects\u0020to\u0020the\u0020actual\u0020implementation.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20250530143000.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20250531150000",
+            "name": "Version20250531150000",
+            "summary": "Wrapper\u0020class\u0020which\u0020gives\u0020the\u0020migration\u0020a\u0020proper\u0020sequence\u0020number\u0020and\nredirects\u0020to\u0020the\u0020actual\u0020implementation.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20250531150000.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20250601120000",
+            "name": "Version20250601120000",
+            "summary": "Wrapper\u0020class\u0020which\u0020gives\u0020the\u0020migration\u0020a\u0020proper\u0020sequence\u0020number\u0020and\nredirects\u0020to\u0020the\u0020actual\u0020implementation.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20250601120000.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20250602180000",
+            "name": "Version20250602180000",
+            "summary": "Wrapper\u0020class\u0020which\u0020gives\u0020the\u0020migration\u0020a\u0020proper\u0020sequence\u0020number\u0020and\nredirects\u0020to\u0020the\u0020actual\u0020implementation.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20250602180000.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20250610123000",
+            "name": "Version20250610123000",
+            "summary": "Wrapper\u0020class\u0020which\u0020gives\u0020the\u0020migration\u0020a\u0020proper\u0020sequence\u0020number\u0020and\nredirects\u0020to\u0020the\u0020actual\u0020implementation.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20250610123000.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20250610233000",
+            "name": "Version20250610233000",
+            "summary": "Wrapper\u0020class\u0020which\u0020gives\u0020the\u0020migration\u0020a\u0020proper\u0020sequence\u0020number\u0020and\nredirects\u0020to\u0020the\u0020actual\u0020implementation.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20250610233000.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20250615150000",
+            "name": "Version20250615150000",
+            "summary": "Wrapper\u0020class\u0020which\u0020gives\u0020the\u0020migration\u0020a\u0020proper\u0020sequence\u0020number\u0020and\nredirects\u0020to\u0020the\u0020actual\u0020implementation.",
+            "url": "classes/OCA-CAFEVDB-Maintenance-Migrations-Version20250615150000.html"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Maintenance\\SanitizerRegistration",
             "name": "SanitizerRegistration",
@@ -23871,16 +25471,6 @@ Search.appendIndex(
             "summary": "Short\u0020title\u0020for\u0020heading.",
             "url": "classes/OCA-CAFEVDB-PageRenderer-AddMusicians.html#method_shortTitle"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\AddMusicians\u003A\u003AnavigationItem\u0028\u0029",
-            "name": "navigationItem",
-            "summary": "Return\u0020the\u0020navigation\u0020item\u0020for\u0020this\u0020renderer.",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-AddMusicians.html#method_navigationItem"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\AddMusicians\u003A\u003AnavigationItems\u0028\u0029",
-            "name": "navigationItems",
-            "summary": "Return\u0020a\u0020list\u0020of\u0020navigation\u0020items\u003A\n\u0060\u0060\u0060\n\u005B\u0020NAV_ITEM0,\u0020NAV_ITEM1,\u0020...\u0020\u005D\n\u0060\u0060\u0060",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-AddMusicians.html#method_navigationItems"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\AddMusicians\u003A\u003Arender\u0028\u0029",
             "name": "render",
             "summary": "Show\u0020the\u0020underlying\u0020template\u0020page.\u0020This\u0020is\u0020supposed\u0020to\u0020echo\u0020html\ncode\u0020to\u0020stdout.\u0020This\u0020is\u0020the\u0020default\u0020do\u002Dnothing\u0020implementation.",
@@ -23891,10 +25481,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-AddMusicians.html#constant_TEMPLATE"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\AddMusicians\u003A\u003A\u0024project",
-            "name": "project",
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\AddMusicians\u003A\u003A\u0024participationContext",
+            "name": "participationContext",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-AddMusicians.html#property_project"
+            "url": "classes/OCA-CAFEVDB-PageRenderer-AddMusicians.html#property_participationContext"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\AllMusicians",
             "name": "AllMusicians",
@@ -24506,6 +26096,31 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-FinanceModeNavigationItemTrait.html#method_requiredPermissions"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\InstrumentsTrait",
+            "name": "InstrumentsTrait",
+            "summary": "Some\u0020convenience\u0020methods\u0020for\u0020instruments\u0020and\u0020instrument\u0020families",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-InstrumentsTrait.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\InstrumentsTrait\u003A\u003AgetInstrumentInfo\u0028\u0029",
+            "name": "getInstrumentInfo",
+            "summary": "Fetch\u0020instruments\u0020info,\u0020\u0040see\u0020OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Repositories\\InstrumentsRepository.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-InstrumentsTrait.html#method_getInstrumentInfo"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\InstrumentsTrait\u003A\u003AgetNonInstruments\u0028\u0029",
+            "name": "getNonInstruments",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-InstrumentsTrait.html#method_getNonInstruments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\InstrumentsTrait\u003A\u003A\u0024instrumentInfo",
+            "name": "instrumentInfo",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-InstrumentsTrait.html#property_instrumentInfo"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\InstrumentsTrait\u003A\u003A\u0024nonInstruments",
+            "name": "nonInstruments",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-InstrumentsTrait.html#property_nonInstruments"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\MailingListsTrait",
             "name": "MailingListsTrait",
             "summary": "Field\u002Dtrait\u0020for\u0020reusable\u0020field\u0020definitions.",
@@ -24625,6 +26240,16 @@ Search.appendIndex(
             "name": "musicianInProjectSql",
             "summary": "Return\u0020an\u0020SQL\u0020filter\u0020fragment\u0020to\u0020ensure\u0020that\u0020a\u0020musician\u002Did\u0020is\nonly\u0020in\u0020the\u0020request\u0020project.",
             "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianInProjectTrait.html#method_musicianInProjectSql"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\MusicianInstrumentsRankingTrait",
+            "name": "MusicianInstrumentsRankingTrait",
+            "summary": "Extract\u0020the\u0020ranking\u0020of\u0020the\u0020played\u0020instrument\u0020from\u0020the\u0020ordering\u0020of\u0020the\u0020instruments\u002Dlist.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianInstrumentsRankingTrait.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\MusicianInstrumentsRankingTrait\u003A\u003AextractInstrumentRanking\u0028\u0029",
+            "name": "extractInstrumentRanking",
+            "summary": "The\u0020ranking\u0020of\u0020the\u0020mussician\u0027s\u0020instruments\u0020is\u0020implicitly\u0020stored\nin\u0020the\u0020order\u0020of\u0020the\u0020instrument\u0020ids.\u0020Change\u0020the\u0020coressponding\nfield\u0020to\u0020include\u0020the\u0020ranking\u0020explicitly.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianInstrumentsRankingTrait.html#method_extractInstrumentRanking"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\MusicianPublicNameTrait",
             "name": "MusicianPublicNameTrait",
@@ -24830,6 +26455,31 @@ Search.appendIndex(
             "name": "toolTipsPrefix",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#property_toolTipsPrefix"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\ProjectEntityTrait",
+            "name": "ProjectEntityTrait",
+            "summary": "Provide\u0020a\u0020findProject\u0028\u0029\u0020method\u0020which\u0020initializes\u0020\u0024this\u002D\u003Eproject\u0020as\u0020project\nentity\u0020if\u0020either\u0020the\u0020project\u0020name\u0020or\u0020id\u0020is\u0020given.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ProjectEntityTrait.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\ProjectEntityTrait\u003A\u003AfindProject\u0028\u0029",
+            "name": "findProject",
+            "summary": "Initialize\u0020\u0024this\u002D\u003Eproject\u0020as\u0020project\u0020entity\u0020if\u0020either\u0020the\u0020project\u0020name\u0020or\nid\u0020is\u0020given.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ProjectEntityTrait.html#method_findProject"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\ProjectEntityTrait\u003A\u003A\u0024projectId",
+            "name": "projectId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ProjectEntityTrait.html#property_projectId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\ProjectEntityTrait\u003A\u003A\u0024projectName",
+            "name": "projectName",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ProjectEntityTrait.html#property_projectName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\ProjectEntityTrait\u003A\u003A\u0024project",
+            "name": "project",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ProjectEntityTrait.html#property_project"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\FieldTraits\\ProjectModeNavigationItemTrait",
             "name": "ProjectModeNavigationItemTrait",
@@ -25071,11 +26721,6 @@ Search.appendIndex(
             "summary": "Show\u0020the\u0020underlying\u0020template\u0020page.\u0020This\u0020is\u0020supposed\u0020to\u0020echo\u0020html\ncode\u0020to\u0020stdout.\u0020This\u0020is\u0020the\u0020default\u0020do\u002Dnothing\u0020implementation.",
             "url": "classes/OCA-CAFEVDB-PageRenderer-Instruments.html#method_render"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Instruments\u003A\u003AinstrumentNames\u0028\u0029",
-            "name": "instrumentNames",
-            "summary": "Convert\u0020an\u0020array\u0020of\u0020ids\u0020to\u0020an\u0020array\u0020of\u0020names.",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-Instruments.html#method_instrumentNames"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Instruments\u003A\u003ATEMPLATE",
             "name": "TEMPLATE",
             "summary": "",
@@ -25085,16 +26730,6 @@ Search.appendIndex(
             "name": "TABLE",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-Instruments.html#constant_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Instruments\u003A\u003AINSTRUMENT_FAMILIES_TABLE",
-            "name": "INSTRUMENT_FAMILIES_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-Instruments.html#constant_INSTRUMENT_FAMILIES_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Instruments\u003A\u003AINSTRUMENT_FAMILIES_JOIN_TABLE",
-            "name": "INSTRUMENT_FAMILIES_JOIN_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-Instruments.html#constant_INSTRUMENT_FAMILIES_JOIN_TABLE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Instruments\u003A\u003ATRANSLATIONS_TABLE",
             "name": "TRANSLATIONS_TABLE",
@@ -25200,6 +26835,146 @@ Search.appendIndex(
             "name": "project",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-InsuranceRates.html#property_project"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices",
+            "name": "Invoices",
+            "summary": "Table\u0020generator\u0020for\u0020Instruments\u0020table.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003AshortTitle\u0028\u0029",
+            "name": "shortTitle",
+            "summary": "Short\u0020title\u0020for\u0020heading.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method_shortTitle"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003Arender\u0028\u0029",
+            "name": "render",
+            "summary": "Show\u0020the\u0020underlying\u0020template\u0020page.\u0020This\u0020is\u0020supposed\u0020to\u0020echo\u0020html\ncode\u0020to\u0020stdout.\u0020This\u0020is\u0020the\u0020default\u0020do\u002Dnothing\u0020implementation.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method_render"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003AactionMenu\u0028\u0029",
+            "name": "actionMenu",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method_actionMenu"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003AbeforeDeleteDoDeleteSubPayments\u0028\u0029",
+            "name": "beforeDeleteDoDeleteSubPayments",
+            "summary": "Sub\u002Dpayment\u0020aware\u0020delete.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method_beforeDeleteDoDeleteSubPayments"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003AbeforeUpdateSanitizeFields\u0028\u0029",
+            "name": "beforeUpdateSanitizeFields",
+            "summary": "Remap\u0020the\u0020input\u0020values\u0020in\u0020order\u0020to\u0020satisfy\u0020the\u0020data\u002Dmodel\u003A",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method_beforeUpdateSanitizeFields"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003AbeforeInsertSanitizeFields\u0028\u0029",
+            "name": "beforeInsertSanitizeFields",
+            "summary": "Remap\u0020the\u0020input\u0020values\u0020in\u0020order\u0020to\u0020satisfy\u0020the\u0020data\u002Dmodel\u003A",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method_beforeInsertSanitizeFields"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003AisCompositeRowTag\u0028\u0029",
+            "name": "isCompositeRowTag",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method_isCompositeRowTag"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003AcompositeRowOnly\u0028\u0029",
+            "name": "compositeRowOnly",
+            "summary": "Print\u0020only\u0020the\u0020values\u0020for\u0020the\u0020composite\u0020row.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method_compositeRowOnly"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003AcomponentRowOnly\u0028\u0029",
+            "name": "componentRowOnly",
+            "summary": "Print\u0020only\u0020the\u0020values\u0020for\u0020the\u0020component\u0020row.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method_componentRowOnly"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003AisCompositeRow\u0028\u0029",
+            "name": "isCompositeRow",
+            "summary": "Decide\u0020whether\u0020the\u0020current\u0020row\u0020refers\u0020to\u0020the\u0020composite\u0020payment\u0020or\u0020to\u0020a\u0020\u0022split\u0022\u0020invoice\u002Ditem",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method_isCompositeRow"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003AselectiveRowDisplay\u0028\u0029",
+            "name": "selectiveRowDisplay",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method_selectiveRowDisplay"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003AcreateSupportingDocumentsDownload\u0028\u0029",
+            "name": "createSupportingDocumentsDownload",
+            "summary": "Callback\u002Dhook\u0020for\u0020download\u002Dlink\u0020display\u0020\u0028view,\u0020delete,\u0020list\u0029",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#method_createSupportingDocumentsDownload"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003ATEMPLATE",
+            "name": "TEMPLATE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#constant_TEMPLATE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003ATABLE",
+            "name": "TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#constant_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003ADEBIT_NOTES_TABLE",
+            "name": "DEBIT_NOTES_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#constant_DEBIT_NOTES_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003ASPLIT_DATABASE_STORAGE_ENTRIES_TABLE",
+            "name": "SPLIT_DATABASE_STORAGE_ENTRIES_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#constant_SPLIT_DATABASE_STORAGE_ENTRIES_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003ACOMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE",
+            "name": "COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#constant_COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003AROW_TAG_PREFIX",
+            "name": "ROW_TAG_PREFIX",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#constant_ROW_TAG_PREFIX"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003A\u0024invoiceExpanded",
+            "name": "invoiceExpanded",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#property_invoiceExpanded"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003A\u0024joinStructure",
+            "name": "joinStructure",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#property_joinStructure"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003A\u0024databaseStorageUtil",
+            "name": "databaseStorageUtil",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#property_databaseStorageUtil"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003A\u0024financeService",
+            "name": "financeService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#property_financeService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003A\u0024orgaRolesService",
+            "name": "orgaRolesService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#property_orgaRolesService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003A\u0024participantFieldsService",
+            "name": "participantFieldsService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#property_participantFieldsService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003A\u0024projectService",
+            "name": "projectService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#property_projectService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Invoices\u003A\u003A\u0024userStorage",
+            "name": "userStorage",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-Invoices.html#property_userStorage"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\IPageRenderer",
             "name": "IPageRenderer",
@@ -25381,6 +27156,11 @@ Search.appendIndex(
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#method___construct"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AgenerateBasePMEOptions\u0028\u0029",
+            "name": "generateBasePMEOptions",
+            "summary": "Create\u0020the\u0020base\u0020options\u0020array\u0020for\u0020phpMyEdit.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#method_generateBasePMEOptions"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AparticipantFieldMultiplicityNames\u0028\u0029",
             "name": "participantFieldMultiplicityNames",
             "summary": "",
@@ -25488,7 +27268,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AcreateDefaultFDD\u0028\u0029",
             "name": "createDefaultFDD",
-            "summary": "The\u0020following\u0020maybe\u0020does\u0020not\u0020belong\u0020her,\u0020but\u0020gives\u0020some\u0020outdated\ndocs\u0020for\u0020the\u0020field\u0020definitions\u0020\u0028fdd\u0029.",
+            "summary": "The\u0020following\u0020maybe\u0020does\u0020not\u0020belong\u0020here,\u0020but\u0020gives\u0020some\u0020outdated\ndocs\u0020for\u0020the\u0020field\u0020definitions\u0020\u0028fdd\u0029.",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#method_createDefaultFDD"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AbeforeUpdateRemoveUnchanged\u0028\u0029",
@@ -25515,11 +27295,6 @@ Search.appendIndex(
             "name": "debugPrintValues",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#method_debugPrintValues"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AextractInstrumentRanking\u0028\u0029",
-            "name": "extractInstrumentRanking",
-            "summary": "The\u0020ranking\u0020of\u0020the\u0020mussician\u0027s\u0020instruments\u0020is\u0020implicitly\u0020stored\nin\u0020the\u0020order\u0020of\u0020the\u0020instrument\u0020ids.\u0020Change\u0020the\u0020coressponding\nfield\u0020to\u0020include\u0020the\u0020ranking\u0020explicitly.",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#method_extractInstrumentRanking"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AfindJoinColumnPivot\u0028\u0029",
             "name": "findJoinColumnPivot",
@@ -25616,6 +27391,16 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#method_makeFieldTranslationFddValues"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AmakeEnumTranslationsTable\u0028\u0029",
+            "name": "makeEnumTranslationsTable",
+            "summary": "Generate\u0020an\u0020SQL\u0020fragment\u0020for\u0020the\u0020sake\u0020of\u0020haveing\u0020translated\u0020enum\u0020values\navailable\u0020in\u0020the\u0020legacy\u0020code.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#method_makeEnumTranslationsTable"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AmakeEnumTranslationsJoin\u0028\u0029",
+            "name": "makeEnumTranslationsJoin",
+            "summary": "Generate\u0020an\u0020SQL\u0020fragment\u0020for\u0020the\u0020sake\u0020of\u0020haveing\u0020translated\u0020enum\u0020values\navailable\u0020in\u0020the\u0020legacy\u0020code.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#method_makeEnumTranslationsJoin"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AunsetRequestValue\u0028\u0029",
             "name": "unsetRequestValue",
             "summary": "Unset\u0020a\u0020value\u0020in\u0020the\u0020input\u0020vars\u0020of\u0020legacy\u0020PME\u0020triggers.",
@@ -25666,65 +27451,10 @@ Search.appendIndex(
             "summary": "Assume\u0020the\u0020join\u0020is\u0020\u0028at\u0020most\u0029\u0020single\u0020valued.\u0020Otherwise\u0020the\u0020values\nare\u0020split\u0020by\u0020PMETableViewBase\u003A\u003AVALUES_SEP\u0020\u0028comma\u0029.\u0020If\u0020this\u0020flag\nis\u0020set,\u0020then\u0020the\u0020expected\u0020format\u0020of\u0020the\u0020data\u0020field\u0020is",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_JOIN_SINGLE_VALUED"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AMUSICIANS_TABLE",
-            "name": "MUSICIANS_TABLE",
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ACOMPOSITE_PAYMENTS_TABLE",
+            "name": "COMPOSITE_PAYMENTS_TABLE",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_MUSICIANS_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AMUSICIAN_EMAILS_TABLE",
-            "name": "MUSICIAN_EMAILS_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_MUSICIAN_EMAILS_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECTS_TABLE",
-            "name": "PROJECTS_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECTS_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AFIELD_TRANSLATIONS_TABLE",
-            "name": "FIELD_TRANSLATIONS_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_FIELD_TRANSLATIONS_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ASEPA_BANK_ACCOUNTS_TABLE",
-            "name": "SEPA_BANK_ACCOUNTS_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_SEPA_BANK_ACCOUNTS_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ASEPA_DEBIT_MANDATES_TABLE",
-            "name": "SEPA_DEBIT_MANDATES_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_SEPA_DEBIT_MANDATES_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ASEPA_BULK_TRANSACTIONS_TABLE",
-            "name": "SEPA_BULK_TRANSACTIONS_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_SEPA_BULK_TRANSACTIONS_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ASEPA_BULK_TRANSACTION_DATA_TABLE",
-            "name": "SEPA_BULK_TRANSACTION_DATA_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_SEPA_BULK_TRANSACTION_DATA_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_PARTICIPANTS_TABLE",
-            "name": "PROJECT_PARTICIPANTS_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_PARTICIPANTS_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_PARTICIPANT_FIELDS_TABLE",
-            "name": "PROJECT_PARTICIPANT_FIELDS_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_PARTICIPANT_FIELDS_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_PARTICIPANT_FIELDS_DATA_TABLE",
-            "name": "PROJECT_PARTICIPANT_FIELDS_DATA_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_PARTICIPANT_FIELDS_DATA_TABLE"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE",
-            "name": "PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE"
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_COMPOSITE_PAYMENTS_TABLE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ADATABASE_STORAGES_TABLE",
             "name": "DATABASE_STORAGES_TABLE",
@@ -25736,35 +27466,60 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_DATABASE_STORAGE_DIR_ENTRIES_TABLE"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ADONATION_RECEIPTS_TABLE",
+            "name": "DONATION_RECEIPTS_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_DONATION_RECEIPTS_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AFIELD_TRANSLATIONS_TABLE",
+            "name": "FIELD_TRANSLATIONS_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_FIELD_TRANSLATIONS_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AFILES_TABLE",
+            "name": "FILES_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_FILES_TABLE"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AINSTRUMENTS_TABLE",
             "name": "INSTRUMENTS_TABLE",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_INSTRUMENTS_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AINSTRUMENT_FAMILIES_JOIN_TABLE",
+            "name": "INSTRUMENT_FAMILIES_JOIN_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_INSTRUMENT_FAMILIES_JOIN_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AINSTRUMENT_FAMILIES_TABLE",
+            "name": "INSTRUMENT_FAMILIES_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_INSTRUMENT_FAMILIES_TABLE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AINSTRUMENT_INSURANCES_TABLE",
             "name": "INSTRUMENT_INSURANCES_TABLE",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_INSTRUMENT_INSURANCES_TABLE"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_PAYMENTS_TABLE",
-            "name": "PROJECT_PAYMENTS_TABLE",
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AINVOICES_TABLE",
+            "name": "INVOICES_TABLE",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_PAYMENTS_TABLE"
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_INVOICES_TABLE"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ACOMPOSITE_PAYMENTS_TABLE",
-            "name": "COMPOSITE_PAYMENTS_TABLE",
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AINVOICE_ITEMS_TABLE",
+            "name": "INVOICE_ITEMS_TABLE",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_COMPOSITE_PAYMENTS_TABLE"
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_INVOICE_ITEMS_TABLE"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_INSTRUMENTS_TABLE",
-            "name": "PROJECT_INSTRUMENTS_TABLE",
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AMUSICIANS_TABLE",
+            "name": "MUSICIANS_TABLE",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_INSTRUMENTS_TABLE"
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_MUSICIANS_TABLE"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_INSTRUMENTATION_NUMBERS_TABLE",
-            "name": "PROJECT_INSTRUMENTATION_NUMBERS_TABLE",
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AMUSICIAN_EMAILS_TABLE",
+            "name": "MUSICIAN_EMAILS_TABLE",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_INSTRUMENTATION_NUMBERS_TABLE"
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_MUSICIAN_EMAILS_TABLE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AMUSICIAN_INSTRUMENTS_TABLE",
             "name": "MUSICIAN_INSTRUMENTS_TABLE",
@@ -25776,25 +27531,85 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_MUSICIAN_PHOTO_JOIN_TABLE"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ATAX_EXEMPTION_NOTICES_TABLE",
-            "name": "TAX_EXEMPTION_NOTICES_TABLE",
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECTS_TABLE",
+            "name": "PROJECTS_TABLE",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_TAX_EXEMPTION_NOTICES_TABLE"
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECTS_TABLE"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ADONATION_RECEIPTS_TABLE",
-            "name": "DONATION_RECEIPTS_TABLE",
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_INSTRUMENTATION_NUMBERS_TABLE",
+            "name": "PROJECT_INSTRUMENTATION_NUMBERS_TABLE",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_DONATION_RECEIPTS_TABLE"
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_INSTRUMENTATION_NUMBERS_TABLE"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AFILES_TABLE",
-            "name": "FILES_TABLE",
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_INSTRUMENTS_TABLE",
+            "name": "PROJECT_INSTRUMENTS_TABLE",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_FILES_TABLE"
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_INSTRUMENTS_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_PARTICIPANTS_TABLE",
+            "name": "PROJECT_PARTICIPANTS_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_PARTICIPANTS_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_PARTICIPANT_FIELDS_DATA_TABLE",
+            "name": "PROJECT_PARTICIPANT_FIELDS_DATA_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_PARTICIPANT_FIELDS_DATA_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE",
+            "name": "PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_PARTICIPANT_FIELDS_TABLE",
+            "name": "PROJECT_PARTICIPANT_FIELDS_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_PARTICIPANT_FIELDS_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APROJECT_PAYMENTS_TABLE",
+            "name": "PROJECT_PAYMENTS_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PROJECT_PAYMENTS_TABLE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ASENT_EMAILS_TABLE",
             "name": "SENT_EMAILS_TABLE",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_SENT_EMAILS_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ASEPA_BANK_ACCOUNTS_TABLE",
+            "name": "SEPA_BANK_ACCOUNTS_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_SEPA_BANK_ACCOUNTS_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ASEPA_BULK_TRANSACTIONS_TABLE",
+            "name": "SEPA_BULK_TRANSACTIONS_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_SEPA_BULK_TRANSACTIONS_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ASEPA_BULK_TRANSACTION_DATA_TABLE",
+            "name": "SEPA_BULK_TRANSACTION_DATA_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_SEPA_BULK_TRANSACTION_DATA_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ASEPA_DEBIT_MANDATES_TABLE",
+            "name": "SEPA_DEBIT_MANDATES_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_SEPA_DEBIT_MANDATES_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ATAX_EXEMPTION_NOTICES_TABLE",
+            "name": "TAX_EXEMPTION_NOTICES_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_TAX_EXEMPTION_NOTICES_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ATAX_EXEMPTION_ITEMS_TABLE",
+            "name": "TAX_EXEMPTION_ITEMS_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_TAX_EXEMPTION_ITEMS_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003ATAXATION_STATUTORY_SOURCES_TABLE",
+            "name": "TAXATION_STATUTORY_SOURCES_TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_TAXATION_STATUTORY_SOURCES_TABLE"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003AVALUES_SEP",
             "name": "VALUES_SEP",
@@ -25856,6 +27671,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PME_NAVIGATION_MULTI"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003APERSISTENT_CGI_KEYS",
+            "name": "PERSISTENT_CGI_KEYS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#constant_PERSISTENT_CGI_KEYS"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003A\u0024l",
             "name": "l",
             "summary": "",
@@ -25890,11 +27710,6 @@ Search.appendIndex(
             "name": "filterVisibility",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#property_filterVisibility"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003A\u0024pmeOptions",
-            "name": "pmeOptions",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#property_pmeOptions"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003A\u0024musicianId",
             "name": "musicianId",
@@ -25951,26 +27766,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#property_joinTables"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003A\u0024instrumentInfo",
-            "name": "instrumentInfo",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#property_instrumentInfo"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003A\u0024instruments",
-            "name": "instruments",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#property_instruments"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003A\u0024groupedInstruments",
-            "name": "groupedInstruments",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#property_groupedInstruments"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003A\u0024instrumentFamilies",
-            "name": "instrumentFamilies",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#property_instrumentFamilies"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\PMETableViewBase\u003A\u003A\u0024configService",
             "name": "configService",
             "summary": "",
@@ -26000,6 +27795,51 @@ Search.appendIndex(
             "name": "toolTipsService",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-PMETableViewBase.html#property_toolTipsService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectAssociates",
+            "name": "ProjectAssociates",
+            "summary": "\u0028Legal\u002D\u0029persons\u0020associated\u0020to\u0020a\u0020project,\u0020primarily\u0020for\u0020organizing\u0020financial\naffairs\u0020and\u0020in\u0020order\u0020to\u0020keep\u0020things\u0020together.\u0020This\u0020table\u0020view\u0020refers\u0020also\nto\u0020the\u0020ProjectParticipants\u0020table\u0020as\u0020well\u0020as\u0020the\u0020ProjectParticipants\u0020view\ndoes,\u0020but\u0020comes\u0020with\u0020a\u0020reduced\u0020set\u0020of\u0020fields.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectAssociates.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectAssociates\u003A\u003AshortTitle\u0028\u0029",
+            "name": "shortTitle",
+            "summary": "Short\u0020title\u0020for\u0020heading.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectAssociates.html#method_shortTitle"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectAssociates\u003A\u003Arender\u0028\u0029",
+            "name": "render",
+            "summary": "Show\u0020the\u0020underlying\u0020template\u0020page.\u0020This\u0020is\u0020supposed\u0020to\u0020echo\u0020html\ncode\u0020to\u0020stdout.\u0020This\u0020is\u0020the\u0020default\u0020do\u002Dnothing\u0020implementation.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectAssociates.html#method_render"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectAssociates\u003A\u003AbeforeDeleteTrigger\u0028\u0029",
+            "name": "beforeDeleteTrigger",
+            "summary": "This\u0020is\u0020a\u0020phpMyEdit\u0020before\u002DSOMETHING\u0020trigger.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectAssociates.html#method_beforeDeleteTrigger"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectAssociates\u003A\u003ATEMPLATE",
+            "name": "TEMPLATE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectAssociates.html#constant_TEMPLATE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectAssociates\u003A\u003ATABLE",
+            "name": "TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectAssociates.html#constant_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectAssociates\u003A\u003AEXTRA_VOICES",
+            "name": "EXTRA_VOICES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectAssociates.html#constant_EXTRA_VOICES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectAssociates\u003A\u003AINSERT_VOICES",
+            "name": "INSERT_VOICES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectAssociates.html#constant_INSERT_VOICES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectAssociates\u003A\u003A\u0024joinStructure",
+            "name": "joinStructure",
+            "summary": "Join\u0020table\u0020structure.\u0020All\u0020updates\u0020are\u0020handled\u0020in\nparent\u003A\u003AbeforeUpdateDoUpdateAll\u0028\u0029.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectAssociates.html#property_joinStructure"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectInstrumentationNumbers",
             "name": "ProjectInstrumentationNumbers",
@@ -26216,10 +28056,20 @@ Search.appendIndex(
             "summary": "When\u0020removing\u0020an\u0020instrument\u0020any\u0020pending\u0020voice\u0028s\u0029\u0020have\u0020to\u0020be\u0020removed,\u0020too.",
             "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectParticipants.html#method_beforeUpdateRemoveDependentVoices"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectParticipants\u003A\u003AbeforeUpdateCheckParticipationStatus\u0028\u0029",
+            "name": "beforeUpdateCheckParticipationStatus",
+            "summary": "Forbid\u0020changing\u0020the\u0020participation\u0020status\u0020to\u0020\u0022passive\u0022\u0020or\u0020\u0022associated\u0022\u0020if\u0020the\nparticipant\u0020is\u0020registered\u0020to\u0020perform\u0020with\u0020real\u0020instruments.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectParticipants.html#method_beforeUpdateCheckParticipationStatus"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectParticipants\u003A\u003AbeforeUpdateEnsureInstrumentationNumbers\u0028\u0029",
             "name": "beforeUpdateEnsureInstrumentationNumbers",
             "summary": "Make\u0020sure\u0020at\u0020least\u0020a\u0020dummy\u0020instrumentation\u0020number\u0020exists\u0020when\nadding\u0020people\u0020to\u0020project\u0020instruments.",
             "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectParticipants.html#method_beforeUpdateEnsureInstrumentationNumbers"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectParticipants\u003A\u003AbeforeDeleteTrigger\u0028\u0029",
+            "name": "beforeDeleteTrigger",
+            "summary": "This\u0020is\u0020a\u0020phpMyEdit\u0020before\u002DSOMETHING\u0020trigger.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectParticipants.html#method_beforeDeleteTrigger"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectParticipants\u003A\u003AtableTabId\u0028\u0029",
             "name": "tableTabId",
@@ -26235,11 +28085,6 @@ Search.appendIndex(
             "name": "tableTabs",
             "summary": "Export\u0020the\u0020description\u0020for\u0020the\u0020table\u0020tabs.",
             "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectParticipants.html#method_tableTabs"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectParticipants\u003A\u003AbeforeDeleteTrigger\u0028\u0029",
-            "name": "beforeDeleteTrigger",
-            "summary": "This\u0020is\u0020a\u0020phpMyEdit\u0020before\u002DSOMETHING\u0020trigger.",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectParticipants.html#method_beforeDeleteTrigger"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectParticipants\u003A\u003ATEMPLATE",
             "name": "TEMPLATE",
@@ -26261,15 +28106,15 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectParticipants.html#constant_INSERT_VOICES"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectParticipants\u003A\u003A\u0024participationContext",
+            "name": "participationContext",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectParticipants.html#property_participationContext"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectParticipants\u003A\u003A\u0024joinStructure",
             "name": "joinStructure",
             "summary": "Join\u0020table\u0020structure.\u0020All\u0020update\u0020are\u0020handled\u0020in\nparent\u003A\u003AbeforeUpdateDoUpdateAll\u0028\u0029.",
             "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectParticipants.html#property_joinStructure"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectParticipants\u003A\u003A\u0024project",
-            "name": "project",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectParticipants.html#property_project"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectParticipants\u003A\u003A\u0024contactsService",
             "name": "contactsService",
@@ -26325,11 +28170,6 @@ Search.appendIndex(
             "name": "shortTitle",
             "summary": "Short\u0020title\u0020for\u0020heading.",
             "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectPayments.html#method_shortTitle"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectPayments\u003A\u003AnavigationItem\u0028\u0029",
-            "name": "navigationItem",
-            "summary": "Return\u0020the\u0020navigation\u0020item\u0020for\u0020this\u0020renderer.",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectPayments.html#method_navigationItem"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectPayments\u003A\u003Arender\u0028\u0029",
             "name": "render",
@@ -26420,11 +28260,6 @@ Search.appendIndex(
             "name": "compositePaymentExpanded",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectPayments.html#property_compositePaymentExpanded"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectPayments\u003A\u003A\u0024project",
-            "name": "project",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-ProjectPayments.html#property_project"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\ProjectPayments\u003A\u003A\u0024joinStructure",
             "name": "joinStructure",
@@ -26711,11 +28546,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-SepaBankAccounts.html#property_joinStructure"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\SepaBankAccounts\u003A\u003A\u0024project",
-            "name": "project",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-SepaBankAccounts.html#property_project"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\SepaBankAccounts\u003A\u003A\u0024financeService",
             "name": "financeService",
             "summary": "",
@@ -26806,11 +28636,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-SepaBulkTransactions.html#property_joinStructure"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\SepaBulkTransactions\u003A\u003A\u0024project",
-            "name": "project",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-SepaBulkTransactions.html#property_project"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\SepaBulkTransactions\u003A\u003A\u0024financeService",
             "name": "financeService",
             "summary": "",
@@ -26820,6 +28645,46 @@ Search.appendIndex(
             "name": "bulkTransactionService",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-SepaBulkTransactions.html#property_bulkTransactionService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\TaxationStatutorySources",
+            "name": "TaxationStatutorySources",
+            "summary": "Table\u0020generator\u0020for\u0020Instruments\u0020table.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-TaxationStatutorySources.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\TaxationStatutorySources\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-TaxationStatutorySources.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\TaxationStatutorySources\u003A\u003AshortTitle\u0028\u0029",
+            "name": "shortTitle",
+            "summary": "Short\u0020title\u0020for\u0020heading.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-TaxationStatutorySources.html#method_shortTitle"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\TaxationStatutorySources\u003A\u003Arender\u0028\u0029",
+            "name": "render",
+            "summary": "Show\u0020the\u0020underlying\u0020template\u0020page.\u0020This\u0020is\u0020supposed\u0020to\u0020echo\u0020html\ncode\u0020to\u0020stdout.\u0020This\u0020is\u0020the\u0020default\u0020do\u002Dnothing\u0020implementation.",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-TaxationStatutorySources.html#method_render"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\TaxationStatutorySources\u003A\u003ATEMPLATE",
+            "name": "TEMPLATE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-TaxationStatutorySources.html#constant_TEMPLATE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\TaxationStatutorySources\u003A\u003ATABLE",
+            "name": "TABLE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-TaxationStatutorySources.html#constant_TABLE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\TaxationStatutorySources\u003A\u003A\u0024joinStructure",
+            "name": "joinStructure",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-TaxationStatutorySources.html#property_joinStructure"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\TaxationStatutorySources\u003A\u003A\u0024geoCodingService",
+            "name": "geoCodingService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-PageRenderer-TaxationStatutorySources.html#property_geoCodingService"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\TaxExemptionNotices",
             "name": "TaxExemptionNotices",
@@ -26855,11 +28720,6 @@ Search.appendIndex(
             "name": "joinStructure",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-TaxExemptionNotices.html#property_joinStructure"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\TaxExemptionNotices\u003A\u003A\u0024taxTypeNames",
-            "name": "taxTypeNames",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-TaxExemptionNotices.html#property_taxTypeNames"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\TaxExemptionNotices\u003A\u003A\u0024userStorage",
             "name": "userStorage",
@@ -26940,11 +28800,6 @@ Search.appendIndex(
             "name": "toolTipsService",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-PageRenderer-Util-Navigation.html#property_toolTipsService"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\PageRenderer\\Util\\Navigation\u003A\u003A\u0024pmeOptions",
-            "name": "pmeOptions",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-PageRenderer-Util-Navigation.html#property_pmeOptions"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\AppMTimeService",
             "name": "AppMTimeService",
@@ -27456,20 +29311,25 @@ Search.appendIndex(
             "summary": "Get\u0020a\u0020addressBook\u0020with\u0020the\u0020given\u0020its\u0020id.",
             "url": "classes/OCA-CAFEVDB-Service-CardDavService.html#method_addressBookById"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\CardDavService\u003A\u003AaddressBookPrincipalUri\u0028\u0029",
+            "name": "addressBookPrincipalUri",
+            "summary": "Get\u0020the\u0020uri\u0020of\u0020the\u0020original\u0020addressbook.",
+            "url": "classes/OCA-CAFEVDB-Service-CardDavService.html#method_addressBookPrincipalUri"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\CardDavService\u003A\u003AaddressBookUris\u0028\u0029",
+            "name": "addressBookUris",
+            "summary": "Get\u0020principal,\u0020shared\u0020and\u0020original\u0020uri\u0020from\u0020the\u0020addressBook\u0020id,\u0020as\u0020well\u0020as\nthe\u0020owner\u002Duser\u002Did.",
+            "url": "classes/OCA-CAFEVDB-Service-CardDavService.html#method_addressBookUris"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\CardDavService\u003A\u003ArefreshAddressBookManager\u0028\u0029",
             "name": "refreshAddressBookManager",
             "summary": "Force\u0020OCP\\Contacts\\IManager\u0020to\u0020be\u0020refreshed.",
             "url": "classes/OCA-CAFEVDB-Service-CardDavService.html#method_refreshAddressBookManager"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\CardDavService\u003A\u003A\u0024contactsUserId",
-            "name": "contactsUserId",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\CardDavService\u003A\u003A\u0024addressBookUserId",
+            "name": "addressBookUserId",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-CardDavService.html#property_contactsUserId"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\CardDavService\u003A\u003A\u0024configService",
-            "name": "configService",
-            "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-CardDavService.html#property_configService"
+            "url": "classes/OCA-CAFEVDB-Service-CardDavService.html#property_addressBookUserId"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\CardDavService\u003A\u003A\u0024addressBookManager",
             "name": "addressBookManager",
@@ -27480,6 +29340,21 @@ Search.appendIndex(
             "name": "cardDavBackend",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-CardDavService.html#property_cardDavBackend"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\CardDavService\u003A\u003A\u0024l",
+            "name": "l",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-CardDavService.html#property_l"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\CardDavService\u003A\u003A\u0024logger",
+            "name": "logger",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-CardDavService.html#property_logger"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\CardDavService\u003A\u003A\u0024userSession",
+            "name": "userSession",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-CardDavService.html#property_userSession"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\CloudAccountsService",
             "name": "CloudAccountsService",
@@ -27526,15 +29401,15 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-CloudAccountsService.html#method_removeGroupSubAdmin"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\CloudAccountsService\u003A\u003AgetAdminstrableGroupsGIDs\u0028\u0029",
-            "name": "getAdminstrableGroupsGIDs",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\CloudAccountsService\u003A\u003AgetAdministrableGroupsGIDs\u0028\u0029",
+            "name": "getAdministrableGroupsGIDs",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-CloudAccountsService.html#method_getAdminstrableGroupsGIDs"
+            "url": "classes/OCA-CAFEVDB-Service-CloudAccountsService.html#method_getAdministrableGroupsGIDs"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\CloudAccountsService\u003A\u003AgetAdminstrableGroups\u0028\u0029",
-            "name": "getAdminstrableGroups",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\CloudAccountsService\u003A\u003AgetAdministrableGroups\u0028\u0029",
+            "name": "getAdministrableGroups",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-CloudAccountsService.html#method_getAdminstrableGroups"
+            "url": "classes/OCA-CAFEVDB-Service-CloudAccountsService.html#method_getAdministrableGroups"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\CloudAccountsService\u003A\u003AaddCloudUserToProject\u0028\u0029",
             "name": "addCloudUserToProject",
@@ -28941,10 +30816,15 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#method_geoCodingService"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AaddressBookByName\u0028\u0029",
-            "name": "addressBookByName",
-            "summary": "Find\u0020a\u0020matching\u0020addressbook\u0020by\u0020its\u0020displayname.",
-            "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#method_addressBookByName"
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AphoneNumberService\u0028\u0029",
+            "name": "phoneNumberService",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#method_phoneNumberService"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AaddressBookByUri\u0028\u0029",
+            "name": "addressBookByUri",
+            "summary": "Get\u0020a\u0020addressBook\u0020with\u0020the\u0020given\u0020uri.\u0020If\u0020the\u0020address\u002Dbook\u0020is\u0020shared\u0020the\nuri\u0020is\u0020tweak\u0020to\u0020match\u0020the\u0020NC\u002Dstyle\u0020\u0022..._shared_by_...\u0022\u0020uri.",
+            "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#method_addressBookByUri"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AemailContacts\u0028\u0029",
             "name": "emailContacts",
@@ -28981,6 +30861,21 @@ Search.appendIndex(
             "summary": "Export\u0020the\u0020stored\u0020data\u0020for\u0020one\u0020musician\u0020as\u0020vCard.",
             "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#method_export"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AmergeMusician\u0028\u0029",
+            "name": "mergeMusician",
+            "summary": "Merge\u0020a\u0020musician\u0020entity\u0020into\u0020an\u0020existing\u0020contact.\u0020The\u0020result\u0020can\u0020be\u0020fed\nin\u0020to\u0020IAddressBook\u003A\u003AcreateOrUpdate\u0028\u0029.\u0020The\u0020URI\u0020component\u0020of\u0020\u0024target\u0020is\npreserved.\u0020If\u0020the\u0020musician\u0020is\u0020\u0028soft\u002D\u0029deleted,\u0020then\u0020the\u0020link\u0020to\u0020the\naddress\u002Dbook\u0020is\u0020removed.",
+            "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#method_mergeMusician"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AregisterContactSynchronization\u0028\u0029",
+            "name": "registerContactSynchronization",
+            "summary": "Register\u0020a\u0020pre\u002Dcommit\u0020action\u0020in\u0020order\u0020to\u0020merge\u0020changed\u0020data\u0020into\u0020a\u0020linked\naddressbook.\u0020This\u0020is\u0020done\u0020\u0022brute\u002Dforce\u0022\u003A\u0020the\u0020musician\u0020is\u0020exported\u0020into\u0020a\nvCard\u0020and\u0020the\u0020result\u0020is\u0020then\u0020\u0022merged\u0022\u0020by\u0020ContactService\u003A\u003AmergeMusician\u0028\u0029\ninto\u0020an\u0020existing\u0020entry,\u0020if\u0020that\u0020is\u0020found.",
+            "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#method_registerContactSynchronization"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AfindMusicianContact\u0028\u0029",
+            "name": "findMusicianContact",
+            "summary": "Find\u0020an\u0020associated\u0020addressbook\u0020contact\u0020if\u0020there\u0020is\u0020one.\u0020The\u0020search\u0020is\nperformed\u0020by\u0020UID\u0020\u0028\u003D\u003D\u0020\u0024musician\u002D\u003EgetUuid\u0028\u0029\u0029.",
+            "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#method_findMusicianContact"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003AVCARD_VERSION",
             "name": "VCARD_VERSION",
             "summary": "",
@@ -28990,6 +30885,16 @@ Search.appendIndex(
             "name": "AVATAR_SIZE",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#constant_AVATAR_SIZE"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003ATYPED_PROPERTIES",
+            "name": "TYPED_PROPERTIES",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#constant_TYPED_PROPERTIES"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003A\u0024addressBooksByUri",
+            "name": "addressBooksByUri",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-ContactsService.html#property_addressBooksByUri"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ContactsService\u003A\u003A\u0024configService",
             "name": "configService",
@@ -30055,6 +31960,11 @@ Search.appendIndex(
             "name": "generatePaymentMailMergeData",
             "summary": "Generate\u0020mail\u002Dmerge\u0020data\u0020for\u0020stanard\u0020receipts.\u0020The\u0020actual\u0020merging\u0020has\nthen\u0020to\u0020be\u0020performed\u0020by\u0020the\u0020MailMergeController.",
             "url": "classes/OCA-CAFEVDB-Service-Finance-FinanceService.html#method_generatePaymentMailMergeData"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\FinanceService\u003A\u003AgenerateInvoiceMailMergeData\u0028\u0029",
+            "name": "generateInvoiceMailMergeData",
+            "summary": "Generate\u0020mail\u002Dmerge\u0020data\u0020for\u0020invoices.\u0020The\u0020actual\u0020merging\u0020has\nthen\u0020to\u0020be\u0020performed\u0020by\u0020the\u0020MailMergeController.",
+            "url": "classes/OCA-CAFEVDB-Service-Finance-FinanceService.html#method_generateInvoiceMailMergeData"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\Finance\\FinanceService\u003A\u003AgenerateReceiptOfDonationMailMergeData\u0028\u0029",
             "name": "generateReceiptOfDonationMailMergeData",
@@ -32181,10 +34091,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-IMAPService.html#method_connect"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\IMAPService\u003A\u003Adisconnet\u0028\u0029",
-            "name": "disconnet",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\IMAPService\u003A\u003Adisconnect\u0028\u0029",
+            "name": "disconnect",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-IMAPService.html#method_disconnet"
+            "url": "classes/OCA-CAFEVDB-Service-IMAPService.html#method_disconnect"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\IMAPService\u003A\u003AdecodeSubject\u0028\u0029",
             "name": "decodeSubject",
@@ -32961,30 +34871,40 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_SUBSCRIPTION_SELF_LINK"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ATEMPLATE_FILE_PREFIX",
-            "name": "TEMPLATE_FILE_PREFIX",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ATEMPLATE_MAILMAN_SEPARATOR",
+            "name": "TEMPLATE_MAILMAN_SEPARATOR",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_PREFIX"
+            "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_SEPARATOR"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ATEMPLATE_FILE_ADMIN",
-            "name": "TEMPLATE_FILE_ADMIN",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ATEMPLATE_FILE_SEPARATOR",
+            "name": "TEMPLATE_FILE_SEPARATOR",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_ADMIN"
+            "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_SEPARATOR"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ATEMPLATE_FILE_MEMBER",
-            "name": "TEMPLATE_FILE_MEMBER",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ATEMPLATE_MAILMAN_PREFIX",
+            "name": "TEMPLATE_MAILMAN_PREFIX",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_MEMBER"
+            "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_PREFIX"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ATEMPLATE_FILE_USER",
-            "name": "TEMPLATE_FILE_USER",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ATEMPLATE_MAILMAN_ADMIN",
+            "name": "TEMPLATE_MAILMAN_ADMIN",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_USER"
+            "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_ADMIN"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ATEMPLATE_FILE_RCPTS",
-            "name": "TEMPLATE_FILE_RCPTS",
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ATEMPLATE_MAILMAN_MEMBER",
+            "name": "TEMPLATE_MAILMAN_MEMBER",
             "summary": "",
-            "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_RCPTS"
+            "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_MEMBER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ATEMPLATE_MAILMAN_USER",
+            "name": "TEMPLATE_MAILMAN_USER",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_USER"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ATEMPLATE_MAILMAN_RCPTS",
+            "name": "TEMPLATE_MAILMAN_RCPTS",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_RCPTS"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\MailingListsService\u003A\u003ASTATUS_SUBSCRIBED",
             "name": "STATUS_SUBSCRIBED",
@@ -33191,6 +35111,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-MigrationsService.html#method_getUnapplied"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\MigrationsService\u003A\u003AgetApplied\u0028\u0029",
+            "name": "getApplied",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-MigrationsService.html#method_getApplied"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\MigrationsService\u003A\u003AgetAll\u0028\u0029",
             "name": "getAll",
             "summary": "",
@@ -33241,6 +35166,11 @@ Search.appendIndex(
             "summary": "Find\u0020all\u0020unapplied\u0020migrations.",
             "url": "classes/OCA-CAFEVDB-Service-MigrationsService.html#method_findUnappliedMigrations"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\MigrationsService\u003A\u003AfindAppliedMigrations\u0028\u0029",
+            "name": "findAppliedMigrations",
+            "summary": "Find\u0020all\u0020applied\u0020migrations.",
+            "url": "classes/OCA-CAFEVDB-Service-MigrationsService.html#method_findAppliedMigrations"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\MigrationsService\u003A\u003AfindMigrations\u0028\u0029",
             "name": "findMigrations",
             "summary": "",
@@ -33280,6 +35210,11 @@ Search.appendIndex(
             "name": "unappliedMigrations",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-MigrationsService.html#property_unappliedMigrations"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\MigrationsService\u003A\u003A\u0024appliedMigrations",
+            "name": "appliedMigrations",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-MigrationsService.html#property_appliedMigrations"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\MigrationsService\u003A\u003A\u0024entityManager",
             "name": "entityManager",
@@ -35841,10 +37776,20 @@ Search.appendIndex(
             "summary": "PME\u002Dlegacy.",
             "url": "classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyDonationReceiptFileName"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\DatabaseStorageNodeNameTrait\u003A\u003AgetLegacyinvoiceFileName\u0028\u0029",
+            "name": "getLegacyinvoiceFileName",
+            "summary": "PME\u002Dlegacy.",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyinvoiceFileName"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\DatabaseStorageNodeNameTrait\u003A\u003AgetDonationReceiptFileName\u0028\u0029",
             "name": "getDonationReceiptFileName",
             "summary": "Generate\u0020a\u0020file\u002Dname\u0020for\u0020the\u0020given\u0020donation.",
             "url": "classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getDonationReceiptFileName"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\DatabaseStorageNodeNameTrait\u003A\u003AgetInvoiceFileName\u0028\u0029",
+            "name": "getInvoiceFileName",
+            "summary": "Generate\u0020a\u0020file\u002Dname\u0020for\u0020the\u0020given\u0020donation.",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getInvoiceFileName"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\DatabaseStorageNodeNameTrait\u003A\u003A\u0024appL10n",
             "name": "appL10n",
@@ -36006,6 +37951,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Storage-Database-Factory.html#method_getDonationReceiptsStorage"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\Factory\u003A\u003AgetInvoicesStorage\u0028\u0029",
+            "name": "getInvoicesStorage",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-Factory.html#method_getInvoicesStorage"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\Factory\u003A\u003AgetProjectBalanceSupportingDocumentsStorage\u0028\u0029",
             "name": "getProjectBalanceSupportingDocumentsStorage",
             "summary": "",
@@ -36130,6 +38080,61 @@ Search.appendIndex(
             "name": "updated",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Storage-Database-InMemoryFileNode.html#property_updated"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\InvoicesStorage",
+            "name": "InvoicesStorage",
+            "summary": "Storage\u0020implementation\u0020for\u0020data\u002Dbase\u0020storage,\u0020including\u0020access\u0020to\nencrypted\u0020entities.",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-InvoicesStorage.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\InvoicesStorage\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "\u007B\u0040inheritdoc\u007D",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-InvoicesStorage.html#method___construct"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\InvoicesStorage\u003A\u003AgetBirthTimeFromEntity\u0028\u0029",
+            "name": "getBirthTimeFromEntity",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-InvoicesStorage.html#method_getBirthTimeFromEntity"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\InvoicesStorage\u003A\u003AfindDocument\u0028\u0029",
+            "name": "findDocument",
+            "summary": "Find\u0020an\u0020existing\u0020directory\u0020entry\u0020for\u0020the\u0020given\u0020file.",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-InvoicesStorage.html#method_findDocument"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\InvoicesStorage\u003A\u003AaddDocument\u0028\u0029",
+            "name": "addDocument",
+            "summary": "Add\u0020a\u0020new\u0020document\u0020to\u0020the\u0020storage.",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-InvoicesStorage.html#method_addDocument"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\InvoicesStorage\u003A\u003AreplaceDocument\u0028\u0029",
+            "name": "replaceDocument",
+            "summary": "Add\u0020or\u0020replace\u0020a\u0020directory\u0020entry\u0020for\u0020the\u0020given\u0020entity\u0020and\u0020file.",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-InvoicesStorage.html#method_replaceDocument"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\InvoicesStorage\u003A\u003AremoveDocument\u0028\u0029",
+            "name": "removeDocument",
+            "summary": "Remove\u0020a\u0020document\u0020from\u0020the\u0020storage.\u0020Note\u0020that\u0020this\u0020does\u0020not\u0020remove\u0020the\nfile\u0020from\u0020the\u0020transaction\u0020entity.",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-InvoicesStorage.html#method_removeDocument"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\InvoicesStorage\u003A\u003AfindFiles\u0028\u0029",
+            "name": "findFiles",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-InvoicesStorage.html#method_findFiles"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\InvoicesStorage\u003A\u003AgetStorageModificationDateTime\u0028\u0029",
+            "name": "getStorageModificationDateTime",
+            "summary": "Return\u0020the\u0020overall\u0020modification\u0020time\u0020of\u0020the\u0020entire\u0020storage.",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-InvoicesStorage.html#method_getStorageModificationDateTime"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\InvoicesStorage\u003A\u003AgetShortId\u0028\u0029",
+            "name": "getShortId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-InvoicesStorage.html#method_getShortId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\InvoicesStorage\u003A\u003A\u0024entityRepository",
+            "name": "entityRepository",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Storage-Database-InvoicesStorage.html#property_entityRepository"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\MountProvider",
             "name": "MountProvider",
@@ -36765,21 +38770,6 @@ Search.appendIndex(
             "name": "unlink",
             "summary": "\u007B\u0040inheritdoc\u007D",
             "url": "classes/OCA-CAFEVDB-Storage-Database-TaxExemptionNoticesStorage.html#method_unlink"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\TaxExemptionNoticesStorage\u003A\u003AparsePath\u0028\u0029",
-            "name": "parsePath",
-            "summary": "Parse\u0020the\u0020filename\u0020of\u0020the\u0020given\u0020path\u0020and\u0020extract\u0020the\u0020tax\u0020type\u0020and\u0020the\nassessment\u0020period.",
-            "url": "classes/OCA-CAFEVDB-Storage-Database-TaxExemptionNoticesStorage.html#method_parsePath"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\TaxExemptionNoticesStorage\u003A\u003Arename\u0028\u0029",
-            "name": "rename",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Storage-Database-TaxExemptionNoticesStorage.html#method_rename"
-        },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\TaxExemptionNoticesStorage\u003A\u003Atouch\u0028\u0029",
-            "name": "touch",
-            "summary": "\u007B\u0040inheritdoc\u007D",
-            "url": "classes/OCA-CAFEVDB-Storage-Database-TaxExemptionNoticesStorage.html#method_touch"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\Database\\TaxExemptionNoticesStorage\u003A\u003AgetStorageModificationDateTime\u0028\u0029",
             "name": "getStorageModificationDateTime",
@@ -38046,6 +40036,26 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#property_secureRandom"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\BackedEnumTrait",
+            "name": "BackedEnumTrait",
+            "summary": "Some\u0020convenience\u0020stuff\u0020for\u0020PHP\u0020enums.",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-BackedEnumTrait.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\BackedEnumTrait\u003A\u003Anames\u0028\u0029",
+            "name": "names",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-BackedEnumTrait.html#method_names"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\BackedEnumTrait\u003A\u003Avalues\u0028\u0029",
+            "name": "values",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-BackedEnumTrait.html#method_values"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\BackedEnumTrait\u003A\u003Aarray\u0028\u0029",
+            "name": "array",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Toolkit-Traits-BackedEnumTrait.html#method_array"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Toolkit\\Traits\\CloudAdminTrait",
             "name": "CloudAdminTrait",
             "summary": "Utitlity\u0020trait\u0020in\u0020order\u0020to\u0020get\u0020the\u0020addresses\u0020of\u0020the\u0020cloud\u0020admins.",
@@ -38816,6 +40826,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getDonationReceiptsPath"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Traits\\ConfigTrait\u003A\u003AgetInvoicesPath\u0028\u0029",
+            "name": "getInvoicesPath",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getInvoicesPath"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Traits\\ConfigTrait\u003A\u003AgetPostBoxFolderPath\u0028\u0029",
             "name": "getPostBoxFolderPath",
             "summary": "",
@@ -39205,6 +41220,31 @@ Search.appendIndex(
             "name": "flattenProject",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Traits-FlattenEntityTrait.html#method_flattenProject"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Traits\\GetUserTrait",
+            "name": "GetUserTrait",
+            "summary": "Convenience\u0020function\u0020to\u0020fetch\u0020the\u0020user\u0020either\u0020from\u0020the\u0020NC\u0020user\u002Dsession\u0020or\nif\u0020in\u0020CLI\u0020mode\u0020from\u0020a\u0020super\u002Dglobals\u0020variable\u0020\u0027cafevdb\u002Duser\u0027",
+            "url": "classes/OCA-CAFEVDB-Traits-GetUserTrait.html"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Traits\\GetUserTrait\u003A\u003AgetUser\u0028\u0029",
+            "name": "getUser",
+            "summary": "Get\u0020the\u0020currently\u0020active\u0020user.",
+            "url": "classes/OCA-CAFEVDB-Traits-GetUserTrait.html#method_getUser"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Traits\\GetUserTrait\u003A\u003AgetUserId\u0028\u0029",
+            "name": "getUserId",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Traits-GetUserTrait.html#method_getUserId"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Traits\\GetUserTrait\u003A\u003A\u0024userManager",
+            "name": "userManager",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Traits-GetUserTrait.html#property_userManager"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Traits\\GetUserTrait\u003A\u003A\u0024user",
+            "name": "user",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Traits-GetUserTrait.html#property_user"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Traits\\InitialStateTrait",
             "name": "InitialStateTrait",

@@ -1,0 +1,5 @@
+<map id="isBulkTransactionRow" name="isBulkTransactionRow">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,21,158,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="206,5,445,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,32,190,32,190,37,158,37"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="storeTemplate" name="storeTemplate">
+<area shape="rect" id="Node000001" title="Take the text supplied by $contents and store it in the DB EmailTemplates table with tag $templateNam..." alt="" coords="5,31,109,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a016db532796f0e82eb53352cd95baf70" title=" " alt="" coords="157,5,256,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,33,141,27,142,32,110,38"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ad647aec9f224f570e5c79be0a9ddd3d1" title=" " alt="" coords="175,56,238,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="110,50,160,59,159,64,109,55"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a35115d6c4451757ebad296254ead1c5a" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="304,56,374,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="239,67,289,67,289,72,239,72"/>
+</map>

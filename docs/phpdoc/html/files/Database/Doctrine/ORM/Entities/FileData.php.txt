@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -73,7 +73,18 @@ class FileData implements \ArrayAccess
    * @var string
    */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true])]
-  #[Gedmo\Slug(fields: ['data'], updatable: true, unique: false, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler'), new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\AssociationSlugHandler', options: [new Gedmo\SlugHandlerOption(name: 'associationSlug', value: 'file.dataHash')])])]
+  #[Gedmo\Slug(
+    fields: ['data'],
+    updatable: true,
+    unique: false,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\HashHandler::class,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\AssociationSlugHandler::class,
+    options: [ 'associationSlug' => 'file.dataHash' ],
+  )]
   protected $dataHash;
 
   /**

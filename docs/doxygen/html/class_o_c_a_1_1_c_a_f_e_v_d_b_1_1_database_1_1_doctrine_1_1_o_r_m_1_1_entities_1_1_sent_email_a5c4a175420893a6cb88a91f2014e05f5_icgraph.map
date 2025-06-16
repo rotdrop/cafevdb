@@ -1,5 +1,5 @@
 <map id="setDonationReceipt" name="setDonationReceipt">
-<area shape="rect" id="Node000001" title="Sets $donationReceipt." alt="" coords="264,27,401,53"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#ab746c3be8a804d9ef4bdcb15866f741f" title="Set notificationMessage." alt="" coords="5,5,216,75"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="250,43,216,43,216,37,250,37"/>
+<area shape="rect" id="Node000001" title="Sets $donationReceipt." alt="" coords="264,29,400,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#ab746c3be8a804d9ef4bdcb15866f741f" title="Set notificationMessage." alt="" coords="5,5,216,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="248,45,216,45,216,40,248,40"/>
 </map>

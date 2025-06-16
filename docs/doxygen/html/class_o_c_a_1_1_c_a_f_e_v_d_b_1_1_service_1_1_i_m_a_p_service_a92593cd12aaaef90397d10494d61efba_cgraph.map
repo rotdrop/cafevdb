@@ -1,0 +1,7 @@
+<map id="searchHeaders" name="searchHeaders">
+<area shape="rect" id="Node000001" title="Search for the given headers." alt="" coords="5,5,115,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_service.html#a26ff4cc57ac93c5796b1b63a5e34a3aa" title="Fetch all mailboxes and cache them for the current request." alt="" coords="163,5,272,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,16,147,16,147,21,115,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_service.html#a7fa09981ff2a52db04a9899e17215fdf" title=" " alt="" coords="320,5,387,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="273,16,305,16,305,21,273,21"/>
+</map>

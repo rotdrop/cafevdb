@@ -1,0 +1,7 @@
+<map id="getDTEnd" name="getDTEnd">
+<area shape="rect" id="Node000001" title=" " alt="" coords="248,63,328,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a6f8658acb2cf99b3e8bec2122a1ca6ee" title="Ensure that the &quot;other&quot; calendar contains a project registration event if and only if the registratio..." alt="" coords="5,5,200,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,66,199,59,201,54,233,61"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a04b935097108ce7abeca9012bb4cfeba" title="Convert the given VEvent object to a simpler flat array structure." alt="" coords="8,88,197,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,91,198,99,197,93,232,86"/>
+</map>

@@ -1,7 +1,7 @@
 <map id="fetchFolders" name="fetchFolders">
-<area shape="rect" id="Node000001" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="5,35,100,60"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="149,5,309,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,37,138,30,139,36,101,42"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="148,55,309,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="101,52,135,58,134,63,100,57"/>
+<area shape="rect" id="Node000001" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="5,35,99,61"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="147,5,306,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,38,131,32,132,37,99,43"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="147,56,307,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="99,53,132,59,131,64,99,58"/>
 </map>

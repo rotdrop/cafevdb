@@ -64,7 +64,7 @@ class TooltipsFind extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:tooltips-find')
+      ->setName($this->appName . ':tooltips-find')
       ->setDescription('Find used tooltip- tags in the php-sources.');
   }
 

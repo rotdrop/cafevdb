@@ -1,19 +1,21 @@
 <map id="getTranslationLanguage" name="getTranslationLanguage">
-<area shape="rect" id="Node000001" title="We have this Nextcloud convention that de means &quot;German personal Du&quot; and de_DE means &quot;German formal S..." alt="" coords="559,115,719,141"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa2a8f3ff74c0ad950fb7418244d04a5a" title=" " alt="" coords="304,39,511,65"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="587,113,510,87,450,67,451,62,512,81,589,108"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a1f1e3a7628fefdebfcff97c388d72bb1" title="Join with an in&#45;database translation table." alt="" coords="319,141,496,166"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="546,141,496,146,496,141,545,136"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,5,234,45"/>
-<area shape="poly" id="edge8_Node000001_Node000004" title=" " alt="" coords="545,122,429,105,303,79,255,60,215,48,217,43,257,55,305,73,430,100,545,116"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,261,234,301"/>
-<area shape="poly" id="edge9_Node000001_Node000005" title=" " alt="" coords="595,148,512,180,385,218,257,252,211,264,210,259,255,247,383,213,510,175,594,143"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="330,138,302,123,286,107,278,90,270,74,254,59,233,48,235,43,258,55,274,71,283,88,291,104,306,119,332,133"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="378,176,313,219,257,252,225,264,223,259,255,247,310,215,375,172"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,69,256,109"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="337,140,217,112,219,107,338,135"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,133,234,173"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="305,156,234,156,234,151,305,151"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,197,234,237"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="338,172,219,200,217,195,337,167"/>
+<area shape="rect" id="Node000001" title="We have this Nextcloud convention that de means &quot;German personal Du&quot; and de_DE means &quot;German formal S..." alt="" coords="557,81,716,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa2a8f3ff74c0ad950fb7418244d04a5a" title=" " alt="" coords="303,5,509,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="581,78,508,53,452,35,453,30,510,48,583,73"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a1f1e3a7628fefdebfcff97c388d72bb1" title="Join with an in&#45;database translation table." alt="" coords="318,173,494,200"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="588,117,443,175,441,170,586,112"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,32,233,75"/>
+<area shape="poly" id="edge9_Node000001_Node000004" title=" " alt="" coords="542,90,233,64,233,59,542,84"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,99,233,141"/>
+<area shape="poly" id="edge10_Node000001_Node000005" title=" " alt="" coords="541,102,233,118,233,112,541,97"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="374,165,320,126,254,89,224,78,226,73,256,84,323,122,377,161"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="332,172,221,145,222,139,333,167"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_associates.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{{Show the underlying template page.This is supposed to echo html code to stdout. This is the default..." alt="" coords="27,299,233,341"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="377,212,323,251,256,289,226,301,224,296,254,284,320,247,374,208"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,365,255,408"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="390,214,337,285,299,323,256,356,233,367,230,363,253,351,295,319,332,282,386,211"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,165,233,208"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="303,189,233,189,233,184,303,184"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,232,233,275"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="333,207,222,234,221,229,332,202"/>
 </map>

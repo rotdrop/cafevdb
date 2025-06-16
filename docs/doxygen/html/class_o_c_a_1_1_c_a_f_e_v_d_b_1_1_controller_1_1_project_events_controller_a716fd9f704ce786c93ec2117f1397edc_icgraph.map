@@ -1,5 +1,7 @@
 <map id="makeCalendarAppData" name="makeCalendarAppData">
-<area shape="rect" id="Node000001" title="Generate data for connecting to the NC calendar app as of NC &gt;= v30." alt="" coords="168,5,325,31"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_events_controller.html#ab71249c3cd64ecb5267cb2627d8c10f2" title="Provide a value for an input element (select option, input) which codes all neccessary info to unique..." alt="" coords="5,5,120,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,21,120,21,120,15,154,15"/>
+<area shape="rect" id="Node000001" title="Generate data for connecting to the NC calendar app as of NC &gt;= v30." alt="" coords="449,13,605,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_events_controller.html#ab71249c3cd64ecb5267cb2627d8c10f2" title="Provide a value for an input element (select option, input) which codes all neccessary info to unique..." alt="" coords="287,13,401,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="434,29,401,29,401,24,434,24"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a2e450981f16737e95f54c94543ae66cf" title="A helper function to generate suitable select options for PageNavigation::selectOptions()." alt="" coords="5,5,239,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="271,29,239,29,239,24,271,24"/>
 </map>

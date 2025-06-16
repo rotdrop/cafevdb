@@ -121,10 +121,6 @@ class InstrumentationService
       $dummy->getProjectParticipation()->set($project->getId(), $participant);
     }
 
-    $person = new Entities\LegalPerson($dummy);
-
-    $dummy->setLegalPerson($person);
-
     $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     return $dummy;

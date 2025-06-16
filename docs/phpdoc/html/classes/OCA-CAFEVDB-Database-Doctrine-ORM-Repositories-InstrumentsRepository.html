@@ -235,6 +235,21 @@ but the criterias may contain &#039;%&#039; or &#039;*&#039;, in which case a LI
 comparison is used.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#method_findNames">findNames()</a>
+    <span>
+                                &nbsp;: array&lt;int, string&gt;    </span>
+</dt>
+<dd>Return instrument names as flat array.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#method_findNonInstruments">findNonInstruments()</a>
+    <span>
+                                &nbsp;: array&lt;int, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Instrument.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument">Instrument</abbr></a>&gt;    </span>
+</dt>
+<dd>Return a collection of non-instruments, that is, instruments which belong
+to the family Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FindLikeTrait.html#method_findOneBy">findOneBy()</a>
     <span>
                                 &nbsp;: null|object    </span>
@@ -495,9 +510,9 @@ already contain the select part.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Repositories/InstrumentsRepository.php"><a href="files/database-doctrine-orm-repositories-instrumentsrepository.html"><abbr title="Database/Doctrine/ORM/Repositories/InstrumentsRepository.php">InstrumentsRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">126</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Repositories/InstrumentsRepository.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#source-view.126" class="phpdocumentor-element-found-in__source" data-line="126" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Repositories/InstrumentsRepository.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Prepare ofor grouping select options by instrument family.</p>
@@ -577,9 +592,9 @@ look-up tables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Repositories/InstrumentsRepository.php"><a href="files/database-doctrine-orm-repositories-instrumentsrepository.html"><abbr title="Database/Doctrine/ORM/Repositories/InstrumentsRepository.php">InstrumentsRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">51</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Repositories/InstrumentsRepository.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Repositories/InstrumentsRepository.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sort by configured sorting column and omit disabled entries.</p>
@@ -781,9 +796,9 @@ result array indexed by the specified column.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Repositories/InstrumentsRepository.php"><a href="files/database-doctrine-orm-repositories-instrumentsrepository.html"><abbr title="Database/Doctrine/ORM/Repositories/InstrumentsRepository.php">InstrumentsRepository.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Repositories/InstrumentsRepository.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Repositories/InstrumentsRepository.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Find an instrument by its name.</p>
@@ -895,6 +910,124 @@ comparison is used.</p>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_findNames">
+        findNames()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#method_findNames" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Repositories/InstrumentsRepository.php"><a href="files/database-doctrine-orm-repositories-instrumentsrepository.html"><abbr title="Database/Doctrine/ORM/Repositories/InstrumentsRepository.php">InstrumentsRepository.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">84</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Repositories/InstrumentsRepository.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Return instrument names as flat array.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">findNames</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$only</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exclude</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$only</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Only instruments belonging to these family names.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$exclude</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Exclude instrument belonging to these families.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_findNonInstruments">
+        findNonInstruments()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#method_findNonInstruments" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Repositories/InstrumentsRepository.php"><a href="files/database-doctrine-orm-repositories-instrumentsrepository.html"><abbr title="Database/Doctrine/ORM/Repositories/InstrumentsRepository.php">InstrumentsRepository.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">42</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Repositories/InstrumentsRepository.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Return a collection of non-instruments, that is, instruments which belong
+to the family Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">findNonInstruments</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$only</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Instrument.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument">Instrument</abbr></a>&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$only</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>If not empty restrict to the given instrument names.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;int, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Instrument.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument">Instrument</abbr></a>&gt;</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The found instruments indexed by id.</p>
+</section>
+
             </section>
 
 </article>
@@ -1615,6 +1748,8 @@ meta-data for all join tables.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FindLikeTrait.html#method_findBy">findBy()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#method_findByName">findByName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FindLikeTrait.html#method_findLike">findLike()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#method_findNames">findNames()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-InstrumentsRepository.html#method_findNonInstruments">findNonInstruments()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FindLikeTrait.html#method_findOneBy">findOneBy()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FindLikeTrait.html#method_findOneLike">findOneLike()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-EntityRepository.html#method_getEntityManager">getEntityManager()</a></li>

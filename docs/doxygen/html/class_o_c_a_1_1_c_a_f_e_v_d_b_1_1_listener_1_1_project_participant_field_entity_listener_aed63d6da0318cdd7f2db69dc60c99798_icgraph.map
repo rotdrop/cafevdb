@@ -1,5 +1,6 @@
 <map id="getTranslationChangeSet" name="getTranslationChangeSet">
-<area shape="rect" id="Node000001" title="Gedmo\Translatable hack&#45;around: the actual change set sometimes has to be cleared." alt="" coords="136,5,305,31"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_project_participant_field_entity_listener.html#a051ee1e8a2bbfbc9270f9887bb3c193b" title="{}" alt="" coords="5,5,88,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,21,88,21,88,15,122,15"/>
+<area shape="rect" id="Node000001" title="Gedmo\Translatable hack&#45;around: the actual change set sometimes has to be cleared." alt="" coords="135,29,303,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="248,16,238,10,219,8,201,10,191,15,189,20,194,28,189,30,184,21,187,11,199,5,219,3,240,5,251,12"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_project_participant_field_entity_listener.html#a051ee1e8a2bbfbc9270f9887bb3c193b" title="{}" alt="" coords="5,29,87,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="119,45,87,45,87,40,119,40"/>
 </map>

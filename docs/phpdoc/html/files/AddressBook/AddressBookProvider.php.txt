@@ -6,7 +6,7 @@ declare(strict_types=1);
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
@@ -119,6 +119,8 @@ class AddressBookProvider implements IAddressBookProvider
     if ($uri !== $this->addressBookUri()) {
       return null;
     }
+    // $this->logInfo('PRINCIPAL AND URI ' . $principalUri . ' URI ' . $uri);
+    // PRINCIPAL AND URI principals/users/claus URI cafevdb-musicians
     if (empty(self::$addressBook)) {
       self::$addressBook = new AddressBook($this->configService, $this->cardBackend, $principalUri);
     }

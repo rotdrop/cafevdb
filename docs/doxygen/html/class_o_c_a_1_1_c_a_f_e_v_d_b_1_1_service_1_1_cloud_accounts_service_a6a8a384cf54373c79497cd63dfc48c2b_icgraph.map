@@ -1,0 +1,9 @@
+<map id="getAdministrableGroupsGIDs" name="getAdministrableGroupsGIDs">
+<area shape="rect" id="Node000001" title=" " alt="" coords="421,31,612,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_accounts_service.html#a84a448b055091ed237ffb71c200117df" title=" " alt="" coords="213,31,373,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="406,47,373,47,373,41,406,41"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_accounts_service.html#a9cb825509c1a91d69748a9596ffe520c" title=" " alt="" coords="16,5,154,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="197,35,154,30,154,24,197,30"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_accounts_service.html#a4190d5fa87dabb135e4825f4f4da10c7" title=" " alt="" coords="5,56,165,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="197,58,165,62,165,57,197,53"/>
+</map>

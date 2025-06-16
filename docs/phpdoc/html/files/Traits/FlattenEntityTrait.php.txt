@@ -25,10 +25,13 @@
 namespace OCA\CAFEVDB\Traits;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 
 /** Convert some entities to array representations */
 trait FlattenEntityTrait
 {
+  use EntityManagerTrait;
+
   /**
    * @param Entities\Musician $musician
    *
@@ -38,6 +41,12 @@ trait FlattenEntityTrait
    */
   private function flattenMusician(Entities\Musician $musician, ?array $only = null):array
   {
+    // We have to disable the filter as there may be ancient payments which
+    // are related to revoked debit mandates and bank accounts.
+    // @todo Perhaps get rid of soft-deleteable altogether and use a dedicated
+    // logic on a case-by-case basis.
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
     $musicianData = $musician->toArray();
 
     $musicianData['personalPublicName'] = $musician->getPublicName(firstNameFirst: true);
@@ -301,6 +310,8 @@ trait FlattenEntityTrait
       $musicianData['genderAssumed'] = false;
     }
 
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+
     return array_filter(
       array_map(
         fn($value) => is_object($value) && method_exists($value, '__toString') ? (string)$value : $value,
@@ -317,6 +328,10 @@ trait FlattenEntityTrait
    */
   private function flattenProject(Entities\Project $project):array
   {
+    // We need to disable the filter in order not to run into (sub-)"entity
+    // not found" issues.
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
     $flatProject = $project->toArray();
     $skippedProperties = [
       'participants',
@@ -352,6 +367,8 @@ trait FlattenEntityTrait
     //   $flatEvent['absenceFieldId'] = $event->getAbsenceField() ? $event->getAbsenceField()->getId() : null;
     //   $flatProject['calendarEvents'][] = $flatEvent;
     // }
+
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
 
     return $flatProject;
   }

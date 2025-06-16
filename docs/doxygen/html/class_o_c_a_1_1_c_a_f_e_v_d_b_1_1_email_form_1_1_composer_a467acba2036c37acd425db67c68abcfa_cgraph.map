@@ -1,0 +1,11 @@
+<map id="validateTemplate" name="validateTemplate">
+<area shape="rect" id="Node000001" title="Validates the given template, i.e." alt="" coords="5,81,125,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a8d6568d7a87ba2a132aa630bb5fd5f4f" title=" " alt="" coords="206,5,321,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,78,172,42,192,34,194,39,174,46,94,83"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a8e77623277f1542549bfd7ae557512eb" title="Return true if this email needs per&#45;namespace substitutions." alt="" coords="173,56,354,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="125,84,157,80,158,86,125,90"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a016db532796f0e82eb53352cd95baf70" title=" " alt="" coords="214,107,313,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="125,100,199,109,198,114,125,105"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a858b467638cc7c967dd04b9fb1272c73" title="Replace all variables of the given namespace in $this&#45;&gt;messageContents." alt="" coords="190,157,336,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="94,106,174,143,194,150,192,155,172,148,91,111"/>
+</map>

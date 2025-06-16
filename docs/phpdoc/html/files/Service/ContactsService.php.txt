@@ -43,11 +43,15 @@ use OCP\Image;
 
 use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\Util\Urlizer as Transliterator;
 
 /** Contacts handling. */
 class ContactsService
@@ -59,6 +63,23 @@ class ContactsService
   const VCARD_VERSION = '4.0';
 
   const AVATAR_SIZE = 256;
+
+  const TYPED_PROPERTIES = [
+    'URL',
+    'GEO',
+    'CLOUD',
+    'ADR',
+    'EMAIL',
+    'IMPP',
+    'TEL',
+    'X-SOCIALPROFILE',
+    'RELATED',
+    'LANG',
+    'X-ADDRESSBOOKSERVER-MEMBER',
+  ];
+
+  /** @var array<string, IAddressBook> */
+  private array $addressBooksByUri = [];
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -75,35 +96,44 @@ class ContactsService
   /** @return GeoCodingService */
   private function geoCodingService():GeoCodingService
   {
-    return $this->di(GeoCodingService::class);
+    return $this->appContainer->get(GeoCodingService::class);
+  }
+
+  /** @return PhoneNumberService */
+  private function phoneNumberService():PhoneNumberService
+  {
+    return $this->appContainer->get(PhoneNumberService::class);
   }
 
   /**
-   * Find a matching addressbook by its displayname.
+   * Get a addressBook with the given uri. If the address-book is shared the
+   * uri is tweak to match the NC-style "..._shared_by_..." uri.
    *
-   * @param string $displayName The display name.
+   * @param null|string $uri A string in the form PRINCIPAL_URI/ADDRESS_BOOK_URI,
+   * e.g. cameratashareholder/general
    *
-   * @param bool $includeShared Include also shared addressbooks.
-   *
-   * @return null|IAddressBook The address-book object (row of the database, i.e. an array).
+   * @return null|IAddressBook
    */
-  public function addressBookByName(string $displayName, bool $includeShared = false):?IAddressBook
+  public function addressBookByUri(?string $uri):?IAddressBook
   {
-    $addressBooks = $this->contactsManager->getUserAddressBooks();
-
-    foreach ($addressBooks as $addressBook) {
-      // $displayName = $addressBook->getDisplayName();
-      // $key = $addressBook->getKey();
-      // $uri = $addressBook->getUri();
-      // $permissions = $adressBook->getPermissions();
-      if (!$addressBook->isShared() && !$includeShared) {
-        continue;
-      }
-      if ($displayName == $addressBook->getDisplayName()) {
-        return $addressBook;
+    if (empty($uri)) {
+      return null;
+    }
+    list($principal, $addressBookUri) = explode('/', $uri);
+    if ($principal != $this->userId()) {
+      $addressBookUri .= '_shared_by_' . $principal;
+    }
+    if (!array_key_exists($addressBookUri, $this->addressBooksByUri)) {
+      $this->addressBooksByUri[$addressBookUri] = null;
+      /** @var IAddressBook $addressBook */
+      foreach ($this->contactsManager->getUserAddressBooks() as $addressBook) {
+        if ($addressBookUri === $addressBook->getUri()) {
+          $this->addressBooksByUri[$addressBookUri] = $addressBook;
+          break;
+        }
       }
     }
-    return null;
+    return $this->addressBooksByUri[$addressBookUri];
   }
 
   /**
@@ -123,14 +153,15 @@ class ContactsService
    * As of now categories are not exported for shared address-books,
    * so we simply group the entries by addressbook-name.
    *
-   * The static musicians address-book of the orchestra app is excluded.
+   * The static musicians address-book of the orchestra app is excluded. This
+   * is used by the email-form.
    *
    * @return array
    */
   public function emailContacts():array
   {
     /** @var MusicianCardBackend $musicianCardBackend */
-    $musicianCardBackend = $this->di(MusicianCardBackend::class);
+    $musicianCardBackend = $this->appContainer->get(MusicianCardBackend::class);
     $musiciansKey = $musicianCardBackend->getURI();
     $result = [];
     $addressBooks = $this->contactsManager->getUserAddressBooks();
@@ -205,7 +236,7 @@ class ContactsService
   }
 
   /**
-   * @param string $cardUri
+   * @param null|string $cardUri
    *
    * @param VCard $vCard
    *
@@ -213,7 +244,7 @@ class ContactsService
    *
    * @return array
    */
-  public function flattenVCard(string $cardUri, VCard $vCard, bool $withTypes = true):array
+  public function flattenVCard(?string $cardUri, VCard $vCard, bool $withTypes = true):array
   {
     $result = [
       'URI' => $cardUri,
@@ -221,7 +252,7 @@ class ContactsService
     foreach ($vCard->children() as $property) {
       if ($property->name === 'PHOTO') {
         if ($property->getValueType() === 'BINARY' && $this->getTypeFromProperty($property)) {
-          $uri = 'data:image/'.strtolower($property['TYPE']).';base64,'.$property->getRawMimeDirValue();
+          $uri = 'data:image/' . strtolower($property['TYPE']) . ';base64,' . $property->getRawMimeDirValue();
           $result[$property->name] = 'VALUE=uri:' . $uri;
         } elseif ($property->getValueType() === 'URI') {
           $result[$property->name] = 'VALUE=uri:' . $property->getValue();
@@ -236,7 +267,7 @@ class ContactsService
         $type = $this->getTypeFromProperty($property);
         if ($withTypes) {
           $result[$property->name][] = [
-            'type' => $type,
+            'type' => strtoupper($type),
             'value' => $property->getValue()
           ];
         } else {
@@ -282,117 +313,233 @@ class ContactsService
    *
    * CATEGORIES are used to code instruments and project membership.
    *
+   * @param null|Entities\Musician $entity If given update the given entity
+   * from the card-data, otherwise create a new entity.
+   *
    * @param VCard $vCard Serialized vCard data.
+   *
+   * @param bool $preferWork Prefer WORK variant for all properties which have
+   * multiple types. Default \true.
+   *
+   * @param bool $keepExisting Rather keep the properties of a given musician
+   * entity instead of overwriting them. Instruments will be added from the
+   * categories and empty fields of the given musician entity will be filled.
    *
    * @return null|Entities\Musician entity.
    *
    * @bug Looks complicated like hell. Simplify?
    */
-  public function importVCard(VCard $vCard):?Entities\Musician
-  {
-    $cardData = $this->flattenVCard($vCard->URI ?? null, $vCard, withType: true);
-    return $this->importCardData($cardData);
+  public function importVCard(
+    null|Entities\Musician $entity,
+    VCard $vCard,
+    bool $preferWork = true,
+    bool $keepExisting = true,
+  ):?Entities\Musician {
+    $cardData = $this->flattenVCard($vCard->URI ?? null, $vCard, withTypes: true);
+    return $this->importCardData($entity, $cardData, $preferWork, $keepExisting);
   }
 
   /**
+   * @param null|Entities\Musician $entity If given update the given entity
+   * from the card-data, otherwise create a new entity.
+   *
    * @param array $cardData
    *
-   * @param bool $preferWork
+   * @param bool $preferWork Prefer WORK variant for all properties which have
+   * multiple types. Default \true.
+   *
+   * @param bool $keepExisting Rather keep the properties of a given musician
+   * entity instead of overwriting them. Instruments will be added from the
+   * categories and empty fields of the given musician entity will be filled.
    *
    * @return null|Entities\Musician
    */
-  public function importCardData(array $cardData, bool $preferWork = true):?Entities\Musician
-  {
-    // $version = $cardData['VERSION'];
-    $entity = new Entities\Musician();
+  public function importCardData(
+    null|Entities\Musician $entity,
+    array $cardData,
+    bool $preferWork = true,
+    bool $keepExisting = false,
+  ):?Entities\Musician {
+
+    $this->logInfo('IMPORT ' . print_r($cardData, true) . ' ' . (int)$preferWork);
+
+    if ($entity === null) {
+      $keepExisting = false;
+      $entity = new Entities\Musician();
+    }
+
+    if (empty($cardData['N']) && !empty($cardData['FN'])) {
+      if (str_contains($cardData['FN'], ',')) {
+        $parts = array_map(fn(string $part) => Util::normalizeSpaces($part), explode(',', $cardData['FN']));
+        $firstName = array_pop($parts);
+        $surName = implode(',', $parts);
+      } else {
+        $parts = array_map(fn(string $part) => Util::normalizeSpaces($part), explode(' ', $cardData['FN']));
+        $surName = array_pop($parts);
+        $firstName = implode(' ', $parts);
+      }
+      $cardData['N'] = $surName . ';' . $firstName;
+    }
+
     if (!empty($cardData['N'])) {
-        // we honour only surname and prename, and give a damn in
-        // particular on title madness.
-      $parts = explode(';', $cardData['N']);
-      $entity
-        ->setSurName($parts[0])
-        ->setFirstName($parts[1]);
+      // we honour only surname and prename, and give a damn in
+      // particular on title madness.
+      $parts = array_map(fn(string $part) => Util::normalizeSpaces($part), explode(';', $cardData['N']));
+      if (!$keepExisting || empty($entity->getSurName())) {
+        $entity->setSurName($parts[0]);
+      }
+      if (!$keepExisting || empty($entity->getFirstName())) {
+        $entity->setFirstName($parts[1]);
+      }
+    }
+
+    if (!$keepExisting || empty($entity->getNickName())) {
+      $typed = [];
+      foreach (($cardData['NICKNAME'] ?? []) as $property) {
+        $type = strtoupper((string)$property['type']) ?: 'UNTYPED';
+        $typed[$type] = $property['value'];
+      }
+      if (!empty($typed)) {
+        if ($preferWork && !empty($typed['WORK'])) {
+          $value = $typed['WORK'];
+        } else {
+          $value = array_shift($typed);
+        }
+        $entity->setNickName($value);
+      }
+    }
+
+    if (!$keepExisting || empty($entity->getUserIdSlug())) {
+      // set the user-id slug ....
+      $parts = empty($entity->getNickName())
+        ? [ $entity->getFirstName() ]
+        : [ $entity->getNickName() ];
+      $parts[] = $entity->getSurName();
+      $slug = implode(
+        '.',
+        array_map(
+          fn(string $part) => Transliterator::transliterate($this->transliterate($part), '-'),
+          $parts,
+        ),
+      );
+      $entity->setUserIdSlug($slug);
     }
 
     // in principle FN would be the displayName
-    $value = $cardData['FN'];
-    if (!empty($value)) {
-      $entity->setDisplayName($value);
+    $value = Util::normalizeSpaces($cardData['FN']);
+    if (!empty($value) && (!$keepExisting || $entity->getDisplayName() === null)) {
+      $entity->setDisplayName(null);
+      $firstNameFirst = !str_contains($cardData['FN'], ',');
+      $publicName = $entity->getPublicName($firstNameFirst);
+      if ($publicName != $value) {
+        $entity->setDisplayName($value);
+      } else {
+        // avoid redundant display name setttings
+        $entity->setDisplayName(null);
+      }
     }
 
+    $entityValues = [];
     foreach (($cardData['TEL'] ?? []) as $tel) {
-      $type = strtolower($tel['type']);
+      $type = strtoupper($tel['type']);
       $number = $tel['value'];
-      $work = strpos($type, 'work') !== false;
-      $cell = strpos($type, 'cell') !== false;
-      $voice = strpos($type, 'voice') !== false;
-      $home = strpos($type, 'home') !== false;
+      $work = strpos($type, 'WORK') !== false;
+      $cell = strpos($type, 'CELL') !== false;
+      $voice = strpos($type, 'VOICE') !== false;
+      // $home = strpos($type, 'HOME') !== false;
 
-      if (!empty($type) && !$voice && !$home && !$work && !$cell) {
+      if (!empty($type) && !$voice  && !$cell) {
         continue; // FAX etc.
       }
       $key = $cell ? 'mobilePhone' : 'fixedLinePhone';
       if (($work && $preferWork)
           || (!empty($type) && empty($typed[$key]))
-          || empty($entity[$key])) {
-        $entity[$key] = $number;
+          || empty($entityValues[$key])) {
+        $entityValues[$key] = $number;
         $typed[$key] = !empty($type);
       }
     }
-
-    $typed = false;
-    foreach (($cardData['EMAIL'] ?? []) as $email) {
-      $type = strtolower($email['type']);
-      $address = $email['value'];
-      $work = strpos($type, 'work') !== false;
-
-      $key = 'email';
-      if (($work && $preferWork) || (!$typed && !empty($type)) || empty($entity[$key])) {
-        $entity[$key] = $address;
-        $typed = !empty($type);
+    foreach ($entityValues as $key => $value) {
+      if (!$keepExisting || empty($entity[$key])) {
+        $entity[$key] = $value;
       }
     }
 
-    $value = $cardData['UID'] ?? null;
-    if (!empty($value)) {
-      $entity['UUID'] = $value;
+    if (!$keepExisting || empty($entity->getEmail())) {
+      $typed = false;
+      foreach (($cardData['EMAIL'] ?? []) as $email) {
+        $type = strtoupper($email['type']);
+        $address = $email['value'];
+        $work = strpos($type, 'WORK') !== false;
+
+        $key = 'email';
+        if (($work && $preferWork) || (!$typed && !empty($type)) || empty($entity[$key])) {
+          $entity[$key] = $address;
+          $typed = !empty($type);
+        }
+      }
     }
 
-    $value = $cardData['LANG'] ?? null;
-    if (!empty($value)) {
-      $entity['language'] = $value;
+    if (!$keepExisting || empty($entity->getUuid())) {
+      $value = $cardData['UID'] ?? null;
+      if (!empty($value)) {
+        $entity['UUID'] = $value;
+      }
     }
 
-    $value = $cardData['BDAY'] ?? null;
-    if (!empty($value)) {
-      $entity['birthday'] = new DateTimeImmutable($value);
+    if (!$keepExisting || empty($entity->getLanguage())) {
+      $typed = false;
+      foreach (($cardData['LANG'] ?? []) as $lang) {
+        $type = strtoupper($lang['type']);
+        $value = $lang['value'];
+        $work = strpos($type, 'WORK') !== false;
+
+        $key = 'language';
+        if (($work && $preferWork) || (!$typed && !empty($type)) || empty($entity[$key])) {
+          $entity[$key] = $value;
+          $typed = !empty($type);
+        }
+      }
     }
 
-    $value = $cardData['REV'] ?? null;
-    if (!empty($value)) {
-      $entity['updated'] = new DateTimeImmutable($value);
+    if (!$keepExisting || empty($entity->getBirthday())) {
+      $value = $cardData['BDAY'] ?? null;
+      if (!empty($value)) {
+        $entity['birthday'] = new DateTimeImmutable($value);
+      }
     }
+
+    if (!$keepExisting || empty($entity->getUpdated())) {
+      $value = $cardData['REV'] ?? null;
+      if (!empty($value)) {
+        $entity['updated'] = new DateTimeImmutable($value);
+      }
+    }
+
+    $isWorkAddress = false;
 
     // [ADR] => Array ( [0] => Array ( [type] => home [value] => ;;Seestraße 70;Leonberg;;71229;Germany ) )
+    $entityValues = [];
     $typed = false;
     foreach (($cardData['ADR'] ?? []) as $addr) {
-      $type = strtolower($addr['type']);
+      $type = strtoupper($addr['type']);
       $address = $addr['value'];
-      $work = strpos($type, 'work') !== false;
+      $work = strpos($type, 'WORK') !== false;
 
       if (($work && $preferWork)
           || (!$typed && !empty($type))
-          || (empty($entity['country'])
-              && empty($entity['street'])
-              && empty($entity['city'])
-              && empty($entity['postalCode']))) {
+          || (empty($entityValues['country'])
+              && empty($entityValues['street'])
+              && empty($entityValues['city'])
+              && empty($entityValues['postalCode']))) {
+        $isWorkAddress = $work;
 
         $address = Util::normalizeSpaces($address); // unicode
         $address = explode(';', $address);
 
-        $poBox = $address[0]; // or so it seems ...
-        $this->logInfo('POBOX ' . $poBox);
-        $entity['addressSupplement'] = $address[1];
+        $poBox = $address[0];
+        // $this->logInfo('POBOX ' . $poBox);
+        $entityValues['addressSupplement'] = $address[1];
         $street = Util::normalizeSpaces($address[2]);
         // if the first word or the last word of the street start with a
         // digit, then we treat it as the street-number. This should hack most
@@ -411,19 +558,12 @@ class ContactsService
           $streetNumber = '';
         }
 
-        // Special hack for po-box only addresses. The musican's entity does
-        // not support po-box addresses (and this is left for later ...) so we
-        // tweak the po-box case into the steet-adress.
-        if (empty($street) && !empty($poBox)) {
-          $street = $this->l->t('PO Box');
-          $streetNumber = $poBox;
-        }
-
-        $entity['street'] = $street;
-        $entity['streetNumber'] = $streetNumber;
-        $entity['city'] = $address[3];
-        $entity['postalCode'] = $address[5];
-        $entity['country'] = $address[6];
+        $entityValues['poBox'] = $poBox;
+        $entityValues['street'] = $street;
+        $entityValues['streetNumber'] = $streetNumber;
+        $entityValues['city'] = $address[3];
+        $entityValues['postalCode'] = $address[5];
+        $entityValues['country'] = $address[6];
 
         $typed = !empty($type);
 
@@ -431,100 +571,93 @@ class ContactsService
         $languages = $geoCodingService->getLanguages(true);
         foreach ($languages as $language) {
           $countries = $geoCodingService->countryNames($language);
-          $iso = array_search($entity['country'], $countries);
+          $iso = array_search($entityValues['country'], $countries);
           if ($iso !== false) {
-            $entity['country'] = $iso;
+            $entityValues['country'] = $iso;
           }
         }
       }
     } // ADR
+    foreach ($entityValues as $key => $value) {
+      if (!$keepExisting || empty($entity[$key])) {
+        $entity[$key] = $value;
+      }
+    }
 
-    // use organization as name if provided and move the name to the address supplement
-    $value = $cardData['ORG'] ?? null;
-    if (empty($entity->getAddressSupplement()) && !empty($value)) {
+    if (!$keepExisting || empty($entity->getOrganization())) {
+      $value = $cardData['ORG'] ?? null;
+      $entity->setOrganization($value);
+    }
+
+    if (!$keepExisting || empty($entity->getJobTitle())) {
+      $value = $cardData['TITLE'] ?? null;
+      $entity->setJobTitle($value);
+    }
+
+    if (!$isWorkAddress && empty($entity->getAddressSupplement()) && !empty($value)) {
       $publicName = $entity->getPublicName(firstNameFirst: true);
       $entity->setAddressSupplement('c/o ' . $publicName);
-      $entity->setDisplayName($value);
     }
 
     $value = $cardData['CATEGORIES'] ?? null;
     if (!empty($value)) {
-      $instrumentsRepository = $this->getDatabaseRepository(Entities\Instrument::class);
-      $instrumentsInfo = $instrumentsRepository->describeAll(useEntities: true);
-      $instruments = $instrumentsInfo['byId'];
       $categories = explode(',', $value);
-      $musicianInstruments = [];
-      /** @var Entities\Instrument $instrument */
-      foreach ($instruments as $instrument) {
-        if (array_search($instrument, $categories)) {
-            $musicianInstruments[] = $instrument;
+      $instrumentsRepository = $this->getDatabaseRepository(Entities\Instrument::class);
+      $instrumentCategories = $instrumentsRepository->findNames();
+      $instrumentCategories = array_intersect($categories, $instrumentCategories);
+      $musicianInstruments = $entity->getInstruments()
+        ->map(fn(Entities\MusicianInstrument $instrument) => $instrument->getName())
+        ->toArray();
+      $missingInstruments = array_diff($instrumentCategories, $musicianInstruments);
+      $excessInstruments = array_diff($musicianInstruments, $instrumentCategories);
+      if (!empty($missingInstruments)) {
+        $instruments = $instrumentsRepository->findBy(
+          [ 'name' => $missingInstruments ],
+          orderBy: [ 'name' => 'INDEX' ],
+        );
+        foreach ($missingInstruments as $instrumentName) {
+          $instrument = $instruments[$instrumentName];
+          if (empty($instrument)) {
+            continue;
+          }
+          $entity->addInstrument($instrument);
         }
       }
-      // now we need to convert to "MusicianInstrument"
-      $musicianInstruments = array_map(
-        fn($instrument) => (new Entities\MusicianInstrument)
-        ->setMusician($entity)
-        ->setInstrument($instrument),
-        $musicianInstruments);
-
-      $entity['instruments'] = new ArrayCollection($musicianInstruments);
-    }
-
-    $value = $cardData['GENDER'] ?? null;
-    if (!empty($value)) {
-      switch ($value) {
-        case 'M':
-          $entity['gender'] = EnumGender::MALE();
-          break;
-        case 'F':
-          $entity['gender'] = EnumGender::FEMALE();
-          break;
-        case 'O':
-          $entity['gender'] = EnumGender::DIVERSE();
-          break;
-        case 'N':
-        case 'U':
-          break;
+      if (!$keepExisting) {
+        $excessInstruments = $entity->getInstruments()
+          ->filter(fn(Entities\MusicianInstrument $instrument) => in_array($instrument->getName(), $excessInstruments));
+        /** @var Entities\MusicianInstrument $musicianInstrument */
+        foreach ($excessInstruments as $musicianInstrument) {
+          $this->remove($musicianInstrument); // soft if in use
+          if ($musicianInstrument->unused()) {
+            $this->remove($musicianInstrument);
+            $entity->getInstruments()->remove($musicianInstrument);
+          }
+        }
       }
     }
 
-    // [PHOTO] => VALUE=uri:http://localhost/nextcloud-git/remote.php/dav/addressbooks/users/claus/
-    //   z-app-generated--cafevdb--cafevdb-musicians/musician-32653235-3461-6335-2d34-3064362d3461.vcf?photo
-    $value = $cardData['PHOTO'] ?? null;
-    if (false && !empty($value)) {
-      // complicated:
-      //
-      // - extract the image datas or URI
-      // - construct a data-base file + data (two entities)
-      // - construct the MusicianPhoto entity
-
-      $havePhoto = false;
-
-      // fetch the image data, we only support data-uri ATM
-      if (preg_match('|^(VALUE=uri:)?data:(image/[^;]+);base64\\\?,|', $value, $matches)) {
-        // $mimeType = $matches[1];
-        $imageData = base64_decode(substr($value, strlen($matches[0])));
-        $havePhoto = true;
-      } elseif (str_starts_with($value, 'VALUE=uri:')) {
-        $url = substr($value, strlen('VALUE=uri:'));
-        /** @var RequestService $requestService */
-        $requestService = $this->di(RequestService::class);
-        $imageData = $requestService->getFromURL($url);
-        $havePhoto = true;
-      }
-
-      if (false && $havePhoto) {
-        // @todo Perhaps import as cloud avatar image, keep the code until this is decided.
-        $image = new Image;
-        $image->loadFromData($imageData);
-
-        $imageEntity = new Entities\Image(fileName: null, image: $image);
-        $musicianPhoto = (new Entities\MusicianPhoto())
-          ->setOwner($entity)
-          ->setImage($imageEntity);
-        $entity->setPhoto($musicianPhoto);
+    if (!$keepExisting || empty($entity->getGender())) {
+      $value = $cardData['GENDER'] ?? null;
+      if (!empty($value)) {
+        switch ($value) {
+          case 'M':
+            $entity['gender'] = EnumGender::MALE();
+            break;
+          case 'F':
+            $entity['gender'] = EnumGender::FEMALE();
+            break;
+          case 'O':
+            $entity['gender'] = EnumGender::DIVERSE();
+            break;
+          case 'N':
+          case 'U':
+            break;
+        }
       }
     }
+
+    // Ignore image data.
 
     return $entity;
   }
@@ -543,50 +676,87 @@ class ContactsService
    */
   public function export(Entities\Musician $musician, string $version = self::VCARD_VERSION):?VCard
   {
-    $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
-    $uuid = (string)(isset($musician['uuid']) ? $musician['uuid'] : $this->generateUUID());
-    $categories = [ 'cafevdb' ];
-    foreach ($musician['instruments'] as $musicianInstrument) {
-      $categories[] = $musicianInstrument['instrument']['name'];
+    /** @var Entities\Musician $musician */
+    $textProperties = [ 'FN', 'N', 'CATEGORIES', 'ADR', 'NOTE', 'ORG', 'TITLE' ];
+    $uuid = (string)($musician->getUuid() ? $musician->getUuid() : $this->generateUUID());
+    $categories = [ $this->appName() ];
+    /** @var Entities\MusicianInstrument $musicianInstrument */
+    foreach ($musician->getInstruments() as $musicianInstrument) {
+      $categories[] = $musicianInstrument->getName();
     }
-    foreach ($musician['projectParticipation'] as $participant) {
-      $categories[] = $participant['project']['name'];
+    /** @var Entities\ProjectParticipant $participant */
+    foreach ($musician->getProjectParticipation() as $participant) {
+      $categories[] = $participant->getProject()->getName();
     }
     $prodid = '-//CAF e.V.//NONSGML ' . $this->appName() . ' ' . $this->appVersion() . '//EN';
 
-    $vcard = new VCard(
+    $baseParameters =
+      (!empty($musician->getOrganization()) && !str_starts_with((string)$musician->getAddressSupplement(), 'c/o'))
+      ? [ 'TYPE' => [ 'WORK' ] ]
+      : [ 'TYPE' => [ 'HOME' ] ];
+
+    $vCard = new VCard(
       [
         'VERSION' => $version,
         'PRODID' => $prodid,
         'UID' => $uuid,
         'FN' => $musician->getPublicName(firstNameFirst: true),
-        'N' => [ $musician['surName'], $musician['firstName'] ],
+        'N' => [ $musician->getSurName(), $musician->getFirstName() ],
         'CATEGORIES' => $categories,
       ]);
     if ($musician->getNickName()) {
-      $vcard->add('NICKNAME', $musician->getNickName());
+      $vCard->add('NICKNAME', $musician->getNickName());
     }
-    if ($musician['language']) {
-      $vcard->add('LANG', $musician['language']);
+    if ($musician->getOrganization()) {
+      $vCard->add('ORG', $musician->getOrganization());
+    }
+    if ($musician->getJobTitle()) {
+      $vCard->add('TITLE', $musician->getJobTitle());
+    }
+    if ($musician->getLanguage()) {
+      $vCard->add('LANG', $musician->getLanguage(), $baseParameters);
+    }
+    $gender = null;
+    switch ((string)$musician->getGender()) {
+      case EnumGender::MALE:
+        $gender = 'M';
+        break;
+      case EnumGender::FEMALE:
+        $gender = 'F';
+        break;
+      case EnumGender::DIVERSE:
+        $gender = 'O';
+        break;
+    }
+    if ($gender) {
+      $vCard->add('GENDER', $gender);
     }
     if ($musician->getEmail()) {
-      $vcard->add('EMAIL', $musician->getEmail());
+      $vCard->add('EMAIL', $musician->getEmail(), $baseParameters);
     }
-    if ($musician['MobilePhone']) {
-      $vcard->add('TEL', $musician['mobilePhone'], ['TYPE' => [ 'cell', 'voice' ] ]);
+    if ($musician->getMobilePhone()) {
+      $vCard->add(
+        'TEL',
+        $musician->getMobilePhone(),
+        Util::arrayMergeRecursive($baseParameters, [ 'TYPE' => [ 'CELL' ] ]),
+      );
     }
-    if ($musician['FixedLinePhone']) {
-      $vcard->add('TEL', $musician['fixedLinePhone'], ['TYPE' => 'voice' ]);
+    if ($musician->getFixedLinePhone()) {
+      $vCard->add(
+        'TEL',
+        $musician->getFixedLinePhone(),
+        Util::arrayMergeRecursive($baseParameters, [ 'TYPE' => [ 'VOICE' ] ]),
+      );
     }
     if (!empty($musician['birthday'])) {
       $birthDay = $musician['birthday'];
       if (is_string($birthDay)) {
         $birthDay = self::convertToDateTime($birthDay);
       }
-      $vcard->add('BDAY', $birthDay);
+      $vCard->add('BDAY', $birthDay);
     }
     if (!empty($musician['updated'])) {
-      $vcard->add('REV', gmdate('Ymd\THis\Z', self::convertToDateTime($musician['updated'])->getTimestamp()));
+      $vCard->add('REV', gmdate('Ymd\THis\Z', self::convertToDateTime($musician['updated'])->getTimestamp()));
     }
     $countryNames = $this->geoCodingService()->countryNames('en');
     if (!isset($countryNames[$musician['country']])) {
@@ -595,28 +765,29 @@ class ContactsService
       $country = $countryNames[$musician['country']];
     }
 
-    $vcard->add(
+    $vCard->add(
       'ADR', [
-        '', // PO box
-        $musician['addressSupplement'], // address extension (appartment nr. and such)
+        $musician['poBox'], // PO box
+        $musician['addressSupplement'], // address extension (appartment nr., c/o and such)
         $musician['street'] . ' ' . $musician['streetNumber'], // street
         $musician['city'], // city
       '', // province
         $musician['postalCode'], //zip code
         $country
       ],
-      [ 'TYPE' => 'home' ]);
+      $baseParameters,
+    );
 
     $gender = $musician->getGender();
     switch ((string)$gender) {
       case EnumGender::MALE:
-        $vcard->add('GENDER', 'M');
+        $vCard->add('GENDER', 'M');
         break;
       case EnumGender::FEMALE:
-        $vcard->add('GENDER', 'F');
+        $vCard->add('GENDER', 'F');
         break;
       case EnumGender::DIVERSE:
-        $vcard->add('GENDER', 'O');
+        $vCard->add('GENDER', 'O');
         break;
       default:
         break;
@@ -636,24 +807,196 @@ class ContactsService
         $mimeType = $image->mimeType();
         $data = $image->data();
         if ($version == '4.0') {
-          $vcard->add('PHOTO', 'data:' . $mimeType . ';base64,' . base64_encode($data));
+          $vCard->add('PHOTO', 'data:' . $mimeType . ';base64,' . base64_encode($data));
         } else {
           $type = Util::explode('/', $mimeType);
           $type = strtoupper(array_pop($type));
           $data = base64_decode($data);
-          $vcard->add('PHOTO', $data, ['ENCODING' => 'b', 'TYPE' => $type ]);
+          $vCard->add('PHOTO', $data, ['ENCODING' => 'b', 'TYPE' => $type ]);
         }
       }
     }
 
     if ($version != '4.0') {
       foreach ($textProperties as $property) {
-        if (isset($vcard->{$property})) {
-          $vcard->{$property}['CHARSET'] = 'UTF-8';
+        if (isset($vCard->{$property})) {
+          $vCard->{$property}['CHARSET'] = 'UTF-8';
         }
       }
     }
 
-    return $vcard;
+    return $vCard;
+  }
+
+  /**
+   * Merge a musician entity into an existing contact. The result can be fed
+   * in to IAddressBook::createOrUpdate(). The URI component of $target is
+   * preserved. If the musician is (soft-)deleted, then the link to the
+   * address-book is removed.
+   *
+   * VCard arguments will be flattened first by ContactsService::flattenVCard().
+   *
+   * @param array|VCard $target
+   *
+   * @param Entities\Musician $musician
+   *
+   * @return arry
+   */
+  public function mergeMusician(
+    array|VCard $target,
+    Entities\Musician $musician,
+  ): array {
+    if ($target instanceof VCard) {
+      $target = $this->flattenVCard($target->URI || null, $target, withTypes: true);
+    }
+
+    $instrumentCategories = $this->getDatabaseRepository(Entities\Instrument::class)->findNames();
+    $projectCategories = $this->getDatabaseRepository(Entities\Project::class)->findNames();
+    $targetCategories = array_diff(
+      explode(',', $target['CATEGORIES']),
+      $instrumentCategories,
+      $projectCategories,
+      [ $this->appName() ],
+    );
+
+    if ($musician->getDeleted() !== null) {
+      // unlink the contact and remove all app-categories
+      sort($targetCategories);
+      $target['CATEGORIES'] = implode(',', $targetCategories);
+      return $target;
+    }
+
+    $source = $this->flattenVCard(cardUri: null, vCard: $this->export($musician), withTypes: true);
+
+    $result = Util::arrayMergeRecursive([], $target, $source, [ 'URI' => $target['URI'] ?? null ]);
+    if (empty($result['URI'])) {
+      unset($result['URI']);
+    }
+
+    $categories = array_unique(array_merge($targetCategories, explode(',', $source['CATEGORIES'])));
+    sort($categories);
+    $result['CATEGORIES'] = implode(',', $categories);
+
+    // eliminate redundant or empty typed properties.
+    foreach (self::TYPED_PROPERTIES as $typedPropery) {
+      if (!empty($target[$typedPropery])) {
+        $result[$typedPropery] = $target[$typedPropery];
+      }
+      foreach (($result[$typedPropery] ?? []) as $key => $property) {
+        if (empty($property['value'])) {
+          unset($result[$typedPropery][$key]);
+        }
+        if ($typedPropery == 'TEL') {
+          $phoneNumberService = $this->phoneNumberService();
+          if ($phoneNumberService->validate($property['value'])) {
+            $result[$typedPropery][$key]['value'] = $phoneNumberService->format();
+            if ($phoneNumberService->isMobile()) {
+              $result[$typedPropery][$key]['type'] = str_replace('VOICE', 'CELL', $result[$typedPropery][$key]['type']);
+            } else {
+              $result[$typedPropery][$key]['type'] = str_replace('CELL', 'VOICE', $result[$typedPropery][$key]['type']);
+            }
+          } else {
+            $this->logError('PHONE NUMBER VALIDATION FAILED FOR ' . $property['value']);
+            // unset($result[$typedPropery][$key]); should we?
+          }
+        }
+      }
+      if (!empty($source[$typedPropery])) {
+        $sourceProperty = $source[$typedPropery][0];
+        foreach ($result[$typedPropery] as $key => $property) {
+          if ($typedPropery == 'ADR') {
+            // assume a match if street, city and PO-code match
+            $address = explode(';', Util::normalizeSpaces($property['value']));
+            $sourceAddress = explode(';', Util::normalizeSpaces($sourceProperty['value']));
+            if ($address[2] == $sourceAddress[2]
+                && $address[3] == $sourceAddress[3]
+                && $address[5] == $sourceAddress[5]) {
+              unset($result[$typedPropery][$key]);
+            }
+          } elseif ($property['value'] == $sourceProperty['value']) {
+            unset($result[$typedPropery][$key]);
+          }
+        }
+        array_unshift($result[$typedPropery], $sourceProperty);
+      }
+    }
+
+    return $result;
+  }
+
+  /**
+   * Register a pre-commit action in order to merge changed data into a linked
+   * addressbook. This is done "brute-force": the musician is exported into a
+   * vCard and the result is then "merged" by ContactService::mergeMusician()
+   * into an existing entry, if that is found.
+   *
+   * @param Entities\Musician $musician The musician which has been altered.
+   *
+   * @return bool \true if a pre-commit action has been registered with the
+   * entity manager.
+   */
+  public function registerContactSynchronization(Entities\Musician $musician):bool
+  {
+    $addressBookUri = $musician->getAddressBookUri();
+    if (empty($addressBookUri)) {
+      return false;
+    }
+    $oldContact = $this->findMusicianContact($musician);
+    if ($oldContact === null) {
+      $this->logError(
+        'Broken address-book link for musician "' . $musician->getPublicName(). '"'
+        . ', addressbook "' . $musician->getAddressBookUri() . '"'
+        . ', uuid "' . $musician->getUuid() . '".',
+      );
+      return false;
+    }
+    $newContact = $this->mergeMusician($oldContact, $musician);
+    $addressBook = $this->addressBookByUri($addressBookUri);
+
+    $this->entityManager->registerPreCommitAction(
+      new GenericUndoable(
+        function() use ($addressBook, $newContact, $musician) {
+          if ($musician->getDeleted() !== null && $this->entityManager->contains($musician)) {
+            $musician->setAddressBookUri(null);
+            $this->flush();
+          }
+          $addressBook->createOrUpdate($newContact);
+        },
+        function () use ($addressBook, $oldContact, $musician) {
+          $addressBook->createOrUpdate($oldContact);
+          // the rollback should restore the addressbook link.
+        }
+      ),
+    );
+    return true;
+  }
+
+  /**
+   * Find an associated addressbook contact if there is one. The search is
+   * performed by UID (== $musician->getUuid()).
+   *
+   * @param Entities\Musician $musician
+   *
+   * @return null|array
+   */
+  public function findMusicianContact(Entities\Musician $musician):?array
+  {
+    $addressBook = $this->addressBookByUri($musician->getAddressBookUri());
+    if ($addressBook === null) {
+      return null;
+    }
+    $result = $addressBook->search(
+      pattern: (string)$musician->getUuid(),
+      searchProperties: [ 'UID' ],
+      options: [
+        'types' => true,
+        'wildcard' => false,
+      ],
+    );
+    if (count($result) !== 1) {
+      $this->logError('Found no or more than one contact ' . print_r($result, true));
+      return null;
+    }
+    return $result[0];
   }
 }

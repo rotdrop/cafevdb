@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -65,7 +65,12 @@ class TranslationKey implements \ArrayAccess
    * @var string
    */
   #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['fixed' => true])]
-  #[Gedmo\Slug(fields: ['phrase'], updatable: true, unique: true, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler')])]
+  #[Gedmo\Slug(
+    fields: ['phrase'],
+    updatable: true,
+    unique: true,
+  )]
+  #[Gedmo\SlugHandler(class: CAFEVDB\Listeners\Sluggable\HashHandler::class)]
   private $phraseHash;
 
   #[ORM\OneToMany(targetEntity: Translation::class, mappedBy: 'translationKey', cascade: ['all'], fetch: 'EXTRA_LAZY')]

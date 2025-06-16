@@ -1,0 +1,11 @@
+<map id="compositeRowOnly" name="compositeRowOnly">
+<area shape="rect" id="Node000001" title="Print only the values for the composite row." alt="" coords="5,39,141,65"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a3bf6b46469ec58a4ff5f4905043bd64b" title=" " alt="" coords="189,39,333,65"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,49,173,49,173,55,141,55"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#ac25db3eeb682f1b3bf9cc9518b437ba0" title="Decide whether the current row refers to the composite payment or to a &quot;split&quot; invoice&#45;item." alt="" coords="381,39,502,65"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="334,49,366,49,366,55,334,55"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a159fbf8c9b2dbe629fb79eb5faa58fd6" title=" " alt="" coords="599,5,741,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="502,41,583,29,584,34,503,46"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="550,56,790,115"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="503,58,536,63,535,68,502,63"/>
+</map>

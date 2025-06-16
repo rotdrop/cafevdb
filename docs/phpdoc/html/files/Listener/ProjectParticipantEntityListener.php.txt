@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,20 +26,24 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
-use OCP\IL10N;
-use Psr\Log\LoggerInterface as ILogger;
 use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
 use OCP\IGroup;
 use OCP\IGroupManager;
+use OCP\IL10N;
 use OCP\IUserManager;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant as Entity;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\EncryptionService;
 
 /**
@@ -86,10 +90,42 @@ class ProjectParticipantEntityListener
    */
   public function preUpdate(Entity $entity, ORMEvent\PreUpdateEventArgs $event)
   {
+    $this->l = $this->appContainer->get(IL10N::class);
+    $field = 'participationStatus';
+    if ($event->hasChangedField($field)) {
+      $participationStatus = (string)$event->getNewValue($field);
+      switch ($participationStatus) {
+        case ParticipationStatus::PASSIVE:
+          // confirmed partiticipants must not be "passive"
+          if ($entity->getRegistration()) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t(
+                'Confirmed project participants cannot have a participation status of "%s".',
+                ParticipationStatus::getL10NValues($this->l)[$participationStatus],
+              ),
+            );
+          }
+          break;
+        case ParticipationStatus::ASSOCIATED:
+          // participants playing real instruments must not be associated
+          $realInstruments = $entity->getRealInstruments();
+          if (!$realInstruments->isEmpty()) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t(
+                'The participation-status cannot be set to "%1$s" as long as the participant is registered to perform with real instruments (%2$s)',
+                [
+                  ParticipationStatus::getL10NValues($this->l)[$participationStatus],
+                  implode(', ', array_map(fn(Entities\ProjectInstrument $instrument) => $instrument->getInstrument()->getName(), $realInstruments->toArray())),
+                ],
+              ),
+            );
+          }
+          break;
+      }
+    }
     $field = 'registration';
     if ($event->hasChangedField($field)) {
       $oldValue = $event->getOldValue($field);
-      $this->entityManager->dispatchEvent(new Events\PreChangeRegistrationConfirmation($this, !empty($oldValue), !empty($event->getNewValue($field))));
       $this->entityManager->dispatchEvent(
         new Events\PreChangeRegistrationConfirmation(
           $entity,
@@ -165,7 +201,8 @@ class ProjectParticipantEntityListener
   /**
    * Register a pre-commit action with undo in order to add / remove the
    * cloud-account of a newly registered executive board member to the
-   * respective cloud user groups.
+   * respective cloud user groups. Also sync a linked address book entry if
+   * present.
    *
    * @param Entity $entity
    *
@@ -176,10 +213,20 @@ class ProjectParticipantEntityListener
    */
   private function registerPreCommitAction(Entity $entity, bool $remove):void
   {
+    /** @var ContactsService $contactsService */
+    $contactsService = $this->appContainer->get(ContactsService::class);
+    $musician = $entity->getMusician();
+    if (!$contactsService->registerContactSynchronization($musician)) {
+      $this->logError('Contacts-synchronization could not be registered for ' . $musician->getPublicName());
+    }
+
     $entityId = self::entityId($entity);
     if (!empty($this->preCommitActions[$entityId])) {
+      // avoid recursion
       return;
     }
+    $this->preCommitActions[$entityId] = true;
+
     /** @var IConfig $cloudConfig */
     $cloudConfig = $this->appContainer->get(IConfig::class);
 
@@ -193,7 +240,7 @@ class ProjectParticipantEntityListener
     /** @var EncryptionService $encryptionService */
     $encryptionService = $this->appContainer->get(EncryptionService::class);
     $executiveBoardProjectId = $encryptionService->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, -1);
-    if ($entity->getProject->getId() != $executiveBoardProjectId) {
+    if ($entity->getProject()->getId() != $executiveBoardProjectId) {
       // nothing to do
       return;
     }
@@ -209,7 +256,7 @@ class ProjectParticipantEntityListener
 
     /** @var IUserManager $userManager */
     $userManager = $this->appContainer->get(IUserManager::class);
-    $userId = $entity->getMusician()->getUserIdSlug();
+    $userId = $musician->getUserIdSlug();
     $user = $userManager->get($userId);
 
     $closureArguments = compact([
@@ -221,34 +268,36 @@ class ProjectParticipantEntityListener
       'userManager',
     ]);
 
-    $this->preCommitActions[$entityId] = new GenericUndoable(
-      function() use ($closureArguments) {
-        extract($closureArguments);
-        $previousStatus = [
-          'orchestraGroup' => $orchestraGroup->inGroup($user),
-          'managementGroup' => $managementGroup->inGroup($user),
-        ];
-        if ($remove) {
-          $managementGroup->removeUser($user);
-        } else {
-          $managementGroup->addUser($user);
-          $orchestraGroup->addUser($user);
-        }
-        return $previousStatus;
-      },
-      function(array $previousStatus) use ($closureArguments) {
-        extract($closureArguments);
-        foreach ($previousStatus as $groupKey => $status) {
-          /** @var IGroup $group */
-          $group = $closureArguments[$groupKey];
-          if ($status && !$group->inGroup($user)) {
-            $group->addUser($user);
+    $this->entityManager->registerPostCommitAction(
+      new GenericUndoable(
+        function() use ($closureArguments) {
+          extract($closureArguments);
+          $previousStatus = [
+            'orchestraGroup' => $orchestraGroup->inGroup($user),
+            'managementGroup' => $managementGroup->inGroup($user),
+          ];
+          if ($remove) {
+            $managementGroup->removeUser($user);
+          } else {
+            $managementGroup->addUser($user);
+            $orchestraGroup->addUser($user);
           }
-          if (!$status && $group->inGroup($user)) {
-            $group->removeUser($user);
+          return $previousStatus;
+        },
+        function(array $previousStatus) use ($closureArguments) {
+          extract($closureArguments);
+          foreach ($previousStatus as $groupKey => $status) {
+            /** @var IGroup $group */
+            $group = $closureArguments[$groupKey];
+            if ($status && !$group->inGroup($user)) {
+              $group->addUser($user);
+            }
+            if (!$status && $group->inGroup($user)) {
+              $group->removeUser($user);
+            }
           }
-        }
-      },
+        },
+      ),
     );
   }
 
@@ -261,7 +310,7 @@ class ProjectParticipantEntityListener
    *
    * @return string
    */
-  private static function entityId(string|Entity $entity, ?string $suffix):string
+  private static function entityId(string|Entity $entity, ?string $suffix = null):string
   {
     return (is_string($entity)
             ? $entity

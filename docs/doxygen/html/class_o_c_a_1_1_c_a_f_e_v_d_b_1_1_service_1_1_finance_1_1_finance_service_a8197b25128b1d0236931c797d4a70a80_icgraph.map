@@ -1,0 +1,9 @@
+<map id="mandateReferenceUsage" name="mandateReferenceUsage">
+<area shape="rect" id="Node000001" title="Compute usage data for the given mandate reference." alt="" coords="536,5,706,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a34074025d55ce5eebb5cf86c23237575" title="Determine if the given mandate is expired, in which case we would need a new mandate." alt="" coords="362,5,488,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="521,21,489,21,489,16,521,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a4c248f60e237cada6351449b40d5bf29" title="Fetch an exisiting reference given project and musician." alt="" coords="184,5,314,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="347,21,314,21,314,16,347,16"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#ae880ef74ba5660c8aaf4078e5c18301c" title="Store a SEPA&#45;mandate, possibly with only partial information." alt="" coords="5,5,136,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="168,21,136,21,136,16,168,16"/>
+</map>

@@ -34,8 +34,9 @@ use OCP\AppFramework\Http\Response;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\IRequest;
 
+use OCA\BAV\Service\BAV as BankAccountValidator;
+
 use OCA\CAFEVDB\Common;
-use OCA\CAFEVDB\Common\BankAccountValidator;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -181,25 +182,25 @@ class SepaDebitMandatesController extends Controller
         case 'orchestraMember':
           // tricky, for now just generate a new reference
           // @todo This has be made foolproof!
-          $newProject = ($value === 'member') ? $memberProjectId : $projectId;
-          $mandate = $this->financeService->fetchSepaMandate($newProject, $musicianId);
+          $newProjectId = ($value === 'member') ? $memberProjectId : $projectId;
+          $mandate = $this->financeService->fetchSepaMandate($newProjectId, $musicianId);
           if (!empty($mandate)) {
             $reference = $mandate['mandateReference'];
             $IBAN = $mandate['IBAN'];
             $BLZ = $mandate['BLZ'];
             $BIC = $mandate['BIC'];
             $message[] = $this->l->t('Found exisiting mandate with reference "%s"', $reference);
-          } elseif (!empty($newProject) && !empty($musicianId)) {
+          } elseif (!empty($newProjectId) && !empty($musicianId)) {
             $mandate = (new Entities\SepaDebitMandate)
-              ->setProject($newProject)
-              ->setMusician($musicianId);
+              ->setProject($this->getReference(Entities\Project::class, $newProjectId))
+              ->setMusician($this->getReference(Entities\Musician::class, $musicianId));
             $reference = $this->financeService->generateSepaMandateReference($mandate);
             $message[] = $this->l->t('Generated new reference "%s"', $reference);
-          } elseif (empty($newProject)) {
+          } elseif (empty($newProjectId)) {
             $reference = '';
             $message[] = $this->l->t('No project, delete mandate-reference.');
           }
-          $mandateProjectId = $newProject;
+          $mandateProjectId = $newProjectId;
           $newValidations[] = [
             'changed' => 'mandateNonRecurring',
             'value' => $value != 'member',

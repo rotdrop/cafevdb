@@ -1,5 +1,9 @@
 <map id="removeFromCache" name="removeFromCache">
-<area shape="rect" id="Node000001" title="Clear the data for the given object ids." alt="" coords="201,5,335,31"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a9b169b15131bc9f1cde755cc5ea43500" title="Create an entry in the given calendar from either a VCalendar blob or a Sabre VCalendar object." alt="" coords="5,5,153,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,21,154,21,154,15,188,15"/>
+<area shape="rect" id="Node000001" title="Clear the data for the given object ids." alt="" coords="204,56,336,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a9b169b15131bc9f1cde755cc5ea43500" title="Create an entry in the given calendar from either a VCalendar blob or a Sabre VCalendar object." alt="" coords="7,5,154,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,54,132,35,134,30,203,49"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a1a333660bc649269f9583a2985635564" title="Remove the given calendar object." alt="" coords="7,56,154,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="188,72,154,72,154,67,188,67"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#aacb997b1d639326486613ee11127e083" title="Update an entry in the given calendar from either a VCalendar blob or a Sabre VCalendar object." alt="" coords="5,107,156,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="203,90,134,109,132,103,202,85"/>
 </map>

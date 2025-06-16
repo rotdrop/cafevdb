@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Expr;
-use \OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 use OCA\CAFEVDB\Exceptions\DatabaseException;
 
 /** Trait for entity repositories which adds kind of a symbolic query "language". */
@@ -530,6 +530,12 @@ trait FindLikeTrait
     ?int $offset = null,
   ):ORM\QueryBuilder {
 
+    /** @var ORM\Mapping\ClassMetadata $class */
+    $class = $this->getClassMetadata();
+
+    /** @var ORM\ENtityManagerInterface $entityManager */
+    $entityManager = $this->getEntityManager();
+
     // unpack parameter array
     // foreach ($queryParts as $key => $part) {
     //   ${$key} = $part;
@@ -574,12 +580,21 @@ trait FindLikeTrait
             continue;
           }
           // $this->log('FIELD ' . $field);
+          $fieldIsCollection = false;
           $dotPos = strpos($field, '.');
           if ($dotPos !== false) {
             $tableAlias = substr($field, 0, $dotPos);
+            $column = substr($field, $dotPos + 1);
           } else {
             $tableAlias = 'mainTable';
+            $column = $field;
             $field = $tableAlias . '.' . $field;
+          }
+          if ($tableAlias == 'mainTable') {
+            $fieldIsCollection = $class->isCollectionValuedAssociation($column);
+          } elseif ($class->hasAssociation($tableAlias)) {
+            $targetClass = $entityManager->getClassMetadata($class->getAssociationTargetClass($tableAlias));
+            $fieldIsCollection = $targetClass->isCollectionValuedAssociation($column);
           }
           $param = str_replace('.', '_', $field) . '_' . $criterion['index'];
           if (!empty($criterion['groupFunction'])) {
@@ -618,8 +633,14 @@ trait FindLikeTrait
               $expr = $qb->expr()->like($field, ':' . $param);
               $criterion['value'] = $value;
             } else {
-              $expr = $qb->expr()->$comparator($field, ':' . $param);
+              if ($fieldIsCollection && $comparator == 'eq') {
+                $expr = $qb->expr()->isMemberOf(':' . $param, $field);
+              } else {
+                $expr = $qb->expr()->$comparator($field, ':' . $param);
+              }
             }
+          } elseif ($fieldIsCollection && $comparator == 'eq') {
+            $expr = $qb->expr()->isMemberOf(':' . $param, $field);
           } else {
             $expr = $qb->expr()->$comparator($field, ':' . $param);
           }
@@ -690,8 +711,3 @@ trait FindLikeTrait
     return $qb;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -1,0 +1,12 @@
+<map id="checkSharedFolder" name="checkSharedFolder">
+<area shape="rect" id="Node000001" title="Check for the existence of the shared folder and create it when not found." alt="" coords="5,31,139,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#af645e42743654289e03a7f7aac7f7294" title="Check whether the shared object exists." alt="" coords="368,5,499,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,27,186,16,272,11,352,12,352,17,272,16,187,21,125,33"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a49c62a655727a3991ae1db58a5ca9d05" title="Share an object between the members of the specified group." alt="" coords="191,31,316,57"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="139,41,175,41,175,47,139,47"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a6f152b7d3b0f5ee7a4b2269d58251cb7" title="We require that the share&#45;owner owns a directory shared with the orchestra group." alt="" coords="187,81,320,108"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="123,55,189,74,188,79,122,61"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="291,78,319,67,388,36,390,41,321,72,293,83"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a68d96928eccd8ec709df328b328c05b3" title="Return true if the share&#45;owner exists and belongs to the orchestra user group (and only to this group..." alt="" coords="370,81,498,108"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="320,92,354,92,354,97,320,97"/>
+</map>

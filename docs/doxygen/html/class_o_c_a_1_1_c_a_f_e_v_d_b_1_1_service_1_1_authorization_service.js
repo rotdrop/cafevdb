@@ -5,5 +5,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service =
     [ "getUserPermissions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#a014588ae449977376e1485aa7d5428d9", null ],
     [ "isAdmin", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#a3d9adc328cc14e84d44359267cf973fc", null ],
     [ "logPermissions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#ae82f33b824a6018099818ce4a1bcc11e", null ],
-    [ "$userGroupId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#ab99d35db72b6781a347270363d12a2c2", null ]
+    [ "$userGroupId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#ac854e248ee49e19605713fa49365b802", null ]
 ];

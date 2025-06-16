@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -156,7 +156,7 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
         $this->userStorage->delete($this->newName);
         break;
       case self::UNDO_RENAME:
-        $this->userStorage->renamew($this->newName, $this->oldName);
+        $this->userStorage->rename($this->newName, $this->oldName);
         break;
       case self::UNDO_RESTORE:
         $this->userStorage->restore($this->oldName, $this->doneInterval);
@@ -171,8 +171,3 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
     $this->doneInterval = null;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

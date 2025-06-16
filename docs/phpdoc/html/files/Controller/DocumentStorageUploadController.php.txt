@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
 use UnexpectedValueException;
 
-use \PHP_IBAN\IBAN;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use PHP_IBAN\IBAN;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -40,10 +40,12 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /** AJAX endpoint to support maintenance of tax exemption notices. */
 class DocumentStorageUploadController extends Controller
@@ -62,11 +64,13 @@ class DocumentStorageUploadController extends Controller
   public const FINANCE_TOPIC_PAYMENTS = 'project-payments';
   public const FINANCE_TOPIC_EXEMPTION_NOTICES = 'tax-exemption-notices';
   public const FINANCE_TOPIC_DONATION_RECEIPTS = 'donation-receipts';
+  public const FINANCE_TOPIC_INVOICES = 'invoices';
 
   public const TOPICS = [
     self::SECTION_FINANCE => [
       self::FINANCE_TOPIC_DONATION_RECEIPTS,
       self::FINANCE_TOPIC_EXEMPTION_NOTICES,
+      self::FINANCE_TOPIC_INVOICES,
       self::FINANCE_TOPIC_PAYMENTS,
     ],
   ];
@@ -75,6 +79,7 @@ class DocumentStorageUploadController extends Controller
     self::SECTION_FINANCE => [
       self::FINANCE_TOPIC_DONATION_RECEIPTS => Entities\DonationReceipt::class,
       self::FINANCE_TOPIC_EXEMPTION_NOTICES => Entities\TaxExemptionNotice::class,
+      self::FINANCE_TOPIC_INVOICES => Entities\Invoice::class,
       self::FINANCE_TOPIC_PAYMENTS => Entities\CompositePayment::class,
     ],
   ];
@@ -84,6 +89,7 @@ class DocumentStorageUploadController extends Controller
       self::FINANCE_TOPIC_DONATION_RECEIPTS => [ 'entityId', ],
       self::FINANCE_TOPIC_EXEMPTION_NOTICES => [ 'entityId', ],
       self::FINANCE_TOPIC_PAYMENTS => [ 'entityId', 'musicianId' ],
+      self::FINANCE_TOPIC_INVOICES => [ 'entityId', ],
     ],
   ];
 
@@ -144,7 +150,9 @@ class DocumentStorageUploadController extends Controller
 
     foreach (self::REQUIRED[$section][$topic] as $required) {
       if (empty(${$required})) {
-        return self::grumble($this->l->t('Required information "%s" not provided.', $required));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Required information "%s" not provided.', $required),
+        );
       }
     }
 
@@ -152,11 +160,12 @@ class DocumentStorageUploadController extends Controller
     $entity = $this->findEntity(self::ENTITIES[$section][$topic], $entityId);
 
     if (empty($entity)) {
-      return self::grumble(
+      throw new Exceptions\EnduserNotificationException(
         $this->l->t(
           'Unable to find the database entity with id "%1$d" in section "%2$s" for topic "%3$s".',
-          [ $entityId, $section, $topic ]
-        ));
+          [ $entityId, $section, $topic ],
+        ),
+      );
     }
 
     switch ($operation) {
@@ -170,7 +179,9 @@ class DocumentStorageUploadController extends Controller
 
         $file = array_shift($files); // only one
         if ($file['error'] != UPLOAD_ERR_OK) {
-          return self::grumble($this->l->t('Upload error "%s".', $file['str_error']));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Upload error "%s".', $file['str_error']),
+          );
         }
 
         /** @var UserStorage $userStorage */
@@ -182,21 +193,29 @@ class DocumentStorageUploadController extends Controller
         switch ($uploadMode) {
           case UploadsController::UPLOAD_MODE_MOVE:
             if (empty($originalFilePath)) {
-              return self::grumble($this->l->t('Move operation requested, but the original file path has not been specified.'));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('Move operation requested, but the original file path has not been specified.'),
+              );
             }
             $originalFile = $userStorage->get($originalFilePath);
-            if (empty($originalFile)) {
-              return self::grumble($this->l->t('Move operation requested, but the original file "%s" cannot be found.', $originalFilePath));
+              if (empty($originalFile)) {
+                throw new Exceptions\EnduserNotificationException(
+                  $this->l->t('Move operation requested, but the original file "%s" cannot be found.', $originalFilePath),
+                );
             }
             break;
           case UploadsController::UPLOAD_MODE_LINK:
             $originalFileId = $file['original_name']; // ?? check if this is correct
             if (empty($originalFileId)) {
-              return self::grumble($this->l->t('Link operation requested, but the id of the original file has not been specified.'));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('Link operation requested, but the id of the original file has not been specified.'),
+              );
             }
             $originalFile = $this->entityManager->find(Entities\File::class, $originalFileId);
             if (empty($originalFile)) {
-              return self::grumble($this->l->t('Link operation requested, but the existing original file with id "%s" cannot be found.', $originalFileId));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('Link operation requested, but the existing original file with id "%s" cannot be found.', $originalFileId),
+              );
             }
             $originalFilePath = $originalFile->getFileName();
             break;
@@ -258,9 +277,14 @@ class DocumentStorageUploadController extends Controller
               $fileContent = null;
               /** @var Entities\EncryptedFile $originalFile */
               if (!empty($fileEntity) && $fileEntity->getId() == $originalFileId) {
-                return self::grumble($this->l->t('Link operation requested, but the existing original file is the same as the target destination (%s@%s)', [
-                  $originalFile->getFileName(), $originalFileId
-                ]));
+                throw new Exceptions\EnduserNotificationException(
+                  $this->l->t(
+                    'Link operation requested, but the existing original file is the same as the target destination (%s@%s)',
+                    [
+                      $originalFile->getFileName(), $originalFileId
+                    ],
+                  ),
+                );
               }
               $fileEntity = $originalFile;
               break;
@@ -273,13 +297,13 @@ class DocumentStorageUploadController extends Controller
           $fileName = $fileNodeEntity->getName();
 
           $this->entityManager->commit();
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          $exceptionChain = $this->exceptionChainData($t);
-          $exceptionChain['message'] =
-            $this->l->t('Error, caught an exception. No changes were performed.');
-          return self::grumble($exceptionChain);
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Error, caught an exception. No changes were performed.'),
+            previous: $t,
+          );
         }
 
         if ($uploadMode != UploadsController::UPLOAD_MODE_LINK) {
@@ -298,7 +322,7 @@ class DocumentStorageUploadController extends Controller
           if (!empty($filesAppPath)) {
             $filesAppLink = $userStorage->getFilesAppLink($filesAppPath, true);
           }
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
         }
 
@@ -352,18 +376,18 @@ class DocumentStorageUploadController extends Controller
 
           $this->entityManager->commit();
 
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          $exceptionChain = $this->exceptionChainData($t);
-          $exceptionChain['message'] =
-            $this->l->t('Error, caught an exception. No changes were performed.');
-          return self::grumble($exceptionChain);
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Error, caught an exception. No changes were performed.'),
+            previous: $t,
+          );
         }
 
         return self::response($this->l->t('Successfully deleted the written document for the entity "%1$s", please upload a new one!', (string)$entity));
     }
-    return self::grumble($this->l->t('UNIMPLEMENTED'));
+    throw new Exceptions\EnduserNotificationException($this->l->t('UNIMPLEMENTED'));
   }
 
   /**
@@ -386,6 +410,8 @@ class DocumentStorageUploadController extends Controller
             return $this->storageFactory->getDonationReceiptsStorage();
           case self::FINANCE_TOPIC_EXEMPTION_NOTICES:
             return $this->storageFactory->getTaxExemptionNoticesStorage();
+          case self::FINANCE_TOPIC_INVOICES:
+            return $this->storageFactory->getInvoicesStorage();
           case self::FINANCE_TOPIC_PAYMENTS:
             /** @var Entities\CompositePayment $entity */
             return $this->storageFactory->getProjectParticipantsStorage($entity->getProjectParticipant());
@@ -410,15 +436,18 @@ class DocumentStorageUploadController extends Controller
   private function getOwner(mixed $entity):?Entities\Musician
   {
     switch (true) {
-      case ($entity instanceof Entities\TaxExemptionNotice):
-        /** @var Entities\DonationReceipt $entity */
-        return $entity->getDonation()->getMusician();
-      case ($entity instanceof Entities\DonationReceipt):
-        /** @var Entities\TaxExemptionNotice $entity */
-        return null;
       case ($entity instanceof Entities\CompositePayment):
         /** @var Entities\CompositePayment $entity */
         return $entity->getMusician();
+      case ($entity instanceof Entities\DonationReceipt):
+        /** @var Entities\DonationReceipt $entity */
+        return $entity->getDonation()->getMusician();
+      case ($entity instanceof Entities\Invoice):
+        /** @var Entities\Invoice $entity */
+        return $entity->getDebitor();
+      case ($entity instanceof Entities\TaxExemptionNotice):
+        /** @var Entities\TaxExemptionNotice $entity */
+        return null;
     }
     throw new UnexpectedValueException(
       $this->l->t(
@@ -438,17 +467,21 @@ class DocumentStorageUploadController extends Controller
   private function clearDocument(mixed $entity):void
   {
     switch (true) {
-      case ($entity instanceof Entities\TaxExemptionNotice):
-        /** @var Entities\DonationReceipt $entity */
-        $entity->setSupportingDocument(null);
-        return;
-      case ($entity instanceof Entities\DonationReceipt):
-        /** @var Entities\TaxExemptionNotice $entity */
-        $entity->setWrittenNotice(null);
-        return;
       case ($entity instanceof Entities\CompositePayment):
         /** @var Entities\CompositePayment $entity */
         $entity->setSupportingDocument(null);
+        return;
+      case ($entity instanceof Entities\DonationReceipt):
+        /** @var Entities\DonationReceipt $entity */
+        $entity->setSupportingDocument(null);
+        return;
+      case ($entity instanceof Entities\Invoice):
+        /** @var Entities\Invoice $entity */
+        $entity->setWrittenInvoice(null);
+        return;
+      case ($entity instanceof Entities\TaxExemptionNotice):
+        /** @var Entities\TaxExemptionNotice $entity */
+        $entity->setWrittenNotice(null);
         return;
     }
     throw new UnexpectedValueException(
@@ -469,15 +502,18 @@ class DocumentStorageUploadController extends Controller
   private function getDocument(mixed $entity):?Entities\DatabaseStorageFile
   {
     switch (true) {
-      case ($entity instanceof Entities\TaxExemptionNotice):
-        /** @var Entities\DonationReceipt $entity */
-        return $entity->getWrittenNotice();
-      case ($entity instanceof Entities\DonationReceipt):
-        /** @var Entities\TaxExemptionNotice $entity */
-        return $entity->getSupportingDocument();
       case ($entity instanceof Entities\CompositePayment):
         /** @var Entities\CompositePayment $entity */
         return $entity->getSupportingDocument();
+      case ($entity instanceof Entities\DonationReceipt):
+        /** @var Entities\DonationReceipt $entity */
+        return $entity->getSupportingDocument();
+      case ($entity instanceof Entities\Invoice):
+        /** @var Entities\Invoice $entity */
+        return $entity->getWrittenInvoice();
+      case ($entity instanceof Entities\TaxExemptionNotice):
+        /** @var Entities\TaxExemptionNotice $entity */
+        return $entity->getWrittenNotice();
     }
     throw new UnexpectedValueException(
       $this->l->t(
@@ -523,6 +559,15 @@ class DocumentStorageUploadController extends Controller
         } else {
           $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false);
           $entity->setSupportingDocument($fileNodeEntity);
+        }
+        return $fileNodeEntity;
+      case ($entity instanceof Entities\Invoice):
+        /** @var Entities\Invoice $entity */
+        if (!empty($fileNodeEntity)) {
+          $fileNodeEntity->setFile($fileEntity);
+        } else {
+          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false);
+          $entity->setWrittenInvoice($fileNodeEntity);
         }
         return $fileNodeEntity;
       case ($entity instanceof Entities\TaxExemptionNotice):

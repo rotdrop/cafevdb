@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,12 +26,15 @@ namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\IRequest;
 use OCP\AppFramework\IAppContainer;
+use OCP\IL10N;
+use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 
 /** Encryption/Decryption AJAX end-points. */
 class CryptoController extends Controller
@@ -41,8 +44,8 @@ class CryptoController extends Controller
 
   const META_DATA_IBAN = 'iban';
 
-  /** @var Transformable\Transformer\TransformerInterface */
-  protected $encryptionTransformer;
+  /** @var null|Transformable\Transformer\TransformerInterface */
+  protected ?Transformable\Transformer\TransformerInterface $encryptionTransformer;
 
   /** @var FinanceService */
   protected $financeService;
@@ -51,13 +54,20 @@ class CryptoController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    protected ILogger $logger,
-    protected IAppContainer $appContainer,
     protected EntityManager $entityManager,
+    protected IAppContainer $appContainer,
+    protected IL10N $l,
+    protected ILogger $logger,
   ) {
     parent::__construct($appName, $request);
 
     $this->encryptionTransformer = $entityManager->getDataTransformer(EntityManager::TRANSFORM_ENCRYPT);
+    if ($this->encryptionTransformer === null) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('The encryption service is not available.'),
+        httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+      );
+    }
   }
   // phpcs:enable
 

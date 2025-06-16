@@ -42,6 +42,7 @@ use OCP\IRequest;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\FetchMode;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Result;
@@ -480,8 +481,6 @@ class PHPMyEdit extends LegacyPHPMyEdit
       $this->queryLog[] = $logEntry;
     } catch (DriverException $t) {
       $endTime = hrtime(true);
-      $this->logException($t);
-      throw $t;
       $this->exception = $t;
       $this->errorCode = $t->getSQLState();
       $this->errorInfo = $t->getMessage();
@@ -490,6 +489,13 @@ class PHPMyEdit extends LegacyPHPMyEdit
       $logEntry['errorInfo'] = $this->errorInfo;
       $logEntry['duration'] = ($endTime - $startTime) / 1e6;
       $this->queryLog[] = $logEntry;
+      // $this->logException($t);
+      throw new Exceptions\DatabaseLegacyException(
+        $this->l->t('Exception in legacy phpMyEdit.'),
+        previous: $t,
+        sql: $query,
+        pmeLine: $line,
+      );
       return false;
     }
     return $stmt;

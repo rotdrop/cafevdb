@@ -1,0 +1,9 @@
+<map id="getUid" name="getUid">
+<area shape="rect" id="Node000001" title=" " alt="" coords="468,55,527,81"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a89595fb1b45135568c26cc3cd895fb1b" title="Inject a new event into the given calendar." alt="" coords="248,13,420,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="452,62,420,55,421,50,453,56"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a3bc5b15a2fa8fffd6b6b075b0e70c81a" title="Inject a new task into the given calendar." alt="" coords="251,80,417,123"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="453,80,418,87,417,82,452,74"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a6f8658acb2cf99b3e8bec2122a1ca6ee" title="Ensure that the &quot;other&quot; calendar contains a project registration event if and only if the registratio..." alt="" coords="5,5,200,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="232,37,200,37,200,32,232,32"/>
+</map>

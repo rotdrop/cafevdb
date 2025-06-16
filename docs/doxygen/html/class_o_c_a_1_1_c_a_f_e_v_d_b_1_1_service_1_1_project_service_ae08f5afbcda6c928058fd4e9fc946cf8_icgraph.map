@@ -1,7 +1,14 @@
 <map id="getProjectPathComponents" name="getProjectPathComponents">
-<area shape="rect" id="Node000001" title="Depending on the type of the project generate the partial project&#45;folder path:" alt="" coords="361,5,544,31"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5a6b377d5fa6d991e6f34179e04615c1" title="Depending on the type of the project generate the partial project&#45;folder path:" alt="" coords="171,5,313,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="348,21,313,21,313,15,348,15"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ab62a010ed016f8544297f9ffc62f7ab0" title="Get the configured name of the or all or the specified folder." alt="" coords="5,5,123,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="157,21,123,21,123,15,157,15"/>
+<area shape="rect" id="Node000001" title="Depending on the type of the project generate the partial project&#45;folder path:" alt="" coords="388,132,569,159"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5a6b377d5fa6d991e6f34179e04615c1" title="Depending on the type of the project generate the partial project&#45;folder path:" alt="" coords="199,107,340,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="373,135,340,131,341,126,373,130"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a7e88bde780a7b6f4da6893f7453af8b0" title="Rename the associated project folders after project rename." alt="" coords="7,157,149,184"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="373,155,149,169,149,164,372,149"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a15130674a8f4af5d90b7befb0d9e3084" title="More leight&#45;weight construction of the participant folder, assuming everything else is just is ok." alt="" coords="9,5,147,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="236,100,196,73,149,46,123,35,125,30,152,42,198,68,239,95"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ab62a010ed016f8544297f9ffc62f7ab0" title="Get the configured name of the or all or the specified folder." alt="" coords="20,56,136,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="201,105,131,86,132,81,202,99"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="202,141,132,159,131,154,201,135"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ab8a7979ae66cb375943059f56613676b" title="Restore the folders for the given project in order to undelete or during error recovery." alt="" coords="5,107,151,133"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="183,123,151,123,151,117,183,117"/>
 </map>

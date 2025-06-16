@@ -1,47 +1,53 @@
 <map id="Renderer" name="Renderer">
-<area shape="rect" id="Node000001" title="Abstract base HTML renderer." alt="" coords="132,301,207,327"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html" title="Abstract page&#45;renderer base class." alt="" coords="255,301,409,327"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="221,311,255,311,255,317,221,317"/>
-<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="5,301,84,327"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,311,132,311,132,317,98,317"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_blog.html" title="Blog renderer class, rendering is done through legacy templates." alt="" coords="504,252,552,277"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="396,295,503,268,505,273,397,301"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_config_check.html" title="Dummy config&#45;check renderer." alt="" coords="479,301,577,327"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="423,311,479,311,479,317,423,317"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="457,351,599,376"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="397,327,477,348,476,353,396,333"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_donation_receipts.html" title="Table generator for DonationReceipt entities." alt="" coords="687,5,813,31"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="594,340,597,338,619,300,627,264,625,227,618,190,612,153,610,116,620,79,645,42,664,27,686,19,687,24,666,32,649,45,625,81,616,117,617,153,624,189,630,226,632,264,624,302,601,341,598,344"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html" title="Table generator for Instruments table." alt="" coords="683,55,817,80"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="594,340,597,338,616,307,624,276,623,246,619,215,614,184,614,153,623,122,645,91,662,78,682,70,684,75,665,82,649,95,628,124,620,154,620,184,624,214,628,245,629,277,621,309,601,341,598,344"/>
-<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_insurances.html" title="Render the instrument insurances of the club&#45;members." alt="" coords="676,104,824,129"/>
-<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="594,341,597,338,613,313,620,289,621,264,619,240,617,215,618,190,626,165,645,140,659,129,675,122,677,127,662,134,649,144,631,167,623,191,622,215,624,239,626,264,625,290,618,315,601,341,597,344"/>
-<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html" title="Table generator for Instruments table." alt="" coords="705,153,795,179"/>
-<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="593,341,597,338,610,319,617,301,619,264,622,227,630,208,645,189,673,173,704,165,705,170,675,178,648,193,634,211,627,228,625,265,622,303,615,322,601,341,597,345"/>
-<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_brokers.html" title="Table generator for Instruments table." alt="" coords="688,203,812,228"/>
-<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="591,342,597,337,607,326,614,314,620,289,626,263,633,251,645,239,665,227,687,219,688,224,667,231,648,243,637,254,631,265,625,290,619,316,612,329,600,341,595,346"/>
-<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_rates.html" title="Table generator for Instruments table." alt="" coords="693,252,807,277"/>
-<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="587,343,597,337,611,325,620,313,630,300,645,288,692,270,693,275,648,292,634,304,625,316,615,329,600,342,590,347"/>
-<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html" title="Abstract table generator for Musicians table." alt="" coords="709,301,791,327"/>
-<area shape="poly" id="edge12_Node000006_Node000013" title=" " alt="" coords="598,345,709,320,710,325,599,350"/>
-<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html" title="Table generator for Instruments table." alt="" coords="647,351,853,376"/>
-<area shape="poly" id="edge15_Node000006_Node000016" title=" " alt="" coords="612,361,646,361,646,366,612,366"/>
-<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html" title="Table generator for Instruments table." alt="" coords="670,400,830,425"/>
-<area shape="poly" id="edge16_Node000006_Node000017" title=" " alt="" coords="600,376,693,397,691,403,599,382"/>
-<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html" title="Table generator for Instruments table." alt="" coords="684,449,816,475"/>
-<area shape="poly" id="edge17_Node000006_Node000018" title=" " alt="" coords="558,382,599,410,648,436,685,448,683,453,646,440,596,414,555,386"/>
-<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html" title="Table generator for Instruments table." alt="" coords="689,499,811,524"/>
-<area shape="poly" id="edge18_Node000006_Node000019" title=" " alt="" coords="547,386,589,437,617,463,648,485,689,501,687,506,645,490,614,467,585,440,543,389"/>
-<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html" title="Table generator for Projects table." alt="" coords="715,548,785,573"/>
-<area shape="poly" id="edge19_Node000006_Node000020" title=" " alt="" coords="542,388,558,421,581,461,611,501,648,534,681,549,715,556,714,561,679,555,645,539,607,505,576,464,553,424,537,390"/>
-<area shape="rect" id="Node000021" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bank_accounts.html" title="TBD." alt="" coords="681,597,819,623"/>
-<area shape="poly" id="edge20_Node000006_Node000021" title=" " alt="" coords="538,389,551,432,573,485,605,539,625,563,648,584,682,600,680,605,645,588,622,567,601,542,569,488,546,434,533,390"/>
-<area shape="rect" id="Node000022" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html" title="TBD." alt="" coords="673,647,827,672"/>
-<area shape="poly" id="edge21_Node000006_Node000022" title=" " alt="" coords="535,390,546,442,566,508,581,542,600,576,622,607,648,633,674,648,672,652,645,637,618,610,595,579,576,545,561,510,541,443,530,391"/>
-<area shape="rect" id="Node000023" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_tax_exemption_notices.html" title="Table generator TaxExemptionNotice." alt="" coords="675,696,825,721"/>
-<area shape="poly" id="edge22_Node000006_Node000023" title=" " alt="" coords="533,389,541,450,560,530,574,572,594,612,618,650,648,683,675,698,673,703,645,687,614,653,589,615,569,574,554,531,536,451,528,390"/>
-<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html" title="Table generator for Musicians table." alt="" coords="901,277,1005,303"/>
-<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="804,305,901,293,901,299,805,310"/>
-<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_all_musicians.html" title="Table generator for Musicians table." alt="" coords="905,327,1001,352"/>
-<area shape="poly" id="edge14_Node000013_Node000015" title=" " alt="" coords="805,318,905,331,905,336,804,323"/>
+<area shape="rect" id="Node000001" title="Abstract base HTML renderer." alt="" coords="132,360,206,387"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html" title="Abstract page&#45;renderer base class." alt="" coords="254,360,407,387"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="221,371,254,371,254,376,221,376"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="5,360,84,387"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,371,131,371,131,376,100,376"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_blog.html" title="Blog renderer class, rendering is done through legacy templates." alt="" coords="502,309,549,336"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="399,353,501,326,502,331,401,358"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_config_check.html" title="Dummy config&#45;check renderer." alt="" coords="477,360,574,387"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="423,371,476,371,476,376,423,376"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="455,411,596,437"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="400,389,472,407,471,413,399,394"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_donation_receipts.html" title="Table generator for DonationReceipt entities." alt="" coords="684,5,809,32"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="592,399,594,397,609,374,619,352,628,307,624,264,615,220,605,176,603,132,606,110,613,87,624,65,642,42,661,28,683,20,684,25,663,32,646,46,629,68,618,89,611,111,608,132,611,175,620,219,629,263,633,308,625,353,614,377,598,400,596,402"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html" title="Table generator for Instruments table." alt="" coords="680,56,812,83"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="591,399,594,397,616,358,624,321,622,283,615,245,608,208,607,170,616,131,642,93,659,80,679,71,681,76,662,84,646,96,621,133,612,170,613,207,620,244,627,282,629,321,621,360,598,400,595,403"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_insurances.html" title="Render the instrument insurances of the club&#45;members." alt="" coords="673,107,820,133"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="591,399,594,397,613,365,621,334,620,302,615,271,611,239,611,207,620,175,642,144,656,132,671,125,674,130,658,137,646,147,624,178,616,208,616,239,621,270,625,302,626,334,618,367,598,400,595,403"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html" title="Table generator for Instruments table." alt="" coords="701,157,792,184"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="591,399,594,397,610,372,617,347,618,322,616,296,613,271,615,245,623,220,642,194,669,177,700,169,702,174,671,182,645,198,628,222,620,246,619,271,621,296,623,321,623,347,615,374,598,400,595,403"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_brokers.html" title="Table generator for Instruments table." alt="" coords="685,208,808,235"/>
+<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="591,400,594,397,607,378,614,360,616,321,619,283,626,264,642,245,661,232,683,224,685,229,664,236,645,249,631,266,624,284,621,322,619,361,612,381,598,400,595,403"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_rates.html" title="Table generator for Instruments table." alt="" coords="690,259,803,285"/>
+<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="590,400,594,397,604,384,611,372,616,347,623,321,630,308,642,295,664,282,689,274,690,279,666,287,645,299,634,311,628,323,622,348,616,374,609,387,598,401,593,404"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html" title="Table generator for Instruments table." alt="" coords="711,309,782,336"/>
+<area shape="poly" id="edge12_Node000006_Node000013" title=" " alt="" coords="586,401,594,397,608,384,617,371,627,358,642,346,676,331,710,324,711,329,678,336,645,350,630,362,622,374,612,388,597,401,589,406"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html" title="Abstract table generator for Musicians table." alt="" coords="706,360,786,387"/>
+<area shape="poly" id="edge13_Node000006_Node000014" title=" " alt="" coords="601,404,705,380,706,385,602,409"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html" title="Table generator for Instruments table." alt="" coords="644,411,849,437"/>
+<area shape="poly" id="edge16_Node000006_Node000017" title=" " alt="" coords="611,421,643,421,643,427,611,427"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html" title="Table generator for Instruments table." alt="" coords="667,461,826,488"/>
+<area shape="poly" id="edge17_Node000006_Node000018" title=" " alt="" coords="602,439,686,458,684,463,601,444"/>
+<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html" title="Table generator for Instruments table." alt="" coords="681,512,812,539"/>
+<area shape="poly" id="edge18_Node000006_Node000019" title=" " alt="" coords="558,445,598,472,645,498,681,510,679,515,643,502,595,477,555,449"/>
+<area shape="rect" id="Node000021" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html" title="Table generator for Instruments table." alt="" coords="686,563,807,589"/>
+<area shape="poly" id="edge20_Node000006_Node000021" title=" " alt="" coords="546,449,587,500,615,526,645,548,686,565,684,570,642,553,611,530,583,504,542,452"/>
+<area shape="rect" id="Node000022" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html" title="Table generator for Projects table." alt="" coords="712,613,781,640"/>
+<area shape="poly" id="edge21_Node000006_Node000022" title=" " alt="" coords="540,450,556,485,579,525,608,565,645,599,678,615,712,622,711,627,676,620,642,604,605,569,574,528,551,487,535,453"/>
+<area shape="rect" id="Node000023" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bank_accounts.html" title="TBD." alt="" coords="678,664,814,691"/>
+<area shape="poly" id="edge22_Node000006_Node000023" title=" " alt="" coords="536,451,549,496,571,550,603,604,623,629,645,650,679,667,677,672,642,654,619,632,598,607,566,552,544,497,531,453"/>
+<area shape="rect" id="Node000024" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html" title="TBD." alt="" coords="670,715,822,741"/>
+<area shape="poly" id="edge23_Node000006_Node000024" title=" " alt="" coords="533,452,543,505,564,573,578,608,597,642,619,673,645,701,671,715,668,720,642,705,615,677,592,645,573,610,559,575,538,507,528,453"/>
+<area shape="rect" id="Node000025" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_tax_exemption_notices.html" title="Table generator TaxExemptionNotice." alt="" coords="672,765,821,792"/>
+<area shape="poly" id="edge24_Node000006_Node000025" title=" " alt="" coords="531,453,538,515,557,596,572,638,591,680,615,718,645,751,673,767,670,772,642,755,611,721,586,682,567,640,552,597,533,516,526,453"/>
+<area shape="rect" id="Node000026" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_taxation_statutory_sources.html" title="Table generator for Instruments table." alt="" coords="661,816,832,843"/>
+<area shape="poly" id="edge25_Node000006_Node000026" title=" " alt="" coords="529,453,534,524,550,618,565,668,585,717,612,763,645,802,662,813,659,818,642,806,607,766,580,720,560,670,545,619,529,524,524,453"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html" title="Table generator for Musicians table." alt="" coords="909,335,1012,361"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="802,364,908,351,909,357,802,369"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_all_musicians.html" title="Table generator for Musicians table." alt="" coords="913,385,1008,412"/>
+<area shape="poly" id="edge15_Node000014_Node000016" title=" " alt="" coords="802,377,913,390,912,396,802,382"/>
+<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_associates.html" title="(Legal&#45;)persons associated to a project, primarily for organizing financial affairs and in order to k..." alt="" coords="897,512,1024,539"/>
+<area shape="poly" id="edge19_Node000019_Node000020" title=" " alt="" coords="827,523,897,523,897,528,827,528"/>
 </map>

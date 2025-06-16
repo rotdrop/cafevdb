@@ -1,0 +1,38 @@
+<map id="cgiValue" name="cgiValue">
+<area shape="rect" id="Node000001" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="642,183,713,209"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#adda03ec92a7028324dd0f3d882e975ba" title="Return non&#45;personalized document templates for use in mass&#45;email." alt="" coords="415,5,594,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="666,169,640,106,619,74,593,46,574,35,577,30,596,42,623,71,645,104,671,167"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a099a1eac786c0fc2c4d7b8c3108b7d13" title=" " alt="" coords="444,157,565,184"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="626,191,565,182,566,177,627,186"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a1dc30339bb1489c3f4a9586dff31066d" title=" " alt="" coords="459,208,550,235"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="627,206,551,217,550,212,626,201"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ac5976a0a50b5addf24a0bd26280f2772" title="Whether recipients are disclosed (send via Cc:) or undisclosed (send via Bcc:)." alt="" coords="439,360,570,387"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="671,225,645,288,623,321,596,350,572,364,569,359,593,346,619,318,640,286,666,223"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#aa7c51513462cc05bd28c79540a6d374a" title="Return the calendar attachment data." alt="" coords="441,107,568,133"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="644,176,593,148,562,136,564,131,595,143,646,172"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a56fae4bd1b4337dfe78d90b051c93a01" title="Return the file attachment data." alt="" coords="448,56,561,83"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="659,171,631,132,613,113,593,97,560,82,562,77,596,92,617,109,635,129,663,168"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#afce9302bd8ab508408cc457cb24786e5" title=" " alt="" coords="464,259,546,285"/>
+<area shape="poly" id="edge16_Node000001_Node000012" title=" " alt="" coords="646,220,595,249,547,265,546,260,593,244,644,216"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ad647aec9f224f570e5c79be0a9ddd3d1" title=" " alt="" coords="473,309,536,336"/>
+<area shape="poly" id="edge18_Node000001_Node000013" title=" " alt="" coords="663,224,635,263,617,283,596,300,567,313,538,321,536,316,565,308,593,295,613,279,631,260,659,221"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a64924c3e38450824617993e28ac40b3e" title="A helper function to generate suitable select options for PageNavigation::selectOptions()." alt="" coords="202,19,352,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="400,27,353,30,353,25,399,22"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a3022527659976cc7e4ce7ea8eed647a2" title="Pre&#45;message construction validation." alt="" coords="202,183,353,209"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="429,182,354,190,353,185,428,176"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ac9b7ecf11f96b66f5b50b296815ace81" title="Send out the messages with self::doSendMessages(), after checking them with self::preComposeValidatio..." alt="" coords="18,183,127,209"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="186,199,127,199,127,193,186,193"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="443,217,353,207,354,202,444,212"/>
+<area shape="poly" id="edge10_Node000009_Node000005" title=" " alt="" coords="438,141,416,148,315,185,313,180,414,143,437,136"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a91e639d9817255254574e35ba821deab" title="Record diagnostic output from the actual message composition for the status page." alt="" coords="188,81,367,108"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="426,114,367,107,368,102,426,109"/>
+<area shape="poly" id="edge13_Node000011_Node000003" title=" " alt="" coords="433,60,353,47,353,42,434,55"/>
+<area shape="poly" id="edge14_Node000011_Node000005" title=" " alt="" coords="435,89,416,97,380,118,347,141,295,184,292,180,343,137,377,113,414,92,433,84"/>
+<area shape="poly" id="edge15_Node000011_Node000010" title=" " alt="" coords="434,80,368,87,367,82,433,75"/>
+<area shape="poly" id="edge17_Node000012_Node000005" title=" " alt="" coords="448,259,414,249,313,212,315,207,416,244,449,254"/>
+<area shape="poly" id="edge19_Node000013_Node000005" title=" " alt="" coords="457,315,414,300,377,279,343,255,292,212,295,208,347,251,380,274,416,295,459,310"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a983520de1e3cc2a8f002055bf82ad3a8" title="Take the text supplied by $contents and store it in the DB EmailTemplates table with tag $templateNam..." alt="" coords="226,309,329,336"/>
+<area shape="poly" id="edge20_Node000013_Node000014" title=" " alt="" coords="458,325,329,325,329,320,458,320"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a346f94effc8c8dfea565e54bc6a27ba7" title="Install a default email text if no tempalte is given." alt="" coords="5,309,140,336"/>
+<area shape="poly" id="edge21_Node000014_Node000015" title=" " alt="" coords="210,325,140,325,140,320,210,320"/>
+</map>

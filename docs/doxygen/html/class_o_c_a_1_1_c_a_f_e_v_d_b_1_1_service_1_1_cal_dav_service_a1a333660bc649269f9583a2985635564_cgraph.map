@@ -1,5 +1,9 @@
 <map id="deleteCalendarObject" name="deleteCalendarObject">
-<area shape="rect" id="node1" title="Remove the given calendar object." alt="" coords="5,5,152,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ab2479c65f5ff410c3580f54e5ba6ee88" title="Convert an object UID to its local URI." alt="" coords="200,5,295,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#afd08da0f2d0c21a2bc9d5d5ae56f7907" title="Get the uri of the original calendar." alt="" coords="343,5,481,31"/>
+<area shape="rect" id="Node000001" title="Remove the given calendar object." alt="" coords="5,31,152,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ab2479c65f5ff410c3580f54e5ba6ee88" title="Convert an object UID to its local URI." alt="" coords="219,5,313,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,31,203,24,204,30,153,37"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ac99cbd52337772919cb05fa5f255035b" title="Clear the data for the given object ids." alt="" coords="200,56,332,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="153,51,185,56,184,61,152,57"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#afd08da0f2d0c21a2bc9d5d5ae56f7907" title="Get the uri of the original calendar." alt="" coords="380,5,517,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="314,16,364,16,364,21,314,21"/>
 </map>

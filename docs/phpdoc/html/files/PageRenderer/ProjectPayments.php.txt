@@ -57,6 +57,7 @@ class ProjectPayments extends PMETableViewBase
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
   use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ParticipantFileFieldsTrait;
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
@@ -75,9 +76,6 @@ class ProjectPayments extends PMETableViewBase
   /** @var array */
   private $compositePaymentExpanded = [];
 
-  /** @var Entities\Project */
-  private ?Entities\Project $project;
-
   protected $joinStructure = [
     self::TABLE => [
       'flags' => self::JOIN_MASTER,
@@ -86,25 +84,39 @@ class ProjectPayments extends PMETableViewBase
     self::MUSICIANS_TABLE => [
       'entity' => Entities\Musician::class,
       'sql' => 'SELECT
-  __t1.*,
-  GROUP_CONCAT(
+  __t1.*,'
+      . '
+  JSON_ARRAYAGG(
     DISTINCT
-    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)))
+    IF(__t4.id IS NULL OR COALESCE(__t2.option_value, __t3.data) IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)))
     ORDER BY __t2.project_id ASC, __t4.id ASC
-  ) AS receivable_keys,
-  GROUP_CONCAT(
-    DISTINCT
-    IF(__t4.id IS NULL,
-       NULL,
-       CONCAT_WS("' . self::JOIN_KEY_SEP . '", CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)), COALESCE(__t2.option_value, __t3.data, "undefined"))
-    )
-    ORDER BY __t2.project_id ASC, __t4.id ASC
-  ) AS receivable_values,
-  GROUP_CONCAT(
-    DISTINCT
-    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::JOIN_KEY_SEP . '", CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)), __t4.data_type))
-    ORDER BY __t2.project_id ASC, __t4.id ASC
-  ) AS receivable_data_types
+  ) AS receivable_keys,'
+      .'
+  JSON_OBJECTAGG(
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
+    IF(__t4.data_type = "' . FieldType::LIABILITIES . '", COALESCE(-1 * __t2.option_value, -1 * __t3.data), COALESCE(__t2.option_value, __t3.data))
+  ) AS receivable_values,'
+      . '
+  JSON_OBJECTAGG(
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
+    __t2.deposit
+  ) AS receivable_deposits,'
+      . '
+  JSON_OBJECTAGG(
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
+    __t4.data_type
+  ) AS receivable_data_types,'
+      . '
+  JSON_OBJECTAGG(
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
+    __t4.due_date
+  ) AS receivable_due_dates,'
+      . '
+  JSON_OBJECTAGG(
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
+    __t4.deposit_due_date
+  ) AS receivable_deposit_due_dates'
+      .'
 FROM ' . self::MUSICIANS_TABLE . ' __t1
 LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . ' __t2
 ON __t2.musician_id = __t1.id
@@ -189,8 +201,8 @@ SELECT
   __t2.project_id AS project_ids,
   __t2.musician_id,
   __t2.composite_payment_id
-FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
-      'entity' => Entities\ProjectPayment::class,
+FROM " . self::PROJECT_PAYMENTS_TABLE . " __t2",
+     'entity' => Entities\ProjectPayment::class,
       'identifier' => [
         'id' => false,
       ],
@@ -315,18 +327,22 @@ WHERE dsf.id IS NOT NULL',
     parent::__construct(
       self::TEMPLATE,
       //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $toolTipsService,
-      $pageNavigation,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
     $this->compositePaymentExpanded = $this->request['compositePaymentExpanded'];
-    if ($this->projectId > 0) {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-    }
+
+    $this->findProject(enforce: false);
+
     $this->initCrypto();
+
+    if ($this->listOperation()) {
+      $this->pme->overrideLabel('Add', $this->l->t('New Payment'));
+    }
   }
 
   /** {@inheritdoc} */
@@ -335,16 +351,6 @@ WHERE dsf.id IS NOT NULL',
     return !empty($this->project)
       ? $this->l->t('Payments for project "%s"', $this->project->getName())
       : $this->l->t('Payments for all projects');
-  }
-
-  /*** {@inheritdoc} */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
-  {
-    return array_merge(
-      parent::navigationItem($projectId, $projectName), [
-        'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
-        'permissions' => AuthorizationService::PERMISSION_FRONTEND|AuthorizationService::PERMISSION_FINANCE,
-      ]);
   }
 
   /**
@@ -539,7 +545,11 @@ WHERE dsf.id IS NOT NULL',
       'sort'     => true,
     ];
 
-    $joinTables = $this->defineJoinStructure($opts);
+    if ($this->projectMode) {
+      $this->joinStructure[self::PROJECT_PAYMENTS_TABLE]['sql'] .= '
+WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this->projectId;
+    }
+    $this->defineJoinStructure($opts);
 
     $opts['fdd']['sepa_transaction_id'] = [
       'name'     => $this->l->t('Bulk-Transaction Id'),
@@ -883,13 +893,25 @@ WHERE dsf.id IS NOT NULL',
       AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
       AND ppfotr.field = "label"
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
-  LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
+  INNER JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppfo.field_id = ppf.id
+      AND ppf.data_type IN ("' . FieldType::RECEIVABLES . '","' . FieldType::LIABILITIES . '")'
+          . ($projectMode
+             ? '
+      AND ppf.project_id = ' . $this->projectId
+             : '')
+          . '
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
     ON ppftr.locale = "'.($this->getTranslationLanguage()).'"
       AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
       AND ppftr.field = "name"
-      AND ppftr.foreign_key = ppf.id',
+      AND ppftr.foreign_key = ppf.id
+  LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.' ppfd
+    ON ppfd.option_key = ppfo.key
+  WHERE ppfo.deleted IS NULL
+    AND NOT ppfo.key = CAST("\0" AS BINARY(16))
+    AND (ppfd.option_value IS NOT NULL OR ppfo.data IS NOT NULL)
+  GROUP BY ppfo.key',
           // 'encode' => 'BIN2UUID(%s)',
           'description' => '$table.display_label',
           'join' => ('$join_table.field_id = '
@@ -905,13 +927,7 @@ WHERE dsf.id IS NOT NULL',
   "'.$this->l->t('Single Options').'",
   $table.field_name)',
           'orderby' => '$table.sort_field ASC, $table.display_label ASC',
-          'filters' => ('$table.deleted IS NULL'
-                        . ' AND $table.data_type IN ('
-                        . "   '" . FieldType::RECEIVABLES . "',"
-                        . "   '" . FieldType::LIABILITIES . "'"
-                        . " )"
-                        . ' AND NOT $table.key = CAST(\'\0\' AS BINARY(16))'
-                        . ($projectMode ? ' AND $table.project_id = '.$this->projectId : '')),
+          'filters' => '1',
         ],
         'values2glue' => '<br/>',
         'display' => [
@@ -934,6 +950,7 @@ WHERE dsf.id IS NOT NULL',
         },
       ]);
 
+    // @todo: should be much more efficient to move the filters into the sub-query.
     // Restrict the choices to the receivables of the actual musician.
     $opts['fdd'][$compositeKeyKey]['values|C'] = $opts['fdd'][$compositeKeyKey]['values'];
     $musicianReceivableFilter = $opts['fdd'][$compositeKeyKey]['values|C']['filters'] .=
@@ -1024,7 +1041,7 @@ WHERE dsf.id IS NOT NULL',
     ];
 
     $opts['fdd']['balance_documents_folder_id'] = [
-      'name' => $this->l->t('Composite Project Balance'),
+      'name' => $this->l->t('Financial Project Balance'),
       'tab' => [ 'id' => 'booking' ],
       'css' => [
         'postfix' => [
@@ -1101,7 +1118,7 @@ WHERE dsf.id IS NOT NULL',
           $filesAppAnchor = '
 <a href="' . $filesAppLink . '"
    data-parent-link="' . Util::htmlEscape($filesAppParentLink) . '"
-   target=" . $filesAppTarget . "
+   target="' . $filesAppTarget . '"
    title="' . $this->toolTipsService['page-renderer:project-payments:project-balance:open'] . '"
    class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
 ></a>';
@@ -1130,7 +1147,10 @@ WHERE dsf.id IS NOT NULL',
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE, 'name');
+      $opts['fdd'], self::COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE, 'name', [
+        'input' => 'HR',
+      ],
+    );
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id', [
@@ -1273,7 +1293,9 @@ WHERE dsf.id IS NOT NULL',
     );
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::SPLIT_DATABASE_STORAGE_ENTRIES_TABLE, 'name');
+      $opts['fdd'], self::SPLIT_DATABASE_STORAGE_ENTRIES_TABLE, 'name', [
+        'input' => 'HR',
+      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BULK_TRANSACTIONS_TABLE, 'created',
@@ -1534,7 +1556,8 @@ WHERE dsf.id IS NOT NULL',
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteDoDeleteSubPayments' ];
 
     if ($projectMode) {
-      $opts['filters'] = 'FIND_IN_SET('.$this->projectId.', '.$joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_ids)';
+      // $opts[PHPMyEdit::OPT_FILTERS] = 'FIND_IN_SET('.$this->projectId.', '.$joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_ids)';
+      $opts[PHPMyEdit::OPT_FILTERS] = '$table.project_id = ' . $this->projectId;
     }
 
     $opts['display']['custom_navigation'] = function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme):string {
@@ -1545,7 +1568,7 @@ WHERE dsf.id IS NOT NULL',
       return $this->actionMenu($rec['id'], $row, $pme);
     };
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     $opts['buttons'] = $this->pageNavigation->prependTableButtons(buttons: []);
     foreach (['C', 'P', 'D', 'V'] as $operationMode) {

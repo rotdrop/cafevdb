@@ -1,0 +1,25 @@
+var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events =
+[
+    [ "AfterEncryptionKeyPairChanged", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_encryption_key_pair_changed.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_encryption_key_pair_changed" ],
+    [ "AfterProjectDeletedEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event" ],
+    [ "BeforeEncryptionKeyPairChanged", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_encryption_key_pair_changed.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_encryption_key_pair_changed" ],
+    [ "BeforeProjectDeletedEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event" ],
+    [ "EncryptionServiceBound", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_encryption_service_bound.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_encryption_service_bound" ],
+    [ "EntityManagerBoundEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_entity_manager_bound_event.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_entity_manager_bound_event" ],
+    [ "EntityManagerClosedEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_entity_manager_closed_event.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_entity_manager_closed_event" ],
+    [ "MusicianEmailEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_musician_email_event.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_musician_email_event" ],
+    [ "PostChangeCompositePaymentNotificationMessageId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_composite_payment_notification_message_id.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_composite_payment_notification_message_id" ],
+    [ "PostChangeMusicianEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_musician_email.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_musician_email" ],
+    [ "PostChangeRegistrationConfirmation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_registration_confirmation.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_registration_confirmation" ],
+    [ "PostChangeSepaBulkTransactionSubmitDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_sepa_bulk_transaction_submit_date.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_sepa_bulk_transaction_submit_date" ],
+    [ "PostPersistMusicianEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_persist_musician_email.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_persist_musician_email" ],
+    [ "PostProjectUpdatedEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_project_updated_event.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_project_updated_event" ],
+    [ "PostRemoveMusicianEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_remove_musician_email.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_remove_musician_email" ],
+    [ "PreChangeRegistrationConfirmation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_change_registration_confirmation.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_change_registration_confirmation" ],
+    [ "PrePersistMusicianEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_persist_musician_email.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_persist_musician_email" ],
+    [ "PreProjectUpdatedEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_project_updated_event.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_project_updated_event" ],
+    [ "PreRemoveMusicianEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_remove_musician_email.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_remove_musician_email" ],
+    [ "ProjectCreatedEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_created_event.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_created_event" ],
+    [ "ProjectEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_event.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_event" ],
+    [ "ProjectUpdatedEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event" ]
+];

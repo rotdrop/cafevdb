@@ -1,7 +1,7 @@
 <map id="getDonationAmount" name="getDonationAmount">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,60,143,85"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a4097b54f79b8353b00e8b6712f845562" title="Get amount." alt="" coords="199,5,386,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,57,185,50,186,55,144,63"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a9a46e274c06a1980ef17c92189666fcd" title="Get isDonation." alt="" coords="191,84,395,139"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,82,178,88,177,94,143,87"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,63,142,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a4097b54f79b8353b00e8b6712f845562" title="Get amount." alt="" coords="199,5,384,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,60,183,53,184,58,143,66"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a9a46e274c06a1980ef17c92189666fcd" title="Get isDonation." alt="" coords="190,88,393,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="143,86,175,92,174,98,142,92"/>
 </map>

@@ -1,4 +1,7 @@
 <map id="getCalendarDisplayName" name="getCalendarDisplayName">
-<area shape="rect" id="node1" title="Return the configured calendar display name." alt="" coords="191,5,361,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#aff411c6e4c5d5f5cbe8342b529297363" title=" " alt="" coords="5,5,143,31"/>
+<area shape="rect" id="Node000001" title="Return the configured calendar display name." alt="" coords="225,43,395,69"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a6f8658acb2cf99b3e8bec2122a1ca6ee" title="Ensure that the &quot;other&quot; calendar contains a project registration event if and only if the registratio..." alt="" coords="5,5,177,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,45,177,41,177,36,210,40"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#aff411c6e4c5d5f5cbe8342b529297363" title=" " alt="" coords="23,72,159,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="210,72,160,79,159,74,209,67"/>
 </map>

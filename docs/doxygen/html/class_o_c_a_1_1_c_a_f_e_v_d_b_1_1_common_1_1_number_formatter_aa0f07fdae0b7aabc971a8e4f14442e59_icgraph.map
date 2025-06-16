@@ -1,7 +1,7 @@
 <map id="kwnSanitizer" name="kwnSanitizer">
-<area shape="rect" id="Node000001" title="Work around some shortcomings of kwn/number&#45;to&#45;words for some known issues." alt="" coords="201,31,299,56"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html#a80c4903cb736d210ecfec215780bdd3f" title="Convert the given currency value to words using the provided or the implied three letter currency cod..." alt="" coords="18,5,141,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,37,141,30,141,24,188,31"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html#ab28da518f74a7bb9f3f650eebea27946" title="Convert the given number to words." alt="" coords="5,55,153,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="188,55,154,60,153,54,187,49"/>
+<area shape="rect" id="Node000001" title="Work around some shortcomings of kwn/number&#45;to&#45;words for some known issues." alt="" coords="201,31,297,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html#a80c4903cb736d210ecfec215780bdd3f" title="Convert the given currency value to words using the provided or the implied three letter currency cod..." alt="" coords="18,5,140,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,37,140,30,141,25,186,32"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html#ab28da518f74a7bb9f3f650eebea27946" title="Convert the given number to words." alt="" coords="5,56,153,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,56,153,61,152,56,185,51"/>
 </map>

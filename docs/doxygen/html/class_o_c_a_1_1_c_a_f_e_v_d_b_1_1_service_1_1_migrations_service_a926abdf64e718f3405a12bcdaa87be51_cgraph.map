@@ -1,8 +1,11 @@
 <map id="ensureMigrationsAreLoaded" name="ensureMigrationsAreLoaded">
-<area shape="rect" id="Node000001" title="Ensure all unapplied migrations are loaded." alt="" coords="5,5,188,31"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#af398c267dc84e9a97bf2a48a46871dcf" title=" " alt="" coords="445,5,548,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,15,431,15,431,21,188,21"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a5a9dff6c1ff549453de63b85b2ece1a0" title="Find all unapplied migrations." alt="" coords="236,31,397,56"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="189,26,222,30,222,35,188,31"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="397,29,431,24,432,30,398,35"/>
+<area shape="rect" id="Node000001" title="Ensure all unapplied migrations are loaded." alt="" coords="5,56,188,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#ac1ff8d0fc167a3979c6485a888ffccc0" title="Find all applied migrations." alt="" coords="243,5,388,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,53,240,33,241,39,158,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#af398c267dc84e9a97bf2a48a46871dcf" title=" " alt="" coords="444,56,546,83"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="188,67,429,67,429,72,188,72"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a8790e3d69231a1f8acfab9ca1a1e4d3c" title="Find all unapplied migrations." alt="" coords="236,107,396,133"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="158,81,241,100,240,105,157,86"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="367,30,432,49,430,54,365,35"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="365,103,430,85,432,90,367,109"/>
 </map>

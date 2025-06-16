@@ -272,9 +272,21 @@ decorator.</p>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_transactionExceptions">$transactionExceptions</a>
+    <span>
+                        &nbsp;: array&lt;int, <abbr title="\Throwable">Throwable</abbr>&gt;            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_transactionNestingLevel">$transactionNestingLevel</a>
     <span>
                         &nbsp;: int            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_translatable">$translatable</a>
+    <span>
+                        &nbsp;: null|<abbr title="\OCA\CAFEVDB\Database\GedmoTranslatableListener">GedmoTranslatableListener</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -457,6 +469,13 @@ application needs it switched off.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_enableLogging">enableLogging()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Enable query logging.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_entitiesByAnnotation">entitiesByAnnotation()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
@@ -496,7 +515,7 @@ of execution matters.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_flush">flush()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: void    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
 
@@ -546,6 +565,12 @@ of execution matters.</dd>
     <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_getPostCommitExceptions">getPostCommitExceptions()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_getTransactionExceptions">getTransactionExceptions()</a>
+    <span>
+                                &nbsp;: array&lt;int, <abbr title="\Throwable">Throwable</abbr>&gt;    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -639,7 +664,7 @@ of execution matters.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_persist">persist()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: void    </span>
 </dt>
 <dd>Persist an entity after performing some special tweaks:</dd>
 
@@ -675,6 +700,12 @@ of execution matters.</dd>
     <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_property">property()</a>
     <span>
                                 &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_pushTransactionException">pushTransactionException()</a>
+    <span>
+                                &nbsp;: void    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -743,6 +774,13 @@ failed transaction.</dd>
 undo-queues of the callback-queues:</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_setTranslatableLocale">setTranslatableLocale()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Set the locale for the translatable Listeners*</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_suspendLogging">suspendLogging()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -763,6 +801,12 @@ undo-queues of the callback-queues:</dd>
 </dt>
 <dd>Map PSR log-levels to ILogger log-levels as the PsrLoggerAdapter only
 understands those.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_checkForRollbackOnly">checkForRollbackOnly()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_connectionParameters">connectionParameters()</a>
@@ -1045,9 +1089,9 @@ Hash-transformer key, see $this-&gt;getDataTransformer()</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">223</span>
+    <span class="phpdocumentor-element-found-in__line">235</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.223" class="phpdocumentor-element-found-in__source" data-line="223" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.235" class="phpdocumentor-element-found-in__source" data-line="235" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -1082,9 +1126,9 @@ Hash-transformer key, see $this-&gt;getDataTransformer()</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">221</span>
+    <span class="phpdocumentor-element-found-in__line">233</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.221" class="phpdocumentor-element-found-in__source" data-line="221" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.233" class="phpdocumentor-element-found-in__source" data-line="233" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -1119,9 +1163,9 @@ Hash-transformer key, see $this-&gt;getDataTransformer()</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">207</span>
+    <span class="phpdocumentor-element-found-in__line">210</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.210" class="phpdocumentor-element-found-in__source" data-line="210" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -1196,9 +1240,9 @@ Hash-transformer key, see $this-&gt;getDataTransformer()</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">227</span>
+    <span class="phpdocumentor-element-found-in__line">239</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.227" class="phpdocumentor-element-found-in__source" data-line="227" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.239" class="phpdocumentor-element-found-in__source" data-line="239" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -1337,6 +1381,48 @@ Pre-commit actions by translation level.</p>
             -protected
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="property_transactionExceptions">
+        $transactionExceptions
+        <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_transactionExceptions" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">229</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.229" class="phpdocumentor-element-found-in__source" data-line="229" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__type">array&lt;int, <abbr title="\Throwable">Throwable</abbr>&gt;</span>
+    <span class="phpdocumentor-signature__name">$transactionExceptions</span>
+     = <span class="phpdocumentor-signature__default-value">[]</span></code>
+
+    
+        <section class="phpdocumentor-description"><p>In order to make the real exceptions visible exceptions can be remembered
+vie pushTransactionExceptions() and retrieved later in the top level
+code.
+code.</p>
+</section>
+
+    
+
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="property_transactionNestingLevel">
         $transactionNestingLevel
         <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_transactionNestingLevel" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1377,6 +1463,43 @@ Connection and run the hooks there.</p>
             phpdocumentor-element
             -property
             -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_translatable">
+        $translatable
+        <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_translatable" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">203</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.203" class="phpdocumentor-element-found-in__source" data-line="203" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__type">null|<abbr title="\OCA\CAFEVDB\Database\GedmoTranslatableListener">GedmoTranslatableListener</abbr></span>
+    <span class="phpdocumentor-signature__name">$translatable</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+    
+    
+    
+
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
             -static                                            "
 >
     <h4 class="phpdocumentor-element__name" id="property_wrappedManagers">
@@ -1389,9 +1512,9 @@ Connection and run the hooks there.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">217</span>
+    <span class="phpdocumentor-element-found-in__line">220</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.217" class="phpdocumentor-element-found-in__source" data-line="217" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -1628,9 +1751,9 @@ Cache of entity names indexed by class annotation</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">222</span>
+    <span class="phpdocumentor-element-found-in__line">234</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.222" class="phpdocumentor-element-found-in__source" data-line="222" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.234" class="phpdocumentor-element-found-in__source" data-line="234" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -1742,9 +1865,9 @@ Cache of entity names indexed by table names.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">228</span>
+    <span class="phpdocumentor-element-found-in__line">240</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -1816,9 +1939,9 @@ Cache of entity names indexed by table names.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">226</span>
+    <span class="phpdocumentor-element-found-in__line">238</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.226" class="phpdocumentor-element-found-in__source" data-line="226" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -1890,9 +2013,9 @@ Cache of entity names indexed by table names.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">224</span>
+    <span class="phpdocumentor-element-found-in__line">236</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.224" class="phpdocumentor-element-found-in__source" data-line="224" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.236" class="phpdocumentor-element-found-in__source" data-line="236" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -2043,9 +2166,9 @@ Cache of entity names indexed by table names.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">220</span>
+    <span class="phpdocumentor-element-found-in__line">232</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.232" class="phpdocumentor-element-found-in__source" data-line="232" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2138,9 +2261,9 @@ Cache of entity names indexed by table names.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1095</span>
+    <span class="phpdocumentor-element-found-in__line">1124</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1095" class="phpdocumentor-element-found-in__source" data-line="1095" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1124" class="phpdocumentor-element-found-in__source" data-line="1124" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Start a new transaction and manage the associated run-queues.</p>
@@ -2174,9 +2297,9 @@ Cache of entity names indexed by table names.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">278</span>
+    <span class="phpdocumentor-element-found-in__line">290</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.278" class="phpdocumentor-element-found-in__source" data-line="278" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.290" class="phpdocumentor-element-found-in__source" data-line="290" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Initialize the wrapper if the EncryptionService has been bound to
@@ -2211,9 +2334,9 @@ a user and password.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">267</span>
+    <span class="phpdocumentor-element-found-in__line">279</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.267" class="phpdocumentor-element-found-in__source" data-line="267" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.279" class="phpdocumentor-element-found-in__source" data-line="279" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -2254,9 +2377,9 @@ a user and password.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">371</span>
+    <span class="phpdocumentor-element-found-in__line">393</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.371" class="phpdocumentor-element-found-in__source" data-line="371" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.393" class="phpdocumentor-element-found-in__source" data-line="393" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2290,9 +2413,9 @@ a user and password.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">838</span>
+    <span class="phpdocumentor-element-found-in__line">862</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.838" class="phpdocumentor-element-found-in__source" data-line="838" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.862" class="phpdocumentor-element-found-in__source" data-line="862" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -2360,9 +2483,9 @@ a user and password.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1125</span>
+    <span class="phpdocumentor-element-found-in__line">1157</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1125" class="phpdocumentor-element-found-in__source" data-line="1125" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1157" class="phpdocumentor-element-found-in__source" data-line="1157" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Commit the currently pending transaction in the following order:</p>
@@ -2459,9 +2582,9 @@ are executed</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">405</span>
+    <span class="phpdocumentor-element-found-in__line">427</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.405" class="phpdocumentor-element-found-in__source" data-line="405" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.427" class="phpdocumentor-element-found-in__source" data-line="427" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check for a valid database connection.</p>
@@ -2499,9 +2622,9 @@ are executed</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1247</span>
+    <span class="phpdocumentor-element-found-in__line">1315</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1247" class="phpdocumentor-element-found-in__source" data-line="1247" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1315" class="phpdocumentor-element-found-in__source" data-line="1315" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Switch metadata-decoration on and off. A hack. The console
@@ -2548,9 +2671,9 @@ application needs it switched off.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">256</span>
+    <span class="phpdocumentor-element-found-in__line">268</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.256" class="phpdocumentor-element-found-in__source" data-line="256" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.268" class="phpdocumentor-element-found-in__source" data-line="268" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -2587,6 +2710,42 @@ application needs it switched off.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_enableLogging">
+        enableLogging()
+        <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_enableLogging" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">378</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Enable query logging.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">enableLogging</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_entitiesByAnnotation">
         entitiesByAnnotation()
         <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_entitiesByAnnotation" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2595,9 +2754,9 @@ application needs it switched off.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1283</span>
+    <span class="phpdocumentor-element-found-in__line">1351</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1283" class="phpdocumentor-element-found-in__source" data-line="1283" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1351" class="phpdocumentor-element-found-in__source" data-line="1351" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return a list of entities tagged by the given annotation.</p>
@@ -2651,9 +2810,9 @@ application needs it switched off.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1268</span>
+    <span class="phpdocumentor-element-found-in__line">1336</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1268" class="phpdocumentor-element-found-in__source" data-line="1268" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1336" class="phpdocumentor-element-found-in__source" data-line="1336" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -2706,9 +2865,9 @@ application needs it switched off.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1031</span>
+    <span class="phpdocumentor-element-found-in__line">1056</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1031" class="phpdocumentor-element-found-in__source" data-line="1031" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1056" class="phpdocumentor-element-found-in__source" data-line="1056" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Explicitly execute the registered post-commit actions. These cannot be undone.</p>
@@ -2752,9 +2911,9 @@ error, \true otherwise.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">983</span>
+    <span class="phpdocumentor-element-found-in__line">1007</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.983" class="phpdocumentor-element-found-in__source" data-line="983" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1007" class="phpdocumentor-element-found-in__source" data-line="1007" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Explicitly execute the registered actions in case that the order of
@@ -2807,9 +2966,9 @@ the current or a higher level will be executed.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1204</span>
+    <span class="phpdocumentor-element-found-in__line">1271</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1204" class="phpdocumentor-element-found-in__source" data-line="1204" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1271" class="phpdocumentor-element-found-in__source" data-line="1271" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Explicitly execute the registered actions in case that the order
@@ -2859,32 +3018,22 @@ of execution matters.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1212</span>
+    <span class="phpdocumentor-element-found-in__line">1280</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1212" class="phpdocumentor-element-found-in__source" data-line="1212" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1280" class="phpdocumentor-element-found-in__source" data-line="1280" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">flush</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">flush</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
     
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entity</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
+    
     
 
     
@@ -2905,9 +3054,9 @@ of execution matters.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1225</span>
+    <span class="phpdocumentor-element-found-in__line">1293</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1225" class="phpdocumentor-element-found-in__source" data-line="1225" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1293" class="phpdocumentor-element-found-in__source" data-line="1293" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2972,9 +3121,9 @@ internal data structure of Doctrine\ORM.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">322</span>
+    <span class="phpdocumentor-element-found-in__line">334</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.322" class="phpdocumentor-element-found-in__source" data-line="322" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.334" class="phpdocumentor-element-found-in__source" data-line="334" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -3012,9 +3161,9 @@ internal data structure of Doctrine\ORM.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1341</span>
+    <span class="phpdocumentor-element-found-in__line">1409</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1341" class="phpdocumentor-element-found-in__source" data-line="1341" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1409" class="phpdocumentor-element-found-in__source" data-line="1409" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the data-transformer for the given key.</p>
@@ -3066,9 +3215,9 @@ self::TRANSFORM_HASH.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">313</span>
+    <span class="phpdocumentor-element-found-in__line">325</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.313" class="phpdocumentor-element-found-in__source" data-line="313" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.325" class="phpdocumentor-element-found-in__source" data-line="325" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Give static access to the decorated entity manager.</p>
@@ -3125,9 +3274,9 @@ passed through.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1085</span>
+    <span class="phpdocumentor-element-found-in__line">1114</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1085" class="phpdocumentor-element-found-in__source" data-line="1085" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1114" class="phpdocumentor-element-found-in__source" data-line="1114" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the transaction nesting level of transactions starting from this decorator.</p>
@@ -3165,9 +3314,9 @@ passed through.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">335</span>
+    <span class="phpdocumentor-element-found-in__line">347</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.335" class="phpdocumentor-element-found-in__source" data-line="335" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.347" class="phpdocumentor-element-found-in__source" data-line="347" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -3205,9 +3354,9 @@ passed through.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1041</span>
+    <span class="phpdocumentor-element-found-in__line">1066</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1041" class="phpdocumentor-element-found-in__source" data-line="1041" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1066" class="phpdocumentor-element-found-in__source" data-line="1066" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -3255,6 +3404,45 @@ passed through.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getTransactionExceptions">
+        getTransactionExceptions()
+        <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_getTransactionExceptions" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1234</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1234" class="phpdocumentor-element-found-in__source" data-line="1234" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getTransactionExceptions</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, <abbr title="\Throwable">Throwable</abbr>&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;int, <abbr title="\Throwable">Throwable</abbr>&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getTransactionNestingLevel">
         getTransactionNestingLevel()
         <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_getTransactionNestingLevel" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3263,9 +3451,9 @@ passed through.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1065</span>
+    <span class="phpdocumentor-element-found-in__line">1094</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1065" class="phpdocumentor-element-found-in__source" data-line="1065" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1094" class="phpdocumentor-element-found-in__source" data-line="1094" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the transaction nesting level of the underlying DBAL connection.</p>
@@ -3318,9 +3506,9 @@ passed through.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">365</span>
+    <span class="phpdocumentor-element-found-in__line">387</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.365" class="phpdocumentor-element-found-in__source" data-line="365" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.387" class="phpdocumentor-element-found-in__source" data-line="387" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -3363,9 +3551,9 @@ if known.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">380</span>
+    <span class="phpdocumentor-element-found-in__line">402</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.380" class="phpdocumentor-element-found-in__source" data-line="380" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.402" class="phpdocumentor-element-found-in__source" data-line="402" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -3406,9 +3594,9 @@ if known.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1075</span>
+    <span class="phpdocumentor-element-found-in__line">1104</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1075" class="phpdocumentor-element-found-in__source" data-line="1075" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1104" class="phpdocumentor-element-found-in__source" data-line="1104" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the transaction status of this decorator.</p>
@@ -3446,9 +3634,9 @@ if known.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1053</span>
+    <span class="phpdocumentor-element-found-in__line">1078</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1053" class="phpdocumentor-element-found-in__source" data-line="1053" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1078" class="phpdocumentor-element-found-in__source" data-line="1078" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the transaction status of the underlying DBAL connection.</p>
@@ -4100,16 +4288,16 @@ if known.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">874</span>
+    <span class="phpdocumentor-element-found-in__line">898</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.874" class="phpdocumentor-element-found-in__source" data-line="874" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.898" class="phpdocumentor-element-found-in__source" data-line="898" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Persist an entity after performing some special tweaks:</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">persist</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">persist</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">object&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -4127,7 +4315,7 @@ are available.</li>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$entity</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                : <span class="phpdocumentor-signature__argument__return-type">object</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The entity instance to persist.</p>
@@ -4158,15 +4346,7 @@ still causes problems.</p>
 
     
 
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">mixed</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The persisted entity (actually the argument $entity).</p>
-</section>
-
-            </section>
-
+    
 </article>
                     <article
         class="phpdocumentor-element
@@ -4182,9 +4362,9 @@ still causes problems.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">773</span>
+    <span class="phpdocumentor-element-found-in__line">797</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.773" class="phpdocumentor-element-found-in__source" data-line="773" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.797" class="phpdocumentor-element-found-in__source" data-line="797" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -4228,9 +4408,9 @@ still causes problems.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">803</span>
+    <span class="phpdocumentor-element-found-in__line">827</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.803" class="phpdocumentor-element-found-in__source" data-line="803" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.827" class="phpdocumentor-element-found-in__source" data-line="827" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Remove unwanted constraints after schema generation.</p>
@@ -4290,9 +4470,9 @@ still causes problems.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">786</span>
+    <span class="phpdocumentor-element-found-in__line">810</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.786" class="phpdocumentor-element-found-in__source" data-line="786" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.810" class="phpdocumentor-element-found-in__source" data-line="810" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Call ENTITY::__wakeup() if it exists.</p>
@@ -4338,9 +4518,9 @@ still causes problems.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1306</span>
+    <span class="phpdocumentor-element-found-in__line">1374</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1306" class="phpdocumentor-element-found-in__source" data-line="1306" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1374" class="phpdocumentor-element-found-in__source" data-line="1374" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return a list of properties tagged by the given annotation.</p>
@@ -4394,9 +4574,9 @@ still causes problems.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">851</span>
+    <span class="phpdocumentor-element-found-in__line">875</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.851" class="phpdocumentor-element-found-in__source" data-line="851" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.875" class="phpdocumentor-element-found-in__source" data-line="875" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -4456,6 +4636,51 @@ still causes problems.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_pushTransactionException">
+        pushTransactionException()
+        <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_pushTransactionException" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1226</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1226" class="phpdocumentor-element-found-in__source" data-line="1226" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">pushTransactionException</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$exception</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$exception</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Throwable">Throwable</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_recryptEncryptedProperties">
         recryptEncryptedProperties()
         <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_recryptEncryptedProperties" class="headerlink"><i class="fas fa-link"></i></a>
@@ -4464,9 +4689,9 @@ still causes problems.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1435</span>
+    <span class="phpdocumentor-element-found-in__line">1528</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1435" class="phpdocumentor-element-found-in__source" data-line="1435" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1528" class="phpdocumentor-element-found-in__source" data-line="1528" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">In order to change the encryption key the encrypted data has to
@@ -4559,9 +4784,9 @@ if the data has been stored unencrypted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1365</span>
+    <span class="phpdocumentor-element-found-in__line">1458</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1365" class="phpdocumentor-element-found-in__source" data-line="1365" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1458" class="phpdocumentor-element-found-in__source" data-line="1458" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Recrypt the given list/array of entities by forcing an update on the unit
@@ -4646,9 +4871,9 @@ the app encryption-key, e.g.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1013</span>
+    <span class="phpdocumentor-element-found-in__line">1038</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1013" class="phpdocumentor-element-found-in__source" data-line="1013" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1038" class="phpdocumentor-element-found-in__source" data-line="1038" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Register a post-commit action to be executed after the final data-base
@@ -4713,9 +4938,9 @@ via UndoableRunQueue::register().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">957</span>
+    <span class="phpdocumentor-element-found-in__line">981</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.957" class="phpdocumentor-element-found-in__source" data-line="957" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.981" class="phpdocumentor-element-found-in__source" data-line="981" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Register a pre-commit action and optionally an associated
@@ -4725,7 +4950,7 @@ execute the actions registered at the current transaction nesting level.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">registerPreCommitAction</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">callable|<a href="classes/OCA-CAFEVDB-Common-IUndoable.html"><abbr title="\OCA\CAFEVDB\Common\IUndoable">IUndoable</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$action</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|callable&nbsp;</span><span class="phpdocumentor-signature__argument__name">$undo</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-UndoableRunQueue.html"><abbr title="\OCA\CAFEVDB\Common\UndoableRunQueue">UndoableRunQueue</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">registerPreCommitAction</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Database\Closure">Closure</abbr>|<a href="classes/OCA-CAFEVDB-Common-IUndoable.html"><abbr title="\OCA\CAFEVDB\Common\IUndoable">IUndoable</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$action</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|callable&nbsp;</span><span class="phpdocumentor-signature__argument__name">$undo</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-UndoableRunQueue.html"><abbr title="\OCA\CAFEVDB\Common\UndoableRunQueue">UndoableRunQueue</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -4742,7 +4967,7 @@ value is ignored.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$action</span>
-                : <span class="phpdocumentor-signature__argument__return-type">callable|<a href="classes/OCA-CAFEVDB-Common-IUndoable.html"><abbr title="\OCA\CAFEVDB\Common\IUndoable">IUndoable</abbr></a></span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Database\Closure">Closure</abbr>|<a href="classes/OCA-CAFEVDB-Common-IUndoable.html"><abbr title="\OCA\CAFEVDB\Common\IUndoable">IUndoable</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Action to register.</p>
@@ -4794,9 +5019,9 @@ via UndoableRunQueue::register().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1184</span>
+    <span class="phpdocumentor-element-found-in__line">1251</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1184" class="phpdocumentor-element-found-in__source" data-line="1184" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1251" class="phpdocumentor-element-found-in__source" data-line="1251" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -4872,9 +5097,9 @@ is called. The undo-queue is executed after the data-base rollback in case of an
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">391</span>
+    <span class="phpdocumentor-element-found-in__line">413</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.391" class="phpdocumentor-element-found-in__source" data-line="391" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.413" class="phpdocumentor-element-found-in__source" data-line="413" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Reopen the entity-manager after it has been closed, e.g. after a
@@ -4909,9 +5134,9 @@ failed transaction.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">356</span>
+    <span class="phpdocumentor-element-found-in__line">368</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.356" class="phpdocumentor-element-found-in__source" data-line="356" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.368" class="phpdocumentor-element-found-in__source" data-line="368" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Resume query logging.</p>
@@ -4945,9 +5170,9 @@ failed transaction.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1151</span>
+    <span class="phpdocumentor-element-found-in__line">1184</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1151" class="phpdocumentor-element-found-in__source" data-line="1151" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1184" class="phpdocumentor-element-found-in__source" data-line="1184" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Rollback the currently failed transactions, afterwards executed the
@@ -4995,6 +5220,60 @@ undo-queues of the callback-queues:</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setTranslatableLocale">
+        setTranslatableLocale()
+        <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_setTranslatableLocale" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1422</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1422" class="phpdocumentor-element-found-in__source" data-line="1422" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set the locale for the translatable Listeners*</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setTranslatableLocale</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$locale</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$locale</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>A locale like de_DE (i.e. with language and
+region). If null the default locale of the translatable listener is used.
+region). If null the default locale of the translatable listener is used.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_suspendLogging">
         suspendLogging()
         <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_suspendLogging" class="headerlink"><i class="fas fa-link"></i></a>
@@ -5003,9 +5282,9 @@ undo-queues of the callback-queues:</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">346</span>
+    <span class="phpdocumentor-element-found-in__line">358</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.346" class="phpdocumentor-element-found-in__source" data-line="346" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.358" class="phpdocumentor-element-found-in__source" data-line="358" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Suspend query logging.</p>
@@ -5118,6 +5397,56 @@ understands those.</p>
             -private
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_checkForRollbackOnly">
+        checkForRollbackOnly()
+        <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_checkForRollbackOnly" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1210</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1210" class="phpdocumentor-element-found-in__source" data-line="1210" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">checkForRollbackOnly</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_checkForRollbackOnly#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">throws</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseRollbackOnlyException.html"><abbr title="\OCA\CAFEVDB\Exceptions\DatabaseRollbackOnlyException">DatabaseRollbackOnlyException</abbr></a></span>
+                                                            
+                                             
+                                    </dd>
+                                            </dl>
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_connectionParameters">
         connectionParameters()
         <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_connectionParameters" class="headerlink"><i class="fas fa-link"></i></a>
@@ -5126,9 +5455,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">513</span>
+    <span class="phpdocumentor-element-found-in__line">537</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.513" class="phpdocumentor-element-found-in__source" data-line="513" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.537" class="phpdocumentor-element-found-in__source" data-line="537" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -5183,9 +5512,9 @@ parameters. In particular merge the db authentication parameters.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">651</span>
+    <span class="phpdocumentor-element-found-in__line">675</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.651" class="phpdocumentor-element-found-in__source" data-line="651" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.675" class="phpdocumentor-element-found-in__source" data-line="675" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -5247,9 +5576,9 @@ parameters. In particular merge the db authentication parameters.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">618</span>
+    <span class="phpdocumentor-element-found-in__line">642</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.618" class="phpdocumentor-element-found-in__source" data-line="618" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.642" class="phpdocumentor-element-found-in__source" data-line="642" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -5290,9 +5619,9 @@ parameters. In particular merge the db authentication parameters.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1253</span>
+    <span class="phpdocumentor-element-found-in__line">1321</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1253" class="phpdocumentor-element-found-in__source" data-line="1253" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.1321" class="phpdocumentor-element-found-in__source" data-line="1321" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -5325,9 +5654,9 @@ parameters. In particular merge the db authentication parameters.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">542</span>
+    <span class="phpdocumentor-element-found-in__line">566</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.542" class="phpdocumentor-element-found-in__source" data-line="542" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.566" class="phpdocumentor-element-found-in__source" data-line="566" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -5380,9 +5709,9 @@ parameters. In particular merge the db authentication parameters.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">602</span>
+    <span class="phpdocumentor-element-found-in__line">626</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.602" class="phpdocumentor-element-found-in__source" data-line="602" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.626" class="phpdocumentor-element-found-in__source" data-line="626" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
     
@@ -5425,9 +5754,9 @@ parameters. In particular merge the db authentication parameters.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/EntityManager.php"><a href="files/database-entitymanager.html"><abbr title="Database/EntityManager.php">EntityManager.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">447</span>
+    <span class="phpdocumentor-element-found-in__line">469</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.447" class="phpdocumentor-element-found-in__source" data-line="447" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-EntityManager.html#source-view.469" class="phpdocumentor-element-found-in__source" data-line="469" data-modal="source-view" data-src="files/Database/EntityManager.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Register the needed additional DBAL types.</p>
@@ -5580,7 +5909,9 @@ parameters. In particular merge the db authentication parameters.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_postCommitActions">$postCommitActions</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_preCommitActions">$preCommitActions</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_preFlushActions">$preFlushActions</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_transactionExceptions">$transactionExceptions</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_transactionNestingLevel">$transactionNestingLevel</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_translatable">$translatable</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_wrappedManagers">$wrappedManagers</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_annotationEntites">$annotationEntites</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#property_annotationProperties">$annotationProperties</a></li>
@@ -5614,6 +5945,7 @@ parameters. In particular merge the db authentication parameters.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_connected">connected()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_decorateClassMetadata">decorateClassMetadata()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_dispatchEvent">dispatchEvent()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_enableLogging">enableLogging()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_entitiesByAnnotation">entitiesByAnnotation()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_entityOfTable">entityOfTable()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_executePostCommitActions">executePostCommitActions()</a></li>
@@ -5627,6 +5959,7 @@ parameters. In particular merge the db authentication parameters.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_getOwnTransactionNestingLevel">getOwnTransactionNestingLevel()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_getPlatform">getPlatform()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_getPostCommitExceptions">getPostCommitExceptions()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_getTransactionExceptions">getTransactionExceptions()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_getTransactionNestingLevel">getTransactionNestingLevel()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_getUserId">getUserId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_getWrappedObject">getWrappedObject()</a></li>
@@ -5646,6 +5979,7 @@ parameters. In particular merge the db authentication parameters.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_postLoad">postLoad()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_propertiesByAnnotation">propertiesByAnnotation()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_property">property()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_pushTransactionException">pushTransactionException()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_recryptEncryptedProperties">recryptEncryptedProperties()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_recryptEntityList">recryptEntityList()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_registerPostCommitAction">registerPostCommitAction()</a></li>
@@ -5654,9 +5988,11 @@ parameters. In particular merge the db authentication parameters.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_reopen">reopen()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_resumeLogging">resumeLogging()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_rollback">rollback()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_setTranslatableLocale">setTranslatableLocale()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_suspendLogging">suspendLogging()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_checkForRollbackOnly">checkForRollbackOnly()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_connectionParameters">connectionParameters()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_createGedmoConfiguration">createGedmoConfiguration()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-EntityManager.html#method_createSimpleConfiguration">createSimpleConfiguration()</a></li>

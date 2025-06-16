@@ -1,16 +1,42 @@
 <map id="debugPrintValues" name="debugPrintValues">
-<area shape="rect" id="Node000001" title=" " alt="" coords="587,109,709,134"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a936748b21bb69d2a3f9d51e14ce2cd87" title="Before insert&#45;trigger which ideally should insert all data such that nothing remains to be done for p..." alt="" coords="343,27,499,53"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="613,104,578,84,538,67,499,55,500,50,540,61,580,79,616,99"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a882a0897b82d354409342d1c195c2f4d" title="Before update&#45;trigger which ideally should update all data such that nothing remains to do for phpMyE..." alt="" coords="334,77,509,102"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="573,114,509,104,509,99,574,108"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_insurances.html#a845b4952ec7ba86475b456928bd641ae" title="Cleanup &quot;trigger&quot; which relocates several virtual inputs to their proper destination columns." alt="" coords="304,126,539,181"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="573,134,539,139,539,134,573,129"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ac4930892b628989ea570c18ef64c0b4b" title="The ranking of the mussician&#39;s instruments is implicitly stored in the order of the instrument ids." alt="" coords="335,205,507,230"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="622,144,585,171,540,194,501,207,499,202,538,190,582,166,619,140"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,5,256,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="330,38,256,34,257,29,330,33"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,69,234,109"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="333,58,235,74,234,69,332,52"/>
-<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="321,92,234,92,234,87,321,87"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="605,488,727,515"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a7d8b34fc0c961eb85894f3710b004a65" title="Sub&#45;payment aware delete." alt="" coords="326,5,534,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="659,473,645,383,623,265,592,152,574,108,555,78,533,60,536,56,559,74,579,105,597,150,628,264,650,382,664,472"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html#a7d8b34fc0c961eb85894f3710b004a65" title="Sub&#45;payment aware delete." alt="" coords="320,88,540,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="662,473,656,409,640,325,626,281,608,237,585,197,555,161,539,147,542,143,559,157,589,194,613,235,631,279,645,324,661,408,667,472"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a936748b21bb69d2a3f9d51e14ce2cd87" title="Before insert&#45;trigger which ideally should insert all data such that nothing remains to be done for p..." alt="" coords="352,171,508,197"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="660,473,653,416,636,345,622,308,605,272,582,240,555,211,533,198,507,189,509,184,535,193,559,207,587,236,609,270,627,306,641,344,658,415,666,472"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_donation_receipts.html#aa653839a82469b91dfa417e6cea4f18a" title="Remap some join&#45;table fields used to &quot;pretty&#45;print&quot; to the real join&#45;columns." alt="" coords="327,539,532,597"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="602,522,534,542,532,536,600,517"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#aa653839a82469b91dfa417e6cea4f18a" title="Remap the input values in order to satisfy the data&#45;model:" alt="" coords="27,268,233,327"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="656,474,643,435,623,390,594,347,576,328,556,313,518,294,477,280,435,272,392,267,309,268,233,277,233,271,308,262,393,262,436,266,479,275,520,289,558,308,580,324,598,343,628,388,648,433,661,472"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html#aa653839a82469b91dfa417e6cea4f18a" title="Remap the input values in order to satisfy the data&#45;model:" alt="" coords="7,405,253,464"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="590,502,455,495,302,479,243,467,244,462,303,473,456,490,590,497"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#aeaad57ee9ea7b0ff111a3e6aab9808a6" title="Forbid changing the participation status to &quot;passive&quot; or &quot;associated&quot; if the participant is registere..." alt="" coords="321,621,538,680"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="647,529,609,571,558,612,537,623,534,619,556,607,605,567,643,525"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a882a0897b82d354409342d1c195c2f4d" title="Before update&#45;trigger which ideally should update all data such that nothing remains to do for phpMyE..." alt="" coords="343,221,516,248"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="657,474,646,428,627,373,597,316,578,291,555,269,537,257,516,248,518,243,539,252,559,265,582,287,601,313,632,371,651,427,663,472"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#a311fde8a615c3cb0c193b999eccd6344" title="Make sure at least a dummy instrumentation number exists when adding people to project instruments." alt="" coords="321,704,538,763"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="659,531,645,567,624,611,595,656,559,694,541,706,538,702,555,690,591,652,619,609,640,565,654,529"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_insurances.html#a845b4952ec7ba86475b456928bd641ae" title="Cleanup &quot;trigger&quot; which relocates several virtual inputs to their proper destination columns." alt="" coords="313,787,546,845"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="664,531,655,583,636,649,605,717,584,749,559,777,544,788,541,784,555,773,580,745,600,714,631,647,649,582,659,530"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#a682f408b8701d4939af7dc4af6c25868" title="When removing an instrument any pending voice(s) have to be removed, too." alt="" coords="321,869,538,928"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="667,530,662,597,647,685,633,731,614,778,590,821,559,859,540,874,537,870,555,855,585,818,609,775,628,730,642,683,657,596,662,530"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_donation_receipts.html#a8202a7769e79d42379eae567f6adaf3e" title="Remap some input values." alt="" coords="324,952,536,1011"/>
+<area shape="poly" id="edge17_Node000001_Node000015" title=" " alt="" coords="664,531,651,623,629,746,598,864,580,910,559,942,538,959,534,955,555,938,575,907,593,862,624,745,646,623,659,530"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a8202a7769e79d42379eae567f6adaf3e" title=" " alt="" coords="327,323,532,381"/>
+<area shape="poly" id="edge18_Node000001_Node000016" title=" " alt="" coords="643,478,605,436,556,396,531,383,534,378,558,391,609,432,647,474"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html#a8202a7769e79d42379eae567f6adaf3e" title=" " alt="" coords="303,405,557,464"/>
+<area shape="poly" id="edge20_Node000001_Node000017" title=" " alt="" coords="601,486,535,467,537,462,602,481"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bank_accounts.html#a8202a7769e79d42379eae567f6adaf3e" title="Safe&#45;guard against unwanted changes." alt="" coords="319,1035,541,1093"/>
+<area shape="poly" id="edge22_Node000001_Node000018" title=" " alt="" coords="665,530,655,638,634,786,620,861,603,929,583,985,559,1024,543,1038,540,1034,555,1021,578,983,598,927,615,859,629,785,649,638,660,530"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,135,255,177"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="336,178,255,170,255,165,337,173"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,201,233,244"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="337,199,233,212,233,207,336,193"/>
+<area shape="poly" id="edge13_Node000011_Node000006" title=" " alt="" coords="327,233,233,229,233,224,327,228"/>
+<area shape="poly" id="edge11_Node000011_Node000008" title=" " alt="" coords="348,254,234,278,233,273,347,249"/>
+<area shape="poly" id="edge12_Node000011_Node000009" title=" " alt="" coords="392,259,304,313,172,407,169,403,301,308,390,254"/>
+<area shape="poly" id="edge19_Node000016_Node000008" title=" " alt="" coords="311,333,233,319,234,313,312,328"/>
+<area shape="poly" id="edge21_Node000017_Node000009" title=" " alt="" coords="287,437,253,437,253,432,287,432"/>
 </map>

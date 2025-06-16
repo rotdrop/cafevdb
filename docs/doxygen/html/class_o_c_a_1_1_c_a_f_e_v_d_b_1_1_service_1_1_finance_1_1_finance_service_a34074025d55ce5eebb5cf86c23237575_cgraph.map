@@ -1,0 +1,5 @@
+<map id="mandateIsExpired" name="mandateIsExpired">
+<area shape="rect" id="Node000001" title="Determine if the given mandate is expired, in which case we would need a new mandate." alt="" coords="5,5,132,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a8197b25128b1d0236931c797d4a70a80" title="Compute usage data for the given mandate reference." alt="" coords="180,5,349,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,16,164,16,164,21,132,21"/>
+</map>

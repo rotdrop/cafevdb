@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -238,6 +238,10 @@ trait ParticipantFileFieldsTrait
     } else {
       $downloadLink = $dbFileName = $dbExtension = '';
     }
+    // set defaults
+    $filesAppPath = '';
+    $filesAppLink = '';
+    $filesAppTarget = '_blank';
     if (!empty($folderPath)) {
       try {
         $filesAppLinkFolder = $this->userStorage->getFilesAppLink($folderPath, subDir: true);
@@ -251,13 +255,7 @@ trait ParticipantFileFieldsTrait
         }
       } catch (NotFoundException $e) {
         $this->logDebug('No folder found for ' . $folderPath);
-        $filesAppPath = '';
-        $filesAppLink = '';
       }
-    } else {
-      $filesAppPath = '';
-      $filesAppLink = '';
-      $filesAppTarget = '_blank';
     }
     $placeHolder = empty($fileBase)
       ? $this->l->t('Drop files here or click to upload files.')

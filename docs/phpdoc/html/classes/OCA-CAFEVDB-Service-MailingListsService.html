@@ -487,33 +487,45 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_ADMIN">TEMPLATE_FILE_ADMIN</a>
+    <a class="" href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_SEPARATOR">TEMPLATE_FILE_SEPARATOR</a>
     <span>
-        &nbsp;= &#039;admin:&#039;                            </span>
+        &nbsp;= &#039;_&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_MEMBER">TEMPLATE_FILE_MEMBER</a>
+    <a class="" href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_ADMIN">TEMPLATE_MAILMAN_ADMIN</a>
     <span>
-        &nbsp;= &#039;member:&#039;                            </span>
+        &nbsp;= &#039;admin&#039; . self::TEMPLATE_MAILMAN_SEPARATOR                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_PREFIX">TEMPLATE_FILE_PREFIX</a>
+    <a class="" href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_MEMBER">TEMPLATE_MAILMAN_MEMBER</a>
     <span>
-        &nbsp;= &#039;list:&#039;                            </span>
+        &nbsp;= &#039;member&#039; . self::TEMPLATE_MAILMAN_SEPARATOR                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_RCPTS">TEMPLATE_FILE_RCPTS</a>
+    <a class="" href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_PREFIX">TEMPLATE_MAILMAN_PREFIX</a>
     <span>
-        &nbsp;= [self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_ADMIN, self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_MEMBER, self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_USER]                            </span>
+        &nbsp;= &#039;list&#039; . self::TEMPLATE_MAILMAN_SEPARATOR                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_USER">TEMPLATE_FILE_USER</a>
+    <a class="" href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_RCPTS">TEMPLATE_MAILMAN_RCPTS</a>
     <span>
-        &nbsp;= &#039;user&#039;                            </span>
+        &nbsp;= [self::TEMPLATE_MAILMAN_PREFIX . self::TEMPLATE_MAILMAN_ADMIN, self::TEMPLATE_MAILMAN_PREFIX . self::TEMPLATE_MAILMAN_MEMBER, self::TEMPLATE_MAILMAN_PREFIX . self::TEMPLATE_MAILMAN_USER]                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_SEPARATOR">TEMPLATE_MAILMAN_SEPARATOR</a>
+    <span>
+        &nbsp;= &#039;:&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_USER">TEMPLATE_MAILMAN_USER</a>
+    <span>
+        &nbsp;= &#039;user&#039; . self::TEMPLATE_MAILMAN_SEPARATOR                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
@@ -1132,6 +1144,12 @@ using the default time-zone if none is specified.</dd>
 <dd>Return all the sub-admins of the given or the configured orchestra group.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getInvoicesPath">getInvoicesPath()</a>
+    <span>
+                                &nbsp;: null|string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getLanguage">getLanguage()</a>
     <span>
                                 &nbsp;: string    </span>
@@ -1506,9 +1524,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">163</span>
+    <span class="phpdocumentor-element-found-in__line">165</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.163" class="phpdocumentor-element-found-in__source" data-line="163" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.165" class="phpdocumentor-element-found-in__source" data-line="165" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -1794,9 +1812,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">138</span>
+    <span class="phpdocumentor-element-found-in__line">140</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.140" class="phpdocumentor-element-found-in__source" data-line="140" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -1826,9 +1844,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">138</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -1858,9 +1876,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">137</span>
+    <span class="phpdocumentor-element-found-in__line">139</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.137" class="phpdocumentor-element-found-in__source" data-line="137" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.139" class="phpdocumentor-element-found-in__source" data-line="139" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -1890,9 +1908,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">143</span>
+    <span class="phpdocumentor-element-found-in__line">145</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.143" class="phpdocumentor-element-found-in__source" data-line="143" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.145" class="phpdocumentor-element-found-in__source" data-line="145" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -1922,9 +1940,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">144</span>
+    <span class="phpdocumentor-element-found-in__line">146</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.144" class="phpdocumentor-element-found-in__source" data-line="144" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.146" class="phpdocumentor-element-found-in__source" data-line="146" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -1954,9 +1972,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">141</span>
+    <span class="phpdocumentor-element-found-in__line">143</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.141" class="phpdocumentor-element-found-in__source" data-line="141" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.143" class="phpdocumentor-element-found-in__source" data-line="143" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -1986,9 +2004,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">142</span>
+    <span class="phpdocumentor-element-found-in__line">144</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.144" class="phpdocumentor-element-found-in__source" data-line="144" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2018,9 +2036,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">153</span>
+    <span class="phpdocumentor-element-found-in__line">155</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.153" class="phpdocumentor-element-found-in__source" data-line="153" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.155" class="phpdocumentor-element-found-in__source" data-line="155" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2053,9 +2071,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">145</span>
+    <span class="phpdocumentor-element-found-in__line">147</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.145" class="phpdocumentor-element-found-in__source" data-line="145" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2085,9 +2103,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">146</span>
+    <span class="phpdocumentor-element-found-in__line">148</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.146" class="phpdocumentor-element-found-in__source" data-line="146" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2117,9 +2135,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">147</span>
+    <span class="phpdocumentor-element-found-in__line">149</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.149" class="phpdocumentor-element-found-in__source" data-line="149" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2245,9 +2263,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">116</span>
+    <span class="phpdocumentor-element-found-in__line">118</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2277,9 +2295,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">119</span>
+    <span class="phpdocumentor-element-found-in__line">121</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.119" class="phpdocumentor-element-found-in__source" data-line="119" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.121" class="phpdocumentor-element-found-in__source" data-line="121" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2309,9 +2327,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">117</span>
+    <span class="phpdocumentor-element-found-in__line">119</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.119" class="phpdocumentor-element-found-in__source" data-line="119" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2341,9 +2359,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">115</span>
+    <span class="phpdocumentor-element-found-in__line">117</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2373,9 +2391,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">118</span>
+    <span class="phpdocumentor-element-found-in__line">120</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2405,9 +2423,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">121</span>
+    <span class="phpdocumentor-element-found-in__line">123</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.121" class="phpdocumentor-element-found-in__source" data-line="121" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2437,9 +2455,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">104</span>
+    <span class="phpdocumentor-element-found-in__line">106</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2469,9 +2487,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">107</span>
+    <span class="phpdocumentor-element-found-in__line">109</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2501,9 +2519,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">105</span>
+    <span class="phpdocumentor-element-found-in__line">107</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.105" class="phpdocumentor-element-found-in__source" data-line="105" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2533,9 +2551,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">108</span>
+    <span class="phpdocumentor-element-found-in__line">110</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.108" class="phpdocumentor-element-found-in__source" data-line="108" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.110" class="phpdocumentor-element-found-in__source" data-line="110" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2565,9 +2583,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">106</span>
+    <span class="phpdocumentor-element-found-in__line">108</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.108" class="phpdocumentor-element-found-in__source" data-line="108" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2693,9 +2711,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">128</span>
+    <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.128" class="phpdocumentor-element-found-in__source" data-line="128" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2725,9 +2743,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">129</span>
+    <span class="phpdocumentor-element-found-in__line">131</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -2757,9 +2775,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">130</span>
+    <span class="phpdocumentor-element-found-in__line">132</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.132" class="phpdocumentor-element-found-in__source" data-line="132" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -3013,9 +3031,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">101</span>
+    <span class="phpdocumentor-element-found-in__line">103</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -3045,9 +3063,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">99</span>
+    <span class="phpdocumentor-element-found-in__line">101</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.99" class="phpdocumentor-element-found-in__source" data-line="99" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -3077,9 +3095,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">100</span>
+    <span class="phpdocumentor-element-found-in__line">102</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -3109,9 +3127,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">104</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -3260,9 +3278,9 @@ retrieve the list-id.</dd>
 
 </article>
                     <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_FILE_ADMIN">
-        TEMPLATE_FILE_ADMIN
-        <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_ADMIN" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_FILE_SEPARATOR">
+        TEMPLATE_FILE_SEPARATOR
+        <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_SEPARATOR" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
 
@@ -3279,8 +3297,8 @@ retrieve the list-id.</dd>
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">TEMPLATE_FILE_ADMIN</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;admin:&#039;</span>
+    <span class="phpdocumentor-signature__name">TEMPLATE_FILE_SEPARATOR</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;_&#039;</span>
 </code>
 
 
@@ -3292,105 +3310,9 @@ retrieve the list-id.</dd>
 
 </article>
                     <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_FILE_MEMBER">
-        TEMPLATE_FILE_MEMBER
-        <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_MEMBER" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">91</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">TEMPLATE_FILE_MEMBER</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;member:&#039;</span>
-</code>
-
-
-    
-    
-    
-
-    
-
-</article>
-                    <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_FILE_PREFIX">
-        TEMPLATE_FILE_PREFIX
-        <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_PREFIX" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">89</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">TEMPLATE_FILE_PREFIX</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;list:&#039;</span>
-</code>
-
-
-    
-    
-    
-
-    
-
-</article>
-                    <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_FILE_RCPTS">
-        TEMPLATE_FILE_RCPTS
-        <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_RCPTS" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">93</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">TEMPLATE_FILE_RCPTS</span>
-    = <span class="phpdocumentor-signature__default-value">[self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_ADMIN, self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_MEMBER, self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_USER]</span>
-</code>
-
-
-    
-    
-    
-
-    
-
-</article>
-                    <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_FILE_USER">
-        TEMPLATE_FILE_USER
-        <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_USER" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_MAILMAN_ADMIN">
+        TEMPLATE_MAILMAN_ADMIN
+        <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_ADMIN" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
 
@@ -3407,8 +3329,168 @@ retrieve the list-id.</dd>
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">TEMPLATE_FILE_USER</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;user&#039;</span>
+    <span class="phpdocumentor-signature__name">TEMPLATE_MAILMAN_ADMIN</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;admin&#039; . self::TEMPLATE_MAILMAN_SEPARATOR</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_MAILMAN_MEMBER">
+        TEMPLATE_MAILMAN_MEMBER
+        <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_MEMBER" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">93</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">TEMPLATE_MAILMAN_MEMBER</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;member&#039; . self::TEMPLATE_MAILMAN_SEPARATOR</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_MAILMAN_PREFIX">
+        TEMPLATE_MAILMAN_PREFIX
+        <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_PREFIX" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">91</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">TEMPLATE_MAILMAN_PREFIX</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;list&#039; . self::TEMPLATE_MAILMAN_SEPARATOR</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_MAILMAN_RCPTS">
+        TEMPLATE_MAILMAN_RCPTS
+        <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_RCPTS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">95</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">TEMPLATE_MAILMAN_RCPTS</span>
+    = <span class="phpdocumentor-signature__default-value">[self::TEMPLATE_MAILMAN_PREFIX . self::TEMPLATE_MAILMAN_ADMIN, self::TEMPLATE_MAILMAN_PREFIX . self::TEMPLATE_MAILMAN_MEMBER, self::TEMPLATE_MAILMAN_PREFIX . self::TEMPLATE_MAILMAN_USER]</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_MAILMAN_SEPARATOR">
+        TEMPLATE_MAILMAN_SEPARATOR
+        <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_SEPARATOR" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">89</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">TEMPLATE_MAILMAN_SEPARATOR</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;:&#039;</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_MAILMAN_USER">
+        TEMPLATE_MAILMAN_USER
+        <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_USER" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">94</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">TEMPLATE_MAILMAN_USER</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;user&#039; . self::TEMPLATE_MAILMAN_SEPARATOR</span>
 </code>
 
 
@@ -3525,9 +3607,9 @@ retrieve the list-id.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">170</span>
+    <span class="phpdocumentor-element-found-in__line">172</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -3608,9 +3690,9 @@ Default rest URI</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">196</span>
+    <span class="phpdocumentor-element-found-in__line">198</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.196" class="phpdocumentor-element-found-in__source" data-line="196" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.198" class="phpdocumentor-element-found-in__source" data-line="198" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -3719,9 +3801,9 @@ Default rest URI</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">183</span>
+    <span class="phpdocumentor-element-found-in__line">185</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.183" class="phpdocumentor-element-found-in__source" data-line="183" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.185" class="phpdocumentor-element-found-in__source" data-line="185" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -3759,9 +3841,9 @@ Default rest URI</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">176</span>
+    <span class="phpdocumentor-element-found-in__line">178</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.176" class="phpdocumentor-element-found-in__source" data-line="176" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -3796,9 +3878,9 @@ Default rest URI</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">173</span>
+    <span class="phpdocumentor-element-found-in__line">175</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.173" class="phpdocumentor-element-found-in__source" data-line="173" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.175" class="phpdocumentor-element-found-in__source" data-line="175" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -3833,9 +3915,9 @@ Default rest URI</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">190</span>
+    <span class="phpdocumentor-element-found-in__line">192</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.190" class="phpdocumentor-element-found-in__source" data-line="190" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.192" class="phpdocumentor-element-found-in__source" data-line="192" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -3878,9 +3960,9 @@ Default rest URI</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">195</span>
+    <span class="phpdocumentor-element-found-in__line">197</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.195" class="phpdocumentor-element-found-in__source" data-line="195" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.197" class="phpdocumentor-element-found-in__source" data-line="197" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -4006,9 +4088,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">504</span>
+    <span class="phpdocumentor-element-found-in__line">506</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.504" class="phpdocumentor-element-found-in__source" data-line="504" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.506" class="phpdocumentor-element-found-in__source" data-line="506" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Configure the given list as an announcements-only list.</p>
@@ -4097,9 +4179,9 @@ the list without moderation.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">384</span>
+    <span class="phpdocumentor-element-found-in__line">386</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.384" class="phpdocumentor-element-found-in__source" data-line="384" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.386" class="phpdocumentor-element-found-in__source" data-line="386" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create a non-existing list.</p>
@@ -4162,9 +4244,9 @@ the list without moderation.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">977</span>
+    <span class="phpdocumentor-element-found-in__line">993</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.977" class="phpdocumentor-element-found-in__source" data-line="977" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.993" class="phpdocumentor-element-found-in__source" data-line="993" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currency code for the locale.</p>
@@ -4212,9 +4294,9 @@ the list without moderation.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">989</span>
+    <span class="phpdocumentor-element-found-in__line">1005</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.989" class="phpdocumentor-element-found-in__source" data-line="989" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1005" class="phpdocumentor-element-found-in__source" data-line="1005" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currency symbol for the locale.</p>
@@ -4377,9 +4459,9 @@ the list without moderation.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">408</span>
+    <span class="phpdocumentor-element-found-in__line">410</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.410" class="phpdocumentor-element-found-in__source" data-line="410" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete an existing list.</p>
@@ -4435,9 +4517,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1151</span>
+    <span class="phpdocumentor-element-found-in__line">1153</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1151" class="phpdocumentor-element-found-in__source" data-line="1151" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1153" class="phpdocumentor-element-found-in__source" data-line="1153" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Ensure that the given folder exists and is anonymously shared.</p>
@@ -4496,9 +4578,9 @@ treated as relative to the configured document-templates folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">941</span>
+    <span class="phpdocumentor-element-found-in__line">957</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.941" class="phpdocumentor-element-found-in__source" data-line="941" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.957" class="phpdocumentor-element-found-in__source" data-line="957" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4562,9 +4644,9 @@ treated as relative to the configured document-templates folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">951</span>
+    <span class="phpdocumentor-element-found-in__line">967</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.951" class="phpdocumentor-element-found-in__source" data-line="951" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.967" class="phpdocumentor-element-found-in__source" data-line="967" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4616,9 +4698,9 @@ treated as relative to the configured document-templates folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1049</span>
+    <span class="phpdocumentor-element-found-in__line">1051</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1049" class="phpdocumentor-element-found-in__source" data-line="1049" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1051" class="phpdocumentor-element-found-in__source" data-line="1051" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Find members matching criteria. Default is to return all members.</p>
@@ -4690,9 +4772,9 @@ treated as relative to the configured document-templates folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1019</span>
+    <span class="phpdocumentor-element-found-in__line">1035</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1019" class="phpdocumentor-element-found-in__source" data-line="1019" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1035" class="phpdocumentor-element-found-in__source" data-line="1035" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert a float value in the given or default locale.</p>
@@ -4806,9 +4888,9 @@ treated as relative to the configured document-templates folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">642</span>
+    <span class="phpdocumentor-element-found-in__line">644</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.642" class="phpdocumentor-element-found-in__source" data-line="642" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.644" class="phpdocumentor-element-found-in__source" data-line="644" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -4863,9 +4945,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">630</span>
+    <span class="phpdocumentor-element-found-in__line">632</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.630" class="phpdocumentor-element-found-in__source" data-line="630" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.632" class="phpdocumentor-element-found-in__source" data-line="632" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -4988,9 +5070,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">788</span>
+    <span class="phpdocumentor-element-found-in__line">804</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.788" class="phpdocumentor-element-found-in__source" data-line="788" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.804" class="phpdocumentor-element-found-in__source" data-line="804" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5031,9 +5113,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">304</span>
+    <span class="phpdocumentor-element-found-in__line">306</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.304" class="phpdocumentor-element-found-in__source" data-line="304" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.306" class="phpdocumentor-element-found-in__source" data-line="306" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch the list configuration from the server. Returns null if the lis
@@ -5101,9 +5183,9 @@ is requested, then only the value of the resourfce.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">612</span>
+    <span class="phpdocumentor-element-found-in__line">614</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.612" class="phpdocumentor-element-found-in__source" data-line="612" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.614" class="phpdocumentor-element-found-in__source" data-line="614" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch the list-id of the given list. Normally it is just the
@@ -5158,9 +5240,9 @@ email-address with @ replaced by a dot.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">359</span>
+    <span class="phpdocumentor-element-found-in__line">361</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.359" class="phpdocumentor-element-found-in__source" data-line="359" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.361" class="phpdocumentor-element-found-in__source" data-line="361" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -5213,9 +5295,9 @@ email-address with @ replaced by a dot.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">244</span>
+    <span class="phpdocumentor-element-found-in__line">246</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.246" class="phpdocumentor-element-found-in__source" data-line="246" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the server configuration, this is rather for testing in
@@ -5254,9 +5336,9 @@ order to check the basic connectivity.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">258</span>
+    <span class="phpdocumentor-element-found-in__line">260</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.258" class="phpdocumentor-element-found-in__source" data-line="258" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.260" class="phpdocumentor-element-found-in__source" data-line="260" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -5309,9 +5391,9 @@ order to check the basic connectivity.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">661</span>
+    <span class="phpdocumentor-element-found-in__line">663</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.661" class="phpdocumentor-element-found-in__source" data-line="661" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.663" class="phpdocumentor-element-found-in__source" data-line="663" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Find the basic information about a subscription for the given
@@ -5386,9 +5468,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">979</span>
+    <span class="phpdocumentor-element-found-in__line">981</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.979" class="phpdocumentor-element-found-in__source" data-line="979" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.981" class="phpdocumentor-element-found-in__source" data-line="981" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch the subscription preferences.</p>
@@ -5462,9 +5544,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">708</span>
+    <span class="phpdocumentor-element-found-in__line">710</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.708" class="phpdocumentor-element-found-in__source" data-line="708" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.710" class="phpdocumentor-element-found-in__source" data-line="710" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get or check for a pending invitation (=== email confirmation request)
@@ -5535,9 +5617,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">787</span>
+    <span class="phpdocumentor-element-found-in__line">789</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.787" class="phpdocumentor-element-found-in__source" data-line="787" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.789" class="phpdocumentor-element-found-in__source" data-line="789" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return a brief status for the requested list and email address</p>
@@ -5619,9 +5701,9 @@ self::STATUS_INVITED, self::STATUS_WAITING;</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">747</span>
+    <span class="phpdocumentor-element-found-in__line">749</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.747" class="phpdocumentor-element-found-in__source" data-line="747" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.749" class="phpdocumentor-element-found-in__source" data-line="749" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Dispose any pending subscription request with the given action. In
@@ -5705,9 +5787,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1219</span>
+    <span class="phpdocumentor-element-found-in__line">1225</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1219" class="phpdocumentor-element-found-in__source" data-line="1219" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1225" class="phpdocumentor-element-found-in__source" data-line="1225" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Install auto-response templates from the specified cloud-folder for the
@@ -5767,9 +5849,9 @@ given list-id.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">900</span>
+    <span class="phpdocumentor-element-found-in__line">902</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.900" class="phpdocumentor-element-found-in__source" data-line="900" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.902" class="phpdocumentor-element-found-in__source" data-line="902" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Just send an invitation.</p>
@@ -5843,9 +5925,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">210</span>
+    <span class="phpdocumentor-element-found-in__line">212</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.210" class="phpdocumentor-element-found-in__source" data-line="210" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.212" class="phpdocumentor-element-found-in__source" data-line="212" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
     
@@ -5886,9 +5968,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">225</span>
+    <span class="phpdocumentor-element-found-in__line">227</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.225" class="phpdocumentor-element-found-in__source" data-line="225" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.227" class="phpdocumentor-element-found-in__source" data-line="227" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the mailing-lists server is configured and reachable.</p>
@@ -5965,9 +6047,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1003</span>
+    <span class="phpdocumentor-element-found-in__line">1019</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1003" class="phpdocumentor-element-found-in__source" data-line="1003" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1019" class="phpdocumentor-element-found-in__source" data-line="1019" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert $value to a currency value in the given or default locale.</p>
@@ -6022,9 +6104,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1096</span>
+    <span class="phpdocumentor-element-found-in__line">1098</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1096" class="phpdocumentor-element-found-in__source" data-line="1096" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1098" class="phpdocumentor-element-found-in__source" data-line="1098" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Patch the membership config for the given email address. In particular,
@@ -6106,9 +6188,9 @@ it is possible to set the moderation action and the delivery address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">438</span>
+    <span class="phpdocumentor-element-found-in__line">440</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.438" class="phpdocumentor-element-found-in__source" data-line="438" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.440" class="phpdocumentor-element-found-in__source" data-line="440" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Rename an existing list.</p>
@@ -6263,9 +6345,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">333</span>
+    <span class="phpdocumentor-element-found-in__line">335</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.333" class="phpdocumentor-element-found-in__source" data-line="333" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.335" class="phpdocumentor-element-found-in__source" data-line="335" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the list config.</p>
@@ -6341,9 +6423,9 @@ value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">572</span>
+    <span class="phpdocumentor-element-found-in__line">574</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.572" class="phpdocumentor-element-found-in__source" data-line="572" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.574" class="phpdocumentor-element-found-in__source" data-line="574" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Install a message template.</p>
@@ -6417,9 +6499,9 @@ necessary to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1017</span>
+    <span class="phpdocumentor-element-found-in__line">1019</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1017" class="phpdocumentor-element-found-in__source" data-line="1017" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1019" class="phpdocumentor-element-found-in__source" data-line="1019" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the subscription preferences.</p>
@@ -6502,9 +6584,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">827</span>
+    <span class="phpdocumentor-element-found-in__line">829</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.827" class="phpdocumentor-element-found-in__source" data-line="827" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.829" class="phpdocumentor-element-found-in__source" data-line="829" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Subscribe a victim to the email-list.</p>
@@ -6607,9 +6689,9 @@ first parameter.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1121</span>
+    <span class="phpdocumentor-element-found-in__line">1123</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1121" class="phpdocumentor-element-found-in__source" data-line="1121" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1123" class="phpdocumentor-element-found-in__source" data-line="1123" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate the full path to the given templates leaf-directory.</p>
@@ -6665,9 +6747,9 @@ e.g. self::TEMPLATE_TYPE_ANNOUNCEMENTS or self::TEMPLATE_TYPE_PROJECTS.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">965</span>
+    <span class="phpdocumentor-element-found-in__line">981</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.965" class="phpdocumentor-element-found-in__source" data-line="965" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.981" class="phpdocumentor-element-found-in__source" data-line="981" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Transliterate the given string to the given or default locale</p>
@@ -6722,9 +6804,9 @@ e.g. self::TEMPLATE_TYPE_ANNOUNCEMENTS or self::TEMPLATE_TYPE_PROJECTS.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">926</span>
+    <span class="phpdocumentor-element-found-in__line">928</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.926" class="phpdocumentor-element-found-in__source" data-line="926" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.928" class="phpdocumentor-element-found-in__source" data-line="928" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Unsubscribe the given email-address.</p>
@@ -6924,9 +7006,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">899</span>
+    <span class="phpdocumentor-element-found-in__line">915</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.899" class="phpdocumentor-element-found-in__source" data-line="899" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.915" class="phpdocumentor-element-found-in__source" data-line="915" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7096,9 +7178,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1136</span>
+    <span class="phpdocumentor-element-found-in__line">1152</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1136" class="phpdocumentor-element-found-in__source" data-line="1136" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1152" class="phpdocumentor-element-found-in__source" data-line="1152" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7135,9 +7217,9 @@ additional query is needed to retrieve the list-id from the server.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">825</span>
+    <span class="phpdocumentor-element-found-in__line">841</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.825" class="phpdocumentor-element-found-in__source" data-line="825" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.841" class="phpdocumentor-element-found-in__source" data-line="841" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7495,9 +7577,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">843</span>
+    <span class="phpdocumentor-element-found-in__line">859</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.843" class="phpdocumentor-element-found-in__source" data-line="843" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.859" class="phpdocumentor-element-found-in__source" data-line="859" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Work around NC annoyingly not accepting \DateTimeInterface</p>
@@ -7566,9 +7648,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">872</span>
+    <span class="phpdocumentor-element-found-in__line">888</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.872" class="phpdocumentor-element-found-in__source" data-line="872" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.888" class="phpdocumentor-element-found-in__source" data-line="888" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Work around NC annoyingly not accepting \DateTimeInterface</p>
@@ -7644,9 +7726,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1070</span>
+    <span class="phpdocumentor-element-found-in__line">1086</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1070" class="phpdocumentor-element-found-in__source" data-line="1070" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1086" class="phpdocumentor-element-found-in__source" data-line="1086" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format the given date according to $format and $timeZone to a
@@ -7710,9 +7792,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1082</span>
+    <span class="phpdocumentor-element-found-in__line">1098</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1082" class="phpdocumentor-element-found-in__source" data-line="1082" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1098" class="phpdocumentor-element-found-in__source" data-line="1098" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7966,9 +8048,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">800</span>
+    <span class="phpdocumentor-element-found-in__line">816</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.800" class="phpdocumentor-element-found-in__source" data-line="800" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.816" class="phpdocumentor-element-found-in__source" data-line="816" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the current timezone</p>
@@ -8086,9 +8168,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">761</span>
+    <span class="phpdocumentor-element-found-in__line">763</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.761" class="phpdocumentor-element-found-in__source" data-line="761" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.763" class="phpdocumentor-element-found-in__source" data-line="763" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8109,7 +8191,9 @@ dirname part of the path.</p>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">null|string</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>Return the full path to the financial balances folder</p>
+                <section class="phpdocumentor-description"><p>Return the full path to the folder containing sent-out
+donationreceipts.
+donationreceipts.</p>
 </section>
 
             </section>
@@ -8337,6 +8421,51 @@ dirname part of the path.</p>
             -protected
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getInvoicesPath">
+        getInvoicesPath()
+        <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getInvoicesPath" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">777</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.777" class="phpdocumentor-element-found-in__source" data-line="777" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getInvoicesPath</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Return the full path to the folder containing
+sent-out invoices.
+sent-out invoices.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getLanguage">
         getLanguage()
         <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getLanguage" class="headerlink"><i class="fas fa-link"></i></a>
@@ -8345,9 +8474,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">909</span>
+    <span class="phpdocumentor-element-found-in__line">925</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.909" class="phpdocumentor-element-found-in__source" data-line="909" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.925" class="phpdocumentor-element-found-in__source" data-line="925" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8394,9 +8523,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">893</span>
+    <span class="phpdocumentor-element-found-in__line">909</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.893" class="phpdocumentor-element-found-in__source" data-line="893" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.909" class="phpdocumentor-element-found-in__source" data-line="909" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the locale.</p>
@@ -8444,9 +8573,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">782</span>
+    <span class="phpdocumentor-element-found-in__line">798</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.782" class="phpdocumentor-element-found-in__source" data-line="782" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.798" class="phpdocumentor-element-found-in__source" data-line="798" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8487,9 +8616,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">774</span>
+    <span class="phpdocumentor-element-found-in__line">790</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.774" class="phpdocumentor-element-found-in__source" data-line="774" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.790" class="phpdocumentor-element-found-in__source" data-line="790" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8706,9 +8835,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1153</span>
+    <span class="phpdocumentor-element-found-in__line">1169</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1153" class="phpdocumentor-element-found-in__source" data-line="1153" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1169" class="phpdocumentor-element-found-in__source" data-line="1169" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValue().</p>
@@ -8759,9 +8888,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1167</span>
+    <span class="phpdocumentor-element-found-in__line">1183</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1167" class="phpdocumentor-element-found-in__source" data-line="1167" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1183" class="phpdocumentor-element-found-in__source" data-line="1183" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueBool().</p>
@@ -8816,9 +8945,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1181</span>
+    <span class="phpdocumentor-element-found-in__line">1197</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1181" class="phpdocumentor-element-found-in__source" data-line="1181" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1197" class="phpdocumentor-element-found-in__source" data-line="1197" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueInt()</p>
@@ -8873,9 +9002,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1195</span>
+    <span class="phpdocumentor-element-found-in__line">1211</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1195" class="phpdocumentor-element-found-in__source" data-line="1195" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1211" class="phpdocumentor-element-found-in__source" data-line="1211" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueString().</p>
@@ -8973,9 +9102,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">748</span>
+    <span class="phpdocumentor-element-found-in__line">749</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.748" class="phpdocumentor-element-found-in__source" data-line="748" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.749" class="phpdocumentor-element-found-in__source" data-line="749" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8996,7 +9125,9 @@ key.</p>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">null|string</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>Return the full path to the financial balances folder</p>
+                <section class="phpdocumentor-description"><p>Return the full path to the folder storing tax
+exemption notices.
+exemption notices.</p>
 </section>
 
             </section>
@@ -9016,9 +9147,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1076</span>
+    <span class="phpdocumentor-element-found-in__line">1092</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1076" class="phpdocumentor-element-found-in__source" data-line="1076" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1092" class="phpdocumentor-element-found-in__source" data-line="1092" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -9059,9 +9190,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">812</span>
+    <span class="phpdocumentor-element-found-in__line">828</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.812" class="phpdocumentor-element-found-in__source" data-line="812" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.828" class="phpdocumentor-element-found-in__source" data-line="828" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the current time-zone string</p>
@@ -9399,9 +9530,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1037</span>
+    <span class="phpdocumentor-element-found-in__line">1053</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1037" class="phpdocumentor-element-found-in__source" data-line="1037" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1053" class="phpdocumentor-element-found-in__source" data-line="1053" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format a bytes value with &quot;readable&quot; postfix.</p>
@@ -9680,9 +9811,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">919</span>
+    <span class="phpdocumentor-element-found-in__line">935</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.919" class="phpdocumentor-element-found-in__source" data-line="919" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.935" class="phpdocumentor-element-found-in__source" data-line="935" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -9729,9 +9860,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">929</span>
+    <span class="phpdocumentor-element-found-in__line">945</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.929" class="phpdocumentor-element-found-in__source" data-line="929" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.945" class="phpdocumentor-element-found-in__source" data-line="945" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -10139,9 +10270,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1208</span>
+    <span class="phpdocumentor-element-found-in__line">1224</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1208" class="phpdocumentor-element-found-in__source" data-line="1208" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1224" class="phpdocumentor-element-found-in__source" data-line="1224" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the current config-setting for debug contains the provided
@@ -10433,9 +10564,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1052</span>
+    <span class="phpdocumentor-element-found-in__line">1068</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1052" class="phpdocumentor-element-found-in__source" data-line="1052" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1068" class="phpdocumentor-element-found-in__source" data-line="1068" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Call ConfigService::formatTimeStamp() with the current date and time.</p>
@@ -10490,9 +10621,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1118</span>
+    <span class="phpdocumentor-element-found-in__line">1134</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1118" class="phpdocumentor-element-found-in__source" data-line="1118" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1134" class="phpdocumentor-element-found-in__source" data-line="1134" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -10529,9 +10660,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1294</span>
+    <span class="phpdocumentor-element-found-in__line">1301</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1294" class="phpdocumentor-element-found-in__source" data-line="1294" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1301" class="phpdocumentor-element-found-in__source" data-line="1301" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Just here in order to inject the enum values into the l10n framework.</p>
@@ -10565,9 +10696,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1095</span>
+    <span class="phpdocumentor-element-found-in__line">1111</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1095" class="phpdocumentor-element-found-in__source" data-line="1095" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1111" class="phpdocumentor-element-found-in__source" data-line="1111" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Search for translation variants by trying several camel-case
@@ -10851,9 +10982,9 @@ be verified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">474</span>
+    <span class="phpdocumentor-element-found-in__line">476</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.474" class="phpdocumentor-element-found-in__source" data-line="474" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.476" class="phpdocumentor-element-found-in__source" data-line="476" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Somehow add an email alias to the mail system .</p>
@@ -10910,9 +11041,9 @@ be verified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">287</span>
+    <span class="phpdocumentor-element-found-in__line">289</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.287" class="phpdocumentor-element-found-in__source" data-line="287" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.289" class="phpdocumentor-element-found-in__source" data-line="289" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">MAJOR.MINOR.REVISION.</p>
@@ -10984,9 +11115,9 @@ be verified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/MailingListsService.php"><a href="files/service-mailinglistsservice.html"><abbr title="Service/MailingListsService.php">MailingListsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1276</span>
+    <span class="phpdocumentor-element-found-in__line">1283</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1276" class="phpdocumentor-element-found-in__source" data-line="1276" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#source-view.1283" class="phpdocumentor-element-found-in__source" data-line="1283" data-modal="source-view" data-src="files/Service/MailingListsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Ensure that the given string is a list-id, if it is a FQDN then try to
@@ -11195,11 +11326,13 @@ retrieve the list-id.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_SUBSCRIPTION_SELF_LINK">SUBSCRIPTION_SELF_LINK</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_DIR_AUTO_RESPONSES">TEMPLATE_DIR_AUTO_RESPONSES</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_DIR_MAILING_LISTS">TEMPLATE_DIR_MAILING_LISTS</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_ADMIN">TEMPLATE_FILE_ADMIN</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_MEMBER">TEMPLATE_FILE_MEMBER</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_PREFIX">TEMPLATE_FILE_PREFIX</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_RCPTS">TEMPLATE_FILE_RCPTS</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_USER">TEMPLATE_FILE_USER</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_FILE_SEPARATOR">TEMPLATE_FILE_SEPARATOR</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_ADMIN">TEMPLATE_MAILMAN_ADMIN</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_MEMBER">TEMPLATE_MAILMAN_MEMBER</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_PREFIX">TEMPLATE_MAILMAN_PREFIX</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_RCPTS">TEMPLATE_MAILMAN_RCPTS</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_SEPARATOR">TEMPLATE_MAILMAN_SEPARATOR</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_MAILMAN_USER">TEMPLATE_MAILMAN_USER</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_TYPE_ANNOUNCEMENTS">TEMPLATE_TYPE_ANNOUNCEMENTS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_TYPE_PROJECTS">TEMPLATE_TYPE_PROJECTS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-MailingListsService.html#constant_TEMPLATE_TYPE_UNSPECIFIC">TEMPLATE_TYPE_UNSPECIFIC</a></li>
@@ -11302,6 +11435,7 @@ retrieve the list-id.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getFinanceFolderPath">getFinanceFolderPath()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getFinancialBalancesPath">getFinancialBalancesPath()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getGroupSubAdmins">getGroupSubAdmins()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getInvoicesPath">getInvoicesPath()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getLanguage">getLanguage()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getLocale">getLocale()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getOutBoxFolderPath">getOutBoxFolderPath()</a></li>

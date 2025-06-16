@@ -1,0 +1,11 @@
+<map id="updateVEventFromRequest" name="updateVEventFromRequest">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,56,188,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aabb41dada7b7f42283e1fe61bab0a887" title="Add one or multiple participans to the given VTodo or VEvent." alt="" coords="265,5,376,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,53,249,32,250,37,159,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ae752a1150511a5891f344e73105d901d" title="Add one or multiple relations to the given VTodo or VEvent." alt="" coords="272,56,369,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="188,67,257,67,257,72,188,72"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a349505932cfde0b222b7d7ea55fdcf19" title="Add one or multiple alarms to the given VTodo or VEvent." alt="" coords="236,107,405,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="159,81,244,100,243,105,158,86"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a682d9e191e5fe8147d2e34456ab59e29" title=" " alt="" coords="453,107,632,133"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="405,117,437,117,437,123,405,123"/>
+</map>

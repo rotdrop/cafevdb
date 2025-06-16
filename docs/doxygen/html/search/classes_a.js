@@ -18,7 +18,7 @@ var searchData=
   ['missingprojectsfolderexception_15',['MissingProjectsFolderException',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_missing_projects_folder_exception.html',1,'OCA::CAFEVDB::Exceptions']]],
   ['missingtranslation_16',['MissingTranslation',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_missing_translation.html',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Entities']]],
   ['mountprovider_17',['MountProvider',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_mount_provider.html',1,'OCA::CAFEVDB::Storage::Database']]],
-  ['musician_18',['musician',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html',1,'Musician'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_4045ad3d1799dd17c3639bac4a84c2a1.html',1,'Musician']]],
+  ['musician_18',['Musician',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html',1,'Musician'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_4045ad3d1799dd17c3639bac4a84c2a1.html',1,'Musician']]],
   ['musiciancard_19',['MusicianCard',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_musician_card.html',1,'OCA::CAFEVDB::AddressBook']]],
   ['musiciancardbackend_20',['MusicianCardBackend',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_musician_card_backend.html',1,'OCA::CAFEVDB::AddressBook']]],
   ['musicianemailaddress_21',['MusicianEmailAddress',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_email_address.html',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Entities']]],
@@ -26,11 +26,12 @@ var searchData=
   ['musicianemailevent_23',['MusicianEmailEvent',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_musician_email_event.html',1,'OCA::CAFEVDB::Events']]],
   ['musicianemailpersistancelistener_24',['MusicianEmailPersistanceListener',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_musician_email_persistance_listener.html',1,'OCA::CAFEVDB::Listener']]],
   ['musicianentitylistener_25',['MusicianEntityListener',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_musician_entity_listener.html',1,'OCA::CAFEVDB::Listener']]],
-  ['musicianinstrument_26',['MusicianInstrument',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Entities']]],
-  ['musicianrowaccesstoken_27',['MusicianRowAccessToken',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_row_access_token.html',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Entities']]],
-  ['musicians_28',['Musicians',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html',1,'OCA::CAFEVDB::PageRenderer']]],
-  ['musicianscontroller_29',['MusiciansController',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_musicians_controller.html',1,'OCA::CAFEVDB::Controller']]],
-  ['musicianservice_30',['MusicianService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_musician_service.html',1,'OCA::CAFEVDB::Service']]],
-  ['musiciansrepository_31',['MusiciansRepository',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_musicians_repository.html',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Repositories']]],
-  ['musicianvalidationcontroller_32',['MusicianValidationController',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_musician_validation_controller.html',1,'OCA::CAFEVDB::Controller']]]
+  ['musicianinstrument_26',['MusicianInstrument',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html',1,'MusicianInstrument'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_fcab19ab1703b7a3ddb5348c0e79b5a0.html',1,'MusicianInstrument']]],
+  ['musicianinstrumententitylistener_27',['MusicianInstrumentEntityListener',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_musician_instrument_entity_listener.html',1,'OCA::CAFEVDB::Listener']]],
+  ['musicianrowaccesstoken_28',['MusicianRowAccessToken',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_row_access_token.html',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Entities']]],
+  ['musicians_29',['Musicians',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html',1,'OCA::CAFEVDB::PageRenderer']]],
+  ['musicianscontroller_30',['MusiciansController',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_musicians_controller.html',1,'OCA::CAFEVDB::Controller']]],
+  ['musicianservice_31',['MusicianService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_musician_service.html',1,'OCA::CAFEVDB::Service']]],
+  ['musiciansrepository_32',['MusiciansRepository',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_musicians_repository.html',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Repositories']]],
+  ['musicianvalidationcontroller_33',['MusicianValidationController',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_musician_validation_controller.html',1,'OCA::CAFEVDB::Controller']]]
 ];

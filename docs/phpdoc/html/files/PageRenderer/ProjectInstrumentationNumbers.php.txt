@@ -39,7 +39,10 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 /**Table generator for Instruments table. */
 class ProjectInstrumentationNumbers extends PMETableViewBase
 {
+  use FieldTraits\InstrumentsTrait;
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
+
   const TEMPLATE = 'project-instrumentation-numbers';
   const TABLE = self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE;
 
@@ -93,17 +96,19 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     parent::__construct(
       self::TEMPLATE,
       //
-      $configService,
-      $entityManager,
-      $request,
-      $pageNavigation,
-      $phpMyEdit,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     if ($this->listOperation()) {
       $this->pme->overrideLabel('Add', $this->l->t('New Voice'));
     }
+
+    $this->findProject(enforce: false);
   }
   // phpcs:enable
 
@@ -134,6 +139,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $template       = $this->template;
     $projectId      = $this->projectId;
     $projectMode    = $this->projectId > 0;
+    $instrumentInfo = $this->getInstrumentInfo();
 
     $opts            = [];
 
@@ -277,8 +283,8 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'join' => false, // [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
         'filters' => '$table.id in (SELECT instrument_id FROM $main_table)',
       ],
-      //'values2|AVCPDLF' => $this->instrumentInfo['byId'],
-      'valueGroups' => $this->instrumentInfo['idGroups'],
+      //'values2|AVCPDLF' => $instrumentInfo['byId'],
+      'valueGroups' => $instrumentInfo['idGroups'],
     ];
     $this->addSlug('instrument', $opts['fdd']['instrument_id']);
 
@@ -455,7 +461,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     // @todo: here we need still delete triggers etc.
     // go
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($execute) {
       $this->execute($opts);

@@ -1,0 +1,7 @@
+<map id="fetchSepaMandate" name="fetchSepaMandate">
+<area shape="rect" id="Node000001" title="Fetch an exisiting reference given project and musician." alt="" coords="5,5,136,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a34074025d55ce5eebb5cf86c23237575" title="Determine if the given mandate is expired, in which case we would need a new mandate." alt="" coords="184,5,310,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,16,168,16,168,21,136,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a8197b25128b1d0236931c797d4a70a80" title="Compute usage data for the given mandate reference." alt="" coords="358,5,527,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="310,16,342,16,342,21,310,21"/>
+</map>

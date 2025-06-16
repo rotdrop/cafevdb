@@ -1,21 +1,5 @@
 <map id="criteria" name="criteria">
-<area shape="rect" id="Node000001" title="Convenience function to generate Collections\Criteria." alt="" coords="480,250,541,275"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af2691c40495d429502e48d4824f0b080" title="Convenience function to generate Collections\Criteria." alt="" coords="276,213,432,253"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="466,257,432,251,433,245,467,252"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e" title="Convenience function." alt="" coords="305,278,403,303"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="467,273,404,284,403,279,466,268"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aafe8e2082bd107d572aa76086a06b24e" title=" " alt="" coords="39,5,195,45"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="290,280,274,267,256,240,248,213,247,187,250,161,252,135,251,110,244,84,226,59,211,47,194,39,196,34,214,43,230,56,249,82,257,109,258,135,255,161,253,187,253,213,261,238,278,264,293,275"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html#aaccc30214fd11a89620910ae83cb2b31" title=" " alt="" coords="27,69,206,139"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="291,279,274,267,262,253,254,238,249,209,244,181,237,167,226,153,204,136,208,132,230,149,242,164,249,179,254,208,259,236,266,250,278,263,294,274"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html#ae3f26d0c9ab593df3331ca906567a115" title=" " alt="" coords="27,163,206,232"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="298,276,275,268,227,246,199,235,201,230,229,242,277,263,300,271"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html#ad8bd1b1e4e8f449108639d5add09edb7" title=" " alt="" coords="27,256,206,325"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="291,293,206,293,206,288,291,288"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#abba1d644a20b16908a615d2409b81720" title="Filter field&#45;data by musician." alt="" coords="27,349,206,419"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="309,311,206,352,204,347,307,306"/>
-<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_data_option.html#abba1d644a20b16908a615d2409b81720" title="Filter field&#45;data by musician." alt="" coords="5,443,228,512"/>
-<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="338,317,293,374,263,405,230,433,211,445,208,440,226,429,259,401,289,370,334,313"/>
-<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#a89b1874ae24baa224ffd642bbb1f6437" title="Search an option by its label." alt="" coords="27,536,206,605"/>
-<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="348,317,332,362,308,417,274,475,230,526,208,542,204,538,226,522,269,472,303,415,327,360,343,316"/>
+<area shape="rect" id="Node000001" title="Convenience function to generate Collections\Criteria." alt="" coords="152,5,212,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e" title="Convenience function." alt="" coords="5,5,104,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,21,104,21,104,16,136,16"/>
 </map>

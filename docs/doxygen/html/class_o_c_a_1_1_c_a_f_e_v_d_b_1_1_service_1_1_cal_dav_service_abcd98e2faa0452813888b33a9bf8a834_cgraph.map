@@ -1,5 +1,13 @@
 <map id="getCalendarObject" name="getCalendarObject">
-<area shape="rect" id="node1" title="Fetch an event object by its local URI." alt="" coords="5,5,136,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ab2479c65f5ff410c3580f54e5ba6ee88" title="Convert an object UID to its local URI." alt="" coords="184,5,279,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#afd08da0f2d0c21a2bc9d5d5ae56f7907" title="Get the uri of the original calendar." alt="" coords="327,5,465,31"/>
+<area shape="rect" id="Node000001" title="Fetch an event object by its local URI." alt="" coords="5,81,135,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a4c3fe95c05e0336bd680f99f5c5dd013" title="Adds the given calendar data to the cache." alt="" coords="242,5,336,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,78,182,41,226,29,228,34,184,47,99,83"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a066227513f488f5afb478d0b30576d2a" title="Fetch an object from the calendar object cache." alt="" coords="236,56,343,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,85,220,75,220,80,135,90"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ab2479c65f5ff410c3580f54e5ba6ee88" title="Convert an object UID to its local URI." alt="" coords="242,107,336,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="135,99,227,110,227,116,135,105"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d" title=" " alt="" coords="183,157,396,200"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="100,106,184,143,202,149,200,154,182,148,98,111"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#afd08da0f2d0c21a2bc9d5d5ae56f7907" title="Get the uri of the original calendar." alt="" coords="444,107,581,133"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="337,117,428,117,428,123,337,123"/>
 </map>

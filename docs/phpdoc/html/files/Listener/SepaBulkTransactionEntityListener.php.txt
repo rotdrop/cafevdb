@@ -96,6 +96,27 @@ class SepaBulkTransactionEntityListener
   }
 
   /**
+   * Schedule a pre-commit action in order to update the transaction data.
+   *
+   * @param Entity $entity
+   *
+   * @return void
+   */
+  private function scheduleCreateTransactionData(Entity $entity):void
+  {
+    if ($entity->getSubmitDate() != null) {
+      // we should not change transactions which already have been submitted
+      // to the bank.
+      return;
+    }
+    $this->entityManager->registerPreCommitAction(function() use ($entity) {
+      foreach (SepaBulkTransactionService::EXPORTERS as $format) {
+        $this->service->generateTransactionData($entity, format: $format);
+      }
+    });
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function preUpdate(Entity $entity, ORMEvent\PreUpdateEventArgs $eventArgs)
@@ -113,7 +134,7 @@ class SepaBulkTransactionEntityListener
     if (!$this->lockEntity($entity)) {
       return;
     }
-    $this->prePersist($entity, $eventArgs);
+    $this->scheduleCreateTransactionData($entity);
     $this->unlockEntity($entity);
   }
 
@@ -141,16 +162,7 @@ class SepaBulkTransactionEntityListener
    */
   public function prePersist(Entity $entity, ORMEvent\PrePersistEventArgs $eventArgs)
   {
-    if ($entity->getSubmitDate() != null) {
-      // we should not change transactions which already have been submitted
-      // to the bank.
-      return;
-    }
-    $this->entityManager->registerPreCommitAction(function() use ($entity) {
-      foreach (SepaBulkTransactionService::EXPORTERS as $format) {
-        $this->service->generateTransactionData($entity, format: $format);
-      }
-    });
+    $this->scheduleCreateTransactionData($entity);
   }
 
   /**

@@ -1,0 +1,7 @@
+<map id="callInternalRoute" name="callInternalRoute">
+<area shape="rect" id="Node000001" title="Send to to a Cloud route." alt="" coords="158,31,277,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service.html#a3a9fef8b15f45554f9eee4282a2b9868" title="GET from a Cloud route." alt="" coords="5,5,110,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,35,109,30,110,24,142,29"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service.html#ad7620f34a874a4d3d9c5b62d66d5d9ea" title="Post to to a Cloud route." alt="" coords="10,56,105,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="142,59,106,64,105,59,142,53"/>
+</map>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Common\Uuid;
 #[ORM\Table(name: 'DonationReceipts')]
 #[ORM\UniqueConstraint(name: 'donation_receipt_unique', columns: ['donation_id', 'deleted'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[ORM\HasLifecycleCallbacks]
 class DonationReceipt implements JsonSerializable, ArrayAccess
 {
@@ -107,7 +107,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    * null the donation receipt must not be deleted.
    */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $mailingDate;
+  private $mailingDate = null;
 
   /**
    * @var string
@@ -118,7 +118,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    */
   #[ORM\JoinColumn(name: 'notification_message_id', referencedColumnName: 'message_id', nullable: true)]
   #[ORM\OneToOne(targetEntity: SentEmail::class, inversedBy: 'donationReceipt')]
-  private SentEmail $notificationMessage;
+  private ?SentEmail $notificationMessage = null;
 
   /** {@inheritdoc} */
   public function __construct()
@@ -155,7 +155,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    *
    * @param CompositePayment $donation
    *
-   * @return LegalPerson
+   * @return DonationReceipt
    */
   public function setDonation(CompositePayment $donation):DonationReceipt
   {
@@ -179,7 +179,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    *
    * @param TaxExemptionNotice $taxExemptionNotice
    *
-   * @return LegalPerson
+   * @return DonationReceipt
    */
   public function setTaxExemptionNotice(TaxExemptionNotice $taxExemptionNotice):DonationReceipt
   {
@@ -251,7 +251,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    *
    * @param null|SentEmail $notificationMessage
    *
-   * @return LegalPerson
+   * @return DonationReceipt
    */
   public function setNotificationMessage(?SentEmail $notificationMessage):DonationReceipt
   {
@@ -270,7 +270,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    */
   public function getNotificationMessage():?SentEmail
   {
-    return $this->taxExemptionNotice;
+    return $this->notificationMessage;
   }
 
   /**
@@ -327,7 +327,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
   /** {@inheritdoc} */
   public function jsonSerialize():array
   {
-    $this->toArray();
+    return $this->toArray();
   }
 
   /** {@inheritdoc} */

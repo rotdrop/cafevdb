@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Constants;
  * @method int getNumberOfLinks()
  */
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFilesRepository::class)]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\DatabaseStorageFileEntityListener'])]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\DatabaseStorageFileEntityListener::class])]
 #[ORM\HasLifecycleCallbacks]
 class DatabaseStorageFile extends DatabaseStorageDirEntry
 {

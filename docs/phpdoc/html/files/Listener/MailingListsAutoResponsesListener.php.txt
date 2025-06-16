@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright , 2021, 2022, 2024,  Claus-Justus Heine
+ * @copyright , 2021, 2022, 2024, 2025,  Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,27 +24,32 @@
 
 namespace OCA\CAFEVDB\Listener;
 
+use Throwable;
+
+use GuzzleHttp\Exception\ClientException;
+
+use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\Files\Events\Node\NodeWrittenEvent;
 use OCP\Files\Events\Node\NodeCopiedEvent;
-use OCP\Files\Events\Node\NodeRenamedEvent;
-use OCP\Files\Events\Node\NodeDeletedEvent;
-use OCP\Files\Events\Node\NodeTouchedEvent;
 use OCP\Files\Events\Node\NodeCreatedEvent;
-use OCP\IUser;
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
-use OCP\IUserSession;
+use OCP\Files\Events\Node\NodeDeletedEvent;
+use OCP\Files\Events\Node\NodeRenamedEvent;
+use OCP\Files\Events\Node\NodeTouchedEvent;
+use OCP\Files\Events\Node\NodeWrittenEvent;
 use OCP\Files\IRootFolder;
-use OCP\AppFramework\IAppContainer;
+use OCP\IL10N;
+use OCP\IUser;
+use OCP\IUserSession;
+use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Constants;
 
 /**
  * Listen to renamed and deleted events in order to keep the
@@ -56,12 +61,12 @@ class MailingListsAutoResponsesListener implements IEventListener
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const EVENT = [
-    NodeRenamedEvent::class,
     NodeCopiedEvent::class,
-    NodeWrittenEvent::class,
-    NodeDeletedEvent::class,
-    NodeTouchedEvent::class,
     NodeCreatedEvent::class,
+    NodeDeletedEvent::class,
+    NodeRenamedEvent::class,
+    NodeTouchedEvent::class,
+    NodeWrittenEvent::class,
   ];
 
   const PROJECTS = MailingListsService::TEMPLATE_TYPE_PROJECTS;
@@ -140,7 +145,7 @@ class MailingListsAutoResponsesListener implements IEventListener
         // Can ony use plain text files for the autoresponses.
         try {
           $eventMimeType = $node->getMimetype();
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           // ignore
           $eventMimeType = null;
         }
@@ -149,9 +154,13 @@ class MailingListsAutoResponsesListener implements IEventListener
           continue;
         }
       }
-      $template = pathinfo($nodePath, PATHINFO_FILENAME);
+      $template = str_replace(
+        MailingListsService::TEMPLATE_FILE_SEPARATOR,
+        MailingListsService::TEMPLATE_MAILMAN_SEPARATOR,
+        pathinfo($nodePath, PATHINFO_FILENAME),
+      );
       // first look at the base name, it must start with one of the known prefixes.
-      if (!str_starts_with($template, MailingListsService::TEMPLATE_FILE_PREFIX)) {
+      if (!str_starts_with($template, MailingListsService::TEMPLATE_MAILMAN_PREFIX)) {
         unset($nodes[$key]);
         continue;
       }
@@ -190,6 +199,10 @@ class MailingListsAutoResponsesListener implements IEventListener
         return;
       }
 
+
+      $templateFolderPath = null;
+
+      // determine list-type, announcements, projects
       foreach ([self::ANNOUNCEMENTS, self::PROJECTS] as $listType) {
         $templateFolderPath = $listsService->templateFolderPath($this->l->t($listType));
         $folderPath = $userFolder . $templateFolderPath;
@@ -211,26 +224,40 @@ class MailingListsAutoResponsesListener implements IEventListener
         } else {
           $lists = [ $configService->getConfigValue('announcementsMailingList'), ];
         }
+        break;
+      }
 
-        $template = pathinfo($nodeBase, PATHINFO_FILENAME);
+      if (empty($templateFolderPath)) {
+        $this->logError('Unable to determine the template folder path for template file "' . $nodePath . '".');
+        continue;
+      }
 
+      $template = str_replace(
+        MailingListsService::TEMPLATE_FILE_SEPARATOR,
+        MailingListsService::TEMPLATE_MAILMAN_SEPARATOR,
+        pathinfo($nodeBase, PATHINFO_FILENAME),
+      );
+
+      foreach ($lists as $list) {
+        // try each list in turn but do not bail out on certain types of errors like "not found".
         try {
           if ($key == self::DEL_KEY) {
-            foreach ($lists as $list) {
-              $listsService->setMessageTemplate($list, $template, null);
-              $this->logInfo('Removed ' . $template . ' from list ' . $list);
-            }
+            $listsService->setMessageTemplate($list, $template, null);
+            $this->logInfo('Removed ' . $template . ' from list ' . $list);
           } else {
             $templateFolderBase = basename($templateFolderPath);
-            $templateUri = $baseFolderShareUri . '/download?path=/' . $templateFolderBase . '&files=' . $nodeBase;
+            $templateUri = $baseFolderShareUri . Constants::PATH_SEP . $templateFolderBase . Constants::PATH_SEP . $nodeBase;
             foreach ($lists as $list) {
               $listsService->setMessageTemplate($list, $template, $templateUri);
               $this->logInfo('Added ' . $template . ' to list ' . $list . ', URI ' . $templateUri);
             }
           }
-          break;
-        } catch (\Throwable $t) {
-          $this->logError('Unable to modify template ' . $template);
+        } catch (Throwable $t) {
+          if (($t instanceof ClientException) && $t->getCode() == 404) {
+            $this->logException($t, 'Mailing-list "' . $list . '" probably does not exist on the server.');
+          } else {
+            $this->logException($t, 'Unable to modify template "' . $template . '" for list "' . $list . '".');
+          }
         }
       }
     }
@@ -253,8 +280,3 @@ class MailingListsAutoResponsesListener implements IEventListener
     return substr($path, strlen($folderPrefix));
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

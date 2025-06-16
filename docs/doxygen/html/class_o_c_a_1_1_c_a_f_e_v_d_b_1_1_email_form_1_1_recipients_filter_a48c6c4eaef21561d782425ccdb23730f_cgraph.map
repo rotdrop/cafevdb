@@ -1,0 +1,11 @@
+<map id="initParticiationStatusFilter" name="initParticiationStatusFilter">
+<area shape="rect" id="Node000001" title="Get the current filter." alt="" coords="5,56,176,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="282,5,352,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,53,266,27,267,32,154,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a27731ed4d08c3c842f0121956d34f60f" title=" " alt="" coords="224,56,410,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="176,67,208,67,208,72,176,72"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aa04f6ab873de060b1658e33fefc6ece4" title=" " alt="" coords="238,107,396,133"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="154,81,240,100,239,105,153,86"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="458,56,617,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="410,67,442,67,442,72,410,72"/>
+</map>

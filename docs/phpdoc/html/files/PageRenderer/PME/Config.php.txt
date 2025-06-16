@@ -53,7 +53,7 @@ class Config extends DefaultOptions
       'url' => [
         'images' => $urlGenerator->imagePath($this->appName(), ''),
       ],
-      'page_name' => $urlGenerator->linkToRoute($this->appName().'.vueApp.index'),
+      'page_name' => $urlGenerator->linkToRoute($this->appName() . '.vueApp.index'),
       'tooltips' => $toolTipsService,
       'inc' => $this->getUserValue('pagerows', 20),
       'debug' => 0 != ($debugMode & ConfigService::DEBUG_QUERY),

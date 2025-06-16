@@ -26,13 +26,13 @@ namespace OCA\CAFEVDB\Traits;
 
 use Throwable;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository as BaseEntityRepository;
-
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator as ClassMetadata;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository as BaseEntityRepository;
 
 /**
  * Database EntityManager short-cuts.
@@ -152,6 +152,7 @@ trait EntityManagerTrait
    *
    * @throws ORMInvalidArgumentException
    * @throws ORMException
+   * @throws Exceptions\DatabaseEntityNotFoundException
    */
   protected function remove(
     mixed $entity,
@@ -170,6 +171,9 @@ trait EntityManagerTrait
       //
       // $entity = $this->entityManager->getReference($this->entityClassName, $key);
       $entity = $this->entityManager->find($this->entityClassName, $key);
+      if (empty($entity)) {
+        throw new Exceptions\DatabaseEntityNotFoundException($this->entityClassName);
+      }
     }
     if ($soft && !$hard && method_exists($entity, 'isDeleted') && $entity->isDeleted()) {
       return;
@@ -224,16 +228,16 @@ trait EntityManagerTrait
    * NOTE: The persist operation always considers entities that are not yet known to
    * this EntityManager as NEW. Do not pass detached entities to the persist operation.
    *
-   * @param mixed $entity The instance to make managed and persistent.
+   * @param object $entity The instance to make managed and persistent.
    *
-   * @return mixed
+   * @return void
    *
    * @throws ORMInvalidArgumentException
    * @throws ORMException
    */
-  protected function persist(mixed $entity)
+  protected function persist(object $entity):void
   {
-    return $this->entityManager->persist($entity);
+    $this->entityManager->persist($entity);
   }
 
   /**
@@ -317,6 +321,9 @@ trait EntityManagerTrait
    */
   protected function findEntity(string $entityClassName, mixed $id, ?int $lockMode = null, ?int $lockVersion = null)
   {
+    if (filter_var($id, FILTER_VALIDATE_INT, ['min_range' => 1])) {
+      $id = [ 'id' => $id ];
+    }
     return $this->entityManager->find($entityClassName, $id, $lockMode, $lockVersion);
   }
 

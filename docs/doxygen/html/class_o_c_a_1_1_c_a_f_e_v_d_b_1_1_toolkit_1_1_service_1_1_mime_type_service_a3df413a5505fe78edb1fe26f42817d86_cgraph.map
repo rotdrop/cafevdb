@@ -1,7 +1,7 @@
 <map id="getAppMimeTypeMappings" name="getAppMimeTypeMappings">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,45,184,70"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="232,5,393,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,42,218,37,219,42,182,47"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab6a06d8f1456a89ac1168e7c8d270595" title="Log an informational message." alt="" coords="232,69,393,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="182,67,219,73,218,78,181,73"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,47,184,73"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="232,5,392,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,44,216,39,217,44,184,49"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab6a06d8f1456a89ac1168e7c8d270595" title="Log an informational message." alt="" coords="232,72,392,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="184,71,217,76,216,81,183,76"/>
 </map>

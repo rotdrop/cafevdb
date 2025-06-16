@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,40 +27,39 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use ZipStream\ZipStream;
+use InvalidArgumentException;
+use Throwable;
+use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
 
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\IAppContainer;
+use OCP\Contacts\IManager as IContactsManager;
+use OCP\Files\File;
+use OCP\Files\FileInfo;
+use OCP\Files\Folder;
+use OCP\Files\Node;
+use OCP\IAddressBook;
+use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 
-use OCP\Files\Node;
-use OCP\Files\File;
-use OCP\Files\Folder;
-use OCP\Files\FileInfo;
-
-use OCP\Contacts\IManager as IContactsManager;
-use OCP\IAddressBook;
-
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\UserStorage;
-
-use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Common\Util;
 
 /**
  * Make the stored personal data accessible for the web-interface. This is
@@ -70,8 +69,8 @@ use OCA\CAFEVDB\Common\Util;
 class MailMergeController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
   /**
@@ -89,16 +88,17 @@ class MailMergeController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    protected ?string $userId,
-    protected ILogger $logger,
-    protected EntityManager $entityManager,
-    protected ConfigService $configService,
-    private OrganizationalRolesService $rolesService,
-    private InstrumentInsuranceService $insuranceService,
     private FinanceService $financeService,
-    private OpenDocumentFiller $documentFiller,
-    private UserStorage $storage,
     private IContactsManager $contactsManager,
+    private ImagesService $imagesService,
+    private InstrumentInsuranceService $insuranceService,
+    private OpenDocumentFiller $documentFiller,
+    private OrganizationalRolesService $rolesService,
+    private UserStorage $userStorage,
+    protected ?string $userId,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    protected ILogger $logger,
   ) {
     parent::__construct($appName, $request);
 
@@ -126,6 +126,8 @@ class MailMergeController extends Controller
    *
    * @param array $compositePaymentIds
    *
+   * @param array $invoiceIds
+   *
    * @param string $operation
    *
    * @param null|int $limit
@@ -145,6 +147,7 @@ class MailMergeController extends Controller
     array $contactKeys = [],
     array $addressBookUris = [],
     array $compositePaymentIds = [],
+    array $invoiceIds = [],
     string $operation = self::OPERATION_DOWNLOAD,
     ?int $limit = null,
     ?int $offset = null,
@@ -166,7 +169,9 @@ class MailMergeController extends Controller
       $sender = $musiciansRepository->find($senderId);
     }
     if (empty($sender)) {
-      return self::grumble($this->l->t('Unable to determine the sender given its id "%s"', $senderId));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to determine the sender given its id "%s"', $senderId),
+      );
     }
 
     $senderId = $sender->getId();
@@ -202,10 +207,14 @@ class MailMergeController extends Controller
         $fileName = $templateName; // ok for testing
       }
       if (empty($fileName)) {
-        return self::grumble($this->l->t('Unable to map the given template name "%s" to an existing template file.', $templateName));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Unable to map the given template name "%s" to an existing template file.', $templateName),
+        );
       }
     } else {
-      return self::grumble($this->l->t('Either a file-name or the name of a dedicated template have to be spicified.'));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Either a file-name or the name of a dedicated template have to be spicified.'),
+      );
     }
 
     try {
@@ -219,11 +228,13 @@ class MailMergeController extends Controller
         $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
         $templateData['sender'] = $this->flattenMusician($sender, only: []); // just the address data, no fancy things
         $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
+
         $signature = $this->rolesService->dedicatedBoardMemberSignature(
           OrganizationalRolesService::BOARD_MEMBER_ROLE, $senderId
         );
         if (!empty($signature)) {
-          $signature = 'data:'.$signature->mimeType().';base64,' . base64_encode($signature->data());
+          /** @var \OCP\Image $signature */
+          $signature = $this->imagesService->generateDataUri($signature->data(), $signature->dataMimeType());
         }
         $templateData['sender']['signature'] = $signature;
       }
@@ -232,7 +243,7 @@ class MailMergeController extends Controller
         $templateData['project'] = $this->flattenProject($project);
       }
 
-      $noRecipients = $limit === 0 || (empty($recipientIds) && empty($contactKeys) && empty($compositePaymentIds));
+      $noRecipients = $limit === 0 || (empty($recipientIds) && empty($contactKeys) && empty($compositePaymentIds) && empty($invoiceIds));
 
       // fill also some financial tax exemption notice abbreviations ...
       $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.corporateIncomeTax';
@@ -269,6 +280,8 @@ class MailMergeController extends Controller
             }
             $fileData = json_encode($fillData);
             return $this->dataDownloadResponse($fileData, $filledFileName, 'application/json');
+          default:
+            throw new InvalidArgumentException('Unknown operation: "' . $operation . '".');
         }
       } else {
 
@@ -277,6 +290,14 @@ class MailMergeController extends Controller
             ->getDatabaseRepository(Entities\CompositePayment::class)
             ->findBy(
               [ 'id' => $compositePaymentIds, ],
+              limit: $limit,
+              offset: $offset,
+            );
+        } elseif (!empty($invoiceIds)) {
+          $recipients = $this
+            ->getDatabaseRepository(Entities\Invoice::class)
+            ->findBy(
+              [ 'id' => $invoiceIds, ],
               limit: $limit,
               offset: $offset,
             );
@@ -325,6 +346,13 @@ class MailMergeController extends Controller
             } else {
               $paymentData = $this->financeService->generatePaymentMailMergeData($compositePayment);
             }
+          } elseif ($recipient instanceof Entities\Invoice) {
+            /** @var Entities\Invoice $invoice */
+            $invoice = $recipient;
+            $recipient = $invoice->getDebitor();
+            $paymentData = $this->financeService->generateInvoiceMailMergeData($invoice);
+          } else {
+            $paymentData = [];
           }
           $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
           $recipientTemplateData = array_merge(
@@ -354,10 +382,12 @@ class MailMergeController extends Controller
               if (!empty($blocks)) {
                 $fillData['__blocks__'] = $blocks;
               }
-              $fileData = json_encode($fillData);
+              $fileData = json_encode($fillData, JSON_PARTIAL_OUTPUT_ON_ERROR);
               $filledFileName = pathinfo($fileName, PATHINFO_FILENAME) . '.' . 'json';
               $mimeType = 'application/json';
               break;
+            default:
+              throw new InvalidArgumentException('Unknown operation: "' . $operation . '".');
           }
 
           $filledFile = pathinfo($filledFileName);
@@ -409,14 +439,18 @@ class MailMergeController extends Controller
             return $this->dataDownloadResponse($fileData, $rootDirectory . '.zip', 'application/zip');
         }
       }
-    } catch (\Throwable $t) {
-      $this->logException($t);
-      return self::dataResponse([
-        'message' => $this->l->t('Exception: "%s"', $t->getMessage()),
-        'exception' => $this->exceptionChainData($t),
-        'conversions' => $mailMergeCount,
-        'failingRecipient' => $recipientSlug,
-      ], Http::STATUS_BAD_REQUEST);
+    } catch (Throwable $t) {
+      if ($t instanceof Exceptions\EnduserNotificationException) {
+        throw $t;
+      }
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Exception during mail-merge: "%s"', $t->getMessage()),
+        context: [
+          'conversions' => $mailMergeCount,
+          'failingRecipient' => $recipientSlug,
+        ],
+        previous: $t,
+      );
     }
   }
 
@@ -493,7 +527,7 @@ class MailMergeController extends Controller
           /** @var ContactsService $contactsService */
           $contactsService = $this->di(ContactsService::class);
 
-          $entities[] = $contactsService->importCardData($contact);
+          $entities[] = $contactsService->importCardData(null, $contact);
         }
       }
     }

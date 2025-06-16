@@ -1,17 +1,19 @@
 <map id="changeOperation" name="changeOperation">
-<area shape="rect" id="Node000001" title=" " alt="" coords="515,141,635,166"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a7e8ed0cd98a598132a3d162d6546e304" title="To be used by the child classes to compose the shortTitle() method." alt="" coords="260,5,467,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="551,132,513,95,465,60,440,48,443,43,468,55,517,91,555,128"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="260,69,467,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="518,139,429,112,431,107,520,134"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="260,133,467,173"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="501,156,467,156,467,151,501,151"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="260,197,467,237"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="520,173,431,200,429,195,518,168"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bank_accounts.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="260,261,467,301"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="555,179,517,216,468,252,443,264,440,259,465,247,513,212,551,175"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,69,212,109"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="247,92,212,92,212,87,247,87"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,133,212,173"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="247,156,212,156,212,151,247,151"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="512,180,631,207"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a7e8ed0cd98a598132a3d162d6546e304" title="To be used by the child classes to compose the shortTitle() method." alt="" coords="259,5,464,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="553,168,516,114,491,86,462,62,443,51,445,46,466,58,495,82,520,111,558,165"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="259,72,464,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="538,173,502,151,463,129,436,118,438,113,465,124,505,146,541,169"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="259,139,464,181"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="496,184,464,179,465,174,497,179"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_associates.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{{string Short title for heading. }}" alt="" coords="259,205,464,248"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="497,208,465,213,464,208,496,203"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="259,272,464,315"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="541,218,505,241,465,262,438,274,436,269,463,258,502,236,538,213"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bank_accounts.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="259,339,464,381"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="558,222,520,276,495,304,466,329,445,340,443,336,462,324,491,300,516,273,553,219"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,72,211,115"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="243,96,211,96,211,91,243,91"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,139,211,181"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="243,163,211,163,211,157,243,157"/>
 </map>

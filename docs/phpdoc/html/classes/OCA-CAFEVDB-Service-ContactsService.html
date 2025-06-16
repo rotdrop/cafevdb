@@ -123,9 +123,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Contacts handling.</p>
@@ -160,6 +160,12 @@
     <a class="" href="classes/OCA-CAFEVDB-Service-ContactsService.html#constant_AVATAR_SIZE">AVATAR_SIZE</a>
     <span>
         &nbsp;= 256                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-ContactsService.html#constant_TYPED_PROPERTIES">TYPED_PROPERTIES</a>
+    <span>
+        &nbsp;= [&#039;URL&#039;, &#039;GEO&#039;, &#039;CLOUD&#039;, &#039;ADR&#039;, &#039;EMAIL&#039;, &#039;IMPP&#039;, &#039;TEL&#039;, &#039;X-SOCIALPROFILE&#039;, &#039;RELATED&#039;, &#039;LANG&#039;, &#039;X-ADDRESSBOOKSERVER-MEMBER&#039;]                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
@@ -220,6 +226,12 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Service-ContactsService.html#property_addressBooksByUri">$addressBooksByUri</a>
+    <span>
+                        &nbsp;: array&lt;string, <abbr title="\OCP\IAddressBook">IAddressBook</abbr>&gt;            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Service-ContactsService.html#property_avatarManager">$avatarManager</a>
     <span>
                         &nbsp;: <abbr title="\OCP\IAvatarManager">IAvatarManager</abbr>            </span>
@@ -253,11 +265,12 @@
 <dd>Add the given email address as possibly new entry to the address book.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_addressBookByName">addressBookByName()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_addressBookByUri">addressBookByUri()</a>
     <span>
                                 &nbsp;: null|<abbr title="\OCP\IAddressBook">IAddressBook</abbr>    </span>
 </dt>
-<dd>Find a matching addressbook by its displayname.</dd>
+<dd>Get a addressBook with the given uri. If the address-book is shared the
+uri is tweak to match the NC-style &quot;..._shared_by_...&quot; uri.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_cloudConfig">cloudConfig()</a>
@@ -349,6 +362,14 @@ user. The return value is a &quot;matrix&quot; of the form</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_findMusicianContact">findMusicianContact()</a>
+    <span>
+                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+</dt>
+<dd>Find an associated addressbook contact if there is one. The search is
+performed by UID (== $musician-&gt;getUuid()).</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_flattenVCard">flattenVCard()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
@@ -405,11 +426,31 @@ available if no personal data is found.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_mergeMusician">mergeMusician()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCA\CAFEVDB\Service\arry">arry</abbr>    </span>
+</dt>
+<dd>Merge a musician entity into an existing contact. The result can be fed
+in to IAddressBook::createOrUpdate(). The URI component of $target is
+preserved. If the musician is (soft-)deleted, then the link to the
+address-book is removed.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_moneyValue">moneyValue()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Convert $value to a currency value in the given or default locale.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_registerContactSynchronization">registerContactSynchronization()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Register a pre-commit action in order to merge changed data into a linked
+addressbook. This is done &quot;brute-force&quot;: the musician is exported into a
+vCard and the result is then &quot;merged&quot; by ContactService::mergeMusician()
+into an existing entry, if that is found.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_setConfigValue">setConfigValue()</a>
@@ -772,6 +813,12 @@ using the default time-zone if none is specified.</dd>
 <dd>Return all the sub-admins of the given or the configured orchestra group.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getInvoicesPath">getInvoicesPath()</a>
+    <span>
+                                &nbsp;: null|string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getLanguage">getLanguage()</a>
     <span>
                                 &nbsp;: string    </span>
@@ -975,7 +1022,7 @@ return a new collection containing these elements.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_persist">persist()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: void    </span>
 </dt>
 <dd>Tells the EntityManager to make an instance managed and persistent.</dd>
 
@@ -1161,6 +1208,12 @@ transformations.</dd>
 </dt>
 <dd>Get the type of the current property</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_phoneNumberService">phoneNumberService()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Service-PhoneNumberService.html"><abbr title="\OCA\CAFEVDB\Service\PhoneNumberService">PhoneNumberService</abbr></a>    </span>
+</dt>
+
     </dl>
 
 
@@ -1182,9 +1235,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">65</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
     
@@ -1205,6 +1258,38 @@ transformations.</dd>
 
 </article>
                     <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_TYPED_PROPERTIES">
+        TYPED_PROPERTIES
+        <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#constant_TYPED_PROPERTIES" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">67</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">TYPED_PROPERTIES</span>
+    = <span class="phpdocumentor-signature__default-value">[&#039;URL&#039;, &#039;GEO&#039;, &#039;CLOUD&#039;, &#039;ADR&#039;, &#039;EMAIL&#039;, &#039;IMPP&#039;, &#039;TEL&#039;, &#039;X-SOCIALPROFILE&#039;, &#039;RELATED&#039;, &#039;LANG&#039;, &#039;X-ADDRESSBOOKSERVER-MEMBER&#039;]</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_VCARD_VERSION">
         VCARD_VERSION
         <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#constant_VCARD_VERSION" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1214,9 +1299,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">59</span>
+    <span class="phpdocumentor-element-found-in__line">63</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
     
@@ -1262,9 +1347,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">68</span>
+    <span class="phpdocumentor-element-found-in__line">89</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
     
@@ -1299,9 +1384,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">65</span>
+    <span class="phpdocumentor-element-found-in__line">86</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
     
@@ -1410,9 +1495,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">90</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
     
@@ -1511,6 +1596,43 @@ transformations.</dd>
             -private
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="property_addressBooksByUri">
+        $addressBooksByUri
+        <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#property_addressBooksByUri" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">82</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">array&lt;string, <abbr title="\OCP\IAddressBook">IAddressBook</abbr>&gt;</span>
+    <span class="phpdocumentor-signature__name">$addressBooksByUri</span>
+     = <span class="phpdocumentor-signature__default-value">[]</span></code>
+
+    
+    
+    
+
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="property_avatarManager">
         $avatarManager
         <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#property_avatarManager" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1521,9 +1643,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">67</span>
+    <span class="phpdocumentor-element-found-in__line">88</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
     
@@ -1558,9 +1680,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">66</span>
+    <span class="phpdocumentor-element-found-in__line">87</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.87" class="phpdocumentor-element-found-in__source" data-line="87" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
     
@@ -1600,9 +1722,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">64</span>
+    <span class="phpdocumentor-element-found-in__line">85</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
     
@@ -1673,9 +1795,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">189</span>
+    <span class="phpdocumentor-element-found-in__line">220</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.189" class="phpdocumentor-element-found-in__source" data-line="189" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Add the given email address as possibly new entry to the address book.</p>
@@ -1729,24 +1851,25 @@ used. If none is set, return null.</p>
             -public
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_addressBookByName">
-        addressBookByName()
-        <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_addressBookByName" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_addressBookByUri">
+        addressBookByUri()
+        <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_addressBookByUri" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">90</span>
+    <span class="phpdocumentor-element-found-in__line">117</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">Find a matching addressbook by its displayname.</p>
+        <p class="phpdocumentor-summary">Get a addressBook with the given uri. If the address-book is shared the
+uri is tweak to match the NC-style &quot;..._shared_by_...&quot; uri.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">addressBookByName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$displayName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$includeShared</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<abbr title="\OCP\IAddressBook">IAddressBook</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">addressBookByUri</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$uri</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<abbr title="\OCP\IAddressBook">IAddressBook</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1755,20 +1878,13 @@ used. If none is set, return null.</p>
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$displayName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-signature__argument__name">$uri</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The display name.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$includeShared</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">false</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Include also shared addressbooks.</p>
+                    <section class="phpdocumentor-description"><p>A string in the form PRINCIPAL_URI/ADDRESS_BOOK_URI,
+e.g. cameratashareholder/general
+e.g. cameratashareholder/general</p>
 </section>
 
             </dd>
@@ -1781,10 +1897,6 @@ used. If none is set, return null.</p>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">null|<abbr title="\OCP\IAddressBook">IAddressBook</abbr></span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The address-book object (row of the database, i.e. an array).</p>
-</section>
-
             </section>
 
 </article>
@@ -2005,9 +2117,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">977</span>
+    <span class="phpdocumentor-element-found-in__line">993</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.977" class="phpdocumentor-element-found-in__source" data-line="977" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.993" class="phpdocumentor-element-found-in__source" data-line="993" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currency code for the locale.</p>
@@ -2055,9 +2167,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">989</span>
+    <span class="phpdocumentor-element-found-in__line">1005</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.989" class="phpdocumentor-element-found-in__source" data-line="989" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1005" class="phpdocumentor-element-found-in__source" data-line="1005" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currency symbol for the locale.</p>
@@ -2220,9 +2332,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">130</span>
+    <span class="phpdocumentor-element-found-in__line">161</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.161" class="phpdocumentor-element-found-in__source" data-line="161" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch a list of contacts with email addresses for the current
@@ -2245,7 +2357,8 @@ user. The return value is a &quot;matrix&quot; of the form</p>
 </code></pre>
 <p>As of now categories are not exported for shared address-books,
 so we simply group the entries by addressbook-name.</p>
-<p>The static musicians address-book of the orchestra app is excluded.</p>
+<p>The static musicians address-book of the orchestra app is excluded. This
+is used by the email-form.</p>
 </section>
 
     
@@ -2323,9 +2436,9 @@ so we simply group the entries by addressbook-name.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">544</span>
+    <span class="phpdocumentor-element-found-in__line">677</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.544" class="phpdocumentor-element-found-in__source" data-line="544" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.677" class="phpdocumentor-element-found-in__source" data-line="677" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Export the stored data for one musician as vCard.</p>
@@ -2388,9 +2501,9 @@ stone-age v2.1 format.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">941</span>
+    <span class="phpdocumentor-element-found-in__line">957</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.941" class="phpdocumentor-element-found-in__source" data-line="941" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.957" class="phpdocumentor-element-found-in__source" data-line="957" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2454,9 +2567,9 @@ stone-age v2.1 format.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">951</span>
+    <span class="phpdocumentor-element-found-in__line">967</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.951" class="phpdocumentor-element-found-in__source" data-line="951" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.967" class="phpdocumentor-element-found-in__source" data-line="967" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2500,6 +2613,57 @@ stone-age v2.1 format.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_findMusicianContact">
+        findMusicianContact()
+        <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_findMusicianContact" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">982</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.982" class="phpdocumentor-element-found-in__source" data-line="982" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Find an associated addressbook contact if there is one. The search is
+performed by UID (== $musician-&gt;getUuid()).</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">findMusicianContact</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$musician</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$musician</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_flattenVCard">
         flattenVCard()
         <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_flattenVCard" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2508,15 +2672,15 @@ stone-age v2.1 format.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">216</span>
+    <span class="phpdocumentor-element-found-in__line">247</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.216" class="phpdocumentor-element-found-in__source" data-line="216" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.247" class="phpdocumentor-element-found-in__source" data-line="247" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">flattenVCard</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cardUri</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Sabre\VObject\Component\VCard">VCard</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$vCard</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$withTypes</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">flattenVCard</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cardUri</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Sabre\VObject\Component\VCard">VCard</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$vCard</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$withTypes</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2526,7 +2690,7 @@ stone-age v2.1 format.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$cardUri</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2571,9 +2735,9 @@ stone-age v2.1 format.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1019</span>
+    <span class="phpdocumentor-element-found-in__line">1035</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1019" class="phpdocumentor-element-found-in__source" data-line="1019" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1035" class="phpdocumentor-element-found-in__source" data-line="1035" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert a float value in the given or default locale.</p>
@@ -2755,9 +2919,9 @@ stone-age v2.1 format.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">788</span>
+    <span class="phpdocumentor-element-found-in__line">804</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.788" class="phpdocumentor-element-found-in__source" data-line="788" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.804" class="phpdocumentor-element-found-in__source" data-line="804" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2798,15 +2962,15 @@ stone-age v2.1 format.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">304</span>
+    <span class="phpdocumentor-element-found-in__line">357</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.304" class="phpdocumentor-element-found-in__source" data-line="304" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.357" class="phpdocumentor-element-found-in__source" data-line="357" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">importCardData</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cardData</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$preferWork</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">importCardData</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cardData</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$preferWork</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$keepExisting</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2814,6 +2978,17 @@ stone-age v2.1 format.</p>
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$entity</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>If given update the given entity
+from the card-data, otherwise create a new entity.
+from the card-data, otherwise create a new entity.</p>
+</section>
+
+            </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$cardData</span>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
@@ -2826,7 +3001,23 @@ stone-age v2.1 format.</p>
                 : <span class="phpdocumentor-signature__argument__return-type">bool</span>
                  = <span class="phpdocumentor-signature__argument__default-value">true</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>Prefer WORK variant for all properties which have
+multiple types. Default \true.
+multiple types. Default \true.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$keepExisting</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Rather keep the properties of a given musician
+entity instead of overwriting them. Instruments will be added from the
+categories and empty fields of the given musician entity will be filled.
+categories and empty fields of the given musician entity will be filled.</p>
+</section>
+
             </dd>
             </dl>
 
@@ -2854,9 +3045,9 @@ stone-age v2.1 format.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">291</span>
+    <span class="phpdocumentor-element-found-in__line">332</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.291" class="phpdocumentor-element-found-in__source" data-line="291" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.332" class="phpdocumentor-element-found-in__source" data-line="332" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Import the given vCard into the musician data-base. This is
@@ -2867,7 +3058,7 @@ available if no personal data is found.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">importVCard</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Sabre\VObject\Component\VCard">VCard</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$vCard</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">importVCard</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Sabre\VObject\Component\VCard">VCard</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$vCard</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$preferWork</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$keepExisting</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2880,11 +3071,45 @@ available if no personal data is found.</p>
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$entity</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>If given update the given entity
+from the card-data, otherwise create a new entity.
+from the card-data, otherwise create a new entity.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$vCard</span>
                 : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Sabre\VObject\Component\VCard">VCard</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Serialized vCard data.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$preferWork</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">true</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Prefer WORK variant for all properties which have
+multiple types. Default \true.
+multiple types. Default \true.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$keepExisting</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">true</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Rather keep the properties of a given musician
+entity instead of overwriting them. Instruments will be added from the
+categories and empty fields of the given musician entity will be filled.
+categories and empty fields of the given musician entity will be filled.</p>
 </section>
 
             </dd>
@@ -2965,6 +3190,68 @@ available if no personal data is found.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_mergeMusician">
+        mergeMusician()
+        <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_mergeMusician" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">845</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.845" class="phpdocumentor-element-found-in__source" data-line="845" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Merge a musician entity into an existing contact. The result can be fed
+in to IAddressBook::createOrUpdate(). The URI component of $target is
+preserved. If the musician is (soft-)deleted, then the link to the
+address-book is removed.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">mergeMusician</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|<abbr title="\Sabre\VObject\Component\VCard">VCard</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$target</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$musician</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Service\arry">arry</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>VCard arguments will be flattened first by ContactsService::flattenVCard().</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$target</span>
+                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|<abbr title="\Sabre\VObject\Component\VCard">VCard</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$musician</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Service\arry">arry</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_moneyValue">
         moneyValue()
         <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_moneyValue" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2973,9 +3260,9 @@ available if no personal data is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1003</span>
+    <span class="phpdocumentor-element-found-in__line">1019</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1003" class="phpdocumentor-element-found-in__source" data-line="1003" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1019" class="phpdocumentor-element-found-in__source" data-line="1019" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert $value to a currency value in the given or default locale.</p>
@@ -3013,6 +3300,67 @@ available if no personal data is found.</p>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_registerContactSynchronization">
+        registerContactSynchronization()
+        <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_registerContactSynchronization" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">938</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.938" class="phpdocumentor-element-found-in__source" data-line="938" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Register a pre-commit action in order to merge changed data into a linked
+addressbook. This is done &quot;brute-force&quot;: the musician is exported into a
+vCard and the result is then &quot;merged&quot; by ContactService::mergeMusician()
+into an existing entry, if that is found.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">registerContactSynchronization</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$musician</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$musician</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The musician which has been altered.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>\true if a pre-commit action has been registered with the
+entity manager.
+entity manager.</p>
+</section>
+
             </section>
 
 </article>
@@ -3105,9 +3453,9 @@ available if no personal data is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">965</span>
+    <span class="phpdocumentor-element-found-in__line">981</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.965" class="phpdocumentor-element-found-in__source" data-line="965" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.981" class="phpdocumentor-element-found-in__source" data-line="981" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Transliterate the given string to the given or default locale</p>
@@ -3279,9 +3627,9 @@ available if no personal data is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">899</span>
+    <span class="phpdocumentor-element-found-in__line">915</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.899" class="phpdocumentor-element-found-in__source" data-line="899" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.915" class="phpdocumentor-element-found-in__source" data-line="915" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3396,9 +3744,9 @@ available if no personal data is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">501</span>
+    <span class="phpdocumentor-element-found-in__line">508</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.501" class="phpdocumentor-element-found-in__source" data-line="501" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.508" class="phpdocumentor-element-found-in__source" data-line="508" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the class meta-data for the given or most recently used
@@ -3489,9 +3837,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">484</span>
+    <span class="phpdocumentor-element-found-in__line">491</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.484" class="phpdocumentor-element-found-in__source" data-line="484" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.491" class="phpdocumentor-element-found-in__source" data-line="491" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the column names of the currently used database entity.</p>
@@ -3600,9 +3948,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">358</span>
+    <span class="phpdocumentor-element-found-in__line">365</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.358" class="phpdocumentor-element-found-in__source" data-line="358" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.365" class="phpdocumentor-element-found-in__source" data-line="365" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to EntityManager::contains().</p>
@@ -3650,9 +3998,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">472</span>
+    <span class="phpdocumentor-element-found-in__line">479</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.472" class="phpdocumentor-element-found-in__source" data-line="472" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.479" class="phpdocumentor-element-found-in__source" data-line="479" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Counts entities by a set of criteria.</p>
@@ -3815,9 +4163,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">430</span>
+    <span class="phpdocumentor-element-found-in__line">437</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.430" class="phpdocumentor-element-found-in__source" data-line="430" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.437" class="phpdocumentor-element-found-in__source" data-line="437" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convenience function to generate Collections\Criteria</p>
@@ -3855,9 +4203,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">440</span>
+    <span class="phpdocumentor-element-found-in__line">447</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.440" class="phpdocumentor-element-found-in__source" data-line="440" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.447" class="phpdocumentor-element-found-in__source" data-line="447" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convenience function to generate Collections\ExpressionBuilder</p>
@@ -3895,9 +4243,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">452</span>
+    <span class="phpdocumentor-element-found-in__line">459</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.452" class="phpdocumentor-element-found-in__source" data-line="452" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.459" class="phpdocumentor-element-found-in__source" data-line="459" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -3959,9 +4307,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1136</span>
+    <span class="phpdocumentor-element-found-in__line">1152</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1136" class="phpdocumentor-element-found-in__source" data-line="1136" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1152" class="phpdocumentor-element-found-in__source" data-line="1152" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3998,9 +4346,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">825</span>
+    <span class="phpdocumentor-element-found-in__line">841</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.825" class="phpdocumentor-element-found-in__source" data-line="825" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.841" class="phpdocumentor-element-found-in__source" data-line="841" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4186,9 +4534,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">401</span>
+    <span class="phpdocumentor-element-found-in__line">408</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.401" class="phpdocumentor-element-found-in__source" data-line="401" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Disable the given filter. In contrast to the upstream-method does
@@ -4241,9 +4589,9 @@ not throw an exception if the filter is not enabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">386</span>
+    <span class="phpdocumentor-element-found-in__line">393</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.386" class="phpdocumentor-element-found-in__source" data-line="386" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.393" class="phpdocumentor-element-found-in__source" data-line="393" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Enable the given filter.</p>
@@ -4474,9 +4822,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">458</span>
+    <span class="phpdocumentor-element-found-in__line">465</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.458" class="phpdocumentor-element-found-in__source" data-line="458" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.465" class="phpdocumentor-element-found-in__source" data-line="465" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -4509,9 +4857,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">299</span>
+    <span class="phpdocumentor-element-found-in__line">303</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.299" class="phpdocumentor-element-found-in__source" data-line="299" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.303" class="phpdocumentor-element-found-in__source" data-line="303" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
@@ -4586,9 +4934,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">282</span>
+    <span class="phpdocumentor-element-found-in__line">286</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.282" class="phpdocumentor-element-found-in__source" data-line="282" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.286" class="phpdocumentor-element-found-in__source" data-line="286" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds all entities in the repository.</p>
@@ -4640,9 +4988,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">333</span>
+    <span class="phpdocumentor-element-found-in__line">340</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.333" class="phpdocumentor-element-found-in__source" data-line="333" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.340" class="phpdocumentor-element-found-in__source" data-line="340" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds entities by a set of criteria.</p>
@@ -4715,9 +5063,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">318</span>
+    <span class="phpdocumentor-element-found-in__line">322</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.318" class="phpdocumentor-element-found-in__source" data-line="318" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.322" class="phpdocumentor-element-found-in__source" data-line="322" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
@@ -4799,9 +5147,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">346</span>
+    <span class="phpdocumentor-element-found-in__line">353</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.346" class="phpdocumentor-element-found-in__source" data-line="346" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.353" class="phpdocumentor-element-found-in__source" data-line="353" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds a single entity by a set of criteria.</p>
@@ -4860,9 +5208,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">257</span>
+    <span class="phpdocumentor-element-found-in__line">261</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.257" class="phpdocumentor-element-found-in__source" data-line="257" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.261" class="phpdocumentor-element-found-in__source" data-line="261" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Flushes all changes to objects that have been queued up to now to the database.</p>
@@ -4946,9 +5294,9 @@ makes use of optimistic locking fails.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">843</span>
+    <span class="phpdocumentor-element-found-in__line">859</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.843" class="phpdocumentor-element-found-in__source" data-line="843" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.859" class="phpdocumentor-element-found-in__source" data-line="859" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Work around NC annoyingly not accepting \DateTimeInterface</p>
@@ -5017,9 +5365,9 @@ makes use of optimistic locking fails.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">872</span>
+    <span class="phpdocumentor-element-found-in__line">888</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.872" class="phpdocumentor-element-found-in__source" data-line="872" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.888" class="phpdocumentor-element-found-in__source" data-line="888" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Work around NC annoyingly not accepting \DateTimeInterface</p>
@@ -5095,9 +5443,9 @@ makes use of optimistic locking fails.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1070</span>
+    <span class="phpdocumentor-element-found-in__line">1086</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1070" class="phpdocumentor-element-found-in__source" data-line="1070" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1086" class="phpdocumentor-element-found-in__source" data-line="1086" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format the given date according to $format and $timeZone to a
@@ -5161,9 +5509,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1082</span>
+    <span class="phpdocumentor-element-found-in__line">1098</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1082" class="phpdocumentor-element-found-in__source" data-line="1082" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1098" class="phpdocumentor-element-found-in__source" data-line="1098" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5473,9 +5821,9 @@ database entity.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">800</span>
+    <span class="phpdocumentor-element-found-in__line">816</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.800" class="phpdocumentor-element-found-in__source" data-line="800" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.816" class="phpdocumentor-element-found-in__source" data-line="816" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the current timezone</p>
@@ -5593,9 +5941,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">761</span>
+    <span class="phpdocumentor-element-found-in__line">763</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.761" class="phpdocumentor-element-found-in__source" data-line="761" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.763" class="phpdocumentor-element-found-in__source" data-line="763" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5616,7 +5964,9 @@ dirname part of the path.</p>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">null|string</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>Return the full path to the financial balances folder</p>
+                <section class="phpdocumentor-description"><p>Return the full path to the folder containing sent-out
+donationreceipts.
+donationreceipts.</p>
 </section>
 
             </section>
@@ -5844,6 +6194,51 @@ dirname part of the path.</p>
             -protected
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getInvoicesPath">
+        getInvoicesPath()
+        <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getInvoicesPath" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">777</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.777" class="phpdocumentor-element-found-in__source" data-line="777" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getInvoicesPath</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Return the full path to the folder containing
+sent-out invoices.
+sent-out invoices.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getLanguage">
         getLanguage()
         <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getLanguage" class="headerlink"><i class="fas fa-link"></i></a>
@@ -5852,9 +6247,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">909</span>
+    <span class="phpdocumentor-element-found-in__line">925</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.909" class="phpdocumentor-element-found-in__source" data-line="909" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.925" class="phpdocumentor-element-found-in__source" data-line="925" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5901,9 +6296,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">893</span>
+    <span class="phpdocumentor-element-found-in__line">909</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.893" class="phpdocumentor-element-found-in__source" data-line="893" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.909" class="phpdocumentor-element-found-in__source" data-line="909" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the locale.</p>
@@ -5951,9 +6346,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">782</span>
+    <span class="phpdocumentor-element-found-in__line">798</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.782" class="phpdocumentor-element-found-in__source" data-line="782" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.798" class="phpdocumentor-element-found-in__source" data-line="798" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5994,9 +6389,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">774</span>
+    <span class="phpdocumentor-element-found-in__line">790</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.774" class="phpdocumentor-element-found-in__source" data-line="774" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.790" class="phpdocumentor-element-found-in__source" data-line="790" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6123,9 +6518,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">213</span>
+    <span class="phpdocumentor-element-found-in__line">217</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.213" class="phpdocumentor-element-found-in__source" data-line="213" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.217" class="phpdocumentor-element-found-in__source" data-line="217" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Gets a reference to the entity identified by the given type and identifier
@@ -6286,9 +6681,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1153</span>
+    <span class="phpdocumentor-element-found-in__line">1169</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1153" class="phpdocumentor-element-found-in__source" data-line="1153" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1169" class="phpdocumentor-element-found-in__source" data-line="1169" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValue().</p>
@@ -6339,9 +6734,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1167</span>
+    <span class="phpdocumentor-element-found-in__line">1183</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1167" class="phpdocumentor-element-found-in__source" data-line="1167" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1183" class="phpdocumentor-element-found-in__source" data-line="1183" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueBool().</p>
@@ -6396,9 +6791,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1181</span>
+    <span class="phpdocumentor-element-found-in__line">1197</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1181" class="phpdocumentor-element-found-in__source" data-line="1181" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1197" class="phpdocumentor-element-found-in__source" data-line="1197" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueInt()</p>
@@ -6453,9 +6848,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1195</span>
+    <span class="phpdocumentor-element-found-in__line">1211</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1195" class="phpdocumentor-element-found-in__source" data-line="1195" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1211" class="phpdocumentor-element-found-in__source" data-line="1211" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueString().</p>
@@ -6553,9 +6948,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">748</span>
+    <span class="phpdocumentor-element-found-in__line">749</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.748" class="phpdocumentor-element-found-in__source" data-line="748" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.749" class="phpdocumentor-element-found-in__source" data-line="749" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6576,7 +6971,9 @@ key.</p>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">null|string</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>Return the full path to the financial balances folder</p>
+                <section class="phpdocumentor-description"><p>Return the full path to the folder storing tax
+exemption notices.
+exemption notices.</p>
 </section>
 
             </section>
@@ -6596,9 +6993,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1076</span>
+    <span class="phpdocumentor-element-found-in__line">1092</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1076" class="phpdocumentor-element-found-in__source" data-line="1076" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1092" class="phpdocumentor-element-found-in__source" data-line="1092" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6639,9 +7036,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">812</span>
+    <span class="phpdocumentor-element-found-in__line">828</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.812" class="phpdocumentor-element-found-in__source" data-line="812" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.828" class="phpdocumentor-element-found-in__source" data-line="828" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the current time-zone string</p>
@@ -6979,9 +7376,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1037</span>
+    <span class="phpdocumentor-element-found-in__line">1053</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1037" class="phpdocumentor-element-found-in__source" data-line="1037" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1053" class="phpdocumentor-element-found-in__source" data-line="1053" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format a bytes value with &quot;readable&quot; postfix.</p>
@@ -7260,9 +7657,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">919</span>
+    <span class="phpdocumentor-element-found-in__line">935</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.919" class="phpdocumentor-element-found-in__source" data-line="919" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.935" class="phpdocumentor-element-found-in__source" data-line="935" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7309,9 +7706,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">929</span>
+    <span class="phpdocumentor-element-found-in__line">945</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.929" class="phpdocumentor-element-found-in__source" data-line="929" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.945" class="phpdocumentor-element-found-in__source" data-line="945" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7358,9 +7755,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">420</span>
+    <span class="phpdocumentor-element-found-in__line">427</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.420" class="phpdocumentor-element-found-in__source" data-line="420" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.427" class="phpdocumentor-element-found-in__source" data-line="427" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Select all elements from a selectable that match the expression and
@@ -7416,16 +7813,16 @@ return a new collection containing these elements.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">234</span>
+    <span class="phpdocumentor-element-found-in__line">238</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.234" class="phpdocumentor-element-found-in__source" data-line="234" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Tells the EntityManager to make an instance managed and persistent.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">persist</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">persist</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">object&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -7440,7 +7837,7 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$entity</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                : <span class="phpdocumentor-signature__argument__return-type">object</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The instance to make managed and persistent.</p>
@@ -7492,9 +7889,9 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">517</span>
+    <span class="phpdocumentor-element-found-in__line">524</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.517" class="phpdocumentor-element-found-in__source" data-line="517" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.524" class="phpdocumentor-element-found-in__source" data-line="524" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -7596,9 +7993,9 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">371</span>
+    <span class="phpdocumentor-element-found-in__line">378</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.371" class="phpdocumentor-element-found-in__source" data-line="371" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to EntityManager::refresh(), return the refreshed entity in order
@@ -7651,9 +8048,9 @@ to allow for &quot;-&gt;&quot; chaining.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">156</span>
+    <span class="phpdocumentor-element-found-in__line">157</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.156" class="phpdocumentor-element-found-in__source" data-line="156" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.157" class="phpdocumentor-element-found-in__source" data-line="157" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Removes an entity instance.</p>
@@ -7746,6 +8143,14 @@ or not. This parameter is ignored if $flush is false.</p>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Traits\ORMException">ORMException</abbr></span>
+                                                            
+                                             
+                                    </dd>
+                            <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">throws</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseEntityNotFoundException.html"><abbr title="\OCA\CAFEVDB\Exceptions\DatabaseEntityNotFoundException">DatabaseEntityNotFoundException</abbr></a></span>
                                                             
                                              
                                     </dd>
@@ -8176,9 +8581,9 @@ or not. This parameter is ignored if $flush is false.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1208</span>
+    <span class="phpdocumentor-element-found-in__line">1224</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1208" class="phpdocumentor-element-found-in__source" data-line="1208" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1224" class="phpdocumentor-element-found-in__source" data-line="1224" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the current config-setting for debug contains the provided
@@ -8414,9 +8819,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1052</span>
+    <span class="phpdocumentor-element-found-in__line">1068</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1052" class="phpdocumentor-element-found-in__source" data-line="1052" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1068" class="phpdocumentor-element-found-in__source" data-line="1068" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Call ConfigService::formatTimeStamp() with the current date and time.</p>
@@ -8471,9 +8876,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1118</span>
+    <span class="phpdocumentor-element-found-in__line">1134</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1118" class="phpdocumentor-element-found-in__source" data-line="1118" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1134" class="phpdocumentor-element-found-in__source" data-line="1134" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8510,9 +8915,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1095</span>
+    <span class="phpdocumentor-element-found-in__line">1111</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1095" class="phpdocumentor-element-found-in__source" data-line="1095" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.1111" class="phpdocumentor-element-found-in__source" data-line="1111" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Search for translation variants by trying several camel-case
@@ -8796,9 +9201,9 @@ be verified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">97</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
     
@@ -8835,9 +9240,9 @@ be verified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">259</span>
+    <span class="phpdocumentor-element-found-in__line">290</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.259" class="phpdocumentor-element-found-in__source" data-line="259" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.290" class="phpdocumentor-element-found-in__source" data-line="290" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the type of the current property</p>
@@ -8868,6 +9273,45 @@ be verified.</p>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">null|string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_phoneNumberService">
+        phoneNumberService()
+        <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_phoneNumberService" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ContactsService.php"><a href="files/service-contactsservice.html"><abbr title="Service/ContactsService.php">ContactsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">103</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ContactsService.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/Service/ContactsService.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">phoneNumberService</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Service-PhoneNumberService.html"><abbr title="\OCA\CAFEVDB\Service\PhoneNumberService">PhoneNumberService</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Service-PhoneNumberService.html"><abbr title="\OCA\CAFEVDB\Service\PhoneNumberService">PhoneNumberService</abbr></a></span>
             </section>
 
 </article>
@@ -8985,6 +9429,7 @@ be verified.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#constant_AVATAR_SIZE">AVATAR_SIZE</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#constant_TYPED_PROPERTIES">TYPED_PROPERTIES</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#constant_VCARD_VERSION">VCARD_VERSION</a></li>
                                             </ul>
                 </li>
@@ -8999,6 +9444,7 @@ be verified.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#property_entityManager">$entityManager</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#property_l">$l</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#property_toolTipsService">$toolTipsService</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#property_addressBooksByUri">$addressBooksByUri</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#property_avatarManager">$avatarManager</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#property_contactsManager">$contactsManager</a></li>
                                             </ul>
@@ -9009,7 +9455,7 @@ be verified.</p>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_addEmailContact">addEmailContact()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_addressBookByName">addressBookByName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_addressBookByUri">addressBookByUri()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_cloudConfig">cloudConfig()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_configService">configService()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a></li>
@@ -9023,6 +9469,7 @@ be verified.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_export">export()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_findAvailableLanguages">findAvailableLanguages()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_findAvailableLocales">findAvailableLocales()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_findMusicianContact">findMusicianContact()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_flattenVCard">flattenVCard()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_floatValue">floatValue()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_generateRandomBytes">generateRandomBytes()</a></li>
@@ -9031,7 +9478,9 @@ be verified.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_importCardData">importCardData()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_importVCard">importVCard()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_logger">logger()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_mergeMusician">mergeMusician()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_moneyValue">moneyValue()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_registerContactSynchronization">registerContactSynchronization()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_setConfigValue">setConfigValue()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_transliterate">transliterate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_appConfig">appConfig()</a></li>
@@ -9086,6 +9535,7 @@ be verified.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getFinanceFolderPath">getFinanceFolderPath()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getFinancialBalancesPath">getFinancialBalancesPath()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getGroupSubAdmins">getGroupSubAdmins()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getInvoicesPath">getInvoicesPath()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getLanguage">getLanguage()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getLocale">getLocale()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getOutBoxFolderPath">getOutBoxFolderPath()</a></li>
@@ -9145,6 +9595,7 @@ be verified.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_verifyHash">verifyHash()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_geoCodingService">geoCodingService()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_getTypeFromProperty">getTypeFromProperty()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-ContactsService.html#method_phoneNumberService">phoneNumberService()</a></li>
                                     </ul>
             </li>
                     </ul>

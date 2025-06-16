@@ -7,6 +7,7 @@ var dir_6033b6f6fee1feb074eb76eeb4a0f3ec =
     [ "EmptyDirectoryNode.php", "_empty_directory_node_8php_source.html", null ],
     [ "Factory.php", "_factory_8php_source.html", null ],
     [ "InMemoryFileNode.php", "_in_memory_file_node_8php_source.html", null ],
+    [ "InvoicesStorage.php", "_invoices_storage_8php_source.html", null ],
     [ "MountProvider.php", "_mount_provider_8php_source.html", null ],
     [ "ProjectBalanceSupportingDocumentsStorage.php", "_project_balance_supporting_documents_storage_8php_source.html", null ],
     [ "ProjectParticipantsStorage.php", "_project_participants_storage_8php_source.html", null ],

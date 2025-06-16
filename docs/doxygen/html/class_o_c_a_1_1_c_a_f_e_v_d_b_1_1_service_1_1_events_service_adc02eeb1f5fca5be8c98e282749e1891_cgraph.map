@@ -1,0 +1,5 @@
+<map id="updateCalendarTask" name="updateCalendarTask">
+<area shape="rect" id="Node000001" title="Update the task entry contained in $event, modify it and write it back to the server." alt="" coords="5,13,146,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d" title=" " alt="" coords="194,5,407,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,24,178,24,178,29,146,29"/>
+</map>

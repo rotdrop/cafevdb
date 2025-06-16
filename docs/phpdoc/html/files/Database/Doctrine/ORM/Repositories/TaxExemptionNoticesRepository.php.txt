@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -58,22 +58,23 @@ class TaxExemptionNoticesRepository extends EntityRepository
     if ($dateOfUsage === null) {
       $dateOfUsage = new DateTimeImmutable;
     }
-    $qb = $this->createQueryBuilder(self::ALIAS);
 
-    $qb->select(self::ALIAS)
-      ->where($qb->expr()->eq(self::ALIAS . '.taxType', ':taxType'))
-      ->andWhere($qb->expr()->lte(self::ALIAS . '.dateIssued', ':dateOfUsage'))
-      ->andWhere(
-        $qb->expr()->orX(
-          $qb->expr()->isNull(self::ALIAS . '.deleted'),
-          $qb->expr()->gt(self::ALIAS . '.deleted', ':dateOfUsage')
-        )
-      )
-      ->orderBy(self::ALIAS . '.assessmentPeriodEnd', 'DESC')
-      ->addOrderBy(self::ALIAS . '.assessmentPeriodStart', 'DESC')
-      ->setParameter('taxType', $taxType)
-      ->setParameter('dateOfUsage', $dateOfUsage)
-      ;
+    // $qb = $this->createQueryBuilder(self::ALIAS);
+
+    // $qb->select(self::ALIAS)
+    //   ->where($qb->expr()->eq(self::ALIAS . '.taxType', ':taxType'))
+    //   ->andWhere($qb->expr()->lte(self::ALIAS . '.dateIssued', ':dateOfUsage'))
+    //   ->andWhere(
+    //     $qb->expr()->orX(
+    //       $qb->expr()->isNull(self::ALIAS . '.deleted'),
+    //       $qb->expr()->gt(self::ALIAS . '.deleted', ':dateOfUsage')
+    //     )
+    //   )
+    //   ->orderBy(self::ALIAS . '.assessmentPeriodEnd', 'DESC')
+    //   ->addOrderBy(self::ALIAS . '.assessmentPeriodStart', 'DESC')
+    //   ->setParameter('taxType', $taxType)
+    //   ->setParameter('dateOfUsage', $dateOfUsage)
+    //   ;
 
     // As we use the "deleted" property of SoftDeleteable we need to disable
     // the query-filter in order to be able to retrieve entries for past
@@ -85,7 +86,17 @@ class TaxExemptionNoticesRepository extends EntityRepository
       $filters->disable(DecoratedEntityManager::SOFT_DELETEABLE_FILTER);
     }
 
-    $result = $qb->getQuery()->getOneOrNullResult();
+    $result = $this->findOneBy(
+      [
+        'taxationStatutorySource.taxType' => $taxType,
+        '<=dateIssued' => $dateOfUsage,
+        '|(deleted' => null,
+        '>deleted' => $dateOfUsage,
+      ],
+      orderBy: [ 'assessmentPeriodStart', 'DESC' ],
+    );
+
+    // $result = $qb->getQuery()->getOneOrNullResult();
 
     if ($softDeleteable) {
       $filters->enable(DecoratedEntityManager::SOFT_DELETEABLE_FILTER);

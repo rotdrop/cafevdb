@@ -1,0 +1,11 @@
+<map id="getRealInstruments" name="getRealInstruments">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,104,141,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a5b7b4dfcee0ad782be274eae99638e67" title="Get instruments." alt="" coords="189,104,297,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,115,173,115,173,120,141,120"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a84e9f3642ab6b2fd223989f118488128" title="Get family." alt="" coords="363,5,550,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="276,101,344,74,360,67,361,72,346,78,278,106"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html#a3b3ec75dc4a258baf0bf6e5d1fdc11ec" title="Get instrument." alt="" coords="345,88,568,147"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="297,115,329,115,329,120,297,120"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a75d345793cef1ab09b64fb72df18d8d1" title="Get the untranslated family name." alt="" coords="346,171,568,245"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="278,129,354,162,352,167,276,134"/>
+</map>

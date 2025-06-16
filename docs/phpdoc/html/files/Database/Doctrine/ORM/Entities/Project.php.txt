@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,8 +45,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\UniqueConstraint(columns: ['name'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\ProjectEntityListener'])]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\ProjectEntityListener::class])]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 class Project implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -142,6 +142,9 @@ class Project implements \ArrayAccess
   #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'project')]
   private $payments;
 
+  #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'project')]
+  private $invoices;
+
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'project')]
   private $participantInstruments;
 
@@ -173,6 +176,7 @@ class Project implements \ArrayAccess
     $this->sepaDebitMandates = new ArrayCollection();
     $this->compositePayments = new ArrayCollection();
     $this->payments = new ArrayCollection();
+    $this->invoices = new ArrayCollection();
     $this->sentEmail = new ArrayCollection();
   }
 
@@ -426,14 +430,24 @@ class Project implements \ArrayAccess
   /**
    * Get participantFields.
    *
+   * @param string|Types\EnumParticipationContext $participationContext
+   *
    * @return Collection
    */
-  public function getParticipantFields():Collection
-  {
+  public function getParticipantFields(
+    string|Types\EnumParticipationContext $participationContext = Types\EnumParticipationContext::UNRESTRICTED,
+  ):Collection {
     // trigger load
     $this->participantFields->count();
     // sorting during load does not work when using Translatable
-    return $this->participantFields->matching(Criteria::create()->orderBy(['tab' => 'ASC', 'displayOrder' => 'DESC']));
+    $fields = $this->participantFields->matching(Criteria::create()->orderBy(['tab' => 'ASC', 'displayOrder' => 'DESC']));
+    if ($participationContext != Types\EnumParticipationContext::UNRESTRICTED) {
+      $fields = $fields->filter(function(ProjectParticipantField $field) use ($participationContext) {
+        $context = $field->getParticipationContext();
+        return $context == Types\EnumParticipationContext::UNRESTRICTED || $context == $participationContext;
+      });
+    }
+    return $fields;
   }
 
   /**
@@ -581,6 +595,30 @@ class Project implements \ArrayAccess
   }
 
   /**
+   * Set invoices.
+   *
+   * @param Collection $invoices
+   *
+   * @return Project
+   */
+  public function setInvoices(Collection $invoices):Project
+  {
+    $this->invoices = $invoices;
+
+    return $this;
+  }
+
+  /**
+   * Get invoices.
+   *
+   * @return Collection
+   */
+  public function getInvoices():Collection
+  {
+    return $this->invoices;
+  }
+
+  /**
    * Set sentEmail.
    *
    * @param Collection $sentEmail
@@ -710,7 +748,7 @@ class Project implements \ArrayAccess
    */
   public function usage():int
   {
-    return $this->payments->count();
+    return $this->payments->count() + $this->invoices->count();
   }
 
   /** {@inheritdoc} */

@@ -1,0 +1,9 @@
+<map id="checkProjectFolder" name="checkProjectFolder">
+<area shape="rect" id="Node000001" title="Check for existence of the project folder and create it when not found." alt="" coords="5,31,139,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a6f152b7d3b0f5ee7a4b2269d58251cb7" title="We require that the share&#45;owner owns a directory shared with the orchestra group." alt="" coords="187,31,320,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,41,171,41,171,47,139,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#af645e42743654289e03a7f7aac7f7294" title="Check whether the shared object exists." alt="" coords="368,5,499,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="320,32,352,27,353,33,321,37"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a68d96928eccd8ec709df328b328c05b3" title="Return true if the share&#45;owner exists and belongs to the orchestra user group (and only to this group..." alt="" coords="370,56,498,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="321,51,355,56,354,61,320,56"/>
+</map>

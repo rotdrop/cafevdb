@@ -1,0 +1,15 @@
+<map id="beforeUpdateSanitizeFields" name="beforeUpdateSanitizeFields">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,135,187,161"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a0160798c24d6bddc98d5192235a59982" title=" " alt="" coords="241,39,490,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,132,234,91,258,84,259,89,236,96,130,137"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a159fbf8c9b2dbe629fb79eb5faa58fd6" title=" " alt="" coords="295,105,437,132"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="187,136,279,125,279,131,187,141"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="235,156,497,199"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="187,155,220,159,219,164,187,160"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a62e9094de93176fae4478b7eae96d61f" title="Unset all array elements with value $value." alt="" coords="278,223,454,265"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="125,160,176,184,236,208,264,217,262,222,234,213,174,189,123,164"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a709d772c597d8bc18d170300a8cabbb7" title=" " alt="" coords="560,5,735,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="491,43,544,36,545,41,491,48"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a586e3ce7bc155a85dae0bbe3149e4181" title="Be noisy if debugging is enabled." alt="" coords="545,72,750,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="491,72,530,77,529,82,491,77"/>
+</map>

@@ -396,7 +396,7 @@ give you the choice to select any musician as recipient.'),
               'database' => self::t('Post to the musicians registered in the database. Unless instrument-filters are active or specific recipients are explicitly selected the global announcement mailing list should be preferred for @all emails.'),
             ],
 
-            'member-status' => self::t('Select recipients by member status. Normally, conductors and soloists
+            'participation-status' => self::t('Select recipients by member status. Normally, conductors and soloists
 are excluded from receiving mass-email. Please be careful when modifying the default selection!'),
             'apply' => self::t('Apply the currently selected instruments as filter. At your option,
 -you can also simply double-click inside the boxed filter-region in order to activate your filter-choice.'),
@@ -473,6 +473,14 @@ invited to have a look, but please do not change anything unless you know what y
 to zero (but don\'t) in order to have a donation which is a waiving of reimbursement.'),
           'amount-waived' => self::t('If non-zero then this amount must be negativ and sum up to zero with the proper donation
 amount. In this case this donation is a waiving of reimbursement'),
+          'written-notice' => self::t('Local copy of the donation receipt sent-out via snail-mail the donator.'),
+        ],
+
+        'invoices' => [
+          'written-invoice' => self::t('Local copy of the invoice sent-out either by email or snail-mail to the debitor.'),
+          'invoice-items' => [
+            'imbalance' => self::t('This is the difference between invoiced amount and the sum of the amount of the individual invoice items and thus must be 0. If not, the invoice data has to be corrected.'),
+          ],
         ],
 
         'add-musicians' => [
@@ -512,7 +520,7 @@ make sure that the musicians are also automatically added to the
             ],
           ],
 
-          'member-status' => self::t('A flag which indicates not so much social or functional status, but
+          'participation-status' => self::t('A flag which indicates not so much social or functional status, but
 default behaviour for mass-emails as follows
 <br/>
 <dl>
@@ -587,6 +595,10 @@ This setting is meant to support a project in the planning phase: one may enter 
           'tabs' => [
             'access' => self::t('Configure access-restrictions for the field. In particular determine whether this field is visible by the respective participant in the associated members cloud-app.'),
           ],
+
+          'participation-context' => self::t('If the field makes only sensor for musicians but not for business-partners or
+associates (or vice versa) then the field can be hidden in either the
+associates or participants view.'),
 
           'participant-access' => self::t('Define whether this field is visible or even writable by the respective participant in the associated member\'s cloud-app.'),
 
@@ -1497,11 +1509,14 @@ the individual table views.'),
           'name' => [
             PageRenderer\AllMusicians::TEMPLATE => self::t('Display all Musicians'),
             PageRenderer\Blog::TEMPLATE => self::t('Frontpage Blog'),
-            PageRenderer\Instruments::TEMPLATE => self::t('Musical Instruments'),
+            PageRenderer\DonationReceipts::TEMPLATE => self::t('Donation Receipts'),
             PageRenderer\InstrumentFamilies::TEMPLATE => self::t('Instrument Families'),
             PageRenderer\InstrumentInsurances::TEMPLATE => self::t('Insurances'),
+            PageRenderer\Instruments::TEMPLATE => self::t('Musical Instruments'),
             PageRenderer\InsuranceBrokers::TEMPLATE => self::t('Insurance Brokers'),
             PageRenderer\InsuranceRates::TEMPLATE => self::t('Insurance Rates'),
+            PageRenderer\Invoices::TEMPLATE => self::t('Invoicing'),
+            PageRenderer\ProjectAssociates::TEMPLATE => self::t('Business Partners'),
             PageRenderer\ProjectInstrumentationNumbers::TEMPLATE => self::t('Instrumentation Numbers'),
             PageRenderer\ProjectParticipantFields::TEMPLATE => self::t('Project Participant-Fields'),
             PageRenderer\ProjectParticipants::TEMPLATE => self::t('Participants'),
@@ -1509,6 +1524,8 @@ the individual table views.'),
             PageRenderer\Projects::TEMPLATE => self::t('All Projects'),
             PageRenderer\SepaBankAccounts::TEMPLATE => self::t('Create Bulk Transactions'),
             PageRenderer\SepaBulkTransactions::TEMPLATE => self::t('Issued Bulk Transactions'),
+            PageRenderer\TaxationStatutorySources::TEMPLATE => self::t('Taxation Legal Basis'),
+            PageRenderer\TaxExemptionNotices::TEMPLATE => self::t('Tax Excemption Notices'),
           ],
           'tooltips' => [
             PageRenderer\AllMusicians::TEMPLATE => self::t('Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.'),
@@ -1519,15 +1536,19 @@ if something has changed in the orchestra app.'),
             PageRenderer\InstrumentInsurances::TEMPLATE => self::t('Display a table with an overview about the current state of the member\'s instrument insurances.'),
             PageRenderer\InsuranceBrokers::TEMPLATE => self::t('Display a table with the insurance brokers.'),
             PageRenderer\InsuranceRates::TEMPLATE => self::t('Display a table with the insurance rates for the individual instrument insurances.'),
+            PageRenderer\Invoices::TEMPLATE => self::t('Display a table with the sent-out invoices and support for issuing new invoices.'),
             PageRenderer\ProjectInstrumentationNumbers::TEMPLATE => self::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.'),
             PageRenderer\ProjectParticipantFields::TEMPLATE => self::t('Add additional data-fields to the instrumenation table for the project.'),
             PageRenderer\ProjectParticipants::TEMPLATE => self::t('Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.'),
+            PageRenderer\ProjectAssociates::TEMPLATE => self::t('Detailed display of business partners or otherwise project related (legal) persons.'),
             PageRenderer\ProjectPayments::TEMPLATE => self::t('A table holding the various payments of participants.'),
             PageRenderer\Projects::TEMPLATE => self::t('Overview over all known projects (start-page).'),
             PageRenderer\SepaBankAccounts::TEMPLATE => self::t('Display a table with the bank accounts of the project participants,
 with the possibility to issued money transfers as well as debit-notes
 to and from the registered bank accounts.'),
             PageRenderer\SepaBulkTransactions::TEMPLATE => self::t('A table holding all bulk bank-transactions issued from the orchestra-software.'),
+            PageRenderer\TaxationStatutorySources::TEMPLATE => self::t('Taxation statutory sources table, used for invoicing and donation receipts.'),
+            PageRenderer\TaxExemptionNotices::TEMPLATE => self::t('Tax exemption notices give the legal basis for donation receipts and omitting sales taxes in invoices.'),
           ],
         ],
         'logo' => self::t('An image file with the orchestra logo -- preferably in SVG format. The logo is substituted into document templates using the "[LOGO]" placeholder.'),

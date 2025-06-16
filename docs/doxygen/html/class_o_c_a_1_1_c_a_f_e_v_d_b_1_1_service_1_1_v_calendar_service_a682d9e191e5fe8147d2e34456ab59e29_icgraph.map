@@ -1,0 +1,9 @@
+<map id="createVAlarmFromSeconds" name="createVAlarmFromSeconds">
+<area shape="rect" id="Node000001" title=" " alt="" coords="701,5,881,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a349505932cfde0b222b7d7ea55fdcf19" title="Add one or multiple alarms to the given VTodo or VEvent." alt="" coords="484,5,653,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="686,21,654,21,654,16,686,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#af4064e41fe3647594fa8fd8166fb42d2" title=" " alt="" coords="254,5,436,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="469,21,437,21,437,16,469,16"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#abed0a7f84ce98b1f4ffb17422f83072a" title=" " alt="" coords="5,5,206,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="238,21,206,21,206,16,238,16"/>
+</map>

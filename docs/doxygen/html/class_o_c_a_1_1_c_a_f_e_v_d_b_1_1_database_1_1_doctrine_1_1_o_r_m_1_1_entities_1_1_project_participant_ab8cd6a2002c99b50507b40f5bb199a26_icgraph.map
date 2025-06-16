@@ -1,0 +1,7 @@
+<map id="usage" name="usage">
+<area shape="rect" id="Node000001" title="Return the number of &quot;serious&quot; items which &quot;use&quot; this entity." alt="" coords="220,5,276,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a0292938ac501bd686542840ea8866ba9" title="Return a boolean to indicate that this entity is no longer used." alt="" coords="109,5,172,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,21,172,21,172,16,205,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#acd81dda8a6f978bdab707300422e0432" title="Return a boolean to indicate that this field is used." alt="" coords="5,5,61,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,21,61,21,61,16,93,16"/>
+</map>

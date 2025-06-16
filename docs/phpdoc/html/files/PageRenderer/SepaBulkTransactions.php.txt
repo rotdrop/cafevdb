@@ -48,6 +48,7 @@ class SepaBulkTransactions extends PMETableViewBase
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
   use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
 
   const TEMPLATE = 'sepa-bulk-transactions';
@@ -160,9 +161,6 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     ],
   ];
 
-  /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project */
-  private ?Entities\Project $project = null;
-
   /** {@inheritdoc} */
   public function __construct(
     ConfigService $configService,
@@ -186,10 +184,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     );
     $this->bulkTransactionExpanded = $this->request['bulkTransactionExpanded'];
 
-    if ($this->projectId > 0) {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-      $this->projectName = $this->project->getName();
-    }
+    $this->findProject(enforce: false);
 
     $this->initCrypto();
   }
@@ -725,7 +720,7 @@ __EOT__;
       return true;
     };
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($execute) {
       $this->execute($opts);

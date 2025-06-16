@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,144,31"/>
-<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_gedmo_translatable_listener.html" title="Override the default listener to use a modified event subscriber which also queries other sources of ..." alt="" coords="192,5,373,31"/>
-<area shape="poly" id="edge499_Node000000_Node000001" title=" " alt="" coords="158,15,192,15,192,21,158,21"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,144,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_gedmo_translatable_listener.html" title="Override the default listener to use a modified event subscriber which also queries other sources of ..." alt="" coords="192,5,372,32"/>
+<area shape="poly" id="edge553_Node000000_Node000001" title=" " alt="" coords="159,16,191,16,191,21,159,21"/>
 </map>

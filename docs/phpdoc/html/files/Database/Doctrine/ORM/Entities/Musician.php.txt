@@ -24,16 +24,12 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use DateTimeImmutable;
 use DateTimeInterface;
 use InvalidArgumentException;
+use Exception;
 
 use GenderDetector;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -41,6 +37,11 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Musician
@@ -50,9 +51,9 @@ use OCA\CAFEVDB\Events;
  */
 #[ORM\Table(name: 'Musicians')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository::class)]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\MusicianEntityListener'])]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\MusicianEntityListener::class])]
 class Musician implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -116,7 +117,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * the slug generator. It will just remove empty fields.
    */
   #[ORM\Column(type: 'string', length: 256, unique: true, nullable: true, options: ['collation' => 'ascii_bin'])]
-  #[Gedmo\Slug(fields: ['firstName', 'nickName', 'surName'], separator: '.', unique: true, updatable: true, handlers: [new Gedmo\SlugHandler(class: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler', options: [new Gedmo\SlugHandlerOption(name: 'separator', value: '-'), new Gedmo\SlugHandlerOption(name: 'preferred', value: [1, 2])])])]
+  #[Gedmo\Slug(
+    fields: ['firstName', 'nickName', 'surName'],
+    separator: '.',
+    unique: true,
+    updatable: true,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\LoginNameSlugHandler::class,
+    options: [ 'separator' => '-', 'preferred' => [1, 2] ],
+  )]
   private $userIdSlug;
 
   /**
@@ -157,10 +167,22 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * @var string
    *
-   * Additional address information, like "Appartment 200" or c/o.
+   * Additional address information, like "Appartment 200" or c/o. If
+   * Musician::organization is not null then an address-supplement starting
+   * with 'c/o' indicates that the given street-address is a private @home
+   * address. This affects the VCard export and the default address format of
+   *  mail-merge operations.
    */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $addressSupplement;
+
+  /**
+   * @var string
+   *
+   * po-box component for the sake of supporting business contacts.
+   */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
+  private $poBox;
 
   /**
    * @var string
@@ -211,10 +233,10 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $emailAddresses;
 
   /**
-   * @var Types\EnumMemberStatus|null
+   * @var Types\EnumParticipationStatus|null
    */
-  #[ORM\Column(type: 'EnumMemberStatus', nullable: false, options: ['default' => 'regular'])]
-  private $memberStatus;
+  #[ORM\Column(type: 'EnumParticipationStatus', nullable: false, options: ['default' => 'regular'])]
+  private $defaultParticipationStatus;
 
   /**
    * @var string|null
@@ -251,14 +273,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => 1])]
   private $cloudAccountDisabled;
 
-  /**
-   * @var LegalPerson
-   */
-  // #[ORM\JoinColumn(name: 'legal_person_id', referencedColumnName: 'id', nullable: true)]
-  #[ORM\OneToOne(targetEntity: LegalPerson::class, mappedBy: 'musician', cascade: ['remove'], orphanRemoval: true)]
-  private $legalPerson;
-
-  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'musician', cascade: ['remove'], orphanRemoval: true)]
+  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'musician', indexBy: 'instrument_id', cascade: ['remove', 'persist'], orphanRemoval: true)]
   #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
   private $instruments;
 
@@ -295,10 +310,48 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $encryptedFiles;
 
   /**
+   * @var Collection
+   */
+  #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'debitor', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+  private $invoices;
+
+  /**
+   * @var Collection
+   */
+  #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'originator', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+  private $originatedInvoices;
+
+  /**
    * @var null|DateTimeImmutable
    */
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
   protected ?DateTimeInterface $updated;
+
+  /**
+   * @var string
+   *
+   * If non null then this is the URI of an address-book which is the primary source
+   * of the contact data.
+   */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
+  private $addressBookUri;
+
+  /**
+   * @var string
+   *
+   * If non null then this contact refers to an organization.
+   */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
+  private $organization;
+
+  /**
+   * @var string
+   *
+   * If organization is non-NULL then this attribute may refere to the title
+   * in the given organization.
+   */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
+  private $jobTitle;
 
   /** {@inheritdoc} */
   public function __construct()
@@ -315,8 +368,13 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
     $this->encryptedFiles = new ArrayCollection();
+    $this->invoices = new ArrayCollection();
+    $this->originatedInvoices = new ArrayCollection();
 
-    $this->memberStatus = Types\EnumMemberStatus::REGULAR();
+    $this->defaultParticipationStatus = Types\EnumParticipationStatus::REGULAR();
+
+    $this->setUpdated(new DateTimeImmutable());
+    $this->setCreated(new DateTimeImmutable());
   }
 
   /** {@inheritdoc} */
@@ -359,6 +417,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function setSurName(?string $surName):Musician
   {
+    if ($surName == 1) {
+      throw new Exception('BLAH');
+    }
     $this->surName = $surName;
 
     return $this;
@@ -367,11 +428,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Get surName.
    *
-   * @return string
+   * @return null|string
    */
-  public function getSurName()
+  public function getSurName():?string
   {
-    return $this->surName;
+    return $this->surName ?? null;
   }
 
   /**
@@ -391,11 +452,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Get firstName.
    *
-   * @return string
+   * @return null|string
    */
-  public function getFirstName()
+  public function getFirstName():?string
   {
-    return $this->firstName;
+    return $this->firstName ?? null;
   }
 
   /**
@@ -492,6 +553,30 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getAddressSupplement()
   {
     return $this->addressSupplement;
+  }
+
+  /**
+   * Set poBox.
+   *
+   * @param null|string $poBox
+   *
+   * @return Musician
+   */
+  public function setPoBox(?string $poBox):Musician
+  {
+    $this->poBox = $poBox;
+
+    return $this;
+  }
+
+  /**
+   * Get poBox.
+   *
+   * @return string
+   */
+  public function getPoBox()
+  {
+    return $this->poBox;
   }
 
   /**
@@ -649,10 +734,12 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function setPrincipalEmailAddress(?MusicianEmailAddress $principalEmailAddress):Musician
   {
     if (empty($principalEmailAddress)) {
+      \OC::$server->get(\Psr\Log\LoggerInterface::class)->info('DELETING PRINCIPAL EMAIL ADDRESS', [ 'exception' => new Exception('NO EMAIL') ]);
       $this->email = null;
     } else {
       $this->email = $principalEmailAddress->getAddress();
       $this->emailAddresses->set($this->email, $principalEmailAddress);
+      \OC::$server->get(\Psr\Log\LoggerInterface::class)->info('SET EMAIL TO ' . $this->email);
     }
 
     return $this;
@@ -663,7 +750,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function getPrincipalEmailAddress():?MusicianEmailAddress
   {
-    return $this->emailAddresses->get($this->email);
+    return $this->email === null ? null : $this->emailAddresses->get($this->email);
   }
 
   /**
@@ -795,27 +882,31 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set memberStatus.
+   * Set participationStatus.
    *
-   * @param string|EnumMemberStatus $memberStatus
+   * @param string|Types\EnumParticipationStatus $participationStatus
    *
    * @return Musician
    */
-  public function setMemberStatus($memberStatus):Musician
+  public function setDefaultParticipationStatus(string|Types\EnumParticipationStatus $participationStatus):Musician
   {
-    $this->memberStatus = new Types\EnumMemberStatus($memberStatus);
+    if ($this->defaultParticipationStatus != $participationStatus) {
+      $this->defaultParticipationStatus = is_string($participationStatus)
+        ? new Types\EnumParticipationStatus($participationStatus)
+        : $participationStatus;
+    }
 
     return $this;
   }
 
   /**
-   * Get memberStatus.
+   * Get participationStatus.
    *
-   * @return EnumMemberStatus
+   * @return EnumParticipationStatus
    */
-  public function getMemberStatus():Types\EnumMemberStatus
+  public function getDefaultParticipationStatus():Types\EnumParticipationStatus
   {
-    return $this->memberStatus;
+    return $this->defaultParticipationStatus;
   }
 
   /**
@@ -963,11 +1054,70 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Get instruments.
    *
+   * @param null|string|InstrumentFamily $family Restrict to instruments which belong to the
+   * InstrumentFamily (or given family name).
+   *
+   * @param bool $complement Invert the search and return all instruments not
+   * belonging to $family. Default \false.
+   *
    * @return Collection
    */
-  public function getInstruments():Collection
+  public function getInstruments(null|string|InstrumentFamily $family = null, bool $complement = false):Collection
   {
-    return $this->instruments;
+    if ($family !== null) {
+      // complicated ...
+      $familyName = ($family instanceof InstrumentFamily) ? $family->getFamily() : $family;
+      $partitions = $this->instruments->partition(
+        fn(mixed $key, MusicianInstrument $instrument)
+        =>
+        $instrument->getInstrument()
+                   ->getFamilies()
+                   ->exists(fn(mixed $key, InstrumentFamily $thisFamily)
+                            =>
+                            $thisFamily->getFamily() == $familyName
+                            || $thisFamily->getUntranslatedFamily() == $familyName));
+      return $complement ? $partitions[1] : $partitions[0];
+    } else {
+      return $this->instruments;
+    }
+  }
+
+  /**
+   * @return Collection The not-an-instruments instruments (i.e. special
+   * roles) of the participant.
+   */
+  public function getNonInstruments():Collection
+  {
+    return $this->getInstruments(ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY);
+  }
+
+  /**
+   * @return Collection Return the real musical instruments of the participant.
+   */
+  public function getRealInstruments():Collection
+  {
+    return $this->getInstruments(ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY, complement: true);
+  }
+
+  /**
+   * Adds the given instrument to the list of the musician's instruments if it
+   * is not yet there.
+   *
+   * @param Instrument $instrument
+   *
+   * @param null|int $ranking
+   *
+   * @return Musician
+   */
+  public function addInstrument(Instrument $instrument, ?int $ranking = null):Musician
+  {
+    if ($this->instruments->containsKey($instrument->getId())) {
+      return $this; // gracefule no-op.
+    }
+    $musicianInstrument = new MusicianInstrument($this, $instrument, $ranking);
+    $this->instruments->set($instrument->getId(), $musicianInstrument);
+
+    return $this;
   }
 
   /**
@@ -1031,7 +1181,8 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Return the project-participant entity for the given project or null
+   * Return the project-participant entity for the given project or null if
+   * $this is not a participant.
    *
    * @param int|Project $projectOrId
    *
@@ -1394,6 +1545,78 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * Set organization.
+   *
+   * @param string|null $organization
+   *
+   * @return Musician
+   */
+  public function setOrganization(?string $organization):Musician
+  {
+    $this->organization = $organization;
+
+    return $this;
+  }
+
+  /**
+   * Get organization.
+   *
+   * @return string
+   */
+  public function getOrganization():?string
+  {
+    return $this->organization ?? null;
+  }
+
+  /**
+   * Set jobTitle.
+   *
+   * @param string|null $jobTitle
+   *
+   * @return Musician
+   */
+  public function setJobTitle(?string $jobTitle):Musician
+  {
+    $this->jobTitle = $jobTitle;
+
+    return $this;
+  }
+
+  /**
+   * Get jobTitle.
+   *
+   * @return string
+   */
+  public function getJobTitle():?string
+  {
+    return $this->jobTitle ?? null;
+  }
+
+  /**
+   * Set addressBookUri.
+   *
+   * @param string|null $addressBookUri
+   *
+   * @return Musician
+   */
+  public function setAddressBookUri(?string $addressBookUri):Musician
+  {
+    $this->addressBookUri = $addressBookUri;
+
+    return $this;
+  }
+
+  /**
+   * Get addressBookUri.
+   *
+   * @return string
+   */
+  public function getAddressBookUri():?string
+  {
+    return $this->addressBookUri;
+  }
+
+  /**
    * Set rowAccessToken.
    *
    * @param string|null $rowAccessToken
@@ -1410,7 +1633,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Get rowAccessToken.
    *
-   * @return LegalPerson
+   * @return null|MusicianRowAccessToken
    */
   public function getRowAccessToken():?MusicianRowAccessToken
   {
@@ -1418,27 +1641,51 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set legalPerson.
+   * Set invoices.
    *
-   * @param string|null $legalPerson
+   * @param Collection $invoices
    *
    * @return Musician
    */
-  public function setLegalPerson(?LegalPerson $legalPerson):Musician
+  public function setInvoices(Collection $invoices):Musician
   {
-    $this->legalPerson = $legalPerson;
+    $this->invoices = $invoices;
 
     return $this;
   }
 
   /**
-   * Get legalPerson.
+   * Get invoices.
    *
-   * @return MusicianLegalPerson
+   * @return Collection
    */
-  public function getLegalPerson():?LegalPerson
+  public function getInvoices():Collection
   {
-    return $this->legalPerson;
+    return $this->invoices;
+  }
+
+  /**
+   * Set originatedInvoices.
+   *
+   * @param Collection $originatedInvoices
+   *
+   * @return Musician
+   */
+  public function setOriginatedInvoices(Collection $originatedInvoices):Musician
+  {
+    $this->originatedInvoices = $originatedInvoices;
+
+    return $this;
+  }
+
+  /**
+   * Get originatedInvoices.
+   *
+   * @return Collection
+   */
+  public function getOriginatedInvoices():Collection
+  {
+    return $this->originatedInvoices;
   }
 
   /**
@@ -1450,7 +1697,10 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function usage():int
   {
-    return $this->payments->count() + $this->projectParticipation->count();
+    return $this->payments->count()
+      + $this->projectParticipation->count()
+      + $this->invoices->count()
+      + $this->originatedInvoices->count();
   }
 
   /** {@inheritdoc} */

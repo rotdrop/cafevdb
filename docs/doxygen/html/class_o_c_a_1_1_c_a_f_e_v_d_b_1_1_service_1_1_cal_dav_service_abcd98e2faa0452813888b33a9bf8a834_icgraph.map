@@ -1,0 +1,5 @@
+<map id="getCalendarObject" name="getCalendarObject">
+<area shape="rect" id="Node000001" title="Fetch an event object by its local URI." alt="" coords="205,5,334,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#acfb67e9236f6553c82d36a193ad866d1" title="Restore the given calendar object from the trashbin." alt="" coords="5,5,157,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,21,157,21,157,16,189,16"/>
+</map>

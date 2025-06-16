@@ -218,7 +218,7 @@ class ConfigCheckService
     $imapService->setAccount($host, $port, $secure, $user, $password);
     try {
       $imapService->connect();
-      $imapService->disconnet();
+      $imapService->disconnect();
       return true;
     } catch (Throwable $t) {
       $this->logException($t, 'Unable to connect to ' . $secure . '://' . urlencode($user) . ':' . 'XXXX@' . $host . ':' . $port);
@@ -899,7 +899,7 @@ class ConfigCheckService
       // Now it should exist as directory and $node should contain its file-info
 
       if ($node) {
-        $url = $this->sharingService->linkShare($node, $userId);
+        ['files_sharing' => $url,] = $this->sharingService->linkShare($node, $userId);
         if (empty($url)) {
           return null;
         }

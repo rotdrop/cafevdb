@@ -12,6 +12,8 @@ var dir_b2a75fba6b19aafaa483ce8d873283c2 =
     [ "EnumMemberStatus.php", "_enum_member_status_8php_source.html", null ],
     [ "EnumParticipantFieldDataType.php", "_enum_participant_field_data_type_8php_source.html", null ],
     [ "EnumParticipantFieldMultiplicity.php", "_enum_participant_field_multiplicity_8php_source.html", null ],
+    [ "EnumParticipationContext.php", "_enum_participation_context_8php_source.html", null ],
+    [ "EnumParticipationStatus.php", "_enum_participation_status_8php_source.html", null ],
     [ "EnumProjectTemporalType.php", "_enum_project_temporal_type_8php_source.html", null ],
     [ "EnumSepaTransaction.php", "_enum_sepa_transaction_8php_source.html", null ],
     [ "EnumTaxType.php", "_enum_tax_type_8php_source.html", null ],

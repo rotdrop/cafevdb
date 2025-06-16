@@ -1,0 +1,5 @@
+<map id="getProjectSkeletonPaths" name="getProjectSkeletonPaths">
+<area shape="rect" id="Node000001" title="Return an array with the project skeleton paths, indexed by folder&#45;type." alt="" coords="212,5,377,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a2ce95aa0cb561134a544ec80d79e7428" title="Make sure the per&#45;project per&#45;participant folder exists for the given project and musician." alt="" coords="5,5,164,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,21,164,21,164,16,196,16"/>
+</map>

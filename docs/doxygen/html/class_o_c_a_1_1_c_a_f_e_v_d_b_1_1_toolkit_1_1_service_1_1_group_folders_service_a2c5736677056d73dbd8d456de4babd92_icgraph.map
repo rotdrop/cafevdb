@@ -1,5 +1,12 @@
 <map id="getFolderById" name="getFolderById">
-<area shape="rect" id="Node000001" title="Get the shared folder by its id." alt="" coords="148,5,251,31"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ab6b826e4a8edcd655850277fbb5e9e74" title="Create a shared folder and set appropriate permissions." alt="" coords="5,5,100,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,21,100,21,100,15,134,15"/>
+<area shape="rect" id="Node000001" title="Get the shared folder by its id." alt="" coords="572,81,675,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a13bfe0a165b8f3fc32dd8e598709e465" title=" " alt="" coords="375,56,524,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="556,88,524,83,525,78,557,82"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ab6b826e4a8edcd655850277fbb5e9e74" title="Create a shared folder and set appropriate permissions." alt="" coords="5,56,99,83"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="557,103,372,110,259,107,146,97,95,86,96,81,147,92,259,102,372,104,557,97"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a3f43811af00573cb21e27cb201c49623" title=" " alt="" coords="166,5,308,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="375,54,295,35,297,30,376,49"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#af683f3e3910aa34f238c4336211d1a77" title=" " alt="" coords="147,56,327,83"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="360,72,328,72,328,67,360,67"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="171,39,100,59,98,54,170,34"/>
 </map>

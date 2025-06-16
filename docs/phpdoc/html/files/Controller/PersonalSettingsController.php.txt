@@ -40,8 +40,9 @@ use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
 
+use OCA\BAV\Service\BAV as BankAccountValidator;
+
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
-use OCA\CAFEVDB\Common\BankAccountValidator;
 use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;

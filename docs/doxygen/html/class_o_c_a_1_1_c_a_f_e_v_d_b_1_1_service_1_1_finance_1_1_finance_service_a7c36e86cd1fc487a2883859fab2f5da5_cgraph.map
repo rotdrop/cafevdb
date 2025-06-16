@@ -1,5 +1,5 @@
 <map id="financeTask" name="financeTask">
-<area shape="rect" id="Node000001" title="Add a task to the finance calendar, possibly including a reminder." alt="" coords="5,20,97,45"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a3d0963e68bb313b163a73f2803c64600" title="Get name." alt="" coords="145,5,324,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,30,132,30,132,35,98,35"/>
+<area shape="rect" id="Node000001" title="Add a task to the finance calendar, possibly including a reminder." alt="" coords="5,21,97,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a3d0963e68bb313b163a73f2803c64600" title="Get name." alt="" coords="145,5,323,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,32,129,32,129,37,97,37"/>
 </map>

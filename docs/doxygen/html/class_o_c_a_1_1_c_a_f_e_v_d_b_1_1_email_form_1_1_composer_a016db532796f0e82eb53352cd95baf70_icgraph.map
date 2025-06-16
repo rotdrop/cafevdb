@@ -1,0 +1,13 @@
+<map id="messageText" name="messageText">
+<area shape="rect" id="Node000001" title=" " alt="" coords="529,31,629,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a983520de1e3cc2a8f002055bf82ad3a8" title="Take the text supplied by $contents and store it in the DB EmailTemplates table with tag $templateNam..." alt="" coords="370,5,473,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="514,36,473,30,474,24,514,31"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a467acba2036c37acd425db67c68abcfa" title="Validates the given template, i.e." alt="" coords="362,56,481,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="514,57,482,62,481,57,513,52"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a346f94effc8c8dfea565e54bc6a27ba7" title="Install a default email text if no tempalte is given." alt="" coords="171,5,306,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="355,21,306,21,306,16,355,16"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a3022527659976cc7e4ce7ea8eed647a2" title="Pre&#45;message construction validation." alt="" coords="163,56,314,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="347,72,315,72,315,67,347,67"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ac9b7ecf11f96b66f5b50b296815ace81" title="Send out the messages with self::doSendMessages(), after checking them with self::preComposeValidatio..." alt="" coords="5,56,115,83"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="147,72,115,72,115,67,147,67"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="yearFromName" name="yearFromName">
+<area shape="rect" id="Node000001" title="Extract the year from the project name if present." alt="" coords="155,5,266,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#adcf09f5f9731a737ce3461a343ab83d8" title="Validate the name, no spaces, camel case, last four characters may be digits of the form 20XX." alt="" coords="5,5,107,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,21,107,21,107,16,139,16"/>
+</map>

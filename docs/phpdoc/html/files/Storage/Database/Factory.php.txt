@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -71,6 +71,12 @@ class Factory
   public function getDonationReceiptsStorage():DonationReceiptsStorage
   {
     return $this->di(DonationReceiptsStorage::class);
+  }
+
+  /** @return TaxExemptionNoticesStorage */
+  public function getInvoicesStorage():InvoicesStorage
+  {
+    return $this->di(InvoicesStorage::class);
   }
 
   /**

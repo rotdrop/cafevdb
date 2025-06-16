@@ -482,7 +482,7 @@ class CloudAccountsService
    */
   public function addGroupSubAdmin(IUser $user, array $gids = null):void
   {
-    $groups = $this->getAdminstrableGroups($gids);
+    $groups = $this->getAdministrableGroups($gids);
     foreach ($groups as $group) {
       if (!empty($group) && !$this->subAdminManager->isSubAdminOfGroup($user, $group)) {
         $this->subAdminManager->createSubAdmin($user, $group);
@@ -500,7 +500,7 @@ class CloudAccountsService
    */
   public function removeGroupSubAdmin(IUser $user, ?array $gids = null):void
   {
-    $groups = $this->getAdminstrableGroups($gids);
+    $groups = $this->getAdministrableGroups($gids);
     foreach ($groups as $group) {
       if (!empty($group) && $this->subAdminManager->isSubAdminOfGroup($user, $group)) {
         $this->subAdminManager->deleteSubAdmin($user, $group);
@@ -512,7 +512,7 @@ class CloudAccountsService
    * @return array<int, string> Return the array of orchestra group GIDs which
    * should have the members of the orchestra admin group as sub-admins.
    */
-  public function getAdminstrableGroupsGIDs():array
+  public function getAdministrableGroupsGIDs():array
   {
     $orchestraGroupId = $this->cloudConfig->getAppValue($this->appName, ConfigService::USER_GROUP_KEY);
     $administrableGroupGids = [];
@@ -530,10 +530,10 @@ class CloudAccountsService
    * @return array<int, ?IGroup> Return the array of orchestra groups which
    * should have the members of the orchestra admin group as sub-admins.
    */
-  public function getAdminstrableGroups(?array $gids = null):array
+  public function getAdministrableGroups(?array $gids = null):array
   {
     if ($gids === null) {
-      $gids = $this->getAdminstrableGroupGIDs();
+      $gids = $this->getAdministrableGroupsGIDs();
     }
     $groups = [];
     foreach ($gids as $gid) {

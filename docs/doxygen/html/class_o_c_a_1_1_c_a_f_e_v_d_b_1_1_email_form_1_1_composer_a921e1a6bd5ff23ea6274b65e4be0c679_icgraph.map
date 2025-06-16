@@ -1,0 +1,5 @@
+<map id="formatExceptionMessage" name="formatExceptionMessage">
+<area shape="rect" id="Node000001" title="Compose a &quot;readable&quot; message from a thrown exception." alt="" coords="180,5,349,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#add8504b52466d3419381680a483a652f" title="Take the supplied message and copy it to the &quot;Sent&quot; folder." alt="" coords="5,5,132,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,21,132,21,132,16,164,16"/>
+</map>

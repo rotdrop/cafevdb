@@ -1,0 +1,26 @@
+<map id="inUse" name="inUse">
+<area shape="rect" id="Node000001" title="Return a boolean to indicate that this field is used." alt="" coords="5,104,61,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a0292938ac501bd686542840ea8866ba9" title="Return a boolean to indicate that this entity is no longer used." alt="" coords="109,104,172,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,115,93,115,93,120,61,120"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#ab8cd6a2002c99b50507b40f5bb199a26" title="Return the number of &quot;serious&quot; items which &quot;use&quot; this entity." alt="" coords="220,104,276,131"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="173,115,205,115,205,120,173,120"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a8d166cbf9d3d0fcb09238cf2ac36640e" title="Determine if $this is only an associated member or business contact without double&#45;role as musician." alt="" coords="324,79,448,105"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="276,110,308,104,309,109,277,115"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a095a4327094e520317f2cac30c767348" title="Determine if $this is only a musician without double&#45;role as associated member or business contact." alt="" coords="331,129,441,156"/>
+<area shape="poly" id="edge11_Node000003_Node000011" title=" " alt="" coords="277,120,316,127,315,132,276,125"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a8468e7235b577417fef77625a966d352" title=" " alt="" coords="497,79,630,105"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="448,89,482,89,482,95,448,95"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a3f568edcfe4fe4820ff96e69d3e7fcde" title=" " alt="" coords="496,129,631,156"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="436,103,500,122,499,127,435,109"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a578e8c33654a919b7bee8fa4f37323b9" title="Get projectInstruments." alt="" coords="679,104,828,131"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="630,98,664,103,663,108,629,103"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a84e9f3642ab6b2fd223989f118488128" title="Get family." alt="" coords="894,5,1081,64"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="793,101,888,67,889,72,795,106"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a3b3ec75dc4a258baf0bf6e5d1fdc11ec" title="Get instrument." alt="" coords="881,88,1094,147"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="829,115,866,115,866,120,829,120"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_family.html#a75d345793cef1ab09b64fb72df18d8d1" title="Get the untranslated family name." alt="" coords="876,171,1099,245"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="792,129,876,162,875,167,790,134"/>
+<area shape="poly" id="edge10_Node000010_Node000006" title=" " alt="" coords="631,131,664,127,664,132,632,136"/>
+<area shape="poly" id="edge12_Node000011_Node000005" title=" " alt="" coords="435,126,499,107,500,113,436,131"/>
+<area shape="poly" id="edge13_Node000011_Node000010" title=" " alt="" coords="442,140,480,140,480,145,442,145"/>
+</map>

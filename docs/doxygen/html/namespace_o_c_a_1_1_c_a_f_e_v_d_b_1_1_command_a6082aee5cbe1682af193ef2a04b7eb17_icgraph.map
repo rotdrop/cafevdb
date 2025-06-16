@@ -1,9 +1,11 @@
 <map id="authenticate" name="authenticate">
-<area shape="rect" id="Node000001" title="{}" alt="" coords="236,92,329,117"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,5,188,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,89,167,62,169,58,237,84"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_files_scan.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,85,188,125"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="222,107,188,107,188,102,222,102"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_hello_world.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,149,188,189"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="232,125,156,151,155,146,231,120"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="236,129,328,156"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,5,188,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="250,122,186,78,165,67,167,62,189,74,253,117"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_files_scan.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,88,188,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,134,188,128,189,123,221,129"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_hello_world.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,155,188,197"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="221,156,189,162,188,157,220,151"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_sanitize_filenames.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,221,188,264"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="254,168,224,190,189,212,164,223,162,218,186,207,221,186,251,164"/>
 </map>

@@ -1,9 +1,17 @@
 <map id="legacyRecordToEntityId" name="legacyRecordToEntityId">
-<area shape="rect" id="Node000001" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="499,31,660,56"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a55f854e5c60ee53f8fc408fbd4127ac1" title="This trigger simply deletes the given entity and prevents the legacy PHPMyEdit class to do the deleti..." alt="" coords="260,5,451,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="484,35,450,31,451,26,485,30"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a05ff3063af06ba0e1c19849c99234b1c" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="280,55,431,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="485,56,431,62,431,57,484,51"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#af5fcd7270e0aafbf684fba2b7fbea4bd" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="5,47,212,87"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="266,70,212,70,212,65,266,65"/>
+<area shape="rect" id="Node000001" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="512,179,672,205"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a55f854e5c60ee53f8fc408fbd4127ac1" title="This trigger simply deletes the given entity and prevents the legacy PHPMyEdit class to do the deleti..." alt="" coords="274,104,464,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="535,176,410,134,412,129,537,171"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a05ff3063af06ba0e1c19849c99234b1c" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="294,216,444,243"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="497,210,444,219,443,214,497,205"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a7d8b34fc0c961eb85894f3710b004a65" title="Sub&#45;payment aware delete." alt="" coords="12,5,219,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="310,101,206,67,208,62,312,96"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html#a7d8b34fc0c961eb85894f3710b004a65" title="Sub&#45;payment aware delete." alt="" coords="5,88,226,147"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="258,120,226,120,226,115,258,115"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#af5fcd7270e0aafbf684fba2b7fbea4bd" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="13,171,218,213"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="279,219,218,210,219,205,279,214"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_associates.html#a8ee693f967495194504a817b08c88021" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="11,237,220,296"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="279,245,221,254,220,249,278,240"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#a8ee693f967495194504a817b08c88021" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="9,320,222,379"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="333,253,227,310,200,322,198,317,225,306,331,249"/>
 </map>

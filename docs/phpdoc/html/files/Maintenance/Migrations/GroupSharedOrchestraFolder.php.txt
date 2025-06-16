@@ -57,19 +57,22 @@ class GroupSharedOrchestraFolder implements IMigration
   private const KEEP_OLD_SUFFIX = '-pre-group-folder-migration';
   private const SHARED_KEEP_OLD_SUFFIX = '-old-do-not-use';
 
-  private const SHARE_TYPES = [
+  private const UPDATE_SHARE_TYPES = [
+    IShare::TYPE_LINK,
+    IShare::TYPE_USER,
+  ];
+
+  private const CLEAN_SHARE_TYPES = [
     IShare::TYPE_CIRCLE,
     IShare::TYPE_DECK,
     IShare::TYPE_DECK_USER,
     IShare::TYPE_EMAIL,
     IShare::TYPE_GROUP,
     IShare::TYPE_GUEST,
-    IShare::TYPE_LINK,
     IShare::TYPE_REMOTE,
     IShare::TYPE_REMOTE_GROUP,
     IShare::TYPE_ROOM,
     IShare::TYPE_SCIENCEMESH,
-    IShare::TYPE_USER,
     IShare::TYPE_USERGROUP,
   ];
 
@@ -209,12 +212,52 @@ class GroupSharedOrchestraFolder implements IMigration
       }
 
       $shares = [];
-      foreach (self::SHARE_TYPES as $shareType) {
+      foreach (self::UPDATE_SHARE_TYPES as $shareType) {
         $shares = array_merge($shares, $this->shareManager->getSharesBy($shareOwner, $shareType, reshares: true, limit: -1));
       }
 
       $sourcePath = $sourceFolder->getPath();
       $targetPath = $targetFolder->getPath();
+
+      /** @var IShare $share */
+      foreach ($shares as $share) {
+        // Update individual and shared-by links shares s.t. they point to
+        // the new location.
+        //
+        // typical source: /cameratashareholder/files/camerata
+        // typical target: /cameratashareholder/files/camerata-migration
+        // typical link share path:
+        // /cameratashareholder/files/camerata/projects/2019/Auvergne2019/downloads
+        try {
+          $sharedNode = $share->getNode();
+          $shareType = $share->getShareType();
+          $shareSource = $sharedNode->getPath();
+          $sharedWith = $share->getSharedWith();
+          $this->logInfo(
+            'Share:'
+              . ' SRC: ' . $shareSource
+              . ' TGT: ' . $share->getTarget()
+              . ' TYPE ' . $shareType
+              . ' TOKEN ' . $share->getToken()
+              . ' WITH ' . $sharedWith
+              . ' BY ' . $share->getSharedBy()
+              . ' OWNER ' . $share->getShareOwner()
+          );
+          $newShareSource = str_replace($sourcePath, '', $shareSource);
+          $newSharedNode = $targetFolder->get($newShareSource);
+          $share->setNode($newSharedNode);
+          $share->setSharedBy($share->getShareOwner());
+          $this->shareManager->updateShare($share);
+        } catch (NotFoundException $e) {
+          $this->logInfo('Cleaning share of non-existing node');
+          $this->shareManager->deleteShare($share);
+        }
+      }
+
+      $shares = [];
+      foreach (self::CLEAN_SHARE_TYPES as $shareType) {
+        $shares = array_merge($shares, $this->shareManager->getSharesBy($shareOwner, $shareType, reshares: true, limit: -1));
+      }
 
       /** @var IShare $share */
       foreach ($shares as $share) {
@@ -231,26 +274,11 @@ class GroupSharedOrchestraFolder implements IMigration
               . ' TOKEN ' . $share->getToken()
               . ' WITH ' . $sharedWith
           );
-          if ($shareType == IShare::TYPE_LINK || $shareType == IShare::TYPE_USER) {
-            // Update individual and shared-by links shares s.t. they point to
-            // the new location.
-            //
-            // typical source: /cameratashareholder/files/camerata
-            // typical target: /cameratashareholder/files/camerata-migration
-            // typical link share path:
-            // /cameratashareholder/files/camerata/projects/2019/Auvergne2019/downloads
-            $newShareSource = str_replace($sourcePath, '', $shareSource);
-            $newSharedNode = $targetFolder->get($newShareSource);
-            $share->setNode($newSharedNode);
-            $this->shareManager->updateShare($share);
-          } else {
-            // Delete all other shares.
-            $this->logInfo('Deleting share ' . $shareSource . ' -> ' . $sharedWith);
-            $this->shareManager->deleteShare($share);
-          }
-        } catch (NotFoundException $e) {
-          $this->logInfo('Cleaning share of non-existing node');
+          // Delete all other shares.
+          $this->logInfo('Deleting share ' . $shareSource . ' -> ' . $sharedWith);
           $this->shareManager->deleteShare($share);
+        } catch (NotFoundException $e) {
+          $this->logInfo('Unable to delete share');
         }
       }
 
@@ -278,8 +306,8 @@ class GroupSharedOrchestraFolder implements IMigration
       $this->encryptionService->setConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, false);
 
     } catch (Throwable $t) {
-      throw new Exceptions\MigrationException('Migration has failed', 0, $t);
       $this->logException($t);
+      throw new Exceptions\MigrationException('Migration has failed', 0, $t);
       return false;
     }
 

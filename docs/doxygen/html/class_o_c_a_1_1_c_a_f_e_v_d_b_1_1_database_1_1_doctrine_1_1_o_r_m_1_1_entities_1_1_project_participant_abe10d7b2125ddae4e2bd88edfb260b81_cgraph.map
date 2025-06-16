@@ -1,0 +1,15 @@
+<map id="addProjectInstrument" name="addProjectInstrument">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,228,151,255"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html#a3b3ec75dc4a258baf0bf6e5d1fdc11ec" title="Get instrument." alt="" coords="207,5,430,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,226,124,154,157,111,197,74,203,70,206,74,200,78,161,115,129,157,88,229"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a3b3ec75dc4a258baf0bf6e5d1fdc11ec" title="Get instrument." alt="" coords="213,88,425,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="95,225,140,192,197,156,209,151,211,156,200,161,143,196,98,230"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html#aabfc34e2707f9ad109ef4ce93abdf56f" title="Get musician." alt="" coords="212,171,426,229"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="150,226,196,218,197,224,151,232"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#aabfc34e2707f9ad109ef4ce93abdf56f" title="Get musician." alt="" coords="218,253,420,312"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="151,251,203,260,202,265,150,256"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a44fb6bcc3beb5c6a8b5f806f29897b59" title="Get voice." alt="" coords="227,336,410,395"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="98,253,143,287,200,322,214,328,212,333,197,326,140,291,95,257"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a86d6fade0ccca71ccae02aa675edd89e" title="Set instrumentationNumber." alt="" coords="199,419,439,493"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="88,254,130,325,162,367,200,405,205,408,202,412,197,409,158,371,125,328,84,257"/>
+</map>

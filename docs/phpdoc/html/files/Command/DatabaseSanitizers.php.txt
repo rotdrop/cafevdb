@@ -70,7 +70,7 @@ class DatabaseSanitizers extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:database:sanitize')
+      ->setName($this->appName . ':database:sanitize')
       ->setDescription('Sanitize Database Entities')
       ->addOption(
         'list',

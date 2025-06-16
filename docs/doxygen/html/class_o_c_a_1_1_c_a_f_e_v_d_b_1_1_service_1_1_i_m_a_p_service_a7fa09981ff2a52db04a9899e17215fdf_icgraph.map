@@ -1,0 +1,12 @@
+<map id="connect" name="connect">
+<area shape="rect" id="Node000001" title=" " alt="" coords="362,31,429,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_service.html#aa550b121d578ca4e3a911ff55abcb203" title="Append the given message to the given $mailbox." alt="" coords="49,5,113,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="346,43,113,24,114,19,347,37"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_service.html#a26ff4cc57ac93c5796b1b63a5e34a3aa" title="Fetch all mailboxes and cache them for the current request." alt="" coords="205,56,314,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="347,56,315,62,314,57,346,50"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="194,54,112,30,114,25,196,49"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_service.html#ac8eee9afce54aebd9b962ceb6e1f6108" title=" " alt="" coords="5,56,157,83"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="189,72,157,72,157,67,189,67"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_service.html#a92593cd12aaaef90397d10494d61efba" title="Search for the given headers." alt="" coords="26,107,136,133"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="196,90,131,109,130,104,194,85"/>
+</map>

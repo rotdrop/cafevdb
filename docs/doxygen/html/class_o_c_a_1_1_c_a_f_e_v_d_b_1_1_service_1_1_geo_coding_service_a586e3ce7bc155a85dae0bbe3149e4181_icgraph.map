@@ -1,8 +1,15 @@
 <map id="debug" name="debug">
-<area shape="rect" id="Node000001" title="Issue a debug message." alt="" coords="144,31,201,56"/>
-<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="193,19,187,12,173,9,161,11,154,16,153,22,157,29,152,32,148,22,150,13,158,6,173,4,189,7,197,16"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#ae336ff85cdf42a37302f84ea0b7c79e8" title="{}" alt="" coords="5,5,96,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,37,96,30,97,25,131,32"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#a87a5fd15c7f6e49e644d23142b01a40f" title="Recurse to the backend and place one single request." alt="" coords="18,55,83,80"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="131,54,84,64,83,58,130,49"/>
+<area shape="rect" id="Node000001" title="Issue a debug message." alt="" coords="343,107,399,133"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="394,94,386,88,371,85,357,87,350,92,348,98,352,105,347,107,343,98,345,88,355,82,371,80,388,83,397,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#ae336ff85cdf42a37302f84ea0b7c79e8" title="{}" alt="" coords="188,5,277,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="348,97,323,71,294,46,273,35,275,30,296,42,327,67,352,93"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#aef284afb885965d50f8599e687059f3b" title=" " alt="" coords="181,56,284,83"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="328,107,270,86,272,81,330,102"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#adc1aa1387dbc45f4002508b9d7718721" title="Synchronize the countries&#45; and continents table with the underlying backend." alt="" coords="5,81,122,108"/>
+<area shape="poly" id="edge7_Node000001_Node000004" title=" " alt="" coords="327,119,122,102,122,97,328,114"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#a87a5fd15c7f6e49e644d23142b01a40f" title="Recurse to the backend and place one single request." alt="" coords="200,157,264,184"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="330,138,266,162,264,157,328,133"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#a35cb11ef422aa51963e7309afe34583e" title="Forcibly set the update&#45;time&#45;stamp for the given postal code." alt="" coords="170,208,295,235"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="352,147,327,173,296,198,275,210,273,205,294,194,323,169,348,143"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="166,82,122,89,122,83,166,77"/>
 </map>

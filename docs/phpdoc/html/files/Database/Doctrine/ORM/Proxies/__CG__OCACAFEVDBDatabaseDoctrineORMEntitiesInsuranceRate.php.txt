@@ -22,20 +22,20 @@ class InsuranceRate extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Insuranc
     
 
     private const LAZY_OBJECT_PROPERTY_SCOPES = [
-        "\0".parent::class."\0".'broker' => [parent::class, 'broker', null],
-        "\0".parent::class."\0".'dueDate' => [parent::class, 'dueDate', null],
-        "\0".parent::class."\0".'geographicalScope' => [parent::class, 'geographicalScope', null],
-        "\0".parent::class."\0".'instrumentInsurances' => [parent::class, 'instrumentInsurances', null],
-        "\0".parent::class."\0".'keys' => [parent::class, 'keys', null],
-        "\0".parent::class."\0".'policyNumber' => [parent::class, 'policyNumber', null],
-        "\0".parent::class."\0".'rate' => [parent::class, 'rate', null],
-        'broker' => [parent::class, 'broker', null],
-        'dueDate' => [parent::class, 'dueDate', null],
-        'geographicalScope' => [parent::class, 'geographicalScope', null],
-        'instrumentInsurances' => [parent::class, 'instrumentInsurances', null],
-        'keys' => [parent::class, 'keys', null],
-        'policyNumber' => [parent::class, 'policyNumber', null],
-        'rate' => [parent::class, 'rate', null],
+        "\0".parent::class."\0".'broker' => [parent::class, 'broker', null, 16],
+        "\0".parent::class."\0".'dueDate' => [parent::class, 'dueDate', null, 16],
+        "\0".parent::class."\0".'geographicalScope' => [parent::class, 'geographicalScope', null, 16],
+        "\0".parent::class."\0".'instrumentInsurances' => [parent::class, 'instrumentInsurances', null, 16],
+        "\0".parent::class."\0".'keys' => [parent::class, 'keys', null, 16],
+        "\0".parent::class."\0".'policyNumber' => [parent::class, 'policyNumber', null, 16],
+        "\0".parent::class."\0".'rate' => [parent::class, 'rate', null, 16],
+        'broker' => [parent::class, 'broker', null, 16],
+        'dueDate' => [parent::class, 'dueDate', null, 16],
+        'geographicalScope' => [parent::class, 'geographicalScope', null, 16],
+        'instrumentInsurances' => [parent::class, 'instrumentInsurances', null, 16],
+        'keys' => [parent::class, 'keys', null, 16],
+        'policyNumber' => [parent::class, 'policyNumber', null, 16],
+        'rate' => [parent::class, 'rate', null, 16],
     ];
 
     public function __isInitialized(): bool

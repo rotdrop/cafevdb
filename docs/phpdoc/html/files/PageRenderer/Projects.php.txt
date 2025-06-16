@@ -50,7 +50,8 @@ use OCA\CAFEVDB\Storage\UserStorage;
 /**Table generator for Projects table. */
 class Projects extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
+  use FieldTraits\InstrumentsTrait;
+  use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const TEMPLATE = 'projects';
@@ -129,7 +130,7 @@ class Projects extends PMETableViewBase
     );
 
     if (!($this->projectId > 0)) {
-      $this->projectId = $this->pmeRecordId['id']??null;
+      $this->projectId = $this->pmeRecordId['id'] ?? null;
     }
     if ($this->projectId > 0) {
       $this->project = $this->projectService->findById($this->projectId);
@@ -186,6 +187,7 @@ class Projects extends PMETableViewBase
     $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
+    $instrumentInfo  = $this->getInstrumentInfo();
 
     $opts            = [];
 
@@ -285,7 +287,7 @@ class Projects extends PMETableViewBase
       $yearValues[] = $year;
     }
 
-    $yearIdx = count($opts['fdd']);
+    // $yearIdx = count($opts['fdd']);
     $opts['fdd']['year'] = [
       'name'     => $this->l->t('year'),
       'select'   => 'N',
@@ -417,7 +419,7 @@ class Projects extends PMETableViewBase
           'orderby'     => '$table.sort_order ASC',
           'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].'.instrument_id',
         ],
-        'valueGroups' => $this->instrumentInfo['idGroups'],
+        'valueGroups' => $instrumentInfo['idGroups'],
         'filter' => [
           'having' => true,
         ],
@@ -426,7 +428,7 @@ class Projects extends PMETableViewBase
     // Blow up the value-groups for the voices ... actually does not
     // matter too much, this is just a lookup table.
     $voicesValueGroups = [];
-    foreach ($this->instrumentInfo['idGroups'] as $instrumentId => $groupName) {
+    foreach ($instrumentInfo['idGroups'] as $instrumentId => $groupName) {
       for ($i = 0; $i < 32; ++$i) {
         $voicesValueGroups[$instrumentId . self::JOIN_KEY_SEP . $i] = $groupName;
       }
@@ -478,8 +480,8 @@ class Projects extends PMETableViewBase
 '; // close dropdown-menu
 
             if ($op == 'add') {
-              $instruments = array_keys($this->instruments);
-              $instrumentNames = $this->instruments;
+              $instruments = array_keys($instrumentInfo['byId']);
+              $instrumentNames = $instrumentInfo['byId'];
             } else {
               $instruments = Util::explode(
                 ',',
@@ -793,14 +795,18 @@ class Projects extends PMETableViewBase
           try {
             // fetch the basic list-info from the lists-server
             $listInfo = $this->listsService->getListInfo($value);
-            $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
-            if (empty($this->listsService->getListConfig($value, 'emergency'))) {
-              $l10nStatus = $this->l->t($status = 'active');
+            if (empty($listInfo)) {
+                $l10nStatus = $this->l->t($status = 'unset');
             } else {
-              $l10nStatus = $this->l->t($status = 'closed');
+                $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
+                if (empty($this->listsService->getListConfig($value, 'emergency'))) {
+                    $l10nStatus = $this->l->t($status = 'active');
+                } else {
+                    $l10nStatus = $this->l->t($status = 'closed');
+                }
+                $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
+                // $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
             }
-            $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
-            // $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
           } catch (Throwable $t) {
             $this->logException($t, 'Unable to communicate with mailing list server.');
             $l10nStatus = $this->l->t($status = 'unknown');
@@ -1062,7 +1068,7 @@ class Projects extends PMETableViewBase
       return $this->projectActionMenu($projectId, $projectName, overview: true, direction: 'left');
     };
 
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($this->projectId > 0) {
       $opts['buttons'] = $this->pageNavigation->prependTableButtons(buttons: []);
@@ -1098,14 +1104,10 @@ class Projects extends PMETableViewBase
    */
   private function templateEditButton(int $projectId, string $projectName, string $template):string
   {
-    $post = [
-      'template' => $template,
-      'projectName' => $projectName,
-      'projectId' => $projectId,
-    ];
+    $url = $this->urlGenerator()->linkToRoute($this->appName() . '.vueApp.indexfront', compact('template', 'projectName'));
+    $post = compact('template', 'projectId', 'projectName');
     $json = htmlspecialchars(json_encode($post));
     $post = http_build_query($post, '', '&');
-    $url = $this->urlGenerator()->linkToRoute($this->appName() . '.vueApp.index', compact('template', 'projectId', 'projectName'));
     $html = '<a class="button button-use-icon edit tooltip-top nav"
    href="' . $url . '"
    data-post="' . $post . '" data-json=\'' . $json . '\'

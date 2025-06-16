@@ -1,7 +1,7 @@
 <map id="dateTimeFormatter" name="dateTimeFormatter">
-<area shape="rect" id="Node000001" title=" " alt="" coords="169,31,301,56"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aabf644196b9bf78eab6b1f20dd7c255f" title="Work around NC annoyingly not accepting \DateTimeInterface." alt="" coords="20,5,107,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,34,106,27,107,22,156,29"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aafd5986c2ed7608a18d61e0b21004e01" title="Work around NC annoyingly not accepting \DateTimeInterface." alt="" coords="5,55,121,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,57,122,62,121,57,155,52"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="169,31,300,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aabf644196b9bf78eab6b1f20dd7c255f" title="Work around NC annoyingly not accepting \DateTimeInterface." alt="" coords="20,5,106,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,35,106,28,107,22,154,29"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aafd5986c2ed7608a18d61e0b21004e01" title="Work around NC annoyingly not accepting \DateTimeInterface." alt="" coords="5,56,121,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="154,59,121,63,121,58,153,53"/>
 </map>

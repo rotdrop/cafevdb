@@ -1,26 +1,19 @@
 <map id="inGroup" name="inGroup">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,65,72,91"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a80ff7d4e6101b55bc46ce120b838b98d" title=" " alt="" coords="139,9,226,35"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,63,135,37,137,42,73,68"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ae2621cc27b1048071816b69caf9b945a" title=" " alt="" coords="120,65,245,91"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="72,75,106,75,106,81,72,81"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="143,128,222,153"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="70,88,141,120,138,125,68,93"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6c2a8487a2ff84a0fa4530de4d61d83b" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="293,8,388,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="226,19,279,19,279,24,226,24"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a3c0a8ca944cfd5a62a77b1c2cc2b49a8" title=" " alt="" coords="439,5,551,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="388,17,425,17,426,22,388,23"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8be64a59621bfe298a4109ce08229ecd" title=" " alt="" coords="307,153,375,179"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="223,144,294,156,293,161,222,150"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a9645249ef330a927cede315afee62d5a" title=" " alt="" coords="436,55,555,80"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="357,151,435,97,456,84,459,89,437,102,360,155"/>
-<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8e80f766c9aa0f817b358aa67422985a" title=" " alt="" coords="719,131,833,156"/>
-<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="374,153,436,141,507,135,579,133,705,136,704,141,579,138,507,140,436,146,375,159"/>
-<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6cacbeb3555df4a292566b2e1b9bb574" title="Install a new user id." alt="" coords="456,156,535,181"/>
-<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="375,171,442,174,442,179,375,177"/>
-<area shape="poly" id="edge10_Node000010_Node000007" title=" " alt="" coords="456,163,388,161,389,156,456,157"/>
-<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7b6e5c12813dec3c45ec9531820c539a" title="Install a new user." alt="" coords="603,156,671,181"/>
-<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="535,166,589,166,589,171,535,171"/>
-<area shape="poly" id="edge12_Node000011_Node000007" title=" " alt="" coords="603,184,555,197,495,203,436,197,387,185,388,180,436,191,495,197,554,191,602,179"/>
-<area shape="poly" id="edge13_Node000011_Node000009" title=" " alt="" coords="670,160,704,154,705,159,671,165"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,56,72,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a80ff7d4e6101b55bc46ce120b838b98d" title=" " alt="" coords="139,5,224,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,55,127,35,129,40,73,60"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ae2621cc27b1048071816b69caf9b945a" title=" " alt="" coords="120,56,244,83"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="72,67,104,67,104,72,72,72"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="143,107,221,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="73,78,129,99,128,104,71,83"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6c2a8487a2ff84a0fa4530de4d61d83b" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="292,5,386,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="225,16,277,16,277,21,225,21"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a3c0a8ca944cfd5a62a77b1c2cc2b49a8" title=" " alt="" coords="437,5,549,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="387,16,421,16,421,21,387,21"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8be64a59621bfe298a4109ce08229ecd" title=" " alt="" coords="306,107,373,133"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="221,117,290,117,290,123,221,123"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a9645249ef330a927cede315afee62d5a" title=" " alt="" coords="434,81,552,108"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="373,112,419,104,420,109,374,117"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8e80f766c9aa0f817b358aa67422985a" title=" " alt="" coords="436,132,550,159"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="374,123,421,131,420,136,373,128"/>
 </map>

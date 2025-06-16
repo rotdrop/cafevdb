@@ -1,5 +1,5 @@
 <map id="resumeLoggingTrigger" name="resumeLoggingTrigger">
-<area shape="rect" id="Node000001" title="Resume PME logging if it was enabled at all." alt="" coords="5,20,156,45"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#ac2f42dfc2f9ac43830897947d86cf3bc" title="Enable or disable writing to the change&#45;log table." alt="" coords="204,5,383,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,30,190,30,190,35,156,35"/>
+<area shape="rect" id="Node000001" title="Resume PME logging if it was enabled at all." alt="" coords="5,21,155,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#ac2f42dfc2f9ac43830897947d86cf3bc" title="Enable or disable writing to the change&#45;log table." alt="" coords="203,5,381,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,32,187,32,187,37,155,37"/>
 </map>

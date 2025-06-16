@@ -1,7 +1,5 @@
 <map id="BeforeEncryptionKeyPairChangedListener" name="BeforeEncryptionKeyPairChangedListener">
-<area shape="rect" id="Node000001" title="Perform necessary tasks in preparation of changing an encryption key pair." alt="" coords="5,93,225,133"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="9,5,115,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,41,107,92,102,94,73,44"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="140,5,197,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,44,128,94,124,92,153,41"/>
+<area shape="rect" id="Node000001" title="Perform necessary tasks in preparation of changing an encryption key pair." alt="" coords="5,80,225,123"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="62,5,168,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,48,118,80,112,80,112,48"/>
 </map>

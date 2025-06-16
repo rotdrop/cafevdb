@@ -1,5 +1,9 @@
 <map id="legacyRecordToEntity" name="legacyRecordToEntity">
-<area shape="rect" id="Node000001" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="260,13,411,38"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#af5fcd7270e0aafbf684fba2b7fbea4bd" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="5,5,212,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="246,28,212,28,212,23,246,23"/>
+<area shape="rect" id="Node000001" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="267,88,416,115"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#af5fcd7270e0aafbf684fba2b7fbea4bd" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="9,5,215,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="284,85,218,63,182,51,184,46,220,57,286,80"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_associates.html#a8ee693f967495194504a817b08c88021" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="7,72,217,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="251,104,217,104,217,99,251,99"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#a8ee693f967495194504a817b08c88021" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="5,155,219,213"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="289,123,196,157,194,152,287,118"/>
 </map>

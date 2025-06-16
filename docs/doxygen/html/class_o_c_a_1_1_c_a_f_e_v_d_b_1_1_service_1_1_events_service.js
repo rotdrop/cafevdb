@@ -17,7 +17,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service =
     [ "flushDatabase", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a71e9c3cdd021a6e1d0406962797b7ac0", null ],
     [ "getCalendarDisplayName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a22bc18698bcfc1dd2c944ea1e404f53c", null ],
     [ "getCalendarId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ad0c26e96685f3326cedfc84c4abc9efc", null ],
-    [ "getEventData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a5ca87d86e6ceae87f102710ffd6297d5", null ],
     [ "getProjectEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a9879c3587b6533f0260f3aee12d7e314", null ],
     [ "getProjectRegistrationCategory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ae55980602759fe9a146c90e766879c49", null ],
     [ "getRecordAbsenceCategory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#afea0342bf7dc45b069dc94e4f043429d", null ],
@@ -43,7 +42,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service =
     [ "updateCalendarEntry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a459aa81a2ad196007a6b53e6c03bf4b1", null ],
     [ "updateCalendarEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ab83c41a2795889f4e5e9a620d9925b71", null ],
     [ "updateCalendarTask", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#adc02eeb1f5fca5be8c98e282749e1891", null ],
-    [ "$eventSiblings", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a7890346a2b1eadbe68e653eae76f6554", null ],
-    [ "$projectEventSiblings", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#aef7c3ea665dd834f69ad0c50c71660f0", null ],
-    [ "$projectRegistrationEvents", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#acc92099efe199a9edb264cdc18ba170d", null ]
+    [ "$eventSiblings", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a3e010f0f8dd698972c203f32e518cb60", null ],
+    [ "$projectEventSiblings", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ac05b634bfd95f47c0918a2add86a6a45", null ],
+    [ "$projectRegistrationEvents", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#af489c786965cd5b19219ead1a1d052b0", null ]
 ];

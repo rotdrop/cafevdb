@@ -1,5 +1,9 @@
 <map id="getObjectUri" name="getObjectUri">
-<area shape="rect" id="node1" title="Convert an object UID to its local URI." alt="" coords="200,31,295,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a1a333660bc649269f9583a2985635564" title="Remove the given calendar object." alt="" coords="5,5,152,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#abcd98e2faa0452813888b33a9bf8a834" title="Fetch an event object by its local URI." alt="" coords="13,55,144,80"/>
+<area shape="rect" id="Node000001" title="Convert an object UID to its local URI." alt="" coords="399,31,493,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a1a333660bc649269f9583a2985635564" title="Remove the given calendar object." alt="" coords="205,5,351,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="383,37,351,32,352,27,384,32"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#abcd98e2faa0452813888b33a9bf8a834" title="Fetch an event object by its local URI." alt="" coords="213,56,342,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="384,56,343,62,343,57,383,51"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#acfb67e9236f6553c82d36a193ad866d1" title="Restore the given calendar object from the trashbin." alt="" coords="5,56,157,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="198,72,157,72,157,67,198,67"/>
 </map>

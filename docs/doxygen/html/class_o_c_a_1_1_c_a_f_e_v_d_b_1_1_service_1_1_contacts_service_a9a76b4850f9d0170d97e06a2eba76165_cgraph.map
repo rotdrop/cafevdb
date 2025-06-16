@@ -1,0 +1,9 @@
+<map id="registerContactSynchronization" name="registerContactSynchronization">
+<area shape="rect" id="Node000001" title="Register a pre&#45;commit action in order to merge changed data into a linked addressbook." alt="" coords="5,31,209,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_contacts_service.html#a0afbb109bfa0b5b3a9154b77cded1e7a" title="Find an associated addressbook contact if there is one." alt="" coords="257,5,397,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,30,241,26,242,31,210,35"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_contacts_service.html#a56e6ef69f101590ed68f16667e9fbc15" title="Merge a musician entity into an existing contact." alt="" coords="272,56,382,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="210,53,257,59,256,64,209,58"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_contacts_service.html#a821d01f287978819079f2ab9af38c25e" title=" " alt="" coords="445,56,539,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="382,67,430,67,430,72,382,72"/>
+</map>

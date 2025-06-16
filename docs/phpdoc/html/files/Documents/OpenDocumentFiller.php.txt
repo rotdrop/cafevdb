@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ImagesService;
@@ -175,7 +176,7 @@ class OpenDocumentFiller
 
     unset($fillData['now']); // the cache is just for this request, so "now" from the first call is good enough
     unset($fillData['date']); // the cache is just for this request, so "now" from the first call is good enough
-    $templateDataHash = md5(json_encode($fillData));
+    $templateDataHash = md5(json_encode($fillData, JSON_PARTIAL_OUTPUT_ON_ERROR));
 
     $this->backend->LoadTemplate($templateFile->fopen('r'), OPENTBS_ALREADY_UTF8);
 
@@ -186,7 +187,7 @@ class OpenDocumentFiller
       if ($value instanceof DateTimeInterface) {
         $stamp = $value->getTimestamp();
         $stamp += $value->getOffset();
-        $this->logInfo('REPLACE DATE BY TIMESTAMP ' . $key . ': ' . print_r($value, true) . ' -> ' . $stamp);
+        $this->logDebug('REPLACE DATE BY TIMESTAMP ' . $key . ': ' . print_r($value, true) . ' -> ' . $stamp);
         $value = $stamp;
       } elseif ($value === true) {
         $value = 1;
@@ -197,12 +198,12 @@ class OpenDocumentFiller
       }
     });
 
-    // do a serialize - unserialize
     $fileHash = $templateFile->getEtag();
 
     if (empty($this->cache[$fileHash][$templateDataHash])) {
 
-      $this->backend->VarRef = json_decode(json_encode($this->backend->VarRef), true);
+      // do a serialize - unserialize
+      $this->backend->VarRef = json_decode(json_encode($this->backend->VarRef, JSON_PARTIAL_OUTPUT_ON_ERROR), true);
 
       // Do an opportunistic block-merge for every key with is an array
       foreach ($this->backend->VarRef as $key => $value) {
@@ -319,6 +320,7 @@ class OpenDocumentFiller
         'name2' => $this->getConfigValue('streetAddressName02'),
         'street' => $this->getConfigValue('streetAddressStreet'),
         'streetNumber' => $this->getConfigValue('streetAddressHouseNumber'),
+        'streetAndNumber' => $this->getConfigValue('streetAddressStreet') . ' ' . $this->getConfigValue('streetAddressHouseNumber'),
         'city' => $this->getConfigValue('streetAddressCity'),
         'postalCode' => $this->getConfigValue('streetAddressZIP'),
         'country' => $this->getConfigValue('streetAddressCountry'),
@@ -330,7 +332,7 @@ class OpenDocumentFiller
     /** @var \OCP\Files\File */
     $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
     $substitutions['org'][ConfigService::DOCUMENT_TEMPLATE_LOGO] =
-      $this->imagesService->dataUriFromFile($logo, ImagesService::SVG_TEXT_TO_PATH);
+      $this->imagesService->dataUriFromFile($logo, ImagesService::SVG_TEXT_TO_PATH|ImagesService::SVG_OPTIMIZE);
 
     /** @var OrganizationalRolesService $rolesService */
     $rolesService = $this->appContainer->get(OrganizationalRolesService::class);
@@ -348,7 +350,7 @@ class OpenDocumentFiller
       $signature = $rolesService->{$boardMember . 'Signature'}();
 
       if (!empty($signature)) {
-        $signature = $this->imagesService->dataUriFromFile($signature, ImagesService::SVG_TEXT_TO_PATH);
+        $signature = $this->imagesService->generateDataUri($signature->data(), $signature->dataMimeType());
       }
       $substitutions['org'][$boardMember]['signature'] = $signature;
       $substitutions['org'][$boardMember]['role'] = $this->l->t($boardMember);

@@ -1,3 +1,43 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_personal_form.html" title="Simple helper class in order to avoid instantiation of a bunch of helper classes just for the sake of..." alt="" coords="5,5,108,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,436,112,463"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="160,436,243,463"/>
+<area shape="poly" id="edge499_Node000000_Node000001" title=" " alt="" coords="127,447,159,447,159,452,127,452"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_enum_type.html" title="Abstract base class for providing some common services." alt="" coords="328,360,461,387"/>
+<area shape="poly" id="edge500_Node000001_Node000002" title=" " alt="" coords="234,425,290,396,327,384,329,389,292,401,237,430"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_participant_field_data_type.html" title=" " alt="" coords="294,411,495,437"/>
+<area shape="poly" id="edge516_Node000001_Node000018" title=" " alt="" coords="258,439,293,435,294,440,259,445"/>
+<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_participant_field_multiplicity.html" title=" " alt="" coords="291,461,498,488"/>
+<area shape="poly" id="edge517_Node000001_Node000019" title=" " alt="" coords="259,454,291,458,290,464,258,459"/>
+<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_export_1_1_export_format.html" title="Quasi enum with the supported export formats." alt="" coords="344,512,445,539"/>
+<area shape="poly" id="edge518_Node000001_Node000020" title=" " alt="" coords="237,469,292,498,345,513,343,519,290,502,234,473"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_access_permission.html" title=" " alt="" coords="553,5,717,32"/>
+<area shape="poly" id="edge501_Node000002_Node000003" title=" " alt="" coords="398,344,413,282,440,200,459,157,483,115,511,76,545,42,563,30,566,35,548,46,515,80,487,118,464,160,445,202,418,283,403,345"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_attachment_origin.html" title=" " alt="" coords="557,56,713,83"/>
+<area shape="poly" id="edge502_Node000002_Node000004" title=" " alt="" coords="401,344,418,291,447,223,489,153,515,121,545,93,564,81,567,86,548,97,519,124,493,156,452,225,423,293,406,346"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_data_transformation.html" title=" " alt="" coords="550,107,720,133"/>
+<area shape="poly" id="edge503_Node000002_Node000005" title=" " alt="" coords="404,345,424,301,455,246,495,191,519,165,545,143,566,132,568,136,548,148,522,169,499,194,459,249,429,303,409,347"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_dir_entry_type.html" title=" " alt="" coords="569,157,701,184"/>
+<area shape="poly" id="edge504_Node000002_Node000006" title=" " alt="" coords="409,345,463,270,501,229,545,194,568,182,570,187,548,198,505,233,467,273,414,348"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_file_type.html" title=" " alt="" coords="583,208,687,235"/>
+<area shape="poly" id="edge505_Node000002_Node000007" title=" " alt="" coords="417,346,472,295,508,268,545,244,581,230,583,235,548,249,511,272,476,299,421,350"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_gender.html" title=" " alt="" coords="586,259,684,285"/>
+<area shape="poly" id="edge506_Node000002_Node000008" title=" " alt="" coords="432,350,485,322,545,295,585,282,587,287,547,300,487,327,434,355"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_geographical_scope.html" title=" " alt="" coords="551,309,719,336"/>
+<area shape="poly" id="edge507_Node000002_Node000009" title=" " alt="" coords="475,354,568,334,569,339,476,359"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_gnu_cash_slot_type.html" title=" " alt="" coords="554,360,716,387"/>
+<area shape="poly" id="edge508_Node000002_Node000010" title=" " alt="" coords="476,371,554,371,554,376,476,376"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_member_status.html" title=" " alt="" coords="565,411,705,437"/>
+<area shape="poly" id="edge509_Node000002_Node000011" title=" " alt="" coords="476,388,569,407,568,413,475,393"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_participation_context.html" title=" " alt="" coords="548,461,722,488"/>
+<area shape="poly" id="edge510_Node000002_Node000012" title=" " alt="" coords="477,386,500,396,515,409,525,422,533,435,548,447,572,458,569,463,545,452,529,439,520,425,511,413,497,401,475,391"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_participation_status.html" title=" " alt="" coords="552,512,718,539"/>
+<area shape="poly" id="edge511_Node000002_Node000013" title=" " alt="" coords="477,383,500,397,512,409,519,422,525,448,531,474,537,486,548,498,566,509,563,514,545,502,533,489,526,476,520,450,514,424,508,412,497,401,474,388"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_project_temporal_type.html" title=" " alt="" coords="546,563,724,589"/>
+<area shape="poly" id="edge512_Node000002_Node000014" title=" " alt="" coords="477,382,500,397,515,416,523,435,525,474,527,512,534,531,548,549,564,560,561,564,544,553,530,533,522,513,520,474,518,436,511,418,497,401,474,386"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_sepa_transaction.html" title=" " alt="" coords="558,613,712,640"/>
+<area shape="poly" id="edge513_Node000002_Node000015" title=" " alt="" coords="477,381,500,397,519,422,527,448,528,474,525,500,523,525,524,550,531,575,548,599,563,611,560,615,544,603,526,577,518,551,518,525,520,499,523,474,522,449,514,425,496,401,474,385"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_tax_type.html" title=" " alt="" coords="583,664,687,691"/>
+<area shape="poly" id="edge514_Node000002_Node000016" title=" " alt="" coords="477,381,500,397,522,429,531,461,530,493,526,525,521,557,520,588,528,619,548,650,564,662,583,670,581,675,561,667,544,654,523,621,515,589,515,556,520,524,525,493,526,462,517,431,496,401,474,385"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_v_calendar_type.html" title=" " alt="" coords="563,715,707,741"/>
+<area shape="poly" id="edge515_Node000002_Node000017" title=" " alt="" coords="477,380,500,397,515,416,526,436,535,474,533,512,526,550,518,588,516,626,525,663,534,682,548,701,564,713,561,717,544,705,530,685,520,665,511,626,513,588,520,549,528,512,529,475,521,437,511,419,497,401,474,385"/>
 </map>

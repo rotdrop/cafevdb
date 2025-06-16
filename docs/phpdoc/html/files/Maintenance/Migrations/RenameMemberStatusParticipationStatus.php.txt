@@ -1,0 +1,83 @@
+<?php
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024, 2025 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Maintenance\Migrations;
+
+/**
+ * Rename the misleading "member_status" column to "participant_status".
+ *
+ * Really, these flags just control the amount of noise the person receives
+ * from the orchestra. It just has nothing to do with a club membership.
+ */
+class RenameMemberStatusParticipationStatus extends AbstractMigration
+{
+  protected static $sql = [
+    self::STRUCTURAL => [
+      "ALTER TABLE Musicians
+  CHANGE COLUMN IF EXISTS
+    member_status default_participation_status
+    enum('associated','conductor','passive','regular','soloist','temporary')
+    DEFAULT 'regular'
+    NOT NULL
+    COMMENT 'enum(associated,conductor,passive,regular,soloist,temporary)(DC2Type:EnumParticipationStatus)'",
+      "ALTER TABLE ProjectParticipants
+  ADD COLUMN IF NOT EXISTS
+    participation_status enum('associated','conductor','passive','regular','soloist','temporary')
+   DEFAULT NULL
+   COMMENT 'enum(associated,conductor,passive,regular,soloist,temporary)(DC2Type:EnumParticipationStatus)'",
+    ],
+    self::TRANSACTIONAL => [
+      "UPDATE ProjectParticipants pp
+  LEFT JOIN Musicians m
+    ON pp.musician_id = m.id
+  SET pp.participation_status = IFNULL(pp.participation_status, m.default_participation_status)",
+    ],
+  ];
+
+  /** {@inheritdoc} */
+  public function description():string
+  {
+    return $this->l->t('Rename member_status to the more neutral participation_status name.');
+  }
+
+  /** {@inheritdoc} */
+  public function execute():bool
+  {
+    if (!parent::execute()) {
+      return false;
+    }
+    static::$sql[self::TRANSACTIONAL] = [];
+    static::$sql[self::STRUCTURAL] = [
+      "ALTER TABLE ProjectParticipants
+  CHANGE COLUMN
+    participation_status
+    participation_status
+    enum('associated','conductor','passive','regular','soloist','temporary')
+    DEFAULT 'regular'
+    NOT NULL
+    COMMENT 'enum(associated,conductor,passive,regular,soloist,temporary)(DC2Type:EnumParticipationStatus)'",
+    ];
+    return parent::execute();
+  }
+}

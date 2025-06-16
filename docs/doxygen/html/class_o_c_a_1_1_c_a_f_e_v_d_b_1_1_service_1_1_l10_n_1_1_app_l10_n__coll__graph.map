@@ -1,6 +1,5 @@
 <map id="AppL10N" name="AppL10N">
-<area shape="rect" id="Node000001" title="AppL10N for the sake of dependency injection is defined as registerd service which simply return an i..." alt="" coords="5,93,81,119"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="15,5,72,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="44,45,43,55,45,93,39,93,38,55,39,44"/>
-<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="46,45,46,93,41,93,41,45"/>
+<area shape="rect" id="Node000001" title="AppL10N for the sake of dependency injection is defined as registerd service which simply return an i..." alt="" coords="5,80,81,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="15,5,71,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="46,48,46,80,40,80,40,48"/>
 </map>

@@ -1,41 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,281,61,307"/>
-<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_encryption_key_pair_changed.html" title="Fired before a new key&#45;pair has been generated and saved." alt="" coords="123,5,334,31"/>
-<area shape="poly" id="edge254_Node000000_Node000001" title=" " alt="" coords="32,267,34,218,45,157,55,125,68,94,85,65,108,40,124,29,127,33,111,44,90,68,73,96,60,127,50,158,40,219,37,267"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_encryption_key_pair_changed.html" title="Fired before a new key&#45;pair has been generated and saved." alt="" coords="119,55,339,80"/>
-<area shape="poly" id="edge255_Node000000_Node000002" title=" " alt="" coords="34,267,40,228,52,179,74,131,89,109,108,89,125,78,128,82,111,93,93,112,78,133,57,181,45,229,39,268"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_encryption_service_bound.html" title="Emitted after the encryption service has been bound to a specific user or group." alt="" coords="146,104,311,129"/>
-<area shape="poly" id="edge256_Node000000_Node000003" title=" " alt="" coords="37,267,46,237,60,202,80,168,108,139,125,128,145,121,147,126,128,133,111,143,84,171,65,205,51,239,42,269"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_entity_manager_bound_event.html" title="Can be used to regenerate cached entities after an entity&#45;manager shoot&#45;down." alt="" coords="140,153,317,179"/>
-<area shape="poly" id="edge257_Node000000_Node000004" title=" " alt="" coords="44,268,69,226,87,205,108,188,139,174,141,178,111,192,90,209,73,229,48,270"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_entity_manager_closed_event.html" title="Can be used to regenerate cached entities after an entity&#45;manager shoot&#45;down." alt="" coords="138,203,319,228"/>
-<area shape="poly" id="edge258_Node000000_Node000005" title=" " alt="" coords="57,270,81,252,108,237,141,226,143,231,110,242,84,257,60,274"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_musician_email_event.html" title="Base class for musician email events." alt="" coords="158,252,299,277"/>
-<area shape="poly" id="edge259_Node000000_Node000006" title=" " alt="" coords="74,285,157,273,158,278,75,291"/>
-<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_composite_payment_notification_message_id.html" title="Event fired by the Musician entity through a life&#45;cycle hook after the bulkTransaction address is cha..." alt="" coords="124,302,333,342"/>
-<area shape="poly" id="edge265_Node000000_Node000012" title=" " alt="" coords="75,297,124,304,123,310,75,302"/>
-<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_registration_confirmation.html" title="ORM &#45;&gt; cloud event forwarding." alt="" coords="109,367,348,392"/>
-<area shape="poly" id="edge266_Node000000_Node000013" title=" " alt="" coords="59,315,83,335,110,352,145,364,143,369,108,356,80,339,55,319"/>
-<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_sepa_bulk_transaction_submit_date.html" title="Event fired by the Musician entity through a life&#45;cycle hook after the bulkTransaction address is cha..." alt="" coords="119,417,338,457"/>
-<area shape="poly" id="edge267_Node000000_Node000014" title=" " alt="" coords="48,318,73,361,90,383,111,401,134,414,131,419,108,405,87,386,69,364,43,321"/>
-<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_change_registration_confirmation.html" title="ORM &#45;&gt; cloud event forwarder." alt="" coords="113,481,344,507"/>
-<area shape="poly" id="edge268_Node000000_Node000015" title=" " alt="" coords="41,320,48,354,62,394,82,433,111,467,131,479,128,483,108,471,78,436,57,396,43,355,36,321"/>
-<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_event.html" title="Base class for project events." alt="" coords="180,531,277,556"/>
-<area shape="poly" id="edge269_Node000000_Node000016" title=" " alt="" coords="38,320,43,363,54,417,76,471,92,495,111,516,126,527,144,534,180,541,179,546,142,539,124,531,108,520,87,498,71,473,49,418,37,364,33,321"/>
-<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html" title="Dispatched after flushing entities to the data&#45;base, but before the final commit." alt="" coords="155,580,302,605"/>
-<area shape="poly" id="edge270_Node000000_Node000017" title=" " alt="" coords="41,320,66,454,87,523,98,549,111,567,132,580,156,588,154,593,130,585,107,571,94,552,82,525,61,455,36,321"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_musician_email.html" title="Event fired by the Musician entity through a life&#45;cycle hook after the email address is changed." alt="" coords="398,153,577,179"/>
-<area shape="poly" id="edge260_Node000006_Node000007" title=" " alt="" coords="312,251,347,237,361,226,370,213,379,200,395,188,420,176,422,181,397,192,383,204,374,216,365,229,349,242,314,256"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_persist_musician_email.html" title="Event fired by the Musician entity through a life&#45;cycle hook after a new email address has been persi..." alt="" coords="400,203,575,228"/>
-<area shape="poly" id="edge261_Node000006_Node000008" title=" " alt="" coords="309,247,419,225,420,231,310,252"/>
-<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_remove_musician_email.html" title="Event fired by the Musician entity through a life&#45;cycle hook after the email address is changed." alt="" coords="396,252,579,277"/>
-<area shape="poly" id="edge262_Node000006_Node000009" title=" " alt="" coords="313,262,396,262,396,267,313,267"/>
-<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_persist_musician_email.html" title="Event fired by the Musician entity through a life&#45;cycle hook after a new email address has been persi..." alt="" coords="403,301,571,327"/>
-<area shape="poly" id="edge263_Node000006_Node000010" title=" " alt="" coords="310,277,420,299,419,304,309,283"/>
-<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_remove_musician_email.html" title="Event fired by the Musician entity through a life&#45;cycle hook after the email address is changed." alt="" coords="399,351,575,376"/>
-<area shape="poly" id="edge264_Node000006_Node000011" title=" " alt="" coords="314,274,349,288,365,300,374,312,383,324,397,336,426,348,424,353,395,340,379,328,370,315,361,303,347,292,312,279"/>
-<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_project_updated_event.html" title="Dispatched after flushing entities to the data&#45;base, but before the final commit." alt="" coords="401,555,574,580"/>
-<area shape="poly" id="edge271_Node000017_Node000018" title=" " alt="" coords="316,582,400,573,401,578,316,587"/>
-<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_project_updated_event.html" title="Dispatched before flushing entities to the data&#45;base." alt="" coords="404,604,571,629"/>
-<area shape="poly" id="edge272_Node000017_Node000019" title=" " alt="" coords="316,598,404,606,404,612,316,603"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,153,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_address_book.html" title="Cloud&#45; and CardDAV address&#45;book integration." alt="" coords="201,5,300,32"/>
+<area shape="poly" id="edge312_Node000000_Node000001" title=" " alt="" coords="169,16,200,16,200,21,169,21"/>
 </map>

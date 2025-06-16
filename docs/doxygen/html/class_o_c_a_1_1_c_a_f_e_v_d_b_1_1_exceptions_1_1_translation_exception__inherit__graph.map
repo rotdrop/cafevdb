@@ -1,7 +1,7 @@
 <map id="TranslationException" name="TranslationException">
-<area shape="rect" id="Node000001" title="Base&#45;class for database exceptions." alt="" coords="5,152,149,177"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="37,79,117,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,118,80,152,75,152,75,118"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="23,5,131,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="80,44,80,79,75,79,75,44"/>
+<area shape="rect" id="Node000001" title="Base&#45;class for database exceptions." alt="" coords="5,155,149,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="37,80,117,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,122,80,154,74,154,74,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="23,5,131,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="80,48,80,80,74,80,74,48"/>
 </map>

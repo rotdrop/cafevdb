@@ -1,11 +1,11 @@
 <map id="registerMimeTypeMappings" name="registerMimeTypeMappings">
-<area shape="rect" id="Node000001" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="5,45,187,70"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1f4cd024c04b5fd11c66259435da40ab" title="Return an array of required mime type mappings missing from this Nextcloud instance." alt="" coords="235,45,436,70"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,55,221,55,221,60,187,60"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a3df413a5505fe78edb1fe26f42817d86" title=" " alt="" coords="484,45,663,70"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="436,55,470,55,470,60,436,60"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="711,5,872,45"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="660,42,697,37,697,42,661,47"/>
-<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab6a06d8f1456a89ac1168e7c8d270595" title="Log an informational message." alt="" coords="711,69,872,109"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="661,67,697,73,697,78,660,73"/>
+<area shape="rect" id="Node000001" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="5,47,186,73"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1f4cd024c04b5fd11c66259435da40ab" title="Return an array of required mime type mappings missing from this Nextcloud instance." alt="" coords="234,47,434,73"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,57,218,57,218,63,186,63"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a3df413a5505fe78edb1fe26f42817d86" title=" " alt="" coords="482,47,660,73"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="434,57,466,57,466,63,434,63"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8b4473cf03ce9c26357c5de69071e89" title=" " alt="" coords="708,5,869,48"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="660,44,692,39,693,44,661,49"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab6a06d8f1456a89ac1168e7c8d270595" title="Log an informational message." alt="" coords="708,72,869,115"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="661,71,693,76,692,81,660,76"/>
 </map>

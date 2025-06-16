@@ -1,27 +1,29 @@
 <map id="getSharedFolderPath" name="getSharedFolderPath">
-<area shape="rect" id="Node000001" title=" " alt="" coords="905,105,1049,131"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a38184946f8c803684078be13c8533425" title="Return the full path to the document templates folder." alt="" coords="671,80,857,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="891,111,857,106,858,101,892,105"/>
-<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a1fe279ec39675001095beafdf178b811" title="Create the full&#45;path for the sub&#45;folder corresponding to the given config key." alt="" coords="681,129,847,155"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="892,130,848,135,847,130,892,125"/>
-<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a642b5ca28f1a47e6409971d1aeb16c2c" title=" " alt="" coords="471,55,621,80"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="695,128,670,119,622,94,591,83,593,77,624,89,672,114,697,123"/>
-<area shape="rect" id="Node000011" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a357251e007461d82f748af451aed3a91" title=" " alt="" coords="473,104,619,129"/>
-<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="667,133,619,128,620,123,668,128"/>
-<area shape="rect" id="Node000012" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ac387596eb24fa62f0170220095911a30" title=" " alt="" coords="469,153,623,179"/>
-<area shape="poly" id="edge11_Node000003_Node000012" title=" " alt="" coords="667,155,623,160,622,155,667,150"/>
-<area shape="rect" id="Node000013" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa58d61eef353556bd02376d0ac587ba0" title=" " alt="" coords="471,203,621,228"/>
-<area shape="poly" id="edge12_Node000003_Node000013" title=" " alt="" coords="714,162,624,193,586,205,584,200,622,187,712,157"/>
-<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a96fbb9c63c9b6d8451834c182a7484b9" title=" " alt="" coords="249,5,421,31"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="477,54,389,33,391,28,478,49"/>
-<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa0764db1b1533db78bb2f515fad6f25a" title=" " alt="" coords="248,55,421,80"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="458,70,421,70,421,65,458,65"/>
-<area shape="rect" id="Node000008" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ab75c56fd73f62d264749cb114869e61f" title=" " alt="" coords="259,104,410,129"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="478,86,391,107,389,101,477,81"/>
-<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a50bd1326b527dbc5a86f52520df9b930" title=" " alt="" coords="21,55,184,80"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="235,70,184,70,184,65,235,65"/>
-<area shape="rect" id="Node000009" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a9125323da063879b100432dc6bb2eb84" title=" " alt="" coords="17,104,188,129"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="245,119,188,119,188,114,245,114"/>
-<area shape="rect" id="Node000010" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a902ebc003b3dd89af022973166d54d48" title=" " alt="" coords="5,153,200,179"/>
-<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="262,135,164,156,163,151,261,130"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="903,132,1046,159"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a38184946f8c803684078be13c8533425" title="Return the full path to the document templates folder." alt="" coords="668,107,855,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="887,138,855,134,856,128,888,132"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a1fe279ec39675001095beafdf178b811" title="Create the full&#45;path for the sub&#45;folder corresponding to the given config key." alt="" coords="678,157,845,184"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="888,158,846,163,845,158,887,153"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a642b5ca28f1a47e6409971d1aeb16c2c" title=" " alt="" coords="470,81,618,108"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="687,155,667,148,619,122,590,111,592,106,621,118,669,143,689,150"/>
+<area shape="rect" id="Node000012" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a357251e007461d82f748af451aed3a91" title=" " alt="" coords="471,132,617,159"/>
+<area shape="poly" id="edge11_Node000003_Node000012" title=" " alt="" coords="662,162,618,157,618,151,663,157"/>
+<area shape="rect" id="Node000013" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ac387596eb24fa62f0170220095911a30" title=" " alt="" coords="468,183,620,209"/>
+<area shape="poly" id="edge12_Node000003_Node000013" title=" " alt="" coords="663,185,621,190,621,184,662,180"/>
+<area shape="rect" id="Node000014" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa58d61eef353556bd02376d0ac587ba0" title=" " alt="" coords="469,233,619,260"/>
+<area shape="poly" id="edge13_Node000003_Node000014" title=" " alt="" coords="709,192,621,224,588,235,586,230,619,219,707,187"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a96fbb9c63c9b6d8451834c182a7484b9" title=" " alt="" coords="248,5,420,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="497,77,419,47,384,35,386,30,421,41,499,73"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa0764db1b1533db78bb2f515fad6f25a" title=" " alt="" coords="248,56,420,83"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="454,87,420,82,421,77,455,81"/>
+<area shape="rect" id="Node000008" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#abd5dee9d946cd26e94c1f3d9b019756d" title=" " alt="" coords="276,107,392,133"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="455,108,392,116,392,110,454,103"/>
+<area shape="rect" id="Node000009" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ab75c56fd73f62d264749cb114869e61f" title=" " alt="" coords="259,157,408,184"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="485,116,469,122,421,148,389,159,387,154,419,143,467,118,483,111"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a50bd1326b527dbc5a86f52520df9b930" title=" " alt="" coords="22,56,183,83"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="232,72,184,72,184,67,232,67"/>
+<area shape="rect" id="Node000010" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a9125323da063879b100432dc6bb2eb84" title=" " alt="" coords="17,132,188,159"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="243,163,188,157,188,152,244,158"/>
+<area shape="rect" id="Node000011" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a902ebc003b3dd89af022973166d54d48" title=" " alt="" coords="5,183,200,209"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="244,183,201,188,200,183,243,178"/>
 </map>

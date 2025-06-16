@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024 Claus-Justus Heine
+ * @copyright 2011-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -93,17 +93,24 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
 
     $template = $this->renderer->template();
     switch ($template) {
-      case 'all-musicians':
+      case PageRenderer\AllMusicians::TEMPLATE:
         $name  = $this->l->t('Musicians');
         break;
-      case 'project-participants':
+      case PageRenderer\ProjectParticipants::TEMPLATE:
         $projectId = $renderer->getProjectId();
         $projectName = $renderer->getProjectName();
         $name = $this->l->t('project participants for %s', $projectName);
         $instrumentLabel = $this->l->t('Instrument');
         $instrumentCol = true;
         break;
-      case 'sepa-bank-accounts':
+      case PageRenderer\ProjectAssociates::TEMPLATE:
+        $projectId = $renderer->getProjectId();
+        $projectName = $renderer->getProjectName();
+        $name = $this->l->t('project associates for %s', $projectName);
+        $instrumentLabel = $this->l->t('Role');
+        $instrumentCol = true;
+        break;
+      case PageRenderer::SepaBankAccounts::TEMPLATE:
         $name = $this->l->t('SEPA bank accounts');
         break;
       default:

@@ -6,5 +6,6 @@ var dir_0db9087837214f042eca4de92637d27b =
     [ "ICardBackend.php", "_i_card_backend_8php_source.html", null ],
     [ "ImageExportPlugin.php", "_image_export_plugin_8php_source.html", null ],
     [ "MusicianCard.php", "_musician_card_8php_source.html", null ],
-    [ "MusicianCardBackend.php", "_musician_card_backend_8php_source.html", null ]
+    [ "MusicianCardBackend.php", "_musician_card_backend_8php_source.html", null ],
+    [ "Registration.php", "_address_book_2_registration_8php_source.html", null ]
 ];

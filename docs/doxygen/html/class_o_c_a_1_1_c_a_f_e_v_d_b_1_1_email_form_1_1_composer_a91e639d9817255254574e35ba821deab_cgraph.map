@@ -1,0 +1,10 @@
+<map id="recordMessageDiagnostics" name="recordMessageDiagnostics">
+<area shape="rect" id="Node000001" title="Record diagnostic output from the actual message composition for the status page." alt="" coords="5,31,185,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#aa7c51513462cc05bd28c79540a6d374a" title="Return the calendar attachment data." alt="" coords="233,5,360,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,30,217,26,218,31,186,35"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a56fae4bd1b4337dfe78d90b051c93a01" title="Return the file attachment data." alt="" coords="240,56,352,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="186,53,225,58,224,63,185,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a35115d6c4451757ebad296254ead1c5a" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="408,31,478,57"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="361,27,393,33,392,38,360,32"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="353,57,392,50,393,55,353,62"/>
+</map>

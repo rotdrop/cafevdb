@@ -1,7 +1,11 @@
 <map id="listOperation" name="listOperation">
-<area shape="rect" id="Node000001" title=" " alt="" coords="260,45,355,70"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#a14428400ba81a6b3bada8ed41a0eb122" title="{}" alt="" coords="5,5,212,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="246,50,212,45,213,39,247,45"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#ac543d5ad3e8662676761e3eaf434c157" title="{}" alt="" coords="5,69,212,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="247,70,213,75,212,70,246,64"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="259,113,353,140"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a43fbdfb33d315ce9c5dd6f8ba93b8907" title="{}" alt="" coords="5,5,211,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="275,105,244,83,209,62,183,51,186,46,212,58,247,79,278,101"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#ac543d5ad3e8662676761e3eaf434c157" title="{}" alt="" coords="5,72,211,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="243,119,211,113,211,108,244,114"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html#a5997a390d555286aa4a63625ccaf54df" title="{}" alt="" coords="5,139,211,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="244,140,211,145,211,140,243,135"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#a14428400ba81a6b3bada8ed41a0eb122" title="{}" alt="" coords="5,205,211,248"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="278,152,247,175,212,196,186,207,183,202,209,191,244,170,275,148"/>
 </map>

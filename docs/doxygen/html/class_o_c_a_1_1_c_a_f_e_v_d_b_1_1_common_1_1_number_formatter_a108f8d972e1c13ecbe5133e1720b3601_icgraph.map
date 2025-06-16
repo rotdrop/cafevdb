@@ -1,7 +1,7 @@
 <map id="provideLanguage" name="provideLanguage">
-<area shape="rect" id="Node000001" title="Initialize locale dependent internal state from the given locale string." alt="" coords="144,31,264,56"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html#acd84f5ac6a3dcce85e3789a6357ebaa0" title=" " alt="" coords="5,5,96,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,34,96,28,97,23,131,29"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html#ab6643b93f57377aaca6ccff3a7b24022" title=" " alt="" coords="11,55,90,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,57,91,64,90,59,130,52"/>
+<area shape="rect" id="Node000001" title="Initialize locale dependent internal state from the given locale string." alt="" coords="143,31,262,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html#acd84f5ac6a3dcce85e3789a6357ebaa0" title=" " alt="" coords="5,5,95,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,34,95,29,96,23,128,29"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html#ab6643b93f57377aaca6ccff3a7b24022" title=" " alt="" coords="11,56,89,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,59,90,66,89,60,127,54"/>
 </map>

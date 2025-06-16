@@ -1,0 +1,5 @@
+<map id="validateSepaAccount" name="validateSepaAccount">
+<area shape="rect" id="Node000001" title="Validate the given SEPA bank account." alt="" coords="5,5,150,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a71a07a45f535949b89d3ba7569f13b0c" title="Validate whether the given string conforms to a very restricted character set." alt="" coords="198,5,328,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,16,182,16,182,21,150,21"/>
+</map>

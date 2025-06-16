@@ -36,7 +36,6 @@ use OCP\IRequest;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
-use OCA\CAFEVDB\Database\Doctrine\ORM;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -106,32 +105,38 @@ abstract class PMETableViewBase extends AbstractPageRenderer
    */
   protected const JOIN_SINGLE_VALUED = 0x10;
 
-  const MUSICIANS_TABLE = 'Musicians';
-  const MUSICIAN_EMAILS_TABLE = 'MusicianEmailAddresses';
-  const PROJECTS_TABLE = 'Projects';
-  const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
-  const SEPA_BANK_ACCOUNTS_TABLE = 'SepaBankAccounts';
-  const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
-  const SEPA_BULK_TRANSACTIONS_TABLE = 'SepaBulkTransactions';
-  const SEPA_BULK_TRANSACTION_DATA_TABLE = 'SepaBulkTransactionData';
-  const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
-  const PROJECT_PARTICIPANT_FIELDS_TABLE = 'ProjectParticipantFields';
-  const PROJECT_PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
-  const PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE = 'ProjectParticipantFieldsDataOptions';
+  const COMPOSITE_PAYMENTS_TABLE = 'CompositePayments';
   const DATABASE_STORAGES_TABLE = 'DatabaseStorages';
   const DATABASE_STORAGE_DIR_ENTRIES_TABLE = 'DatabaseStorageDirEntries';
+  const DONATION_RECEIPTS_TABLE = 'DonationReceipts';
+  const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
+  const FILES_TABLE = 'Files';
   const INSTRUMENTS_TABLE = 'Instruments';
+  const INSTRUMENT_FAMILIES_JOIN_TABLE = 'instrument_instrument_family';
+  const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
   const INSTRUMENT_INSURANCES_TABLE = 'InstrumentInsurances';
-  const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
-  const COMPOSITE_PAYMENTS_TABLE = 'CompositePayments';
-  const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
-  const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
+  const INVOICES_TABLE = 'Invoices';
+  const INVOICE_ITEMS_TABLE = 'InvoiceItems';
+  const MUSICIANS_TABLE = 'Musicians';
+  const MUSICIAN_EMAILS_TABLE = 'MusicianEmailAddresses';
   const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstruments';
   const MUSICIAN_PHOTO_JOIN_TABLE = 'MusicianPhoto';
-  const TAX_EXEMPTION_NOTICES_TABLE = 'TaxExemptionNotices';
-  const DONATION_RECEIPTS_TABLE = 'DonationReceipts';
-  const FILES_TABLE = 'Files';
+  const PROJECTS_TABLE = 'Projects';
+  const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
+  const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
+  const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
+  const PROJECT_PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
+  const PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE = 'ProjectParticipantFieldsDataOptions';
+  const PROJECT_PARTICIPANT_FIELDS_TABLE = 'ProjectParticipantFields';
+  const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
   const SENT_EMAILS_TABLE = 'SentEmails';
+  const SEPA_BANK_ACCOUNTS_TABLE = 'SepaBankAccounts';
+  const SEPA_BULK_TRANSACTIONS_TABLE = 'SepaBulkTransactions';
+  const SEPA_BULK_TRANSACTION_DATA_TABLE = 'SepaBulkTransactionData';
+  const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
+  const TAX_EXEMPTION_NOTICES_TABLE = 'TaxExemptionNotices';
+  const TAX_EXEMPTION_ITEMS_TABLE = 'TaxExemptionItems';
+  const TAXATION_STATUTORY_SOURCES_TABLE = 'TaxationStatutorySources';
 
   const VALUES_SEP = ',';
   const JOIN_FIELD_NAME_SEPARATOR = ':';
@@ -154,6 +159,14 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   protected const PME_NAVIGATION_NO_MULTI = 'GUD';
   protected const PME_NAVIGATION_MULTI = 'GUDM';
 
+  protected const PERSISTENT_CGI_KEYS = [
+    'template',
+    'musicianId',
+    'projectId',
+    'projectName',
+    'recordsPerPage',
+  ];
+
   /** @var IL10N */
   protected IL10N $l;
 
@@ -175,17 +188,14 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   /** @var bool */
   protected $filterVisibility;
 
-  /** @var array default PHPMyEdit options */
-  protected $pmeOptions;
-
   /** @var ?int */
   protected $musicianId;
 
   /** @var ?int */
-  protected $projectId;
+  protected ?int $projectId;
 
   /** @var ?string */
-  protected $projectName;
+  protected ?string $projectName;
 
   /** @var int */
   protected $membersProjectId;
@@ -235,34 +245,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
    */
   protected $joinTables = null;
 
-  /**
-   * @var array
-   *
-   * Fetched from the database at construction.
-   */
-  protected $instrumentInfo;
-
-  /**
-   * @var array
-   *
-   * Fetched from the database at construction.
-   */
-  protected $instruments;
-
-  /**
-   * @var array
-   *
-   * Fetched from the database at construction.
-   */
-  protected $groupedInstruments;
-
-  /**
-   * @var array
-   *
-   * Fetched from the database at construction.
-   */
-  protected $instrumentFamilies;
-
   /** {@inheritdoc} */
   protected function __construct(
     protected string $template,
@@ -290,49 +272,57 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     // this is done by the legacy code itself.
     $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
-    $this->defaultFDD = $this->createDefaultFDD();
-
     $cgiDefault = [
-      'template' => fn($value):string => (string)($value ?? 'blog'),
       'musicianId' => fn($value):?int => $value === null ? null : (int)$value,
       'projectId' => fn($value):?int => $value === null ? null : (int)$value,
       'projectName' => fn($value):string => (string)($value ?? ''),
       'recordsPerPage' => fn($value):int => (int)($value ?? $this->getUserValue('pagerows', 20)),
     ];
 
-    $this->pmeOptions = [
+    foreach ($cgiDefault as $key => $default) {
+      $this->{lcFirst($key)} = $default($this->request[$key] ?? null);
+    }
+
+    $this->defaultFDD = $this->createDefaultFDD();
+  }
+
+  /**
+   * Create the base options array for phpMyEdit.
+   *
+   * @return array
+   */
+  protected function generateBasePMEOptions():array
+  {
+    $pmeOptions = [
       'cgi' => [ 'persist' => [] ],
       'display' => [],
       'css' => [ 'postfix' => [], ],
       'navigation' => self::PME_NAVIGATION_NO_MULTI,
     ];
 
-    foreach ($cgiDefault as $key => $default) {
-      $this->pmeOptions['cgi']['persist'][$key] =
-        $this->{lcFirst($key)} = $default($this->request[$key] ?? null);
+    foreach (self::PERSISTENT_CGI_KEYS as $key) {
+      $pmeOptions['cgi']['persist'][$key] = $this->{lcFirst($key)};
     }
 
-    $this->pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';
+    $pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';
 
-    $this->pmeOptions['cgi']['append'][$this->pme->cgiSysName('fl')] = $this->filterVisibility;
+    $pmeOptions['cgi']['append'][$this->pme->cgiSysName('fl')] = $this->filterVisibility;
 
-    $this->template = $template; // overwrite with child-class supplied value
+    $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['*']['pre'][] = [ $this, 'preTrigger' ];
 
-    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['*']['pre'][] = [ $this, 'preTrigger' ];
+    //$pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] = [ __CLASS__, 'suspendLoggingTrigger' ];
+    $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['after'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['after'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['copy']['after'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['delete']['after'][] = [ __CLASS__, 'resumeLoggingTrigger' ];
 
-    //$this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] = [ __CLASS__, 'suspendLoggingTrigger' ];
-    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['after'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['after'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['copy']['after'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['delete']['after'][] = [ __CLASS__, 'resumeLoggingTrigger' ];
+    $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['copy']['before'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['before'][] = [ $this, 'beforeAnythingTrimAnything' ];
 
-    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['copy']['before'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['before'][] = [ $this, 'beforeAnythingTrimAnything' ];
-
-    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['before'][] =
-      $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['delete']['before'][] = function(
+    $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['before'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['insert']['before'][] =
+      $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['delete']['before'][] = function(
         $pme,
         $op,
         $step,
@@ -344,7 +334,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
         return true;
       };
 
-    $this->pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['after'][] = function($pme) {
+    $pmeOptions[PHPMyEdit::OPT_TRIGGERS]['update']['after'][] = function($pme) {
       $pme->message = $this->l->n(
         '%n data field affected',
         '%n data fields affected',
@@ -352,7 +342,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       return true;
     };
 
-    $this->pmeOptions['display']['postfix'] = function($pme) {
+    $pmeOptions['display']['postfix'] = function($pme) {
       $html = '';
       $html .= $this->pme->htmlHiddenSys('reloadOuterForm', $this->reloadOuterForm);
       if (!$this->expertMode) {
@@ -383,16 +373,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       return $html;
     };
 
-    // @todo: the following should be done only on demand and is
-    // somewhat chaotic.
-
-    // List of instruments
-    $this->instrumentInfo =
-      $this->getDatabaseRepository(ORM\Entities\Instrument::class)->describeALL();
-    $this->instruments = $this->instrumentInfo['byId'];
-    $this->groupedInstruments = $this->instrumentInfo['nameGroups'];
-    $this->instrumentFamilies =
-      $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class)->values();
+    return $pmeOptions;
   }
 
   /**
@@ -405,7 +386,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     $multiplicities = array_values(DBTypes\EnumParticipantFieldMultiplicity::toArray());
     $result = [];
     foreach ($multiplicities as $tag) {
-      $slug = 'extra field '.$tag;
+      $slug = 'extra field ' . $tag;
       $result[$tag] = $this->l->t($slug);
     }
     return $result;
@@ -484,7 +465,26 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     } catch (Throwable $t) {
       $this->logException($t, 'Rolling back SQL transaction ...');
       $this->pme->rollBack();
-      throw new Exception($this->l->t('SQL Transaction failed: %s', $t->getMessage()), (int)$t->getCode(), $t);
+      if ($t instanceof Exceptions\DatabaseLegacyException) {
+        $context = [
+          'sql' => $t->getSql(),
+          'pmeLine' => $t->getPmeLine(),
+        ];
+        $this->logError('Legacy phpMyEdit error at line ' . $t->getPmeLine() . ', SQL: ' . $t->getSql());
+        // $extraMesssage = '; ' .  $this->l->t(
+        //   'SQL-querey at %1$s: "%2$s".',
+        //   [ 'phpMyEdit.php:' . $t->getPmeLine, $t->getSql() ],
+        // );
+        $extraMesssage = '';
+      } else {
+        $context = null;
+        $extraMesssage = '';
+      }
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('SQL Transaction failed: %s', $t->getMessage()) . $extraMesssage,
+        previous: $t,
+        context: $context,
+      );
     }
   }
 
@@ -582,13 +582,13 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   }
 
   /**
-   * @param array $opts Options to be merged in the default options.
+   * @param array $opts Options to be merged into the default options.
    *
    * @return array Merged options array.
    */
   protected function mergeDefaultOptions(array $opts):array
   {
-    $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
     if ($this->pmeBare) {
       // disable all navigation buttons, probably for html export
       $opts['navigation'] = 'N'; // no navigation
@@ -612,7 +612,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   }
 
   /**
-   * The following maybe does not belong her, but gives some outdated
+   * The following maybe does not belong here, but gives some outdated
    * docs for the field definitions (fdd).
    *
    * Field definitions
@@ -714,6 +714,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       'deleted' => [
         'name' => $this->l->t('Revoked'),
         'input' => $this->expertMode ? '' : 'R',
+        'select'=> 'T',
         'maxlen' => 10,
         'sort' => true,
         'css' => [ 'postfix' => [ 'revocation-date', 'date',  'show-disabled-shown', 'hide-disabled-hidden', ], ],
@@ -879,53 +880,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     $this->debug($prefix .'OLDVALS ' . print_r(Util::arraySliceKeys($oldValues, $onlyKeys), true), [], 1);
     $this->debug($prefix . 'NEWVALS ' . print_r(Util::arraySliceKeys($newValues, $onlyKeys), true), [], 1);
     $this->debug($prefix . 'CHANGED ' . print_r($changed, true), [], 1);
-  }
-
-  /**
-   * The ranking of the mussician's instruments is implicitly stored
-   * in the order of the instrument ids. Change the coressponding
-   * field to include the ranking explicitly.
-   *
-   * @param PHPMyEdit $pme The phpMyEdit instance.
-   *
-   * @param string $op The operation, 'insert', 'update' etc.
-   *
-   * @param string $step 'before' or 'after'.
-   *
-   * @param array $oldValues Self-explanatory.
-   *
-   * @param array $changed Set of changed fields, may be modified by the callback.
-   *
-   * @param null|array $newValues Set of new values, which may also be modified.
-   *
-   * @return bool If returning @c false the operation will be terminated
-   */
-  public function extractInstrumentRanking(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
-  {
-    $keyField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
-    $rankingField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'ranking');
-
-    $this->debug('FIELDS: ' . $keyField . ' / ' . $rankingField);
-    $this->debugPrintValues($oldValues, $changed, $newValues, [ $keyField, $rankingField ]);
-
-    foreach (['old', 'new'] as $dataSet) {
-      $keys = Util::explode(self::VALUES_SEP, Util::removeSpaces(${$dataSet.'Values'}[$keyField ] ?? ''));
-      $ranking = [];
-      foreach ($keys as $key) {
-        $ranking[] = $key.self::JOIN_KEY_SEP.(count($ranking)+1);
-      }
-      ${$dataSet.'Values'}[$rankingField] = implode(self::VALUES_SEP, $ranking);
-    }
-
-    // as the ordering is implied by the ordering of keys the ranking
-    // changes whenever the keys change.
-    if (array_search($keyField, $changed) !== false) {
-      $changed[] = $rankingField;
-    }
-
-    $this->debugPrintValues($oldValues, $changed, $newValues, [ $keyField, $rankingField ], 'after');
-
-    return true;
   }
 
   /**
@@ -1411,6 +1365,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
                     // treat this as autoincrement or otherwise auto-generated ids
                     continue;
                   }
+                  if ($meta->hasAssociation($key)) {
+                    $entityName = $meta->getAssociationMapping($key)['targetEntity'];
+                    $value = $this->entityManager->getReference($entityName, $value);
+                  }
                   $entity[$key] = $value;
                 }
                 $needPersist = true;
@@ -1517,6 +1475,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           $this->debug('Entity not found, creating');
           $entity = new $entityClass;
           foreach ($entityId as $key => $value) {
+            if ($meta->hasAssociation($key)) {
+              $entityName = $meta->getAssociationMapping($key)['targetEntity'];
+              $value = $this->entityManager->getReference($entityName, $value);
+            }
             $entity[$key] = $value;
           }
         }
@@ -1856,6 +1818,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $this->debug('GENERATE NEW ENTITY OF CLASS ' . $entityClass);
               $entity = new $entityClass;
               foreach ($entityId as $key => $value) {
+                if ($meta->hasAssociation($key)) {
+                  $entityName = $meta->getAssociationMapping($key)['targetEntity'];
+                  $value = $this->entityManager->getReference($entityName, $value);
+                }
                 $entity[$key] = $value;
               }
               $needPersist = true;
@@ -1925,6 +1891,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
         $entity = new $entityClass;
         foreach ($entityId as $key => $value) {
           $this->debug('TRY SET ID ' . $key . ' => ' . $value);
+          if ($meta->hasAssociation($key)) {
+            $entityName = $meta->getAssociationMapping($key)['targetEntity'];
+            $value = $this->entityManager->getReference($entityName, $value);
+          }
           $entity[$key] = $value;
         }
         foreach ($changeSet as $column => $field) {
@@ -2179,7 +2149,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $mainTableColumn = $joinTableValue['column']?: 'id';
               $joinCondition .= '= '.$joinTables[$joinTableValue['table']].'.'.self::COL_QUOTE.$mainTableColumn.self::COL_QUOTE;
               $group = $grouped[$joinTableValue['table']];
-              $groupOrderBy = array_merge($groupOrderBy, $orderBy[$joinTableValue['table']]);
+              $groupOrderBy = array_merge($groupOrderBy, $orderBy[$joinTableValue['table']] ?? []);
             } elseif (array_key_exists('value', $joinTableValue)
                        && ($joinTableValue['value'] === null || $joinTableValue['value'] === false)) {
               $joinCondition = $joinColumn . ' IS NULL';
@@ -2192,6 +2162,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
                 return is_numeric($value) ? $value : "'".addslashes($value)."'";
               }, is_array($values) ? $values : [ $values ]);
               $joinCondition .= 'IN (' . implode(self::VALUES_SEP, $values) . ')';
+            } elseif (!empty($joinTableValue['!value'])) {
+              $values = $joinTableValue['!value'];
+              $values = array_map(function($value) {
+                return is_numeric($value) ? $value : "'".addslashes($value)."'";
+              }, is_array($values) ? $values : [ $values ]);
+              $joinCondition .= 'NOT IN (' . implode(self::VALUES_SEP, $values) . ')';
             } elseif (!empty($joinTableValue['condition'])) {
               $joinCondition .= $joinTableValue['condition'];
             } elseif (!empty($joinTableValue['self'])) {
@@ -2427,7 +2403,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
           if ($joinIndex === false) {
             $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
-            throw new Exception($this->l->t("Master join-table field for %s not found.", $table));
+            throw new Exception(
+              $this->l->t(
+                'Master join-table field for %1$s not found, avalaible fields: "%2$s", missing "%3$s".',
+                [ $table, implode('", "', array_keys($fieldDescriptionData)), $masterFieldName ],
+              )
+            );
           }
           if (isset($fieldDescriptionData[$masterFieldName]['values']['join']['reference'])) {
             $joinIndex = $fieldDescriptionData[$masterFieldName]['values']['join']['reference'];
@@ -2589,11 +2570,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       $l10nJoins[] = $l10nJoin;
     }
     $table = explode(self::VALUES_TABLE_SEP, $joinInfo['table'])[0];
+
     $query = 'SELECT t.*'
       . ', '
-      . implode(', ', $l10nFields).'
-  FROM '.$table.' t
-'.implode('', $l10nJoins);
+      . implode(', ', $l10nFields) . '
+  FROM ' . $table . ' t
+' . implode('', $l10nJoins);
     if ($onlyTranslated) {
       array_map(fn($field) => 'l10n_'.$field.' IS NOT NULL', $fields);
       $query .= ' WHERE '
@@ -2635,6 +2617,72 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   AND $table.object_class = "'.addslashes($joinInfo['entity']).'"',
       ],
     ];
+  }
+
+  /**
+   * Generate an SQL fragment for the sake of haveing translated enum values
+   * available in the legacy code.
+   *
+   * @param string $enumClass
+   *
+   * @return string SQL fragment.
+   */
+  protected function makeEnumTranslationsTable(string $enumClass):string
+  {
+    $l10nValues = $enumClass::getL10NValues($this->l);
+    $selects = [];
+    foreach ($l10nValues as $value => $l10nValue) {
+      $selects[] = "SELECT '{$value}' AS value, '{$l10nValue}' AS l10n_value";
+    }
+    $union = implode('
+UNION
+', $selects);
+
+    return $union;
+  }
+
+  /**
+   * Generate an SQL fragment for the sake of haveing translated enum values
+   * available in the legacy code.
+   *
+   * - l10n_FIELD -- translated field will fallback translation to original value
+   *
+   * @param array $joinInfo Join desciption, see PMETableViewBase::defineJoinStructure().
+   *
+   * @param array $fields FIELDNAME => ENUM_CLASS array
+   *
+   * @return string SQL fragment.
+   */
+  protected function makeEnumTranslationsJoin(array $joinInfo, array $fields):string
+  {
+    $mainTableAlias = '_enum_main_table';
+    $l10nFields = [];
+    $enumSelects = [];
+    foreach ($fields as $field => $enumClass) {
+      $l10nValues = $enumClass::getL10NValues($this->l);
+      $selects = [];
+      foreach ($l10nValues as $value => $l10nValue) {
+        $selects[] = "SELECT '{$value}' AS value, '{$l10nValue}' AS l10n_value";
+      }
+      $alias = "`_enum_table_{$field}`";
+      $union = implode('
+UNION
+', $selects);
+      $enumSelects[] = "LEFT JOIN (
+{$union}
+) {$alias}
+ON {$mainTableAlias}.`{$field}` = {$alias}.value
+";
+      $l10nFields[] = "{$alias}.l10n_value AS `l10n_{$field}`";
+    }
+    list($table,) = explode(self::VALUES_TABLE_SEP, $joinInfo['table']);
+
+    $query = "SELECT {$mainTableAlias}.*,
+  " . implode(', ', $l10nFields) . "
+  FROM " . $table . " {$mainTableAlias}
+" . implode($enumSelects);
+
+    return $query;
   }
 
   /**

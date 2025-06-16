@@ -16,5 +16,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_group_folders_service =
     [ "searchFolders", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_group_folders_service.html#ab053279bea70dd2be3ff1676354fd041", null ],
     [ "setGroupPermissions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_group_folders_service.html#ae04f6099f86829bf90861bfb46a86041", null ],
     [ "setL10N", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_group_folders_service.html#af90f86d01e7d58d8929f5b654a9ecaa5", null ],
-    [ "$sharedFolders", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_group_folders_service.html#aaf64dabf2ee2db82d4585c04d8dc9237", null ]
+    [ "$sharedFolders", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_group_folders_service.html#ae9e782df46821055a96a0f1effc85271", null ]
 ];

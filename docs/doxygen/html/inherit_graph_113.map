@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service.html" title="Telephone number validation." alt="" coords="5,5,155,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,147,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_p_h_p_mailer.html" title="Slightly enhanced version of PHPMailer." alt="" coords="195,5,279,32"/>
+<area shape="poly" id="edge519_Node000000_Node000001" title=" " alt="" coords="162,16,194,16,194,21,162,21"/>
 </map>

@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener as TranslatableListener;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -55,8 +56,8 @@ use OCA\CAFEVDB\Database\EntityManager;
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\TranslationEntity(class: 'TableFieldTranslation')]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: 'OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused')]
-#[ORM\EntityListeners(['\OCA\CAFEVDB\Listener\ProjectParticipantFieldEntityListener'])]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\ProjectParticipantFieldEntityListener::class])]
 class ProjectParticipantField implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -166,6 +167,15 @@ class ProjectParticipantField implements \ArrayAccess
   private $displayOrder = null;
 
   /**
+   * @var null|string
+   *
+   * If non-null show the field only in the respective view, either
+   * "participants" or "associates". If null show the field in either view.
+   */
+  #[ORM\Column(type: 'EnumParticipationContext', nullable: false, options: ['default' => 'unrestricted'])]
+  private ParticipationContext $participationContext;
+
+  /**
    * @var bool|null
    */
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => '0'])]
@@ -202,6 +212,7 @@ class ProjectParticipantField implements \ArrayAccess
     $this->fieldData = new ArrayCollection();
     $this->dataOptions = new ArrayCollection();
     $this->participantAccess = Types\EnumAccessPermission::NONE();
+    $this->participationContext = ParticipationContext::UNRESTRICTED();
   }
   // phpcs:enable
 
@@ -457,6 +468,34 @@ class ProjectParticipantField implements \ArrayAccess
   public function getDisplayOrder()
   {
     return $this->displayOrder;
+  }
+
+  /**
+   * Set participationContext.
+   *
+   * @param null|string|ParticipationContext $participationContext On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
+   *
+   * @return ProjectParticipantField
+   */
+  public function setParticipationContext(null|string|ParticipationContext $participationContext):?ProjectParticipantField
+  {
+    if ($participationContext === null) {
+      $this->participationContext = null;
+    } elseif ((string)$participationContext !== ((string)$this->participationContext ?? '')) {
+      $this->participationContext = new ParticipationContext($participationContext);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Get participationContext.
+   *
+   * @return ParticipationContext
+   */
+  public function getParticipationContext():ParticipationContext
+  {
+    return $this->participationContext;
   }
 
   /**
@@ -723,13 +762,15 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set participantAccess.
    *
-   * @param null|string|Types\EnumAccessPermission $participantAccess On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
+   * @param string|Types\EnumAccessPermission $participantAccess On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
    *
    * @return ProjectParticipantField
    */
-  public function setParticipantAccess(mixed $participantAccess):ProjectParticipantField
+  public function setParticipantAccess(string|Types\EnumAccessPermission $participantAccess):ProjectParticipantField
   {
-    $this->participantAccess = $participantAccess;
+    if ((string)$participantAccess !== (string)$this->participantAccess ?? '') {
+      $this->participantAccess = new Types\EnumAccessPermission($participantAccess);
+    }
 
     return $this;
   }
@@ -737,9 +778,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get participantAccess.
    *
-   * @return null|string|Types\EnumAccessPermission
+   * @return Types\EnumAccessPermission
    */
-  public function getParticipantAccess():mixed
+  public function getParticipantAccess():Types\EnumAccessPermission
   {
     return $this->participantAccess;
   }

@@ -1,0 +1,5 @@
+<map id="setInvoice" name="setInvoice">
+<area shape="rect" id="Node000001" title="Sets $invoice." alt="" coords="242,21,323,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#aed25625f6c815dd26171ae7357ba05c0" title="Set notificationEmail." alt="" coords="5,5,194,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,37,194,37,194,32,226,32"/>
+</map>

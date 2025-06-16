@@ -1,0 +1,5 @@
+<map id="moveCalendarObject" name="moveCalendarObject">
+<area shape="rect" id="Node000001" title="Move the given object, given by its local URI relative to the old calendar, to the given new calendar..." alt="" coords="5,5,149,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#afd08da0f2d0c21a2bc9d5d5ae56f7907" title="Get the uri of the original calendar." alt="" coords="197,5,334,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,16,181,16,181,21,149,21"/>
+</map>

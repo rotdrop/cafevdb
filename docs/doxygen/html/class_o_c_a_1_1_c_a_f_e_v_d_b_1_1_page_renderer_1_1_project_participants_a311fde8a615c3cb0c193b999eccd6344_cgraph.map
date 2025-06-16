@@ -1,0 +1,20 @@
+<map id="beforeUpdateEnsureInstrumentationNumbers" name="beforeUpdateEnsureInstrumentationNumbers">
+<area shape="rect" id="Node000001" title="Make sure at least a dummy instrumentation number exists when adding people to project instruments." alt="" coords="5,123,236,165"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a586e3ce7bc155a85dae0bbe3149e4181" title="Be noisy if debugging is enabled." alt="" coords="594,5,799,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,120,208,82,245,64,283,49,358,32,436,22,511,18,578,17,578,23,511,23,436,27,359,37,284,55,247,69,211,87,152,125"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a0160798c24d6bddc98d5192235a59982" title=" " alt="" coords="290,64,540,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="230,119,289,108,290,113,231,125"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a0bef3dc2eedd594dab3a84b15d183c36" title="A preg_explode() wrapper with some extra features." alt="" coords="609,172,784,215"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="236,145,384,153,546,167,594,173,593,178,546,172,384,158,236,150"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a1c7326cf6f827db64c27bbb89f64dd7d" title="Explode a string of the form." alt="" coords="327,181,502,224"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="231,163,313,180,312,185,230,169"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="284,248,546,291"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="155,163,214,199,285,234,303,240,301,245,283,238,212,204,153,168"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="520,61,578,49,579,54,521,66"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a709d772c597d8bc18d170300a8cabbb7" title=" " alt="" coords="609,72,784,115"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="540,86,594,88,593,93,540,92"/>
+<area shape="poly" id="edge6_Node000005_Node000005" title=" " alt="" coords="652,172,650,162,657,153,673,147,697,145,722,148,737,154,735,159,721,153,697,151,674,153,660,157,655,163,657,171"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a33027424113469f92dd6e70bcd90953f" title="Un&#45;escape delimiters in the given value." alt="" coords="847,172,1023,215"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="785,191,832,191,832,196,785,196"/>
+<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="503,197,593,194,593,199,503,202"/>
+</map>
