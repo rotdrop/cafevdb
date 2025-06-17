@@ -320,16 +320,19 @@ trait DatabaseStorageNodeNameTrait
    */
   protected function getLegacyinvoiceFileName(
     string $invoiceNumber,
+    ?string $organization,
     string $musicianName,
     string $projectName,
     ?string $extension = null,
   ):string {
-    // TRANSLATORS: file-name
-    $fileName =  $this->getAppL10n()->t('invoice-%1$s-%2$s-%3$s', [
-      str_replace(Constants::PATH_SEPARATOR, '-', $invoiceNumber),
-      Util::dashesToCamelCase($musicianName, true, '_-. ,'),
-      $projectName,
-    ]);
+    $parts = [ $this->getAppL10n()->t('invoice') ];
+    if (!empty($organization)) {
+      $parts[] = Util::dashesToCamelCase($organization, true, '_-. ,');
+    }
+    $parts[] = Util::dashesToCamelCase($musicianName, true, '_-. ,');
+    $parts[] = $projectName;
+    $fileName = implode('-', $parts);
+
     if (!empty($extension)) {
       $fileName .= '.' . $extension;
     }
@@ -372,6 +375,7 @@ trait DatabaseStorageNodeNameTrait
   ):string {
     return $this->getLegacyInvoiceFileName(
       $invoice->getInvoiceNumber(),
+      $invoice->getDebitor()->getOrganization(),
       $invoice->getDebitor()->getPublicName(firstNameFirst: true),
       $invoice->getProject()->getName(),
       $extension,

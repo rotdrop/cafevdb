@@ -714,6 +714,12 @@ WHERE dsf.id IS NOT NULL',
       ]);
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'organization', [
+        'name' => $this->l->t('Organization'),
+        'input' => 'RH',
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [
         'name' => $this->l->t('User Id'),
         'input' => 'RH',
@@ -1161,11 +1167,13 @@ WHERE dsf.id IS NOT NULL',
         }
 
         $invoiceNumber = $row[$this->queryField('invoice_number')];
+        $organization = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'organization')];
         $musicianName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
         $projectName = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'name')];
 
         $fileName = $this->getLegacyInvoiceFileName(
           $invoiceNumber,
+          $organization,
           $musicianName,
           $projectName,
         );
