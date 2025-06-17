@@ -464,7 +464,7 @@ class Projects extends PMETableViewBase
   <div class="dropdown-menu">
 ';
           },
-          'postfix' => function($op, $when, $k, $row, $pme) {
+          'postfix' => function($op, $when, $k, $row, $pme) use ($instrumentInfo) {
             $html = '';
             if ($op == 'copy') {
               $html .= '
