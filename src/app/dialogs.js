@@ -26,7 +26,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from '../config.ts';
+import { appName, appNameTag } from '../config.ts';
 import { DialogBuilder } from '@nextcloud/dialogs';
 
 require('dialogs.scss');
@@ -74,14 +74,24 @@ const getLegacyButtons = function(buttons, callback) {
   return buttonList;
 };
 
-const message = function(content, title, dialogType, buttons, callback = () => {}, modal, allowHtml) {
+const message = function({
+  content,
+  title,
+  dialogType,
+  buttons,
+  callback = () => {},
+  modal,
+  allowHtml,
+  dialogClasses,
+}) {
 
   console.info('MESSAGE', { content, title, dialogType, buttons, callback, modal, allowHtml });
 
   const builder = (new DialogBuilder())
     .setName(title)
     .setText(allowHtml ? '' : content)
-    .setButtons(getLegacyButtons(buttons, callback));
+    .setButtons(getLegacyButtons(buttons, callback))
+    .setDialogClasses([appNameTag, 'legacy-dialog', dialogType, dialogClasses]);
 
   switch (dialogType) {
   case 'alert':
@@ -96,44 +106,48 @@ const message = function(content, title, dialogType, buttons, callback = () => {
 
   const dialog = builder.build();
 
-  console.info('DIALOG', { dialog });
-
   if (allowHtml) {
     dialog.setHTML(content);
   }
 
-  return dialog.show().then(() => {
+  const promise = dialog.show().then(() => {
     if (!callback._clicked) {
       callback(false);
     }
   });
+
+  $('body').find('.legacy-dialog.' + appNameTag)
+    .closest('.modal-container')
+    .addClass([appNameTag, 'legacy-dialog', dialogClasses]);
+
+  return promise;
 };
 
-const alert = function(text, title, callback, modal, allowHtml) {
-  return message(
-    text,
+const alert = function(content, title, callback, modal, allowHtml) {
+  return message({
+    content,
     title,
-    'alert',
-    OC.dialogs.OK_BUTTONS,
+    dialogType: 'alert',
+    buttons: OC.dialogs.OK_BUTTONS,
     callback,
     modal,
     allowHtml,
-  );
+  });
 };
 
-const info = function(text, title, callback, modal, allowHtml) {
-  return message(
-    text,
+const info = function(content, title, callback, modal, allowHtml) {
+  return message({
+    content,
     title,
-    'info',
-    OC.dialogs.OK_BUTTONS,
+    dialogType: 'info',
+    buttons: OC.dialogs.OK_BUTTONS,
     callback,
     modal,
     allowHtml,
-  );
+  });
 };
 
-const confirm = function(text, title, options, modal, allowHtml) {
+const confirm = function(content, title, options, modal, allowHtml) {
   const defaultOptions = {
     callback() {},
     modal: false,
@@ -165,22 +179,23 @@ const confirm = function(text, title, options, modal, allowHtml) {
   }
   options.buttons.confirmClasses = classes;
 
-  console.debug('CONFIRM TEXT', { text, title, options, modal, allowHtml });
+  console.debug('CONFIRM CONTENT', { content, title, options, modal, allowHtml });
 
   return new Promise((resolve, reject) =>
-    message(
-      text,
+    message({
+      content,
       title,
-      'notice',
-      options.buttons,
-      (answer) => {
+      dialogType: 'notice',
+      buttons: options.buttons,
+      callback: (answer) => {
         options.callback(answer);
         // do not reject, as this triggers an exception
         resolve(answer);
       },
-      options.modal,
-      options.allowHtml,
-    ).then(() => {
+      modal: options.modal,
+      allowHtml: options.allowHtml,
+      dialogClasses: options.dialogClasses,
+    }).then(() => {
       $('body').find('.oc-dialog-buttonrow.twobuttons').each(function() {
         const $buttonRow = $(this);
         const $confirmButton = $buttonRow.find('button.primary.' + appName);
@@ -219,9 +234,9 @@ const filePicker = function(title, callback, multiselect, mimetypeFilter, modal,
   return OC.dialogs.filepicker(title, callback, multiselect, mimetypeFilter || [], modal, type, path, options);
 };
 
-const attachDialogHandlers = function(container) {
+const attachDialogHandlers = function() {
 
-  const $container = $(container || 'body');
+  const $container = $('body');
 
   if ($container.data(appName + 'DialogHandlersAttached')) {
     return;
@@ -229,34 +244,12 @@ const attachDialogHandlers = function(container) {
 
   $container.data(appName + 'DialogHandlersAttached', true);
 
-  $container
-    .off('dblclick', '.oc-dialog')
-    .on('dblclick', '.oc-dialog', function(event) {
-      $('.oc-dialog').toggleClass('maximize-width');
-      event.stopImmediatePropagation();
-    });
+  const dialogContainerSelector = '.modal-container.legacy-dialog.' + appNameTag;
 
   $container
-    .off('click', '.oc-dialog .exception.error.name')
-    .on('click', '.oc-dialog .exception.error.name', function(event) {
-      $(this).next().toggleClass('visible');
-      event.stopImmediatePropagation();
-    });
-
-  $container
-    .off('click', '.oc-dialog .error.exception ul.technical')
-    .on('click', '.oc-dialog .error.exception ul.technical', function(event) {
-      $(this).nextAll('.trace').toggleClass('visible');
-      event.stopImmediatePropagation();
-    });
-
-  $container
-    .off('click', '.oc-dialog .error.exception .trace.visible')
-    .on('click', '.oc-dialog .error.exception .trace.visible', function(event) {
-      const $this = $(this);
-      $this.removeClass('visible');
-      $this.next('.trace').removeClass('visible');
-      $this.prev('.trace').removeClass('visible');
+    .off('dblclick', dialogContainerSelector + ' .dialog__name')
+    .on('dblclick', dialogContainerSelector + ' .dialog__name', function(event) {
+      $(this).closest(dialogContainerSelector).toggleClass('maximize-width');
       event.stopImmediatePropagation();
     });
 };
@@ -269,8 +262,3 @@ export {
   filePicker,
   attachDialogHandlers,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

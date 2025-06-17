@@ -167,6 +167,7 @@ const cloudFilePickerDialog = function(options) {
               },
               modal: true,
               allowHtml: true,
+              dialogClasses: 'fit-content-width',
             },
           )
             .then(function() {

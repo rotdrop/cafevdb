@@ -30,11 +30,12 @@
 </template>
 <script lang="ts" setup>
 import { appName } from '../../config.ts'
-import { translate as t } from '@nextcloud/l10n'
+import { translate } from '@nextcloud/l10n'
 import { computed } from 'vue'
 import useTooltipsStore from '../../stores/tooltips.ts'
 
-const modes = ['copy', 'move', 'link']
+const t = (a, b) => b
+const modes = [t(appName, 'copy'), t(appName, 'move'), t(appName, 'link')]
 const tooltipsProvider = useTooltipsStore()
 tooltipsProvider.provideTooltips(modes.map(mode => 'cloud-file-system-operations:' + mode))
 const hints = tooltipsProvider.tooltipsData
@@ -43,7 +44,7 @@ const modeData = computed<Record<string, { name: string, hint: string }> >(() =>
   console.info('UPDATE MODEDATE', { hints, currentHints: { ...hints } })
   const result = {}
   for (const mode of modes) {
-    result[mode] = { name: t(appName, mode), hint: hints['cloud-file-system-operations:' + mode] }
+    result[mode] = { name: translate(appName, mode), hint: hints['cloud-file-system-operations:' + mode] }
   }
   return result
 })

@@ -128,16 +128,14 @@ $full-screen-zindex: 9000;
   box-sizing:border-box;
 }
 
-.nc-generic-dialog {
+.modal-container.#{$appNameTag}.legacy-dialog {
 
   @include errorDialogs($appNameTag);
 
   @include cloudFileSystemOperations;
 
-  &.maximize-width {
-    .oc-dialog-content {
-      max-width:calc(100vw - 20px);
-    }
+  &.maximize-width, &.fit-content-width {
+    width:unset;
 
     .error-wide {
       width: auto;
