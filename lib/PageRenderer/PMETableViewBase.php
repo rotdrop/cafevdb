@@ -1253,6 +1253,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             foreach ($ids as $id) {
               $entityId = $meta->extractKeyValues($id);
               foreach ($association->matching(self::criteriaWhere($entityId)) as $entity) {
+                $this->debug('CALLING REMOVE ON ' . $entityClass . ' ' . print_r($entityId, true));
                 $association->removeElement($entity);
               }
             }
@@ -1264,6 +1265,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             $ids = $addIdentifier[$add];
             foreach ($ids as $id) {
               $entityId = $meta->extractKeyValues($id);
+              $this->debug('CALLING ADD ON ' . $entityClass . ' ' . print_r($entityId, true));
               $association->add($this->getReference($entityClass, $entityId));
             }
           }
@@ -1300,14 +1302,15 @@ abstract class PMETableViewBase extends AbstractPageRenderer
                * select boxes of the user interface.
                */
               if ($softDeleteable && !$entity->isDeleted()) {
+                $this->debug('ONLY SOFT DELETE ' . print_r($entityId, true));
                 $this->remove($entity);
               }
             } else {
               if ($softDeleteable && !$entity->isDeleted()) {
-                $this->debug('SOFT DELETE');
+                $this->debug('SOFT DELETE ' . print_r($entityId, true));
                 $this->remove($entity, true); // soft, need flush
               }
-              $this->debug('HARD DELETE '.(int)($softDeleteable && (int)$entity->isDeleted()));
+              $this->debug('HARD DELETE ' . print_r($entityId, true) . ' ' . (int)($softDeleteable && (int)$entity->isDeleted()));
               $this->remove($entity); // hard
             }
             $this->flush();
@@ -1761,6 +1764,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             $ids = $addIdentifier[$add];
             foreach ($ids as $id) {
               $entityId = $meta->extractKeyValues($id);
+              $this->debug('CALLING ADD ON ' . $entityClass . ' ' . print_r($entityId, true));
               $association->add($this->getReference($entityClass, $entityId));
             }
           }
