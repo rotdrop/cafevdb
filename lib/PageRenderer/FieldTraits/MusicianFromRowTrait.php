@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use InvalidArgumentException;
 use Throwable;
 
 use OCA\CAFEVDB\Common\Util;
@@ -143,6 +144,13 @@ trait MusicianFromRowTrait
     }
     if (!$userIdSlugSeen) {
       $musicianId = $musician->getId();
+      if ($musicianId === null) {
+        throw new InvalidArgumentException(
+          'No musician id in data-base row '
+          . print_r($row, true) . ' queries: '
+          . print_r($this->pme->queryLog(), true)
+        );
+      }
       $musician = $this->findEntity(Entities\Musician::class, $musicianId);
       if (empty($musician)) {
         $this->logError('NO MUSICIAN FOR ROW ' . $musicianId . ' ' . print_r($row, true));
