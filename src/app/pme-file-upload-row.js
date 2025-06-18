@@ -53,6 +53,12 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
   const isCloudFolder = $thisRow.closest('td.participant-field').hasClass('cloud-folder');
   // const storageType = $thisRow.data('storage');
   const uploadMultiple = isCloudFolder && !fileName;
+  let uploadData;
+  try {
+    uploadData = JSON.stringify($thisRow.data());
+  } catch (error) {
+    console.error('JSON STRINGIFY ERROR', { error, data: $thisRow.data() });
+  }
   const $uploadUi = $('#fileUploadTemplate').octemplate({
     wrapperId: widgetId,
     formClass: 'file-upload-form',
@@ -60,7 +66,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
     uploadName: 'files[' + optionKey + ']' + (uploadMultiple ? '[]' : ''),
     projectId,
     musicianId,
-    uploadData: JSON.stringify($thisRow.data()),
+    uploadData,
     requestToken: OC.requestToken,
   });
   const $oldUploadForm = $('#' + widgetId);
