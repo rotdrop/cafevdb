@@ -51,9 +51,9 @@ class MusicianInstrumentEntityListener
   // phpcs:enable
 
   /** {@inheritdoc} */
-  #[ORM\PrePersist]
-  #[ORM\PreRemove]
-  #[ORM\PreUpdate]
+  #[ORM\PostPersist]
+  #[ORM\PostRemove]
+  #[ORM\PostUpdate]
   public function synchronizeContact(Entity $entity, LifecycleEventArgs $eventArgs)
   {
     $musician = $entity->getMusician();

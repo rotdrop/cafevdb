@@ -82,6 +82,13 @@ class ContactsCardEventListener implements IEventListener
    */
   private array $alreadyHandled = [];
 
+  /**
+   * @var bool
+   *
+   * Prevent ping-pong when updating contacts programmatically.
+   */
+  private bool $enabled = true;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected IAppContainer $appContainer,
@@ -89,11 +96,27 @@ class ContactsCardEventListener implements IEventListener
   }
   // phpcs:enable
 
+  /**
+   * In order to disable the listener during programmatic contact updates.
+   *
+   * @param bool $enabled
+   *
+   * @return bool Old state.
+   */
+  public function setEnabled(bool $enabled):bool
+  {
+    $oldEnabled = $this->enabled;
+
+    $this->enabled = $enabled;
+
+    return $oldEnabled;
+  }
+
   /** {@inheritdoc} */
   public function handle(Event $event):void
   {
     $eventClass = get_class($event);
-    if (!in_array($eventClass, self::EVENT)) {
+    if (!$this->enabled || !in_array($eventClass, self::EVENT)) {
       return;
     }
     $this->logger = $this->appContainer->get(LoggerInterface::class);

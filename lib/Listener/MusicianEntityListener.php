@@ -127,6 +127,13 @@ class MusicianEntityListener
         [ $field => $event->getOldValue($field) ],
       );
     }
+    $field = 'addressBookUri';
+    if ($event->hasChangedField($field)) {
+      $this->preUpdateValues[$musicianId] = array_merge(
+        $this->preUpdateValues[$musicianId] ?? [],
+        [ $field => $event->getOldValue($field) ],
+      );
+    }
   }
 
   /**
@@ -166,17 +173,21 @@ class MusicianEntityListener
    * trigger the pre-update hook which already will break the addressbook
    * link.
    */
-  #[ORM\PrePersist]
-  #[ORM\PreUpdate]
+  #[ORM\PostPersist]
+  #[ORM\PostUpdate]
+  #[ORM\PostDelete]
   public function synchronizeContact(Entities\Musician $musician, LifecycleEventArgs $eventArgs)
   {
-    if (empty($musician->getAddressBookUri())) {
-      return;
+    if ($eventArgs instanceof ORMEvent\PostUpdateEventArgs) {
+      $field = 'addressBookUri';
+      $musicianId = $musician->getId();
+      $addressBookUri = $this->preUpdateValues[$musicianId][$field];
+      unset($this->preUpdateValues[$musicianId][$field]);
+    } else {
+      $addressBookUri = $musician->getAddressBookUri();
     }
     /** @var ContactsService $contactsService */
     $contactsService = $this->appContainer->get(ContactsService::class);
-    if (!$contactsService->registerContactSynchronization($musician)) {
-      $this->logError('Contacts-synchronization could not be registered for ' . $musician->getPublicName());
-    }
+    $contactsService->registerContactSynchronization($musician, $addressBookUri);
   }
 }
