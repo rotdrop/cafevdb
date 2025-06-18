@@ -195,7 +195,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
 
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
   #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
-  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'invoices', fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
   /**

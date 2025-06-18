@@ -97,6 +97,22 @@ class ProjectParticipant implements \ArrayAccess
   private $projectInstruments;
 
   /**
+   * @var Collection
+   *
+   * Link to composit payments, needed for the usage accounting.
+   */
+  #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'projectParticipant')]
+  private $payments;
+
+  /**
+   * @var Collection
+   *
+   * Link to composit payments, needed for the usage accounting.
+   */
+  #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'projectParticipant')]
+  private $invoices;
+
+  /**
    * @var DatabaseStorage
    *
    * The root-directory entry for the potentially encrypted participant
@@ -110,6 +126,7 @@ class ProjectParticipant implements \ArrayAccess
   public function __construct(?Musician $musician = null, ?Project $project = null)
   {
     $this->arrayCTOR();
+    $this->invoices = new ArrayCollection();
     $this->payments = new ArrayCollection();
     $this->participantFieldsData = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
@@ -507,7 +524,7 @@ class ProjectParticipant implements \ArrayAccess
    */
   public function usage(string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED):int
   {
-    $usage = $this->payments->count();
+    $usage = $this->payments->count() + $this->invoices->count();
     switch ($participationContext) {
       case ParticipationContext::ASSOCIATES:
         $usage += (int)$this->isOnlyMusician();

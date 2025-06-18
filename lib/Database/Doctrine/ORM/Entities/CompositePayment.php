@@ -42,8 +42,17 @@ use OCA\CAFEVDB\Common\Util;
 
 /**
  * CompositePayments collect a couple of ProjectPayments of the same
- * Musician. In GnuCash this would be a "split transactions". The transaction
- * parts are ProjectPayment entities.
+ * ProjectParticipant. In GnuCash this would be a "split transactions". The
+ * transaction parts are ProjectPayment entities which is just a "named joint
+ * table" in order to avoid ManyToMany and add some stuff.
+ *
+ * So: there are no other per-person payments, each payment thus is tied to a
+ * person and a project. For "unprojected payments" either the club members
+ * project has to be used or the executive board project. External parties
+ * also have first to be added to a project as "associates", then they are
+ * also "Musician" entities (thow the name is misleading) and then can be used
+ * as ordinary participants for payments.
+ *
  */
 #[ORM\Table(name: 'CompositePayments')]
 #[ORM\UniqueConstraint(columns: ['pre_notification_message_id'])]
@@ -172,7 +181,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
 
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
-  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
   /**

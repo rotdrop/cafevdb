@@ -24,16 +24,16 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use DateTimeInterface;
 use DateTimeImmutable;
+use DateTimeInterface;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -491,11 +491,26 @@ class Project implements \ArrayAccess
   /**
    * Get participants.
    *
+   * @param string|ParticipationContext $participationContext Defaults to
+   * UNRESTRICTED, can be used to filter out "real" participants or associated
+   * (legal) persons.
+   *
    * @return Collection
    */
-  public function getParticipants():Collection
-  {
-    return $this->participants;
+  public function getParticipants(
+    string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED,
+  ):Collection {
+    switch (ParticipationContext::from($participationContext)) {
+      case ParticipationContext::UNRESTRICTED:
+        return $this->participants;
+      case ParticipationContext::ASSOCIATES:
+      case ParticipationContext::PARTICIPANTS:
+        return $this->participants->filter(
+          fn(ProjectParticipant $participant) => $participant->getParticipationContext() == $participationContext,
+        );
+      default:
+        throw new InvalidArgumentException('Invalid participation context "' . $participationContext . '".');
+    }
   }
 
   /**
