@@ -593,10 +593,10 @@ GROUP BY t.id';
         'dateformat' => 'medium',
         'timeformat' => 'short',
         'maxlen' => 19,
-        'input' => ($this->showDisabled ? '' : 'RH'),
       ]
     );
     Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'date');
+    // Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'hide-disabled-hidden');
     $opts['fdd']['deleted']['css']['postfix'][] = 'datetime';
 
     $this->makeJoinTableField(
