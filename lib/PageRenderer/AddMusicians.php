@@ -235,7 +235,7 @@ GROUP BY __t1.instrument_id',
       $opts[PHPMyEdit::OPT_HAVING]['AND'] = '('
         . "({$projectsJoin}.project_id IS NULL)"
         . " OR "
-        . "(NOT {$projectsJoin}.project_id = {$this->projectId})"
+        . "({$projectsJoin}.deleted IS NOT NULL OR NOT {$projectsJoin}.project_id = {$this->projectId})"
         . " OR NOT "
         . "($participationStatus = '$associated' OR $instrumentFamily = '$notAnInstrumentFamily')"
         . ")";
@@ -246,7 +246,7 @@ GROUP BY __t1.instrument_id',
       $opts[PHPMyEdit::OPT_HAVING]['AND'] = '('
         . "({$projectsJoin}.project_id IS NULL)"
         . " OR "
-        . "(NOT {$projectsJoin}.project_id = {$this->projectId})"
+        . "({$projectsJoin}.deleted IS NOT NULL OR NOT {$projectsJoin}.project_id = {$this->projectId})"
         . " OR "
         . "($participationStatus = '$associated')"
         // . " OR "
