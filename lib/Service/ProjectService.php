@@ -2085,8 +2085,14 @@ Whatever.',
     if ($id instanceof Entities\Musician) {
       $musician = $id;
     } else {
+      // We need to disable the filter in order to be able to undelete.
+      $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
       $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
       $musician = $musiciansRepository->find($id);
+      $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+      if ($musician->isDeleted()) {
+        $musician = null;
+      }
     }
     if (empty($musician)) {
       $status[] = [
@@ -2103,7 +2109,7 @@ Whatever.',
     // check for already registered
     // @todo: check for participationContext
     $participant = $musician->getProjectParticipantOf($project);
-    $exists = !empty($participant);
+    $exists = !empty($participant) && ($participant->getDeleted() === null || $participant->getDeleted() > (new DateTimeImmutable));
     if ($exists) {
       // "exists" is ok if the the participationContext differs
       $participantParticipationContext = $participant->getParticipationContext();
@@ -2123,6 +2129,8 @@ Whatever.',
     $this->entityManager->beginTransaction();
     try {
 
+      $bestInstrument = null;
+
       if (empty($participant)) {
         // The musician exists and is not already registered, so add it.
         $participant = new Entities\ProjectParticipant(musician: $musician, project: $project);
@@ -2132,7 +2140,8 @@ Whatever.',
         $project->getParticipants()->set($musician->getId(), $participant);
         $birth = true;
       } else {
-        $birth = false;
+        $birth = $participant->getDeleted() !== null;
+        $participant->setDeleted(null);
       }
 
       $instrumentationNumbers = $project->getInstrumentationNumbers();
@@ -2158,7 +2167,7 @@ Whatever.',
             }
             $musician->addInstrument($instrument, ranking: $ranking);
           }
-          $this->persist($musician);
+          $this->persist($musician); // needed?
           $this->flush();
         }
         $musicianInstruments = $musician->getNonInstruments();
@@ -2167,11 +2176,12 @@ Whatever.',
           throw new Exceptions\EnduserNotificationException('NO INSTRUMENTS');
         }
 
-        $ranking = PHP_INT_MIN;
+        $ranking = PHP_INT_MAX;
         /** @var Entities\MusicianInstrument $musicanInstrument */
         foreach ($musicianInstruments as $musicianInstrument) {
           $thisRanking = $musicianInstrument->getRanking();
           if ($thisRanking >= $ranking) {
+            $this->logInfo('Not choosing ' . $musicianInstrument->getInstrument()->getName() . ' ' . $thisRanking . ' >= ' . $ranking);
             continue;
           }
           $ranking = $thisRanking;
@@ -2181,6 +2191,8 @@ Whatever.',
             'voice' => Entities\ProjectInstrument::UNVOICED,
           ];
         }
+
+        $this->logInfo('BEST INTRUMENT SET ' . (int)($bestInstrument !== null));
 
       } else { // $participationContext
         // Make sure the participation status is neither passive nor associate.
@@ -2203,7 +2215,7 @@ Whatever.',
         $musicianInstruments = $musician->getInstruments();
         // first find one instrument with best ranking
         $bestInstrument = null;
-        $ranking = PHP_INT_MIN;
+        $ranking = PHP_INT_MAX;
         /** @var Entities\MusicianInstrument $musicianInstrument */
         foreach ($musicianInstruments as $musicianInstrument) {
           $instrumentId = $musicianInstrument->getInstrument()->getId();
@@ -3346,8 +3358,11 @@ Whatever.',
     string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED,
   ):void {
     $publicName = $participant->getPublicName();
+    $thisParticipantsContext = $participant->getParticipationContext();
+
     $this->entityManager->beginTransaction();
     try {
+      // remove all roles/instruments for the given context
       switch ($participationContext) {
         case ParticipationContext::PARTICIPANTS:
           $removeList = $participant->getRealInstruments();
@@ -3367,8 +3382,11 @@ Whatever.',
       }
       $this->flush();
 
-      if ($participant->unused($participationContext)) {
-        $this->remove($participant, true); // this should be soft-delete
+      if ($participationContext == ParticipationContext::UNRESTRICTED
+          || $participationContext == $thisParticipantsContext) {
+          $this->remove($participant, true); // this should be soft-delete
+      } else {
+        $this->logInfo('Not removing, participant still in use in context "' . $participant->getParticipationContext() . '".');
       }
       if ($participant->unused($participationContext)) {
         $this->logInfo('Project participant ' . $participant->getPublicName() . ' is unused, issuing hard-delete');
