@@ -699,7 +699,8 @@ const syncProjectData = async (projectName: string) => {
           const eventObject = btoa(event.urlPath)
           const params = {
             object: eventObject,
-            recurrenceId: event.times.start.stamp, // event.recurrenceId is different
+            // recurrenceId: event.times.start.stamp, // event.recurrenceId is different
+            recurrenceId: +event.recurrenceId > 0 ? event.recurrenceId : event.times.start.stamp,
             context: btoa(JSON.stringify(context)),
           }
           const query = currentRoute.query
