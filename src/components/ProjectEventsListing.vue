@@ -149,14 +149,24 @@
                         @click="toggleCalendarVisibility(matrixEntry)"
               >
                 <template #icon>
-                  <IconHideDetails v-if="showCalendarEvents(matrixEntry)" />
+                  <IconHideDetails v-if="showCalendarEvent(matrixEntry)" />
                   <IconShowDetails v-else />
                 </template>
               </NcButton>
             </template>
           </NcListItem>
+          <NcListItem v-if="matrixEntry.events.length > 20 && Object.keys(eventsByYear[matrixEntry.uri]).length > 1"
+                      v-show="showCalendarEvent(matrixEntry)"
+          >
+            <template #details>
+              <NcSelect v-model="matrixEntryYear[matrixEntry.uri]"
+                        :options="Object.keys(eventsByYear[matrixEntry.uri])"
+                        :placeholder="t(appName, 'select a year')"
+              />
+            </template>
+          </NcListItem>
           <NcListItem v-for="event in matrixEntry.events"
-                      v-show="showCalendarEvents(matrixEntry)"
+                      v-show="showCalendarEvent(matrixEntry, event)"
                       :key="event.instanceId"
                       :class="['project-event', 'fc-event', { detached: event.deleted }]"
                       :to="routerEventEdit[event.instanceId] || ''"
@@ -336,6 +346,7 @@ import {
   NcActionRouter,
   NcActionSeparator,
   NcActions,
+  NcSelect,
   NcAppSidebar,
   NcButton,
   NcListItem,
@@ -382,6 +393,7 @@ import {
   nextTick,
   onBeforeMount,
   onUnmounted,
+  reactive,
   set as vueSet,
 } from 'vue'
 import type {
@@ -509,7 +521,7 @@ const calendarOrdering: { [Key in CalendarUris|'']: number } = {
 }
 const emptyEventMatrix: EventMatrixEntry[] = []
 for (const uri of Object.keys(calendarOrdering) as ((CalendarUris|'')[])) {
-  emptyEventMatrix.push({ name: uri, uri, calendarId: -1, urlPath: '', events: [] })
+  emptyEventMatrix.push({ name: t(appName, uri), uri, calendarId: -1, urlPath: '', events: [] })
 }
 emptyEventMatrix.sort((a, b) => calendarOrdering[a.uri] - calendarOrdering[b.uri])
 
@@ -610,6 +622,13 @@ const calendarIcons: { [Key in CalendarUris|'']?: VueConstructor } = {
 
 type ActionScope = 'single'|'series'|'related'
 
+const currentYear = new Date().getFullYear()
+const matrixEntryYear = reactive<{ [Key in CalendarUris | '']?: string }>({})
+for (const uri of Object.keys(calendarOrdering) as ((CalendarUris | '')[])) {
+  vueSet(matrixEntryYear, uri, currentYear)
+}
+const eventsByYear = reactive<{ [Key in CalendarUris | '']?: Record<string, EventMatrixEvent[]> }>({})
+const yearsByEvent = reactive<Record<string, string> >({})
 const expandedState = ref<{ [Key in CalendarUris]?: boolean }>({})
 const hasAbsenceField = ref<Record<string, boolean> >({})
 const attachmentMark = ref<Record<string, boolean> >({})
@@ -689,7 +708,16 @@ const syncProjectData = async (projectName: string) => {
         for (const key in Object.keys(eventSeries.value)) {
           delete eventSeries.value[key]
         }
+        vueSet(eventsByYear, entry.uri, {})
         for (const event of entry.events) {
+          const eventStartDate = DateTime.fromSQL(event.start.date + ' ' + event.start.timezone).toISODate()
+          const eventYear = eventStartDate.substring(0, 4)
+          if (eventsByYear[entry.uri]![eventYear]) {
+            eventsByYear[entry.uri]![eventYear].push(event)
+          } else {
+            vueSet(eventsByYear[entry.uri], eventYear, [event])
+          }
+          vueSet(yearsByEvent, event.instanceId, eventYear)
           vueSet(hasAbsenceField.value, event.instanceId, +(event.absenceField || 0) > 0)
           vueSet(attachmentMark.value, event.instanceId, false || attachmentMark.value?.[event.instanceId])
           vueSet(actionScope.value, event.uid, actionScope.value?.[event.uid] || 'single')
@@ -708,7 +736,7 @@ const syncProjectData = async (projectName: string) => {
 
           const calendarAppUrlParams = {
             view: 'timeGridWeek',
-            timeRange: DateTime.fromSQL(event.start.date + ' ' + event.start.timezone).toISODate(),
+            timeRange: eventStartDate,
             mode: 'sidebar',
             objectId: params.object,
             recurrenceId: params.recurrenceId,
@@ -771,7 +799,17 @@ const syncProjectData = async (projectName: string) => {
 const toggleCalendarVisibility = (entry: EventMatrixEntry) => {
   expandedState.value[entry.uri] = !expandedState.value[entry.uri]
 }
-const showCalendarEvents = (entry: EventMatrixEntry) => !!expandedState.value[entry.uri]
+const showCalendarEvent = (matrixEntry: EventMatrixEntry, event: EventMatrixEvent) => {
+  const show = !!expandedState.value[matrixEntry.uri]
+  if (!event) {
+    return show
+  }
+  if (matrixEntry.events.length > 20 && Object.keys(eventsByYear[matrixEntry.uri]).length > 1) {
+    return show && (+matrixEntryYear[matrixEntry.uri] === +yearsByEvent[event.instanceId])
+  } else {
+    return show
+  }
+}
 
 const briefEventDate = (event: EventMatrixEvent) => {
   const times = event.times
@@ -929,7 +967,6 @@ const exportEvents = async () => {
   try {
     await axiosFileDownload('projects/events/download', post)
   } catch (error) {
-    logger.error('DOWNLOAD ERROR', { error })
     errorHandler(
       new AppError(
         { component: COMPONENT_NAME },
