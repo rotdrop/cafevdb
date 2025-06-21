@@ -2243,7 +2243,7 @@ Whatever.',
               }
               continue;
             }
-            $needed = $number->getQuantity() - count($number->getInstruments());
+            $needed = $number->getQuantity() - count($number->getProjectInstruments());
             if ($needed > $neededMost ||
                 ($needed == $neededMost &&  $number->getVoice() > $voice)) {
               $neededMost = $needed;
