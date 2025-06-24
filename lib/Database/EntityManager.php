@@ -523,7 +523,7 @@ class EntityManager extends EntityManagerDecorator
       Type::overrideType('datetimetz', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
       Type::overrideType('datetimetz_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
       $this->typesBound = true;
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
     }
   }
@@ -655,7 +655,7 @@ class EntityManager extends EntityManagerDecorator
       {
         try {
           return parent::resolve($className);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->register($object = $this->appContainer->get($className));
           return $object;
         }
@@ -943,7 +943,7 @@ class EntityManager extends EntityManagerDecorator
 
           $meta->setFieldValue($entity, $property, $reference);
 
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           // can happen if the relation is allowed to be null
           // $this->logException($t);
         }
@@ -1496,7 +1496,7 @@ class EntityManager extends EntityManagerDecorator
 
       $this->commit();
 
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
 
       $this->logError('Recrypting encrypted database entries failed, rolling back ...');
       $this->rollback();
@@ -1560,7 +1560,7 @@ class EntityManager extends EntityManagerDecorator
       $transformer->setAppCryptor($oldAppCryptor);
       try {
         $this->reopen(); // in case the caller catches the exception.
-      } catch (\Throwable $t2) {
+      } catch (Throwable $t2) {
         $this->logException($t2, 'Reopening entity-manager failed.');
       }
 
