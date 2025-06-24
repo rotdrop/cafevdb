@@ -223,7 +223,7 @@ class ProjectParticipantsController extends Controller
    *
    * @param string|EnumValidateInstrumentsContext $context Either of 'musician' or 'project'.
    *
-   * @param array $recordId The database record id of the project participant.
+   * @param null|string|array $recordId The database record id of the project participant.
    *
    * @param array $instrumentValues The is of the selected instruments.
    *
@@ -237,7 +237,7 @@ class ProjectParticipantsController extends Controller
    */
   public function validateInstrumentsSelection(
     string|EnumValidateInstrumentsContext $context,
-    array $recordId = [],
+    null|string|array $recordId = [],
     array $instrumentValues = [],
     ?string $only = null,
     ?string $exclude = null,

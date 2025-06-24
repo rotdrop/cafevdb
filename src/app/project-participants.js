@@ -171,8 +171,16 @@ const validateInstrumentChoices = function(options) {
 
   Notification.hide();
   const instrumentValues = SelectUtils.selected(selectMusicianInstrument);
+  const recordId = pmeRec(container);
+  if (!recordId) {
+    // could be an error, but also occurs in the add dialog. For the
+    // moment we are sloppy and just assume this is a new musician and
+    // skip validation.
+    finalizeCB();
+    return;
+  }
   const postData = {
-    recordId: pmeRec(container),
+    recordId,
     instrumentValues: Array.isArray(instrumentValues) ? instrumentValues : [instrumentValues],
   };
   switch (participationContext) {
