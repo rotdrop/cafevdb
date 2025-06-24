@@ -85,7 +85,7 @@ class File implements \ArrayAccess
   protected $size = -1;
 
   /**
-   * @var FileData
+   * @var Collection
    *
    * As ORM still does not support lazy one-to-one associations from the
    * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
