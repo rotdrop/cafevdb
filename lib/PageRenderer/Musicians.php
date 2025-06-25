@@ -408,8 +408,13 @@ GROUP BY t.id';
       'select'   => 'T',
       'maxlen'   => 380,
       'sort'     => true,
-      'display|ACP' => [
+      'display|CP' => [
         'attributes' => function($op, $k, $row, $pme) {
+          $this->logInfo('NICKNAME DISPLAY '
+                         . ' | ' . $op
+                         . ' | ' . $k
+                         . ' | ' . print_r($row, true),
+          );
           $nickNamePlaceholder = $this->l->t('e.g. Cathy');
           $firstName = $row[$this->queryField('first_name')];
           $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
@@ -546,7 +551,7 @@ GROUP BY t.id';
       'select'   => 'T',
       'maxlen'   => 256,
       'sort'     => true,
-      'display|ACP' => [
+      'display|CP' => [
         'attributes' => function($op, $k, $row, $pme) {
           $surName = $row[$this->queryField('sur_name')];
           $firstName = $row[$this->queryField('first_name')];
