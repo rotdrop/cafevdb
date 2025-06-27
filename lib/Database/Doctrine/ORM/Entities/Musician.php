@@ -51,6 +51,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  */
 #[ORM\Table(name: 'Musicians')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository::class)]
+#[ORM\Index(name: 'country_postal_code_deleted', columns: ['country', 'postal_code', 'deleted'])]
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\EntityListeners([\OCA\CAFEVDB\Listener\MusicianEntityListener::class])]
