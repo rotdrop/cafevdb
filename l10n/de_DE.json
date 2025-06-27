@@ -1524,7 +1524,7 @@
     "%s Problem Report Receiver" : "%s Fehlerberichts-Empfänger",
     "Unable to send email address challenge for problem reports." : "Kann die Verifikations-Em@il für Fehlerberichte nicht versenden.",
     "There is no receiving email address configured for problem reports." : "Eine Em@il-Adresse für den Empfang von Fehlerberichten ist nicht konfiguriert.",
-    "[%1$s Error] Problem  Report by %2$s" : "[%1$s Fehler] Fehlerbreicht von %2$s",
+    "[%1$s Error] Problem  Report by %2$s" : "[%1$s Fehler] Fehlerbericht von %2$s",
     "Personal Comments by %s" : "Zusätzliche Kommentare von %s",
     "System Error Report" : "Fehlerbericht des Systems",
     "SystemErrorReport" : "SystemFehlerBericht",

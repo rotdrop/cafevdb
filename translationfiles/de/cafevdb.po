@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
 "POT-Creation-Date: 2025-06-27 16:10+0200\n"
-"PO-Revision-Date: 2025-06-27 16:09+0200\n"
+"PO-Revision-Date: 2025-06-27 16:15+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -8647,7 +8647,7 @@ msgstr ""
 #: lib/Service/ProblemReportService.php:221
 #, php-format
 msgid "[%1$s Error] Problem  Report by %2$s"
-msgstr "[%1$s Fehler] Fehlerbreicht von %2$s"
+msgstr "[%1$s Fehler] Fehlerbericht von %2$s"
 
 #: lib/Service/ProblemReportService.php:225
 #, php-format
