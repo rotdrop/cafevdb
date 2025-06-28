@@ -83,7 +83,7 @@ class MusicianEntityListener
   #[ORM\PreUpdate]
   public function preUpdate(Entities\Musician $musician, ORMEvent\PreUpdateEventArgs $event)
   {
-    $this->logInfo('CHGSET ' . print_r($event->getEntityChangeSet(), true));
+    // $this->logInfo('CHGSET ' . print_r($event->getEntityChangeSet(), true));
     $musicianId = $musician->getId();
     $field = 'userIdSlug';
     if ($event->hasChangedField($field)) {
