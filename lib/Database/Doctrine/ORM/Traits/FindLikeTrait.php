@@ -440,17 +440,40 @@ trait FindLikeTrait
     foreach (array_merge($whereCriteria, $havingCriteria) as $criterion) {
       $field = $criterion['field'];
       $dotPos = strpos($field, '.');
-      if ($dotPos !== false) {
-        $joinEntities[substr($field, 0, $dotPos)] = true;
+      $joinParent = 'mainTable';
+      $joinAlias = [];
+      while ($dotPos !== false) {
+        $joinTable = substr($field, 0, $dotPos);
+        $joinAlias[] = $joinTable;
+        $joinEntities[] = [
+          'parent' => $joinParent,
+          'association' => $joinTable,
+          'alias' => implode('_', $joinAlias),
+        ];
+        $field = substr($field, $dotPos + 1);
+        $dotPos = strpos($field, '.');
+        $joinParent = $joinTable;
       }
     }
     $indexBy = [];
     foreach ($orderBy as $key => $ordering) {
       $dotPos = strpos($key, '.');
       if ($dotPos !== false) {
-        $tableAlias = substr($key, 0, $dotPos);
-        $field = $key;
-        $joinEntities[$tableAlias] = true;
+        $joinParent = 'mainTable';
+        $joinAlias = [];
+        while ($dotPos !== false) {
+          $joinTable = substr($field, 0, $dotPos);
+          $joinAlias[] = $joinTable;
+          $joinEntities[] = [
+            'parent' => $joinParent,
+            'association' => $joinTable,
+            'alias' => implode('_', $joinAlias),
+          ];
+          $joinAlias[] = $joinTable;
+          $field = substr($field, $dotPos + 1);
+          $dotPos = strpos($field, '.');
+          $joinParent = $joinTable;
+        }
       } else {
         $tableAlias = 'mainTable';
         $field = $tableAlias.'.'.$key;
@@ -490,8 +513,10 @@ trait FindLikeTrait
   {
     $indexBy = $queryParts['indexBy']?:['mainTable' => null];
     $qb = $this->createQueryBuilder('mainTable', $indexBy['mainTable']);
-    foreach (array_keys($queryParts['joinEntities']) as $association) {
-      $qb->leftJoin('mainTable.'.$association, $association, null, null, $indexBy[$association] ?? null);
+    foreach ($queryParts['joinEntities'] as $joinInfo) {
+      $association = $joinInfo['association'];
+      $alias = $joinInfo['alias'];
+      $qb->leftJoin($joinInfo['parent'] . '.' . $association, $alias, null, null, $indexBy[$alias] ?? null);
     }
     if (!empty($select)) {
       $qb->select($select);
@@ -556,6 +581,12 @@ trait FindLikeTrait
         foreach ($criteria[$conditionType] as &$criterion) {
 
           $field = $criterion['field'];
+          $joinParts = explode('.', $field);
+          if (count($joinParts) > 1) {
+            $col = array_pop($joinParts);
+            $field = implode('_', $joinParts) . '.' . $col;
+          }
+
           $value = $criterion['value'];
 
           // $this->log('FIELD ' . $conditionType . ': ' . $field);

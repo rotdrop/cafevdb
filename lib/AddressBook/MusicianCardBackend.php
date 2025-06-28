@@ -141,7 +141,9 @@ class MusicianCardBackend implements ICardBackend
         }
       }
       if (array_search('CATEGORIES', $properties) !== false) {
-        // this could search through instruments and projects
+        $empty = false;
+        $criteria[] = [ 'instruments.instrument.name' => $likePattern ];
+        $criteria[] = [ 'projectParticipation.project.name' => $likePattern ];
       }
       if (array_search('ORG', $properties) !== false) {
         // this could return all if the pattern matches the orchestra name
