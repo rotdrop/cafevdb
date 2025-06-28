@@ -290,11 +290,6 @@ class MusicianService
     $musician->setDefaultParticipationStatus(ParticipationStatus::PASSIVE);
     $musician->setLanguage(null);
 
-    if (!empty($musician->getPhoto())) {
-      $this->remove($musician->getPhoto(), true);
-      $musician->setPhoto(null);
-    }
-
     $musician->setFirstName($this->l->t('Dummy'));
     $musician->setSurName((string)$musician->getUuid());
     $musician->setUserPassphrase(null);
