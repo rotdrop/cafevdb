@@ -111,8 +111,8 @@ class TaxExemptionNoticesStorage extends Storage
   ):Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
-    if (empty($extension) && !empty($file['name'])) {
-      $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (empty($extension) && !empty($file->getFileName())) {
+      $extension = strtolower(pathinfo($file->getFileName(), PATHINFO_EXTENSION));
     }
     $fileName = $this->getTaxExemptionNoticeFileName($entity, $extension);
 

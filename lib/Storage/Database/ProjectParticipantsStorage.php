@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024, 2025, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -188,8 +188,8 @@ class ProjectParticipantsStorage extends Storage
   ):?Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
-    if (empty($extension) && !empty($file['name'])) {
-      $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (empty($extension) && !empty($file->getFileName())) {
+      $extension = strtolower(pathinfo($file->getFileName(), PATHINFO_EXTENSION));
     }
     $fileName = $this->getDebitMandateFileName($debitMandate, $extension);
 
@@ -313,8 +313,8 @@ class ProjectParticipantsStorage extends Storage
   ):?Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
-    if (empty($extension) && !empty($file['name'])) {
-      $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (empty($extension) && !empty($file->getFileName())) {
+      $extension = strtolower(pathinfo($file->getFileName(), PATHINFO_EXTENSION));
     }
     $fileName = $this->getPaymentRecordFileName($compositePayment, $extension);
 
