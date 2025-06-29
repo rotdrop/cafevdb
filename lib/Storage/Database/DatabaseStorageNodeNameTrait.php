@@ -310,6 +310,38 @@ trait DatabaseStorageNodeNameTrait
    *
    * @param string $invoiceNumber
    *
+   * @param null|string $organization
+   *
+   * @param string $projectName
+   *
+   * @param string $musicianName
+   *
+   * @return string
+   */
+  protected function getLegacyInvoiceFolderName(
+    string $invoiceNumber,
+    ?string $organization,
+    string $musicianName,
+    string $projectName,
+  ):string {
+    $parts = [ str_replace(Constants::PATH_SEP, '-', $invoiceNumber) ];
+    if (!empty($organization)) {
+      $parts[] = Util::dashesToCamelCase($organization, true, '_-. ,');
+    }
+    $parts[] = Util::dashesToCamelCase($musicianName, true, '_-. ,');
+    // $parts[] = $projectName; project name is already part of the invoice number
+    $fileName = implode('-', $parts);
+
+    return $fileName;
+  }
+
+  /**
+   * PME-legacy.
+   *
+   * @param string $invoiceNumber
+   *
+   * @param null|string $organization
+   *
    * @param string $projectName
    *
    * @param string $musicianName
@@ -325,13 +357,8 @@ trait DatabaseStorageNodeNameTrait
     string $projectName,
     ?string $extension = null,
   ):string {
-    $parts = [ $this->getAppL10n()->t('invoice') ];
-    if (!empty($organization)) {
-      $parts[] = Util::dashesToCamelCase($organization, true, '_-. ,');
-    }
-    $parts[] = Util::dashesToCamelCase($musicianName, true, '_-. ,');
-    $parts[] = $projectName;
-    $fileName = implode('-', $parts);
+    $fileName = $this->getLegacyInvoiceFolderName($invoiceNumber, $organization, $musicianName, $projectName);
+    $fileName = $this->getAppL10n()->t('invoice') . '-' . $fileName;
 
     if (!empty($extension)) {
       $fileName .= '.' . $extension;
@@ -361,9 +388,29 @@ trait DatabaseStorageNodeNameTrait
   }
 
   /**
+   * Generate the folder-name for the given invoice.
+   *
+   * @param Entities\Invoice $invoice
+   *
+   * @param null|string $extension
+   *
+   * @return string
+   */
+  protected function getInvoiceFolderName(
+    Entities\Invoice $invoice,
+  ):string {
+    return $this->getLegacyFolderFileName(
+      $invoice->getInvoiceNumber(),
+      $invoice->getDebitor()->getOrganization(),
+      $invoice->getDebitor()->getPublicName(firstNameFirst: true),
+      $invoice->getProject()->getName(),
+    );
+  }
+
+  /**
    * Generate a file-name for the given donation.
    *
-   * @param Entities\Invoice $donation
+   * @param Entities\Invoice $invoice
    *
    * @param null|string $extension
    *

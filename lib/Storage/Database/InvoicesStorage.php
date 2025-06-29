@@ -74,34 +74,6 @@ class InvoicesStorage extends Storage
   }
 
   /**
-   * Find an existing directory entry for the given file.
-   *
-   * @param Entity $entity
-   *
-   * @param Entities\EncryptedFile $file
-   *
-   * @return null|Entities\DatabaseStorageFile
-   */
-  public function findDocument(Entity $entity, Entities\EncryptedFile $file):?Entities\DatabaseStorageFile
-  {
-    $year = $this->getBirthTimeFromEntity($entity)->format('Y');
-
-    /** @var Entities\DatabaseStorageFile $dirEntry */
-    foreach ($file->getDatabaseStorageDirEntries() as $dirEntry) {
-      $parent = $dirEntry->getParent();
-      if (empty($parent)) {
-        continue;
-      }
-      $grandParent = $parent->getParent();
-      if ($grandParent === $this->rootFolder && $parent->getName() == $year) {
-        return $dirEntry;
-      }
-    }
-
-    return null;
-  }
-
-  /**
    * Add a new document to the storage.
    *
    * @param Entity $entity
@@ -124,10 +96,12 @@ class InvoicesStorage extends Storage
   ):Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
-    if (empty($extension) && !empty($file['name'])) {
-      $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (empty($extension) && !empty($file->getFileName())) {
+      $extension = strtolower(pathinfo($file->getFileName(), PATHINFO_EXTENSION));
     }
-    $fileName = $this->getInvoiceFileName($entity, $extension);
+    $folderName = $this->getInvoiceFileName($entity);
+    $fileName = $folderName . ($extension ? '.' . $extension : '');
+    $folderName = substr($folderName, strlen($this->getAppL10n()->t('invoice')) + 1);
 
     if ($flush) {
       $this->entityManager->beginTransaction();
@@ -146,14 +120,24 @@ class InvoicesStorage extends Storage
           ->setCreated($file->getCreated());
         $this->persist($yearFolder);
       }
+      $invoiceFolder = $yearFolder->getFolderByName($folderName);
+      if (empty($invoiceFolder)) {
+        $invoiceFolder = $yearFolder->addSubFolder($folderName)
+          ->setUpdated($file->getUpdated())
+          ->setCreated($file->getCreated());
+        $this->persist($invoiceFolder);
+      }
 
-      $document = $yearFolder->addDocument($file, $fileName, replace: $replace)
+      $document = $invoiceFolder->addDocument($file, $fileName, replace: $replace)
         ->setCreated($file->getCreated())
         ->setUpdated($file->getUpdated());
       $this->persist($document);
-      $yearFolder
+      $invoiceFolder
         ->setCreated(min($file->getCreated(), $yearFolder->getCreated()))
         ->setUpdated(max($file->getUpdated(), $yearFolder->getUpdated()));
+      $yearFolder
+        ->setCreated(min($invoiceFolder->getCreated(), $yearFolder->getCreated()))
+        ->setUpdated(max($invoiceFolder->getUpdated(), $yearFolder->getUpdated()));
 
       if ($flush) {
         $this->flush();
@@ -189,60 +173,38 @@ class InvoicesStorage extends Storage
     return $this->addDocument($entity, $file, $flush, replace: true);
   }
 
-  /**
-   * Remove a document from the storage. Note that this does not remove the
-   * file from the transaction entity.
-   *
-   * @param Entity $entity
-   *
-   * @param Entities\EncryptedFile $file
-   *
-   * @param bool $flush Whether to actually flush the operations to th db.
-   *
-   * @return void
-   */
-  public function removeDocument(
-    Entity $entity,
-    Entities\EncryptedFile $file,
-    bool $flush = true,
-  ):void {
-    $document = $this->findDocument($entity, $file);
-    if (empty($document)) {
-      $this->logInfo('DOCUMENT NOT FOUND, CANNOT REMOVE ' . $file->getFileName());
-      return;
+   /** {@inheritdoc} */
+  public function rmdir($path)
+  {
+    // Allow rmdir for cleanup purposes. We can rely on the databse
+    // constraints which prevent accidental deletion.
+
+    /** @var Entities\DatabaseStorageFolder $dirEntry */
+    $dirEntry = $this->fileFromFileName($path);
+    if (empty($dirEntry)) {
+      return false;
     }
 
-    if ($flush) {
-      $this->entityManager->beginTransaction();
-    }
+    $this->entityManager->beginTransaction();
     try {
-      $parent = $document->getParent();
-      $file = $document->getFile();
-      $document->setFile(null);
-      $document->setParent(null);
-      $this->entityManager->remove($document);
-      if ($flush) {
-        $this->flush();
-      }
-      if ($parent->isEmpty()) {
-        $parent->setParent(null);
-        $this->entityManager->remove($parent);
-        if ($flush) {
-          $this->flush();
-        }
-      }
+      $dirEntry->setParent(null);
+      $this->entityManager->remove($dirEntry);
+      $this->flush();
 
-      if ($flush) {
-        $this->flush();
-        $this->entityManager->commit();
-      }
+      $this->entityManager->commit();
 
-    } catch (Throwable $t) {
+    } catch (\Throwable $t) {
+      $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();
       }
-      throw new Exceptions\DatabaseException($this->l->t('Unable to remove document "%s".', $file->getFileName()));
+      return false;
     }
+
+    // update the local cache
+    $this->unsetFileNameCache($path);
+
+    return true;
   }
 
   /**
@@ -267,5 +229,221 @@ class InvoicesStorage extends Storage
         'finance', 'invoices',
       ])
       . self::PATH_SEPARATOR;
+  }
+
+  /**  {@inheritdoc} */
+  public function isUpdatable(string $path): bool
+  {
+    if (!$this->file_exists($path)) {
+      return false;
+    }
+    list('basename' => $baseName, 'dirname' => $dirName) = self::pathinfo($path);
+
+    /** @var Entity $invoice */
+    $invoice = $this->entityRepository->findInvoiceByFileName($dirName);
+    if ($invoice && $invoice->getNotificationEmail()) {
+      return in_array($baseName, $this->getReadMeFactory()->getReadMeFileNames());
+    }
+
+    return true;
+  }
+
+  /** {@inheritdoc} */
+  public function touch($path, $mtime = null)
+  {
+    if ($this->is_dir($path)) {
+      // $this->logInfo('IS DIR ' . $path);
+      return false;
+    }
+    list('basename' => $baseName, 'dirname' => $dirName) = self::pathinfo($path);
+
+    $this->logInfo('EXPLODED PATH ' . print_r(explode(self::PATH_SEPARATOR, $path), true));
+
+    // Do not allow files with the same name as the year directories
+    if (preg_match('|^/?(\d{4})/?$|', $baseName)) {
+      return false;
+    }
+
+    /** @var Entity $invoice */
+    $invoice = $this->entityRepository->findInvoiceByFileName($dirName);
+    if ($invoice && $invoice->getNotificationEmail() && !str_contains($baseName, 'ocTransferId')) {
+      // Do not allow adding further documents except adding a folder
+      // documentation. The final rename will fail in addition if this is
+      // something else but a readme.
+      return false;
+    }
+
+    $this->entityManager->beginTransaction();
+    try {
+      $this->getRootFolder();
+
+      /** @var Entities\DatabaseStorageFile $dirEntry */
+      $dirEntry = $this->fileFromFileName($path);
+      if (empty($dirEntry)) {
+        $parent = $this->fileFromFileName($dirName);
+        if (empty($parent)) {
+          return false;
+        }
+        $file = new Entities\EncryptedFile($baseName, '', '');
+        if ($mtime !== null) {
+          $file->setCreated($mtime);
+        }
+        $this->persist($file);
+        $this->flush();
+        $dirEntry = $parent->addDocument($file, $baseName);
+        $this->persist($dirEntry);
+        if ($mtime !== null) {
+          $dirEntry->setCreated($mtime);
+        }
+      }
+      if ($dirEntry instanceof InMemoryFileNode) {
+        $dirEntry = $this->persistInMemoryFileNode($dirEntry);
+      }
+      if ($mtime !== null) {
+        $dirEntry->setUpdated($mtime);
+        $dirEntry->getFile()->setUpdated($mtime);
+      }
+      $this->flush();
+
+      $this->entityManager->commit();
+
+      $this->setFileNameCache($path, $dirEntry);
+
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      return false;
+    }
+
+    return true;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   *
+   * This is needed in order to
+   *
+   * - add custom folder descriptions
+   *
+   * - add attachments
+   *
+   * We disallow renaming of
+   *
+   * - anything not at the leaf-level with the exception of renaming temporary files to ReadMe files
+   *
+   * So now: first allow, code late and restrict.
+   *
+   * @return bool
+   */
+  public function rename(string $path1, string $path2): bool
+  {
+    $this->logInfo('RENAME ARGS ' . $path1 . ' || ' . $path2);
+
+    $path1 = $this->buildPath($path1);
+    $path2 = $this->buildPath($path2);
+    list('dirname' => $dirName1, /* 'basename' => $baseName1 */) = self::pathinfo($path1);
+    list('dirname' => $dirName2, 'basename' => $baseName2) = self::pathinfo($path2);
+
+    /** @var Entities\DatabaseStorageDirEntry $dirEntry */
+    $dirEntry = $this->fileFromFileName($path1);
+    if (empty($dirEntry)) {
+      // $this->logInfo('NO DIR ENTRY FOR ' . $path1);
+      return false;
+    }
+
+    if ($dirEntry instanceof InMemoryFileNode) {
+      $dirEntry = $this->persistInMemoryFileNode($dirEntry);
+    }
+
+    if ($dirName1 != $dirName2) {
+      $parent2 = $this->fileFromFileName($dirName2);
+      if (empty($parent2)) {
+        // $this->logInfo('NO PARENT2 for ' . $path2);
+        return false;
+      }
+    }
+
+    $this->entityManager->beginTransaction();
+    try {
+      $dirEntry->setName($baseName2);
+      if (!empty($parent2)) {
+        $dirEntry->setParent($parent2);
+      }
+
+      $this->flush();
+
+      $this->entityManager->commit();
+
+      // update our local files cache
+      $this->setFileNameCache($path2, $dirEntry);
+      $this->unsetFileNameCache($path1);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      return false;
+    }
+
+    return true;
+  }
+
+  /** {@inheritdoc} */
+  public function unlink(string $path): bool
+  {
+    if ($this->is_dir($path)) {
+      return false;
+    }
+    /** @var Entities\DatabaseStorageFile $dirEntry */
+    $dirEntry = $this->fileFromFileName($path);
+    if (empty($dirEntry)) {
+      throw new Exceptions\DatabaseStorageException(
+        $this->l->t('Unable to find database entity for path "%s".', $path)
+      );
+    }
+    if ($dirEntry instanceof Entities\DatabaseStorageFolder) {
+      throw new Exceptions\DatabaseStorageException(
+        $this->l->t('Path "%s" is a directory.', $path)
+      );
+    }
+
+    $parent = $dirEntry->getParent();
+    if (empty($parent)) {
+      throw new Exceptions\DatabaseStorageException(
+        $this->l->t('Unable to find document container for path "%s".', $path)
+      );
+    }
+    $file = $dirEntry->getFile();
+    if (empty($file)) {
+      throw new Exceptions\DatabaseStorageException(
+        $this->l->t('The directory entry "%s" is not linked to a file.', $path)
+      );
+    }
+
+    $this->entityManager->beginTransaction();
+    try {
+      // @todo implement side-effects
+
+      $dirEntry->setParent(null);
+      $dirEntry->setFile(null);
+      $this->entityManager->remove($dirEntry);
+
+      $this->flush();
+
+      $this->entityManager->commit();
+
+      $this->unsetFileNameCache($path);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      return false;
+    }
+
+    return true;
   }
 }

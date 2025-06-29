@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,4 +35,20 @@ use OCA\CAFEVDB\Database\EntityManager as DecoratedEntityManager;
 class InvoicesRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
+
+  /**
+   * Find the invoice by the given file-name. As the filename contains the
+   * invoice number there is at most one result.
+   *
+   * @param string $fileName
+   *
+   * @return null|Entity
+   */
+  public function findInvoiceByFileName(string $fileName): ?Entity
+  {
+    return $this->findOneBy([
+      '(|writtenInvoice.name' => $fileName,
+      'writtenInvoice.parent.name' => $fileName
+    ]);
+  }
 }
