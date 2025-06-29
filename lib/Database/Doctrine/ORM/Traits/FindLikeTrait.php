@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
+use OCA\CAFEVDB\Exceptions\DatabaseException;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Expr;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
-use OCA\CAFEVDB\Exceptions\DatabaseException;
 
 /** Trait for entity repositories which adds kind of a symbolic query "language". */
 trait FindLikeTrait
@@ -379,7 +379,12 @@ trait FindLikeTrait
 
         $criterion['field'] = $key;
 
+        $count = 0;
         while (!empty($operators)) {
+          ++$count;
+          if ($count > 100) {
+            throw new DatabaseException('INFINITE LOOP "' . $operators . '" ' . print_r($criterion, true) . ' ' . print_r($criteria, true));
+          }
           // reduce multiple ! signs
           while (strpos($operators, '!!') !== false) {
             $operators = str_replace('!!', '', $operators);
