@@ -119,7 +119,7 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
    *
    * @return null|int
    */
-  public function getId():?ìnt
+  public function getId():?int
   {
     return $this->id ?? null;
   }
