@@ -450,10 +450,11 @@ trait FindLikeTrait
       while ($dotPos !== false) {
         $joinTable = substr($field, 0, $dotPos);
         $joinAlias[] = $joinTable;
-        $joinEntities[] = [
+        $aliasKey = implode('_', $joinAlias);
+        $joinEntities[$aliasKey] = [
           'parent' => $joinParent,
           'association' => $joinTable,
-          'alias' => implode('_', $joinAlias),
+          'alias' => $aliasKey,
         ];
         $field = substr($field, $dotPos + 1);
         $dotPos = strpos($field, '.');
@@ -469,10 +470,11 @@ trait FindLikeTrait
         while ($dotPos !== false) {
           $joinTable = substr($field, 0, $dotPos);
           $joinAlias[] = $joinTable;
+          $aliasKey = implode('_', $joinAlias);
           $joinEntities[] = [
             'parent' => $joinParent,
             'association' => $joinTable,
-            'alias' => implode('_', $joinAlias),
+            'alias' => $aliasKey,
           ];
           $joinAlias[] = $joinTable;
           $field = substr($field, $dotPos + 1);
