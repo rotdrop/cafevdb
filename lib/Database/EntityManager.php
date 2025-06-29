@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Database;
 use InvalidArgumentException;
 use RuntimeException;
 use Throwable;
+use Closure;
 
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
