@@ -22,14 +22,19 @@
 
 namespace OCA\RotDrop\Toolkit\Traits;
 
+use Throwable;
+
 use OCP\AppFramework\IAppContainer;
 use OC\Files\FilenameValidator;
 
+use OCA\RotDrop\Toolkit\Exceptions;
+
 /**
- * Cloned from OCP\Files\Command\SanitzeFilenames.
+ * Cloned from OCP\Files\Command\SanitzeFilenames and changed a bit.
  */
 trait SanitizeFilenameTrait
 {
+  use FakeTranslationTrait;
   use LoggerTrait;
 
   protected IAppContainer $appContainer;
@@ -41,6 +46,8 @@ trait SanitizeFilenameTrait
    * @param string $name
    *
    * @return string
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   protected function sanitizeFilename(string $name): string
   {
@@ -71,8 +78,9 @@ trait SanitizeFilenameTrait
       $forbiddenCharacter = $filenameValidator->getForbiddenCharacters();
       $name = str_replace($forbiddenCharacter, $charReplacement, $name);
     } catch (Throwable $t) {
-      $this->logException($t, 'Unable to sanitize filename');
-      return $oldName;
+      throw new Exceptions\EnduserNotificationException(
+        self::t('Unable to sanitize filename "%s".', $oldName),
+      );
     }
     return $name;
   }
