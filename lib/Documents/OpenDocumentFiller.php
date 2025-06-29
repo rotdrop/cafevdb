@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Service\AnyToPdf;
 
 /** Autofill for Libre-/Openoffice documents. */
 class OpenDocumentFiller
@@ -387,6 +388,12 @@ class OpenDocumentFiller
       'exemptionNotices' => [],
     ];
 
+    $taxNames = TaxType::getL10NValues($this->appL10n());
+    $taxKeys = array_combine(
+      array_keys($taxNames),
+      array_map(fn(string $type) => Util::dashesToCamelCase($type, dashes: ' -_'), array_keys($taxNames)),
+    );
+
     /** @var Repositories\TaxExemptionNoticesRepository $repository */
     $repository = $this->getDatabaseRepository(Entities\TaxExemptionNotice::class);
     foreach (TaxType::values() as $taxType) {
@@ -394,12 +401,26 @@ class OpenDocumentFiller
       if ($notice === null) {
         continue;
       }
-      $noticeData = $notice->toArray();
+      $noticeData = $notice->jsonSerialize();
       if ($notice->getWrittenNotice()) {
         $noticeData['writtenNotice'] = $notice->getWrittenNotice()->getData(Entities\FileData::DATA_FORMAT_URI);
       }
-      $taxType = Util::dashesToCamelCase($taxType, dashes: ' -_');
-      $substitutions['org']['taxAuthorities']['exemptionNotices'][(string)$taxType] = $noticeData;
+      $noticeData['taxes'] = $noticeData['taxationStatutorySources'];
+      unset($noticeData['taxationStatutorySources']);
+      $noticeData['taxTypes'] = [];
+      foreach ($notice->getTaxTypes() as $type) {
+        $type = (string)$type;
+        $noticeData['taxTypes'][$taxKeys[$type]] = $taxNames[$type];
+      }
+      $taxes = [];
+      foreach ($noticeData['taxes'] as $type => &$tax) {
+        $tax['taxType'] = $taxKeys[$type];
+        $tax['name'] = $taxNames[$type];
+        $taxes[$taxKeys[$type]] = $tax;
+      }
+      unset($tax);
+      $noticeData['taxes'] = $taxes;
+      $substitutions['org']['taxAuthorities']['exemptionNotices'][$taxKeys[(string)$taxType]] = $noticeData;
     }
 
     return $substitutions;
