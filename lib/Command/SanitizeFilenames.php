@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Command;
 
+use Throwable;
+
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\IRootFolder;
@@ -40,22 +42,23 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Exceptions;
+
 /** Authenticated sanitize-filenames which is thus also able to scan the database-backed mounts */
 class SanitizeFilenames extends \OCA\Files\Command\SanitizeFilenames
 {
   use AuthenticatedCommandTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\SanitizeFilenameTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected string $appName,
+    protected IAppContainer $appContainer,
     protected IL10N $l,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    protected IAppContainer $appContainer,
-    //
-    // private IUserManager $userManager,
     IRootFolder $rootFolder,
-    // IUserSession $session,
     IL10NFactory $l10nFactory,
     FilenameValidator $filenameValidator,
   ) {
@@ -82,6 +85,53 @@ class SanitizeFilenames extends \OCA\Files\Command\SanitizeFilenames
     $result = $this->authenticate($input, $output);
     if ($result != 0) {
       return $result;
+    }
+
+    $dryRun = $input->getOption('dry-run');
+
+    $this->entityManager->beginTransaction();
+    try {
+      // Handle the database storage separately as not all parts of it are
+      // writable through the file-system.
+      $dirEntries = $this->findAll(Entities\DatabaseStorageDirEntry::class);
+      /** @var Entities\DatabaseStorageDirEntry $dirEntry */
+      foreach ($dirEntries as $dirEntry) {
+        $oldName = $dirEntry->getName();
+        $newName = $this->sanitizeFilename($oldName, $dirEntry->getMimeType());
+        if ($oldName !== $newName) {
+          $oldPath = $dirEntry->getPathName();
+          $newPath = substr($oldPath, 0, -strlen($oldName)) . $newName;
+          $storage = '[' . $dirEntry->getStorage()->getStorageId() . ']';
+          if ($dryRun) {
+            $output->writeln(
+              '<info>'
+              . $this->l->t('Would rename "%1$s" to "%2$s" (dry-run).', [
+                $storage . $oldPath, $storage . $newPath
+              ])
+              . '</>',
+            );
+          } else {
+            $output->writeln(
+              '<info>'
+              . $this->l->t('Renaming "%1$s" to "%2$s".', [
+                $storage . $oldPath, $storage . $newPath
+              ])
+              . '</>',
+            );
+            $dirEntry->setName($newName);
+          }
+        }
+      }
+      $this->flush();
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to sanitize filenames, caught an exception.'),
+        previous: $t,
+      );
     }
 
     return parent::execute($input, $output);

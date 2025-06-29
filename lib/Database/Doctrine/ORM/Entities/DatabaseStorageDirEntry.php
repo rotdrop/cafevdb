@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -171,10 +171,8 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   public function getPathName():string
   {
     $path = $this->name;
-    $node = $this->parent;
-    while (!empty($node)) {
-      $path = $node->getName() . Constants::PATH_SEP . $path;
-      $node = $node->getParent();
+    if (!$this->isRootFolder()) {
+      $path = $this->parent->getPathName() . Constants::PATH_SEP . $path;
     }
     return $path;
   }
@@ -184,8 +182,7 @@ class DatabaseStorageDirEntry implements \ArrayAccess
    */
   public function getRoot():DatabaseStorageFolder
   {
-    for ($root = $this, $parent = $root->getParent(); !empty($parent); $root = $parent, $parent = $root->getParent());
-    return $root;
+    return $this->isRootFolder() ? $this : $this->parent->getRoot();
   }
 
   /**
