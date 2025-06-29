@@ -24,23 +24,26 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IConfig;
-use OCP\IRequest;
-use OCP\IL10N;
+use OCP\AppFramework\Http\Response;
+use OCP\Constants as CloudConstants;
 use OCP\Files\File;
 use OCP\Files\FileInfo;
-use OCP\Constants as CloudConstants;
+use OCP\IConfig;
+use OCP\IL10N;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Storage\AppStorage;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Storage\AppStorage;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Simple upload end-point which moved uploaded file to a temporary
@@ -183,10 +186,14 @@ class UploadsController extends Controller
           $this->persist($dbFile);
           $this->flush();
           $this->entityManager->commit();
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          return self::grumble($this->exceptionChainData($t));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Unable to move "%1$s" to db-storage with name "%2$s".', [ $stashedFile, $destinationPath ]),
+            previous: $t,
+            httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+          );
         }
 
         // ok, all fine
@@ -314,7 +321,7 @@ class UploadsController extends Controller
             try {
               $uploadFile = $this->appStorage->newTemporaryFile($uploadFolder);
               $uploadFile->putContent($cloudFile->getContent());
-            } catch (\Throwable $t) {
+            } catch (Throwable $t) {
               return self::grumble($this->l->t('Could not copy cloud file "%s" to upload storage.', $fileName));
             }
             $originalName = $uploadMode == self::UPLOAD_MODE_MOVE ? $path : $fileName;
@@ -396,7 +403,7 @@ class UploadsController extends Controller
           $this->appStorage->moveFileSystemFile($file['tmp_name'], $uploadFile);
           $file['name'] = $uploadFile->getName();
           $file['tmp_name'] = $file['name'];
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $file['error'] = 99;
           $file['str_error'] = $this->l->t('Couldn\'t save temporary file for: %s', $file['name']);
           continue;

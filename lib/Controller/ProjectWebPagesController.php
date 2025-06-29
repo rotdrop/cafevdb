@@ -24,12 +24,15 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Exceptions;
 
 /** AJAX end-points to manage the web-pages via the CMS. */
 class ProjectWebPagesController extends Controller
@@ -70,7 +73,7 @@ class ProjectWebPagesController extends Controller
     array $articleData = [],
   ):Http\Response {
     if ($topic != 'ping' && $projectId <= 0) {
-      return self::grumble($this->l->t("Invalid or unset project-id: `%s'", [ $projectId ]));
+      return self::grumble($this->l->t('Invalid or unset project-id: "%s".', [ $projectId ]));
     }
 
     if (count($articleData) > 0 &&
@@ -78,21 +81,20 @@ class ProjectWebPagesController extends Controller
         $articleData['articleId'] != $articleId) {
       return self::grumble(
         $this->l->t(
-          "Submitted article id %d ".
-          "does not match the id %d stored in the article-data.",
+          'Submitted article id "%1$d" does not match the id "%2$d" stored in the article-data.',
           [ $articleId, $articleData['articleId'] ]));
     }
 
     if ($topic != 'add' && $topic != 'ping') {
       // require both, articleId and articleData
       if ($articleId < 0) {
-        return self::grumble($this->l->t("Invalid or unset article-id: `%s'", [ $articleId ]));
+        return self::grumble($this->l->t('Invalid or unset article-id: "%s".', [ $articleId ]));
       }
       if (count($articleData) == 0) {
         return self::grumble(
           $this->l->t(
-            "Cannot perform action `%s' with article with id %d, project with id %d: ".
-            "missing article-data.",
+            'Cannot perform action "%1$s" with article with id "%2$d", project with id "%3$d": '.
+            'missing article-data.',
             [ $topic, $articleId, $projectId ]));
       }
     }
@@ -109,13 +111,17 @@ class ProjectWebPagesController extends Controller
         try {
           // This simply means: create a new page for the project.
           $article = $this->projectService->createProjectWebPage($projectId);
-        } catch (\Throwable $t) {
-          return self::grumble($this->exceptionChainData($t));
+        } catch (Throwable $t) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Unable to create new project web pages for the project with id "%s".', $projectId),
+            previous: $t,
+            httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+          );
         }
         $message = $this->l->t(
-          "Created a new public web page with name %s and id %d ".
-          "for the project with id %d.",
-          [ $article['articleName'], $article['articleId'], $projectId ]);
+          'Created a new public web page with name "%1$s" and id "%2$d" for the project with id "%3$d".',
+          [ $article['articleName'], $article['articleId'], $projectId ],
+        );
         // If there is no rehearsal page attached to the project, then attach one
         $rehearsalsCat = $this->getConfigValue('redaxoRehearsals');
         $rehearsal = null;
@@ -127,49 +133,72 @@ class ProjectWebPagesController extends Controller
               break;
             }
           }
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           // ignore
         }
         if ($rehearsal === null) {
           // create one, but ignore anypotential error
           try {
             $this->projectService->createProjectWebPage($projectId, 'rehearsals');
-            $message .= ' '.$this->l->t("Created additionally a new rehearsal web page.");
-          } catch (\Throwable $t) {
-            $message .= ' '.$this->l->t("Failed to create additionally a new rehearsal web-page.");
+            $message .= ' '.$this->l->t('Created additionally a new rehearsal web page.');
+          } catch (Throwable $t) {
+            $message .= ' '.$this->l->t('Failed to create additionally a new rehearsal web-page.');
           }
         }
         return self::response($message);
       case 'link':
         try {
           $this->projectService->attachProjectWebPage($projectId, $articleData);
-        } catch (\Throwable $t) {
-          return self::grumble($this->exceptionChainData($t));
+        } catch (Throwable $t) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t(
+              'Unable to link the existing public web-article "%1$s" (id "%2$d") to the project with id "%3$d".',
+              [ $articleData['articleName'], $articleId, $projectId ],
+            ),
+            previous: $t,
+            httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+          );
         }
         return self::response(
           $this->l->t(
-            "Linked the existing public web-article %s (id %d) to the project with id %d",
+            'Linked the existing public web-article "%1$s" (id "%2$d") to the project with id "%3$d".',
             [ $articleData['articleName'], $articleId, $projectId ]));
       case 'unlink':
         try {
           $this->projectService->detachProjectWebPage($projectId, $articleId);
-        } catch (\Throwable $t) {
-          return self::grumble($this->exceptionChainData($t));
+        } catch (Throwable $t) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t(
+              'Unable to detach the public web-article "%s" (id "%d") from the project with id "%d".',
+              [ $articleData['articleName'], $articleId, $projectId ],
+            ),
+            previous: $t,
+            httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+          );
         }
         return self::response(
           $this->l->t(
-            "Detached the public web-article %s (id %d) from the project with id %d",
-            [ $articleData['articleName'], $articleId, $projectId ]));
+            'Detached the public web-article "%1$s" (id "%2$d") from the project with id "%3$d".',
+            [ $articleData['articleName'], $articleId, $projectId ],
+          ));
       case 'delete':
         try {
           $this->projectService->deleteProjectWebPage($projectId, $articleData);
-        } catch (\Throwable $t) {
-          return self::grumble($this->exceptionChainData($t));
+        } catch (Throwable $t) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t(
+              'Unable to remove the public web page "%1$s" (id "%2$d") from the project with id "%3$d".',
+              [ $articleData['articleName'], $articleId, $projectId ],
+            ),
+            previous: $t,
+            httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+          );
         }
         return self::response(
           $this->l->t(
-            "Removed public web page %s (id %d) from the project with id %d.",
-            [ $articleData['articleName'], $articleId, $projectId ]));
+            'Removed the public web page "%1$s" (id "%2$d") from the project with id "%3$d".',
+            [ $articleData['articleName'], $articleId, $projectId ],
+          ));
         break;
     }
 

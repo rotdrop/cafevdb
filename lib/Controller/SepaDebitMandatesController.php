@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
+
 use DateTimeImmutable;
 use PHP_IBAN\IBAN;
 
@@ -43,6 +45,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
@@ -1187,10 +1190,11 @@ class SepaDebitMandatesController extends Controller
         } catch (Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          $exceptionChain = $this->exceptionChainData($t);
-          $exceptionChain['message'] =
-            $this->l->t('Error, caught an exception. No changes were performed.');
-          return self::grumble($exceptionChain);
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Error, caught an exception. No changes were performed.'),
+            previous: $t,
+            httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+          );
         }
 
         return self::response($this->l->t('Successfully deleted the hard-copy of the written-mandate for "%1$s", please upload a new one!', $mandateReference));
@@ -1326,13 +1330,14 @@ class SepaDebitMandatesController extends Controller
       $this->flush();
 
       $this->entityManager->commit();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      $exceptionChain = $this->exceptionChainData($t);
-      $exceptionChain['message'] =
-        $this->l->t('Error, caught an exception. No changes were performed.');
-      return self::grumble($exceptionChain);
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Error, caught an exception. No changes were performed.'),
+        previous: $t,
+        httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+      );
     }
 
     if ($uploadMode != UploadsController::UPLOAD_MODE_LINK) {
@@ -1355,7 +1360,7 @@ class SepaDebitMandatesController extends Controller
           $this->getDebitMandatesFolderName(),
         ]);
       $filesAppLink = $userStorage->getFilesAppLink($filesAppPath, true);
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
     }
 
@@ -1604,13 +1609,14 @@ class SepaDebitMandatesController extends Controller
       }
 
       $this->entityManager->commit();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      $exceptionChain = $this->exceptionChainData($t);
-      $exceptionChain['message'] =
-        $this->l->t('Error, caught an exception. No changes were performed.');
-      return self::grumble($exceptionChain);
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Error, caught an exception. No changes were performed.'),
+        previous: $t,
+        httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+      );
     }
 
     $messages = [];
