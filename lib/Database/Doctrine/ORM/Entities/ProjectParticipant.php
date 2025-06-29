@@ -417,6 +417,30 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
+   * Set invoices.
+   *
+   * @param Collection $invoices
+   *
+   * @return ProjectParticipant
+   */
+  public function setInvoices(Collection $invoices):ProjectParticipant
+  {
+    $this->invoices = $invoices;
+
+    return $this;
+  }
+
+  /**
+   * Get invoices.
+   *
+   * @return Collection
+   */
+  public function getInvoices():Collection
+  {
+    return $this->invoices;
+  }
+
+  /**
    * Set databaseDocuments.
    *
    * @param null|DatabaseStorage $databaseDocuments
