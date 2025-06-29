@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-06-27 16:15+0200\n"
+"POT-Creation-Date: 2025-06-29 19:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1029,6 +1029,20 @@ msgstr ""
 msgid "Total amount for \"%s\": %s."
 msgstr ""
 
+#: lib/Command/SanitizeFilenames.php:108
+#, php-format
+msgid "Would rename \"%1$s\" to \"%2$s\" (dry-run)."
+msgstr ""
+
+#: lib/Command/SanitizeFilenames.php:116
+#, php-format
+msgid "Renaming \"%1$s\" to \"%2$s\"."
+msgstr ""
+
+#: lib/Command/SanitizeFilenames.php:132
+msgid "Unable to sanitize filenames, caught an exception."
+msgstr ""
+
 #: lib/Command/SentNotifications.php:108
 msgid ""
 "Consistency checks for sent emails for bank transactions and donation "
@@ -1424,7 +1438,7 @@ msgstr ""
 #: lib/Controller/PersonalSettingsController.php:249
 #: lib/Controller/ProgressStatusController.php:147
 #: lib/Controller/ProjectParticipantsController.php:218
-#: lib/Controller/ProjectWebPagesController.php:176
+#: lib/Controller/ProjectWebPagesController.php:205
 #: lib/Controller/ProjectsController.php:166
 #: lib/Controller/ProjectsController.php:185
 #: lib/Controller/ValidationController.php:82
@@ -1434,7 +1448,7 @@ msgstr ""
 #: lib/Controller/ContactsController.php:77
 #: lib/Controller/DocumentStorageUploadController.php:390
 #: lib/Controller/EmailFormController.php:1009
-#: lib/Controller/SepaDebitMandatesController.php:1198
+#: lib/Controller/SepaDebitMandatesController.php:1202
 msgid "UNIMPLEMENTED"
 msgstr ""
 
@@ -1443,8 +1457,8 @@ msgid "The encryption service is not available."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:154
-#: lib/Controller/SepaDebitMandatesController.php:1127
-#: lib/Controller/SepaDebitMandatesController.php:1418
+#: lib/Controller/SepaDebitMandatesController.php:1130
+#: lib/Controller/SepaDebitMandatesController.php:1423
 #, php-format
 msgid "Required information \"%s\" not provided."
 msgstr ""
@@ -1457,28 +1471,28 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:183
-#: lib/Controller/SepaDebitMandatesController.php:1214
+#: lib/Controller/SepaDebitMandatesController.php:1218
 #, php-format
 msgid "Upload error \"%s\"."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:197
 #: lib/Controller/ProjectParticipantsController.php:702
-#: lib/Controller/SepaDebitMandatesController.php:1231
+#: lib/Controller/SepaDebitMandatesController.php:1235
 msgid ""
 "Move operation requested, but the original file path has not been specified."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:203
 #: lib/Controller/ProjectParticipantsController.php:706
-#: lib/Controller/SepaDebitMandatesController.php:1235
+#: lib/Controller/SepaDebitMandatesController.php:1239
 #, php-format
 msgid "Move operation requested, but the original file \"%s\" cannot be found."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:211
 #: lib/Controller/ProjectParticipantsController.php:718
-#: lib/Controller/SepaDebitMandatesController.php:1241
+#: lib/Controller/SepaDebitMandatesController.php:1245
 msgid ""
 "Link operation requested, but the id of the original file has not been "
 "specified."
@@ -1486,7 +1500,7 @@ msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:217
 #: lib/Controller/ProjectParticipantsController.php:722
-#: lib/Controller/SepaDebitMandatesController.php:1245
+#: lib/Controller/SepaDebitMandatesController.php:1249
 #, php-format
 msgid ""
 "Link operation requested, but the existing original file with id \"%s\" "
@@ -1495,7 +1509,7 @@ msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:282
 #: lib/Controller/ProjectParticipantsController.php:834
-#: lib/Controller/SepaDebitMandatesController.php:1306
+#: lib/Controller/SepaDebitMandatesController.php:1310
 #, php-format
 msgid ""
 "Link operation requested, but the existing original file is the same as the "
@@ -1504,29 +1518,29 @@ msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:304
 #: lib/Controller/DocumentStorageUploadController.php:383
-#: lib/Controller/SepaDebitMandatesController.php:1192
-#: lib/Controller/SepaDebitMandatesController.php:1334
-#: lib/Controller/SepaDebitMandatesController.php:1612
+#: lib/Controller/SepaDebitMandatesController.php:1194
+#: lib/Controller/SepaDebitMandatesController.php:1337
+#: lib/Controller/SepaDebitMandatesController.php:1616
 msgid "Error, caught an exception. No changes were performed."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:333
 #: lib/Controller/ProjectParticipantsController.php:970
-#: lib/Controller/SepaDebitMandatesController.php:1366
+#: lib/Controller/SepaDebitMandatesController.php:1371
 #, php-format
 msgid "Upload of \"%s\" as \"%s\" successful."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:336
 #: lib/Controller/ProjectParticipantsController.php:973
-#: lib/Controller/SepaDebitMandatesController.php:1369
+#: lib/Controller/SepaDebitMandatesController.php:1374
 #, php-format
 msgid "Move of \"%s\" to \"%s\" successful."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:339
 #: lib/Controller/ProjectParticipantsController.php:976
-#: lib/Controller/SepaDebitMandatesController.php:1372
+#: lib/Controller/SepaDebitMandatesController.php:1377
 #, php-format
 msgid "Linking of file id \"%s\" to \"%s\" successful."
 msgstr ""
@@ -1649,47 +1663,47 @@ msgid "Attachment file-names were not submitted"
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1045
-#: lib/Controller/UploadsController.php:270
+#: lib/Controller/UploadsController.php:277
 #, php-format
 msgid "File \"%s\" could not be found in cloud storage."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1048
-#: lib/Controller/UploadsController.php:273
+#: lib/Controller/UploadsController.php:280
 #, php-format
 msgid "File \"%s\" is not a plain file, this is not yet implemented."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1062
 #: lib/Controller/EmailFormController.php:1120
-#: lib/Controller/UploadsController.php:401
+#: lib/Controller/UploadsController.php:408
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1080
 #: lib/Controller/FileUploadRowTrait.php:79
-#: lib/Controller/UploadsController.php:355
+#: lib/Controller/UploadsController.php:362
 #, php-format
 msgid "Upload size %s exceeds limit %s, contact your server administrator."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1088
 #: lib/Controller/FileUploadRowTrait.php:87
-#: lib/Controller/UploadsController.php:363
+#: lib/Controller/UploadsController.php:370
 #, php-format
 msgid "No file was uploaded, error message was \"%s\"."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1090
 #: lib/Controller/FileUploadRowTrait.php:89
-#: lib/Controller/UploadsController.php:365
+#: lib/Controller/UploadsController.php:372
 msgid "No file was uploaded. Unknown error"
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1102
 #: lib/Controller/FileUploadRowTrait.php:117
-#: lib/Controller/UploadsController.php:377
+#: lib/Controller/UploadsController.php:384
 msgid "Not enough storage available"
 msgstr ""
 
@@ -1789,13 +1803,13 @@ msgid "Manufacturer field is empty."
 msgstr ""
 
 #: lib/Controller/InstrumentInsuranceController.php:268
-#: lib/Database/EntityManager.php:298
-#: lib/Documents/OpenDocumentFiller.php:346
-#: lib/Documents/OpenDocumentFiller.php:361
-#: lib/Documents/OpenDocumentFiller.php:372
-#: lib/Documents/OpenDocumentFiller.php:378
+#: lib/Database/EntityManager.php:299
+#: lib/Documents/OpenDocumentFiller.php:347
+#: lib/Documents/OpenDocumentFiller.php:362
+#: lib/Documents/OpenDocumentFiller.php:373
 #: lib/Documents/OpenDocumentFiller.php:379
-#: lib/Documents/OpenDocumentFiller.php:382
+#: lib/Documents/OpenDocumentFiller.php:380
+#: lib/Documents/OpenDocumentFiller.php:383
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:146
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2452
 #: lib/PageRenderer/Projects.php:812
@@ -2188,7 +2202,7 @@ msgstr ""
 #: lib/Controller/PersonalSettingsController.php:704
 #: lib/Controller/PersonalSettingsController.php:725
 #: lib/Controller/PersonalSettingsController.php:740
-#: lib/Controller/SepaDebitMandatesController.php:475
+#: lib/Controller/SepaDebitMandatesController.php:478
 #, php-format
 msgid "Value for \"%s\" set to \"%s\"."
 msgstr ""
@@ -2796,167 +2810,190 @@ msgstr ""
 msgid "Project-id AND -name have to be specified (%s / %s)."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:135
-#: lib/Controller/ProjectParticipantFieldsController.php:251
+#: lib/Controller/ProjectParticipantFieldsController.php:137
+#: lib/Controller/ProjectParticipantFieldsController.php:253
 #, php-format
 msgid "Missing parameters in request \"%s\": \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:146
-#: lib/Controller/ProjectParticipantFieldsController.php:264
-#: lib/Controller/ProjectParticipantFieldsController.php:345
-#: lib/Controller/ProjectParticipantFieldsController.php:743
-#: lib/Controller/ProjectParticipantFieldsController.php:784
+#: lib/Controller/ProjectParticipantFieldsController.php:148
+#: lib/Controller/ProjectParticipantFieldsController.php:266
+#: lib/Controller/ProjectParticipantFieldsController.php:351
+#: lib/Controller/ProjectParticipantFieldsController.php:764
+#: lib/Controller/ProjectParticipantFieldsController.php:805
 #, php-format
 msgid "Unable to fetch field with id \"%d\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:167
+#: lib/Controller/ProjectParticipantFieldsController.php:169
 #, php-format
 msgid "Unable to retrieve property \"%s\" from field \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:187
+#: lib/Controller/ProjectParticipantFieldsController.php:189
 msgid "Request successful."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:201
+#: lib/Controller/ProjectParticipantFieldsController.php:203
 #, php-format
 msgid "Missing parameters in request \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:208
+#: lib/Controller/ProjectParticipantFieldsController.php:210
 #, php-format
 msgid "No or too many items available: \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:214
+#: lib/Controller/ProjectParticipantFieldsController.php:216
 #, php-format
 msgid "Generator data must be tagged with \"%s\" label, got \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:218
+#: lib/Controller/ProjectParticipantFieldsController.php:220
 #, php-format
 msgid "Generator data must be tagged with NIL uuid, got \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:228
+#: lib/Controller/ProjectParticipantFieldsController.php:230
 #, php-format
 msgid "Generator \"%s\" could not be instantiated."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:241
+#: lib/Controller/ProjectParticipantFieldsController.php:243
 #, php-format
 msgid "Generator \"%s\" successfully mapped to PHP-class \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:271
+#: lib/Controller/ProjectParticipantFieldsController.php:273
 #, php-format
 msgid "No management option in field \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:290
-#: lib/Controller/ProjectParticipantFieldsController.php:361
-#: lib/Controller/ProjectParticipantFieldsController.php:441
-#: lib/Controller/ProjectParticipantFieldsController.php:627
+#: lib/Controller/ProjectParticipantFieldsController.php:292
+#: lib/Controller/ProjectParticipantFieldsController.php:367
+#: lib/Controller/ProjectParticipantFieldsController.php:451
+#: lib/Controller/ProjectParticipantFieldsController.php:641
 #, php-format
 msgid "Unable to load generator for recurring receivables \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:315
-#: lib/Controller/ProjectParticipantFieldsController.php:560
-#: lib/Controller/ProjectParticipantFieldsController.php:699
+#: lib/Controller/ProjectParticipantFieldsController.php:305
+#, php-format
+msgid "Unable to generate receivables for the field \"%1$s\"."
+msgstr ""
+
+#: lib/Controller/ProjectParticipantFieldsController.php:321
+#: lib/Controller/ProjectParticipantFieldsController.php:574
+#: lib/Controller/ProjectParticipantFieldsController.php:720
 #, php-format
 msgid "Request \"%s/%s\" successful"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:329
-#: lib/Controller/ProjectParticipantFieldsController.php:403
-#: lib/Controller/ProjectParticipantFieldsController.php:577
+#: lib/Controller/ProjectParticipantFieldsController.php:335
+#: lib/Controller/ProjectParticipantFieldsController.php:413
+#: lib/Controller/ProjectParticipantFieldsController.php:591
 #, php-format
 msgid "Missing parameters in request \"%s/%s\": \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:336
-#: lib/Controller/ProjectParticipantFieldsController.php:410
-#: lib/Controller/ProjectParticipantFieldsController.php:584
+#: lib/Controller/ProjectParticipantFieldsController.php:342
+#: lib/Controller/ProjectParticipantFieldsController.php:420
+#: lib/Controller/ProjectParticipantFieldsController.php:598
 #, php-format
 msgid "Unknown update strategy: \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:376
+#: lib/Controller/ProjectParticipantFieldsController.php:382
 #, php-format
 msgid "Field \"%s\", options addded/removed/changed: %d/%d/%d/%d."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:418
+#: lib/Controller/ProjectParticipantFieldsController.php:391
+#, php-format
+msgid "Unable to regenerate receivables for the field \"%1$s\"."
+msgstr ""
+
+#: lib/Controller/ProjectParticipantFieldsController.php:428
 #, php-format
 msgid "Unable to find the project with the id %d."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:423
+#: lib/Controller/ProjectParticipantFieldsController.php:433
 #, php-format
 msgid "Project \"%s\" has no generated fields."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:459
+#: lib/Controller/ProjectParticipantFieldsController.php:469
 #, php-format
 msgid "Field \"%s\", options addded/removed/changed/skipped: %d/%d/%d/%d."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:485
+#: lib/Controller/ProjectParticipantFieldsController.php:481
+#, php-format
+msgid ""
+"Unable to regenerate the autogenerated receivables for the project \"%1$s\"."
+msgstr ""
+
+#: lib/Controller/ProjectParticipantFieldsController.php:499
 #, php-format
 msgid "Missing parameters in request %s"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:501
+#: lib/Controller/ProjectParticipantFieldsController.php:515
 #, php-format
 msgid "No or too many items available: %s"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:509
+#: lib/Controller/ProjectParticipantFieldsController.php:523
 #, php-format
 msgid ""
 "Using \"%1$s\" as option-label is not allowed. The \"%2$s\"-file is reserved "
 "by the app to hold the contents of the tooltip for this field."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:524
-#: lib/Controller/ProjectParticipantFieldsController.php:531
+#: lib/Controller/ProjectParticipantFieldsController.php:538
+#: lib/Controller/ProjectParticipantFieldsController.php:545
 #: lib/Controller/ValidationController.php:77
 #, php-format
 msgid "Could not parse number: \"%s\""
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:539
+#: lib/Controller/ProjectParticipantFieldsController.php:553
 #, php-format
 msgid ""
 "Using \"%1$s\" as option-label is not allowed. The \"%2$s\"-file is used by "
 "the app to hold the contents of the help-text for this field."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:592
+#: lib/Controller/ProjectParticipantFieldsController.php:606
 #, php-format
 msgid "Unable to fetch field with id \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:604
+#: lib/Controller/ProjectParticipantFieldsController.php:618
 #, php-format
 msgid "Unable to find the musician with the id \"%d\" in project \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:617
+#: lib/Controller/ProjectParticipantFieldsController.php:631
 #, php-format
 msgid "Unable to fetch receivable with key \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:720
-#: lib/Controller/ProjectParticipantFieldsController.php:816
+#: lib/Controller/ProjectParticipantFieldsController.php:686
+#, php-format
+msgid ""
+"Unable to update receivable \"%1$s\" for the person \"%2$s\" using the "
+"generator \"%3$s\"."
+msgstr ""
+
+#: lib/Controller/ProjectParticipantFieldsController.php:741
+#: lib/Controller/ProjectParticipantFieldsController.php:841
 #, php-format
 msgid "Unknown Request \"%s/%s\""
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:763
+#: lib/Controller/ProjectParticipantFieldsController.php:784
 #: lib/Controller/ProjectsController.php:576
 #: lib/Controller/ProjectsController.php:617
 #: lib/Controller/ProjectsController.php:668
@@ -2965,9 +3002,14 @@ msgstr ""
 msgid "Unknown request: \"%1$s / %2$s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:790
+#: lib/Controller/ProjectParticipantFieldsController.php:811
 #, php-format
 msgid "Unable to find the option with id \"%1$s\" for field \"%2$s\"."
+msgstr ""
+
+#: lib/Controller/ProjectParticipantFieldsController.php:827
+#, php-format
+msgid "Unable to modify the option \"%1$s\"."
 msgstr ""
 
 #: lib/Controller/ProjectParticipantsController.php:146
@@ -3205,62 +3247,94 @@ msgstr ""
 msgid "disabled by moderator"
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:73
+#: lib/Controller/ProjectWebPagesController.php:76
 #, php-format
-msgid "Invalid or unset project-id: `%s'"
+msgid "Invalid or unset project-id: \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:81
-#, php-format
-msgid ""
-"Submitted article id %d does not match the id %d stored in the article-data."
-msgstr ""
-
-#: lib/Controller/ProjectWebPagesController.php:89
-#, php-format
-msgid "Invalid or unset article-id: `%s'"
-msgstr ""
-
-#: lib/Controller/ProjectWebPagesController.php:94
+#: lib/Controller/ProjectWebPagesController.php:84
 #, php-format
 msgid ""
-"Cannot perform action `%s' with article with id %d, project with id %d: "
-"missing article-data."
+"Submitted article id \"%1$d\" does not match the id \"%2$d\" stored in the "
+"article-data."
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:103
+#: lib/Controller/ProjectWebPagesController.php:91
+#, php-format
+msgid "Invalid or unset article-id: \"%s\"."
+msgstr ""
+
+#: lib/Controller/ProjectWebPagesController.php:96
+#, php-format
+msgid ""
+"Cannot perform action \"%1$s\" with article with id \"%2$d\", project with "
+"id \"%3$d\": missing article-data."
+msgstr ""
+
+#: lib/Controller/ProjectWebPagesController.php:105
 msgid "Unable to ping project web-pages CMS"
 msgstr ""
 
 #: lib/Controller/ProjectWebPagesController.php:116
 #, php-format
-msgid ""
-"Created a new public web page with name %s and id %d for the project with id "
-"%d."
+msgid "Unable to create new project web pages for the project with id \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:137
+#: lib/Controller/ProjectWebPagesController.php:122
+#, php-format
+msgid ""
+"Created a new public web page with name \"%1$s\" and id \"%2$d\" for the "
+"project with id \"%3$d\"."
+msgstr ""
+
+#: lib/Controller/ProjectWebPagesController.php:143
 msgid "Created additionally a new rehearsal web page."
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:139
+#: lib/Controller/ProjectWebPagesController.php:145
 msgid "Failed to create additionally a new rehearsal web-page."
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:151
+#: lib/Controller/ProjectWebPagesController.php:155
 #, php-format
 msgid ""
-"Linked the existing public web-article %s (id %d) to the project with id %d"
+"Unable to link the existing public web-article \"%1$s\" (id \"%2$d\") to the "
+"project with id \"%3$d\"."
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:161
+#: lib/Controller/ProjectWebPagesController.php:164
 #, php-format
-msgid "Detached the public web-article %s (id %d) from the project with id %d"
+msgid ""
+"Linked the existing public web-article \"%1$s\" (id \"%2$d\") to the project "
+"with id \"%3$d\"."
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:171
+#: lib/Controller/ProjectWebPagesController.php:172
 #, php-format
-msgid "Removed public web page %s (id %d) from the project with id %d."
+msgid ""
+"Unable to detach the public web-article \"%s\" (id \"%d\") from the project "
+"with id \"%d\"."
+msgstr ""
+
+#: lib/Controller/ProjectWebPagesController.php:181
+#, php-format
+msgid ""
+"Detached the public web-article \"%1$s\" (id \"%2$d\") from the project with "
+"id \"%3$d\"."
+msgstr ""
+
+#: lib/Controller/ProjectWebPagesController.php:190
+#, php-format
+msgid ""
+"Unable to remove the public web page \"%1$s\" (id \"%2$d\") from the project "
+"with id \"%3$d\"."
+msgstr ""
+
+#: lib/Controller/ProjectWebPagesController.php:199
+#, php-format
+msgid ""
+"Removed the public web page \"%1$s\" (id \"%2$d\") from the project with id "
+"\"%3$d\"."
 msgstr ""
 
 #: lib/Controller/ProjectsController.php:91
@@ -3650,363 +3724,368 @@ msgstr ""
 msgid "Unable to export the bulktransaction with id \"%d\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:119
+#: lib/Controller/SepaDebitMandatesController.php:122
 #, php-format
 msgid "Required information %s not provided."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:192
+#: lib/Controller/SepaDebitMandatesController.php:195
 #, php-format
 msgid "Found exisiting mandate with reference \"%s\""
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:198
+#: lib/Controller/SepaDebitMandatesController.php:201
 #, php-format
 msgid "Generated new reference \"%s\""
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:201
+#: lib/Controller/SepaDebitMandatesController.php:204
 msgid "No project, delete mandate-reference."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:220
+#: lib/Controller/SepaDebitMandatesController.php:223
 #, php-format
 msgid "Failed setting `%s' to `%s'."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:231
+#: lib/Controller/SepaDebitMandatesController.php:234
 #, php-format
 msgid "Value for `%s' set to `%s'."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:249
+#: lib/Controller/SepaDebitMandatesController.php:252
 #, php-format
 msgid "Participant %d not found in project %d."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:264
+#: lib/Controller/SepaDebitMandatesController.php:267
 msgid "Set bank-account owner to musician's name?"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:271
+#: lib/Controller/SepaDebitMandatesController.php:274
 #, php-format
 msgid "Account owner contains invalid characters: \"%s\""
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:293
+#: lib/Controller/SepaDebitMandatesController.php:296
 msgid "BLZ not given, cannot validate the bank account."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:300
+#: lib/Controller/SepaDebitMandatesController.php:303
 #, php-format
 msgid "A German bank id consists of exactly 8 digits: %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:309
-#: lib/Controller/SepaDebitMandatesController.php:374
+#: lib/Controller/SepaDebitMandatesController.php:312
+#: lib/Controller/SepaDebitMandatesController.php:377
 #, php-format
 msgid "Invalid German(?) bank id \"%s\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:320
-#: lib/Controller/SepaDebitMandatesController.php:388
+#: lib/Controller/SepaDebitMandatesController.php:323
+#: lib/Controller/SepaDebitMandatesController.php:391
 #, php-format
 msgid "Invalid German(?) bank account number %s @ %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:339
+#: lib/Controller/SepaDebitMandatesController.php:342
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:425
-#: lib/Controller/SepaDebitMandatesController.php:458
+#: lib/Controller/SepaDebitMandatesController.php:428
+#: lib/Controller/SepaDebitMandatesController.php:461
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:465
+#: lib/Controller/SepaDebitMandatesController.php:468
 #, php-format
 msgid "Unknown Request: %s / %s / %s"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:536
+#: lib/Controller/SepaDebitMandatesController.php:539
 msgid "Parameter musicianId must be set, but is empty."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:561
+#: lib/Controller/SepaDebitMandatesController.php:564
 #, php-format
 msgid "Unable to load SEPA debit mandate for musician %s/%d, sequence count %d"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:785
-#: lib/Controller/SepaDebitMandatesController.php:1538
+#: lib/Controller/SepaDebitMandatesController.php:788
+#: lib/Controller/SepaDebitMandatesController.php:1543
 #, php-format
 msgid "Required information `%s' not provided."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:809
+#: lib/Controller/SepaDebitMandatesController.php:812
 msgid ""
 "The current bank account has already been used for payments or is bound to "
 "debit-mandates. Therefore the IBAN must not be changed. Please create a new "
 "account; you may disable the current account, at you option."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:823
+#: lib/Controller/SepaDebitMandatesController.php:826
 #, php-format
 msgid "Bank-account failed to validate: %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:839
+#: lib/Controller/SepaDebitMandatesController.php:842
 #, php-format
 msgid ""
 "The IBAN %s, account-owner %s, has already been recorded for the musician %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:856
+#: lib/Controller/SepaDebitMandatesController.php:859
 msgid "Unable to modify already used bank-account."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:871
+#: lib/Controller/SepaDebitMandatesController.php:874
 #, php-format
 msgid "Successfully stored the bank account with IBAN \"%s\" and owner \"%s\""
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:899
+#: lib/Controller/SepaDebitMandatesController.php:902
 #, php-format
 msgid ""
 "The bank-account with IBAN %s bound to the existing mandate does not match "
 "the submitted bank-account with IBAN %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:918
+#: lib/Controller/SepaDebitMandatesController.php:921
 msgid ""
 "The current debit-mandate already has been used for payments. Therefore the "
 "date of the debit-mandate must not be changed. Please create a new debit-"
 "mandate; you may disable the current mandate, at you option."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:925
+#: lib/Controller/SepaDebitMandatesController.php:928
 msgid ""
 "The current debit-mandate already has been used for more than a single "
 "payment. Therefore it can non longer be changed from \"recurring\" to \"non-"
 "recurring\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:930
+#: lib/Controller/SepaDebitMandatesController.php:933
 msgid ""
 "The current debit-mandate already has been used for payments. Therefore the "
 "project-binding can no longer be changed."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:933
+#: lib/Controller/SepaDebitMandatesController.php:936
 msgid ""
 "The current debit-mandate alrady has been used for payments. Therefore the "
 "stored copy of the written mandate cannot be deleted."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:957
+#: lib/Controller/SepaDebitMandatesController.php:960
 msgid "Unable to modify already used debit-mandate."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:969
+#: lib/Controller/SepaDebitMandatesController.php:972
 #, php-format
 msgid "Successfully stored the bank-account with IBAN \"%s\" and owner \"%s\""
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:973
+#: lib/Controller/SepaDebitMandatesController.php:976
 #, php-format
 msgid ""
 "Successfully stored the debit-mandate with reference \"%s\" for the IBAN "
 "\"%s\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:984
+#: lib/Controller/SepaDebitMandatesController.php:987
 msgid "Unknown upload failure."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1037
+#: lib/Controller/SepaDebitMandatesController.php:1040
 #, php-format
 msgid ""
 "General debit-mandate requested but musician \"%s\" is not a club member."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1046
+#: lib/Controller/SepaDebitMandatesController.php:1049
 msgid "Unable to find fillable debit mandate form."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1135
+#: lib/Controller/SepaDebitMandatesController.php:1138
 #, php-format
 msgid "Unable to find mandate for musician id \"%1$d\" with sequence \"%2$d\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1155
+#: lib/Controller/SepaDebitMandatesController.php:1158
 #, php-format
 msgid ""
 "We have no hard-copy of the written-mandate for \"%1$s\", so we cannot "
 "delete it."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1159
+#: lib/Controller/SepaDebitMandatesController.php:1162
 #, php-format
 msgid ""
 "The debit mandate \"%1$s\" is already in use, the hard-copy of the written-"
 "mandate should only be replaced, but not deleted."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1161
+#: lib/Controller/SepaDebitMandatesController.php:1164
 msgid "Are you sure you want to proceed?"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1196
+#: lib/Controller/SepaDebitMandatesController.php:1200
 #, php-format
 msgid ""
 "Successfully deleted the hard-copy of the written-mandate for \"%1$s\", "
 "please upload a new one!"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1435
+#: lib/Controller/SepaDebitMandatesController.php:1440
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" is already disabled."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1442
+#: lib/Controller/SepaDebitMandatesController.php:1447
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" is already active."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1448
-#: lib/Controller/SepaDebitMandatesController.php:1603
+#: lib/Controller/SepaDebitMandatesController.php:1453
+#: lib/Controller/SepaDebitMandatesController.php:1608
 #, php-format
 msgid "Unknown revocation action: \"%s\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1458
+#: lib/Controller/SepaDebitMandatesController.php:1463
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been invalidated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1461
+#: lib/Controller/SepaDebitMandatesController.php:1466
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been reactivated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1473
+#: lib/Controller/SepaDebitMandatesController.php:1478
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been deleted."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1563
+#: lib/Controller/SepaDebitMandatesController.php:1568
 #, php-format
 msgid ""
 "The account with IBAN \"%s\" cannot be deleted as the following associated "
 "mandates are still active: %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1578
+#: lib/Controller/SepaDebitMandatesController.php:1583
 #, php-format
 msgid "Bank account with IBAN \"%s\" is already disabled."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1588
+#: lib/Controller/SepaDebitMandatesController.php:1593
 #, php-format
 msgid ""
 "The account with IBAN \"%s\" cannot be disabled as the following associated "
 "mandates are still active: %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1597
+#: lib/Controller/SepaDebitMandatesController.php:1602
 #, php-format
 msgid "Bank account with IBAN \"%s\" is already active."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1619
+#: lib/Controller/SepaDebitMandatesController.php:1625
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been invalidated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1621
+#: lib/Controller/SepaDebitMandatesController.php:1627
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been reactivated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1622
+#: lib/Controller/SepaDebitMandatesController.php:1628
 msgid ""
 "Please note that associated debit-mandates need to be reactivated "
 "separately, they are still disabled."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1625
+#: lib/Controller/SepaDebitMandatesController.php:1631
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been deleted."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:108
+#: lib/Controller/UploadsController.php:111
 msgid "Original file path is not given, cannot move files."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:115
+#: lib/Controller/UploadsController.php:118
 #, php-format
 msgid "The original file \"%s\" cannot be found, cannot move files."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:121
+#: lib/Controller/UploadsController.php:124
 #, php-format
 msgid ""
 "Original file \"%s\" cannot be deleted, moving it is therefore not possible."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:133
+#: lib/Controller/UploadsController.php:136
 msgid ""
 "Linking files is only support when the destination storage is backed by the "
 "data-base."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:142
+#: lib/Controller/UploadsController.php:145
 #, php-format
 msgid "Moved \"%s\" to \"%s\"."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:159
+#: lib/Controller/UploadsController.php:162
 msgid "Link source cannot be found."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:163
+#: lib/Controller/UploadsController.php:166
 #, php-format
 msgid "Encryption requested, but link-source \"%s\" is unencrypted"
 msgstr ""
 
-#: lib/Controller/UploadsController.php:204
+#: lib/Controller/UploadsController.php:193
+#, php-format
+msgid "Unable to move \"%1$s\" to db-storage with name \"%2$s\"."
+msgstr ""
+
+#: lib/Controller/UploadsController.php:211
 msgid "Moved \"%1$s\" to db-storage with name \"%2$s\", id %d."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:210
+#: lib/Controller/UploadsController.php:217
 msgid "Unknown request"
 msgstr ""
 
-#: lib/Controller/UploadsController.php:266
+#: lib/Controller/UploadsController.php:273
 #, php-format
 msgid ""
 "File \"%s\" referes to a database storage folder, we expected a plain file."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:296
+#: lib/Controller/UploadsController.php:303
 #, php-format
 msgid ""
 "File \"%s\" is not backed by database-storage and thus cannot be linked."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:306
+#: lib/Controller/UploadsController.php:313
 #, php-format
 msgid "File \"%s\" cannot be deleted, moving it is therefor not possible."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:318
+#: lib/Controller/UploadsController.php:325
 #, php-format
 msgid "Could not copy cloud file \"%s\" to upload storage."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:342
+#: lib/Controller/UploadsController.php:349
 #, php-format
 msgid ""
 "For client-uploads the only supported upload-mode is \"copy\", \"%s\" is not "
@@ -4130,42 +4209,42 @@ msgid ""
 "column: %s"
 msgstr ""
 
-#: lib/Database/EntityManager.php:337
+#: lib/Database/EntityManager.php:338
 msgid "There is no entity-manager initialized yet."
 msgstr ""
 
-#: lib/Database/EntityManager.php:342
+#: lib/Database/EntityManager.php:343
 msgid "The entity-manager is unable to connect to the database."
 msgstr ""
 
-#: lib/Database/EntityManager.php:984
+#: lib/Database/EntityManager.php:985
 msgid ""
 "There is no active database transaction, cannot register pre-commit actions."
 msgstr ""
 
-#: lib/Database/EntityManager.php:993
-#: lib/Database/EntityManager.php:1045
-#: lib/Database/EntityManager.php:1258
+#: lib/Database/EntityManager.php:994
+#: lib/Database/EntityManager.php:1046
+#: lib/Database/EntityManager.php:1259
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1010
+#: lib/Database/EntityManager.php:1011
 msgid ""
 "There is no active database transaction, cannot execute pre-commit actions."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1215
+#: lib/Database/EntityManager.php:1216
 msgid "The connection is marked for rollback only."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1505
+#: lib/Database/EntityManager.php:1506
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1531
+#: lib/Database/EntityManager.php:1532
 msgid "EntityManager is not connected to database."
 msgstr ""
 
@@ -4185,22 +4264,12 @@ msgstr ""
 msgid "ToolTip-Key \"%1$s\", failed keys %2$s"
 msgstr ""
 
-#: lib/Documents/AnyToPdf.php:124
-#, php-format
-msgid "Converter \"%1$s\" has failed trying to convert mime-type \"%2$s\""
-msgstr ""
-
-#: lib/Documents/AnyToPdf.php:269
-#, php-format
-msgid "Please install the \"%s\" program on the server."
-msgstr ""
-
-#: lib/Documents/OpenDocumentFiller.php:143
+#: lib/Documents/OpenDocumentFiller.php:144
 #, php-format
 msgid "Unable to obtain file-handle for path \"%s\""
 msgstr ""
 
-#: lib/Documents/OpenDocumentFiller.php:232
+#: lib/Documents/OpenDocumentFiller.php:233
 #, php-format
 msgid ""
 "Data for block \"%s\" using the path \"%s\" could not be found in the "
@@ -7790,7 +7859,7 @@ msgid ""
 "depend on this musician."
 msgstr ""
 
-#: lib/Service/MusicianService.php:298
+#: lib/Service/MusicianService.php:293
 #: templates/settings/personal-settings.php:162
 msgid "Dummy"
 msgstr ""
@@ -11692,6 +11761,47 @@ msgstr ""
 msgid "and"
 msgstr ""
 
+#: php-toolkit/Service/AnyToPdf.php:176
+#, php-format
+msgid "Unable to find any of the fallback converters \"%s\"."
+msgstr ""
+
+#: php-toolkit/Service/AnyToPdf.php:265
+#: php-toolkit/Service/AnyToPdf.php:297
+#: php-toolkit/Service/AnyToPdf.php:315
+msgid "not found"
+msgstr ""
+
+#. TRANSLATORS: This is actually just the name of the "converter"
+#. TRANSLATORS: which does "nothing", i.e. just copies the input
+#. TRANSLATORS: data unchanged to the output.
+#: php-toolkit/Service/AnyToPdf.php:283
+msgid "pass through"
+msgstr ""
+
+#: php-toolkit/Service/AnyToPdf.php:348
+#, php-format
+msgid ""
+"Universal converter \"%1$s\" has failed trying to convert MIME type \"%2$s\""
+msgstr ""
+
+#: php-toolkit/Service/AnyToPdf.php:399
+#, php-format
+msgid "Converter \"%1$s\" has failed trying to convert MIME type \"%2$s\""
+msgstr ""
+
+#: php-toolkit/Service/AnyToPdf.php:723
+#, php-format
+msgid ""
+"Unable to determine the version of the helper program \"%1$s\", is it "
+"installed?"
+msgstr ""
+
+#: php-toolkit/Service/ExecutableFinder.php:135
+#, php-format
+msgid "Please install the \"%s\" program on the server."
+msgstr ""
+
 #: php-toolkit/Service/RequestService.php:214
 #, php-format
 msgid ""
@@ -11750,6 +11860,20 @@ msgstr ""
 
 #: php-toolkit/Traits/ResponseTrait.php:201
 msgid "Caused by previous exception"
+msgstr ""
+
+#: php-toolkit/Traits/SanitizeFilenameTrait.php:81
+#, php-format
+msgid "%1$s (renamed)"
+msgstr ""
+
+#: php-toolkit/Traits/SanitizeFilenameTrait.php:85
+msgid "renamed file"
+msgstr ""
+
+#: php-toolkit/Traits/SanitizeFilenameTrait.php:92
+#, php-format
+msgid "Unable to sanitize filename \"%s\"."
 msgstr ""
 
 #: specialAppInfoFakeDummyForL10nScript.php:2
