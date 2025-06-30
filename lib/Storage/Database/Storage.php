@@ -447,7 +447,7 @@ class Storage extends AbstractStorage
     if ($flags == PATHINFO_DIRNAME) {
       $pathInfo = self::normalizeDirectoryName($pathInfo);
     } elseif (is_array($pathInfo)) {
-      $pathInfo['dirname'] = self::normalizeDirectoryName($pathInfo['dirname']);
+      $pathInfo['dirname'] = self::normalizeDirectoryName($pathInfo['dirname'] ?? '');
     }
     return $pathInfo;
   }
