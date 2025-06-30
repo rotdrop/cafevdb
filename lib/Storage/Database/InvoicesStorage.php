@@ -265,7 +265,7 @@ class InvoicesStorage extends Storage
     }
 
     /** @var Entity $invoice */
-    $invoice = $this->entityRepository->findInvoiceByFileName($dirName);
+    $invoice = $this->entityRepository->findInvoiceByFileName(self::pathInfo($dirName, PATHINFO_BASENAME));
     if ($invoice && $invoice->getNotificationEmail() && !str_contains($baseName, 'ocTransferId')) {
       // Do not allow adding further documents except adding a folder
       // documentation. The final rename will fail in addition if this is
@@ -344,13 +344,23 @@ class InvoicesStorage extends Storage
 
     $path1 = $this->buildPath($path1);
     $path2 = $this->buildPath($path2);
-    list('dirname' => $dirName1, /* 'basename' => $baseName1 */) = self::pathinfo($path1);
+    list('dirname' => $dirName1, 'basename' => $baseName1) = self::pathinfo($path1);
     list('dirname' => $dirName2, 'basename' => $baseName2) = self::pathinfo($path2);
 
     /** @var Entities\DatabaseStorageDirEntry $dirEntry */
     $dirEntry = $this->fileFromFileName($path1);
     if (empty($dirEntry)) {
       // $this->logInfo('NO DIR ENTRY FOR ' . $path1);
+      return false;
+    } elseif ($dirEntry instanceof Entities\DatabaseStorageFolder) {
+      // nope, we do not allow renaming folders
+      return false;
+    }
+
+    /** @var Entity $invoice */
+    $invoice = $this->entityRepository->findInvoiceByFileName($baseName1);
+    if ($invoice) {
+      // keep it
       return false;
     }
 
