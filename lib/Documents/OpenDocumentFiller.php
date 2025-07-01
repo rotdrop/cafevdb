@@ -230,7 +230,12 @@ class OpenDocumentFiller
           $value = $value[$index]??null;
         }
         if (empty($value)) {
-          throw new RuntimeException($this->l->t('Data for block "%s" using the path "%s" could not be found in the substitution data.', [ $key, $reference ]));
+          throw new RuntimeException(
+            $this->l->t(
+              'Data for block "%1$s" using the path "%2$s" could not be found in the substitution data.',
+              [ $key, $reference ],
+            ),
+          );
         }
         $keys = array_keys($value);
         if ($keys != array_filter($keys, 'is_int')) {
