@@ -140,17 +140,32 @@ const isProjectBalanceSupportingDocumentsFolder = function(folder: Folder, proje
 const isInvoicesFolder = (folder: Folder) =>
   initialState && folder.path.startsWith(initialState?.sharing.files.folders.invoices);
 
-const getProjectNameFromInvoiceFolder = (folder: Folder) => {
-  let dirName = folder.dirname;
-  if (!initialState || !dirName.startsWith(initialState?.sharing.files.folders.invoices)) {
+const getDataFromInvoiceFolder = (folder: Folder) => {
+  let path = folder.path
+  logger.info('TEST INVOICE FOLDER', { folder, path });
+  if (!initialState || !path.startsWith(initialState?.sharing.files.folders.invoices)) {
     return null;
   }
-  dirName = dirName.substring(initialState?.sharing.files.folders.invoices.length);
-  // /2025/Rechnung-Firma-TestContactIntegration-Test2024-002-1.pdf
-  // /2025/Rechnung-Firma-TestContactIntegration-Test2024-XXX-1.pdf
-  // /2025/Rechnung-Firma-TestContactIntegration-Vorstand-2024-002-1.pdf
-  const projectName = dirName.replace(/^\/?\d{4}\/.*-(\w+(?:\d{4})?)(-\d{4})?-(?:\d|X){3}-\d+\..*$/, '$1')
-  return projectName;
+  path = path.substring(initialState?.sharing.files.folders.invoices.length);
+  // '/2025/Test-2024-002-2-EineFirmaBlah-AddressbookIntegrationTester'
+  // -> [ "/2025/Test-2024-002-2-EineFirmaBlah-AddressbookIntegrationTester", "Test-2024-002", "Test", undefined, "2024", "2", "EineFirmaBlah", "AddressbookIntegrationTester" ]
+  // '/2025/Test2024-002-2-EineFirmaBlah-AddressbookIntegrationTester'
+  // -> [ "/2025/Test2024-002-2-EineFirmaBlah-AddressbookIntegrationTester", "Test2024-002", "Test2024", "2024", undefined, "2", "EineFirmaBlah", "AddressbookIntegrationTester" ]
+  const matches = path.match(/^\/?\d{4}\/(([^0-9-\s]+(\d{4})?)(?:-(\d{4}))?-(?:\d|X){3})-(\d+)-([^-]+)-([^-]+)?$/);
+  if (!matches) {
+    return null;
+  }
+  const invoice = {
+    invoiceNumber: matches[1] + '/' + matches[5],
+    projectName: matches[2],
+    projectYear: matches[3] || matches[4],
+    projectType: matches[3] ? 'temporary' : 'permanent',
+    organization: matches[6],
+    person: matches[7],
+  };
+  logger.info('INVOICE DATA', { path, invoice });
+
+  return invoice;
 };
 
 const enableTemplateActions = function(node: Node) {
@@ -263,6 +278,10 @@ class SupportingDocumentEntry implements Entry {
   }
 
   public enabled(folder: Folder) {
+    // tweak further?
+    // class="action upload-picker__menu-entry" data-cy-upload-picker-menu-entry="cafevdb-project-supporting-document-folder"><
+    logger.info('MENU ENTRY', { el: document.querySelector('[data-cy-upload-picker-menu-entry="' + supportingDocumentsEntry.id + '"]') });
+
     const projectName = getProjectNameFromProjectBalancesFolders(folder);
     const projectYear = getProjectYearFromProjectName(projectName);
 
@@ -397,8 +416,8 @@ class InvoicesEntry implements Entry {
       return false;
     }
 
-    const projectName = getProjectNameFromInvoiceFolder(folder);
-    if (!projectName) {
+    const invoiceData = getDataFromInvoiceFolder(folder);
+    if (!invoiceData) {
       this.displayName = t(appName, 'New Invoice');
     } else {
       this.displayName = t(appName, 'Generate Invoice Document');
@@ -408,8 +427,10 @@ class InvoicesEntry implements Entry {
   }
 
   public async handler(folder: Folder, content: Node[]) {
-    console.info('FOLDER', { folder, content });
+    logger.info('FOLDER', { folder, content });
     // fixup later
+
+    // const projectName = getProjectNameFromInvoiceFolder(folder);
   }
 }
 
@@ -422,7 +443,7 @@ addNewFileMenuEntry(invoicesEntry);
  */
 window.addEventListener('DOMContentLoaded', () => {
   const newFileMenuEntries = getNewFileMenuEntries();
-  console.info('NEW FILE MENU ENTRIES', newFileMenuEntries);
+  logger.info('NEW FILE MENU ENTRIES', newFileMenuEntries);
   for (const entry of newFileMenuEntries) {
     if (entry !== supportingDocumentsEntry && entry !== invoicesEntry && entry.id !== 'rich-workspace-init') {
       const enabledMethod = entry.enabled;
