@@ -41,6 +41,7 @@ use OCP\IUserSession;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\Files\Event\LoadSidebar;
 
+use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -152,6 +153,7 @@ class FilesHooksListener implements IEventListener
       $encryptionService = $this->appContainer->get(EncryptionService::class);
       $this->logger = $this->appContainer->get(ILogger::class);
       $this->l = $this->appContainer->get(\OCP\IL10N::class);
+      $appL10n = $this->appContainer->get(AppL10N::class);
 
       $sharedFolder = $encryptionService->getConfigValue(ConfigService::SHARED_FOLDER, '');
       $templatesFolder = $encryptionService->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER, '');
@@ -179,6 +181,8 @@ class FilesHooksListener implements IEventListener
       $financeFolder = $sharedFolder . '/' . $financeFolder;
       $balancesFolder = $financeFolder . '/' . $balancesFolder;
       $projectBalancesFolder = $balancesFolder . '/' . $projectsFolder;
+      $invoicesFolder = $financeFolder . '/' . $appL10n->t('invoices');
+      $donationReceiptsFolder = $financeFolder . '/' . $appL10n->t('dontation-receipts');
 
       $initialState->provideInitialState('files', [
         'sharing' => [
@@ -186,10 +190,12 @@ class FilesHooksListener implements IEventListener
             'folders' => [
               // absolute paths
               'root' => $sharedFolder,
-              'templates' => $templatesFolder,
-              'finance' => $financeFolder,
               'balances' => $balancesFolder,
+              'donationReceipts' => $donationReceiptsFolder,
+              'finance' => $financeFolder,
+              'invoices' => $invoicesFolder,
               'projectBalances' => $projectBalancesFolder,
+              'templates' => $templatesFolder,
             ],
             'subFolders' => [
               // relative paths

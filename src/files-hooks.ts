@@ -137,6 +137,22 @@ const isProjectBalanceSupportingDocumentsFolder = function(folder: Folder, proje
   }
 };
 
+const isInvoicesFolder = (folder: Folder) =>
+  initialState && folder.path.startsWith(initialState?.sharing.files.folders.invoices);
+
+const getProjectNameFromInvoiceFolder = (folder: Folder) => {
+  let dirName = folder.dirname;
+  if (!initialState || !dirName.startsWith(initialState?.sharing.files.folders.invoices)) {
+    return null;
+  }
+  dirName = dirName.substring(initialState?.sharing.files.folders.invoices.length);
+  // /2025/Rechnung-Firma-TestContactIntegration-Test2024-002-1.pdf
+  // /2025/Rechnung-Firma-TestContactIntegration-Test2024-XXX-1.pdf
+  // /2025/Rechnung-Firma-TestContactIntegration-Vorstand-2024-002-1.pdf
+  const projectName = dirName.replace(/^\/?\d{4}\/.*-(\w+(?:\d{4})?)(-\d{4})?-(?:\d|X){3}-\d+\..*$/, '$1')
+  return projectName;
+};
+
 const enableTemplateActions = function(node: Node) {
 
   if (node && node.type === FileType.Folder) {
@@ -361,6 +377,46 @@ const supportingDocumentsEntry = new SupportingDocumentEntry(appName);
 
 addNewFileMenuEntry(supportingDocumentsEntry);
 
+// invoices are also special, and perhaps later on contracts
+
+class InvoicesEntry implements Entry {
+
+  public id: string;
+  public displayName: string;
+  public iconClass: string = 'icon-folder';
+  public order: number = 1000000;
+
+  public constructor(appName: string) {
+    this.id = appName + '-invoices-folder';
+    this.displayName = t(appName, 'New Invoice');
+  }
+
+  public enabled(folder: Folder) {
+    logger.info('FOLDER', { folder });
+    if (!isInvoicesFolder(folder)) {
+      return false;
+    }
+
+    const projectName = getProjectNameFromInvoiceFolder(folder);
+    if (!projectName) {
+      this.displayName = t(appName, 'New Invoice');
+    } else {
+      this.displayName = t(appName, 'Generate Invoice Document');
+    }
+
+    return true;
+  }
+
+  public async handler(folder: Folder, content: Node[]) {
+    console.info('FOLDER', { folder, content });
+    // fixup later
+  }
+}
+
+const invoicesEntry = new InvoicesEntry(appName);
+
+addNewFileMenuEntry(invoicesEntry);
+
 /*
  * In special locations generic "new file" action should be very restricted.
  */
@@ -368,10 +424,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const newFileMenuEntries = getNewFileMenuEntries();
   console.info('NEW FILE MENU ENTRIES', newFileMenuEntries);
   for (const entry of newFileMenuEntries) {
-    if (entry !== supportingDocumentsEntry && entry.id !== 'rich-workspace-init') {
+    if (entry !== supportingDocumentsEntry && entry !== invoicesEntry && entry.id !== 'rich-workspace-init') {
       const enabledMethod = entry.enabled;
       entry.enabled = (folder: Folder) => {
-        return !supportingDocumentsEntry.enabled(folder) && (enabledMethod ? enabledMethod(folder) : true);
+        return !invoicesEntry.enabled(folder) && !supportingDocumentsEntry.enabled(folder) && (enabledMethod ? enabledMethod(folder) : true);
       };
     }
   }

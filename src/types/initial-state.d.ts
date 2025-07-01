@@ -29,10 +29,12 @@ export interface FilesInitialState {
       folders: {
         // absolute paths
         root: string,
-        templates: string,
-        finance: string,
         balances: string,
+        donationReceipts: string,
+        finance: string,
+        invoices: string,
         projectBalances: string,
+        templates: string,
       },
       subFolders: {
         // relative paths
