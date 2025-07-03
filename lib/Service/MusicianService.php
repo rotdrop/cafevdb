@@ -242,8 +242,10 @@ class MusicianService
         case FieldDataType::RECEIVABLES:
         case FieldDataType::LIABILITIES:
           $dbFile = $participantDatum->getSupportingDocument();
-          $this->remove($dbFile, true);
-          $participantDatum->setSupportingDocument(null);
+          if ($dbFile) {
+              $this->remove($dbFile, true);
+              $participantDatum->setSupportingDocument(null);
+          }
           $this->persist($participantDatum); // ??? needed ???
           break;
         default:
