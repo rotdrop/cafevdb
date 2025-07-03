@@ -24,22 +24,23 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
-use \OutOfBoundsException;
-use \RuntimeException;
+use OutOfBoundsException;
+use RuntimeException;
+use DateTimeImmutable;
 
-use OCP\ISession;
 use OCP\IL10N;
+use OCP\ISession;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Common\PHPMailer;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Common\PHPMailer;
-use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\MailingListsService;
 
 /**
  * Wrap the email filter form into a class to make things a little
@@ -651,6 +652,8 @@ class RecipientsFilter
       $criteria[] = [ 'projectParticipation.project' => $this->projectId ];
       $criteria[] = [ '!projectParticipation.participationStatus' => $this->participationStatusBlackList() ];
     }
+    $criteria[] = [ '(|deleted' => null ];
+    $criteria[] = [ '>=deleted' => new DateTimeImmutable() ];
 
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
 
@@ -834,13 +837,15 @@ class RecipientsFilter
       if (!$this->participationStatusNames) {
         $this->participationStatusNames = [];
       }
-      return array_keys($this->participationStatusNames);
+      $byStatusDefault = array_keys($this->participationStatusNames);
+    } else {
+      $byStatusDefault = [ DBTypes\EnumParticipationStatus::REGULAR ];
+      if ($this->projectId > 0 && !$this->recipientsExceptProject()) {
+        $byStatusDefault[] = DBTypes\EnumParticipationStatus::PASSIVE;
+        $byStatusDefault[] = DBTypes\EnumParticipationStatus::TEMPORARY;
+      }
     }
-    $byStatusDefault = [ DBTypes\EnumParticipationStatus::REGULAR ];
-    if ($this->projectId > 0 && !$this->recipientsExceptProject()) {
-      $byStatusDefault[] = DBTypes\EnumParticipationStatus::PASSIVE;
-      $byStatusDefault[] = DBTypes\EnumParticipationStatus::TEMPORARY;
-    }
+    sort($byStatusDefault);
     return $byStatusDefault;
   }
 
@@ -1407,10 +1412,10 @@ class RecipientsFilter
 
     $defaultByParticipationStatus = $this->defaultByParticipationStatus();
     $participationStatusFilter = $this->participationStatusFilter ?? [];
-    if (array_intersect($participationStatusFilter, $defaultByParticipationStatus) !== $defaultByParticipationStatus) {
+    if (array_intersect($participationStatusFilter, $defaultByParticipationStatus) != $defaultByParticipationStatus) {
       // intentionally not for the list as less than the default status type
       // were addressed
-      $this->logInfo('MEMBER FILTER INCOMPATIBLE');
+      $this->logInfo('MEMBER FILTER INCOMPATIBLE ' . print_r($defaultByParticipationStatus, true) . ' ' . print_r($participationStatusFilter, true));
       return false;
     }
 
