@@ -212,39 +212,22 @@ import type { Contact, AddressBook, Musician } from '../types/address-book.d.ts'
 import Console from '../util/console.ts'
 import { tooltips } from '../util/tooltips.ts'
 import type { FilesInitialState as InitialState } from '../types/initial-state.d.ts'
+import {
+  MailMergeDataset,
+  MailMergeDownload,
+  MailMergeCloud,
+} from '../types/ajax/mail-merge.ts'
+import type {
+  MailMergeOperation,
+  ContactKeys,
+  MailMergePayload,
+} from '../types/ajax/mail-merge.ts'
 
 const COMPONENT_NAME = 'FilesTab'
 const logger = new Console(COMPONENT_NAME)
 
 type MusicianModel = {
   id: number
-}
-
-const MailMergeDataset = 'dataset'
-const MailMergeDownload = 'download'
-const MailMergeCloud = 'cloud'
-type MailMergeOperations = typeof MailMergeDataset
-  | typeof MailMergeDownload
-  | typeof MailMergeCloud
-
-type ContactKeys = {
-  key: string|number,
-  uri: string|undefined,
-  uid: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  book: any,
-}
-
-type MailMergePayload = {
-  fileId: number,
-  fileName: string,
-  senderId: number,
-  projectId: number,
-  recipientIds: (number|string)[],
-  addressBooksUris: Record<string, string>,
-  contactKeys: ContactKeys[],
-  operation: MailMergeOperations,
-  limit?: number,
 }
 
 interface RadioInputEvent extends Event {
@@ -425,17 +408,16 @@ const toggleRecipientsSource = (event: RadioInputEvent) => {
   recipientsSourceComponent.value.closeMenu()
 }
 
-const mailMergeHandlerHelper = (operation: MailMergeOperations) =>
+const mailMergeHandlerHelper = (operation: MailMergeOperation) =>
   (event: MouseEvent) => handleMailMergeRequest(operation, event as TargetedMouseEvent)
 
-const handleMailMergeRequest = async (operation: MailMergeOperations, event: TargetedMouseEvent) => {
+const handleMailMergeRequest = async (operation: MailMergeOperation, event: TargetedMouseEvent) => {
   logger.info('MAIL MERGE', operation, event)
   logger.info('FILE', fileInfo.value)
 
   merging.value = true
 
   const postData: MailMergePayload = {
-    fileId: fileInfo.value!.id,
     fileName: fileInfo.value!.path + '/' + fileInfo.value!.name,
     senderId: sender.value!.id,
     projectId: projectId.value,
@@ -456,7 +438,7 @@ const handleMailMergeRequest = async (operation: MailMergeOperations, event: Tar
         await axiosFileDownload(ajaxUrl, postData)
       } catch (e) {
         showError(
-          t(appName, 'File download failed for {fileName}.', { fileName: postData.fileName }),
+          t(appName, 'File download failed for {fileName}.', { fileName: postData.fileName! }),
           { timeout: TOAST_PERMANENT_TIMEOUT },
         )
       }

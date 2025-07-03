@@ -51,7 +51,7 @@ class FilesCacheService
   private const CACHE_HASH_ALGORITHM = 'sha256';
   private const FILES_CACHE_FOLDER = 'files-cache';
 
-  public const FILE_HASH_KEY = 'hash:' . self::CACHE_HASH_ALGORITHM;
+  public const FILE_HASH_KEY = 'hash@' . self::CACHE_HASH_ALGORITHM;
 
   /** @var Folder */
   private Folder $filesCacheFolder;

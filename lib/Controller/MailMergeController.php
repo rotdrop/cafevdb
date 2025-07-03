@@ -47,6 +47,7 @@ use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -110,13 +111,13 @@ class MailMergeController extends Controller
    * Try to perform a mail-merge of a document which is assumed to need
    * somehow a sender/recipient context (i.e. a letter).
    *
-   * @param int|string $senderId
+   * @param int|string $senderId Database id or uid of sender.
    *
    * @param null|string $fileName
    *
    * @param null|string $templateName
    *
-   * @param array $recipientIds
+   * @param array $recipientIds Database ids of recipients (Musicians table).
    *
    * @param int $projectId
    *
@@ -126,7 +127,7 @@ class MailMergeController extends Controller
    *
    * @param array $compositePaymentIds
    *
-   * @param array $invoiceIds
+   * @param array $invoiceIds Database ids or invoice numbers of invoices.
    *
    * @param string $operation
    *
@@ -246,7 +247,12 @@ class MailMergeController extends Controller
       $noRecipients = $limit === 0 || (empty($recipientIds) && empty($contactKeys) && empty($compositePaymentIds) && empty($invoiceIds));
 
       // fill also some financial tax exemption notice abbreviations ...
-      $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.corporateIncomeTax';
+      $taxTypes = array_map(fn(string $value) => Util::dashesToCamelCase($value, dashes: ' -_'), TaxType::values());
+      foreach ($taxTypes as $taxType) {
+        if (!empty($templateData['org']['taxAuthorities']['exemptionNotices'][$taxType])) {
+          $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.' . $taxType;
+        }
+      }
 
       if ($noRecipients) {
         switch ($operation) {
@@ -297,7 +303,10 @@ class MailMergeController extends Controller
           $recipients = $this
             ->getDatabaseRepository(Entities\Invoice::class)
             ->findBy(
-              [ 'id' => $invoiceIds, ],
+              [
+                '(|id' => $invoiceIds,
+                'invoiceNumber' => $invoiceIds,
+              ],
               limit: $limit,
               offset: $offset,
             );
