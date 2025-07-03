@@ -716,7 +716,6 @@ WHERE dsf.id IS NOT NULL',
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'display_name_personal', [
         'name'     => $this->l->t('Display-Name (pers.)'),
-        'tab'      => [ 'id' => 'musician' ],
         'css'      => [ 'postfix' => [ 'musician-personal-public-name' ], ],
         'options'  => 'LFAVCPD',
         'input' => $this->pmeBare ? 'R' : 'HR', // handy for export
@@ -738,6 +737,7 @@ WHERE dsf.id IS NOT NULL',
 
     $opts['fdd']['invoice_number'] = [
       'name'     => $this->l->t('Invoice Number'),
+      'tab' => [ 'id' => 'invoice' ],
       'input'    => '', // 'M', automatically determined.
       'select'   => 'T',
       'options'  => 'LACPDV',
