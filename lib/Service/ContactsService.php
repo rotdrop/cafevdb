@@ -950,6 +950,9 @@ class ContactsService
     if (!empty($this->contactSynchronizations[$musician->getId()])) {
       return;
     }
+    if (!$this->entityManager->isTransactionActive()) {
+      return;
+    }
     $this->contactSynchronizations[$musician->getId()] = $musician;
     /** @var ContactsCardEventListener $listener */
     $listener = $this->appContainer->get(ContactsCardEventListener::class);

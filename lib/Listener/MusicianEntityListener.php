@@ -181,7 +181,7 @@ class MusicianEntityListener
     if ($eventArgs instanceof ORMEvent\PostUpdateEventArgs) {
       $field = 'addressBookUri';
       $musicianId = $musician->getId();
-      $addressBookUri = $this->preUpdateValues[$musicianId][$field];
+      $addressBookUri = $this->preUpdateValues[$musicianId][$field] ?? null;
       unset($this->preUpdateValues[$musicianId][$field]);
     } else {
       $addressBookUri = $musician->getAddressBookUri();
