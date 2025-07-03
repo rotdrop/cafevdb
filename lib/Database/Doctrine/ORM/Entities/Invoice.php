@@ -207,7 +207,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * @var DatabaseStorageFile
    */
-  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'])]
   private ?DatabaseStorageFile $writtenInvoice;
 
   /**
