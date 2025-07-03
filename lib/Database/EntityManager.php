@@ -211,16 +211,6 @@ class EntityManager extends EntityManagerDecorator
   protected $databaseAccess = [];
 
   /**
-   * @var array
-   *
-   * Event listeners only get access to the vanilla entity manager. In order
-   * to give access to the decorated manager we supply a static lookup which
-   * lets us determine the decorator for each decorated insance (ahem, "each":
-   * there is probably always only one ...).
-   */
-  protected static $wrappedManagers = [];
-
-  /**
    * @var array<int, Throwable>
    *
    * In order to make the real exceptions visible exceptions can be remembered
@@ -228,6 +218,13 @@ class EntityManager extends EntityManagerDecorator
    * code.
    */
   protected array $transactionExceptions = [];
+
+  /**
+   * @var EntityManager
+   *
+   * The entity manager is a singleton. There is only one.
+   */
+  protected static ?EntityManager $instance = null;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -259,6 +256,7 @@ class EntityManager extends EntityManagerDecorator
         $this->bind();
       });
     }
+    self::$instance = $this;
   }
 
   /**
@@ -310,25 +308,18 @@ class EntityManager extends EntityManagerDecorator
     if ($this->connected()) {
       $this->registerTypes();
     }
-    self::$wrappedManagers[spl_object_id($this->entityManager)] = $this;
     $this->dispatchEvent(new Events\EntityManagerBoundEvent($this));
   }
 
   /**
-   * Give static access to the decorated entity manager.
+   * The entity manager is a singleton: there is only one. If there is any
+   * then return the instance, if there is no (yet) any return null.
    *
-   * @param EntityManagerInterface $entityManager A potentially vanilla entity
-   * manager. If the decorator is passed as argument, then it is gracefully
-   * passed through.
-   *
-   * @return EntityManager The decorated entity Manager.
+   * @return null|EntityManager
    */
-  public static function getDecorator(EntityManagerInterface $entityManager):?EntityManager
+  public static function getInstance():?EntityManager
   {
-    if ($entityManager instanceof EntityManager) {
-      return $entityManager;
-    }
-    return self::$wrappedManagers[spl_object_id($entityManager)] ?? null;
+    return self::$instance;
   }
 
   /** {@inheritdoc} */
