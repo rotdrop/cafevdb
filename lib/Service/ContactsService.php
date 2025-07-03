@@ -597,7 +597,7 @@ class ContactsService
       $entity->setJobTitle($value);
     }
 
-    if (!$isWorkAddress && empty($entity->getAddressSupplement()) && !empty($value)) {
+    if (!$isWorkAddress && empty($entity->getAddressSupplement()) && !empty($entityValues)) {
       $publicName = $entity->getPublicName(firstNameFirst: true);
       $entity->setAddressSupplement('c/o ' . $publicName);
     }
