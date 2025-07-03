@@ -111,7 +111,8 @@ class MailMergeController extends Controller
    * Try to perform a mail-merge of a document which is assumed to need
    * somehow a sender/recipient context (i.e. a letter).
    *
-   * @param int|string $senderId Database id or uid of sender.
+   * @param null|int|string $senderId Database id or uid of sender. If null
+   * the current loggged on user is the sender.
    *
    * @param null|string $fileName
    *
@@ -140,7 +141,7 @@ class MailMergeController extends Controller
    * @NoAdminRequired
    */
   public function merge(
-    int|string $senderId,
+    null|Int|string $senderId = null,
     ?string $fileName = null,
     ?string $templateName = null,
     array $recipientIds = [],
@@ -163,12 +164,16 @@ class MailMergeController extends Controller
 
     $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
 
-    /** @var Entities\Musician $sender */
-    if (filter_var($senderId, FILTER_VALIDATE_INT, ['min_range' => 1]) === false) {
-      $sender = $musiciansRepository->findByUserId($senderId);
-    } else {
-      $sender = $musiciansRepository->find($senderId);
+    if ($senderId === null) {
+      $senderId = $this->userId();
     }
+
+    /** @var Entities\Musician $sender */
+    $sender = $musiciansRepository->findOneBy([
+      '(|id' => $senderId,
+      'userIdSlug' => $senderId,
+    ]);
+
     if (empty($sender)) {
       throw new Exceptions\EnduserNotificationException(
         $this->l->t('Unable to determine the sender given its id "%s"', $senderId),
@@ -344,6 +349,8 @@ class MailMergeController extends Controller
           }
         }
 
+        $cloudFiles = [];
+
         foreach ($recipients as $recipient) {
 
           if ($recipient instanceof Entities\CompositePayment) {
@@ -411,7 +418,9 @@ class MailMergeController extends Controller
                 return self::dataResponse([
                   'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
                   'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+                  'cloudFiles' => [ $filledFileName ],
                   'count' => $mailMergeCount,
+                  'senderId' => $sender->getId(),
                 ]);
               case self::OPERATION_DOWNLOAD:
               case self::OPERATION_DATASET:
@@ -422,6 +431,7 @@ class MailMergeController extends Controller
           switch ($operation) {
             case self::OPERATION_CLOUD:
               $cloudFolder->newFile($filledFileName, $fileData);
+              $cloudFiles[] = $filledFileName;
               break;
             case self::OPERATION_DOWNLOAD:
             case self::OPERATION_DATASET:
@@ -436,7 +446,9 @@ class MailMergeController extends Controller
             return self::dataResponse([
               'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
               'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+              'cloudFiles' => $cloudFiles,
               'count' => $mailMergeCount,
+              'senderId' => $sender->getId(),
             ]);
           case self::OPERATION_DOWNLOAD:
           case self::OPERATION_DATASET:

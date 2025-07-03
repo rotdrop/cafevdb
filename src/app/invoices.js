@@ -240,7 +240,7 @@ const ready = function(selector, pmeParameters, resizeCB) {
     $container
       .on('click', 'a.download-link.ajax-download', function(event) {
         const $this = $(this);
-        fileDownload($this.attr('href'));
+        fileDownload($this.attr('href'), undefined, $this);
         return false;
       });
 

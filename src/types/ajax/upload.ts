@@ -21,42 +21,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const MailMergeDataset = 'dataset'
-export const MailMergeDownload = 'download'
-export const MailMergeCloud = 'cloud'
-export type MailMergeOperation = typeof MailMergeDataset
-  | typeof MailMergeDownload
-  | typeof MailMergeCloud
+export const UploadModeMove = 'move';
+export const UploadModeCopy = 'copy';
+export const UploadModeLink = 'link'
+export type UploadMode = typeof UploadModeCopy | typeof UploadModeMove  | typeof UploadModeLink;
 
-export interface ContactKeys {
-  key: string|number,
-  uri?: string,
-  uid: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  book: any,
-}
-
-export interface MailMergePayload {
-  senderId?: number|string,
-  fileName?: string,
-  templateName?: string,
-  projectId?: number,
-  recipientIds?: number[],
-  contactKeys?: ContactKeys[],
-  addressBooksUris?: Record<string, string>,
-  compositePaymentIds?: number[],
-  invoiceIds?: (string|number)[],
-  operation: MailMergeOperation,
-  limit?: number,
-  offset?: null,
-}
-
-export interface MailMergeResponse {
-  message: string,
-  cloudFolder: string,
-  cloudFiles: string[],
-  count: number,
-  senderId: number,
-}
+export interface UploadStashResponse {
+  upload_mode: UploadMode,
+  name: string,
+  error: number,
+  tmp_name: string,
+  type: string, // mime-type
+  size: number,
+  upload_max_file_size: number,
+  max_human_file_size: string,
+};
 
 export {}

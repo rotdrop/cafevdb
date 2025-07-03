@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TaxExemptionNotice as Entity;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
@@ -97,9 +98,7 @@ class TaxExemptionNoticesStorage extends Storage
    *
    * @param bool $flush Whether to flush the changes to the db.
    *
-   * @param bool $replace If \true replace the existing file references by the
-   * given file. Otherwise it is an error if an entry already exists and
-   * points to another file.
+   * @param string $conflict
    *
    * @return Entities\DatabaseStorageFile
    */
@@ -107,7 +106,7 @@ class TaxExemptionNoticesStorage extends Storage
     Entity $entity,
     Entities\EncryptedFile $file,
     bool $flush = true,
-    bool $replace = false,
+    string $conflict = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_FAIL,
   ):Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -125,7 +124,7 @@ class TaxExemptionNoticesStorage extends Storage
       if (empty($rootFolder)) {
         throw new UnexpectedValueException($this->l->t('Root-folder does not exist.'));
       }
-      $documentEntity = $rootFolder->addDocument($file, $fileName, replace: $replace);
+      $documentEntity = $rootFolder->addDocument($file, $fileName, conflict: $conflict);
       $this->persist($documentEntity);
 
       if ($flush) {
@@ -159,7 +158,7 @@ class TaxExemptionNoticesStorage extends Storage
     Entities\EncryptedFile $file,
     bool $flush = true,
   ):?Entities\DatabaseStorageFile {
-    return $this->addDocument($entity, $file, $flush, replace: true);
+    return $this->addDocument($entity, $file, $flush, conflict: DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE);
   }
 
   /**

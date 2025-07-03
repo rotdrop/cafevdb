@@ -26,11 +26,13 @@ namespace OCA\CAFEVDB\Storage\Database;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use Throwable;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice as Entity;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
@@ -82,9 +84,7 @@ class InvoicesStorage extends Storage
    *
    * @param bool $flush Whether to flush the changes to the db.
    *
-   * @param bool $replace If \true replace the existing file references by the
-   * given file. Otherwise it is an error if an entry already exists and
-   * points to another file.
+   * @param string $conflict Conflict resolution, fail, rename, replace.
    *
    * @return Entities\DatabaseStorageFile
    */
@@ -92,13 +92,14 @@ class InvoicesStorage extends Storage
     Entity $entity,
     Entities\EncryptedFile $file,
     bool $flush = true,
-    bool $replace = false,
+    string $conflict = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_FAIL,
   ):Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
     if (empty($extension) && !empty($file->getFileName())) {
       $extension = strtolower(pathinfo($file->getFileName(), PATHINFO_EXTENSION));
     }
+    $this->logInfo('MIME AND EXTENSION ' . $mimeType . ' "' . $extension . '"');
     $folderName = $this->getInvoiceFileName($entity);
     $fileName = $folderName . ($extension ? '.' . $extension : '');
     $folderName = substr($folderName, strlen($this->getAppL10n()->t('invoice')) + 1);
@@ -128,7 +129,7 @@ class InvoicesStorage extends Storage
         $this->persist($invoiceFolder);
       }
 
-      $document = $invoiceFolder->addDocument($file, $fileName, replace: $replace)
+      $document = $invoiceFolder->addDocument($file, $fileName, conflict: $conflict)
         ->setCreated($file->getCreated())
         ->setUpdated($file->getUpdated());
       $this->persist($document);
@@ -136,8 +137,8 @@ class InvoicesStorage extends Storage
         ->setCreated(min($file->getCreated(), $yearFolder->getCreated()))
         ->setUpdated(max($file->getUpdated(), $yearFolder->getUpdated()));
       $yearFolder
-        ->setCreated(min($invoiceFolder->getCreated(), $yearFolder->getCreated()))
-        ->setUpdated(max($invoiceFolder->getUpdated(), $yearFolder->getUpdated()));
+        ->setCreated(min($invoiceFolder->getCreated(), $invoiceFolder->getCreated()))
+        ->setUpdated(max($invoiceFolder->getUpdated(), $invoiceFolder->getUpdated()));
 
       if ($flush) {
         $this->flush();
@@ -148,7 +149,7 @@ class InvoicesStorage extends Storage
       if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();
       }
-      throw new Exceptions\Exception($this->l->t('Unable to add new document "%s".', $file->getFileName()));
+      throw new Exceptions\Exception($this->l->t('Unable to add new document "%s".', $file->getFileName()), previous: $t);
     }
 
     return $document;
@@ -170,7 +171,7 @@ class InvoicesStorage extends Storage
     Entities\EncryptedFile $file,
     bool $flush = true,
   ):?Entities\DatabaseStorageFile {
-    return $this->addDocument($entity, $file, $flush, replace: true);
+    return $this->addDocument($entity, $file, $flush, conflict: DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE);
   }
 
    /** {@inheritdoc} */
@@ -193,7 +194,7 @@ class InvoicesStorage extends Storage
 
       $this->entityManager->commit();
 
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();
@@ -309,7 +310,7 @@ class InvoicesStorage extends Storage
 
       $this->setFileNameCache($path, $dirEntry);
 
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();
@@ -390,7 +391,7 @@ class InvoicesStorage extends Storage
       // update our local files cache
       $this->setFileNameCache($path2, $dirEntry);
       $this->unsetFileNameCache($path1);
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();
@@ -446,7 +447,7 @@ class InvoicesStorage extends Storage
       $this->entityManager->commit();
 
       $this->unsetFileNameCache($path);
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();

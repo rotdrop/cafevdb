@@ -27,8 +27,9 @@ import getInitialState from './toolkit/util/initial-state.ts';
 import { basename } from 'path';
 import { getCurrentUser } from '@nextcloud/auth';
 import { generateFilePath } from '@nextcloud/router';
+import { generateUrl as generateAppUrl } from './toolkit/util/generate-url.ts'
 import { emit } from '@nextcloud/event-bus';
-import { showInfo, showSuccess } from '@nextcloud/dialogs';
+import { showError, showInfo, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import {
   FileAction,
   FileType,
@@ -46,6 +47,16 @@ import axios from '@nextcloud/axios';
 import logoSvg from '../img/cafevdb.svg?raw';
 import type { FilesInitialState } from './types/initial-state.d.ts';
 import Console from './util/console.ts'
+import { MailMergeCloud } from './types/ajax/mail-merge.ts';
+import type {
+  MailMergePayload,
+  MailMergeResponse,
+} from './types/ajax/mail-merge.ts';
+import { UploadModeMove } from './types/ajax/upload.ts';
+import type {
+  UploadStashResponse,
+} from './types/ajax/upload.ts';
+import { isAxiosErrorResponse } from './toolkit/types/axios-type-guards.ts';
 
 const COMPONENT_NAME = 'CAFEVDB-FILES-HOOKS';
 const logger = new Console(COMPONENT_NAME)
@@ -430,7 +441,59 @@ class InvoicesEntry implements Entry {
     logger.info('FOLDER', { folder, content });
     // fixup later
 
-    // const projectName = getProjectNameFromInvoiceFolder(folder);
+    const invoiceData = getDataFromInvoiceFolder(folder);
+    if (!invoiceData) {
+
+    } else {
+      const postData: MailMergePayload = {
+        templateName: 'invoice',
+        operation: MailMergeCloud,
+        invoiceIds: [ invoiceData.invoiceNumber ],
+      };
+      const mailMergeUrl = generateAppUrl('documents/mail-merge');
+      let mailMergeToast = showInfo(t(appName, 'Starting mail-merge, this may take some time ...'), { timeout: TOAST_PERMANENT_TIMEOUT });
+      try {
+        const response = await axios.post<MailMergeResponse>(mailMergeUrl, postData);
+        const cloudFile = response.data.cloudFolder + '/' + response.data.cloudFiles[0];
+
+        mailMergeToast.hideToast();
+        mailMergeToast = null;
+        showInfo(t(appName, 'Mail-merge completed, moving document into the proper place ...'));
+
+        const moveUrl = generateAppUrl('documents/finance/invoices/upload');
+
+        const moveData = {
+          data: {
+            optionKey: invoiceData.invoiceNumber,
+            filesAppPath: folder.path,
+          },
+          cloudFile,
+          uploadMode: 'move',
+          conflict: 'rename',
+        };
+
+        const moveResponse = await axios.post(moveUrl, moveData);
+
+        logger.info('MAIL MERGE RESPONSES', {
+          moveResponse,
+          response,
+        });
+
+        showInfo(moveResponse.data[0].message);
+        showInfo(t(appName, 'Reloading file list.'));
+
+        emit('files:config:updated', {});
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        if (mailMergeToast) {
+          mailMergeToast.hideToast();
+        }
+        // @todo: better diagnostics
+        showError(t(appName, 'Mail-merge operation has failed'));
+        logger.error('MAIL MERGE ERROR', { error: e });
+      }
+    }
   }
 }
 

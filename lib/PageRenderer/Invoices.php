@@ -714,6 +714,17 @@ WHERE dsf.id IS NOT NULL',
       ]);
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'display_name_personal', [
+        'name'     => $this->l->t('Display-Name (pers.)'),
+        'tab'      => [ 'id' => 'musician' ],
+        'css'      => [ 'postfix' => [ 'musician-personal-public-name' ], ],
+        'options'  => 'LFAVCPD',
+        'input' => $this->pmeBare ? 'R' : 'HR', // handy for export
+        'sql' => static::musicianPublicNameSql(firstNameFirst: true),
+        'maxlen'   => 384,
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'organization', [
         'name' => $this->l->t('Organization'),
         'input' => 'RH',
@@ -1168,13 +1179,14 @@ WHERE dsf.id IS NOT NULL',
 
         $invoiceNumber = $row[$this->queryField('invoice_number')];
         $organization = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'organization')];
-        $musicianName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
+        // $musicianName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
+        $musicianNamePersonal = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'display_name_personal')];
         $projectName = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'name')];
 
         $fileName = $this->getLegacyInvoiceFileName(
           $invoiceNumber,
           $organization,
-          $musicianName,
+          $musicianNamePersonal,
           $projectName,
         );
 
@@ -1210,11 +1222,25 @@ WHERE dsf.id IS NOT NULL',
         /** @var Entities\DatabaseStorageFile $file */
         $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
 
+        $invoiceNumber = $row[$this->queryField('invoice_number')];
+        $organization = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'organization')];
+        // $musicianName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
+        $musicianNamePersonal = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'display_name_personal')];
+        $projectName = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'name')];
+
+        $invoiceFolder = $this->getLegacyInvoiceFolderName(
+          $invoiceNumber,
+          $organization,
+          $musicianNamePersonal,
+          $projectName,
+        );
+
         $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($file);
         $invoiceDate = $row[$this->queryField('invoice_date')];
         $year = substr($invoiceDate, 0, 4);
         $dir = $this->getInvoicesPath()
-          . UserStorage::PATH_SEP . $year;
+          . UserStorage::PATH_SEP . $year
+          . UserStorage::PATH_SEP . $invoiceFolder;
 
         try {
           $filesAppLink = $this->userStorage->getFilesAppLink($dir, true);

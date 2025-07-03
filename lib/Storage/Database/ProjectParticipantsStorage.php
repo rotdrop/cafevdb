@@ -33,6 +33,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -174,9 +175,7 @@ class ProjectParticipantsStorage extends Storage
    *
    * @param bool $flush
    *
-   * @param bool $replace If \true replace the existing file references by the
-   * given file. Otherwise it is an error if an entry already exists and
-   * points to another file.
+   * @param string $conflict
    *
    * @return null|Entities\DatabaseStorageFile
    */
@@ -184,7 +183,7 @@ class ProjectParticipantsStorage extends Storage
     Entities\SepaDebitMandate $debitMandate,
     Entities\EncryptedFile $file,
     bool $flush = true,
-    bool $replace = false,
+    string $conflict = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_FAIL,
   ):?Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -207,7 +206,7 @@ class ProjectParticipantsStorage extends Storage
         $this->persist($folderEntity);
       }
 
-      $documentEntity = $folderEntity->addDocument($file, $fileName, replace: $replace);
+      $documentEntity = $folderEntity->addDocument($file, $fileName, conflict: $conflict);
       $this->persist($documentEntity);
 
       if ($flush) {
@@ -304,12 +303,15 @@ class ProjectParticipantsStorage extends Storage
    *
    * @param bool $flush
    *
+   * @param string $conflict
+   *
    * @return null|Entities\DatabaseStorageFile
    */
   public function addCompositePayment(
     Entities\CompositePayment $compositePayment,
     Entities\EncryptedFile $file,
     bool $flush = true,
+    string $conflict = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_FAIL,
   ):?Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -329,7 +331,7 @@ class ProjectParticipantsStorage extends Storage
       $folderEntity = $folderEntity->addSubFolder($this->getBankTransactionsFolderName());
       $this->persist($folderEntity);
 
-      $documentEntity = $folderEntity->addDocument($file, $fileName);
+      $documentEntity = $folderEntity->addDocument($file, $fileName, conflict: $conflict);
       $this->persist($documentEntity);
 
       if ($flush) {
