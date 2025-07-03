@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-06-29 18:53+0200\n"
-"PO-Revision-Date: 2025-06-29 19:12+0200\n"
+"POT-Creation-Date: 2025-07-03 21:29+0200\n"
+"PO-Revision-Date: 2025-07-03 21:29+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -686,7 +686,7 @@ msgid "Unable to find the project with name \"%s\"."
 msgstr "Konnte das Projekt mit dem Namen \"%s\" nicht finden."
 
 #: lib/Command/ParticipantFolders.php:193
-#: lib/Storage/Database/ProjectParticipantsStorage.php:462
+#: lib/Storage/Database/ProjectParticipantsStorage.php:464
 #, php-format
 msgid "Folder \"%s\" does not exist."
 msgstr "Der Datei-Ordner \"%s\" existiert nicht."
@@ -1325,7 +1325,7 @@ msgstr "Eingangsdatum"
 #: lib/Command/SentNotifications.php:263
 #: lib/PageRenderer/DonationReceipts.php:473
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1579
-#: lib/PageRenderer/Invoices.php:916 lib/PageRenderer/Invoices.php:937
+#: lib/PageRenderer/Invoices.php:927 lib/PageRenderer/Invoices.php:948
 #: lib/PageRenderer/ProjectPayments.php:715
 #: lib/PageRenderer/ProjectPayments.php:736
 #: lib/PageRenderer/SepaBulkTransactions.php:516
@@ -1696,7 +1696,7 @@ msgid "Unknown Request"
 msgstr "Unbekannte Anfrage."
 
 #: lib/Controller/ContactsController.php:77
-#: lib/Controller/DocumentStorageUploadController.php:390
+#: lib/Controller/DocumentStorageUploadController.php:435
 #: lib/Controller/EmailFormController.php:1009
 #: lib/Controller/SepaDebitMandatesController.php:1202
 msgid "UNIMPLEMENTED"
@@ -1706,14 +1706,14 @@ msgstr "MUSS NOCH IMPLEMENTIERT WERDEN"
 msgid "The encryption service is not available."
 msgstr "Der Verschlüsselungsservice ist nicht erreichbar."
 
-#: lib/Controller/DocumentStorageUploadController.php:154
+#: lib/Controller/DocumentStorageUploadController.php:173
 #: lib/Controller/SepaDebitMandatesController.php:1130
 #: lib/Controller/SepaDebitMandatesController.php:1423
 #, php-format
 msgid "Required information \"%s\" not provided."
 msgstr "Die Information \"%s\" wird benötigt, fehlt aber."
 
-#: lib/Controller/DocumentStorageUploadController.php:165
+#: lib/Controller/DocumentStorageUploadController.php:183
 #, php-format
 msgid ""
 "Unable to find the database entity with id \"%1$d\" in section \"%2$s\" for "
@@ -1722,13 +1722,13 @@ msgstr ""
 "Kann den Datenbankeintrag zur Id \"%1$s\" im Abschnitt \"%2$s\", Stichpunkt "
 "\"%3$s\" nicht finden."
 
-#: lib/Controller/DocumentStorageUploadController.php:183
+#: lib/Controller/DocumentStorageUploadController.php:202
 #: lib/Controller/SepaDebitMandatesController.php:1218
 #, php-format
 msgid "Upload error \"%s\"."
 msgstr "Hochlade-Fehler \"%s\"."
 
-#: lib/Controller/DocumentStorageUploadController.php:197
+#: lib/Controller/DocumentStorageUploadController.php:223
 #: lib/Controller/ProjectParticipantsController.php:702
 #: lib/Controller/SepaDebitMandatesController.php:1235
 msgid ""
@@ -1737,7 +1737,7 @@ msgstr ""
 "Verschieben einer Datei angefragt, aber deren Datei-Pfad wurde nicht "
 "angegeben."
 
-#: lib/Controller/DocumentStorageUploadController.php:203
+#: lib/Controller/DocumentStorageUploadController.php:230
 #: lib/Controller/ProjectParticipantsController.php:706
 #: lib/Controller/SepaDebitMandatesController.php:1239
 #, php-format
@@ -1746,7 +1746,7 @@ msgstr ""
 "Verschieben einer Datei angefragt, aber die Quelldatei \"%s\" kann nicht "
 "gefunden werden."
 
-#: lib/Controller/DocumentStorageUploadController.php:211
+#: lib/Controller/DocumentStorageUploadController.php:238
 #: lib/Controller/ProjectParticipantsController.php:718
 #: lib/Controller/SepaDebitMandatesController.php:1245
 msgid ""
@@ -1756,7 +1756,7 @@ msgstr ""
 "Verknüpfen einer Datei angefragt, aber die Datenbank-Id der ursprünglichen "
 "Datei wurde nicht angegeben."
 
-#: lib/Controller/DocumentStorageUploadController.php:217
+#: lib/Controller/DocumentStorageUploadController.php:244
 #: lib/Controller/ProjectParticipantsController.php:722
 #: lib/Controller/SepaDebitMandatesController.php:1249
 #, php-format
@@ -1767,7 +1767,19 @@ msgstr ""
 "Verknüpfen einer Datei angefragt, aber die ursprüngliche Datei mit der Id "
 "\"%s\" konnte nicht gefunden werden."
 
-#: lib/Controller/DocumentStorageUploadController.php:282
+#: lib/Controller/DocumentStorageUploadController.php:255
+#, php-format
+msgid "Copy operation requested, but the original file \"%s\" cannot be found."
+msgstr ""
+"Kopieren einer Datei angefragt, aber die Quelldatei \"%s\" kann nicht "
+"gefunden werden."
+
+#: lib/Controller/DocumentStorageUploadController.php:312
+#, php-format
+msgid "The destination document already exists as \"%s\"."
+msgstr "Das Ziel-Dokukemnt existiert bereits unter dem Namen \"%s\"."
+
+#: lib/Controller/DocumentStorageUploadController.php:325
 #: lib/Controller/ProjectParticipantsController.php:834
 #: lib/Controller/SepaDebitMandatesController.php:1310
 #, php-format
@@ -1777,36 +1789,36 @@ msgid ""
 msgstr ""
 "Verknüpfen einer Datei angefragt, aber Quelle und Ziel sind gleich (%s@%s)."
 
-#: lib/Controller/DocumentStorageUploadController.php:304
-#: lib/Controller/DocumentStorageUploadController.php:383
+#: lib/Controller/DocumentStorageUploadController.php:349
+#: lib/Controller/DocumentStorageUploadController.php:428
 #: lib/Controller/SepaDebitMandatesController.php:1194
 #: lib/Controller/SepaDebitMandatesController.php:1337
 #: lib/Controller/SepaDebitMandatesController.php:1616
 msgid "Error, caught an exception. No changes were performed."
 msgstr "Interner Fehler. Es wurden deshalb keine Änderungen gespeichert."
 
-#: lib/Controller/DocumentStorageUploadController.php:333
+#: lib/Controller/DocumentStorageUploadController.php:378
 #: lib/Controller/ProjectParticipantsController.php:970
 #: lib/Controller/SepaDebitMandatesController.php:1371
 #, php-format
 msgid "Upload of \"%s\" as \"%s\" successful."
 msgstr "Hochladen von \"%s\" als \"%s\" erfolgreich."
 
-#: lib/Controller/DocumentStorageUploadController.php:336
+#: lib/Controller/DocumentStorageUploadController.php:381
 #: lib/Controller/ProjectParticipantsController.php:973
 #: lib/Controller/SepaDebitMandatesController.php:1374
 #, php-format
 msgid "Move of \"%s\" to \"%s\" successful."
 msgstr "Verschieben von \"%s\" nach \"%s\" erfolgreich."
 
-#: lib/Controller/DocumentStorageUploadController.php:339
+#: lib/Controller/DocumentStorageUploadController.php:384
 #: lib/Controller/ProjectParticipantsController.php:976
 #: lib/Controller/SepaDebitMandatesController.php:1377
 #, php-format
 msgid "Linking of file id \"%s\" to \"%s\" successful."
 msgstr "Verknüpfen der Datei \"%s\" zum Ziel \"%s\" erfolgreich."
 
-#: lib/Controller/DocumentStorageUploadController.php:368
+#: lib/Controller/DocumentStorageUploadController.php:413
 #, php-format
 msgid ""
 "We have no supporting document for the entity \"%1$s\", so we cannot delete "
@@ -1815,7 +1827,7 @@ msgstr ""
 "Es ist kein Zahlungsbeleg zu Buchung \"%1$s\" gespeichert, kann also auch "
 "nicht gelöscht werden."
 
-#: lib/Controller/DocumentStorageUploadController.php:388
+#: lib/Controller/DocumentStorageUploadController.php:433
 #, php-format
 msgid ""
 "Successfully deleted the written document for the entity \"%1$s\", please "
@@ -1824,7 +1836,7 @@ msgstr ""
 "Zahlungsbeleg zur Buchnung \"%1$s\" gelöscht, bitte den korrekten Beleg "
 "hochladen!"
 
-#: lib/Controller/DocumentStorageUploadController.php:423
+#: lib/Controller/DocumentStorageUploadController.php:468
 #, php-format
 msgid ""
 "Support for file upload in section \"%2$s\" for the topic \"%3$s\" is "
@@ -1833,10 +1845,10 @@ msgstr ""
 "Datei-Upload in Abschnitt \"%2$s\", Stichpunkt \"%3$s\" ist nicht "
 "implementiert."
 
-#: lib/Controller/DocumentStorageUploadController.php:454
-#: lib/Controller/DocumentStorageUploadController.php:489
-#: lib/Controller/DocumentStorageUploadController.php:520
-#: lib/Controller/DocumentStorageUploadController.php:585
+#: lib/Controller/DocumentStorageUploadController.php:499
+#: lib/Controller/DocumentStorageUploadController.php:534
+#: lib/Controller/DocumentStorageUploadController.php:565
+#: lib/Controller/DocumentStorageUploadController.php:629
 #, php-format
 msgid "Support for file upload for entities of type \"%1$s\" is unimplemented."
 msgstr ""
@@ -2083,12 +2095,12 @@ msgid "Manufacturer field is empty."
 msgstr "Der Hersteller wurde nicht angegeben."
 
 #: lib/Controller/InstrumentInsuranceController.php:268
-#: lib/Database/EntityManager.php:299 lib/Documents/OpenDocumentFiller.php:347
-#: lib/Documents/OpenDocumentFiller.php:362
-#: lib/Documents/OpenDocumentFiller.php:373
-#: lib/Documents/OpenDocumentFiller.php:379
-#: lib/Documents/OpenDocumentFiller.php:380
-#: lib/Documents/OpenDocumentFiller.php:383
+#: lib/Database/EntityManager.php:297 lib/Documents/OpenDocumentFiller.php:352
+#: lib/Documents/OpenDocumentFiller.php:367
+#: lib/Documents/OpenDocumentFiller.php:378
+#: lib/Documents/OpenDocumentFiller.php:384
+#: lib/Documents/OpenDocumentFiller.php:385
+#: lib/Documents/OpenDocumentFiller.php:388
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:146
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2452
 #: lib/PageRenderer/Projects.php:812 lib/PageRenderer/Projects.php:820
@@ -2123,47 +2135,47 @@ msgstr "Die Versicherungssumme sollte eine ganze Zahl sein."
 msgid "Unknown Request: \"%s / %s\"."
 msgstr "Unbekannte Anfrage: \"%s / %s\"."
 
-#: lib/Controller/MailMergeController.php:173
+#: lib/Controller/MailMergeController.php:179
 #, php-format
 msgid "Unable to determine the sender given its id \"%s\""
 msgstr "Kann den Sender anhand der angegeben Id \"%s\" nicht ermitteln."
 
-#: lib/Controller/MailMergeController.php:211
+#: lib/Controller/MailMergeController.php:217
 #, php-format
 msgid ""
 "Unable to map the given template name \"%s\" to an existing template file."
 msgstr "Kann die angebene Vorlage \"%s\" keiner Datei zurordnen."
 
-#: lib/Controller/MailMergeController.php:216
+#: lib/Controller/MailMergeController.php:222
 msgid ""
 "Either a file-name or the name of a dedicated template have to be spicified."
 msgstr ""
 "Es muss entweder ein Dateiname oder aber einer der vordefinierten "
 "Vorlagenarten angegeben werden."
 
-#: lib/Controller/MailMergeController.php:269
-#: lib/Controller/MailMergeController.php:403
-#: lib/Controller/MailMergeController.php:428
+#: lib/Controller/MailMergeController.php:280
+#: lib/Controller/MailMergeController.php:424
+#: lib/Controller/MailMergeController.php:452
 msgid "Mail-merge successful, %n file substituted."
 msgid_plural "Mail-merge successful, %n files substituted."
 msgstr[0] "Vorlage erfolgreich ausgefüllt, %n Dokument wurde erstellt."
 msgstr[1] "Vorlage erfolgreich ausgefüllt, %n Dokumente wurden erstellt."
 
-#: lib/Controller/MailMergeController.php:447
+#: lib/Controller/MailMergeController.php:473
 #, php-format
 msgid "Exception during mail-merge: \"%s\""
 msgstr "Fehler während der Serienbrief-Erstellung: \"%s\""
 
 #. TRANSLATORS: folder-name
-#: lib/Controller/MailMergeController.php:471
+#: lib/Controller/MailMergeController.php:497
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1541
 #: lib/PageRenderer/Invoices.php:500
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:65
 msgid "Documents"
 msgstr "Dokumente"
 
-#: lib/Controller/MailMergeController.php:472
-#: lib/Controller/MailMergeController.php:480 src/files-sidebar-hooks.ts:93
+#: lib/Controller/MailMergeController.php:498
+#: lib/Controller/MailMergeController.php:506 src/files-sidebar-hooks.ts:93
 msgid "MailMerge"
 msgstr "Serienbrief"
 
@@ -3286,7 +3298,9 @@ msgstr ""
 #, php-format
 msgid ""
 "Unable to regenerate the autogenerated receivables for the project \"%1$s\"."
-msgstr "Kann die automatisch erzeugten Forderungen für das Projekt \"%1$s\" nicht aktualisieren."
+msgstr ""
+"Kann die automatisch erzeugten Forderungen für das Projekt \"%1$s\" nicht "
+"aktualisieren."
 
 #: lib/Controller/ProjectParticipantFieldsController.php:499
 #, php-format
@@ -3345,7 +3359,9 @@ msgstr "Kann die Forderung mit der Id \"%s\" nicht laden."
 msgid ""
 "Unable to update receivable \"%1$s\" for the person \"%2$s\" using the "
 "generator \"%3$s\"."
-msgstr "Kann die Forderung \"%1$s\" der Person \"%2$s\" nicht aktualisieren (Generator \"%3$s\")."
+msgstr ""
+"Kann die Forderung \"%1$s\" der Person \"%2$s\" nicht aktualisieren "
+"(Generator \"%3$s\")."
 
 #: lib/Controller/ProjectParticipantFieldsController.php:741
 #: lib/Controller/ProjectParticipantFieldsController.php:841
@@ -3651,7 +3667,9 @@ msgstr "Unsinnige oder fehlende Projekt-Id: \"%s\"."
 msgid ""
 "Submitted article id \"%1$d\" does not match the id \"%2$d\" stored in the "
 "article-data."
-msgstr "Die übermittelte Artikel-Id \"%1$d\" stimmt nicht mit der Id \"%2$d\" in den Artikel-Daten überein."
+msgstr ""
+"Die übermittelte Artikel-Id \"%1$d\" stimmt nicht mit der Id \"%2$d\" in den "
+"Artikel-Daten überein."
 
 #: lib/Controller/ProjectWebPagesController.php:91
 #, php-format
@@ -3664,7 +3682,8 @@ msgid ""
 "Cannot perform action \"%1$s\" with article with id \"%2$d\", project with "
 "id \"%3$d\": missing article-data."
 msgstr ""
-"Kann die Operation \"%1$s\" mit dem Artikel zur Id \"%2$d\", Projekt-Id \"%3$d\" nicht\n"
+"Kann die Operation \"%1$s\" mit dem Artikel zur Id \"%2$d\", Projekt-Id "
+"\"%3$d\" nicht\n"
 "ausführen, da keine weiteren Daten zu dem Artikel übermittelt wurden."
 
 #: lib/Controller/ProjectWebPagesController.php:105
@@ -3674,14 +3693,18 @@ msgstr "Kann das Projekt-Web-Seiten CMS nicht \"anstupsen\""
 #: lib/Controller/ProjectWebPagesController.php:116
 #, php-format
 msgid "Unable to create new project web pages for the project with id \"%s\"."
-msgstr "Konnte die Daten-Infrastruktur (Dateiordner, Wiki, Web-Seiten) für das Projekt mit der Id \"%s\" nicht erzeugen."
+msgstr ""
+"Konnte die Daten-Infrastruktur (Dateiordner, Wiki, Web-Seiten) für das "
+"Projekt mit der Id \"%s\" nicht erzeugen."
 
 #: lib/Controller/ProjectWebPagesController.php:122
 #, php-format
 msgid ""
 "Created a new public web page with name \"%1$s\" and id \"%2$d\" for the "
 "project with id \"%3$d\"."
-msgstr "Neue Web-Seite \"%1$s\" mit Id \"%2$d\" für das Projekt mit der Id \"%3$d\" wurde angelegt."
+msgstr ""
+"Neue Web-Seite \"%1$s\" mit Id \"%2$d\" für das Projekt mit der Id \"%3$d\" "
+"wurde angelegt."
 
 #: lib/Controller/ProjectWebPagesController.php:143
 msgid "Created additionally a new rehearsal web page."
@@ -3696,42 +3719,54 @@ msgstr "Konnte aber leider keine neue Proben-Web-Seite anlegen."
 msgid ""
 "Unable to link the existing public web-article \"%1$s\" (id \"%2$d\") to the "
 "project with id \"%3$d\"."
-msgstr "Die Web-Seite \"%1$s\" (Id \"%2$d\") wurde mit dem Projekt mit der Id \"%3$d\" verknüpft."
+msgstr ""
+"Die Web-Seite \"%1$s\" (Id \"%2$d\") wurde mit dem Projekt mit der Id "
+"\"%3$d\" verknüpft."
 
 #: lib/Controller/ProjectWebPagesController.php:164
 #, php-format
 msgid ""
 "Linked the existing public web-article \"%1$s\" (id \"%2$d\") to the project "
 "with id \"%3$d\"."
-msgstr "Die Web-Seite \"%1$s\" (Id \"%2$d\") wurde mit dem Projekt mit der Id \"%3$d\" verknüpft."
+msgstr ""
+"Die Web-Seite \"%1$s\" (Id \"%2$d\") wurde mit dem Projekt mit der Id "
+"\"%3$d\" verknüpft."
 
 #: lib/Controller/ProjectWebPagesController.php:172
 #, php-format
 msgid ""
 "Unable to detach the public web-article \"%s\" (id \"%d\") from the project "
 "with id \"%d\"."
-msgstr "Die Web-Seite \"%1$s\" (Id \"%2$d\") für das Projekt mit der Id \"%3$d\" wurde vom Projekt gelöst."
+msgstr ""
+"Die Web-Seite \"%1$s\" (Id \"%2$d\") für das Projekt mit der Id \"%3$d\" "
+"wurde vom Projekt gelöst."
 
 #: lib/Controller/ProjectWebPagesController.php:181
 #, php-format
 msgid ""
 "Detached the public web-article \"%1$s\" (id \"%2$d\") from the project with "
 "id \"%3$d\"."
-msgstr "Die Web-Seite \"%1$s\" (Id \"%2$d\") für das Projekt mit der Id \"%3$d\" wurde vom Projekt gelöst."
+msgstr ""
+"Die Web-Seite \"%1$s\" (Id \"%2$d\") für das Projekt mit der Id \"%3$d\" "
+"wurde vom Projekt gelöst."
 
 #: lib/Controller/ProjectWebPagesController.php:190
 #, php-format
 msgid ""
 "Unable to remove the public web page \"%1$s\" (id \"%2$d\") from the project "
 "with id \"%3$d\"."
-msgstr "Die Web-Seite \"%1$s\" mit der id \"%2$d\" für das Projekt mit der Id \"%3$d\" wurde entfernt."
+msgstr ""
+"Die Web-Seite \"%1$s\" mit der id \"%2$d\" für das Projekt mit der Id "
+"\"%3$d\" wurde entfernt."
 
 #: lib/Controller/ProjectWebPagesController.php:199
 #, php-format
 msgid ""
 "Removed the public web page \"%1$s\" (id \"%2$d\") from the project with id "
 "\"%3$d\"."
-msgstr "Die Web-Seite \"%1$s\" mit der id \"%2d\" für das Projekt mit der Id \"%3d\" wurde entfernt."
+msgstr ""
+"Die Web-Seite \"%1$s\" mit der id \"%2d\" für das Projekt mit der Id \"%3d\" "
+"wurde entfernt."
 
 #: lib/Controller/ProjectsController.php:91
 msgid "project-year"
@@ -4549,7 +4584,9 @@ msgstr ""
 #: lib/Controller/UploadsController.php:193
 #, php-format
 msgid "Unable to move \"%1$s\" to db-storage with name \"%2$s\"."
-msgstr "Kann die Datei \"%1$s\" nicht in den DB-Speicher mit Namen \"%2$s\" verschieben."
+msgstr ""
+"Kann die Datei \"%1$s\" nicht in den DB-Speicher mit Namen \"%2$s\" "
+"verschieben."
 
 #: lib/Controller/UploadsController.php:211
 msgid "Moved \"%1$s\" to db-storage with name \"%2$s\", id %d."
@@ -4735,41 +4772,41 @@ msgstr ""
 "Das Verknüpfungsfeld muss entweder eine Datenbank-Entität sein oder der Wert "
 "der einzigen Verknüpfungs-Spalte: %s"
 
-#: lib/Database/EntityManager.php:338
+#: lib/Database/EntityManager.php:329
 msgid "There is no entity-manager initialized yet."
 msgstr "Der Entitäten-Manager ist noch nicht verfügbar."
 
-#: lib/Database/EntityManager.php:343
+#: lib/Database/EntityManager.php:334
 msgid "The entity-manager is unable to connect to the database."
 msgstr "Der Entitätenmanager ist nicht mit der Datenbank verbunden."
 
-#: lib/Database/EntityManager.php:985
+#: lib/Database/EntityManager.php:976
 msgid ""
 "There is no active database transaction, cannot register pre-commit actions."
 msgstr ""
 "Es ist keine Datenbank-Transaktion aktiv, Prä-Commit-Aktionen können nicht "
 "registriert werden."
 
-#: lib/Database/EntityManager.php:994 lib/Database/EntityManager.php:1046
-#: lib/Database/EntityManager.php:1259
+#: lib/Database/EntityManager.php:985 lib/Database/EntityManager.php:1037
+#: lib/Database/EntityManager.php:1250
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 "$action muss ein PHP-Callable sein oder eine Klasseninstanz von \"%s\"."
 
-#: lib/Database/EntityManager.php:1011
+#: lib/Database/EntityManager.php:1002
 msgid ""
 "There is no active database transaction, cannot execute pre-commit actions."
 msgstr ""
 "Es ist keine Datenbank-Transaktion aktiv, Prä-Commit-Aktionen können nicht "
 "ausgeführt werden."
 
-#: lib/Database/EntityManager.php:1216
+#: lib/Database/EntityManager.php:1207
 msgid "The connection is marked for rollback only."
 msgstr ""
 "Die Datenbankverbindung kann nur noch zum Rückgängigmachen verwendet werden."
 
-#: lib/Database/EntityManager.php:1506
+#: lib/Database/EntityManager.php:1497
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
@@ -4777,7 +4814,7 @@ msgstr ""
 "Die Neuverschlüsselung der Datenbankeinträge ist fehlgeschlagen, mache\n"
 "die Datenbanktransaktion rückgängig."
 
-#: lib/Database/EntityManager.php:1532
+#: lib/Database/EntityManager.php:1523
 msgid "EntityManager is not connected to database."
 msgstr "Der Entitätenmanager ist nicht mit der Datenbank verbunden."
 
@@ -4804,14 +4841,14 @@ msgstr "Hilfe-Tag \"%1$s\", unauffindbare Tags %2$s"
 msgid "Unable to obtain file-handle for path \"%s\""
 msgstr "Kann keine Datei-Deskriptor für \"%s\" erhalten."
 
-#: lib/Documents/OpenDocumentFiller.php:233
+#: lib/Documents/OpenDocumentFiller.php:235
 #, php-format
 msgid ""
-"Data for block \"%s\" using the path \"%s\" could not be found in the "
+"Data for block \"%1$s\" using the path \"%2$s\" could not be found in the "
 "substitution data."
 msgstr ""
-"Keine Daten für den Abschnitt \"%s\", Pfad \"%s\", in den Feld-Ersetzungen "
-"gefunden."
+"Keine Daten für den Abschnitt \"%1$s\", Pfad \"%2$s\", in den Feld-"
+"Ersetzungen gefunden."
 
 #: lib/EmailForm/Composer.php:547
 msgid "announcement"
@@ -4831,7 +4868,7 @@ msgstr "Option"
 
 #: lib/EmailForm/Composer.php:1039 lib/EmailForm/Composer.php:1061
 #: lib/EmailForm/Composer.php:1487 lib/EmailForm/Composer.php:1539
-#: lib/PageRenderer/Invoices.php:765 lib/PageRenderer/ProjectPayments.php:653
+#: lib/PageRenderer/Invoices.php:776 lib/PageRenderer/ProjectPayments.php:653
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
 
@@ -4853,7 +4890,7 @@ msgstr "Fehlbetrag"
 
 #: lib/EmailForm/Composer.php:1042
 #: lib/PageRenderer/InstrumentInsurances.php:616
-#: lib/PageRenderer/Invoices.php:886 lib/PageRenderer/Invoices.php:897
+#: lib/PageRenderer/Invoices.php:897 lib/PageRenderer/Invoices.php:908
 #: lib/PageRenderer/PMETableViewBase.php:707
 msgid "Due Date"
 msgstr "Fälligkeit"
@@ -5104,62 +5141,62 @@ msgstr "Lokale Dateien"
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
 
-#: lib/EmailForm/RecipientsFilter.php:553
+#: lib/EmailForm/RecipientsFilter.php:554
 #, php-format
 msgid "Invalid history position %d request, history size is %d"
 msgstr "Ungültige Position %d, Länge der Filter-Historie ist %d."
 
-#: lib/EmailForm/RecipientsFilter.php:582
+#: lib/EmailForm/RecipientsFilter.php:583
 #, php-format
 msgid "No payments for bulk-transaction id %d."
 msgstr "Umsätze zum Sammelauftrag mit der Id %d liegen nicht vor."
 
-#: lib/EmailForm/RecipientsFilter.php:598
+#: lib/EmailForm/RecipientsFilter.php:599
 #, php-format
 msgid "No payment attached to the donation receipt with id %d."
 msgstr "Der Zuwendungsbestätigung mit Id %d ist keine Zahlung zugeordnet."
 
-#: lib/EmailForm/RecipientsFilter.php:978
+#: lib/EmailForm/RecipientsFilter.php:983
 msgid "project mailing list"
 msgstr "Projekt-Email-Verteiler"
 
-#: lib/EmailForm/RecipientsFilter.php:982
+#: lib/EmailForm/RecipientsFilter.php:987
 msgid "announcements mailing list"
 msgstr "Ankündigungs-Email-Verteiler"
 
-#: lib/EmailForm/RecipientsFilter.php:986
+#: lib/EmailForm/RecipientsFilter.php:991
 msgid "musician database"
 msgstr "Musiker-Datenbank"
 
-#: lib/EmailForm/RecipientsFilter.php:990
+#: lib/EmailForm/RecipientsFilter.php:995
 msgid "all known musicians"
 msgstr "Alle bekannten Musiker*innen"
 
-#: lib/EmailForm/RecipientsFilter.php:994
+#: lib/EmailForm/RecipientsFilter.php:999
 msgid "all musicians NOT participating"
 msgstr "alle NICHT-Teilnehmenden"
 
-#: lib/EmailForm/RecipientsFilter.php:998
+#: lib/EmailForm/RecipientsFilter.php:1003
 msgid "participants (confirmed)"
 msgstr "bestätigt Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:1002
+#: lib/EmailForm/RecipientsFilter.php:1007
 msgid "participants (preliminary)"
 msgstr "vorläufig Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:1006
+#: lib/EmailForm/RecipientsFilter.php:1011
 msgid "participants (preliminary and confirmed)"
 msgstr "alle Teilnehmenden (bestätigt und vorläufig)"
 
-#: lib/EmailForm/RecipientsFilter.php:1010
+#: lib/EmailForm/RecipientsFilter.php:1015
 msgid "all musicians except confirmed participants"
 msgstr "alle Personen AUSSER bestätigt Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:1014
+#: lib/EmailForm/RecipientsFilter.php:1019
 msgid "all musicians except preliminary participants"
 msgstr "alle Personen AUSSER vorläufig Teilnehmende"
 
-#: lib/EmailForm/RecipientsFilter.php:1018
+#: lib/EmailForm/RecipientsFilter.php:1023
 msgid "no one"
 msgstr "niemand"
 
@@ -5346,6 +5383,14 @@ msgstr "nach Wochennummer(n)"
 #: lib/Legacy/Calendar/OC_Calendar_Object.php:337
 msgid "by day and month"
 msgstr "nach Tag im Monat"
+
+#: lib/Listener/FilesHooksListener.php:184 lib/Traits/ConfigTrait.php:783
+msgid "invoices"
+msgstr "Rechnungen"
+
+#: lib/Listener/FilesHooksListener.php:185 lib/Traits/ConfigTrait.php:769
+msgid "donation-receipts"
+msgstr "Zuwendungsbestätigungen"
 
 #: lib/Listener/MusicianEmailAddressEntityListener.php:99
 #, php-format
@@ -5787,7 +5832,7 @@ msgstr "Verschiedenes"
 #: lib/PageRenderer/ProjectPayments.php:495
 #: lib/PageRenderer/SepaBankAccounts.php:1129
 #: lib/PageRenderer/SepaBulkTransactions.php:276
-#: lib/Service/InstrumentationService.php:193
+#: lib/Service/InstrumentationService.php:210
 msgid "Display all columns"
 msgstr "Alles anzeigen"
 
@@ -5801,7 +5846,7 @@ msgid "Musician"
 msgstr "Person"
 
 #: lib/PageRenderer/DonationReceipts.php:380
-#: lib/PageRenderer/DonationReceipts.php:386 lib/PageRenderer/Invoices.php:724
+#: lib/PageRenderer/DonationReceipts.php:386 lib/PageRenderer/Invoices.php:734
 #: lib/PageRenderer/Musicians.php:547
 #: lib/PageRenderer/ProjectAssociates.php:594
 #: lib/PageRenderer/ProjectParticipants.php:645
@@ -5814,7 +5859,7 @@ msgstr "Benutzerkennung"
 msgid "Payment Id"
 msgstr "Zahlungs-Id"
 
-#: lib/PageRenderer/DonationReceipts.php:510 lib/PageRenderer/Invoices.php:789
+#: lib/PageRenderer/DonationReceipts.php:510 lib/PageRenderer/Invoices.php:800
 #: lib/PageRenderer/ProjectParticipantFields.php:2031
 #: lib/PageRenderer/ProjectPayments.php:668
 #: lib/PageRenderer/SepaBankAccounts.php:1083
@@ -5840,7 +5885,7 @@ msgstr "Konsistenztests waren erfolgreich"
 #: lib/PageRenderer/ProjectParticipantFields.php:324
 #: lib/PageRenderer/ProjectPayments.php:575
 #: lib/PageRenderer/SepaBulkTransactions.php:369
-#: specialVueFakeDummyForL10nScript.js:5997
+#: specialVueFakeDummyForL10nScript.js:5979
 msgid "Project"
 msgstr "Projekt"
 
@@ -5856,7 +5901,7 @@ msgstr "Projekt-Name"
 msgid "Project Year"
 msgstr "Projekt-Jahr"
 
-#: lib/PageRenderer/DonationReceipts.php:616 lib/PageRenderer/Invoices.php:1158
+#: lib/PageRenderer/DonationReceipts.php:616 lib/PageRenderer/Invoices.php:1169
 msgid "Local Copy"
 msgstr "Lokale Kopie"
 
@@ -5872,7 +5917,7 @@ msgstr "Versanddatum"
 msgid "Invalidated"
 msgstr "Löschdatum"
 
-#: lib/PageRenderer/DonationReceipts.php:751 lib/PageRenderer/Musicians.php:994
+#: lib/PageRenderer/DonationReceipts.php:751 lib/PageRenderer/Musicians.php:995
 #: lib/PageRenderer/ProjectAssociates.php:1147
 #: lib/PageRenderer/ProjectParticipants.php:1402
 #: lib/PageRenderer/Projects.php:1019
@@ -5882,7 +5927,7 @@ msgstr "Letzte Aktualisierung"
 
 #. TRANSLATORS: Textual description of HTTP status code 201, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 #: lib/PageRenderer/DonationReceipts.php:764
-#: lib/PageRenderer/Musicians.php:1007
+#: lib/PageRenderer/Musicians.php:1008
 #: lib/PageRenderer/ProjectAssociates.php:1159
 #: lib/PageRenderer/ProjectParticipants.php:1414
 #: lib/PageRenderer/TaxExemptionNotices.php:457 src/toolkit/util/ajax.js:38
@@ -5980,8 +6025,8 @@ msgstr "Gesamtversicherungssumme ab %s"
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:97
 #: lib/Service/CloudUserConnectorService.php:397
 #: specialVueFakeDummyForL10nScript.js:1625
-#: specialVueFakeDummyForL10nScript.js:5981
-#: specialVueFakeDummyForL10nScript.js:5993
+#: specialVueFakeDummyForL10nScript.js:5963
+#: specialVueFakeDummyForL10nScript.js:5975
 msgid "Musicians"
 msgstr "Personen"
 
@@ -6280,7 +6325,7 @@ msgid "SEPA Bank Accounts"
 msgstr "SEPA Bankverbindungen"
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:185
-#: lib/PageRenderer/Invoices.php:1550 lib/PageRenderer/ProjectPayments.php:1353
+#: lib/PageRenderer/Invoices.php:1576 lib/PageRenderer/ProjectPayments.php:1353
 #: lib/PageRenderer/SepaBankAccounts.php:623
 #: lib/PageRenderer/SepaBankAccounts.php:701
 #: lib/PageRenderer/SepaBulkTransactions.php:450
@@ -6289,7 +6334,7 @@ msgid "Fetching decrypted values in the background."
 msgstr "Entschlüssele Werte im Hintergrund."
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:187
-#: lib/PageRenderer/Invoices.php:1552 lib/PageRenderer/ProjectPayments.php:1355
+#: lib/PageRenderer/Invoices.php:1578 lib/PageRenderer/ProjectPayments.php:1355
 #: lib/PageRenderer/SepaBankAccounts.php:625
 #: lib/PageRenderer/SepaBankAccounts.php:703
 #: lib/PageRenderer/SepaBulkTransactions.php:452
@@ -6421,7 +6466,7 @@ msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
 #: lib/PageRenderer/InstrumentInsurances.php:641
-#: lib/PageRenderer/Musicians.php:919
+#: lib/PageRenderer/Musicians.php:920
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
@@ -6517,7 +6562,8 @@ msgstr "Bereich"
 msgid "Rate"
 msgstr "Rate"
 
-#: lib/PageRenderer/Invoices.php:352
+#: lib/PageRenderer/Invoices.php:352 src/files-hooks.ts:421
+#: src/files-hooks.ts:432
 msgid "New Invoice"
 msgstr "Neue Rechnung"
 
@@ -6542,7 +6588,7 @@ msgstr "Rechnungsdaten"
 msgid "Bulk-transaction data"
 msgstr "Sammelauftragsddaten"
 
-#: lib/PageRenderer/Invoices.php:504 lib/PageRenderer/Invoices.php:1502
+#: lib/PageRenderer/Invoices.php:504 lib/PageRenderer/Invoices.php:1528
 #: lib/PageRenderer/ProjectPayments.php:491
 msgid "Bank Transaction"
 msgstr "Bankauftrag"
@@ -6573,100 +6619,106 @@ msgstr "Urheber*in"
 msgid "Debitor"
 msgstr "Schuldner"
 
-#: lib/PageRenderer/Invoices.php:718 lib/PageRenderer/Musicians.php:364
+#: lib/PageRenderer/Invoices.php:718 lib/PageRenderer/Musicians.php:508
+#: lib/PageRenderer/ProjectAssociates.php:553
+#: lib/PageRenderer/ProjectParticipants.php:604
+msgid "Display-Name (pers.)"
+msgstr "Anzeigename (pers.)"
+
+#: lib/PageRenderer/Invoices.php:728 lib/PageRenderer/Musicians.php:364
 #: lib/PageRenderer/ProjectAssociates.php:420
 #: lib/PageRenderer/ProjectParticipants.php:469
 msgid "Organization"
 msgstr "Körperschaft"
 
-#: lib/PageRenderer/Invoices.php:729
+#: lib/PageRenderer/Invoices.php:739
 msgid "Invoice Number"
 msgstr "Rechnungsnummer"
 
-#: lib/PageRenderer/Invoices.php:739 lib/PageRenderer/Invoices.php:746
+#: lib/PageRenderer/Invoices.php:750 lib/PageRenderer/Invoices.php:757
 msgid "automatically determined"
 msgstr "wird automatisch ermittelt"
 
-#: lib/PageRenderer/Invoices.php:806
+#: lib/PageRenderer/Invoices.php:817
 msgid "Sales Tax"
 msgstr "Umsatzsteuer"
 
-#: lib/PageRenderer/Invoices.php:828
+#: lib/PageRenderer/Invoices.php:839
 #: lib/PageRenderer/TaxationStatutorySources.php:263
 msgid "Legal Basis"
 msgstr "Rechtsgrundlage"
 
-#: lib/PageRenderer/Invoices.php:842
+#: lib/PageRenderer/Invoices.php:853
 msgid "Inconsistency"
 msgstr "Inkonsistenz"
 
-#: lib/PageRenderer/Invoices.php:874
+#: lib/PageRenderer/Invoices.php:885
 msgid "Invoice Date"
 msgstr "Rechnungsdatum"
 
-#: lib/PageRenderer/Invoices.php:898
+#: lib/PageRenderer/Invoices.php:909
 msgid "Item Due Date"
 msgstr "Fälligkeit (Unterpunkt)"
 
-#: lib/PageRenderer/Invoices.php:909
+#: lib/PageRenderer/Invoices.php:920
 msgid "Balanced Date"
 msgstr "Zahlungseingang"
 
 #. TRANSLATORS: folder-name
-#: lib/PageRenderer/Invoices.php:964 lib/PageRenderer/Invoices.php:1054
+#: lib/PageRenderer/Invoices.php:975 lib/PageRenderer/Invoices.php:1065
 #: lib/PageRenderer/ProjectPayments.php:781
 #: lib/PageRenderer/ProjectPayments.php:867
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:99
 msgid "Receivables"
 msgstr "Forderungen"
 
-#: lib/PageRenderer/Invoices.php:1038 lib/PageRenderer/Invoices.php:1116
+#: lib/PageRenderer/Invoices.php:1049 lib/PageRenderer/Invoices.php:1127
 #: lib/PageRenderer/ProjectPayments.php:851
 #: lib/PageRenderer/ProjectPayments.php:927
 msgid "Single Options"
 msgstr "Einfachauswahl"
 
-#: lib/PageRenderer/Invoices.php:1041 lib/PageRenderer/ProjectPayments.php:854
+#: lib/PageRenderer/Invoices.php:1052 lib/PageRenderer/ProjectPayments.php:854
 msgid "Operations"
 msgstr "Operationen"
 
-#: lib/PageRenderer/Invoices.php:1042 lib/PageRenderer/ProjectPayments.php:855
+#: lib/PageRenderer/Invoices.php:1053 lib/PageRenderer/ProjectPayments.php:855
 msgid "Add a new Receivable"
 msgstr "Eine neue Forderung hinzufügen"
 
-#: lib/PageRenderer/Invoices.php:1241 lib/PageRenderer/ProjectPayments.php:1044
+#: lib/PageRenderer/Invoices.php:1267 lib/PageRenderer/ProjectPayments.php:1044
 msgid "Financial Project Balance"
 msgstr "Gewinn-/Verlustrechung"
 
-#: lib/PageRenderer/Invoices.php:1354 lib/PageRenderer/ProjectPayments.php:1157
+#: lib/PageRenderer/Invoices.php:1380 lib/PageRenderer/ProjectPayments.php:1157
 msgid "Parts Project Balances"
 msgstr "Projekt-Bilanz Teilzahlungen"
 
-#: lib/PageRenderer/Invoices.php:1520
+#: lib/PageRenderer/Invoices.php:1546
 msgid "Date of Bank Transaction"
 msgstr "Datum des Bankauftrags"
 
-#: lib/PageRenderer/Invoices.php:1531 lib/PageRenderer/ProjectPayments.php:1334
+#: lib/PageRenderer/Invoices.php:1557 lib/PageRenderer/ProjectPayments.php:1334
 #: lib/PageRenderer/SepaBulkTransactions.php:428
 msgid "IBAN"
 msgstr "IBAN"
 
-#: lib/PageRenderer/Invoices.php:1593 lib/PageRenderer/ProjectPayments.php:1396
+#: lib/PageRenderer/Invoices.php:1619 lib/PageRenderer/ProjectPayments.php:1396
 #: lib/PageRenderer/SepaBankAccounts.php:808
 #: lib/PageRenderer/SepaBulkTransactions.php:490
 msgid "Mandate Reference"
 msgstr "Mandatsreferenz"
 
-#: lib/PageRenderer/Invoices.php:1601 lib/PageRenderer/ProjectPayments.php:1404
+#: lib/PageRenderer/Invoices.php:1627 lib/PageRenderer/ProjectPayments.php:1404
 msgid "Message-ID"
 msgstr "Message-ID"
 
-#: lib/PageRenderer/Invoices.php:1619 lib/PageRenderer/ProjectPayments.php:1422
+#: lib/PageRenderer/Invoices.php:1645 lib/PageRenderer/ProjectPayments.php:1422
 msgid "Payments resulting from direct debit transfers cannot be changed."
 msgstr ""
 "Zahlung, die von Lastschriften herrühren, können nicht geändert werden."
 
-#: lib/PageRenderer/Invoices.php:1736 lib/PageRenderer/ProjectPayments.php:1515
+#: lib/PageRenderer/Invoices.php:1762 lib/PageRenderer/ProjectPayments.php:1515
 msgid "Project Balance"
 msgstr "Projekt-Bilanz"
 
@@ -6750,12 +6802,6 @@ msgstr "Anzeigename"
 msgid "e.g. Doe, Cathy"
 msgstr "z.B. Muster, Michi"
 
-#: lib/PageRenderer/Musicians.php:508
-#: lib/PageRenderer/ProjectAssociates.php:553
-#: lib/PageRenderer/ProjectParticipants.php:604
-msgid "Display-Name (pers.)"
-msgstr "Anzeigename (pers.)"
-
 #: lib/PageRenderer/Musicians.php:518
 #: lib/PageRenderer/ProjectAssociates.php:564
 #: lib/PageRenderer/ProjectParticipants.php:615
@@ -6769,101 +6815,101 @@ msgstr "Genus"
 msgid "auto-detected gender: %s"
 msgstr "mutmaßlicher Genus: %s"
 
-#: lib/PageRenderer/Musicians.php:643
+#: lib/PageRenderer/Musicians.php:644
 #: lib/PageRenderer/ProjectParticipants.php:721
 msgid "Instrument Sort Order"
 msgstr "Instrumenten Reihenfolge"
 
-#: lib/PageRenderer/Musicians.php:657
+#: lib/PageRenderer/Musicians.php:658
 #: lib/PageRenderer/ProjectParticipants.php:1007
 msgid "Disabled Instruments"
 msgstr "Gesperrte Instrumente"
 
-#: lib/PageRenderer/Musicians.php:685
+#: lib/PageRenderer/Musicians.php:686
 msgid "Default Status"
 msgstr "Voreinstellung Teilnahmestatus"
 
-#: lib/PageRenderer/Musicians.php:696
+#: lib/PageRenderer/Musicians.php:697
 #: lib/PageRenderer/ProjectAssociates.php:830
 #: lib/PageRenderer/ProjectParticipants.php:1071
 msgid "Cloud Account Deactivated"
 msgstr "Cloud-Zugang deaktiviert"
 
-#: lib/PageRenderer/Musicians.php:715
+#: lib/PageRenderer/Musicians.php:716
 #: lib/PageRenderer/ProjectAssociates.php:850
 #: lib/PageRenderer/ProjectParticipants.php:1091
 msgid "Hidden from Cloud"
 msgstr "Kein Cloud-Zugang"
 
-#: lib/PageRenderer/Musicians.php:737
+#: lib/PageRenderer/Musicians.php:738
 #: lib/PageRenderer/ProjectAssociates.php:921
 #: lib/PageRenderer/ProjectParticipants.php:1176
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
-#: lib/PageRenderer/Musicians.php:751
+#: lib/PageRenderer/Musicians.php:752
 #: lib/PageRenderer/ProjectAssociates.php:936
 #: lib/PageRenderer/ProjectParticipants.php:1191
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
-#: lib/PageRenderer/Musicians.php:769
+#: lib/PageRenderer/Musicians.php:770
 #: lib/PageRenderer/ProjectAssociates.php:951
 #: lib/PageRenderer/ProjectParticipants.php:1206
 msgid "Address Supplement"
 msgstr "Adresszusatz"
 
-#: lib/PageRenderer/Musicians.php:780
+#: lib/PageRenderer/Musicians.php:781
 #: lib/PageRenderer/ProjectAssociates.php:962
 #: lib/PageRenderer/ProjectParticipants.php:1217
 msgid "Street"
 msgstr "Straße"
 
-#: lib/PageRenderer/Musicians.php:795
+#: lib/PageRenderer/Musicians.php:796
 #: lib/PageRenderer/ProjectAssociates.php:976
 #: lib/PageRenderer/ProjectParticipants.php:1231
 msgid "Street Number"
 msgstr "Hausnummer"
 
-#: lib/PageRenderer/Musicians.php:806
+#: lib/PageRenderer/Musicians.php:807
 #: lib/PageRenderer/ProjectParticipants.php:1242
 msgid "P.O. Box"
 msgstr "Postfach"
 
-#: lib/PageRenderer/Musicians.php:817
+#: lib/PageRenderer/Musicians.php:818
 #: lib/PageRenderer/ProjectAssociates.php:998
 #: lib/PageRenderer/ProjectParticipants.php:1253
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
-#: lib/PageRenderer/Musicians.php:826
+#: lib/PageRenderer/Musicians.php:827
 #: lib/PageRenderer/ProjectAssociates.php:1007
 #: lib/PageRenderer/ProjectParticipants.php:1262
 msgid "City"
 msgstr "Stadt"
 
-#: lib/PageRenderer/Musicians.php:838
+#: lib/PageRenderer/Musicians.php:839
 #: lib/PageRenderer/ProjectAssociates.php:1019
 #: lib/PageRenderer/ProjectParticipants.php:1274
 #: lib/PageRenderer/TaxationStatutorySources.php:212
 msgid "Country"
 msgstr "Land"
 
-#: lib/PageRenderer/Musicians.php:853
+#: lib/PageRenderer/Musicians.php:854
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/PageRenderer/Musicians.php:871
+#: lib/PageRenderer/Musicians.php:872
 #: lib/PageRenderer/ProjectAssociates.php:1078
 #: lib/PageRenderer/ProjectParticipants.php:1333
 msgid "Language"
 msgstr "Sprache"
 
-#: lib/PageRenderer/Musicians.php:901
+#: lib/PageRenderer/Musicians.php:902
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
-#: lib/PageRenderer/Musicians.php:938
+#: lib/PageRenderer/Musicians.php:939
 #: lib/PageRenderer/ProjectAssociates.php:1092
 #: lib/PageRenderer/ProjectParticipants.php:1347 src/app/email.js:1942
 #: templates/emailform/part.emailform.composer.php:172
@@ -7389,22 +7435,22 @@ msgid "Announcements List"
 msgstr "Ankündigungs-Email-Verteiler"
 
 #: lib/PageRenderer/ProjectParticipants.php:1754
-#: lib/Service/InstrumentationService.php:164
+#: lib/Service/InstrumentationService.php:181
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
 #: lib/PageRenderer/ProjectParticipants.php:1759
-#: lib/Service/InstrumentationService.php:169
+#: lib/Service/InstrumentationService.php:186
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
 #: lib/PageRenderer/ProjectParticipants.php:1766
-#: lib/Service/InstrumentationService.php:176
+#: lib/Service/InstrumentationService.php:193
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
 #: lib/PageRenderer/ProjectParticipants.php:1783
-#: lib/Service/InstrumentationService.php:188
+#: lib/Service/InstrumentationService.php:205
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
@@ -7784,7 +7830,7 @@ msgstr "Vorankündigung"
 
 #. TRANSLATORS src/views/FilesTab.vue:94
 #: lib/PageRenderer/SepaBulkTransactions.php:610
-#: specialVueFakeDummyForL10nScript.js:5985 templates/emailform/form.php:36
+#: specialVueFakeDummyForL10nScript.js:5967 templates/emailform/form.php:36
 #: templates/emailform/part.emailform.composer.php:125
 msgid "Recipients"
 msgstr "Empfänger*innen"
@@ -8491,23 +8537,27 @@ msgstr "Die Bilddaten sind nicht im SVG-Format. \"%s\"."
 msgid "Conversion of SVG image data failed."
 msgstr "Die Konvertierung der SVG-Bilddaten ist fehlgeschlagen."
 
-#: lib/Service/InstrumentationService.php:81
+#: lib/Service/InstrumentationService.php:87
 msgid "Doe"
 msgstr "Musterperson"
 
-#: lib/Service/InstrumentationService.php:82
+#: lib/Service/InstrumentationService.php:88
 msgid "John"
 msgstr "Max"
 
-#: lib/Service/InstrumentationService.php:84
+#: lib/Service/InstrumentationService.php:90
 msgid "Undiscoverable"
 msgstr "Unauffindbarweg"
 
-#: lib/Service/InstrumentationService.php:87
+#: lib/Service/InstrumentationService.php:93
 msgid "Nowhere"
 msgstr "Nirgends"
 
-#: lib/Service/InstrumentationService.php:183
+#: lib/Service/InstrumentationService.php:129
+msgid "Unable to create a dummy-musician for preview purposes."
+msgstr "Kann keine Personen-Strohpuppe (Voransichten) erzeugen."
+
+#: lib/Service/InstrumentationService.php:200
 msgid "Project file attachments"
 msgstr "Datei-Anhänge"
 
@@ -8558,7 +8608,7 @@ msgstr ""
 "Die Person \"%s\" kann nicht gelöscht werden weil es Finanztransaktionen\n"
 "gibt, die die Person betreffen."
 
-#: lib/Service/MusicianService.php:293
+#: lib/Service/MusicianService.php:295
 #: templates/settings/personal-settings.php:162
 msgid "Dummy"
 msgstr "Strohpuppe"
@@ -13470,15 +13520,14 @@ msgid "Readme"
 msgstr "Anleitung"
 
 #: lib/Storage/Database/BankTransactionsStorage.php:141
-#: lib/Storage/Database/DonationReceiptsStorage.php:167
-#: lib/Storage/Database/InvoicesStorage.php:167
+#: lib/Storage/Database/DonationReceiptsStorage.php:166
+#: lib/Storage/Database/InvoicesStorage.php:152
 #, php-format
 msgid "Unable to add new document \"%s\"."
 msgstr "Kann das neue Dokument \"%s\" nicht hinzufügen."
 
 #: lib/Storage/Database/BankTransactionsStorage.php:199
-#: lib/Storage/Database/DonationReceiptsStorage.php:244
-#: lib/Storage/Database/InvoicesStorage.php:244
+#: lib/Storage/Database/DonationReceiptsStorage.php:243
 #, php-format
 msgid "Unable to remove document \"%s\"."
 msgstr "Kann das Dokument \"%s\" nicht entfernen."
@@ -13530,80 +13579,85 @@ msgstr "ZuwendungsBestätigung-%1$d-%2$s-%3$s"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_INVOICE_NAME = 'invoice';
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:328
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:361
+#: lib/Storage/Database/InvoicesStorage.php:105
 #: lib/Service/ConfigService.php:270
 #, php-format
 msgid "invoice"
 msgstr "Rechnung"
 
-#: lib/Storage/Database/DonationReceiptsStorage.php:139
-#: lib/Storage/Database/InvoicesStorage.php:139
-#: lib/Storage/Database/ProjectParticipantsStorage.php:274
-#: lib/Storage/Database/ProjectParticipantsStorage.php:455
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:126
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:191
+#: lib/Storage/Database/DonationReceiptsStorage.php:138
+#: lib/Storage/Database/InvoicesStorage.php:114
+#: lib/Storage/Database/ProjectParticipantsStorage.php:273
+#: lib/Storage/Database/ProjectParticipantsStorage.php:457
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:125
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:190
 msgid "Root-folder does not exist."
 msgstr "Das Wurzel-Verzeichnis existiert nicht."
 
+#: lib/Storage/Database/InvoicesStorage.php:415
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:443
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:239
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:238
 #, php-format
 msgid "Unable to find database entity for path \"%s\"."
 msgstr "Kann die Datenbank-Entität zum Pfad \"%s\" nicht finden."
 
+#: lib/Storage/Database/InvoicesStorage.php:420
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:448
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:244
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:243
 #, php-format
 msgid "Path \"%s\" is a directory."
 msgstr "Der Pfad \"%s\" gehört zu einem Verzeichnis."
 
+#: lib/Storage/Database/InvoicesStorage.php:427
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:455
 #, php-format
 msgid "Unable to find document container for path \"%s\"."
 msgstr "Kann den Beleg-Container zum Pfad \"%s\" nicht finden."
 
+#: lib/Storage/Database/InvoicesStorage.php:433
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:461
 #, php-format
 msgid "The directory entry \"%s\" is not linked to a file."
 msgstr "Der Verzeichnis-Eintrag \"%s\" ist nicht mit einer Datei verknüpft."
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:222
+#: lib/Storage/Database/ProjectParticipantsStorage.php:221
 #, php-format
 msgid "Unable to add debit-mandate \"%s\"."
 msgstr "Kann das Lastschrift-Mandat \"%s\" nicht hinzufügen."
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:263
+#: lib/Storage/Database/ProjectParticipantsStorage.php:262
 #, php-format
 msgid "Debit-mandate \"%s\" has no hard-copy attached."
 msgstr "Zum Lastschrift-Mandat \"%s\" fehlt der Beleg."
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:294
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:209
+#: lib/Storage/Database/ProjectParticipantsStorage.php:293
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:208
 #, php-format
 msgid "Unable to remove debit-mandate \"%s\"."
 msgstr "Kann das Lastschrift-Mandat \"%s\" nicht entfernen."
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:344
+#: lib/Storage/Database/ProjectParticipantsStorage.php:346
 #, php-format
 msgid "Unable to add composite payment \"%s\"."
 msgstr "Kann die Buchung \"%s\" nicht hinzufügen."
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:408
+#: lib/Storage/Database/ProjectParticipantsStorage.php:410
 #, php-format
 msgid "Unable to add file for field-datum \"%s\"."
 msgstr "Kann die zum Feld \"%s\" gehörende Datei nicht hinzufügen."
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:435
+#: lib/Storage/Database/ProjectParticipantsStorage.php:437
 #, php-format
 msgid "The field datum for field \"%s\" has no file attached to it."
 msgstr "Zum Feldeintrag \"%s\" gibt es keine Datei."
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:491
+#: lib/Storage/Database/ProjectParticipantsStorage.php:493
 #, php-format
 msgid "Unable to remove file for field-datum \"%s\"."
 msgstr "msgstr \"Kann die zum Feld \"%s\" gehörende Datei nicht entfernen."
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:558
+#: lib/Storage/Database/ProjectParticipantsStorage.php:560
 #, php-format
 msgid "Unable to update file-name for field-datum \"%s\"."
 msgstr ""
@@ -13628,12 +13682,12 @@ msgstr ""
 msgid "Unable to convert the in-memory file \"%s\"."
 msgstr "Kann die virtuelle Datei \"%s\" nicht verstetigen."
 
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:140
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:139
 #, php-format
 msgid "Unable to add written tax exemption notice for \"%s\"."
 msgstr "Kann die Kopie des Freistellungsbescheids \"%s\" nicht hinzu fügen."
 
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:180
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:179
 #, php-format
 msgid "Tax exemption notice \"%s\" has no hard-copy attached."
 msgstr "Zum Freistellungsbescheid \"%s\" gibt es keine Dokumenten-Kopie."
@@ -13724,14 +13778,6 @@ msgstr "Finanzamt"
 msgid "exemption-notices"
 msgstr "FreistellungsBescheide"
 
-#: lib/Traits/ConfigTrait.php:769
-msgid "donation-receipts"
-msgstr "Zuwendungsbestätigungen"
-
-#: lib/Traits/ConfigTrait.php:783
-msgid "invoices"
-msgstr "Rechnungen"
-
 #. TRANSLATORS: default value for unconfigured setting.
 #: lib/Traits/InitialStateTrait.php:128
 msgid "unconfigured"
@@ -13782,19 +13828,25 @@ msgstr "durchwinken"
 #, php-format
 msgid ""
 "Universal converter \"%1$s\" has failed trying to convert MIME type \"%2$s\""
-msgstr "Das Umwandlungsprogramm \"%1$s\" konnte eine Datei mit MIME-Typ \"%2$s\" nicht konvertieren"
+msgstr ""
+"Das Umwandlungsprogramm \"%1$s\" konnte eine Datei mit MIME-Typ \"%2$s\" "
+"nicht konvertieren"
 
 #: php-toolkit/Service/AnyToPdf.php:399
 #, php-format
 msgid "Converter \"%1$s\" has failed trying to convert MIME type \"%2$s\""
-msgstr "Das Umwandlungsprogramm \"%1$s\" konnte eine Datei mit MIME-Typ \"%2$s\" nicht konvertieren"
+msgstr ""
+"Das Umwandlungsprogramm \"%1$s\" konnte eine Datei mit MIME-Typ \"%2$s\" "
+"nicht konvertieren"
 
 #: php-toolkit/Service/AnyToPdf.php:723
 #, php-format
 msgid ""
 "Unable to determine the version of the helper program \"%1$s\", is it "
 "installed?"
-msgstr "Die Version des Hilfsprogramms \"%1$s\" kann nicht ermittelt werden, ist es installiert?"
+msgstr ""
+"Die Version des Hilfsprogramms \"%1$s\" kann nicht ermittelt werden, ist es "
+"installiert?"
 
 #: php-toolkit/Service/ExecutableFinder.php:135
 #, php-format
@@ -14041,7 +14093,7 @@ msgstr "Kontakte hinzufügen"
 #. TRANSLATORS src/components/AddContactsToProject.vue:33
 #. TRANSLATORS src/views/FilesTab.vue:154
 #: specialVueFakeDummyForL10nScript.js:700
-#: specialVueFakeDummyForL10nScript.js:6001
+#: specialVueFakeDummyForL10nScript.js:5983
 #: templates/settings/share-settings.php:103
 msgid "Contacts"
 msgstr "Kontakte"
@@ -14049,14 +14101,14 @@ msgstr "Kontakte"
 #. TRANSLATORS src/components/AddContactsToProject.vue:34
 #. TRANSLATORS src/views/FilesTab.vue:155
 #: specialVueFakeDummyForL10nScript.js:702
-#: specialVueFakeDummyForL10nScript.js:6003
+#: specialVueFakeDummyForL10nScript.js:5985
 msgid "e.g. Bilbo Baggins"
 msgstr "z.B. Bilbo Beutlin"
 
 #. TRANSLATORS src/components/AddContactsToProject.vue:46
 #. TRANSLATORS src/views/FilesTab.vue:167
 #: specialVueFakeDummyForL10nScript.js:704
-#: specialVueFakeDummyForL10nScript.js:6005
+#: specialVueFakeDummyForL10nScript.js:5987
 msgid "Address-Books"
 msgstr "Adressbücher"
 
@@ -14079,7 +14131,7 @@ msgstr "unzugänglich"
 #: specialVueFakeDummyForL10nScript.js:1411
 #: specialVueFakeDummyForL10nScript.js:1480
 #: specialVueFakeDummyForL10nScript.js:1535
-#: specialVueFakeDummyForL10nScript.js:5936
+#: specialVueFakeDummyForL10nScript.js:5918
 #: src/toolkit/util/settings-sync.ts:66 src/toolkit/util/settings-sync.ts:107
 #: src/toolkit/util/settings-sync.ts:186 src/toolkit/util/settings-sync.ts:304
 msgid "reason unknown"
@@ -14289,7 +14341,7 @@ msgstr "Keine Neuverschlüsselungs-Anfragen anhängig."
 #. TRANSLATORS src/components/AdminSettings.vue:208
 #. TRANSLATORS src/views/FilesTab.vue:133
 #: specialVueFakeDummyForL10nScript.js:1627
-#: specialVueFakeDummyForL10nScript.js:5995
+#: specialVueFakeDummyForL10nScript.js:5977
 msgid "e.g. Jane Doe"
 msgstr "z.B. Maximiliane Musterfrau"
 
@@ -14301,7 +14353,7 @@ msgstr "Benutzerauswahl auf ein Projekt einschränken"
 #. TRANSLATORS src/components/AdminSettings.vue:220
 #. TRANSLATORS src/views/FilesTab.vue:144
 #: specialVueFakeDummyForL10nScript.js:1631
-#: specialVueFakeDummyForL10nScript.js:5999
+#: specialVueFakeDummyForL10nScript.js:5981
 msgid "e.g. Auvergne2019"
 msgstr "z.B. Auvergne2019"
 
@@ -14995,79 +15047,79 @@ msgstr "Telefon"
 msgid "Propability"
 msgstr "Wahrscheinlichkeit"
 
-#: specialVueFakeDummyForL10nScript.js:5775
+#: specialVueFakeDummyForL10nScript.js:5758
 msgid "Required."
 msgstr "Benötigt."
 
-#: specialVueFakeDummyForL10nScript.js:5918
+#: specialVueFakeDummyForL10nScript.js:5900
 msgid "File download failed for {fileName}."
 msgstr "Laden der Datei {fileName} ist fehlgeschlagen."
 
-#: specialVueFakeDummyForL10nScript.js:5954
+#: specialVueFakeDummyForL10nScript.js:5936
 msgid "no response received from {ajaxUrl}"
 msgstr "keine Antwort von {ajaxUrl} erhalten"
 
-#: specialVueFakeDummyForL10nScript.js:5958
+#: specialVueFakeDummyForL10nScript.js:5940
 msgid "Could not perform mail-merge: {message}"
 msgstr "Konnte die Vorlage nicht ausfüllen: {message}"
 
 #. TRANSLATORS src/views/FilesTab.vue:31
-#: specialVueFakeDummyForL10nScript.js:5965
+#: specialVueFakeDummyForL10nScript.js:5947
 msgid "Mail merge operations"
 msgstr "Serienbrief-Operation"
 
 #. TRANSLATORS src/views/FilesTab.vue:40
-#: specialVueFakeDummyForL10nScript.js:5967
+#: specialVueFakeDummyForL10nScript.js:5949
 msgid "Download Merged Document"
 msgstr "Ausgefüllte Vorlage laden"
 
 #. TRANSLATORS src/views/FilesTab.vue:43
-#: specialVueFakeDummyForL10nScript.js:5969
+#: specialVueFakeDummyForL10nScript.js:5951
 msgid "download locally"
 msgstr "lokal laden"
 
 #. TRANSLATORS src/views/FilesTab.vue:48
-#: specialVueFakeDummyForL10nScript.js:5971
+#: specialVueFakeDummyForL10nScript.js:5953
 msgid "Merge Document into Cloud"
 msgstr "Ergebnis in der Cloud speichern"
 
 #. TRANSLATORS src/views/FilesTab.vue:54
-#: specialVueFakeDummyForL10nScript.js:5973
+#: specialVueFakeDummyForL10nScript.js:5955
 msgid "save to cloud"
 msgstr "in die Cloud speichern"
 
 #. TRANSLATORS src/views/FilesTab.vue:59
-#: specialVueFakeDummyForL10nScript.js:5975
+#: specialVueFakeDummyForL10nScript.js:5957
 msgid "Download Replacement Data"
 msgstr "Ersetzungs-Datensatz laden"
 
 #. TRANSLATORS src/views/FilesTab.vue:65
-#: specialVueFakeDummyForL10nScript.js:5977
+#: specialVueFakeDummyForL10nScript.js:5959
 msgid "download data"
 msgstr "Daten laden"
 
 #. TRANSLATORS src/views/FilesTab.vue:72
-#: specialVueFakeDummyForL10nScript.js:5979
+#: specialVueFakeDummyForL10nScript.js:5961
 msgid "Sender"
 msgstr "Absender*in"
 
 #. TRANSLATORS src/views/FilesTab.vue:80
-#: specialVueFakeDummyForL10nScript.js:5983
+#: specialVueFakeDummyForL10nScript.js:5965
 msgid "e.g. John Doe"
 msgstr "z.B. Max Mustermann"
 
 #. TRANSLATORS src/views/FilesTab.vue:106
-#: specialVueFakeDummyForL10nScript.js:5987
+#: specialVueFakeDummyForL10nScript.js:5969
 msgid "Musician's Datebase"
 msgstr "Musiker-Datenbank"
 
 #. TRANSLATORS src/views/FilesTab.vue:115
-#: specialVueFakeDummyForL10nScript.js:5989
+#: specialVueFakeDummyForL10nScript.js:5971
 msgid "Addressbooks"
 msgstr "Adressbücher"
 
 #. TRANSLATORS src/views/FilesTab.vue:125
-#: specialVueFakeDummyForL10nScript.js:5991
+#: specialVueFakeDummyForL10nScript.js:5973
 msgid "Enter Address"
 msgstr "Anschrift eingeben"
 
@@ -16188,29 +16240,51 @@ msgstr "Vue JS Frontend"
 msgid "Resolve JS Sourceode"
 msgstr "Orte im JS-Quellcode auflösen"
 
-#: src/files-hooks.ts:165
+#: src/files-hooks.ts:207
 msgid "Perform mail-merge operation with this template file."
 msgstr "Serienbrief-Operationen mit dieser Vorlage ausführen."
 
-#: src/files-hooks.ts:246 src/files-hooks.ts:269
+#: src/files-hooks.ts:288 src/files-hooks.ts:315
 msgid "New Supporting Document"
 msgstr "Neuer Beleg"
 
-#: src/files-hooks.ts:267
+#: src/files-hooks.ts:313
 msgid "New Year Folder"
 msgstr "Neuer Jahreszahl-Ordner."
 
-#: src/files-hooks.ts:292
+#: src/files-hooks.ts:338
 msgid "Year determined as {year}."
 msgstr "Nehme {year} als Jahreszahl."
 
-#: src/files-hooks.ts:308 src/files-hooks.ts:352
+#: src/files-hooks.ts:354 src/files-hooks.ts:398
 msgid "Created new folder \"{name}\""
 msgstr "Neuen Ordner \"{name}\" erzeugt"
 
-#: src/files-hooks.ts:335
+#: src/files-hooks.ts:381
 msgid "Document sequence determined as {sequence}."
 msgstr "Belegnummer als {sequence} ermittelt."
+
+#: src/files-hooks.ts:434
+msgid "Generate Invoice Document"
+msgstr "Rechnungsdokument erzeugen"
+
+#: src/files-hooks.ts:454
+msgid "Starting mail-merge, this may take some time ..."
+msgstr "(Serien-)Brief wird erzeugt, das kann dauern ..."
+
+#: src/files-hooks.ts:461
+msgid "Mail-merge completed, moving document into the proper place ..."
+msgstr ""
+"(Serien-)Brief-Erzeugung abgeschlossen, verschiebe das Ergebnis an die "
+"richtige Stelle ..."
+
+#: src/files-hooks.ts:483
+msgid "Reloading file list."
+msgstr "Lade die Datei-Liste neu."
+
+#: src/files-hooks.ts:493
+msgid "Mail-merge operation has failed"
+msgstr "Die Serienbrief-Operation ist fehlgeschlagen"
 
 #: src/stores/app-data.ts:180
 msgid "An error occurred in the app-data store."
@@ -20050,6 +20124,9 @@ msgid ""
 "activated at the same time."
 msgstr "Zeigt einfach alle Spalten an."
 
+#~ msgid "dontation-receipts"
+#~ msgstr "Zuwendungsbestätigungen"
+
 #, php-format
 #~ msgid "invoice-%1$s-%2$s-%3$s"
 #~ msgstr "Rechnung-%1$s-%2$s-%3$s"
@@ -21860,9 +21937,6 @@ msgstr "Zeigt einfach alle Spalten an."
 #~ msgstr ""
 #~ "Die neue vorgeschlagene Benutzerkennung ist leer, darf es jedoch nicht "
 #~ "sein. Die alte Kennung war \"%s\"."
-
-#~ msgid "Unable to retrieve musician for id \"%s\" from database."
-#~ msgstr "Kann das Musizierende \"%s\" nicht aus der Datenbank laden."
 
 #~ msgid "Address Validation"
 #~ msgstr "Anschrifts-Validierung"

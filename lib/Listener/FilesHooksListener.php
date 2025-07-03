@@ -182,7 +182,7 @@ class FilesHooksListener implements IEventListener
       $balancesFolder = $financeFolder . '/' . $balancesFolder;
       $projectBalancesFolder = $balancesFolder . '/' . $projectsFolder;
       $invoicesFolder = $financeFolder . '/' . $appL10n->t('invoices');
-      $donationReceiptsFolder = $financeFolder . '/' . $appL10n->t('dontation-receipts');
+      $donationReceiptsFolder = $financeFolder . '/' . $appL10n->t('donation-receipts');
 
       $initialState->provideInitialState('files', [
         'sharing' => [
