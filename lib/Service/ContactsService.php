@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Listener\ContactsCardEventListener;
@@ -181,7 +182,6 @@ class ContactsService
       $bookName = $addressBook->getDisplayName();
       $contacts = $addressBook->search('', [ 'FN', 'EMAIL' ], [] /* options */);
       foreach ($contacts as $contact) {
-        // $this->logInfo('CONTACT: ' . print_r($contact, true));
         $uid = $contact['UID'];
         $fullName = $contact['FN']??'';
         $emails = $contact['EMAIL']??null;
@@ -544,16 +544,13 @@ class ContactsService
         $address = explode(';', $address);
 
         $poBox = $address[0];
-        // $this->logInfo('POBOX ' . $poBox);
         $entityValues['addressSupplement'] = $address[1];
         $street = Util::normalizeSpaces($address[2]);
         // if the first word or the last word of the street start with a
         // digit, then we treat it as the street-number. This should hack most
         // of the cases for _us_ ...
-        // $this->logInfo('STREET IS "' . $street . '"');
         $lastWord = substr($street, strrpos($street, ' ') + 1);
         $firstWord = substr($street, 0, strpos($street, ' '));
-        // $this->logInfo('LAST FIRST' . $lastWord . ' / ' . $firstWord);
         if (!empty($lastWord) && ctype_digit($lastWord[0])) {
           $streetNumber = $lastWord;
           $street = substr($street, 0, -strlen($lastWord)-1);
@@ -661,6 +658,10 @@ class ContactsService
             break;
         }
       }
+    }
+
+    if (!empty($entity->getOrganization())) {
+      $entity->setDefaultParticipationStatus(EnumParticipationStatus::ASSOCIATED());
     }
 
     // Ignore image data.
