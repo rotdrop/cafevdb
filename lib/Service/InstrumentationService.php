@@ -24,12 +24,14 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Throwable;
 use DateTimeImmutable;
 
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Legacy\Util as DataBaseUtil;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\Util as DataBaseUtil;
+use OCA\CAFEVDB\Exceptions;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -75,43 +77,58 @@ class InstrumentationService
       /** @var Entities\Musician $dummy */
       $dummy = $musiciansRepository->findOneBy([ 'uuid' => Uuid::NIL ]);
     }
-    if (empty($dummy)) {
-      $dummy = Entities\Musician::create();
-    }
-    $dummy->setSurName($this->l->t('Doe'))
-      ->setFirstName($this->l->t('John'))
-      ->setAddressSupplement('Igloo 13')
-      ->setStreet($this->l->t('Undiscoverable'))
-      ->setStreetNumber(42)
-      ->setPostalCode('Z-7')
-      ->setCity($this->l->t('Nowhere'))
-      ->setCountry('AQ')
-      ->setEmail($this->getConfigValue('emailtestaddress', 'john.doe@nowhere.tld'))
-      ->setBirthday(new DateTimeImmutable)
-      ->setMobilePhone('0815')
-      ->setFixedLinePhone('4711')
-      ->setDeleted(new DateTimeImmutable)
-      ->setUuid(Uuid::NIL);
-    if ($persist) {
-      $this->persist($dummy);
-    }
-    if ($dummy->getSepaBankAccounts()->isEmpty()) {
-      // also generate a dummy bank account
-      $bankAccount = (new Entities\SepaBankAccount)
-                   ->setMusician($dummy)
-                   ->setIban('DE02700100800030876808')
-                   ->setBic('PBNKDEFF')
-                   ->setBlz('70010080')
-                   ->setBankAccountOwner($dummy->getPublicName())
-                   ->setSequence(1)
-                   ->setDeleted(new DateTimeImmutable);
-      $dummy->getSepaBankAccounts()->add($bankAccount);
-      if ($persist) {
-        $this->persist($bankAccount);
+
+    $this->entityManager->beginTransaction();
+    try {
+
+      if (empty($dummy)) {
+        $dummy = Entities\Musician::create();
       }
-    }
-    if ($persist) {
-      $this->flush();
+      $dummy->setSurName($this->l->t('Doe'))
+        ->setFirstName($this->l->t('John'))
+        ->setAddressSupplement('Igloo 13')
+        ->setStreet($this->l->t('Undiscoverable'))
+        ->setStreetNumber(42)
+        ->setPostalCode('Z-7')
+        ->setCity($this->l->t('Nowhere'))
+        ->setCountry('AQ')
+        ->setEmail($this->getConfigValue('emailtestaddress', 'john.doe@nowhere.tld'))
+        ->setBirthday(new DateTimeImmutable)
+        ->setMobilePhone('0815')
+        ->setFixedLinePhone('4711')
+        ->setDeleted(new DateTimeImmutable)
+        ->setUuid(Uuid::NIL);
+      if ($persist) {
+        $this->persist($dummy);
+      }
+      if ($dummy->getSepaBankAccounts()->isEmpty()) {
+        // also generate a dummy bank account
+        $bankAccount = (new Entities\SepaBankAccount)
+          ->setMusician($dummy)
+          ->setIban('DE02700100800030876808')
+          ->setBic('PBNKDEFF')
+          ->setBlz('70010080')
+          ->setBankAccountOwner($dummy->getPublicName())
+          ->setSequence(1)
+          ->setDeleted(new DateTimeImmutable);
+        $dummy->getSepaBankAccounts()->add($bankAccount);
+        if ($persist) {
+          $this->persist($bankAccount);
+        }
+      }
+      if ($persist) {
+        $this->flush();
+      }
+
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to create a dummy-musician for preview purposes.'),
+        previous: $t,
+      );
     }
 
     if (!empty($project)) {
