@@ -59,7 +59,7 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findByName(string $name)
   {
-    return $this->findOneBy([ 'name' => $name ], [ 'sortOrder' => 'ASC' ]);
+    return $this->findOneBy([ 'name' => $name ], [ 'sortOrder' => 'ASC', 'name' => 'ASC' ]);
   }
 
   /**
@@ -69,7 +69,7 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findAll():array
   {
-    return $this->findBy(['deleted' => null], [ 'sortOrder' => 'ASC']);
+    return $this->findBy(['deleted' => null], [ 'sortOrder' => 'ASC', 'name' => 'ASC' ]);
   }
 
   /**
@@ -83,24 +83,17 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findNames(?array $only = null, ?array $exclude = null):array
   {
-    $qb = $this->createQueryBuilder('i');
-    $qb->select('i.name AS instrument')
-      ->where($qb->expr()->isNull('i.deleted'));
-    if (!empty($only) || !empty($exclude)) {
-      $qb->leftJoin('i.families', 'if');
-      if (!empty($only)) {
-        $qb->andWhere($qb->expr()->in('if.family', ':only'))
-          ->setParameter('only', $only);
-      }
-      if (!empty($exclude)) {
-        $qb->andWhere($qb->expr()->notIn('if.family', ':exclude'))
-          ->setParameter('exclude', $exclude);
-      }
+    $criteria = [ 'deleted' => null ];
+    if (!empty($only)) {
+      $criteria[] = [ 'family.family' => $only ];
     }
-    $qb->orderBy('i.sortOrder', 'ASC')
-      ->addOrderBy('i.name', 'ASC');
+    if (!empty($exclude)) {
+      $criteria[] = [ '!family.family' => $exclude ];
+    }
+    $result = $this->findBy($criteria, [ 'sortOrder' => 'ASC', 'name' => 'ASC' ]);
+    $names = array_map(fn(Entities\Instrument $entity) => $entity->getName(), $result);
 
-    return $qb->getQuery()->getResult('COLUMN_HYDRATOR');
+    return $names;
   }
 
   /**
