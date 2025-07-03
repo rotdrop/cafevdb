@@ -350,8 +350,8 @@ ON t.id = __t2.instrument_id
 INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id
 ' . $join . '
-WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
 GROUP BY t.id';
+          // WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
           break;
         default:
           break;
@@ -633,7 +633,8 @@ GROUP BY t.id';
         ],
       ],
     ];
-    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL AND $table.id NOT IN ("' . implode('","', $instrumentsFilter) . '")']);
+    // $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL AND $table.id NOT IN ("' . implode('","', $instrumentsFilter) . '")']);
+    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL']);
 
     list($instrumentsFddIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
