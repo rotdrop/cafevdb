@@ -120,9 +120,9 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
   public function getUpdated():?DateTimeInterface
   {
     if (empty($this->file)) {
-      return self::ensureDate($this->updated);
+      return self::ensureDate($this->updated ?? null);
     }
-    return max(self::ensureDate($this->updated), self::ensureDate($this->file->getUpdated()));
+    return max(self::ensureDate($this->updated ?? null), self::ensureDate($this->file->getUpdated()));
   }
 
   const FILE_METHODS = [
@@ -147,7 +147,7 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
         && is_callable([ $this->file, $method ])) {
       return call_user_func_array([ $this->file, $method ], $args);
     }
-    throw new Exceptions\DatabaseException('Undefined method - ' . __CLASS__ . '::' . $method);
+    throw new Exceptions\DatabaseException('Undefined method "' . $method . '", id = ' . $this->id);
   }
 
   /** @return null|string */
