@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Common\Util;
 
-/** Handle PME file-uplaod row. The controller must make sure to define all ingredients. */
+/** Handle PME file-upload row. The controller must make sure to define all ingredients. */
 trait FileUploadRowTrait
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -176,26 +176,4 @@ trait FileUploadRowTrait
       unlink($file['tmp_name']);
     }
   }
-
-  // /**
-  //  * Return the underline storage entity if the upload refers to db-backed
-  //  * cloud-file.
-  //  *
-  //  * @param array $file File-upload data as prepared by
-  //  * FileUploadRowTrait::prepareUploadInfo().
-  //  *
-  //  * @return null|Entities\EncryptedFile
-  //  */
-  // protected function getDatabaseFile(array $file):?Entities\EncryptedFile
-  // {
-  //   if (!isset($file['cloud_path'])) {
-  //     return null;
-  //   }
-  //   $cloudPath = $file['cloud_path'];
-
-  //   /** @var UserStorage $userStorage */
-  //   $userStorage = $this->di(UserStorage::class);
-
-  //   return $userStorage->getDatabaseFile($cloudPath);
-  // }
 }
