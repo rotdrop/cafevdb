@@ -138,6 +138,12 @@ class EmailFormController extends Controller
 
     $emailDraftAutoSave = $this->getEmailDraftAutoSave();
 
+    $subjectTagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+    $subjectTag = trim($composer->subjectTag(), '[]');
+    if (!empty($subjectTagPrefix) && str_starts_with($subjectTag, $subjectTagPrefix)) {
+      $subjectTag = substr($subjectTag, strlen($subjectTagPrefix) + 1);
+    }
+
     $templateParameters = [
       'appName' => $this->appName(),
       'appNameTag' => 'app-' . $this->appName,
@@ -175,7 +181,8 @@ class EmailFormController extends Controller
       'TO' => $composer->toStringArray(),
       'BCC' => $composer->blindCarbonCopy(),
       'CC' => $composer->carbonCopy(),
-      'mailTag' => $composer->subjectTag(),
+      'subjectTagPrefix' => $subjectTagPrefix,
+      'subjectTag' => $subjectTag,
       'subject' => $composer->subject(),
       'message' => $composer->messageText(),
       'sender' => $composer->fromName(),
@@ -384,6 +391,12 @@ class EmailFormController extends Controller
 
             $emailDraftAutoSave = $this->getEmailDraftAutoSave();
 
+            $subjectTagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+            $subjectTag = trim($composer->subjectTag(), '[]');
+            if (!empty($subjectTagPrefix) && str_starts_with($subjectTag, $subjectTagPrefix)) {
+              $subjectTag = substr($subjectTag, strlen($subjectTagPrefix) + 1);
+            }
+
             $templateParameters = [
               'projectName' => $projectName,
               'projectId' => $projectId,
@@ -394,7 +407,8 @@ class EmailFormController extends Controller
               'TO' => $composer->toStringArray(),
               'BCC' => $composer->blindCarbonCopy(),
               'CC' => $composer->carbonCopy(),
-              'mailTag' => $composer->subjectTag(),
+              'subjectTagPrefix' => $subjectTagPrefix,
+              'subjectTag' => $subjectTag,
               'subject' => $composer->subject(),
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),
@@ -424,7 +438,12 @@ class EmailFormController extends Controller
                   $elementData[$formElement] = $composer->toStringArray();
                   break;
                 case 'subjecttag':
-                  $elementData[$formElement] = $composer->subjectTag();
+                  $subjectTagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+                  $subjectTag = trim($composer->subjectTag(), '[]');
+                  if (!empty($subjectTagPrefix) && str_starts_with($subjectTag, $subjectTagPrefix)) {
+                    $subjectTag = substr($subjectTag, strlen($subjectTagPrefix) + 1);
+                  }
+                  $elementData[$formElement] = $subjectTag;
                   break;
                 case 'fileattachments':
                   $fileAttachments = $composer->fileAttachments();
@@ -483,7 +502,7 @@ class EmailFormController extends Controller
               'TO' => $composer->toStringArray(),
               'BCC' => $composer->blindCarbonCopy(),
               'CC' => $composer->carbonCopy(),
-              'mailTag' => $composer->subjectTag(),
+              'subjectTag' => $composer->subjectTag(),
               'subject' => $composer->subject(),
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),
@@ -604,7 +623,7 @@ class EmailFormController extends Controller
               'TO' => $composer->toStringArray(),
               'BCC' => $composer->blindCarbonCopy(),
               'CC' => $composer->carbonCopy(),
-              'mailTag' => $composer->subjectTag(),
+              'subjectTag' => $composer->subjectTag(),
               'subject' => $composer->subject(),
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),

@@ -27,7 +27,7 @@
 
 $editorHeight: 20em;
 
-.ui-dialog.emailform {
+.ui-widget.ui-dialog.emailform.#{$appNameTag} {
   overflow:hidden;
   max-height: 90%;
   padding:0;
@@ -915,14 +915,43 @@ $editorHeight: 20em;
 
           td.subject.input {
             span.subject.tag {
-              flex-basis:auto;
-              font-family:monospace;
-              font-size:100%;
-              width:fit-content;
-              text-align:right;
-              font-weight:bold;
-              display:inline-block;
-              line-height:2.5em;
+              &.display {
+                .editable {
+                  display: none;
+                }
+                .display {
+                  display: inline-block;
+                }
+              }
+              &.edit {
+                .editable {
+                  display: inline-block;
+                }
+                .display {
+                  display: none;
+                }
+              }
+              .button.edit-subject-tag {
+                background-image: var(--icon-settings-dark);
+                background-repeat: no-repeat;
+                background-position: center;
+                width: 24px;
+                height: 24px;
+                min-height: 24px;
+                min-width: 24px;
+                max-height: 24px;
+                max-width: 24px;
+                padding: 0;
+              }
+              &, *:not(input) {
+                flex-basis:auto;
+                font-family:monospace;
+                font-size:100%;
+                width:fit-content;
+                text-align:right;
+                font-weight:bold;
+                line-height:2.5em;
+              }
             }
 
             span.subject.input {

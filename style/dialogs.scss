@@ -59,12 +59,17 @@ $full-screen-zindex: 9000;
   overflow:hidden !important;
 }
 
-.ui-widget.#{$appNameTag} .ui-dialog-buttonset .hidden {
-  display:none;
-}
-
-.ui-widget.app-cafev {
-  /*box-sizing: border-box !important;*/
+.ui-widget.#{$appNameTag} {
+  &, * {
+    font-family: inherit;
+    font-size: inherit;
+  }
+  input, textarea, select, button, div[contenteditable="true"], div[contenteditable="false"] {
+    font-family: var(--font-face);
+  }
+  .ui-dialog-buttonset .hidden {
+    display:none;
+  }
 }
 
 .cafev .fixed-container,

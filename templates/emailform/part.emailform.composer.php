@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -158,13 +158,13 @@ foreach ($eventAttachmentOptions as $option) {
       <td class="email-address caption"><?php echo $l->t('Carbon Copy'); ?></td>
       <td class="email-address input" colspan="2">
         <input size="40"
-               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:freeform-CC']); ?>"
+               title="<?php $toolTips['emailform:composer:recipients:freeform-CC']; ?>"
                class="email-address-holder tooltip-top"
-               value="<?php echo htmlspecialchars($_['CC']); ?>"
+               value="<?php p($_['CC']); ?>"
                name="emailComposer[CC]"
                type="text"
                id="carbon-copy" />
-        <input title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:address-book']); ?>"
+        <input title="<?php echo $toolTips['emailform:composer:recipients:address-book']; ?>"
                type="submit"
                class="submit address-book-emails CC tooltip-bottom"
                data-for="#carbon-copy"
@@ -179,7 +179,7 @@ foreach ($eventAttachmentOptions as $option) {
         <input size="40"
                title="<?php echo $toolTips['emailform:composer:recipients:freeform-BCC']; ?>"
                class="email-address-holder tooltip-top"
-               value="<?php echo htmlspecialchars($_['BCC']); ?>"
+               value="<?php p($_['BCC']); ?>"
                name="emailComposer[BCC]"
                type="text"
                id="blind-carbon-copy"/>
@@ -195,10 +195,22 @@ foreach ($eventAttachmentOptions as $option) {
     <tr>
       <td class="subject caption"><?php echo $l->t('Subject'); ?></td>
       <td colspan="2" class="subject input">
-        <div class="subject <?php p($containerClass); ?> flex-container flex-justify-full">
-          <span class="subject tag"><?php echo htmlspecialchars($mailTag); ?></span>
+        <div class="subject <?php p($containerClass); ?> flex-container flex-justify-full flex-center">
+          <span class="subject tag container display flex-container flex-center">
+            <span class="prefix">
+            [<?php p($subjectTagPrefix) ?>-
+            </span>
+            <span class="content">
+              <input class="editable" type="text" name="emailComposer[subjectTag]" value="<?php p($subjectTag); ?>">
+              <span class="display"><?php p($subjectTag) ?></span>
+            </span>
+            <span class="postfix">
+              ]
+            </span>
+            <input type="button" class="button edit-subject-tag display" name="emailComposer[editSubjectTag]">
+          </span>
           <span class="subject input">
-            <input value="<?php echo htmlspecialchars($subject); ?>"
+            <input value="<?php p($subject); ?>"
                    size="40" name="emailComposer[subject]"
                    type="text"
                    class="email-subject"

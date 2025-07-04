@@ -189,9 +189,9 @@ function updateComposerElements($emailForm, elements) {
           break;
         }
         case 'subjecttag': {
-          const $subjectTag = $emailForm.find('span.subject.tag');
           const subjectTag = data.requestData.elementData[element];
-          $subjectTag.html(subjectTag);
+          $emailForm.find('.subject.tag.container .content .editable').val(subjectTag);
+          $emailForm.find('.subject.tag.container .content .display').html(subjectTag);
           break;
         }
         default:
@@ -1240,10 +1240,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       clearTimeout(Email.autoSaveTimer);
     }
     Email.autoSaveTimer = null;
-    // add a dummy subject in order to please the save-validator
-    if (fieldset.find('input.email-subject').val() === '') {
-      fieldset.find('input.email-subject').val(t(appName, 'Dummy Autosave Subject'));
-    }
     applyComposerControls(
       {
         operation: 'save',
@@ -1616,6 +1612,24 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .off('blur')
     .on('blur', function(event) {
       return carbonCopyBlur.call(this, event, 'BCC');
+    });
+
+  const $subjectTagContainer = fieldset.find('.subject.tag.container');
+  const $subjectTagContentDisplay = $subjectTagContainer.find('.content .display');
+  const $subjectTagContentEditable = $subjectTagContainer.find('.content .editable');
+  $subjectTagContainer
+    .find('.button.edit-subject-tag')
+    .off('click')
+    .on('click', function(event) {
+      $subjectTagContainer.removeClass('display').addClass('edit');
+      return false;
+    });
+  $subjectTagContentEditable
+    .off('blur')
+    .on('blur', function(event) {
+      $subjectTagContentDisplay.html($subjectTagContentEditable.val());
+      $subjectTagContainer.addClass('display').removeClass('edit');
+      return false;
     });
 
   /*************************************************************************

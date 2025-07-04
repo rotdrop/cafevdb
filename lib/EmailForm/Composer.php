@@ -149,13 +149,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 Mit den besten Grüßen,
 <p>
 Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
-<p>
-P.s.:
-Sie erhalten diese Email, weil Sie schon einmal mit dem Orchester
-Camerata Academica Freiburg musiziert haben. Wenn wir Sie aus unserer Datenbank
-löschen sollen, teilen Sie uns das bitte kurz mit, indem Sie entsprechend
-auf diese Email antworten. Wir entschuldigen uns in diesem Fall für die
-Störung.';
+';
   // phpcs:enable
   const GLOBAL_NAMESPACE = 'GLOBAL';
   const MEMBER_NAMESPACE = 'MEMBER';
@@ -3870,12 +3864,13 @@ Störung.';
    */
   private function setSubjectTag(?int $recipientsSet = null):void
   {
+    $userSubjectTag = $this->cgiValue('subjectTag');
     $recipientsSet = $recipientsSet ?? $this->recipientsFilter->getUserBase();
     if ($recipientsSet & RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST) {
       if ($this->projectId <= 0 || $this->projectName == '') {
         $this->messageTag = ''; // the mailing list has its own tag
       } else {
-        $this->messageTag = '[' . $this->projectName . ']'; // keep the project name as tag
+        $this->messageTag = '[' . $this->projectName . ']'; // keep the project name as tag in addition
       }
     } elseif ($recipientsSet & RecipientsFilter::PROJECT_MAILING_LIST) {
       $this->messageTag = ''; // the mailing list has its own tag
@@ -3884,12 +3879,15 @@ Störung.';
       if (!empty($tagPrefix)) {
         $tagPrefix = $tagPrefix . '-';
       }
-      if ($this->projectId <= 0 || $this->projectName == '') {
-        // TRANSLATORS: email prefix when writing to all musicians
-        $this->messageTag = '[' . $tagPrefix . ucfirst($this->l->t('ALL_PERSONS: musicians')) . ']';
-      } else {
-        $this->messageTag = '[' . $tagPrefix . $this->projectName . ']';
+      if (empty($userSubjectTag)) {
+        if ($this->projectId <= 0 || $this->projectName == '') {
+          // TRANSLATORS: email prefix when writing to all musicians
+          $userSubjectTag = ucfirst($this->l->t('ALL_PERSONS: musicians'));
+        } else {
+          $userSubjectTag = $this->projectName;
+        }
       }
+      $this->messageTag = '[' . $tagPrefix . $userSubjectTag . ']';
     }
   }
 
@@ -4586,21 +4584,12 @@ Störung.';
   }
 
   /**
-   * Store a draft message. The only constraint on the "operator
-   * behaviour" is that the subject must not be empty. Otherwise in
-   * any way incomplete messages may be stored as drafts.
+   * Store a draft message.
    *
    * @return bool The execution status.
    */
   public function storeDraft():bool
   {
-    if ($this->subject() == '') {
-      $this->diagnostics[self::DIAGNOSTICS_SUBJECT_VALIDATION] = $this->messageTag;
-      return $this->executionStatus = false;
-    } else {
-      $this->diagnostics[self::DIAGNOSTICS_SUBJECT_VALIDATION] = true;
-    }
-
     // autoSave is the flag programmatically submitted by the ajax-call,
     // draftAutoSave is that state of the auto-save enable button.
     $autoSave = $this->requestParameters[self::POST_TAG]['autoSave'] ?? null;
