@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use DateTime;
 
-use IRequest;
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
