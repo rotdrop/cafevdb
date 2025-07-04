@@ -132,7 +132,7 @@ class ProjectParticipant implements \ArrayAccess
     $this->projectInstruments = new ArrayCollection();
     $this->musician = $musician;
     $this->project = $project;
-    $this->participationStatus = $musician ? $musician->getDefaultParticipationStatus() : Types\ParticipationStatus::REGULAR();
+    $this->participationStatus = $musician ? $musician->getDefaultParticipationStatus() : Types\EnumParticipationStatus::REGULAR();
   }
   // phpcs:enable
 
