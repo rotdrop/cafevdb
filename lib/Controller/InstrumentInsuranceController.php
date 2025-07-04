@@ -72,7 +72,7 @@ class InstrumentInsuranceController extends Controller
   {
     $errorMessages = [];
     $message = [];
-    $cgiPrefix  = $this->pme->cgiDataName();
+    $cgiPrefix  = $this->phpMyEdit->cgiDataName();
     $pmeData = $this->getPrefixParams($cgiPrefix);
     switch ($template) {
       case 'insurance-brokers':
