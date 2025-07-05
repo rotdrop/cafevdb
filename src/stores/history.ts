@@ -190,7 +190,7 @@ export default defineStore(storeId, () => {
       if (arg.post && !requestData[this._hash]) {
         requestData[this._hash] = Object.freeze(sanitizePostData(arg.post, true /* excludeUrlParams */));
       }
-      logger.info('REPLACE HASH REQUEST DATA', { post: this.post });
+      logger.debug('REPLACE HASH REQUEST DATA', { post: this.post });
     };
     // just convert _hash to hash.
     toJSON() {
@@ -262,13 +262,14 @@ export default defineStore(storeId, () => {
     if (document.visibilityState === 'hidden' && routerHistoryKeys.value.length > 1) {
       const historySaveRecord = prepareHistorySaveRecord();
       SessionStorage.setItem(sessionStorageHistoryKey, historySaveRecord);
+      // logger.debug('SESSION STORAGE HISTORY', JSON.stringify(historySaveRecord, undefined, 2));
     }
   };
 
   const getSessionStorageHistoryData = ():HistoryPersistenceRecord|null => {
     try {
       const historyData = SessionStorage.getItem(sessionStorageHistoryKey);
-      logger.debug('GOT HISTORY DATA', historyData);
+      logger.debug('GOT HISTORY DATA', JSON.stringify(historyData, undefined, 2));
       // SessionStorage.removeItem(sessionStorageHistoryKey);
       return historyData;
     } catch (error) {
@@ -412,7 +413,7 @@ export default defineStore(storeId, () => {
     pendingHistoryKey.value = undefined;
     logger.debug('terminateHistoryAction()', {
       resolve,
-      history:  { ...routerHistory.value },
+      history: JSON.parse(JSON.stringify(routerHistory.value)),
       currentHistoryKey: currentHistoryKey.value,
       currentHistoryState: { ...(currentHistoryState.value || { undefined }) },
     });
@@ -573,7 +574,7 @@ export default defineStore(storeId, () => {
         vueSet(history, key, currentState);
         currentState.replaceKey(key);
         currentHistoryKey.value = key;
-        logger.info('Adjusted initial history key', { ...history }, { ...currentHistoryState.value });
+        // logger.debug('Adjusted initial history key', JSON.parse(JSON.stringify(history)), { ...currentHistoryState.value });
       }
       if (currentHistoryState.value.path !== route.fullPath) {
         logger.info('Replacing route path', currentHistoryState.value.path, route.fullPath);
@@ -768,6 +769,11 @@ export default defineStore(storeId, () => {
    * client machine.
    */
   const prepareHistorySaveRecord = ():HistoryPersistenceRecord => {
+    // logger.debug('PREPARE HISTORY SAVE', JSON.stringify({
+    //   position: currentHistoryKey.value,
+    //   currentState: { ...currentHistoryState.value },
+    //   currentRequestData: { ...requestData[currentHistoryState.value.hash] },
+    // }, undefined, 2));
     return {
       position: currentHistoryKey.value,
       requestData, // the post data proper
@@ -1062,7 +1068,7 @@ export default defineStore(storeId, () => {
         scheduleHistoryPush(params);
         await router.push(location);
         delete location.query[force];
-        scheduleHistoryPush(params);
+        scheduleHistoryReplace(params);
         await router.replace(location);
       } catch (error) {
         errorHandler(
@@ -1154,7 +1160,7 @@ export default defineStore(storeId, () => {
       for (const entry of Object.values(historyData.history)) {
         entry.post = historyData.requestData[entry.hash];
       }
-      replaceHistoryStack(historyData.history, historyData.position)
+      replaceHistoryStack(historyData.history, historyData.position);
     }
   });
 
