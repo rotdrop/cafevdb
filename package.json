@@ -151,7 +151,7 @@
     "webpack-merge": "^5.1.4",
     "webpack-node-externals": "^2.5.2",
     "webpack-visualizer-plugin2": "^1.0.0",
-    "xml-loader": "^1.2.1",
+    "xml-loader": "github:MrGazdag/xml-loader#patch-1",
     "xml-reader": "^2.4.3",
     "xml2js": "*"
   },
