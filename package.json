@@ -153,7 +153,7 @@
     "webpack-visualizer-plugin2": "^1.0.0",
     "xml-loader": "github:MrGazdag/xml-loader#patch-1",
     "xml-reader": "^2.4.3",
-    "xml2js": "*"
+    "xml2js": "^0.6.0"
   },
   "engines": {
     "node": "^22.0.0",
