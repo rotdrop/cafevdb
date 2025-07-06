@@ -13,6 +13,10 @@
       "bamarni/composer-bin-plugin": true
     }
   },
+  "scripts": {
+    "post-install-cmd": "bash -c 'rm -f vendor/jpgraph/jpgraph/lib/jpgraph/src/Examples/jpgraph'",
+    "post-update-cmd": "bash -c 'rm -f vendor/jpgraph/jpgraph/lib/jpgraph/src/Examples/jpgraph'"
+  },
   "require": {
     "behat/transliterator": "^1.3.0",
     "chillerlan/php-qrcode": "^4.2",
