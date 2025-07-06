@@ -1263,6 +1263,18 @@ WHERE dsf.id IS NOT NULL',
       },
     ];
 
+    $opts['fdd']['notification_message_id'] = [
+      'name' => $this->l->t('Message-ID'),
+      'input'  => 'R',
+      'options' => 'LFVD',
+      'css'  => [ 'postfix' => [ 'message-id', 'hide-subsequent-lines', ], ],
+      'select' => 'T',
+      'escape' => true,
+      'sort' => true,
+      'tooltip' => $this->toolTipsService['page-renderer:invoices:notification-message-id'],
+      'display|LF' => [ 'popup' => 'data' ],
+    ];
+
     $opts['fdd']['balance_documents_folder_id'] = [
       'name' => $this->l->t('Financial Project Balance'),
       'tab' => [ 'id' => 'documents' ],
@@ -1623,7 +1635,7 @@ WHERE dsf.id IS NOT NULL',
         'php|LF' => [$this, 'compositeRowOnly'],
       ]);
 
-    $opts['fdd']['notification_email_id'] = [
+    $opts['fdd']['notification_message_id'] = [
       'name' => $this->l->t('Message-ID'),
       'input'  => 'R',
       'options' => 'LFVD',

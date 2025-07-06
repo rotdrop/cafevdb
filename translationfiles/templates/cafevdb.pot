@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-06 12:31+0200\n"
+"POT-Creation-Date: 2025-07-07 01:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5049,6 +5049,10 @@ msgid ""
 "absence."
 msgstr ""
 
+#: lib/Maintenance/Migrations/RenameInvoicesNotificationEmailColumn.php:47
+msgid "Cleanup a join column name."
+msgstr ""
+
 #: lib/Maintenance/Migrations/RenameMemberStatusParticipationStatus.php:61
 msgid "Rename member_status to the more neutral participation_status name."
 msgstr ""
@@ -5690,7 +5694,7 @@ msgid "SEPA Bank Accounts"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:185
-#: lib/PageRenderer/Invoices.php:1576
+#: lib/PageRenderer/Invoices.php:1588
 #: lib/PageRenderer/ProjectPayments.php:1353
 #: lib/PageRenderer/SepaBankAccounts.php:623
 #: lib/PageRenderer/SepaBankAccounts.php:701
@@ -5700,7 +5704,7 @@ msgid "Fetching decrypted values in the background."
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:187
-#: lib/PageRenderer/Invoices.php:1578
+#: lib/PageRenderer/Invoices.php:1590
 #: lib/PageRenderer/ProjectPayments.php:1355
 #: lib/PageRenderer/SepaBankAccounts.php:625
 #: lib/PageRenderer/SepaBankAccounts.php:703
@@ -5956,7 +5960,7 @@ msgid "Bulk-transaction data"
 msgstr ""
 
 #: lib/PageRenderer/Invoices.php:504
-#: lib/PageRenderer/Invoices.php:1528
+#: lib/PageRenderer/Invoices.php:1540
 #: lib/PageRenderer/ProjectPayments.php:491
 msgid "Bank Transaction"
 msgstr ""
@@ -6064,43 +6068,44 @@ msgid "Add a new Receivable"
 msgstr ""
 
 #: lib/PageRenderer/Invoices.php:1267
+#: lib/PageRenderer/Invoices.php:1639
+#: lib/PageRenderer/ProjectPayments.php:1404
+msgid "Message-ID"
+msgstr ""
+
+#: lib/PageRenderer/Invoices.php:1279
 #: lib/PageRenderer/ProjectPayments.php:1044
 msgid "Financial Project Balance"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1380
+#: lib/PageRenderer/Invoices.php:1392
 #: lib/PageRenderer/ProjectPayments.php:1157
 msgid "Parts Project Balances"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1546
+#: lib/PageRenderer/Invoices.php:1558
 msgid "Date of Bank Transaction"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1557
+#: lib/PageRenderer/Invoices.php:1569
 #: lib/PageRenderer/ProjectPayments.php:1334
 #: lib/PageRenderer/SepaBulkTransactions.php:428
 msgid "IBAN"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1619
+#: lib/PageRenderer/Invoices.php:1631
 #: lib/PageRenderer/ProjectPayments.php:1396
 #: lib/PageRenderer/SepaBankAccounts.php:808
 #: lib/PageRenderer/SepaBulkTransactions.php:490
 msgid "Mandate Reference"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1627
-#: lib/PageRenderer/ProjectPayments.php:1404
-msgid "Message-ID"
-msgstr ""
-
-#: lib/PageRenderer/Invoices.php:1645
+#: lib/PageRenderer/Invoices.php:1657
 #: lib/PageRenderer/ProjectPayments.php:1422
 msgid "Payments resulting from direct debit transfers cannot be changed."
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1762
+#: lib/PageRenderer/Invoices.php:1774
 #: lib/PageRenderer/ProjectPayments.php:1515
 msgid "Project Balance"
 msgstr ""

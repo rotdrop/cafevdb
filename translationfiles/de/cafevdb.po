@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-06 12:31+0200\n"
+"POT-Creation-Date: 2025-07-07 01:03+0200\n"
 "PO-Revision-Date: 2025-07-06 12:42+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -5683,6 +5683,12 @@ msgstr ""
 "Personendaten-Felder in der Besetzungstabelle mit Terminen verknüpfen, um "
 "Abwesenheit bei Proben modellieren zu können."
 
+#: lib/Maintenance/Migrations/RenameInvoicesNotificationEmailColumn.php:47
+#, fuzzy
+#| msgid "No hidden join column."
+msgid "Cleanup a join column name."
+msgstr "Keine versteckte Verknüpfungsspalte."
+
 #: lib/Maintenance/Migrations/RenameMemberStatusParticipationStatus.php:61
 msgid "Rename member_status to the more neutral participation_status name."
 msgstr ""
@@ -6329,7 +6335,7 @@ msgid "SEPA Bank Accounts"
 msgstr "SEPA Bankverbindungen"
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:185
-#: lib/PageRenderer/Invoices.php:1576 lib/PageRenderer/ProjectPayments.php:1353
+#: lib/PageRenderer/Invoices.php:1588 lib/PageRenderer/ProjectPayments.php:1353
 #: lib/PageRenderer/SepaBankAccounts.php:623
 #: lib/PageRenderer/SepaBankAccounts.php:701
 #: lib/PageRenderer/SepaBulkTransactions.php:450
@@ -6338,7 +6344,7 @@ msgid "Fetching decrypted values in the background."
 msgstr "Entschlüssele Werte im Hintergrund."
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:187
-#: lib/PageRenderer/Invoices.php:1578 lib/PageRenderer/ProjectPayments.php:1355
+#: lib/PageRenderer/Invoices.php:1590 lib/PageRenderer/ProjectPayments.php:1355
 #: lib/PageRenderer/SepaBankAccounts.php:625
 #: lib/PageRenderer/SepaBankAccounts.php:703
 #: lib/PageRenderer/SepaBulkTransactions.php:452
@@ -6592,7 +6598,7 @@ msgstr "Rechnungsdaten"
 msgid "Bulk-transaction data"
 msgstr "Sammelauftragsddaten"
 
-#: lib/PageRenderer/Invoices.php:504 lib/PageRenderer/Invoices.php:1528
+#: lib/PageRenderer/Invoices.php:504 lib/PageRenderer/Invoices.php:1540
 #: lib/PageRenderer/ProjectPayments.php:491
 msgid "Bank Transaction"
 msgstr "Bankauftrag"
@@ -6690,39 +6696,40 @@ msgstr "Operationen"
 msgid "Add a new Receivable"
 msgstr "Eine neue Forderung hinzufügen"
 
-#: lib/PageRenderer/Invoices.php:1267 lib/PageRenderer/ProjectPayments.php:1044
+#: lib/PageRenderer/Invoices.php:1267 lib/PageRenderer/Invoices.php:1639
+#: lib/PageRenderer/ProjectPayments.php:1404
+msgid "Message-ID"
+msgstr "Message-ID"
+
+#: lib/PageRenderer/Invoices.php:1279 lib/PageRenderer/ProjectPayments.php:1044
 msgid "Financial Project Balance"
 msgstr "Gewinn-/Verlustrechung"
 
-#: lib/PageRenderer/Invoices.php:1380 lib/PageRenderer/ProjectPayments.php:1157
+#: lib/PageRenderer/Invoices.php:1392 lib/PageRenderer/ProjectPayments.php:1157
 msgid "Parts Project Balances"
 msgstr "Projekt-Bilanz Teilzahlungen"
 
-#: lib/PageRenderer/Invoices.php:1546
+#: lib/PageRenderer/Invoices.php:1558
 msgid "Date of Bank Transaction"
 msgstr "Datum des Bankauftrags"
 
-#: lib/PageRenderer/Invoices.php:1557 lib/PageRenderer/ProjectPayments.php:1334
+#: lib/PageRenderer/Invoices.php:1569 lib/PageRenderer/ProjectPayments.php:1334
 #: lib/PageRenderer/SepaBulkTransactions.php:428
 msgid "IBAN"
 msgstr "IBAN"
 
-#: lib/PageRenderer/Invoices.php:1619 lib/PageRenderer/ProjectPayments.php:1396
+#: lib/PageRenderer/Invoices.php:1631 lib/PageRenderer/ProjectPayments.php:1396
 #: lib/PageRenderer/SepaBankAccounts.php:808
 #: lib/PageRenderer/SepaBulkTransactions.php:490
 msgid "Mandate Reference"
 msgstr "Mandatsreferenz"
 
-#: lib/PageRenderer/Invoices.php:1627 lib/PageRenderer/ProjectPayments.php:1404
-msgid "Message-ID"
-msgstr "Message-ID"
-
-#: lib/PageRenderer/Invoices.php:1645 lib/PageRenderer/ProjectPayments.php:1422
+#: lib/PageRenderer/Invoices.php:1657 lib/PageRenderer/ProjectPayments.php:1422
 msgid "Payments resulting from direct debit transfers cannot be changed."
 msgstr ""
 "Zahlung, die von Lastschriften herrühren, können nicht geändert werden."
 
-#: lib/PageRenderer/Invoices.php:1762 lib/PageRenderer/ProjectPayments.php:1515
+#: lib/PageRenderer/Invoices.php:1774 lib/PageRenderer/ProjectPayments.php:1515
 msgid "Project Balance"
 msgstr "Projekt-Bilanz"
 
@@ -21925,9 +21932,6 @@ msgstr "Zeigt einfach alle Spalten an."
 
 #~ msgid "More than one hidden join-column."
 #~ msgstr "Mehr als eine versteckte Verknüpfungs-Spalte."
-
-#~ msgid "No hidden join column."
-#~ msgstr "Keine versteckte Verknüpfungsspalte."
 
 #~ msgid "days"
 #~ msgstr "Tage"

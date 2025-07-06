@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;
  * Invoices collects a couple of InvoiceItems of the same Musician.
  */
 #[ORM\Table(name: 'Invoices')]
-#[ORM\UniqueConstraint(columns: ['notification_email_id'])]
+#[ORM\UniqueConstraint(columns: ['notification_message_id'])]
 #[ORM\UniqueConstraint(columns: ['invoice_number'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InvoicesRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -222,7 +222,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * Pre notification email sent out to the recipients.
    */
-  #[ORM\JoinColumn(name: 'notification_email_id', referencedColumnName: 'message_id', nullable: true)]
+  #[ORM\JoinColumn(name: 'notification_message_id', referencedColumnName: 'message_id', nullable: true)]
   #[ORM\OneToOne(targetEntity: SentEmail::class, inversedBy: 'invoice')]
   private $notificationEmail;
 
