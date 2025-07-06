@@ -2464,7 +2464,6 @@
     "Message delivery in progress" : "Nachrichten-Auslieferung ist im Gang",
     "Message Delivery Status" : "Em@il-Sende-Monitor",
     "Email sending is in progress. Leaving the page now will cancel the email submission." : "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\nVorgang möglicherweise abbrechen.",
-    "Dummy Autosave Subject" : "Pro-forma Autosave-Betreff",
     "Do you want to delete the auto-save backup copy of the current message-draft (id = {id})?<br/>If you answer \"no\" then the current message will be saved again and marked as manually saved. It will then linger on until you or someone else deletes it manually." : "Möchten Sie die automatisch erzeugte Sicherungs-Kopie der aktuellen Nachricht (id= {id}) löschen?<br/>\nFalls Sie mit \"nein\" antworten, wird die aktuelle Sicherungskopie erneut gespeichert und als explizite Sicherung markiert. Die Kopie verbleibt dann auf dem Server, bis Sie oder jemand anders die Kopie aktiv löscht.",
     "Delete Auto-Save Draft?" : "Automatische Sicherungskopie löschen?",
     "Draft-auto-save interval set to {seconds} seconds." : "Automatische Sicherungskopie alle {seconds} Sekunden.",
