@@ -737,7 +737,7 @@ WHERE dsf.id IS NOT NULL',
 
     $opts['fdd']['invoice_number'] = [
       'name'     => $this->l->t('Invoice Number'),
-      'tab' => [ 'id' => 'invoice' ],
+      'tab' => [ 'id' => 'tab-all' ],
       'input'    => '', // 'M', automatically determined.
       'select'   => 'T',
       'options'  => 'LACPDV',

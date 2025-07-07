@@ -365,6 +365,24 @@ class InvoicesStorage extends Storage
       return false;
     }
 
+    $readMeFileNames = $this->getReadMeFactory()->getReadMeFileNames();
+
+    /** @var Entity $invoice2 */
+    $invoice2 = $this->entityRepository->findInvoiceByFileName(self::pathInfo($dirName2, PATHINFO_BASENAME));
+    if ($invoice2 && $invoice2->getNotificationEmail() && !in_array($baseName2, $readMeFileNames)) {
+      $this->logError('Destination directory "' . $dirName2 . '" refers to a sent-out invoice and "' . $baseName2 . '" is not a README filename, denying changes.');
+      // @todo cleanup path1 if it is a temporary file
+      return false;
+    }
+
+    /** @var Entity $invoice1 */
+    $invoice1 = $this->entityRepository->findInvoiceByFileName(self::pathInfo($dirName1, PATHINFO_BASENAME));
+    if ($invoice1 && $invoice1->getNotificationEmail() && !str_contains($baseName1, 'ocTransferId')) {
+      $this->logError('Source directory "' . $dirName1 . '" refers to a sent-out invoice and "' . $baseName1 . '" is not a README upload file, , denying changes.');
+      // @todo cleanup path1 if it is a temporary file
+      return false;
+    }
+
     if ($dirEntry instanceof InMemoryFileNode) {
       $dirEntry = $this->persistInMemoryFileNode($dirEntry);
     }
