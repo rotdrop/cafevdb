@@ -121,8 +121,8 @@ function dialogFullScreenButton(dialogHolder, onChangeCallback) {
   const button = $('<button class="fullScreenButton customDialogHeaderButton" title="' + buttonTitle + '"></button>');
   button.button({
     label: '_',
-    icons: { primary: 'ui-icon-arrow-4-diag', secondary: null },
-    text: false,
+    icon: 'ui-icon-arrow-4-diag',
+    showLabel: false,
   });
   dialogWidget.find('.ui-dialog-titlebar').append(button);
   button.cafevTooltip({ placement: 'auto' });
