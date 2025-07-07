@@ -392,6 +392,9 @@ class ProjectParticipantsStorage extends Storage
         if (empty($subFolder)) {
           $subFolder = $folderEntity->addSubFolder($component);
           $this->persist($subFolder);
+          if ($flush) {
+            $this->flush();
+          }
         }
         $folderEntity = $subFolder;
       }
