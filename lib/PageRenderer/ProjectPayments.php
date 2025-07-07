@@ -182,7 +182,7 @@ GROUP BY __t1.id',
   GROUP_CONCAT(DISTINCT __t1.project_id) AS project_ids,
   __t1.musician_id,
   __t1.composite_payment_id
-FROM ".self::PROJECT_PAYMENTS_TABLE." __t1
+FROM ".self::PROJECT_PAYMENTS_TABLE." __t1@WHERE_PLACEHOLDER_T1@
 GROUP BY __t1.composite_payment_id
 UNION
 SELECT
@@ -201,7 +201,7 @@ SELECT
   __t2.project_id AS project_ids,
   __t2.musician_id,
   __t2.composite_payment_id
-FROM " . self::PROJECT_PAYMENTS_TABLE . " __t2",
+FROM " . self::PROJECT_PAYMENTS_TABLE . " __t2@WHERE_PLACEHOLDER_T2@",
      'entity' => Entities\ProjectPayment::class,
       'identifier' => [
         'id' => false,
@@ -545,10 +545,18 @@ WHERE dsf.id IS NOT NULL',
       'sort'     => true,
     ];
 
-    if ($this->projectMode) {
-      $this->joinStructure[self::PROJECT_PAYMENTS_TABLE]['sql'] .= '
-WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this->projectId;
-    }
+    $projectPaymentsPlaceHolder = [
+      '@WHERE_PLACEHOLDER_T1@',
+      '@WHERE_PLACEHOLDER_T2@',
+    ];
+    $projectPaymentsReplacement = $projectMode
+      ? [ ' WHERE __t1.project_id = ' . $this->projectId, ' WHERE __t2.project_id = ' . $this->projectId, ]
+    : [ '', '' ];
+    $this->joinStructure[self::PROJECT_PAYMENTS_TABLE]['sql'] = str_replace(
+      $projectPaymentsPlaceHolder,
+      $projectPaymentsReplacement,
+      $this->joinStructure[self::PROJECT_PAYMENTS_TABLE]['sql'],
+    );
     $this->defineJoinStructure($opts);
 
     $opts['fdd']['sepa_transaction_id'] = [
@@ -2074,7 +2082,8 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
   {
     $rowTag = $row[$this->queryField($this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE))];
     if (empty($rowTag)) {
-      $this->logException(new \Exception('blah'));
+      $key = $this->queryField($this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE));
+      $this->logException(new \Exception('EMPTY ROW TAG, KEY ' . $key . ' ' . print_r($row, true)));
     }
     return $this->isCompositeRowTag($rowTag);
   }
@@ -2200,14 +2209,23 @@ WHERE __t1.project_id = ' . $this->projectId . ' AND __t2.project_id = ' . $this
     list($projectId, $fieldId, $optionKey) = explode(self::COMP_KEY_SEP, $receivable, 3);
 
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-    $fieldDatum = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)->find([
+    $fieldDatum = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)->findOneBy([
       'field' => $fieldId,
       'project' => $projectId,
       'musician' => $musicianId,
       'optionKey' => $optionKey,
     ]);
     if (empty($fieldDatum)) {
-      $this->logError('Cannot find field-datum for musician ' . $musicianId . ' and option-key ' . $optionKey);
+      $this->logError(
+	'Cannot find field-datum for musician '
+      . $musicianId . ' and option-key ' . $optionKey
+      . print_r([
+	'field' => $fieldId,
+	'project' => $projectId,
+	'musician' => $musicianId,
+	'optionKey' => $optionKey,
+      ], true));
+
       return $value;
     }
     $filesAppAnchor = $this->getFilesAppAnchor($fieldDatum->getField(), $fieldDatum->getMusician());
