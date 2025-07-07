@@ -61,6 +61,7 @@ use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\IMAPService;
 use OCA\CAFEVDB\Service\InstrumentationService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
@@ -4360,7 +4361,14 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     $this->draftId = 0; // avoid accidental overwriting
 
+    $mailingLists = [];
+    foreach ([RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY, RecipientsFilter::PROJECT_MAILING_LIST_KEY] as $listKey) {
+      $mailingLists[$listKey] = $this->recipientsFilter->getMailingListInfo($listKey);
+    }
+    $mailingLists = array_filter($mailingLists);
+
     $recipients = [];
+    $mailingListMusicianIds = [];
     foreach (explode(';', $sentEmail->getBulkRecipients()) as $recipient) {
       try {
         $emailRecord = $this->emailAddressService->parseAddressString($recipient);
@@ -4371,9 +4379,31 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       if (count($emailRecord) != 1) {
         continue;
       }
-      $recipients[] = array_key_first($emailRecord);
+      $emailAddress = array_key_first($emailRecord);
+      foreach ($mailingLists as $listKey => $listInfo) {
+        if ($emailAddress != $listInfo[MailingListsService::LIST_INFO_FQDN_LISTNAME]) {
+          continue;
+        }
+        switch ($listKey) {
+          case RecipientsFilter::PROJECT_MAILING_LIST_KEY:
+            $participants = $this->getDatabaseRepository(Entities\ProjectParticipant::class)->findBy([
+              'registration' => 1,
+              'project' => $this->project,
+              '(|deleted' => null,
+              '>=deleted' => new DateTimeImmutable(),
+            ]);
+            $mailingListMusicianIds = array_map(fn(Entities\ProjectParticipant $participant) => $participant->getMusician()->getId(), $participants);
+            continue 3;
+          case RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY:
+            break;
+        }
+      }
+      $recipients[] = $emailAddress;
     }
-    $musicianIds = $this->getDatabaseRepository(Entities\Musician::class)->fetchIds([ 'email' => $recipients ]);
+    $musicianIds = array_merge(
+      $this->getDatabaseRepository(Entities\Musician::class)->fetchIds([ 'email' => $recipients ]),
+      $mailingListMusicianIds,
+    );
 
     $this->recipientsFilter->setSelectedRecipients($musicianIds);
     $this->recipients = $this->recipientsFilter->selectedRecipients();
