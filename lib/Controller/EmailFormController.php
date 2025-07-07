@@ -486,6 +486,12 @@ class EmailFormController extends Controller
 
             $emailDraftAutoSave = $this->getEmailDraftAutoSave();
 
+            $subjectTagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+            $subjectTag = trim($composer->subjectTag(), '[]');
+            if (!empty($subjectTagPrefix) && str_starts_with($subjectTag, $subjectTagPrefix)) {
+              $subjectTag = substr($subjectTag, strlen($subjectTagPrefix) + 1);
+            }
+
             $templateParameters = [
               'appName' =>  $this->appName(),
               'appNameTag' => 'app-' . $this->appName,
@@ -502,7 +508,8 @@ class EmailFormController extends Controller
               'TO' => $composer->toStringArray(),
               'BCC' => $composer->blindCarbonCopy(),
               'CC' => $composer->carbonCopy(),
-              'subjectTag' => $composer->subjectTag(),
+              'subjectTagPrefix' => $subjectTagPrefix,
+              'subjectTag' => $subjectTag,
               'subject' => $composer->subject(),
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),
@@ -607,6 +614,12 @@ class EmailFormController extends Controller
 
             $emailDraftAutoSave = $this->getEmailDraftAutoSave();
 
+            $subjectTagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+            $subjectTag = trim($composer->subjectTag(), '[]');
+            if (!empty($subjectTagPrefix) && str_starts_with($subjectTag, $subjectTagPrefix)) {
+              $subjectTag = substr($subjectTag, strlen($subjectTagPrefix) + 1);
+            }
+
             $templateParameters = [
               'appName' =>  $this->appName(),
               'appNameTag' => 'app-' . $this->appName,
@@ -623,7 +636,8 @@ class EmailFormController extends Controller
               'TO' => $composer->toStringArray(),
               'BCC' => $composer->blindCarbonCopy(),
               'CC' => $composer->carbonCopy(),
-              'subjectTag' => $composer->subjectTag(),
+              'subjectTagPrefix' => $subjectTagPrefix,
+              'subjectTag' => $subjectTag,
               'subject' => $composer->subject(),
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),
