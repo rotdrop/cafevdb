@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -1518,6 +1518,9 @@ trait ParticipantFieldsTrait
               // generate the per-option input rows
 
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              if (empty($musician)) {
+                return '';
+              }
               $subDir = $this->participantFieldsService->getFileSystemFieldName($field);
               $rowHtml = '';
               $hasEmptyLabelledValues = false;

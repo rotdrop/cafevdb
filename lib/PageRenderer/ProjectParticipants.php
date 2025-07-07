@@ -1364,6 +1364,9 @@ GROUP BY t.id';
           case 'change':
           case 'display':
             list('musician' => $musician, 'categories' => $categories) = $this->musicianFromRow($row, $pme);
+            if ($musician === null) {
+              return '';
+            }
             $vcard = $this->contactsService->export($musician);
             unset($vcard->PHOTO); // too much information
             $categories = array_merge($categories, $vcard->CATEGORIES->getParts());
