@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-07 01:03+0200\n"
-"PO-Revision-Date: 2025-07-06 12:42+0200\n"
+"POT-Creation-Date: 2025-07-07 13:53+0200\n"
+"PO-Revision-Date: 2025-07-07 13:55+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1324,7 +1324,7 @@ msgstr "Eingangsdatum"
 
 #: lib/Command/SentNotifications.php:263
 #: lib/PageRenderer/DonationReceipts.php:473
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1579
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1582
 #: lib/PageRenderer/Invoices.php:927 lib/PageRenderer/Invoices.php:948
 #: lib/PageRenderer/ProjectPayments.php:715
 #: lib/PageRenderer/ProjectPayments.php:736
@@ -2102,7 +2102,7 @@ msgstr "Der Hersteller wurde nicht angegeben."
 #: lib/Documents/OpenDocumentFiller.php:385
 #: lib/Documents/OpenDocumentFiller.php:388
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:146
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2452
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2455
 #: lib/PageRenderer/Projects.php:812 lib/PageRenderer/Projects.php:820
 #: lib/Service/Finance/InstrumentInsuranceService.php:611
 #: lib/Service/Finance/InstrumentInsuranceService.php:615
@@ -2168,7 +2168,7 @@ msgstr "Fehler während der Serienbrief-Erstellung: \"%s\""
 
 #. TRANSLATORS: folder-name
 #: lib/Controller/MailMergeController.php:497
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1541
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1544
 #: lib/PageRenderer/Invoices.php:500
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:65
 msgid "Documents"
@@ -5431,7 +5431,7 @@ msgid "Unable to initialize asymmetric key-pair for user \"%s\"."
 msgstr "Kann kein Schlüsselpaar für die Person \"%s\" erzeugen."
 
 #: lib/Listener/ProjectParticipantEntityListener.php:103
-#: lib/PageRenderer/ProjectParticipants.php:1577
+#: lib/PageRenderer/ProjectParticipants.php:1580
 #, php-format
 msgid ""
 "Confirmed project participants cannot have a participation status of \"%s\"."
@@ -5440,7 +5440,7 @@ msgstr ""
 "werden."
 
 #: lib/Listener/ProjectParticipantEntityListener.php:115
-#: lib/PageRenderer/ProjectParticipants.php:1594
+#: lib/PageRenderer/ProjectParticipants.php:1597
 #, php-format
 msgid ""
 "The participation-status cannot be set to \"%1$s\" as long as the "
@@ -5684,10 +5684,8 @@ msgstr ""
 "Abwesenheit bei Proben modellieren zu können."
 
 #: lib/Maintenance/Migrations/RenameInvoicesNotificationEmailColumn.php:47
-#, fuzzy
-#| msgid "No hidden join column."
 msgid "Cleanup a join column name."
-msgstr "Keine versteckte Verknüpfungsspalte."
+msgstr "Den Namen einer Verknüpfungsspalte etwas aufpolieren."
 
 #: lib/Maintenance/Migrations/RenameMemberStatusParticipationStatus.php:61
 msgid "Rename member_status to the more neutral participation_status name."
@@ -5838,7 +5836,7 @@ msgstr "Verschiedenes"
 #: lib/PageRenderer/InstrumentInsurances.php:237
 #: lib/PageRenderer/Invoices.php:508 lib/PageRenderer/Musicians.php:284
 #: lib/PageRenderer/ProjectParticipantFields.php:277
-#: lib/PageRenderer/ProjectParticipants.php:1795
+#: lib/PageRenderer/ProjectParticipants.php:1798
 #: lib/PageRenderer/ProjectPayments.php:495
 #: lib/PageRenderer/SepaBankAccounts.php:1129
 #: lib/PageRenderer/SepaBulkTransactions.php:276
@@ -5929,7 +5927,7 @@ msgstr "Löschdatum"
 
 #: lib/PageRenderer/DonationReceipts.php:751 lib/PageRenderer/Musicians.php:995
 #: lib/PageRenderer/ProjectAssociates.php:1147
-#: lib/PageRenderer/ProjectParticipants.php:1402
+#: lib/PageRenderer/ProjectParticipants.php:1405
 #: lib/PageRenderer/Projects.php:1019
 #: lib/PageRenderer/TaxExemptionNotices.php:444
 msgid "Last Updated"
@@ -5939,7 +5937,7 @@ msgstr "Letzte Aktualisierung"
 #: lib/PageRenderer/DonationReceipts.php:764
 #: lib/PageRenderer/Musicians.php:1008
 #: lib/PageRenderer/ProjectAssociates.php:1159
-#: lib/PageRenderer/ProjectParticipants.php:1414
+#: lib/PageRenderer/ProjectParticipants.php:1417
 #: lib/PageRenderer/TaxExemptionNotices.php:457 src/toolkit/util/ajax.js:38
 msgid "Created"
 msgstr "Erzeugt"
@@ -6011,7 +6009,7 @@ msgid "Orchestra Contact"
 msgstr "Orchester-Kontakt"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:535
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1549
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1552
 #: lib/PageRenderer/SepaBulkTransactions.php:612
 msgid "Date"
 msgstr "Datum"
@@ -6184,13 +6182,13 @@ msgstr "Auf Voreinstellung zurücksetzen."
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:878
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1162
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1283
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1776
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2038
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1779
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2041
 msgid "sub-totals"
 msgstr "Zwischensumme"
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:544
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1546
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1549
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -6215,45 +6213,45 @@ msgstr "Der Dateiordner ist leer."
 msgid "Label for %s"
 msgstr "Kennzeichung für %s"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1540
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1543
 msgid "Value"
 msgstr "Wert"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1545
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1548
 #, php-format
 msgid "Value [%s]"
 msgstr "Wert [%s]"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1552
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1555
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1556
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1559
 msgid "File"
 msgstr "Datei"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1578
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1581
 #: lib/PageRenderer/SepaBulkTransactions.php:658
 msgid "Actions"
 msgstr "Aktionen"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1628
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1728
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1832
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1631
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1731
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1835
 msgid "without group"
 msgstr "Ohne Gruppe"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1695
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1915
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2004
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1698
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1918
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2007
 msgid "deleted"
 msgstr "gelöscht"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1843
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1846
 msgid "add to this group"
 msgstr "zu dieser Gruppe hinzufügen"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2327
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2330
 #, php-format
 msgid ""
 "Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: "
@@ -6262,7 +6260,7 @@ msgstr ""
 "Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt "
 "\"%s\""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2471
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2474
 #, php-format
 msgid ""
 "Number %d of requested participants for group %s is larger than the number "
@@ -6763,7 +6761,7 @@ msgid "Instruments and Status"
 msgstr "Instrumente und Status"
 
 #: lib/PageRenderer/Musicians.php:275
-#: lib/PageRenderer/ProjectParticipants.php:1778
+#: lib/PageRenderer/ProjectParticipants.php:1781
 msgid "Contact Information"
 msgstr "Kontaktinformation"
 
@@ -7445,27 +7443,27 @@ msgstr "Alle Instrumente"
 msgid "Announcements List"
 msgstr "Ankündigungs-Email-Verteiler"
 
-#: lib/PageRenderer/ProjectParticipants.php:1754
+#: lib/PageRenderer/ProjectParticipants.php:1757
 #: lib/Service/InstrumentationService.php:181
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: lib/PageRenderer/ProjectParticipants.php:1759
+#: lib/PageRenderer/ProjectParticipants.php:1762
 #: lib/Service/InstrumentationService.php:186
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1766
+#: lib/PageRenderer/ProjectParticipants.php:1769
 #: lib/Service/InstrumentationService.php:193
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1783
+#: lib/PageRenderer/ProjectParticipants.php:1786
 #: lib/Service/InstrumentationService.php:205
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1790
+#: lib/PageRenderer/ProjectParticipants.php:1793
 #: lib/PageRenderer/SepaBankAccounts.php:1122
 msgid "Miscinfo"
 msgstr "Verschiedenes"
@@ -13606,27 +13604,27 @@ msgstr "Rechnung"
 msgid "Root-folder does not exist."
 msgstr "Das Wurzel-Verzeichnis existiert nicht."
 
-#: lib/Storage/Database/InvoicesStorage.php:415
+#: lib/Storage/Database/InvoicesStorage.php:433
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:443
 #: lib/Storage/Database/TaxExemptionNoticesStorage.php:238
 #, php-format
 msgid "Unable to find database entity for path \"%s\"."
 msgstr "Kann die Datenbank-Entität zum Pfad \"%s\" nicht finden."
 
-#: lib/Storage/Database/InvoicesStorage.php:420
+#: lib/Storage/Database/InvoicesStorage.php:438
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:448
 #: lib/Storage/Database/TaxExemptionNoticesStorage.php:243
 #, php-format
 msgid "Path \"%s\" is a directory."
 msgstr "Der Pfad \"%s\" gehört zu einem Verzeichnis."
 
-#: lib/Storage/Database/InvoicesStorage.php:427
+#: lib/Storage/Database/InvoicesStorage.php:445
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:455
 #, php-format
 msgid "Unable to find document container for path \"%s\"."
 msgstr "Kann den Beleg-Container zum Pfad \"%s\" nicht finden."
 
-#: lib/Storage/Database/InvoicesStorage.php:433
+#: lib/Storage/Database/InvoicesStorage.php:451
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:461
 #, php-format
 msgid "The directory entry \"%s\" is not linked to a file."
@@ -20030,7 +20028,6 @@ msgstr "Geschäftspartner*in"
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY = 'not an instrument';
 #: lib/Maintenance/Migrations/EnsureNotAnInstrumentBusinessRelation.php:70
 #: lib/Maintenance/Migrations/EnsureNotAnInstrumentBusinessRelation.php:74
-#: lib/PageRenderer/#ProjectParticipants.php#:256
 #: lib/PageRenderer/FieldTraits/InstrumentsTrait.php:62
 #: lib/PageRenderer/ProjectParticipants.php:256
 #, php-format

@@ -945,7 +945,7 @@
     "Drop some unused columns in the participant fields table" : "Entferne einige unnötige Spalten aus den Personen-Daten-Feldern.",
     "Add \"liabilities\" as new field-type in order to avoid negative numbers in the UI." : "Neuer Datentyp \"Verbindlichkeiten\" für die Personen-Daten, um negative Zahlen im Frontend zu vermeiden.",
     "Link optional per participant fields to project events in order to record absence." : "Personendaten-Felder in der Besetzungstabelle mit Terminen verknüpfen, um Abwesenheit bei Proben modellieren zu können.",
-    "Cleanup a join column name." : "Keine versteckte Verknüpfungsspalte.",
+    "Cleanup a join column name." : "Den Namen einer Verknüpfungsspalte etwas aufpolieren.",
     "Rename member_status to the more neutral participation_status name." : "Umbenennen von \"member_status\" zum neutralerem \"participation_status\"",
     "Sanitize some storage identifiers." : "Einige Dateispeicher ids aufräumen.",
     "Replace \"%1$s\" by \"%2$s\" in the filenames for the mailing list auto-response templates." : "Ersetze \"%1$s\" durch \"%2$s\" in den Dateinamen für die automatischen Antworten der Mailinglisten.",
