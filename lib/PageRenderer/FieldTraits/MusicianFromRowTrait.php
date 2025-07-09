@@ -64,7 +64,7 @@ trait MusicianFromRowTrait
    */
   protected function musicianFromRow(array $row, ?PHPMyEdit $pme = null)
   {
-    $this->logInfo('FILTERED ROW ' . print_r(array_filter($row), true));
+    // $this->logInfo('FILTERED ROW ' . print_r(array_filter($row), true));
     if (empty(array_filter($row, fn(mixed $value) => !empty($value) && $value !== '0.00'))) {
       return [ 'musician' => null, 'categories' => [] ];
     }
