@@ -1436,7 +1436,7 @@ class EntityManager extends EntityManagerDecorator
     $locale = $this->getLocaleCode($l10n);
     $oldLocale = $this->getLocaleCode($this->translatableL10n);
     if ($oldLocale != $this->translatable->getTranslatableLocale()) {
-      throw new UnexpectedValueException($this->l->t('Unexpected locate settings "%1$s" vs. "%2$s".', [
+      throw new UnexpectedValueException($this->l->t('Unexpected locale settings "%1$s" vs. "%2$s".', [
         $oldLocale, $this->translatable->getTranslatableLocale(),
       ]));
     }
