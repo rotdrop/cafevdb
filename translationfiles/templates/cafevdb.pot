@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-11 20:54+0200\n"
+"POT-Creation-Date: 2025-07-11 21:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -11196,7 +11196,7 @@ msgid "Project Participant-Fields"
 msgstr ""
 
 #: lib/Service/ToolTipsDataService.php:1523
-msgid "Received Payments"
+msgid "Bank-Transaktionen"
 msgstr ""
 
 #: lib/Service/ToolTipsDataService.php:1524
@@ -11292,7 +11292,9 @@ msgid ""
 msgstr ""
 
 #: lib/Service/ToolTipsDataService.php:1545
-msgid "A table holding the various payments of participants."
+msgid ""
+"A table holding the various payments and reimbursements of participants, as "
+"well as bank transfers to external parties."
 msgstr ""
 
 #: lib/Service/ToolTipsDataService.php:1546

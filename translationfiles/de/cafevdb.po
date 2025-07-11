@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-11 20:54+0200\n"
+"POT-Creation-Date: 2025-07-11 21:16+0200\n"
 "PO-Revision-Date: 2025-07-11 20:54+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -13129,8 +13129,10 @@ msgid "Project Participant-Fields"
 msgstr "Verwaltung Tabellen-Spalten"
 
 #: lib/Service/ToolTipsDataService.php:1523
-msgid "Received Payments"
-msgstr "Eingegangene Zahlungen"
+#, fuzzy
+#| msgid "Bank Transaction"
+msgid "Bank-Transaktionen"
+msgstr "Bankauftrag"
 
 #: lib/Service/ToolTipsDataService.php:1524
 msgid "All Projects"
@@ -13251,7 +13253,11 @@ msgstr ""
 "Projektbezug."
 
 #: lib/Service/ToolTipsDataService.php:1545
-msgid "A table holding the various payments of participants."
+#, fuzzy
+#| msgid "A table holding the various payments of participants."
+msgid ""
+"A table holding the various payments and reimbursements of participants, as "
+"well as bank transfers to external parties."
 msgstr "Daten-Tabelle mit allen Zahlungen der Teilnehmenden."
 
 #: lib/Service/ToolTipsDataService.php:1546
@@ -20182,6 +20188,9 @@ msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr "Zeigt einfach alle Spalten an."
+
+#~ msgid "Received Payments"
+#~ msgstr "Eingegangene Zahlungen"
 
 #~ msgid ""
 #~ "Add additional data-fields to the instrumenation table for the project."
