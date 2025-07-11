@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-09 11:03+0200\n"
-"PO-Revision-Date: 2025-07-09 11:02+0200\n"
+"POT-Creation-Date: 2025-07-11 12:41+0200\n"
+"PO-Revision-Date: 2025-07-11 12:46+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2610,7 +2610,7 @@ msgstr ""
 "wie vor für die Finanzbuchhaltung benötigt."
 
 #: lib/Controller/PersonalSettingsController.php:916
-#: lib/Service/ProjectService.php:2951
+#: lib/Service/ProjectService.php:2952
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr "Konnte das Projekt \"%s\" mit der Id \"%d\" nicht löschen."
@@ -2627,7 +2627,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr "Projekt \"%s\" (%d) zu \"%s\" umbenannt."
 
 #: lib/Controller/PersonalSettingsController.php:950
-#: lib/Service/ProjectService.php:3215
+#: lib/Service/ProjectService.php:3216
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -4858,7 +4858,7 @@ msgstr "Ankündigung"
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:640 src/app/email.js:1429
+#: lib/EmailForm/Composer.php:640 src/app/email.js:1430
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
@@ -5746,7 +5746,7 @@ msgstr "Orchester-Verwaltung"
 msgid "User Recryption Request for {fancy}"
 msgstr "Benutzer-Neuverschlüsselungs-Anfrage für {fancy}"
 
-#: lib/Notifications/Notifier.php:110 src/app/email.js:1957
+#: lib/Notifications/Notifier.php:110 src/app/email.js:1958
 msgid "Accept"
 msgstr "Zustimmen"
 
@@ -6920,7 +6920,7 @@ msgstr "Instrumentenversicherung"
 
 #: lib/PageRenderer/Musicians.php:939
 #: lib/PageRenderer/ProjectAssociates.php:1092
-#: lib/PageRenderer/ProjectParticipants.php:1347 src/app/email.js:1956
+#: lib/PageRenderer/ProjectParticipants.php:1347 src/app/email.js:1957
 #: templates/emailform/part.emailform.composer.php:172
 #: templates/emailform/part.emailform.composer.php:191
 msgid "Address Book"
@@ -7537,7 +7537,7 @@ msgid "Instrumentation"
 msgstr "Besetzung"
 
 #: lib/PageRenderer/Projects.php:398 lib/PageRenderer/Projects.php:475
-#: lib/PageRenderer/Projects.php:914 src/app/pme.js:1528
+#: lib/PageRenderer/Projects.php:914 src/app/pme.js:1527
 msgid "Clear"
 msgstr "Leeren"
 
@@ -9109,12 +9109,12 @@ msgstr "Kann die Daten für die Musiker:Innen-Id \"%s\" nicht laden."
 msgid "The musician %s is already registered with project %s."
 msgstr "Die Person %s ist bereits für das Projekt %s registriert."
 
-#: lib/Service/ProjectService.php:2271
+#: lib/Service/ProjectService.php:2272
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr "DiePerson %s scheint kein einziges Instrument zu spielen."
 
-#: lib/Service/ProjectService.php:2277
+#: lib/Service/ProjectService.php:2278
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
@@ -9123,68 +9123,68 @@ msgstr ""
 "Die Person \"%s\" spielt kein einziges Instrument, das in der\n"
 "Besetzungstabelle für das Projekt \"%s\" aufgeführt ist."
 
-#: lib/Service/ProjectService.php:2285
+#: lib/Service/ProjectService.php:2286
 #, php-format
 msgid ""
 "Selecting \"%1$s\" as instrument of the musician %2$s for the project "
 "\"%3$s\"."
 msgstr "Wähle \"%1$s\" als Instrument von %2$s für das Projekt \"%3$s\"."
 
-#: lib/Service/ProjectService.php:2330
+#: lib/Service/ProjectService.php:2331
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr "Person mit id \"%d\" konnte nicht hinzugefügt werden, Fehler \"%s\""
 
-#: lib/Service/ProjectService.php:2341
+#: lib/Service/ProjectService.php:2342
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr "Die Person %s wurde zum Projekt %s hinzugefügt."
 
-#: lib/Service/ProjectService.php:2397
+#: lib/Service/ProjectService.php:2398
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 "Konnte den Email-Verteiler \"%1$s\" für das Projekt \"%2$s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2463
+#: lib/Service/ProjectService.php:2464
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr "Konnte den Email-Verteiler \"%s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2607
+#: lib/Service/ProjectService.php:2608
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr "Kann die Person \"%s\" nicht vom Projekt-Email-Verteiler abmelden."
 
-#: lib/Service/ProjectService.php:2632
+#: lib/Service/ProjectService.php:2633
 #, php-format
 msgid "Unable to fetch the project for id \"%s\"."
 msgstr "Kann das Projekt zur id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:2709
+#: lib/Service/ProjectService.php:2710
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 "Konnte die Daten-Infrastruktur (Dateiordner, Wiki, Web-Seiten) für das "
 "Projekt mit der Id \"%d\" nicht erzeugen."
 
-#: lib/Service/ProjectService.php:2750
+#: lib/Service/ProjectService.php:2751
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr "Konnte kein Projekt \"%s\" erzeugen."
 
-#: lib/Service/ProjectService.php:2780
+#: lib/Service/ProjectService.php:2781
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr "Konnte das zu löschende Projekt mit der Id %d nicht finden."
 
-#: lib/Service/ProjectService.php:3295
+#: lib/Service/ProjectService.php:3296
 msgid "Project not found."
 msgstr "Projekt nicht gefunden."
 
-#: lib/Service/ProjectService.php:3328
+#: lib/Service/ProjectService.php:3329
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
@@ -9194,11 +9194,11 @@ msgstr ""
 "verfassen von Serienbriefen zu vereinfachen. Idealerweise hat das Bild einen "
 "transparenten Hintergrund und eine Auflösung von mindestens 600 DPI."
 
-#: lib/Service/ProjectService.php:3334
+#: lib/Service/ProjectService.php:3335
 msgid "Validation of projects not yet implemented."
 msgstr "Validierung von Projekten ist noch nicht implementiert."
 
-#: lib/Service/ProjectService.php:3422
+#: lib/Service/ProjectService.php:3423
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr "Kann \"%1$s\" nicht vom Projekt austragen."
@@ -14151,7 +14151,7 @@ msgid "Could not fetch the value for \"{key}\": {message}"
 msgstr "Konnte den Wert für die Einstellung \"{key}\" nicht laden: {message}"
 
 #: specialVueFakeDummyForL10nScript.js:1108 src/app/project-participants.js:886
-#: src/app/projects.js:593 src/app/sepa-debit-mandate.js:858
+#: src/app/projects.js:593 src/app/sepa-debit-mandate.js:857
 #: src/toolkit/util/settings-sync.ts:261
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
@@ -14511,7 +14511,7 @@ msgid "Append to Current"
 msgstr "An aktuellen Verlauf anhängen"
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:109
-#: specialVueFakeDummyForL10nScript.js:1867 src/app/sepa-debit-mandate.js:646
+#: specialVueFakeDummyForL10nScript.js:1867 src/app/sepa-debit-mandate.js:645
 #: templates/blog/blogthreads.php:100
 msgid "Delete"
 msgstr "Löschen"
@@ -15144,8 +15144,8 @@ msgstr "Abgebrochen"
 #: src/app/blog.js:229 src/app/blog.js:279 src/app/blog.js:299
 #: src/app/blog.js:316 src/app/blog.js:337 src/app/blog.js:363
 #: src/app/blog.js:386 src/app/cloud-file-picker-dialog.js:59
-#: src/app/cloud-file-picker-dialog.js:87 src/app/email.js:98
-#: src/app/email.js:850 src/app/email.js:976
+#: src/app/cloud-file-picker-dialog.js:87 src/app/email.js:97
+#: src/app/email.js:851 src/app/email.js:977
 #: src/app/project-participant-fields.js:258 src/app/settings.js:1360
 #: src/app/settings.js:1373 src/toolkit/util/ajax.js:239
 #: src/toolkit/util/ajax.js:431
@@ -15303,7 +15303,7 @@ msgstr "Fehlende Eingabedaten"
 msgid "Choose some Options"
 msgstr "Wähle aus den Optionen"
 
-#: src/app/chosen-popup.js:41 src/app/sepa-debit-mandate.js:590
+#: src/app/chosen-popup.js:41 src/app/sepa-debit-mandate.js:589
 #: templates/settings/share-settings.php:238
 #: templates/settings/share-settings.php:261
 #: templates/settings/share-settings.php:284
@@ -15349,7 +15349,7 @@ msgstr "Auswahl der Dateioperation"
 msgid "Operation has been cancelled."
 msgstr "Benutzer:in hat den Vorgang abgebrochen"
 
-#: src/app/cloud-file-picker-dialog.js:165 src/app/sepa-debit-mandate.js:610
+#: src/app/cloud-file-picker-dialog.js:165 src/app/sepa-debit-mandate.js:609
 msgid "Apply"
 msgstr "Anwenden"
 
@@ -15424,13 +15424,17 @@ msgstr "Fein"
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
-#: src/app/email.js:98
+#: src/app/email.js:97
 msgid "Not called from main email-form."
 msgstr "Nicht vom Haupt-Formular aufgerufen (Fehler)."
 
-#: src/app/email.js:234
+#: src/app/email.js:233
 msgid "Move all"
 msgstr "Alle auswählen"
+
+#: src/app/email.js:234
+msgid "Select all"
+msgstr "Alle auswählen "
 
 #: src/app/email.js:235
 msgid "Move selected"
@@ -15440,73 +15444,73 @@ msgstr "Ausgewählte verschieben"
 msgid "Remove selected"
 msgstr "Ausgewählte entfernen"
 
-#: src/app/email.js:237
+#: src/app/email.js:237 src/app/email.js:238
 msgid "Remove all"
 msgstr "Alle entfernen"
 
-#: src/app/email.js:238
+#: src/app/email.js:239
 msgid "Remaining Recipients"
 msgstr "Verbleibende Empfänger"
 
-#: src/app/email.js:239
+#: src/app/email.js:240
 msgid "Selected Recipients"
 msgstr "Ausgewählte Empfänger"
 
-#: src/app/email.js:242
+#: src/app/email.js:243
 msgid "Filtered"
 msgstr "Suchergebnis"
 
-#: src/app/email.js:244
+#: src/app/email.js:245
 msgid "from"
 msgstr "von"
 
-#: src/app/email.js:246
+#: src/app/email.js:247
 msgid "Empty list"
 msgstr "Leere Liste"
 
-#: src/app/email.js:247
+#: src/app/email.js:248
 msgid "Filter"
 msgstr "Suchbegriff"
 
-#: src/app/email.js:248
+#: src/app/email.js:249
 msgid "show all"
 msgstr "alle anzeigen"
 
-#: src/app/email.js:255
+#: src/app/email.js:256
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 "Bitte die Namen anklicken, um den jeweiligen Adressaten in den anderen "
 "Kasten zu schieben."
 
-#: src/app/email.js:849
+#: src/app/email.js:850
 msgid "Unknown form element: {formElement}"
 msgstr "Unbekanntes Formularfeld: {formElement}"
 
-#: src/app/email.js:893 src/app/email.js:2125
+#: src/app/email.js:894 src/app/email.js:2126
 msgid "Em@il Form for {projectName}"
 msgstr "Em@il Formular für {projectName}"
 
-#: src/app/email.js:895 src/app/email.js:2127
+#: src/app/email.js:896 src/app/email.js:2128
 msgid "Em@il Form"
 msgstr "Em@il Formular"
 
-#: src/app/email.js:975
+#: src/app/email.js:976
 msgid "Unknown request: {operation} / {topic}"
 msgstr "Unbekannte Anfrage: {operation} / {topic}"
 
-#: src/app/email.js:1035
+#: src/app/email.js:1036
 msgid "Sending message {active} out of {total}"
 msgstr "Sende Nachricht {active} von {total}"
 
-#: src/app/email.js:1037
+#: src/app/email.js:1038
 msgid "Message delivery in progress"
 msgstr "Nachrichten-Auslieferung ist im Gang"
 
-#: src/app/email.js:1066
+#: src/app/email.js:1067
 msgid "Message Delivery Status"
 msgstr "Em@il-Sende-Monitor"
 
-#: src/app/email.js:1102
+#: src/app/email.js:1103
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
@@ -15514,7 +15518,7 @@ msgstr ""
 "Nachrichten werden gerade gesendet. Das Verlassen der Seite würde den\n"
 "Vorgang möglicherweise abbrechen."
 
-#: src/app/email.js:1273
+#: src/app/email.js:1274
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -15527,19 +15531,19 @@ msgstr ""
 "gespeichert und als explizite Sicherung markiert. Die Kopie verbleibt dann "
 "auf dem Server, bis Sie oder jemand anders die Kopie aktiv löscht."
 
-#: src/app/email.js:1278
+#: src/app/email.js:1279
 msgid "Delete Auto-Save Draft?"
 msgstr "Automatische Sicherungskopie löschen?"
 
-#: src/app/email.js:1339
+#: src/app/email.js:1340
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr "Automatische Sicherungskopie alle {seconds} Sekunden."
 
-#: src/app/email.js:1340
+#: src/app/email.js:1341
 msgid "Draft-auto-save switched off"
 msgstr "Erstellen automatischer Sicherungskopien ausgeschaltet"
 
-#: src/app/email.js:1372
+#: src/app/email.js:1373
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
@@ -15547,11 +15551,11 @@ msgstr ""
 "Es gibt bereits eine Vorlage mit dem Namen `{emailTemplateName}'; soll die "
 "überschrieben werden?"
 
-#: src/app/email.js:1374
+#: src/app/email.js:1375
 msgid "Overwrite existing template?"
 msgstr "Existierende Vorlage überschreiben?"
 
-#: src/app/email.js:1411
+#: src/app/email.js:1412
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
@@ -15559,17 +15563,17 @@ msgstr ""
 "Möchten Sie die Email-Vorlage mit dem Namen {emailTemplateName} wirklich "
 "löschen?"
 
-#: src/app/email.js:1413
+#: src/app/email.js:1414
 msgid "Really Delete Template?"
 msgstr "Vorlage tatsächlich löschen?"
 
-#: src/app/email.js:1427
+#: src/app/email.js:1428
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 "Die Vorlage {emailTemplateName} existiert nicht und kann deshalb auch nicht "
 "gelöscht werden."
 
-#: src/app/email.js:1444
+#: src/app/email.js:1445
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
@@ -15577,19 +15581,19 @@ msgstr ""
 "Möchten Sie wirklich die Sicherungskopie der aktuellen Nachricht (id = {id}) "
 "löschen?"
 
-#: src/app/email.js:1447
+#: src/app/email.js:1448
 msgid "Really Delete Draft?"
 msgstr "Entwurf tatsächlich löschen?"
 
-#: src/app/email.js:1489
+#: src/app/email.js:1490
 msgid "There are currently no stored draft messages available."
 msgstr "Derzeit sind keine Entwürfe gespeichert."
 
-#: src/app/email.js:1490
+#: src/app/email.js:1491
 msgid "No Drafts Available"
 msgstr "Kein Entwürfe vorhanden"
 
-#: src/app/email.js:1554
+#: src/app/email.js:1555
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
@@ -15597,31 +15601,31 @@ msgstr ""
 "Möchten Sie wirklich die Massen-Email mit einer offenen Empfängerliste "
 "versenden? Das könnte Datenschutz-Richtlinien verletzen."
 
-#: src/app/email.js:1556
+#: src/app/email.js:1557
 msgid "Really disclose the recipients?"
 msgstr "Offene Empfängerliste? Wirklich??"
 
-#: src/app/email.js:1738
+#: src/app/email.js:1739
 msgid "Do you really want to delete all event attachments?"
 msgstr "Möchten Sie wirklich alle Termin-Anhänge löschen?"
 
-#: src/app/email.js:1739 src/app/email.js:1898
+#: src/app/email.js:1740 src/app/email.js:1899
 msgid "Really Delete Attachments?"
 msgstr "Anhänge wirklich löschen?"
 
-#: src/app/email.js:1856
+#: src/app/email.js:1857
 msgid "Select Attachment"
 msgstr "Anhang auswählen"
 
-#: src/app/email.js:1897
+#: src/app/email.js:1898
 msgid "Do you really want to delete all file attachments?"
 msgstr "Möchten Sie wirklich alle Datei-Anhänge löschen?"
 
-#: src/app/email.js:1960
+#: src/app/email.js:1961
 msgid "Save Contacts"
 msgstr "Kontakte speichern"
 
-#: src/app/email.js:1963
+#: src/app/email.js:1964
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
@@ -15831,7 +15835,7 @@ msgid "Failed copying query to the clipboard: {reason}."
 msgstr ""
 "Die Abfrage konnte nicht in die Zwischenablage kopiert werden: {reason}."
 
-#: src/app/pme.js:755
+#: src/app/pme.js:754
 msgid ""
 "An error occurred. The data has not been saved. Unfortunately, no further "
 "information is available. Sorry for that."
@@ -15840,15 +15844,15 @@ msgstr ""
 "es keine spezifischeren Fehlermeldungen. Tut uns leid."
 
 # #Spalten
-#: src/app/pme.js:1411
+#: src/app/pme.js:1410
 msgid "#columns"
 msgstr "#Spalten"
 
-#: src/app/pme.js:1420
+#: src/app/pme.js:1419
 msgid "#rows"
 msgstr "#Zeilen"
 
-#: src/app/pme.js:1521
+#: src/app/pme.js:1520
 msgid "Remove"
 msgstr "Entfernen"
 
@@ -16010,27 +16014,27 @@ msgstr "Kein Wert passt."
 msgid "Unable to download debit notes."
 msgstr "Kann die Lastschriften nicht laden."
 
-#: src/app/sepa-debit-mandate.js:199
+#: src/app/sepa-debit-mandate.js:198
 msgid "Unable to download pre-filled mandate form."
 msgstr "Kann das personalisierte Mandatsformular nicht herunter laden."
 
-#: src/app/sepa-debit-mandate.js:303
+#: src/app/sepa-debit-mandate.js:302
 msgid "Select debit mandate for {musicianName}"
 msgstr "Lastschrift-Formular für {musicianName} auswählen"
 
-#: src/app/sepa-debit-mandate.js:591
+#: src/app/sepa-debit-mandate.js:590
 msgid "Close the form and save the data in the underlying data-base storage."
 msgstr "Schließt das Formular und speichert die Daten in der Datenbank."
 
-#: src/app/sepa-debit-mandate.js:611
+#: src/app/sepa-debit-mandate.js:610
 msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr "Speichert die Daten in der Datenbank. Das Formular bleibt offen."
 
-#: src/app/sepa-debit-mandate.js:637
+#: src/app/sepa-debit-mandate.js:636
 msgid "Close"
 msgstr "Schließen"
 
-#: src/app/sepa-debit-mandate.js:638
+#: src/app/sepa-debit-mandate.js:637
 msgid ""
 "Discard all filled-in data and close the form. Note that this will not undo "
 "any changes previously stored in the data-base by pressing the \"Apply\" "
@@ -16040,7 +16044,7 @@ msgstr ""
 "Änderungen, die vorher über den `Anwenden'-Knopf gespeichert wurden,\n"
 "nicht rückgängig gemacht."
 
-#: src/app/sepa-debit-mandate.js:647
+#: src/app/sepa-debit-mandate.js:646
 msgid ""
 "Delete this bank-account from the data-base. Normally, this should only be "
 "done in case of desinformation or misunderstanding. Use with care."
@@ -16049,11 +16053,11 @@ msgstr ""
 "sollte das aufgrund falscher Eintragungen oder Mißverständnissen mit\n"
 "der Person nötig sein."
 
-#: src/app/sepa-debit-mandate.js:659
+#: src/app/sepa-debit-mandate.js:658
 msgid "Reactivate"
 msgstr "Reaktivieren"
 
-#: src/app/sepa-debit-mandate.js:660
+#: src/app/sepa-debit-mandate.js:659
 msgid ""
 "Reactivate the debit-mandate or bank-account in case it has been deleted in "
 "error."
@@ -16061,11 +16065,11 @@ msgstr ""
 "Das Lastschriftmandat oder die Bankverbindung reaktivieren, falls die "
 "versehentlich deaktiviert wurde."
 
-#: src/app/sepa-debit-mandate.js:671
+#: src/app/sepa-debit-mandate.js:670
 msgid "Disable"
 msgstr "Deaktivieren"
 
-#: src/app/sepa-debit-mandate.js:672
+#: src/app/sepa-debit-mandate.js:671
 msgid ""
 "Disable the debit-mandate or bank-account in case the bank account has "
 "changed, or on request of the participant. The bank account can only be "
@@ -16075,17 +16079,17 @@ msgstr ""
 "erst dann gesperrt werden, wenn alle assoziierten Lastschriftmandate\n"
 "entwertet wurden."
 
-#: src/app/sepa-debit-mandate.js:685
+#: src/app/sepa-debit-mandate.js:684
 msgid "Reload"
 msgstr "Neu laden"
 
-#: src/app/sepa-debit-mandate.js:686
+#: src/app/sepa-debit-mandate.js:685
 msgid "Reload the form and locks it. Unsaved changes are lost."
 msgstr ""
 "Eingabeformular neu laden und sperren. Ungespeicherte Eingaben gehen "
 "verloren."
 
-#: src/app/sepa-debit-mandate.js:781
+#: src/app/sepa-debit-mandate.js:780
 msgid ""
 "Please either upload a copy of the written and signed debit-mandate or at "
 "least check the \"upload later\" option"
@@ -16094,53 +16098,53 @@ msgstr ""
 "Mandats hochladen, oder doch zuallermindest die \"später hochladen\"-Option\n"
 "aktivieren. "
 
-#: src/app/sepa-debit-mandate.js:781
+#: src/app/sepa-debit-mandate.js:780
 msgid "Missing Data"
 msgstr "Fehlende Daten"
 
-#: src/app/sepa-debit-mandate.js:828
+#: src/app/sepa-debit-mandate.js:827
 msgid "Do you really want to disable the current bank-account?"
 msgstr ""
 "Möchten Sie wirklich die angezeigte Bankverbindung als inaktiv markieren?"
 
-#: src/app/sepa-debit-mandate.js:830
+#: src/app/sepa-debit-mandate.js:829
 msgid "Do you really want to disable the current debit-mandate?"
 msgstr ""
 "Möchten Sie wirklich das angezeigte Lastschrift-Mandat als inaktiv markieren?"
 
-#: src/app/sepa-debit-mandate.js:837
+#: src/app/sepa-debit-mandate.js:836
 msgid "Do you really want to reactivate the current bank-account?"
 msgstr "Möchten Sie wirklich die angezeigte Bankverbindung reaktivieren?"
 
-#: src/app/sepa-debit-mandate.js:839
+#: src/app/sepa-debit-mandate.js:838
 msgid "Do you really want to reactiveate the current debit-mandate?"
 msgstr "Möchten Sie wirklich das angezeigte Lastschrift-Mandat reaktivieren?"
 
-#: src/app/sepa-debit-mandate.js:848
+#: src/app/sepa-debit-mandate.js:847
 msgid "Do you really want to delete the current bank-account?"
 msgstr "Möchten Sie wirklich die angezeigte Bankverbindung löschen?"
 
-#: src/app/sepa-debit-mandate.js:850
+#: src/app/sepa-debit-mandate.js:849
 msgid "Do you really want to delete the current debit-mandate?"
 msgstr "Möchten Sie wirklich das angezeigte Lastschriftmandat löschen?"
 
-#: src/app/sepa-debit-mandate.js:861
+#: src/app/sepa-debit-mandate.js:860
 msgid "Unconfirmed, doing nothing"
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
-#: src/app/sepa-debit-mandate.js:886 src/app/sepa-debit-mandate.js:1003
+#: src/app/sepa-debit-mandate.js:885 src/app/sepa-debit-mandate.js:1002
 msgid "Suggested alternatives based on common human mis-transcriptions:"
 msgstr "Mögliche Alternativen ausgehend von den üblichen Übertragungsfehlern:"
 
-#: src/app/sepa-debit-mandate.js:890 src/app/sepa-debit-mandate.js:1007
+#: src/app/sepa-debit-mandate.js:889 src/app/sepa-debit-mandate.js:1006
 msgid "Please do not accept these alternatives lightly!"
 msgstr "Bitte die Alternativen nicht leichtsinnig übernehmen!"
 
-#: src/app/sepa-debit-mandate.js:1470
+#: src/app/sepa-debit-mandate.js:1469
 msgid "Update canceled by user"
 msgstr "Benutzer:in hat den Vorgang abgebrochen"
 
-#: src/app/sepa-debit-mandate.js:1642
+#: src/app/sepa-debit-mandate.js:1641
 msgid ""
 "The bank-account-owner is already set but differs from the project-"
 "participant. Shall we replace the current bank-account-owner by the project-"
@@ -16150,11 +16154,11 @@ msgstr ""
 "vom Projektmitglied. Soll der/die/das Kontoinhaber:in durch das "
 "Projektmitglied ersetzt werden?"
 
-#: src/app/sepa-debit-mandate.js:1644
+#: src/app/sepa-debit-mandate.js:1643
 msgid "Set Bank-Account-Owner to Project-Participant?"
 msgstr "Kontoinhaber:in durch Projekt-Mitglied ersetzen?"
 
-#: src/app/sepa-debit-mandate.js:1699
+#: src/app/sepa-debit-mandate.js:1698
 msgid ""
 "Project-participant is already set but differs from the bank-account-owner. "
 "Shall we set the project-participant to the bank-account-owner?"
@@ -16163,7 +16167,7 @@ msgstr ""
 "der/die/das Kontoinhaber:in. Sollt das Projektmitglied durch der/die/das "
 "Kontoinhaber:in ersetzt werden?"
 
-#: src/app/sepa-debit-mandate.js:1701
+#: src/app/sepa-debit-mandate.js:1700
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr "Projekt-Mitlied durch Kontoinhaber:in ersetzen?"
 

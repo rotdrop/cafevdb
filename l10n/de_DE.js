@@ -2449,6 +2449,7 @@ OC.L10N.register(
     "Debug Information" : "Debug Informationen",
     "Not called from main email-form." : "Nicht vom Haupt-Formular aufgerufen (Fehler).",
     "Move all" : "Alle auswählen",
+    "Select all" : "Alle auswählen ",
     "Move selected" : "Ausgewählte verschieben",
     "Remove selected" : "Ausgewählte entfernen",
     "Remove all" : "Alle entfernen",
