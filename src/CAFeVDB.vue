@@ -35,6 +35,7 @@
           </template>
         </NcAppNavigationItem>
         <NcAppNavigationItem v-if="projectMode"
+                             v-tooltip.right="projectOverviewTooltip"
                              :name="t(appId, 'Overview {currentProjectName}', { currentProjectName })"
                              @click="openProjectOverview"
         >
@@ -45,11 +46,12 @@
         <NcAppNavigationItem v-for="item in authorizedNavigationItems"
                              v-show="globalState.financeMode || !(item.permissions & PERMISSION_FINANCE)"
                              :key="item.template"
-                             v-tooltip="item.tooltip"
+                             v-tooltip.right="item.tooltip"
                              :to="{
                                name: 'legacy-page',
                                params: { template: item.template, ...item.templateParameters }
                              }"
+                             :class="{ 'finance-item': (item.permissions & PERMISSION_FINANCE) }"
                              :name="item.name"
                              exact
                              @click="showSidebar = false"
@@ -364,6 +366,10 @@ const settingsLocked = ref(false)
 const appSettingsLoading = ref(false)
 const pageTemplate = ref<string|null>(null)
 const navigationItems = ref<NavigationItem[]>([])
+
+const projectOverviewTooltip = ref(t(appName, `Display basic information about the current project like the registration deadline,
+instrumentation, web-pages (inclusive editing them!), also provides configuration for the public share for music sheet download
+for the participants. The view also provides a context menu in order to access the most important project views without navigating back to the main view. Just try it out!`))
 
 const tooltipKeys = [
   'debug-mode',
@@ -801,6 +807,9 @@ onMounted(() => {
       }
     }
   }
+}
+.app-navigation-entry-wrapper.finance-item::v-deep .app-navigation-entry:not(:hover) {
+  background-color: lightyellow;
 }
 .app-navigation-entry.disabled::v-deep {
   opacity: 0.5;
