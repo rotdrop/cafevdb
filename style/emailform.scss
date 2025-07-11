@@ -242,10 +242,12 @@ $editorHeight: 20em;
           .recipients-select {
             @include meta.load-css('bootstrap/dist/css/bootstrap');
             @include meta.load-css('bootstrap4-duallistbox/dist/bootstrap-duallistbox');
-            --bs-border-radius: var(--border-radius-large);
-            --bs-border-width: var(--border-width-input, 2px);
-            --bs-border-color: var(--color-border-maxcontrast);
-            --bs-badge-color: var(--color-main-text);
+            & {
+              --bs-border-radius: var(--border-radius-large);
+              --bs-border-width: var(--border-width-input, 2px);
+              --bs-border-color: var(--color-border-maxcontrast);
+              --bs-badge-color: var(--color-main-text);
+            }
             button {
               min-height: unset;
             }
