@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,19 +24,38 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use OCP\AppFramework\IAppContainer;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
+use OCA\CAFEVDB\Database\EntityManager as EntityManagerDecorator;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 
 /** Base class for all of our repositories. */
 class EntityRepository extends \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
 
+  /** {@inheritdoc} */
+  public function __construct(
+    protected EntityManagerDecorator $entityManagerDecorator,
+    protected ClassMetadataInterface $classMetaData,
+    protected ?IAppContainer $appContainer = null,
+  ) {
+    if ($classMetaData instanceof ClassMetadataDecorator) {
+      $classMetaData = $classMetaData->getWrappedObject();
+    } else {
+      throw new \Exception('BLAH ' . get_class($classMetaData));
+    }
+    parent::__construct($entityManagerDecorator, $classMetaData);
+  }
+
   /**
    * Public export of parent function.
    *
    * @return EntityManagerInterface
    */
-  public function getEntityManager():EntityManagerInterface
+  public function getEntityManager():EntityManagerDecorator
   {
     return parent::getEntityManager();
   }

@@ -24,72 +24,66 @@
 
 namespace OCA\CAFEVDB\Database;
 
+use Closure;
 use InvalidArgumentException;
 use RuntimeException;
 use Throwable;
-use Closure;
+use UnexpectedValueException;
+use function class_exists;
 
+use OCP\AppFramework\IAppContainer;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
-use OCP\AppFramework\IAppContainer;
-use OCP\EventDispatcher\IEventDispatcher;
-use OCP\EventDispatcher\Event;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\ORMSetup;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager as ORMEntityManager;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\ConnectionEventArgs;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners as DBALEventListeners;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
-use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
-use OCA\CAFEVDB\Wrapped\Symfony\Component\Cache\Adapter\ArrayAdapter;
+use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Common\IUndoable;
+use OCA\CAFEVDB\Common\UndoableRunQueue;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Crypto;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DeprecationLogger;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Functions;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions as CJH;
+use OCA\CAFEVDB\Wrapped\Doctrine as Doctrine;
+use OCA\CAFEVDB\Wrapped\DoctrineExtensions;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\ArrayCache;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\Psr6\CacheAdapter;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\Psr6\DoctrineProvider;
-use OCA\CAFEVDB\Wrapped\Doctrine as Doctrine;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\ConnectionEventArgs;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners as DBALEventListeners;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager as ORMEntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\ORMSetup;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 use OCA\CAFEVDB\Wrapped\Gedmo;
-
-use OCA\CAFEVDB\Wrapped\DoctrineExtensions;
-
-use function class_exists;
-
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine as Ramsey;
-use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions as CJH;
-
-use OCA\CAFEVDB\Crypto;
-use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Exceptions;
-
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
-
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
-use OCA\CAFEVDB\Database\Doctrine\DeprecationLogger;
-
-use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Functions;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy;
-
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\UndoableRunQueue;
-use OCA\CAFEVDB\Common\GenericUndoable;
-use OCA\CAFEVDB\Common\IUndoable;
-use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine as Ramsey;
+use OCA\CAFEVDB\Wrapped\Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 /**
  * Use this as the actual EntityManager in order to be able to
@@ -202,6 +196,11 @@ class EntityManager extends EntityManagerDecorator
 
   /** @var null|GedmoTranslatableListener */
   protected ?Listeners\GedmoTranslatableListener $translatable = null;
+
+  /**
+   * Locale -provider of the translatable listener.
+   */
+  protected ?IL10N $translatableL10n;
 
   /**
    * @var array
@@ -653,6 +652,9 @@ class EntityManager extends EntityManagerDecorator
         }
       }
     });
+    $config->setDefaultRepositoryClassName(Repositories\EntityRepository::class);
+    $config->setRepositoryFactory($this->appContainer->get(Repositories\RepositoryFactory::class));
+
     return [ $config, new Doctrine\Common\EventManager, ];
   }
 
@@ -753,10 +755,8 @@ class EntityManager extends EntityManagerDecorator
     $this->translatable = $translatableListener = $this->appContainer->get(Listeners\GedmoTranslatableListener::class);
     // current translation locale should be set from session or hook later into the listener
     // most important, before entity manager is flushed
-    $localeCode = $this->l->getLocaleCode();
-    if (strpos($localeCode, '_') === false) {
-      $localeCode = $localeCode . '_' . strtoupper($localeCode);
-    }
+    $localeCode = $this->getLocaleCode($this->l);
+    $this->translatableL10n = $this->l;
     $translatableListener->setTranslatableLocale($localeCode);
     $translatableListener->setDefaultLocale(ConfigService::DEFAULT_LOCALE);
     $translatableListener->setTranslationFallback(true);
@@ -1404,28 +1404,59 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
-   * Set the locale for the translatable Listeners*
+   * Compute the locale code from an IL10N object.
    *
-   * @param null|string $locale A locale like de_DE (i.e. with language and
-   * region). If null the default locale of the translatable listener is used.
+   * @param null|IL10N $l10n Locale provider.
    *
    * @return string
    */
-  public function setTranslatableLocale(?string $locale):string
+  protected function getLocaleCode(?IL10N $l10n): string
   {
+    $locale = $l10n->getLocaleCode();
     if ($locale === null) {
       $locale = ConfigService::DEFAULT_LOCALE;
+    } else {
+      $locale = $this->l->getLocaleCode();
     }
     if (strpos($locale, '_') === false) {
       $locale = $locale . '_' . strtoupper($locale);
     }
-    $oldLocale = $this->translatable->getTranslatableLocale();
+    return $locale;
+  }
+
+  /**
+   * Set the locale for the translatable Listeners*
+   *
+   * @param null|IL10N $l10n Locale provider.
+   *
+   * @return null|IL10N
+   */
+  public function setTranslatableL10N(?IL10N $l10n):?IL10N
+  {
+    $locale = $this->getLocaleCode($l10n);
+    $oldLocale = $this->getLocaleCode($this->translatableL10n);
+    if ($oldLocale != $this->translatable->getTranslatableLocale()) {
+      throw new UnexpectedValueException($this->l->t('Unexpected locate settings "%1$s" vs. "%2$s".', [
+        $oldLocale, $this->translatable->getTranslatableLocale(),
+      ]));
+    }
     $this->translatable->setTranslatableLocale($locale);
     $this->getConfiguration()->setDefaultQueryHint(
       Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
       $locale
     );
-    return $oldLocale;
+    $oldL10n = $this->translatableL10n;
+    $this->translatableL10n = $l10n;
+
+    return $oldL10n;
+  }
+
+  /**
+   * @return null|IL10N
+   */
+  public function getTranslatableL10n():?IL10N
+  {
+    return $this->translatableL10n;
   }
 
   /**

@@ -60,7 +60,7 @@ class EnsureNotAnInstrumentBusinessRelation extends AbstractMigration
 
     $this->entityManager->beginTransaction();
     try {
-      $oldLocale = null;
+      $oldL10n = null;
       /** @var Entities\InstrumentFamily $notAnInstrumentFamily */
       $notAnInstrumentFamily = $this->getDatabaseRepository(Entities\InstrumentFamily::class)->findOneBy([
         'family' => Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY,
@@ -69,7 +69,7 @@ class EnsureNotAnInstrumentBusinessRelation extends AbstractMigration
         $notAnInstrumentFamily = new Entities\InstrumentFamily();
         $familyName = $this->l->t(Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY);
         if ($familyName == Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY) {
-          $oldLocale = $this->entityManager->setTranslatableLocale(null);
+          $oldL10n = $this->entityManager->setTranslatableL10n(null);
         }
         $notAnInstrumentFamily->setFamily($this->l->t(Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY));
         $this->persist($notAnInstrumentFamily);
@@ -77,9 +77,9 @@ class EnsureNotAnInstrumentBusinessRelation extends AbstractMigration
 
       $this->flush();
 
-      if ($oldLocale) {
-        $this->entityManager->setTranslatableLocale($oldLocale);
-        $oldLocale = null;
+      if ($oldL10n) {
+        $this->entityManager->setTranslatableL10n($oldL10n);
+        $oldL10n = null;
       }
 
       $nonInstruments = $this->getDatabaseRepository(Entities\Instrument::class)->findBy([
@@ -92,16 +92,16 @@ class EnsureNotAnInstrumentBusinessRelation extends AbstractMigration
         $instrument = new Entities\Instrument();
         $l10nName = $this->l->t($name);
         if ($l10nName == $name) {
-          $oldLocale = $this->entityManager->setTranslatableLocale(null);
+          $oldL10n = $this->entityManager->setTranslatableL10n(null);
         }
         $instrument->setName($name)->setSortOrder(0x7fffffff);
         $instrument->getFamilies()->add($notAnInstrumentFamily);
         $notAnInstrumentFamily->getInstruments()->add($instrument);
         $this->persist($instrument);
         $this->flush();
-        if ($oldLocale) {
-          $this->entityManager->setTranslatableLocale($oldLocale);
-          $oldLocale = null;
+        if ($oldL10n) {
+          $this->entityManager->setTranslatableL10n($oldL10n);
+          $oldL10n = null;
         }
       }
 

@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 
-use Stringable;
+use InvalidArgumentException;
 use ReflectionClass;
+use Stringable;
 
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
@@ -63,6 +64,17 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
     private IL10N $l,
     protected ILogger $logger,
   ) {
+    if ($metaData instanceof ClassMetadataDecorator) {
+      throw new InvalidArgumentException($this->l->t('Attempt to double wrap an class-meta-data instance.'));
+    }
+  }
+
+  /**
+   * @return The wrapped object.
+   */
+  public function getWrappedObject():ClassMetadata
+  {
+    return $this->metaData;
   }
 
   /**
