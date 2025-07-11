@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
  * the user-id matches also.
  */
 #[ORM\Table(name: 'MusicianRowAccessTokens')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class MusicianRowAccessToken implements \ArrayAccess
 {

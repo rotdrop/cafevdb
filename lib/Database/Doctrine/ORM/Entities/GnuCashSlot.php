@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Table(name: 'GnuCashSlots')]
 #[ORM\Index(name: 'slots_guid_index', columns: ['obj_guid'])]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class GnuCashSlot implements \ArrayAccess
 {

@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
  * Generic directory entry for a database-backed file.
  */
 #[ORM\Table(name: 'WebBrowserHistoryEntries')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class WebBrowserHistoryEntry implements \ArrayAccess
 {

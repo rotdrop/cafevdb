@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  * provinces etc.
  */
 #[ORM\Table(name: 'GeoStatesProvinces')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\Loggable(enabled: false)]
 class GeoStateProvince implements \ArrayAccess

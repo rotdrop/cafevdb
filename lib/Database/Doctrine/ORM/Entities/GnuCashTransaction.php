@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Table(name: 'GnuCashTransactions')]
 #[ORM\Index(name: 'tx_post_date_index', columns: ['post_date'])]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class GnuCashTransaction implements \ArrayAccess
 {

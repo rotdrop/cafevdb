@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  * InsuranceBroker
  */
 #[ORM\Table(name: 'InsuranceBrokers')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class InsuranceBroker implements \ArrayAccess
 {

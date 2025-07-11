@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
  */
 #[ORM\Table(name: 'WebBrowserHistoryStates')]
 #[ORM\UniqueConstraint(columns: ['user_id', 'created'])]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class WebBrowserHistoryState implements \ArrayAccess
 {

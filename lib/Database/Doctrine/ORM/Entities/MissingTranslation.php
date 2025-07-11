@@ -39,7 +39,7 @@ use Psr\Log\LoggerInterface as ILogger;
  * the TranslationKey entities are found.
  */
 #[ORM\Table(name: 'MissingTranslations')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\Loggable(enabled: false)]
 class MissingTranslation implements \ArrayAccess

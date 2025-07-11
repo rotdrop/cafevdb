@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
  * -- and otherwise they imply ugly kludges and conventions in the frontend usage.
  */
 #[ORM\Table(name: 'ProjectInstruments')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\EntityListeners([\OCA\CAFEVDB\Listener\ProjectInstrumentEntityListener::class])]
 class ProjectInstrument implements \ArrayAccess

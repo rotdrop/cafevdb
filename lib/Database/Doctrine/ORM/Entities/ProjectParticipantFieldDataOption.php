@@ -51,7 +51,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  */
 #[ORM\Table(name: 'ProjectParticipantFieldsDataOptions')]
 #[ORM\Index(columns: ['key'])]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\TranslationEntity(class: 'TableFieldTranslation', idToString: ['key' => 'BIN2UUID(%s)'])]
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]

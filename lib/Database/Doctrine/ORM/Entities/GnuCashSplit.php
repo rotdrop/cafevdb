@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'GnuCashSplits')]
 #[ORM\Index(name: 'splits_tx_guid_index', columns: ['tx_guid'])]
 #[ORM\Index(name: 'splits_account_guid_index', columns: ['account_guid'])]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class GnuCashSplit implements \ArrayAccess
 {

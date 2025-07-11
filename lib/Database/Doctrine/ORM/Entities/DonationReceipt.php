@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 #[ORM\Table(name: 'DonationReceipts')]
 #[ORM\UniqueConstraint(name: 'donation_receipt_unique', columns: ['donation_id', 'deleted'])]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[ORM\HasLifecycleCallbacks]
 class DonationReceipt implements JsonSerializable, ArrayAccess

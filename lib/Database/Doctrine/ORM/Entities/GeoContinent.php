@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  * GeoContinents
  */
 #[ORM\Table(name: 'GeoContinents')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\Loggable(enabled: false)]
 class GeoContinent implements \ArrayAccess

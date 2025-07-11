@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  * InstrumentInsurance
  */
 #[ORM\Table(name: 'MusicianEmailAddresses')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\EntityListeners([\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener::class])]
 #[ORM\HasLifecycleCallbacks]
 class MusicianEmailAddress implements \ArrayAccess

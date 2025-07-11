@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  * Link to the Gnucash accounts table.
  */
 #[ORM\Table(name: 'GnuCashAccounts')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class GnuCashAccount implements \ArrayAccess
 {
