@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use UnexpectedValueException;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**
@@ -52,6 +54,8 @@ trait InstrumentsTrait
 
   /**
    * @return array<int, string> An array of non-instruments as id => name string.
+   *
+   * @throws UnexpectedValueException
    */
   protected function getNonInstruments():array
   {
@@ -63,6 +67,11 @@ trait InstrumentsTrait
       );
       $this->nonInstruments = array_intersect_key($instrumentInfo['byId'], $ids);
     }
+
+    if (empty($this->nonInstruments)) {
+      throw new UnexpectedValueException($this->l->t('Unable to find the standard non-instruments AKA roles.'));
+    }
+
     return $this->nonInstruments;
   }
 }

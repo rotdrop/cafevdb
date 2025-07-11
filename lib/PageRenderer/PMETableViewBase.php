@@ -2178,7 +2178,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               // used during update to determine key values, otherwise ignored
               continue;
             } else {
-              throw new RuntimeException($this->l->t('Unknown column description: "%s"', print_r($joinTableValue, true)));
+              throw new RuntimeException($this->l->t('Unknown column description: "%s"', print_r($joinTableValue, true) . '  @' . $table . ' '  . print_r($this->joinStructure, true)));
             }
           } else {
             $joinCondition .= '= $main_table.'.$joinTableValue;
