@@ -52,6 +52,15 @@ module.exports = {
   //   level: 'verbose',
   // },
   // stats: 'verbose',
+  ignoreWarnings: [
+    // get rid of sass warnings for code that we cannot change
+    {
+      // file: /node_modules|3rdparty[/]selectize/,
+      message: /node_modules|3rdparty[/]selectize/,
+    },
+    // /3rdparty\/selectize/,
+    // (warning) => true,
+  ],
   entry: Object.entries({
     app: './src/app.ts',
     'vue-app': './src/vue-app.ts',
@@ -217,6 +226,9 @@ module.exports = {
             options: {
               // Prefer `dart-sass`
               implementation: require('sass'),
+              sassOptions: {
+                quietDeps: true, // this still does not work
+              },
               additionalData: [
                 '$appName: ' + appName,
                 '$appNameTag: app-' + appName,
