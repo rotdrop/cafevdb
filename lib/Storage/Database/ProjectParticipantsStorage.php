@@ -243,7 +243,7 @@ class ProjectParticipantsStorage extends Storage
     bool $flush = true,
     bool $replace = false,
   ):?Entities\DatabaseStorageFile {
-    return $this->addDebitMandate($debitMandate, $file, $flush, replace: true);
+    return $this->addDebitMandate($debitMandate, $file, $flush, conflict: DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE);
   }
 
   /**
