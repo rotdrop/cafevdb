@@ -50,8 +50,7 @@ import {
 import { subscribe as asyncSubscribe, emit as asyncEmit } from '../services/async-event-bus.ts';
 
 import 'selectize';
-import 'selectize/dist/css/selectize.bootstrap4.css';
-// import 'selectize/dist/css/selectize.css';
+import 'selectize/dist/css/selectize.bootstrap.css';
 require('cafevdb-selectize.scss');
 
 const selectizeOptions = {
@@ -232,13 +231,15 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
     // moveOnSelect: false,
     // preserveSelectionOnMove : 'all',
     moveAllLabel: t(appName, 'Move all'),
+    btnMoveAllText: t(appName, 'Select all'),
     moveSelectedLabel: t(appName, 'Move selected'),
     removeSelectedLabel: t(appName, 'Remove selected'),
     removeAllLabel: t(appName, 'Remove all'),
+    btnRemoveAllText: t(appName, 'Remove all'),
     nonSelectedListLabel: t(appName, 'Remaining Recipients'),
     selectedListLabel: t(appName, 'Selected Recipients'),
     infoText: '&nbsp;', // t(appName, 'Showing all {0}'),
-    infoTextFiltered: '<span class="badge badge-warning">'
+    infoTextFiltered: '<span class="badge bg-warning">'
       + t(appName, 'Filtered')
       + '</span> {0} '
       + t(appName, 'from')

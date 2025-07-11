@@ -63,8 +63,7 @@ import {
 } from './lazy-decryption.js';
 
 import 'selectize';
-import 'selectize/dist/css/selectize.bootstrap4.css';
-// import 'selectize/dist/css/selectize.css';
+import 'selectize/dist/css/selectize.bootstrap.css';
 require('cafevdb-selectize.scss');
 
 require('jquery-ui/ui/widgets/autocomplete');

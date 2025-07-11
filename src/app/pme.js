@@ -73,7 +73,7 @@ import {
 } from './pme-selectors.js';
 import 'jquery-ui/ui/effects/effect-highlight.js';
 import 'jquery-ui/ui/widgets/sortable.js';
-import 'selectize/dist/css/selectize.bootstrap4.css';
+import 'selectize/dist/scss/selectize.bootstrap.scss';
 import mergician from 'mergician';
 import {
   LEGACY_PME_UPDATE,
@@ -83,7 +83,6 @@ import {
   emit as asyncEmit,
   getEmitResult,
 } from '../services/async-event-bus.ts';
-// import 'selectize/dist/css/selectize.css';
 require('cafevdb-selectize.scss');
 
 require('pme-table.scss');

@@ -240,17 +240,52 @@ $editorHeight: 20em;
           }
 
           .recipients-select {
+            @include meta.load-css('bootstrap/dist/css/bootstrap');
+            @include meta.load-css('bootstrap4-duallistbox/dist/bootstrap-duallistbox');
+            --bs-border-radius: var(--border-radius-large);
+            --bs-border-width: var(--border-width-input, 2px);
+            --bs-border-color: var(--color-border-maxcontrast);
+            --bs-badge-color: var(--color-main-text);
             button {
               min-height: unset;
             }
-            // @import 'bootstrap/scss/bootstrap';
-            // @import 'bootstrap4-duallistbox/dist/bootstrap-duallistbox';
-            // @include meta.load-css('bootstrap/scss/bootstrap');
-            @include meta.load-css('bootstrap/dist/css/bootstrap.css');
-            @include meta.load-css('bootstrap4-duallistbox/dist/bootstrap-duallistbox');
             .bootstrap-duallistbox-container {
-              input, select, button {
-                background-color:#FFF;
+              .btn.moveall, .btn.removeall, select {
+                border: 2px solid var(--color-border-maxcontrast);
+              }
+              .btn {
+                --bs-btn-hover-color: var(--color-primary-element-light-text);
+                --bs-btn-color: var(--color-primary-element-light-text);
+                // --bs-btn-bg: var(--color-primary-element-light);
+                --bs-btn-hover-bg: var(--color-primary-element-light-hover);
+                --bs-btn-bg: var(--color-main-background);
+                font-weight: bold;
+                background-repeat: no-repeat, no-repeat;
+                background-size: auto 60%;
+                background-position-x: 47%, 53%;
+                background-position-y: center, center;
+                text-indent: -200vw;
+                &.moveall {
+                  $icon: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/arrow-right.svg');
+                  background-image: $icon, $icon;
+                }
+                &.removeall {
+                  $icon: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/arrow-left.svg');
+                  background-image: $icon, $icon;
+                }
+              }
+              input, select {
+                background-color: var(--color-main-background);
+              }
+              input {
+                &:hover, &:focus {
+                  &:not([disabled]) {
+                    border-color: var(--color-main-text);
+                    border-width: var(--border-width-input-focused, 2px);
+                    box-shadow: 0 0 0 2px var(--color-main-background) !important;
+                    --input-border-width-offset: 0px;
+                  }
+                }
               }
             }
           }
