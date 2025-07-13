@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-11 21:16+0200\n"
-"PO-Revision-Date: 2025-07-11 20:54+0200\n"
+"POT-Creation-Date: 2025-07-13 18:14+0200\n"
+"PO-Revision-Date: 2025-07-13 18:16+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -4811,8 +4811,7 @@ msgstr ""
 "Die Datenbankverbindung kann nur noch zum Rückgängigmachen verwendet werden."
 
 #: lib/Database/EntityManager.php:1439
-#, fuzzy, php-format
-#| msgid "Unexpected locate settings \"%1$s\" vs. \"%2$s\"."
+#, php-format
 msgid "Unexpected locale settings \"%1$s\" vs. \"%2$s\"."
 msgstr ""
 "Widersprüchliche Lokalisierungs-Einstellungen, \"%1$s\" versus \"%2$s\"."
@@ -6614,7 +6613,7 @@ msgstr "Sammelauftragsddaten"
 #: lib/PageRenderer/Invoices.php:504 lib/PageRenderer/Invoices.php:1540
 #: lib/PageRenderer/ProjectPayments.php:491
 msgid "Bank Transaction"
-msgstr "Bankauftrag"
+msgstr "Bankgeschäfte"
 
 #: lib/PageRenderer/Invoices.php:518
 msgid "Invoice Id"
@@ -13129,10 +13128,8 @@ msgid "Project Participant-Fields"
 msgstr "Verwaltung Tabellen-Spalten"
 
 #: lib/Service/ToolTipsDataService.php:1523
-#, fuzzy
-#| msgid "Bank Transaction"
-msgid "Bank-Transaktionen"
-msgstr "Bankauftrag"
+msgid "Bank Transactions"
+msgstr "Bankgeschäfte"
 
 #: lib/Service/ToolTipsDataService.php:1524
 msgid "All Projects"
@@ -13253,12 +13250,12 @@ msgstr ""
 "Projektbezug."
 
 #: lib/Service/ToolTipsDataService.php:1545
-#, fuzzy
-#| msgid "A table holding the various payments of participants."
 msgid ""
 "A table holding the various payments and reimbursements of participants, as "
 "well as bank transfers to external parties."
-msgstr "Daten-Tabelle mit allen Zahlungen der Teilnehmenden."
+msgstr ""
+"Daten-Tabelle mit allen Zahlungen der und Erstattung für\n"
+"Teilnehmenden, außerdem Zahlungen an externe Partner."
 
 #: lib/Service/ToolTipsDataService.php:1546
 msgid "Overview over all known projects (start-page)."
@@ -20188,6 +20185,11 @@ msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr "Zeigt einfach alle Spalten an."
+
+#, fuzzy
+#~| msgid "Bank Transaction"
+#~ msgid "Bank-Transaktionen"
+#~ msgstr "Bankauftrag"
 
 #~ msgid "Received Payments"
 #~ msgstr "Eingegangene Zahlungen"
