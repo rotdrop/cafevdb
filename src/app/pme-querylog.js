@@ -31,6 +31,7 @@ import { appName, appPrefix } from '../config.ts';
 import { selectedOptions, deselectAll as selectDeselectAll, makePlaceholder as selectPlaceholder } from './select-utils.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
+import { formatDialect as sqlFormat, mariadb as sqlDialect } from 'sql-formatter';
 
 /**
  * Handle the export menu actions.
@@ -41,30 +42,28 @@ const handleQueryLogMenu = function($select) {
   const $logOption = selectedOptions($select);
 
   const queryData = $logOption.data('query');
-  Dialogs.info(
-    '<div class="query-log-container">'
-      + '<dl class="query-log-entry">'
-      + '<dt>' + t(appName, 'Query')
-      + '<a class="copy button" href="#">' + t(appName, 'copy') + '</a>'
-      + '</dt>'
-      + '<dd>' + queryData.query + '</dd>'
-      + '<dt>' + t(appName, 'Duration') + '</dt>'
-      + '<dd>' + queryData.duration + ' ' + 'ms' + '</dd>'
-      + '<dt>' + t(appName, 'Affected Rows') + '</dt>'
-      + '<dd>' + queryData.affectedRows + '</dd>'
-      + '<dt>' + t(appName, 'Error Code') + '</dt>'
-      + '<dd>' + queryData.errorCode + '</dd>'
-      + '</dl>'
-      + '</div>',
-    t(appName, 'Selected SQL-Query'),
-    undefined,
-    undefined,
-    true, // allow HTML
-  );
+  const sqlData = sqlFormat(queryData.query, { dialect: sqlDialect });
+  Dialogs.info({
+    content: `<div class="query-log-container">
+  <dl class="query-log-entry">
+    <dt><span>${t(appName, 'Query')}</span><span>&nbsp;</span><button class="copy button">${t(appName, 'copy')}</button></dt>
+    <dd><pre style="width:auto;">${sqlData}</pre></dd>
+    <dt>${t(appName, 'Duration')}</dt>
+    <dd>${queryData.duration} ms</dd>
+    <dt>${t(appName, 'Affected Rows')}</dt>
+    <dd>${queryData.affectedRows}</dd>
+    <dt>${t(appName, 'Error Code')}</dt>
+    <dd>${queryData.errorCode}</dd>
+  </dl>
+</div>`,
+    title: t(appName, 'Selected SQL-Query'),
+    allowHtml: true,
+    dialogClasses: ['maximize-width', 'sql-query', 'error'],
+  });
 
   $('body')
-    .off('click', '.query-log-container a.copy')
-    .on('click', '.query-log-container a.copy', function(event) {
+    .off('click', '.query-log-container .button.copy')
+    .on('click', '.query-log-container .button.copy', function(event) {
       navigator.clipboard.writeText(queryData.query).then(function() {
         Notification.showTemporary(t(appName, 'Query has been copied to the clipboard.'));
       }, function(reason) {
@@ -112,8 +111,3 @@ const pmeQueryLogMenu = function(containerSel) {
 };
 
 export default pmeQueryLogMenu;
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

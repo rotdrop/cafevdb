@@ -85,13 +85,22 @@ const message = function({
   dialogClasses,
 }) {
 
-  console.info('MESSAGE', { content, title, dialogType, buttons, callback, modal, allowHtml });
+  console.info('MESSAGE', { content, title, dialogType, buttons, callback, modal, allowHtml, dialogClasses });
+
+  const cssClasses = [appNameTag, 'legacy-dialog', dialogType];
+  if (dialogClasses) {
+    if (Array.isArray(dialogClasses)) {
+      cssClasses.splice(0, 0, ...dialogClasses);
+    } else {
+      cssClasses.push(dialogClasses);
+    }
+  }
 
   const builder = (new DialogBuilder())
     .setName(title)
     .setText(allowHtml ? '' : content)
     .setButtons(getLegacyButtons(buttons, callback))
-    .setDialogClasses([appNameTag, 'legacy-dialog', dialogType, dialogClasses]);
+    .setDialogClasses(cssClasses);
 
   switch (dialogType) {
   case 'alert':
@@ -118,7 +127,7 @@ const message = function({
 
   $('body').find('.legacy-dialog.' + appNameTag)
     .closest('.modal-container')
-    .addClass([appNameTag, 'legacy-dialog', dialogClasses]);
+    .addClass(cssClasses);
 
   return promise;
 };
@@ -136,15 +145,17 @@ const alert = function(content, title, callback, modal, allowHtml) {
 };
 
 const info = function(content, title, callback, modal, allowHtml) {
-  return message({
-    content,
-    title,
+  const defaultOptions = {
     dialogType: 'info',
     buttons: OC.dialogs.OK_BUTTONS,
-    callback,
-    modal,
-    allowHtml,
-  });
+    modal: false,
+    allowHtml: false,
+  };
+  const options = (typeof content === 'string' || content instanceof String)
+    ? { ...defaultOptions, ...{ content, title, callback, modal, allowHtml } }
+    : { ...defaultOptions, ...content };
+  console.info('DIALOG OPTIONS', { content, defaultOptions, options });
+  return message(options);
 };
 
 const confirm = function(content, title, options, modal, allowHtml) {
