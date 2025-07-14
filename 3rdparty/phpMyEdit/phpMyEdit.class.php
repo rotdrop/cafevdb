@@ -5717,6 +5717,7 @@ EOT;
 		if ($this->misc_enabled()) {
 			$this->emit_misc_recs();
 		}
+		echo '<span class="'.$this->getCSSclass('postfix', 'down').'">'."\n";
 		if ($this->display['time'] && $this->timer != null) {
 			echo '<span class="'.$this->getCSSclass('time').'">'.$this->timer->end().' miliseconds'.'</span>';
 		}
@@ -5728,6 +5729,7 @@ EOT;
 				echo $postfix;
 			}
 		}
+		echo '</span>'."\n";
 		echo '</div>'."\n";
 		$this->form_end();
 	} /* }}} */
