@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Exceptions;
 /** TBD. */
 class SepaBulkTransactions extends PMETableViewBase
 {
-
+  use FieldTraits\ActionMenuToggleTrait;
   use FieldTraits\CryptoTrait;
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
@@ -719,6 +719,13 @@ __EOT__;
       }
       return true;
     };
+
+    $this->installActionMenuToggle(
+      $opts,
+      fn(array $record, array $groupByRecord, array $row, PHPMyEdit $pme)
+      =>
+      $this->isBulkTransactionRow($row, $pme) ? compact('record', 'groupByRecord', 'row') : null,
+    );
 
     $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 

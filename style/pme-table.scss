@@ -1602,6 +1602,20 @@ form.pme-form {
     }
   }
 
+  .vue-action-menu-placeholder {
+    button.vue-mount-point {
+      color: var(--color-main-text);
+      background-color: transparent;
+      &:hover:not(:disabled) {
+	background-color: var(--color-background-hover);
+      }
+      svg {
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+
   .pme-postfix.pme-down {
     display: inline-flex;
     align-items: center;

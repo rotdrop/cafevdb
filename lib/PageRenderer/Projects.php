@@ -50,6 +50,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 /**Table generator for Projects table. */
 class Projects extends PMETableViewBase
 {
+  use FieldTraits\ActionMenuToggleTrait;
   use FieldTraits\InstrumentsTrait;
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
@@ -243,7 +244,7 @@ class Projects extends PMETableViewBase
     // Navigation style: B - buttons (default), T - text links, G - graphic links
     // Buttons position: U - up, D - down (default)
     //$opts['navigation'] = 'DB';
-    $opts['navigation'] = self::PME_NAVIGATION_NO_MULTI . 'C';
+    // $opts['navigation'] = self::PME_NAVIGATION_NO_MULTI . 'C';
 
     // Display special page elements
     $opts['display'] = [
@@ -1062,19 +1063,23 @@ class Projects extends PMETableViewBase
       return true;
     };
 
-    $opts['display']['custom_navigation'] = function($rec, $groupby_rec, $row, $pme) {
-      $projectId = $rec['id'];
-      $projectName = $row[$this->queryField('name')];
-      return $this->projectActionMenu($projectId, $projectName, overview: true, direction: 'left');
-    };
+    $this->installActionMenuToggle(
+      $opts,
+      fn($rec, $groupby_rec, $row, $pme)
+      =>
+      [ 'projectId' => (int)$rec['id'], 'projectName' => $row[$this->queryField('name')] ],
+    );
 
     $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($this->projectId > 0) {
       $opts['buttons'] = $this->pageNavigation->prependTableButtons(buttons: []);
       foreach (['C', 'P', 'D', 'V'] as $operationMode) {
-        foreach (['up' => 'down', 'down' => 'up'] as $position => $direction) {
-          $actionMenu = $this->projectActionMenu($this->projectId, $this->projectName, direction: 'left', dropDirection: $direction);
+        foreach (['up', 'down'] as $position) {
+          $actionMenu = $this->generateActionMenuToggle([
+            'projectId' => (int)$this->projectId,
+            'projectName' => $this->projectName,
+          ]);
           $button = [
             'code' => $actionMenu,
             'name' => 'actions',
@@ -1113,46 +1118,6 @@ class Projects extends PMETableViewBase
    data-post="' . $post . '" data-json=\'' . $json . '\'
    title="' . $this->toolTipsService['page-renderer:projects:edit-' . $template] . '"
 >' . $this->l->t('edit') . '</a>';
-
-    return $html;
-  }
-
-  /**
-   * Generate a HTML snippet for the project actions menu, giving access to
-   * other pages and cloud services related to the project.
-   *
-   * @param int $projectId Entity id.
-   *
-   * @param string $projectName Project name.
-   *
-   * @param bool $overview Whether this is the overview in which page the
-   * overview menu entry is not generated.
-   *
-   * @param string $direction Menu direction left, right.
-   *
-   * @param string $dropDirection Drop up or down.
-   *
-   * @return string HTML.
-   */
-  public function projectActionMenu(
-    int $projectId,
-    string $projectName,
-    bool $overview = false,
-    string $direction = 'left',
-    string $dropDirection = 'down',
-  ):string {
-    $templateParameters = [
-      'projectId' => $projectId,
-      'projectName' => $projectName,
-      'toolTips' => $this->toolTipsService,
-      'direction' => $direction,
-      'dropDirection' => $dropDirection,
-    ];
-    $template = $this->templateResponse(
-      'fragments/projects/project-actions',
-      $templateParameters,
-    );
-    $html = $template->render();
 
     return $html;
   }

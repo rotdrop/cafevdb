@@ -235,8 +235,9 @@ const actionMenu = async function(containerSel) {
   const $container = PHPMyEdit.container(containerSel);
 
   const generateVueMenu = async ($actionMenu) => {
-    const projectId = $actionMenu.data('projectId');
-    const projectName = $actionMenu.data('projectName');
+    const actionMenuData = $actionMenu.data('actionMenu');
+    const projectId = actionMenuData.projectId;
+    const projectName = actionMenuData.projectName;
     const vueMenu = await getEmitResult(
       asyncEmit(BusEvents.GET_VUE_COMPONENT, {
         name: PROJECT_ACTIONS_MENU,
@@ -255,18 +256,16 @@ const actionMenu = async function(containerSel) {
 
     console.info('AFTER CREATE NEW MENU', vueMenu);
     $actionMenu.data('vueMenu', vueMenu);
-    $actionMenu.removeClass('dropdown-container').empty().html('<div></div>');
-    return await vueMenu.$mount($actionMenu.children(':first')[0]);
+    return await vueMenu.$mount($actionMenu.find('.vue-mount-point')[0]);
   };
-  // $container.find('.project-actions.dropdown-container').each(function() { generateVueMenu($(this); });
 
   $container
-    .off('click', '.project-actions')
-    .on('click', '.project-actions', async function(event) {
+    .off('click', '.vue-action-menu-placeholder.projects button.vue-mount-point')
+    .on('click', '.vue-action-menu-placeholder.projects button.vue-mount-point', async function(event) {
 
       $.fn.cafevTooltip.hide();
 
-      const $actionMenu = $(this);
+      const $actionMenu = $(this).parent();
       if ($actionMenu.data('vueMenu')) {
         // the menu already exists, just let it do its work
         return;
@@ -277,7 +276,7 @@ const actionMenu = async function(containerSel) {
       event.stopImmediatePropagation();
 
       const vueMenu = await generateVueMenu($actionMenu);
-      const projectId = $actionMenu.data('projectId');
+      const projectId = $actionMenu.data('actionMenu').projectId;
 
       asyncEmit(BusEvents.PROJECT_ACTIONS, {
         open: false,
@@ -296,7 +295,7 @@ const actionMenu = async function(containerSel) {
       const $row = $(this);
       const $form = $row.closest(pmeFormSelector);
       const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
-      const $actionMenu = $actionMenuContainer.find('.project-actions').first();
+      const $actionMenu = $actionMenuContainer.find('.vue-action-menu-placeholder.projects').first();
 
       if ($actionMenu.length === 0) {
         return;
@@ -306,7 +305,7 @@ const actionMenu = async function(containerSel) {
       originalEvent.stopImmediatePropagation();
 
       const vueMenu = $actionMenu.data('vueMenu') || await generateVueMenu($actionMenu);
-      const projectId = $actionMenu.data('projectId');
+      const projectId = $actionMenu.data('actionMenu').projectId;
 
       if (vueMenu.isOpen()) {
         vueMenu.closeMenu();
