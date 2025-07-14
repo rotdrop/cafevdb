@@ -27,59 +27,25 @@
  */
 
 import $ from './jquery.js';
-import { appName, appPrefix } from '../config.ts';
-import { selectedOptions, deselectAll as selectDeselectAll, makePlaceholder as selectPlaceholder } from './select-utils.js';
-import * as Notification from './notification.js';
-import * as Dialogs from './dialogs.js';
-import { formatDialect as sqlFormat, mariadb as sqlDialect } from 'sql-formatter';
+import { appPrefix } from '../config.ts';
+import { LEGACY_QUERY_LOG } from '../mountable-component-names.ts';
+import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
+import { emit as asyncEmit, getEmitResult } from '../services/async-event-bus.ts';
 
-/**
- * Handle the export menu actions.
- *
- * @param {jQuery} $select TBD.
- */
-const handleQueryLogMenu = function($select) {
-  const $logOption = selectedOptions($select);
+const vueQueryLogKey = 'vueQueryLog';
 
-  const queryData = $logOption.data('query');
-  const sqlData = sqlFormat(queryData.query, { dialect: sqlDialect });
-  Dialogs.info({
-    content: `<div class="query-log-container">
-  <dl class="query-log-entry">
-    <dt><span>${t(appName, 'Query')}</span><span>&nbsp;</span><button class="copy button">${t(appName, 'copy')}</button></dt>
-    <dd><pre style="width:auto;">${sqlData}</pre></dd>
-    <dt>${t(appName, 'Duration')}</dt>
-    <dd>${queryData.duration} ms</dd>
-    <dt>${t(appName, 'Affected Rows')}</dt>
-    <dd>${queryData.affectedRows}</dd>
-    <dt>${t(appName, 'Error Code')}</dt>
-    <dd>${queryData.errorCode}</dd>
-  </dl>
-</div>`,
-    title: t(appName, 'Selected SQL-Query'),
-    allowHtml: true,
-    dialogClasses: ['maximize-width', 'sql-query', 'error'],
-  });
-
-  $('body')
-    .off('click', '.query-log-container .button.copy')
-    .on('click', '.query-log-container .button.copy', function(event) {
-      navigator.clipboard.writeText(queryData.query).then(function() {
-        Notification.showTemporary(t(appName, 'Query has been copied to the clipboard.'));
-      }, function(reason) {
-        Notification.showTemporary(t(appName, 'Failed copying query to the clipboard: {reason}.', { reason }));
-      });
-      return false;
-    });
-
-  // Cheating. In principle we mis-use this as a simple pull-down
-  // menu, so let the text remain at its default value. Make sure to
-  // also remove and re-attach the tool-tips, otherwise some of the
-  // tips remain, because chosen() removes the element underneath.
-  selectDeselectAll($select);
-  $.fn.cafevTooltip.remove();
-
-  $('div.chosen-container').cafevTooltip({ placement: 'auto' });
+const queryLogMenu = async function($queryLogProvider) {
+  if ($queryLogProvider.data(vueQueryLogKey)) {
+    return false;
+  }
+  const queryLog = $queryLogProvider.data('queryLog');
+  console.info('QUERY LOG', { queryLog });
+  const queryLogComponent = await getEmitResult(
+    asyncEmit(GET_VUE_COMPONENT, { name: LEGACY_QUERY_LOG, propsData: { queryLog } }),
+  );
+  await queryLogComponent.$mount($queryLogProvider.find('.vue-mount-point')[0]);
+  $queryLogProvider.data(vueQueryLogKey, queryLogComponent);
+  return queryLogComponent;
 };
 
 const pmeQueryLogMenu = function(containerSel) {
@@ -87,25 +53,20 @@ const pmeQueryLogMenu = function(containerSel) {
     containerSel = '#' + appPrefix('page-body');
   }
   const $container = $(containerSel);
-
-  // Emulate a pull-down menu with export options via the chosen
-  // plugin.
-  const $queryLogSelect = $container.find('.query-log select');
-
-  $queryLogSelect.chosen({
-    width: 'auto',
-    disable_search: true,
-    inherit_select_classes: true,
-    title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
-  });
-
-  // install placeholder as first item if chosen is not active
-  selectPlaceholder($queryLogSelect);
-
-  $queryLogSelect
-    .off('change')
-    .on('change', function(event) {
-      handleQueryLogMenu($queryLogSelect);
+  const vueComponents = $container.data('vueComponents') || [];
+  if (vueComponents.length === 0) {
+    $container.data('vueComponents', vueComponents);
+  }
+  const $queryLogProvider = $container.find('.query-log');
+  $queryLogProvider
+    .find('.query-log-trigger')
+    .off('click')
+    .on('click', function(event) {
+      queryLogMenu($queryLogProvider).then((component) => {
+        if (component) {
+          vueComponents.push(component);
+        }
+      });
       return false;
     });
 };

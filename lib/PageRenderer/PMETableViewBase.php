@@ -348,28 +348,21 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       if (!$this->expertMode) {
         return $html;
       }
-      $html .= '<span class="query-log"><select class="chosen chosen-dropup" name="query-log" data-placeholder="' . $this->l->t('Query Log'). '">';
-      //$html .= '<option value="" hidden>' . $this->l->t('Query Log') . '</option>';
-      $html .= '<option value="" hidden></option>';
-      $cnt = 0;
       $queryLog = $this->pme->queryLog();
       usort($queryLog, function($a, $b) {
         $aVal = (double)$a['duration'];
         $bVal = (double)$b['duration'];
         return (($aVal == $bVal) ? 0 : ($aVal < $bVal ? +1 : -1));
       });
-      foreach ($queryLog as $logEntry) {
-        $label = sprintf('%.03f ms: ', $logEntry['duration']);
-        $label .= htmlspecialchars(substr($logEntry['query'], 0, 24));
-        if (strlen($logEntry['query']) > 24) {
-          $label .= ' &#8230;';
-        }
-        $toolTip = htmlspecialchars($logEntry['query']);
-        $data = htmlspecialchars(json_encode($logEntry), ENT_QUOTES, 'UTF-8');
-        $html .= '<option data-query=\'' . $data . '\' title="' . $toolTip . '" class="tooltip-wide" value="' . $cnt . '">' . $label . '</option>';
-        $cnt++;
-      }
-      $html .= '</select></span>';
+      $dotsSvg = '<svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24" class="material-design-icon__svg"><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z"><!----></path></svg>';
+      $html .= '<span class="query-log flex-container flex-center" data-query-log=\'' . htmlspecialchars(json_encode($queryLog)) . '\'>
+  <button class="query-log-trigger vue-mount-point flex-container flex-center flex-justify-center" style="margin:0;padding: 0 12px 0 4px;">
+    <span class="button-content flex-container flex-center">
+      <span class="button-icon flex-container flex-center flex-justify-center" style="width:34px;height:34px">' . $dotsSvg . '</span>
+      <span class="button-text" style="padding:2px 0;margin-bottom:1px;">' . $this->l->t('Query Log') . '</span>
+    </span>
+  </button>
+</span>';
       return $html;
     };
 

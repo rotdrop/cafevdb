@@ -40,6 +40,9 @@ export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
       case MountableComponents.DOKU_WIKI_WRAPPER:
         vueComponent = (await import('@rotdrop/nextcloud-app-dokuwiki/src/DokuWikiWrapper.vue')).default;
         break;
+      case MountableComponents.LEGACY_QUERY_LOG:
+        vueComponent = (await import('../components/LegacyQueryLog.vue')).default;
+        break;
       default:
         return;
       }

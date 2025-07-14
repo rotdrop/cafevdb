@@ -1602,8 +1602,13 @@ form.pme-form {
     }
   }
 
-  span.query-log {
-    margin-left:1ex;
+  .pme-postfix.pme-down {
+    display: inline-flex;
+    align-items: center;
+
+    span.query-log {
+      margin-left:1ex;
+    }
   }
 } /* form.pme-form */
 

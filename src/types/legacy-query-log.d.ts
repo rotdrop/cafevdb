@@ -21,29 +21,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LegacySqlQueryLogItem } from './types/legacy-query-log.d.ts';
-
-export const PROJECT_ACTIONS_MENU = 'ProjectActionsMenu';
-export const DOKU_WIKI_WRAPPER = 'DokuWikiWrapper';
-export const LEGACY_QUERY_LOG = 'LegacyQueryLog';
-
-export interface ComponentProps {
-  [PROJECT_ACTIONS_MENU]: {
-    projectId: number,
-    projectName: string,
-    forceProjectName?: boolean,
-    enableOverviewItem?: boolean,
-    testOpen?: boolean,
-  },
-  [DOKU_WIKI_WRAPPER]: {
-    wikiPage?: string,
-    query?: Record<string, string>,
-    iFrameAttributes?: Record<string, string>,
-    fullScreen?: boolean,
-  },
-  [LEGACY_QUERY_LOG]: {
-    queryLog: LegacySqlQueryLogItem[],
-  },
+export interface LegacySqlQueryLogItem {
+  query: string, // SQL code
+  queryHash: string, // md5 hash of query for indexing purposes
+  affectedRows: number, // integral
+  duration: number, // micro seconds
+  errorCode: number, // 0 on success
+  errorInfo: null|string,
 }
-
-export type PropsData<C extends keyof ComponentProps> = ComponentProps[C];
