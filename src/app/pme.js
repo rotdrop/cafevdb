@@ -76,12 +76,14 @@ import 'jquery-ui/ui/widgets/sortable.js';
 import 'selectize/dist/scss/selectize.bootstrap.scss';
 import mergician from 'mergician';
 import {
+  LEGACY_PAGE_CLEANUP,
   LEGACY_PME_UPDATE,
   LEGACY_SANITIZE_POST_DATA,
 } from '../event-bus-events.ts';
 import {
   emit as asyncEmit,
   getEmitResult,
+  subscribe as asyncSubscribe,
 } from '../services/async-event-bus.ts';
 require('cafevdb-selectize.scss');
 
@@ -102,6 +104,29 @@ const pmeDefaultSelector = PMEState.defaultSelector;
 const pmePrefix = PMEState.prefix;
 const pmeOpenDialogs = PMEState.openDialogs;
 const pmePageRenderer = PMEState.pageRenderer;
+
+/**
+ * Cleanup vue-component when replacing parts of the DOM.
+ *
+ * @param {jQuery} $container TBD.
+ */
+const pmeDestroyVueComponents = function($container) {
+  console.info('CLEANUP TO BE ORPHANCED VUE COMPONENTS', {
+    $container,
+    vueComponents: $container?.data('vueComponents'),
+  });
+  const vueComponents = $container.data('vueComponents') || [];
+  for (const component of vueComponents) {
+    component.$destroy();
+    console.info('REMOVED VUE COMPONENT', { component });
+  }
+  $container.data('vueComponents', []);
+};
+
+asyncSubscribe(LEGACY_PAGE_CLEANUP, () => {
+  pmeDestroyVueComponents(pmeContainer());
+  // to do: find all open dialogs and do the same.
+});
 
 const pmeHasEditableData = function(form) {
   let $form = $(form);
@@ -328,6 +353,8 @@ const tableDialogReplace = function(container, content, options, callback, trigg
   pmeUnTweak(container);
   // remove the WYSIWYG editor, if any is attached
   WysiwygEditor.removeEditor(container.find('textarea.wysiwyg-editor'));
+
+  pmeDestroyVueComponents(container);
 
   container.css('height', 'auto');
   $.fn.cafevTooltip.remove();
@@ -1040,6 +1067,7 @@ const pmeTableDialogOpen = async function(tableOptions, post) {
               switch (parameters.reason) {
               case 'dialogClose':
                 tableLoadCallback(template, containerSel, parameters, function(arg) {});
+                pmeDestroyVueComponents(pmeContainer(containerSel));
                 break;
               case 'dialogOpen':
                 WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'/* :enabled' */), function() {
@@ -1095,6 +1123,8 @@ const pmeTableDialogOpen = async function(tableOptions, post) {
             WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
 
             dialogHolder.find('iframe').removeAttr('src');
+
+            pmeDestroyVueComponents(dialogHolder);
 
             if (tableOptions.modified === true) {
               // reload outer form
@@ -1243,6 +1273,8 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
     .done(async function(htmlBody, action, post) {
 
       console.info('DONE AFTER PSEUDO SUBMIT', action, post);
+
+      pmeDestroyVueComponents(container);
 
       await asyncEmit(LEGACY_PME_UPDATE, {
         post,

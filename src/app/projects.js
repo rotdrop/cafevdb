@@ -247,6 +247,12 @@ const actionMenu = async function(containerSel) {
         },
       }),
     );
+    const vueComponents = $container.data('vueComponents') || [];
+    if (vueComponents.length === 0) {
+      $container.data('vueComponents', vueComponents);
+    }
+    vueComponents.push(vueMenu);
+
     console.info('AFTER CREATE NEW MENU', vueMenu);
     $actionMenu.data('vueMenu', vueMenu);
     $actionMenu.removeClass('dropdown-container').empty().html('<div></div>');
