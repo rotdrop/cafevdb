@@ -27,6 +27,7 @@ import * as ncRouter from '@nextcloud/router';
 import wikiPopup from './wiki-popup.js';
 import { WIKI_POPUP } from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
+import { classSelector as pmeClassSelector } from './pme-selectors.js';
 
 // listen to requests from the Vue wrapper application, the idea is
 // not to have to load all the code twice, or not to have to change
@@ -65,7 +66,7 @@ const userManualMenuHandler = function(event) {
     if (menuId === 'manual_dialog') {
       let dialogTitle = $item.data('dialogTitle');
       if (!dialogTitle) {
-        const $titleProvider = $('#pme-short-title');
+        const $titleProvider = $(pmeClassSelector('span', 'short-title'));
         dialogTitle = $titleProvider.length > 0 ? $titleProvider.html() : manualPage;
       }
       wikiPopup({ wikiPage, popupTitle: t(appName, 'User Manual: {section}', { section: dialogTitle }, 0, { escape: false }) });
