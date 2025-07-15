@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-13 18:16+0200\n"
+"POT-Creation-Date: 2025-07-15 10:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1822,8 +1822,8 @@ msgstr ""
 #: lib/Documents/OpenDocumentFiller.php:388
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:146
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2455
-#: lib/PageRenderer/Projects.php:812
-#: lib/PageRenderer/Projects.php:820
+#: lib/PageRenderer/Projects.php:813
+#: lib/PageRenderer/Projects.php:821
 #: lib/Service/Finance/InstrumentInsuranceService.php:611
 #: lib/Service/Finance/InstrumentInsuranceService.php:615
 #: lib/Service/PhoneNumberService.php:155
@@ -3406,13 +3406,13 @@ msgstr ""
 
 #: lib/Controller/ProjectsController.php:259
 #: lib/Controller/ProjectsController.php:280
-#: lib/PageRenderer/Projects.php:805
+#: lib/PageRenderer/Projects.php:806
 msgid "closed"
 msgstr ""
 
 #: lib/Controller/ProjectsController.php:261
 #: lib/Controller/ProjectsController.php:283
-#: lib/PageRenderer/Projects.php:803
+#: lib/PageRenderer/Projects.php:804
 msgid "active"
 msgstr ""
 
@@ -3442,8 +3442,8 @@ msgid "Successfully deleted \"%s\"."
 msgstr ""
 
 #: lib/Controller/ProjectsController.php:308
-#: lib/PageRenderer/Projects.php:791
-#: lib/PageRenderer/Projects.php:799
+#: lib/PageRenderer/Projects.php:792
+#: lib/PageRenderer/Projects.php:800
 msgid "unset"
 msgstr ""
 
@@ -4343,7 +4343,7 @@ msgstr ""
 #: lib/PageRenderer/InstrumentInsurances.php:616
 #: lib/PageRenderer/Invoices.php:897
 #: lib/PageRenderer/Invoices.php:908
-#: lib/PageRenderer/PMETableViewBase.php:707
+#: lib/PageRenderer/PMETableViewBase.php:700
 msgid "Due Date"
 msgstr ""
 
@@ -5262,7 +5262,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:324
 #: lib/PageRenderer/ProjectPayments.php:583
 #: lib/PageRenderer/SepaBulkTransactions.php:369
-#: specialVueFakeDummyForL10nScript.js:5983
+#: specialVueFakeDummyForL10nScript.js:6347
 msgid "Project"
 msgstr ""
 
@@ -5301,7 +5301,7 @@ msgstr ""
 #: lib/PageRenderer/Musicians.php:995
 #: lib/PageRenderer/ProjectAssociates.php:1147
 #: lib/PageRenderer/ProjectParticipants.php:1405
-#: lib/PageRenderer/Projects.php:1019
+#: lib/PageRenderer/Projects.php:1020
 #: lib/PageRenderer/TaxExemptionNotices.php:444
 msgid "Last Updated"
 msgstr ""
@@ -5407,8 +5407,8 @@ msgstr ""
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:97
 #: lib/Service/CloudUserConnectorService.php:397
 #: specialVueFakeDummyForL10nScript.js:1629
-#: specialVueFakeDummyForL10nScript.js:5967
-#: specialVueFakeDummyForL10nScript.js:5979
+#: specialVueFakeDummyForL10nScript.js:6331
+#: specialVueFakeDummyForL10nScript.js:6343
 msgid "Musicians"
 msgstr ""
 
@@ -5477,7 +5477,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:992
 #: lib/PageRenderer/ProjectParticipantFields.php:1567
 #: lib/Service/ProjectParticipantFieldsService.php:667
-#: templates/pme-table.php:58
+#: templates/pme-table.php:57
 msgid "false"
 msgstr ""
 
@@ -5490,7 +5490,7 @@ msgid "Unable to find the standard non-instruments AKA roles."
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:74
-#: lib/PageRenderer/Projects.php:758
+#: lib/PageRenderer/Projects.php:759
 #: templates/settings/email-settings.php:137
 msgid "Mailing List"
 msgstr ""
@@ -5541,7 +5541,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectAssociates.php:539
 #: lib/PageRenderer/ProjectParticipantFields.php:380
 #: lib/PageRenderer/ProjectParticipants.php:590
-#: lib/PageRenderer/Projects.php:323
+#: lib/PageRenderer/Projects.php:324
 #: lib/PageRenderer/TaxExemptionNotices.php:253
 #: lib/PageRenderer/TaxationStatutorySources.php:304
 msgid "Deleted"
@@ -5610,7 +5610,6 @@ msgid "File"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1581
-#: lib/PageRenderer/SepaBulkTransactions.php:658
 msgid "Actions"
 msgstr ""
 
@@ -5784,7 +5783,9 @@ msgstr ""
 msgid "Insurance brief, item, musician, broker"
 msgstr ""
 
+#. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:46
 #: lib/PageRenderer/InstrumentInsurances.php:217
+#: specialVueFakeDummyForL10nScript.js:5667
 msgid "Overview"
 msgstr ""
 
@@ -5918,13 +5919,13 @@ msgstr ""
 #: lib/PageRenderer/InsuranceBrokers.php:168
 #: lib/PageRenderer/ProjectAssociates.php:436
 #: lib/PageRenderer/ProjectParticipants.php:487
-#: specialVueFakeDummyForL10nScript.js:5625
+#: specialVueFakeDummyForL10nScript.js:5989
 msgid "Name"
 msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:63
 #: lib/PageRenderer/InsuranceBrokers.php:176
-#: specialVueFakeDummyForL10nScript.js:5631
+#: specialVueFakeDummyForL10nScript.js:5995
 msgid "Address"
 msgstr ""
 
@@ -6323,9 +6324,9 @@ msgstr ""
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:121
 #. TRANSLATORS src/components/ProjectEventsListing.vue:82
 #: lib/PageRenderer/PME/Config.php:64
-#: lib/PageRenderer/PMETableViewBase.php:661
-#: specialVueFakeDummyForL10nScript.js:3517
-#: specialVueFakeDummyForL10nScript.js:4506
+#: lib/PageRenderer/PMETableViewBase.php:654
+#: specialVueFakeDummyForL10nScript.js:3636
+#: specialVueFakeDummyForL10nScript.js:4625
 msgid "Em@il"
 msgstr ""
 
@@ -6335,132 +6336,134 @@ msgid_plural "%n data fields affected"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/PageRenderer/PMETableViewBase.php:351
+#. TRANSLATORS src/components/LegacyQueryLog.vue:25
+#: lib/PageRenderer/PMETableViewBase.php:362
+#: specialVueFakeDummyForL10nScript.js:2321
 msgid "Query Log"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:484
+#: lib/PageRenderer/PMETableViewBase.php:477
 #, php-format
 msgid "SQL Transaction failed: %s"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:674
+#: lib/PageRenderer/PMETableViewBase.php:667
 msgid "Fees"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:674
+#: lib/PageRenderer/PMETableViewBase.php:667
 msgid "expenses negative"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:715
+#: lib/PageRenderer/PMETableViewBase.php:708
 msgid "Revoked"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:726
+#: lib/PageRenderer/PMETableViewBase.php:719
 msgid "birthday"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:989
+#: lib/PageRenderer/PMETableViewBase.php:982
 #, php-format
 msgid ""
 "Table \"%s\": missing identifier for field \"%s\" and grouping field \"%s\" "
 "already set."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1032
-#: lib/PageRenderer/PMETableViewBase.php:1638
+#: lib/PageRenderer/PMETableViewBase.php:1025
+#: lib/PageRenderer/PMETableViewBase.php:1631
 #, php-format
 msgid ""
 "Identifier column \"%s\" for single-valued join-table \"%s\" contains more "
 "than one key: \"%s\" / \"%s\"."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1049
-#: lib/PageRenderer/PMETableViewBase.php:1426
-#: lib/PageRenderer/PMETableViewBase.php:1662
-#: lib/PageRenderer/PMETableViewBase.php:1882
+#: lib/PageRenderer/PMETableViewBase.php:1042
+#: lib/PageRenderer/PMETableViewBase.php:1419
+#: lib/PageRenderer/PMETableViewBase.php:1655
+#: lib/PageRenderer/PMETableViewBase.php:1875
 #, php-format
 msgid ""
 "Field \"%s.%s\": nested multi-value join tables with unexpected pivot-"
 "column: %s."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1131
+#: lib/PageRenderer/PMETableViewBase.php:1124
 #, php-format
 msgid ""
 "Inconsistent removal request for \"%1$s\" (%3$s), major key \"%2$s\" (%4$s)."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1160
+#: lib/PageRenderer/PMETableViewBase.php:1153
 msgid ""
 "Inconsistent add request for \"%1$s\" (%3$%s), major key \"%2$s\" (%4$s)."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1189
+#: lib/PageRenderer/PMETableViewBase.php:1182
 #, php-format
 msgid ""
 "Inconsistent remaining data for \"%1$s\" (%3$s), major key \"%2$s\" (%4$s)."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1215
-#: lib/PageRenderer/PMETableViewBase.php:1736
+#: lib/PageRenderer/PMETableViewBase.php:1208
+#: lib/PageRenderer/PMETableViewBase.php:1729
 #, php-format
 msgid "No value for identifier field \"%s / %s\"."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1242
+#: lib/PageRenderer/PMETableViewBase.php:1235
 #, php-format
 msgid "Unmable to find master entity for key \"%s\"."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1419
-#: lib/PageRenderer/PMETableViewBase.php:1875
+#: lib/PageRenderer/PMETableViewBase.php:1412
+#: lib/PageRenderer/PMETableViewBase.php:1868
 #, php-format
 msgid ""
 "Adding a new entity \"%1$s\" resulted in an inconsistent value for the "
 "column \"%2$s\", prescribed value was \"%3$s\", generated value is \"%4$s\"."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1441
+#: lib/PageRenderer/PMETableViewBase.php:1434
 #, php-format
 msgid "Unable to find entity in table %s given id %s"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1513
+#: lib/PageRenderer/PMETableViewBase.php:1506
 #, php-format
 msgid "Change-set %s should be empty."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1623
+#: lib/PageRenderer/PMETableViewBase.php:1616
 #, php-format
 msgid ""
 "Missing identifier for field \"%s\" and grouping field \"%s\" already set."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1712
+#: lib/PageRenderer/PMETableViewBase.php:1705
 #, php-format
 msgid "Inconsistent add request for \"%1$s\", major key \"%2$s\"."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1755
+#: lib/PageRenderer/PMETableViewBase.php:1748
 msgid "Master entity is unset."
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:1965
+#: lib/PageRenderer/PMETableViewBase.php:1958
 #, php-format
 msgid "Remaining change-set %s must be empty"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:2181
+#: lib/PageRenderer/PMETableViewBase.php:2174
 #, php-format
 msgid "Unknown column description: \"%s\""
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:2335
+#: lib/PageRenderer/PMETableViewBase.php:2328
 msgid "Table-name not specified"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:2412
+#: lib/PageRenderer/PMETableViewBase.php:2405
 #, php-format
 msgid ""
 "Master join-table field for %1$s not found, avalaible fields: \"%2$s\", "
@@ -6547,7 +6550,7 @@ msgstr ""
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:69
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:121
 #: lib/Service/ToolTipsDataService.php:1520
-#: specialVueFakeDummyForL10nScript.js:3507
+#: specialVueFakeDummyForL10nScript.js:3626
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -6874,134 +6877,134 @@ msgstr ""
 msgid "Filing Date"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:141
+#: lib/PageRenderer/Projects.php:142
 msgid "New Project"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:149
+#: lib/PageRenderer/Projects.php:150
 #, php-format
 msgid "%s Project %s"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:151
+#: lib/PageRenderer/Projects.php:152
 #, php-format
 msgid "%s Projects"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:292
+#: lib/PageRenderer/Projects.php:293
 msgid "year"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:304
+#: lib/PageRenderer/Projects.php:305
 msgid "Project-Name"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:329
+#: lib/PageRenderer/Projects.php:330
 msgid "Kind"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:358
-#: lib/PageRenderer/Projects.php:441
+#: lib/PageRenderer/Projects.php:359
+#: lib/PageRenderer/Projects.php:442
 msgid "Instrumentation"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:398
-#: lib/PageRenderer/Projects.php:475
-#: lib/PageRenderer/Projects.php:914
-#: src/app/pme.js:1527
+#: lib/PageRenderer/Projects.php:399
+#: lib/PageRenderer/Projects.php:476
+#: lib/PageRenderer/Projects.php:915
+#: src/app/pme.js:1559
 msgid "Clear"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:440
+#: lib/PageRenderer/Projects.php:441
 msgid "Voices"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:503
+#: lib/PageRenderer/Projects.php:504
 #, php-format
 msgid "%1$s, #voices"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:641
+#: lib/PageRenderer/Projects.php:642
 msgid "Quantity"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:665
+#: lib/PageRenderer/Projects.php:666
 msgid "Registration Start"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:683
+#: lib/PageRenderer/Projects.php:684
 msgid "Registration Deadline"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:717
 #: lib/PageRenderer/Projects.php:718
+#: lib/PageRenderer/Projects.php:719
 #: templates/fragments/instrument-voices.php:46
 #, php-format
 msgid "e.g. %s"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:764
+#: lib/PageRenderer/Projects.php:765
 #: templates/fragments/projects/project-mailing-list.php:70
 msgid "create"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:764
+#: lib/PageRenderer/Projects.php:765
 msgid "do not create"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:851
+#: lib/PageRenderer/Projects.php:852
 msgid "Public Downloads"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:79
-#: lib/PageRenderer/Projects.php:888
-#: specialVueFakeDummyForL10nScript.js:3509
+#: lib/PageRenderer/Projects.php:889
+#: specialVueFakeDummyForL10nScript.js:3628
 msgid "Participant Fields"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:59
-#: lib/PageRenderer/Projects.php:951
+#: lib/PageRenderer/Projects.php:952
 #: lib/Service/ToolTipsDataService.php:1522
-#: specialVueFakeDummyForL10nScript.js:3505
+#: specialVueFakeDummyForL10nScript.js:3624
 msgid "Participants"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:958
+#: lib/PageRenderer/Projects.php:959
 msgid "Copy participants"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:959
+#: lib/PageRenderer/Projects.php:960
 msgid "Do not copy participants"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:967
+#: lib/PageRenderer/Projects.php:968
 msgid "Program"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:984
+#: lib/PageRenderer/Projects.php:985
 msgid "Posters"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1060
+#: lib/PageRenderer/Projects.php:1061
 #, php-format
 msgid "Copy of %s"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:273
-#: lib/PageRenderer/Projects.php:1115
-#: specialVueFakeDummyForL10nScript.js:4534
+#: lib/PageRenderer/Projects.php:1120
+#: specialVueFakeDummyForL10nScript.js:4653
 msgid "edit"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1402
+#: lib/PageRenderer/Projects.php:1367
 msgid "Copying participants is requested, but the new project id is not given."
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1414
+#: lib/PageRenderer/Projects.php:1379
 msgid "Copying is requested, but the old project id is not given."
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1568
+#: lib/PageRenderer/Projects.php:1533
 #, php-format
 msgid "%s (deleted)"
 msgstr ""
@@ -7202,7 +7205,7 @@ msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:94
 #: lib/PageRenderer/SepaBulkTransactions.php:610
-#: specialVueFakeDummyForL10nScript.js:5971
+#: specialVueFakeDummyForL10nScript.js:6335
 #: templates/emailform/form.php:36
 #: templates/emailform/part.emailform.composer.php:125
 msgid "Recipients"
@@ -7213,17 +7216,7 @@ msgstr ""
 msgid "From"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:675
-#: templates/fragments/participant-fields/attachment-file-upload-menu.php:110
-#: templates/fragments/participant-fields/attachment-file-upload-menu.php:120
-msgid "download"
-msgstr ""
-
-#: lib/PageRenderer/SepaBulkTransactions.php:680
-msgid "announce"
-msgstr ""
-
-#: lib/PageRenderer/SepaBulkTransactions.php:767
+#: lib/PageRenderer/SepaBulkTransactions.php:760
 #: lib/Service/Finance/SepaBulkTransactionService.php:684
 #, php-format
 msgid ""
@@ -7231,7 +7224,7 @@ msgid ""
 "bank, it cannot be deleted."
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:784
+#: lib/PageRenderer/SepaBulkTransactions.php:777
 #, php-format
 msgid "Data inconsistency in bulk-transaction payments: %d / %d"
 msgstr ""
@@ -8589,16 +8582,22 @@ msgstr ""
 msgid "Date of latest submission of the debit note to our own bank."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:179
+#: lib/Service/ToolTipsDataService.php:180
 msgid ""
-"Inform all debitors of this debit-note by email; an email dialog is\n"
-"opened."
+"Inform all debitors of this debit-note by email; an email dialog is opened."
+msgstr ""
+
+#: lib/Service/ToolTipsDataService.php:181
+msgid ""
+"Download the data-set of this bulk-transaction for transferal to our bank "
+"institute."
 msgstr ""
 
 #: lib/Service/ToolTipsDataService.php:182
 msgid ""
-"Download the data-set of this bulk-transaction for transferal to our bank\n"
-"institute."
+"Generate a CSV table in order to record balances in GnuCash. The records the "
+"amounts as receivables and inserts the appropriate balancing booking as "
+"income or expenses as appropriate."
 msgstr ""
 
 #: lib/Service/ToolTipsDataService.php:189
@@ -12102,7 +12101,7 @@ msgstr ""
 #. TRANSLATORS src/components/AddContactsToProject.vue:33
 #. TRANSLATORS src/views/FilesTab.vue:154
 #: specialVueFakeDummyForL10nScript.js:704
-#: specialVueFakeDummyForL10nScript.js:5987
+#: specialVueFakeDummyForL10nScript.js:6351
 #: templates/settings/share-settings.php:103
 msgid "Contacts"
 msgstr ""
@@ -12110,14 +12109,14 @@ msgstr ""
 #. TRANSLATORS src/components/AddContactsToProject.vue:34
 #. TRANSLATORS src/views/FilesTab.vue:155
 #: specialVueFakeDummyForL10nScript.js:706
-#: specialVueFakeDummyForL10nScript.js:5989
+#: specialVueFakeDummyForL10nScript.js:6353
 msgid "e.g. Bilbo Baggins"
 msgstr ""
 
 #. TRANSLATORS src/components/AddContactsToProject.vue:46
 #. TRANSLATORS src/views/FilesTab.vue:167
 #: specialVueFakeDummyForL10nScript.js:708
-#: specialVueFakeDummyForL10nScript.js:5991
+#: specialVueFakeDummyForL10nScript.js:6355
 msgid "Address-Books"
 msgstr ""
 
@@ -12140,7 +12139,7 @@ msgstr ""
 #: specialVueFakeDummyForL10nScript.js:1415
 #: specialVueFakeDummyForL10nScript.js:1484
 #: specialVueFakeDummyForL10nScript.js:1539
-#: specialVueFakeDummyForL10nScript.js:5922
+#: specialVueFakeDummyForL10nScript.js:6286
 #: src/toolkit/util/settings-sync.ts:66
 #: src/toolkit/util/settings-sync.ts:107
 #: src/toolkit/util/settings-sync.ts:186
@@ -12154,7 +12153,7 @@ msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:1112
 #: src/app/project-participants.js:886
-#: src/app/projects.js:593
+#: src/app/projects.js:596
 #: src/app/sepa-debit-mandate.js:857
 #: src/toolkit/util/settings-sync.ts:261
 msgid "Confirmation Required"
@@ -12345,7 +12344,7 @@ msgstr ""
 #. TRANSLATORS src/components/AdminSettings.vue:208
 #. TRANSLATORS src/views/FilesTab.vue:133
 #: specialVueFakeDummyForL10nScript.js:1631
-#: specialVueFakeDummyForL10nScript.js:5981
+#: specialVueFakeDummyForL10nScript.js:6345
 msgid "e.g. Jane Doe"
 msgstr ""
 
@@ -12357,7 +12356,7 @@ msgstr ""
 #. TRANSLATORS src/components/AdminSettings.vue:220
 #. TRANSLATORS src/views/FilesTab.vue:144
 #: specialVueFakeDummyForL10nScript.js:1635
-#: specialVueFakeDummyForL10nScript.js:5985
+#: specialVueFakeDummyForL10nScript.js:6349
 msgid "e.g. Auvergne2019"
 msgstr ""
 
@@ -12484,7 +12483,7 @@ msgstr ""
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:68
 #. TRANSLATORS src/components/ProjectEventsListing.vue:148
 #: specialVueFakeDummyForL10nScript.js:1863
-#: specialVueFakeDummyForL10nScript.js:4518
+#: specialVueFakeDummyForL10nScript.js:4637
 msgid "Toggle Details"
 msgstr ""
 
@@ -12681,307 +12680,331 @@ msgstr ""
 msgid "An Error Occurred"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2456
-#: specialVueFakeDummyForL10nScript.js:3777
-#: src/app/user-manual.js:71
+#: specialVueFakeDummyForL10nScript.js:2366
+msgid "Query has been copied to the clipboard."
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:2369
+msgid "Failed copying query to the clipboard: {error}."
+msgstr ""
+
+#. TRANSLATORS src/components/LegacyQueryLogModal.vue:36
+#: specialVueFakeDummyForL10nScript.js:2375
+msgid "Legacy Sql Query Log"
+msgstr ""
+
+#. TRANSLATORS src/components/LegacyQueryLogModal.vue:48
+#: specialVueFakeDummyForL10nScript.js:2377
+msgid "SQL Query"
+msgstr ""
+
+#. TRANSLATORS src/components/LegacyQueryLogModal.vue:55
+#: specialVueFakeDummyForL10nScript.js:2379
+#: specialVueFakeDummyForL10nScript.js:2381
+msgid "Copy to Clipboard"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:2575
+#: specialVueFakeDummyForL10nScript.js:3896
+#: src/app/user-manual.js:72
 msgid "User Manual: {section}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2516
+#: specialVueFakeDummyForL10nScript.js:2635
 msgid "Error updating legacy route from {template} to {newTemplate}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2603
+#: specialVueFakeDummyForL10nScript.js:2722
 msgid "Error loading view \"{template}\"."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2708
+#: specialVueFakeDummyForL10nScript.js:2827
 msgid "Error synchronizing history state for template \"{template}\"."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2797
+#: specialVueFakeDummyForL10nScript.js:2916
 msgid "An error occured during communication with the server."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:28
-#: specialVueFakeDummyForL10nScript.js:2833
+#: specialVueFakeDummyForL10nScript.js:2952
 msgid "Navigate to the previous view in the browser history stack."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:39
-#: specialVueFakeDummyForL10nScript.js:2835
+#: specialVueFakeDummyForL10nScript.js:2954
 msgid "Reload the current view."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:49
-#: specialVueFakeDummyForL10nScript.js:2837
+#: specialVueFakeDummyForL10nScript.js:2956
 msgid "Navigate to the next view in the browser history stack."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:59
-#: specialVueFakeDummyForL10nScript.js:2839
+#: specialVueFakeDummyForL10nScript.js:2958
 msgid "Go to the start page of the app."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:76
-#: specialVueFakeDummyForL10nScript.js:2841
+#: specialVueFakeDummyForL10nScript.js:2960
 msgid "Tooltips"
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:82
 #. TRANSLATORS src/components/ProjectEventsListing.vue:106
-#: specialVueFakeDummyForL10nScript.js:2843
-#: specialVueFakeDummyForL10nScript.js:4510
+#: specialVueFakeDummyForL10nScript.js:2962
+#: specialVueFakeDummyForL10nScript.js:4629
 msgid "Manual (other tab or window)"
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:87
 #. TRANSLATORS src/components/ProjectEventsListing.vue:114
-#: specialVueFakeDummyForL10nScript.js:2845
-#: specialVueFakeDummyForL10nScript.js:4512
+#: specialVueFakeDummyForL10nScript.js:2964
+#: specialVueFakeDummyForL10nScript.js:4631
 #: templates/emailform/form.php:62
 msgid "Manual (popup)"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3032
-#: specialVueFakeDummyForL10nScript.js:3041
+#: specialVueFakeDummyForL10nScript.js:3151
+#: specialVueFakeDummyForL10nScript.js:3160
 msgid "Log entry successfully copied"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:17
-#: specialVueFakeDummyForL10nScript.js:3046
+#: specialVueFakeDummyForL10nScript.js:3165
 msgid "Level"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:19
-#: specialVueFakeDummyForL10nScript.js:3048
+#: specialVueFakeDummyForL10nScript.js:3167
 msgid "App"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:21
-#: specialVueFakeDummyForL10nScript.js:3050
+#: specialVueFakeDummyForL10nScript.js:3169
 msgid "No app in context"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:23
-#: specialVueFakeDummyForL10nScript.js:3052
+#: specialVueFakeDummyForL10nScript.js:3171
 msgid "Time"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:26
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:30
-#: specialVueFakeDummyForL10nScript.js:3054
-#: specialVueFakeDummyForL10nScript.js:3056
+#: specialVueFakeDummyForL10nScript.js:3173
+#: specialVueFakeDummyForL10nScript.js:3175
 msgid "Copy raw entry"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:32
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:36
-#: specialVueFakeDummyForL10nScript.js:3058
-#: specialVueFakeDummyForL10nScript.js:3060
+#: specialVueFakeDummyForL10nScript.js:3177
+#: specialVueFakeDummyForL10nScript.js:3179
 msgid "Copy formatted entry"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:42
-#: specialVueFakeDummyForL10nScript.js:3062
+#: specialVueFakeDummyForL10nScript.js:3181
 msgid "Hide exception details"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3062
+#: specialVueFakeDummyForL10nScript.js:3181
 msgid "View exception details"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:53
-#: specialVueFakeDummyForL10nScript.js:3064
+#: specialVueFakeDummyForL10nScript.js:3183
 msgid "Raw log entry"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3094
+#: specialVueFakeDummyForL10nScript.js:3213
 msgid "Caused by {exception}"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/exception/TraceLine.vue:10
-#: specialVueFakeDummyForL10nScript.js:3143
+#: specialVueFakeDummyForL10nScript.js:3262
 msgid "Line {line}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3368
+#: specialVueFakeDummyForL10nScript.js:3487
 msgid "Project Wiki for {projectName}"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:48
-#: specialVueFakeDummyForL10nScript.js:3503
+#: specialVueFakeDummyForL10nScript.js:3622
 msgid "Project Overview"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:90
-#: specialVueFakeDummyForL10nScript.js:3511
+#: specialVueFakeDummyForL10nScript.js:3630
 msgid "Project Files"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:101
-#: specialVueFakeDummyForL10nScript.js:3513
+#: specialVueFakeDummyForL10nScript.js:3632
 msgid "Project Notes"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:111
-#: specialVueFakeDummyForL10nScript.js:3515
+#: specialVueFakeDummyForL10nScript.js:3634
 msgid "Events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:132
-#: specialVueFakeDummyForL10nScript.js:3519
+#: specialVueFakeDummyForL10nScript.js:3638
 msgid "Business Contacts / Associates"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:143
-#: specialVueFakeDummyForL10nScript.js:3521
+#: specialVueFakeDummyForL10nScript.js:3640
 msgid "Debit Mandates"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:154
-#: specialVueFakeDummyForL10nScript.js:3523
+#: specialVueFakeDummyForL10nScript.js:3642
 msgid "Payments"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:165
-#: specialVueFakeDummyForL10nScript.js:3525
+#: specialVueFakeDummyForL10nScript.js:3644
 msgid "Invoices"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:175
-#: specialVueFakeDummyForL10nScript.js:3527
+#: specialVueFakeDummyForL10nScript.js:3646
 msgid "Financial Balance"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3777
+#: specialVueFakeDummyForL10nScript.js:3896
 #: templates/emailform/part.emailform.composer.php:279
 msgid "Project Events"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4162
+#: specialVueFakeDummyForL10nScript.js:4281
 msgid "Unable to export selected events."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4319
+#: specialVueFakeDummyForL10nScript.js:4438
 msgid "Unable to modify the absence field."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4362
+#: specialVueFakeDummyForL10nScript.js:4481
 msgid "Unable to detach events from the project."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4439
+#: specialVueFakeDummyForL10nScript.js:4558
 msgid "Unable to delete events."
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:26
-#: specialVueFakeDummyForL10nScript.js:4496
+#: specialVueFakeDummyForL10nScript.js:4615
 msgid "{name} - Appointments"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4496
+#: specialVueFakeDummyForL10nScript.js:4615
 msgid "Appointments"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:36
-#: specialVueFakeDummyForL10nScript.js:4498
+#: specialVueFakeDummyForL10nScript.js:4617
 msgid "create a new appointment"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:57
-#: specialVueFakeDummyForL10nScript.js:4500
+#: specialVueFakeDummyForL10nScript.js:4619
 msgid "mark all events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:66
-#: specialVueFakeDummyForL10nScript.js:4502
+#: specialVueFakeDummyForL10nScript.js:4621
 msgid "unmark all events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:75
-#: specialVueFakeDummyForL10nScript.js:4504
+#: specialVueFakeDummyForL10nScript.js:4623
 msgid "open email editor"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:85
-#: specialVueFakeDummyForL10nScript.js:4508
+#: specialVueFakeDummyForL10nScript.js:4627
 msgid "export events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:120
-#: specialVueFakeDummyForL10nScript.js:4514
+#: specialVueFakeDummyForL10nScript.js:4633
 msgid "reload the project appointments"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:133
-#: specialVueFakeDummyForL10nScript.js:4516
+#: specialVueFakeDummyForL10nScript.js:4635
 msgid "no events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:164
-#: specialVueFakeDummyForL10nScript.js:4520
+#: specialVueFakeDummyForL10nScript.js:4639
 msgid "select a year"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:180
-#: specialVueFakeDummyForL10nScript.js:4522
+#: specialVueFakeDummyForL10nScript.js:4641
 msgid "detached"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:216
-#: specialVueFakeDummyForL10nScript.js:4524
+#: specialVueFakeDummyForL10nScript.js:4643
 msgid "act only on this event"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:226
-#: specialVueFakeDummyForL10nScript.js:4526
+#: specialVueFakeDummyForL10nScript.js:4645
 msgid "act on the event series"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:236
-#: specialVueFakeDummyForL10nScript.js:4528
+#: specialVueFakeDummyForL10nScript.js:4647
 msgid "act on all related events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:249
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::RECORD_ABSENCE_CATEGORY = 'record absence';
-#: specialVueFakeDummyForL10nScript.js:4530
+#: specialVueFakeDummyForL10nScript.js:4649
 #: lib/Service/EventsService.php:1203
 #, php-format
 msgid "record absence"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:263
-#: specialVueFakeDummyForL10nScript.js:4532
+#: specialVueFakeDummyForL10nScript.js:4651
 msgid "mark for download / em@il"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:284
-#: specialVueFakeDummyForL10nScript.js:4536
-#: specialVueFakeDummyForL10nScript.js:4538
+#: specialVueFakeDummyForL10nScript.js:4655
+#: specialVueFakeDummyForL10nScript.js:4657
 msgid "open in calendar-app"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:305
-#: specialVueFakeDummyForL10nScript.js:4540
+#: specialVueFakeDummyForL10nScript.js:4659
 #: templates/fragments/projects/project-mailing-list.php:114
 msgid "delete"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:316
-#: specialVueFakeDummyForL10nScript.js:4542
+#: specialVueFakeDummyForL10nScript.js:4661
 msgid "detach from project"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:327
-#: specialVueFakeDummyForL10nScript.js:4544
+#: specialVueFakeDummyForL10nScript.js:4663
 msgid "reattach to project"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4787
-#: specialVueFakeDummyForL10nScript.js:5087
+#: specialVueFakeDummyForL10nScript.js:4906
+#: specialVueFakeDummyForL10nScript.js:5206
 msgid "** everybody **"
 msgstr ""
 
@@ -12989,131 +13012,149 @@ msgstr ""
 #. TRANSLATORS src/components/SelectMusicians.vue:45
 #. TRANSLATORS src/components/SettingsSelectGroup.vue:47
 #. TRANSLATORS src/components/SettingsSelectUsers.vue:60
-#: specialVueFakeDummyForL10nScript.js:4898
-#: specialVueFakeDummyForL10nScript.js:4900
-#: specialVueFakeDummyForL10nScript.js:4902
-#: specialVueFakeDummyForL10nScript.js:4904
-#: specialVueFakeDummyForL10nScript.js:5155
-#: specialVueFakeDummyForL10nScript.js:5157
-#: specialVueFakeDummyForL10nScript.js:5159
-#: specialVueFakeDummyForL10nScript.js:5161
-#: specialVueFakeDummyForL10nScript.js:5392
-#: specialVueFakeDummyForL10nScript.js:5394
-#: specialVueFakeDummyForL10nScript.js:5396
-#: specialVueFakeDummyForL10nScript.js:5398
-#: specialVueFakeDummyForL10nScript.js:5500
-#: specialVueFakeDummyForL10nScript.js:5502
-#: specialVueFakeDummyForL10nScript.js:5504
-#: specialVueFakeDummyForL10nScript.js:5506
+#: specialVueFakeDummyForL10nScript.js:5017
+#: specialVueFakeDummyForL10nScript.js:5019
+#: specialVueFakeDummyForL10nScript.js:5021
+#: specialVueFakeDummyForL10nScript.js:5023
+#: specialVueFakeDummyForL10nScript.js:5274
+#: specialVueFakeDummyForL10nScript.js:5276
+#: specialVueFakeDummyForL10nScript.js:5278
+#: specialVueFakeDummyForL10nScript.js:5280
+#: specialVueFakeDummyForL10nScript.js:5756
+#: specialVueFakeDummyForL10nScript.js:5758
+#: specialVueFakeDummyForL10nScript.js:5760
+#: specialVueFakeDummyForL10nScript.js:5762
+#: specialVueFakeDummyForL10nScript.js:5864
+#: specialVueFakeDummyForL10nScript.js:5866
+#: specialVueFakeDummyForL10nScript.js:5868
+#: specialVueFakeDummyForL10nScript.js:5870
 msgid "undefined"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5252
+#: specialVueFakeDummyForL10nScript.js:5371
 msgid "Permanent"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5514
-#: src/app/pme-querylog.js:48
+#: specialVueFakeDummyForL10nScript.js:5646
+msgid "Unable to export the bulktransaction with id \"{bulkTransactionId}\"."
+msgstr ""
+
+#. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:57
+#: specialVueFakeDummyForL10nScript.js:5669
+msgid "Bank Transaction Data"
+msgstr ""
+
+#. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:67
+#: specialVueFakeDummyForL10nScript.js:5671
+msgid "Email Pre-Notification"
+msgstr ""
+
+#. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:77
+#: specialVueFakeDummyForL10nScript.js:5673
+msgid "GnuCash Balance Data"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:5878
 msgid "copy"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5514
+#: specialVueFakeDummyForL10nScript.js:5878
 msgid "move"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5514
+#: specialVueFakeDummyForL10nScript.js:5878
 msgid "link"
 msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:43
-#: specialVueFakeDummyForL10nScript.js:5627
+#: specialVueFakeDummyForL10nScript.js:5991
 #: templates/settings.php:67
 msgid "Email"
 msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:51
-#: specialVueFakeDummyForL10nScript.js:5629
+#: specialVueFakeDummyForL10nScript.js:5993
 msgid "Phone"
 msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:79
-#: specialVueFakeDummyForL10nScript.js:5633
+#: specialVueFakeDummyForL10nScript.js:5997
 msgid "Propability"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5762
+#: specialVueFakeDummyForL10nScript.js:6126
 msgid "Required."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5904
+#: specialVueFakeDummyForL10nScript.js:6268
 msgid "File download failed for {fileName}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5940
+#: specialVueFakeDummyForL10nScript.js:6304
 msgid "no response received from {ajaxUrl}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5944
+#: specialVueFakeDummyForL10nScript.js:6308
 msgid "Could not perform mail-merge: {message}"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:31
-#: specialVueFakeDummyForL10nScript.js:5951
+#: specialVueFakeDummyForL10nScript.js:6315
 msgid "Mail merge operations"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:40
-#: specialVueFakeDummyForL10nScript.js:5953
+#: specialVueFakeDummyForL10nScript.js:6317
 msgid "Download Merged Document"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:43
-#: specialVueFakeDummyForL10nScript.js:5955
+#: specialVueFakeDummyForL10nScript.js:6319
 msgid "download locally"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:48
-#: specialVueFakeDummyForL10nScript.js:5957
+#: specialVueFakeDummyForL10nScript.js:6321
 msgid "Merge Document into Cloud"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:54
-#: specialVueFakeDummyForL10nScript.js:5959
+#: specialVueFakeDummyForL10nScript.js:6323
 msgid "save to cloud"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:59
-#: specialVueFakeDummyForL10nScript.js:5961
+#: specialVueFakeDummyForL10nScript.js:6325
 msgid "Download Replacement Data"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:65
-#: specialVueFakeDummyForL10nScript.js:5963
+#: specialVueFakeDummyForL10nScript.js:6327
 msgid "download data"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:72
-#: specialVueFakeDummyForL10nScript.js:5965
+#: specialVueFakeDummyForL10nScript.js:6329
 msgid "Sender"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:80
-#: specialVueFakeDummyForL10nScript.js:5969
+#: specialVueFakeDummyForL10nScript.js:6333
 msgid "e.g. John Doe"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:106
-#: specialVueFakeDummyForL10nScript.js:5973
+#: specialVueFakeDummyForL10nScript.js:6337
 msgid "Musician's Datebase"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:115
-#: specialVueFakeDummyForL10nScript.js:5975
+#: specialVueFakeDummyForL10nScript.js:6339
 msgid "Addressbooks"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:125
-#: specialVueFakeDummyForL10nScript.js:5977
+#: specialVueFakeDummyForL10nScript.js:6341
 msgid "Enter Address"
 msgstr ""
 
@@ -13405,7 +13446,7 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: src/app/dialogs.js:228
+#: src/app/dialogs.js:239
 #: src/toolkit/util/dialogs.js:105
 msgid "Debug Information"
 msgstr ""
@@ -13759,49 +13800,21 @@ msgstr ""
 msgid "Confirmation Required!"
 msgstr ""
 
-#: src/app/pme-querylog.js:47
-msgid "Query"
-msgstr ""
-
-#: src/app/pme-querylog.js:51
-msgid "Duration"
-msgstr ""
-
-#: src/app/pme-querylog.js:53
-msgid "Affected Rows"
-msgstr ""
-
-#: src/app/pme-querylog.js:55
-msgid "Error Code"
-msgstr ""
-
-#: src/app/pme-querylog.js:59
-msgid "Selected SQL-Query"
-msgstr ""
-
-#: src/app/pme-querylog.js:69
-msgid "Query has been copied to the clipboard."
-msgstr ""
-
-#: src/app/pme-querylog.js:71
-msgid "Failed copying query to the clipboard: {reason}."
-msgstr ""
-
-#: src/app/pme.js:754
+#: src/app/pme.js:781
 msgid ""
 "An error occurred. The data has not been saved. Unfortunately, no further "
 "information is available. Sorry for that."
 msgstr ""
 
-#: src/app/pme.js:1410
+#: src/app/pme.js:1442
 msgid "#columns"
 msgstr ""
 
-#: src/app/pme.js:1419
+#: src/app/pme.js:1451
 msgid "#rows"
 msgstr ""
 
-#: src/app/pme.js:1520
+#: src/app/pme.js:1552
 msgid "Remove"
 msgstr ""
 
@@ -13883,7 +13896,7 @@ msgid ""
 msgstr ""
 
 #: src/app/project-participants.js:891
-#: src/app/projects.js:598
+#: src/app/projects.js:601
 msgid "Unconfirmed, doing nothing."
 msgstr ""
 
@@ -13903,36 +13916,32 @@ msgid ""
 "musicians ({musicians})."
 msgstr ""
 
-#: src/app/projects.js:565
+#: src/app/projects.js:568
 msgid "Share-link has been copied to the clipboard."
 msgstr ""
 
-#: src/app/projects.js:567
+#: src/app/projects.js:570
 msgid "Failed copying share-link to the clipboard: {reason}."
 msgstr ""
 
-#: src/app/projects.js:718
+#: src/app/projects.js:721
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 
-#: src/app/projects.js:719
+#: src/app/projects.js:722
 msgid "Unlink Web-Page with Id {articleId}?"
 msgstr ""
 
-#: src/app/projects.js:744
+#: src/app/projects.js:747
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 
-#: src/app/projects.js:745
+#: src/app/projects.js:748
 msgid "Delete Web-Page with Id {articleId}?"
 msgstr ""
 
-#: src/app/projects.js:791
+#: src/app/projects.js:794
 msgid "No values match"
-msgstr ""
-
-#: src/app/sepa-bulk-transactions.js:100
-msgid "Unable to download debit notes."
 msgstr ""
 
 #: src/app/sepa-debit-mandate.js:198
@@ -15534,6 +15543,11 @@ msgstr ""
 msgid "open parent folder"
 msgstr ""
 
+#: templates/fragments/participant-fields/attachment-file-upload-menu.php:110
+#: templates/fragments/participant-fields/attachment-file-upload-menu.php:120
+msgid "download"
+msgstr ""
+
 #: templates/fragments/participant-fields/recurring-receivable-definition-generator-row.php:111
 msgid "new option"
 msgstr ""
@@ -16963,7 +16977,7 @@ msgstr ""
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPLATE = 'template';
 #: lib/PageRenderer/PMETableViewBase.php:230
 #: lib/Database/Doctrine/DBAL/Types/EnumProjectTemporalType.php:49
-#: lib/PageRenderer/Projects.php:1034
+#: lib/PageRenderer/Projects.php:1035
 #, php-format
 msgid "template"
 msgstr ""
