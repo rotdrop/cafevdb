@@ -60,6 +60,8 @@ import { PROJECT_ACTIONS_MENU } from '../mountable-component-names.ts';
 
 require('projects.scss');
 
+const template = 'projects';
+
 asyncSubscribe(BusEvents.PROJECT_POPUP, async (event) => {
   console.info('EVENT', event);
   asyncEmit(BusEvents.PUSH_BUSY_STATE);
@@ -205,10 +207,6 @@ const participantFieldsPopup = async function(containerSel, post) {
  * { projectName: 'NAME', projectId: XX }
  */
 const projectViewPopup = async function(containerSel, post) {
-  // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
-  // instrumentation numbers are somewhat nasty and require too
-  // many options.
-
   const template = 'projects';
   const tableOptions = {
     ambientContainerSelector: containerSel,
@@ -230,7 +228,6 @@ const projectViewPopup = async function(containerSel, post) {
 };
 
 const actionMenu = async function(containerSel) {
-  console.info('PROJECT CONTAINER SELECTOR', containerSel);
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
 
@@ -254,14 +251,15 @@ const actionMenu = async function(containerSel) {
     }
     vueComponents.push(vueMenu);
 
-    console.info('AFTER CREATE NEW MENU', vueMenu);
     $actionMenu.data('vueMenu', vueMenu);
-    return await vueMenu.$mount($actionMenu.find('.vue-mount-point')[0]);
+    await vueMenu.$mount($actionMenu.find('.vue-mount-point')[0]);
+    return vueMenu;
   };
 
+  const actionTriggerSelector = `.vue-action-menu-placeholder.${template} button.vue-mount-point`;
   $container
-    .off('click', '.vue-action-menu-placeholder.projects button.vue-mount-point')
-    .on('click', '.vue-action-menu-placeholder.projects button.vue-mount-point', async function(event) {
+    .off('click', actionTriggerSelector)
+    .on('click', actionTriggerSelector, async function(event) {
 
       $.fn.cafevTooltip.hide();
 
@@ -295,7 +293,7 @@ const actionMenu = async function(containerSel) {
       const $row = $(this);
       const $form = $row.closest(pmeFormSelector);
       const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
-      const $actionMenu = $actionMenuContainer.find('.vue-action-menu-placeholder.projects').first();
+      const $actionMenu = $actionMenuContainer.find('.vue-action-menu-placeholder.' + template).first();
 
       if ($actionMenu.length === 0) {
         return;

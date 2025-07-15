@@ -176,11 +176,11 @@ application is AQBanking.'),
 
       'bulk-transaction-submission-deadline' => self::t('Date of latest submission of the debit note to our own bank.'),
 
-      'bulk-transaction-announce' => self::t('Inform all debitors of this debit-note by email; an email dialog is
-opened.'),
-
-      'bulk-transaction-download' => self::t('Download the data-set of this bulk-transaction for transferal to our bank
-institute.'),
+      'sepa-bulk-transaction' => [
+        'announce' => self::t('Inform all debitors of this debit-note by email; an email dialog is opened.'),
+        'download' => self::t('Download the data-set of this bulk-transaction for transferal to our bank institute.'),
+        'gnucash-balance' => self::t('Generate a CSV table in order to record balances in GnuCash. The records the amounts as receivables and inserts the appropriate balancing booking as income or expenses as appropriate.'),
+      ],
 
       'database-storage' => [
         'finance' => [

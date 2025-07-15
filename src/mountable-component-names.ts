@@ -23,18 +23,12 @@
 
 import type { LegacySqlQueryLogItem } from './types/legacy-query-log.d.ts';
 
-export const PROJECT_ACTIONS_MENU = 'ProjectActionsMenu';
 export const DOKU_WIKI_WRAPPER = 'DokuWikiWrapper';
 export const LEGACY_QUERY_LOG = 'LegacyQueryLog';
+export const PROJECT_ACTIONS_MENU = 'ProjectActionsMenu';
+export const SEPA_BULK_TRANSACTION_ACTIONS_MENU = 'SepaBulkTransactionActionsMenu';
 
 export interface ComponentProps {
-  [PROJECT_ACTIONS_MENU]: {
-    projectId: number,
-    projectName: string,
-    forceProjectName?: boolean,
-    enableOverviewItem?: boolean,
-    testOpen?: boolean,
-  },
   [DOKU_WIKI_WRAPPER]: {
     wikiPage?: string,
     query?: Record<string, string>,
@@ -43,6 +37,20 @@ export interface ComponentProps {
   },
   [LEGACY_QUERY_LOG]: {
     queryLog: LegacySqlQueryLogItem[],
+  },
+  [PROJECT_ACTIONS_MENU]: {
+    projectId: number,
+    projectName: string,
+    forceProjectName?: boolean,
+    enableOverviewItem?: boolean,
+    testOpen?: boolean,
+  },
+  [SEPA_BULK_TRANSACTION_ACTIONS_MENU]: {
+    projectId: number,
+    projectName: string,
+    forceMenuCaption?: boolean,
+    enableOverviewItem?: boolean,
+    testOpen?: boolean,
   },
 }
 

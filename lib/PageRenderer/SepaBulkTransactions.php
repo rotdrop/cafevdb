@@ -652,53 +652,6 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       $opts['fdd'][$msgIdField]['value']['filters'] = '$table.project_id = ' . $this->projectId;
     }
 
-    $opts['fdd']['actions'] = [
-      'tab' => [ 'id' => 'transaction' ],
-      //'php|LF' => [$this, 'bulkTransactionRowOnly'],
-      'name'  => $this->l->t('Actions'),
-      'css'   => [ 'postfix' => ' bulk-transaction-actions' ],
-      'input' => 'VR',
-      'sql' => '$main_table.id',
-      'sort'  => false,
-      'php' => function($value, $op, $field, $row, $recordId, $pme) {
-        if (!$this->isBulkTransactionRow($row, $pme)) {
-          return '';
-        }
-        $post = json_encode([
-          'bulkTransactionId' => $recordId['id'],
-          'requesttoken' => \OCP\Util::callRegister(),
-          'projectId' => $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
-          'projectName' => $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
-        ]);
-        $actions = [
-          'download' => [
-            'label' =>  $this->l->t('download'),
-            'post' => $post,
-            'title' => $this->toolTipsService['bulk-transaction-download'],
-          ],
-          'announce' => [
-            'label' => $this->l->t('announce'),
-            'post'  => $post,
-            'title' => $this->toolTipsService['bulk-transaction-announce'],
-          ],
-        ];
-        $html = '';
-        foreach ($actions as $key => $action) {
-          $html .=<<<__EOT__
-<li class="nav tooltip-left inline-block tooltip-auto">
-  <a class="nav {$key} tooltip-auto"
-     href="#"
-     data-post='{$action['post']}'
-     title="{$action['title']}">
-{$action['label']}
-  </a>
-</li>
-__EOT__;
-        }
-        return $html;
-      },
-    ];
-
     //
     ///////////////////////////////////////////////////////////////////////////
 
@@ -711,7 +664,7 @@ __EOT__;
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteTrigger' ];
 
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($submitIdx, $opts) {
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function($pme, $op, $step, &$row) use ($submitIdx, $opts) {
       if ($this->expertMode || empty($row[PHPMyEdit::QUERY_FIELD . $submitIdx])) {
         $pme->options = $opts['options'];
       } else {
@@ -719,15 +672,48 @@ __EOT__;
       }
       return true;
     };
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
+      $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] =
+      function($pme, $op, $step, &$row) {
+        $this->logError('DATA TRIGGER list ' . (int)$this->listOperation() . ' ' . (int)$this->addOperation());
+        if (!$this->listOperation() && !$this->addOperation()) {
+          $this->logError('TRY TWEAK BUTTONS');
+          $pme->buttons = $this->pageNavigation->prependTableButtons(buttons: []);
+          foreach (['C', 'P', 'D', 'V'] as $operationMode) {
+            foreach (['up', 'down'] as $position) {
+              $actionMenu = $this->generateActionMenuToggle([
+                'bulkTransactionId' => $pme->rec['id'],
+                'projectId' => (int)$row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
+                'projectName' => $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
+              ]);
+              $button = [
+                'code' => $actionMenu,
+                'name' => 'actions',
+              ];
+              array_unshift($pme->buttons[$operationMode][$position], $button);
+            }
+          }
+        }
+        return true;
+      };
 
     $this->installActionMenuToggle(
       $opts,
-      fn(array $record, array $groupByRecord, array $row, PHPMyEdit $pme)
-      =>
-      $this->isBulkTransactionRow($row, $pme) ? compact('record', 'groupByRecord', 'row') : null,
+      function(array $recordId, array $groupByRecordId, array $row, PHPMyEdit $pme) {
+        if (!$this->isBulkTransactionRow($row, $pme)) {
+          return null;
+        }
+        $this->logInfo('BULK STUFF ' . print_r($recordId, true) . ' ' . print_r($groupByRecordId, true));
+        return [
+          'bulkTransactionId' => $recordId['id'],
+          'projectId' => (int)$row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
+          'projectName' => $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
+        ];
+      },
     );
 
     $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
+
 
     if ($execute) {
       $this->execute($opts);
