@@ -50,18 +50,18 @@ $css .= ' ' . $renderer->cssClass();
 ?>
 <div id="pme-table-container" class="pme-table-container <?php p($css); ?>">
   <?php $renderer->render(); ?>
-</div>
-<?php
-$operation = $renderer->operation();
-if (!empty($operation)) {
-  $operation = explode('?', $operation)[0];
-  if ($operation === 'false' || $operation === $l->t('false')) {
-    $operation = '';
-  } else {
-    $operation = $l->t($operation) . ': ';
+  <?php
+  $l10nOperation = $operation = $renderer->operation();
+  if (!empty($operation)) {
+    $operation = explode('?', $operation)[0];
+    if ($operation === 'false' || $operation === $l->t('false')) {
+      $operation = $l10nOperation = '';
+    } else {
+      $l10nOperation = $l->t($operation) . ': ';
+    }
   }
-}
-?>
-<span id="pme-short-title" class="pme-short-title" style="display:none;">
-  <?php echo $operation . $renderer->shortTitle(); ?>
-</span>
+  ?>
+  <span class="pme-short-title <?php p($operation)?>" style="display:none;">
+    <?php echo "$l10nOperation" . $renderer->shortTitle(); ?>
+  </span>
+</div>
