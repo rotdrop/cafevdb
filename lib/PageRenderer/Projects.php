@@ -1067,19 +1067,20 @@ class Projects extends PMETableViewBase
       $opts,
       fn($rec, $groupby_rec, $row, $pme)
       =>
-      [ 'projectId' => (int)$rec['id'], 'projectName' => $row[$this->queryField('name')] ],
+      [ 'entityId' => (int)$rec['id'], 'projectName' => $row[$this->queryField('name')] ],
     );
 
     $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($this->projectId > 0) {
       $opts['buttons'] = $this->pageNavigation->prependTableButtons(buttons: []);
+      $menuData = [
+        'entityId' => (int)$this->projectId,
+        'projectName' => $this->projectName,
+      ];
       foreach (['C', 'P', 'D', 'V'] as $operationMode) {
         foreach (['up', 'down'] as $position) {
-          $actionMenu = $this->generateActionMenuToggle([
-            'projectId' => (int)$this->projectId,
-            'projectName' => $this->projectName,
-          ]);
+          $actionMenu = $this->generateActionMenuToggle($menuData);
           $button = [
             'code' => $actionMenu,
             'name' => 'actions',

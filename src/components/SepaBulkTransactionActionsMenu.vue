@@ -21,33 +21,16 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div class="container">
-    <NcActions v-if="positioned"
-               :force-menu="true"
-               :manual-open="true"
-               @click="moveToAnchor"
-    >
-      <NcActionSeparator v-show="false" />
-    </NcActions>
-    <NcActions ref="actions"
-               :class="[{ positioned }, appName + '-sepa-bulk-transaction-actions']"
-               :force-menu="true"
-               force-semantic-type="menu"
-               :open.sync="open"
-               @closed="closeMenu"
-    >
-      <NcActionButton v-if="enableOverviewItem"
-                      :class="[appName + '-sepa-bulk-transaction-actions']"
-                      :name="t(appName, 'Overview')"
-                      :close-after-click="true"
-                      @click="openOverview"
-      >
-        <template #icon>
-          <IconOverview />
-        </template>
-      </NcActionButton>
-      <NcActionSeparator v-if="enableOverviewItem" />
-      <NcActionButton v-tooltip="tooltips['sepa-bulk-transaction:download']"
+  <LegacyPageActionsMenu ref="actions"
+                         :menu-caption="menuCaption"
+                         :enable-overview-item="enableOverviewItem"
+                         :entity-id="entityId"
+                         :project-id="projectId"
+                         :project-name="projectName"
+                         :template="template"
+  >
+    <template #actions>
+      <NcActionButton v-tooltip.right="tooltips['sepa-bulk-transaction:download']"
                       :class="[appName + '-sepa-bulk-transaction-actions']"
                       :name="t(appName, 'Bank Transaction Data')"
                       :close-after-click="true"
@@ -57,7 +40,7 @@
           <IconBankTransfer />
         </template>
       </NcActionButton>
-      <NcActionButton v-tooltip="tooltips['sepa-bulk-transaction:announce']"
+      <NcActionButton v-tooltip.right="tooltips['sepa-bulk-transaction:announce']"
                       :class="[appName + '-sepa-bulk-transaction-actions']"
                       :name="t(appName, 'Email Pre-Notification')"
                       :close-after-click="true"
@@ -67,82 +50,52 @@
           <IconEmail />
         </template>
       </NcActionButton>
-      <NcActionButton v-tooltip="tooltips['sepa-bulk-transaction:gnucash-balance']"
+      <NcActionButton v-tooltip.right="tooltips['sepa-bulk-transaction:gnucash-balance']"
                       :class="[appName + '-sepa-bulk-transaction-actions']"
                       :name="t(appName, 'GnuCash Balance Data')"
                       :close-after-click="true"
+                      @click="handleGnuCashBalanceDownload"
       >
         <template #icon>
           <IconGnuCashBalances />
         </template>
       </NcActionButton>
-    </NcActions>
-  </div>
+    </template>
+  </LegacyPageActionsMenu>
 </template>
 <script setup lang="ts">
-import {
-  NcActions,
-  NcActionButton,
-  NcActionSeparator,
-} from '@nextcloud/vue'
+import LegacyPageActionsMenu from './LegacyPageActionsMenu.vue'
+import { NcActionButton } from '@nextcloud/vue'
 import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
-
-import IconOverview from 'vue-material-design-icons/InformationOutline.vue'
 import IconBankTransfer from 'vue-material-design-icons/BankTransfer.vue'
 import IconGnuCashBalances from 'vue-material-design-icons/BankCheck.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
-import { SEPA_BULK_TRANSACTION_ACTIONS } from '../event-bus-events.ts'
-import { closeNavigation } from '../services/navigation.js'
+import { emit as asyncEmit } from '../services/async-event-bus.ts'
 import useTooltipsStore from '../stores/tooltips.ts'
 import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
 import useErrorHandlerStore from '../stores/error-handler.ts'
 import { AppError } from '../types/errors.ts'
-import {
-  ref,
-  watch,
-  nextTick,
-  onMounted,
-} from 'vue'
+import { ref } from 'vue'
 import * as BusEvents from '../event-bus-events.ts'
-import Console from '../util/console.ts'
 import { SEPA_BULK_TRANSACTION_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
-
-const logger = new Console(COMPONENT_NAME)
-
-type NcButtonType = {
-  ref?: string,
-  $el: HTMLElement,
-}
-type NcActionsType = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  closeMenu(returnFocus?: boolean):Promise<any>,
-  $refs: {
-    popover: { $refs: { popover: { $refs: { reference: HTMLElement, } } } },
-    triggerButton: NcButtonType,
-  },
-}
+import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 
 const errorHandlerProvider = useErrorHandlerStore()
 
 const errorHandler = errorHandlerProvider.getHandler()
 
 const props = withDefaults(defineProps</* ComponentProps[typeof COMPONENT_NAME] */{
-  bulkTransactionId: number,
+  enableOverviewItem?: boolean,
+  entityId: number,
+  menuCaption?: string,
   projectId: number,
   projectName: string,
-  enableOverviewItem?: boolean,
+  template: string,
 }>(), {
   enableOverviewItem: true,
+  menuCaption: undefined,
 })
-
-// data
-const open = ref(false)
-const referenceElement = ref<null | HTMLElement>(null)
-const triggerButton = ref<null|NcButtonType>(null)
-const positioned = ref(false)
-// const project = ref<null|Project>(null)
 
 const tooltipKeys = [
   'sepa-bulk-transaction:download',
@@ -154,88 +107,11 @@ const tooltipsProvider = useTooltipsStore()
 tooltipsProvider.provideTooltips(tooltipKeys)
 const tooltips = tooltipsProvider.tooltipsData
 
-// watchers
-watch(open, (state, oldState) => {
-  if (!state && positioned.value) {
-    // logger.debug('WATCHER CLOSE MENU')
-    // this.closeMenu()
-  }
-  logger.debug('OPEN CHANGED', { state, oldState })
-})
+const actions = ref<null|typeof LegacyPageActionsMenu>(null)
 
-const openOverview = () => {
-  open.value = false
-  closeNavigation()
-  asyncEmit(BusEvents.SEPA_BULK_TRANSACTION_POPUP, {
-    bulkTransactionId: props.bulkTransactionId,
-    projectId: props.projectId,
-    projectName: props.projectName,
-  })
-}
-const setPosition = (x?: number, y?: number) => {
-  if (x !== undefined && y !== undefined) {
-    referenceElement.value!.style.position = 'fixed'
-    referenceElement.value!.style.left = x + 'px'
-    referenceElement.value!.style.top = y + 'px'
-
-    positioned.value = true
-  } else if (positioned.value) {
-        referenceElement.value!.style.position = ''
-    referenceElement.value!.style.left = ''
-    referenceElement.value!.style.top = ''
-
-    positioned.value = false
-  }
-}
-const closeMenu = async () => {
-  logger.debug('-> closeMenu()')
-  if (open.value) {
-    open.value = false
-    await nextTick()
-  }
-  if (positioned.value) {
-    // the open trigger was a context menu click, so there is not
-    // point to return the focus to the menu button.
-    triggerButton.value?.$el.blur()
-  }
-  for (let i = 0; i < 2; ++i) {
-    await nextFrame()
-    await nextTick()
-  }
-  setPosition()
-  logger.debug('<- closeMenu()')
-}
-const nextFrame = () => {
-  return new Promise(resolve => requestAnimationFrame(() => {
-    requestAnimationFrame(resolve)
-  }))
-}
-const openMenu = async (x?: number, y?: number) => {
-  logger.debug('-> openMenu()', x, y, positioned.value)
-  setPosition(x, y)
-  open.value = true
-  if (positioned.value) {
-    await nextTick()
-    triggerButton.value?.$el.blur()
-  }
-  logger.debug('<- openMenu()', x, y, positioned.value)
-}
-const moveToAnchor = async (event?: MouseEvent) => {
-  if (!open.value || !positioned.value) {
-    return
-  }
-  logger.debug('-> moveToAnchor()')
-  event?.preventDefault()
-  await closeMenu()
-  await nextTick()
-  openMenu()
-  logger.debug('<- moveToAnchor()')
-}
-
-const isOpen = () => {
-  logger.debug('OPEN STATE', open.value)
-  return open.value
-}
+const isOpen = () => actions.value!.isOpen()
+const closeMenu = () => actions.value!.closeMenu()
+const openMenu = (x?: number, y?: number) => actions.value!.openMenu(x, y)
 
 // we need to expose some methods in order to allow legacy code to
 // open, close and position the menu.
@@ -245,35 +121,10 @@ defineExpose({
   closeMenu,
 })
 
-// onBeforeMount(async () => {
-//   await syncProjectData(props.projectId)
-// })
-
-const actions = ref<null|NcActionsType>(null)
-
-onMounted(() => {
-  const origCloseMenu = actions.value!.closeMenu
-  actions.value!.closeMenu = (returnFocus) => origCloseMenu(positioned.value ? false : returnFocus)
-  referenceElement.value = actions.value!.$refs.popover.$refs.popover.$refs.reference
-  triggerButton.value = actions.value!.$refs.triggerButton
-  asyncSubscribe(SEPA_BULK_TRANSACTION_ACTIONS, (event) => {
-    const bulkTransactionId = event?.bulkTransactionId
-    const newOpenState = event?.open
-    if (!newOpenState
-      && open.value
-      && +bulkTransactionId !== -props.bulkTransactionId
-      && (+bulkTransactionId <= 0 || +bulkTransactionId === +props.bulkTransactionId)) {
-      closeMenu()
-    } else if (newOpenState && bulkTransactionId === props.bulkTransactionId) {
-      openMenu(event?.x || undefined, event?.y || undefined)
-    }
-  })
-})
-
 const handleTransactionDataDownload = async () => {
   asyncEmit(BusEvents.PUSH_BUSY_STATE)
   const post = {
-    bulkTransactionId: props.bulkTransactionId,
+    bulkTransactionId: props.entityId,
     projectId: props.projectId,
     projectName: props.projectName,
   }
@@ -285,7 +136,7 @@ const handleTransactionDataDownload = async () => {
     errorHandler(
       new AppError(
         { component: COMPONENT_NAME },
-        t(appName, 'Unable to export the bulktransaction with id "{bulkTransactionId}".', props),
+        t(appName, 'Unable to export the bulktransaction with id "{entityId}".', props),
         { cause: error },
       ),
     )
@@ -297,11 +148,15 @@ const handlePreNotificationEmail = async () => {
     projectId: props.projectId,
     projectName: props.projectName,
     post: {
-      bulkTransactionId: props.bulkTransactionId,
+      bulkTransactionId: props.entityId,
       projectId: props.projectId,
       projectName: props.projectName,
     },
   })
+}
+
+const handleGnuCashBalanceDownload = () => {
+  showError(t(appName, 'Export of GnuCash balance bookings is not yet implemented.'), { timeout: TOAST_PERMANENT_TIMEOUT })
 }
 
 </script>

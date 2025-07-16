@@ -677,17 +677,10 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       function($pme, $op, $step, &$row) {
         if (!$this->listOperation() && !$this->addOperation()) {
           $pme->buttons = $this->pageNavigation->prependTableButtons(buttons: []);
+          $menuData = $this->generateActionMenuData($pme->rec['id'], $row);
           foreach (['C', 'P', 'D', 'V'] as $operationMode) {
             foreach (['up', 'down'] as $position) {
-              $actionMenu = $this->generateActionMenuToggle([
-                'bulkTransactionId' => (int)$pme->rec['id'],
-                'projectId' => (int)$row[
-                  $this->queryFieldIndex($this->joinTableFieldName(self::PROJECTS_TABLE, 'id'))
-                ],
-                'projectName' => $row[
-                  $this->queryField($this->joinTableFieldName(self::PROJECTS_TABLE, 'id'))
-                ],
-              ]);
+              $actionMenu = $this->generateActionMenuToggle($menuData);
               $button = [
                 'code' => $actionMenu,
                 'name' => 'actions',
@@ -705,26 +698,33 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         if (!$this->isBulkTransactionRow($row, $pme)) {
           return null;
         }
-        return [
-          'bulkTransactionId' => (int)$recordId['id'],
-          'projectId' => (int)$row[
-            $this->queryFieldIndex($this->joinTableFieldName(self::PROJECTS_TABLE, 'id'))
-          ],
-          'projectName' => $row[
-            $this->queryField($this->joinTableFieldName(self::PROJECTS_TABLE, 'id'))
-          ],
-        ];
+        return $this->generateActionMenuData($recordId['id'], $row);
       },
     );
 
     $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
-
 
     if ($execute) {
       $this->execute($opts);
     } else {
       $this->pme->setOptions($opts);
     }
+  }
+
+  /**
+   * @param int $entityId
+   *
+   * @param array $row Legacy DB data provided by PME.
+   *
+   * @return array
+   */
+  protected function generateActionMenuData(int $entityId, array $row):array
+  {
+    return [
+      'entityId' => $entityId,
+      'projectId' => (int)$row[$this->joinQueryIndexField(self::PROJECTS_TABLE, 'id')],
+      'projectName' => $row[$this->joinQueryField(self::PROJECTS_TABLE, 'id')],
+    ];
   }
 
   /**

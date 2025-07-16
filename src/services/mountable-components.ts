@@ -21,11 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { appName } from '../config.ts';
+import { translate as t } from '@nextcloud/l10n';
 import Vue from 'vue';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe } from './async-event-bus.ts'
 import * as MountableComponents from '../mountable-component-names.ts';
 import type { VueConstructor } from 'vue/types/vue';
+import { AppError } from '../types/errors.ts'
 
 const vueConstructors: Record<string, VueConstructor> = {};
 
@@ -46,11 +49,14 @@ export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
       case MountableComponents.PROJECT_ACTIONS_MENU:
         vueComponent = (await import('../components/ProjectActionsMenu.vue')).default;
         break;
+        case MountableComponents.PROJECT_PAYMENT_ACTIONS_MENU:
+        vueComponent = (await import('../components/ProjectPaymentActionsMenu.vue')).default;
+        break;
       case MountableComponents.SEPA_BULK_TRANSACTION_ACTIONS_MENU:
         vueComponent = (await import('../components/SepaBulkTransactionActionsMenu.vue')).default;
         break;
       default:
-        return;
+        throw new AppError(event, t(appName, 'Unknown mountable component: "{name}".', { event }));
       }
       // generate the constructor
       vueConstructors[event.name] = Vue.extend(vueComponent);

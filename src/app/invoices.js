@@ -37,7 +37,6 @@ import {
   valueSelector as pmeValueSelector,
   sys as pmeSys,
   data as pmeData,
-  token as pmeToken,
   formSelector as pmeFormSelector,
 } from './pme-selectors.js';
 import {
@@ -48,11 +47,11 @@ import {
 import formatDate from '../util/formatDate.js';
 import {
   emit as asyncEmit,
-  getEmitResult,
   subscribe as asyncSubscribe,
 } from '../services/async-event-bus.ts';
 import { INVOICE_ACTIONS_MENU } from '../mountable-component-names.ts';
 import * as BusEvents from '../event-bus-events.ts';
+import actionMenu from './vue-action-menu.ts';
 
 require('./jquery-readonly.js');
 require('invoices.scss');
@@ -70,9 +69,12 @@ const iiAmountName = pmeData('InvoiceItems:amount');
 const iiSubjectName = pmeData('InvoiceItems:subject');
 const iDueDateName = pmeData('due_date');
 
-const templateName = filename(__filename);
+const template = filename(__filename);
 
-asyncSubscribe(BusEvents.INVOICE_POPUP, async (event) => {
+asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
+  if (event.template !== template) {
+    return;
+  }
   asyncEmit(BusEvents.PUSH_BUSY_STATE);
   await overviewPopup(PHPMyEdit.selector(), event);
   asyncEmit(BusEvents.POP_BUSY_STATE);
@@ -81,24 +83,24 @@ asyncSubscribe(BusEvents.INVOICE_POPUP, async (event) => {
 const overviewPopup = async function(containerSel, data) {
   const tableOptions = {
     ambientContainerSelector: containerSel,
-    templateName,
-    templateRenderer: templateRenderer(templateName),
+    template,
+    templateRenderer: templateRenderer(template),
     // Now special options for the dialog popup
     initialViewOperation: true,
     initialName: pmeSys('operation'),
     initialValue: 'View',
     reloadName: pmeSys('operation'),
     reloadValue: 'View',
-    [pmeSys('rec')]: { id: data.invoiceId },
+    [pmeSys('rec')]: { id: data.entityId },
     [pmeSys('groupby_rec')]: {
-      id: data.invoiceId,
+      id: data.entityId,
       // eslint-disable-next-line camelcase
-      InvoiceItems__master_key_: '0;' + data.invoiceId,
+      InvoiceItems__master_key_: '0;' + data.entityId,
     },
     [pmeSys('mrec_rec')]: {
-      id: data.invoiceId,
+      id: data.entityId,
       // eslint-disable-next-line camelcase
-      InvoiceItems__master_key_: '0;' + data.invoiceId,
+      InvoiceItems__master_key_: '0;' + data.entityId,
     },
     projectId: data.projectId,
     projectName: data.projectName,
@@ -124,7 +126,6 @@ const invoiceItemPopup = function(containerSel, post) {
   // instrumentation numbers are somewhat nasty and require too
   // many options.
 
-  const template = templateName;
   const tableOptions = {
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: template + '-dialog',
@@ -174,99 +175,6 @@ const fileDownload = (url, post, $menu) => {
   });
 };
 
-const actionMenu = async function($container) {
-
-  const generateVueMenu = async ($actionMenu) => {
-    const propsData = { ...$actionMenu.data('actionMenu') };
-    propsData.enableOverviewItem = $container.find(pmeFormSelector).hasClass(pmeToken('list'));
-    const vueMenu = await getEmitResult(
-      asyncEmit(BusEvents.GET_VUE_COMPONENT, {
-        name: INVOICE_ACTIONS_MENU,
-        propsData,
-      }),
-    );
-    const vueComponents = $container.data('vueComponents') || [];
-    if (vueComponents.length === 0) {
-      $container.data('vueComponents', vueComponents);
-    }
-    vueComponents.push(vueMenu);
-
-    $actionMenu.data('vueMenu', vueMenu);
-    await vueMenu.$mount($actionMenu.find('.vue-mount-point')[0]);
-    return vueMenu;
-  };
-
-  const actionTriggerSelector = `.vue-action-menu-placeholder.${templateName} button.vue-mount-point`;
-  $container
-    .off('click', actionTriggerSelector)
-    .on('click', actionTriggerSelector, async function(event) {
-
-      $.fn.cafevTooltip.hide();
-
-      const $actionMenu = $(this).parent();
-      if ($actionMenu.data('vueMenu')) {
-        // the menu already exists, just let it do its work
-        return;
-      }
-
-      // otherwise intercept the event and mount the menu
-      event.preventDefault();
-      event.stopImmediatePropagation();
-
-      const vueMenu = await generateVueMenu($actionMenu);
-      const invoiceId = $actionMenu.data('actionMenu').invoiceId;
-
-      asyncEmit(BusEvents.INVOICE_ACTIONS, {
-        open: false,
-        invoiceId: -invoiceId,
-      });
-      vueMenu.openMenu();
-
-      return false;
-    });
-
-  $container
-    .off('pme:contextmenu', 'tr.' + pmeToken('row'))
-    .on('pme:contextmenu', 'tr.' + pmeToken('row'), async function(event, originalEvent, databaseIdentifier) {
-      console.debug('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
-
-      const $row = $(this);
-      const $form = $row.closest(pmeFormSelector);
-      let $actionMenuContainer;
-      if ($form.is('.' + pmeToken('list'))) {
-        $actionMenuContainer = $row.hasClass('following') ? $row.prevAll('.first').first() : $row;
-      } else {
-        $actionMenuContainer = $row.closest(pmeFormSelector);
-      }
-      const $actionMenu = $actionMenuContainer.find('.vue-action-menu-placeholder.' + templateName).first();
-
-      if ($actionMenu.length === 0) {
-        return;
-      }
-
-      originalEvent.preventDefault();
-      originalEvent.stopImmediatePropagation();
-
-      const vueMenu = $actionMenu.data('vueMenu') || await generateVueMenu($actionMenu);
-      const invoiceId = $actionMenu.data('actionMenu').invoiceId;
-
-      if (vueMenu.isOpen()) {
-        vueMenu.closeMenu();
-      } else {
-        asyncEmit(BusEvents.INVOICE_ACTIONS, {
-          open: false,
-          invoiceId: -invoiceId,
-        });
-        vueMenu.openMenu(
-          originalEvent.originalEvent.clientX,
-          originalEvent.originalEvent.clientY,
-        );
-      }
-
-      return false;
-    });
-};
-
 const ready = function(selector, pmeParameters, resizeCB) {
 
   const $container = $(selector);
@@ -277,7 +185,7 @@ const ready = function(selector, pmeParameters, resizeCB) {
 
   if (pmeParameters.reason === 'dialogOpen') {
 
-    actionMenu($container);
+    actionMenu($container, template, INVOICE_ACTIONS_MENU);
 
     // AJAX download support
     $container
@@ -467,8 +375,8 @@ const ready = function(selector, pmeParameters, resizeCB) {
           -1, // projectId
           debitorId,
           resizeCB, {
-            upload: 'documents/finance/' + templateName + '/upload',
-            delete: 'documents/finance/' + templateName + '/delete',
+            upload: 'documents/finance/' + template + '/upload',
+            delete: 'documents/finance/' + template + '/delete',
           });
         const ambientContainerSelector = pmeParameters?.tableOptions?.ambientContainerSelector;
         if (ambientContainerSelector) {
@@ -534,8 +442,8 @@ const documentReady = function() {
 
     const container = PHPMyEdit.container();
 
-    if (!container.hasClass(templateName)) {
-      console.debug('IGNORING WRONG TEMPLATE', { templateName });
+    if (!container.hasClass(template)) {
+      console.debug('IGNORING WRONG TEMPLATE', { template });
       return;
     }
 

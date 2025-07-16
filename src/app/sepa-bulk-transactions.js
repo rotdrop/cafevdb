@@ -26,8 +26,6 @@ import * as CAFEVDB from './cafevdb.js';
 import { templateRenderer } from './template-renderer.js';
 import * as PHPMyEdit from './pme.js';
 import {
-  token as pmeToken,
-  formSelector as pmeFormSelector,
   sys as pmeSys,
   classSelector as pmeClassSelector,
 } from './pme-selectors.js';
@@ -38,17 +36,20 @@ import {
 } from './lazy-decryption.js';
 import {
   emit as asyncEmit,
-  getEmitResult,
   subscribe as asyncSubscribe,
 } from '../services/async-event-bus.ts';
 import { SEPA_BULK_TRANSACTION_ACTIONS_MENU } from '../mountable-component-names.ts';
 import * as BusEvents from '../event-bus-events.ts';
+import actionMenu from './vue-action-menu.ts';
 
 require('sepa-bulk-transactions.scss');
 
 const template = 'sepa-bulk-transactions';
 
-asyncSubscribe(BusEvents.SEPA_BULK_TRANSACTION_POPUP, async (event) => {
+asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
+  if (event.template !== template) {
+    return;
+  }
   asyncEmit(BusEvents.PUSH_BUSY_STATE);
   await overviewPopup(PHPMyEdit.selector(), event);
   asyncEmit(BusEvents.POP_BUSY_STATE);
@@ -66,6 +67,7 @@ const backgroundDecryption = function(container) {
 };
 
 const overviewPopup = async function(containerSel, data) {
+  const entityId = data.entityId;
   const tableOptions = {
     ambientContainerSelector: containerSel,
     template,
@@ -77,16 +79,16 @@ const overviewPopup = async function(containerSel, data) {
     reloadName: pmeSys('operation'),
     reloadValue: 'View',
     // [pmeSys('operation')]: 'View',
-    [pmeSys('rec')]: { id: data.bulkTransactionId },
+    [pmeSys('rec')]: { id: entityId },
     [pmeSys('groupby_rec')]: {
-      id: data.bulkTransactionId,
+      id: entityId,
       // eslint-disable-next-line camelcase
-      CompositePayments__master_key_: '0;' + data.bulkTransactionId,
+      CompositePayments__master_key_: '0;' + entityId,
     },
     [pmeSys('mrec_rec')]: {
-      id: data.bulkTransactionId,
+      id: entityId,
       // eslint-disable-next-line camelcase
-      CompositePayments__master_key_: '0;' + data.bulkTransactionId,
+      CompositePayments__master_key_: '0;' + entityId,
     },
     projectId: data.projectId,
     projectName: data.projectName,
@@ -94,99 +96,6 @@ const overviewPopup = async function(containerSel, data) {
     modified: false,
   };
   await PHPMyEdit.tableDialogOpen(tableOptions);
-};
-
-const actionMenu = async function($container) {
-
-  const generateVueMenu = async ($actionMenu) => {
-    const propsData = { ...$actionMenu.data('actionMenu') };
-    propsData.enableOverviewItem = $container.find(pmeFormSelector).hasClass(pmeToken('list'));
-    const vueMenu = await getEmitResult(
-      asyncEmit(BusEvents.GET_VUE_COMPONENT, {
-        name: SEPA_BULK_TRANSACTION_ACTIONS_MENU,
-        propsData,
-      }),
-    );
-    const vueComponents = $container.data('vueComponents') || [];
-    if (vueComponents.length === 0) {
-      $container.data('vueComponents', vueComponents);
-    }
-    vueComponents.push(vueMenu);
-
-    $actionMenu.data('vueMenu', vueMenu);
-    await vueMenu.$mount($actionMenu.find('.vue-mount-point')[0]);
-    return vueMenu;
-  };
-
-  const actionTriggerSelector = `.vue-action-menu-placeholder.${template} button.vue-mount-point`;
-  $container
-    .off('click', actionTriggerSelector)
-    .on('click', actionTriggerSelector, async function(event) {
-
-      $.fn.cafevTooltip.hide();
-
-      const $actionMenu = $(this).parent();
-      if ($actionMenu.data('vueMenu')) {
-        // the menu already exists, just let it do its work
-        return;
-      }
-
-      // otherwise intercept the event and mount the menu
-      event.preventDefault();
-      event.stopImmediatePropagation();
-
-      const vueMenu = await generateVueMenu($actionMenu);
-      const bulkTransactionId = $actionMenu.data('actionMenu').bulkTransactionId;
-
-      asyncEmit(BusEvents.SEPA_BULK_TRANSACTION_ACTIONS, {
-        open: false,
-        bulkTransactionId: -bulkTransactionId,
-      });
-      vueMenu.openMenu();
-
-      return false;
-    });
-
-  $container
-    .off('pme:contextmenu', 'tr.' + pmeToken('row'))
-    .on('pme:contextmenu', 'tr.' + pmeToken('row'), async function(event, originalEvent, databaseIdentifier) {
-      console.debug('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
-
-      const $row = $(this);
-      const $form = $row.closest(pmeFormSelector);
-      let $actionMenuContainer;
-      if ($form.is('.' + pmeToken('list'))) {
-        $actionMenuContainer = $row.hasClass('following') ? $row.prevAll('.first').first() : $row;
-      } else {
-        $actionMenuContainer = $row.closest(pmeFormSelector);
-      }
-      const $actionMenu = $actionMenuContainer.find('.vue-action-menu-placeholder.' + template).first();
-
-      if ($actionMenu.length === 0) {
-        return;
-      }
-
-      originalEvent.preventDefault();
-      originalEvent.stopImmediatePropagation();
-
-      const vueMenu = $actionMenu.data('vueMenu') || await generateVueMenu($actionMenu);
-      const bulkTransactionId = $actionMenu.data('actionMenu').bulkTransactionId;
-
-      if (vueMenu.isOpen()) {
-        vueMenu.closeMenu();
-      } else {
-        asyncEmit(BusEvents.SEPA_BULK_TRANSACTION_ACTIONS, {
-          open: false,
-          bulkTransactionId: -bulkTransactionId,
-        });
-        vueMenu.openMenu(
-          originalEvent.originalEvent.clientX,
-          originalEvent.originalEvent.clientY,
-        );
-      }
-
-      return false;
-    });
 };
 
 const ready = function(container, resizeCB) {
@@ -216,7 +125,7 @@ const ready = function(container, resizeCB) {
       return false;
     });
 
-  actionMenu($container);
+  actionMenu($container, template, SEPA_BULK_TRANSACTION_ACTIONS_MENU);
 
   resizeCB();
 };

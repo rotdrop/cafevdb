@@ -22,8 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName, cloudUser } from './config.js';
-import generateAppUrl from './generate-url.js';
+import { appName } from './config.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
@@ -32,14 +31,12 @@ import * as Dialogs from './dialogs.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import ajaxDownload from './file-download.js';
 import { pageRenderer } from './pme-state.js';
-import { showError, /* showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import setBusyIndicators from './busy-indicators.js';
 import { filename } from './path.js';
 import {
   valueSelector as pmeValueSelector,
   sys as pmeSys,
   data as pmeData,
-  token as pmeToken,
   formSelector as pmeFormSelector,
 } from './pme-selectors.js';
 import {
@@ -47,6 +44,13 @@ import {
   reject as rejectDecryptionPromise,
   promise as decryptionPromise,
 } from './lazy-decryption.js';
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+} from '../services/async-event-bus.ts';
+import { PROJECT_PAYMENT_ACTIONS_MENU } from '../mountable-component-names.ts';
+import * as BusEvents from '../event-bus-events.ts';
+import actionMenu from './vue-action-menu.ts';
 
 require('project-payments.scss');
 require('project-participant-fields-display.scss');
@@ -62,7 +66,47 @@ const findByName = function($container, name) {
 const ppAmountName = pmeData('ProjectPayments:amount');
 const ppSubjectName = pmeData('ProjectPayments:subject');
 
-const templateName = filename(__filename);
+const template = filename(__filename);
+
+asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
+  if (event.template !== template) {
+    return;
+  }
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
+  await overviewPopup(PHPMyEdit.selector(), event);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
+});
+
+const overviewPopup = async function(containerSel, data) {
+  const entityId = data.entityId;
+  const tableOptions = {
+    ambientContainerSelector: containerSel,
+    template,
+    templateRenderer: templateRenderer(template),
+    // Now special options for the dialog popup
+    initialViewOperation: true,
+    initialName: pmeSys('operation'),
+    initialValue: 'View',
+    reloadName: pmeSys('operation'),
+    reloadValue: 'View',
+    [pmeSys('rec')]: { id: entityId },
+    [pmeSys('groupby_rec')]: {
+      id: entityId,
+      // eslint-disable-next-line camelcase
+      ProjectPayments__master_key_: '0;' + entityId,
+    },
+    [pmeSys('mrec_rec')]: {
+      id: data.invoiceId,
+      // eslint-disable-next-line camelcase
+      ProjectPayments__master_key_: '0;' + entityId,
+    },
+    projectId: data.projectId,
+    projectName: data.projectName,
+    modalDialog: true,
+    modified: false,
+  };
+  await PHPMyEdit.tableDialogOpen(tableOptions);
+};
 
 /**
  * Generate a popup in order to add a new split-transaction, i.e. a
@@ -81,7 +125,6 @@ const projectPaymentPopup = function(containerSel, post) {
   // instrumentation numbers are somewhat nasty and require too
   // many options.
 
-  const template = templateName;
   const tableOptions = {
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: template + '-dialog',
@@ -131,109 +174,6 @@ const fileDownload = (url, post, $menu) => {
   });
 };
 
-const actionMenu = function(containerSel) {
-  containerSel = PHPMyEdit.selector(containerSel);
-  const $container = PHPMyEdit.container(containerSel);
-  const itemSelector = '.menu-actions.dropdown-container .dropdown-item';
-
-  $container.on('click', itemSelector + '.disabled', function(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    return false;
-  });
-  $container.on('click', itemSelector, function(event) {
-    const $this = $(this);
-    const $menu = $this.closest('.menu-actions.dropdown-container');
-    const menuData = $menu.data();
-
-    const postData = {
-      senderId: cloudUser.uid,
-      operation: 'download',
-      compositePaymentIds: [menuData.compositePaymentId],
-      projectId: menuData.projectId,
-    };
-
-    const operation = $this.data('operation');
-
-    switch (operation) {
-    case 'donation-receipt:download':
-      fileDownload(
-        generateAppUrl('documents/mail-merge'), {
-          templateName: 'donationReceipt',
-          ...postData,
-        },
-        $menu,
-      );
-      break;
-    case 'donation-receipt:email':
-      showError(t(appName, 'Unimplemented operation: {operation}', { operation }), { timeout: TOAST_PERMANENT_TIMEOUT });
-      break;
-    case 'standard-receipt:download':
-      fileDownload(
-        generateAppUrl('documents/mail-merge'), {
-          templateName: 'standardReceipt',
-          ...postData,
-        },
-        $menu,
-      );
-      break;
-    case 'standard-receipt:email':
-      showError(t(appName, 'Unimplemented operation: {operation}', { operation }), { timeout: TOAST_PERMANENT_TIMEOUT });
-      break;
-    case 'payment:download-data':
-      fileDownload(
-        generateAppUrl('documents/mail-merge'), {
-          templateName: 'standardReceipt',
-          ...postData,
-          operation: 'dataset',
-        },
-        $menu,
-      );
-      break;
-    default:
-      showError(t(appName, 'Unknown operation: {operation}', { operation }), { timeout: TOAST_PERMANENT_TIMEOUT });
-      break;
-    }
-    // return false;
-  });
-  const $form = $container.find(pmeFormSelector);
-  const listMode = $form.is('.' + pmeToken('list'));
-
-  $container
-    .off('pme:contextmenu', 'tr.' + pmeToken('row'))
-    .on('pme:contextmenu', 'tr.' + pmeToken('row'), function(event, originalEvent, databaseIdentifier) {
-      const $contentTarget = $(originalEvent.target).closest('.dropdown-content');
-      if ($contentTarget.length > 0) {
-        // use standard context menu inside dropdown
-        return;
-      }
-
-      const $row = $(this);
-      const $actionMenuContainer = listMode ? $row.closest('tbody').find('.composite-payment.first') : $form;
-      const $actionMenu = $actionMenuContainer.find('.menu-actions.dropdown-container').first();
-
-      if ($actionMenu.length === 0) {
-        return;
-      }
-
-      const $actionMenuToggle = $actionMenu.find('.action-menu-toggle');
-      const $actionMenuContent = $actionMenu.find('.dropdown-content');
-
-      originalEvent.preventDefault();
-      originalEvent.stopImmediatePropagation();
-
-      $actionMenuContent.css({
-        position: 'fixed',
-        left: originalEvent.originalEvent.clientX,
-        top: originalEvent.originalEvent.clientY,
-      });
-      $actionMenu.addClass('context-menu');
-      $actionMenuToggle.trigger('click');
-
-      return false;
-    });
-};
-
 const ready = function(selector, pmeParameters, resizeCB) {
 
   const $container = $(selector);
@@ -244,7 +184,7 @@ const ready = function(selector, pmeParameters, resizeCB) {
 
   if (pmeParameters.reason === 'dialogOpen') {
 
-    actionMenu($container);
+    actionMenu($container, template, PROJECT_PAYMENT_ACTIONS_MENU);
 
     // AJAX download support
     $container
@@ -416,8 +356,8 @@ const ready = function(selector, pmeParameters, resizeCB) {
           -1, // projectId
           musicianId,
           resizeCB, {
-            upload: 'documents/finance/' + templateName + '/upload',
-            delete: 'documents/finance/' + templateName + '/delete',
+            upload: 'documents/finance/' + template + '/upload',
+            delete: 'documents/finance/' + template + '/delete',
           });
         const ambientContainerSelector = pmeParameters?.tableOptions?.ambientContainerSelector;
         if (ambientContainerSelector) {
@@ -483,7 +423,7 @@ const documentReady = function() {
 
     const container = PHPMyEdit.container();
 
-    if (!container.hasClass(templateName)) {
+    if (!container.hasClass(template)) {
       return;
     }
 

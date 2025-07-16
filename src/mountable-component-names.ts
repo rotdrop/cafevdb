@@ -24,10 +24,11 @@
 import type { LegacySqlQueryLogItem } from './types/legacy-query-log.d.ts';
 
 export const DOKU_WIKI_WRAPPER = 'DokuWikiWrapper';
+export const INVOICE_ACTIONS_MENU = 'InvoiceActionsMenu';
 export const LEGACY_QUERY_LOG = 'LegacyQueryLog';
 export const PROJECT_ACTIONS_MENU = 'ProjectActionsMenu';
+export const PROJECT_PAYMENT_ACTIONS_MENU = 'ProjectPaymentsActionsMenu';
 export const SEPA_BULK_TRANSACTION_ACTIONS_MENU = 'SepaBulkTransactionActionsMenu';
-export const INVOICE_ACTIONS_MENU = 'InvoiceActionsMenu';
 
 export interface ComponentProps {
   [DOKU_WIKI_WRAPPER]: {
@@ -37,30 +38,50 @@ export interface ComponentProps {
     fullScreen?: boolean,
   },
   [INVOICE_ACTIONS_MENU]: {
-    'menuTitle': string,
-    'invoiceNumber': string,
-    'invoiceId': number,
-    'originatorName': string,
-    'originatorId': number,
-    'debitorName': string,
-    'debitorId': number,
-    'projectId': number,
+    amount?: number,
+    currencyCode?: string,
+    debitorId?: number,
+    debitorName?: string,
     enableOverviewItem?: boolean,
+    entityId: number,
+    invoiceNumber: string,
+    menuCaption?: string,
+    originatorId: number,
+    originatorName?: string,
+    projectId: number,
+    projectName: string,
+    template: string,
   },
   [LEGACY_QUERY_LOG]: {
     queryLog: LegacySqlQueryLogItem[],
   },
   [PROJECT_ACTIONS_MENU]: {
-    projectId: number,
+    entityId: number,
     projectName: string,
     forceProjectName?: boolean,
     enableOverviewItem?: boolean,
+    template: string,
   },
-  [SEPA_BULK_TRANSACTION_ACTIONS_MENU]: {
+  [PROJECT_PAYMENT_ACTIONS_MENU]: {
+    amount?: number,
+    entityId: number,
+    currencyCode?: string,
+    debitorId: number,
+    debitorName: string,
+    enableOverviewItem?: boolean,
+    isDonation: boolean,
+    menuCaption?: string,
     projectId: number,
     projectName: string,
-    forceMenuCaption?: boolean,
+    template: string,
+  },
+  [SEPA_BULK_TRANSACTION_ACTIONS_MENU]: {
     enableOverviewItem?: boolean,
+    entityId: number,
+    menuCaption?: string,
+    projectId: number,
+    projectName: string,
+    template: string,
   },
 }
 

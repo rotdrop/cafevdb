@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectT
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -53,6 +54,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 /** Table generator for Instruments table. */
 class ProjectPayments extends PMETableViewBase
 {
+  use FieldTraits\ActionMenuToggleTrait;
   use FieldTraits\CryptoTrait;
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
@@ -1562,6 +1564,25 @@ WHERE dsf.id IS NOT NULL',
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertSanitizeFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteDoDeleteSubPayments' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
+      $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] =
+      function($pme, $op, $step, &$row) {
+        if (!$this->listOperation() && !$this->addOperation()) {
+          $pme->buttons = $this->pageNavigation->prependTableButtons(buttons: []);
+          $menuData = $this->generateActionMenuData((int)$pme->rec['id'], $row);
+          foreach (['C', 'P', 'D', 'V'] as $operationMode) {
+            foreach (['up', 'down'] as $position) {
+              $actionMenu = $this->generateActionMenuToggle($menuData);
+              $button = [
+                'code' => $actionMenu,
+                'name' => 'actions',
+              ];
+              array_unshift($pme->buttons[$operationMode][$position], $button);
+            }
+          }
+        }
+        return true;
+      };
 
     if ($projectMode) {
       // $opts[PHPMyEdit::OPT_FILTERS] = 'FIND_IN_SET('.$this->projectId.', '.$joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_ids)';
@@ -1576,21 +1597,18 @@ WHERE dsf.id IS NOT NULL',
       return $this->actionMenu($rec['id'], $row, $pme);
     };
 
-    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
+    $this->installActionMenuToggle(
+      $opts,
+      function(array $recordId, array $groupByRecordId, array $row, PHPMyEdit $pme) {
+        $rowTag = $row[$this->joinQueryField(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
+        if (!$this->isCompositeRowTag($rowTag)) {
+          return null;
+        }
+        return $this->generateActionMenuData($recordId['id'], $row);
+      },
+    );
 
-    $opts['buttons'] = $this->pageNavigation->prependTableButtons(buttons: []);
-    foreach (['C', 'P', 'D', 'V'] as $operationMode) {
-      foreach (['up' => 'down', 'down' => 'up'] as $position => $direction) {
-        $button = [
-          'code' => function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme) use ($direction):string {
-            return $this->actionMenu($rec['id'], $row, $pme, dropDirection: $direction);
-          },
-          'name' => 'actions',
-        ];
-        array_unshift($opts['buttons'][$operationMode][$position], $button);
-      }
-    }
-    // $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
+    $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($execute) {
       $this->execute($opts);
@@ -1600,45 +1618,29 @@ WHERE dsf.id IS NOT NULL',
   }
 
   /**
-   * @param int $id Composite payment id.
+   * @param int $entityId
    *
-   * @param array $row
+   * @param array $row Legacy DB data provided by PME.
    *
-   * @param PHPMyEdit $pme
-   *
-   * @param string $direction Menu direction left, right.
-   *
-   * @param string $dropDirection Drop up or down.
-   *
-   * @return string HTML.
+   * @return array
    */
-  protected function actionMenu(
-    int $id,
-    array $row,
-    PHPMyEdit $pme,
-    string $direction = 'left',
-    string $dropDirection = 'down',
-  ):string {
-    $templateParameters = [
-      'appName' => $this->appName(),
-      'cssClasses' => ['project-payment-actions'],
-      'toolTips' => $this->toolTipsService,
-      'financeMode' => $this->financeMode,
-      'expertMode' => $this->expertMode,
-      'direction' => $direction,
-      'dropDirection' => $dropDirection,
-      'compositePaymentId' => $id,
-      'debitorName' => $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')],
+  protected function generateActionMenuData(int $entityId, array $row):array
+  {
+    $amount = $row[$this->queryField('amount')];
+    $numberFormatter = new NumberFormatter($this->appLocale());
+    $l10nAmount = $numberFormatter->formatCurrency($amount);
+    $debitorName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
+    return [
+      'amount' => $amount,
+      'currencyCode' => $this->currencyCode(),
       'debitorId' => $row[$this->queryField('musician_id')],
-      'isDonation' => $row[$this->joinQueryField(self::PROJECT_PAYMENTS_TABLE, 'is_donation')],
-      'amount' => $row[$this->queryField('amount')],
-      'appLocale' => $this->appLocale(),
+      'debitorName' => $debitorName,
+      'entityId' => $entityId,
+      'isDonation' => !!(int)$row[$this->joinQueryField(self::PROJECT_PAYMENTS_TABLE, 'is_donation')],
+      'menuCaption' => $entityId . ' - ' . $debitorName . ' - ' . $l10nAmount,
       'projectId' => $row[$this->queryField('project_id')],
+      'projectName' => $row[$this->joinQueryField(self::PROJECTS_TABLE, 'name')],
     ];
-    return $this->templateResponse(
-      'fragments/project-payments/action-menu',
-      $templateParameters,
-    )->render();
   }
 
   /**

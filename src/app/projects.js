@@ -38,7 +38,6 @@ import {
   classSelector as pmeClassSelector,
   formSelector as pmeFormSelector,
   inputSelector as pmeInputSelector,
-  token as pmeToken,
   idSelector as pmeIdSelector,
 } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
@@ -48,21 +47,19 @@ import iFrameResize from './iframe-resize.js';
 import {
   emit as asyncEmit,
   subscribe as asyncSubscribe,
-  getEmitResult,
 } from '../services/async-event-bus.ts';
 import * as BusEvents from '../event-bus-events.ts';
 import { PROJECT_ACTIONS_MENU } from '../mountable-component-names.ts';
-
-// eslint-disable-next-line no-unused-vars
-// import iFrameResize from 'iframe-resizer';
-// eslint-disable-next-line
-// import iFrameContentScript from '!!raw-loader!iframe-resizer/js/iframeResizer.contentWindow.js';
+import actionMenu from './vue-action-menu.ts';
 
 require('projects.scss');
 
 const template = 'projects';
 
-asyncSubscribe(BusEvents.PROJECT_POPUP, async (event) => {
+asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
+  if (event.template !== template) {
+    return;
+  }
   console.info('EVENT', event);
   asyncEmit(BusEvents.PUSH_BUSY_STATE);
   await projectViewPopup(PHPMyEdit.selector(), event);
@@ -207,7 +204,7 @@ const participantFieldsPopup = async function(containerSel, post) {
  * { projectName: 'NAME', projectId: XX }
  */
 const projectViewPopup = async function(containerSel, post) {
-  const template = 'projects';
+  const projectId = post.projectId || post.entityId;
   const tableOptions = {
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: 'project-overview',
@@ -220,106 +217,11 @@ const projectViewPopup = async function(containerSel, post) {
     reloadName: pmeSys('operation'),
     reloadValue: 'View',
     // [pmeSys('operation')]: 'View',
-    [pmeSys('rec')]: { id: post.projectId },
+    [pmeSys('rec')]: { id: projectId },
     modalDialog: true,
     modified: false,
   };
   await PHPMyEdit.tableDialogOpen(tableOptions);
-};
-
-const actionMenu = async function(containerSel) {
-  containerSel = PHPMyEdit.selector(containerSel);
-  const $container = PHPMyEdit.container(containerSel);
-
-  const generateVueMenu = async ($actionMenu) => {
-    const actionMenuData = $actionMenu.data('actionMenu');
-    const projectId = actionMenuData.projectId;
-    const projectName = actionMenuData.projectName;
-    const vueMenu = await getEmitResult(
-      asyncEmit(BusEvents.GET_VUE_COMPONENT, {
-        name: PROJECT_ACTIONS_MENU,
-        propsData: {
-          projectId,
-          projectName,
-          enableOverviewItem: $container.find(pmeFormSelector).hasClass(pmeToken('list')),
-        },
-      }),
-    );
-    const vueComponents = $container.data('vueComponents') || [];
-    if (vueComponents.length === 0) {
-      $container.data('vueComponents', vueComponents);
-    }
-    vueComponents.push(vueMenu);
-
-    $actionMenu.data('vueMenu', vueMenu);
-    await vueMenu.$mount($actionMenu.find('.vue-mount-point')[0]);
-    return vueMenu;
-  };
-
-  const actionTriggerSelector = `.vue-action-menu-placeholder.${template} button.vue-mount-point`;
-  $container
-    .off('click', actionTriggerSelector)
-    .on('click', actionTriggerSelector, async function(event) {
-
-      $.fn.cafevTooltip.hide();
-
-      const $actionMenu = $(this).parent();
-      if ($actionMenu.data('vueMenu')) {
-        // the menu already exists, just let it do its work
-        return;
-      }
-
-      // otherwise intercept the event and mount the menu
-      event.preventDefault();
-      event.stopImmediatePropagation();
-
-      const vueMenu = await generateVueMenu($actionMenu);
-      const projectId = $actionMenu.data('actionMenu').projectId;
-
-      asyncEmit(BusEvents.PROJECT_ACTIONS, {
-        open: false,
-        projectId: -projectId,
-      });
-      vueMenu.openMenu();
-
-      return false;
-    });
-
-  $container
-    .off('pme:contextmenu', 'tr.' + pmeToken('row'))
-    .on('pme:contextmenu', 'tr.' + pmeToken('row'), async function(event, originalEvent, databaseIdentifier) {
-      console.info('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
-
-      const $row = $(this);
-      const $form = $row.closest(pmeFormSelector);
-      const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
-      const $actionMenu = $actionMenuContainer.find('.vue-action-menu-placeholder.' + template).first();
-
-      if ($actionMenu.length === 0) {
-        return;
-      }
-
-      originalEvent.preventDefault();
-      originalEvent.stopImmediatePropagation();
-
-      const vueMenu = $actionMenu.data('vueMenu') || await generateVueMenu($actionMenu);
-      const projectId = $actionMenu.data('actionMenu').projectId;
-
-      if (vueMenu.isOpen()) {
-        vueMenu.closeMenu();
-      } else {
-        asyncEmit(BusEvents.PROJECT_ACTIONS, {
-          open: false,
-          projectId: -projectId,
-        });
-        vueMenu.openMenu(
-          originalEvent.originalEvent.clientX,
-          originalEvent.originalEvent.clientY,
-        );
-      }
-
-      return false;
-    });
 };
 
 const pmeFormInit = function(containerSel) {
@@ -1023,7 +925,7 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
   if (parameters.reason === 'dialogClose') {
     if (parameters.closedBy !== undefined && parameters.closedBy === pmeSys('savedelete')) {
       const templateRenderer = $(parameters.tableOptions.ambientContainerSelector).find('input[name="templateRenderer"]').val();
-      if (templateRenderer !== templateRenderer('projects')) {
+      if (templateRenderer !== templateRenderer(template)) {
         // we have to reload the default page as the underlying page
         // most likely depends on the now deleted project
         window.location.replace(generateAppUrl('') + '?history=discard');
@@ -1034,7 +936,7 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
   }
 
   const container = PHPMyEdit.container(selector);
-  actionMenu(selector);
+  actionMenu(container, template, PROJECT_ACTIONS_MENU);
   pmeFormInit(selector);
 
   const articleBox = container.find('#projectWebArticles');
@@ -1255,7 +1157,7 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
 
 const documentReady = function() {
 
-  PHPMyEdit.addTableLoadCallback('projects', {
+  PHPMyEdit.addTableLoadCallback(template, {
     callback: tableLoadCallback,
     context: globalState,
     parameters: [],
@@ -1263,10 +1165,10 @@ const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
     const container = PHPMyEdit.container();
-    if (!container.hasClass('projects')) {
+    if (!container.hasClass(template)) {
       return;
     }
-    actionMenu();
+    actionMenu(container, template, PROJECT_ACTIONS_MENU);
     pmeFormInit(PHPMyEdit.defaultSelector);
   });
 };

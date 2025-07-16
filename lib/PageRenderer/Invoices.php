@@ -1818,9 +1818,10 @@ WHERE dsf.id IS NOT NULL',
       function($pme, $op, $step, &$row) {
         if (!$this->listOperation() && !$this->addOperation()) {
           $pme->buttons = $this->pageNavigation->prependTableButtons(buttons: []);
+          $menuData = $this->generateActionMenuData($pme->rec['id'], $row);
           foreach (['C', 'P', 'D', 'V'] as $operationMode) {
             foreach (['up', 'down'] as $position) {
-              $actionMenu = $this->generateActionMenuToggle($this->generateActionMenuData($row));
+              $actionMenu = $this->generateActionMenuToggle($menuData);
               $button = [
                 'code' => $actionMenu,
                 'name' => 'actions',
@@ -1844,12 +1845,11 @@ WHERE dsf.id IS NOT NULL',
         if (!$this->isCompositeRowTag($rowTag)) {
           return null;
         }
-        return $this->generateActionMenuData($row);
+        return $this->generateActionMenuData($recordId['id'], $row);
       },
     );
 
     $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
-
 
     if ($execute) {
       $this->execute($opts);
@@ -1859,11 +1859,13 @@ WHERE dsf.id IS NOT NULL',
   }
 
   /**
+   * @param int $entityId
+   *
    * @param array $row Legacy DB data provided by PME.
    *
    * @return array
    */
-  protected function generateActionMenuData(array $row):array
+  protected function generateActionMenuData(int $entityId, array $row):array
   {
     $invoiceNumber = $row[$this->queryField('invoice_number')];
     $amount = $row[$this->queryField('amount')];
@@ -1871,57 +1873,18 @@ WHERE dsf.id IS NOT NULL',
     $l10nAmount = $numberFormatter->formatCurrency($amount);
     $debitorName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
     return [
-      'menuCaption' => $invoiceNumber . ' - ' . $debitorName . ' - ' . $l10nAmount,
-      'invoiceNumber' => $invoiceNumber,
-      'invoiceId' => (int)$this->pme->rec['id'],
-      'originatorId' => (int)$row[$this->queryIndexField('originator_id')],
-      'projectId' => (int)$row[$this->queryField('project_id')],
-      'projectName' => $row[$this->queryField($this->joinTableFieldName(self::PROJECTS_TABLE, 'name'))],
-    ];
-  }
-
-  /**
-   * @param int $id Database entity id.
-   *
-   * @param array $row
-   *
-   * @param PHPMyEdit $pme
-   *
-   * @param string $direction Menu direction left, right.
-   *
-   * @param string $dropDirection Drop up or down.
-   *
-   * @return string HTML.
-   */
-  protected function actionMenu(
-    int $id,
-    array $row,
-    PHPMyEdit $pme,
-    string $direction = 'left',
-    string $dropDirection = 'down',
-  ):string {
-    $templateParameters = [
-      'appName' => $this->appName(),
-      'cssClasses' => ['invoice-item-actions'],
-      'toolTips' => $this->toolTipsService,
-      'financeMode' => $this->financeMode,
-      'expertMode' => $this->expertMode,
-      'direction' => $direction,
-      'dropDirection' => $dropDirection,
-      'invoiceId' => $id,
-      'invoiceNumber' => $row[$this->queryField('invoice_number')],
+      'amount' => (float)$amount,
+      'currencyCode' => $this->currencyCode(),
+      'debitorId' => (int)$row[$this->queryField('debitor_id')],
       'debitorName' => $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')],
-      'debitorId' => $row[$this->queryField('debitor_id')],
+      'entityId' => (int)$entityId,
+      'invoiceNumber' => $invoiceNumber,
+      'menuCaption' => $invoiceNumber . ' - ' . $debitorName . ' - ' . $l10nAmount,
+      'originatorId' => (int)$row[$this->queryIndexField('originator_id')],
       'originatorName' => $row[$this->queryField('originator_id')],
-      'originatorId' => $row[$this->queryIndexField('originator_id')],
-      'amount' => $row[$this->queryField('amount')],
-      'appLocale' => $this->appLocale(),
-      'projectId' => $row[$this->queryField('project_id')],
+      'projectId' => (int)$row[$this->queryField('project_id')],
+      'projectName' => $row[$this->joinQueryField(self::PROJECTS_TABLE, 'name')],
     ];
-    return $this->templateResponse(
-      'fragments/invoices/action-menu',
-      $templateParameters,
-    )->render();
   }
 
   /**

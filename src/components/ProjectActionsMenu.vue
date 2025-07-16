@@ -21,50 +21,27 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div class="container">
-    <NcActions v-if="positioned"
-               :force-menu="true"
-               :manual-open="true"
-               @click="moveToAnchor"
-    >
-      <NcActionSeparator v-show="false" />
-    </NcActions>
-    <NcActions ref="actions"
-               :class="[{ positioned }, appName + '-project-actions']"
-               :force-menu="true"
-               force-semantic-type="menu"
-               :open.sync="open"
-               :close-after-click="true"
-               @closed="closeMenu"
-    >
-      <NcActionCaption v-if="showProjectName"
-                       :class="[ appName + '-project-actions', 'project-name']"
-                       :name="projectName"
-      />
-      <NcActionSeparator v-if="showProjectName" />
-      <NcActionButton v-if="enableOverviewItem"
-                      v-tooltip="tooltips['project-infopage']"
-                      :class="[appName + '-project-actions']"
-                      :name="t(appName, 'Project Overview')"
-                      @click="openProjectOverview"
-      >
-        <template #icon>
-          <ProjectInfoIcon />
-        </template>
-      </NcActionButton>
-      <NcActionSeparator v-if="enableOverviewItem" />
-      <NcActionRouter v-tooltip="tooltips['project-action:project-participants']"
+  <LegacyPageActionsMenu ref="actions"
+                         :menu-caption="projectName"
+                         :enable-overview-item="enableOverviewItem"
+                         :entity-id="entityId"
+                         :project-id="entityId"
+                         :project-name="projectName"
+                         :template="template"
+  >
+    <template #actions>
+      <NcActionRouter v-tooltip.right="tooltips['project-action:project-participants']"
                       :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('project-participants')"
                       :name="t(appName, 'Participants')"
                       exact
-                      @click="closeMenu"
+                      :close-after-click="true"
       >
         <template #icon>
           <ProjectParticipantsIcon />
         </template>
       </NcActionRouter>
-      <NcActionLink v-tooltip="tooltips['project-action:project-instrumentation-numbers']"
+      <NcActionLink v-tooltip.right="tooltips['project-action:project-instrumentation-numbers']"
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Instrumentation Numbers')"
                     :href="getRouteHref(toProjectRouteData('project-instrumentation-numbers'))"
@@ -74,7 +51,7 @@
           <InstrumentationNumbersIcon />
         </template>
       </NcActionLink>
-      <NcActionLink v-tooltip="tooltips['project-action:participant-fields']"
+      <NcActionLink v-tooltip.right="tooltips['project-action:participant-fields']"
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Participant Fields')"
                     :href="getRouteHref(toProjectRouteData('project-participant-fields'))"
@@ -85,18 +62,18 @@
         </template>
       </NcActionLink>
       <NcActionSeparator />
-      <NcActionLink v-tooltip="tooltips['project-action:files']"
+      <NcActionLink v-tooltip.right="tooltips['project-action:files']"
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Project Files')"
                     :href="projectFolderLink"
                     :target="projectFolderLinkTarget"
-                    @click="closeMenu"
+                    :close-after-click="true"
       >
         <template #icon>
           <ProjectFolderIcon />
         </template>
       </NcActionLink>
-      <NcActionLink v-tooltip="tooltips['project-action:wiki']"
+      <NcActionLink v-tooltip.right="tooltips['project-action:wiki']"
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Project Notes')"
                     :href="projectNotesLink"
@@ -106,7 +83,7 @@
           <ProjectNotesIcon />
         </template>
       </NcActionLink>
-      <NcActionLink v-tooltip="tooltips['project-action:events']"
+      <NcActionLink v-tooltip.right="tooltips['project-action:events']"
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Events')"
                     :href="projectEventsLink"
@@ -116,7 +93,7 @@
           <ProjectEventsIcon />
         </template>
       </NcActionLink>
-      <NcActionButton v-tooltip="tooltips['project-action:email']"
+      <NcActionButton v-tooltip.right="tooltips['project-action:email']"
                       :class="[appName + '-project-actions']"
                       :name="t(appName, 'Em@il')"
                       @click="openProjectEmail"
@@ -126,69 +103,68 @@
         </template>
       </NcActionButton>
       <NcActionSeparator v-if="financeMode" />
-      <NcActionRouter v-tooltip="tooltips['project-action:business-contacts']"
+      <NcActionRouter v-tooltip.right="tooltips['project-action:business-contacts']"
                       :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('project-associates')"
                       :name="t(appName, 'Business Contacts / Associates')"
                       exact
-                      @click="closeMenu"
+                      :close-after-click="true"
       >
         <template #icon>
           <ProjectAssociatesIcon />
         </template>
       </NcActionRouter>
-      <NcActionRouter v-tooltip="tooltips['project-action:sepa-bank-accounts']"
+      <NcActionRouter v-tooltip.right="tooltips['project-action:sepa-bank-accounts']"
                       :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('sepa-bank-accounts')"
                       :name="t(appName, 'Debit Mandates')"
                       exact
-                      @click="closeMenu"
+                      :close-after-click="true"
       >
         <template #icon>
           <SepaBankAccountsIcon />
         </template>
       </NcActionRouter>
-      <NcActionRouter v-tooltip="tooltips['project-action:payments']"
+      <NcActionRouter v-tooltip.right="tooltips['project-action:payments']"
                       :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('project-payments')"
                       :name="t(appName, 'Payments')"
                       exact
-                      @click="closeMenu"
+                      :close-after-click="true"
       >
         <template #icon>
           <span class="font-currency-symbol">{{ globalState.currencySymbol }}</span>
         </template>
       </NcActionRouter>
-      <NcActionRouter v-tooltip="tooltips['project-action:invoices']"
+      <NcActionRouter v-tooltip.right="tooltips['project-action:invoices']"
                       :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('invoices')"
                       :name="t(appName, 'Invoices')"
                       exact
-                      @click="closeMenu"
+                      :close-after-click="true"
       >
         <template #icon>
           <InvoicesIcon />
         </template>
       </NcActionRouter>
-      <NcActionLink v-tooltip="tooltips['project-action:financial-balance']"
+      <NcActionLink v-tooltip.right="tooltips['project-action:financial-balance']"
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Financial Balance')"
                     :href="financialBalanceLink"
                     :target="financialBalanceLinkTarget"
-                    @click="closeMenu"
+                    :close-after-click="true"
       >
         <template #icon>
           <ProjectFolderIcon />
         </template>
       </NcActionLink>
-    </NcActions>
-  </div>
+    </template>
+  </LegacyPageActionsMenu>
 </template>
 <script setup lang="ts">
+import LegacyPageActionsMenu from './LegacyPageActionsMenu.vue'
 import {
-  NcActions,
   NcActionButton,
-  NcActionCaption,
   NcActionLink,
   NcActionRouter,
   NcActionSeparator,
@@ -196,8 +172,6 @@ import {
 import globalState from '../app/globalstate.js'
 import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
-
-import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 import ProjectAssociatesIcon from 'vue-material-design-icons/Handshake.vue'
 import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
@@ -209,9 +183,7 @@ import ProjectEmailIcon from 'vue-material-design-icons/EmailArrowRight.vue'
 import ProjectEventsIcon from 'vue-material-design-icons/Calendar.vue'
 import SepaBankAccountsIcon from 'vue-material-design-icons/BankTransfer.vue'
 // import ProjectPaymentsIcon from 'vue-material-design-icons/CurrencyEur.vue' // Mmmh. l10n?
-
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
-import { PROJECT_ACTIONS } from '../event-bus-events.ts'
+import { emit as asyncEmit } from '../services/async-event-bus.ts'
 import { closeNavigation } from '../services/navigation.js'
 import useAppDataStore from '../stores/app-data.ts'
 import useTooltipsStore from '../stores/tooltips.ts'
@@ -222,9 +194,7 @@ import {
   computed,
   ref,
   watch,
-  nextTick,
   onBeforeMount,
-  onMounted,
 } from 'vue'
 import {
   useRoute,
@@ -239,26 +209,12 @@ import { PROJECT_EVENTS_LISTING_NAME } from '../router/calendar-routes.ts'
 
 const logger = new Console(COMPONENT_NAME)
 
-type NcButtonType = {
-  ref?: string,
-  $el: HTMLElement,
-}
-type NcActionsType = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  closeMenu(returnFocus?: boolean):Promise<any>,
-  $refs: {
-    popover: { $refs: { popover: { $refs: { reference: HTMLElement, } } } },
-    triggerButton: NcButtonType,
-  },
-}
-
 const props = withDefaults(defineProps</* ComponentProps[typeof COMPONENT_NAME] */{
-  projectId: number,
-  projectName: string,
-  forceProjectName?: boolean,
   enableOverviewItem?: boolean,
+  entityId: number,
+  projectName: string,
+  template: string,
 }>(), {
-  forceProjectname: false,
   enableOverviewItem: true,
 })
 
@@ -266,8 +222,6 @@ const appData = useAppDataStore()
 
 // data
 const open = ref(false)
-const referenceElement = ref<null|HTMLElement>(null)
-const triggerButton = ref<null|NcButtonType>(null)
 const positioned = ref(false)
 const project = ref<null|Project>(null)
 
@@ -289,8 +243,21 @@ const tooltipsProvider = useTooltipsStore()
 tooltipsProvider.provideTooltips(tooltipKeys)
 const tooltips = tooltipsProvider.tooltipsData
 
+const actions = ref<null|typeof LegacyPageActionsMenu>(null)
+
+const isOpen = () => actions.value!.isOpen()
+const closeMenu = () => actions.value!.closeMenu()
+const openMenu = (x?: number, y?: number) => actions.value!.openMenu(x, y)
+
+// we need to expose some methods in order to allow legacy code to
+// open, close and position the menu.
+defineExpose({
+  isOpen,
+  openMenu,
+  closeMenu,
+})
+
 // computed
-const showProjectName = computed(() => props.forceProjectName || positioned.value)
 const projectFolder = computed(() => project.value?.folders?.projectsfolder || null)
 const projectFolderLink = computed(() => nextcloudGenerateUrl('/apps/files/?dir=' + projectFolder.value))
 const projectFolderLinkTarget = computed(() => md5(projectFolderLink.value))
@@ -310,7 +277,7 @@ watch(open, (state, oldState) => {
   }
   logger.info('OPEN CHANGED', { state, oldState })
 })
-watch(() => props.projectId, async (newValue/*, oldValue */) => {
+watch(() => props.entityId, async (newValue/*, oldValue */) => {
   await syncProjectData(newValue)
 })
 
@@ -320,7 +287,7 @@ const toProjectRouteData = (template: string):RouterLocation => {
     name: 'legacy-page',
     params: {
       template,
-      projectId: '' + props.projectId,
+      projectId: '' + props.entityId,
       projectName: props.projectName,
     },
   }
@@ -332,20 +299,12 @@ const syncProjectData = async (projectId: number) => {
   }
   // vueSet(this.project, 'folders', this.project.folders)
 }
-const openProjectOverview = () => {
-  open.value = false
-  closeNavigation()
-  asyncEmit(BusEvents.PROJECT_POPUP, {
-    projectId: props.projectId,
-    projectName: props.projectName,
-  })
-}
 const openInstrumentationNumbers = (event: MouseEvent) => {
   event.preventDefault()
   open.value = false
   closeNavigation()
   asyncEmit(BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP, {
-    projectId: props.projectId,
+    projectId: props.entityId,
     projectName: props.projectName,
   })
 }
@@ -354,7 +313,7 @@ const openParticipantFields = (event: MouseEvent) => {
   open.value = false
   closeNavigation()
   asyncEmit(BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP, {
-    projectId: props.projectId,
+    projectId: props.entityId,
     projectName: props.projectName,
   })
 }
@@ -379,7 +338,6 @@ const openProjectEvents = (event: MouseEvent) => {
     },
     query: currentRoute.query,
   }
-  // @ts-expect-error: 2769
   return router.push(location)
 }
 const openProjectEmail = (event: MouseEvent) => {
@@ -387,71 +345,11 @@ const openProjectEmail = (event: MouseEvent) => {
   open.value = false
   closeNavigation()
   asyncEmit(BusEvents.EMAIL_POPUP, {
-    projectId: props.projectId,
+    projectId: props.entityId,
     projectName: props.projectName,
     reopen: true,
   })
 }
-const setPosition = (x?: number, y?: number) => {
-  if (x !== undefined && y !== undefined) {
-    referenceElement.value!.style.position = 'fixed'
-    referenceElement.value!.style.left = x + 'px'
-    referenceElement.value!.style.top = y + 'px'
-
-    positioned.value = true
-  } else if (positioned.value) {
-        referenceElement.value!.style.position = ''
-    referenceElement.value!.style.left = ''
-    referenceElement.value!.style.top = ''
-
-    positioned.value = false
-  }
-}
-const closeMenu = async () => {
-  logger.info('-> closeMenu()')
-  if (open.value) {
-    open.value = false
-    await nextTick()
-  }
-  if (positioned.value) {
-    // the open trigger was a context menu click, so there is not
-    // point to return the focus to the menu button.
-    triggerButton.value?.$el.blur()
-  }
-  for (let i = 0; i < 2; ++i) {
-    await nextFrame()
-    await nextTick()
-  }
-  setPosition()
-  logger.info('<- closeMenu()')
-}
-const nextFrame = () => {
-  return new Promise(resolve => requestAnimationFrame(() => {
-    requestAnimationFrame(resolve)
-  }))
-}
-const openMenu = async (x?: number, y?: number) => {
-  logger.info('-> openMenu()', x, y, positioned.value)
-  setPosition(x, y)
-  open.value = true
-  if (positioned.value) {
-    await nextTick()
-    triggerButton.value?.$el.blur()
-  }
-  logger.info('<- openMenu()', x, y, positioned.value)
-}
-const moveToAnchor = async (event?: MouseEvent) => {
-  if (!open.value || !positioned.value) {
-    return
-  }
-  logger.info('-> moveToAnchor()')
-  event?.preventDefault()
-  await closeMenu()
-  await nextTick()
-  openMenu()
-  logger.info('<- moveToAnchor()')
-}
-
 const router = useRouter()
 const currentRoute = useRoute()
 
@@ -460,43 +358,10 @@ const getRouteHref = (route: RouterLocation) => {
   return routeProps?.href || '#'
 }
 
-const isOpen = () => {
-  logger.info('OPEN STATE', open.value)
-  return open.value
-}
-
-// we need to expose some methods in order to allow legacy code to
-// open, close and position the menu.
-defineExpose({
-  isOpen,
-  openMenu,
-  closeMenu,
-})
-
 onBeforeMount(async () => {
-  await syncProjectData(props.projectId)
+  await syncProjectData(props.entityId)
 })
 
-const actions = ref<null|NcActionsType>(null)
-
-onMounted(() => {
-  const origCloseMenu = actions.value!.closeMenu
-  actions.value!.closeMenu = (returnFocus) => origCloseMenu(positioned.value ? false : returnFocus)
-  referenceElement.value = actions.value!.$refs.popover.$refs.popover.$refs.reference
-  triggerButton.value = actions.value!.$refs.triggerButton
-  asyncSubscribe(PROJECT_ACTIONS, (event) => {
-    const projectId = event?.projectId
-    const newOpenState = event?.open
-    if (!newOpenState
-      && open.value
-      && +projectId !== -props.projectId //
-      && (+projectId <= 0 || +projectId === +props.projectId)) {
-      closeMenu()
-    } else if (newOpenState && projectId === props.projectId) {
-      openMenu(event?.x || undefined, event?.y || undefined)
-    }
-  })
-})
 </script>
 <style lang="scss" scoped>
 .container {
