@@ -30,14 +30,19 @@
       <NcActionSeparator v-show="false" />
     </NcActions>
     <NcActions ref="actions"
-               :class="[{ positioned }, appName + '-sepa-bulk-transaction-actions']"
+               :class="[{ positioned }, cssClass]"
                :force-menu="true"
                force-semantic-type="menu"
                :open.sync="open"
                @closed="closeMenu"
     >
+      <NcActionCaption v-if="showMenuCaption"
+                       :class="[cssClass, 'menu-caption']"
+                       :name="menuCaptionBlah"
+      />
+      <NcActionSeparator v-if="showMenuCaption" class="menu-caption" />
       <NcActionButton v-if="enableOverviewItem"
-                      :class="[appName + '-sepa-bulk-transaction-actions']"
+                      :class="[cssClass]"
                       :name="t(appName, 'Overview')"
                       :close-after-click="true"
                       @click="openOverview"
@@ -46,34 +51,35 @@
           <IconOverview />
         </template>
       </NcActionButton>
-      <NcActionSeparator v-if="enableOverviewItem" />
-      <NcActionButton v-tooltip="tooltips['sepa-bulk-transaction:download']"
-                      :class="[appName + '-sepa-bulk-transaction-actions']"
-                      :name="t(appName, 'Bank Transaction Data')"
+      <NcActionSeparator v-if="enableOverviewItem" class="overview" />
+      <NcActionButton v-tooltip="tooltips['invoice:download']"
+                      :class="[cssClass]"
+                      :name="t(appName, 'Download Standard Invoice')"
                       :close-after-click="true"
-                      @click="handleTransactionDataDownload"
+                      @click="handleInvoiceDownload(MailMergeDownload)"
       >
         <template #icon>
-          <IconBankTransfer />
+          <IconInvoiceDownload />
         </template>
       </NcActionButton>
-      <NcActionButton v-tooltip="tooltips['sepa-bulk-transaction:announce']"
-                      :class="[appName + '-sepa-bulk-transaction-actions']"
-                      :name="t(appName, 'Email Pre-Notification')"
+      <NcActionButton v-tooltip="tooltips['invoice:send']"
+                      :class="[cssClass]"
+                      :name="t(appName, 'Email Standard Invoice')"
                       :close-after-click="true"
-                      @click="handlePreNotificationEmail"
+                      @click="handleInvoiceEmail"
       >
         <template #icon>
           <IconEmail />
         </template>
       </NcActionButton>
-      <NcActionButton v-tooltip="tooltips['sepa-bulk-transaction:gnucash-balance']"
-                      :class="[appName + '-sepa-bulk-transaction-actions']"
-                      :name="t(appName, 'GnuCash Balance Data')"
+      <NcActionButton v-tooltip="tooltips['invoice:download-data']"
+                      :class="[cssClass]"
+                      :name="t(appName, 'Download Substitution Data')"
                       :close-after-click="true"
+                      @click="handleInvoiceDownload(MailMergeDataset)"
       >
         <template #icon>
-          <IconGnuCashBalances />
+          <IconSubstitutionDataDownload />
         </template>
       </NcActionButton>
     </NcActions>
@@ -83,31 +89,34 @@
 import {
   NcActions,
   NcActionButton,
+  NcActionCaption,
   NcActionSeparator,
 } from '@nextcloud/vue'
 import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
-
 import IconOverview from 'vue-material-design-icons/InformationOutline.vue'
-import IconBankTransfer from 'vue-material-design-icons/BankTransfer.vue'
-import IconGnuCashBalances from 'vue-material-design-icons/BankCheck.vue'
+import IconInvoiceDownload from 'vue-material-design-icons/FileDownloadOutline.vue'
+import IconSubstitutionDataDownload from 'vue-material-design-icons/CodeJson.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
-import { SEPA_BULK_TRANSACTION_ACTIONS } from '../event-bus-events.ts'
+import { INVOICE_ACTIONS } from '../event-bus-events.ts'
 import { closeNavigation } from '../services/navigation.js'
 import useTooltipsStore from '../stores/tooltips.ts'
 import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
 import useErrorHandlerStore from '../stores/error-handler.ts'
 import { AppError } from '../types/errors.ts'
 import {
-  ref,
-  watch,
+  computed,
   nextTick,
   onMounted,
+  ref,
+  watch,
 } from 'vue'
 import * as BusEvents from '../event-bus-events.ts'
 import Console from '../util/console.ts'
-import { SEPA_BULK_TRANSACTION_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
+import { INVOICE_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
+import type { MailMergePayload, MailMergeOperation } from '../types/ajax/mail-merge.ts'
+import { MailMergeDownload, MailMergeDataset } from '../types/ajax/mail-merge.ts'
 
 const logger = new Console(COMPONENT_NAME)
 
@@ -129,7 +138,10 @@ const errorHandlerProvider = useErrorHandlerStore()
 const errorHandler = errorHandlerProvider.getHandler()
 
 const props = withDefaults(defineProps</* ComponentProps[typeof COMPONENT_NAME] */{
-  bulkTransactionId: number,
+  menuCaption: string,
+  invoiceNumber: string,
+  invoiceId: number,
+  originatorId: number,
   projectId: number,
   projectName: string,
   enableOverviewItem?: boolean,
@@ -139,15 +151,19 @@ const props = withDefaults(defineProps</* ComponentProps[typeof COMPONENT_NAME] 
 
 // data
 const open = ref(false)
-const referenceElement = ref<null | HTMLElement>(null)
+const referenceElement = ref<null|HTMLElement>(null)
 const triggerButton = ref<null|NcButtonType>(null)
 const positioned = ref(false)
-// const project = ref<null|Project>(null)
+const cssClass = computed(() => appName + '-invoice-actions')
+const showMenuCaption = computed(() => positioned.value)
+const menuCaptionBlah = computed(() => {
+  return props.menuCaption || 'WHAT THE FUCK'
+})
 
 const tooltipKeys = [
-  'sepa-bulk-transaction:download',
-  'sepa-bulk-transaction:announce',
-  'sepa-bulk-transaction:gnucash-balance',
+  'invoice:download',
+  'invoice:send',
+  'invoice:download-data',
 ]
 
 const tooltipsProvider = useTooltipsStore()
@@ -166,8 +182,8 @@ watch(open, (state, oldState) => {
 const openOverview = () => {
   open.value = false
   closeNavigation()
-  asyncEmit(BusEvents.SEPA_BULK_TRANSACTION_POPUP, {
-    bulkTransactionId: props.bulkTransactionId,
+  asyncEmit(BusEvents.INVOICE_POPUP, {
+    invoiceId: props.invoiceId,
     projectId: props.projectId,
     projectName: props.projectName,
   })
@@ -256,50 +272,53 @@ onMounted(() => {
   actions.value!.closeMenu = (returnFocus) => origCloseMenu(positioned.value ? false : returnFocus)
   referenceElement.value = actions.value!.$refs.popover.$refs.popover.$refs.reference
   triggerButton.value = actions.value!.$refs.triggerButton
-  asyncSubscribe(SEPA_BULK_TRANSACTION_ACTIONS, (event) => {
-    const bulkTransactionId = event?.bulkTransactionId
+  asyncSubscribe(INVOICE_ACTIONS, (event) => {
+    const invoiceId = event?.invoiceId
     const newOpenState = event?.open
     if (!newOpenState
       && open.value
-      && +bulkTransactionId !== -props.bulkTransactionId
-      && (+bulkTransactionId <= 0 || +bulkTransactionId === +props.bulkTransactionId)) {
+      && +invoiceId !== -props.invoiceId
+      && (+invoiceId <= 0 || +invoiceId === +props.invoiceId)) {
       closeMenu()
-    } else if (newOpenState && bulkTransactionId === props.bulkTransactionId) {
+    } else if (newOpenState && invoiceId === props.invoiceId) {
       openMenu(event?.x || undefined, event?.y || undefined)
     }
   })
 })
 
-const handleTransactionDataDownload = async () => {
+const handleInvoiceDownload = async (operation: MailMergeOperation = MailMergeDownload) => {
   asyncEmit(BusEvents.PUSH_BUSY_STATE)
-  const post = {
-    bulkTransactionId: props.bulkTransactionId,
+  const post: MailMergePayload = {
+    templateName: 'invoice',
+    senderId: props.originatorId,
+    invoiceIds: [props.invoiceId],
     projectId: props.projectId,
-    projectName: props.projectName,
+    operation,
   }
   try {
-    await axiosFileDownload('finance/sepa/bulk-transactions/export', post)
+    await axiosFileDownload('documents/mail-merge', post)
     asyncEmit(BusEvents.POP_BUSY_STATE)
   } catch (error) {
     asyncEmit(BusEvents.POP_BUSY_STATE)
+    const messageData = { error, invoiceNumber: props.invoiceNumber }
+    const message = (operation === MailMergeDownload)
+      ? t(appName, 'Unable to download the invoice with invoice-number {invoiceNumber}: {error}.', messageData)
+      : t(appName, 'Unable to download the mail-merge substituions for invoice-number {invoiceNumber}: {error}.', messageData)
     errorHandler(
       new AppError(
         { component: COMPONENT_NAME },
-        t(appName, 'Unable to export the bulktransaction with id "{bulkTransactionId}".', props),
+        message,
         { cause: error },
       ),
     )
   }
 }
 
-const handlePreNotificationEmail = async () => {
+const handleInvoiceEmail = async () => {
   asyncEmit(BusEvents.EMAIL_POPUP, {
     projectId: props.projectId,
-    projectName: props.projectName,
     post: {
-      bulkTransactionId: props.bulkTransactionId,
-      projectId: props.projectId,
-      projectName: props.projectName,
+      ...props,
     },
   })
 }
@@ -323,5 +342,15 @@ const handlePreNotificationEmail = async () => {
       overflow: hidden;
     }
   }
+}
+.#{$appName}-invoice-actions.menu-caption.app-navigation-caption {
+  font-weight: bold;
+  color: blue;
+  font-style: italic;
+  text-align: center;
+  display: inline-block;
+  margin: auto;
+  width: 100%;
+  padding: 0;
 }
 </style>

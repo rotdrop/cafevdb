@@ -49,7 +49,6 @@ require('sepa-bulk-transactions.scss');
 const template = 'sepa-bulk-transactions';
 
 asyncSubscribe(BusEvents.SEPA_BULK_TRANSACTION_POPUP, async (event) => {
-  console.info('EVENT', event);
   asyncEmit(BusEvents.PUSH_BUSY_STATE);
   await overviewPopup(PHPMyEdit.selector(), event);
   asyncEmit(BusEvents.POP_BUSY_STATE);
@@ -61,7 +60,7 @@ const backgroundDecryption = function(container) {
   console.time('DECRYPTION PROMISE');
   decryptionPromise.done((maxJobs) => {
     console.timeEnd('DECRYPTION PROMISE');
-    console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
+    console.debug('MAX DECRYPTION JOBS HANDLED', maxJobs);
   });
   lazyDecrypt($container);
 };
@@ -137,11 +136,11 @@ const actionMenu = async function($container) {
       event.stopImmediatePropagation();
 
       const vueMenu = await generateVueMenu($actionMenu);
-      const projectId = $actionMenu.data('actionMenu').projectId;
+      const bulkTransactionId = $actionMenu.data('actionMenu').bulkTransactionId;
 
       asyncEmit(BusEvents.SEPA_BULK_TRANSACTION_ACTIONS, {
         open: false,
-        projectId: -projectId,
+        bulkTransactionId: -bulkTransactionId,
       });
       vueMenu.openMenu();
 
@@ -151,7 +150,7 @@ const actionMenu = async function($container) {
   $container
     .off('pme:contextmenu', 'tr.' + pmeToken('row'))
     .on('pme:contextmenu', 'tr.' + pmeToken('row'), async function(event, originalEvent, databaseIdentifier) {
-      console.info('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
+      console.debug('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
 
       const $row = $(this);
       const $form = $row.closest(pmeFormSelector);
@@ -171,14 +170,14 @@ const actionMenu = async function($container) {
       originalEvent.stopImmediatePropagation();
 
       const vueMenu = $actionMenu.data('vueMenu') || await generateVueMenu($actionMenu);
-      const projectId = $actionMenu.data('actionMenu').projectId;
+      const bulkTransactionId = $actionMenu.data('actionMenu').bulkTransactionId;
 
       if (vueMenu.isOpen()) {
         vueMenu.closeMenu();
       } else {
         asyncEmit(BusEvents.SEPA_BULK_TRANSACTION_ACTIONS, {
           open: false,
-          projectId: -projectId,
+          bulkTransactionId: -bulkTransactionId,
         });
         vueMenu.openMenu(
           originalEvent.originalEvent.clientX,

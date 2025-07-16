@@ -27,6 +27,7 @@ export const DOKU_WIKI_WRAPPER = 'DokuWikiWrapper';
 export const LEGACY_QUERY_LOG = 'LegacyQueryLog';
 export const PROJECT_ACTIONS_MENU = 'ProjectActionsMenu';
 export const SEPA_BULK_TRANSACTION_ACTIONS_MENU = 'SepaBulkTransactionActionsMenu';
+export const INVOICE_ACTIONS_MENU = 'InvoiceActionsMenu';
 
 export interface ComponentProps {
   [DOKU_WIKI_WRAPPER]: {
@@ -34,6 +35,17 @@ export interface ComponentProps {
     query?: Record<string, string>,
     iFrameAttributes?: Record<string, string>,
     fullScreen?: boolean,
+  },
+  [INVOICE_ACTIONS_MENU]: {
+    'menuTitle': string,
+    'invoiceNumber': string,
+    'invoiceId': number,
+    'originatorName': string,
+    'originatorId': number,
+    'debitorName': string,
+    'debitorId': number,
+    'projectId': number,
+    enableOverviewItem?: boolean,
   },
   [LEGACY_QUERY_LOG]: {
     queryLog: LegacySqlQueryLogItem[],
@@ -43,14 +55,12 @@ export interface ComponentProps {
     projectName: string,
     forceProjectName?: boolean,
     enableOverviewItem?: boolean,
-    testOpen?: boolean,
   },
   [SEPA_BULK_TRANSACTION_ACTIONS_MENU]: {
     projectId: number,
     projectName: string,
     forceMenuCaption?: boolean,
     enableOverviewItem?: boolean,
-    testOpen?: boolean,
   },
 }
 

@@ -31,12 +31,13 @@ use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Navigation;
+use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller\DownloadsController;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -56,6 +57,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;
 /** Table generator for Instruments table. */
 class Invoices extends PMETableViewBase
 {
+  use FieldTraits\ActionMenuToggleTrait;
   use FieldTraits\CryptoTrait;
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
@@ -1195,8 +1197,6 @@ WHERE dsf.id IS NOT NULL',
         $year = substr($invoiceDate, 0, 4);
         $dir .= UserStorage::PATH_SEP . $year;
 
-        $this->logInfo('INVOICE PATH ' . $dir . UserStorage::PATH_SEP . $fileName);
-
         return '<div class="file-upload-wrapper">
   <table class="file-upload">'
           . $this->dbFileUploadRowHtml(
@@ -1347,7 +1347,7 @@ WHERE dsf.id IS NOT NULL',
               : $filesAppParentLink . '/' . $value;
           } catch (\OCP\Files\NotFoundException $e) {
             $this->logInfo('No file found for ' . $documentParentPath);
-              $filesAppParentLink = $filesAppLink = '';
+            $filesAppParentLink = $filesAppLink = '';
           }
 
           $filesAppAnchor = '
@@ -1813,41 +1813,71 @@ WHERE dsf.id IS NOT NULL',
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertSanitizeFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteDoDeleteSubPayments' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
+      $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] =
+      function($pme, $op, $step, &$row) {
+        if (!$this->listOperation() && !$this->addOperation()) {
+          $pme->buttons = $this->pageNavigation->prependTableButtons(buttons: []);
+          foreach (['C', 'P', 'D', 'V'] as $operationMode) {
+            foreach (['up', 'down'] as $position) {
+              $actionMenu = $this->generateActionMenuToggle($this->generateActionMenuData($row));
+              $button = [
+                'code' => $actionMenu,
+                'name' => 'actions',
+              ];
+              array_unshift($pme->buttons[$operationMode][$position], $button);
+            }
+          }
+        }
+        return true;
+      };
 
     if ($projectMode) {
       // $opts['filters'] = 'FIND_IN_SET('.$this->projectId.', '.$joinTables[self::INVOICE_ITEMS_TABLE].'.project_ids)';
       $opts[PHPMyEdit::OPT_FILTERS] = '$table.project_id = ' . $this->projectId;
     }
 
-    $opts['display']['custom_navigation'] = function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme):string {
-      $rowTag = $row[$this->joinQueryField(self::INVOICE_ITEMS_TABLE, 'row_tag')];
-      if (!$this->isCompositeRowTag($rowTag)) {
-        return '';
-      }
-      return $this->actionMenu($rec['id'], $row, $pme);
-    };
+    $this->installActionMenuToggle(
+      $opts,
+      function(array $recordId, array $groupByRecordId, array $row, PHPMyEdit $pme) {
+        $rowTag = $row[$this->joinQueryField(self::INVOICE_ITEMS_TABLE, 'row_tag')];
+        if (!$this->isCompositeRowTag($rowTag)) {
+          return null;
+        }
+        return $this->generateActionMenuData($row);
+      },
+    );
 
     $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
-    $opts['buttons'] = $this->pageNavigation->prependTableButtons(buttons: []);
-    foreach (['C', 'P', 'D', 'V'] as $operationMode) {
-      foreach (['up' => 'down', 'down' => 'up'] as $position => $direction) {
-        $button = [
-          'code' => function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme) use ($direction):string {
-            return $this->actionMenu($rec['id'], $row, $pme, dropDirection: $direction);
-          },
-          'name' => 'actions',
-        ];
-        array_unshift($opts['buttons'][$operationMode][$position], $button);
-      }
-    }
-    // $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
 
     if ($execute) {
       $this->execute($opts);
     } else {
       $this->pme->setOptions($opts);
     }
+  }
+
+  /**
+   * @param array $row Legacy DB data provided by PME.
+   *
+   * @return array
+   */
+  protected function generateActionMenuData(array $row):array
+  {
+    $invoiceNumber = $row[$this->queryField('invoice_number')];
+    $amount = $row[$this->queryField('amount')];
+    $numberFormatter = new NumberFormatter($this->appLocale());
+    $l10nAmount = $numberFormatter->formatCurrency($amount);
+    $debitorName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
+    return [
+      'menuCaption' => $invoiceNumber . ' - ' . $debitorName . ' - ' . $l10nAmount,
+      'invoiceNumber' => $invoiceNumber,
+      'invoiceId' => (int)$this->pme->rec['id'],
+      'originatorId' => (int)$row[$this->queryIndexField('originator_id')],
+      'projectId' => (int)$row[$this->queryField('project_id')],
+      'projectName' => $row[$this->queryField($this->joinTableFieldName(self::PROJECTS_TABLE, 'name'))],
+    ];
   }
 
   /**
@@ -2018,8 +2048,6 @@ WHERE dsf.id IS NOT NULL',
           $oldValues[$invoiceItemIdKey] =
           $oldValues[$rowTagKey] = $invoiceItemId;
       }
-
-      $this->logInfo('COMPOSITE ' . $compositeKey);
 
       // extract project-id, field-id, receivable_key from the composite-option-key select
       list($projectId, $fieldId, $receivableKey) = explode(

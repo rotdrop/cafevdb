@@ -22,8 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName, cloudUser } from './config.js';
-import generateAppUrl from './generate-url.js';
+import { appName } from './config.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
@@ -32,7 +31,6 @@ import * as Dialogs from './dialogs.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import ajaxDownload from './file-download.js';
 import { pageRenderer } from './pme-state.js';
-import { showError, /* showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import setBusyIndicators from './busy-indicators.js';
 import { filename } from './path.js';
 import {
@@ -48,6 +46,13 @@ import {
   promise as decryptionPromise,
 } from './lazy-decryption.js';
 import formatDate from '../util/formatDate.js';
+import {
+  emit as asyncEmit,
+  getEmitResult,
+  subscribe as asyncSubscribe,
+} from '../services/async-event-bus.ts';
+import { INVOICE_ACTIONS_MENU } from '../mountable-component-names.ts';
+import * as BusEvents from '../event-bus-events.ts';
 
 require('./jquery-readonly.js');
 require('invoices.scss');
@@ -66,6 +71,42 @@ const iiSubjectName = pmeData('InvoiceItems:subject');
 const iDueDateName = pmeData('due_date');
 
 const templateName = filename(__filename);
+
+asyncSubscribe(BusEvents.INVOICE_POPUP, async (event) => {
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
+  await overviewPopup(PHPMyEdit.selector(), event);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
+});
+
+const overviewPopup = async function(containerSel, data) {
+  const tableOptions = {
+    ambientContainerSelector: containerSel,
+    templateName,
+    templateRenderer: templateRenderer(templateName),
+    // Now special options for the dialog popup
+    initialViewOperation: true,
+    initialName: pmeSys('operation'),
+    initialValue: 'View',
+    reloadName: pmeSys('operation'),
+    reloadValue: 'View',
+    [pmeSys('rec')]: { id: data.invoiceId },
+    [pmeSys('groupby_rec')]: {
+      id: data.invoiceId,
+      // eslint-disable-next-line camelcase
+      InvoiceItems__master_key_: '0;' + data.invoiceId,
+    },
+    [pmeSys('mrec_rec')]: {
+      id: data.invoiceId,
+      // eslint-disable-next-line camelcase
+      InvoiceItems__master_key_: '0;' + data.invoiceId,
+    },
+    projectId: data.projectId,
+    projectName: data.projectName,
+    modalDialog: true,
+    modified: false,
+  };
+  await PHPMyEdit.tableDialogOpen(tableOptions);
+};
 
 /**
  * Generate a popup in order to add a new InvoiceItem entity which
@@ -112,7 +153,7 @@ const backgroundDecryption = function(container) {
   console.time('DECRYPTION PROMISE');
   decryptionPromise.done((maxJobs) => {
     console.timeEnd('DECRYPTION PROMISE');
-    console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
+    console.debug('MAX DECRYPTION JOBS HANDLED', maxJobs);
   });
   lazyDecrypt($container);
 };
@@ -133,92 +174,94 @@ const fileDownload = (url, post, $menu) => {
   });
 };
 
-const actionMenu = function(containerSel) {
-  containerSel = PHPMyEdit.selector(containerSel);
-  const $container = PHPMyEdit.container(containerSel);
-  const itemSelector = '.menu-actions.dropdown-container .dropdown-item';
+const actionMenu = async function($container) {
 
-  $container.on('click', itemSelector + '.disabled', function(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    return false;
-  });
-  $container.on('click', itemSelector, function(event) {
-    const $this = $(this);
-    const $menu = $this.closest('.menu-actions.dropdown-container');
-    const menuData = $menu.data();
-
-    const postData = {
-      senderId: cloudUser.uid,
-      operation: 'download',
-      invoiceIds: [menuData.invoiceId],
-      projectId: menuData.projectId,
-    };
-
-    const operation = $this.data('operation');
-
-    switch (operation) {
-    case 'invoice:download':
-      fileDownload(
-        generateAppUrl('documents/mail-merge'), {
-          templateName: 'invoice',
-          ...postData,
-        },
-        $menu,
-      );
-      break;
-    case 'invoice:email':
-      showError(t(appName, 'Unimplemented operation: {operation}', { operation }), { timeout: TOAST_PERMANENT_TIMEOUT });
-      break;
-    case 'invoice:download-data':
-      fileDownload(
-        generateAppUrl('documents/mail-merge'), {
-          templateName: 'invoice',
-          ...postData,
-          operation: 'dataset',
-        },
-        $menu,
-      );
-      break;
-    default:
-      showError(t(appName, 'Unknown operation: {operation}', { operation }), { timeout: TOAST_PERMANENT_TIMEOUT });
-      break;
+  const generateVueMenu = async ($actionMenu) => {
+    const propsData = { ...$actionMenu.data('actionMenu') };
+    propsData.enableOverviewItem = $container.find(pmeFormSelector).hasClass(pmeToken('list'));
+    const vueMenu = await getEmitResult(
+      asyncEmit(BusEvents.GET_VUE_COMPONENT, {
+        name: INVOICE_ACTIONS_MENU,
+        propsData,
+      }),
+    );
+    const vueComponents = $container.data('vueComponents') || [];
+    if (vueComponents.length === 0) {
+      $container.data('vueComponents', vueComponents);
     }
-    // return false;
-  });
-  const $form = $container.find(pmeFormSelector);
-  const listMode = $form.is('.' + pmeToken('list'));
+    vueComponents.push(vueMenu);
 
+    $actionMenu.data('vueMenu', vueMenu);
+    await vueMenu.$mount($actionMenu.find('.vue-mount-point')[0]);
+    return vueMenu;
+  };
+
+  const actionTriggerSelector = `.vue-action-menu-placeholder.${templateName} button.vue-mount-point`;
   $container
-    .off('pme:contextmenu', 'tr.' + pmeToken('row'))
-    .on('pme:contextmenu', 'tr.' + pmeToken('row'), function(event, originalEvent, databaseIdentifier) {
-      const $contentTarget = $(originalEvent.target).closest('.dropdown-content');
-      if ($contentTarget.length > 0) {
-        // use standard context menu inside dropdown
+    .off('click', actionTriggerSelector)
+    .on('click', actionTriggerSelector, async function(event) {
+
+      $.fn.cafevTooltip.hide();
+
+      const $actionMenu = $(this).parent();
+      if ($actionMenu.data('vueMenu')) {
+        // the menu already exists, just let it do its work
         return;
       }
 
+      // otherwise intercept the event and mount the menu
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      const vueMenu = await generateVueMenu($actionMenu);
+      const invoiceId = $actionMenu.data('actionMenu').invoiceId;
+
+      asyncEmit(BusEvents.INVOICE_ACTIONS, {
+        open: false,
+        invoiceId: -invoiceId,
+      });
+      vueMenu.openMenu();
+
+      return false;
+    });
+
+  $container
+    .off('pme:contextmenu', 'tr.' + pmeToken('row'))
+    .on('pme:contextmenu', 'tr.' + pmeToken('row'), async function(event, originalEvent, databaseIdentifier) {
+      console.debug('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
+
       const $row = $(this);
-      const $actionMenuContainer = listMode ? $row.closest('tbody').find('.invoice.first') : $form;
-      const $actionMenu = $actionMenuContainer.find('.menu-actions.dropdown-container').first();
+      const $form = $row.closest(pmeFormSelector);
+      let $actionMenuContainer;
+      if ($form.is('.' + pmeToken('list'))) {
+        $actionMenuContainer = $row.hasClass('following') ? $row.prevAll('.first').first() : $row;
+      } else {
+        $actionMenuContainer = $row.closest(pmeFormSelector);
+      }
+      const $actionMenu = $actionMenuContainer.find('.vue-action-menu-placeholder.' + templateName).first();
 
       if ($actionMenu.length === 0) {
         return;
       }
 
-      const $actionMenuToggle = $actionMenu.find('.action-menu-toggle');
-      const $actionMenuContent = $actionMenu.find('.dropdown-content');
-
       originalEvent.preventDefault();
       originalEvent.stopImmediatePropagation();
 
-      $actionMenuContent.css({
-        position: 'fixed',
-        left: originalEvent.originalEvent.clientX,
-        top: originalEvent.originalEvent.clientY,
-      });
-      $actionMenu.addClass('context-menu');
-      $actionMenuToggle.trigger('click');
+      const vueMenu = $actionMenu.data('vueMenu') || await generateVueMenu($actionMenu);
+      const invoiceId = $actionMenu.data('actionMenu').invoiceId;
+
+      if (vueMenu.isOpen()) {
+        vueMenu.closeMenu();
+      } else {
+        asyncEmit(BusEvents.INVOICE_ACTIONS, {
+          open: false,
+          invoiceId: -invoiceId,
+        });
+        vueMenu.openMenu(
+          originalEvent.originalEvent.clientX,
+          originalEvent.originalEvent.clientY,
+        );
+      }
 
       return false;
     });
@@ -244,11 +287,11 @@ const ready = function(selector, pmeParameters, resizeCB) {
         return false;
       });
 
-    console.info('INSTALL CONTEXT MENU', { $container, selector: 'table.pme-main tr.invoice.first td' });
+    console.debug('INSTALL CONTEXT MENU', { $container, selector: 'table.pme-main tr.invoice.first td' });
 
     $container
       .on('contextmenu', 'table.pme-main tr.invoice.first td', function(event) {
-        console.info('CONTEXT MENU EVENT');
+        console.debug('CONTEXT MENU EVENT');
         if (event.ctrlKey || $(event.target).closest('.dropdown-content').length > 0) {
           return; // let the user see the normal context menu
         }
@@ -492,7 +535,7 @@ const documentReady = function() {
     const container = PHPMyEdit.container();
 
     if (!container.hasClass(templateName)) {
-      console.info('IGNORING WRONG TEMPLATE', { templateName });
+      console.debug('IGNORING WRONG TEMPLATE', { templateName });
       return;
     }
 

@@ -257,11 +257,9 @@ const props = withDefaults(defineProps</* ComponentProps[typeof COMPONENT_NAME] 
   projectName: string,
   forceProjectName?: boolean,
   enableOverviewItem?: boolean,
-  testOpen?: boolean,
 }>(), {
   forceProjectname: false,
   enableOverviewItem: true,
-  testOpen: true,
 })
 
 const appData = useAppDataStore()

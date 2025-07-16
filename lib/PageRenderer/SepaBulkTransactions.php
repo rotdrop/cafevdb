@@ -675,16 +675,18 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] =
       function($pme, $op, $step, &$row) {
-        $this->logError('DATA TRIGGER list ' . (int)$this->listOperation() . ' ' . (int)$this->addOperation());
         if (!$this->listOperation() && !$this->addOperation()) {
-          $this->logError('TRY TWEAK BUTTONS');
           $pme->buttons = $this->pageNavigation->prependTableButtons(buttons: []);
           foreach (['C', 'P', 'D', 'V'] as $operationMode) {
             foreach (['up', 'down'] as $position) {
               $actionMenu = $this->generateActionMenuToggle([
-                'bulkTransactionId' => $pme->rec['id'],
-                'projectId' => (int)$row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
-                'projectName' => $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
+                'bulkTransactionId' => (int)$pme->rec['id'],
+                'projectId' => (int)$row[
+                  $this->queryFieldIndex($this->joinTableFieldName(self::PROJECTS_TABLE, 'id'))
+                ],
+                'projectName' => $row[
+                  $this->queryField($this->joinTableFieldName(self::PROJECTS_TABLE, 'id'))
+                ],
               ]);
               $button = [
                 'code' => $actionMenu,
@@ -703,11 +705,14 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         if (!$this->isBulkTransactionRow($row, $pme)) {
           return null;
         }
-        $this->logInfo('BULK STUFF ' . print_r($recordId, true) . ' ' . print_r($groupByRecordId, true));
         return [
-          'bulkTransactionId' => $recordId['id'],
-          'projectId' => (int)$row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
-          'projectName' => $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
+          'bulkTransactionId' => (int)$recordId['id'],
+          'projectId' => (int)$row[
+            $this->queryFieldIndex($this->joinTableFieldName(self::PROJECTS_TABLE, 'id'))
+          ],
+          'projectName' => $row[
+            $this->queryField($this->joinTableFieldName(self::PROJECTS_TABLE, 'id'))
+          ],
         ];
       },
     );
