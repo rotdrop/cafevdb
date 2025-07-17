@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -61,10 +61,12 @@ class InsuranceRate implements \ArrayAccess
   private $geographicalScope;
 
   /**
-   * @var float
+   * @var string
+   *
+   * The rate as fraction between 0 and 1. Common values are .0051 or .0043.
    */
-  #[ORM\Column(type: 'float', precision: 10, scale: 0, nullable: false, options: ['comment' => 'fraction, not percentage, excluding taxes'])]
-  private $rate;
+  #[ORM\Column(type: 'decimal', precision: 4, scale: 4, nullable: false, options: ['comment' => 'fraction, not percentage, excluding taxes'])]
+  private string $rate;
 
   /**
    * @var \DateTimeImmutable

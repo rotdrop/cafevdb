@@ -92,11 +92,12 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   private $optionValue = null;
 
   /**
-   * @var float
-   * Optional value of a deposit for monetary options. This is unused if
-   * the deposit is fixed by single- or multi-select options.
+   * @var float Optional value of a deposit for monetary options. This is
+   * unused if the deposit is fixed by single- or multi-select
+   * options. Supported range is IIIII.DD which is plenty at the time of this
+   * writing.
    */
-  #[ORM\Column(type: 'float', nullable: true)]
+  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: true)]
   private $deposit;
 
   /**

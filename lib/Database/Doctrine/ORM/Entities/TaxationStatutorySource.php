@@ -72,8 +72,8 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
    * exception. This assumes that governments never issue fractional tax rates
    * ... This not the percentage, but the fraction between 0 and 1.
    */
-  #[ORM\Column(type: 'float', nullable: false, options: ['default' => 0])]
-  private float $rate = 0.0;
+  #[ORM\Column(type: 'decimal', precision: 2, scale: 2, nullable: false, options: ['default' => '0.00'])]
+  private string $rate = '0.00';
 
   /**
    * @var string
@@ -171,7 +171,7 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
    */
   public function getRate():?float
   {
-    return $this->rate ?? null;
+    $this->rate ?? null;
   }
 
   /**
