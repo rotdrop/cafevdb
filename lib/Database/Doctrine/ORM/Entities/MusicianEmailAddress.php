@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Database\EntityManager;
 
 /**
- * InstrumentInsurance
+ * Email address for persons.
  */
 #[ORM\Table(name: 'MusicianEmailAddresses')]
 #[ORM\Entity]
