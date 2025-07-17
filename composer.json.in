@@ -34,6 +34,7 @@
     "kwn/number-to-words": "^2.8",
     "league/commonmark": "^2.6",
     "league/html-to-markdown": "^5.1",
+    "markrogoyski/math-php": "2.*",
     "mathiasreker/php-svg-optimizer": "^5.2",
     "mpdf/mpdf": "^8.0",
     "paragonie/halite": "^5",
