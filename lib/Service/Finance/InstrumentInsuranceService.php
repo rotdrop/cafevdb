@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use DateTimeZone;
 use DateTimeImmutable as DateTime;
+use RoundingMode;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 use OCA\CAFEVDB\Service;
@@ -301,7 +303,15 @@ class InstrumentInsuranceService
       $annualFee = $amount * $rate->getRate();
       $annualFee *= $this->yearFraction($insuranceStart, $insuranceEnd, $dueDate);
 
-      $fee += $annualFee * (1.0 + self::TAXES);
+      // Hack around a floating point instability. The real hack-around would
+      // be to use exact math, i.e. fixed-point math with 8 decimal places:
+      // - individual amount have 2 decimal places
+      // - the insurance rates have 4 decimal places (e.g. 0.43 %)
+      // - taxes are in percentage, i.e. 2 more decimal places
+      // - adding numbers does not add further decimal places
+      // - the yearFraction() above should just round the result to 6 decimal places.
+      // - or use https://github.com/markrogoyski/math-php with rationals
+      $fee += floatval(strval($annualFee * (1.0 + self::TAXES)));
     }
     $dueInterval = [ 'min' => $minDueDate, 'max' => $maxDueDate ];
     return round($fee, 2);
