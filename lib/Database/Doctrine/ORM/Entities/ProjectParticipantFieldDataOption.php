@@ -109,11 +109,11 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $data;
 
   /**
-   * @var float
+   * @var string
    * Optional value of a deposit for monetary options.
    */
-  #[ORM\Column(type: 'float', nullable: true)]
-  private $deposit;
+  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: true)]
+  private string $deposit;
 
   /**
    * @var int Limit on number of group members for
