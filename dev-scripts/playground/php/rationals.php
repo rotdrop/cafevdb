@@ -8,9 +8,9 @@ use MathPHP\Number\Rational;
 use BcMath\Number;
 use OCA\CAFEVDB\Common\RationalNumber;
 
-echo (new RationalNumber(0, 43, 10000))->toDecimal(4) . PHP_EOL;
-echo (new RationalNumber(0, 43, -10000))->toDecimal(4) . PHP_EOL;
-echo (new RationalNumber(-1, 43, -10000))->toDecimal(4) . PHP_EOL;
+echo (new RationalNumber(0, 435, 100000))->toDecimal(4) . PHP_EOL;
+echo (new RationalNumber(0, 433, -100000))->toDecimal(4) . PHP_EOL;
+echo (new RationalNumber(-1, 437, -100000))->toDecimal(4) . PHP_EOL;
 
 $decimals = [
   '.1234',
@@ -29,6 +29,23 @@ foreach ($decimals as $decimal) {
   // print_r($rational);
   echo $rational->toFloat() . PHP_EOL;
   echo (string)$rational . PHP_EOL;
+}
+
+echo 'BLAH' . PHP_EOL;
+print_r(RationalNumber::fromRational(new Rational(0, 119, 20000)));
+//->multiply(1000);
+echo 'BLUB' . PHP_EOL;
+
+$roundingExamples = [
+  [ [ 72, 5, 10], [1, 19, 100] ],
+];
+
+foreach ($roundingExamples as $tuple) {
+  $float = ($tuple[0][0] + $tuple[0][1] / $tuple[0][2]) * ($tuple[1][0] + $tuple[1][1] / $tuple[1][2]);
+  echo $float . ': ' . round($float, 2) . ' ' . (86.28 - round($float, 2)) . PHP_EOL;
+  $rational = RationalNumber::create(...$tuple[0])->multiply(RationalNumber::create(...$tuple[1]));
+  print_r($rational);
+  echo (string)$rational . ': ' . (string)$rational->round(2) . PHP_EOL;
 }
 
 exit;

@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Common;
 
 use InvalidArgumentException;
+use OutOfBoundsException;
 
 use MathPHP\Number\Rational;
 
@@ -35,6 +36,49 @@ use MathPHP\Number\Rational;
  */
 class RationalNumber extends Rational
 {
+  /**
+   * {@inheritdoc}
+   *
+   * @param bool $normalized Assume the three ingredients do not need normalization.
+   *
+   */
+  public function __construct(int $integralPart, int $numerator, int $denominator, bool $skipNormalization = false)
+  {
+    if ($skipNormalization) {
+      $this->whole = $integralPart;
+      $this->numerator = $numerator;
+      $this->denominator = $denominator;
+    } else {
+      parent::__construct($integralPart, $numerator, $denominator);
+    }
+  }
+
+  /**
+   * Generator method.
+   *
+   * @param int $integralPart
+   *
+   * @param int $numerator
+   *
+   * @param int $denominator
+   *
+   * @return RationalNumber
+   */
+  public static function create(int $integralPart, int $numerator, int $denominator):RationalNumber
+  {
+    return new RationalNumber($integralPart, $numerator, $denominator);
+  }
+
+  /**
+   * Generate a new instance from a given base-class instance.
+   *
+   * @return RationalNumber
+   */
+  public static function fromRational(Rational $rational):RationalNumber
+  {
+    return new RationalNumber($rational->whole, $rational->numerator, $rational->denominator, true);
+  }
+
   /**
    * Round "half away from zero".
    *
@@ -56,7 +100,7 @@ class RationalNumber extends Rational
   {
     if ($this->getWholePart() < 0 || $this->getNumerator() < 0) {
       return -1;
-    } elseif ($this->getWholePart() == 0 && $this->getNumerator == 0) {
+    } elseif ($this->getWholePart() == 0 && $this->getNumerator() == 0) {
       return 0;
     }
     return 1;
@@ -64,18 +108,36 @@ class RationalNumber extends Rational
 
   /**
    * Return a correctly rounded floating point string with the given number of
-   * fractional digits.
+   * fractional digits. Intentionally the naming of the arguments $scale and
+   * $precision corresponds to the Doctrine ORM "decimal"-type parameters.
    *
-   * @param int $precision Number of fractional digits.
+   * @param int $scale Number of fractional digits to produce. If the rational
+   * number cannot be exactly represented by the given number of digits then
+   * the result is rounded "5 away from zero".
+   *
+   * @param int $precision Total number of decimal digits. If <= 0 then there
+   * is no limit on the number of digits. If positive and the rational number
+   * does not fit into specified number of digits, an OutOfBounds exception is
+   * thrown.
    *
    * @return string
+   *
+   * @throws OutOfBoundsException
    */
-  public function toDecimal(int $precision = 0):string
+  public function toDecimal(int $scale = 0, int $precision = 0):string
   {
-    $rollIn = pow(10, $precision + 1);
+    $rollIn = pow(10, $scale + 1);
     $sign = $this->sign();
-    $fixedPoint = str_pad(intdiv($this->abs()->multiply($rollIn)->getWholePart() + 5, 10), $precision + 1, '0', STR_PAD_LEFT);
-    $result = substr($fixedPoint, 0, -$precision) . '.' . substr($fixedPoint, -$precision);
+    $fixedPoint = str_pad(intdiv($this->abs()->multiply($rollIn)->getWholePart() + 5, 10), $scale + 1, '0', STR_PAD_LEFT);
+    $integralPart = substr($fixedPoint, 0, -$scale);
+    $fractionalPart = substr($fixedPoint, -$scale);
+    $result = $integralPart . '.' . $fractionalPart;
+    if ($precision > 0 && (strlen(ltrim($integralPart, '0')) + strlen($fractionalPart)) > $precision) {
+      $bound = str_pad('', $precision - $scale, '9') . '.' . str_pad('', $scale, '9');
+      throw new OutOfBoundsException(
+        'The rational number ' . (string)$this . ' (' . $this->toFloat() . ') does not fit into the range [-' . $bound . ', ' . $bound . '].'
+      );
+    }
     return $sign < 0 ? '-' . $result : $result;
   }
 
@@ -106,5 +168,41 @@ class RationalNumber extends Rational
     $integralPart = empty($matches[2]) ? 0 : (int)$matches[2][0];
     $fractionalPart = empty($matches[3]) ? 0 : (int)$matches[3][0];
     return new RationalNumber($sign * $integralPart, $sign * $fractionalPart, pow(10, strlen($fractionalPart)));
+  }
+
+  /** {@inheritdoc} */
+  public function abs():RationalNumber
+  {
+    return self::fromRational(parent::abs());
+  }
+
+  /** {@inheritdoc} */
+  public function inverse():RationalNumber
+  {
+    return self::fromRational(parent::inverse());
+  }
+
+  /** {@inheritdoc} */
+  public function add($r):RationalNumber
+  {
+    return self::fromRational(parent::add($r));
+  }
+
+  /** {@inheritdoc} */
+  public function subtract($r):RationalNumber
+  {
+    return self::fromRational(parent::subtract($r));
+  }
+
+  /** {@inheritdoc} */
+  public function multiply($r):RationalNumber
+  {
+    return self::fromRational(parent::multiply($r));
+  }
+
+  /** {@inheritdoc} */
+  public function divide($r):RationalNumber
+  {
+    return self::fromRational(parent::divide($r));
   }
 }
