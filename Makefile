@@ -42,6 +42,8 @@ OCC=$(ABSSRCDIR)/../../occ
 ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
 WGET = $(shell which wget 2> /dev/null)
 TINYMCE_VERSION=7
+#
+PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
 
 ###############################################################################
 #
@@ -143,6 +145,8 @@ dev-setup: pre-build composer namespace-wrapper
 .PHONY: dev-setup
 
 include $(DEV_LIB_DIR)/makefile/composer.mk
+
+$(PHPUNIT): composer.lock
 
 .PHONY: php-scoper-install
 php-scoper-install: composer
@@ -499,7 +503,7 @@ updatesql: $(ABSSRCDIR)/vendor-wrapped
 	$(ORM_CLI) orm:schema-tool:update --dump-sql
 
 .PHONY: test
-test: composer
+test: $(PHPUNIT)
 	$(PHPUNIT) -c phpunit.xml
 	$(PHPUNIT) -c phpunit.integration.xml
 

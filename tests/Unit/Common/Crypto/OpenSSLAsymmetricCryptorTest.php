@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,9 +26,12 @@ namespace OCA\CAFEVDB\Tests\Unit\Crypto;
 
 // use OCP\AppFramework\App;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 use OCA\CAFEVDB\Crypto\OpenSSLAsymmetricCryptor;
 
+/** Test the OpenSSLAsymmetricCryptor class. */
+#[CoversClass(OpenSSLAsymmetricCryptor::class)]
 class OpenSSLAsymmetricCryptorTest extends TestCase
 {
   /** @var string */
@@ -51,6 +54,11 @@ class OpenSSLAsymmetricCryptorTest extends TestCase
   /** @var string */
   private $pubKey;
 
+  /**
+   * {@inheritdoc}
+   *
+   * @return void
+   */
   public function setup():void
   {
     parent::setup();
@@ -60,7 +68,8 @@ class OpenSSLAsymmetricCryptorTest extends TestCase
     $this->pubKey = $details['key'];
   }
 
-  public function testConstruction()
+  /** @return void */
+  public function testConstruction():void
   {
     $cryptor = new OpenSSLAsymmetricCryptor();
     $this->assertInstanceOf(OpenSSLAsymmetricCryptor::class, $cryptor);
@@ -69,7 +78,8 @@ class OpenSSLAsymmetricCryptorTest extends TestCase
     $this->assertInstanceOf(OpenSSLAsymmetricCryptor::class, $cryptor);
   }
 
-  public function testEncryptWrapping()
+  /** @return void */
+  public function testEncryptWrapping():void
   {
     $cryptor = (new OpenSSLAsymmetricCryptor())
       ->setPrivateKey($this->privKey, self::ENCRYPTION_KEY)

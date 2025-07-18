@@ -5,6 +5,39 @@ include_once __DIR__ . '/console-setup.php';
 include_once __DIR__ . '/../../../vendor/autoload.php';
 
 use MathPHP\Number\Rational;
+use BcMath\Number;
+use OCA\CAFEVDB\Common\RationalNumber;
+
+echo (new RationalNumber(0, 43, 10000))->toDecimal(4) . PHP_EOL;
+echo (new RationalNumber(0, 43, -10000))->toDecimal(4) . PHP_EOL;
+echo (new RationalNumber(-1, 43, -10000))->toDecimal(4) . PHP_EOL;
+
+$decimals = [
+  '.1234',
+  '-.1234',
+  '0.1234',
+  '-0.1234',
+  '12345.678',
+  '-12345.678',
+  '1234.',
+  '1234',
+  1234,
+];
+
+foreach ($decimals as $decimal) {
+  $rational = RationalNumber::fromDecimal($decimal);
+  // print_r($rational);
+  echo $rational->toFloat() . PHP_EOL;
+  echo (string)$rational . PHP_EOL;
+}
+
+exit;
+
+$insuranceRate1 = new Number('0.0043');
+print_r($insuranceRate1);
+print_r((new Number(1)) / (new Number(3)));
+
+exit;
 
 $taxRate = new Rational(1, 19, 100); // 1.19
 $insuranceRate1 = new Rational(0, 43, 10000); // 0.0043
