@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Tests\Unit\Crypto;
 use PHPUnit\Framework\TestCase;
 
 use OCP\Security\ICrypto;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Crypto\ICryptor;
 use OCA\CAFEVDB\Crypto\CryptoFactoryInterface;
@@ -52,7 +52,7 @@ class SealServiceTest extends TestCase
 
   private const USER_B = 'user.b';
 
-  /** @var \PHPUnit\Framework\MockObject\MockObject|ILogger */
+  /** @var \PHPUnit\Framework\MockObject\MockObject|LoggerInterface */
   private $cloudLogger;
 
   /** @var \PHPUnit\Framework\MockObject\MockObject|ICrypto */
@@ -68,7 +68,7 @@ class SealServiceTest extends TestCase
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->cloudLogger = $this->getMockBuilder(ILogger::class)
+    $this->cloudLogger = $this->getMockBuilder(LoggerInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
 
