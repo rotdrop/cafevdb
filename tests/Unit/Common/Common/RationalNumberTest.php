@@ -77,9 +77,13 @@ class RationalNumberTest extends TestCase
       (new RationalNumber(-1, 437, -100000))->toDecimal(4) => '-1.0044',
       (new RationalNumber(0, 435, 100000))->toDecimal(4, 4) => '0.0044',
       (new RationalNumber(0, 433, -100000))->toDecimal(4, 4) => '-0.0043',
+      (new RationalNumber(0, 1, 3))->toDecimal(-1) => '0.33333333333333333',
+      (new RationalNumber(0, -2, 3))->toDecimal(-1) => '-0.66666666666666667',
+      (new RationalNumber(12, 1, 3))->toDecimal(-1) => '12.333333333333333',
+      (new RationalNumber(-123, -2, 3))->toDecimal(-1) => '-123.66666666666667',
     ];
     foreach ($rationals as $decimal => $givenDecimal) {
-      $this->assertEquals($decimal, $givenDecimal);
+      $this->assertEquals($givenDecimal, $decimal);
     }
     $outOfBoundsRationals = [
       [1, 437, 100000],
@@ -94,14 +98,14 @@ class RationalNumberTest extends TestCase
   /** @return void */
   public function testCreate():void
   {
-    $this->assertEquals(RationalNumber::create(1, 2, 3)->equals(new RationalNumber(1, 2, 3)), true);
+    $this->assertEquals(true, RationalNumber::create(1, 2, 3)->equals(new RationalNumber(1, 2, 3)));
   }
 
   /** @return void */
   public function fromRational():void
   {
     $ctorArgs = [1, 300, 200];
-    $this->assertEquals(RationalNumber::fromRational(new Rational(...$ctorArgs))->equals(new RationalNumber(...$ctorArgs)), true);
+    $this->assertEquals(true, RationalNumber::fromRational(new Rational(...$ctorArgs))->equals(new RationalNumber(...$ctorArgs)));
   }
 
   /**
@@ -117,9 +121,77 @@ class RationalNumberTest extends TestCase
     ];
     foreach ($roundingExamples as $tuple) {
       $float = ($tuple[0][0] + $tuple[0][1] / $tuple[0][2]) * ($tuple[1][0] + $tuple[1][1] / $tuple[1][2]);
-      $this->assertEquals(round($float, $tuple[2]), $tuple[3]); // wrong
+      // check that float gives indeed the wrong result:
+      $this->assertEquals($tuple[3], round($float, $tuple[2])); // wrong
       $rational = RationalNumber::create(...$tuple[0])->multiply(RationalNumber::create(...$tuple[1]));
-      $this->assertEquals($rational->round($tuple[2])->equals(RationalNumber::create(...$tuple[4])), true);
+      $this->assertEquals(true, $rational->round($tuple[2])->equals(RationalNumber::create(...$tuple[4])));
+    }
+  }
+
+  /**
+   * Test in-place assignments.
+   *
+   * @return void
+   */
+  public function testInPlaceOperations():void
+  {
+    $rational2 = RationalNumber::create(4, 5, 6);
+
+    // test whether the operation gives the same result as the non-assigning operations
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals((string)$rational2, (string)$rational1->assign($rational2));
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals((string)$rational1->add($rational2), (string)$rational1->addEq($rational2));
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals((string)$rational1->sub($rational2), (string)$rational1->subEq($rational2));
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals((string)$rational1->mul($rational2), (string)$rational1->mulEq($rational2));
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals((string)$rational1->div($rational2), (string)$rational1->divEq($rational2));
+    $rational1 = RationalNumber::create(-1, -2, 3);
+    $this->assertEquals((string)$rational1->abs(), (string)$rational1->absEq());
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals((string)$rational1->inv(), (string)$rational1->invEq());
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals((string)$rational1->neg(), (string)$rational1->negEq());
+
+    // test whether we really operate in place
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals(true, $rational1 === $rational1->assign($rational2));
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals(true, $rational1 === $rational1->addEq($rational2));
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals(true, $rational1 === $rational1->subEq($rational2));
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals(true, $rational1 === $rational1->mulEq($rational2));
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals(true, $rational1 === $rational1->divEq($rational2));
+    $rational1 = RationalNumber::create(-1, -2, 3);
+    $this->assertEquals(true, $rational1 === $rational1->absEq());
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals(true, $rational1 === $rational1->invEq());
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $this->assertEquals(true, $rational1 === $rational1->negEq());
+  }
+
+  /**
+   * Test comparisons.
+   *
+   * @return void
+   */
+  public function testComparisons():void
+  {
+    $rational1 = RationalNumber::create(1, 2, 3);
+    $rational2 = RationalNumber::create(4, 5, 6);
+    $operations = [
+      'eq' => false,
+      'gt' => false,
+      'ge' => false,
+      'lt' => true,
+      'le' => true,
+    ];
+    foreach ($operations as $operation => $result) {
+      $this->assertEquals($result, $rational1->{$operation}($rational2));
     }
   }
 
@@ -132,11 +204,11 @@ class RationalNumberTest extends TestCase
   {
     $rational1 = RationalNumber::create(1, 2, 3);
     $rational2 = RationalNumber::create(4, 5, 6);
-    $this->assertEquals(get_class($rational1->multiply($rational2)), RationalNumber::class);
-    $this->assertEquals(get_class($rational1->divide($rational2)), RationalNumber::class);
-    $this->assertEquals(get_class($rational1->add($rational2)), RationalNumber::class);
-    $this->assertEquals(get_class($rational1->subtract($rational2)), RationalNumber::class);
-    $this->assertEquals(get_class($rational1->inverse()), RationalNumber::class);
-    $this->assertEquals(get_class($rational1->abs()), RationalNumber::class);
+    $this->assertEquals(RationalNumber::class, get_class($rational1->multiply($rational2)));
+    $this->assertEquals(RationalNumber::class, get_class($rational1->divide($rational2)));
+    $this->assertEquals(RationalNumber::class, get_class($rational1->add($rational2)));
+    $this->assertEquals(RationalNumber::class, get_class($rational1->subtract($rational2)));
+    $this->assertEquals(RationalNumber::class, get_class($rational1->inverse()));
+    $this->assertEquals(RationalNumber::class, get_class($rational1->abs()));
   }
 }
