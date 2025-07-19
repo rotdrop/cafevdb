@@ -30,33 +30,31 @@ use RuntimeException;
 
 use OCP\Files as CloudFiles;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
-
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission as AccessPermission;
+use OCA\CAFEVDB\Common;
+use OCA\CAFEVDB\Common\Functions;
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Storage\Database\Factory as DatabaseStorageFactory;
+use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission as AccessPermission;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Common\Functions;
-
-use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
-use OCA\CAFEVDB\Service\Finance\PeriodicReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\MembershipFeesReceivablesGenerator;
+use OCA\CAFEVDB\Service\Finance\PeriodicReceivablesGenerator;
+use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
 use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
-use OCA\CAFEVDB\Exceptions;
-
-use OCA\CAFEVDB\Common;
-use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Storage\Database\Factory as DatabaseStorageFactory;
+use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -357,28 +355,30 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * Internal function: given a surcharge choice compute the
-   * associated amount of money and return that as float.
+   * Internal function: given a surcharge choice compute the associated amount
+   * of money and return that as RationalNumber. This is used in the legacy
+   * display code in ParticipantTotalFeesTrait.
    *
    * @param string|null $key Key from the participant-fields data table. $key may
    * be a comma-separated list of keys.
    *
-   * @param string|null $value Value form the participant-fields data table.
+   * @param string|null $value Value from the participant-fields data
+   * table. This is a decimal number if non-null.
    *
    * @param Entities\ProjectParticipantField $participantField Field definition.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function participantFieldSurcharge(?string $key, ?string $value, Entities\ProjectParticipantField $participantField):float
+  public function participantFieldSurcharge(?string $key, ?string $value, Entities\ProjectParticipantField $participantField):RationalNumber
   {
     switch ($participantField->getMultiplicity()) {
       case Multiplicity::SIMPLE():
-        return (float)$value;
+        return RationalNumber::create($value);
       case Multiplicity::GROUPOFPEOPLE():
         if (empty($key)) {
           break;
         }
-        return (float)$participantField->getManagementOption()->getData();
+        return RationalNumber::create($participantField->getManagementOption()->getData());
       case Multiplicity::SINGLE():
         if (empty($key)) {
           break;
@@ -387,9 +387,9 @@ class ProjectParticipantFieldsService
         $dataOption = $participantField->getDataOptions()->first();
         // Non empty value means "yes".
         if ((string)$dataOption['key'] != $key) {
-          $this->logWarn('Stored value "'.$key.'" unequal to stored key "'.$dataOption['key'].'"');
+          $this->logWarn('Stored value "' . $key . '" unequal to stored key "' . $dataOption['key'] . '"');
         }
-        return (float)$dataOption['data'];
+        return RationalNumber::create($dataOption['data']);
       case Multiplicity::GROUPSOFPEOPLE():
       case Multiplicity::MULTIPLE():
         if (empty($key)) {
@@ -397,21 +397,22 @@ class ProjectParticipantFieldsService
         }
         foreach ($participantField->getDataOptions() as $dataOption) {
           if ((string)$dataOption['key'] == $key) {
-            return (float)$dataOption['data'];
+            return RationalNumber::create($dataOption['data']);
           }
         }
         $this->logError('No data item for multiple choice key "'.$key.'"');
-        return 0.0;
+        return RationalNumber::zero();
       case Multiplicity::PARALLEL():
         if (empty($key)) {
           break;
         }
         $keys = Util::explode(',', $key);
         $found = false;
-        $amount = 0.0;
+        /** @var RationalNumber $amount */
+        $amount = RationalNumber::zero();
         foreach ($participantField->getDataOptions() as $dataOption) {
           if (array_search((string)$dataOption['key'], $keys) !== false) {
-            $amount += (float)$dataOption['data'];
+            $amount->addEq($dataOption['data']);
             $found = true;
           }
         }
@@ -426,13 +427,15 @@ class ProjectParticipantFieldsService
         // $keys = Util::explode(',', $key);
         $values = Util::explodeIndexed($value);
 
-        $amount = 0.0;
+        $amount = RationalNumber::zero();
         foreach ($values as $key => $value) {
-          $amount += $value;
+          if (!empty($value)) {
+            $amount->addEq($value);
+          }
         }
         return $amount;
     }
-    return 0.0;
+    return RationalNumber::zero();
   }
 
   /**
@@ -588,7 +591,7 @@ class ProjectParticipantFieldsService
    * Return the effective value of the given datum. In particular
    * referenced files are returned as cloud file-node or DB
    * file-entity. Dates are converted to \DateTimeImmutable. Float
-   * values to float, int to int, boolean to boolean.
+   * values to RationalNumber, int to int, boolean to boolean.
    *
    * @param Entities\ProjectParticipantFieldDatum $datum
    *
@@ -609,9 +612,9 @@ class ProjectParticipantFieldsService
         return Util::convertToDateTime($value);
       case DataType::FLOAT:
       case DataType::RECEIVABLES:
-        return floatval($value);
+        return RationalNumber::create($value);
       case DataType::LIABILITIES:
-        return -floatval($value);
+        return RationalNumber::create($value)->neg();
       case DataType::INTEGER:
         return intval($value);
       case DataType::CLOUD_FILE:

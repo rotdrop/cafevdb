@@ -84,7 +84,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   private $id;
 
   /**
-   * @var float
+   * @var RationalNumber
    *
    * The total amount for the bank transaction. This must equal the
    * sum of the self:$projectPayments collection.
@@ -278,16 +278,14 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * Return the sum of the amounts of the individual payments, which
    * should sum up to $this->amount, of course.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function sumPaymentsAmount():float
+  public function sumPaymentsAmount():RationalNumber
   {
-    $totalAmount = 0.0;
-    /** @var ProjectPayment $payment */
-    foreach ($this->payments as $payment) {
-      $totalAmount += $payment->getAmount();
-    }
-    return $totalAmount;
+    return $this->projectPayments->reduce(
+      fn(RationalNumber $accumulator, ProjectPayment $payment) => $accumulator->add($payment->getAmount()),
+      RationalNumber::zero(),
+    );
   }
 
   /**
@@ -688,24 +686,28 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * @return float The sum of all contained donation parts.
+   * @return RationalNumber The sum of all contained donation parts.
    */
-  public function getDonationAmount():float
+  public function getDonationAmount():RationalNumber
   {
     return $this->projectPayments->reduce(
-      fn(float $accumulator, ProjectPayment $payment) => $accumulator + (int)$payment->getIsDonation() * $payment->getAmount(),
-      0.0,
+      fn(RationalNumber $accumulator, ProjectPayment $payment)
+      =>
+      $payment->getIsDonation() ? $accumulator->add($payment->getAmount()) : $accumulator,
+      RationalNumber::zero(),
     );
   }
 
   /**
-   * @return float The sum of all contained non-donation parts.
+   * @return RationalNumber The sum of all contained non-donation parts.
    */
-  public function getNonDonationAmount():float
+  public function getNonDonationAmount():RationalNumber
   {
     return $this->projectPayments->reduce(
-      fn(float $accumulator, ProjectPayment $payment) => $accumulator + (int)(!$payment->getIsDonation()) * $payment->getAmount(),
-      0.0,
+      fn(RationalNumber $accumulator, ProjectPayment $payment)
+      =>
+      $payment->getIsDonation() ? $accumulator : $accumulator->add($payment->getAmount()),
+      RationalNumber::zero(),
     );
   }
 

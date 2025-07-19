@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,14 +31,15 @@ use DateTimeImmutable;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Common\Util;
 
 /**
  * Always generate a new payment request. This is just a dummy
@@ -51,8 +52,8 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityTranslationTrait;
 
-  /** @var float */
-  protected $amount;
+  /** @var RationalNumber */
+  protected RationalNumber $amount;
 
   /** @var \DateTimeZone */
   private $timeZone;
@@ -71,7 +72,7 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     parent::__construct($entityManager, $progressStatusService);
     $this->l = $this->l10n();
 
-    $this->amount = 1.0;
+    $this->amount = RationalNumber::create(1);
 
     if (empty($interval)) {
       $interval = new DateInterval('P1D');
@@ -174,7 +175,7 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     } else {
       /** @var Entities\ProjectParticipantFieldDatum $datum */
       $datum = $existingReceivableData->first(); // there is at most one ...
-      $datum->setOptionValue((float)$datum->getOptionValue()+0.01);
+      $datum->setOptionValue(RationalNumber::create($datum->getOptionValue())->add($this->amount));
       $changed = true;
     }
     return [

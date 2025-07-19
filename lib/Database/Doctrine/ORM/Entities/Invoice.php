@@ -114,7 +114,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   private $debitor;
 
   /**
-   * @var float
+   * @var RationalNumber
    *
    * The total amount for the bank transaction. This must equal the
    * sum of the self::$invoiceItems collection.
@@ -297,16 +297,14 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    * Return the sum of the amounts of the individual payments, which
    * should sum up to $this->amount, of course.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function sumInvoiceItemsAmount():float
+  public function sumInvoiceItemsAmount():RationalNumber
   {
-    $totalAmount = 0.0;
-    /** @var InvoiceItem $invoiceItem */
-    foreach ($this->invoiceItems as $invoiceItem) {
-      $totalAmount += $invoiceItem->getAmount();
-    }
-    return $totalAmount;
+    return $this->invoiceItems->reduce(
+      fn(RationalNumber $accumulator, InvoiceItem $item) => $accumulator->add($item->getAmount()),
+      RationalNumber::zero(),
+    );
   }
 
   /**

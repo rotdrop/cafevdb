@@ -414,15 +414,15 @@ class FinanceService
       $value = $item->getAmount();
       $templateData['invoice']['items'][] = [
         'amount' => $value,
-        'isIncome' => (int)($value > 0),
+        'isIncome' => $value->gt(0),
         'dueDate' => $item->getReceivable()->getField()->getDueDate(),
         'subject' => $item->getSubject(),
         'l10n' => [
           'locale' => $this->appLocale(),
           'amount' => $numberFormatter->formatCurrency($value),
           'amountText' => $numberFormatter->currencyToWords($value),
-          'absAmount' => $numberFormatter->formatCurrency(abs($value)),
-          'absAmountText' => $numberFormatter->currencyToWords(abs($value)),
+          'absAmount' => $numberFormatter->formatCurrency($value->abs()),
+          'absAmountText' => $numberFormatter->currencyToWords($value->abs()),
         ],
       ];
     }

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,25 +24,24 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use \RuntimeException;
-use \DateTimeImmutable as DateTime;
-
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\ProgressStatusService;
-use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Exceptions;
+use RuntimeException;
+use DateTimeImmutable as DateTime;
 
 use OCA\CAFEVDB\Common\Functions;
+use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ProgressStatusService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorage;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /**
  * Do nothing implementation to have something implementing
@@ -213,8 +212,9 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $participantFieldsData = $participant->getParticipantFieldsData();
     $optionKey = $receivable->getKey();
     $datum = $participant->getParticipantFieldsDatum($optionKey);
+    /** @var RationalNumber $fee */
     if (empty($datum)) {
-      if ($openingBalance || $fee != 0.0) {
+      if ($openingBalance || $fee->equals(0)) {
         // add a new option
         /** @var Entities\ProjectParticipantFieldDatum $datum */
         $datum = (new Entities\ProjectParticipantFieldDatum)
@@ -240,8 +240,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         $added = true;
       }
     } else { // !empty($datum)
-      $optionValue = (float)$datum->getOptionValue();
-      if (!$datum->isDeleted() && $fee != $optionValue) {
+      $optionValue = $datum->getOptionValue();
+      if (!$datum->isDeleted() && (!$fee || $fee->toDecimal(2) != $optionValue)) {
         if ($openingBalance) {
           $notices[] = $this->l->t('Keeping opening balance of %s.', $this->moneyValue($optionValue));
         } else {
@@ -266,7 +266,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         }
       }
       if (!$skipped) {
-        if (!$openingBalance && $fee == 0.0) {
+        if (!$openingBalance && $fee->equals(0)) {
           // remove current option
           $this->remove($datum);
           $this->remove($datum);
@@ -279,6 +279,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
           if (!$openingBalance) {
             $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
             $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview);
+            $this->logInfo('OVERVIEW ' . print_r($overview, true));
             /** @var Entities\DatabaseStorageFile $supportingDocument */
             $supportingDocument = $datum->getSupportingDocument();
             if (empty($supportingDocument)) {
@@ -291,7 +292,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
               );
               $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
               $datum->setSupportingDocument($supportingDocument);
-            } elseif (true || $fee != $datum->getOptionValue()) {
+            } elseif (true || !$fee->toDecimal(2) != $datum->getOptionValue()) {
               // @todo only update letter if fee changes?
               $supportingDocument
                 ->setName($overviewFilename)
@@ -307,7 +308,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
             $datum->setDeleted(null);
             $datum->setOptionValue($fee);
             $added = true;
-          } elseif ($fee != $datum->getOptionValue()) {
+          } elseif ($fee->toDecimal(2) != $datum->getOptionValue()) {
             $datum->setOptionValue($fee);
             $changed = true;
           }
