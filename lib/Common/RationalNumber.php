@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Common;
 
 use InvalidArgumentException;
 use OutOfBoundsException;
+use Throwable;
 
 use MathPHP\Number\Rational;
 
@@ -40,8 +41,11 @@ class RationalNumber extends Rational
    * @var int
    *
    * Maximum number of digits to procuce with RationalNumber::toDecimal(scale: -1).
+   *
+   * This MUST NOT BE TOO LARGE as otherwise PHP implicitly casts numerical
+   * results to float.
    */
-  public const DECIMAL_DIGITS_MAX = 17;
+  public const DECIMAL_DIGITS_MAX = 15;
 
   /**
    * {@inheritdoc}
@@ -120,7 +124,10 @@ class RationalNumber extends Rational
   {
     $rollIn = pow(10, $precision + 1);
     $roundInc = ($this->getWholePart() + $this->getNumerator() < 0) ? -5 : 5;
-    return new RationalNumber(0, intdiv($this->mul($rollIn)->getWholePart() + $roundInc, 10), $rollIn / 10);
+    $integralPart = $this->getWholePart();
+    // this should in principle reduce the chance of overflow ...
+    $fractional = $this->sub($integralPart);
+    return new RationalNumber($integralPart, intdiv($fractional->mul($rollIn)->whole + $roundInc, 10), $rollIn / 10);
   }
 
   /**
