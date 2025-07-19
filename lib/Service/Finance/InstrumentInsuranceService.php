@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,34 +26,35 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use DateTimeZone;
 use DateTimeImmutable as DateTime;
+use DateTimeInterface;
 use RoundingMode;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-
+use OCA\CAFEVDB\Common\Functions;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Documents\OpenDocumentFiller;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Documents\OpenDocumentFiller;
-use OCA\CAFEVDB\Exceptions;
-
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Functions;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /** Collective instrument insurance. */
 class InstrumentInsuranceService
 {
-  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
   const ENTITY = Entities\InstrumentInsurance::class;
-  const TAXES = 0.19; // ?? make this configurable ??
+  const TAXES_PERCENT = 19; // ?? make this configurable ??
+  const TAXES = self::TAXES_PERCENT / 100.0;
 
   /** @var Repositories\InstrumentInsurancesRepository */
   private $insurancesRepository;
@@ -123,9 +124,13 @@ class InstrumentInsuranceService
    * @param \DateTimeInterface $dueDate The end of the
    * insurance year for this contract.
    *
-   * @return float Fraction
+   * @return RationalNumber Fraction with denominator 12 (full months)
    */
-  private function yearFraction(\DateTimeInterface $insuranceStart, ?\DateTimeInterface $insuranceEnd, \DateTimeInterface $dueDate)
+  private function yearFraction(
+    DateTimeInterface $insuranceStart,
+    ?DateTimeInterface $insuranceEnd,
+    DateTimeInterface $dueDate,
+  ):RationalNumber
   {
     $timeZone = new DateTimeZone('UTC'); // $this->getDateTimeZone();
     $startDate = self::convertToTimezoneDate(self::convertToDateTime($insuranceStart), $timeZone);
@@ -135,14 +140,14 @@ class InstrumentInsuranceService
 
     // $dueDate is before $insuranceStart
     if ($startDistance->invert) {
-      return 0.0;
+      return new RationalNumber(0, 0, 12);
     }
 
     // for our purpose everything > 0 days is a month, we only charge
     // full months
     $startDistance->d = 0;
 
-    $months = $startDistance->y > 0 ? 12.0 : $startDistance->m;
+    $months = $startDistance->y > 0 ? 12 : $startDistance->m;
 
     if (!empty($insuranceEnd)) {
       // to get the diff right -- $insuranceEnd is the last day where the
@@ -155,83 +160,16 @@ class InstrumentInsuranceService
         // due-date after end-date
         if ($endDistance->y > 0) {
           // ended longer than one year ago, so return 0
-          return 0.0;
+          return new RationalNumber(0, 0, 12);
         }
         $endDistance->d = 0; // just include fractional months
         $months -= $endDistance->m;
       }
     }
 
-    $fraction = $months / 12.0;
+    $fraction = new RationalNumber(0, $months, 12);
 
     return $fraction;
-  }
-
-  /**
-   * Compute a sparse list of insurance fees per year for the given
-   * musician. Years with an amount of 0 are skipped.
-   *
-   * The fees for the given year are always for the following
-   * insurance year in advance. If the insurance-year starts at
-   * December 30., then the fees charged in year Y are for the
-   * insurance period Y/12/30 - (Y+1)/12/29. If the insurance-year
-   * starts at January 2nd, then the fees charged in year Y are for
-   * Y/01/02 - (Y+1)/01/01.
-   *
-   * @param int|Entities\Musician $musicianOrId
-   *
-   * @param mixed string|\DateTimeInterface $date Compute until this
-   * date. Only the calendar-year of $date according to the timezone.
-   *
-   * @return array<int, float>
-   * ```[ YEAR => VALUE ]```
-   *
-   * @todo What happens if the rates change? The rates should have a
-   * validity time-range.
-   *
-   * @todo This function appears to be unused.
-   */
-  public function insuranceFeesYearly($musicianOrId, $date = null)
-  {
-    $timeZone = $this->getDateTimeZone();
-    if (empty($date)) {
-      $date = new DateTime();
-    }
-    $date = self::convertToTimezoneDate($date, $timeZone);
-    $yearUntil = $date->format('Y');
-
-    $result = [];
-
-    $insurances = $this->billableInsurances($musicianOrId);
-    /** @var Entities\InstrumentInsurance $insurance */
-    foreach ($insurances as $insurance) {
-      $amount = $insurance->getInsuranceAmount();
-      /** @var Entities\InsuranceRate $rate */
-      $rate = $insurance->getInsuranceRate();
-      $annualFee = $amount * $rate->getRate();
-
-      $insuranceStart = self::convertToTimezoneDate($insurance->getStartOfInsurance(), $timeZone);
-      $insuranceEnd = $insurance->getDeleted();
-      if (!empty($insuranceEnd)) {
-        $insuranceEnd = self::convertToTimezoneDate($insuranceEnd, $timeZone);
-      }
-      $startYear = $insuranceStart->format('Y');
-
-      $lastDueDate = $this->dueDate($rate->getDueDate(), ($startYear - 1).'-06-01');
-      for ($year = $startYear; $year <= $yearUntil; ++$year) {
-        $dueDate = $this->dueDate($rate->getDueDate(), $year.'-06-01');
-        if ($lastDueDate > $insuranceEnd) {
-          break;
-        }
-        $yearFraction = $this->yearFraction($insuranceStart, $insuranceEnd, $dueDate);
-        if ($yearFraction != 0.0) {
-          $fee = $yearFraction * $annualFee * self::TAXES;
-          $result[$year] = ($result[$year] ?? 0.0) + $fee;
-        }
-        $lastDueDate = $dueDate;
-      }
-    }
-    return $result;
   }
 
   /**
@@ -264,9 +202,9 @@ class InstrumentInsuranceService
    * @param null|array $dueInterval Return the minimum and maximum due dates
    * found for the musician.
    *
-   * @return float Insurance fees computed.
+   * @return RationalNumber Insurance fees computed.
    */
-  public function insuranceFee(mixed $musicianOrId, $date = null, ?array &$dueInterval = null):float
+  public function insuranceFee(mixed $musicianOrId, $date = null, ?array &$dueInterval = null):RationalNumber
   {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
@@ -276,7 +214,9 @@ class InstrumentInsuranceService
 
     $payables = $this->billableInsurances($musicianOrId);
 
-    $fee = 0.0;
+    $taxFactor = new RationalNumber(1, self::TAXES_PERCENT, 100);
+
+    $fee = RationalNumber::createZeroValue();
     /** @var \DateTimeInterface $minDueDate */
     /** @var \DateTimeInterface $maxDueDate */
     $minDueDate = $maxDueDate = null;
@@ -299,22 +239,14 @@ class InstrumentInsuranceService
       $minDueDate = empty($minDueDate) ? $dueDate : min($dueDate, $minDueDate);
       $maxDueDate = empty($maxDueDate) ? $dueDate : max($dueDate, $maxDueDate);
 
-      $amount = $insurance->getInsuranceAmount();
-      $annualFee = $amount * $rate->getRate();
-      $annualFee *= $this->yearFraction($insuranceStart, $insuranceEnd, $dueDate);
+      $annualFee = $rate->getRate()->multiply($insurance->getInsuranceAmount());
+      $annualFee = $annualFee->multiply($this->yearFraction($insuranceStart, $insuranceEnd, $dueDate));
 
-      // Hack around a floating point instability. The real hack-around would
-      // be to use exact math, i.e. fixed-point math with 8 decimal places:
-      // - individual amount have 2 decimal places
-      // - the insurance rates have 4 decimal places (e.g. 0.43 %)
-      // - taxes are in percentage, i.e. 2 more decimal places
-      // - adding numbers does not add further decimal places
-      // - the yearFraction() above should just round the result to 6 decimal places.
-      // - or use https://github.com/markrogoyski/math-php with rationals
-      $fee += floatval(strval($annualFee * (1.0 + self::TAXES)));
+      $fee = $fee->add($annualFee->multiply($taxFactor));
     }
     $dueInterval = [ 'min' => $minDueDate, 'max' => $maxDueDate ];
-    return round($fee, 2);
+
+    return $fee->round(2);
   }
 
   /**
@@ -477,7 +409,7 @@ class InstrumentInsuranceService
 
       $amount = $insurance->getInsuranceAmount();
       $fraction = $this->yearFraction($insuranceStart, $insuranceEnd, $dueDate);
-      $annualFee = $amount * $rate->getRate();
+      $annualFee = $rate->getRate()->multiply($amount);
 
       $instrumentHolder = $insurance->getInstrumentHolder();
       $instrumentHolderId = $instrumentHolder->getId();
@@ -494,29 +426,29 @@ class InstrumentInsuranceService
         'scope' => $insurance->getGeographicalScope(),
         'object' => $insurance->getObject(),
         'manufacturer' => $insurance->getManufacturer(),
-        'amount' => (float)$amount,
+        'amount' => $amount,
         'rate' => $rate->getRate(),
         'lastDue' => $lastDueDate,
         'due' => empty($insuranceEnd) ? $endDate : $insuranceEnd,
         'start' => $insuranceStart,
         'fullFee' => $annualFee,
         'fraction' => $fraction,
-        'fee' => $annualFee * $fraction,
+        'fee' => $annualFee->multiply($fraction),
       ];
 
       $insuranceOverview['musicians'][$instrumentHolderId]['items'][] = $itemInfo;
     }
 
-    $annual     = 0.0;
+    $annual = RationalNumber::createZeroValue();
     foreach ($insuranceOverview['musicians'] as $id => $info) {
       // ordinary annular fees
-      $subTotals = 0.0;
+      $subTotals = RationalNumber::createZeroValue();
       foreach ($info['items'] as $itemInfo) {
-        $subTotals += $itemInfo['fee'];
+        $subTotals = $subTotals->add($itemInfo['fee']);
       }
       $insuranceOverview['musicians'][$id]['subTotals'] = $subTotals;
       // $this->logInfo('SUBTOTALS '.$subTotals);
-      $annual += $subTotals;
+      $annual = $annual->add($subTotals);
     }
     $insuranceOverview['annual'] = $annual;
 
