@@ -53,11 +53,16 @@ class InstrumentInsuranceService
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
   const ENTITY = Entities\InstrumentInsurance::class;
-  const TAXES_PERCENT = 19; // ?? make this configurable ??
-  const TAXES = self::TAXES_PERCENT / 100.0;
 
   /** @var Repositories\InstrumentInsurancesRepository */
   private $insurancesRepository;
+
+  /**
+   * @var null|RationalNumber
+   *
+   * The insurance tax rate.
+   */
+  private ?RationalNumber $taxRate = null;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -185,6 +190,30 @@ class InstrumentInsuranceService
   }
 
   /**
+   * Fetch the tax rate from the TaxationStatutorySources table.
+   *
+   * @return RationalNumber
+   */
+  public function getTaxRate():RationalNumber
+  {
+    if ($this->taxRate !== null) {
+      return $this->taxRate;
+    }
+    $taxItems = $this->getDatabaseRepository(Entities\TaxationStatutorySource::class)->findBy(['taxType' => Types\EnumTaxType::INSURANCE]);
+    if (empty($taxItems)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to determine the insurance tax rate. Please populate the TaxationStatutorySources table with appropriate items.'),
+      );
+    } elseif (count($taxItems) > 1) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('More than one possible insurance tax rate found. Please check the TaxationStatutorySources table.'),
+      );
+    }
+    $this->taxRate = $taxItems[0]->getRate();
+    return $this->taxRate;
+  }
+
+  /**
    * Compute the annual insurance fee for the respective musician up
    * to the year containing the given date.
    *
@@ -214,9 +243,9 @@ class InstrumentInsuranceService
 
     $payables = $this->billableInsurances($musicianOrId);
 
-    $taxFactor = new RationalNumber(1, self::TAXES_PERCENT, 100);
+    $taxFactor = $this->getTaxRate()->add(1);
 
-    $fee = RationalNumber::createZeroValue();
+    $fee = RationalNumber::zero();
     /** @var \DateTimeInterface $minDueDate */
     /** @var \DateTimeInterface $maxDueDate */
     $minDueDate = $maxDueDate = null;
@@ -239,10 +268,10 @@ class InstrumentInsuranceService
       $minDueDate = empty($minDueDate) ? $dueDate : min($dueDate, $minDueDate);
       $maxDueDate = empty($maxDueDate) ? $dueDate : max($dueDate, $maxDueDate);
 
-      $annualFee = $rate->getRate()->multiply($insurance->getInsuranceAmount());
-      $annualFee = $annualFee->multiply($this->yearFraction($insuranceStart, $insuranceEnd, $dueDate));
+      $annualFee = $rate->getRate()->mul($insurance->getInsuranceAmount());
+      $annualFee->mulEq($this->yearFraction($insuranceStart, $insuranceEnd, $dueDate));
 
-      $fee = $fee->add($annualFee->multiply($taxFactor));
+      $fee->addEq($annualFee->mul($taxFactor));
     }
     $dueInterval = [ 'min' => $minDueDate, 'max' => $maxDueDate ];
 
@@ -374,7 +403,7 @@ class InstrumentInsuranceService
 
     $insuranceOverview = [
       'billTo' => $this->flattenMusician($billToParty, only: []),
-      'taxRate' => floatval(self::TAXES),
+      'taxRate' => $this->getTaxRate(),
       'musicians' => [],
       'date' => $date,
     ];
@@ -409,14 +438,14 @@ class InstrumentInsuranceService
 
       $amount = $insurance->getInsuranceAmount();
       $fraction = $this->yearFraction($insuranceStart, $insuranceEnd, $dueDate);
-      $annualFee = $rate->getRate()->multiply($amount);
+      $annualFee = $rate->getRate()->mul($amount);
 
       $instrumentHolder = $insurance->getInstrumentHolder();
       $instrumentHolderId = $instrumentHolder->getId();
       if (empty($insuranceOverview['musicians'][$instrumentHolderId])) {
         $insuranceOverview['musicians'][$instrumentHolderId] = [
           'name' => $instrumentHolder->getPublicName(true),
-          'subTotals' => 0.0,
+          'subTotals' => RationalNumber::create(0),
           'items' => [],
         ];
       }
@@ -433,16 +462,16 @@ class InstrumentInsuranceService
         'start' => $insuranceStart,
         'fullFee' => $annualFee,
         'fraction' => $fraction,
-        'fee' => $annualFee->multiply($fraction),
+        'fee' => $annualFee->mul($fraction),
       ];
 
       $insuranceOverview['musicians'][$instrumentHolderId]['items'][] = $itemInfo;
     }
 
-    $annual = RationalNumber::createZeroValue();
+    $annual = RationalNumber::zero();
     foreach ($insuranceOverview['musicians'] as $id => $info) {
       // ordinary annular fees
-      $subTotals = RationalNumber::createZeroValue();
+      $subTotals = RationalNumber::zero();
       foreach ($info['items'] as $itemInfo) {
         $subTotals = $subTotals->add($itemInfo['fee']);
       }
