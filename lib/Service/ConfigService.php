@@ -1361,7 +1361,7 @@ class ConfigService
       $value = $value->toDecimal($decimals);
     }
     empty($locale) && $locale = $this->getLocale();
-    $fmt = new NumberFormatter($locale, \NumberFormatter::DECIMAL);
+    $fmt = new NumberFormatter($locale, NumberFormatter::DECIMAL);
     $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, 0);
     $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimals);
     $result = $fmt->format((float)$value);
