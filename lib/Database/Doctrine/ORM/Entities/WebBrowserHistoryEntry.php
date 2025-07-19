@@ -24,14 +24,13 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-
-use OCA\CAFEVDB\Constants;
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 /**
  * Generic directory entry for a database-backed file.
@@ -50,7 +49,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   /**
    * @var int
    */
-  #[ORM\Column(type: 'decimal', precision: 16, scale: 3, nullable: false)]
+  #[ORM\Column(type: 'decimal', precision: 16, scale: 3, nullable: false, options: ['unsigned' => true])]
   #[ORM\GeneratedValue(strategy: 'NONE')]
   #[ORM\Id]
   protected string $key;
@@ -93,10 +92,10 @@ class WebBrowserHistoryEntry implements \ArrayAccess
     return $this;
   }
 
-  /** @return string */
-  public function getKey():string
+  /** @return null|string */
+  public function getKey():?string
   {
-    return $this->key;
+    return $this->key ?? null;
   }
 
   /**

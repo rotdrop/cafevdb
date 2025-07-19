@@ -30,6 +30,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
  * "Umsatzsteuer" and this is it.
  *
  * @method static EnumTaxType CORPORATE_INCOME()
+ * @method static EnumTaxType INSURANCE()
  * @method static EnumTaxType SALES()
  * @method static EnumTaxType TRADE()
  * @method static EnumTaxType VAT()
@@ -40,6 +41,7 @@ class EnumTaxType extends AbstractEnumType
   public const SALES = 'sales tax';
   public const TRADE = 'trade tax';
   public const VAT = 'VAT';
+  public const INSURANCE = 'insurance tax';
 
   /**
    * Just here in order to inject the enum values into the l10n framework.
@@ -49,6 +51,7 @@ class EnumTaxType extends AbstractEnumType
   protected static function translationHack():void
   {
     self::t(self::CORPORATE_INCOME);
+    self::t(self::INSURANCE);
     self::t(self::SALES);
     self::t(self::TRADE);
     self::t(self::VAT);

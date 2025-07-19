@@ -28,17 +28,17 @@ use Closure;
 use DateTimeInterface;
 use UnexpectedValueException;
 
+use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Constants;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
-
-use OCA\CAFEVDB\Events;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Common\Util;
 
 /**
  * CompositePayments collect a couple of ProjectPayments of the same
@@ -84,7 +84,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   private $id;
 
   /**
-   * @var float
+   * @var RationalNumber
    *
    * The total amount for the bank transaction. This must equal the
    * sum of the self:$projectPayments collection.
@@ -92,8 +92,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * @todo If this is always the sum and thus can be computed, why then this
    * field?
    */
-  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: false, options: ['default' => '0.00'])]
-  private $amount = '0.00';
+  #[ORM\Column(type: 'decimal_rational_monetary', nullable: false, options: ['default' => '0.00'])]
+  private RationalNumber $amount;
 
   /**
    * @var \DateTimeImmutable|null
@@ -213,6 +213,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   {
     $this->arrayCTOR();
     $this->projectPayments = new ArrayCollection;
+    $this->setAmount(0);
   }
 
   /**
@@ -252,13 +253,13 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set amount.
    *
-   * @param float|null $amount
+   * @param int|float|string|RationalNumber $amount
    *
    * @return ProjectPayment
    */
-  public function setAmount(?float $amount):CompositePayment
+  public function setAmount(int|float|string|RationalNumber $amount):CompositePayment
   {
-    $this->amount = $amount;
+    $this->amount = RationalNumber::create($amount);
 
     return $this;
   }
@@ -266,9 +267,9 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * Get amount.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function getAmount():float
+  public function getAmount():RationalNumber
   {
     return $this->amount;
   }
@@ -277,16 +278,14 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * Return the sum of the amounts of the individual payments, which
    * should sum up to $this->amount, of course.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function sumPaymentsAmount():float
+  public function sumPaymentsAmount():RationalNumber
   {
-    $totalAmount = 0.0;
-    /** @var ProjectPayment $payment */
-    foreach ($this->payments as $payment) {
-      $totalAmount += $payment->getAmount();
-    }
-    return $totalAmount;
+    return $this->projectPayments->reduce(
+      fn(RationalNumber $accumulator, ProjectPayment $payment) => $accumulator->add($payment->getAmount()),
+      RationalNumber::zero(),
+    );
   }
 
   /**
@@ -687,24 +686,28 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * @return float The sum of all contained donation parts.
+   * @return RationalNumber The sum of all contained donation parts.
    */
-  public function getDonationAmount():float
+  public function getDonationAmount():RationalNumber
   {
     return $this->projectPayments->reduce(
-      fn(float $accumulator, ProjectPayment $payment) => $accumulator + (int)$payment->getIsDonation() * $payment->getAmount(),
-      0.0,
+      fn(RationalNumber $accumulator, ProjectPayment $payment)
+      =>
+      $payment->getIsDonation() ? $accumulator->add($payment->getAmount()) : $accumulator,
+      RationalNumber::zero(),
     );
   }
 
   /**
-   * @return float The sum of all contained non-donation parts.
+   * @return RationalNumber The sum of all contained non-donation parts.
    */
-  public function getNonDonationAmount():float
+  public function getNonDonationAmount():RationalNumber
   {
     return $this->projectPayments->reduce(
-      fn(float $accumulator, ProjectPayment $payment) => $accumulator + (int)(!$payment->getIsDonation()) * $payment->getAmount(),
-      0.0,
+      fn(RationalNumber $accumulator, ProjectPayment $payment)
+      =>
+      $payment->getIsDonation() ? $accumulator : $accumulator->add($payment->getAmount()),
+      RationalNumber::zero(),
     );
   }
 

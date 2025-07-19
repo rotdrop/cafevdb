@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,11 +25,14 @@
 namespace OCA\CAFEVDB\Tests\Unit\Crypto;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 use OCP\Security\ICrypto;
 
 use OCA\CAFEVDB\Crypto\CloudSymmetricCryptor;
 
+/** Test the CloudSymmetricCryptor class. */
+#[CoversClass(CloudSymmetricCryptor::class)]
 class CloudSymmetricCryptorTest extends TestCase
 {
   /** @var string */
@@ -41,12 +44,14 @@ class CloudSymmetricCryptorTest extends TestCase
   /** @var string */
   private const ENCRYPTED_BYTES = 'abcd|3';
 
-  /** @var CloudSymmetricCryptor */
-  private $cryptor;
-
   /** @var \PHPUnit\Framework\MockObject\MockObject|ICrypto */
   private $cloudCryptor;
 
+  /**
+   * {@inheritdoc}
+   *
+   * @return void
+   */
   public function setup():void
   {
     parent::setup();
@@ -56,14 +61,16 @@ class CloudSymmetricCryptorTest extends TestCase
       ->getMock();
   }
 
-  public function testConstruction()
+  /** @return void */
+  public function testConstruction():void
   {
     $cryptor = new CloudSymmetricCryptor($this->cloudCryptor, self::ENCRYPTION_KEY);
 
     $this->assertInstanceOf(CloudSymmetricCryptor::class, $cryptor);
   }
 
-  public function testEncryptWrapping()
+  /** @return void */
+  public function testEncryptWrapping():void
   {
     $this->cloudCryptor
       ->expects($this->once())
@@ -75,7 +82,8 @@ class CloudSymmetricCryptorTest extends TestCase
     $this->assertEquals(self::ENCRYPTED_BYTES, $cryptor->encrypt(self::DATA_BYTES));
   }
 
-  public function testDecryptWrapping()
+  /** @return void */
+  public function testDecryptWrapping():void
   {
     $this->cloudCryptor
       ->expects($this->once())

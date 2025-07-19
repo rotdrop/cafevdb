@@ -76,7 +76,7 @@ class SealService
     foreach ($keyEncryption as $userId => $sealCryptor) {
       $sealData[] = $userId . ':' . $sealCryptor->encrypt($sealKey);
     }
-    $sealedData = sprintf('%08d|', strlen($encryptedData));
+    $sealedData = sprintf('%08d|', strlen($encryptedData ?? ''));
     $sealedData .= $encryptedData . '|';
     $sealedData .= implode(';', $sealData);
     return $sealedData;

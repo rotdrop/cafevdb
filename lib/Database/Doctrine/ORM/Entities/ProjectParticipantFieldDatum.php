@@ -24,20 +24,20 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use \RuntimeException;
+use InvalidArgumentException;
+use RuntimeException;
+use Throwable;
 
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
-
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**
  * ProjectParticipantFieldsData
@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(fields: ['field', 'project'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectParticipantFieldDataRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)] // Soft deletion is necessary in case the ProjectPayments table
+#[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 class ProjectParticipantFieldDatum implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -92,13 +92,15 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   private $optionValue = null;
 
   /**
-   * @var float Optional value of a deposit for monetary options. This is
+   * @var RationalNumber
+   *
+   * Optional value of a deposit for monetary options. This is
    * unused if the deposit is fixed by single- or multi-select
    * options. Supported range is IIIII.DD which is plenty at the time of this
    * writing.
    */
-  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: true)]
-  private $deposit;
+  #[ORM\Column(type: 'decimal_rational_monetary', nullable: true)]
+  private ?RationalNumber $deposit;
 
   /**
    * @var ProjectParticipantFieldDataOption
@@ -271,13 +273,21 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set optionValue.
    *
-   * @param null|string $optionValue
+   * @param null|string|RationalNumber $optionValue RationalNumber is only
+   * allowed for monetary fields.
    *
    * @return ProjectParticipantFieldDatum
    */
-  public function setOptionValue(?string $optionValue):ProjectParticipantFieldDatum
+  public function setOptionValue(null|string|RationalNumber $optionValue):ProjectParticipantFieldDatum
   {
-    $this->optionValue = $optionValue;
+    if ($optionValue instanceof RationalNumber) {
+      $scale = ($this->field->getDataType() == DataType::LIABILITIES || $this->field->getDataType() == DataType::RECEIVABLES)
+        ? 2
+        : -1;
+      $this->optionValue = $optionValue->toDecimal($scale);
+    } else {
+      $this->optionValue = $optionValue;
+    }
 
     return $this;
   }
@@ -326,12 +336,15 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set deposit.
    *
-   * @param null|float $deposit
+   * @param null|int|float|string|RationalNumber $deposit
    *
    * @return ProjectParticipantFieldDatum
    */
-  public function setDeposit(?float $deposit):ProjectParticipantFieldDatum
+  public function setDeposit(null|int|float|string|RationalNumber $deposit):ProjectParticipantFieldDatum
   {
+    if ($deposit !== null) {
+      $deposit = RationalNumber::create($deposit);
+    }
     $this->deposit = $deposit;
 
     return $this;
@@ -340,11 +353,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get deposit.
    *
-   * @return null|float
+   * @return null|RationalNumber
    */
-  public function getDeposit():?float
+  public function getDeposit():?RationalNumber
   {
-    return $this->deposit;
+    return $this->deposit ?? null;
   }
 
   /**
@@ -428,19 +441,20 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * For DataType::LIABILITIES the amount is negated.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function amountPayable():float
+  public function amountPayable():RationalNumber
   {
-    $value = 0.0;
     switch ($this->field->getMultiplicity()) {
       case Multiplicity::SINGLE():
       case Multiplicity::MULTIPLE():
       case Multiplicity::PARALLEL():
       case Multiplicity::GROUPSOFPEOPLE():
-        $value = filter_var($this->dataOption->getData(), FILTER_VALIDATE_FLOAT);
-        if ($value === false) {
-          throw new RuntimeException('Stored value cannot be converted to float.');
+        $storedValue = $this->dataOption->getData();
+        try {
+          $value = RationalNumber::fromDecimal($storedValue);
+        } catch (Throwable $t) {
+          throw new RuntimeException('Stored value cannot be converted to decimal: "' . $storedValue . '".');
         }
         break;
       case Multiplicity::GROUPOFPEOPLE():
@@ -449,25 +463,31 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
         if (empty($managementOption)) {
           throw new RuntimeException('Unable to access management option for obtaining the field value.');
         }
-        $value = filter_var($managementOption->getData(), FILTER_VALIDATE_FLOAT);
-        if ($value === false) {
-          throw new RuntimeException('Stored value cannot be converted to float.');
+        $storedValue = $managementOption->getData();
+        try {
+          $value = RationalNumber::fromDecimal($storedValue);
+        } catch (Throwable $t) {
+          throw new RuntimeException('Stored value cannot be converted to decimal: "' . $storedValue . '".');
         }
         break;
       case Multiplicity::SIMPLE():
       case Multiplicity::RECURRING():
-        if (!empty($this->optionValue)) {
-          $value = filter_var($this->optionValue, FILTER_VALIDATE_FLOAT);
-          if ($value === false) {
-            throw new RuntimeException('Stored value cannot be converted to float: ' . (string)$this->optionValue);
+        if (empty($this->optionValue)) {
+          $value = RationalNumber::zero();
+        } else {
+          $storedValue = $this->optionValue;
+          try {
+            $value = RationalNumber::fromDecimal($storedValue);
+          } catch (Throwable $t) {
+            throw new RuntimeException('Stored value cannot be converted to decimal: "' . $storedValue . '".');
           }
         }
         break;
       default:
-        throw new RuntimeException('Unhandled multiplicity tag: '.(string)$this->field->getMultiplicity());
+        throw new RuntimeException('Unhandled multiplicity tag: "' . (string)$this->field->getMultiplicity() . '".');
     }
     if ($this->field->getDataType() == DataType::LIABILITIES) {
-      $value = -$value;
+      $value = $value->neg();
     }
     return $value;
   }
@@ -481,9 +501,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * For DataType::LIABILITIES the amount is negated.
    *
-   * @return null|float
+   * @return null|RationalNumber
    */
-  public function depositAmount():?float
+  public function depositAmount():?RationalNumber
   {
     $value = null;
     switch ($this->field->getMultiplicity()) {
@@ -507,10 +527,10 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       case Multiplicity::RECURRING():
         break;
       default:
-        throw new RuntimeException('Unhandled multiplicity tag: '.(string)$this->field->getMultiplicity());
+        throw new RuntimeException('Unhandled multiplicity tag: "' . (string)$this->field->getMultiplicity() . '".');
     }
     if ($value !== null && $this->field->getDataType() == DataType::LIABILITIES) {
-      $value = -$value;
+      $value->negEq();
     }
     return $value;
   }
@@ -522,17 +542,15 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * ProjectParticipantFieldDatum::getField()::getDataType() is
    * 'service-fee'.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function amountPaid():float
+  public function amountPaid():RationalNumber
   {
     // sum up the values of all related payments
-    $amount = 0.0;
-    /** @var ProjectPayment $payment */
-    foreach ($this->payments as $payment) {
-      $amount += $payment->getAmount();
-    }
-    return $amount;
+    return $this->payments->reduce(
+      fn(RationalNumber $accumulator, ProjectPayment $payment) => $accumulator->add($payment->getAmount()),
+      RationalNumber::zero(),
+    );
   }
 
   /**
@@ -541,17 +559,15 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * Only meaningful if this is a monetary field.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function amountInvoiced():float
+  public function amountInvoiced():RationalNumber
   {
     // sum up the values of all related invoice items
-    $amount = 0.0;
-    /** @var InvoiceItem $item */
-    foreach ($this->invoiceItems as $item) {
-      $amount += $item->getAmount();
-    }
-    return $amount;
+    return $this->invoiceItems->reduce(
+      fn(RationalNumber $accumulator, InvoiceItem $item) => $accumulator->add($item->getAmount()),
+      RationalNumber::zero(),
+    );
   }
 
   /**

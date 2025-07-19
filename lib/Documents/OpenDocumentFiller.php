@@ -37,6 +37,7 @@ use OCP\Files\File;
 use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -194,6 +195,8 @@ class OpenDocumentFiller
         $value = 1;
       } elseif ($value === false) {
         $value = 0;
+      } elseif ($value instanceof RationalNumber) {
+        $value = $value->toDecimal();
       } elseif ($value === null) {
         $value = '';
       }

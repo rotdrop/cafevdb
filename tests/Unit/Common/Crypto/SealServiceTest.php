@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,15 +25,18 @@
 namespace OCA\CAFEVDB\Tests\Unit\Crypto;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 use OCP\Security\ICrypto;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Crypto\ICryptor;
 use OCA\CAFEVDB\Crypto\CryptoFactoryInterface;
 use OCA\CAFEVDB\Crypto\SealService;
 use OCA\CAFEVDB\Crypto\CloudSymmetricCryptor;
 
+/** Test the SealService class. */
+#[CoversClass(SealService::class)]
 class SealServiceTest extends TestCase
 {
   /** @var string */
@@ -52,7 +55,7 @@ class SealServiceTest extends TestCase
 
   private const USER_B = 'user.b';
 
-  /** @var \PHPUnit\Framework\MockObject\MockObject|ILogger */
+  /** @var \PHPUnit\Framework\MockObject\MockObject|LoggerInterface */
   private $cloudLogger;
 
   /** @var \PHPUnit\Framework\MockObject\MockObject|ICrypto */
@@ -61,6 +64,11 @@ class SealServiceTest extends TestCase
   /** @var \PHPUnit\Framework\MockObject\MockObject|CryptoFactoryInterface */
   private $cryptoFactory;
 
+  /**
+   * {@inheritdoc}
+   *
+   * @return void
+   */
   public function setup():void
   {
     parent::setup();
@@ -68,7 +76,7 @@ class SealServiceTest extends TestCase
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->cloudLogger = $this->getMockBuilder(ILogger::class)
+    $this->cloudLogger = $this->getMockBuilder(LoggerInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
 
@@ -77,13 +85,15 @@ class SealServiceTest extends TestCase
       ->getMock();
   }
 
-  public function testConstruction()
+  /** @return void */
+  public function testConstruction():void
   {
     $sealService = new SealService($this->cryptoFactory, $this->cloudLogger);
     $this->assertInstanceOf(SealService::class, $sealService);
   }
 
-  public function testSealing()
+  /** @return void */
+  public function testSealing():void
   {
     $this->cloudCryptor
       ->expects($this->any())
@@ -129,7 +139,8 @@ class SealServiceTest extends TestCase
     $this->assertEquals($unsealed, self::DATA_BYTES);
   }
 
-  public function testSealValidation()
+  /** @return void */
+  public function testSealValidation():void
   {
     $this->cloudCryptor
       ->expects($this->any())

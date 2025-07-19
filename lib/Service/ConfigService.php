@@ -47,6 +47,7 @@ use OCP\L10N\IFactory as IL10NFactory;
 use OCP\Security\ISecureRandom;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
@@ -1334,6 +1335,9 @@ class ConfigService
     if (empty($locale)) {
       $locale = $this->getLocale();
     }
+    if ($value instanceof RationalNumber) {
+      $value = $value->toDecimal(2);
+    }
     $fmt = new NumberFormatter($locale, \NumberFormatter::CURRENCY);
     $result = $fmt->formatCurrency((float)$value, $this->currencyIsoCode());
 
@@ -1353,8 +1357,11 @@ class ConfigService
    */
   public function floatValue(mixed $value, int $decimals = 4, ?string $locale = null):string
   {
+    if ($value instanceof RationalNumber) {
+      $value = $value->toDecimal($decimals);
+    }
     empty($locale) && $locale = $this->getLocale();
-    $fmt = new NumberFormatter($locale, \NumberFormatter::DECIMAL);
+    $fmt = new NumberFormatter($locale, NumberFormatter::DECIMAL);
     $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, 0);
     $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimals);
     $result = $fmt->format((float)$value);

@@ -28,31 +28,28 @@ use Throwable;
 use Exception;
 use RuntimeException;
 
-use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
-
 use OCP\Files as CloudFiles;
 use OCP\Files\NotFoundException;
 
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
-
+use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Common\Functions;
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
-
-use OCA\CAFEVDB\Controller\DownloadsController;
-use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
-
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\DownloadsController;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Database\Constants as DBConstants;
+use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
+use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 /** Participant-fields. */
 trait ParticipantFieldsTrait
@@ -65,6 +62,8 @@ trait ParticipantFieldsTrait
   use ParticipantFieldsCgiNameTrait;
   use SubstituteSQLFragmentTrait;
   use MusicianFromRowTrait;
+
+  protected const MONETARY_TYPE = DBConstants::MONETARY_TYPE;
 
   /** @var UserStorage */
   protected UserStorage $userStorage;
@@ -400,7 +399,7 @@ trait ParticipantFieldsTrait
     ),
     0
   )
-  AS DECIMAL(7, 2)
+  AS ' . self::MONETARY_TYPE . '
 )',
                       'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
                       'align' => 'right',
@@ -1134,7 +1133,7 @@ trait ParticipantFieldsTrait
   ' . $this->joinTables[$optionsTableName] . '.data,
   NULL
 )';
-                    $sql = 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))';
+                    $sql = 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS ' . self::MONETARY_TYPE . ')';
                   } else {
                     // comparatively difficult because of the many multi-valued joins.
 
@@ -1142,7 +1141,7 @@ trait ParticipantFieldsTrait
   $join_table.field_id = ' . $fieldId . '
   AND $join_table.deleted IS NULL
   AND ' . $this->joinTables[$optionsTableName] . '.key = $join_col_fqn,
-  CAST(' . $this->joinTables[$optionsTableName] . '.data AS DECIMAL(7, 2)),
+  CAST(' . $this->joinTables[$optionsTableName] . '.data AS ' . self::MONETARY_TYPE . '),
   NULL
 )';
                     $optionKeySql = 'IF(
@@ -1152,7 +1151,7 @@ trait ParticipantFieldsTrait
   $join_col_fqn,
   NULL
 )';
-                    $sql = 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS DECIMAL(7, 2))';
+                    $sql = 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS ' . self::MONETARY_TYPE . ')';
                   }
 
                   list($subTotalsIndex, $subTotalsName) = $this->makeJoinTableField(
@@ -1260,7 +1259,7 @@ trait ParticipantFieldsTrait
   AND ' . $this->joinTables[$optionsTableName] . '.key = $join_col_fqn
   AND $join_table.option_value IS NOT NULL
   AND $join_table.option_value <> "",
-  CAST($join_table.option_value AS DECIMAL(7, 2)),
+  CAST($join_table.option_value AS ' . self::MONETARY_TYPE . '),
   NULL
 )';
               // in contrast to Multiplicity::PARALLEL and ::MULTIPLE the
@@ -1286,7 +1285,7 @@ trait ParticipantFieldsTrait
                     'select' => 'T',
                     'align' => 'right',
                     'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
-                    'sql' => $subTotalsSign . 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS DECIMAL(7, 2))',
+                    'sql' => $subTotalsSign . 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS ' . self::MONETARY_TYPE . ')',
                     'values' => [
                       'column' => 'option_key',
                       'encode' => 'BIN2UUID(%s)',
@@ -2044,7 +2043,7 @@ GROUP BY " . $fdAlias . ".option_key",
                     'select' => 'T',
                     'align' => 'right',
                     'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
-                    'sql' => $subTotalsSign . 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))',
+                    'sql' => $subTotalsSign . 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS ' . self::MONETARY_TYPE . ')',
                     'values' => [
                       'column' => 'option_key',
                       'encode' => 'BIN2UUID(%s)',

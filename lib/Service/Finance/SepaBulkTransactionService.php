@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -221,13 +221,13 @@ class SepaBulkTransactionService
               $description = $this->l->t(
                 'Bank-transfers have been submitted, due-date is %s.', $configService->dateTimeFormatter()->formatDate($bulkTransaction->getDueDate(), 'long'))
                 . "\n"
-                . $this->l->t('Total amount to pay: %s.', $configService->moneyValue(-$bulkTransaction->totals()));
+                . $this->l->t('Total amount to pay: %s.', $configService->moneyValue($bulkTransaction->totals()->neg()));
               /** @var Entities\CompositePayment $payment */
               foreach ($bulkTransaction->getPayments() as $payment) {
                 $description .= "\n"
                   . $this->l->t('%s receives %s.', [
                     $payment->getMusician()->getPublicName(firstNameFirst: false),
-                    $configService->moneyValue(-$payment->getAmount())
+                    $configService->moneyValue($payment->getAmount()->neg())
                   ]);
               }
             }
@@ -457,7 +457,7 @@ class SepaBulkTransactionService
   public function generateProjectPayments(Entities\ProjectParticipant $participant, array $receivableOptions, ?\DateTimeInterface $transactionDueDate = null):Entities\CompositePayment
   {
     $payments = new ArrayCollection();
-    $totalAmount = 0.0;
+    $totalAmount = RationalNumber::zero();
     $project = $participant->getProject();
     $musician = $participant->getMusician();
 
@@ -486,13 +486,17 @@ class SepaBulkTransactionService
       /** @var Entities\ProjectParticipantFieldDatum $receivable */
       foreach ($receivableOption->getMusicianFieldData($musician) as $receivable) {
         $paidAmount = $receivable->amountPaid();
-        $payableAmount = (float)$receivable->amountPayable();
-        $depositAmount = (float)$receivable->depositAmount();
-        if ((float)$payableAmount * (float)$depositAmount < 0) {
-          throw new RuntimeException($this->l->t('Payable amount "%f" and deposit amount "%f" should have the compatible signs.', [ $payableAmount, $depositAmount ]));
+        $payableAmount = $receivable->amountPayable();
+        $depositAmount = $receivable->depositAmount();
+        if ($payableAmount->sign() * $depositAmount->sign() < 0) {
+          throw new RuntimeException(
+            $this->l->t(
+              'Payable amount "%1$s" and deposit amount "%2$s" should have the compatible signs.', [
+                $payableAmount->toDecimal(2), $depositAmount->toDecimal(2),
+              ]));
         }
         if (!empty($transactionDueDate) && !empty($receivableDueDate)) {
-          if ($payableAmount > 0) {
+          if ($payableAmount->gt(0)) {
             // debit note
             if ($receivableDueDate <= $transactionDueDate) {
               // past due-date, just keep billing the entire amount
@@ -501,7 +505,7 @@ class SepaBulkTransactionService
               $payableAmount = $depositAmount;
             } else {
               // too early, just don't charge anything
-              $payableAmount = 0.0;
+              $payableAmount->assign(0);
               $this->logInfo('NOT YET DUE; DOING NOTHING');
             }
           } else {
@@ -514,8 +518,8 @@ class SepaBulkTransactionService
             }
           }
         }
-        $debitAmount = round($payableAmount - $paidAmount, 2);
-        if ($debitAmount == 0.0) {
+        $debitAmount = $payableAmount->sub($paidAmount)->round(2);
+        if ($debitAmount->eq(0)) {
           // No need to debit empty amounts
           // @todo Perhaps empty amounts should also be recorded.
           continue;
@@ -533,7 +537,7 @@ class SepaBulkTransactionService
           ;
 
         $payments->add($payment);
-        $totalAmount += $debitAmount;
+        $totalAmount->addEq($debitAmount);
       }
     }
 

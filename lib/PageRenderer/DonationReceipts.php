@@ -29,6 +29,7 @@ use DateTime;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Constants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -890,7 +891,7 @@ class DonationReceipts extends PMETableViewBase
   SUM(IF(' . $table . '.is_donation, ' . $amountColumn . ', 0))
   /
   COUNT(DISTINCT ' . $this->joinTables[self::PROJECT_PARTICIPANTS_TABLE] . '.project_id)
-  AS DECIMAL(7, 2)
+  AS ' . Constants::MONETARY_TYPE . '
 )';
   }
 
@@ -908,7 +909,7 @@ class DonationReceipts extends PMETableViewBase
   SUM(IF(NOT ' . $table . '.is_donation, ' . $amountColumn . ', 0))
   /
   COUNT(DISTINCT ' . $this->joinTables[self::PROJECT_PARTICIPANTS_TABLE] . '.project_id)
-  AS DECIMAL(7, 2)
+  AS ' . Constants::MONETARY_TYPE . '
 )';
   }
 
