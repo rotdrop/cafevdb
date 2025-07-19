@@ -40,9 +40,8 @@ class RationalNumber extends Rational
    * {@inheritdoc}
    *
    * @param bool $normalized Assume the three ingredients do not need normalization.
-   *
    */
-  public function __construct(int $integralPart, int $numerator, int $denominator, bool $skipNormalization = false)
+  public function __construct(int $integralPart, int $numerator = 0, int $denominator = 1, bool $skipNormalization = false)
   {
     if ($skipNormalization) {
       $this->whole = $integralPart;
@@ -56,7 +55,7 @@ class RationalNumber extends Rational
   /**
    * Generator method.
    *
-   * @param int $integralPart
+   * @param int|float|string|RationalNumber $integralPartOrAny
    *
    * @param int $numerator
    *
@@ -64,13 +63,34 @@ class RationalNumber extends Rational
    *
    * @return RationalNumber
    */
-  public static function create(int $integralPart, int $numerator, int $denominator):RationalNumber
-  {
-    return new RationalNumber($integralPart, $numerator, $denominator);
+  public static function create(
+    int|float|string|RationalNumber $integralPartOrAny,
+    int $numerator = null,
+    int $denominator = null,
+  ):RationalNumber {
+    if (!is_int($integralPartOrAny)) {
+      if ($numerator !== null && $denominator !== null) {
+        throw new InvalidArgumentException(
+          'Too many arguments: only 1 is expected: "'
+          . implode('", "', [$integralPartOrAny, $numerator, $denominator])
+          . '".'
+        );
+      }
+      if (is_float($integralPartOrAny)) {
+        return static::fromFloat($integralPartOrAny);
+      } elseif (is_string($integralPartOrAny)) {
+        return static::fromDecimal($integralPartOrAny);
+      } elseif ($integralPartOrAny instanceof RationalNumber) {
+        return clone $integralPartOrAny;
+      }
+    }
+    return new RationalNumber($integralPartOrAny, $numerator ?? 0, $denominator ?? 1);
   }
 
   /**
    * Generate a new instance from a given base-class instance.
+   *
+   * @param Rational $rational Construct an instance given a base-class instance.
    *
    * @return RationalNumber
    */
@@ -142,7 +162,7 @@ class RationalNumber extends Rational
   }
 
   /**
-   * Initialize an instance from a "vanialla" decimal string. Only supported
+   * Initialize an instance from a "vanilla" decimal string. Only supported
    * formats are (optional in square brackets):
    *
    * [-][D1...DN][0][.][F1....FM]
@@ -168,6 +188,22 @@ class RationalNumber extends Rational
     $integralPart = empty($matches[2]) ? 0 : (int)$matches[2][0];
     $fractionalPart = empty($matches[3]) ? 0 : (int)$matches[3][0];
     return new RationalNumber($sign * $integralPart, $sign * $fractionalPart, pow(10, strlen($fractionalPart)));
+  }
+
+  /**
+   * Try to convert the given float into a RationalNumber.
+   *
+   * @param float $value
+   *
+   * @return RationalNumber
+   *
+   * @bug
+   */
+  public static function fromFloat(float $value):RationalNumber
+  {
+    $valueString = sprintf('%.16f', $value);
+    // @todo: range checking
+    return self::fromDecimal($valueString);
   }
 
   /** {@inheritdoc} */
