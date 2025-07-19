@@ -24,13 +24,15 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use OCA\CAFEVDB\Database\Constants;
+
 /**
  * Abstract base class for decimal types
  */
 class DecimalRationalMonetaryType extends AbstractDecimalRationalType
 {
-  protected const PRECISION = 7;
-  protected const SCALE = 2;
+  protected const PRECISION = Constants::MONETARY_PRECISION;
+  protected const SCALE = Constants::MONETARY_SCALE;
 
   /**
    * {@inheritDoc}

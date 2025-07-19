@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,15 +24,16 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
-use Exception;
-
 use OCP\IL10N;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Database\Constants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**
@@ -93,11 +94,11 @@ trait ParticipantTotalFeesTrait
         'filter' => [
           'having' => true,
         ],
-        'php' => function($amountPaid, $op, $k, $row, $recordId, $pme) use ($monetaryFields) {
+        'php' => function(string $amountPaid, $op, $k, $row, $recordId, $pme) use ($monetaryFields) {
 
           // $musicianId = $recordId['musician_id'];
 
-          $amountInvoiced = 0.0;
+          $amountInvoiced = RationalNumber::zero();
           /** @var Entities\ProjectParticipantField $participantField */
           foreach ($monetaryFields as $participantField) {
             $fieldId = $participantField->getId();
@@ -107,7 +108,7 @@ trait ParticipantTotalFeesTrait
             foreach ($fieldValues as $fieldName => &$fieldValue) {
               $label = $this->joinTableFieldName($table, 'option_'.$fieldName);
               if (!isset($pme->fdn[$label])) {
-                throw new Exception($this->l->t('Data for monetary field "%s" not found', $label));
+                throw new Exceptions\DatabaseLegacyException($this->l->t('Data for monetary field "%s" not found', $label));
               }
               $qf = $this->queryField($label);
               $qfIdx = $this->queryIndexField($label);
@@ -123,20 +124,25 @@ trait ParticipantTotalFeesTrait
               continue;
             }
 
-            $sign = $participantField->getDataType() == FieldType::LIABILITIES ? -1 : 1;
-            $amountInvoiced += $sign * $this->participantFieldsService->participantFieldSurcharge(
-              $fieldValues['key'], $fieldValues['value'], $participantField);
+            $fieldAmount = $this->participantFieldsService->participantFieldSurcharge(
+              $fieldValues['key'], $fieldValues['value'], $participantField,
+            );
+            if ($participantField->getDataType() == FieldType::LIABILITIES) {
+              $amountInvoiced->subEq($fieldAmount);
+            } else {
+              $amountInvoiced->addEq($fieldAmount);
+            }
           }
 
           // display as TOTAL/PAID/REMAINDER
-          $rest = $amountInvoiced - $amountPaid;
+          $rest = $amountInvoiced->sub($amountPaid);
 
           $amountInvoiced = $this->moneyValue($amountInvoiced);
           $amountPaid = $this->moneyValue($amountPaid);
           $rest = $this->moneyValue($rest);
-          return ('<span class="totals finance-state">'.$amountInvoiced.'</span>'
-                  .'<span class="received finance-state">'.$amountPaid.'</span>'
-                  .'<span class="outstanding finance-state">'.$rest.'</span>');
+          return ('<span class="totals finance-state">' . $amountInvoiced . '</span>'
+                  .'<span class="received finance-state">' . $amountPaid . '</span>'
+                  .'<span class="outstanding finance-state">' . $rest . '</span>');
         },
         'tooltip'  => $this->toolTipsService[self::$toolTipsPrefix . ':total-fees:summary'],
         'display|LFVD' => [ 'popup' => 'tooltip' ],
@@ -189,7 +195,7 @@ trait ParticipantTotalFeesTrait
     SUM($join_col_fqn)
     * COUNT(DISTINCT $join_table.id)
     / COUNT($join_table.id)
-  ) AS DECIMAL(7, 2))';
+  ) AS ' . Constants::MONETARY_TYPE . ')';
 
     $column = 'amount';
     list($fddIndex, $fddName) = $this->makeJoinTableField(
