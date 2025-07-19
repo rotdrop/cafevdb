@@ -28,12 +28,13 @@ use DateTimeInterface;
 use JsonSerializable;
 use ArrayAccess;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * A table for recording possible tax excemption reasons and their legal
@@ -51,6 +52,9 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
 
+  public const RATE_PRECISION = 2;
+  public const RATE_SCALE = self::RATE_PRECISION;
+
   /**
    * @var int
    */
@@ -66,14 +70,14 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
   private Types\EnumTaxType $taxType;
 
   /**
-   * @var float
+   * @var string
    *
    * Tax rate. If 0 then this item refers to a tax exemption, a taxation
    * exception. This assumes that governments never issue fractional tax rates
    * ... This not the percentage, but the fraction between 0 and 1.
    */
-  #[ORM\Column(type: 'decimal', precision: 2, scale: 2, nullable: false, options: ['default' => '0.00'])]
-  private string $rate = '0.00';
+  #[ORM\Column(type: 'decimal_rational_' . self::RATE_PRECISION . '_' . self::RATE_SCALE, nullable: false, options: ['unsigned' => true, 'default' => '0.00'])]
+  private RationalNumber $rate;
 
   /**
    * @var string
@@ -111,6 +115,7 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
     $this->arrayCTOR();
     $this->taxExemptionNotices = new ArrayCollection;
     $this->invoices = new ArrayCollection;
+    $this->setRate(0);
   }
   // phpcs:enable
 
@@ -151,15 +156,15 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
   }
 
   /**
-   * Set rate as a fraction between 0 and 1 (not the percentage)
+   * Set rate.
    *
-   * @param float $rate
+   * @param int|float|string|RationalNumber $rate
    *
-   * @return TaxationStatutorySource
+   * @return InsuranceRate
    */
-  public function setRate(float $rate):TaxationStatutorySource
+  public function setRate(int|float|string|RationalNumber $rate):TaxationStatutorySource
   {
-    $this->rate = $rate;
+    $this->rate = RationalNumber::create($rate);
 
     return $this;
   }
@@ -167,11 +172,11 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
   /**
    * Get rate.
    *
-   * @return null|float
+   * @return RationalNumber
    */
-  public function getRate():?float
+  public function getRate():RationalNumber
   {
-    $this->rate ?? null;
+    return $this->rate;
   }
 
   /**

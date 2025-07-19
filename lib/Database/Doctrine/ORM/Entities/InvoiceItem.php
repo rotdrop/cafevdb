@@ -24,8 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -55,8 +55,8 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
    * The amount invoice corresponding to this itme. Typically equal to the
    * amount of the associated receivable.
    */
-  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: false, options: ['default' => '0.00'])]
-  private $amount = '0.00';
+  #[ORM\Column(type: 'decimal_rational_monetary', nullable: false, options: ['default' => '0.00'])]
+  private RationalNumber $amount;
 
   /**
    * @var string
@@ -132,6 +132,7 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
   public function __construct()
   {
     $this->arrayCTOR();
+    $this->setAmount(0);
   }
 
   /**
@@ -258,13 +259,13 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
   /**
    * Set amount.
    *
-   * @param float|null $amount
+   * @param int|float|string|RationalNumber $amount
    *
-   * @return InvoiceItem
+   * @return ProjectPayment
    */
-  public function setAmount(?float $amount):InvoiceItem
+  public function setAmount(int|float|string|RationalNumber $amount):InvoiceItem
   {
-    $this->amount = $amount;
+    $this->amount = RationalNumber::create($amount);
 
     return $this;
   }
@@ -272,9 +273,9 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
   /**
    * Get amount.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function getAmount():?float
+  public function getAmount():RationalNumber
   {
     return $this->amount;
   }

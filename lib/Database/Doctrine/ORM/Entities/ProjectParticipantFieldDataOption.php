@@ -24,27 +24,24 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
-
-use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Events;
-use OCA\CAFEVDB\Service\ConfigService;
-
+use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener as TranslatableListener;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
-
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**
  * ProjectParticipantFieldsDataOptions
@@ -112,8 +109,8 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * @var string
    * Optional value of a deposit for monetary options.
    */
-  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: true)]
-  private string $deposit;
+  #[ORM\Column(type: 'decimal_rational_monetary', nullable: true)]
+  private ?RationalNumber $deposit;
 
   /**
    * @var int Limit on number of group members for
@@ -305,12 +302,15 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Set deposit.
    *
-   * @param null|float $deposit
+   * @param null|int|float|string|RationalNumber $deposit
    *
    * @return ProjectParticipantFieldDatum
    */
-  public function setDeposit(?float $deposit):ProjectParticipantFieldDataOption
+  public function setDeposit(null|int|float|string|RationalNumber $deposit):ProjectParticipantFieldDataOption
   {
+    if ($deposit !== null) {
+      $deposit = RationalNumber::create($deposit);
+    }
     $this->deposit = $deposit;
 
     return $this;
@@ -319,11 +319,11 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Get deposit.
    *
-   * @return null|float
+   * @return null|RationalNumber
    */
-  public function getDeposit():?float
+  public function getDeposit():?RationalNumber
   {
-    return $this->deposit;
+    return $this->deposit ?? null;
   }
 
   /**

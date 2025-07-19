@@ -482,7 +482,10 @@ class EntityManager extends EntityManagerDecorator
       // Ramsey\UuidType::class => null,
       // Ramsey\UuidBinaryType::class => 'binary',
       // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
-      Types\UuidType::class => 'binary',
+      Types\UuidType::class => 'uuid_binary',
+      Types\DecimalRationalP2S2Type::class => 'decimal_rational_2_2',
+      Types\DecimalRationalP4S4Type::class => 'decimal_rational_4_4',
+      Types\DecimalRationalMonetaryType::class => 'decimal_rational_monetary',
     ];
 
     $connection = $this->entityManager->getConnection();
@@ -494,6 +497,7 @@ class EntityManager extends EntityManagerDecorator
           Types\EnumType::registerEnumType($typeName, $phpType);
 
           // variant in lower case
+          // @todo: WHY?
           $blah = strtolower($typeName);
           Types\EnumType::registerEnumType($blah, $phpType);
           $platform->registerDoctrineTypeMapping($sqlType, $blah);

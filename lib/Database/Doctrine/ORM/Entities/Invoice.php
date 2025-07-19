@@ -30,6 +30,7 @@ use DateTimeInterface;
 use UnexpectedValueException;
 use InvalidArgumentException;
 
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
@@ -121,8 +122,8 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    * @todo If this is always the sum and thus can be computed, why then this
    * field?
    */
-  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: false, options: ['default' => '0.00'])]
-  private $amount = '0.00';
+  #[ORM\Column(type: 'decimal_rational_monetary', nullable: false, options: ['default' => '0.00'])]
+  private RationalNumber $amount;
 
   /**
    * @var \DateTimeImmutable|null
@@ -231,6 +232,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   {
     $this->arrayCTOR();
     $this->invoiceItems = new ArrayCollection;
+    $this->setAmount(0);
   }
 
   /**
@@ -270,13 +272,13 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * Set amount.
    *
-   * @param float|null $amount
+   * @param int|float|string|RationalNumber $amount
    *
-   * @return InvoiceItem
+   * @return ProjectPayment
    */
-  public function setAmount(?float $amount):Invoice
+  public function setAmount(int|float|string|RationalNumber $amount):Invoice
   {
-    $this->amount = $amount;
+    $this->amount = RationalNumber::create($amount);
 
     return $this;
   }
@@ -284,9 +286,9 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * Get amount.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function getAmount():float
+  public function getAmount():RationalNumber
   {
     return $this->amount;
   }

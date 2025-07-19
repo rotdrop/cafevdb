@@ -24,20 +24,18 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use \RuntimeException;
+use RuntimeException;
 
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
-
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**
  * ProjectParticipantFieldsData
@@ -97,8 +95,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * options. Supported range is IIIII.DD which is plenty at the time of this
    * writing.
    */
-  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: true)]
-  private $deposit;
+  #[ORM\Column(type: 'decimal_rational_monetary', nullable: true)]
+  private ?RationalNumber $deposit;
 
   /**
    * @var ProjectParticipantFieldDataOption
@@ -326,12 +324,15 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set deposit.
    *
-   * @param null|float $deposit
+   * @param null|int|float|string|RationalNumber $deposit
    *
    * @return ProjectParticipantFieldDatum
    */
-  public function setDeposit(?float $deposit):ProjectParticipantFieldDatum
+  public function setDeposit(null|int|float|string|RationalNumber $deposit):ProjectParticipantFieldDatum
   {
+    if ($deposit !== null) {
+      $deposit = RationalNumber::create($deposit);
+    }
     $this->deposit = $deposit;
 
     return $this;
@@ -340,11 +341,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get deposit.
    *
-   * @return null|float
+   * @return null|RationalNumber
    */
-  public function getDeposit():?float
+  public function getDeposit():?RationalNumber
   {
-    return $this->deposit;
+    return $this->deposit ?? null;
   }
 
   /**
