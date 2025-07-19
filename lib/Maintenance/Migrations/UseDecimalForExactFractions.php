@@ -32,9 +32,15 @@ class UseDecimalForExactFractions extends AbstractMigration
   protected static $sql = [
     self::STRUCTURAL => [
       "ALTER TABLE ProjectParticipantFieldsData CHANGE deposit deposit NUMERIC(7, 2) DEFAULT NULL",
-      "ALTER TABLE TaxationStatutorySources CHANGE rate rate NUMERIC(2, 2) DEFAULT '0.00' NOT NULL",
-      "ALTER TABLE InsuranceRates CHANGE Rate rate NUMERIC(4, 4) NOT NULL COMMENT 'fraction, not percentage, excluding taxes'",
       "ALTER TABLE ProjectParticipantFieldsDataOptions CHANGE deposit deposit NUMERIC(7, 2) DEFAULT NULL",
+      "ALTER TABLE TaxationStatutorySources CHANGE rate rate NUMERIC(2, 2) UNSIGNED DEFAULT '0.00' NOT NULL",
+      "ALTER TABLE InsuranceRates CHANGE Rate rate NUMERIC(4, 4) UNSIGNED NOT NULL COMMENT 'fraction, not percentage, excluding taxes'",
+      "ALTER TABLE WebBrowserHistoryStates DROP FOREIGN KEY IF EXISTS FK_FD38B3C74CDC76F1D06B458A",
+      "ALTER TABLE WebBrowserHistoryStates CHANGE pos_key pos_key NUMERIC(16, 3) UNSIGNED DEFAULT NULL",
+      "ALTER TABLE WebBrowserHistoryEntries CHANGE `key` `key` NUMERIC(16, 3) UNSIGNED NOT NULL",
+      "ALTER TABLE WebBrowserHistoryStates ADD CONSTRAINT FK_FD38B3C74CDC76F1D06B458A FOREIGN KEY IF NOT EXISTS
+  (pos_state_id, pos_key)
+  REFERENCES WebBrowserHistoryEntries (state_id, `key`)",
     ],
   ];
 
