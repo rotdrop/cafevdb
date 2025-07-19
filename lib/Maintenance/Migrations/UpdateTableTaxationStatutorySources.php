@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 class UpdateTableTaxationStatutorySources extends AbstractMigration
 {
   private const SOURCES = [
-    [ 'type' => Types\EnumTaxType::INSURANCE, 'law' => '§6 Abs. 1 VersStG', 'hint' => 'Versicherungssteuer' ],
+    [ 'type' => Types\EnumTaxType::INSURANCE, 'rate' => '0.19', 'law' => '§6 Abs. 1 VersStG', 'hint' => 'Versicherungssteuer' ],
   ];
 
   protected static $sql = [
@@ -65,8 +65,8 @@ class UpdateTableTaxationStatutorySources extends AbstractMigration
     foreach (self::SOURCES as $data) {
       $hint = $data['hint'] === null ? 'NULL' : "'{$data['hint']}'";
       self::$sql[self::TRANSACTIONAL][] = "INSERT IGNORE INTO TaxationStatutorySources
-(tax_type, law, country, hint, updated, created)
-VALUES ('{$data['type']}', '{$data['law']}', 'DE', $hint, NOW(), NOW())";
+(tax_type, rate, law, country, hint, updated, created)
+VALUES ('{$data['type']}', '{$data['rate']}', '{$data['law']}', 'DE', $hint, NOW(), NOW())";
     }
     return parent::execute();
   }
