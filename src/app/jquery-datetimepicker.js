@@ -118,9 +118,9 @@ const dateTimeFormat = [dateFormat, timeFormat].join(', ');
 
 // override datetimepicker a little bit
 const jQueryDateTimePicker = $.fn.datetimepicker;
-$.fn.datetimepicker = function(opt, ...rest) {
-  opt = Object.assign(
-    {
+$.fn.datetimepicker = function(argument, ...rest) {
+  if (rest.length === 0 && typeof argument === 'object' && argument !== null) {
+    argument = {
       format: dateTimeFormat,
       formatTime: timeFormat,
       formatDate: dateFormat,
@@ -137,13 +137,8 @@ $.fn.datetimepicker = function(opt, ...rest) {
         // $inputElement.trigger('blur');
         $inputElement.trigger('focusout');
       },
-    },
-    opt,
-  );
-  return jQueryDateTimePicker.call(this, opt, ...rest);
+      ...argument,
+    };
+  }
+  return jQueryDateTimePicker.call(this, argument, ...rest);
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

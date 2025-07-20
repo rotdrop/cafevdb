@@ -35,13 +35,16 @@ require('tooltips.scss');
 
 const $ = jQuery;
 
-console.log('jquery-cafevdb-tooltips');
+const vendorOriginalTitleKey = 'bsOriginalTitle';
+const vendorOriginalTitleAttribute = 'data-bs-original-title';
+const appTitleKey = appName + 'Title';
+const appTitleAttribute = 'data-' + appName + '-title';
 
 const toolTipJobInitialTimeOut = 100; // ms
 const toolTipJobRunnerTimeOut = 0; // ms
 
-const whiteList = {
-  ...$.fn.tooltip.Constructor.Default.whiteList,
+const allowList = {
+  ...$.fn.tooltip.Constructor.Default.allowList,
   table: [],
   thead: [],
   tbody: [],
@@ -57,7 +60,7 @@ const defaultOptions = {
   container: 'body',
   html: true,
   sanitize: true, // @todo just tweak whitelist
-  whiteList,
+  allowList,
   placement: 'auto',
   cssclass: [],
   fallbackPlacement: 'flip',
@@ -148,26 +151,26 @@ function singleToolTipWorker($this, optionsForAll, jobChunkSize) {
     }
   }
   $.fn.tooltip.call($this, 'dispose');
-  const appTitle = $this.data(appName + 'Title');
+  const appTitle = $this.data(appTitleKey);
   if (appTitle && !$this.attr('title')) {
     $this.attr('title', appTitle);
   } else {
-    const originalTitle = $this.data('original-title');
+    const originalTitle = $this.data(vendorOriginalTitleKey);
     if (originalTitle && !$this.attr('title')) {
       $this.attr('title', originalTitle);
     }
   }
-  $this.removeData(appName + 'Title');
-  $this.removeAttr('data-' + appName + '-title');
-  $this.removeAttr('data-original-title');
-  $this.removeData('original-title');
+  $this.removeData(appTitleKey);
+  $this.removeAttr(appTitleAttribute);
+  $this.removeAttr(vendorOriginalTitleAttribute);
+  $this.removeData(vendorOriginalTitleKey);
   if (!selfOptions.title) {
-    $this.data(appName + 'Title', $this.attr('title'));
-    $this.attr('data-' + appName + '-title', $this.attr('title'));
+    $this.data(appTitleKey, $this.attr('title'));
+    $this.attr(appTitleAttribute, $this.attr('title'));
     $this.removeAttr('title');
     selfOptions.title = function() {
       const $this = $(this);
-      const originalTitle = $this.data(appName + 'Title');
+      const originalTitle = $this.data(appTitleKey);
       if ($this.is(':invalid')) {
         const invalidHint = t(appName, 'Please fill out this field!');
         if (!selfOptions.html) {
@@ -268,19 +271,19 @@ $.fn.cafevTooltip = function(argument) {
       console.error('EXCEPTION DURING TOOLTIP HANDLING', this, arguments);
     }
     if (argument === 'dispose') {
-      const appTitle = $this.data(appName + 'Title');
+      const appTitle = $this.data(appTitleKey);
       if (appTitle && !$this.attr('title')) {
         $this.attr('title', appTitle);
       } else {
-        const originalTitle = $this.data('original-title');
+        const originalTitle = $this.data(vendorOriginalTitleKey);
         if (originalTitle && !$this.attr('title')) {
           $this.attr('title', originalTitle);
         }
       }
-      $this.removeData(appName + 'Title');
-      $this.removeAttr('data-' + appName + '-title');
-      $this.removeAttr('data-original-title');
-      $this.removeData('original-title');
+      $this.removeData(appTitleKey);
+      $this.removeAttr(appTitleAttribute);
+      $this.removeAttr(vendorOriginalTitleAttribute);
+      $this.removeData(vendorOriginalTitleKey);
     }
   }
   return $this;

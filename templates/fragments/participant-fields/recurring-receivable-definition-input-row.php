@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB;
+
+use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 use OCA\CAFEVDB\PageRenderer\ProjectParticipantFields as PageRenderer;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
@@ -67,9 +69,9 @@ $deleted = !empty($rowData['deleted']);
     <input readonly
            type="text"
            class="<?= $cssClass ?>"
-           name="<?= $inputName ?>[<?= $index ?>][<?= $prop ?>]"
-           value="<?= $rowData[$prop] ?>"
-           title="<?= $rowData[$prop] ?>"
+           name="<?=$inputName?>[<?= $index ?>][<?= $prop ?>]"
+           value="<?php p($rowData[$prop]) ?>"
+           title="<?php p($rowData[$prop]) ?>"
            size="5"
            maxlength="<?= strlen($rowData[$prop]) ?>"
     />
@@ -89,7 +91,7 @@ $deleted = !empty($rowData['deleted']);
            spellcheck="true"
            type="text"
            name="<?=$inputName?>[<?=$index?>][<?=$prop?>]"
-           value="<?=$rowData[$prop]?>"
+           value="<?php p($rowData[$prop]) ?>"
            title="<?=$toolTips['participant-fields-data-options:' . $prop]?>"
            size="16"
            maxlength="32"
@@ -101,30 +103,41 @@ $deleted = !empty($rowData['deleted']);
   $cssClass = PageRenderer::OPTION_DATA_SHOW_MASK[$prop]??[];
   $cssClass[] = 'field-' . $prop;
   $cssClass = implode(' ', $cssClass);
+  $cssClassNonRecurring = $cssClass . ' ' . 'multiplicity-recurring-hidden';
+  $cssClassRecurring = $cssClass . ' ' . 'not-multiplicity-recurring-hidden';
   $size = PageRenderer::OPTION_DATA_INPUT_SIZE[$dataType]??PageRenderer::OPTION_DATA_INPUT_SIZE['default'];
   $fieldValue = $rowData[$prop];
   if (!empty($fieldValue)) {
     switch ($dataType) {
       case DataType::DATE:
-        $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
-        $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
+        $date = DateTime::parse($fieldValue, $dateTimeZone);
+        $fieldValue = $dateTimeFormatter->formatDate($date, 'medium');
         break;
       case DataType::DATETIME:
-        $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
-        $fieldValue = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+        $date = DateTime::parse($fieldValue, $dateTimeZone);
+        $fieldValue = $dateTimeFormatter->formatDateTime($date, 'medium', 'short');
         break;
     }
   }
   ?>
-  <td class="<?= $cssClass ?>">
-    <input class="<?= $cssClass ?>"
+  <td class="<?= $cssClassNonRecurring ?>">
+    <input class="<?= $cssClassNonRecurring ?>"
            type="text"
            name="<?=$inputName?>[<?=$index?>][<?=$prop?>]"
-           value="<?=$fieldValue?>"
+           value="<?php p($fieldValue) ?>"
            title="<?=$toolTips['participant-fields-data-options:' . $prop]?>"
            size="<?=$size?>"
            <?php ($deleted && p('readonly')) ?>
     />
+  </td>
+  <td class="<?= $cssClassRecurring ?>">
+    <textarea class="<?= $cssClassRecurring ?>"
+              name="<?=$inputName?>[<?=$index?>][<?=$prop?>]"
+              title="<?=$toolTips['participant-fields-data-options:' . $prop]?>"
+              cols="32"
+              rows="1"
+              <?php ($deleted && p('readonly')) ?>
+    ><?=$rowData[$prop]?></textarea>
   </td>
   <?php
   $prop = 'deposit';
@@ -148,7 +161,7 @@ $deleted = !empty($rowData['deleted']);
            step="0.01"
            required
            name="<?=$inputName?>[<?=$index?>][<?=$prop?>]"
-           value="<?=$rowData[$prop]?>"
+           value="<?php p($rowData[$prop]) ?>"
            title="<?=$toolTips['participant-fields-data-options:' . $prop]?>"
            maxlength="8"
            size="9"
@@ -163,7 +176,7 @@ $deleted = !empty($rowData['deleted']);
     <input class="<?= $cssClass ?>"
            type="number"
            name="<?=$inputName?>[<?=$index?>][<?=$prop?>]"
-           value="<?=$rowData[$prop]?>"
+           value="<?php p($rowData[$prop]) ?>"
            title="<?=$toolTips['participant-fields-data-options:' . $prop]?>"
            maxlength="8"
            size="9"

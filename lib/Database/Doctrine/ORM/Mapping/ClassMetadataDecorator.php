@@ -65,7 +65,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
     protected ILogger $logger,
   ) {
     if ($metaData instanceof ClassMetadataDecorator) {
-      throw new InvalidArgumentException($this->l->t('Attempt to double wrap an class-meta-data instance.'));
+      throw new InvalidArgumentException($this->l->t('Attempt to double wrap a class-meta-data instance.'));
     }
   }
 
@@ -217,7 +217,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
   }
 
   /** {@inheritdoc} */
-  public function __get($property)
+  public function __get(string $property): mixed
   {
     if (property_exists($this->metaData, $property)) {
       return $this->metaData->$property;
@@ -226,10 +226,21 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
   }
 
   /** {@inheritdoc} */
-  public function __set($property, $value)
+  public function __set(string $property, mixed $value): void
   {
     $this->metaData->$property = $value;
-    return $this;
+  }
+
+  /** {@inheritdoc} */
+  public function __isset(string $property): bool
+  {
+    return property_exists($this->metaData, $property);
+  }
+
+  /** {@inheritdoc} */
+  public function __unset(string $property): void
+  {
+    unset($this->metaData, $property);
   }
 
   //

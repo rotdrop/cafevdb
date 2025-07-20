@@ -24,13 +24,16 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use Psr\Log\LoggerInterface;
+
 use OCP\AppFramework\IAppContainer;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository as DerivedEntityRepository;
+use OCA\CAFEVDB\Database\EntityManager as DecoratedEntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
-use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\ObjectRepository;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Repository\RepositoryFactory as RepositoryFactoryInterface;
-use OCA\CAFEVDB\Database\EntityManager as DecoratedEntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\ObjectRepository;
 
 /**
  * Custom repository factory which hooks into the dependency injection
@@ -39,6 +42,8 @@ use OCA\CAFEVDB\Database\EntityManager as DecoratedEntityManager;
  */
 class RepositoryFactory implements RepositoryFactoryInterface
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+
   /**
    * The list of EntityRepository instances.
    *
@@ -50,6 +55,7 @@ class RepositoryFactory implements RepositoryFactoryInterface
   /** {@inheritdoc} */
   public function __construct(
     protected IAppContainer $appContainer,
+    protected LoggerInterface $logger,
   ) {
   }
 
@@ -80,11 +86,12 @@ class RepositoryFactory implements RepositoryFactoryInterface
     $repositoryClassName = $metadata->customRepositoryClassName
       ?: $entityManager->getConfiguration()->getDefaultRepositoryClassName();
 
-    if ($repositoryClassName === EntityRepository::class
-        && $entityManager === $decoratedEntityManager) {
-      return new $repositoryClassName($entityManager, $metadata, $this->appContainer);
-    } else {
-      return new $repositoryClassName($entityManager, $metadata);
+    if ($entityManager === $decoratedEntityManager) {
+      if (is_a($repositoryClassName, DerivedEntityRepository::class, true)) {
+        return new $repositoryClassName($entityManager, $metadata, $this->appContainer);
+      }
+      $metadata = $metadata->getWrappedObject();
     }
+    return new $repositoryClassName($entityManager, $metadata);
   }
 }

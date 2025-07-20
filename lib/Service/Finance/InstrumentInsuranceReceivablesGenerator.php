@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use RuntimeException;
 use DateTimeImmutable as DateTime;
+use RuntimeException;
+use UnexpectedValueException;
 
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\RationalNumber;
@@ -120,36 +121,76 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       },
       array_merge([0], range($startingYear, $endingYear)));
 
+    // Split receivables by insurance broker
+    $brokers = $this->getDatabaseRepository(Entities\InsuranceBroker::class)->findAll();
+
     foreach ($years as $year) {
-      if ($year == '0000') {
-        $labelText = $this->l->t($labelTemplate = 'Opening Balance');
-        $tooltipTemplate = $this->toolTipsService['instrument-insurance:opening-balance']??'';
-        $tooltipText = $this->l->t($tooltipTemplate);
-      } else {
-        $labelText = $this->l->t($labelTemplate = 'Insurance Fee %d', $year);
-        $tooltipTemplate = $this->toolTipsService['instrument-insurance:annual-service-fee']??'';
-        $tooltipText = $this->l->t($tooltipTemplate);
+      $legacy = false;
+      /** @var Entities\InsuranceBroker $broker */
+      foreach ($brokers as $broker) {
+        $brokerShortName = $broker->getShortName();
+        if ($year == '0000') {
+          $labelText = $this->l->t($labelTemplate = 'Opening Balance (%s)', $brokerShortName);
+          $tooltipTemplate = $this->toolTipsService['instrument-insurance:opening-balance'] ?? '';
+          $tooltipText = $this->l->t($tooltipTemplate);
+        } else {
+          $labelText = $this->l->t($labelTemplate = 'Insurance Fee %s (%s)', [ $year, $brokerShortName ]);
+          $tooltipTemplate = $this->toolTipsService['instrument-insurance:annual-service-fee'] ?? '';
+          $tooltipText = $this->l->t($tooltipTemplate);
+        }
+        // new style data with year and broker
+        $data = '{"year":"' . $year . '","broker":"' . $brokerShortName . '"}';
+        $yearReceivables = $receivableOptions->matching(self::criteriaWhere([
+          '(|data' => $year,
+          // {"year":"1234","broker":"blahblub"}
+          'data' => $data,
+        ]));
+        if ($yearReceivables->isEmpty()) {
+          // add a new option
+          $receivable = (new Entities\ProjectParticipantFieldDataOption);
+          $receivable->setField($this->serviceFeeField)
+                     ->setKey(Uuid::create())
+                     ->setLabel($labelText)
+                     ->setToolTip($tooltipText)
+                     ->setData($data)
+                     ->setLimit(null); // may change in the future
+          $receivableOptions->set($receivable->getKey()->getBytes(), $receivable);
+        } else {
+          if ($yearReceivables->count() > 1) {
+            throw new UnexpectedValueException(
+              $this->l->t(
+                'Multiple insurance fee options for year "%1$s" and broker "%2$s".', [
+                  $year, $brokerShortName,
+                ]),
+            );
+          }
+          // update display things, but keep the essential data untouched
+          /** @var Entities\ProjectParticipantFieldDataOption $receivable */
+          $receivable = $yearReceivables->first();
+          if (!str_starts_with($receivable->getData(), '{')) {
+            // Legacy option
+            $legacy = true;
+            if ($year == '0000') {
+              $labelText = $this->l->t($labelTemplate = 'Opening Balance');
+              $tooltipTemplate = $this->toolTipsService['instrument-insurance:opening-balance']??'';
+              $tooltipText = $this->l->t($tooltipTemplate);
+            } else {
+              $labelText = $this->l->t($labelTemplate = 'Insurance Fee %d', $year);
+              $tooltipTemplate = $this->toolTipsService['instrument-insurance:annual-service-fee']??'';
+              $tooltipText = $this->l->t($tooltipTemplate);
+            }
+          }
+          $receivable->setLabel($labelText)
+                     ->setTooltip($tooltipText);
+          if ($legacy) {
+            $this->translate($receivable, 'label', null, sprintf($labelTemplate, $year))
+                 ->translate($receivable, 'tooltip', null, $tooltipTemplate);
+            break; // no need to iterate further over brokers.
+          }
+          $this->translate($receivable, 'label', null, sprintf($labelTemplate, $year, $brokerShortName))
+               ->translate($receivable, 'tooltip', null, $tooltipTemplate);
+        }
       }
-      $yearReceivables = $receivableOptions->matching(self::criteriaWhere(['data' => (string)$year]));
-      if ($yearReceivables->isEmpty()) {
-        // add a new option
-        $receivable = (new Entities\ProjectParticipantFieldDataOption)
-                    ->setField($this->serviceFeeField)
-                    ->setKey(Uuid::create())
-                    ->setLabel($labelText)
-                    ->setToolTip($tooltipText)
-                    ->setData($year) // may change in the future
-                    ->setLimit(null); // may change in the future
-        $receivableOptions->set($receivable->getKey()->getBytes(), $receivable);
-      } else {
-        // update display things, but keep the essential data untouched
-        /** @var Entities\ProjectParticipantFieldDataOption $receivable */
-        $receivable = $yearReceivables->first();
-        $receivable->setLabel($labelText)
-                   ->setTooltip($tooltipText);
-      }
-      $this->translate($receivable, 'label', null, sprintf($labelTemplate, $year))
-           ->translate($receivable, 'tooltip', null, $tooltipTemplate);
     }
     return $this->serviceFeeField->getSelectableOptions();
   }
@@ -167,7 +208,14 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     //   - remove items without payment when insurance fee == 0
     //   - update all existing items with newly computed insurance sum
 
-    $year = $receivable->getData();
+    $data = $receivable->getData();
+    if (!str_starts_with($data, '{')) {
+      // legacy item
+      $year = $data;
+      $brokerShortName = null;
+    } else {
+      list('year' => $year, 'broker' => $brokerShortName) = json_decode($data, true);
+    }
 
     $openingBalance = $year === '0000';
 
@@ -190,12 +238,12 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
 
       // Compute the actual fee
       $dueInterval = null;
-      $fee = $this->insuranceService->insuranceFee($musician, $referenceDate, $dueInterval);
+      $fee = $this->insuranceService->insuranceFee($musician, $brokerShortName, $referenceDate, $dueInterval);
 
       // Generate the overview letter as supporting document
-      $overview = $this->insuranceService->musicianOverview($musician, $referenceDate);
+      $overview = $this->insuranceService->musicianOverview($musician, $brokerShortName, $referenceDate);
     } else {
-      if (0 == count($this->insuranceService->billableInsurances($musician))) {
+      if (0 == count($this->insuranceService->billableInsurances($musician, $brokerShortName))) {
         // bail out early, DO NOT ADD an opening balance
         return [
           'added' => 0,
@@ -214,7 +262,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $datum = $participant->getParticipantFieldsDatum($optionKey);
     /** @var RationalNumber $fee */
     if (empty($datum)) {
-      if ($openingBalance || $fee->equals(0)) {
+      if ($openingBalance || !$fee->equals(0)) {
         // add a new option
         /** @var Entities\ProjectParticipantFieldDatum $datum */
         $datum = (new Entities\ProjectParticipantFieldDatum)
@@ -292,8 +340,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
               );
               $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
               $datum->setSupportingDocument($supportingDocument);
-            } elseif (true || !$fee->toDecimal(2) != $datum->getOptionValue()) {
-              // @todo only update letter if fee changes?
+            } elseif ($updateStrategy == self::UPDATE_STRATEGY_REPLACE || $fee->toDecimal(2) != $datum->getOptionValue()) {
               $supportingDocument
                 ->setName($overviewFilename)
                 ->getFile()

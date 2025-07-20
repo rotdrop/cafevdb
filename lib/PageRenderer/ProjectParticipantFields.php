@@ -516,7 +516,16 @@ class ProjectParticipantFields extends PMETableViewBase
           'input' => 'H',
           'sql' => ($column == 'key')
           ? "GROUP_CONCAT(DISTINCT BIN2UUID(\$join_col_fqn) ORDER BY \$join_col_fqn ASC)"
-          : "GROUP_CONCAT(DISTINCT CONCAT(BIN2UUID(\$join_table.key), '".parent::JOIN_KEY_SEP."', \$join_col_fqn) ORDER BY \$join_table.key ASC)",
+          : "GROUP_CONCAT(
+  DISTINCT
+  CONCAT(
+    BIN2UUID(\$join_table.key),
+    '" . self::JOIN_KEY_SEP . "',
+    REPLACE(\$join_col_fqn, '" . self::VALUES_SEP . "', '\\\\" . self::VALUES_SEP. "')
+  )
+  ORDER BY \$join_table.key ASC
+  SEPARATOR '" . self::VALUES_SEP . "'
+)",
         ]);
     }
 
@@ -1486,6 +1495,8 @@ __EOT__;
         'dataType' => $dataType,
         'inputName' => $this->pme->cgiDataName('data_options'),
         'toolTips' => $this->toolTipsService,
+        'dateTimeFormatter' => $this->dateTimeFormatter(),
+        'dateTimeZone' => $this->getDateTimeZone(),
       ],
     )->render();
   }
