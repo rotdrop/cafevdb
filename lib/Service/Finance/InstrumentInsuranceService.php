@@ -182,11 +182,17 @@ class InstrumentInsuranceService
    *
    * @param int|Entities\Musician $musicianOrId
    *
-   * @return Collection
+   * @return array
    */
-  public function billableInsurances($musicianOrId)
-  {
-    return $this->insurancesRepository->findBy([ 'billToParty' => $musicianOrId ]);
+  public function billableInsurances(
+    int|Entities\Musician $musicianOrId,
+    null|string|Entities\InsuranceBroker $broker,
+  ):array {
+    $criteria = [ 'billToParty' => $musicianOrId ];
+    if ($broker !== null) {
+      $criteria['broker'] = $broker;
+    }
+    return $this->insurancesRepository->findBy($criteria);
   }
 
   /**
@@ -226,6 +232,10 @@ class InstrumentInsuranceService
    *
    * @param int|Entities\Musician $musicianOrId Database entity or id.
    *
+   * @param null|string|Entities\InsuranceBroker $broker Short name (db id) or
+   * database entity or null. If null compute the fee for all brokers,
+   * otherwise only for the given one.
+   *
    * @param string|DateTime $date
    *
    * @param null|array $dueInterval Return the minimum and maximum due dates
@@ -233,15 +243,19 @@ class InstrumentInsuranceService
    *
    * @return RationalNumber Insurance fees computed.
    */
-  public function insuranceFee(mixed $musicianOrId, $date = null, ?array &$dueInterval = null):RationalNumber
-  {
+  public function insuranceFee(
+    mixed $musicianOrId,
+    null|string|Entities\InsuranceBroker $broker,
+    $date = null,
+    ?array &$dueInterval = null,
+  ):RationalNumber {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
       $date = new DateTime();
     }
     $date = self::convertToTimezoneDate($date, $timeZone);
 
-    $payables = $this->billableInsurances($musicianOrId);
+    $payables = $this->billableInsurances($musicianOrId, $broker);
 
     $taxFactor = $this->getTaxRate()->add(1);
 
