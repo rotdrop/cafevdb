@@ -359,7 +359,7 @@ class Util
    * ```
    *
    * Only the first $keyDelimiter is taken into account. This means
-   * that it is not necessary to explode the key-delimiter.
+   * that it is not necessary to escape the key-delimiter.
    *
    * @param null|string $data
    *
