@@ -343,12 +343,12 @@ const ready = function(selector, resizeCB) {
     });
 
     const inputData = $container.find('table.data-options').data('size');
-    const $dataInputs = $container
+    let $dataInputs = $container
       .find(
         'tr.pme-row.' + 'data-options-' + multiplicity + ' td.pme-value'
           + ', '
           + 'tr.pme-row.data-options td.pme-value table.' + multiplicityClass + ' tr:not(.generator, .placeholder)')
-      .find('input.field-data')
+      .find('input.field-data, textarea.field-data')
       .not(nonTextInputSelector);
 
     const dateTimePickerSelector = 'body > .xdsoft_datetimepicker';
@@ -368,40 +368,59 @@ const ready = function(selector, resizeCB) {
       }
     });
     $(dateTimePickerSelector).remove();
-    switch (dataType) {
-    case 'receivables':
-    case 'liabilities':
+    if (multiplicity === 'recurring') {
+      // generated receivables use the data field for their own
+      // purposes, for our purposes it is just text, depending on the
+      // receivable generator it may be even unused.
       $dataInputs
-        .attr('type', 'number')
-        .attr('step', '0.01');
-      break;
-    case 'date':
-      $dataInputs
+        .filter('input')
         .attr('type', 'text')
         .removeAttr('step')
-        .datepicker({
-          minDate: '01.01.1940', // birthday
-        });
-      // $dataInputs
-      //   .off('change')
-      //   .on('change', function(event) {
-      //     const $this = $(this);
-      //     console.info('DATE', $this.datepicker('getDate'));
-      //   });
-      break;
-    case 'datetime':
+        .prop('disabled', true);
       $dataInputs
-        .attr('type', 'text')
-        .removeAttr('step')
-        .datetimepicker({
-          step: 5,
-        });
-      break;
-    default:
+        .filter('textarea')
+        .prop('disabled', false);
+    } else {
       $dataInputs
-        .attr('type', 'text')
-        .removeAttr('step');
-      break;
+        .filter('textarea')
+        .prop('disabled', true);
+      $dataInputs = $dataInputs.filter('input');
+      $dataInputs.prop('disable', false);
+      switch (dataType) {
+      case 'receivables':
+      case 'liabilities':
+        $dataInputs
+          .attr('type', 'number')
+          .attr('step', '0.01');
+        break;
+      case 'date':
+        $dataInputs
+          .attr('type', 'text')
+          .removeAttr('step')
+          .datepicker({
+            minDate: '01.01.1940', // birthday
+          });
+        // $dataInputs
+        //   .off('change')
+        //   .on('change', function(event) {
+        //     const $this = $(this);
+        //     console.info('DATE', $this.datepicker('getDate'));
+        //   });
+        break;
+      case 'datetime':
+        $dataInputs
+          .attr('type', 'text')
+          .removeAttr('step')
+          .datetimepicker({
+            step: 5,
+          });
+        break;
+      default:
+        $dataInputs
+          .attr('type', 'text')
+          .removeAttr('step');
+        break;
+      }
     }
   };
 

@@ -39,6 +39,7 @@ use Psr\Log\LoggerInterface as ILogger;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicty;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -528,35 +529,41 @@ class ProjectParticipantFieldsController extends Controller
             // remove dangerous html
             $item['tooltip'] = $this->fuzzyInput->purifyHTML($item['tooltip']);
 
-            switch ($data['dataType']??null) {
-              case FieldDataType::RECEIVABLES:
-              case FieldDataType::LIABILITIES:
-                // see that it is a valid decimal number ...
-                if (!empty($item['data'])) {
-                  $parsed = $this->fuzzyInput->currencyValue($item['data']);
-                  if ($parsed === false) {
-                    return self::grumble($this->l->t('Could not parse number: "%s"', [ $item['data'] ]));
+            // receivable generators make their own use (if any) of the data field.
+            if ($data['multiplicity'] != FieldMultiplicty::RECURRING) {
+              switch ($data['dataType'] ?? null) {
+                case FieldDataType::RECEIVABLES:
+                case FieldDataType::LIABILITIES:
+                  // see that it is a valid decimal number ...
+                  if (!empty($item['data'])) {
+                    $parsed = $this->fuzzyInput->currencyValue($item['data']);
+                    if ($parsed === false) {
+                      throw new Exceptions\EnduserNotificationException(
+                        $this->l->t('Could not parse number: "%s"', $item['data']),
+                        context: [ 'item' =>  $item ],
+                      );
+                    }
+                    $item['data'] = $parsed;
                   }
-                  $item['data'] = $parsed;
-                }
-                if (!empty($item['deposit'])) {
-                  $parsed = $this->fuzzyInput->currencyValue($item['deposit']);
-                  if ($parsed === false) {
-                    return self::grumble($this->l->t('Could not parse number: "%s"', [ $item['deposit'] ]));
+                  if (!empty($item['deposit'])) {
+                    $parsed = $this->fuzzyInput->currencyValue($item['deposit']);
+                    if ($parsed === false) {
+                      return self::grumble($this->l->t('Could not parse number: "%s"', [ $item['deposit'] ]));
+                    }
+                    $item['deposit'] = $parsed;
                   }
-                  $item['deposit'] = $parsed;
-                }
-                break;
-              case FieldDataType::CLOUD_FILE:
-                if ($item['label'] === Constants::README_NAME) {
-                  return self::grumble($this->l->t(
-                    'Using "%1$s" as option-label is not allowed.'
-                    . ' The "%2$s"-file is used by the app to hold the contents of the help-text for this field.', [
-                      $item['label'], Constants::README_NAME ]));
-                }
-                break;
-              default:
-                break;
+                  break;
+                case FieldDataType::CLOUD_FILE:
+                  if ($item['label'] === Constants::README_NAME) {
+                    return self::grumble($this->l->t(
+                      'Using "%1$s" as option-label is not allowed.'
+                      . ' The "%2$s"-file is used by the app to hold the contents of the help-text for this field.', [
+                        $item['label'], Constants::README_NAME ]));
+                  }
+                  break;
+                default:
+                  break;
+              }
             }
 
             $input = '';
