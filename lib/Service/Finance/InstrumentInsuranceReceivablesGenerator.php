@@ -214,7 +214,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       $year = $data;
       $brokerShortName = null;
     } else {
-      list('year' => $year, 'broker' => $brokerShortName) = json_decode($data);
+      list('year' => $year, 'broker' => $brokerShortName) = json_decode($data, true);
     }
 
     $openingBalance = $year === '0000';
@@ -241,7 +241,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       $fee = $this->insuranceService->insuranceFee($musician, $brokerShortName, $referenceDate, $dueInterval);
 
       // Generate the overview letter as supporting document
-      $overview = $this->insuranceService->musicianOverview($musician, $referenceDate);
+      $overview = $this->insuranceService->musicianOverview($musician, $brokerShortName, $referenceDate);
     } else {
       if (0 == count($this->insuranceService->billableInsurances($musician, $brokerShortName))) {
         // bail out early, DO NOT ADD an opening balance

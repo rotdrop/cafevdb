@@ -182,6 +182,10 @@ class InstrumentInsuranceService
    *
    * @param int|Entities\Musician $musicianOrId
    *
+   * @param null|string|Entities\InsuranceBroker $broker Short name (db id) or
+   * database entity or null. If null compute the fee for all brokers,
+   * otherwise only for the given one.
+   *
    * @return array
    */
   public function billableInsurances(
@@ -190,7 +194,7 @@ class InstrumentInsuranceService
   ):array {
     $criteria = [ 'billToParty' => $musicianOrId ];
     if ($broker !== null) {
-      $criteria['broker'] = $broker;
+      $criteria['insuranceRate.broker'] = $broker;
     }
     return $this->insurancesRepository->findBy($criteria);
   }
@@ -398,12 +402,23 @@ class InstrumentInsuranceService
    *
    * @param int|Entities\Musician $musicianOrId Database entity or its id.
    *
+   * @param null|string|Entities\InsuranceBroker $broker Short name (db id) or
+   * database entity or null. If null compute the fee for all brokers,
+   * otherwise only for the given one.
+   *
    * @param null|DateTime $date Determines the insurance year.
+   *
+   * @param null|string|Entities\InsuranceBroker $broker Short name (db id) or
+   * database entity or null. If null compute the fee for all brokers,
+   * otherwise only for the given one.
    *
    * @return array
    */
-  public function musicianOverview(mixed $musicianOrId, ?DateTime $date = null):array
-  {
+  public function musicianOverview(
+    int|Entities\Musician $musicianOrId,
+    null|string|Entities\InsuranceBroker $broker,
+    ?DateTime $date = null,
+  ):array {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
       $date = new DateTime();
@@ -414,10 +429,19 @@ class InstrumentInsuranceService
     $billToParty = $this->ensureMusician($musicianOrId);
 
     $payableInsurances = $billToParty->getPayableInsurances();
+    if ($broker !== null) {
+      if ($broker instanceof Entities\InsuranceBroker) {
+        $broker = $broker->getShortName();
+      }
+      $payableInsurances = $payableInsurances->filter(
+        fn(Entities\InstrumentInsurance $insurance) => $insurance->getBroker()->getShortName() == $broker,
+      );
+    }
 
     $insuranceOverview = [
       'billTo' => $this->flattenMusician($billToParty, only: []),
       'taxRate' => $this->getTaxRate(),
+      'broker' => $broker,
       'musicians' => [],
       'date' => $date,
     ];
