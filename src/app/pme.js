@@ -2207,7 +2207,8 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     function(event) {
       const $this = $(this);
       const locked = !$this.prop('checked');
-      const $input = $this.closest(pmeValueSelector).find(pmeInputClassSelector()).not($this);
+      const containerSelector = $this.data('container') || pmeValueSelector;
+      const $input = $this.closest(containerSelector).find(pmeInputClassSelector()).not($this);
       // const $input = $this.hasClass('left-of-input') ? $this.next().next() : $this.prev();
       $input.prop('readonly', locked);
       if ($this.hasClass('locked-disabled') || $input.hasClass('locked-disabled')) {
@@ -2231,7 +2232,8 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     function(event) {
       const $this = $(this);
       const locked = $this.prop('checked');
-      const $input = $this.closest(pmeValueSelector).find(pmeInputClassSelector()).not($this);
+      const containerSelector = $this.data('container') || pmeValueSelector;
+      const $input = $this.closest(containerSelector).find(pmeInputClassSelector()).not($this);
       // const $input = $this.hasClass('left-of-input') ? $this.next().next() : $this.prev();
       $input.prop('readonly', locked);
       if ($this.hasClass('locked-disabled') || $input.hasClass('locked-disabled')) {
