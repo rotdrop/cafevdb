@@ -32,6 +32,8 @@ use OCP\IInitialStateService;
 use OCP\IL10N;
 use OCP\IUser;
 
+use OCA\Calendar\Service\CalendarInitialStateService;
+
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Documents\TemplateService;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
@@ -41,8 +43,7 @@ use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
-
-use OCA\Calendar\Service\CalendarInitialStateService;
+use OCA\CAFEVDB\Settings\Admin;
 
 /** Provide an "initial state" for JavaScript. */
 trait InitialStateTrait
@@ -145,7 +146,7 @@ trait InitialStateTrait
         'isGroupAdmin' => $authorizationService->isAdmin($this->userId()),
         'sharedFolder' => $this->getSharedFolderPath(),
         'projectsFolder' => $this->getProjectsFolderPath(),
-        'wikiNamespace' => $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY),
+        Admin::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY),
         'uploadMaxFileSize' => Util::maxUploadSize(),
       ]);
 

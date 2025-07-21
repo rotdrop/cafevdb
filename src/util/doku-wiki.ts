@@ -26,7 +26,7 @@ import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router';
 import md5 from 'blueimp-md5';
 
 export function dokuWikiSection(path: string[]) {
-  return [globalState.wikiNamespace, ...path].join(':');
+  return [globalState.wikiNameSpace, ...path].join(':');
 }
 export function dokuWikiUrl(path: string|string[]) {
   const wikiPage = Array.isArray(path) ? dokuWikiSection(path) : path;
