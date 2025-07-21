@@ -33,7 +33,7 @@ export interface GlobalState {
   orchestra: string,
   userPermissions: int,
   financeMode: boolean,
-  wikiNamespace: string,
+  wikiNameSpace: string,
   toolTipsEnabled: boolean,
   userPermissions: number,
   uploadMaxFileSize?: number,
