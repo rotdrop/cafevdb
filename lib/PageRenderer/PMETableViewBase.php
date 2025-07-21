@@ -2294,6 +2294,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
    */
   protected static function joinTableFieldName($joinInfo, string $column)
   {
+    $column = Util::camelCaseToDashes($column, '_');
     if (empty($joinInfo)) {
       return $column;
     }
