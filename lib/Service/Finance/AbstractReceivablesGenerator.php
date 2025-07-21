@@ -76,9 +76,15 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   }
 
   /** {@inheritdoc} */
+  public static function balancingAccountSlug():?string
+  {
+    return null;
+  }
+
+  /** {@inheritdoc} */
   public static function uiFlags():int
   {
-    return self::UI_PROTECTED_LABEL|self::UI_PROTECTED_VALUE;
+    return self::UI_PROTECTED_LABEL|self::UI_PROTECTED_VALUE|self::UI_PROTECTED_BALANCING_ACCOUNT;
   }
 
   /** {@inheritdoc} */
@@ -105,7 +111,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
       self::OPERATION_GENERATOR_RUN => true,
       self::OPERATION_GENERATOR_REGENERATE => true,
     ];
-    return $slug === null ? $labels : $labels[$slug]??null;
+    return $slug === null ? $labels : $labels[$slug] ?? null;
   }
 
   /** {@inheritdoc} */

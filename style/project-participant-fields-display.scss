@@ -192,9 +192,12 @@ form.pme-form.project-participant-fields-display {
     }
   }
 
-  tr.recurring td.pme-value td.label {
-    // padding-left:0.5em;
-    padding-right:0.5em;
+  tr.recurring td.pme-value {
+    td, th {
+      &.input, &.balancing-account {
+        padding-left:0.5em;
+      }
+    }
   }
 
   &.pme-view, &.pme-delete {
@@ -521,7 +524,7 @@ form.pme-form.project-participant-fields-display {
           td.input {
             width:80%;
           }
-          td.label, td.input {
+          td.label, td.input, td.balancing-account {
             position:relative;
             label.lock-unlock.left-of-input.position-right {
               right:0;
@@ -643,5 +646,15 @@ form.pme-form.project-participant-fields-display {
   }
   .operation {
     display:none;
+  }
+}
+
+body:not(.#{$appName}-finance-mode) {
+  #pme-table-container {
+    form.pme-form.project-participant-fields-display {
+      .finance-mode-only {
+        display:none !important;
+      }
+    }
   }
 }

@@ -445,6 +445,8 @@ invited to have a look, but please do not change anything unless you know what y
         'bill' => self::t('Generate a PDF with detailed records of the insured items and the resulting insurance fee.'),
         'manufacturer' => self::t('Manufacturer and (brief) place of manufacture if know.'),
         'year-of-construction' => self::t('Year of manufacture, if known. "Fuzzy" expression like "unknown", "end of 19th century", "around 1900" etc. are allowed.'),
+        'opening-balance' => self::t('The opening balance can be used to compensate for payments not recorded by the orchestra app or to compensate for other special agreements.'),
+        'annual-service-fee' => self::t('Annual service fee for instrument insurances for the club-members and their relatives.'),
       ],
 
       'page-renderer' => [
@@ -646,6 +648,7 @@ some easy cases like changing between liabilities and receivables and
 treating dates as text. Depending on the already filled data the
 results may be unexpected.'),
             ],
+            'balancing-account' => self::t('Balancing account for the accounting software for double-bookkeeping. This should either be an expenses or an income account and is used in order to generate import data for the accounting software.'),
           ],
 
           'display' => [
@@ -756,7 +759,8 @@ help text in order to inform others what this option is about.'),
         'single' => self::t('For a yes/no option please enter here the single item to select, e.g. the surcharge amount for a service-fee field.'),
         'groupofpeople' => self::t('For a yes/no option please enter here the single item to select, e.g. the surcharge amount for a service-fee field.'),
         'simple' => self::t('Please enter the default value for this free-text option.'),
-
+        'balancingAccount' => self::t('Balancing account for the accounting software for double-bookkeeping. This should either be an expenses or an income account and is used in order to generate import data for the accounting software.'),
+        'deposit' => self::t('If needed it is possible to split the total amount into a deposit and the remaining amount. Otherwise should be left empty.'),
       ],
 
       'participant-fields-recurring-data' => [

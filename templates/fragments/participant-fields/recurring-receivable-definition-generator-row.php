@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Common\Uuid;
  * @param \OCP\IDateTimeFormatter $dateTimeFormatter
  */
 
-foreach (['key', 'data', 'limit', 'deposit', 'label', 'tooltip'] as $prop) {
+foreach (['key', 'data', 'limit', 'deposit', 'label', 'balancingAccount', 'tooltip'] as $prop) {
   $value = ($generatorItem[$prop] ?? '');
   if (empty($value) && $prop == 'key') {
     $value = Uuid::NIL;
@@ -143,7 +143,7 @@ $cssClass = implode(' ', [
       <?php (empty($generator) || empty($fieldId)) && p('disabled') ?>
     />
   </td>
-  <td class="generator" colspan="5">
+  <td class="generator" colspan="8">
     <label for="recurring-receivables-update-strategy" class="recurring-receivables-update-strategy">
       <?php p($l->t('In case of Conflict')) ?>
     </label>

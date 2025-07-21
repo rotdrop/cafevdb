@@ -30,6 +30,7 @@ use OCP\IRequest;
 
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
@@ -63,7 +64,7 @@ class ProjectParticipantFields extends PMETableViewBase
   const OPTIONS_TABLE = self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE;
   const DATA_TABLE = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE;
 
-  const OPTION_FIELDS = [ 'key', 'label', 'data', 'deposit', 'limit', 'tooltip', 'deleted', ];
+  const OPTION_FIELDS = [ 'key', 'label', 'data', 'deposit', 'limit', 'balancing_account', 'tooltip', 'deleted', ];
 
   const OPTION_DATA_SHOW_MASK = [
     'key' => [
@@ -89,6 +90,15 @@ class ProjectParticipantFields extends PMETableViewBase
       'not-data-type-date-hidden',
       'not-data-type-date-time-hidden',
       'not-show-data-hidden',
+    ],
+    'balancingAccount' => [
+      'default-hidden',
+      'not-data-type-receivables-hidden',
+      'not-data-type-liabilities-hidden',
+      'multiplicity-parallel-hidden',
+      'multiplicity-multiple-hidden',
+      'multiplicity-group-of-people-hidden',
+      'multiplicity-groups-of-people-hidden',
     ],
   ];
 
@@ -590,6 +600,7 @@ class ProjectParticipantFields extends PMETableViewBase
     , "data", $join_table.data
     , "deposit", $join_table.deposit
     , "limit", $join_table.`limit`
+    , "balancingAccount", $join_table.balancing_account
     , "tooltip", $join_table.l10n_tooltip
     , "deleted", $join_table.deleted
 ) ORDER BY ' . self::ifFileSystemEntry('$join_table.label', '$join_table.l10n_label') . ' ASC, $join_table.data ASC),"]")',
@@ -883,6 +894,21 @@ __EOT__;
       'size' => 30,
       'sort' => false,
       'tooltip' => $this->toolTipsService['participant-fields-default-single-value'],
+    ];
+
+    $opts['fdd']['balancing_account'] = [
+      'name' => $this->l->t('Balancing Account'),
+      'options' => 'ACPVD',
+      'css' => [
+        'postfix' => [
+          'balancing-account',
+          'default-hidden',
+          'not-data-type-receivables-hidden',
+          'not-data-type-liabilities-hidden',
+          'multiplicity-recurring-hidden',
+        ],
+      ],
+      'tooltip' => $this->toolTipsService[self::$toolTipsPrefix . ':balancing-account'],
     ];
 
     $opts['fdd']['tooltip'] = array_merge(
@@ -1384,9 +1410,11 @@ __EOT__;
               $value = $date->setTimezone('UTC')->toIso8601String();
               break;
           }
+        } elseif ($field === 'deposit') {
+          $value = RationalNumber::create($value)->toDecimal(2);
         }
         $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
-        $optionValues[$field][] = $value === null ? null : $key.self::JOIN_KEY_SEP.$value;
+        $optionValues[$field][] = $value === null ? null : $key . self::JOIN_KEY_SEP . $value;
       }
       if (($newValues['multiplicity'] == Multiplicity::SIMPLE
            || $newValues['multiplicity'] == Multiplicity::SINGLE)
@@ -1461,7 +1489,7 @@ __EOT__;
   /**
    * @param null|int $fieldId May be null in add mode.
    *
-   * @return iterable All option kleys for the given field.
+   * @return iterable All option keys for the given field.
    */
   private function optionKeys(?int $fieldId):iterable
   {
@@ -1697,6 +1725,7 @@ __EOT__;
         'data' => $this->l->t('Data'),
         'deposit' => $this->l->t('Deposit') . ' ['.$this->currencySymbol().']',
         'limit' => $this->l->t('Limit'),
+        'balancingAccount' => $this->l->t('Balancing Account'),
         'tooltip' => $this->l->t('Tooltip'),
       ];
     } else {
@@ -1706,6 +1735,7 @@ __EOT__;
         'data' => $this->currencyLabel($this->l->t('Data')),
         'deposit' => $this->l->t('Deposit') . ' ['.$this->currencySymbol().']',
         'limit' => $this->l->t('Limit'),
+        'balancingAccount' => $this->l->t('Balancing Account'),
         'tooltip' => $this->l->t('Tooltip'),
       ];
     }
@@ -1737,7 +1767,7 @@ __EOT__;
           $html .= '
     <tr>
       <td class="operations"></td>';
-          foreach (['key', 'label', 'data', 'deposit', 'limit', 'tooltip'] as $field) {
+          foreach (['key', 'label', 'data', 'deposit', 'limit', 'balancingAccount', 'tooltip'] as $field) {
             $fieldValue = $value[$field];
             if ($multiplicity == Multiplicity::RECURRING) {
               if ($field == 'limit' && !empty($fieldValue)) {
@@ -1745,38 +1775,34 @@ __EOT__;
                   Util::convertToDateTime($fieldValue),
                   'medium');
               }
-            } else {
+            } elseif ($field == 'data' && !empty($fieldValue)) {
               switch ($dataType) {
                 case DataType::RECEIVABLES:
                 case DataType::LIABILITIES:
                   $fieldValue = $this->currencyValue($fieldValue);
                   break;
                 case DataType::DATE:
-                  if (!empty($fieldValue)) {
-                    try {
-                      $reporting = error_reporting(0);
-                      $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
-                      $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
-                      error_reporting($reporting);
+                  try {
+                    $reporting = error_reporting(0);
+                    $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
+                    $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
+                    error_reporting($reporting);
                     } catch (\Throwable $t) {
-                      error_reporting($reporting);
-                      $this->logInfo('IGNORE DATE PARSE ERROR');
-                      // ignore
-                    }
+                    error_reporting($reporting);
+                    $this->logInfo('IGNORE DATE PARSE ERROR');
+                    // ignore
                   }
                   break;
                 case DataType::DATETIME:
-                  if (!empty($fieldValue)) {
-                    try {
-                      $reporting = error_reporting(0);
-                      $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
-                      $fieldValue = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
-                      error_reporting($reporting);
-                    } catch (\Throwable $t) {
-                      error_reporting($reporting);
-                      $this->logInfo('IGNORE DATE PARSE ERROR');
-                      // ignore
-                    }
+                  try {
+                    $reporting = error_reporting(0);
+                    $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
+                    $fieldValue = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+                    error_reporting($reporting);
+                  } catch (\Throwable $t) {
+                    error_reporting($reporting);
+                    $this->logInfo('IGNORE DATE PARSE ERROR: ' . $fieldValue);
+                    // ignore
                   }
                   break;
                 default:
@@ -1967,7 +1993,7 @@ __EOT__;
 </span>
 __EOT__;
     // deposit displayed in own extra field
-    foreach (['key', 'label',/* 'deposit',*/ 'limit', 'tooltip', 'deleted'] as $field) {
+    foreach (['key', 'label',/* 'deposit',*/ 'limit', 'balancingAccount', 'tooltip', 'deleted'] as $field) {
       $value = htmlspecialchars($entry[$field]);
       $cssClass = implode(' ', array_merge(
         $cssBase, [
@@ -1992,7 +2018,7 @@ __EOT__;
       if ($multiplicity != Multiplicity::GROUPOFPEOPLE) {
         $option['deleted'] = (new DateTime)->getTimestamp();
       }
-      foreach (['key', 'label', 'data', 'deposit', 'limit', 'tooltip', 'deleted'] as $field) {
+      foreach (['key', 'label', 'data', 'deposit', 'limit', 'balancingAccount', 'tooltip', 'deleted'] as $field) {
         $value = htmlspecialchars($option[$field]);
         $html .=<<<__EOT__
 <input class="pme-input data-options-{$multiplicityVariant}"

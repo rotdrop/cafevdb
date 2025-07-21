@@ -51,7 +51,7 @@
 }
 
 /// Hide an element by default and show it only if the $prefix has the
-/// given property set. Elements are shown if the have a not-#{$property}-hidden attribute.
+/// given property set. Elements are shown if they have a not-#{$property}-hidden attribute.
 ///
 /// @param{list} $property A CSS class or list of CSS classes
 ///
@@ -206,7 +206,7 @@
     @each $property in finance-mode, expert-mode, show-data {
       @include columnShownIf($property, $important: true);
     }
-    @each $multiplicity in recurring {
+    @each $multiplicity in recurring, parallel, multiple, group-of-people, groups-of-people {
       @include columnHiddenIfMultiplicity($multiplicity);
       @include rowHiddenIfMultiplicity($multiplicity, $relation: "");
       @include rowShownIfMultiplicity($multiplicity, $relation: "");
@@ -227,7 +227,7 @@
             width:100%;
           }
         }
-        @each $dataType in cloud-file, cloud-folder, db-file {
+        @each $dataType in cloud-file, cloud-folder, db-file, text, html-text {
           @include columnHiddenIfDataType($dataType);
         }
       }
@@ -246,11 +246,14 @@
         }
         th, td {
           border:1px solid #004D9C;
-          &.field-data, &.field-deposit, &.field-limit, &.field-tooltip {
+          &.field-data, &.field-deposit, &.field-limit, &.field-balancingAccount, &.field-tooltip {
             overflow:hidden;
             text-overflow:ellipsis;
           }
           &.field-data {
+            max-width:8em;
+          }
+          &.field-balancingAccount {
             max-width:8em;
           }
           &.field-tooltip {
@@ -358,6 +361,8 @@
     }
     &:not(.pme-view, .pme-delete) {
       table.pme-main {
+        textarea.field-data,
+        textarea.field-balancingAccount,
         textarea.field-tooltip,
         textarea.participant-field-tooltip {
           overflow-x:hidden; /* fix FF extra-line bug */
@@ -497,7 +502,7 @@
   @include dataOptionsTable;
   table.data-options {
     th, td {
-      &.field-data, &.field-tooltip {
+      &.field-data, &.field-balancingAccount, &.field-tooltip {
         max-width:8em;
         overflow:hidden;
         text-overflow:ellipsis;

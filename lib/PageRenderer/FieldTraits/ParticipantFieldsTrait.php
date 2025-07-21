@@ -1366,6 +1366,41 @@ trait ParticipantFieldsTrait
             );
             // $labelFdd = &$fieldDescData[$labelFddName];
 
+            // Allow update of the balancing account for recurring receivables.
+            /* list($labelFddIndex, $labelFddName) = */$this->makeJoinTableField(
+              $fieldDescData, $optionsTableName, 'balancing_account', [
+                'name' => $this->l->t('Balancing account for %s', $fieldName),
+                'tab'  => $tab,
+                'css'  => [ 'postfix' => [ 'participant-field-blanacing account', 'field-id-'.$fieldId, ] ],
+                'select' => 'M',
+                'input' => ' HR',
+                'php' => fn() => '',
+                'filter' => [
+                  'having' => true,
+                ],
+                'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
+  DISTINCT
+  IF(
+    $join_table.field_id = '.$fieldId.$deletedSqlFilter.',
+    CONCAT_WS(
+      \''.self::JOIN_KEY_SEP.'\',
+      BIN2UUID($join_table.key),
+      COALESCE($join_table.balancing_account, "")
+    ),
+    NULL
+  )
+  ORDER BY $order_by)
+)',
+                'values' => [
+                  'grouped' => true,
+                  'filters' => ('$table.field_id = '.$fieldId
+                                .$deletedValueFilter),
+                  'orderby' => '$table.key ASC',
+                ],
+              ],
+            );
+            // $labelFdd = &$fieldDescData[$labelFddName];
+
             // yet another field for the supporting documents
             list(, $invoiceFddName) = $this->makeJoinTableField(
               $fieldDescData, $tableName, 'supporting_document_id', [
@@ -1578,9 +1613,14 @@ trait ParticipantFieldsTrait
   <thead>
     <tr>
       <th class="operations"><span class="column-heading">' . $this->l->t('Actions') . '</span></th>
-      <th class="label"><span class="column-heading">'.$this->l->t('Subject').'</span></th>
-      <th class="input"><span class="column-heading">'.$valueLabel.'</span></th>
-      <th class="documents"><span class="column-heading">'.$invoiceLabel.'</</th>
+      <th class="label"><span class="column-heading">' . $this->l->t('Subject') . '</span></th>
+      <th class="input"><span class="column-heading">' . $valueLabel . '</span></th>';
+              if ($uiFlags & IRecurringReceivablesGenerator::UI_VISIBLE_BALANCING_ACCOUNT) {
+                $html .= '
+      <th class="balancing-account finance-mode-only"><span class="column-heading">' . $this->l->t('Balancing Account') . '</span></th>';
+              }
+              $html .= '
+      <th class="documents"><span class="column-heading">' . $invoiceLabel . '</</th>
     </tr>
   </thead>
   <tbody>';
@@ -2207,6 +2247,7 @@ GROUP BY " . $fdAlias . ".option_key",
     }
 
     $optionLabelName = $this->pme->cgiDataName(self::joinTableFieldName(self::participantFieldOptionsTableName($fieldId), 'label'));
+    $optionBalancingAccountName = $this->pme->cgiDataName(self::joinTableFieldName(self::participantFieldOptionsTableName($fieldId), 'balancing_account'));
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId));
     $optionKeyName = $this->pme->cgiDataName(self::participantFieldKeyFieldName($fieldId));
 
@@ -2238,6 +2279,7 @@ GROUP BY " . $fdAlias . ".option_key",
         'fieldOption' => $fieldOption,
         'optionValue' => $optionValue,
         'optionLabelName' => $optionLabelName,
+        'optionBalancingAcountName' => $optionBalancingAccountName,
         'optionKeyName' => $optionKeyName,
         'optionValueName' => $optionValueName,
         'optionIdx' => $optionIdx,

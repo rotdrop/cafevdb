@@ -104,7 +104,7 @@ $deleted = !empty($rowData['deleted']);
   $cssClass[] = 'field-' . $prop;
   $cssClass = implode(' ', $cssClass);
   $cssClassNonRecurring = $cssClass . ' ' . 'multiplicity-recurring-hidden';
-  $cssClassRecurring = $cssClass . ' ' . 'not-multiplicity-recurring-hidden';
+  $cssClassRecurring = $cssClass . ' ' . 'not-multiplicity-recurring-hidden only-multiplicity-recurring';
   $size = PageRenderer::OPTION_DATA_INPUT_SIZE[$dataType]??PageRenderer::OPTION_DATA_INPUT_SIZE['default'];
   $fieldValue = $rowData[$prop];
   if (!empty($fieldValue)) {
@@ -182,6 +182,19 @@ $deleted = !empty($rowData['deleted']);
            size="9"
            <?php ($deleted && p('readonly')) ?>
     />
+  </td>
+  <?php
+  $prop = 'balancingAccount';
+  $cssClass = implode(' ', array_merge(['field-' . $prop], PageRenderer::OPTION_DATA_SHOW_MASK[$prop]));
+  ?>
+  <td class="<?= $cssClass ?>">
+    <textarea class="<?= $cssClass ?>"
+              name="<?=$inputName?>[<?=$index?>][<?=$prop?>]"
+              title="<?=$toolTips['participant-fields-data-options:' . $prop]?>"
+              cols="32"
+              rows="1"
+              <?php ($deleted && p('readonly')) ?>
+    ><?=$rowData[$prop]?></textarea>
   </td>
   <?php
   $prop = 'tooltip';

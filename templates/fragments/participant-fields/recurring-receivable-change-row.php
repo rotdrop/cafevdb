@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,10 +32,11 @@ use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as Generator;
  * @param int $uiFlags
  * @param Entities\ProjectParticipantField $field
  * @param Entities\ProjectParticipantFieldDataOption $fieldOption
- * @param string $optionValue
- * @param string $optionLabelName
  * @param string $optionKeyName
+ * @param string $optionValue
  * @param string $optionValueName
+ * @param string $optionLabelName
+ * @param string $optionBalancingAccountName
  * @param int $optionIdx Should go away, really
  * @param string $filesAppPath
  * @param string $filesAppLink
@@ -51,12 +52,18 @@ $fieldName = $field->getName();
 $dataType = $field->getDataType();
 $optionKey = $fieldOption->getKey();
 $optionLabel = $fieldOption->getLabel();
+$optionBalancingAccount = $fieldOption->getBalancingAccount();
 
 $optionLabelLocked = ($uiFlags & Generator::UI_PROTECTED_LABEL)
   || !(empty($optionLabel) && ($uiFlags & Generator::UI_EDITABLE_LABEL));
 
 $optionValueLocked = ($uiFlags & Generator::UI_PROTECTED_VALUE)
-                  || !(empty($optionValue) && ($uiFlags & Generator::UI_EDITABLE_VALUE));
+  || !(empty($optionValue) && ($uiFlags & Generator::UI_EDITABLE_VALUE));
+
+$optionBalancingAccountLocked = ($uiFlags & Generator::UI_PROTECTED_BALANCING_ACCOUNT)
+  || !(empty($optionBalancingAccount) && ($uiFlags & Generator::UI_EDITABLE_BALANCING_ACCOUNT));
+
+$optionBalancingAccountVisible = ($uiFlags & Generator::UI_VISIBLE_BALANCING_ACCOUNT);
 
 $valueInputType = ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES)
   ? 'type="number" step="0.01"' : 'type="text"';
@@ -106,6 +113,7 @@ $rowClasses = implode(' ', $rowClasses);
   <td class="label">
     <input id="receivable-option-label-lock-<?php p($optionKey); ?>"
            type="checkbox"
+           data-container="td.label"
            <?php $optionLabelLocked && p('checked'); ?>
            class="<?php p($lockCssClass); ?>"
     />
@@ -125,6 +133,7 @@ $rowClasses = implode(' ', $rowClasses);
   <td class="input">
     <input id="receivable-option-value-lock-<?php p($optionKey); ?>"
            type="checkbox"
+           data-container="td.input"
            <?php $optionValueLocked && p('checked'); ?>
            class="<?php p($lockCssClass); ?>"
     />
@@ -142,6 +151,28 @@ $rowClasses = implode(' ', $rowClasses);
            name="<?php p($optionKeyName); ?>[<?php p($optionIdx); ?>]"
            value="<?php p($optionKey); ?>"/>
   </td>
+  <?php if ($optionBalancingAccountVisible) { ?>
+  <td class="balancing-account finance-mode-only">
+    <input id="receivable-option-balancing-account-lock-<?php p($optionKey); ?>"
+           type="checkbox"
+           data-container="td.balancing-account"
+           <?php $optionBalancingAccountLocked && p('checked'); ?>
+           class="<?php p($lockCssClass); ?>"
+    />
+    <label class="<?php p($lockRightCssClass); ?>"
+           title="<?php echo $toolTips['pme:input:lock-unlock']; ?>"
+           for="receivable-option-balancing-account-lock-<?php p($optionKey); ?>"
+    >
+    </label>
+    <input class="pme-input"
+           type="text"
+           value="<?php p($optionBalancingAccount); ?>"
+           name="<?php p($optionBalancingAccountName); ?>[<?php p($optionIdx); ?>]"
+           <?php $optionBalancingAccountLocked && p('readonly'); ?>
+           title="<?php echo $toolTips['participant-fields-recurring-data:set-balancing-account']; ?>"
+    />
+  </td>
+  <?php } ?>
   <?php echo $this->inc('fragments/participant-fields/attachment-file-upload-menu', [
     'containerTag' => 'td',
     'containerAttributes' => [

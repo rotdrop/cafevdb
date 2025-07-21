@@ -67,6 +67,8 @@ class Admin implements IDelegatedSettings
   const PROBLEM_REPORT_EMAIL_RECIPIENT_KEY = 'problemReportEmailRecipient';
   const EMAIL_CHALLENGE_SUFFIX = 'Challenge';
   const EMAIL_VERIFICATION_SUFFIX = 'Verification';
+  const GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY = 'gnuCashParticipantReceivablesAccount';
+  const GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY = 'gnuCashInstrumentInsuranceBalancingAccount';
 
   const DELEGATABLE = 'delegatable';
   const ADMIN_ONLY = 'admin_only';

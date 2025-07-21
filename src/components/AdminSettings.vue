@@ -268,6 +268,34 @@
         </NcActions>
       </span>
     </NcSettingsSection>
+    <NcSettingsSection v-if="config.isSubAdmin" :class="['sub-admin', 'finance']" :name="t(appId, 'Finance')">
+      <div>
+        <label for="gnucash-participant-receivables-template">
+          {{ t(appId, 'GnuCash Participant Receivables Account') }}
+        </label>
+        <!-- Note: v-model does not work here -->
+        <TextField id="gnucash-participant-receivables-template"
+                   :value.sync="settings.gnuCashParticipantReceivablesAccount"
+                   type="text"
+                   :label="t(appId, 'GnuCash Participant Receivables Account')"
+                   :placeholder="t(appId, 'e.g. &quot;assets:receivables:participants:{PERSON}:{PROJECT}:{GENERATOR_TAG}&quot;.')"
+                   :hint="hints['settings:admin:gnu-cash:participant-receivables-account']"
+                   @submit="saveSetting('gnuCashParticipantReceivablesAccount', settings.gnuCashParticipantReceivablesAccount)"
+        />
+        <label for="gnucash-instrument-insurances-template">
+          {{ t(appId, 'GnuCash Instrument Insurances Balancing Account') }}
+        </label>
+        <!-- Note: v-model does not work here -->
+        <TextField id="gnucash-instrument-insurances-template"
+                   :value.sync="settings.gnuCashInstrumentInsuranceBalancingAccount"
+                   type="text"
+                   :label="t(appId, 'GnuCash Instrument Insurances Balancing Account')"
+                   :placeholder="t(appId, 'e.g. &quot;outside-capital:escrow-accounts:insurances:receivables:{BROKER}&quot;.')"
+                   :hint="hints['settings:admin:gnu-cash:instrument-insurance-balancing-account']"
+                   @submit="saveSetting('gnuCashInstrumentInsuranceBalancingAccount', settings.gnuCashInstrumentInsuranceBalancingAccount)"
+        />
+      </div>
+    </NcSettingsSection>
     <NcSettingsSection v-if="config.isSubAdmin"
                        :class="['sub-admin', 'fonts-container']"
                        :name="t(appId, 'Configure Office Fonts for Office Exports')"
@@ -476,7 +504,7 @@ type FontFiles = {
   xbi?: string,
 }
 
-type InitialState = {
+interface InitialState {
   authorizationGroupSuffixes: string[],
   isAdmin: boolean,
   isSubAdmin: boolean,
@@ -488,7 +516,7 @@ type InitialState = {
   cloudUserBackend: string,
 }
 
-type AppAdminSettings = {
+interface AppAdminSettings {
   userAndGroupBackend: string,
   orchestraUserGroup: string,
   orchestraUserGroupAdmins: string[],
@@ -498,6 +526,8 @@ type AppAdminSettings = {
   problemReportEmailRecipient: string;
   problemReportEmailRecipientVerification: string;
   problemReportEmailRecipientStatus: string;
+  gnuCashParticipantReceivablesAccount: string;
+  gnuCashInstrumentInsuranceBalancingAccount: string;
 }
 
 type CloudUserGetResponse = AxiosResponse<OCSResponse<CloudUser> >
@@ -600,6 +630,8 @@ const settings: AppAdminSettings = reactive({
   problemReportEmailRecipient: '',
   problemReportEmailRecipientVerification: '',
   problemReportEmailRecipientStatus: '',
+  gnuCashParticipantReceivablesAccount: '',
+  gnuCashInstrumentInsuranceBalancingAccount: '',
 })
 
 const problemReportRecipientVerificationInput = ref(false)

@@ -54,6 +54,8 @@ class AdminSettingsController extends Controller
     AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY,
     AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX,
     AdminSettings::WIKI_NAME_SPACE_KEY,
+    AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY,
+    AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY,
     FontService::DEFAULT_OFFICE_FONT_CONFIG,
     self::POST_REQUEST_FONT_CACHE,
   ];
@@ -129,7 +131,9 @@ class AdminSettingsController extends Controller
         }
         break;
       case AdminSettings::WIKI_NAME_SPACE_KEY:
-        $value = $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY);
+      case AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY:
+      case AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY:
+        $value = $this->getAppValue($parameter);
         break;
       case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
         $value = $this->di(CloudUserConnectorService::class)->haveCloudUserBackendConfig();
@@ -148,6 +152,7 @@ class AdminSettingsController extends Controller
         /** @var FontService $fontService */
         $fontService = $this->di(FontService::class);
         $value = $fontService->getDefaultFontName();
+        break;
         break;
       default:
         return new DataResponse([ 'key' => $parameter ], Http::STATUS_NOT_FOUND);
@@ -370,6 +375,34 @@ Please enter the confirmation code contained in the email into the admin-setting
           'messages' => [
             'transient' => [
               $this->l->t('Setting wiki name-space to "%s".', [$realValue]),
+            ],
+          ],
+        ];
+        return self::dataResponse($result);
+
+      case AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY:
+        $balancingAccount = trim($value);
+        $this->setAppValue(AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY, $balancingAccount);
+        $result[AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY] = $balancingAccount;
+
+        $result = [
+          'messages' => [
+            'transient' => [
+              $this->l->t('Setting the GnuCash instrument insurance balancing account to "%s".', [$balancingAccount]),
+            ],
+          ],
+        ];
+        return self::dataResponse($result);
+
+      case AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY:
+        $receivablesAccount = trim($value);
+        $this->setAppValue(AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY, $receivablesAccount);
+        $result[AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY] = $receivablesAccount;
+
+        $result = [
+          'messages' => [
+            'transient' => [
+              $this->l->t('Setting the GnuCash participant receivables account to "%s".', [$receivablesAccount]),
             ],
           ],
         ];

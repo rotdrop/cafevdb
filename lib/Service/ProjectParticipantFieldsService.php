@@ -191,12 +191,12 @@ class ProjectParticipantFieldsService
    */
   public function monetaryFields(
     Entities\Project $project,
-    string|ParticipationContext $participationConext = ParticipationContext::UNRESTRICTED,
+    string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED,
   ):iterable {
     // "matching" cannot work as our quasi-enums are objects which are not
     // singletons. "matching" uses === which only yields true for objects if
     // their refer to the same instance.
-    return $project->getParticipantFields($participationConext)->filter(function($field) {
+    return $project->getParticipantFields($participationContext)->filter(function($field) {
       switch ($field->getDataType()) {
         case DataType::RECEIVABLES:
         case DataType::LIABILITIES:
@@ -719,6 +719,7 @@ class ProjectParticipantFieldsService
       'data' => false,
       'deposit' => false,
       'limit' => false,
+      'balancingAccount' => false,
       'tooltip' => false,
       'deleted' => false,
     ];
@@ -1389,25 +1390,35 @@ class ProjectParticipantFieldsService
             // value is stored in the option, negate it
             foreach ($field->getDataOptions() as $option) {
               $option->setData(-$option->getData());
-              $option->setDeposit(-$option->getDeposit());
+              $deposit = $option->getDeposit();
+              if ($deposit) {
+                $option->setDeposit($deposit->neg());
+              }
             }
             break;
           case Multiplicity::GROUPOFPEOPLE:
             // value in management option of $field
             $option = $field->getManagementOption();
             $option->setData(-$option->getData());
-            $option->setDeposit(-$option->getDeposit());
+            $option->setDeposit($option->getDeposit()->neg());
             break;
           case Multiplicity::SIMPLE:
             /** @var Entities\ProjectParticipantFieldDatum $datum */
             foreach ($field->getFieldData() as $datum) {
               $datum->setOptionValue(-$datum->getOptionValue());
-              $datum->setDeposit(-$datum->getDeposit());
+              $deposit = $datum->getDeposit();
+              if ($deposit) {
+                $datum->setDeposit($deposit->neg());
+              }
             }
             $option = $field->getDefaultValue();
             if (!empty($option)) {
               $option->setData(-$option->getData());
-              $option->setDeposit(-$option->getDeposit());
+              $deposit = $option->getDeposit();
+              if ($deposit) {
+                $this->logInfo('CHANGE DEPOSIT ' . print_r($deposit, true) . ' -> ' . print_r($deposit->neg(), true));
+                $option->setDeposit($deposit->neg());
+              }
             }
             break;
           case Multiplicity::RECURRING:
@@ -1468,9 +1479,13 @@ class ProjectParticipantFieldsService
 
     if (!$this->isSupportedType($newMultiplicity, $dataType)) {
       $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
-      throw new Exceptions\EnduserNotificationException($this->l->t('Changing the multiplicity from "%1$s" to "%2$s" is not possible as the new multiplicity does not support the field data-type "%3$s".', [
-        $this->l->t($oldMultiplicity), $this->l->t($newMultiplicity), $this->l->t($dataType),
-      ]));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t(
+          'Changing the multiplicity from "%1$s" to "%2$s" is not possible as the new multiplicity does not support the field data-type "%3$s".', [
+            $this->l->t($oldMultiplicity), $this->l->t($newMultiplicity), $this->l->t($dataType),
+          ],
+        )
+      );
     }
 
     if ($field->usage() <= 0 || (!empty($field->getProjectEvent()) && $field->usage() < 1)) {

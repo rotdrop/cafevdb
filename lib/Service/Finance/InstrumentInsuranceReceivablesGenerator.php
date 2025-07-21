@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorage;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
@@ -50,6 +51,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
  */
 class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerator
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\BracedPlaceholderTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityTranslationTrait;
 
@@ -83,8 +85,25 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   }
 
   /** {@inheritdoc} */
+  public static function balancingAccountSlug():?string
+  {
+    // TRANSLATORS: This is a slug, please keep it in camel-case without spaces.
+    return self::t('InstrumentInsurances');
+  }
+
+  /** {@inheritdoc} */
   public function generateReceivables():Collection
   {
+    $balancingAccountTemplate = $this->getAppValue(AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY);
+    $templateKeys = [
+      // TRANSLATORS: This is a text substitution placeholder. If the target
+      // TRANSLATORS: language knows the concept of casing, then please use
+      // TRANSLATORS: only uppercase letters in the translation. Otherwise
+      // TRANSLATORS: please use whatever else convention "usually" applies to
+      // TRANSLATORS: placeholder keywords in the target language.
+      'BROKER' => $this->l->t('BROKER'),
+    ];
+
     $receivableOptions = $this->serviceFeeField->getDataOptions();
 
     /** @var Entities\ProjectParticipantFieldDataOption $managementOption */
@@ -164,7 +183,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
                 ]),
             );
           }
-          // update display things, but keep the essential data untouched
+          // update display things and balancing account, but keep the
+          // essential data untouched
           /** @var Entities\ProjectParticipantFieldDataOption $receivable */
           $receivable = $yearReceivables->first();
           if (!str_starts_with($receivable->getData(), '{')) {
@@ -186,6 +206,10 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
             $this->translate($receivable, 'label', null, sprintf($labelTemplate, $year))
                  ->translate($receivable, 'tooltip', null, $tooltipTemplate);
             break; // no need to iterate further over brokers.
+          }
+          if (!empty($balancingAccountTemplate)) {
+            $balancingAccount = $this->replaceBracedPlaceholders($balancingAccountTemplate, [ 'BROKER' => $brokerShortName ], $templateKeys);
+            $receivable->setBalancingAccount($balancingAccount);
           }
           $this->translate($receivable, 'label', null, sprintf($labelTemplate, $year, $brokerShortName))
                ->translate($receivable, 'tooltip', null, $tooltipTemplate);

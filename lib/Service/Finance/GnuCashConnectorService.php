@@ -24,18 +24,21 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use UnexpectedValueException;
 use Throwable;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\AbstractSchemaManager as SchemaManager;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\View;
+use UnexpectedValueException;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\Connection;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Settings\Admin as AdminSettings;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\AbstractSchemaManager as SchemaManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\View;
 
 /**
  * Connect to a GnuCash account book stored in a MariaDB database. This is
@@ -46,7 +49,9 @@ use OCA\CAFEVDB\Service\EncryptionService;
  */
 class GnuCashConnectorService
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\BracedPlaceholderTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
   private const GNU_CASH_TABLES = [
     'accounts',
@@ -189,5 +194,69 @@ FROM %2$s';
         $gncSchemaManager->renameTable($gncTable . '_old', $gncTable);
       }
     }
+  }
+
+  public const PERSON_KEY = 'PERSON';
+  public const PROJECT_KEY = 'PROJECT';
+  public const GENERATOR_TAG_KEY = 'GENERATOR_TAG';
+
+  /**
+   * Generate the GnuCash account for the given receivable if the
+   * corresponding template is configured.
+   *
+   * @param Entities\ProjectParticipantFieldDatum $receivable
+   *
+   * @return null|string Return \null if no template is defined or the given data is not a receivable or liability.
+   */
+  public function generateParticipantReceivablesAccount(
+    Entities\ProjectParticipantFieldDatum $receivable,
+  ):?string {
+    $field = $receivable->getField();
+    $fieldType = $field->getDataType();
+    if ($fieldType != FieldDataType::RECEIVABLES && $fieldType != FieldDataType::LIABILITIES) {
+      return null;
+    }
+    $accountTemplate = $this->encryptionService->getAppValue(AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY);
+    if (empty($accountTemplate)) {
+      return null;
+    }
+    if ($field->getMultiplicity() == FieldMultiplicity::RECURRING) {
+      $generatorOption = $field->getManagementOption();
+      $class = $generatorOption->getData();
+      $generatorSlug = $class::balancingAccountSlug();
+      if ($generatorSlug !== null) {
+        $generatorSlug = $this->l->t($generatorSlug);
+      }
+    }
+    $participant = $receivable->getProjectParticipant();
+    $values = [
+      self::PERSON_KEY => $participant->getMusician()->getPublicName(firstNameFirst: false),
+      self::PROJECT_KEY => $participant->getProject()->getName(),
+      self::GENERATOR_TAG_KEY => $generatorSlug ?? '',
+    ];
+    $l10nKeys =[
+      // TRANSLATORS: This is a text substitution placeholder. If the target
+      // TRANSLATORS: language knows the concept of casing, then please use
+      // TRANSLATORS: only uppercase letters in the translation. Otherwise
+      // TRANSLATORS: please use whatever else convention "usually" applies to
+      // TRANSLATORS: placeholder keywords in the target language.
+      self::PERSON_KEY => $this->l->t(self::PERSON_KEY),
+      // TRANSLATORS: This is a text substitution placeholder. If the target
+      // TRANSLATORS: language knows the concept of casing, then please use
+      // TRANSLATORS: only uppercase letters in the translation. Otherwise
+      // TRANSLATORS: please use whatever else convention "usually" applies to
+      // TRANSLATORS: placeholder keywords in the target language.
+      self::PROJECT_KEY => $this->l->t(self::PROJECT_KEY),
+      // TRANSLATORS: This is a text substitution placeholder. If the target
+      // TRANSLATORS: language knows the concept of casing, then please use
+      // TRANSLATORS: only uppercase letters in the translation. Otherwise
+      // TRANSLATORS: please use whatever else convention "usually" applies to
+      // TRANSLATORS: placeholder keywords in the target language.
+      self::GENERATOR_TAG_KEY => $this->l->t(self::GENERATOR_TAG_KEY),
+    ];
+    $l10nKeys = array_combine(array_keys($values), array_map(fn(string $key) => $this->l->t($key), array_keys($values)));
+    $account = str_replace('::', ':', trim($this->replaceBracedPlaceholders($accountTemplate, $values, $l10nKeys), ':'));
+
+    return $account;
   }
 }
