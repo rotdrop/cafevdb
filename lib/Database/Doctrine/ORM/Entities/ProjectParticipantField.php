@@ -140,6 +140,19 @@ class ProjectParticipantField implements \ArrayAccess
 
   /**
    * @var string
+   *
+   * Only for receivables and liabilities. The balancing account for
+   * double-entry accounting. Currently this is just the full path of the
+   * GnuCash account, separated by colons. The other account is implied by
+   * project name, musician name and potentially the receivables generator.
+   *
+   * @todo Quite hard-coded.
+   */
+  #[ORM\Column(type: 'string', length: 1024, nullable: true)]
+  private $balancingAccount;
+
+  /**
+   * @var string
    */
   #[Gedmo\Translatable]
   #[ORM\Column(type: 'string', length: 4096, nullable: true)]
@@ -659,9 +672,33 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return null|ProjectParticipantFieldDataOption
    */
-  public function getDefaultValue():?ProjectParticipantFieldDataOption
+  public function getDefaultValue():?ProjectParticipantField
   {
     return $this->defaultValue;
+  }
+
+  /**
+   * Set the balancingAccount.
+   *
+   * @param null|string $balancingAccount
+   *
+   * @return ProjectParticipantFieldBalancingAccountOption
+   */
+  public function setBalancingAccount(?string $balancingAccount):ProjectParticipantField
+  {
+    $this->balancingAccount = $balancingAccount;
+
+    return $this;
+  }
+
+  /**
+   * Get the balancingAccount.
+   *
+   * @return null|string
+   */
+  public function getBalancingAccount(): ?string
+  {
+    return $this->balancingAccount ?? null;
   }
 
   /**

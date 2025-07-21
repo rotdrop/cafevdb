@@ -97,13 +97,32 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $untranslatedLabel;
 
   /**
-   * Multi-purpose field. For FieldMultiplicity::RECURRING the PHP class
-   * name of the generator class.
-   *
    * @var string
+   *
+   * Multi-purpose field.
+   *
+   * - for FieldMultiplicity::RECURRING the generator option (Uuid::NIL) stores
+   *   the name of the PHP generator class.
+   * - the InstrumentInsuranceReceivablesGenertor uses this to store the year
+   *   and the broker.
+   * - the (yet unused) PeriodicReceivablesGenerator stores the timestamp of
+   *   the birth of its receivables.
    */
   #[ORM\Column(type: 'string', length: 1024, nullable: true)]
   private $data;
+
+  /**
+   * @var string
+   *
+   * Only for receivables and liabilities. The balancing account for
+   * double-entry accounting. Currently this is just the full path of the
+   * GnuCash account, separated by colons. The other account is implied by
+   * project name, musician name and potentially the receivables generator.
+   *
+   * @todo Quite hard-coded.
+   */
+  #[ORM\Column(type: 'string', length: 1024, nullable: true)]
+  private $balancingAccount;
 
   /**
    * @var string
@@ -115,7 +134,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * @var int Limit on number of group members for
    * FieldMultiplicity::GROUPSOFPEOPLE, FieldMultiplicity::GROUPOFPEOPLE
-   * fields. Misused as starting date for recurring receivables
+   * fields. Also misused as starting date for recurring receivables
    * generators.
    */
   #[ORM\Column(type: 'bigint', nullable: true)]
@@ -294,9 +313,33 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return null|string
    */
-  public function getData():?string
+  public function getData(): ?string
   {
-    return $this->data;
+    return $this->data ?? null;
+  }
+
+  /**
+   * Set the balancingAccount.
+   *
+   * @param null|string $balancingAccount
+   *
+   * @return ProjectParticipantFieldBalancingAccountOption
+   */
+  public function setBalancingAccount(?string $balancingAccount):ProjectParticipantFieldDataOption
+  {
+    $this->balancingAccount = $balancingAccount;
+
+    return $this;
+  }
+
+  /**
+   * Get the balancingAccount.
+   *
+   * @return null|string
+   */
+  public function getBalancingAccount(): ?string
+  {
+    return $this->balancingAccount ?? ($this->field->getBalancingAccount() ?? null);
   }
 
   /**
