@@ -35,7 +35,7 @@ Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
 
 // eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', 'js');
+__webpack_public_path__ = generateFilePath(appName, '', '');
 
 Vue.mixin(globalMixin);
 

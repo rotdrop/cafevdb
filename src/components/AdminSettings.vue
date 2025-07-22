@@ -294,6 +294,30 @@
                    :hint="hints['settings:admin:gnu-cash:instrument-insurance-balancing-account']"
                    @submit="saveSetting('gnuCashInstrumentInsuranceBalancingAccount', settings.gnuCashInstrumentInsuranceBalancingAccount)"
         />
+        <label for="gnucash-accounts-tree-data">
+          {{ t(appId, 'GnuCash Accounts Tree') }}
+        </label>
+        <!-- Note: v-model does not work here -->
+        <TextField id="gnucash-accounts-tree"
+                   :value.sync="settings.gnuCashAccountsTreeData"
+                   type="text"
+                   :label="t(appId, 'GnuCash Accounts Tree (CSV export)')"
+                   :placeholder="t(appId, 'e.g. &quot;{sharedFolder}/finance/ledger/accounts.csv&quot;.', config)"
+                   :hint="hints['settings:admin:gnu-cash:accounts-tree-data']"
+                   @submit="saveSetting('gnuCashAccountsTreeData', settings.gnuCashAccountsTreeData)"
+        >
+          <template #alignedAfter>
+            <NcActions>
+              <NcActionButton :name="t(appId, 'choose')"
+                              @click="openGnuCashAccountsPicker"
+              >
+                <template #icon>
+                  <IconChooseGnuCashAccountsData />
+                </template>
+              </NcActionButton>
+            </NcActions>
+          </template>
+        </TextField>
       </div>
     </NcSettingsSection>
     <NcSettingsSection v-if="config.isSubAdmin"
@@ -439,6 +463,7 @@ import {
   NcSettingsSection,
   NcListItem,
 } from '@nextcloud/vue'
+import IconChooseGnuCashAccountsData from 'vue-material-design-icons/File.vue'
 import IconEmailVerificationPending from 'vue-material-design-icons/Help.vue'
 import IconEmailVerified from 'vue-material-design-icons/EmailCheck.vue'
 import IconEmailVerificationFailed from 'vue-material-design-icons/Cancel.vue'
@@ -454,7 +479,14 @@ import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
 import { generateUrl as generateAppUrl, generateOcsUrl as generateAppOcsUrl } from '../toolkit/util/generate-url.ts'
 import { loadState } from '@nextcloud/initial-state'
-import { showError, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import {
+  FilePickerType,
+  TOAST_DEFAULT_TIMEOUT,
+  TOAST_PERMANENT_TIMEOUT,
+  getFilePickerBuilder,
+  showError,
+  showInfo,
+} from '@nextcloud/dialogs'
 
 import { appName as appId } from '../config.ts'
 import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
@@ -514,6 +546,7 @@ interface InitialState {
   userAndGroupBackends: string[],
   cloudUserBackendConfig: boolean,
   cloudUserBackend: string,
+  sharedFolder: string,
 }
 
 interface AppAdminSettings {
@@ -528,6 +561,7 @@ interface AppAdminSettings {
   problemReportEmailRecipientStatus: string;
   gnuCashParticipantReceivablesAccount: string;
   gnuCashInstrumentInsuranceBalancingAccount: string;
+  gnuCashAccountsTreeData: string;
 }
 
 type CloudUserGetResponse = AxiosResponse<OCSResponse<CloudUser> >
@@ -632,6 +666,7 @@ const settings: AppAdminSettings = reactive({
   problemReportEmailRecipientStatus: '',
   gnuCashParticipantReceivablesAccount: '',
   gnuCashInstrumentInsuranceBalancingAccount: '',
+  gnuCashAccountsTreeData: '',
 })
 
 const problemReportRecipientVerificationInput = ref(false)
@@ -1285,6 +1320,22 @@ const createGroup = async (gid: string) => {
   }
 
   return result
+}
+
+const openGnuCashAccountsPicker = async () => {
+  const picker = getFilePickerBuilder(t(appId, 'Choose the CSV file with the GnuCash accounts tree'))
+    .startAt('/' + config.sharedFolder)
+    .setType(FilePickerType.Choose)
+    .setMultiSelect(false)
+    .setMimeTypeFilter(['text/csv'])
+    .build()
+
+  let file = await picker.pick()
+  if (Array.isArray(file)) {
+    file = file[0]
+  }
+  showInfo('GOT FILE ' + file)
+  settings.gnuCashAccountsTreeData = file
 }
 
 const emit = defineEmits(['error'])

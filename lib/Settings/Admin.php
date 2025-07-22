@@ -69,6 +69,8 @@ class Admin implements IDelegatedSettings
   const EMAIL_VERIFICATION_SUFFIX = 'Verification';
   const GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY = 'gnuCashParticipantReceivablesAccount';
   const GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY = 'gnuCashInstrumentInsuranceBalancingAccount';
+  const GNU_CASH_ACCOUNTS_TREE_DATA_KEY = 'gnuCashAccountsTreeData';
+  const SHARED_FOLDER_KEY = 'sharedFolder';
 
   const DELEGATABLE = 'delegatable';
   const ADMIN_ONLY = 'admin_only';
@@ -151,6 +153,7 @@ class Admin implements IDelegatedSettings
       self::AUTHORIZATION_GROUP_SUFFIXES_KEY => self::AUTHORIZATION_GROUP_SUFFIXES,
       self::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY => $this->getAppValue(self::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY),
       self::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . self::EMAIL_VERIFICATION_SUFFIX => $this->getAppValue(self::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . self::EMAIL_VERIFICATION_SUFFIX),
+      self::SHARED_FOLDER_KEY => $this->configService->getConfigValue(ConfigService::SHARED_FOLDER),
     ];
 
     $this->initialState->provideInitialState('adminConfig', $configData);

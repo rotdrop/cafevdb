@@ -56,6 +56,7 @@ class AdminSettingsController extends Controller
     AdminSettings::WIKI_NAME_SPACE_KEY,
     AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY,
     AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY,
+    AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY,
     FontService::DEFAULT_OFFICE_FONT_CONFIG,
     self::POST_REQUEST_FONT_CACHE,
   ];
@@ -133,6 +134,7 @@ class AdminSettingsController extends Controller
       case AdminSettings::WIKI_NAME_SPACE_KEY:
       case AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY:
       case AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY:
+      case AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY:
         $value = $this->getAppValue($parameter);
         break;
       case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
@@ -403,6 +405,20 @@ Please enter the confirmation code contained in the email into the admin-setting
           'messages' => [
             'transient' => [
               $this->l->t('Setting the GnuCash participant receivables account to "%s".', [$receivablesAccount]),
+            ],
+          ],
+        ];
+        return self::dataResponse($result);
+
+      case AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY:
+        $value = trim($value);
+        $this->setAppValue($parameter, $value);
+        $result[$parameter] = $value;
+
+        $result = [
+          'messages' => [
+            'transient' => [
+              $this->l->t('Setting the GnuCash accounts tree data file to "%s".', [$value]),
             ],
           ],
         ];
