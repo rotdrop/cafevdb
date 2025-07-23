@@ -26,11 +26,13 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Exceptions;
 
 /** Entity repository for projects. */
 class ProjectsRepository extends EntityRepository
 {
   // use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
   const ALIAS = 'proj';
 
@@ -50,23 +52,55 @@ class ProjectsRepository extends EntityRepository
   /**
    * Find a project by its Id.
    *
-   * @param array|int $projectOrId This may either be an integer --
-   * the plain id -- or "something" array-like with an 'id' index.
+   * @param array|int $projectIdentifier This may either be an integer -- the
+   * plain id -- or "something" array-like with an 'id' index.
    *
    * @return null|Entities\Project
+   *
+   * @throws Exceptions\DatabaseMissingIdentifierException
    */
-  public function findById($projectOrId):?Entities\Project
+  public function findById(int|array $projectIdentifier):?Entities\Project
   {
-    // $this->log(print_r($projectOrId, true));
-    if (isset($projectOrId['id'])) { // allow plain array with id
-      $projectId = $projectOrId['id'];
-    } else {
-      $projectId = $projectOrId;
+    return $this->findByIdOrName($projectIdentifier);
+  }
+
+  /**
+   * Find a project by its Id or name.
+   *
+   * @param int|string|array $projectIdentifier A project-id, a project-name
+   * or an array with keys 'id' or 'name'.
+   *
+   * @return null|Entities\Project
+   *
+   * @throws Exceptions\DatabaseMissingIdentifierException
+   */
+  public function findByIdOrName(int|string|array $projectIdentifier):?Entities\Project
+  {
+    $id = null;
+    $name = null;
+    if (filter_var($projectIdentifier, FILTER_VALIDATE_INT, ['min_range' => 1])) {
+      $id = $projectIdentifier;
+    } elseif (is_string($projectIdentifier)) {
+      $name = $projectIdentifier;
+    } elseif (is_array($projectIdentifier)) {
+      $id = $projectIdentifier['id'] ?? null;
+      $name = $projectIdentifier['name'] ?? null;
     }
-    return $this->findOneBy([
-      'id' => $projectId,
-      'deleted' => null,
-    ]);
+    if ($id === null && $name === null) {
+      throw new Exceptions\DatabaseMissingIdentifierException(
+        sprintf(self::t('The identifier is missing for a query to find an instance of "%1$s".'), $this->entityName),
+        entityClassName: $this->entityName,
+        incompleteIdentifier: $projectIdentifier,
+      );
+    }
+    $criteria = [];
+    if (!empty($id)) {
+      $criteria[] = ['id' => $id];
+    }
+    if (!empty($name)) {
+      $criteria[] = ['name' => $name];
+    }
+    return $this->findOneBy($criteria);
   }
 
   /**
@@ -74,18 +108,16 @@ class ProjectsRepository extends EntityRepository
    * project entity, otherwise fetch the project, repectively generate
    * a reference.
    *
-   * @param int|Entities\Project $projectOrId
+   * @param int|string|array|Entities\Project $projectOrId
    *
    * @return null|Entities\Project
    */
-  public function ensureProject($projectOrId):?Entities\Project
+  public function ensureProject(int|string|array|Entities\Project $projectOrId):?Entities\Project
   {
-    if (!($projectOrId instanceof Entities\Project)) {
-      //return $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectOrId, ]);
-      return $this->findById($projectOrId);
-    } else {
+    if ($projectOrId instanceof Entities\Project) {
       return $projectOrId;
     }
+    return $this->findByIdOrName($projectOrId);
   }
 
   /**
@@ -216,5 +248,56 @@ class ProjectsRepository extends EntityRepository
     $query = $qb->getQuery();
 
     return $query->getResult('COLUMN_HYDRATOR');
+  }
+
+  /**
+   * Just query the database for the project name given its id.
+   *
+   * @param int|string|array $projectIdentifier A project-id, a project-name
+   * or an array with keys 'id' or 'name'. Even if the name is given a recurse
+   * to the database will ensure that a project with that name exists.
+   *
+   * @return null|string
+   *
+   * @throws Exceptions\DatabaseMis
+   */
+  public function findName(int|string|array $projectIdentifier):?string
+  {
+    $id = null;
+    $name = null;
+    if (filter_var($projectIdentifier, FILTER_VALIDATE_INT, ['min_range' => 1])) {
+      $id = $projectIdentifier;
+    } elseif (is_string($projectIdentifier)) {
+      $name = $projectIdentifier;
+    } elseif (is_array($projectIdentifier)) {
+      $id = $projectIdentifier['id'] ?? null;
+      $name = $projectIdentifier['name'] ?? null;
+    }
+    if ($id === null && $name === null) {
+      throw new Exceptions\DatabaseMissingIdentifierException(
+        sprintf(self::t('The identifier is missing for a query to find an instance of "%1$s".'), $this->entityName),
+        entityClassName: $this->entityName,
+        incompleteIdentifier: $projectIdentifier,
+      );
+    }
+    $criteria = [];
+    if (!empty($id)) {
+      $criteria[] = ['id' => $id];
+    }
+    if (!empty($name)) {
+      $criteria[] = ['name' => $name];
+    }
+
+    $queryParts = $this->prepareFindBy($criteria);
+
+    /** @var ORM\QueryBuilder */
+    $qb = $this->generateFindBySelect($queryParts, [ 'mainTable.name' ]);
+    $qb = $this->generateFindByWhere($qb, $queryParts);
+
+    $query = $qb->getQuery();
+
+    $result = $query->getResult('COLUMN_HYDRATOR');
+
+    return count($result) == 1 ? $result[0] : null;
   }
 }
