@@ -188,13 +188,14 @@ $deleted = !empty($rowData['deleted']);
   $cssClass = implode(' ', array_merge(['field-' . $prop], PageRenderer::OPTION_DATA_SHOW_MASK[$prop]));
   ?>
   <td class="<?= $cssClass ?>">
-    <textarea class="<?= $cssClass ?>"
-              name="<?=$inputName?>[<?=$index?>][<?=$prop?>]"
-              title="<?=$toolTips['participant-fields-data-options:' . $prop]?>"
-              cols="32"
-              rows="1"
-              <?php ($deleted && p('readonly')) ?>
-    ><?=$rowData[$prop]?></textarea>
+    <input class="<?= $cssClass ?> balancing-account"
+           name="<?=$inputName?>[<?=$index?>][<?=$prop?>]"
+           value="<?php p($rowData[$prop]) ?>"
+           title="<?=$toolTips['participant-fields-data-options:' . $prop]?>"
+           cols="32"
+           rows="1"
+           <?php ($deleted && p('readonly')) ?>
+    >
   </td>
   <?php
   $prop = 'tooltip';

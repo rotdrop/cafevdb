@@ -27,7 +27,12 @@ import * as Ajax from './ajax.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as Dialogs from './dialogs.js';
 import { submitOuterFormNoThrow, tableDialogLoadIndicator } from './pme.js';
-import { confirmedReceivablesUpdate } from './project-participant-fields.js';
+import {
+  confirmedReceivablesUpdate,
+  autocompleteFocusHandler,
+  fetchBalancingAccountsAutocompleteData,
+  balancingAccountsAutocompleteData,
+} from './project-participant-fields.js';
 import pageBusyIcon from './busy-icon.js';
 import generateAppUrl from './generate-url.js';
 import fileDownload from './file-download.js';
@@ -35,6 +40,21 @@ import {
   formSelector as pmeFormSelector,
   inputSelector as pmeInputSelector,
 } from './pme-selectors.js';
+
+require('jquery-ui/ui/widgets/autocomplete');
+require('jquery-ui/themes/base/autocomplete.css');
+
+const balancingAccountsAutocompleteOptions = {
+  source: [],
+  position: { my: 'left bottom', at: 'left top', collision: 'none' },
+  minLength: 0,
+  select(event, ui) {
+    // trigger blur event for validation
+    const $input = $(event.target);
+    $input.val(ui.item.value);
+    $input.blur();
+  },
+};
 
 const pmeLabelInputSelector = 'td.label ' + pmeInputSelector + '[type="text"]';
 const pmeValueInputSelector = [
@@ -49,6 +69,25 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
   }
 
   const $container = $(container);
+
+  fetchBalancingAccountsAutocompleteData(projectId)
+    .then(() => {
+      $container
+        .find('tr.multiplicity-recurring')
+        .filter('.data-type-liabilities, .data-type-receivables')
+        .each(function() {
+          const $row = $(this);
+          const autocompleteFlavour = $row.hasClass('data-type-liabilities') ? 'expense' : 'income';
+          $row.find('td.balancing-account ' + pmeInputSelector)
+            .each(function() {
+              const $input = $(this);
+              $input
+                .autocomplete(balancingAccountsAutocompleteOptions)
+                .on('focus', autocompleteFocusHandler);
+              $input.autocomplete('option', 'source', balancingAccountsAutocompleteData[autocompleteFlavour]);
+            });
+        });
+    });
 
   // AJAX download support
   $container

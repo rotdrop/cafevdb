@@ -37,10 +37,14 @@ import './lock-input.js';
 import { textInputSelector, nonTextInputSelector, textElementSelector } from '../util/css-selectors.js';
 import {
   data as pmeData,
+  inputSelector as pmeInputSelector,
 } from './pme-selectors.js';
 import { showSuccess } from '@nextcloud/dialogs';
+import getBalancingAccountsAutocomplete from './gnucash-accounts.js';
+
 require('./jquery-readonly.js');
 require('../legacy/nextcloud/jquery/octemplate.js');
+
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
 
@@ -50,6 +54,57 @@ require('./jquery-datetimepicker.js');
 // NB: much of the visibility stuff is handled by CSS, e.g. which
 // input is shown for which multiplicity.
 require('project-participant-fields.scss');
+
+const balancingAccountsAutocompleteData = {
+  income: [],
+  expense: [],
+  default: [],
+};
+let balancingAccountsAutocompleteFlavour = 'default';
+
+const balancingAccountsAutocompleteOptions = {
+  source: (request, response) => {
+    const dataArray = balancingAccountsAutocompleteData[balancingAccountsAutocompleteFlavour];
+    response($.ui.autocomplete.filter(dataArray, request.term));
+  },
+  position: { my: 'left bottom', at: 'left top', collision: 'none' },
+  minLength: 0,
+  select(event, ui) {
+    // trigger blur event for validation
+    const $input = $(event.target);
+    $input.val(ui.item.value);
+    $input.blur();
+  },
+};
+const updateBalancingAccountsAutocompleteData = (dataType) => {
+  switch (dataType) {
+  case 'receivables':
+    balancingAccountsAutocompleteFlavour = 'income';
+    break;
+  case 'liabilities':
+    balancingAccountsAutocompleteFlavour = 'expense';
+    break;
+  default:
+    balancingAccountsAutocompleteFlavour = 'default';
+    break;
+  }
+
+};
+const fetchBalancingAccountsAutocompleteData = (projectId, dataType) => {
+  return getBalancingAccountsAutocomplete(projectId)
+    .then(data => {
+      Object.assign(balancingAccountsAutocompleteData, data);
+      updateBalancingAccountsAutocompleteData(dataType);
+    })
+    .catch(error => { console.error('Fetching balancing accounts autocomplete failed.', { error }); });
+};
+const autocompleteFocusHandler = function() {
+  const $this = $(this);
+  if (!$this.autocomplete('widget').is(':visible')
+      && !$this.prop('disabled') && !$this.prop('readonly')) {
+    $(this).autocomplete('search', '');
+  }
+};
 
 /**
  * @param {number} projectId The id of the project.
@@ -500,6 +555,7 @@ const ready = function(selector, resizeCB) {
       dataTypeSelect.trigger('chosen:updated');
       const depositDueDate = (isMonetaryType(dataType) && depositDueDateInput.val() !== '') ? 'set' : 'unset';
       setFieldTypeCssClass({ multiplicity, dataType, depositDueDate });
+      updateBalancingAccountsAutocompleteData(dataType);
       allowedHeaderVisibility();
       console.debug('RESIZECB');
       resizeCB();
@@ -1040,21 +1096,29 @@ const ready = function(selector, resizeCB) {
           const option = data.dataOptionSelectOption;
           const input = data.dataOptionFormInputs;
           $.fn.cafevTooltip.remove();
+          let $newRow;
           if (placeHolder) {
             $row.parents('table').find('thead').show();
-            $row.before(input).prev().find('input, textarea').cafevTooltip({ placement: 'auto right' });
+            $newRow = $row.before(input).prev();
             self.val('');
             $row.data('index', +$row.data('index') + 1); // next index
             resizeCB();
           } else {
             const $nextRow = $row.next();
+            try { $row.find('.field-balancingAccount').autocomplete('destroy'); } catch (e) { /* ignore */ }
             $row.replaceWith(input);
-            const $newRow = $nextRow.prev();
-            $newRow.find('input, textarea').cafevTooltip({ placement: 'auto right' });
+            $newRow = $nextRow.prev();
             if ($table.hasClass('multiplicity-recurring')) {
               lockGeneratedValuesRow($newRow);
             }
           }
+          $newRow.find('input, textarea').cafevTooltip({ placement: 'auto right' });
+          $newRow.find('input, textarea').cafevTooltip({ placement: 'auto right' });
+          $newRow
+            .find('.field-balancingAccount')
+            .autocomplete(balancingAccountsAutocompleteOptions)
+            .on('focus', autocompleteFocusHandler);
+
           // get the key <-> value connection right for the default selector
           const newValue = $(option).val();
           const oldOption = dflt.find('option[value="' + newValue + '"]');
@@ -1147,7 +1211,8 @@ const ready = function(selector, resizeCB) {
     return false;
   });
 
-  setFieldTypeCssClass(fieldTypeData());
+  const fieldType = fieldTypeData();
+  setFieldTypeCssClass(fieldType);
 
   allowedHeaderVisibility();
 
@@ -1166,16 +1231,20 @@ const ready = function(selector, resizeCB) {
         $input.blur();
       },
     })
-    .on('focus', function() {
-      const $this = $(this);
-      if (!$this.autocomplete('widget').is(':visible')
-          && !$this.prop('disabled') && !$this.prop('readonly')) {
-        $(this).autocomplete('search', '');
-      }
-    });
+    .on('focus', autocompleteFocusHandler);
+
+  const projectId = $container.find('input[name="' + pmeData('project_id') + '"]').val();
+  fetchBalancingAccountsAutocompleteData(projectId, fieldType.dataType);
+
+  const $balancingAccountInputs = $container.find(pmeInputSelector + '.balancing-account, .field-balancingAccount');
+  console.info('BALANCING ACCOUNT INPUTS', { $balancingAccountInputs });
+  $balancingAccountInputs
+    .autocomplete(balancingAccountsAutocompleteOptions)
+    .on('focus', autocompleteFocusHandler);
 
   // synthesize resize events for textareas.
-  textareaResize($container, 'textarea.field-tooltip, textarea.participant-field-tooltip, textarea.pme-input');
+  // @todo use a resize observer instead of timers
+  textareaResize($container, 'textarea.field-tooltip, textarea.participant-field-tooltip, .pme-input');
   resizeCB();
 };
 
@@ -1199,4 +1268,7 @@ export {
   getProjectParticipantFields,
   getProjectParticipantFieldOptions,
   receivablesStatisticsKeys,
+  balancingAccountsAutocompleteData,
+  fetchBalancingAccountsAutocompleteData,
+  autocompleteFocusHandler, // @todo: move somewhere else
 };
