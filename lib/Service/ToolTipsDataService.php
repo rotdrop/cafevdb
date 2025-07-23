@@ -780,6 +780,7 @@ help text in order to inform others what this option is about.'),
           'skip' => self::t('During update of receivables skip the update of existing records and record inconsistencies for later processing.'),
           'exception' => self::t('During update of receivables compare with the newly computed value and throw an exception if the values differ. This is the default.'),
         ],
+        'set-balancing-account' => self::t('The balancing account for double book-keeping. This is used to generate import data for the account software.'),
       ],
 
       'participant-fields-default-multi-value' => self::t('Specify a default value for the custom field here. Leave blank if unsure.'),
