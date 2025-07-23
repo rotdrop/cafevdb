@@ -672,7 +672,7 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return null|ProjectParticipantFieldDataOption
    */
-  public function getDefaultValue():?ProjectParticipantField
+  public function getDefaultValue():?ProjectParticipantFieldDataOption
   {
     return $this->defaultValue;
   }
