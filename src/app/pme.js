@@ -396,7 +396,7 @@ const pmeIsHalted = function() {
 };
 
 const pmePost = function(post) {
-  console.debug('PME POST', post);
+  // console.debug('PME POST', post);
   if (pmeIsHalted()) {
     // just return a promise which is never resolved.
     console.info('PME is halted, returning never-resolved promise.');
