@@ -25,15 +25,15 @@
 namespace OCA\CAFEVDB\Storage;
 
 use InvalidArgumentException;
+use Throwable;
 
-use OCP\IL10N;
-use Psr\Log\LoggerInterface as ILogger;
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
-use Spatie\TemporaryDirectory\TemporaryDirectory; // for ordinary file-system temporaries
+use OCP\IL10N;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
@@ -66,7 +66,7 @@ class AppStorage
     try {
       $this->uploadFolder = $this->ensureFolder(self::UPLOAD_FOLDER);
       $this->draftsFolder = $this->ensureFolder(self::DRAFTS_FOLDER);
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
     }
   }
@@ -119,9 +119,11 @@ class AppStorage
    *
    * @param null|string $fileName
    *
-   * @return ISimpleFile
+   * @param bool $throw Defaults to true, if false return null if the file does not exist.
+   *
+   * @return null|ISimpleFile
    */
-  public function getFile(string $dirName, ?string $fileName = null):ISimpleFile
+  public function getFile(string $dirName, ?string $fileName = null, bool $throw = true):?ISimpleFile
   {
     if (empty($fileName)) {
       $components = array_filter(Util::explode(self::PATH_SEP, $dirName));
@@ -130,9 +132,47 @@ class AppStorage
       }
       list($dirName, $fileName) = $components;
     }
-    /** @var ISimpleFolder $folder */
-    $folder = $this->getFolder($dirName);
-    return $folder->getFile($fileName);
+    try {
+      /** @var ISimpleFolder $folder */
+      $folder = $this->getFolder($dirName);
+      return $folder->getFile($fileName);
+    } catch (NotFoundException $e) {
+      if ($throw) {
+        throw $e;
+      }
+      return null;
+    }
+  }
+
+  /**
+   * Ensure the given file exists, if it does not, create it. Return the
+   * file-handle.
+   *
+   * @param string $dirNameOrPath Dir-name or full path.
+   *
+   * @param null|string $fileName If $dirNameOrPath is only the dir-name, then
+   * $fileName must specify the second path component.
+   *
+   * @return ISimpleFile
+   *
+   * @throws InvalidArgumentException
+   */
+  public function ensureFile(string $dirName, ?string $fileName = null):ISimpleFile
+  {
+    try {
+      $file = $this->getFile($dirName, $fileName);
+    } catch (NotFoundException) {
+      if (empty($fileName)) {
+        $components = array_filter(Util::explode(self::PATH_SEP, $dirName));
+        if (count($components) != 2) {
+          throw new InvalidArgumentException($this->l->t('Path "%s" must consist of exactly one directory and exactly one file component.'));
+        }
+        list($dirName, $fileName) = $components;
+      }
+      $folder = $this->ensureFolder($dirName);
+      $file = $folder->newFile($fileName);
+    }
+    return $file;
   }
 
   /**
@@ -141,6 +181,8 @@ class AppStorage
    * @param null|string $fileName
    *
    * @return bool
+   *
+   * @throws InvalidArgumentException
    */
   public function fileExists(string $dirName, ?string $fileName = null):bool
   {
@@ -151,8 +193,12 @@ class AppStorage
       }
       list($dirName, $fileName) = $components;
     }
-    /** @var ISimpleFolder $folder */
-    $folder = $this->getFolder($dirName);
+    try {
+      /** @var ISimpleFolder $folder */
+      $folder = $this->getFolder($dirName);
+    } catch (NotFoundException) {
+      return false;
+    }
     return $folder->fileExists($fileName);
   }
 
