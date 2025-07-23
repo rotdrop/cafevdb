@@ -1371,7 +1371,7 @@ trait ParticipantFieldsTrait
               $fieldDescData, $optionsTableName, 'balancing_account', [
                 'name' => $this->l->t('Balancing account for %s', $fieldName),
                 'tab'  => $tab,
-                'css'  => [ 'postfix' => [ 'participant-field-blanacing account', 'field-id-'.$fieldId, ] ],
+                'css'  => [ 'postfix' => [ 'participant-field-balancing account', 'field-id-'.$fieldId, ] ],
                 'select' => 'M',
                 'input' => ' HR',
                 'php' => fn() => '',
@@ -2279,7 +2279,7 @@ GROUP BY " . $fdAlias . ".option_key",
         'fieldOption' => $fieldOption,
         'optionValue' => $optionValue,
         'optionLabelName' => $optionLabelName,
-        'optionBalancingAcountName' => $optionBalancingAccountName,
+        'optionBalancingAccountName' => $optionBalancingAccountName,
         'optionKeyName' => $optionKeyName,
         'optionValueName' => $optionValueName,
         'optionIdx' => $optionIdx,
@@ -2334,13 +2334,14 @@ GROUP BY " . $fdAlias . ".option_key",
 
       $optionTableName = self::participantFieldOptionsTableName($fieldId);
       $optionLabelName = $this->joinTableFieldName($optionTableName, 'label');
-      $optionLabelKeyName = self::joinTableFieldName(self::participantFieldOptionsTableName($fieldId), 'key');
+      $optionBalancingAccountName = $this->joinTableFieldName($optionTableName, 'balancing_account');
+      $optionKeyName = self::joinTableFieldName($optionTableName, 'key');
 
       $supportingDocumentName = $this->joinTableFieldName($tableName, 'supporting_document_id');
 
-      // label may only be tweaked for recurring multiplicity
+      // label and balancing account may only be tweaked for recurring multiplicity
       if ($multiplicity != FieldMultiplicity::RECURRING) {
-        foreach ([$optionLabelName, $optionLabelKeyName] as $key) {
+        foreach ([$optionLabelName, $optionBalancingAccountName, $optionKeyName] as $key) {
           unset($newValues[$key]);
           unset($oldValues[$key]);
           Util::unsetValue($changed, $key);
@@ -2421,7 +2422,7 @@ GROUP BY " . $fdAlias . ".option_key",
           if ($dataType == FieldType::DB_FILE) {
             // these are handled immediately during upload and have to be
             // removed from the change-sets.
-            foreach ([$keyName, $valueName, $optionLabelName, $optionLabelKeyName] as $key) {
+            foreach ([$keyName, $valueName, $optionLabelName, $optionBalancingAccountName, $optionKeyName] as $key) {
               unset($newValues[$key]);
               unset($oldValues[$key]);
               Util::unsetValue($changed, $key);
@@ -2463,18 +2464,27 @@ GROUP BY " . $fdAlias . ".option_key",
               $keyedLabels[] = $key . self::JOIN_KEY_SEP . $label;
             }
             $dataSet[$optionLabelName] = implode(',', $keyedLabels);
+
+            if (!empty($dataSet[$optionBalancingAccountName])) {
+              $balancingAccounts = Util::explode(',', $dataSet[$optionBalancingAccountName], flags: Util::ESCAPED);
+              $keyedBalancingAccounts = [];
+              foreach (array_combine($keys, $balancingAccounts) as $key => $balancingAccount) {
+                $keyedBalancingAccounts[] = $key . self::JOIN_KEY_SEP . $balancingAccount;
+              }
+              $dataSet[$optionBalancingAccountName] = implode(',', $keyedBalancingAccounts);
+            }
           }
 
           // mark both as changed
-          foreach ([$keyName, $valueName, $optionLabelName] as $fieldName) {
+          foreach ([$keyName, $valueName, $optionLabelName, $optionBalancingAccountName] as $fieldName) {
             Util::unsetValue($changed, $fieldName);
             if ($oldValues[$fieldName] != $newValues[$fieldName]) {
               $changed[] = $fieldName;
             }
           }
-          if (array_search($optionLabelName, $changed)) {
+          if (array_search($optionLabelName, $changed) || array_search($optionBalancingAccountName, $changed)) {
             // make sure the key value is also there
-            $oldValues[$optionLabelKeyName] = $newValues[$optionLabelKeyName] = $newValues[$keyName];
+            $oldValues[$optionKeyName] = $newValues[$optionKeyName] = $newValues[$keyName];
           }
           break;
         case FieldMultiplicity::GROUPOFPEOPLE:
