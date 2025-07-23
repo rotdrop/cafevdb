@@ -32,11 +32,16 @@ use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\Connection;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
+use OCA\CAFEVDB\Storage\AppStorage;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\AbstractSchemaManager as SchemaManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\View;
 
@@ -50,8 +55,12 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\View;
 class GnuCashConnectorService
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BracedPlaceholderTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+
+  private const GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE = 'gnucash/autocomplete-accounts.json';
+  public const GNU_CASH_INCOME_KEY = 'income';
+  public const GNU_CASH_EXPENSE_KEY = 'expense';
 
   private const GNU_CASH_TABLES = [
     'accounts',
@@ -82,10 +91,10 @@ FROM %2$s';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected IAppContainer $appContainer,
-    protected ILogger $logger,
-    protected IL10N $l,
     private EncryptionService $encryptionService,
+    protected IAppContainer $appContainer,
+    protected IL10N $l,
+    protected ILogger $logger,
   ) {
     if ($this->encryptionService->bound()) {
       $this->connection = $this->appContainer->get(Connection::class);
@@ -258,5 +267,119 @@ FROM %2$s';
     $account = str_replace('::', ':', trim($this->replaceBracedPlaceholders($accountTemplate, $values, $l10nKeys), ':'));
 
     return $account;
+  }
+
+  /**
+   * Gnerate autocomplete data from an accounts CSV export from GnuCash. Only
+   * valid for autocompletion are income and expense accounts.
+   *
+   * @param null|Entities\Project $project If non-null the project name will
+   * always added as last component to the account name.
+   *
+   * @return null|array
+   * ```[ 'income' => [ AC0, AC1, ... ], 'expense' => [ AC0, AC1, ... ] ]```
+   */
+  public function generateAccountsAutocompleteData(): ?array
+  {
+    $accountsExport = $this->encryptionService->getAppValue(AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY);
+    if (empty($accountsExport)) {
+      $this->logError('ACCOUNTS EXPORT FILE IS NOT SET');
+      return null;
+    }
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->appContainer->get(UserStorage::class);
+    $accountsExportFile = $userStorage->getFile($accountsExport);
+    if (empty($accountsExportFile)) {
+      $this->logError('UNABLE TO OPEN ACCOUNTS EXPORTS FILE ' . $accountsExport);
+      return null;
+    }
+
+    /** @var AppStorage $appStorage */
+    $appStorage = $this->appContainer->get(AppStorage::class);
+    $accountsAutocompleteFile = $appStorage->getFile(self::GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE, throw: false);
+    if ($accountsAutocompleteFile !== null && $accountsExportFile->getMTime() <= $accountsExportFile->getMTime()) {
+      return json_decode($accountsAutocompleteFile->getContent(), true);
+    }
+
+    /** @var EntityManager $entityManager */
+    $entityManager = $this->appContainer->get(EntityManager::class);
+    $permanentProjects = $entityManager->getRepository(Entities\Project::class)->findNames(onlyType: ProjectType::PERMANENT);
+
+    $leafAccountRe = '/:([^0-9]+[0-9]{4}|'
+      . implode('|', array_map(fn(string $name) => preg_quote($name), $permanentProjects))
+      . ')$/';
+
+    $autocompleteData = [
+      self::GNU_CASH_EXPENSE_KEY => [],
+      self::GNU_CASH_INCOME_KEY => [],
+    ];
+
+    $exportData = explode("\n", $accountsExportFile->getContent());
+
+    foreach ($exportData as $dataLine) {
+      $lineData = str_getcsv($dataLine, ';');
+      if ($lineData === false) {
+        break;
+      }
+      $type = strtolower($lineData[0]);
+      if ($type != self::GNU_CASH_EXPENSE_KEY && $type != self::GNU_CASH_INCOME_KEY) {
+        continue;
+      }
+      $account = preg_replace($leafAccountRe, '', $lineData[1]);
+      $autocompleteData[$type][] = $account;
+    }
+    foreach ($autocompleteData as &$accounts) {
+      $accounts = array_unique($accounts);
+      sort($accounts);
+      $accounts = array_values($accounts);
+
+      $count = count($accounts);
+      for ($i = 0; $i < $count - 1; ++$i) {
+        if (str_starts_with($accounts[$i + 1], $accounts[$i] . ':')) {
+          unset($accounts[$i]);
+        }
+      }
+      $accounts = array_values($accounts);
+    }
+
+    if (!$accountsAutocompleteFile) {
+      $accountsAutocompleteFile = $appStorage->ensureFile(self::GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE);
+    }
+    $accountsAutocompleteFile->putContent(json_encode($autocompleteData));
+
+    return $autocompleteData;
+  }
+
+  /**
+   * @param array|int|string|Entities\Project $project
+   *
+   * @return array
+   *
+   * @throws Exceptions\EnduserNotificationException
+   */
+  public function getAccountsAutocompleteData(int|string|array|Entities\Project $project):array
+  {
+    $autocompleteData = $this->generateAccountsAutocompleteData();
+    if (empty($autocompleteData)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('GnuCash accounts autocompletion data is unavailable, please contact an administrator.'),
+      );
+    }
+    if ($project instanceof Entities\Project) {
+      $name = $project->getName();
+    } else {
+      /* @var EntityManager $entityManager */
+      $entityManager = $this->appContainer->get(EntityManager::class);
+      $name = $entityManager->getRepository(Entities\Project::class)->findName($project);
+    }
+    foreach ($autocompleteData as &$accounts) {
+      foreach ($accounts as &$account) {
+        $account .= ':' . $name;
+      }
+    }
+    return [
+      'projectName' => $name,
+      'accounts' => $autocompleteData,
+    ];
   }
 }

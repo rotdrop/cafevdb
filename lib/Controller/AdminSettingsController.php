@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EmailAddressService;
+use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
 use OCA\CAFEVDB\Service\FontService;
 use OCA\CAFEVDB\Service\ProblemReportService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
@@ -71,6 +72,7 @@ class AdminSettingsController extends Controller
     ?string $appName,
     IRequest $request,
     private EmailAddressService $emailAddressService,
+    private GnuCashConnectorService $gnuCashConnectorService,
     private ProblemReportService $problemReportService,
     private WikiRPC $wikiRPC,
     protected ConfigService $configService,
@@ -414,6 +416,10 @@ Please enter the confirmation code contained in the email into the admin-setting
         $value = trim($value);
         $this->setAppValue($parameter, $value);
         $result[$parameter] = $value;
+
+        if (!empty($value)) {
+          $this->gnuCashConnectorService->generateAccountsAutocompleteData();
+        }
 
         $result = [
           'messages' => [
