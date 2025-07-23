@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-21 21:03+0200\n"
+"POT-Creation-Date: 2025-07-23 15:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -522,7 +522,7 @@ msgstr ""
 
 #. TRANSLATORS: status of verification of problem report email address
 #: lib/Command/Migrations.php:346
-#: lib/Controller/AdminSettingsController.php:113
+#: lib/Controller/AdminSettingsController.php:116
 msgid "pending"
 msgstr ""
 
@@ -1239,37 +1239,37 @@ msgid "Unknown upload error"
 msgstr ""
 
 #. TRANSLATORS: status of verification of problem report email address
-#: lib/Controller/AdminSettingsController.php:107
+#: lib/Controller/AdminSettingsController.php:110
 msgid "irrelevant"
 msgstr ""
 
 #. TRANSLATORS: status of verification of problem report email address
-#: lib/Controller/AdminSettingsController.php:110
+#: lib/Controller/AdminSettingsController.php:113
 msgid "verified"
 msgstr ""
 
 #. TRANSLATORS: status of verification of problem report email address
-#: lib/Controller/AdminSettingsController.php:116
+#: lib/Controller/AdminSettingsController.php:119
 msgid "failed"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:199
+#: lib/Controller/AdminSettingsController.php:203
 #, php-format
 msgid "Settings is reserved to cloud-administrators: \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:226
+#: lib/Controller/AdminSettingsController.php:230
 #: lib/Controller/PersonalSettingsController.php:1661
 #, php-format
 msgid "Unable to parse email address \"%1$s\": %2$s"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:248
+#: lib/Controller/AdminSettingsController.php:252
 #, php-format
 msgid "Setting the problem report email recipient to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:252
+#: lib/Controller/AdminSettingsController.php:256
 #, php-format
 msgid ""
 "A verification email has been sent to \"%s\".\n"
@@ -1277,101 +1277,106 @@ msgid ""
 "settings form."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:267
+#: lib/Controller/AdminSettingsController.php:271
 #, php-format
 msgid "Submitted verification code \"%s\" differs from sent email challenge."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:274
+#: lib/Controller/AdminSettingsController.php:278
 #, php-format
 msgid "Setting the problem report email verification code to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:286
+#: lib/Controller/AdminSettingsController.php:290
 #, php-format
 msgid ""
 "Setting user and group backend to \"%s\". Please have a look at the action-"
 "menu for additional actions."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:310
+#: lib/Controller/AdminSettingsController.php:314
 #, php-format
 msgid ""
 "Setting orchestra group to \"%s\". Please login as group administrator and "
 "configure the Camerata DB application."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:318
+#: lib/Controller/AdminSettingsController.php:322
 msgid "Expecting a list of user-ids."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:322
+#: lib/Controller/AdminSettingsController.php:326
 msgid "Orchestra management group is unset or non-existent"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:331
+#: lib/Controller/AdminSettingsController.php:335
 #, php-format
 msgid "Already as sub-admin of \"%1$s\" configured: %2$s."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:337
+#: lib/Controller/AdminSettingsController.php:341
 #, php-format
 msgid "Added \"%1$s\" as sub-admin of \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:340
+#: lib/Controller/AdminSettingsController.php:344
 #, php-format
 msgid "Failed to add \"%1$s\" as sub-admin to \"%2$s\": %3$s"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:347
+#: lib/Controller/AdminSettingsController.php:351
 #, php-format
 msgid "Deleted \"%1$s\" as sub-admin from \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:350
+#: lib/Controller/AdminSettingsController.php:354
 #, php-format
 msgid "Failed to delete \"%1$s\" as sub-admin from \"%2$s\": %3$s"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:377
+#: lib/Controller/AdminSettingsController.php:381
 #, php-format
 msgid "Setting wiki name-space to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:391
+#: lib/Controller/AdminSettingsController.php:395
 #, php-format
 msgid "Setting the GnuCash instrument insurance balancing account to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:405
+#: lib/Controller/AdminSettingsController.php:409
 #, php-format
 msgid "Setting the GnuCash participant receivables account to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:424
+#: lib/Controller/AdminSettingsController.php:427
+#, php-format
+msgid "Setting the GnuCash accounts tree data file to \"%s\"."
+msgstr ""
+
+#: lib/Controller/AdminSettingsController.php:446
 #, php-format
 msgid "\"%1$s\" controller answered with \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:433
+#: lib/Controller/AdminSettingsController.php:455
 #, php-format
 msgid ""
 "Please head over to the %1$s settings and check the generated \"%2$s\"-"
 "configuration."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:450
+#: lib/Controller/AdminSettingsController.php:472
 #, php-format
 msgid "Default office font reset to default \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:453
+#: lib/Controller/AdminSettingsController.php:475
 #, php-format
 msgid "Default office font set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:466
+#: lib/Controller/AdminSettingsController.php:488
 #: lib/Controller/PersonalSettingsController.php:1870
 #: lib/Controller/PersonalSettingsController.php:1908
 #: lib/Controller/ProjectParticipantsController.php:1022
@@ -1379,22 +1384,22 @@ msgstr ""
 msgid "Unknown Request: \"%s\""
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:525
+#: lib/Controller/AdminSettingsController.php:547
 #, php-format
 msgid "Unknown font cache operation: \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:529
+#: lib/Controller/AdminSettingsController.php:551
 #, php-format
 msgid "Font operation \"%1$s\" failed with exception \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:535
+#: lib/Controller/AdminSettingsController.php:557
 #, php-format
 msgid "Font operation \"%s\" successful."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:540
+#: lib/Controller/AdminSettingsController.php:562
 #, php-format
 msgid "Unknown internal error during font-cache operation: \"%s\"."
 msgstr ""
@@ -1831,7 +1836,7 @@ msgstr ""
 #: lib/Documents/OpenDocumentFiller.php:388
 #: lib/Documents/OpenDocumentFiller.php:391
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:146
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2496
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2506
 #: lib/PageRenderer/Projects.php:813
 #: lib/PageRenderer/Projects.php:821
 #: lib/Service/Finance/InstrumentInsuranceService.php:620
@@ -4233,6 +4238,12 @@ msgid ""
 "column: %s"
 msgstr ""
 
+#: lib/Database/Doctrine/ORM/Repositories/ProjectsRepository.php:91
+#: lib/Database/Doctrine/ORM/Repositories/ProjectsRepository.php:278
+#, php-format
+msgid "The identifier is missing for a query to find an instance of \"%1$s\"."
+msgstr ""
+
 #: lib/Database/EntityManager.php:328
 msgid "There is no entity-manager initialized yet."
 msgstr ""
@@ -5198,7 +5209,7 @@ msgid "Overview over all registered musicians"
 msgstr ""
 
 #: lib/PageRenderer/DonationReceipts.php:184
-#: lib/Service/ToolTipsDataService.php:1516
+#: lib/Service/ToolTipsDataService.php:1517
 msgid "Donation Receipts"
 msgstr ""
 
@@ -5284,7 +5295,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:334
 #: lib/PageRenderer/ProjectPayments.php:585
 #: lib/PageRenderer/SepaBulkTransactions.php:369
-#: specialVueFakeDummyForL10nScript.js:6552
+#: specialVueFakeDummyForL10nScript.js:6587
 msgid "Project"
 msgstr ""
 
@@ -5428,9 +5439,9 @@ msgstr ""
 #. TRANSLATORS src/views/FilesTab.vue:77
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:97
 #: lib/Service/CloudUserConnectorService.php:397
-#: specialVueFakeDummyForL10nScript.js:1633
-#: specialVueFakeDummyForL10nScript.js:6536
-#: specialVueFakeDummyForL10nScript.js:6548
+#: specialVueFakeDummyForL10nScript.js:1660
+#: specialVueFakeDummyForL10nScript.js:6571
+#: specialVueFakeDummyForL10nScript.js:6583
 msgid "Musicians"
 msgstr ""
 
@@ -5663,14 +5674,14 @@ msgstr ""
 msgid "add to this group"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2371
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2372
 #, php-format
 msgid ""
 "Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: "
 "\"%s\", new: \"%s\""
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2515
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2525
 #, php-format
 msgid ""
 "Number %d of requested participants for group %s is larger than the number "
@@ -5819,7 +5830,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/LegacyPageActionsMenu.vue:45
 #: lib/PageRenderer/InstrumentInsurances.php:217
-#: specialVueFakeDummyForL10nScript.js:2592
+#: specialVueFakeDummyForL10nScript.js:2627
 msgid "Overview"
 msgstr ""
 
@@ -5953,13 +5964,13 @@ msgstr ""
 #: lib/PageRenderer/InsuranceBrokers.php:168
 #: lib/PageRenderer/ProjectAssociates.php:436
 #: lib/PageRenderer/ProjectParticipants.php:487
-#: specialVueFakeDummyForL10nScript.js:6194
+#: specialVueFakeDummyForL10nScript.js:6229
 msgid "Name"
 msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:63
 #: lib/PageRenderer/InsuranceBrokers.php:176
-#: specialVueFakeDummyForL10nScript.js:6200
+#: specialVueFakeDummyForL10nScript.js:6235
 msgid "Address"
 msgstr ""
 
@@ -6359,8 +6370,8 @@ msgstr ""
 #. TRANSLATORS src/components/ProjectEventsListing.vue:82
 #: lib/PageRenderer/PME/Config.php:64
 #: lib/PageRenderer/PMETableViewBase.php:654
-#: specialVueFakeDummyForL10nScript.js:3850
-#: specialVueFakeDummyForL10nScript.js:4839
+#: specialVueFakeDummyForL10nScript.js:3885
+#: specialVueFakeDummyForL10nScript.js:4874
 msgid "Em@il"
 msgstr ""
 
@@ -6372,7 +6383,7 @@ msgstr[1] ""
 
 #. TRANSLATORS src/components/LegacyQueryLog.vue:25
 #: lib/PageRenderer/PMETableViewBase.php:362
-#: specialVueFakeDummyForL10nScript.js:2651
+#: specialVueFakeDummyForL10nScript.js:2686
 msgid "Query Log"
 msgstr ""
 
@@ -6493,11 +6504,11 @@ msgstr ""
 msgid "Unknown column description: \"%s\""
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:2329
+#: lib/PageRenderer/PMETableViewBase.php:2331
 msgid "Table-name not specified"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:2406
+#: lib/PageRenderer/PMETableViewBase.php:2408
 #, php-format
 msgid ""
 "Master join-table field for %1$s not found, avalaible fields: \"%2$s\", "
@@ -6583,8 +6594,8 @@ msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:46
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:121
-#: lib/Service/ToolTipsDataService.php:1524
-#: specialVueFakeDummyForL10nScript.js:3840
+#: lib/Service/ToolTipsDataService.php:1525
+#: specialVueFakeDummyForL10nScript.js:3875
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -6655,7 +6666,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:203
 #: lib/PageRenderer/ProjectParticipantFields.php:277
-#: specialVueFakeDummyForL10nScript.js:1631
+#: specialVueFakeDummyForL10nScript.js:1658
 msgid "Access Control"
 msgstr ""
 
@@ -6992,14 +7003,14 @@ msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:56
 #: lib/PageRenderer/Projects.php:889
-#: specialVueFakeDummyForL10nScript.js:3842
+#: specialVueFakeDummyForL10nScript.js:3877
 msgid "Participant Fields"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:36
 #: lib/PageRenderer/Projects.php:952
-#: lib/Service/ToolTipsDataService.php:1526
-#: specialVueFakeDummyForL10nScript.js:3838
+#: lib/Service/ToolTipsDataService.php:1527
+#: specialVueFakeDummyForL10nScript.js:3873
 msgid "Participants"
 msgstr ""
 
@@ -7026,7 +7037,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:273
 #: lib/PageRenderer/Projects.php:1121
-#: specialVueFakeDummyForL10nScript.js:4867
+#: specialVueFakeDummyForL10nScript.js:4902
 msgid "edit"
 msgstr ""
 
@@ -7239,7 +7250,7 @@ msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:94
 #: lib/PageRenderer/SepaBulkTransactions.php:610
-#: specialVueFakeDummyForL10nScript.js:6540
+#: specialVueFakeDummyForL10nScript.js:6575
 #: templates/emailform/form.php:36
 #: templates/emailform/part.emailform.composer.php:125
 msgid "Recipients"
@@ -7580,7 +7591,7 @@ msgid "Unsupported bulk-transaction class: \"%s\"."
 msgstr ""
 
 #: lib/Service/Finance/DoNothingReceivablesGenerator.php:50
-#: lib/Service/ToolTipsDataService.php:876
+#: lib/Service/ToolTipsDataService.php:877
 #: templates/project-web-articles.php:72
 msgid "nothing"
 msgstr ""
@@ -7677,9 +7688,15 @@ msgstr ""
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr ""
 
-#: lib/Service/Finance/GnuCashConnectorService.php:166
+#: lib/Service/Finance/GnuCashConnectorService.php:175
 #, php-format
 msgid "%1$s column names differ from expected column-names."
+msgstr ""
+
+#: lib/Service/Finance/GnuCashConnectorService.php:365
+msgid ""
+"GnuCash accounts autocompletion data is unavailable, please contact an "
+"administrator."
 msgstr ""
 
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:84
@@ -8124,7 +8141,7 @@ msgid "Personal Comments by %s"
 msgstr ""
 
 #: lib/Service/ProblemReportService.php:235
-#: specialVueFakeDummyForL10nScript.js:2091
+#: specialVueFakeDummyForL10nScript.js:2126
 msgid "System Error Report"
 msgstr ""
 
@@ -8341,7 +8358,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:166
 #: lib/Service/ProjectService.php:1654
-#: specialVueFakeDummyForL10nScript.js:2231
+#: specialVueFakeDummyForL10nScript.js:2266
 msgid "Preview"
 msgstr ""
 
@@ -9095,13 +9112,13 @@ msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:111
 #: lib/Service/ToolTipsDataService.php:427
-#: specialVueFakeDummyForL10nScript.js:2215
+#: specialVueFakeDummyForL10nScript.js:2250
 msgid "Cancel the problem report."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:122
 #: lib/Service/ToolTipsDataService.php:428
-#: specialVueFakeDummyForL10nScript.js:2217
+#: specialVueFakeDummyForL10nScript.js:2252
 msgid "Submit the problem report."
 msgstr ""
 
@@ -9385,7 +9402,7 @@ msgid ""
 msgstr ""
 
 #: lib/Service/ToolTipsDataService.php:552
-#: lib/Service/ToolTipsDataService.php:1184
+#: lib/Service/ToolTipsDataService.php:1185
 msgid ""
 "The project mailing list is an optional discussion mailing list open to the "
 "project participants. It is preferred by the orchestra-app when sending "
@@ -9907,14 +9924,20 @@ msgid ""
 "an exception if the values differ. This is the default."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:785
-#: lib/Service/ToolTipsDataService.php:787
-#: lib/Service/ToolTipsDataService.php:791
+#: lib/Service/ToolTipsDataService.php:783
+msgid ""
+"The balancing account for double book-keeping. This is used to generate "
+"import data for the account software."
+msgstr ""
+
+#: lib/Service/ToolTipsDataService.php:786
+#: lib/Service/ToolTipsDataService.php:788
+#: lib/Service/ToolTipsDataService.php:792
 msgid ""
 "Specify a default value for the custom field here. Leave blank if unsure."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:789
+#: lib/Service/ToolTipsDataService.php:790
 msgid ""
 "Default policy when replacing files with new uploads. Default is to rename "
 "the old file by attaching a time-stamp. \"replace\" will just overwrite the "
@@ -9922,31 +9945,31 @@ msgid ""
 "may provide undelete operations and versioning of overwritten files."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:793
+#: lib/Service/ToolTipsDataService.php:794
 msgid ""
 "Disable this extra field. This will not erase any data in the\n"
 "data-base, but simply mark the field as unused and hide it from sight."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:796
+#: lib/Service/ToolTipsDataService.php:797
 msgid ""
 "Define the display priority. Larger values will move the item more to\n"
 "the left or the top inside its table-tab."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:799
+#: lib/Service/ToolTipsDataService.php:800
 msgid ""
 "Expert use: store encrypted values in the data-base. If unsure: <em>DON'T</"
 "em>"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:801
+#: lib/Service/ToolTipsDataService.php:802
 msgid ""
 "Extra-tab to group project-specific data which just didn't fit\n"
 "somewhere else."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:804
+#: lib/Service/ToolTipsDataService.php:805
 msgid ""
 "Just the name for this option. Please keep the name as <em>short</em> as\n"
 "possible, but try to be descriptive. If further explanations are\n"
@@ -9955,18 +9978,18 @@ msgid ""
 "<strong>Display</strong> tab."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:809
+#: lib/Service/ToolTipsDataService.php:810
 msgid "The maximum number of peopel allowed in the group."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:811
+#: lib/Service/ToolTipsDataService.php:812
 msgid ""
 "Define a new table-tab. In order to do so, first deselect any\n"
 "predefined tab in the select box above, then enter the new name. The\n"
 "new tab-name will also be available as tab-option for other fields."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:815
+#: lib/Service/ToolTipsDataService.php:816
 msgid ""
 "Define the table-tab this entry should be grouped with. It is also\n"
 "possible to define new table-tabs. In order to do so, first deselect\n"
@@ -9974,26 +9997,26 @@ msgid ""
 "input box below."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:820
+#: lib/Service/ToolTipsDataService.php:821
 msgid ""
 "Optionally define a tool-tip (context-help) for the field. The tooltip\n"
 "may contain HTML formatting."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:823
+#: lib/Service/ToolTipsDataService.php:824
 msgid ""
 "Select-box with all currently uploaded attachments. Note that a file will "
 "only be attached to a message if it is also checked in this select box."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:825
+#: lib/Service/ToolTipsDataService.php:826
 msgid ""
 "Try to restore the last visited table view whenreloading the entire page "
 "with the web-browser. If unchecked either the musician's view or the blog-"
 "page is loaded."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:827
+#: lib/Service/ToolTipsDataService.php:828
 msgid ""
 "Toggle the initial display of the search-filters for data-base tables\n"
 "in order to make the table view a little less crowded. Search-filters\n"
@@ -10001,11 +10024,11 @@ msgid ""
 "each individual table view."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:832
+#: lib/Service/ToolTipsDataService.php:833
 msgid "Further personal settings, normally not needed use with care."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:835
+#: lib/Service/ToolTipsDataService.php:836
 #: lib/Service/ToolTipsService.php:430
 #, php-format
 msgid ""
@@ -10013,7 +10036,7 @@ msgid ""
 "section is split by voices, e.g. \"violin 1\", \"violin 2\")"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:837
+#: lib/Service/ToolTipsDataService.php:838
 #: lib/Service/ToolTipsService.php:432
 #, php-format
 msgid ""
@@ -10022,7 +10045,7 @@ msgid ""
 "to distinguish between violin 1 and violin 2, thought ..."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:839
+#: lib/Service/ToolTipsDataService.php:840
 #: lib/Service/ToolTipsService.php:434
 #, php-format
 msgid ""
@@ -10030,55 +10053,55 @@ msgid ""
 "registered / confirmed musicians."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:842
+#: lib/Service/ToolTipsDataService.php:843
 msgid ""
 "Instruments which are already used by musicians or\n"
 "projects cannot be deleted; instead \"deleting\" them flags them as "
 "\"Disabled\"."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:847
+#: lib/Service/ToolTipsDataService.php:848
 msgid "Externally visible domains and configuration web-pages."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:848
+#: lib/Service/ToolTipsDataService.php:849
 msgid ""
 "The base-URL of the public web-pages of the used Mailman3 server. The web-"
 "pages give access to personal list configuration settings for list-members "
 "as well as access to the list configuration pages for administrators."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:849
+#: lib/Service/ToolTipsDataService.php:850
 msgid "The email-domain of the mailing lists."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:852
+#: lib/Service/ToolTipsDataService.php:853
 msgid ""
 "REST API account for interaction with a Mailman3 server. Should be located "
 "on the same server or proxied via SSL."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:856
+#: lib/Service/ToolTipsDataService.php:857
 msgid ""
 "Some settings for generated per-project mailing lists. The detail "
 "configuration can be tuned by visiting the list-configuration pages."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:857
+#: lib/Service/ToolTipsDataService.php:858
 msgid ""
 "An email address which owns all auto-generated mailing lists. This email "
 "will receive notifications by the mailing-list software about necessary "
 "administrative tasks."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:858
+#: lib/Service/ToolTipsDataService.php:859
 msgid ""
 "An email address which handle moderator-tasks for the mailing lists. List "
 "moderation is e.g. necessary for rejecting or accepting posts by non-members "
 "or to handle subscription requests."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:862
+#: lib/Service/ToolTipsDataService.php:863
 msgid ""
 "Attempt to auto-configure the announcements mailing-list as one-way "
 "announcements-only list, with the same moderators and owners as specified "
@@ -10093,23 +10116,23 @@ msgid ""
 "configured first."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:870
+#: lib/Service/ToolTipsDataService.php:871
 msgid ""
 "Musicians which already paid something for the project cannot be\n"
 "deleted in order not to loose track of the payments. Instead, they are\n"
 "simply marked as \"disabled\" and normally are hidden from sight."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:874
+#: lib/Service/ToolTipsDataService.php:875
 msgid ""
 "Opens a new table view with the insured items for the respective musician."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:878
+#: lib/Service/ToolTipsDataService.php:879
 msgid "Web-link to the current Cloud developer documentation."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:881
+#: lib/Service/ToolTipsDataService.php:882
 #, php-format
 msgid ""
 "Status of outstanding project fees:\n"
@@ -10127,35 +10150,35 @@ msgid ""
 "</dl>"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:897
+#: lib/Service/ToolTipsDataService.php:898
 msgid ""
 "Link to the data-base administration tool for the underlying data-base. "
 "Swiss-army-knife-like."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:899
+#: lib/Service/ToolTipsDataService.php:900
 msgid "Link to the documentation for the database-management tool."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:902
+#: lib/Service/ToolTipsDataService.php:903
 msgid ""
 "  Click me to add a new\n"
 "row to the current table."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:905
-#: lib/Service/ToolTipsDataService.php:1119
+#: lib/Service/ToolTipsDataService.php:906
+#: lib/Service/ToolTipsDataService.php:1120
 msgid "Saves the current values; the current input form will remain active."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:908
+#: lib/Service/ToolTipsDataService.php:909
 msgid ""
 "  Click me to add all selected musicians\n"
 "to the selected project. All selected\n"
 "musicians on all pages will be added."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:912
+#: lib/Service/ToolTipsDataService.php:913
 msgid ""
 "  Click me to pre-select\n"
 "all musicians on all pages\n"
@@ -10164,7 +10187,7 @@ msgid ""
 "actually add them."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:918
+#: lib/Service/ToolTipsDataService.php:919
 msgid ""
 "  Click me to remove\n"
 "all musicians on all pages\n"
@@ -10172,7 +10195,7 @@ msgid ""
 "the current project."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:923
+#: lib/Service/ToolTipsDataService.php:924
 msgid ""
 "  Check me to pre-select\n"
 "this musician for the current\n"
@@ -10182,24 +10205,24 @@ msgid ""
 "musicians."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:932
+#: lib/Service/ToolTipsDataService.php:933
 msgid ""
 "Stop the current operation. Settings which already have been stored by\n"
 "hitting an \"Apply\" button are maintained, though. You will be returned\n"
 "to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:935
+#: lib/Service/ToolTipsDataService.php:936
 msgid "Stop the current operation. You will be returned to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:939
+#: lib/Service/ToolTipsDataService.php:940
 msgid ""
 "Directs you to a form with input fields. From there you can return to\n"
 "this form by means of the \"Save\" or \"Back\" resp. \"Cancel\" buttons."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:943
+#: lib/Service/ToolTipsDataService.php:944
 msgid ""
 "Einzelnen Datensatz anzeigen,\n"
 "zeigt ein neues Formular mit\n"
@@ -10207,20 +10230,20 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:951
+#: lib/Service/ToolTipsDataService.php:952
 msgid ""
 "  Klick mich, um die\n"
 "Sortierreihenfolge auf die\n"
 "Voreinstellung zurückzusetzen."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:954
+#: lib/Service/ToolTipsDataService.php:955
 msgid ""
 "  Klick mich, um den\n"
 "aktuellen Filter zu löschen."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:960
+#: lib/Service/ToolTipsDataService.php:961
 msgid ""
 "Einzelnen Datensatz kopieren,\n"
 "zeigt ein neues Formular mit\n"
@@ -10228,7 +10251,7 @@ msgid ""
 "und Abbruchmöglichkeit."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:969
+#: lib/Service/ToolTipsDataService.php:970
 msgid ""
 "Click me to export a CSV-table with the selected debit notes suitable for "
 "use with AQBanking command-line tool `aqbanking-cli'. Please refer to the "
@@ -10237,21 +10260,21 @@ msgid ""
 "debiting their bank account."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:971
+#: lib/Service/ToolTipsDataService.php:972
 msgid "Select all displayed debit-notes for export."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:973
+#: lib/Service/ToolTipsDataService.php:974
 msgid "Deselect all displayed debit-notes from export selection."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:975
+#: lib/Service/ToolTipsDataService.php:976
 msgid ""
 "Select this debit note for debiting the project fees. In order to actually "
 "export the debit-note you have to hit the `Debit' button above."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:981
+#: lib/Service/ToolTipsDataService.php:982
 msgid ""
 "Einzelnen Datensatz löschen,\n"
 "zeigt den aktuellen Datensatz zunächst an.\n"
@@ -10260,7 +10283,7 @@ msgid ""
 "VORSICHT!."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:990
+#: lib/Service/ToolTipsDataService.php:991
 msgid ""
 "Klick mich, um eine Em@il an die ausgewählten\n"
 "Musiker zu versenden. Auf der folgenden Seite kann\n"
@@ -10272,13 +10295,13 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:999
+#: lib/Service/ToolTipsDataService.php:1000
 msgid ""
 "Click to generate bulk-transactions for the selected musicians and "
 "receivables."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1002
+#: lib/Service/ToolTipsDataService.php:1003
 msgid ""
 "Klick mich, um alle gerade\n"
 "angezeigten Musiker zu der\n"
@@ -10290,25 +10313,25 @@ msgid ""
 "entsprechen."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1011
+#: lib/Service/ToolTipsDataService.php:1012
 msgid ""
 "Click to select all displayed participants for bulk-transaction generation."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1015
+#: lib/Service/ToolTipsDataService.php:1016
 msgid ""
 "Klick mich, um alle gerade\n"
 "angezeigten Musiker von der\n"
 "Em@il-Auswahl zu entfernen"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1019
+#: lib/Service/ToolTipsDataService.php:1020
 msgid ""
 "Click to deselect all displayed participants from the bulk-transaction "
 "generation."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1023
+#: lib/Service/ToolTipsDataService.php:1024
 msgid ""
 "Adressaten in potentielle\n"
 "Massenmail Adressliste aufnehmen.\n"
@@ -10317,13 +10340,13 @@ msgid ""
 "korrigieren."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1029
+#: lib/Service/ToolTipsDataService.php:1030
 msgid ""
 "Select and deselect this participant and bank-acccount to and from bulk-"
 "transaction generation."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1035
+#: lib/Service/ToolTipsDataService.php:1036
 msgid ""
 "Export the visible part of the data-base to an office-format. The `Excel'-"
 "export should produce useful input for either Libre- or OpenOffice or for "
@@ -10331,29 +10354,29 @@ msgid ""
 "USA."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1037
+#: lib/Service/ToolTipsDataService.php:1038
 msgid "Export in CSV-format using a semicolon as delimiter (Excel convention)"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1039
+#: lib/Service/ToolTipsDataService.php:1040
 msgid "Export in OpenDocument-format (LibreOffice/OpenOffice)"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1041
+#: lib/Service/ToolTipsDataService.php:1042
 msgid "Export as PDF in A3/Landscape, scaled to fit the page size"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1043
+#: lib/Service/ToolTipsDataService.php:1044
 msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1045
+#: lib/Service/ToolTipsDataService.php:1046
 msgid ""
 "Export as HTML page without navigation elements; can also be loaded into "
 "your office-programs."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1049
+#: lib/Service/ToolTipsDataService.php:1050
 #, php-format
 msgid ""
 "Field for filter/search criteria.\n"
@@ -10401,7 +10424,7 @@ msgid ""
 "</dl>"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1090
+#: lib/Service/ToolTipsDataService.php:1091
 msgid ""
 "Field for filter/search criteria.\n"
 "Short explanation: simply type somthing and press <code>ENTER</code>.\n"
@@ -10409,66 +10432,66 @@ msgid ""
 "left."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1093
+#: lib/Service/ToolTipsDataService.php:1094
 msgid ""
 "Numeric comparison operators. To submit the query double-click into the "
 "search-field to the right or click on the \"query\" button."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1094
+#: lib/Service/ToolTipsDataService.php:1095
 #: lib/Traits/InitialStateTrait.php:165
 msgid ""
 "Select from the pull-down menu. Double-click will submit the form. The pull-"
 "down can be closed by clicking anywhere outside the menu."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1095
+#: lib/Service/ToolTipsDataService.php:1096
 msgid ""
 "Negate the filter, i.e. search for anything not matching the selected "
 "options."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1098
+#: lib/Service/ToolTipsDataService.php:1099
 msgid "Jumps directly to the given page"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1101
+#: lib/Service/ToolTipsDataService.php:1102
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien zu verstecken."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1107
+#: lib/Service/ToolTipsDataService.php:1108
 msgid ""
 "Click to unlock if the field is empty, click again to clear the field if the "
 "field contains data."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1108
+#: lib/Service/ToolTipsDataService.php:1109
 msgid "Click to lock and unlock this input field."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1113
+#: lib/Service/ToolTipsDataService.php:1114
 msgid "Some usefull convenience actions (click me for details!)"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1117
+#: lib/Service/ToolTipsDataService.php:1118
 msgid "Saves the current values and start to generate another new data-set."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1118
+#: lib/Service/ToolTipsDataService.php:1119
 msgid ""
 "Saves the current values and continues to make yet another copy of the "
 "source data-set."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1122
+#: lib/Service/ToolTipsDataService.php:1123
 msgid ""
 "Limits the number of rows per page to the given value. A \"∞\" means to "
 "display all records on one large page."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1125
+#: lib/Service/ToolTipsDataService.php:1126
 #, php-format
 msgid ""
 "Klick mich, um die\n"
@@ -10477,78 +10500,78 @@ msgid ""
 "Als Platzhalter verwendet man `%%'."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1132
+#: lib/Service/ToolTipsDataService.php:1133
 msgid "Refreshes the current view by reloading all data from the data-base."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1133
+#: lib/Service/ToolTipsDataService.php:1134
 msgid ""
 "Discards all unsaved data and reloads all fields form the data-base. "
 "Settings which already have been stored by hitting an\n"
 "\"Apply\" button are maintained, though."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1135
+#: lib/Service/ToolTipsDataService.php:1136
 msgid ""
 "Discards all unsaved data and reloads all fields from the data-base. "
 "Settings which already have been stored by hitting an\n"
 "\"Apply\" button are maintained, though."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1140
+#: lib/Service/ToolTipsDataService.php:1141
 msgid "Saves the current values and returns to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1141
+#: lib/Service/ToolTipsDataService.php:1142
 msgid "Deletes the current record and returns to the previous view."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1145
+#: lib/Service/ToolTipsDataService.php:1146
 msgid ""
 "  Klick mich, um die\n"
 "Suchkriterien anzuzeigen."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1154
+#: lib/Service/ToolTipsDataService.php:1155
 msgid ""
 "Click me to sort by this field! Click again to reverse the search direction. "
 "Click another time to disable sorting by this field."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1156
+#: lib/Service/ToolTipsDataService.php:1157
 msgid "Click me to reverse the sort order by this field!"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1158
+#: lib/Service/ToolTipsDataService.php:1159
 msgid "Click me to remove this field from the sorting criteria!"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1161
+#: lib/Service/ToolTipsDataService.php:1162
 msgid ""
 "Transpose the displayed table; may be beneficial for tables with only a few "
 "rows but many columns!"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1165
+#: lib/Service/ToolTipsDataService.php:1166
 msgid "Einzelnen Datensatz anzeigen"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1171
-#: lib/Service/ToolTipsDataService.php:1212
+#: lib/Service/ToolTipsDataService.php:1172
+#: lib/Service/ToolTipsDataService.php:1213
 msgid ""
 "Define participant-fields for the instrumentation table. E.g.: surcharge\n"
 "fields for double-/single-room preference, room-mates and such."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1174
-#: lib/Service/ToolTipsDataService.php:1221
-#: lib/Service/ToolTipsDataService.php:1545
+#: lib/Service/ToolTipsDataService.php:1175
+#: lib/Service/ToolTipsDataService.php:1222
+#: lib/Service/ToolTipsDataService.php:1546
 msgid ""
 "Display the desired instrumentaion numbers, i.e. how many musicians are "
 "already registered for each instrument group and how many are finally needed."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1176
+#: lib/Service/ToolTipsDataService.php:1177
 msgid ""
 "Either \"temporary\" -- the regular case -- or \"permanent\" -- the\n"
 "exceptional case for \"virtual pseudo projects\". The latter in\n"
@@ -10558,62 +10581,62 @@ msgid ""
 "permanent \"pseudo-projects\" don't, as it does not make any sense."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1185
+#: lib/Service/ToolTipsDataService.php:1186
 msgid "Pull-down menu with interesting mailing-list operations."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1186
+#: lib/Service/ToolTipsDataService.php:1187
 msgid ""
 "Create a mailing-list for the project participants. The list is open for "
 "posting from members, participants are auto-subscribed if they are accepted "
 "as project-participants, the list archives are accessible to members only."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1187
+#: lib/Service/ToolTipsDataService.php:1188
 msgid "External link to the list configuration page."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1188
+#: lib/Service/ToolTipsDataService.php:1189
 msgid "Close the list, i.e. disallow further postings to the list."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1189
+#: lib/Service/ToolTipsDataService.php:1190
 msgid "Reopen the list, i.e. again allow further postings to the list."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1190
+#: lib/Service/ToolTipsDataService.php:1191
 msgid "Delete the list and all of its archived messages."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1191
+#: lib/Service/ToolTipsDataService.php:1192
 msgid ""
 "Subscribe those participants to the project mailing list which have been "
 "finally accepted for participation."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1195
+#: lib/Service/ToolTipsDataService.php:1196
 msgid ""
 "Pull-down menu with entries to move on\n"
 "to pages with the instrumentation, events, instrumentation numbers etc."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1199
+#: lib/Service/ToolTipsDataService.php:1200
 msgid "Load a new page with all debit-mandates for project-fees"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1201
+#: lib/Service/ToolTipsDataService.php:1202
 msgid ""
 "Display all registered musicians for the selected project. The table\n"
 "        shows project related details as well as all stored personal\n"
 "        \"information about the respective musician"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1205
+#: lib/Service/ToolTipsDataService.php:1206
 msgid "Opens the email-form for the project inside a dialog window."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1207
-#: lib/Service/ToolTipsDataService.php:1268
+#: lib/Service/ToolTipsDataService.php:1208
+#: lib/Service/ToolTipsDataService.php:1269
 msgid ""
 "Open a dialog with all known\n"
 "events associated to the project.\n"
@@ -10621,55 +10644,55 @@ msgid ""
 "as needed."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1215
+#: lib/Service/ToolTipsDataService.php:1216
 msgid "Change to the folder with project related files."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1217
+#: lib/Service/ToolTipsDataService.php:1218
 msgid ""
 "Change to the folder with the financial balance\n"
 "sheets for the project (only available after the project\n"
 "has been ``closed''."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1223
+#: lib/Service/ToolTipsDataService.php:1224
 msgid "Change to the DokuWiki-page for this project (if there is one)"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1226
+#: lib/Service/ToolTipsDataService.php:1227
 msgid ""
 "Some people gave us debit mandates but still want to pay by bank-transfer. "
 "Uncheck in order to exclude the person from direct debits transfers."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1228
+#: lib/Service/ToolTipsDataService.php:1229
 msgid "Sum of the fees for all booked etra items."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1230
+#: lib/Service/ToolTipsDataService.php:1231
 msgid ""
 "Everything related to project fees, surcharges, bank transfers, debit\n"
 "mandates."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1233
+#: lib/Service/ToolTipsDataService.php:1234
 msgid ""
 "Opens a dialog-window which gives access to all stored informations for the "
 "project."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1235
+#: lib/Service/ToolTipsDataService.php:1236
 msgid ""
 "Displays the columns directly related to the instrumentation for the project."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1237
+#: lib/Service/ToolTipsDataService.php:1238
 msgid ""
 "Displays `meta-data' like project fees, single/double room preferences, "
 "debit-mandates and the like."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1239
+#: lib/Service/ToolTipsDataService.php:1240
 msgid ""
 "Please enter here a <b>SHORT</b> project name, rather a project tag. The "
 "software will try very hard to confine you to the following rules:\n"
@@ -10684,7 +10707,7 @@ msgid ""
 "Thanks."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1248
+#: lib/Service/ToolTipsDataService.php:1249
 msgid ""
 "Append the year to the name if checked.\n"
 "Regardless of this checkbox any decimal digit will first be stripped from "
@@ -10692,13 +10715,13 @@ msgid ""
 "of the project name before the year is added."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1252
+#: lib/Service/ToolTipsDataService.php:1253
 msgid ""
 "Displays the personal data of the respective musicians, like address, email, "
 "date of birth if known, phone numbers."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1254
+#: lib/Service/ToolTipsDataService.php:1255
 #: lib/Service/ToolTipsService.php:777
 #, php-format
 msgid ""
@@ -10706,20 +10729,20 @@ msgid ""
 "special field for the things you want to note"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1256
+#: lib/Service/ToolTipsDataService.php:1257
 msgid ""
 "Add a new public web-page to the project by generating a new, empty concert "
 "announcement."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1258
+#: lib/Service/ToolTipsDataService.php:1259
 msgid ""
 "Delete the currently displayed web-page fromthe project. The web page will "
 "be \"detached\" from the project and moved to the trash-bin\n"
 "\"category\" (folger) inside the CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1261
+#: lib/Service/ToolTipsDataService.php:1262
 msgid ""
 "Link existing pages to the project. This can be used, for instance, in order "
 "to add a page to the project which has not been created by hitting the `+'-"
@@ -10729,38 +10752,38 @@ msgid ""
 "feature.z"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1263
+#: lib/Service/ToolTipsDataService.php:1264
 msgid ""
 "Please select articles to link to the current project. The articles will be "
 "immediately added to the project if you select them. In order to remove the "
 "article, please use the `-' button above."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1265
+#: lib/Service/ToolTipsDataService.php:1266
 msgid ""
 "Detach the currently displayed event announcement from the project. "
 "Primarily meant to provide means to undo erroneous linking of articles."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1273
+#: lib/Service/ToolTipsDataService.php:1274
 msgid "Open the user manual either as a popup or in another tab or window"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1276
+#: lib/Service/ToolTipsDataService.php:1277
 msgid "Modify the event."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1278
+#: lib/Service/ToolTipsDataService.php:1279
 msgid ""
 "Clone (duplicate) the event. A new event-form will popup with just the data "
 "from this event."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1280
+#: lib/Service/ToolTipsDataService.php:1281
 msgid "Delete the event from the system (no undo possible)."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1282
+#: lib/Service/ToolTipsDataService.php:1283
 msgid ""
 "Detach the respective event\n"
 "from the project, but do not\n"
@@ -10770,11 +10793,11 @@ msgid ""
 "categories."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1289
+#: lib/Service/ToolTipsDataService.php:1290
 msgid "Reattach the respective event to the project."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1291
+#: lib/Service/ToolTipsDataService.php:1292
 msgid ""
 "Mark the respective event for download or for being\n"
 "sent by email as ICS-attachment.\n"
@@ -10786,7 +10809,7 @@ msgid ""
 "The download button at the top will just download the selected items."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1301
+#: lib/Service/ToolTipsDataService.php:1302
 msgid ""
 "Optionally augment the instrumenation table by an additional columns which "
 "can\n"
@@ -10800,7 +10823,7 @@ msgid ""
 "or the event."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1307
+#: lib/Service/ToolTipsDataService.php:1308
 msgid ""
 "The instrumentation table can be augmented by additional columns which can "
 "be\n"
@@ -10808,25 +10831,25 @@ msgid ""
 "case for this particular event."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1313
+#: lib/Service/ToolTipsDataService.php:1314
 msgid ""
 "Open the respective event instance in the calendar app in another browser "
 "window or tab."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1314
+#: lib/Service/ToolTipsDataService.php:1315
 msgid ""
 "SINGLE Open the respective event instance in the calendar app in another "
 "browser window or tab."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1315
+#: lib/Service/ToolTipsDataService.php:1316
 msgid ""
 "SERIES Open the respective event instance in the calendar app in another "
 "browser window or tab."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1318
+#: lib/Service/ToolTipsDataService.php:1319
 msgid ""
 "When changing particular events of repeating event series then calendar apps "
 "may choose to even split those repeating events into several distinct "
@@ -10836,7 +10859,7 @@ msgid ""
 "have no label and just show the background color."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1320
+#: lib/Service/ToolTipsDataService.php:1321
 msgid ""
 "If this particular event instance belongs to a series of repeating events "
 "then all events which belong to this series will show the same letter and "
@@ -10845,15 +10868,15 @@ msgid ""
 "label and just show the background color."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1327
+#: lib/Service/ToolTipsDataService.php:1328
 msgid "Act only on this particular event."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1328
+#: lib/Service/ToolTipsDataService.php:1329
 msgid "Act on the event series this event belongs to."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1329
+#: lib/Service/ToolTipsDataService.php:1330
 msgid ""
 "Act on the entire family of related events. When changing particular events "
 "of\n"
@@ -10863,7 +10886,7 @@ msgid ""
 "the user chooses to alter properties for \"this and future events\"."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1338
+#: lib/Service/ToolTipsDataService.php:1339
 msgid ""
 "Add a new event for the project. The event is added to the respective\n"
 "calendar and will also be visible and editable through the calendar\n"
@@ -10874,116 +10897,116 @@ msgid ""
 "the event."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1346
+#: lib/Service/ToolTipsDataService.php:1347
 msgid "Add a new concert-event to the project."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1348
+#: lib/Service/ToolTipsDataService.php:1349
 msgid "Add a new rehearsal-event to the project."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1350
+#: lib/Service/ToolTipsDataService.php:1351
 msgid "Add a non-categorized event to the project."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1352
+#: lib/Service/ToolTipsDataService.php:1353
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1354
+#: lib/Service/ToolTipsDataService.php:1355
 msgid ""
 "Add a finance event to the project, e.g. a dead-line for debit-notes or bank "
 "transfers."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1357
+#: lib/Service/ToolTipsDataService.php:1358
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
 "selected recipients."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1361
+#: lib/Service/ToolTipsDataService.php:1362
 msgid "Select all events for email-submission"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1363
+#: lib/Service/ToolTipsDataService.php:1364
 msgid "Exclude all events from email-submission"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1365
+#: lib/Service/ToolTipsDataService.php:1366
 msgid ""
 "Download the events as ICS file. In principle it is possible to import\n"
 "the ICS file into the respective calendar apps of your smartphone,\n"
 "tablet or desktop computer."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1369
+#: lib/Service/ToolTipsDataService.php:1370
 msgid "Reload all events from the cloud-calendars."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1374
+#: lib/Service/ToolTipsDataService.php:1375
 msgid ""
 "Force the re-creation of the folder where financial balances are stored."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1376
+#: lib/Service/ToolTipsDataService.php:1377
 msgid "Force the re-creation of the folder where project data is stored."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1378
+#: lib/Service/ToolTipsDataService.php:1379
 msgid "Article category of the concert-archive inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1380
+#: lib/Service/ToolTipsDataService.php:1381
 msgid "Article category of the concert-previews inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1382
+#: lib/Service/ToolTipsDataService.php:1383
 msgid "Article category of the rehearsals inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1384
+#: lib/Service/ToolTipsDataService.php:1385
 msgid "Article category for templates inside the Redaxo CMS."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1386
+#: lib/Service/ToolTipsDataService.php:1387
 msgid ""
 "Trashbin pseudo-category, articles deleted from within the\n"
 "project-views are moved here."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1389
+#: lib/Service/ToolTipsDataService.php:1390
 msgid ""
 "This is checked for officially registered musicians, those, who have\n"
 "sent us a signed registration form. It is left blannk otherwise."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1392
+#: lib/Service/ToolTipsDataService.php:1393
 msgid "This is checked for section-leaders and left blank otherwise."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1395
+#: lib/Service/ToolTipsDataService.php:1396
 msgid ""
 "Delete the given account. If the account has been used for payments then the "
 "bank-account will just be marked disabled, but not removed from the data-"
 "base."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1396
+#: lib/Service/ToolTipsDataService.php:1397
 msgid "Add a new dialog with detailed information about the bank-account."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1397
+#: lib/Service/ToolTipsDataService.php:1398
 msgid "Add a new dialog for defining a new bank-account."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1398
+#: lib/Service/ToolTipsDataService.php:1399
 msgid "Show also the disabled bank accounts, if any."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1402
+#: lib/Service/ToolTipsDataService.php:1403
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -10992,7 +11015,7 @@ msgid ""
 "enabled."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1405
+#: lib/Service/ToolTipsDataService.php:1406
 #, php-format
 msgid ""
 "This debit-mandate has not been used for more than %d month and\n"
@@ -11000,21 +11023,21 @@ msgid ""
 "and contact the treasurer for further instructions."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1410
+#: lib/Service/ToolTipsDataService.php:1411
 msgid ""
 "Use this debit-mandate only for the given project. Note that debit-mandates "
 "of club-members are always general debit-mandates for all receivables."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1411
+#: lib/Service/ToolTipsDataService.php:1412
 msgid "Use this as a general debit-mandate for all receivables of this person."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1413
+#: lib/Service/ToolTipsDataService.php:1414
 msgid "Download the existing signed hard-copy of the debit mandate."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1414
+#: lib/Service/ToolTipsDataService.php:1415
 msgid ""
 "Download a prefilled debit-mandate form with the name and bank-account of "
 "this person, suitable to be handed to the person in order to be signed. Note "
@@ -11022,48 +11045,48 @@ msgid ""
 "can be attached to personalized mail-merged emails."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1417
+#: lib/Service/ToolTipsDataService.php:1418
 msgid "Upload a signed hard-copy of the debit-mandate from the computer."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1418
+#: lib/Service/ToolTipsDataService.php:1419
 msgid ""
 "Choose a signed hard-copy of the debit-mandate from the cloud file-system."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1419
+#: lib/Service/ToolTipsDataService.php:1420
 msgid ""
 "For your inconvenience you have to check this box if you want skip the "
 "upload-step and store the mandate-data without a signed hard-copy."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1424
+#: lib/Service/ToolTipsDataService.php:1425
 msgid "Folder shared by the orchestra group."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1425
+#: lib/Service/ToolTipsDataService.php:1426
 msgid ""
 "Public upload \"postbox\" folder. Meant for anonymous public uploads of "
 "larger files."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1426
+#: lib/Service/ToolTipsDataService.php:1427
 msgid "Shared folder for document templates."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1427
+#: lib/Service/ToolTipsDataService.php:1428
 msgid "Shared folder for per-project data."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1428
+#: lib/Service/ToolTipsDataService.php:1429
 msgid "Shared folder for per-project per-participant data"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1429
+#: lib/Service/ToolTipsDataService.php:1430
 msgid "Shared folder for flyers and posters"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1431
+#: lib/Service/ToolTipsDataService.php:1432
 msgid ""
 "Link-shared folder for data needed by participants. In particular, this can "
 "be used for music-sheet downloads. The folder is automatically created and "
@@ -11071,17 +11094,17 @@ msgid ""
 "link is available as ${GLOBAL::PARTICIPANTS_DOWNLOADS_URL}."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1436
+#: lib/Service/ToolTipsDataService.php:1437
 msgid ""
 "Shared folder for the financial balances, probably used after the project is "
 "finished."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1437
+#: lib/Service/ToolTipsDataService.php:1438
 msgid "Subfolder for incoming letters from the tax offices."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1438
+#: lib/Service/ToolTipsDataService.php:1439
 msgid ""
 "Template file name for tax excemption notices, may and probably should "
 "contain\n"
@@ -11089,26 +11112,26 @@ msgid ""
 "period in the file-name."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1444
+#: lib/Service/ToolTipsDataService.php:1445
 msgid ""
 "Add the name of a dedicated user-group for the people allowed to access the "
 "orchestra-administration app."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1445
+#: lib/Service/ToolTipsDataService.php:1446
 msgid ""
 "The list of group-admins for the dedicated user-group. You should at least "
 "add one group-admin."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1447
+#: lib/Service/ToolTipsDataService.php:1448
 msgid ""
 "Add the name of a DokuWiki namespace which will host all wiki-pages of the "
 "orchestra. The namespace should be all lower-case and must not contain any "
 "spaces or fancy characters."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1448
+#: lib/Service/ToolTipsDataService.php:1449
 msgid ""
 "It is possible to inject cloud-user-accounts for all orchestra club-members "
 "into the ambient cloud-software. This works by granting select access to the "
@@ -11118,14 +11141,14 @@ msgid ""
 "the orchestra group."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1452
+#: lib/Service/ToolTipsDataService.php:1453
 msgid ""
 "An email address which receives the data posted by the problem report page. "
 "The problem report page is presented to the end-user when the application "
 "(frontend or backend) throws an error."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1455
+#: lib/Service/ToolTipsDataService.php:1456
 msgid ""
 "Enter the code from the verification email sent to the problem report "
 "recipient address. If the verfication message has not yet been received, "
@@ -11134,35 +11157,35 @@ msgid ""
 "then please click on the resend button."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1456
+#: lib/Service/ToolTipsDataService.php:1457
 msgid ""
 "If you are sure that the entered email address is indeed correct and you "
 "have waited long enough and you have checked the recipient's spam folders "
 "then you may request a new verification message by clicking on this button."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1458
+#: lib/Service/ToolTipsDataService.php:1459
 msgid "Email address has been verified."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1459
+#: lib/Service/ToolTipsDataService.php:1460
 msgid "Email address is empty, invalid or has not yet been verified."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1460
+#: lib/Service/ToolTipsDataService.php:1461
 msgid ""
 "The provided verification code did not match the challenge sent by email to "
 "the configured address."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1469
+#: lib/Service/ToolTipsDataService.php:1470
 msgid ""
 "Short descriptive name of the orchestra, e.g. use \"camerata\" instead of "
 "\"camerata academica freiburg e.V.\". The short name is used in various "
 "places. It should be lower-case and \"handy\", without spaces."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1470
+#: lib/Service/ToolTipsDataService.php:1471
 msgid ""
 "The locale of the orchestral organization. In particular, this determines "
 "the currency and the name of some directories in the file-system. Note that "
@@ -11170,7 +11193,7 @@ msgid ""
 "on."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1475
+#: lib/Service/ToolTipsDataService.php:1476
 #, php-format
 msgid ""
 "Import the orchestra club-members into the ambient cloud as ordinary cloud-"
@@ -11179,14 +11202,14 @@ msgid ""
 "user."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1476
+#: lib/Service/ToolTipsDataService.php:1477
 #, php-format
 msgid ""
 "Recreate all \"%1$s\" views and grant permissions to use them to the cloud "
 "dastabase-user."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1477
+#: lib/Service/ToolTipsDataService.php:1478
 msgid ""
 "In order to isolate the SQL-views for the cloud-user-backend from the rest "
 "of the database tables it is possible to put them into their own separate "
@@ -11194,7 +11217,7 @@ msgid ""
 "has all -- and in particular: GRANT -- privileges on that dedicated database."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1481
+#: lib/Service/ToolTipsDataService.php:1482
 msgid ""
 "Optionally parts of the data-base and some configuration settings can be "
 "stored encrypted. If you are confronted with error messages about a missing "
@@ -11203,25 +11226,25 @@ msgid ""
 "password in the password-field."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1482
+#: lib/Service/ToolTipsDataService.php:1483
 msgid ""
 "Changing the encryption key needs your login-password. Please enter it here "
 "before trying to save the changed encryption key."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1487
+#: lib/Service/ToolTipsDataService.php:1488
 msgid "Personal application settings."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1489
+#: lib/Service/ToolTipsDataService.php:1490
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1491
+#: lib/Service/ToolTipsDataService.php:1492
 msgid "Re-create the share-owner."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1493
+#: lib/Service/ToolTipsDataService.php:1494
 msgid ""
 "Some data-sets should better not be deleted because they have attached\n"
 "important - e.g. financial - data attached to it. In this case a\n"
@@ -11230,147 +11253,147 @@ msgid ""
 "these data-items."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1499
+#: lib/Service/ToolTipsDataService.php:1500
 msgid "Toggle Tooltips"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1501
+#: lib/Service/ToolTipsDataService.php:1502
 msgid "Link to the source-code archives for the DB app."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1503
+#: lib/Service/ToolTipsDataService.php:1504
 msgid "Link to the source-code documentation for the DB app."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1505
+#: lib/Service/ToolTipsDataService.php:1506
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1507
+#: lib/Service/ToolTipsDataService.php:1508
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
 "the individual table views."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1514
+#: lib/Service/ToolTipsDataService.php:1515
 msgid "Display all Musicians"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1515
+#: lib/Service/ToolTipsDataService.php:1516
 msgid "Frontpage Blog"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1517
+#: lib/Service/ToolTipsDataService.php:1518
 msgid "Instrument Families"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1518
+#: lib/Service/ToolTipsDataService.php:1519
 msgid "Insurances"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1519
+#: lib/Service/ToolTipsDataService.php:1520
 msgid "Musical Instruments"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1520
+#: lib/Service/ToolTipsDataService.php:1521
 msgid "Insurance Brokers"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1521
+#: lib/Service/ToolTipsDataService.php:1522
 msgid "Insurance Rates"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1522
+#: lib/Service/ToolTipsDataService.php:1523
 msgid "Invoicing"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1523
+#: lib/Service/ToolTipsDataService.php:1524
 msgid "Business Partners"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1525
+#: lib/Service/ToolTipsDataService.php:1526
 msgid "Project Participant-Fields"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1527
+#: lib/Service/ToolTipsDataService.php:1528
 msgid "Bank Transactions"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1528
+#: lib/Service/ToolTipsDataService.php:1529
 msgid "All Projects"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1529
+#: lib/Service/ToolTipsDataService.php:1530
 msgid "Create Bulk Transactions"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1530
+#: lib/Service/ToolTipsDataService.php:1531
 msgid "Issued Bulk Transactions"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1531
+#: lib/Service/ToolTipsDataService.php:1532
 msgid "Taxation Legal Basis"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1532
+#: lib/Service/ToolTipsDataService.php:1533
 msgid "Tax Excemption Notices"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1535
+#: lib/Service/ToolTipsDataService.php:1536
 msgid ""
 "Display all musicians stored in the data-base, with detailed facilities for "
 "filtering and sorting."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1536
+#: lib/Service/ToolTipsDataService.php:1537
 msgid ""
 "Simplistic blog page with follow apps, used primarily to display hints\n"
 "if something has changed in the orchestra app."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1538
+#: lib/Service/ToolTipsDataService.php:1539
 msgid ""
 "Display the list of donation receipts asserted by our organization. Donation "
 "receipts can also be reviewed by visiting the finance folder."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1539
+#: lib/Service/ToolTipsDataService.php:1540
 msgid ""
 "Display the list of instruments known by the data-base, possibly add new "
 "ones as needed."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1540
+#: lib/Service/ToolTipsDataService.php:1541
 msgid ""
 "Display the list of instrument families and add or change them as needed."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1541
+#: lib/Service/ToolTipsDataService.php:1542
 msgid ""
 "Display a table with an overview about the current state of the member's "
 "instrument insurances."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1542
+#: lib/Service/ToolTipsDataService.php:1543
 msgid "Display a table with the insurance brokers."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1543
+#: lib/Service/ToolTipsDataService.php:1544
 msgid ""
 "Display a table with the insurance rates for the individual instrument "
 "insurances."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1544
+#: lib/Service/ToolTipsDataService.php:1545
 msgid ""
 "Display a table with the sent-out invoices and support for issuing new "
 "invoices."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1546
+#: lib/Service/ToolTipsDataService.php:1547
 msgid ""
 "Add additional data-fields to the instrumenation table for the project. This "
 "just add project-specific columns to the table like project fees, "
@@ -11378,54 +11401,54 @@ msgid ""
 "helps to keep the data together inside one table!"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1547
+#: lib/Service/ToolTipsDataService.php:1548
 msgid ""
 "Detailed display of all registered musicians for the selected project. The "
 "table will allow for modification of personal data like email, phone, "
 "address etc."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1548
+#: lib/Service/ToolTipsDataService.php:1549
 msgid ""
 "Detailed display of business partners or otherwise project related (legal) "
 "persons."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1549
+#: lib/Service/ToolTipsDataService.php:1550
 msgid ""
 "A table holding the various payments and reimbursements of participants, as "
 "well as bank transfers to external parties."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1550
+#: lib/Service/ToolTipsDataService.php:1551
 msgid "Overview over all known projects (start-page)."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1551
+#: lib/Service/ToolTipsDataService.php:1552
 msgid ""
 "Display a table with the bank accounts of the project participants,\n"
 "with the possibility to issued money transfers as well as debit-notes\n"
 "to and from the registered bank accounts."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1554
+#: lib/Service/ToolTipsDataService.php:1555
 msgid ""
 "A table holding all bulk bank-transactions issued from the orchestra-"
 "software."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1555
+#: lib/Service/ToolTipsDataService.php:1556
 msgid ""
 "Taxation statutory sources table, used for invoicing and donation receipts."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1556
+#: lib/Service/ToolTipsDataService.php:1557
 msgid ""
 "Tax exemption notices give the legal basis for donation receipts and "
 "omitting sales taxes in invoices."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1559
+#: lib/Service/ToolTipsDataService.php:1560
 #: lib/Service/ToolTipsService.php:989
 #, php-format
 msgid ""
@@ -11433,7 +11456,7 @@ msgid ""
 "is substituted into document templates using the \"[LOGO]\" placeholder."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1560
+#: lib/Service/ToolTipsDataService.php:1561
 msgid ""
 "A fillable PDF form for debit-mandates bound to special projects. The app is "
 "able to auto-fill form-fields with the names \"projectName\", "
@@ -11443,7 +11466,7 @@ msgid ""
 "project-participant views."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1562
+#: lib/Service/ToolTipsDataService.php:1563
 msgid ""
 "A fillable PDF form for debit-mandates not bound to special projects. The "
 "app is able to auto-fill form-fields with the names \"bankAccountOwner\", "
@@ -11452,116 +11475,116 @@ msgid ""
 "mandates can be downloaed from the musician and member's project view."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1564
+#: lib/Service/ToolTipsDataService.php:1565
 msgid ""
 "A fillable form in order to collect address updates and for renewal of debit-"
 "mandates."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1566
+#: lib/Service/ToolTipsDataService.php:1567
 msgid ""
 "An office document with variable substitutions \"[PLACEHOLDER]\" used to "
 "communicate the\n"
 "yearly insurance fees to the club-members."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1569
+#: lib/Service/ToolTipsDataService.php:1570
 msgid "Delete this document template from the server"
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1572
+#: lib/Service/ToolTipsDataService.php:1573
 msgid "Choose a template file from the cloud storage."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1573
+#: lib/Service/ToolTipsDataService.php:1574
 msgid "Upload a document template from your computer or mobile."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1577
+#: lib/Service/ToolTipsDataService.php:1578
 msgid ""
 "Test the form-filling features with a test-data-set. The file-format of the "
 "generated download remains the same as of the original template."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1578
+#: lib/Service/ToolTipsDataService.php:1579
 msgid ""
 "Test the form-filling features with a test-data-set and convert the "
 "generated file to PDF, providing a fillable PDF-form if the original "
 "document contains form-elements."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1579
+#: lib/Service/ToolTipsDataService.php:1580
 msgid ""
 "Just download the test-data set as JSON data for inspection and for "
 "debugging."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1583
+#: lib/Service/ToolTipsDataService.php:1584
 msgid "Select the sender from the members of the executive board."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1585
+#: lib/Service/ToolTipsDataService.php:1586
 msgid "Select the recipients for the mail-merge."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1586
+#: lib/Service/ToolTipsDataService.php:1587
 msgid "Select recipients from the one of the cloud's address-books."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1588
+#: lib/Service/ToolTipsDataService.php:1589
 msgid ""
 "Optionally select a project to provide more context information for the mail-"
 "merge operation."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1589
+#: lib/Service/ToolTipsDataService.php:1590
 msgid ""
 "Preferred for one-time merges or for testing. Just download to your local "
 "computer."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1590
+#: lib/Service/ToolTipsDataService.php:1591
 msgid ""
 "Preferred for mass-mail-merges and when the substituted template does not "
 "need to be post-processed."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1591
+#: lib/Service/ToolTipsDataService.php:1592
 msgid ""
 "Download the data-set which would be substituted into the document. This is "
 "primarily meant for debuggin."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1596
+#: lib/Service/ToolTipsDataService.php:1597
 msgid "Test data-base passphrase."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1598
+#: lib/Service/ToolTipsDataService.php:1599
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
 "configuration storage if the test can be performed successfully."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1602
+#: lib/Service/ToolTipsDataService.php:1603
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1604
+#: lib/Service/ToolTipsDataService.php:1605
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1606
+#: lib/Service/ToolTipsDataService.php:1607
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
 msgstr ""
 
-#: lib/Service/ToolTipsDataService.php:1608
+#: lib/Service/ToolTipsDataService.php:1609
 msgid "Change to another WYSIWYG editor."
 msgstr ""
 
@@ -11606,7 +11629,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:271
 #: lib/Settings/PersonalForm.php:307
-#: specialVueFakeDummyForL10nScript.js:1655
+#: specialVueFakeDummyForL10nScript.js:1682
 msgid "Finance"
 msgstr ""
 
@@ -11614,8 +11637,9 @@ msgstr ""
 msgid "Miscellaneous"
 msgstr ""
 
-#: lib/Storage/AppStorage.php:129
-#: lib/Storage/AppStorage.php:150
+#: lib/Storage/AppStorage.php:131
+#: lib/Storage/AppStorage.php:168
+#: lib/Storage/AppStorage.php:192
 #, php-format
 msgid ""
 "Path \"%s\" must consist of exactly one directory and exactly one file "
@@ -12074,7 +12098,7 @@ msgstr ""
 
 #. TRANSLATORS src/CAFeVDB.vue:27
 #: specialVueFakeDummyForL10nScript.js:544
-#: specialVueFakeDummyForL10nScript.js:1756
+#: specialVueFakeDummyForL10nScript.js:1791
 #: src/router/routes.ts:41
 #: src/stores/history.ts:354
 msgid "Home"
@@ -12204,7 +12228,7 @@ msgstr ""
 #. TRANSLATORS src/components/AddContactsToProject.vue:33
 #. TRANSLATORS src/views/FilesTab.vue:154
 #: specialVueFakeDummyForL10nScript.js:704
-#: specialVueFakeDummyForL10nScript.js:6556
+#: specialVueFakeDummyForL10nScript.js:6591
 #: templates/settings/share-settings.php:103
 msgid "Contacts"
 msgstr ""
@@ -12212,37 +12236,37 @@ msgstr ""
 #. TRANSLATORS src/components/AddContactsToProject.vue:34
 #. TRANSLATORS src/views/FilesTab.vue:155
 #: specialVueFakeDummyForL10nScript.js:706
-#: specialVueFakeDummyForL10nScript.js:6558
+#: specialVueFakeDummyForL10nScript.js:6593
 msgid "e.g. Bilbo Baggins"
 msgstr ""
 
 #. TRANSLATORS src/components/AddContactsToProject.vue:46
 #. TRANSLATORS src/views/FilesTab.vue:167
 #: specialVueFakeDummyForL10nScript.js:708
-#: specialVueFakeDummyForL10nScript.js:6560
+#: specialVueFakeDummyForL10nScript.js:6595
 msgid "Address-Books"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1006
+#: specialVueFakeDummyForL10nScript.js:1017
 msgid "{current} of {totals}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1058
+#: specialVueFakeDummyForL10nScript.js:1069
 msgid "accessible"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1067
+#: specialVueFakeDummyForL10nScript.js:1078
 msgid "inaccessible"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1092
-#: specialVueFakeDummyForL10nScript.js:1168
-#: specialVueFakeDummyForL10nScript.js:1325
-#: specialVueFakeDummyForL10nScript.js:1350
-#: specialVueFakeDummyForL10nScript.js:1419
-#: specialVueFakeDummyForL10nScript.js:1488
-#: specialVueFakeDummyForL10nScript.js:1543
-#: specialVueFakeDummyForL10nScript.js:6491
+#: specialVueFakeDummyForL10nScript.js:1103
+#: specialVueFakeDummyForL10nScript.js:1179
+#: specialVueFakeDummyForL10nScript.js:1336
+#: specialVueFakeDummyForL10nScript.js:1361
+#: specialVueFakeDummyForL10nScript.js:1430
+#: specialVueFakeDummyForL10nScript.js:1499
+#: specialVueFakeDummyForL10nScript.js:1554
+#: specialVueFakeDummyForL10nScript.js:6526
 #: src/toolkit/util/settings-sync.ts:66
 #: src/toolkit/util/settings-sync.ts:107
 #: src/toolkit/util/settings-sync.ts:186
@@ -12250,11 +12274,11 @@ msgstr ""
 msgid "reason unknown"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1097
+#: specialVueFakeDummyForL10nScript.js:1108
 msgid "Could not fetch the value for \"{key}\": {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1116
+#: specialVueFakeDummyForL10nScript.js:1127
 #: src/app/project-participants.js:886
 #: src/app/projects.js:498
 #: src/app/sepa-debit-mandate.js:857
@@ -12262,251 +12286,255 @@ msgstr ""
 msgid "Confirmation Required"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1122
+#: specialVueFakeDummyForL10nScript.js:1133
 #: src/toolkit/util/settings-sync.ts:267
 msgid "Unconfirmed, reverting to old value."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1153
+#: specialVueFakeDummyForL10nScript.js:1164
 msgid "Successfully set value for \"{settingsKey}\" to \"{value}\"."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1155
+#: specialVueFakeDummyForL10nScript.js:1166
 msgid "Value for \"{settingsKey}\" has been erased."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1177
+#: specialVueFakeDummyForL10nScript.js:1188
 msgid "Could not set \"{settingsKey}\" to \"{value}\": {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1179
+#: specialVueFakeDummyForL10nScript.js:1190
 msgid "Could not set \"{settingsKey}\": {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1287
+#: specialVueFakeDummyForL10nScript.js:1298
 msgid "Synchronizing user backends not yet implemented."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1318
+#: specialVueFakeDummyForL10nScript.js:1329
 msgid "Successfully handled recryption request for {userId}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1333
+#: specialVueFakeDummyForL10nScript.js:1344
 msgid "Could not resolve the recryption request for {userId}: {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1343
+#: specialVueFakeDummyForL10nScript.js:1354
 msgid "Successfully deleted recryption request for {userId}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1358
+#: specialVueFakeDummyForL10nScript.js:1369
 msgid "Could not delete the recryption request for {userId}: {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1393
+#: specialVueFakeDummyForL10nScript.js:1404
 msgid "No musicians selected, doing nothing."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1411
-#: specialVueFakeDummyForL10nScript.js:1479
+#: specialVueFakeDummyForL10nScript.js:1422
+#: specialVueFakeDummyForL10nScript.js:1490
 msgid "Processed user-id {userId}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1413
-#: specialVueFakeDummyForL10nScript.js:1481
+#: specialVueFakeDummyForL10nScript.js:1424
+#: specialVueFakeDummyForL10nScript.js:1492
 msgid "{failedUsers} users have failed."
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:1428
-#: specialVueFakeDummyForL10nScript.js:1497
-msgid "Unable to handle access action: {message}"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:1435
-#: specialVueFakeDummyForL10nScript.js:1504
-msgid "Failed after {numUsers} users have been processed successfully."
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:1437
-#: specialVueFakeDummyForL10nScript.js:1443
-#: specialVueFakeDummyForL10nScript.js:1506
-#: specialVueFakeDummyForL10nScript.js:1512
-msgid "{failedUsers} were processed unsuccessfully."
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:1439
 #: specialVueFakeDummyForL10nScript.js:1508
+msgid "Unable to handle access action: {message}"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:1446
+#: specialVueFakeDummyForL10nScript.js:1515
+msgid "Failed after {numUsers} users have been processed successfully."
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:1448
+#: specialVueFakeDummyForL10nScript.js:1454
+#: specialVueFakeDummyForL10nScript.js:1517
+#: specialVueFakeDummyForL10nScript.js:1523
+msgid "{failedUsers} were processed unsuccessfully."
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:1450
+#: specialVueFakeDummyForL10nScript.js:1519
 msgid "{remainingUsers} remain unprocessed."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1441
-#: specialVueFakeDummyForL10nScript.js:1510
+#: specialVueFakeDummyForL10nScript.js:1452
+#: specialVueFakeDummyForL10nScript.js:1521
 msgid "{numUsers} users have been processed successfully."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1533
+#: specialVueFakeDummyForL10nScript.js:1544
 msgid "Font cache operation {operation} completed successfully."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1548
+#: specialVueFakeDummyForL10nScript.js:1559
 msgid ""
 "Could not perform the requested font-cache operation \"{operation}\": "
 "{message}"
 msgstr ""
 
+#: specialVueFakeDummyForL10nScript.js:1589
+msgid "Choose the CSV file with the GnuCash accounts tree"
+msgstr ""
+
 #. TRANSLATORS src/components/AdminSettings.vue:25
-#: specialVueFakeDummyForL10nScript.js:1591
+#: specialVueFakeDummyForL10nScript.js:1618
 msgid "Camerata DB"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:34
-#: specialVueFakeDummyForL10nScript.js:1593
+#: specialVueFakeDummyForL10nScript.js:1620
 msgid "User and group backend"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:50
-#: specialVueFakeDummyForL10nScript.js:1595
+#: specialVueFakeDummyForL10nScript.js:1622
 msgid "Sychronize User Backends"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:57
-#: specialVueFakeDummyForL10nScript.js:1597
+#: specialVueFakeDummyForL10nScript.js:1624
 msgid "User Group"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:67
-#: specialVueFakeDummyForL10nScript.js:1599
+#: specialVueFakeDummyForL10nScript.js:1626
 msgid "User Group Admins"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:107
-#: specialVueFakeDummyForL10nScript.js:1601
+#: specialVueFakeDummyForL10nScript.js:1628
 msgid "Create Group"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:121
 #. TRANSLATORS src/components/AdminSettings.vue:127
-#: specialVueFakeDummyForL10nScript.js:1603
-#: specialVueFakeDummyForL10nScript.js:1605
+#: specialVueFakeDummyForL10nScript.js:1630
+#: specialVueFakeDummyForL10nScript.js:1632
 msgid "Wiki Name-Space"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:133
-#: specialVueFakeDummyForL10nScript.js:1607
+#: specialVueFakeDummyForL10nScript.js:1634
 msgid "Configure User Backend"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:141
-#: specialVueFakeDummyForL10nScript.js:1609
+#: specialVueFakeDummyForL10nScript.js:1636
 msgid "Autoconfigure \"{cloudUserBackend}\" app"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:150
-#: specialVueFakeDummyForL10nScript.js:1611
+#: specialVueFakeDummyForL10nScript.js:1638
 msgid "Recryption Requests"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:162
-#: specialVueFakeDummyForL10nScript.js:1613
-#: specialVueFakeDummyForL10nScript.js:1625
+#: specialVueFakeDummyForL10nScript.js:1640
+#: specialVueFakeDummyForL10nScript.js:1652
 msgid "recrypt"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:165
-#: specialVueFakeDummyForL10nScript.js:1615
-#: specialVueFakeDummyForL10nScript.js:1627
+#: specialVueFakeDummyForL10nScript.js:1642
+#: specialVueFakeDummyForL10nScript.js:1654
 #: templates/fragments/mailing-lists/announcements-list-controls.php:84
 msgid "reject"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:172
-#: specialVueFakeDummyForL10nScript.js:1617
+#: specialVueFakeDummyForL10nScript.js:1644
 msgid "organizer"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:174
-#: specialVueFakeDummyForL10nScript.js:1619
+#: specialVueFakeDummyForL10nScript.js:1646
 msgid "group-admin"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:184
-#: specialVueFakeDummyForL10nScript.js:1621
+#: specialVueFakeDummyForL10nScript.js:1648
 msgid "mark/unmark all."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:186
-#: specialVueFakeDummyForL10nScript.js:1623
+#: specialVueFakeDummyForL10nScript.js:1650
 msgid "With the marked requests perform the following action:"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:198
-#: specialVueFakeDummyForL10nScript.js:1629
+#: specialVueFakeDummyForL10nScript.js:1656
 msgid "No recryption requests are pending."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:208
 #. TRANSLATORS src/views/FilesTab.vue:133
-#: specialVueFakeDummyForL10nScript.js:1635
-#: specialVueFakeDummyForL10nScript.js:6550
+#: specialVueFakeDummyForL10nScript.js:1662
+#: specialVueFakeDummyForL10nScript.js:6585
 msgid "e.g. Jane Doe"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:219
-#: specialVueFakeDummyForL10nScript.js:1637
+#: specialVueFakeDummyForL10nScript.js:1664
 msgid "Restrict User Selection to Project"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:220
 #. TRANSLATORS src/views/FilesTab.vue:144
-#: specialVueFakeDummyForL10nScript.js:1639
-#: specialVueFakeDummyForL10nScript.js:6554
+#: specialVueFakeDummyForL10nScript.js:1666
+#: specialVueFakeDummyForL10nScript.js:6589
 msgid "e.g. Auvergne2019"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:231
-#: specialVueFakeDummyForL10nScript.js:1641
+#: specialVueFakeDummyForL10nScript.js:1668
 msgid "include disabled accounts"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:240
-#: specialVueFakeDummyForL10nScript.js:1643
+#: specialVueFakeDummyForL10nScript.js:1670
 msgid "include deactivated accounts"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:247
-#: specialVueFakeDummyForL10nScript.js:1645
+#: specialVueFakeDummyForL10nScript.js:1672
 msgid "Remove the status feedback from the last action."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:250
-#: specialVueFakeDummyForL10nScript.js:1647
+#: specialVueFakeDummyForL10nScript.js:1674
 msgid "Ok"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:259
-#: specialVueFakeDummyForL10nScript.js:1649
+#: specialVueFakeDummyForL10nScript.js:1676
 msgid "With the selected musicians perform the following action:"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:263
-#: specialVueFakeDummyForL10nScript.js:1651
+#: specialVueFakeDummyForL10nScript.js:1678
 msgid "deny access"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:266
-#: specialVueFakeDummyForL10nScript.js:1653
+#: specialVueFakeDummyForL10nScript.js:1680
 msgid "grant access"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:274
 #. TRANSLATORS src/components/AdminSettings.vue:280
-#: specialVueFakeDummyForL10nScript.js:1657
-#: specialVueFakeDummyForL10nScript.js:1659
+#: specialVueFakeDummyForL10nScript.js:1684
+#: specialVueFakeDummyForL10nScript.js:1686
 msgid "GnuCash Participant Receivables Account"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:281
-#: specialVueFakeDummyForL10nScript.js:1661
+#: specialVueFakeDummyForL10nScript.js:1688
 msgid ""
 "e.g. &quot;assets:receivables:participants:{PERSON}:{PROJECT}:{GENERATOR_TAG}"
 "&quot;."
@@ -12514,687 +12542,707 @@ msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:286
 #. TRANSLATORS src/components/AdminSettings.vue:292
-#: specialVueFakeDummyForL10nScript.js:1663
-#: specialVueFakeDummyForL10nScript.js:1665
+#: specialVueFakeDummyForL10nScript.js:1690
+#: specialVueFakeDummyForL10nScript.js:1692
 msgid "GnuCash Instrument Insurances Balancing Account"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:293
-#: specialVueFakeDummyForL10nScript.js:1667
+#: specialVueFakeDummyForL10nScript.js:1694
 msgid ""
 "e.g. &quot;outside-capital:escrow-accounts:insurances:receivables:{BROKER}"
 "&quot;."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:301
-#: specialVueFakeDummyForL10nScript.js:1669
-msgid "Configure Office Fonts for Office Exports"
+#. TRANSLATORS src/components/AdminSettings.vue:298
+#: specialVueFakeDummyForL10nScript.js:1696
+msgid "GnuCash Accounts Tree"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:304
-#: specialVueFakeDummyForL10nScript.js:1671
-msgid "Font Data Folder"
+#: specialVueFakeDummyForL10nScript.js:1698
+msgid "GnuCash Accounts Tree (CSV export)"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:305
+#: specialVueFakeDummyForL10nScript.js:1700
+msgid "e.g. &quot;{sharedFolder}/finance/ledger/accounts.csv&quot;."
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:311
+#: specialVueFakeDummyForL10nScript.js:1702
+msgid "choose"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:325
-#: specialVueFakeDummyForL10nScript.js:1673
-msgid "Default Font"
+#: specialVueFakeDummyForL10nScript.js:1704
+msgid "Configure Office Fonts for Office Exports"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:330
-#: specialVueFakeDummyForL10nScript.js:1675
-msgid "Update Font Data"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:333
-#: specialVueFakeDummyForL10nScript.js:1677
-msgid "Rescan Font Data"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:336
-#: specialVueFakeDummyForL10nScript.js:1679
-msgid "Purge Font Data"
-msgstr ""
-
-#. TRANSLATORS src/components/AdminSettings.vue:343
-#: specialVueFakeDummyForL10nScript.js:1681
-msgid "Configure Problem Report Handling"
+#. TRANSLATORS src/components/AdminSettings.vue:328
+#: specialVueFakeDummyForL10nScript.js:1706
+msgid "Font Data Folder"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:349
-#: specialVueFakeDummyForL10nScript.js:1683
+#: specialVueFakeDummyForL10nScript.js:1708
+msgid "Default Font"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:354
+#: specialVueFakeDummyForL10nScript.js:1710
+msgid "Update Font Data"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:357
+#: specialVueFakeDummyForL10nScript.js:1712
+msgid "Rescan Font Data"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:360
+#: specialVueFakeDummyForL10nScript.js:1714
+msgid "Purge Font Data"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:367
+#: specialVueFakeDummyForL10nScript.js:1716
+msgid "Configure Problem Report Handling"
+msgstr ""
+
+#. TRANSLATORS src/components/AdminSettings.vue:373
+#: specialVueFakeDummyForL10nScript.js:1718
 msgid "Problem Report Email Recipient"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:374
-#: specialVueFakeDummyForL10nScript.js:1685
+#. TRANSLATORS src/components/AdminSettings.vue:398
+#: specialVueFakeDummyForL10nScript.js:1720
 msgid "Email Verification Code"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:392
-#: specialVueFakeDummyForL10nScript.js:1687
+#. TRANSLATORS src/components/AdminSettings.vue:416
+#: specialVueFakeDummyForL10nScript.js:1722
 msgid "resend verification code"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:400
-#: specialVueFakeDummyForL10nScript.js:1689
+#. TRANSLATORS src/components/AdminSettings.vue:424
+#: specialVueFakeDummyForL10nScript.js:1724
 msgid "cancel verification"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:414
-#: specialVueFakeDummyForL10nScript.js:1691
+#. TRANSLATORS src/components/AdminSettings.vue:438
+#: specialVueFakeDummyForL10nScript.js:1726
 msgid "Enable Vue DevTools Support"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:417
-#: specialVueFakeDummyForL10nScript.js:1693
+#. TRANSLATORS src/components/AdminSettings.vue:441
+#: specialVueFakeDummyForL10nScript.js:1728
 msgid "Check to enable Vue Devtools support (also needs unsafe-eval CSP)"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1741
+#: specialVueFakeDummyForL10nScript.js:1776
 msgid "Manage Saved Web-Browser History"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1873
+#: specialVueFakeDummyForL10nScript.js:1908
 msgid "No data coulde be found."
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:42
-#: specialVueFakeDummyForL10nScript.js:1877
+#: specialVueFakeDummyForL10nScript.js:1912
 msgid "Reload History States"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:62
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:133
-#: specialVueFakeDummyForL10nScript.js:1879
-#: specialVueFakeDummyForL10nScript.js:1891
+#: specialVueFakeDummyForL10nScript.js:1914
+#: specialVueFakeDummyForL10nScript.js:1926
 msgid "Active page when the history was saved."
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:68
 #. TRANSLATORS src/components/ProjectEventsListing.vue:148
-#: specialVueFakeDummyForL10nScript.js:1881
-#: specialVueFakeDummyForL10nScript.js:4851
+#: specialVueFakeDummyForL10nScript.js:1916
+#: specialVueFakeDummyForL10nScript.js:4886
 msgid "Toggle Details"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:85
-#: specialVueFakeDummyForL10nScript.js:1883
+#: specialVueFakeDummyForL10nScript.js:1918
 msgid "Push History"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:94
-#: specialVueFakeDummyForL10nScript.js:1885
+#: specialVueFakeDummyForL10nScript.js:1920
 msgid "Replace History"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:103
-#: specialVueFakeDummyForL10nScript.js:1887
+#: specialVueFakeDummyForL10nScript.js:1922
 msgid "Append to Current"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:109
-#: specialVueFakeDummyForL10nScript.js:1889
+#: specialVueFakeDummyForL10nScript.js:1924
 #: src/app/sepa-debit-mandate.js:645
 #: templates/blog/blogthreads.php:100
 msgid "Delete"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:142
-#: specialVueFakeDummyForL10nScript.js:1893
+#: specialVueFakeDummyForL10nScript.js:1928
 msgid "Show the raw data submitted to the server (expert use)."
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:149
-#: specialVueFakeDummyForL10nScript.js:1895
+#: specialVueFakeDummyForL10nScript.js:1930
 msgid "Data-Record"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:78
-#: specialVueFakeDummyForL10nScript.js:1897
+#: specialVueFakeDummyForL10nScript.js:1932
 msgid ""
 "Push the listed items after the current view and navigate to the last active "
 "view of the saved history."
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:87
-#: specialVueFakeDummyForL10nScript.js:1899
+#: specialVueFakeDummyForL10nScript.js:1934
 msgid ""
 "Replace the current browser history by the listed items and navigate to the "
 "last active view of the saved history."
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:96
-#: specialVueFakeDummyForL10nScript.js:1901
+#: specialVueFakeDummyForL10nScript.js:1936
 msgid ""
 "Append the listed items at the end of the current browser history and "
 "navigate to the last active view of the saved history."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1979
+#: specialVueFakeDummyForL10nScript.js:2014
 msgid "Top-Level Erorr"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2074
+#: specialVueFakeDummyForL10nScript.js:2109
 msgid "Personal Comments by {user}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2075
+#: specialVueFakeDummyForL10nScript.js:2110
 msgid "No comment."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2084
+#: specialVueFakeDummyForL10nScript.js:2119
 msgid "Data Record"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:103
-#: specialVueFakeDummyForL10nScript.js:2088
-#: specialVueFakeDummyForL10nScript.js:2213
+#: specialVueFakeDummyForL10nScript.js:2123
+#: specialVueFakeDummyForL10nScript.js:2248
 msgid "Problem Report"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2092
+#: specialVueFakeDummyForL10nScript.js:2127
 msgid "You cannot change this part of the report."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2125
+#: specialVueFakeDummyForL10nScript.js:2160
 msgid ""
 "Your comment has already been submitted with the following notification: "
 "{notification}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2138
+#: specialVueFakeDummyForL10nScript.js:2173
 msgid "Your problem-report has been submitted."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2153
+#: specialVueFakeDummyForL10nScript.js:2188
 #: src/app/file-download.js:60
 #: src/toolkit/util/file-download.js:50
 msgid "unknown error"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2155
+#: specialVueFakeDummyForL10nScript.js:2190
 msgid "Could not submit the problem report: \"{errorString}\"."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:44
-#: specialVueFakeDummyForL10nScript.js:2191
+#: specialVueFakeDummyForL10nScript.js:2226
 msgid "Error Details"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:56
-#: specialVueFakeDummyForL10nScript.js:2193
+#: specialVueFakeDummyForL10nScript.js:2228
 msgid "report error"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:62
-#: specialVueFakeDummyForL10nScript.js:2195
+#: specialVueFakeDummyForL10nScript.js:2230
 msgid "show details"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:65
-#: specialVueFakeDummyForL10nScript.js:2197
+#: specialVueFakeDummyForL10nScript.js:2232
 msgid "go to previous page"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:69
-#: specialVueFakeDummyForL10nScript.js:2199
+#: specialVueFakeDummyForL10nScript.js:2234
 msgid "try to reload"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:76
-#: specialVueFakeDummyForL10nScript.js:2201
+#: specialVueFakeDummyForL10nScript.js:2236
 msgid "AXIOS ERROR WITH RESPONSE DATA"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:80
-#: specialVueFakeDummyForL10nScript.js:2203
+#: specialVueFakeDummyForL10nScript.js:2238
 msgid "AXIOS ERROR WITHOUT RESPONSE DATA"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:84
-#: specialVueFakeDummyForL10nScript.js:2205
+#: specialVueFakeDummyForL10nScript.js:2240
 msgid "FRONTEND ERROR"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:88
-#: specialVueFakeDummyForL10nScript.js:2207
+#: specialVueFakeDummyForL10nScript.js:2242
 msgid "jQuery AJAX ERROR WITH RESPONSE DATA"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:92
-#: specialVueFakeDummyForL10nScript.js:2209
+#: specialVueFakeDummyForL10nScript.js:2244
 msgid "jQuery AJAX ERROR WITHOUT RESPONSE DATA"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:95
-#: specialVueFakeDummyForL10nScript.js:2211
+#: specialVueFakeDummyForL10nScript.js:2246
 msgid "UNKNOWN ERROR"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:133
-#: specialVueFakeDummyForL10nScript.js:2219
+#: specialVueFakeDummyForL10nScript.js:2254
 msgid "Modify the comment of the problem report."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:144
-#: specialVueFakeDummyForL10nScript.js:2221
+#: specialVueFakeDummyForL10nScript.js:2256
 msgid "Close the problem report page."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:153
-#: specialVueFakeDummyForL10nScript.js:2223
+#: specialVueFakeDummyForL10nScript.js:2258
 msgid "Optional Comment"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:155
-#: specialVueFakeDummyForL10nScript.js:2225
+#: specialVueFakeDummyForL10nScript.js:2260
 msgid "You can optionally add comments. Markdown is supported."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:157
-#: specialVueFakeDummyForL10nScript.js:2227
+#: specialVueFakeDummyForL10nScript.js:2262
 msgid "A preview of the error report is shown below."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:164
-#: specialVueFakeDummyForL10nScript.js:2229
+#: specialVueFakeDummyForL10nScript.js:2264
 msgid "Please add your personal notes here."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2251
+#: specialVueFakeDummyForL10nScript.js:2286
 msgid "Sorry, an Error Occurred"
 msgstr ""
 
 #. TRANSLATORS src/components/HtmlErrorModal.vue:30
-#: specialVueFakeDummyForL10nScript.js:2280
+#: specialVueFakeDummyForL10nScript.js:2315
 msgid "An Error Occurred"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2371
+#: specialVueFakeDummyForL10nScript.js:2406
 msgid ""
 "Unable to download the invoice with invoice-number {invoiceNumber}: {error}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2372
+#: specialVueFakeDummyForL10nScript.js:2407
 msgid ""
 "Unable to download the mail-merge substituions for invoice-number "
 "{invoiceNumber}: {error}."
 msgstr ""
 
 #. TRANSLATORS src/components/InvoiceActionsMenu.vue:35
-#: specialVueFakeDummyForL10nScript.js:2394
+#: specialVueFakeDummyForL10nScript.js:2429
 msgid "Download Standard Invoice"
 msgstr ""
 
 #. TRANSLATORS src/components/InvoiceActionsMenu.vue:45
-#: specialVueFakeDummyForL10nScript.js:2396
+#: specialVueFakeDummyForL10nScript.js:2431
 msgid "Email Standard Invoice"
 msgstr ""
 
 #. TRANSLATORS src/components/InvoiceActionsMenu.vue:55
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:78
-#: specialVueFakeDummyForL10nScript.js:2398
-#: specialVueFakeDummyForL10nScript.js:5010
+#: specialVueFakeDummyForL10nScript.js:2433
+#: specialVueFakeDummyForL10nScript.js:5045
 msgid "Download Substitution Data"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2696
+#: specialVueFakeDummyForL10nScript.js:2731
 msgid "Query has been copied to the clipboard."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2699
+#: specialVueFakeDummyForL10nScript.js:2734
 msgid "Failed copying query to the clipboard: {error}."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyQueryLogModal.vue:36
-#: specialVueFakeDummyForL10nScript.js:2705
+#: specialVueFakeDummyForL10nScript.js:2740
 msgid "Legacy Sql Query Log"
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyQueryLogModal.vue:48
-#: specialVueFakeDummyForL10nScript.js:2707
+#: specialVueFakeDummyForL10nScript.js:2742
 msgid "SQL Query"
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyQueryLogModal.vue:55
-#: specialVueFakeDummyForL10nScript.js:2709
-#: specialVueFakeDummyForL10nScript.js:2711
+#: specialVueFakeDummyForL10nScript.js:2744
+#: specialVueFakeDummyForL10nScript.js:2746
 msgid "Copy to Clipboard"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2905
-#: specialVueFakeDummyForL10nScript.js:4110
+#: specialVueFakeDummyForL10nScript.js:2940
+#: specialVueFakeDummyForL10nScript.js:4145
 #: src/app/user-manual.js:72
 msgid "User Manual: {section}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2965
+#: specialVueFakeDummyForL10nScript.js:3000
 msgid "Error updating legacy route from {template} to {newTemplate}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3052
+#: specialVueFakeDummyForL10nScript.js:3087
 msgid "Error loading view \"{template}\"."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3157
+#: specialVueFakeDummyForL10nScript.js:3192
 msgid "Error synchronizing history state for template \"{template}\"."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3246
+#: specialVueFakeDummyForL10nScript.js:3281
 msgid "An error occured during communication with the server."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:28
-#: specialVueFakeDummyForL10nScript.js:3282
+#: specialVueFakeDummyForL10nScript.js:3317
 msgid "Navigate to the previous view in the browser history stack."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:39
-#: specialVueFakeDummyForL10nScript.js:3284
+#: specialVueFakeDummyForL10nScript.js:3319
 msgid "Reload the current view."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:49
-#: specialVueFakeDummyForL10nScript.js:3286
+#: specialVueFakeDummyForL10nScript.js:3321
 msgid "Navigate to the next view in the browser history stack."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:59
-#: specialVueFakeDummyForL10nScript.js:3288
+#: specialVueFakeDummyForL10nScript.js:3323
 msgid "Go to the start page of the app."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:76
-#: specialVueFakeDummyForL10nScript.js:3290
+#: specialVueFakeDummyForL10nScript.js:3325
 msgid "Tooltips"
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:82
 #. TRANSLATORS src/components/ProjectEventsListing.vue:106
-#: specialVueFakeDummyForL10nScript.js:3292
-#: specialVueFakeDummyForL10nScript.js:4843
+#: specialVueFakeDummyForL10nScript.js:3327
+#: specialVueFakeDummyForL10nScript.js:4878
 msgid "Manual (other tab or window)"
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:87
 #. TRANSLATORS src/components/ProjectEventsListing.vue:114
-#: specialVueFakeDummyForL10nScript.js:3294
-#: specialVueFakeDummyForL10nScript.js:4845
+#: specialVueFakeDummyForL10nScript.js:3329
+#: specialVueFakeDummyForL10nScript.js:4880
 #: templates/emailform/form.php:62
 msgid "Manual (popup)"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3481
-#: specialVueFakeDummyForL10nScript.js:3490
+#: specialVueFakeDummyForL10nScript.js:3516
+#: specialVueFakeDummyForL10nScript.js:3525
 msgid "Log entry successfully copied"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:17
-#: specialVueFakeDummyForL10nScript.js:3495
+#: specialVueFakeDummyForL10nScript.js:3530
 msgid "Level"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:19
-#: specialVueFakeDummyForL10nScript.js:3497
+#: specialVueFakeDummyForL10nScript.js:3532
 msgid "App"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:21
-#: specialVueFakeDummyForL10nScript.js:3499
+#: specialVueFakeDummyForL10nScript.js:3534
 msgid "No app in context"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:23
-#: specialVueFakeDummyForL10nScript.js:3501
+#: specialVueFakeDummyForL10nScript.js:3536
 msgid "Time"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:26
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:30
-#: specialVueFakeDummyForL10nScript.js:3503
-#: specialVueFakeDummyForL10nScript.js:3505
+#: specialVueFakeDummyForL10nScript.js:3538
+#: specialVueFakeDummyForL10nScript.js:3540
 msgid "Copy raw entry"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:32
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:36
-#: specialVueFakeDummyForL10nScript.js:3507
-#: specialVueFakeDummyForL10nScript.js:3509
+#: specialVueFakeDummyForL10nScript.js:3542
+#: specialVueFakeDummyForL10nScript.js:3544
 msgid "Copy formatted entry"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:42
-#: specialVueFakeDummyForL10nScript.js:3511
+#: specialVueFakeDummyForL10nScript.js:3546
 msgid "Hide exception details"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3511
+#: specialVueFakeDummyForL10nScript.js:3546
 msgid "View exception details"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:53
-#: specialVueFakeDummyForL10nScript.js:3513
+#: specialVueFakeDummyForL10nScript.js:3548
 msgid "Raw log entry"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3543
+#: specialVueFakeDummyForL10nScript.js:3578
 msgid "Caused by {exception}"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/exception/TraceLine.vue:10
-#: specialVueFakeDummyForL10nScript.js:3592
+#: specialVueFakeDummyForL10nScript.js:3627
 msgid "Line {line}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3797
+#: specialVueFakeDummyForL10nScript.js:3832
 msgid "Project Wiki for {projectName}"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:67
-#: specialVueFakeDummyForL10nScript.js:3844
+#: specialVueFakeDummyForL10nScript.js:3879
 msgid "Project Files"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:78
-#: specialVueFakeDummyForL10nScript.js:3846
+#: specialVueFakeDummyForL10nScript.js:3881
 msgid "Project Notes"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:88
-#: specialVueFakeDummyForL10nScript.js:3848
+#: specialVueFakeDummyForL10nScript.js:3883
 msgid "Events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:109
-#: specialVueFakeDummyForL10nScript.js:3852
+#: specialVueFakeDummyForL10nScript.js:3887
 msgid "Business Contacts / Associates"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:120
-#: specialVueFakeDummyForL10nScript.js:3854
+#: specialVueFakeDummyForL10nScript.js:3889
 msgid "Debit Mandates"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:131
-#: specialVueFakeDummyForL10nScript.js:3856
+#: specialVueFakeDummyForL10nScript.js:3891
 msgid "Payments"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:142
-#: specialVueFakeDummyForL10nScript.js:3858
+#: specialVueFakeDummyForL10nScript.js:3893
 msgid "Invoices"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:152
-#: specialVueFakeDummyForL10nScript.js:3860
+#: specialVueFakeDummyForL10nScript.js:3895
 msgid "Financial Balance"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4110
+#: specialVueFakeDummyForL10nScript.js:4145
 #: templates/emailform/part.emailform.composer.php:279
 msgid "Project Events"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4495
+#: specialVueFakeDummyForL10nScript.js:4530
 msgid "Unable to export selected events."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4652
+#: specialVueFakeDummyForL10nScript.js:4687
 msgid "Unable to modify the absence field."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4695
+#: specialVueFakeDummyForL10nScript.js:4730
 msgid "Unable to detach events from the project."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4772
+#: specialVueFakeDummyForL10nScript.js:4807
 msgid "Unable to delete events."
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:26
-#: specialVueFakeDummyForL10nScript.js:4829
+#: specialVueFakeDummyForL10nScript.js:4864
 msgid "{name} - Appointments"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4829
+#: specialVueFakeDummyForL10nScript.js:4864
 msgid "Appointments"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:36
-#: specialVueFakeDummyForL10nScript.js:4831
+#: specialVueFakeDummyForL10nScript.js:4866
 msgid "create a new appointment"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:57
-#: specialVueFakeDummyForL10nScript.js:4833
+#: specialVueFakeDummyForL10nScript.js:4868
 msgid "mark all events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:66
-#: specialVueFakeDummyForL10nScript.js:4835
+#: specialVueFakeDummyForL10nScript.js:4870
 msgid "unmark all events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:75
-#: specialVueFakeDummyForL10nScript.js:4837
+#: specialVueFakeDummyForL10nScript.js:4872
 msgid "open email editor"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:85
-#: specialVueFakeDummyForL10nScript.js:4841
+#: specialVueFakeDummyForL10nScript.js:4876
 msgid "export events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:120
-#: specialVueFakeDummyForL10nScript.js:4847
+#: specialVueFakeDummyForL10nScript.js:4882
 msgid "reload the project appointments"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:133
-#: specialVueFakeDummyForL10nScript.js:4849
+#: specialVueFakeDummyForL10nScript.js:4884
 msgid "no events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:164
-#: specialVueFakeDummyForL10nScript.js:4853
+#: specialVueFakeDummyForL10nScript.js:4888
 msgid "select a year"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:180
-#: specialVueFakeDummyForL10nScript.js:4855
+#: specialVueFakeDummyForL10nScript.js:4890
 msgid "detached"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:216
-#: specialVueFakeDummyForL10nScript.js:4857
+#: specialVueFakeDummyForL10nScript.js:4892
 msgid "act only on this event"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:226
-#: specialVueFakeDummyForL10nScript.js:4859
+#: specialVueFakeDummyForL10nScript.js:4894
 msgid "act on the event series"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:236
-#: specialVueFakeDummyForL10nScript.js:4861
+#: specialVueFakeDummyForL10nScript.js:4896
 msgid "act on all related events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:249
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::RECORD_ABSENCE_CATEGORY = 'record absence';
-#: specialVueFakeDummyForL10nScript.js:4863
+#: specialVueFakeDummyForL10nScript.js:4898
 #: lib/Service/EventsService.php:1203
 #, php-format
 msgid "record absence"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:263
-#: specialVueFakeDummyForL10nScript.js:4865
+#: specialVueFakeDummyForL10nScript.js:4900
 msgid "mark for download / em@il"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:284
-#: specialVueFakeDummyForL10nScript.js:4869
-#: specialVueFakeDummyForL10nScript.js:4871
+#: specialVueFakeDummyForL10nScript.js:4904
+#: specialVueFakeDummyForL10nScript.js:4906
 msgid "open in calendar-app"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:305
-#: specialVueFakeDummyForL10nScript.js:4873
+#: specialVueFakeDummyForL10nScript.js:4908
 #: templates/fragments/projects/project-mailing-list.php:114
 msgid "delete"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:316
-#: specialVueFakeDummyForL10nScript.js:4875
+#: specialVueFakeDummyForL10nScript.js:4910
 msgid "detach from project"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:327
-#: specialVueFakeDummyForL10nScript.js:4877
+#: specialVueFakeDummyForL10nScript.js:4912
 msgid "reattach to project"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4957
-#: specialVueFakeDummyForL10nScript.js:4963
+#: specialVueFakeDummyForL10nScript.js:4992
+#: specialVueFakeDummyForL10nScript.js:4998
 msgid "Sending receipts by email is not yet supported."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4988
+#: specialVueFakeDummyForL10nScript.js:5023
 msgid ""
 "Unable to download the receipt for the payment with id {paymentId}: {error}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4989
+#: specialVueFakeDummyForL10nScript.js:5024
 msgid ""
 "Unable to download the mail-merge substituions for the payment with id "
 "{paymentId}: {error}."
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:34
-#: specialVueFakeDummyForL10nScript.js:5002
+#: specialVueFakeDummyForL10nScript.js:5037
 msgid "Download Donation Receipt"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:45
-#: specialVueFakeDummyForL10nScript.js:5004
+#: specialVueFakeDummyForL10nScript.js:5039
 msgid "Email Donation Receipt"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:56
-#: specialVueFakeDummyForL10nScript.js:5006
+#: specialVueFakeDummyForL10nScript.js:5041
 msgid "Download Standard Receipt"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:67
-#: specialVueFakeDummyForL10nScript.js:5008
+#: specialVueFakeDummyForL10nScript.js:5043
 msgid "Email Standard Receipt"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5253
-#: specialVueFakeDummyForL10nScript.js:5553
+#: specialVueFakeDummyForL10nScript.js:5288
+#: specialVueFakeDummyForL10nScript.js:5588
 msgid "** everybody **"
 msgstr ""
 
@@ -13202,153 +13250,153 @@ msgstr ""
 #. TRANSLATORS src/components/SelectMusicians.vue:45
 #. TRANSLATORS src/components/SettingsSelectGroup.vue:47
 #. TRANSLATORS src/components/SettingsSelectUsers.vue:60
-#: specialVueFakeDummyForL10nScript.js:5364
-#: specialVueFakeDummyForL10nScript.js:5366
-#: specialVueFakeDummyForL10nScript.js:5368
-#: specialVueFakeDummyForL10nScript.js:5370
-#: specialVueFakeDummyForL10nScript.js:5621
-#: specialVueFakeDummyForL10nScript.js:5623
-#: specialVueFakeDummyForL10nScript.js:5625
-#: specialVueFakeDummyForL10nScript.js:5627
-#: specialVueFakeDummyForL10nScript.js:5961
-#: specialVueFakeDummyForL10nScript.js:5963
-#: specialVueFakeDummyForL10nScript.js:5965
-#: specialVueFakeDummyForL10nScript.js:5967
-#: specialVueFakeDummyForL10nScript.js:6069
-#: specialVueFakeDummyForL10nScript.js:6071
-#: specialVueFakeDummyForL10nScript.js:6073
-#: specialVueFakeDummyForL10nScript.js:6075
+#: specialVueFakeDummyForL10nScript.js:5399
+#: specialVueFakeDummyForL10nScript.js:5401
+#: specialVueFakeDummyForL10nScript.js:5403
+#: specialVueFakeDummyForL10nScript.js:5405
+#: specialVueFakeDummyForL10nScript.js:5656
+#: specialVueFakeDummyForL10nScript.js:5658
+#: specialVueFakeDummyForL10nScript.js:5660
+#: specialVueFakeDummyForL10nScript.js:5662
+#: specialVueFakeDummyForL10nScript.js:5996
+#: specialVueFakeDummyForL10nScript.js:5998
+#: specialVueFakeDummyForL10nScript.js:6000
+#: specialVueFakeDummyForL10nScript.js:6002
+#: specialVueFakeDummyForL10nScript.js:6104
+#: specialVueFakeDummyForL10nScript.js:6106
+#: specialVueFakeDummyForL10nScript.js:6108
+#: specialVueFakeDummyForL10nScript.js:6110
 msgid "undefined"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5718
+#: specialVueFakeDummyForL10nScript.js:5753
 msgid "Permanent"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5849
+#: specialVueFakeDummyForL10nScript.js:5884
 msgid "Unable to export the bulktransaction with id \"{entityId}\"."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5869
+#: specialVueFakeDummyForL10nScript.js:5904
 msgid "Export of GnuCash balance bookings is not yet implemented."
 msgstr ""
 
 #. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:35
-#: specialVueFakeDummyForL10nScript.js:5874
+#: specialVueFakeDummyForL10nScript.js:5909
 msgid "Bank Transaction Data"
 msgstr ""
 
 #. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:45
-#: specialVueFakeDummyForL10nScript.js:5876
+#: specialVueFakeDummyForL10nScript.js:5911
 msgid "Email Pre-Notification"
 msgstr ""
 
 #. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:55
-#: specialVueFakeDummyForL10nScript.js:5878
+#: specialVueFakeDummyForL10nScript.js:5913
 msgid "GnuCash Balance Data"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6083
+#: specialVueFakeDummyForL10nScript.js:6118
 msgid "copy"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6083
+#: specialVueFakeDummyForL10nScript.js:6118
 msgid "move"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6083
+#: specialVueFakeDummyForL10nScript.js:6118
 msgid "link"
 msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:43
-#: specialVueFakeDummyForL10nScript.js:6196
+#: specialVueFakeDummyForL10nScript.js:6231
 #: templates/settings.php:67
 msgid "Email"
 msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:51
-#: specialVueFakeDummyForL10nScript.js:6198
+#: specialVueFakeDummyForL10nScript.js:6233
 msgid "Phone"
 msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:79
-#: specialVueFakeDummyForL10nScript.js:6202
+#: specialVueFakeDummyForL10nScript.js:6237
 msgid "Propability"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6331
+#: specialVueFakeDummyForL10nScript.js:6366
 msgid "Required."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6473
+#: specialVueFakeDummyForL10nScript.js:6508
 msgid "File download failed for {fileName}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6509
+#: specialVueFakeDummyForL10nScript.js:6544
 msgid "no response received from {ajaxUrl}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6513
+#: specialVueFakeDummyForL10nScript.js:6548
 msgid "Could not perform mail-merge: {message}"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:31
-#: specialVueFakeDummyForL10nScript.js:6520
+#: specialVueFakeDummyForL10nScript.js:6555
 msgid "Mail merge operations"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:40
-#: specialVueFakeDummyForL10nScript.js:6522
+#: specialVueFakeDummyForL10nScript.js:6557
 msgid "Download Merged Document"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:43
-#: specialVueFakeDummyForL10nScript.js:6524
+#: specialVueFakeDummyForL10nScript.js:6559
 msgid "download locally"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:48
-#: specialVueFakeDummyForL10nScript.js:6526
+#: specialVueFakeDummyForL10nScript.js:6561
 msgid "Merge Document into Cloud"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:54
-#: specialVueFakeDummyForL10nScript.js:6528
+#: specialVueFakeDummyForL10nScript.js:6563
 msgid "save to cloud"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:59
-#: specialVueFakeDummyForL10nScript.js:6530
+#: specialVueFakeDummyForL10nScript.js:6565
 msgid "Download Replacement Data"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:65
-#: specialVueFakeDummyForL10nScript.js:6532
+#: specialVueFakeDummyForL10nScript.js:6567
 msgid "download data"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:72
-#: specialVueFakeDummyForL10nScript.js:6534
+#: specialVueFakeDummyForL10nScript.js:6569
 msgid "Sender"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:80
-#: specialVueFakeDummyForL10nScript.js:6538
+#: specialVueFakeDummyForL10nScript.js:6573
 msgid "e.g. John Doe"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:106
-#: specialVueFakeDummyForL10nScript.js:6542
+#: specialVueFakeDummyForL10nScript.js:6577
 msgid "Musician's Datebase"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:115
-#: specialVueFakeDummyForL10nScript.js:6544
+#: specialVueFakeDummyForL10nScript.js:6579
 msgid "Addressbooks"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:125
-#: specialVueFakeDummyForL10nScript.js:6546
+#: specialVueFakeDummyForL10nScript.js:6581
 msgid "Enter Address"
 msgstr ""
 
@@ -13377,7 +13425,7 @@ msgstr ""
 #: src/app/email.js:97
 #: src/app/email.js:851
 #: src/app/email.js:977
-#: src/app/project-participant-fields.js:258
+#: src/app/project-participant-fields.js:313
 #: src/app/settings.js:1360
 #: src/app/settings.js:1373
 #: src/toolkit/util/ajax.js:239
@@ -14001,51 +14049,51 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/app/project-participant-fields-display.js:110
+#: src/app/project-participant-fields-display.js:149
 msgid ""
 "Input element is not empty, do your really want to revert it to its default "
 "value?"
 msgstr ""
 
-#: src/app/project-participant-fields-display.js:111
+#: src/app/project-participant-fields-display.js:150
 msgid "Revert to default value?"
 msgstr ""
 
-#: src/app/project-participant-fields.js:124
+#: src/app/project-participant-fields.js:179
 msgid ""
 "Update strategy \"{updateStrategy}\" replaces the value of existing "
 "receivables, please confirm that you want to continue."
 msgstr ""
 
-#: src/app/project-participant-fields.js:127
+#: src/app/project-participant-fields.js:182
 msgid "Overwrite Existing Records?"
 msgstr ""
 
-#: src/app/project-participant-fields.js:156
+#: src/app/project-participant-fields.js:211
 msgid "Updating recurring receivables"
 msgstr ""
 
-#: src/app/project-participant-fields.js:165
+#: src/app/project-participant-fields.js:220
 msgid "cancel"
 msgstr ""
 
-#: src/app/project-participant-fields.js:166
+#: src/app/project-participant-fields.js:221
 msgid "Cancel the operation in progress."
 msgstr ""
 
-#: src/app/project-participant-fields.js:169
+#: src/app/project-participant-fields.js:224
 msgid "Cancelled by User"
 msgstr ""
 
-#: src/app/project-participant-fields.js:222
+#: src/app/project-participant-fields.js:277
 msgid "Updating receivables for {fieldName}, {receivableLabel}, {musicianName}"
 msgstr ""
 
-#: src/app/project-participant-fields.js:252
+#: src/app/project-participant-fields.js:307
 msgid "{musicianName}, {receivableLabel}: \"{message}\"."
 msgstr ""
 
-#: src/app/project-participant-fields.js:531
+#: src/app/project-participant-fields.js:587
 msgid ""
 "This field already is filled out for some participants. Changing the "
 "multiplicity is still possible in some cases, but generally irrevertible. "
@@ -14056,11 +14104,11 @@ msgid ""
 "or \"HTML-text\"."
 msgstr ""
 
-#: src/app/project-participant-fields.js:532
+#: src/app/project-participant-fields.js:588
 msgid "Really allow changing the multiplicity?"
 msgstr ""
 
-#: src/app/project-participant-fields.js:553
+#: src/app/project-participant-fields.js:609
 msgid ""
 "This field already is filled out for some participants. Changing the data-"
 "type is still possible in some cases, but does not always make sense. The "
@@ -14068,7 +14116,7 @@ msgid ""
 "prepared that the results might look unexpected."
 msgstr ""
 
-#: src/app/project-participant-fields.js:554
+#: src/app/project-participant-fields.js:610
 msgid "Really allow changing the data-type?"
 msgstr ""
 
@@ -16857,7 +16905,7 @@ msgstr ""
 #: templates/settings/share-settings.php:246
 #: templates/settings/share-settings.php:269
 #: templates/settings/share-settings.php:344
-#: lib/Service/Finance/GnuCashConnectorService.php:249
+#: lib/Service/Finance/GnuCashConnectorService.php:258
 #, php-format
 msgid "PROJECT"
 msgstr ""
@@ -17952,14 +18000,14 @@ msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\GnuCashConnectorService::PERSON_KEY = 'PERSON';
-#: lib/Service/Finance/GnuCashConnectorService.php:243
+#: lib/Service/Finance/GnuCashConnectorService.php:252
 #, php-format
 msgid "PERSON"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\GnuCashConnectorService::GENERATOR_TAG_KEY = 'GENERATOR_TAG';
-#: lib/Service/Finance/GnuCashConnectorService.php:255
+#: lib/Service/Finance/GnuCashConnectorService.php:264
 #, php-format
 msgid "GENERATOR_TAG"
 msgstr ""
@@ -18022,7 +18070,7 @@ msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ToolTipsDataService::PME_SHOW_ALL_TEXT = 'Simply blends in all the columns of the table as if all the tabs would be activated at the same time.';
-#: lib/Service/ToolTipsDataService.php:1150
+#: lib/Service/ToolTipsDataService.php:1151
 #: lib/Service/ToolTipsDataService.php:454
 #, php-format
 msgid ""
