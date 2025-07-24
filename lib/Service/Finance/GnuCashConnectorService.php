@@ -28,9 +28,11 @@ use Throwable;
 use UnexpectedValueException;
 
 use OCP\AppFramework\IAppContainer;
+use OCP\IDateTimeFormatter;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -39,6 +41,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Fie
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\Registration as ServiceRegistration;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -381,5 +384,88 @@ FROM %2$s';
       'projectName' => $name,
       'accounts' => $autocompleteData,
     ];
+  }
+
+  /**
+   * @return string The currency code used by the orchestra.
+   */
+  protected function getAppCurrencyCode():string
+  {
+    $locale = $this->appContainer->get(ServiceRegistration::APP_LOCALE);
+    $fmt = new NumberFormatter($locale, \NumberFormatter::CURRENCY);
+    return $fmt->getTextAttribute(\NumberFormatter::CURRENCY_CODE);
+  }
+
+  /**
+   * Export a CompositePayment entity to GnuCash transaction CSV import. We
+   * use multi-split mode as the composite payment may contain arbitrarily
+   * many splits with different transfer accounts.
+   *
+   * @param Entities\CompositePayment $compositePayment
+   *
+   * @return array
+   */
+  public function exportCompositePayment(Entities\CompositePayment $compositePayment): array
+  {
+    $currencyCode = $this->getAppCurrencyCode();
+
+    $dueDate = $compositePayment->getReceivablesDueDate();
+    /** @var IDateTimeFormatter $dateTimeFormatter */
+    $dateTimeFormatter = $this->appContainer->get(IDateTimeFormatter::class);
+    $dateTimeFormatter->formatDate($dueDate);
+    $receivableAccounts = [];
+
+    // it need not be the case that a composite payment result in the same
+    // balancing account for each splits, though in general this should be the
+    // case.
+    /** @var Entities\ProjectPayment $projectPayment */
+    foreach ($compositePayment->projectPayments as $projectPayment) {
+      $receivableAccount = $this->generateParticipantReceivablesAccount($projectPayment->getReceivable());
+      if (!isset($receivableAccounts[$receivableAccount])) {
+        $receivableAccounts[$receivableAccount] = [
+          'payments' => [ $projectPayment ],
+        ];
+      } else {
+        $receivableAccounts[$receivableAccount]['payments'][] = $projectPayment;
+      }
+    }
+    $data = [];
+    foreach ($receivableAccounts as $receivableAccount) {
+      $dueDate = max(
+        ...array_map(
+          fn(Entities\ProjectPayment $payment) => $payment->getReceivable()->getField()->getDueDate(),
+        ),
+      );
+      /** @var RationalNumber $subTotals */
+      $subTotals = array_reduce(
+        $receivableAccount['payments'],
+        fn(RationalNumber $carry, Entities\ProjectPayment $payment) => $carry->add($payment->getAmount()),
+        RationalNumber::zero(),
+      );
+      $transactionId = md5($receivableAccount);
+      $data[] = [
+        'transactionId' => $transactionId,
+        'date' => $dueDate,
+        'amount' => $subTotals->toDecimal(2), // + or minus?
+        'account' => $receivableAccount,
+        'subject' => $compositePayment->getSubject(),
+        'currency' => $currencyCode,
+        'notes' => '',
+      ];
+      /** @var Entities\ProjectPayment $projectPayment */
+      foreach ($receivableAccount['payments'] as $projectPayment) {
+        /** @var RationalNumber $amount */
+        $data[] = [
+          'transactionId' => $transactionId,
+          'date' => '',
+          'amount' => $projectPayment->getAmount()->mul(-$subTotals->sign())->toDecimal(2),
+          'account' => $projectPayment->getReceivable()->getBalancingAccount(),
+          'subject' => '',
+          'currency' => '',
+          'notes' => '',
+        ];
+      }
+    }
+    return $data;
   }
 }
