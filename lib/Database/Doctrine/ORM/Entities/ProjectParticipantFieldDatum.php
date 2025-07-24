@@ -571,6 +571,16 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   }
 
   /**
+   * Get the balancingAccount.
+   *
+   * @return null|string
+   */
+  public function getBalancingAccount(): ?string
+  {
+    return $this->dataOption->getBalancingAccount();
+  }
+
+  /**
    * Suggestion for a reference field for debit notes or money
    * transfers. Constructed from the labels of the associated
    * ProjectParticipantField and ProjectParticipantFieldDataOption
