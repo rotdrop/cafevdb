@@ -24,6 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use DateTimeInterface;
+use DateTimeImmutable;
+
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Common\UndoableFolderRename;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
@@ -119,13 +122,13 @@ class ProjectParticipantField implements \ArrayAccess
   private $dataOptions;
 
   /**
-   * @var \DateTimeImmutable
+   * @var DateTimeImmutable
    */
   #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'Due-date for financial fields.'])]
   private $dueDate = null;
 
   /**
-   * @var \DateTimeImmutable
+   * @var DateTimeImmutable
    */
   #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'Due-date of deposit for financial fields.'])]
   private $depositDueDate = null;
@@ -610,7 +613,7 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set dueDate.
    *
-   * @param string|null|\DateTimeInterface $dueDate
+   * @param string|null|DateTimeInterface $dueDate
    *
    * @return ProjectParticipantField
    */
@@ -623,9 +626,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get dueDate.
    *
-   * @return \DateTimeImmutable|null
+   * @return DateTimeImmutable|null
    */
-  public function getDueDate():?\DateTimeImmutable
+  public function getDueDate():?DateTimeImmutable
   {
     return $this->dueDate;
   }
@@ -633,7 +636,7 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set depositDueDate.
    *
-   * @param string|null|\DateTimeInterface $depositDueDate
+   * @param string|null|DateTimeInterface $depositDueDate
    *
    * @return ProjectParticipantField
    */
@@ -646,9 +649,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get depositDueDate.
    *
-   * @return \DateTimeImmutable|null
+   * @return DateTimeImmutable|null
    */
-  public function getDepositDueDate():?\DateTimeImmutable
+  public function getDepositDueDate():?DateTimeImmutable
   {
     return $this->depositDueDate;
   }
