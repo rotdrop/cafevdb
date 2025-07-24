@@ -883,6 +883,20 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     return $this;
   }
 
+  /**
+   * Return the maximum due-date of all underlying receivables.
+   *
+   * @return DateTimeInterface
+   */
+  public function getReceivablesDueData():DateTimeInterface
+  {
+    return max(
+      ...$this->projectPayments->map(
+        fn(ProjectPayment $payment) => $payment->getReceivable()->getField()->getDueDate(),
+      )->toArray(),
+    );
+  }
+
   /** {@inheritdoc} */
   public function jsonSerialize():array
   {
