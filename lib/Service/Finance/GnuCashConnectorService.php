@@ -397,7 +397,23 @@ FROM %2$s';
   }
 
   /**
-   * Export a CompositePayment entity to GnuCash transaction CSV import. We
+   * Export a bulk transaction to a GnuCash multi-split transactions CSV import.
+   *
+   * @param Entities\SepaBulkTransaction $bulkTransaction
+   *
+   * @return array
+   */
+  public function exportBulkTransactionBalancingEntries(Entities\SepaBulkTransaction $bulkTransaction): array
+  {
+    $data = [];
+    foreach ($bulkTransaction->getPayments() as $compositePayment) {
+      $data = array_merge($data, $this->exportCompositePayment($compositePayment));
+    }
+    return $data;
+  }
+
+  /**
+   * Export a CompositePayment entity to a GnuCash transactions CSV import. We
    * use multi-split mode as the composite payment may contain arbitrarily
    * many splits with different transfer accounts.
    *
@@ -405,7 +421,7 @@ FROM %2$s';
    *
    * @return array
    */
-  public function exportCompositePayment(Entities\CompositePayment $compositePayment): array
+  public function exportCompositePaymentBalancingEntries(Entities\CompositePayment $compositePayment): array
   {
     $currencyCode = $this->getAppCurrencyCode();
 
