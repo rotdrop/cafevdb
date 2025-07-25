@@ -138,7 +138,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       function($value) {
         return sprintf('%04d', $value);
       },
-      array_merge([0], range($startingYear, $endingYear)));
+      array_merge([0], range($startingYear, $endingYear)),
+    );
 
     // Split receivables by insurance broker
     $brokers = $this->getDatabaseRepository(Entities\InsuranceBroker::class)->findAll();
@@ -149,11 +150,13 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       foreach ($brokers as $broker) {
         $brokerShortName = $broker->getShortName();
         if ($year == '0000') {
-          $labelText = $this->l->t($labelTemplate = 'Opening Balance (%s)', $brokerShortName);
+          // TRANSLATORS: Parameter is a name.
+          $labelText = $this->l->t($labelTemplate = 'Opening Balance: %s', $brokerShortName);
           $tooltipTemplate = $this->toolTipsService['instrument-insurance:opening-balance'] ?? '';
           $tooltipText = $this->l->t($tooltipTemplate);
         } else {
-          $labelText = $this->l->t($labelTemplate = 'Insurance Fee %s (%s)', [ $year, $brokerShortName ]);
+          // TRANSLATORS: First parameter is a year YYYY, second parameter a name.
+          $labelText = $this->l->t($labelTemplate = 'Insurance Fee %1$d: %2$s', [ $year, $brokerShortName ]);
           $tooltipTemplate = $this->toolTipsService['instrument-insurance:annual-service-fee'] ?? '';
           $tooltipText = $this->l->t($tooltipTemplate);
         }
