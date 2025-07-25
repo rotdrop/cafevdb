@@ -69,7 +69,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * @var string
    */
-  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
+  #[ORM\Column(type: 'string', length: 1024, nullable: true)]
   private $subject;
 
   /**
@@ -289,7 +289,9 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function setSubject(?string $subject):ProjectPayment
   {
-    $this->subject = $subject;
+    $autoSubject = $this->receivable->paymentReference();
+
+    $this->subject = ($subject == $autoSubject) ? null : $subject;
 
     return $this;
   }
@@ -301,7 +303,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function getSubject():?string
   {
-    return $this->subject;
+    return $this->subject ?? $this->receivable->paymentReference();
   }
 
   /**
