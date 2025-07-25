@@ -479,6 +479,7 @@ onMounted(() => {
       margin: auto;
       color: inherit;
       text-overflow: ellipsis;
+      white-space: normal;
       overflow: hidden;
     }
     .list-item-content__actions {
@@ -489,6 +490,7 @@ onMounted(() => {
     h5 {
       margin: auto;
       color: inherit;
+      white-space: normal;
     }
     .list-item-content__subname {
       white-space: normal;
@@ -514,7 +516,7 @@ onMounted(() => {
   }
 }
 </style>
-<style lange="scss">
+<style lang="scss">
 .modal-mask {
   &, * {
     box-sizing: border-box;
