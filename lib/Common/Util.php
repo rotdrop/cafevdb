@@ -602,7 +602,7 @@ class Util
     $excess = strlen($string) - $limit;
     if ($excess > 0) {
       $parts = explode(' ', Util::camelCaseToDashes($string, ' '));
-      \OCP\Util::writeLog('cafevdb', print_r($parts, true), \OCP\Util::INFO);
+      // \OCP\Util::writeLog('cafevdb', print_r($parts, true), \OCP\Util::INFO);
       do {
         $shortened = false;
         foreach ($parts as &$part) {
