@@ -2641,9 +2641,6 @@ GROUP BY " . $fdAlias . ".option_key",
     $labelled = false;
     foreach (array_keys($values) as $key) {
       $options[$key] = $field->getDataOption($key);
-      if (empty($options[$key])) {
-        \OCP\Util::writeLog('cafevdb', 'KEY ' . (string)$key . ' / ' . $values[$key] . ' / ' . $field->getId() . ' / ' . print_r($values, true), \OCP\Util::INFO);
-      }
       if (!empty($options[$key]->getLabel())) {
         $labelled = true;
       }
