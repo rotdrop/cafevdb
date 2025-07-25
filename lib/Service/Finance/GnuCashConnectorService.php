@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use NumberFormatter;
 use Throwable;
 use UnexpectedValueException;
 
@@ -392,8 +393,8 @@ FROM %2$s';
   protected function getAppCurrencyCode():string
   {
     $locale = $this->appContainer->get(ServiceRegistration::APP_LOCALE);
-    $fmt = new NumberFormatter($locale, \NumberFormatter::CURRENCY);
-    return $fmt->getTextAttribute(\NumberFormatter::CURRENCY_CODE);
+    $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+    return $fmt->getTextAttribute(NumberFormatter::CURRENCY_CODE);
   }
 
   /**
@@ -407,8 +408,11 @@ FROM %2$s';
   {
     $data = [];
     foreach ($bulkTransaction->getPayments() as $compositePayment) {
-      $data = array_merge($data, $this->exportCompositePayment($compositePayment));
+      $data = array_merge($data, $this->exportCompositePaymentBalancingEntries($compositePayment));
     }
+
+    $this->logError('EXPORT DATA ' . print_r($data, true));
+
     return $data;
   }
 
@@ -425,17 +429,17 @@ FROM %2$s';
   {
     $currencyCode = $this->getAppCurrencyCode();
 
-    $dueDate = $compositePayment->getReceivablesDueDate();
     /** @var IDateTimeFormatter $dateTimeFormatter */
     $dateTimeFormatter = $this->appContainer->get(IDateTimeFormatter::class);
-    $dateTimeFormatter->formatDate($dueDate);
     $receivableAccounts = [];
+    $musician = $compositePayment->getProjectParticipant()->getMusician();
+    $description = $compositePayment->getSubject() . '; ' . $musician->getPublicName(false);
 
     // it need not be the case that a composite payment result in the same
     // balancing account for each splits, though in general this should be the
     // case.
     /** @var Entities\ProjectPayment $projectPayment */
-    foreach ($compositePayment->projectPayments as $projectPayment) {
+    foreach ($compositePayment->getProjectPayments() as $projectPayment) {
       $receivableAccount = $this->generateParticipantReceivablesAccount($projectPayment->getReceivable());
       if (!isset($receivableAccounts[$receivableAccount])) {
         $receivableAccounts[$receivableAccount] = [
@@ -446,30 +450,32 @@ FROM %2$s';
       }
     }
     $data = [];
-    foreach ($receivableAccounts as $receivableAccount) {
+    foreach ($receivableAccounts as $receivableAccount => $accountData) {
       $dueDate = max(
-        ...array_map(
+        array_map(
           fn(Entities\ProjectPayment $payment) => $payment->getReceivable()->getField()->getDueDate(),
+          $accountData['payments'],
         ),
       );
       /** @var RationalNumber $subTotals */
       $subTotals = array_reduce(
-        $receivableAccount['payments'],
+        $accountData['payments'],
         fn(RationalNumber $carry, Entities\ProjectPayment $payment) => $carry->add($payment->getAmount()),
         RationalNumber::zero(),
       );
       $transactionId = md5($receivableAccount);
       $data[] = [
         'transactionId' => $transactionId,
-        'date' => $dueDate,
+        'date' => $dateTimeFormatter->formatDate($dueDate),
         'amount' => $subTotals->toDecimal(2), // + or minus?
         'account' => $receivableAccount,
-        'subject' => $compositePayment->getSubject(),
+        'description' => $description,
         'currency' => $currencyCode,
         'notes' => '',
+        'memo' => '',
       ];
       /** @var Entities\ProjectPayment $projectPayment */
-      foreach ($receivableAccount['payments'] as $projectPayment) {
+      foreach ($accountData['payments'] as $projectPayment) {
         /** @var RationalNumber $amount */
         $data[] = [
           'transactionId' => $transactionId,
@@ -477,11 +483,15 @@ FROM %2$s';
           'amount' => $projectPayment->getAmount()->mul(-$subTotals->sign())->toDecimal(2),
           'account' => $projectPayment->getReceivable()->getBalancingAccount(),
           'subject' => '',
-          'currency' => '',
+          'description' => '',
           'notes' => '',
+          'memo' => $projectPayment->getSubject(),
         ];
       }
     }
+
+    $this->logError('EXPORT DATA ' . print_r($data, true));
+
     return $data;
   }
 }

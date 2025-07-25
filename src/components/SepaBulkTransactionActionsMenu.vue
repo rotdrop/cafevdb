@@ -79,7 +79,6 @@ import { AppError } from '../types/errors.ts'
 import { ref } from 'vue'
 import * as BusEvents from '../event-bus-events.ts'
 import { SEPA_BULK_TRANSACTION_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
-import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 
 const errorHandlerProvider = useErrorHandlerStore()
 
@@ -127,6 +126,7 @@ const handleTransactionDataDownload = async () => {
     bulkTransactionId: props.entityId,
     projectId: props.projectId,
     projectName: props.projectName,
+    purpose: 'bank-import',
   }
   try {
     await axiosFileDownload('finance/sepa/bulk-transactions/export', post)
@@ -136,7 +136,7 @@ const handleTransactionDataDownload = async () => {
     errorHandler(
       new AppError(
         { component: COMPONENT_NAME },
-        t(appName, 'Unable to export the bulktransaction with id "{entityId}".', props),
+        t(appName, 'Unable to export the bank import-data for the bulktransaction with id "{entityId}".', props),
         { cause: error },
       ),
     )
@@ -155,8 +155,28 @@ const handlePreNotificationEmail = async () => {
   })
 }
 
-const handleGnuCashBalanceDownload = () => {
-  showError(t(appName, 'Export of GnuCash balance bookings is not yet implemented.'), { timeout: TOAST_PERMANENT_TIMEOUT })
+const handleGnuCashBalanceDownload = async () => {
+  asyncEmit(BusEvents.PUSH_BUSY_STATE)
+  const post = {
+    bulkTransactionId: props.entityId,
+    projectId: props.projectId,
+    projectName: props.projectName,
+    purpose: 'balancing-items',
+    format: 'gnucash',
+  }
+  try {
+    await axiosFileDownload('finance/sepa/bulk-transactions/export', post)
+    asyncEmit(BusEvents.POP_BUSY_STATE)
+  } catch (error) {
+    asyncEmit(BusEvents.POP_BUSY_STATE)
+    errorHandler(
+      new AppError(
+        { component: COMPONENT_NAME },
+        t(appName, 'Unable to export the balancing items for the bulktransaction with id "{entityId}".', props),
+        { cause: error },
+      ),
+    )
+  }
 }
 
 </script>

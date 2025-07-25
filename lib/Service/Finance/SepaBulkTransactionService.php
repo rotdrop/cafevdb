@@ -24,37 +24,34 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use Throwable;
-use RuntimeException;
-use InvalidArgumentException;
 use DateTimeImmutable;
 use DateTimeInterface;
+use InvalidArgumentException;
+use RuntimeException;
+use Throwable;
 use UnexpectedValueException;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\IDateTimeFormatter;
-
-use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
+use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-
+use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNote as DebitNote;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNoteData as DataEntity;
-
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Storage\Database\BankTransactionsStorage;
-
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Service;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 
 /**
  * Service class for generating bulk-transactions for submittance to the
@@ -126,10 +123,20 @@ class SepaBulkTransactionService
   /** @var string Export format AqBanking. */
   const EXPORT_AQBANKING = 'aqbanking';
 
+  /** @var string Export format GnuCash e.g. for balancing items. */
+  const EXPORT_GNU_CASH = 'gnucash';
+
   /** @var array All supported exporters. */
   const EXPORTERS = [
     self::EXPORT_AQBANKING,
   ];
+
+  const BALANCING_ITEMS_EXPORTERS = [
+    self::EXPORT_GNU_CASH,
+  ];
+
+  const EXPORT_SERVICE_ALIAS = 'export:bank-bulk-transaction:';
+  const EXPORT_BALANCING_ITEMS_SERVICE_ALIAS = self::EXPORT_SERVICE_ALIAS . 'balancing-items:';
 
   const SUBJECT_PREFIX_LIMIT = 16;
   const SUBJECT_PREFIX_SEPARATOR = ' / ';
@@ -379,12 +386,21 @@ class SepaBulkTransactionService
   /**
    * @param string $format Export format specifier such as 'aqbanking'.
    *
-   * @return IBulkTransactionExporter
+   * @return null|IBulkTransactionExporter
    */
   public function getTransactionExporter(string $format):?IBulkTransactionExporter
   {
-    $serviceName = 'export:' . 'bank-bulk-transactions:' . $format;
-    return $this->appContainer->get($serviceName);
+    return $this->appContainer->get(self::EXPORT_SERVICE_ALIAS . $format);
+  }
+
+  /**
+   * @param string $format Export format specifier such as 'gnucash'.
+   *
+   * @return null|IBulkTransactionExporter
+   */
+  public function getBalancingItemsExporter(string $format):?IBulkTransactionExporter
+  {
+    return $this->appContainer->get(self::EXPORT_BALANCING_ITEMS_SERVICE_ALIAS . $format);
   }
 
   /**
@@ -487,7 +503,7 @@ class SepaBulkTransactionService
       foreach ($receivableOption->getMusicianFieldData($musician) as $receivable) {
         $paidAmount = $receivable->amountPaid();
         $payableAmount = $receivable->amountPayable();
-        $depositAmount = $receivable->depositAmount();
+        $depositAmount = $receivable->depositAmount() ?? RationalNumber::zero();
         if ($payableAmount->sign() * $depositAmount->sign() < 0) {
           throw new RuntimeException(
             $this->l->t(
@@ -769,15 +785,16 @@ class SepaBulkTransactionService
    *
    * @param null|Entities\Project $project Project the transaction belongs to.
    *
-   * @param string $format Format of the export file, defaults to self::EXPORT_AQBANKING.
+   * @param null|string $format Format of the export file, defaults to self::EXPORT_AQBANKING.
    *
-   * @return null|Entities\EncryptedFile The generated export set.
+   * @return null|Entities\DatabaseStorageFile The generated export set.
    */
   public function generateTransactionData(
     Entities\SepaBulkTransaction $bulkTransaction,
     ?Entities\Project $project = null,
-    string $format = self::EXPORT_AQBANKING,
+    null|string $format = null,
   ):?Entities\DatabaseStorageFile {
+    $format = $format ?? self::EXPORT_AQBANKING;
 
     // as a safe-guard regenerate the subject in order to catch changes in
     // linked supporting documents.
@@ -793,7 +810,7 @@ class SepaBulkTransactionService
       $exportDocument = null;
     }
 
-    if (empty($exportDocument) || $bulkTransaction->getUpdated() > $exportDocument->getUpdated()) {
+    if (true || empty($exportDocument) || $bulkTransaction->getUpdated() > $exportDocument->getUpdated()) {
 
       /** @var BankTransactionsStorage $storage */
       $storage = $this->appContainer->get(BankTransactionsStorage::class);
@@ -854,8 +871,8 @@ class SepaBulkTransactionService
 
       $this->entityManager->beginTransaction();
       try {
-        $document = $storage->addDocument($bulkTransaction, $exportFile, flush: false);
-        $bulkTransaction->addTransactionData($document);
+        $exportDocument = $storage->addDocument($bulkTransaction, $exportFile, flush: false);
+        $bulkTransaction->addTransactionData($exportDocument);
         $this->flush();
         $this->entityManager->commit();
       } catch (Throwable $t) {
@@ -871,6 +888,118 @@ class SepaBulkTransactionService
         );
       }
     }
+    return $exportDocument;
+  }
+
+  /**
+   * Generate import data for accounting software.
+   *
+   * @param Entities\SepaBulkTransaction $bulkTransaction
+   *
+   * @param null|string $format Format of the export file, defaults to self::EXPORT_GNU_CASH.
+   *
+   * @return null|Entities\DatabaseStorageFile The generated export set.
+   *
+   * @throws Exceptions\EnduserNotificationException
+   */
+  public function generateBalancingItems(
+    Entities\SepaBulkTransaction $bulkTransaction,
+    ?string $format = null,
+  ):?Entities\DatabaseStorageFile {
+    $format = $format ?? self::EXPORT_GNU_CASH;
+
+    $exportDocument = null;
+    $balancingItemsData = $bulkTransaction->getBalancingItemsData();
+    /** @var Entities\DatabaseStorageFile $exportDocument */
+    foreach ($balancingItemsData as $exportDocument) {
+      if (strpos($exportDocument->getName(), $format) !== false) {
+        break;
+      }
+      $exportDocument = null;
+    }
+
+    if (true || empty($exportDocument) || $bulkTransaction->getUpdated() > $exportDocument->getUpdated()) {
+
+      /** @var BankTransactionsStorage $storage */
+      $storage = $this->appContainer->get(BankTransactionsStorage::class);
+
+      /** @var IBulkTransactionExporter $exporter */
+      $exporter = $this->getBalancingItemsExporter($format);
+      if (empty($exporter)) {
+        throw new InvalidArgumentException($this->l->t('Unable to find a balancing items exporter for format "%s".', $format));
+      }
+      if ($bulkTransaction instanceof Entities\SepaBankTransfer) {
+        $transactionType = self::TRANSACTION_TYPE_BANK_TRANSFER;
+      } elseif ($bulkTransaction instanceof Entities\SepaDebitNote) {
+        $transactionType = self::TRANSACTION_TYPE_DEBIT_NOTE;
+      }
+
+      $timeStamp = $this->timeStamp();
+
+      $project = null;
+      /** @var Entities\CompositePayment $payment */
+      foreach ($bulkTransaction->getPayments() as $payment) {
+        $paymentProject = $payment->getProject();
+        if (empty($project)) {
+          $project = $paymentProject;
+        } elseif ($project != $paymentProject) {
+          throw new UnexpectedValueException($this->l->t(
+            'Conflicting projects "%1$s" vs. "%2$s".', [
+              (string)$project,  (string)$paymentProject
+            ]));
+        }
+      }
+
+      $fileName = implode('-', array_filter([
+        $timeStamp,
+        $transactionType,
+        !empty($project) ? $project->getName() : null,
+        'balancing',
+        'items',
+        $format,
+      ])) . '.' . $exporter->fileExtension($bulkTransaction);
+
+      $fileData = $exporter->fileData($bulkTransaction);
+
+      if (empty($exportDocument)) {
+        $exportFile = new Entities\EncryptedFile(
+          fileName: $fileName,
+          data: $fileData,
+          mimeType: $exporter->mimeType($bulkTransaction)
+        );
+        $this->persist($exportFile);
+      } else {
+        $exportDocument
+          ->setName($fileName);
+        $exportFile = $exportDocument->getFile();
+        $exportFile
+          ->setFileName($fileName)
+          ->setMimeType($exporter->mimeType($bulkTransaction))
+          ->setSize(strlen($fileData))
+          ->getFileData()->setData($fileData);
+
+      }
+
+      $this->entityManager->beginTransaction();
+      try {
+        $exportDocument = $storage->addDocument($bulkTransaction, $exportFile, flush: false);
+        $bulkTransaction->addBalancingItemsData($exportDocument);
+        $this->flush();
+        $this->entityManager->commit();
+      } catch (Throwable $t) {
+        $this->entityManager->rollback();
+        throw new Exceptions\DatabaseException(
+          $this->l->t(
+            'Unable to generate export data for the balancing items for bulk-transaction id %1$d, format "%2$s".', [
+              $bulkTransaction->getId(), $format
+            ]
+          ),
+          $t->getCode(),
+          $t
+        );
+      }
+    }
+
     return $exportDocument;
   }
 }

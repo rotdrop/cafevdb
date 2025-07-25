@@ -57,8 +57,12 @@ class Registration
   public static function register(IRegistrationContext $context):void
   {
     $context->registerServiceAlias(
-      'export:bank-bulk-transactions:aqbanking',
+      Finance\SepaBulkTransactionService::EXPORT_SERVICE_ALIAS . 'aqbanking',
       Finance\AqBankingBulkTransactionExporter::class);
+
+    $context->registerServiceAlias(
+      Finance\SepaBulkTransactionService::EXPORT_BALANCING_ITEMS_SERVICE_ALIAS . 'gnucash',
+      Finance\GnuCashBulkTransactionBalancingItemsExporter::class);
 
     $context->registerService('AppCryptor', function(ContainerInterface $container) {
       return $container->get(EncryptionService::class)->getAppCryptor();
