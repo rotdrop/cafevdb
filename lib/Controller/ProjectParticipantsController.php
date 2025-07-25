@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use InvalidArgumentException;
 use RuntimeException;
+use Throwable;
 use UnexpectedValueException;
 
 use OCP\AppFramework\Controller;
@@ -586,12 +587,11 @@ class ProjectParticipantsController extends Controller
           }
           $this->flush();
           $this->entityManager->commit();
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->entityManager->rollback();
           throw new RuntimeException($this->l->t('Unable to delete file "%s".', $filePath), $t->getCode(), $t);
         }
         return self::response($this->l->t('Successfully removed file "%s".', $filePath));
-        break;
 
       case self::FILE_ACTION_UPLOAD:
 
@@ -955,7 +955,7 @@ class ProjectParticipantsController extends Controller
               if (!empty($filesAppPath)) {
                 $filesAppLink = $userStorage->getFilesAppLink($filesAppPath, true);
               }
-            } catch (\Throwable $t) {
+            } catch (Throwable $t) {
               $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
             }
 
@@ -996,7 +996,7 @@ class ProjectParticipantsController extends Controller
             $this->flush();
 
             $this->entityManager->commit();
-          } catch (\Throwable $t) {
+          } catch (Throwable $t) {
             $this->entityManager->rollback();
             if ($fileCopied) {
               switch ($dataType) {
