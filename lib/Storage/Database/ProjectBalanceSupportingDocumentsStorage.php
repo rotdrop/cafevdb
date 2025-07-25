@@ -24,7 +24,8 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
-use \DateTimeImmutable;
+use DateTimeImmutable;
+use Throwable;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
@@ -74,7 +75,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
         $this->getRootFolder(create: false);
 
         $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t);
       }
       $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
@@ -229,10 +230,12 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
 
       // update the local cache
       $this->setFileNameCache($path, $documentContainer);
-    } catch (\Throwable $t) {
-      $this->logException($t);
+    } catch (Throwable $t) {
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
       return false;
     }
@@ -263,10 +266,12 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
 
       $this->entityManager->commit();
 
-    } catch (\Throwable $t) {
-      $this->logException($t);
+    } catch (Throwable $t) {
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
       return false;
     }
@@ -350,10 +355,12 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       // update our local files cache
       $this->setFileNameCache($path2, $dirEntry);
       $this->unsetFileNameCache($path1);
-    } catch (\Throwable $t) {
-      $this->logException($t);
+    } catch (Throwable $t) {
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
       return false;
     }
@@ -419,10 +426,12 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
 
       // $this->logInfo('TOUCHED ' . $path . ' ' . $dirEntry->getName());
 
-    } catch (\Throwable $t) {
-      $this->logException($t);
+    } catch (Throwable $t) {
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
       return false;
     }
@@ -500,10 +509,12 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       $this->entityManager->commit();
 
       $this->unsetFileNameCache($path);
-    } catch (\Throwable $t) {
-      $this->logException($t);
+    } catch (Throwable $t) {
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
       return false;
     }

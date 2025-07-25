@@ -395,9 +395,11 @@ class ContactsCardEventListener implements IEventListener
           break;
       }
     } catch (Throwable $t) {
-      $this->entityManager->pushTransactionException($t);
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
     }
   }

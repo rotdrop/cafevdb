@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Storage\Database;
 
 use DateTimeImmutable;
 use UnexpectedValueException;
+use Throwable;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
@@ -267,10 +268,12 @@ class TaxExemptionNoticesStorage extends Storage
 
       // update our local files cache
       $this->unsetFileNameCache($path);
-    } catch (\Throwable $t) {
-      $this->logException($t);
+    } catch (Throwable $t) {
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
       return false;
     }

@@ -195,9 +195,11 @@ class InvoicesStorage extends Storage
       $this->entityManager->commit();
 
     } catch (Throwable $t) {
-      $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
       return false;
     }
@@ -311,9 +313,11 @@ class InvoicesStorage extends Storage
       $this->setFileNameCache($path, $dirEntry);
 
     } catch (Throwable $t) {
-      $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
       return false;
     }
@@ -410,9 +414,11 @@ class InvoicesStorage extends Storage
       $this->setFileNameCache($path2, $dirEntry);
       $this->unsetFileNameCache($path1);
     } catch (Throwable $t) {
-      $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
       return false;
     }
@@ -466,9 +472,11 @@ class InvoicesStorage extends Storage
 
       $this->unsetFileNameCache($path);
     } catch (Throwable $t) {
-      $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
       return false;
     }

@@ -1596,8 +1596,9 @@ class EventsService
       $this->flush();
       $this->entityManager->commit();
     } catch (Throwable $t) {
+      $this->entityManager->pushTransactionException($t);
       $this->entityManager->rollback();
-      $this->logException($t);
+      // $this->logException($t, 'Do not throw in event handlers.');
     }
 
     $registered = array_unique($registered);

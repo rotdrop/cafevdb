@@ -1221,6 +1221,7 @@ class EntityManager extends EntityManagerDecorator
    */
   public function pushTransactionException(Throwable $exception):void
   {
+    $this->logException($exception, 'Remembering transaction exception');
     $this->transactionExceptions[] = $exception;
   }
 

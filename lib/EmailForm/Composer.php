@@ -1935,9 +1935,11 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $this->flush();
       $this->entityManager->commit();
     } catch (Throwable $t) {
-      $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
     }
 

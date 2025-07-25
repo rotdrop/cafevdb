@@ -777,9 +777,11 @@ class Storage extends AbstractStorage
 
       $this->entityManager->commit();
     } catch (Throwable $t) {
-      $this->logException($t, 'writeStream() failed');
       if ($this->entityManager->isOwnTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t, 'writeStream() failed');
       }
       return -1;
     }

@@ -2322,7 +2322,7 @@ Whatever.',
 
       $this->entityManager->commit();
     } catch (Throwable $t) {
-      $this->logException($t);
+      $this->entityManager->pushTransactionException($t);
       $this->entityManager->rollback();
       $status[] = [
         'id' => $id,

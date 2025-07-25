@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021-2024 Claus-Justus Heine
+ * @copyright 2021-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,50 +24,50 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCP\HintException;
+use Throwable;
+
+use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Files;
-use OCP\Files\Node as FileSystemNode;
-use OCP\Files\Folder as CloudFolder;
+use OCP\Files\Events\Node\BeforeFolderCreatedEvent;
+use OCP\Files\Events\Node\BeforeNodeCopiedEvent;
+use OCP\Files\Events\Node\BeforeNodeCreatedEvent;
+use OCP\Files\Events\Node\BeforeNodeDeletedEvent;
+use OCP\Files\Events\Node\BeforeNodeRenamedEvent;
+use OCP\Files\Events\Node\BeforeNodeTouchedEvent;
+use OCP\Files\Events\Node\FolderCreatedEvent;
+use OCP\Files\Events\Node\NodeCopiedEvent;
+use OCP\Files\Events\Node\NodeCreatedEvent;
+use OCP\Files\Events\Node\NodeDeletedEvent;
+use OCP\Files\Events\Node\NodeRenamedEvent;
+use OCP\Files\Events\Node\NodeTouchedEvent;
 use OCP\Files\File as CloudFile;
 use OCP\Files\FileInfo;
-use OCP\Files\Events\Node\NodeCopiedEvent;
-use OCP\Files\Events\Node\NodeRenamedEvent;
-use OCP\Files\Events\Node\NodeDeletedEvent;
-use OCP\Files\Events\Node\NodeTouchedEvent;
-use OCP\Files\Events\Node\NodeCreatedEvent;
-use OCP\Files\Events\Node\FolderCreatedEvent;
-use OCP\Files\Events\Node\BeforeNodeCopiedEvent;
-use OCP\Files\Events\Node\BeforeNodeRenamedEvent;
-use OCP\Files\Events\Node\BeforeNodeDeletedEvent;
-use OCP\Files\Events\Node\BeforeNodeTouchedEvent;
-use OCP\Files\Events\Node\BeforeNodeCreatedEvent;
-use OCP\Files\Events\Node\BeforeFolderCreatedEvent;
-use OCP\IUser;
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
-use OCP\IUserSession;
+use OCP\Files\Folder as CloudFolder;
 use OCP\Files\IRootFolder;
-use OCP\AppFramework\IAppContainer;
+use OCP\Files\Node as FileSystemNode;
+use OCP\HintException;
+use OCP\IL10N;
+use OCP\IUser;
+use OCP\IUserSession;
+use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Common;
+use OCA\CAFEVDB\Common\UndoableFileRemove;
+use OCA\CAFEVDB\Common\UndoableFileRename;
+use OCA\CAFEVDB\Common\UndoableFileReplace;
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
-
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-
-use OCA\CAFEVDB\Common\UndoableFileReplace;
-use OCA\CAFEVDB\Common\UndoableFileRemove;
-use OCA\CAFEVDB\Common\UndoableFileRename;
-use OCA\CAFEVDB\Common;
-use OCA\CAFEVDB\Constants;
 
 /**
  * Listen to changes to the configured participant-field cloud-folder
@@ -376,7 +376,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                   $eventClass,
                 ]);
                 $hint = $message; // perhaps we want to change this ...
-                // only \OCP\HintException and \OC\ServerNotAvailableException can cancel the operation.
+                // only HintException and \OC\ServerNotAvailableException can cancel the operation.
                 throw new HintException($message, $hint);
               }
             } elseif ($baseName !== Constants::README_NAME) { // baseName given
@@ -520,7 +520,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                   $eventClass,
                 ]);
                 $hint = $message;
-                // only \OCP\HintException and \OC\ServerNotAvailableException can cancel the operation.
+                // only HintException and \OC\ServerNotAvailableException can cancel the operation.
                 throw new HintException($message, $hint);
               }
             }
@@ -564,12 +564,16 @@ class ParticipantFieldCloudFolderListener implements IEventListener
         $this->flush();
         $this->entityManager->commit();
       }
-    } catch (\OCP\HintException $e) {
+    } catch (HintException $e) {
       $throw = $e;
       $rollBack = !$checkOnly;
-    } catch (\Throwable $t) {
-      $this->logException($t, 'Unable to update field-data for ' . print_r($flatCriteria, true) . '.');
+    } catch (Throwable $t) {
       $rollBack = !$checkOnly;
+      if ($rollBack) {
+        $this->entityManager->pushTransactionException($t);
+      } else {
+        $this->logException($t, 'Unable to update field-data for ' . print_r($flatCriteria, true) . '.');
+      }
     } finally {
       $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
       if ($rollBack) {
