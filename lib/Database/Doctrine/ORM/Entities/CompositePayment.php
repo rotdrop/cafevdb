@@ -888,10 +888,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return DateTimeInterface
    */
-  public function getReceivablesDueData():DateTimeInterface
+  public function getReceivablesDueDate():DateTimeInterface
   {
     return max(
-      ...$this->projectPayments->map(
+      $this->projectPayments->map(
         fn(ProjectPayment $payment) => $payment->getReceivable()->getField()->getDueDate(),
       )->toArray(),
     );
