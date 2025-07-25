@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Throwable;
-
 use DateTimeImmutable;
+use InvalidArgumentException;
 use PHP_IBAN\IBAN;
+use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -100,6 +100,8 @@ class SepaDebitMandatesController extends Controller
    *
    * @NoAdminRequired
    *
+   * @throws Exceptions\EnduserNotificationException
+   *
    * @SuppressWarnings(PHPMD.CamelCaseVariableName)
    */
   public function mandateValidate(string $changed):Response
@@ -118,8 +120,13 @@ class SepaDebitMandatesController extends Controller
         $missing[] = $required;
       }
       if (!empty($missing)) {
-        return self::grumble(
-          $this->l->t('Required information %s not provided.', implode(', ', $missing)));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Required information %s not provided.', implode(', ', $missing)),
+          context: [
+            'missing' => $missing,
+            'required' => $required,
+          ],
+        );
       }
     }
 
@@ -219,8 +226,14 @@ class SepaDebitMandatesController extends Controller
               'lastUsedDate' => $value,
             ];
             if (!$this->financeService->storeSepaMandate($mandate)) {
-              return self::grumble(
-                $this->l->t('Failed setting `%s\' to `%s\'.', [ $changed, $value, ]));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('Failed setting `%s\' to `%s\'.', [ $changed, $value, ]),
+                context: [
+                  'mandate' => $mandate,
+                  'changed' => $changed,
+                  'value' => $value,
+                ],
+              );
             }
           }
           // no break
@@ -248,8 +261,9 @@ class SepaDebitMandatesController extends Controller
           }
           $participant = $this->projectService->findParticipant($projectId, $musicianId);
           if (empty($participant)) {
-            return self::grumble(
-              $this->l->t('Participant %d not found in project %d.', [ $musicianId, $projectId ]));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Participant %d not found in project %d.', [ $musicianId, $projectId ]),
+            );
           }
           $newOwner = $participant['musician']['surName'].', '.$participant['musician']['firstName'];
           if (!empty($projectId)) {
@@ -270,8 +284,9 @@ class SepaDebitMandatesController extends Controller
         case 'bankAccountOwner':
           $value = $this->financeService->sepaTranslit($value);
           if (!$this->financeService->validateSepaString($value)) {
-            return self::grumble(
-              $this->l->t('Account owner contains invalid characters: "%s"', $value));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Account owner contains invalid characters: "%s"', $value),
+            );
           }
           $owner = $value;
           break;
@@ -292,15 +307,17 @@ class SepaDebitMandatesController extends Controller
             $blz = $BLZ;
 
             if (empty($BLZ)) {
-              return self::grumble(
-                $this->l->t('BLZ not given, cannot validate the bank account.'));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('BLZ not given, cannot validate the bank account.'),
+              );
             }
 
             // First validate the BLZ
             if (!$this->bav->isValidBank($blz)) {
               if (strlen($blz) != 8 || !is_numeric($blz)) {
-                return self::grumble(
-                  $this->l->t('A German bank id consists of exactly 8 digits: %s.', [ $blz ]));
+                throw new Exceptions\EnduserNotificationException(
+                  $this->l->t('A German bank id consists of exactly 8 digits: %s.', [ $blz ]),
+                );
               }
 
               $suggestions = $this->fuzzyInputService->transposition($blz, function($input) {
@@ -424,8 +441,9 @@ class SepaDebitMandatesController extends Controller
           }
           $value = Util::removeSpaces($value);
           if (!$this->bav->isValidBank($value)) {
-            return self::grumble(
-              $this->l->t('Value for `%s\' invalid: `%s\'.', [ $changed, $value ]));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Value for `%s\' invalid: `%s\'.', [ $changed, $value ]),
+            );
           }
           // set also the BIC
           $BLZ = $value;
@@ -457,20 +475,26 @@ class SepaDebitMandatesController extends Controller
             }
           }
           if (!$this->financeService->validateSWIFT($value)) {
-            return self::grumble(
-              $this->l->t('Value for `%s\' invalid: `%s\'.', [ $changed, $value ]));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Value for `%s\' invalid: `%s\'.', [ $changed, $value ]),
+            );
           }
           $BIC = $value;
           break;
         default:
-          return self::grumble(
+          throw new Exceptions\EnduserNotificationException(
             $this->l->t(
               'Unknown Request: %s / %s / %s',
               [
                 'validate',
                 print_r($changed, true),
                 print_r($value, true),
-              ]));
+              ]),
+            context: [
+              'changed' => $changed,
+              'value' => $value,
+            ],
+          );
       }
 
       if ($initialValue != $value) {
@@ -523,6 +547,8 @@ class SepaDebitMandatesController extends Controller
    *
    * @return Response
    *
+   * @throws Exceptions\EnduserNotificationException
+   *
    * @NoAdminRequired
    */
   public function mandateForm(
@@ -536,7 +562,9 @@ class SepaDebitMandatesController extends Controller
     $mandateExpired = false;
 
     if (empty($musicianId)) {
-      return self::grumble($this->l->t('Parameter musicianId must be set, but is empty.'));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Parameter musicianId must be set, but is empty.'),
+      );
     }
 
     // disable soft-deletion filter as we are fetching specific data.
@@ -560,10 +588,12 @@ class SepaDebitMandatesController extends Controller
       ]);
 
       if (empty($mandate)) {
-        return self::grumble($this->l->t(
-          'Unable to load SEPA debit mandate for musician %s/%d, sequence count %d',
-          [$musician->getPublicName(), $musician->getId(), $mandateSequence]
-        ));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t(
+            'Unable to load SEPA debit mandate for musician %s/%d, sequence count %d',
+            [$musician->getPublicName(), $musician->getId(), $mandateSequence]
+          ),
+        );
       }
 
       /** @var Entities\SepaBankAccount $bankAccount */
@@ -785,7 +815,13 @@ class SepaDebitMandatesController extends Controller
 
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
-        return self::grumble($this->l->t("Required information `%s' not provided.", $required));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t("Required information `%s' not provided.", $required),
+          context: [
+            'required' => $requiredKeys,
+            'missing' => $required,
+          ],
+        );
       }
     }
 
@@ -808,10 +844,12 @@ class SepaDebitMandatesController extends Controller
     }
 
     if ($bankAccount->inUse() && $bankAccount->getIban() !== $bankAccountIBAN) {
-      return self::grumble($this->l->t(
-        'The current bank account has already been used for payments or is bound to debit-mandates. '
-        . 'Therefore the IBAN must not be changed. Please create a new account; you may disable the current account, at you option.'
-      ));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t(
+          'The current bank account has already been used for payments or is bound to debit-mandates. '
+          . 'Therefore the IBAN must not be changed. Please create a new account; you may disable the current account, at you option.'
+        ),
+      );
     }
 
     // set the new values
@@ -822,8 +860,11 @@ class SepaDebitMandatesController extends Controller
 
     try {
       $this->financeService->validateSepaAccount($bankAccount); // throws on error
-    } catch (\InvalidArgumentException $e) {
-      return self::grumble($this->l->t('Bank-account failed to validate: %s.', $e->getMessage()));
+    } catch (InvalidArgumentException $e) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Bank-account failed to validate: %s.', $e->getMessage()),
+        previous: $e,
+      );
     }
 
     if ($bankAccount->getSequence() == null) {
@@ -838,13 +879,14 @@ class SepaDebitMandatesController extends Controller
       /** @var Entities\SepaBankAccount $oldAccount */
       foreach ($existingAccounts as $oldAccount) {
         if ($oldAccount->getIban() == $bankAccountIBAN) {
-          return self::grumble($this->l->t(
-            'The IBAN %s, account-owner %s, has already been recorded for the musician %s.',
-            [
-              $bankAccountIBAN,
-              $oldAccount->getBankAccountOwner(),
-              $oldAccount->getMusician()->getPublicName(),
-            ]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t(
+              'The IBAN %1$s, account-owner %2$s, has already been recorded for the musician %3$s.', [
+                $bankAccountIBAN,
+                $oldAccount->getBankAccountOwner(),
+                $oldAccount->getMusician()->getPublicName(),
+              ]),
+          );
         }
       }
     }
@@ -855,8 +897,10 @@ class SepaDebitMandatesController extends Controller
         $this->bankAccountsRepository->persist($bankAccount);
       } catch (UniqueConstraintViolationException $e) {
         if ($bankAccount->inUse()) {
-          $this->logException($e);
-          return self::grumble($this->l->t('Unable to modify already used bank-account.'));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Unable to modify already used bank-account.'),
+            previous: $e,
+          );
         }
         $this->entityManager->reopen();
         $this->clearDatabaseRepository();
@@ -898,11 +942,12 @@ class SepaDebitMandatesController extends Controller
         // would be allowable if not in use, but does not fit the
         // layout of the UI: this cannot happen unless things are
         // garbled.
-        return self::grumble(
-          $this->l->t('The bank-account with IBAN %s bound to the existing mandate does not match the submitted bank-account with IBAN %s.', [
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('The bank-account with IBAN %1$s bound to the existing mandate does not match the submitted bank-account with IBAN %2$s.', [
             $debitMandate->getSepaBankAccount()->getIban(),
             $bankAccountIBAN,
-          ]));
+          ]),
+        );
       }
       $musician = $debitMandate->getMusician();
       // $mandateProject = $debitMandate->getProject();
@@ -917,23 +962,31 @@ class SepaDebitMandatesController extends Controller
 
     if ($debitMandate->inUse()) {
       if ($debitMandate->getMandateDate() != $mandateDate) {
-        return self::grumble($this->l->t(
-          'The current debit-mandate already has been used for payments. '
-          . 'Therefore the date of the debit-mandate must not be changed. Please create a new debit-mandate; you may disable the current mandate, at you option.'
-        ));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t(
+            'The current debit-mandate already has been used for payments. '
+            . 'Therefore the date of the debit-mandate must not be changed. Please create a new debit-mandate; you may disable the current mandate, at you option.'
+          ),
+        );
       }
       if ($debitMandate->getNonRecurring() != $mandateNonRecurring
           && $mandateNonRecurring && $debitMandate->usage() > 1) {
-        return self::grumble($this->l->t(
-          'The current debit-mandate already has been used for more than a single payment. '
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t(
+            'The current debit-mandate already has been used for more than a single payment. '
             . 'Therefore it can non longer be changed from "recurring" to "non-recurring".'
-        ));
+          ),
+        );
       }
       if ($debitMandate->getProject()->getId() != $mandateProjectId) {
-        return self::grumble($this->l->t('The current debit-mandate already has been used for payments. Therefore the project-binding can no longer be changed.'));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('The current debit-mandate already has been used for payments. Therefore the project-binding can no longer be changed.'),
+        );
       }
       if ($debitMandate->getWrittenMandate() != null && (int)$writtenMandateId <= 0) {
-        return self::grumble($this->l->t('The current debit-mandate alrady has been used for payments. Therefore the stored copy of the written mandate cannot be deleted.'));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('The current debit-mandate alrady has been used for payments. Therefore the stored copy of the written mandate cannot be deleted.'),
+        );
       }
       // just make sure it does not change.
       $mandateReference = $debitMandate->getMandateReference();
@@ -956,8 +1009,10 @@ class SepaDebitMandatesController extends Controller
         $this->flush();
       } catch (UniqueConstraintViolationException $e) {
         if ($debitMandate->inUse()) {
-          $this->logException($e);
-          return self::grumble($this->l->t('Unable to modify already used debit-mandate.'));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Unable to modify already used debit-mandate.'),
+            previous: $e,
+          );
         }
         $this->entityManager->reopen(); // this cannot work ...
         $this->clearDatabaseRepository();
@@ -1035,10 +1090,11 @@ class SepaDebitMandatesController extends Controller
       if ($musician->isMemberOf($clubMembersProjectId)) {
         $projectId = $clubMembersProjectId;
       } else {
-        return self::grumble(
+        throw new Exceptions\EnduserNotificationException(
           $this->l->t(
             'General debit-mandate requested but musician "%s" is not a club member.',
-            $musician->getPublicName()));
+            $musician->getPublicName()),
+        );
       }
     }
 
@@ -1046,7 +1102,9 @@ class SepaDebitMandatesController extends Controller
       $bankAccountSequence, $projectId, $musicianId);
 
     if (empty($formData)) {
-      return self::grumble($this->l->t('Unable to find fillable debit mandate form.'));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to find a fillable debit mandate form.'),
+      );
     }
 
     return $this->dataDownloadResponse($formData, $fileName, $mimeType);
@@ -1127,7 +1185,13 @@ class SepaDebitMandatesController extends Controller
     $requiredKeys = [ 'musicianId', 'mandateSequence' ];
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
-        return self::grumble($this->l->t('Required information "%s" not provided.', $required));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Required information "%s" not provided.', $required),
+          context: [
+            'required' => $requiredKeys,
+            'missing' => $required,
+          ],
+        );
       }
     }
 
@@ -1135,7 +1199,9 @@ class SepaDebitMandatesController extends Controller
     $debitMandate = $this->debitMandatesRepository->find([ 'musician' => $musicianId, 'sequence' => $mandateSequence ]);
 
     if (empty($debitMandate)) {
-      return self::grumble($this->l->t('Unable to find mandate for musician id "%1$d" with sequence "%2$d".', [ $musicianId, $mandateSequence ]));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to find a debit mandate for musician id "%1$d" with sequence "%2$d".', [ $musicianId, $mandateSequence ]),
+      );
     }
     $mandateReference = $debitMandate->getMandateReference();
 
@@ -1190,16 +1256,20 @@ class SepaDebitMandatesController extends Controller
         } catch (Throwable $t) {
           $this->logException($t);
           $this->entityManager->rollback();
-          throw new Exceptions\EnduserNotificationException(
-            $this->l->t('Error, caught an exception. No changes were performed.'),
-            previous: $t,
-            httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
-          );
+          if ($t instanceof Exceptions\EnduserNotificationException) {
+            throw $t;
+          } else {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Error, caught an exception. No changes were performed.'),
+              previous: $t,
+              httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+            );
+          }
         }
 
         return self::response($this->l->t('Successfully deleted the hard-copy of the written-mandate for "%1$s", please upload a new one!', $mandateReference));
     }
-    return self::grumble($this->l->t('UNIMPLEMENTED'));
+    throw new Exceptions\EnduserNotificationException($this->l->t('UNIMPLEMENTED'));
   }
 
   /**
@@ -1333,11 +1403,15 @@ class SepaDebitMandatesController extends Controller
     } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      throw new Exceptions\EnduserNotificationException(
-        $this->l->t('Error, caught an exception. No changes were performed.'),
-        previous: $t,
-        httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
-      );
+      if ($t instanceof Execptions\EnduserNotificationException) {
+        throw $t;
+      } else {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Error, caught an exception. No changes were performed.'),
+          previous: $t,
+          httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+        );
+      }
     }
 
     if ($uploadMode != UploadsController::UPLOAD_MODE_LINK) {
@@ -1420,7 +1494,13 @@ class SepaDebitMandatesController extends Controller
     $requiredKeys = [ 'musicianId', 'mandateSequence' ];
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
-        return self::grumble($this->l->t('Required information "%s" not provided.', $required));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Required information "%s" not provided.', $required),
+          context: [
+            'required' => $requiredKeys,
+            'missing' => $required,
+          ],
+        );
       }
     }
 
@@ -1437,20 +1517,26 @@ class SepaDebitMandatesController extends Controller
         break;
       case 'disable':
         if (!empty($mandate->getDeleted())) {
-          return self::grumble($this->l->t('SEPA debit mandate with reference "%s" is already disabled.', $reference));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('SEPA debit mandate with reference "%s" is already disabled.', $reference),
+          );
         }
         $mandate->setDeleted('now');
         $this->flush();
         break;
       case 'reactivate':
         if (empty($mandate->getDeleted())) {
-          return self::grumble($this->l->t('SEPA debit mandate with reference "%s" is already active.', $reference));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('SEPA debit mandate with reference "%s" is already active.', $reference),
+          );
         }
         $mandate->setDeleted(null);
         $this->flush();
         break;
       default:
-        return self::grumble($this->l->t('Unknown revocation action: "%s".', $operation));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Unknown revocation action: "%s".', $operation),
+        );
     }
 
     $responseData = [
@@ -1540,7 +1626,13 @@ class SepaDebitMandatesController extends Controller
     $requiredKeys = [ 'musicianId', 'bankAccountSequence' ];
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
-        return self::grumble($this->l->t("Required information `%s' not provided.", $required));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t("Required information `%s' not provided.", $required),
+          context: [
+            'required' => $requiredKeys,
+            'missing' => $required,
+          ],
+        );
       }
     }
 
@@ -1564,10 +1656,18 @@ class SepaDebitMandatesController extends Controller
             }
           }
           if (!empty($affectedMandates)) {
-            return self::grumble($this->l->t(
-              'The account with IBAN "%s" cannot be deleted as the following associated mandates are still active: %s.', [
-                $iban, implode(', ', $affectedMandates) ]
-            ));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t(
+                'The account with IBAN "%s" cannot be deleted as the following associated mandates are still active: %s.', [
+                  $iban,
+                  implode(', ', $affectedMandates),
+                ],
+              ),
+              context: [
+                'iban' => $iban,
+                'mandates' => $affectedMandates,
+              ],
+            );
           }
           // Ok, no active mandate, try to delete the deactivated mandates
 
@@ -1580,7 +1680,9 @@ class SepaDebitMandatesController extends Controller
           break;
         case 'disable':
           if (!empty($account->getDeleted())) {
-            return self::grumble($this->l->t('Bank account with IBAN "%s" is already disabled.', $iban));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Bank account with IBAN "%s" is already disabled.', $iban),
+            );
           }
           /** @var Entities\SepaDebitMandate $mandate */
           foreach ($account->getSepaDebitMandates() as $mandate) {
@@ -1589,34 +1691,50 @@ class SepaDebitMandatesController extends Controller
             }
           }
           if (!empty($affectedMandates)) {
-            return self::grumble($this->l->t(
-              'The account with IBAN "%s" cannot be disabled as the following associated mandates are still active: %s.', [
-                $iban, implode(', ', $affectedMandates)
-              ]));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t(
+                'The account with IBAN "%s" cannot be disabled as the following associated mandates are still active: %s.', [
+                  $iban,
+                  implode(', ', $affectedMandates)
+                ],
+              ),
+              context: [
+                'iban' => $iban,
+                'mandated' => $affectedMandates,
+              ],
+            );
           }
           $account->setDeleted('now');
           $this->flush();
           break;
         case 'reactivate':
           if (empty($account->getDeleted())) {
-            return self::grumble($this->l->t('Bank account with IBAN "%s" is already active.', $iban));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Bank account with IBAN "%s" is already active.', $iban),
+            );
           }
           $account->setDeleted(null);
           $this->flush();
           break;
         default:
-          return self::grumble($this->l->t('Unknown revocation action: "%s".', $action));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Unknown revocation action: "%s".', $action),
+          );
       }
 
       $this->entityManager->commit();
     } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
-      throw new Exceptions\EnduserNotificationException(
-        $this->l->t('Error, caught an exception. No changes were performed.'),
-        previous: $t,
-        httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
-      );
+      if ($t instanceof Exceptions\EnduserNotificationException) {
+        throw $t;
+      } else {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Error, caught an exception. No changes were performed.'),
+          previous: $t,
+          httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+        );
+      }
     }
 
     $messages = [];
