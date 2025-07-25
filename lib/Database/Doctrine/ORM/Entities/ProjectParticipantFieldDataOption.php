@@ -158,7 +158,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $payments;
 
   /**
-   * @var ProjectPayment
+   * @var InvoiceItem
    */
   #[ORM\OneToMany(targetEntity: InvoiceItem::class, mappedBy: 'receivableOption')]
   private $invoiceItems;
