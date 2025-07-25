@@ -468,10 +468,12 @@ class phpMyEdit
 		return $wparts;
 	}
 
-	private function key_record_where()
+	private function key_record_where(bool $keysOnly = false)
 	{
 		$conditions = $this->key_record_where_parts(groupByWhere: false);
-		$conditions[] = $this->get_SQL_where_from_query_opts(onlyGlobal: true);
+		if (!$keysOnly) {
+			$conditions[] = $this->get_SQL_where_from_query_opts(onlyGlobal: true);
+		}
 		return '(' . implode(' AND ', array_filter($conditions)) . ')';
 	}
 
@@ -1937,7 +1939,7 @@ class phpMyEdit
 	function get_SQL_where_from_query_opts($text = false, $onlyGlobal = false) /* {{{ */
 	{
 		$qp = $onlyGlobal ? [] : $this->query_opts;
-		$where = array();
+		$where = [];
 		foreach ($qp as $k => $ov) {
 
 			if ($text && $this->col_has_values($k)) {
@@ -2081,6 +2083,8 @@ class phpMyEdit
 			}
 			$where .= $andFilter;
 		}
+
+		$this->logError('FILTERS ' . print_r($this->filters, true) . ' ' . $where);
 
 		if ($text) {
 			$where = str_replace([
@@ -6365,7 +6369,7 @@ EOT;
 
 		if (!empty($changed)) {
 			// Real query
-			$query = 'DELETE '.self::MAIN_ALIAS.' FROM '.$this->tb.' '.self::MAIN_ALIAS.' WHERE '.$this->key_record_where();
+			$query = 'DELETE '.self::MAIN_ALIAS.' FROM '.$this->tb.' '.self::MAIN_ALIAS.' WHERE '.$this->key_record_where(keysOnly: true);
 			$res = $this->myquery($query, __LINE__);
 			$this->message = $this->sql_affected_rows().' '.$this->labels['record deleted'];
 			if (! $res) {
