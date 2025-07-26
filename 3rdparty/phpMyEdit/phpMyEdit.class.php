@@ -2084,8 +2084,6 @@ class phpMyEdit
 			$where .= $andFilter;
 		}
 
-		$this->logError('FILTERS ' . print_r($this->filters, true) . ' ' . $where);
-
 		if ($text) {
 			$where = str_replace([
 				// '%',
