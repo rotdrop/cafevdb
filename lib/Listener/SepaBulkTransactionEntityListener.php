@@ -182,6 +182,10 @@ class SepaBulkTransactionEntityListener
       $this->remove($dirEntry);
       // $this->storage->removeDocument($entity, $file, flush: false);
     }
+    foreach ($entity->getBalancingItemsData() as $dirEntry) {
+      $entity->removeBalancingItemsData($dirEntry);
+      $this->remove($dirEntry);
+    }
     $this->flush();
     $this->unlockEntity($entity);
   }
