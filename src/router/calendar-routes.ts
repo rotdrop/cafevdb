@@ -43,7 +43,7 @@ const ProjectEventsListing = async () => {
 const calendarSetup = async () => {
   // make sure the timezones are actually loaded
   // @ts-expect-error
-  import('@nextcloud/app-calendar/css/app-sidebar.scss');
+  import('@nextcloud/app-calendar/css/app-full.scss');
   import('../services/calendar-store-setup.ts')
     .then(({ default: calendarStoreSetup }) => calendarStoreSetup());
   // translations are probably not reactive, so we have to await their
@@ -56,16 +56,16 @@ const SimpleEventEditor = async () => {
   return import('@nextcloud/app-calendar/src/views/EditSimple.vue');
 }
 
-const SidebarEventEditor = async () => {
+const FullEventEditor = async () => {
   await calendarSetup()
-  return import('@nextcloud/app-calendar/src/views/EditSidebar.vue');
+  return import('@nextcloud/app-calendar/src/views/EditFull.vue');
 };
 
 export const CALENDAR_APP_ROUTES = [
   'EditPopoverView',
-  'EditSidebarView',
+  'EditFullView',
   'NewPopoverView',
-  'NewSidebarView',
+  'NewFullView',
 ];
 
 let preCalendarRoute: Location|undefined;
@@ -124,8 +124,8 @@ const calendarAppRoutes: RouteConfig[] = [
   },
   {
     path: 'edit/sidebar/:object/:recurrenceId/:context?',
-    name: 'EditSidebarView',
-    component: SidebarEventEditor,
+    name: 'EditFullView',
+    component: FullEventEditor,
     beforeEnter: beforeCalendarRouteEnter,
   },
   {
@@ -136,8 +136,8 @@ const calendarAppRoutes: RouteConfig[] = [
   },
   {
     path: 'new/sidebar/:allDay/:dtstart/:dtend/:context?',
-    name: 'NewSidebarView',
-    component: SidebarEventEditor,
+    name: 'NewFullView',
+    component: FullEventEditor,
     beforeEnter: beforeCalendarRouteEnter,
   },
   {

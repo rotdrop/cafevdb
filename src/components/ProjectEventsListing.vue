@@ -1190,7 +1190,7 @@ const deleteSingleEvent = async (matrixEntry: EventMatrixEntry, event: EventMatr
   // logger.debug('AFTER DELETE')
 
   // if one of the event editors is open we should close it ...
-  if ((currentRoute.name === 'EditPopoverView' || currentRoute.name === 'EditSidebarView')
+  if ((currentRoute.name === 'EditPopoverView' || currentRoute.name === 'EditFullView')
       && currentRoute.params.object === routerEventEdit.value[event.instanceId].params.object
       && +currentRoute.params.recurrenceId === +routerEventEdit.value[event.instanceId].params.recurrenceId) {
     // as the event has been deleted, a router.replace() should be
@@ -1275,7 +1275,7 @@ watch(syncEventListTrigger, async (value) => {
     return
   }
   // the the start date has changen the we probably have to chance the route
-  if (currentRoute.name === 'EditPopoverView' || currentRoute.name === 'EditSidebarView') {
+  if (currentRoute.name === 'EditPopoverView' || currentRoute.name === 'EditFullView') {
     const recurrenceId = Math.round(calendarObjectInstanceStore.calendarObjectInstance!.startDate.getTime() / 1000)
     if (+currentRoute.params.recurrenceId !== recurrenceId) {
       const location: CalendarEditLocation = {
