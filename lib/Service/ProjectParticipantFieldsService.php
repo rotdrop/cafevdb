@@ -298,7 +298,7 @@ class ProjectParticipantFieldsService
           break;
       }
     }
-    return array_filter($selectOptions, fn($option) => !empty($option['name']));
+    return array_values(array_filter($selectOptions, fn($option) => !empty($option['name'])));
   }
 
   /**
