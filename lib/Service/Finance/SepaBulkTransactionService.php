@@ -479,10 +479,10 @@ class SepaBulkTransactionService
 
     /** @var Entities\CompositePayment $compositePayment */
     $compositePayment = (new Entities\CompositePayment)
-                      ->setMusician($musician)
-                      ->setProjectPayments($payments)
-                      ->setAmount($totalAmount)
-                      ->setSubject('');
+      ->setProjectParticipant($participant)
+      ->setProjectPayments($payments)
+      ->setAmount($totalAmount)
+      ->setSubject('');
 
     if (empty($receivableOptions)) {
       return $compositePayment;
@@ -558,8 +558,6 @@ class SepaBulkTransactionService
     }
 
     $compositePayment
-      ->setMusician($participant->getMusician())
-      ->setProject($participant->getProject())
       ->setAmount($totalAmount)
       ->updateSubject(fn($x) => $this->financeService->sepaTranslit($x));
 

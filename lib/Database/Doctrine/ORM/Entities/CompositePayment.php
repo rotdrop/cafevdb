@@ -346,6 +346,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   public function setProjectParticipant(?ProjectParticipant $projectParticipant):CompositePayment
   {
     $this->projectParticipant = $projectParticipant;
+    $this->project = $projectParticipant->getProject();
+    $this->musician = $projectParticipant->getMusician();
 
     return $this;
   }
