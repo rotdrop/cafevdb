@@ -466,6 +466,7 @@ FROM %2$s';
         'transactionId' => $transactionId,
         'date' => $dueDate->format('m-d-Y'),
         'amount' => $subTotals->toDecimal(2), // + or minus?
+        'negativeAmount' => $subTotals->mul(-$subTotals->sign())->toDecimal(2), // + or minus?
         'account' => $receivableAccount,
         'description' => $description,
         'currency' => $currencyCode,
@@ -479,6 +480,7 @@ FROM %2$s';
           'transactionId' => $transactionId,
           'date' => '',
           'amount' => $projectPayment->getAmount()->mul(-$subTotals->sign())->toDecimal(2),
+          'negativeAmount' => $projectPayment->getAmount()->toDecimal(2),
           'account' => $projectPayment->getReceivable()->getBalancingAccount(),
           'subject' => '',
           'description' => '',
