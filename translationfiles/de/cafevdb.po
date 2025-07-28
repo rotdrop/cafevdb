@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-25 14:52+0200\n"
-"PO-Revision-Date: 2025-07-25 16:49+0200\n"
+"POT-Creation-Date: 2025-07-28 22:13+0200\n"
+"PO-Revision-Date: 2025-07-28 22:16+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -3988,7 +3988,9 @@ msgstr "Konnte das Projekt mit der Id %d nicht aus der Datenbank laden."
 #: lib/Controller/SepaBulkTransactionsController.php:207
 #, php-format
 msgid "Bank account for musician-id %1$d, sequence %2$d not found."
-msgstr "Die Bankverbindung für die Person mit Id %1$d, lfd. Nr. %2$d, wurde nicht gefunden."
+msgstr ""
+"Die Bankverbindung für die Person mit Id %1$d, lfd. Nr. %2$d, wurde nicht "
+"gefunden."
 
 #: lib/Controller/SepaBulkTransactionsController.php:217
 #, php-format
@@ -4006,7 +4008,9 @@ msgstr ""
 msgid ""
 "More than one bank account submitted for musician %1$s, multiple IBANs %2$s, "
 "%3$s."
-msgstr "Mehrere Bankverbindungen der Person %1$s wurden übermittelt, insbesondere %2$s, %3$s."
+msgstr ""
+"Mehrere Bankverbindungen der Person %1$s wurden übermittelt, insbesondere "
+"%2$s, %3$s."
 
 #: lib/Controller/SepaBulkTransactionsController.php:241
 #, php-format
@@ -4016,14 +4020,18 @@ msgstr "Die Person \"%1$s\" scheint nicht zum Projekt \"%2$s\" zu gehören."
 #: lib/Controller/SepaBulkTransactionsController.php:258
 #, php-format
 msgid "Debit-mandate for musician-id %1$d, sequence %2$d not found."
-msgstr "Lastschrift-Mandat für die Person %1$d, lfd. Nr. %2$d konnte nicht gefunden werden."
+msgstr ""
+"Lastschrift-Mandat für die Person %1$d, lfd. Nr. %2$d konnte nicht gefunden "
+"werden."
 
 #: lib/Controller/SepaBulkTransactionsController.php:267
 #, php-format
 msgid ""
 "More than one debit-mandate submitted for musician %1$s, multiple references "
 "%2$s, %3$s."
-msgstr "Mehrere Lastschriftmandate der Person %1$s wurden übermittelt, insbesondere %2$s, %3$s."
+msgstr ""
+"Mehrere Lastschriftmandate der Person %1$s wurden übermittelt, insbesondere "
+"%2$s, %3$s."
 
 #: lib/Controller/SepaBulkTransactionsController.php:276
 #, php-format
@@ -4069,7 +4077,9 @@ msgstr ""
 msgid ""
 "Musician \"%1$s\" has to pay an amount of %2$s, but there is no debit-note-"
 "mandate for the musician."
-msgstr "Die Person \"%1$s\" muss einen Betrag von %2$s bezahlen, uns liegt aber kein Lastschriftmandat vor."
+msgstr ""
+"Die Person \"%1$s\" muss einen Betrag von %2$s bezahlen, uns liegt aber kein "
+"Lastschriftmandat vor."
 
 #: lib/Controller/SepaBulkTransactionsController.php:459
 #: lib/Controller/SepaBulkTransactionsController.php:460
@@ -4090,14 +4100,17 @@ msgid ""
 msgstr ""
 "Das Lastschriftmandats für den Sammelauftag müssen entweder alle\n"
 "mehrfach verwendbar oder alle einmalig sein. Das kollidierende Mandat\n"
-"der Person \"%1$s\", Mandatsreferenz \"%2$s\", ist %3$s, die bislang verarbeiteten Mandate waren %4$s.;\n"
+"der Person \"%1$s\", Mandatsreferenz \"%2$s\", ist %3$s, die bislang "
+"verarbeiteten Mandate waren %4$s.;\n"
 
 #: lib/Controller/SepaBulkTransactionsController.php:498
 #, php-format
 msgid ""
 "Due-deadline %1$s conflicts with the pre-notification dead-line %2$s for the "
 "debit-mandate \"%3$s\"."
-msgstr "Fälligkeitsdatum %1$s kollidiert mit der Vorab-Informations-Frist %2$s des Lastschriftmandates \"%3$s\"."
+msgstr ""
+"Fälligkeitsdatum %1$s kollidiert mit der Vorab-Informations-Frist %2$s des "
+"Lastschriftmandates \"%3$s\"."
 
 #: lib/Controller/SepaBulkTransactionsController.php:567
 #, php-format
@@ -4326,7 +4339,8 @@ msgstr "Bankverbindung konnte nicht verifiziert werden: %s."
 msgid ""
 "The IBAN %1$s, account-owner %2$s, has already been recorded for the "
 "musician %3$s."
-msgstr "Die IBAN %1$s, Kontoinhaber:in %2$s, wurde bereits für %$3s registriert."
+msgstr ""
+"Die IBAN %1$s, Kontoinhaber:in %2$s, wurde bereits für %$3s registriert."
 
 #: lib/Controller/SepaDebitMandatesController.php:901
 msgid "Unable to modify already used bank-account."
@@ -5691,6 +5705,12 @@ msgstr "Datenbank-Initialisierung."
 #: lib/Maintenance/Migrations/MakeEmailDraftSubjectOptional.php:41
 msgid "Make the subject of email draft optional."
 msgstr "Der Betreff von Email-Entwürfen ist nur noch optional."
+
+#: lib/Maintenance/Migrations/MakeProjectPaymentsSubjectNullable.php:43
+#, fuzzy
+#| msgid "Sanitize project-payments structure."
+msgid "Make the ProjectPayment subject nullable."
+msgstr "Projekt-Umsatz-Tabelle aufräumen."
 
 #: lib/Maintenance/Migrations/ParticipantDropBankAccountColumns.php:47
 msgid "Drop some unused obsololete columns in the project_participants table"
@@ -7924,7 +7944,7 @@ msgid "From"
 msgstr "Von"
 
 #: lib/PageRenderer/SepaBulkTransactions.php:765
-#: lib/Service/Finance/SepaBulkTransactionService.php:704
+#: lib/Service/Finance/SepaBulkTransactionService.php:702
 #, php-format
 msgid ""
 "The bulk-transaction with id \"%1$d\" has already been submitted to the "
@@ -8420,7 +8440,7 @@ msgstr "Versicherung"
 #. TRANSLATORS: This is a slug, please keep it in camel-case without spaces.
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:91
 msgid "InstrumentInsurances"
-msgstr "Instrumentenversicherungen"
+msgstr "InstrumentenVersicherungen"
 
 #. TRANSLATORS: This is a text substitution placeholder. If the target
 #. TRANSLATORS: language knows the concept of casing, then please use
@@ -8621,29 +8641,29 @@ msgstr ""
 "Der Endbetrag \"%1$s\" und die Anzahlung \"%2$s\" sollten das gleiche "
 "Vorzeichen haben."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:737
+#: lib/Service/Finance/SepaBulkTransactionService.php:735
 #, php-format
 msgid "Failed to remove bulk-transaction with id %d"
 msgstr "Kann den Sammelauftrag mit Id %d nicht löschen."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:772
+#: lib/Service/Finance/SepaBulkTransactionService.php:770
 msgid "Unable to update payment subject while generating bank export data."
 msgstr ""
 "Der Zahlungsbetreff konnte nicht aktualisiert werden als versucht wurde, die "
 "Bankdaten für den Sammelauftrag zu exportieren."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:821
+#: lib/Service/Finance/SepaBulkTransactionService.php:819
 #, php-format
 msgid "Unable to find exporter for format \"%s\"."
 msgstr "Export in das Format \"%s\" ist nicht implementiert."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:838
-#: lib/Service/Finance/SepaBulkTransactionService.php:947
+#: lib/Service/Finance/SepaBulkTransactionService.php:836
+#: lib/Service/Finance/SepaBulkTransactionService.php:945
 #, php-format
 msgid "Conflicting projects \"%1$s\" vs. \"%2$s\"."
 msgstr "Wiedersprüchliche Projekt-Angaben, \"%1$s\" versus \"%2$s\".<\n"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:882
+#: lib/Service/Finance/SepaBulkTransactionService.php:880
 #, php-format
 msgid ""
 "Unable to generate export data for bulk-transaction id %1$d, format \"%2$s\"."
@@ -8651,17 +8671,19 @@ msgstr ""
 "Kann die Bank-Export-Daten für den Sammelauftrag %1$d nicht erzeugen, "
 "angefragtes Format war \"%2$s\"."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:929
+#: lib/Service/Finance/SepaBulkTransactionService.php:927
 #, php-format
 msgid "Unable to find a balancing items exporter for format \"%s\"."
 msgstr "Export in das Format \"%s\" ist nicht implementiert."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:993
+#: lib/Service/Finance/SepaBulkTransactionService.php:991
 #, php-format
 msgid ""
 "Unable to generate export data for the balancing items for bulk-transaction "
 "id %1$d, format \"%2$s\"."
-msgstr "Kann die Ausgleichsbuchungen-Export-Daten für den Sammelauftrag %1$d nicht erzeugen, angefragtes Format war \"%2$s\"."
+msgstr ""
+"Kann die Ausgleichsbuchungen-Export-Daten für den Sammelauftrag %1$d nicht "
+"erzeugen, angefragtes Format war \"%2$s\"."
 
 #: lib/Service/FuzzyInputService.php:112
 #, php-format
@@ -15416,13 +15438,17 @@ msgstr "Permanent"
 msgid ""
 "Unable to export the bank import-data for the bulktransaction with id "
 "\"{entityId}\"."
-msgstr "Kann die Bank-Importdaten für den Sammelauftrag mit der Id \"{entityId}\" nicht exportieren."
+msgstr ""
+"Kann die Bank-Importdaten für den Sammelauftrag mit der Id \"{entityId}\" "
+"nicht exportieren."
 
 #: specialVueFakeDummyForL10nScript.js:5920
 msgid ""
 "Unable to export the balancing items for the bulktransaction with id "
 "\"{entityId}\"."
-msgstr "Kann die Ausgleichsbuchungen für den Sammelauftrag mit der Id \"{entityId}\" nicht exportieren."
+msgstr ""
+"Kann die Ausgleichsbuchungen für den Sammelauftrag mit der Id \"{entityId}\" "
+"nicht exportieren."
 
 #. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:35
 #: specialVueFakeDummyForL10nScript.js:5929
@@ -21774,9 +21800,6 @@ msgstr "Zeigt einfach alle Spalten an."
 
 #~ msgid "Exception during transactional part of the migration."
 #~ msgstr "Der inhaltliche Teil der Datenmigration ist fehlgeschlagen."
-
-#~ msgid "Sanitize project-payments structure."
-#~ msgstr "Projekt-Umsatz-Tabelle aufräumen."
 
 #~ msgid "Remember the associated project for sent emails."
 #~ msgstr "Für gesendete Emails das zugeordnete Projekt mitspeichern."

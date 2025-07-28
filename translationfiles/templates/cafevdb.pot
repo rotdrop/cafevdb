@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-25 16:50+0200\n"
+"POT-Creation-Date: 2025-07-28 22:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5067,6 +5067,10 @@ msgstr ""
 msgid "Make the subject of email draft optional."
 msgstr ""
 
+#: lib/Maintenance/Migrations/MakeProjectPaymentsSubjectNullable.php:43
+msgid "Make the ProjectPayment subject nullable."
+msgstr ""
+
 #: lib/Maintenance/Migrations/ParticipantDropBankAccountColumns.php:47
 msgid "Drop some unused obsololete columns in the project_participants table"
 msgstr ""
@@ -7274,7 +7278,7 @@ msgid "From"
 msgstr ""
 
 #: lib/PageRenderer/SepaBulkTransactions.php:765
-#: lib/Service/Finance/SepaBulkTransactionService.php:704
+#: lib/Service/Finance/SepaBulkTransactionService.php:702
 #, php-format
 msgid ""
 "The bulk-transaction with id \"%1$d\" has already been submitted to the "
@@ -7903,38 +7907,38 @@ msgid ""
 "compatible signs."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:737
+#: lib/Service/Finance/SepaBulkTransactionService.php:735
 #, php-format
 msgid "Failed to remove bulk-transaction with id %d"
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:772
+#: lib/Service/Finance/SepaBulkTransactionService.php:770
 msgid "Unable to update payment subject while generating bank export data."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:821
+#: lib/Service/Finance/SepaBulkTransactionService.php:819
 #, php-format
 msgid "Unable to find exporter for format \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:838
-#: lib/Service/Finance/SepaBulkTransactionService.php:947
+#: lib/Service/Finance/SepaBulkTransactionService.php:836
+#: lib/Service/Finance/SepaBulkTransactionService.php:945
 #, php-format
 msgid "Conflicting projects \"%1$s\" vs. \"%2$s\"."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:882
+#: lib/Service/Finance/SepaBulkTransactionService.php:880
 #, php-format
 msgid ""
 "Unable to generate export data for bulk-transaction id %1$d, format \"%2$s\"."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:929
+#: lib/Service/Finance/SepaBulkTransactionService.php:927
 #, php-format
 msgid "Unable to find a balancing items exporter for format \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:993
+#: lib/Service/Finance/SepaBulkTransactionService.php:991
 #, php-format
 msgid ""
 "Unable to generate export data for the balancing items for bulk-transaction "
