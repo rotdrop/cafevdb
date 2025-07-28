@@ -109,7 +109,7 @@ const sqlQueryCode = computed(() => sqlFormat(props.queryLogEntry.query || '', {
 
 const copyToClipboard = async () => {
   try {
-    await navigator.clipboard.writeText(props.queryLogEntry.query)
+    await navigator.clipboard.writeText(sqlQueryCode.value)
     showInfo(t(appName, 'Query has been copied to the clipboard.'))
   } catch (error) {
     logger.error('CLIPBOARD ERROR', { error })
