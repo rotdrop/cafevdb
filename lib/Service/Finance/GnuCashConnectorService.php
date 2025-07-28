@@ -429,8 +429,6 @@ FROM %2$s';
   {
     $currencyCode = $this->getAppCurrencyCode();
 
-    /** @var IDateTimeFormatter $dateTimeFormatter */
-    $dateTimeFormatter = $this->appContainer->get(IDateTimeFormatter::class);
     $receivableAccounts = [];
     $musician = $compositePayment->getProjectParticipant()->getMusician();
     $description = $compositePayment->getSubject() . '; ' . $musician->getPublicName(false);
@@ -466,7 +464,7 @@ FROM %2$s';
       $transactionId = md5($receivableAccount);
       $data[] = [
         'transactionId' => $transactionId,
-        'date' => $dateTimeFormatter->formatDate($dueDate),
+        'date' => $dueDate->format('m-d-Y'),
         'amount' => $subTotals->toDecimal(2), // + or minus?
         'account' => $receivableAccount,
         'description' => $description,
