@@ -79,8 +79,8 @@ class RationalNumberTest extends TestCase
       (new RationalNumber(0, 433, -100000))->toDecimal(4, 4) => '-0.0043',
       (new RationalNumber(0, 1, 3))->toDecimal(-1) => '0.' . str_pad('', RationalNumber::DECIMAL_DIGITS_MAX, '3'),
       (new RationalNumber(0, 1, 3))->toDecimal() => '0.' . str_pad('', RationalNumber::DECIMAL_DIGITS_MAX, '3'),
-      (new RationalNumber(0, -2, 3))->toDecimal(-1) => '-0.' . str_pad('', RationalNumber::DECIMAL_DIGITS_MAX - 1, '6') . '7',
-      (new RationalNumber(0, -2, 3))->toDecimal() => '-0.' . str_pad('', RationalNumber::DECIMAL_DIGITS_MAX - 1, '6') . '7',
+      (new RationalNumber(0, -2, 3))->toDecimal(-1) => '-0.' . str_pad('', RationalNumber::DECIMAL_DIGITS_MAX - 2, '6') . '7',
+      (new RationalNumber(0, -2, 3))->toDecimal() => '-0.' . str_pad('', RationalNumber::DECIMAL_DIGITS_MAX - 2, '6') . '7',
       (new RationalNumber(12, 1, 3))->toDecimal(-1) => '12.' . str_pad('', RationalNumber::DECIMAL_DIGITS_MAX - 2, '3'),
       (new RationalNumber(12, 1, 3))->toDecimal() => '12.' . str_pad('', RationalNumber::DECIMAL_DIGITS_MAX - 2, '3'),
       (new RationalNumber(-123, -2, 3))->toDecimal(-1) => '-123.' . str_pad('', RationalNumber::DECIMAL_DIGITS_MAX - 1 - 3, '6') . '7',
@@ -89,6 +89,8 @@ class RationalNumberTest extends TestCase
       (new RationalNumber(0, 19, 100))->toDecimal() => '0.19',
       (new RationalNumber(0, 391, 1000))->toDecimal(-1) => '0.391',
       (new RationalNumber(0, 391, 1000))->toDecimal() => '0.391',
+      (new RationalNumber(0, 18189, 20000))->toDecimal(-1, 0) => '0.90945',
+
     ];
     foreach ($rationals as $decimal => $givenDecimal) {
       $this->assertEquals($givenDecimal, $decimal);

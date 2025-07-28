@@ -167,7 +167,7 @@ class RationalNumber extends Rational
     $abs = $this->abs();
     if ($scale === -1) {
       $result = $abs->whole;
-      $fractionalLimit = self::DECIMAL_DIGITS_MAX - ($result == 0 ? 0 : strlen($result));
+      $fractionalLimit = self::DECIMAL_DIGITS_MAX - max($abs->numerator > 1 ? strlen($abs->numerator) : 0, ($result == 0 ? 0 : strlen($result)));
       $abs = $abs->round($fractionalLimit);
       $abs->subEq($result);
       $fractionalPart = '';

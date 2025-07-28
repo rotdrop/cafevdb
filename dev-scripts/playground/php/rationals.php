@@ -8,6 +8,9 @@ use MathPHP\Number\Rational;
 use BcMath\Number;
 use OCA\CAFEVDB\Common\RationalNumber;
 
+
+echo (new RationalNumber(0, 18189, 20000))->toDecimal(-1, 0). PHP_EOL;
+
 echo (new RationalNumber(0, 435, 100000))->toDecimal(4) . PHP_EOL;
 echo (new RationalNumber(0, 433, -100000))->toDecimal(4) . PHP_EOL;
 echo (new RationalNumber(-1, 437, -100000))->toDecimal(4) . PHP_EOL;
