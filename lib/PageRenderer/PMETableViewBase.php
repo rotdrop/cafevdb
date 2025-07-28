@@ -2587,6 +2587,9 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   }
 
   /**
+   * Generate a join statement for use in an $opts['fdd'] definition. The join
+   * is only defined for single key identifiers.
+   *
    * @param string|array $joinInfo Table-description-data.
    *
    * @param string $field
@@ -2594,6 +2597,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
    * @return array
    *
    * @see joinTableFieldName()
+   * @see makeFieldTranslationsJoin()
    */
   protected function makeFieldTranslationFddValues(array $joinInfo, string $field):array
   {
@@ -2608,10 +2612,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       'values' => [
         'table' => self::FIELD_TRANSLATIONS_TABLE,
         'column' => 'content',
-        'join' => '$join_table.field = "'.$field.'"
-  AND $join_table.foreign_key = $main_table.'.$id.'
-  AND $join_table.object_class = "'.addslashes($joinInfo['entity']).'"
-  AND $join_table.locale = "'.$lang.'"',
+        'join' => implode("\nAND ", [
+          '$join_table.locale = "' . $lang . '"',
+          '$join_table.object_class = "' . addslashes($joinInfo['entity']) . '"',
+          '$join_table.field = "'.$field.'"',
+          '$join_table.foreign_key = CAST($main_table.' . $id . ' AS CHAR CHARACTER SET ' . DBConstants::CHARACTER_SET . ') COLLATE ' .  DBConstants::FULL_COLLATION,
+        ]),
         'filters' => '$table.field = "'.$field.'"
   AND $table.locale = "'.$lang.'
   AND $table.object_class = "'.addslashes($joinInfo['entity']).'"',
