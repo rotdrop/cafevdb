@@ -464,7 +464,7 @@ FROM %2$s';
       $transactionId = md5($receivableAccount);
       $data[] = [
         'transactionId' => $transactionId,
-        'date' => $dueDate->format('m-d-Y'),
+        'date' => $dueDate->format('d-m-Y'),
         'amount' => $subTotals->toDecimal(2), // + or minus?
         'negativeAmount' => $subTotals->mul(-$subTotals->sign())->toDecimal(2), // + or minus?
         'account' => $receivableAccount,
