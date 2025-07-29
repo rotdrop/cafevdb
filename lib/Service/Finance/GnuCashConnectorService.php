@@ -447,11 +447,13 @@ FROM %2$s';
         $receivableAccounts[$receivableAccount]['payments'][] = $projectPayment;
       }
     }
+    /** @var FinanceService $financeService */
+    $financeService = $this->appContainer->get(FinanceService::class);
     $data = [];
     foreach ($receivableAccounts as $receivableAccount => $accountData) {
       $dueDate = max(
         array_map(
-          fn(Entities\ProjectPayment $payment) => $payment->getReceivable()->getField()->getDueDate(),
+          fn(Entities\ProjectPayment $payment) => $financeService->getDueDate($payment->getReceivable()),
           $accountData['payments'],
         ),
       );

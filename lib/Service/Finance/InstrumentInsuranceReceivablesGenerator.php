@@ -405,13 +405,19 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     if ($receivable === null) {
       $year = (int)(new DateTime)->setTimezone($timeZone)->format('Y');
     } else {
-      $year = (int)$receivable->getData();
+      $data = $receivable->getData();
+      if (!str_starts_with($data, '{')) {
+        // legacy item
+        $year = $data;
+      } else {
+        list('year' => $year) = json_decode($data, true);
+      }
       if ($year == 0) {
         return null;
       }
     }
     $dueDate = $this->serviceFeeField->getDueDate()->setTimezone($timeZone);
     $dueYear = (int)$dueDate->format('Y');
-    return $dueDate->modify('+'.($year - $dueYear).' years');
+    return $dueDate->modify('+' . ($year - $dueYear) . ' years');
   }
 }

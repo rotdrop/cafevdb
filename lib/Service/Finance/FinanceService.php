@@ -25,17 +25,18 @@
 namespace OCA\CAFEVDB\Service\Finance;
 
 use DateTimeImmutable as DateTime;
+use DateTimeInterface;
 use InvalidArgumentException;
 use RuntimeException;
 
 use Cmixin\BusinessDay;
-use DateTimeInterface;
 use PHP_IBAN;
 
 use OCA\BAV\Service\BAV as BankAccountValidator;
 
 use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -116,6 +117,32 @@ class FinanceService
       CarbonImmutable::addHolidays(strtolower($bankHolidays), self::TARGET2_HOLIDAYS);
     } else {
       CarbonImmutable::setHolidays('target2', self::TARGET2_HOLIDAYS);
+    }
+  }
+
+  /**
+   * Fetch the due-date from either the associated field or the receivable generator.
+   *
+   * @param Entities\ProjectParticipantFieldDatum|Entities\ProjectParticipantFieldDataOption $receivable
+   *
+   * @return DateTimeInterface
+   */
+  public function getDueDate(
+    Entities\ProjectParticipantFieldDatum|Entities\ProjectParticipantFieldDataOption $receivable,
+  ): DateTimeInterface
+  {
+    $field = $receivable->getField();
+    if ($field->getMultiplicity() == Types\EnumParticipantFieldMultiplicity::RECURRING) {
+      /** @var ReceivablesGeneratorFactory $factory */
+      $factory = $this->di(ReceivablesGeneratorFactory::class);
+      /** @var IRecurringReceivablesGenerator $generator */
+      $generator = $factory->getGenerator($field);
+      if ($receivable instanceof Entities\ProjectParticipantFieldDatum) {
+        $receivable = $receivable->getDataOption();
+      }
+      return $generator->dueDate($receivable);
+    } else {
+      return $field->getDueDate();
     }
   }
 
