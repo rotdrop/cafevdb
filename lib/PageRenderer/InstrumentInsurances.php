@@ -618,7 +618,7 @@ GROUP BY b.short_name',
       'sql' => 'ROUND($table.insurance_amount
  * ' . $joinTables[self::RATES_TABLE] . '.rate
  * (1 + ' . $joinTables[self::TAXATION_STATUTORY_SOURCES_TABLE] . '.rate), 2)',
-      'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
+      'php' => function($value, $action, $k, $row, $recordId, $pme) {
         $taxRate = $row[$this->joinQueryField(self::TAXATION_STATUTORY_SOURCES_TABLE, 'rate')];
         return '<span class="insurance-fee-display"
   data-currency-code="' . $this->currencyCode() . '"
