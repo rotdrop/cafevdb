@@ -96,6 +96,16 @@ class InstrumentInsurances extends PMETableViewBase
       ],
       'column' => 'musician_id',
     ],
+    self::TAXATION_STATUTORY_SOURCES_TABLE => [
+      'entity' => Entities\TaxationStatutorySource::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'tax_type' => [
+          'value' => Types\EnumTaxType::INSURANCE,
+        ],
+      ],
+      'column' => 'tax_type',
+    ],
   ];
 
   /** @var Entities\Project */
@@ -589,6 +599,14 @@ GROUP BY b.short_name',
         },
       ]);
 
+    $this->makeJoinTableField(
+      $opts['fdd'],  self::TAXATION_STATUTORY_SOURCES_TABLE, 'rate', [
+        'name' => $this->l->t('Tax Rate'),
+        'input' => 'N',
+        'tab' => [ 'id' => 'finance' ],
+        'input' => 'HR',
+      ]);
+
     $opts['fdd']['insurance_fee'] = [
       'tab'  => [ 'id' => 'finance' ],
       'input' => 'V',
@@ -599,11 +617,12 @@ GROUP BY b.short_name',
       'sort' => true,
       'sql' => 'ROUND($table.insurance_amount
  * ' . $joinTables[self::RATES_TABLE] . '.rate
- * (1 + ' . floatval(InstrumentInsuranceService::TAXES) . '), 2)',
-      'php' => function($value) {
+ * (1 + ' . $joinTables[self::TAXATION_STATUTORY_SOURCES_TABLE] . '.rate), 2)',
+      'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
+        $taxRate = $row[$this->joinQueryField(self::TAXATION_STATUTORY_SOURCES_TABLE, 'rate')];
         return '<span class="insurance-fee-display"
   data-currency-code="' . $this->currencyCode() . '"
-  data-tax-rate="' . InstrumentInsuranceService::TAXES . '"
+  data-tax-rate="' . $taxRate . '"
 >'
           . $this->moneyValue($value)
           . '</span>';
@@ -611,11 +630,11 @@ GROUP BY b.short_name',
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::RATES_TABLE, 'due_date', array_merge(
+      $opts['fdd'], self::RATES_TABLE, 'due_date', Util::arrayMergeRecursive(
         $this->defaultFDD['date'], [
           'name' => $this->l->t('Due Date'),
           'tab'  => [ 'id' => 'finance' ],
-          'css' => [ 'postfix' => [ 'insurance-rate -due-date', ], ],
+          'css' => [ 'postfix' => [ 'insurance-rate-due-date', ], ],
           // 'sql' => 'DATE_ADD($join_col_fqn, INTERVAL (YEAR(NOW()) - YEAR($join_col_fqn) + 1) YEAR)',
           'sql' => 'DATE_ADD($join_col_fqn, INTERVAL (YEAR(NOW()) - YEAR($join_col_fqn) + 0) YEAR)',
           'input' => 'VR',
