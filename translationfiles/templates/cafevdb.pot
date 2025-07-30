@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-30 13:03+0200\n"
+"POT-Creation-Date: 2025-07-30 13:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14111,13 +14111,13 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/app/project-participant-fields-display.js:149
+#: src/app/project-participant-fields-display.js:153
 msgid ""
 "Input element is not empty, do your really want to revert it to its default "
 "value?"
 msgstr ""
 
-#: src/app/project-participant-fields-display.js:150
+#: src/app/project-participant-fields-display.js:154
 msgid "Revert to default value?"
 msgstr ""
 

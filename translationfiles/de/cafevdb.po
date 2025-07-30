@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-30 12:57+0200\n"
-"PO-Revision-Date: 2025-07-30 13:03+0200\n"
+"POT-Creation-Date: 2025-07-30 13:42+0200\n"
+"PO-Revision-Date: 2025-07-30 13:42+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -4253,7 +4253,7 @@ msgstr "Wert für `%s' auf `%s' gesetzt."
 #: lib/Controller/SepaDebitMandatesController.php:265
 #, php-format
 msgid "Participant %d not found in project %d."
-msgstr "Teilnehmen %d wurde im Projekt %d nicht gefunden."
+msgstr "Person %d wurde im Projekt %d nicht gefunden."
 
 #: lib/Controller/SepaDebitMandatesController.php:281
 msgid "Set bank-account owner to musician's name?"
@@ -16269,7 +16269,7 @@ msgstr "#Zeilen"
 msgid "Remove"
 msgstr "Entfernen"
 
-#: src/app/project-participant-fields-display.js:149
+#: src/app/project-participant-fields-display.js:153
 msgid ""
 "Input element is not empty, do your really want to revert it to its default "
 "value?"
@@ -16277,7 +16277,7 @@ msgstr ""
 "Das Eingabefeld enthält Daten, soll es wirklich auf den voreingestellten "
 "Wert zurück gesetzt werden?"
 
-#: src/app/project-participant-fields-display.js:150
+#: src/app/project-participant-fields-display.js:154
 msgid "Revert to default value?"
 msgstr "Auf Voreinstellung zurücksetzen?"
 

@@ -697,7 +697,7 @@ OC.L10N.register(
     "No project, delete mandate-reference." : "Kein Projekt, lösche Mandatsreferenz.",
     "Failed setting `%s' to `%s'." : "Konnte die Einstellung '%s' nicht auf den Wert '%s' setzen.",
     "Value for `%s' set to `%s'." : "Wert für `%s' auf `%s' gesetzt.",
-    "Participant %d not found in project %d." : "Teilnehmen %d wurde im Projekt %d nicht gefunden.",
+    "Participant %d not found in project %d." : "Person %d wurde im Projekt %d nicht gefunden.",
     "Set bank-account owner to musician's name?" : "Namen des/der Musizierenden als Kontoinhaber:in verwenden?",
     "Account owner contains invalid characters: \"%s\"" : "Kontoinhaber:in enthält ungültige Buchstaben: \"%s\"",
     "BLZ not given, cannot validate the bank account." : "BLZ wurde noch nicht angegeben, kann die Kontonummer deshalb nicht verifizieren.",
