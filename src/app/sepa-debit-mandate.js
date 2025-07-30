@@ -1362,18 +1362,18 @@ const mandateInsuranceReady = function(selector) {
 const mandateReady = function(selector, parameters, resizeCB) {
 
   const containerSel = PHPMyEdit.selector(selector);
-  const container = PHPMyEdit.container(containerSel);
-  const pmeReload = container.find(pmeFormSelector + ' input.' + pmeToken('reload')).first();
+  const $container = PHPMyEdit.container(containerSel);
+  const pmeReload = $container.find(pmeFormSelector + ' input.' + pmeToken('reload')).first();
 
   // bail out if not for us.
-  const form = container.find(pmeFormSelector);
-  let $pmeTable = form.find('table[summary="InstrumentInsurance"]');
+  const $form = $container.find(pmeFormSelector);
+  let $pmeTable = $form.find('table[summary="InstrumentInsurance"]');
   if ($pmeTable.length > 0) {
     mandateInsuranceReady(selector);
     return;
   }
 
-  const bulkTransactionChooser = container.find('select.sepa-bulk-transactions');
+  const bulkTransactionChooser = $container.find('select.sepa-bulk-transactions');
   bulkTransactionChooser.chosen({
     disable_search: true,
     inherit_select_classes: true,
@@ -1406,7 +1406,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
       return false;
     });
 
-  const bulkDueDeadline = container.find('input.sepa-due-deadline');
+  const bulkDueDeadline = $container.find('input.sepa-due-deadline');
   bulkDueDeadline
     .off('change')
     .on('change', function(event) {
@@ -1417,7 +1417,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
       return false;
     });
 
-  const $recurringReceivablesUpdateStrategy = container.find('input.recurring-receivables-update-strategy');
+  const $recurringReceivablesUpdateStrategy = $container.find('input.recurring-receivables-update-strategy');
 
   // synchronize top and bottom update-strategy radio buttons´
   $recurringReceivablesUpdateStrategy
@@ -1431,7 +1431,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
       return false;
     });
 
-  container.find('input.regenerate-receivables')
+  $container.find('input.regenerate-receivables')
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
@@ -1496,7 +1496,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
   pmeExportMenu(containerSel);
 
   // from here
-  $pmeTable = form.find('table[summary="SepaBankAccounts"]');
+  $pmeTable = $form.find('table[summary="SepaBankAccounts"]');
 
   if ($pmeTable.length === 0) {
     return;
@@ -1510,11 +1510,11 @@ const mandateReady = function(selector, parameters, resizeCB) {
   const $mandateProjectSelect = $pmeTable.find('select.mandate-project');
 
   const musicianId = $musicianIdInput.val();
-  const projectId = $mandateProjectSelect.val();
+  const projectId = $mandateProjectSelect.val() || $form.find('input[name="projectId"]').val();
 
-  participantFieldsHandlers(container, musicianId, projectId, parameters);
+  participantFieldsHandlers($container, musicianId, projectId, parameters);
 
-  container.find(['input', 'debit-note', pmeToken('misc'), pmeToken('commit')].join('.'))
+  $container.find(['input', 'debit-note', pmeToken('misc'), pmeToken('commit')].join('.'))
     .off('click')
     .on('click', mandateExportHandler);
 
@@ -1525,8 +1525,8 @@ const mandateReady = function(selector, parameters, resizeCB) {
     console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
   });
 
-  if (form.is(pmeClassSelectors('', ['list', 'view', 'delete']))) {
-    lazyDecrypt(form);
+  if ($form.is(pmeClassSelectors('', ['list', 'view', 'delete']))) {
+    lazyDecrypt($form);
     return;
   }
 
@@ -1708,7 +1708,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
   });
 
   // must come after the promise.done()
-  lazyDecrypt(form);
+  lazyDecrypt($form);
 
   const validateInput = function(event) {
     const $input = $(this);
@@ -1732,7 +1732,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
       .closest('tr.pme-row')
       .toggleClass('empty-mandate-project', $this.val() === '');
     // $this.closest('.ui-dialog').trigger('resize');
-    container.trigger('pmetable:layoutchange');
+    $container.trigger('pmetable:layoutchange');
   });
 
   $pmeTable.find('input[type="text"].pme-input').not('.revocation-date, .participant-field')
@@ -1746,7 +1746,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
 
   const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);
   let submitActive = false;
-  form
+  $form
     .off('click', submitSel)
     .on('click', submitSel, function(event) {
       const $button = $(this);
@@ -1780,7 +1780,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
           $inputs.prop('readonly', false);
           if (validateOk) {
             // submit the form ...
-            form.off('click', submitSel);
+            $form.off('click', submitSel);
             $button.trigger('click');
           }
         }
