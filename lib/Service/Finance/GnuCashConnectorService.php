@@ -410,9 +410,6 @@ FROM %2$s';
     foreach ($bulkTransaction->getPayments() as $compositePayment) {
       $data = array_merge($data, $this->exportCompositePaymentBalancingEntries($compositePayment));
     }
-
-    $this->logError('EXPORT DATA ' . print_r($data, true));
-
     return $data;
   }
 
@@ -463,12 +460,13 @@ FROM %2$s';
         fn(RationalNumber $carry, Entities\ProjectPayment $payment) => $carry->add($payment->getAmount()),
         RationalNumber::zero(),
       );
+      $this->logInfo('SUB TOTALS ' . $subTotals->toDecimal() . ' SIGN ' . $subTotals->sign());
       $transactionId = md5($receivableAccount);
       $data[] = [
         'transactionId' => $transactionId,
         'date' => $dueDate->format('d-m-Y'),
         'amount' => $subTotals->toDecimal(2), // + or minus?
-        'negativeAmount' => $subTotals->mul(-$subTotals->sign())->toDecimal(2), // + or minus?
+        'negativeAmount' => $subTotals->neg()->toDecimal(2), // + or minus?
         'account' => $receivableAccount,
         'description' => $description,
         'currency' => $currencyCode,
@@ -481,7 +479,7 @@ FROM %2$s';
         $data[] = [
           'transactionId' => $transactionId,
           'date' => '',
-          'amount' => $projectPayment->getAmount()->mul(-$subTotals->sign())->toDecimal(2),
+          'amount' => $projectPayment->getAmount()->neg()->toDecimal(2),
           'negativeAmount' => $projectPayment->getAmount()->toDecimal(2),
           'account' => $projectPayment->getReceivable()->getBalancingAccount(),
           'subject' => '',
