@@ -204,7 +204,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
               $tooltipTemplate = $this->toolTipsService['instrument-insurance:opening-balance']??'';
               $tooltipText = $this->l->t($tooltipTemplate);
             } else {
-              $labelText = $this->l->t($labelTemplate = 'Insurance Fee %d', $year);
+              // TRANSLATORS: First parameter is a year YYYY, second parameter year plus one
+              $labelText = $this->l->t($labelTemplate = 'Insurance Fee %1$d-%2$d', [$year, $year + 1]);
               $tooltipTemplate = $this->toolTipsService['instrument-insurance:annual-service-fee']??'';
               $tooltipText = $this->l->t($tooltipTemplate);
             }
@@ -212,7 +213,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
           $receivable->setLabel($labelText)
                      ->setTooltip($tooltipText);
           if ($legacy) {
-            $this->translate($receivable, 'label', null, sprintf($labelTemplate, $year))
+            $this->translate($receivable, 'label', null, sprintf($labelTemplate, $year, $year + 1))
                  ->translate($receivable, 'tooltip', null, $tooltipTemplate);
             break; // no need to iterate further over brokers.
           }
