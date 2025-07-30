@@ -460,7 +460,6 @@ FROM %2$s';
         fn(RationalNumber $carry, Entities\ProjectPayment $payment) => $carry->add($payment->getAmount()),
         RationalNumber::zero(),
       );
-      $this->logInfo('SUB TOTALS ' . $subTotals->toDecimal() . ' SIGN ' . $subTotals->sign());
       $transactionId = md5($receivableAccount);
       $data[] = [
         'transactionId' => $transactionId,
@@ -475,13 +474,31 @@ FROM %2$s';
       ];
       /** @var Entities\ProjectPayment $projectPayment */
       foreach ($accountData['payments'] as $projectPayment) {
+        $receivable = $projectPayment->getReceivable();
+        $balancingAccount = $receivable->getBalancingAccount();
+        if (empty($balancingAcount)) {
+          $field = $receivable->getField();
+          if ($field->getMultiplicity() == FieldMultiplicity::RECURRING) {
+            $generatorOption = $field->getManagementOption();
+            $class = $generatorOption->getData();
+            try {
+              $generator = $this->appContainer->get($class);
+              if (method_exists($generator, 'generateLegacyBalancingAccount')) {
+                $balancingAccount = $generator->generateLegacyBalancingAccount($receivable);
+              }
+            } catch (Throwable) {
+              // ignore
+              $balancingAccount = '';
+            }
+          }
+        }
         /** @var RationalNumber $amount */
         $data[] = [
           'transactionId' => $transactionId,
           'date' => '',
           'amount' => $projectPayment->getAmount()->neg()->toDecimal(2),
           'negativeAmount' => $projectPayment->getAmount()->toDecimal(2),
-          'account' => $projectPayment->getReceivable()->getBalancingAccount(),
+          'account' => $balancingAccount,
           'subject' => '',
           'description' => '',
           'notes' => '',
@@ -489,8 +506,6 @@ FROM %2$s';
         ];
       }
     }
-
-    $this->logError('EXPORT DATA ' . print_r($data, true));
 
     return $data;
   }

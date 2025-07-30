@@ -102,6 +102,12 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       // TRANSLATORS: please use whatever else convention "usually" applies to
       // TRANSLATORS: placeholder keywords in the target language.
       'BROKER' => $this->l->t('BROKER'),
+      // TRANSLATORS: This is a text substitution placeholder. If the target
+      // TRANSLATORS: language knows the concept of casing, then please use
+      // TRANSLATORS: only uppercase letters in the translation. Otherwise
+      // TRANSLATORS: please use whatever else convention "usually" applies to
+      // TRANSLATORS: placeholder keywords in the target language.
+      'YEAR' => $this->l->t('YEAR'),
     ];
 
     $receivableOptions = $this->serviceFeeField->getDataOptions();
@@ -211,7 +217,13 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
             break; // no need to iterate further over brokers.
           }
           if (!empty($balancingAccountTemplate)) {
-            $balancingAccount = $this->replaceBracedPlaceholders($balancingAccountTemplate, [ 'BROKER' => $brokerShortName ], $templateKeys);
+            $balancingAccount = $this->replaceBracedPlaceholders(
+              $balancingAccountTemplate, [
+                'BROKER' => $brokerShortName,
+                'YEAR' => $year,
+              ],
+              $templateKeys,
+            );
             $receivable->setBalancingAccount($balancingAccount);
           }
           $this->translate($receivable, 'label', null, sprintf($labelTemplate, $year, $brokerShortName))
@@ -220,6 +232,67 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       }
     }
     return $this->serviceFeeField->getSelectableOptions();
+  }
+
+  /**
+   * Try to generate a balancing account for a legacy item without broker information.
+   *
+   * @param Entities\ProjectParticipantFieldDatum $receivable
+   *
+   * @return null|string
+   */
+  public function generateLegacyBalancingAccount(Entities\ProjectParticipantFieldDatum $receivable):?string
+  {
+    $field = $receivable->getField();
+    $generatorOption = $field->getManagementOption();
+    if ($generatorOption->getData() != __CLASS__) {
+      return null;
+    }
+    $balancingAccountTemplate = $this->getAppValue(AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY);
+    if (empty($balancingAccountTemplate)) {
+      return null;
+    }
+    $templateKeys = [
+      // TRANSLATORS: This is a text substitution placeholder. If the target
+      // TRANSLATORS: language knows the concept of casing, then please use
+      // TRANSLATORS: only uppercase letters in the translation. Otherwise
+      // TRANSLATORS: please use whatever else convention "usually" applies to
+      // TRANSLATORS: placeholder keywords in the target language.
+      'BROKER' => $this->l->t('BROKER'),
+      // TRANSLATORS: This is a text substitution placeholder. If the target
+      // TRANSLATORS: language knows the concept of casing, then please use
+      // TRANSLATORS: only uppercase letters in the translation. Otherwise
+      // TRANSLATORS: please use whatever else convention "usually" applies to
+      // TRANSLATORS: placeholder keywords in the target language.
+      'YEAR' => $this->l->t('YEAR'),
+    ];
+    $option = $receivable->getDataOption();
+    $data = $option->getData();
+    if (str_starts_with($data, '{')) {
+      // non legacy case
+      list('year' => $year, 'broker' => $brokerShortName) = json_decode($data, true);
+    } else {
+      $year = $data;
+      // Just take the first insurance found in order to have some valid account. Must be cleaned up later then.
+      $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+      $musician = $receivable->getMusician();
+      $insurances = $musician->getInstrumentInsurances();
+      $this->logInfo('NOT MY CLASS ' . __CLASS__ . ' <-> ' . $generatorOption->getData());
+      if (!$insurances || $insurances->count() <= 0) {
+        return null;
+      }
+      $brokerShortName = $insurances->first()->getBroker()->getShortName();
+    }
+    if (empty($year) || empty($brokerShortName)) {
+      return null;
+    }
+    return $this->replaceBracedPlaceholders(
+      $balancingAccountTemplate, [
+        'YEAR' => $year,
+        'BROKER' => $brokerShortName,
+      ],
+      $templateKeys,
+    );
   }
 
   /** {@inheritdoc} */
