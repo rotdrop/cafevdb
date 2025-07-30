@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-28 22:13+0200\n"
-"PO-Revision-Date: 2025-07-28 22:16+0200\n"
+"POT-Creation-Date: 2025-07-30 12:57+0200\n"
+"PO-Revision-Date: 2025-07-30 13:03+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -4935,7 +4935,7 @@ msgid "Remaining"
 msgstr "Fehlbetrag"
 
 #: lib/EmailForm/Composer.php:1037
-#: lib/PageRenderer/InstrumentInsurances.php:616
+#: lib/PageRenderer/InstrumentInsurances.php:635
 #: lib/PageRenderer/Invoices.php:899 lib/PageRenderer/Invoices.php:910
 #: lib/PageRenderer/PMETableViewBase.php:700
 msgid "Due Date"
@@ -5707,10 +5707,8 @@ msgid "Make the subject of email draft optional."
 msgstr "Der Betreff von Email-Entwürfen ist nur noch optional."
 
 #: lib/Maintenance/Migrations/MakeProjectPaymentsSubjectNullable.php:43
-#, fuzzy
-#| msgid "Sanitize project-payments structure."
 msgid "Make the ProjectPayment subject nullable."
-msgstr "Projekt-Umsatz-Tabelle aufräumen."
+msgstr "Der Projektzahlungs-Betreff darf NULL sein."
 
 #: lib/Maintenance/Migrations/ParticipantDropBankAccountColumns.php:47
 msgid "Drop some unused obsololete columns in the project_participants table"
@@ -5900,14 +5898,14 @@ msgid "Supporting Document"
 msgstr "Beleg"
 
 #: lib/PageRenderer/DonationReceipts.php:319
-#: lib/PageRenderer/InstrumentInsurances.php:232
+#: lib/PageRenderer/InstrumentInsurances.php:242
 #: lib/PageRenderer/Musicians.php:281
 #: lib/PageRenderer/ProjectParticipantFields.php:282
 msgid "Miscellaneous Data"
 msgstr "Verschiedenes"
 
 #: lib/PageRenderer/DonationReceipts.php:323
-#: lib/PageRenderer/InstrumentInsurances.php:237
+#: lib/PageRenderer/InstrumentInsurances.php:247
 #: lib/PageRenderer/Invoices.php:510 lib/PageRenderer/Musicians.php:284
 #: lib/PageRenderer/ProjectParticipantFields.php:287
 #: lib/PageRenderer/ProjectParticipants.php:1798
@@ -5920,7 +5918,7 @@ msgstr "Alles anzeigen"
 
 #: lib/PageRenderer/DonationReceipts.php:351
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:177
-#: lib/PageRenderer/InstrumentInsurances.php:272
+#: lib/PageRenderer/InstrumentInsurances.php:282
 #: lib/PageRenderer/ProjectPayments.php:629
 #: lib/PageRenderer/SepaBankAccounts.php:547
 #: lib/PageRenderer/SepaBulkTransactions.php:398
@@ -6022,8 +6020,8 @@ msgid "Instrument Insurances"
 msgstr "Instrumentenversicherungen"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:178
-#: lib/PageRenderer/InstrumentInsurances.php:222
-#: lib/PageRenderer/InstrumentInsurances.php:479
+#: lib/PageRenderer/InstrumentInsurances.php:232
+#: lib/PageRenderer/InstrumentInsurances.php:489
 msgid "Insured Object"
 msgstr "Versicherter Gegenstand"
 
@@ -6036,23 +6034,23 @@ msgid "End Date"
 msgstr "Enddatum"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:181
-#: lib/PageRenderer/InstrumentInsurances.php:498
+#: lib/PageRenderer/InstrumentInsurances.php:508
 msgid "Accessory"
 msgstr "Zubehör"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:182
-#: lib/PageRenderer/InstrumentInsurances.php:515
+#: lib/PageRenderer/InstrumentInsurances.php:525
 msgid "Manufacturer"
 msgstr "Hersteller"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:183
-#: lib/PageRenderer/InstrumentInsurances.php:542
+#: lib/PageRenderer/InstrumentInsurances.php:552
 msgid "Year of Construction"
 msgstr "Herstellungsjahr"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:184
-#: lib/PageRenderer/InstrumentInsurances.php:227
-#: lib/PageRenderer/InstrumentInsurances.php:561
+#: lib/PageRenderer/InstrumentInsurances.php:237
+#: lib/PageRenderer/InstrumentInsurances.php:571
 msgid "Insurance Amount"
 msgstr "Versicherungssumme"
 
@@ -6070,7 +6068,7 @@ msgid "Policy Number"
 msgstr "Versicherungsnummer"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:532
-#: lib/PageRenderer/InstrumentInsurances.php:467
+#: lib/PageRenderer/InstrumentInsurances.php:477
 msgid "Geographical Scope"
 msgstr "Geltungsbereich"
 
@@ -6491,98 +6489,103 @@ msgstr "Familie"
 msgid "Instruments"
 msgstr "Instrumente"
 
-#: lib/PageRenderer/InstrumentInsurances.php:149
+#: lib/PageRenderer/InstrumentInsurances.php:159
 msgid "Overview over the Bulk Instrument Insurances"
 msgstr "Übersicht über die Instrumentensammelversicherungen"
 
-#: lib/PageRenderer/InstrumentInsurances.php:216
+#: lib/PageRenderer/InstrumentInsurances.php:226
 msgid "Insurance brief, item, musician, broker"
 msgstr "Kurzinformation; Makler, vers. Person, versicherter Gegenstand"
 
 #. TRANSLATORS src/components/LegacyPageActionsMenu.vue:45
-#: lib/PageRenderer/InstrumentInsurances.php:217
+#: lib/PageRenderer/InstrumentInsurances.php:227
 #: specialVueFakeDummyForL10nScript.js:2627
 msgid "Overview"
 msgstr "Übersicht"
 
-#: lib/PageRenderer/InstrumentInsurances.php:221
+#: lib/PageRenderer/InstrumentInsurances.php:231
 msgid "Details about the insured item"
 msgstr "Details über die versicherten Gegenstände"
 
-#: lib/PageRenderer/InstrumentInsurances.php:226
+#: lib/PageRenderer/InstrumentInsurances.php:236
 msgid "Insurance rate and total sum of insurance police"
 msgstr "Versicherungsraten und Gesamtbeitrag"
 
-#: lib/PageRenderer/InstrumentInsurances.php:256
+#: lib/PageRenderer/InstrumentInsurances.php:266
 msgid "Insurance Id"
 msgstr "Versicherungs-Id"
 
-#: lib/PageRenderer/InstrumentInsurances.php:311
+#: lib/PageRenderer/InstrumentInsurances.php:321
 msgid "Bill-to Party"
 msgstr "Zahlungspflichtiger"
 
-#: lib/PageRenderer/InstrumentInsurances.php:354
+#: lib/PageRenderer/InstrumentInsurances.php:364
 msgid "Owner"
 msgstr "Eigentümer"
 
-#: lib/PageRenderer/InstrumentInsurances.php:394
+#: lib/PageRenderer/InstrumentInsurances.php:404
 msgid "Club Member"
 msgstr "Vereinsmitglied"
 
-#: lib/PageRenderer/InstrumentInsurances.php:414
-#: lib/PageRenderer/InstrumentInsurances.php:421
+#: lib/PageRenderer/InstrumentInsurances.php:424
+#: lib/PageRenderer/InstrumentInsurances.php:431
 msgid "Insurance Broker"
 msgstr "Versicherungsmakler"
 
-#: lib/PageRenderer/InstrumentInsurances.php:520
+#: lib/PageRenderer/InstrumentInsurances.php:530
 msgid "e.g. Bilbo Beutlin, Hobbiton, The Shire"
 msgstr "z.B. Bilbo Beutlin, Hobbingen, Auenland"
 
-#: lib/PageRenderer/InstrumentInsurances.php:531
+#: lib/PageRenderer/InstrumentInsurances.php:541
 #, php-format
 msgid "around %1$04d"
 msgstr "um %1$04d"
 
-#: lib/PageRenderer/InstrumentInsurances.php:535
+#: lib/PageRenderer/InstrumentInsurances.php:545
 #, php-format
 msgid "end of %1$02dth century"
 msgstr "Ende des %1$02den Jahrhunderts"
 
-#: lib/PageRenderer/InstrumentInsurances.php:549
+#: lib/PageRenderer/InstrumentInsurances.php:559
 msgid "e.g. \"1921\" or \"around 1900\""
 msgstr "z.B. \"1921\" oder \"um 1900\""
 
-#: lib/PageRenderer/InstrumentInsurances.php:578
+#: lib/PageRenderer/InstrumentInsurances.php:588
 msgid "Insurance Rate"
 msgstr "Rate"
 
-#: lib/PageRenderer/InstrumentInsurances.php:597
+#: lib/PageRenderer/InstrumentInsurances.php:604
+#: lib/PageRenderer/TaxationStatutorySources.php:240
+msgid "Tax Rate"
+msgstr "Steuersaz"
+
+#: lib/PageRenderer/InstrumentInsurances.php:615
 msgid "Insurance Fee w/ taxes"
 msgstr "Versicherungs-Beitrag m. St."
 
-#: lib/PageRenderer/InstrumentInsurances.php:630
+#: lib/PageRenderer/InstrumentInsurances.php:649
 msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
-#: lib/PageRenderer/InstrumentInsurances.php:641
+#: lib/PageRenderer/InstrumentInsurances.php:660
 #: lib/PageRenderer/Musicians.php:920
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
 
-#: lib/PageRenderer/InstrumentInsurances.php:660
+#: lib/PageRenderer/InstrumentInsurances.php:679
 msgid "Start of Insurance"
 msgstr "Versicherungsbeginn"
 
-#: lib/PageRenderer/InstrumentInsurances.php:668
+#: lib/PageRenderer/InstrumentInsurances.php:687
 msgid "End of Insurance"
 msgstr "Versicherungsende"
 
-#: lib/PageRenderer/InstrumentInsurances.php:682
+#: lib/PageRenderer/InstrumentInsurances.php:701
 msgid "Bill"
 msgstr "Rechnung"
 
-#: lib/PageRenderer/InstrumentInsurances.php:708
+#: lib/PageRenderer/InstrumentInsurances.php:727
 msgid "bill"
 msgstr "Rechnung"
 
@@ -8011,10 +8014,6 @@ msgstr "Rechtsgrundlagen für Besteuerungen bzw. Freistellungen"
 msgid "Tax Type"
 msgstr "Steuer"
 
-#: lib/PageRenderer/TaxationStatutorySources.php:240
-msgid "Tax Rate"
-msgstr "Steuersaz"
-
 #: lib/PageRenderer/TaxationStatutorySources.php:271
 msgid "Hint"
 msgstr "Hinweise"
@@ -8314,7 +8313,7 @@ msgstr "Nicht unterstützte Sammelauftrags-Klasse: \"%s\"."
 msgid "nothing"
 msgstr "nichts"
 
-#: lib/Service/Finance/FinanceService.php:155
+#: lib/Service/Finance/FinanceService.php:182
 #, php-format
 msgid ""
 "The business-day and calendar-day offset must have the same sign (%d / %d)"
@@ -8322,12 +8321,12 @@ msgstr ""
 "Die Fristen für Werktage und Kalendertage müssen das gleiche Vorzeichen "
 "haben (%d / %d)"
 
-#: lib/Service/Finance/FinanceService.php:451
+#: lib/Service/Finance/FinanceService.php:478
 #, php-format
 msgid "The composite payment \"%s\" does not refer to a donation."
 msgstr "Die Buchung \"%s\" bezieht sich nicht auf eine Spende."
 
-#: lib/Service/Finance/FinanceService.php:453
+#: lib/Service/Finance/FinanceService.php:480
 #, php-format
 msgid ""
 "The composite pamynet \"%s\" contains more than one donation. This is not "
@@ -8336,7 +8335,7 @@ msgstr ""
 "Der Sammel-Umsatz \"%s\" enthält mehr als eine Spende. Das wird\n"
 "derzeit nicht von der Software unterstützt."
 
-#: lib/Service/Finance/FinanceService.php:462
+#: lib/Service/Finance/FinanceService.php:489
 #, php-format
 msgid ""
 "The donation in the composite payment \"%s\" sums up to less or equal zero: "
@@ -8345,7 +8344,7 @@ msgstr ""
 "Die Spendenanteile des Sammelumsatzes \"%s\" summieren sich auf einen Betrag "
 "kleiner oder gleich 0: \"%s\"."
 
-#: lib/Service/Finance/FinanceService.php:472
+#: lib/Service/Finance/FinanceService.php:499
 #, php-format
 msgid ""
 "The non-donation parts of the composite payment \"%s\" sum up to an income "
@@ -8354,7 +8353,7 @@ msgstr ""
 "Die nicht-Spendenanteile des Sammelumsatzes \"%s\" summieren sich zu\n"
 "einem Einkommen \"%s\". Das wird nicht unterstützt."
 
-#: lib/Service/Finance/FinanceService.php:545
+#: lib/Service/Finance/FinanceService.php:572
 #, php-format
 msgid ""
 "Bankaccount belongs to musician \"%s\", but specified musician is \"%s\"."
@@ -8362,12 +8361,12 @@ msgstr ""
 "Die Bankverbindung gehört zur Person \"%s\", übermittelt wurde aber "
 "zusätzlich die Person \"%s\"."
 
-#: lib/Service/Finance/FinanceService.php:759
-#: lib/Service/Finance/FinanceService.php:831
+#: lib/Service/Finance/FinanceService.php:786
+#: lib/Service/Finance/FinanceService.php:858
 msgid "finance"
 msgstr "Kasse"
 
-#: lib/Service/Finance/FinanceService.php:880
+#: lib/Service/Finance/FinanceService.php:907
 #, php-format
 msgid ""
 "Unable to find calendar entry with identifier \"%2$s\" in calendar with id "
@@ -8376,44 +8375,44 @@ msgstr ""
 "Kann den Kalender-Eintrag \"%2$s\" im Kalender mit der Id \"%1$s\" nicht "
 "finden."
 
-#: lib/Service/Finance/FinanceService.php:997
+#: lib/Service/Finance/FinanceService.php:1024
 msgid "The given mandate does not contain a valid project-id."
 msgstr "Das Lastschriftmandat enthält keine gültige Projekt-Id."
 
-#: lib/Service/Finance/FinanceService.php:1013
+#: lib/Service/Finance/FinanceService.php:1040
 msgid "The given mandate does not contain a valid musician-id."
 msgstr "Das Lastschriftmandat enthält keine gültige Musizierenden-Id."
 
-#: lib/Service/Finance/FinanceService.php:1039
+#: lib/Service/Finance/FinanceService.php:1066
 #, php-format
 msgid "SEPA mandate-reference \"%s\" is too long (%d > %d)."
 msgstr "Die SEPA-Mandatsreferenz \"%s\" ist zu lang (%d > %d)."
 
-#: lib/Service/Finance/FinanceService.php:1358
+#: lib/Service/Finance/FinanceService.php:1385
 msgid "Illegal characters in bank account owner field."
 msgstr "Ungültige Buchstaben im Kontoinhaber:innen:feld."
 
-#: lib/Service/Finance/FinanceService.php:1369
+#: lib/Service/Finance/FinanceService.php:1396
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr "Ungültige IBAN: %s."
 
-#: lib/Service/Finance/FinanceService.php:1378
+#: lib/Service/Finance/FinanceService.php:1405
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr "BLZ und IBAN passen nicht zusammen: %s != %s."
 
-#: lib/Service/Finance/FinanceService.php:1384
+#: lib/Service/Finance/FinanceService.php:1411
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: lib/Service/Finance/FinanceService.php:1388
+#: lib/Service/Finance/FinanceService.php:1415
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/Service/Finance/FinanceService.php:1393
+#: lib/Service/Finance/FinanceService.php:1420
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
@@ -8448,10 +8447,26 @@ msgstr "InstrumentenVersicherungen"
 #. TRANSLATORS: please use whatever else convention "usually" applies to
 #. TRANSLATORS: placeholder keywords in the target language.
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:104
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:261
 msgid "BROKER"
 msgstr "MAKLER"
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:114
+#. TRANSLATORS: This is a text substitution placeholder. If the target
+#. TRANSLATORS: language knows the concept of casing, then please use
+#. TRANSLATORS: only uppercase letters in the translation. Otherwise
+#. TRANSLATORS: please use whatever else convention "usually" applies to
+#. TRANSLATORS: placeholder keywords in the target language.
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:110
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:267
+#: templates/settings/share-settings.php:208
+#: templates/settings/share-settings.php:221
+#: templates/settings/share-settings.php:245
+#: templates/settings/share-settings.php:268
+#: templates/settings/share-settings.php:343
+msgid "YEAR"
+msgstr "JAHR"
+
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:120
 #: lib/Service/Finance/PeriodicReceivablesGenerator.php:104
 #, php-format
 msgid "Unable to find management option for participant field \"%s\"."
@@ -8459,44 +8474,44 @@ msgstr ""
 "Kann die Definitionsdaten für den Forderungen-Generator \"%s\" nicht finden."
 
 #. TRANSLATORS: Parameter is a name.
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:154
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:160
 #, php-format
 msgid "Opening Balance: %s"
 msgstr "Anfangsbestand: %s"
 
-#. TRANSLATORS: First parameter is a year YYYY, second parameter a name.
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:159
+#. TRANSLATORS: First parameter is a year YYYY, second parameter year plus one, third parameter a name.
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:165
 #, php-format
-msgid "Insurance Fee %1$d: %2$s"
-msgstr "Versicherungs-Beitrag %1$d: %2$s"
+msgid "Insurance Fee %1$d-%2$d: %3$s"
+msgstr "Versicherungs-Beitrag %1$d-%2$d: %3$s"
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:184
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:190
 #, php-format
 msgid "Multiple insurance fee options for year \"%1$s\" and broker \"%2$s\"."
 msgstr ""
 "Es gibt mehrere Versicherungsbeiträge für das Jahr \"%1$s\" und den "
 "Versicherungsmakler \"%2$s\""
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:197
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:203
 msgid "Opening Balance"
 msgstr "Anfangsbestand"
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:201
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:207
 #, php-format
 msgid "Insurance Fee %d"
 msgstr "Versicherungs-Beitrag %d"
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:321
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:393
 #, php-format
 msgid "Keeping opening balance of %s."
 msgstr "Anfangsbestand %s unverändert beibehalten."
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:323
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:395
 #, php-format
 msgid "Data inconsistency for musician %s in year %d: old fee %s, new fee %s."
 msgstr "Inkonsistente Daten für %s, Jahr %d: alter Betrag %s, neuer Betrag %s."
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:340
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:412
 #, php-format
 msgid "Unknonw update strategy: \"%s\"."
 msgstr "Unbekannte Aktualisierungsstrategie: \"%s\"."
@@ -19338,14 +19353,6 @@ msgstr "Dokumentenvorlagen-Ordner"
 #: templates/settings/share-settings.php:204
 msgid "Project folder"
 msgstr "Projekt-Dateien"
-
-#: templates/settings/share-settings.php:208
-#: templates/settings/share-settings.php:221
-#: templates/settings/share-settings.php:245
-#: templates/settings/share-settings.php:268
-#: templates/settings/share-settings.php:343
-msgid "YEAR"
-msgstr "JAHR"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\GnuCashConnectorService::PROJECT_KEY = 'PROJECT';
