@@ -180,7 +180,7 @@ class InstrumentInsuranceService
   /**
    * Return all insurance items which are billable to the given musician.
    *
-   * @param int|Entities\Musician $musicianOrId
+   * @param int|string|Entities\Musician $musicianOrId
    *
    * @param null|string|Entities\InsuranceBroker $broker Short name (db id) or
    * database entity or null. If null compute the fee for all brokers,
@@ -189,7 +189,7 @@ class InstrumentInsuranceService
    * @return array
    */
   public function billableInsurances(
-    int|Entities\Musician $musicianOrId,
+    int|string|Entities\Musician $musicianOrId,
     null|string|Entities\InsuranceBroker $broker,
   ):array {
     $criteria = [ 'billToParty' => $musicianOrId ];
