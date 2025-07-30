@@ -828,7 +828,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     foreach ($subjects as $subject) {
       $parts = array_map(
         fn($part) => Util::dashesToCamelCase(
-          preg_replace('/([^0-9]|^)[0-9]{2}([0-9]{2})([^0-9]|$)/', '\1\2\3', $part),
+          preg_replace('/(?<![0-9])[0-9]{2}([0-9]{2})(?![0-9])/', '\1', $part),
           capitalizeFirstCharacter: true,
           dashes: ' -_',
         ),
