@@ -277,7 +277,6 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
       $musician = $receivable->getMusician();
       $insurances = $musician->getInstrumentInsurances();
-      $this->logInfo('NOT MY CLASS ' . __CLASS__ . ' <-> ' . $generatorOption->getData());
       if (!$insurances || $insurances->count() <= 0) {
         return null;
       }
