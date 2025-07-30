@@ -1486,7 +1486,7 @@
     "Insurance Fee %1$d-%2$d: %3$s" : "Versicherungs-Beitrag %1$d-%2$d: %3$s",
     "Multiple insurance fee options for year \"%1$s\" and broker \"%2$s\"." : "Es gibt mehrere Versicherungsbeiträge für das Jahr \"%1$s\" und den Versicherungsmakler \"%2$s\"",
     "Opening Balance" : "Anfangsbestand",
-    "Insurance Fee %d" : "Versicherungs-Beitrag %d",
+    "Insurance Fee %1$d-%2$d" : "Versicherungs-Beitrag %1$d-%2$d",
     "Keeping opening balance of %s." : "Anfangsbestand %s unverändert beibehalten.",
     "Data inconsistency for musician %s in year %d: old fee %s, new fee %s." : "Inkonsistente Daten für %s, Jahr %d: alter Betrag %s, neuer Betrag %s.",
     "Unknonw update strategy: \"%s\"." : "Unbekannte Aktualisierungsstrategie: \"%s\".",

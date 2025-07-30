@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-30 13:46+0200\n"
+"POT-Creation-Date: 2025-07-30 16:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -7734,7 +7734,7 @@ msgstr ""
 #. TRANSLATORS: please use whatever else convention "usually" applies to
 #. TRANSLATORS: placeholder keywords in the target language.
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:104
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:261
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:262
 msgid "BROKER"
 msgstr ""
 
@@ -7744,7 +7744,7 @@ msgstr ""
 #. TRANSLATORS: please use whatever else convention "usually" applies to
 #. TRANSLATORS: placeholder keywords in the target language.
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:110
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:267
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:268
 #: templates/settings/share-settings.php:208
 #: templates/settings/share-settings.php:221
 #: templates/settings/share-settings.php:245
@@ -7780,22 +7780,23 @@ msgstr ""
 msgid "Opening Balance"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:207
+#. TRANSLATORS: First parameter is a year YYYY, second parameter year plus one
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:208
 #, php-format
-msgid "Insurance Fee %d"
+msgid "Insurance Fee %1$d-%2$d"
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:393
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:394
 #, php-format
 msgid "Keeping opening balance of %s."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:395
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:396
 #, php-format
 msgid "Data inconsistency for musician %s in year %d: old fee %s, new fee %s."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:412
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:413
 #, php-format
 msgid "Unknonw update strategy: \"%s\"."
 msgstr ""
@@ -14111,13 +14112,13 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/app/project-participant-fields-display.js:153
+#: src/app/project-participant-fields-display.js:149
 msgid ""
 "Input element is not empty, do your really want to revert it to its default "
 "value?"
 msgstr ""
 
-#: src/app/project-participant-fields-display.js:154
+#: src/app/project-participant-fields-display.js:150
 msgid "Revert to default value?"
 msgstr ""
 

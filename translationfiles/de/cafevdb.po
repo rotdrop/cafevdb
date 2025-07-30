@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-30 13:42+0200\n"
-"PO-Revision-Date: 2025-07-30 13:42+0200\n"
+"POT-Creation-Date: 2025-07-30 16:30+0200\n"
+"PO-Revision-Date: 2025-07-30 16:31+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -8447,7 +8447,7 @@ msgstr "InstrumentenVersicherungen"
 #. TRANSLATORS: please use whatever else convention "usually" applies to
 #. TRANSLATORS: placeholder keywords in the target language.
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:104
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:261
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:262
 msgid "BROKER"
 msgstr "MAKLER"
 
@@ -8457,7 +8457,7 @@ msgstr "MAKLER"
 #. TRANSLATORS: please use whatever else convention "usually" applies to
 #. TRANSLATORS: placeholder keywords in the target language.
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:110
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:267
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:268
 #: templates/settings/share-settings.php:208
 #: templates/settings/share-settings.php:221
 #: templates/settings/share-settings.php:245
@@ -8496,22 +8496,23 @@ msgstr ""
 msgid "Opening Balance"
 msgstr "Anfangsbestand"
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:207
+#. TRANSLATORS: First parameter is a year YYYY, second parameter year plus one
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:208
 #, php-format
-msgid "Insurance Fee %d"
-msgstr "Versicherungs-Beitrag %d"
+msgid "Insurance Fee %1$d-%2$d"
+msgstr "Versicherungs-Beitrag %1$d-%2$d"
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:393
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:394
 #, php-format
 msgid "Keeping opening balance of %s."
 msgstr "Anfangsbestand %s unverändert beibehalten."
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:395
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:396
 #, php-format
 msgid "Data inconsistency for musician %s in year %d: old fee %s, new fee %s."
 msgstr "Inkonsistente Daten für %s, Jahr %d: alter Betrag %s, neuer Betrag %s."
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:412
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:413
 #, php-format
 msgid "Unknonw update strategy: \"%s\"."
 msgstr "Unbekannte Aktualisierungsstrategie: \"%s\"."
@@ -16269,7 +16270,7 @@ msgstr "#Zeilen"
 msgid "Remove"
 msgstr "Entfernen"
 
-#: src/app/project-participant-fields-display.js:153
+#: src/app/project-participant-fields-display.js:149
 msgid ""
 "Input element is not empty, do your really want to revert it to its default "
 "value?"
@@ -16277,7 +16278,7 @@ msgstr ""
 "Das Eingabefeld enthält Daten, soll es wirklich auf den voreingestellten "
 "Wert zurück gesetzt werden?"
 
-#: src/app/project-participant-fields-display.js:154
+#: src/app/project-participant-fields-display.js:150
 msgid "Revert to default value?"
 msgstr "Auf Voreinstellung zurücksetzen?"
 
@@ -20537,6 +20538,10 @@ msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr "Zeigt einfach alle Spalten an."
+
+#, php-format
+#~ msgid "Insurance Fee %d"
+#~ msgstr "Versicherungs-Beitrag %d"
 
 #~ msgid "Export of GnuCash balance bookings is not yet implemented."
 #~ msgstr ""
