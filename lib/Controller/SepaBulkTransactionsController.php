@@ -704,13 +704,13 @@ class SepaBulkTransactionsController extends Controller
             } else {
               $description = $this->l->t(
                 'Total amount to pay: %s.',
-                $this->moneyValue(-$bulkTransaction->totals()));
+                $this->moneyValue($bulkTransaction->totals()->neg()));
               /** @var Entities\CompositePayment $payment */
               foreach ($bulkTransaction->getPayments() as $payment) {
                 $description .= "\n"
                   . $this->l->t('%1$s receives %2$s.', [
                     $payment->getMusician()->getPublicName(firstNameFirst: false),
-                    $this->moneyValue(-$payment->getAmount())
+                    $this->moneyValue($payment->getAmount()->neg())
                   ]);
               }
             }
