@@ -290,25 +290,25 @@ $.fn.cafevTooltip = function(argument) {
 };
 
 $.fn.cafevTooltip.enable = function() {
-  $('[data-original-title]').cafevTooltip('enable');
+  $('[' + appTitleAttribute + ']').cafevTooltip('enable');
 };
 
 $.fn.cafevTooltip.disable = function() {
-  $('[data-original-title]').cafevTooltip('disable');
+  $('[' + appTitleAttribute + ']').cafevTooltip('disable');
 };
 
 // remove left-over tooltips
 $.fn.cafevTooltip.remove = function() {
   $('div.tooltip[role=tooltip]').each(function(index) {
-    const tip = $(this);
-    const id = tip.attr('id');
+    const $tip = $(this);
+    const id = $tip.attr('id');
     $('[aria-describedby=' + id + ']').removeAttr('aria-describedby');
-    $(this).remove();
+    $tip.remove();
   });
 };
 
 $.fn.cafevTooltip.hide = function() {
-  $('[data-original-title]').cafevTooltip('hide');
+  $('[' + appTitleAttribute + ']').cafevTooltip('hide');
 };
 
 export {
