@@ -103,66 +103,74 @@ const metaDataText = function(metaData) {
   return metaData.join('<br/>');
 };
 
-const replaceEncryptionPlaceholder = function(data, $container, $filter, $option) {
-  $option.html(data.data);
-  if ($filter.hasClass('meta-data-popup') && data.metaData) {
+const replaceElementEncryptionPlaceholder = function($element, cryptoData) {
+  if (!cryptoData) {
+    cryptoData = cryptoCache[$element.data('cryptoHash')];
+    if (!cryptoData) {
+      return;
+    }
+  }
+  $element.html(cryptoData.data)
+    .removeClass('encryption-placeholder')
+    .removeAttr('data-encrypted-value')
+    .removeData('dataEncryptedValue');
+  // remove background decryption hint
+  $element
+    .cafevTooltip('dispose')
+    .removeAttr('title');
+  if ($element.hasClass('meta-data-popup')) {
+    // const cryptoHash = $element.data('cryptoHash');
+    // const cryptoData = cryptoCache[cryptoHash];
+    if (cryptoData.metaData) {
+      $element
+        .attr('title', metaDataText(cryptoData.metaData))
+        .cafevTooltip({ placement: 'auto' });
+    }
+  }
+  const $tableCell = $element.closest(pmeCellSelector);
+  if ($tableCell.length === 1 && $tableCell.find('.encryption-placeholder').length === 0) {
+    let popupText;
+    if ($tableCell.hasClass('cell-data-popup')) {
+      popupText = $tableCell.html();
+    } else if ($tableCell.hasClass('meta-data-popup')) {
+      popupText = [];
+      $tableCell.find('[data-crypto-hash]').each(function() {
+        const cryptoHash = $(this).data('cryptoHash');
+        const cryptoData = cryptoCache[cryptoHash];
+        if (!cryptoData || !cryptoData.metaData) {
+          return;
+        }
+        popupText.push(metaDataText(cryptoData.metaData));
+      });
+      popupText = popupText.join('<hr/>');
+    }
+    $tableCell
+      .cafevTooltip('dispose')
+      .attr('title', popupText)
+      .cafevTooltip({ placement: 'auto' });
+  }
+  const $queryInfo = $element.closest(pmeQueryInfoSelector);
+  if ($queryInfo.length === 1 && $queryInfo.find('.encryption-placeholder').length === 0) {
+    const popupText = $queryInfo.html();
+    $queryInfo
+      .cafevTooltip('dispose')
+      .attr('title', popupText)
+      .cafevTooltip({ placement: 'auto', cssClass: 'tooltip-wide' });
+  }
+};
+
+const replaceEncryptionPlaceholder = function(cryptoData, $container, $filter, $option) {
+  $option.html(cryptoData.data);
+  if ($filter.hasClass('meta-data-popup') && cryptoData.metaData) {
     $option
       .cafevTooltip('dispose')
-      .attr('title', metaDataText(data.metaData))
+      .attr('title', metaDataText(cryptoData.metaData))
       .cafevTooltip({ placement: 'auto' });
   }
   refreshWidget($filter);
-  $container.find('[data-crypto-hash="' + data.hash + '"].encryption-placeholder')
-    .each(function() {
-      const $this = $(this);
-      $this.html(data.data)
-        .removeClass('encryption-placeholder')
-        .removeAttr('data-encrypted-value')
-        .removeData('dataEncryptedValue');
-      // remove background decryption hint
-      $this
-        .cafevTooltip('dispose')
-        .removeAttr('title');
-      if ($this.hasClass('meta-data-popup')) {
-        const cryptoHash = $this.data('cryptoHash');
-        const cryptoData = cryptoCache[cryptoHash];
-        if (cryptoData && cryptoData.metaData) {
-          $this
-            .attr('title', metaDataText(cryptoData.metaData))
-            .cafevTooltip({ placement: 'auto' });
-        }
-      }
-      const $tableCell = $this.closest(pmeCellSelector);
-      if ($tableCell.length === 1 && $tableCell.find('.encryption-placeholder').length === 0) {
-        let popupText;
-        if ($tableCell.hasClass('cell-data-popup')) {
-          popupText = $tableCell.html();
-        } else if ($tableCell.hasClass('meta-data-popup')) {
-          popupText = [];
-          $tableCell.find('[data-crypto-hash]').each(function() {
-            const cryptoHash = $(this).data('cryptoHash');
-            const cryptoData = cryptoCache[cryptoHash];
-            if (!cryptoData || !cryptoData.metaData) {
-              return;
-            }
-            popupText.push(metaDataText(cryptoData.metaData));
-          });
-          popupText = popupText.join('<hr/>');
-        }
-        $tableCell
-          .cafevTooltip('dispose')
-          .attr('title', popupText)
-          .cafevTooltip({ placement: 'auto' });
-      }
-      const $queryInfo = $this.closest(pmeQueryInfoSelector);
-      if ($queryInfo.length === 1 && $queryInfo.find('.encryption-placeholder').length === 0) {
-        const popupText = $queryInfo.html();
-        $queryInfo
-          .cafevTooltip('dispose')
-          .attr('title', popupText)
-          .cafevTooltip({ placement: 'auto', cssClass: 'tooltip-wide' });
-      }
-    });
+  $container
+    .find('[data-crypto-hash="' + cryptoData.hash + '"].encryption-placeholder')
+    .each(function() { replaceElementEncryptionPlaceholder($(this), cryptoData); });
 };
 
 /**
@@ -171,6 +179,12 @@ const replaceEncryptionPlaceholder = function(data, $container, $filter, $option
  * @param {jQuery} $container TBD.
  */
 const lazyBatchDecryptValues = function($container) {
+  // replace any remaining, also run if the cache is just used as is.
+  decryptionPromise.always(() => {
+    $container
+      .find('[data-crypto-hash].encryption-placeholder')
+      .each(function() { replaceElementEncryptionPlaceholder($(this)); });
+  });
   const batchJobs = {};
   const batchOptions = {};
   const batchInputs = {};
@@ -268,46 +282,6 @@ const lazyBatchDecryptValues = function($container) {
   decreaseDecryptionJobCount(0); // resolves if nothing had to be done.
 };
 
-// /**
-//  * Background-fetch for encrypted PME fields, one-by-one AJAX calls.
-//  *
-//  * @param {jQuery} $container TBD.
-//  */
-// const lazyDecryptValues = function($container) {
-//   const $filters = $container.find(pmeClassSelector('select', 'filter') + '.lazy-decryption');
-//   console.debug('FILTERS NEEDING DECRYPTION', $filters);
-//   $filters.each(function() {
-//     const $filter = $(this);
-//     $filter.removeClass('lazy-decryption');
-//     const metaData = $filter.data('metaData');
-//     const $options = getOptions($filter);
-//     $options.each(function() {
-//       const $option = $(this);
-//       const cryptoHash = $option.data('cryptoHash');
-//       const cachedData = cryptoCache[cryptoHash];
-//       if (cachedData) {
-//         replaceEncryptionPlaceholder(cachedData, $container, $filter, $option);
-//         return;
-//       }
-//       const sealedData = $option.val();
-//       if (!sealedData) {
-//         return;
-//       }
-//       setTimeout(() => {
-//         const url = generateAppUrl('crypto/decryption/unseal');
-//         $.post(url, { sealedData, metaData })
-//           .fail(function(xhr, textStatus, errorThrown) {
-//             console.info('DECRYPTION FAILED', sealedData, xhr, textStatus, errorThrown);
-//           })
-//           .done(function(data) {
-//             cryptoCache[data.hash] = data;
-//             replaceEncryptionPlaceholder(data, $container, $filter, $option);
-//           });
-//       });
-//     });
-//   });
-// };
-
 export default lazyBatchDecryptValues;
 
 export {
@@ -315,5 +289,4 @@ export {
   decryptionJobCount as jobCount,
   decryptionPromise as promise,
   rejectDecryptionPromise as reject,
-  // lazyDecryptValues,
 };

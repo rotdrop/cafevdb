@@ -592,7 +592,7 @@ class SepaBankAccounts extends PMETableViewBase
         'data' => [
           'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
           'crypto-hash' => 'MD5($table.$column)',
-          'meta-data' => '"iban"', // SQL STRING
+          'meta-data' => '"bankAccountOwner"', // SQL STRING
         ],
       ],
       'values|ACP' => [
@@ -610,13 +610,13 @@ class SepaBankAccounts extends PMETableViewBase
       ],
       'display' => [
         'attributes' => [
-          'data-meta-data' => 'bankAccountrOwner',
+          'data-meta-data' => 'bankAccountOwner',
         ],
       ],
     ];
     // See also FieldTraits/SepaAccountsTrait. Decrypt values in the
     // background to improve the responsiveness of the UI.
-    $opts['fdd']['bank_account_owner']['encryption|LF']['decrypt'] = function($value) {
+    $opts['fdd']['bank_account_owner']['encryption|LFVD']['decrypt'] = function($value) {
       // $this->ormDecrypt($value);
       $value = '<span class="iban encryption-placeholder"
       data-crypto-hash="' . md5($value) . '"
@@ -694,7 +694,7 @@ class SepaBankAccounts extends PMETableViewBase
     ];
     // See also FieldTraits/SepaAccountsTrait. Decrypt values in the
     // background to improve the responsiveness of the UI.
-    $opts['fdd']['iban']['encryption|LF']['decrypt'] = function($value) {
+    $opts['fdd']['iban']['encryption|LFVD']['decrypt'] = function($value) {
       // $this->ormDecrypt($value);
       $value = '<span class="iban encryption-placeholder"
       data-crypto-hash="' . md5($value) . '"
@@ -767,7 +767,7 @@ class SepaBankAccounts extends PMETableViewBase
       if ($projectId === $this->membersProjectId) {
         $opts['fdd'][$fieldName] = array_merge(
           $opts['fdd'][$fieldName], [
-            'select' => 'T',
+            'select' => 'D',
             'sort' => false,
             'maxlen' => 40,
             'options' => 'VPCDL',
