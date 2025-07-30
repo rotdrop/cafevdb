@@ -440,7 +440,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
               );
               $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
               $datum->setSupportingDocument($supportingDocument);
-            } elseif ($updateStrategy == self::UPDATE_STRATEGY_REPLACE || $fee->toDecimal(2) != $datum->getOptionValue()) {
+            } elseif (true || $updateStrategy == self::UPDATE_STRATEGY_REPLACE || $fee->toDecimal(2) != $datum->getOptionValue()) {
               $supportingDocument
                 ->setName($overviewFilename)
                 ->getFile()
