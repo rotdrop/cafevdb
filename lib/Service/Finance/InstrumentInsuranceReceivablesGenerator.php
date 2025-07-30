@@ -226,7 +226,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
             );
             $receivable->setBalancingAccount($balancingAccount);
           }
-          $this->translate($receivable, 'label', null, sprintf($labelTemplate, $year, $brokerShortName))
+          $this->translate($receivable, 'label', null, sprintf($labelTemplate, $year, $year + 1, $brokerShortName))
                ->translate($receivable, 'tooltip', null, $tooltipTemplate);
         }
       }
