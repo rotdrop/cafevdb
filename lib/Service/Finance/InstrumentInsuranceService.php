@@ -416,7 +416,7 @@ class InstrumentInsuranceService
    */
   public function musicianOverview(
     int|Entities\Musician $musicianOrId,
-    null|string|Entities\InsuranceBroker $broker,
+    null|string|Entities\InsuranceBroker $broker = null,
     ?DateTime $date = null,
   ):array {
     $timeZone = $this->getDateTimeZone();
