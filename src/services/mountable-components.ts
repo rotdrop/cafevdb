@@ -25,10 +25,10 @@ import { appName } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
 import Vue from 'vue';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
-import { subscribe as asyncSubscribe } from './async-event-bus.ts'
+import { subscribe as asyncSubscribe } from './async-event-bus.ts';
 import * as MountableComponents from '../mountable-component-names.ts';
 import type { VueConstructor } from 'vue/types/vue';
-import { AppError } from '../types/errors.ts'
+import { AppError } from '../types/errors.ts';
 
 const vueConstructors: Record<string, VueConstructor> = {};
 
@@ -37,26 +37,26 @@ export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
     if (!vueConstructors[event.name]) {
       let vueComponent: VueConstructor;
       switch (event.name) {
-      case MountableComponents.DOKU_WIKI_WRAPPER:
-        vueComponent = (await import('@rotdrop/nextcloud-app-dokuwiki/src/DokuWikiWrapper.vue')).default;
-        break;
-      case MountableComponents.INVOICE_ACTIONS_MENU:
-        vueComponent = (await import('../components/InvoiceActionsMenu.vue')).default;
-        break;
-      case MountableComponents.LEGACY_QUERY_LOG:
-        vueComponent = (await import('../components/LegacyQueryLog.vue')).default;
-        break;
-      case MountableComponents.PROJECT_ACTIONS_MENU:
-        vueComponent = (await import('../components/ProjectActionsMenu.vue')).default;
-        break;
+        case MountableComponents.DOKU_WIKI_WRAPPER:
+          vueComponent = (await import('@rotdrop/nextcloud-app-dokuwiki/src/DokuWikiWrapper.vue')).default;
+          break;
+        case MountableComponents.INVOICE_ACTIONS_MENU:
+          vueComponent = (await import('../components/InvoiceActionsMenu.vue')).default;
+          break;
+        case MountableComponents.LEGACY_QUERY_LOG:
+          vueComponent = (await import('../components/LegacyQueryLog.vue')).default;
+          break;
+        case MountableComponents.PROJECT_ACTIONS_MENU:
+          vueComponent = (await import('../components/ProjectActionsMenu.vue')).default;
+          break;
         case MountableComponents.PROJECT_PAYMENT_ACTIONS_MENU:
-        vueComponent = (await import('../components/ProjectPaymentActionsMenu.vue')).default;
-        break;
-      case MountableComponents.SEPA_BULK_TRANSACTION_ACTIONS_MENU:
-        vueComponent = (await import('../components/SepaBulkTransactionActionsMenu.vue')).default;
-        break;
-      default:
-        throw new AppError(event, t(appName, 'Unknown mountable component: "{name}".', event));
+          vueComponent = (await import('../components/ProjectPaymentActionsMenu.vue')).default;
+          break;
+        case MountableComponents.SEPA_BULK_TRANSACTION_ACTIONS_MENU:
+          vueComponent = (await import('../components/SepaBulkTransactionActionsMenu.vue')).default;
+          break;
+        default:
+          throw new AppError(event, t(appName, 'Unknown mountable component: "{name}".', event));
       }
       // generate the constructor
       vueConstructors[event.name] = Vue.extend(vueComponent);

@@ -29,7 +29,7 @@ const COMPONENT_NAME = 'session-storage';
 const logger = new Console(COMPONENT_NAME);
 const browserStorage = getBuilder(appName).clearOnLogout().build();
 
-export const setItem = (key: string, data: any) => {
+export const setItem = (key: string, data: unknown) => {
   try {
     browserStorage.setItem(key, JSON.stringify(data));
   } catch (error) {
@@ -52,7 +52,7 @@ export const getItem = (key: string) => {
     });
     return null;
   }
-}
+};
 
 export const removeItem = (key: string) => browserStorage.removeItem(key);
 

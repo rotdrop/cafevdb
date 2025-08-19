@@ -30,16 +30,20 @@ export type JoinLiterals<T extends string[], S extends string> =
          ? `${T[0]}${S}${JoinLiterals<U, S>}`
          : string;
 
-
 function joinLiterals(): <T extends string[]>(...strings: T) => JoinLiterals<T, ''>;
 function joinLiterals<Separator extends string>(separator: Separator): <T extends string[]>(...strings: T) => JoinLiterals<T, Separator>;
+
+/**
+ * Return a function which joins literals with the given separator.
+ *
+ * @param separator Separator.
+ */
 function joinLiterals(separator = '') {
   return function<T extends string[]>(...strings: T): JoinLiterals<T, typeof separator> {
     return strings.join(separator) as JoinLiterals<T, typeof separator>;
-  }
+  };
 }
-
 
 export {
   joinLiterals,
-}
+};

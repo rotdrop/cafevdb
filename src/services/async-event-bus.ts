@@ -52,8 +52,8 @@ export function subscribe<K extends keyof AsyncNextcloudEvents>(
  * @param handler callback passed to `subscribed`
  */
 export function unsubscribe<K extends keyof AsyncNextcloudEvents>(
-       name: K,
-       handler: EventHandler<AsyncNextcloudEvents[K]>,
+  name: K,
+  handler: EventHandler<AsyncNextcloudEvents[K]>,
 ) {
   bus.unsubscribe(name, handler);
 }
@@ -67,7 +67,7 @@ export function unsubscribe<K extends keyof AsyncNextcloudEvents>(
 export function emit<K extends keyof AsyncNextcloudEvents>(
   name: K,
   ...event: EventArg<AsyncNextcloudEvents, K>
-       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<PromiseSettledResult<any>[]> {
   return bus.emit(name, ...event);
 }
@@ -79,11 +79,13 @@ export function emit<K extends keyof AsyncNextcloudEvents>(
  *
  * @param count Default 1, how many items to expect at least.
  *
- * @return Data items of just the first data item if count === 1.
+ * @returns Data items of just the first data item if count === 1.
+ *
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getEmitResult(result: Promise<PromiseSettledResult<any>[]>|PromiseSettledResult<any>[], count = 1) {
   result = await result;
-  const values = result.filter(item => item.status === 'fulfilled').map(item => item.value)
+  const values = result.filter(item => item.status === 'fulfilled').map(item => item.value);
 
   if (values.length < count) {
     throw new Error('Not enough fulfilled data items in Promise.allSettled() result.');

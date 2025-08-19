@@ -28,6 +28,11 @@ import { joinLiterals } from './util/string-literals.ts';
 
 function appPrefix<T extends string>(id: T): JoinLiterals<[AppName, T], '-'>;
 function appPrefix<T1 extends string, T2 extends string>(id: T1, join: T2): JoinLiterals<[AppName, T1], T2>;
+/**
+ * @param id Custom postfix appended to the app-name with the separator join.
+ *
+ * @param join Separator between app-name and id.
+ */
 function appPrefix<T extends string>(id: T, join = '-') {
   return joinLiterals(join)(appName, id);
 }
@@ -36,7 +41,7 @@ const appNameTag = joinLiterals('-')('app', appName);
 
 export type {
   AppName,
-}
+};
 
 export {
   appName,

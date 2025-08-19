@@ -27,7 +27,7 @@ import getInitialState from './toolkit/util/initial-state.ts';
 import { basename } from 'path';
 import { getCurrentUser } from '@nextcloud/auth';
 import { generateFilePath } from '@nextcloud/router';
-import { generateUrl as generateAppUrl } from './toolkit/util/generate-url.ts'
+import { generateUrl as generateAppUrl } from './toolkit/util/generate-url.ts';
 import { emit } from '@nextcloud/event-bus';
 import { showError, showInfo, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import {
@@ -46,8 +46,9 @@ import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import axios from '@nextcloud/axios';
 import logoSvg from '../img/cafevdb.svg?raw';
 import type { FilesInitialState } from './types/initial-state.d.ts';
-import Console from './util/console.ts'
+import Console from './util/console.ts';
 import { MailMergeCloud } from './types/ajax/mail-merge.ts';
+import { UploadModeMove, ConflictResolutionRename } from './types/ajax/upload.ts';
 import type {
   MailMergePayload,
   MailMergeResponse,
@@ -56,7 +57,7 @@ import type {
 type Toast = ReturnType<typeof showError>;
 
 const COMPONENT_NAME = 'CAFEVDB-FILES-HOOKS';
-const logger = new Console(COMPONENT_NAME)
+const logger = new Console(COMPONENT_NAME);
 
 declare global {
   interface Window {
@@ -149,7 +150,7 @@ const isInvoicesFolder = (folder: Folder) =>
   initialState && folder.path.startsWith(initialState?.sharing.files.folders.invoices);
 
 const getDataFromInvoiceFolder = (folder: Folder) => {
-  let path = folder.path
+  let path = folder.path;
   logger.info('TEST INVOICE FOLDER', { folder, path });
   if (!initialState || !path.startsWith(initialState?.sharing.files.folders.invoices)) {
     return null;
@@ -218,14 +219,14 @@ registerFileAction(new FileAction({
       try {
         // If the sidebar is already open for the current file, do nothing
         if (window.OCA.Files.Sidebar.file === node.path) {
-          logger.debug('Sidebar already open for this file', { node })
-          return null
+          logger.debug('Sidebar already open for this file', { node });
+          return null;
         }
         // Open sidebar and set active tab to our mailmerge tool
-        window.OCA.Files.Sidebar.setActiveTab(appName + '-mailmerge')
+        window.OCA.Files.Sidebar.setActiveTab(appName + '-mailmerge');
 
         // TODO: migrate Sidebar to use a Node instead
-        await window.OCA.Files.Sidebar.open(node.path)
+        await window.OCA.Files.Sidebar.open(node.path);
 
         // Silently update current fileid
         window.OCP?.Files?.Router?.goToRoute(
@@ -233,12 +234,12 @@ registerFileAction(new FileAction({
           { view: view.id, fileid: String(node.fileid) },
           { ...window.OCP.Files.Router.query, dir, opendetails: 'true' },
           true,
-        )
+        );
 
-        return null
+        return null;
       } catch (error) {
-        logger.error('Error while opening sidebar', { error })
-        return false
+        logger.error('Error while opening sidebar', { error });
+        return false;
       }
     }
     return null;
@@ -440,12 +441,12 @@ class InvoicesEntry implements NewMenuEntry {
 
     const invoiceData = getDataFromInvoiceFolder(folder);
     if (!invoiceData) {
-
+      logger.debug('NO INVOICE DATA', { folder, content });
     } else {
       const postData: MailMergePayload = {
         templateName: 'invoice',
         operation: MailMergeCloud,
-        invoiceIds: [ invoiceData.invoiceNumber ],
+        invoiceIds: [invoiceData.invoiceNumber],
       };
       const mailMergeUrl = generateAppUrl('documents/mail-merge');
       let mailMergeToast: Toast|null = showInfo(t(appName, 'Starting mail-merge, this may take some time ...'), { timeout: TOAST_PERMANENT_TIMEOUT });
@@ -465,8 +466,8 @@ class InvoicesEntry implements NewMenuEntry {
             filesAppPath: folder.path,
           },
           cloudFile,
-          uploadMode: 'move',
-          conflict: 'rename',
+          uploadMode: UploadModeMove,
+          conflict: ConflictResolutionRename,
         };
 
         const moveResponse = await axios.post(moveUrl, moveData);
@@ -493,6 +494,7 @@ class InvoicesEntry implements NewMenuEntry {
       }
     }
   }
+
 }
 
 const invoicesEntry = new InvoicesEntry(appName);

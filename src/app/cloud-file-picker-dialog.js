@@ -29,6 +29,7 @@ import * as Notification from './notification.js';
 import generateAppUrl from './generate-url.js';
 import { parse as pathParse } from './path.js';
 import escapeHtml from 'escape-html';
+import { UploadModeMove, UploadModeCopy, UploadModeLink } from '../types/ajax/upload.ts';
 
 const defaultOptions = {
   setup() {},
@@ -94,7 +95,11 @@ const cloudFilePickerDialog = function(options) {
           };
 
           const uploadFiles = [];
-          const allUploadModes = ['copy', 'move', 'link'];
+          const allUploadModes = [
+            UploadModeCopy,
+            UploadModeMove,
+            UploadModeLink,
+          ];
           let uploadModes = allUploadModes;
           for (const uploadInfo of data) {
             uploadModes = uploadModes.filter(value => uploadInfo.upload_mode.includes(value));

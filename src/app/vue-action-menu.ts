@@ -84,7 +84,7 @@ const actionMenu = async function(
       const entityId = $actionMenu.data('actionMenu').entityId;
 
       asyncEmit(PAGE_TEMPLATE_ACTION_MENU, {
-        template: template,
+        template,
         open: false,
         entityId: -entityId,
       });

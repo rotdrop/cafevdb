@@ -27,22 +27,25 @@ import axios from '@nextcloud/axios';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import type { AxiosResponse } from 'axios';
 import { PUSH_BUSY_STATE, POP_BUSY_STATE, SET_BUSY_FLAG } from '../event-bus-events.ts';
-import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
+import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import Console from '../util/console.ts';
 import { AppError } from '../types/errors.ts';
 import type { ErrorContext, ErrorHandler } from '../types/errors.ts';
 import { appName } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
 import useErrorHandler from './error-handler.ts';
+import type { AnyPromise } from '../types/promise.d.ts';
 
 const storeId = 'app-data';
 const logger = new Console(storeId);
 
 export class AppDataStoreError extends AppError {
+
   constructor(context: ErrorContext, ...p: ConstructorParameters<ErrorConstructor>) {
     super({ ...context, type: storeId, component: storeId + '-store' }, ...p);
   }
-};
+
+}
 
 const abortController = new AbortController();
 
@@ -171,32 +174,33 @@ const usePrivateState = defineStore(storeId + '-private', {
   state: () => ({
     projects: {} as Record<number, Project>,
     projectsByName: {} as Record<string, Project>,
-    loadingPromise: Promise.resolve(true) as Promise<any>,
+    loadingPromise: Promise.resolve(true) as AnyPromise,
   }),
   actions: {
-    handleError<E extends Error>(error: E|any, context: ErrorContext, errorHandler?: ErrorHandler) {
+    handleError<E extends Error>(error: E|unknown, context: ErrorContext, errorHandler?: ErrorHandler) {
       logger.error(context, error);
       const message = typeof context.message === 'string'
-        ? context.message : t(appName, 'An error occurred in the app-data store.')
-      error = new AppDataStoreError(context, message, { cause: error });
+        ? context.message
+        : t(appName, 'An error occurred in the app-data store.');
+      const appError = new AppDataStoreError(context, message, { cause: error });
       if (typeof errorHandler === 'function') {
-        errorHandler(error);
+        errorHandler(appError);
       } else {
-        throw error;
+        throw appError;
       }
     },
     abort() {
       abortController.abort();
     },
     async awaitLoadingPromise() {
-      let promise: Promise<any>;
+      let promise: AnyPromise;
       do {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
     },
     async getProject(projectKey: string|number, errorHandler?: ErrorHandler): Promise<undefined|Project> {
       await this.awaitLoadingPromise();
-      const projectId = parseInt('' + projectKey)
+      const projectId = parseInt('' + projectKey);
       if (projectId !== +projectKey) {
         const projectName = '' + projectKey;
         if (!this.projectsByName[projectName]) {
@@ -267,7 +271,7 @@ const usePrivateState = defineStore(storeId + '-private', {
       return this.projects[projectId];
     },
     async findProject(projectId: number, errorHandler?: ErrorHandler) {
-      let url = generateAppUrl('projects/{projectId}', { projectId });
+      const url = generateAppUrl('projects/{projectId}', { projectId });
       try {
         const response: AxiosResponse<Project> = await axios.get(url, { signal: abortController.signal });
         logger.info('FIND PROJECT RESPONSE', response);
@@ -279,7 +283,7 @@ const usePrivateState = defineStore(storeId + '-private', {
       }
     },
     async findProjectIds(errorHandler?: ErrorHandler) {
-      let url = generateAppUrl('projects');
+      const url = generateAppUrl('projects');
       try {
         const response: AxiosResponse<number[]> = await axios.get(url, { signal: abortController.signal });
         logger.info('FIND PROJECT IDS RESPONSE', response);
@@ -306,7 +310,7 @@ const usePrivateState = defineStore(storeId + '-private', {
       try {
         const response: AxiosResponse<Project[]> = await axios.get(generateAppUrl(`projects/search${query}`), {
           params: { limit: 10 },
-        })
+        });
         if (response.data.length > 0) {
           const promises = [] as Promise<undefined|Project>[];
           for (const project of response.data) {
@@ -341,9 +345,9 @@ export default defineStore(storeId, () => {
   const popBusyState = () => { --busyCount.value; logger[(busyCount.value < 0) ? 'trace' : 'info']('BUSY STATE POP', busyCount.value); return busyCount.value; };
 
   // receive updates from the legacy code.
-  asyncSubscribe(SET_BUSY_FLAG, ({ value }) => setBusyFlag(value))
-  asyncSubscribe(PUSH_BUSY_STATE, () => pushBusyState())
-  asyncSubscribe(POP_BUSY_STATE, () => popBusyState())
+  asyncSubscribe(SET_BUSY_FLAG, ({ value }) => setBusyFlag(value));
+  asyncSubscribe(PUSH_BUSY_STATE, () => pushBusyState());
+  asyncSubscribe(POP_BUSY_STATE, () => popBusyState());
 
   const errorHandler = computed(() => errorHandlerProvider.errorHandler);
 

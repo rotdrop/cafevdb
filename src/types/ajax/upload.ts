@@ -23,8 +23,12 @@
 
 export const UploadModeMove = 'move';
 export const UploadModeCopy = 'copy';
-export const UploadModeLink = 'link'
-export type UploadMode = typeof UploadModeCopy | typeof UploadModeMove  | typeof UploadModeLink;
+export const UploadModeLink = 'link';
+export type UploadMode = typeof UploadModeCopy | typeof UploadModeMove | typeof UploadModeLink;
+
+export const ConflictResolutionFail = 'fail';
+export const ConflictResolutionReplace = 'replace';
+export const ConflictResolutionRename = 'rename';
 
 export interface UploadStashResponse {
   upload_mode: UploadMode,
@@ -35,6 +39,6 @@ export interface UploadStashResponse {
   size: number,
   upload_max_file_size: number,
   max_human_file_size: string,
-};
+}
 
-export {}
+export {};

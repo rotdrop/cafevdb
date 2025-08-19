@@ -23,7 +23,7 @@
 
 import { appName } from '../config.ts';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
-import type { CloudUser, CloudGroup } from '../stores/cloud-users-groups.ts'
+import type { CloudUser, CloudGroup } from '../stores/cloud-users-groups.ts';
 
 export type UserOption = CloudUser | (Pick<CloudUser, 'id'|'displayname'> & Pick<Partial<CloudUser>, 'email'|'backend'>)
 
@@ -44,7 +44,7 @@ export const userInfoPopup = (userOption: UserOption) => {
     content,
     // placement: 'bottom',
     preventOverflow: false,
-        boundariesElement: 'viewport',
+    boundariesElement: 'viewport',
     html: true,
     classes: ['vue-tooltip-user-info-popup'],
   };

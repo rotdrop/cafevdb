@@ -64,7 +64,7 @@ const calendarStoreSetup = async () => {
   const calendarsStore: CalendarsStore = useCalendarsStore();
   const principalsStore: PricipalsStore = usePrincipalsStore();
   const settingsStore: SettingsStore = useSettingsStore();
-  loadMomentLocalization().then((locale: string) => { settingsStore.setMomentLocale({ locale }) })
+  loadMomentLocalization().then((locale: string) => { settingsStore.setMomentLocale({ locale }); });
 
   if (calendarsStore.initialCalendarsLoaded) {
     logger.debug('INITIAL CALENDARS ALREADY LOADED');
@@ -83,7 +83,7 @@ const calendarStoreSetup = async () => {
     if (owners.indexOf(calendar.owner) === -1) {
       owners.push(calendar.owner);
     }
-  })
+  });
   owners.forEach((owner) => {
     principalsStore.fetchPrincipalByUrl({ url: owner });
   });

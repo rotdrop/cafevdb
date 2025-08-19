@@ -28,14 +28,16 @@ import globalState from '../app/globalstate.js';
 import { DEBUG_SMAPS } from '../debug-modes.ts';
 
 class Console extends ToolKitConsole {
+
   constructor(prefix: string, options?: ConsoleOptions) {
     const debugSmaps = !!(globalState.debugModes & DEBUG_SMAPS);
     options = {
       smaps: { ...{ debug: debugSmaps, info: debugSmaps, error: debugSmaps, trace: debugSmaps }, ...(options?.smaps || {}) },
-      stackDepth: options?.stackDepth  || 0,
+      stackDepth: options?.stackDepth || 0,
     };
     super(prefix, options);
   }
+
 }
 
 export * from '../toolkit/util/console.ts';

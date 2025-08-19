@@ -19,7 +19,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { loadTranslations } from '@nextcloud/l10n'
+import { loadTranslations } from '@nextcloud/l10n';
 import Console from '../util/console.ts';
 import { HISTORY_GO_REQUEST } from '../event-bus-events.ts';
 import { emit as asyncEmit } from '../services/async-event-bus.ts';
@@ -42,22 +42,22 @@ const ProjectEventsListing = async () => {
 
 const calendarSetup = async () => {
   // make sure the timezones are actually loaded
-  // @ts-expect-error
+  // @ts-expect-error 2307
   import('@nextcloud/app-calendar/css/app-full.scss');
   import('../services/calendar-store-setup.ts')
     .then(({ default: calendarStoreSetup }) => calendarStoreSetup());
   // translations are probably not reactive, so we have to await their
   // loading.
-  await loadTranslations('calendar', () => {});
+  await loadTranslations('calendar');
 };
 
 const SimpleEventEditor = async () => {
-  await calendarSetup()
+  await calendarSetup();
   return import('@nextcloud/app-calendar/src/views/EditSimple.vue');
-}
+};
 
 const FullEventEditor = async () => {
-  await calendarSetup()
+  await calendarSetup();
   return import('@nextcloud/app-calendar/src/views/EditFull.vue');
 };
 
@@ -99,7 +99,7 @@ const beforeCalendarRouteEnter = <V extends Vue>(to: Route, from: Route, next: N
       params: to.params,
       query: Object.assign({}, to.query || {}, { hash: from.query.hash }),
       replace: to.transition === 'replace',
-    }
+    };
     next(target);
   } else {
     if (to.transition === 'push') {
@@ -163,12 +163,11 @@ const calendarAppRoutes: RouteConfig[] = [
         next(target);
       } else {
         logger.error('No previous route defined');
-        next({ name: 'home', replace: to.transition === 'replace' })
+        next({ name: 'home', replace: to.transition === 'replace' });
       }
     },
   },
 ];
-
 
 // p/projects/events/345/event/edit/popover/...
 
@@ -191,7 +190,7 @@ const projectEventsRoute: RouteConfig = {
         params: to.params,
         query: Object.assign({}, to.query || {}, { hash: from.query.hash }),
         replace: to.transition === 'replace',
-      }
+      };
       next(target);
     } else {
       next();

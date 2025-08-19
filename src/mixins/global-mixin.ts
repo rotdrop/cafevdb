@@ -26,7 +26,7 @@ import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 
 export const mixin = {
   data() {
-    return { appId: appName, };
+    return { appId: appName };
   },
   // $t and $n are needed by the code borrowed from the calendar app.
   methods: { t, n, $t: t, $n: n },

@@ -26,12 +26,16 @@ import axios from '@nextcloud/axios';
 import { generateOcsUrl } from '@nextcloud/router';
 import { confirmPassword } from '@nextcloud/password-confirmation';
 import { set as vueSet /* , del as vueDelete */ } from 'vue';
-import type { AxiosResponse } from 'axios'
+import type { AxiosResponse } from 'axios';
+// Why is the following needed?
+// eslint-disable-next-line n/no-missing-import
 import type { OCSResponse } from '@nextcloud/typings/ocs';
+import type { AnyPromise } from '../types/promise.d.ts';
+import type Keyable from '../types/keyable.d.ts';
 
 const storeId = 'cloud-user-groups';
 
-type ErrorHandler = <E extends Error>(error: E|any) => void;
+type ErrorHandler = <E extends Error>(error: E|unknown) => void;
 
 export type CloudUser = {
   id: string,
@@ -54,8 +58,8 @@ export type CloudGroup = {
   backends: string[],
   users?: string[],
   usersDetails: Record<string, CloudUser>,
-  getUsers: (errorHandler: null|ErrorHandler) => Promise<any>,
-  getUsersDetails: (errorHandler: null|ErrorHandler) => Promise<any>,
+  getUsers: (errorHandler: null|ErrorHandler) => AnyPromise,
+  getUsersDetails: (errorHandler: null|ErrorHandler) => AnyPromise,
 }
 
 type GroupUsersDetailsResponse = AxiosResponse<OCSResponse<{ users: Record<string, CloudUser> }> >
@@ -66,23 +70,23 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
     return {
       groups: {} as Record<string, CloudGroup>,
       users: {} as Record<string, CloudUser>,
-      loadingPromise: Promise.resolve(true) as Promise<any>,
+      loadingPromise: Promise.resolve(true) as AnyPromise,
     };
   },
   actions: {
-    debug(...args: any[]) {
+    debug(...args: unknown[]) {
       console.debug(storeId, ...args);
     },
-    info(...args: any[]) {
+    info(...args: unknown[]) {
       console.info(storeId, ...args);
     },
-    error(...args: any[]) {
+    error(...args: unknown[]) {
       console.error(storeId, ...args);
     },
-    trace(...args: any[]) {
+    trace(...args: unknown[]) {
       console.trace(storeId, ...args);
     },
-    handleError<E extends Error>(error: E|any, errorHandler: null|ErrorHandler) {
+    handleError<E extends Error>(error: E|unknown, errorHandler: null|ErrorHandler) {
       this.error('findUsers', error);
       if (typeof errorHandler === 'function') {
         errorHandler(error);
@@ -90,7 +94,7 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
     },
     async getUser(uid: string, errorHandler: null|ErrorHandler): Promise<CloudUser|undefined> {
 
-      let promise: Promise<any>;
+      let promise: AnyPromise;
       do {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
@@ -102,7 +106,7 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
     },
     async getGroup(gid: string, errorHandler: null|ErrorHandler): Promise<CloudGroup|undefined> {
 
-      let promise: Promise<any>;
+      let promise: AnyPromise;
       do {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
@@ -120,8 +124,8 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
       try {
         await (this.loadingPromise = axios.post(generateOcsUrl('cloud/groups'), { groupid: gid, displayname: displayName }));
         return await this.getGroup(gid, errorHandler);
-      } catch (error: any) {
-        const data: null|OCSResponse = error?.response?.data || null;
+      } catch (error: unknown) {
+        const data: null|OCSResponse = ((((error as Keyable)?.response) as Keyable)?.data as OCSResponse) || null;
         if (data && data.ocs.meta.statuscode === 403) {
           try {
             await confirmPassword();
@@ -136,7 +140,7 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
     },
     async getGroupUsers(gid: string, errorHandler: null|ErrorHandler) {
 
-      let promise: Promise<any>;
+      let promise: AnyPromise;
       do {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
@@ -157,7 +161,7 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
     },
     async getGroupUsersDetails(gid: string, errorHandler: null|ErrorHandler) {
 
-      let promise: Promise<any>;
+      let promise: AnyPromise;
       do {
         await (promise = this.loadingPromise);
       } while (promise !== this.loadingPromise);
@@ -166,7 +170,7 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
         if (this.groups[gid].usersDetails) {
           return this.groups[gid].usersDetails;
         } else if (this.groups[gid].users) {
-          const usersDetails = {} as Record<string, CloudUser> ;
+          const usersDetails = {} as Record<string, CloudUser>;
           for (const uid of this.groups[gid].users) {
             if (this.users[uid]) {
               usersDetails[uid] = this.users[uid];
@@ -250,7 +254,7 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
         while (count < limit) {
           const response = await (this.loadingPromise = axios.get(generateOcsUrl(`cloud/users/details?search=${query}&limit=${limit}&offset=${offset}`)));
 
-          for (const [uid, user] of (Object.entries(response.data.ocs.data.users) as [string, any][])) {
+          for (const [uid, user] of (Object.entries(response.data.ocs.data.users) as [string, unknown][])) {
             ++count;
             const oldUser = this.users[uid];
             if (!oldUser) {
@@ -263,7 +267,7 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
                   oldUser[key] = value;
                 }
                 for (const key of Object.keys(oldUser)) {
-                  if (user?.[key] === undefined) {
+                  if (user?.[key]) {
                     delete user[key];
                   }
                 }

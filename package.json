@@ -80,6 +80,7 @@
     "camelcase": "^5.2.0",
     "capitalize": "^2.0.4",
     "content-disposition": "*",
+    "core-js": "^3.45.0",
     "css-loader": "^5.0.1",
     "css-minimizer-webpack-plugin": "^3.2.0",
     "csso-webpack-plugin": "^2.0.0-beta.3",

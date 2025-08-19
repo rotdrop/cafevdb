@@ -24,6 +24,7 @@
 import { showError, showInfo, TOAST_DEFAULT_TIMEOUT/*, TOAST_PERMANENT_TIMEOUT */ } from '@nextcloud/dialogs';
 
 export const showErrorToast = (message: string, timeout?: number, isHTML?: boolean) =>
-  showError(message, { timeout: timeout || TOAST_DEFAULT_TIMEOUT, isHTML })
+  showError(message, { timeout: timeout || TOAST_DEFAULT_TIMEOUT, isHTML });
+
 export const showInfoToast = (message: string, timeout: number, isHTML: boolean) =>
   showInfo(message, { timeout: timeout || TOAST_DEFAULT_TIMEOUT, isHTML });

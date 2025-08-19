@@ -21,11 +21,10 @@
 
 import { appName } from '../config.ts';
 import Vue from 'vue';
-import Router from 'vue-router';
 import type { RouterOptions, Route } from 'vue-router';
 import { generateUrl } from '@nextcloud/router';
 import appRoutes from './routes.js';
-import { isNavigationFailure, NavigationFailureType } from 'vue-router'
+import Router, { isNavigationFailure, NavigationFailureType } from 'vue-router';
 import Console from '../util/console.ts';
 
 const COMPONENT_NAME = 'app-router';
@@ -59,7 +58,7 @@ const options: RouterOptions = {
     arg(resolve, (error) => {
       logger.debug('NAVIGATION PROMISE REJECT', { error });
       if (isNavigationFailure(error, NavigationFailureType.redirected)) {
-        logger.debug('Catch and ignore redirection navigation error', { error});
+        logger.debug('Catch and ignore redirection navigation error', { error });
         resolve(error.to);
       // } else if (isNavigationFailure(error, NavigationFailureType.aborted)
       //            && error.to.path.endsWith('--never--')) {
@@ -70,7 +69,7 @@ const options: RouterOptions = {
     });
 
     return promise;
-  }
+  },
 };
 
 const router = new Router(options);

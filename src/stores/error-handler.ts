@@ -39,11 +39,11 @@ export default defineStore(storeId, () => {
   const defaultHandler = <E extends AppError>(error: E) => { throw error; };
 
   const errorHandler = computed<ErrorHandler>(
-    () => errorHandlerStack.value?.[errorHandlerStack.value.length - 1] || defaultHandler
+    () => errorHandlerStack.value?.[errorHandlerStack.value.length - 1] || defaultHandler,
   );
   // Mmmh. Reactivity. But in principle here we want to have the
   // handler available RIGHT NOW and not only on the next tick ...
-  const getHandler = () => errorHandlerStack.value?.[errorHandlerStack.value.length - 1] || null
+  const getHandler = () => errorHandlerStack.value?.[errorHandlerStack.value.length - 1] || null;
 
   const pushHandler = (handler: ErrorHandler) => {
     errorHandlerStack.value.push(handler);

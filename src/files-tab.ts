@@ -33,7 +33,7 @@ interface FilesTabVue extends Vue {
   update(fileInfo: LegacyFileInfo): Promise<unknown>,
 }
 
-Vue.mixin({ data() { return { appName } }, methods: { t, n } });
+Vue.mixin({ data() { return { appName }; }, methods: { t, n } });
 Vue.directive('tooltip', Tooltip);
 Vue.use(PiniaVuePlugin);
 
@@ -44,6 +44,6 @@ const createTabInstance = (parent: Vue):FilesTabVue => new FilesTabVue({
   parent,
   // @ts-expect-error 2769
   pinia,
-})
+});
 
 export default createTabInstance;

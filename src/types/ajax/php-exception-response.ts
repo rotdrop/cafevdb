@@ -26,7 +26,8 @@ import ResponseTypes from './response-types.ts';
 import type {
   ILogEntry as NextcloudLogEntry,
   IException as NextcloudException,
-} from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts'
+} from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts';
+import type Keyable from '../../types/keyable.d.ts';
 
 export interface NextcloudExceptionLogEntry extends Omit<NextcloudLogEntry, 'exception'> {
   exception: NextcloudException,
@@ -48,17 +49,17 @@ export interface PHPExceptionData {
   previous: null|PHPExceptionData,
 }
 
-export const isNextcloudLogEntry = (data: any): data is NextcloudLogEntry =>
-  !!data && typeof data === 'object' && data.reqId && data.app
+export const isNextcloudLogEntry = (data: unknown): data is NextcloudLogEntry =>
+  !!data && typeof data === 'object' && !!(data as Keyable).reqId && !!(data as Keyable).app;
 
-export const isNextcloudExceptionLogEntry = (data: any): data is NextcloudExceptionLogEntry =>
-  isNextcloudLogEntry(data) && !!data.exception
+export const isNextcloudExceptionLogEntry = (data: unknown): data is NextcloudExceptionLogEntry =>
+  isNextcloudLogEntry(data) && !!data.exception;
 
-export const isNextcloudExceptionResponse = (data: any): data is AxiosErrorResponse<NextcloudExceptionLogEntry> =>
-  isAxiosErrorResponse(data) && isNextcloudExceptionLogEntry(data.response.data)
+export const isNextcloudExceptionResponse = (data: unknown): data is AxiosErrorResponse<NextcloudExceptionLogEntry> =>
+  isAxiosErrorResponse(data) && isNextcloudExceptionLogEntry(data.response.data);
 
-export const isPHPExceptionData = (data: any): data is PHPExceptionData =>
-  !!data && typeof data === 'object' && data?.type === ResponseTypes.PHPExceptionData
+export const isPHPExceptionData = (data: unknown): data is PHPExceptionData =>
+  !!data && typeof data === 'object' && (data as Keyable)?.type === ResponseTypes.PHPExceptionData;
 
-export const isPHPExceptionResponse = <D = any>(error: any): error is AxiosErrorResponse<PHPExceptionData, D> =>
-  isAxiosErrorResponse(error) && isPHPExceptionData(error.response.data)
+export const isPHPExceptionResponse = <D = unknown>(error: unknown): error is AxiosErrorResponse<PHPExceptionData, D> =>
+  isAxiosErrorResponse(error) && isPHPExceptionData(error.response.data);

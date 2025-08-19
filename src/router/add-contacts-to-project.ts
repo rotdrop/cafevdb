@@ -52,7 +52,7 @@ const addContactsToProjectsRoute: RouteConfig = {
         params: to.params,
         query: Object.assign({}, to.query || {}, { hash: from.query.hash }),
         replace: to.transition === 'replace',
-      }
+      };
       next(target);
     } else {
       next();

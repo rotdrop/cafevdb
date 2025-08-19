@@ -40,9 +40,9 @@ interface FilesTab extends Vue {
   update(fileInfo: LegacyFileInfo): Promise<unknown>,
 }
 
-let OCA = window.OCA;
+const OCA = window.OCA;
 
-let TabInstance: undefined|FilesTab = undefined;
+let TabInstance: undefined|FilesTab;
 
 if (!OCA.CAFEVDB) {
   OCA.CAFEVDB = {};
@@ -101,7 +101,7 @@ window.addEventListener('DOMContentLoaded', () => {
           TabInstance.$destroy();
         }
 
-        TabInstance = factory(context)
+        TabInstance = factory(context);
 
         // Only mount after we hahve all the info we need
         await TabInstance.update(fileInfo);

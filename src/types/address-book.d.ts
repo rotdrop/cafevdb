@@ -21,6 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type StringValued from '../util/string-valued.ts';
+
 export interface AddressBook {
   key: string|number,
   uid: string,
@@ -33,16 +35,16 @@ export interface AddressBook {
 
 export interface Contact {
   key: number|string,
-  name?: string|{ value: string },
+  name?: StringValued,
   label: string,
   addressBookName?: string,
   $isDisabled?: boolean,
   UID: string,
   URI?: string,
-  FN?: string
-  EMAIL?: string[] | { value: string }[],
+  FN?: string,
+  EMAIL?: StringValued[],
   informalDisplayName?: string,
-  ADR?: string[] | { value: string }[],
+  ADR?: StringValued[],
   ORG?: string,
 }
 

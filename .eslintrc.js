@@ -58,7 +58,7 @@ module.exports = {
     // other
     //
     'no-tabs': ['error', { allowIndentationTabs: false }],
-    indent: ['error', 2],
+    indent: ['error', 2, { SwitchCase: 0 }],
     'no-mixed-spaces-and-tabs': 'error',
     //
     camelcase: [
@@ -120,6 +120,12 @@ module.exports = {
       files: ['*.ts', '*.cts', '*.mts', '*.tsx', '*.vue'],
       rules: {
         '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      },
+    },
+    {
+      files: ['*.ts'],
+      rules: {
+        indent: ['error', 2, { SwitchCase: 1 }],
       },
     },
   ],

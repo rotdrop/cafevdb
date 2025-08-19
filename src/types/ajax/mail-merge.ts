@@ -21,9 +21,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const MailMergeDataset = 'dataset'
-export const MailMergeDownload = 'download'
-export const MailMergeCloud = 'cloud'
+export const MailMergeDataset = 'dataset';
+export const MailMergeDownload = 'download';
+export const MailMergeCloud = 'cloud';
 export type MailMergeOperation = typeof MailMergeDataset
   | typeof MailMergeDownload
   | typeof MailMergeCloud
@@ -59,4 +59,4 @@ export interface MailMergeResponse {
   senderId: number,
 }
 
-export {}
+export {};

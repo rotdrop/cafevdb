@@ -24,6 +24,7 @@
 import { appName } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
 import type { Contact, Musician } from '../types/address-book.d.ts';
+import { stringValue } from '../util/string-valued.ts';
 
 const addressItemUnknownLabel = (item: string) =>
   t(appName, '{item}: unknown', { item: t(appName, item) });
@@ -52,8 +53,7 @@ export const musicianAddressPopup = (option: Musician) => {
 };
 
 export const contactNameFromContact = (option: Contact) => {
-  const nameValue = option?.name as any;
-  let name = nameValue?.value || nameValue;
+  let name = stringValue(option?.name);
   if (typeof name !== 'string') {
     name = t(appName, '[empty name]');
   }
@@ -67,10 +67,10 @@ export const contactAddressPopup = (option: Contact) => {
     additionalInfo.push('c/o ' + displayName);
     displayName = option.ORG;
   }
-  let emails: string[] = [];
+  const emails: string[] = [];
   if (option.EMAIL) {
-    for (const email of option.EMAIL as any[]) {
-      const emailValue = (email.value || email) as string;
+    for (const email of option.EMAIL) {
+      const emailValue = stringValue(email);
       if (typeof emailValue === 'string') {
         emails.push(`${emailValue}`);
       }
@@ -81,8 +81,8 @@ export const contactAddressPopup = (option: Contact) => {
   }
   let address: string[] = [];
   if (option.ADR && option.ADR.length > 0) {
-    const  adrValue = option.ADR[0] as any;
-    address = (adrValue.value || adrValue).split(';');
+    const adrValue = option.ADR[0];
+    address = stringValue(adrValue).split(';');
   }
   const street = address[2] || addressItemUnknownLabel('street');
   const postalCode = (address[5] + ' ') || '';

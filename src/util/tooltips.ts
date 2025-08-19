@@ -39,7 +39,7 @@ export const tooltip = async (key: string) => {
   }
 };
 
-export const tooltips =  async (keys: string[]) => {
+export const tooltips = async (keys: string[]) => {
   try {
     const response: AxiosResponse<Record<string, string> > = await axios.get(generateAppUrl('tooltips'), {
       params: {

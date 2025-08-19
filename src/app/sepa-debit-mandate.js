@@ -49,6 +49,7 @@ import {
 } from './project-participant-fields.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import cloudFilePickerDialog from './cloud-file-picker-dialog.js';
+import { UploadModeLink } from '../types/ajax/upload.ts';
 import './lock-input.js';
 import {
   data as pmeData,
@@ -280,7 +281,7 @@ const mandatesInit = function(data, onChangeCallback) {
     console.info('FILE', [file]);
     const mandateFieldset = popup.find(mandateFormSelector + ' ' + 'fieldset.debit-mandate');
     mandateFieldset.find('input.written-mandate-file-upload').val(JSON.stringify([file]));
-    const fileName = (file.upload_mode !== 'link')
+    const fileName = (file.upload_mode !== UploadModeLink)
       ? file.original_name
       : file.name;
     mandateFieldset.find('input.upload-placeholder')

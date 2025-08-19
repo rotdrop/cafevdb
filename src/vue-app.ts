@@ -21,6 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// eslint-disable-next-line n/no-missing-import
 import 'core-js/actual';
 import { appName } from './config.ts';
 import globalState from './app/globalstate.js';
@@ -44,8 +45,8 @@ Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
 
 declare global {
-  var __webpack_nonce__: string;
-  var __webpack_public_path__: string;
+  let __webpack_nonce__: string;
+  let __webpack_public_path__: string;
 }
 // CSP config for webpack dynamic chunk loading
 __webpack_nonce__ = btoa(getRequestToken() || '');
@@ -58,7 +59,7 @@ const provide = Object.assign(
   {},
   { appId: appName },
   Object.fromEntries(
-    Object.entries(Authorization).filter(([key,]) => key.startsWith('PERMISSION_'))
+    Object.entries(Authorization).filter(([key]) => key.startsWith('PERMISSION_')),
   ),
 );
 

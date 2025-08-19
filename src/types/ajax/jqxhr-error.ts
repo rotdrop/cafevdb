@@ -1,4 +1,4 @@
- /**
+/**
  * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
@@ -23,26 +23,30 @@
 
 import { isNextcloudLogEntry } from './nextcloud-log.ts';
 import type { NextcloudLogEntry } from './nextcloud-log.ts';
+import type Keyable from '../keyable.d.ts';
 
-export type JqXHR<T = any> = JQuery.jqXHR<T>;
+export type JqXHR<T = unknown> = JQuery.jqXHR<T>;
 
-export class JQueryAjaxError<T = any> extends Error {
+export class JQueryAjaxError<T = unknown> extends Error {
+
   constructor(message: string, xhr: JqXHR<T>, html?: string) {
     super(message);
     this.name = 'JQAjaxError';
     this.cause = xhr;
     this.html = html;
   }
+
   cause: JqXHR<T>;
   html?: string;
+
 }
 
-export interface JqJsonXHR<T = any> extends Omit<JqXHR<T>, 'responseJSON'> {
+export interface JqJsonXHR<T = unknown> extends Omit<JqXHR<T>, 'responseJSON'> {
   responseJSON: T;
 }
 
 export interface JqHtmlXHR extends Omit<JqXHR<string>, 'responseJSON'> {
-  responseText: string; // present anyway, but so what
+  responseText: string; // present unknownway, but so what
 }
 
 export interface JQueryAjaxHtmlError<T extends string> extends Omit<JQueryAjaxError<T>, 'html'> {
@@ -50,17 +54,24 @@ export interface JQueryAjaxHtmlError<T extends string> extends Omit<JQueryAjaxEr
 }
 
 // sparse testing for a jQuery XHR object ...
-export const isJqXHR = <T = any>(error: any): error is JqXHR<T> =>
-  !!error && error.responseText && error.status && error.abort && error.done && error.fail;
+export const isJqXHR = <T = unknown>(error: unknown): error is JqXHR<T> =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (!!error
+   && typeof error === 'object'
+   && !!(error as Keyable).responseText
+   && !!(error as Keyable).status
+   && !!(error as Keyable).abort
+   && !!(error as Keyable).done
+   && !!(error as Keyable).fail);
 
-export const isJqJsonXHR = <T = any>(error: any): error is JqJsonXHR<T> =>
+export const isJqJsonXHR = <T = unknown>(error: unknown): error is JqJsonXHR<T> =>
   isJqXHR(error) && error.responseJSON;
 
-export const isJqHtmlXHR = (error: any): error is JqHtmlXHR =>
+export const isJqHtmlXHR = (error: unknown): error is JqHtmlXHR =>
   isJqXHR(error) && !error.responseJSON && ((error.getResponseHeader('content-type') || '').includes('html'));
 
-export const isJqNextcloudLogEntryXHR = (error: any): error is JqJsonXHR<NextcloudLogEntry> =>
+export const isJqNextcloudLogEntryXHR = (error: unknown): error is JqJsonXHR<NextcloudLogEntry> =>
   isJqXHR(error) && isNextcloudLogEntry(error.responseJSON);
 
-export const isJQueryAjaxHtmlError = <T extends string>(error: any): error is JQueryAjaxHtmlError<T> =>
+export const isJQueryAjaxHtmlError = <T extends string>(error: unknown): error is JQueryAjaxHtmlError<T> =>
   error instanceof JQueryAjaxError && !!error.html;

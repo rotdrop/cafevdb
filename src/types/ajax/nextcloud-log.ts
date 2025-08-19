@@ -1,4 +1,4 @@
- /**
+/**
  * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
@@ -23,17 +23,18 @@
 
 import { AxiosError } from 'axios';
 import { isAxiosError } from '../../toolkit/types/axios-type-guards.ts';
-import type { ILogEntry as NextcloudLogEntry } from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts'
+import type { ILogEntry as NextcloudLogEntry } from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts';
+import type Keyable from '../keyable.d.ts';
 
-export type { ILogEntry as NextcloudLogEntry } from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts'
+export type { ILogEntry as NextcloudLogEntry } from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts';
 
-export const isNextcloudLogEntry = (data: any): data is NextcloudLogEntry =>
+export const isNextcloudLogEntry = (data: unknown): data is NextcloudLogEntry =>
   (!!data
    && typeof data === 'object'
-   && data.app
-   && data.level
-   && data.message
-   && data.reqId);
+   && !!(data as Keyable).app
+   && !!(data as Keyable).level
+   && !!(data as Keyable).message
+   && !!(data as Keyable).reqId);
 
-export const isNextcloudExceptionResponse = <D = any>(error: any): error is AxiosError<NextcloudLogEntry, D> =>
+export const isNextcloudExceptionResponse = <D = unknown>(error: unknown): error is AxiosError<NextcloudLogEntry, D> =>
   isAxiosError(error) && !!error.response && isNextcloudLogEntry(error.response.data);

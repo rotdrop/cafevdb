@@ -25,16 +25,16 @@ import { appName } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
 import { getDialogBuilder } from '@nextcloud/dialogs';
 
-const dialogConfirm = (title: string, body: string, callback: (answer: boolean) => void) => {
+const dialogConfirm = (title: string, body: string, confirmationCallback: (answer: boolean) => void) => {
   return getDialogBuilder(title)
     .addButton({
       label: t(appName, 'No'),
-      callback: () => callback(false),
+      callback: () => confirmationCallback(false),
       type: 'primary',
     })
     .addButton({
       label: t(appName, 'Yes'),
-      callback: () => callback(true),
+      callback: () => confirmationCallback(true),
       type: 'secondary',
     })
     .setText(body)

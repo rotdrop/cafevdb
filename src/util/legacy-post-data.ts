@@ -25,7 +25,7 @@ import objectHash from 'object-hash/index.js'; // avoid using the browserified v
 import { walk, deepCopy } from 'walkjs';
 import Console from './console.ts';
 import type { NormalOption } from 'object-hash';
-import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus'
+import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus';
 
 const COMPONENT_NAME = 'legacyPostData';
 
@@ -37,7 +37,7 @@ export const HASH_KEY = '__post_data_hash__';
 export const FRONTEND_URL_PATH_KEY = '__frontend_url_path__';
 
 type NormalOptionsExt = NormalOption & {
-  exclude: ((key: string, value: any, level: number) => boolean)|undefined;
+  exclude: ((key: string, value: unknown, level: number) => boolean)|undefined;
 };
 
 const EXCLUDED_KEYS = [
@@ -85,6 +85,8 @@ const EMPTY_VALUE_KEYS = [
 /**
  * Generate a hash from the given data, excluding entries which
  * "belong to the system" or are part of the route.
+ *
+ * @param postData Data-record from the post-request.
  */
 export const generatePostHash = (postData: TemplatePostData):string => {
   const options: NormalOptionsExt = {
@@ -140,15 +142,15 @@ export const sanitizeTemplateParams = (params: TemplatePostData) => {
         switch (nodeType) {
           case 'value':
             del = node.val === null
-              || node.val === undefined
-              || ('' + node.val) === ''
-              || (EMPTY_VALUE_KEYS.includes(node.key as string) && +(node.val as string) === 0);
+               || node.val === undefined
+               || ('' + node.val) === ''
+               || (EMPTY_VALUE_KEYS.includes(node.key as string) && +(node.val as string) === 0);
             break;
           case 'array':
             del = node.val.length === 0;
             break;
           case 'object':
-            del = Object.keys(node.val).length === 0
+            del = Object.keys(node.val).length === 0;
             break;
         }
         if (del) {
@@ -166,7 +168,7 @@ export const sanitizeTemplateParams = (params: TemplatePostData) => {
  * Remove empty values for projectId, projectName and musicianId,
  * remove also all null and undefined values.
  *
- * @param params
+ * @param params Data-array from the post request.
  */
 export const sanitizePostDataOld = (params: TemplatePostData): TemplatePostData => Object.fromEntries(
   Object.entries(params).filter(
@@ -225,4 +227,4 @@ export const sanitizePostData = (params: TemplatePostData, excludeUrlParams = fa
   });
 
   return params;
-}
+};

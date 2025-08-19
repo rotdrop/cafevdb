@@ -25,13 +25,24 @@ import globalState from '../app/globalstate.js';
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router';
 import md5 from 'blueimp-md5';
 
+/**
+ * @param path Wiki path as string array.
+ */
 export function dokuWikiSection(path: string[]) {
   return [globalState.wikiNameSpace, ...path].join(':');
 }
+
+/**
+ * @param path Wiki path as string array as colon separated string path.
+ */
 export function dokuWikiUrl(path: string|string[]) {
   const wikiPage = Array.isArray(path) ? dokuWikiSection(path) : path;
   return nextcloudGenerateUrl('/apps/dokuwiki/page/index?wikiPage=' + wikiPage);
 }
+
+/**
+ * @param path Wiki path as string array as colon separated string path.
+ */
 export function dokuWikiUrlTarget(path: string|string[]) {
   const wikiPage = Array.isArray(path) ? dokuWikiSection(path) : path;
   return md5(wikiPage);
