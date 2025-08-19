@@ -18,7 +18,12 @@
     "./src/*.vue"
   ],
   "compilerOptions": {
-    "types": ["jest", "node", "vue", "vue-router", "moment"],
+    "types": [
+      "node",
+      "vue",
+      "vue-router",
+      "moment"
+    ],
     "lib": [ "ES2024", "DOM", "DOM.Iterable" ],
     "outDir": "./dist/",
     "target": "ESNext",
