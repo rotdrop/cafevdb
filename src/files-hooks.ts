@@ -41,7 +41,7 @@ import {
   getNewFileMenuEntries,
   registerFileAction,
 } from '@nextcloud/files';
-import type { Entry } from '@nextcloud/files';
+import type { NewMenuEntry } from '@nextcloud/files';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import axios from '@nextcloud/axios';
 import logoSvg from '../img/cafevdb.svg?raw';
@@ -52,11 +52,8 @@ import type {
   MailMergePayload,
   MailMergeResponse,
 } from './types/ajax/mail-merge.ts';
-import { UploadModeMove } from './types/ajax/upload.ts';
-import type {
-  UploadStashResponse,
-} from './types/ajax/upload.ts';
-import { isAxiosErrorResponse } from './toolkit/types/axios-type-guards.ts';
+
+type Toast = ReturnType<typeof showError>;
 
 const COMPONENT_NAME = 'CAFEVDB-FILES-HOOKS';
 const logger = new Console(COMPONENT_NAME)
@@ -272,7 +269,7 @@ const createNewFolder = async (root: Folder, name: string): Promise<createFolder
   };
 };
 
-class SupportingDocumentEntry implements Entry {
+class SupportingDocumentEntry implements NewMenuEntry {
 
   private projectName: string|null = null;
   private projectYear: string|null = null;
@@ -409,7 +406,7 @@ addNewFileMenuEntry(supportingDocumentsEntry);
 
 // invoices are also special, and perhaps later on contracts
 
-class InvoicesEntry implements Entry {
+class InvoicesEntry implements NewMenuEntry {
 
   public id: string;
   public displayName: string;
@@ -451,7 +448,7 @@ class InvoicesEntry implements Entry {
         invoiceIds: [ invoiceData.invoiceNumber ],
       };
       const mailMergeUrl = generateAppUrl('documents/mail-merge');
-      let mailMergeToast = showInfo(t(appName, 'Starting mail-merge, this may take some time ...'), { timeout: TOAST_PERMANENT_TIMEOUT });
+      let mailMergeToast: Toast|null = showInfo(t(appName, 'Starting mail-merge, this may take some time ...'), { timeout: TOAST_PERMANENT_TIMEOUT });
       try {
         const response = await axios.post<MailMergeResponse>(mailMergeUrl, postData);
         const cloudFile = response.data.cloudFolder + '/' + response.data.cloudFiles[0];
@@ -488,6 +485,7 @@ class InvoicesEntry implements Entry {
       } catch (e: any) {
         if (mailMergeToast) {
           mailMergeToast.hideToast();
+          mailMergeToast = null;
         }
         // @todo: better diagnostics
         showError(t(appName, 'Mail-merge operation has failed'));

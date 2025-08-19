@@ -25,6 +25,8 @@ import { AxiosError } from 'axios';
 import { isAxiosError } from '../../toolkit/types/axios-type-guards.ts';
 import type { ILogEntry as NextcloudLogEntry } from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts'
 
+export type { ILogEntry as NextcloudLogEntry } from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts'
+
 export const isNextcloudLogEntry = (data: any): data is NextcloudLogEntry =>
   (!!data
    && typeof data === 'object'

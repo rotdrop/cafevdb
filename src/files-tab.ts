@@ -40,6 +40,10 @@ Vue.use(PiniaVuePlugin);
 const FilesTabVue = Vue.extend(FilesTab);
 const pinia = createPinia();
 
-const createTabInstance = (parent: Vue):FilesTabVue => new FilesTabVue({ parent, pinia })
+const createTabInstance = (parent: Vue):FilesTabVue => new FilesTabVue({
+  parent,
+  // @ts-expect-error 2769
+  pinia,
+})
 
 export default createTabInstance;

@@ -65,10 +65,11 @@ const provide = Object.assign(
 const vueApp = new Vue({
   el: '#content',
   name: appName,
-  router,
-  pinia,
   render: h => h(CAFeVDB),
   provide,
+  // @ts-expect-error 2769
+  router,
+  pinia,
 });
 
 globalState.vueMode = true;

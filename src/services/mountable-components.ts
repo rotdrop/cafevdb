@@ -56,7 +56,7 @@ export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
         vueComponent = (await import('../components/SepaBulkTransactionActionsMenu.vue')).default;
         break;
       default:
-        throw new AppError(event, t(appName, 'Unknown mountable component: "{name}".', { event }));
+        throw new AppError(event, t(appName, 'Unknown mountable component: "{name}".', event));
       }
       // generate the constructor
       vueConstructors[event.name] = Vue.extend(vueComponent);

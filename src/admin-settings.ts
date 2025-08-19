@@ -44,5 +44,6 @@ const vueAnchorId = 'admin-settings-vue';
 export default new Vue({
   el: '#' + vueAnchorId,
   render: h => h(AdminSettings),
+  // @ts-expect-error 2769
   pinia,
 });
