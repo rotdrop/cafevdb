@@ -181,7 +181,6 @@ module.exports = {
         'src/toolkit/services/InitialStateService.js',
         'src/toolkit/util/file-node-helper.ts',
         'src/toolkit/util/nextcloud-sidebar-root.ts',
-        'src/toolkit/util/jquery.js',
         'src/toolkit/util/on-document-loaded.js',
         'src/toolkit/util/settings-sync.ts',
         'src/toolkit/util/pangram.ts',
