@@ -160,7 +160,7 @@ module.exports = {
       },
     }),
     new ESLintPlugin({
-      extensions: ['js', 'vue'],
+      extensions: ['ts', 'js', 'vue'],
       exclude: [
         'node_modules',
         '3rdparty',
@@ -171,19 +171,22 @@ module.exports = {
     new NodePolyfillPlugin(),
     new DeadCodePlugin({
       patterns: [
-        'src/**/*.(vue|js|ts|jsx|css)',
+        'src/*.(vue|js|ts)',
+        'src/**/*.(vue|js|ts)',
         'style/**/*.scss',
       ],
       exclude: [
         'src/*.d.ts',
         'src/**/*.d.ts',
-        'src/toolkit/mixins/settings-sync.js',
-        'src/toolkit/services/InitialStateService.js',
+        // used by other packages
+        'src/toolkit/util/dialog-alert.ts',
+        'src/toolkit/util/dialog-confirm.ts',
         'src/toolkit/util/file-node-helper.ts',
         'src/toolkit/util/nextcloud-sidebar-root.ts',
-        'src/toolkit/util/on-document-loaded.js',
-        'src/toolkit/util/settings-sync.ts',
         'src/toolkit/util/pangram.ts',
+        'src/toolkit/util/settings-sync.ts',
+        // false positive (TS or Vue problem)
+        'src/types/ajax/page-load-response.ts',
       ],
     }),
   ],
