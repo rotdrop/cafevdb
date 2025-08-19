@@ -184,7 +184,7 @@ import {
   watch,
   reactive,
 } from 'vue'
-import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
+import cloudVersionClasses from '../toolkit/util/cloud-version-classes.ts'
 import {
   NcActions,
   NcActionButton,

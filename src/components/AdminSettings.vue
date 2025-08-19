@@ -489,7 +489,7 @@ import {
 } from '@nextcloud/dialogs'
 
 import { appName as appId } from '../config.ts'
-import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
+import cloudVersionClasses from '../toolkit/util/cloud-version-classes.ts'
 
 import SelectMusicians from './SelectMusicians.vue'
 import type { Musician } from '../types/address-book.d.ts'
