@@ -4296,12 +4296,16 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     $executiveBoardNames = $this
       ->getDatabaseRepository(Entities\ProjectParticipant::class)
-      ->fetchParticipantNames($executiveBoardId, [
-        'nickName' => 'ASC',
-        'firstName' => 'ASC',
-        'displayName' => 'ASC',
-        'surName' => 'ASC',
-      ]);
+      ->fetchParticipantNames(
+        projectId: $executiveBoardId,
+        orderBy: [
+          'nickName' => 'ASC',
+          'firstName' => 'ASC',
+          'displayName' => 'ASC',
+          'surName' => 'ASC',
+        ],
+        excludeStatus: ParticipationStatus::ASSOCIATED,
+      );
 
     $executiveBoardNickNames = [];
     foreach ($executiveBoardNames as $names) {

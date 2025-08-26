@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVBD\Common\Util;
-
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
 
 /** Repository for project participants. */
@@ -44,10 +44,19 @@ class ProjectParticipantsRepository extends EntityRepository
    *
    * @param bool $includeDeleted
    *
+   * @param mixed $onlyStatus
+   *
+   * @param mixed $excludeStatus
+   *
    * @return array
    */
-  public function fetchParticipantNames(int $projectId, ?array $orderBy = null, bool $includeDeleted = false)
-  {
+  public function fetchParticipantNames(
+    int $projectId,
+    ?array $orderBy = null,
+    bool $includeDeleted = false,
+    mixed $onlyStatus = null,
+    mixed $excludeStatus = null,
+  ):array {
     if (empty($orderBy)) {
       $orderBy = [
         'surName' => 'ASC',
@@ -79,6 +88,18 @@ AS displayName",
     $qb->where($qb->expr()->eq('p.id', ':projectId'));
     if (!$includeDeleted) {
       $qb->andWhere($qb->expr()->isNull('pp.deleted'));
+    }
+    if ($onlyStatus !== null) {
+      if (!is_array($onlyStatus)) {
+        $onlyStatus = [$onlyStatus];
+      }
+      $qb->andWhere($qb->expr()->in('pp.participationStatus', array_map(fn(mixed $any) => (string)$any, $onlyStatus)));
+    }
+    if ($excludeStatus !== null) {
+      if (!is_array($excludeStatus)) {
+        $excludeStatus = [$excludeStatus];
+      }
+      $qb->andWhere($qb->expr()->notIn('pp.participationStatus', array_map(fn(mixed $any) => (string)$any, $excludeStatus)));
     }
     return $qb
       ->setParameter('projectId', $projectId)

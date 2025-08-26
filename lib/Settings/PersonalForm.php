@@ -26,26 +26,25 @@ namespace OCA\CAFEVDB\Settings;
 
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\App\IAppManager;
-use OCP\Settings\ISettings;
 use OCP\IInitialStateService;
+use OCP\Settings\ISettings;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\DatabaseService;
-use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\ErrorService;
-use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Service\CloudUserConnectorService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\Service\AssetService;
-
-use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
-use OCA\Redaxo\Service\RPC as WebPagesRPC;
-
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
+use OCA\CAFEVDB\Service\AssetService;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\DatabaseService;
+use OCA\CAFEVDB\Service\ErrorService;
+use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\L10N\TranslationService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
+use OCA\Redaxo\Service\RPC as WebPagesRPC;
 
 /**
  * Simple helper class in order to avoid instantiation of a bunch of
@@ -214,7 +213,10 @@ class PersonalForm
         if ($this->databaseConfigured() && $executiveBoardProjectId > 0) {
           // this can throw if there is no datadase configured yet.
           try {
-            $executiveBoardMembers = $this->projectService->participantOptions($executiveBoardProjectId, $executiveBoardProject);
+            $executiveBoardMembers = $this->projectService->participantOptions(
+              $executiveBoardProjectId,
+              excludeStatus: ParticipationStatus::ASSOCIATED,
+            );
           } catch (\Throwable $t) {
             $this->logException($t);
             $executiveBoardMembers = [];
@@ -226,7 +228,10 @@ class PersonalForm
         if ($this->databaseConfigured() && $memberProjectId > 0) {
           // this can throw if there is no datadase configured yet.
           try {
-            $clubMembers = $this->projectService->participantOptions($memberProjectId, $memberProject);
+            $clubMembers = $this->projectService->participantOptions(
+              projectId: $memberProjectId,
+              excludeStatus: ParticipationStatus::ASSOCIATED,
+            );
           } catch (\Exception $e) {
             $clubMembers = [];
           }

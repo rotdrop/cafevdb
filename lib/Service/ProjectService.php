@@ -209,16 +209,25 @@ class ProjectService
    *
    * @param int $projectId The id of the project to fetch the musician options from.
    *
-   * @param null|string $projectName Optional project name, will be queried from
-   * DB if not specified.
-   *
    * @param int $selectedMusicianId A pre-selected musician, defaults to -1.
+   *
+   * @param mixed $onlyStatus Restrict to participants with the given status (e.g. ParticipationStatus::REGULAR).
+   *
+   * @param mixed $excludeStatus Exclude participants with the given status (e.g. ParticipationStatus::ASSOCIATED).
    *
    * @return array
    */
-  public function participantOptions(int $projectId, ?string $projectName = null, int $selectedMusicianId = -1):array
-  {
-    $participants = $this->getDatabaseRepository(Entities\ProjectParticipant::class)->fetchParticipantNames($projectId);
+  public function participantOptions(
+    int $projectId,
+    int $selectedMusicianId = -1,
+    mixed $onlyStatus = null,
+    mixed $excludeStatus = null,
+  ):array {
+    $participants = $this->getDatabaseRepository(Entities\ProjectParticipant::class)->fetchParticipantNames(
+      $projectId,
+      onlyStatus: $onlyStatus,
+      excludeStatus: $excludeStatus,
+    );
     $options = [];
     foreach ($participants as $participant) {
       $musicianId = $participant['musicianId'];
