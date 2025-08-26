@@ -57,13 +57,16 @@ const wikiPopup = async (post, reopen = undefined) => {
   if (typeof reopen === 'undefined') {
     reopen = false;
   }
-  const wikiDlg = $('#dokuwiki_popup');
-  if (wikiDlg.dialog('isOpen') === true) {
+  let $dialogHolder = $('#dokuwiki_popup');
+  if ($dialogHolder.dialog('isOpen') === true) {
     if (reopen === false) {
-      wikiDlg.dialog('moveToTop');
+      $dialogHolder.dialog('moveToTop');
       return;
     }
-    wikiDlg.dialog('close').remove();
+    $dialogHolder.dialog('close').remove();
+    $dialogHolder = undefined;
+    dokuWikiWrapper.$destroy();
+    dokuWikiWrapper = undefined;
   }
   if (!dokuWikiWrapper) {
     dokuWikiWrapper = await getEmitResult(
@@ -81,9 +84,10 @@ const wikiPopup = async (post, reopen = undefined) => {
     dokuWikiWrapper._props.fullScreen = false;
     dokuWikiWrapper._props.wikiPage = post.wikiPage;
   }
-  const $dialogHolder = $('<div id="dokuwiki_popup" style="overflow:hidden;"><div></div></div>');
-  await dokuWikiWrapper.$mount($dialogHolder.find('div')[0]);
-  console.info('DW WRAPPER', { dokuWikiWrapper });
+  if (($dialogHolder?.length || 0) === 0) {
+    $dialogHolder = $('<div id="dokuwiki_popup" style="overflow:hidden;"><div></div></div>');
+    await dokuWikiWrapper.$mount($dialogHolder.find('div')[0]);
+  }
 
   $dialogHolder.cafevDialog({
     title: post.popupTitle,
