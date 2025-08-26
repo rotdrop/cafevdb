@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-07-30 16:30+0200\n"
-"PO-Revision-Date: 2025-07-30 16:31+0200\n"
+"POT-Creation-Date: 2025-08-26 11:10+0200\n"
+"PO-Revision-Date: 2025-08-26 11:09+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -6005,12 +6005,11 @@ msgstr "Löschdatum"
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
-#. TRANSLATORS: Textual description of HTTP status code 201, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 #: lib/PageRenderer/DonationReceipts.php:765
 #: lib/PageRenderer/Musicians.php:1008
 #: lib/PageRenderer/ProjectAssociates.php:1159
 #: lib/PageRenderer/ProjectParticipants.php:1417
-#: lib/PageRenderer/TaxExemptionNotices.php:457 src/toolkit/util/ajax.js:38
+#: lib/PageRenderer/TaxExemptionNotices.php:457
 msgid "Created"
 msgstr "Erzeugt"
 
@@ -6664,8 +6663,8 @@ msgstr "Bereich"
 msgid "Rate"
 msgstr "Rate"
 
-#: lib/PageRenderer/Invoices.php:354 src/files-hooks.ts:421
-#: src/files-hooks.ts:432
+#: lib/PageRenderer/Invoices.php:354 src/files-hooks.ts:419
+#: src/files-hooks.ts:430
 msgid "New Invoice"
 msgstr "Neue Rechnung"
 
@@ -7316,11 +7315,11 @@ msgstr "Neue Tabellenspalte"
 #: lib/PageRenderer/ProjectParticipantFields.php:190
 #, php-format
 msgid "Participant-Fields for Project %s"
-msgstr "Personen-Daten für das Projekt %s"
+msgstr "Tabellen-Spalten für das Projekt %s"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:192
 msgid "Extra Fields for Projects"
-msgstr "Personen-Daten für alle Projekte"
+msgstr "Tabellen-Spalten für alle Projekte"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:265
 msgid "Definition of name, type, allowed values, default values."
@@ -7681,7 +7680,7 @@ msgstr "Öffentliche Freigabe"
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:56
 #: lib/PageRenderer/Projects.php:889 specialVueFakeDummyForL10nScript.js:3877
 msgid "Participant Fields"
-msgstr "Personen-Daten"
+msgstr "Tabellen-Spalten"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:36
 #: lib/PageRenderer/Projects.php:952 lib/Service/ToolTipsDataService.php:1527
@@ -14246,7 +14245,7 @@ msgstr "Kann das Navigations-Menü nicht aktualisieren."
 #. TRANSLATORS src/CAFeVDB.vue:27
 #: specialVueFakeDummyForL10nScript.js:544
 #: specialVueFakeDummyForL10nScript.js:1791 src/router/routes.ts:41
-#: src/stores/history.ts:354
+#: src/stores/history.ts:373
 msgid "Home"
 msgstr "Startseite"
 
@@ -14425,7 +14424,7 @@ msgid "Could not fetch the value for \"{key}\": {message}"
 msgstr "Konnte den Wert für die Einstellung \"{key}\" nicht laden: {message}"
 
 #: specialVueFakeDummyForL10nScript.js:1127 src/app/project-participants.js:886
-#: src/app/projects.js:498 src/app/sepa-debit-mandate.js:857
+#: src/app/projects.js:498 src/app/sepa-debit-mandate.js:858
 #: src/toolkit/util/settings-sync.ts:261
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
@@ -14842,7 +14841,7 @@ msgid "Append to Current"
 msgstr "An aktuellen Verlauf anhängen"
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:109
-#: specialVueFakeDummyForL10nScript.js:1924 src/app/sepa-debit-mandate.js:645
+#: specialVueFakeDummyForL10nScript.js:1924 src/app/sepa-debit-mandate.js:646
 #: templates/blog/blogthreads.php:100
 msgid "Delete"
 msgstr "Löschen"
@@ -14926,7 +14925,6 @@ msgid "Your problem-report has been submitted."
 msgstr "Dein Fehlerbericht wurde abgeschickt."
 
 #: specialVueFakeDummyForL10nScript.js:2188 src/app/file-download.js:60
-#: src/toolkit/util/file-download.js:50
 msgid "unknown error"
 msgstr "irgendein Fehler"
 
@@ -15584,27 +15582,26 @@ msgstr "Adressbücher"
 msgid "Enter Address"
 msgstr "Anschrift eingeben"
 
-#: src/app/ajax.js:84 src/toolkit/util/ajax.js:223
+#: src/app/ajax.js:84
 msgid "Operation cancelled by user."
 msgstr "Benutzer:in hat den Vorgang abgebrochen"
 
-#: src/app/ajax.js:87 src/toolkit/util/ajax.js:226
+#: src/app/ajax.js:87
 msgid "Aborted"
 msgstr "Abgebrochen"
 
 #: src/app/ajax.js:100 src/app/ajax.js:303 src/app/blog.js:181
 #: src/app/blog.js:229 src/app/blog.js:279 src/app/blog.js:299
 #: src/app/blog.js:316 src/app/blog.js:337 src/app/blog.js:363
-#: src/app/blog.js:386 src/app/cloud-file-picker-dialog.js:59
-#: src/app/cloud-file-picker-dialog.js:87 src/app/email.js:97
+#: src/app/blog.js:386 src/app/cloud-file-picker-dialog.js:60
+#: src/app/cloud-file-picker-dialog.js:88 src/app/email.js:97
 #: src/app/email.js:851 src/app/email.js:977
 #: src/app/project-participant-fields.js:313 src/app/settings.js:1360
-#: src/app/settings.js:1373 src/toolkit/util/ajax.js:239
-#: src/toolkit/util/ajax.js:431
+#: src/app/settings.js:1373
 msgid "Error"
 msgstr "Fehler"
 
-#: src/app/ajax.js:199 src/toolkit/util/ajax.js:323
+#: src/app/ajax.js:199
 msgid "Something went wrong."
 msgstr "Irgendetwas ist schief gelaufen."
 
@@ -15634,19 +15631,19 @@ msgstr ""
 "Tut uns leid, unbekannte interner Fehler, weitere Informationen sind\n"
 "leider nicht verfügbar."
 
-#: src/app/ajax.js:253 src/toolkit/util/ajax.js:381
+#: src/app/ajax.js:253
 msgid "Internal Error"
 msgstr "Irgendein Fehler"
 
-#: src/app/ajax.js:260 src/toolkit/util/ajax.js:388
+#: src/app/ajax.js:260
 msgid "Field {RequiredField} not present in AJAX response."
 msgstr "In der AJAX-Antwort fehlt das Feld {RequiredField}."
 
-#: src/app/ajax.js:269 src/toolkit/util/ajax.js:397
+#: src/app/ajax.js:269
 msgid "Missing data"
 msgstr "Fehlende Daten"
 
-#: src/app/ajax.js:281 src/toolkit/util/ajax.js:409
+#: src/app/ajax.js:281
 msgid ""
 "The submitted data \"{stringValue}\" seems to be a plain string, but we need "
 "an object where the data is provided through above listed properties."
@@ -15656,11 +15653,11 @@ msgstr ""
 "Daten über die oben aufgeführten (fehlenden) Objekt-Eigenschaften zu "
 "Verfügung stellt."
 
-#: src/app/ajax.js:284 src/toolkit/util/ajax.js:412
+#: src/app/ajax.js:284
 msgid "Error: plain string received"
 msgstr "Fehler: einfache Zeichenkette empfangen"
 
-#: src/app/ajax.js:289 src/toolkit/util/ajax.js:417
+#: src/app/ajax.js:289
 msgid ""
 "The submitted data is not a plain object, and does not provide the "
 "properties listed above."
@@ -15668,11 +15665,11 @@ msgstr ""
 "Die übermittelten DAten sind kein einfaches Objekt und beinhalteten nicht "
 "die oben aufgeführten benötigten Eigentschaften."
 
-#: src/app/ajax.js:292 src/toolkit/util/ajax.js:420
+#: src/app/ajax.js:292
 msgid "Error: not a plain object"
 msgstr "Fehler: kein einfaches Objekt"
 
-#: src/app/ajax.js:339 src/toolkit/util/ajax.js:460
+#: src/app/ajax.js:339
 msgid "Unknown JSON error response to AJAX call: {status} / {error}"
 msgstr "Unbekannte JSON Fehler-Antwort auf AJAX-Anfrage: {status} / {error}"
 
@@ -15755,7 +15752,7 @@ msgstr "Fehlende Eingabedaten"
 msgid "Choose some Options"
 msgstr "Wähle aus den Optionen"
 
-#: src/app/chosen-popup.js:41 src/app/sepa-debit-mandate.js:589
+#: src/app/chosen-popup.js:41 src/app/sepa-debit-mandate.js:590
 #: templates/settings/share-settings.php:238
 #: templates/settings/share-settings.php:261
 #: templates/settings/share-settings.php:284
@@ -15767,7 +15764,7 @@ msgid ""
 "Accept the currently selected options and return to the underlying form. "
 msgstr "Übernimmt die aktuellen Werte und kehrt zur vorherigen Ansicht zurück."
 
-#: src/app/chosen-popup.js:45 src/app/cloud-file-picker-dialog.js:166
+#: src/app/chosen-popup.js:45 src/app/cloud-file-picker-dialog.js:171
 #: templates/blog/blogedit.php:42
 #: templates/emailform/part.emailform.composer.php:365
 msgid "Cancel"
@@ -15781,27 +15778,27 @@ msgstr ""
 "Verwirft die aktuelle Auswahl und schließt das Fenster. Die\n"
 "ursprünglichen Optionen werden unverändert beibehalten."
 
-#: src/app/cloud-file-picker-dialog.js:39 src/app/pme-file-upload-row.js:193
+#: src/app/cloud-file-picker-dialog.js:40 src/app/pme-file-upload-row.js:193
 msgid "Select a file from the cloud"
 msgstr "Datei aus der \"Cloud\" auswählen"
 
-#: src/app/cloud-file-picker-dialog.js:59 src/app/settings.js:1360
+#: src/app/cloud-file-picker-dialog.js:60 src/app/settings.js:1360
 msgid "Empty response from file selection!"
 msgstr "Keine Antwort vom Datei-Auswahldialog!"
 
-#: src/app/cloud-file-picker-dialog.js:86
+#: src/app/cloud-file-picker-dialog.js:87
 msgid "Unable to copy selected file(s) {file}."
 msgstr "Kann die ausgwählte(n) Datei(en) {file} nicht kopieren."
 
-#: src/app/cloud-file-picker-dialog.js:153
+#: src/app/cloud-file-picker-dialog.js:158
 msgid "Select File System Operation"
 msgstr "Auswahl der Dateioperation"
 
-#: src/app/cloud-file-picker-dialog.js:160
+#: src/app/cloud-file-picker-dialog.js:165
 msgid "Operation has been cancelled."
 msgstr "Benutzer:in hat den Vorgang abgebrochen"
 
-#: src/app/cloud-file-picker-dialog.js:165 src/app/sepa-debit-mandate.js:609
+#: src/app/cloud-file-picker-dialog.js:170 src/app/sepa-debit-mandate.js:610
 msgid "Apply"
 msgstr "Anwenden"
 
@@ -15857,22 +15854,20 @@ msgstr ""
 "sollte der eigentlich das gleiche bewirken."
 
 #: src/app/dialogs.js:45 src/toolkit/util/dialog-confirm.ts:38
-#: src/toolkit/util/dialogs.js:69 src/util/dialogs.ts:31
+#: src/util/dialogs.ts:31
 msgid "No"
 msgstr "Nein"
 
 #: src/app/dialogs.js:52 src/toolkit/util/dialog-alert.ts:36
-#: src/toolkit/util/dialog-confirm.ts:43 src/toolkit/util/dialogs.js:70
-#: src/util/dialogs.ts:36
+#: src/toolkit/util/dialog-confirm.ts:43 src/util/dialogs.ts:36
 msgid "Yes"
 msgstr "Ja"
 
-#. TRANSLATORS: Textual description of HTTP status code 200, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/app/dialogs.js:62 src/toolkit/util/ajax.js:36
+#: src/app/dialogs.js:62
 msgid "OK"
 msgstr "Fein"
 
-#: src/app/dialogs.js:239 src/toolkit/util/dialogs.js:105
+#: src/app/dialogs.js:239
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
@@ -16084,7 +16079,7 @@ msgstr ""
 "Sichere die zusätzlichen Emails aus dem Eingabefeld im Adressbuch,\n"
 "damit die später wieder verwendet werden können."
 
-#: src/app/file-download.js:63 src/toolkit/util/file-download.js:53
+#: src/app/file-download.js:63
 msgid "Unable to download data from \"{url}\": {message}"
 msgstr "Kann die Daten nicht von \"{url}\" laden: {message}"
 
@@ -16424,27 +16419,27 @@ msgstr "Web-Seite mit Id {articleId} löschen?"
 msgid "No values match"
 msgstr "Kein Wert passt."
 
-#: src/app/sepa-debit-mandate.js:198
+#: src/app/sepa-debit-mandate.js:199
 msgid "Unable to download pre-filled mandate form."
 msgstr "Kann das personalisierte Mandatsformular nicht herunter laden."
 
-#: src/app/sepa-debit-mandate.js:302
+#: src/app/sepa-debit-mandate.js:303
 msgid "Select debit mandate for {musicianName}"
 msgstr "Lastschrift-Formular für {musicianName} auswählen"
 
-#: src/app/sepa-debit-mandate.js:590
+#: src/app/sepa-debit-mandate.js:591
 msgid "Close the form and save the data in the underlying data-base storage."
 msgstr "Schließt das Formular und speichert die Daten in der Datenbank."
 
-#: src/app/sepa-debit-mandate.js:610
+#: src/app/sepa-debit-mandate.js:611
 msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr "Speichert die Daten in der Datenbank. Das Formular bleibt offen."
 
-#: src/app/sepa-debit-mandate.js:636
+#: src/app/sepa-debit-mandate.js:637
 msgid "Close"
 msgstr "Schließen"
 
-#: src/app/sepa-debit-mandate.js:637
+#: src/app/sepa-debit-mandate.js:638
 msgid ""
 "Discard all filled-in data and close the form. Note that this will not undo "
 "any changes previously stored in the data-base by pressing the \"Apply\" "
@@ -16454,7 +16449,7 @@ msgstr ""
 "Änderungen, die vorher über den `Anwenden'-Knopf gespeichert wurden,\n"
 "nicht rückgängig gemacht."
 
-#: src/app/sepa-debit-mandate.js:646
+#: src/app/sepa-debit-mandate.js:647
 msgid ""
 "Delete this bank-account from the data-base. Normally, this should only be "
 "done in case of desinformation or misunderstanding. Use with care."
@@ -16463,11 +16458,11 @@ msgstr ""
 "sollte das aufgrund falscher Eintragungen oder Mißverständnissen mit\n"
 "der Person nötig sein."
 
-#: src/app/sepa-debit-mandate.js:658
+#: src/app/sepa-debit-mandate.js:659
 msgid "Reactivate"
 msgstr "Reaktivieren"
 
-#: src/app/sepa-debit-mandate.js:659
+#: src/app/sepa-debit-mandate.js:660
 msgid ""
 "Reactivate the debit-mandate or bank-account in case it has been deleted in "
 "error."
@@ -16475,11 +16470,11 @@ msgstr ""
 "Das Lastschriftmandat oder die Bankverbindung reaktivieren, falls die "
 "versehentlich deaktiviert wurde."
 
-#: src/app/sepa-debit-mandate.js:670
+#: src/app/sepa-debit-mandate.js:671
 msgid "Disable"
 msgstr "Deaktivieren"
 
-#: src/app/sepa-debit-mandate.js:671
+#: src/app/sepa-debit-mandate.js:672
 msgid ""
 "Disable the debit-mandate or bank-account in case the bank account has "
 "changed, or on request of the participant. The bank account can only be "
@@ -16489,17 +16484,17 @@ msgstr ""
 "erst dann gesperrt werden, wenn alle assoziierten Lastschriftmandate\n"
 "entwertet wurden."
 
-#: src/app/sepa-debit-mandate.js:684
+#: src/app/sepa-debit-mandate.js:685
 msgid "Reload"
 msgstr "Neu laden"
 
-#: src/app/sepa-debit-mandate.js:685
+#: src/app/sepa-debit-mandate.js:686
 msgid "Reload the form and locks it. Unsaved changes are lost."
 msgstr ""
 "Eingabeformular neu laden und sperren. Ungespeicherte Eingaben gehen "
 "verloren."
 
-#: src/app/sepa-debit-mandate.js:780
+#: src/app/sepa-debit-mandate.js:781
 msgid ""
 "Please either upload a copy of the written and signed debit-mandate or at "
 "least check the \"upload later\" option"
@@ -16508,53 +16503,53 @@ msgstr ""
 "Mandats hochladen, oder doch zuallermindest die \"später hochladen\"-Option\n"
 "aktivieren. "
 
-#: src/app/sepa-debit-mandate.js:780
+#: src/app/sepa-debit-mandate.js:781
 msgid "Missing Data"
 msgstr "Fehlende Daten"
 
-#: src/app/sepa-debit-mandate.js:827
+#: src/app/sepa-debit-mandate.js:828
 msgid "Do you really want to disable the current bank-account?"
 msgstr ""
 "Möchten Sie wirklich die angezeigte Bankverbindung als inaktiv markieren?"
 
-#: src/app/sepa-debit-mandate.js:829
+#: src/app/sepa-debit-mandate.js:830
 msgid "Do you really want to disable the current debit-mandate?"
 msgstr ""
 "Möchten Sie wirklich das angezeigte Lastschrift-Mandat als inaktiv markieren?"
 
-#: src/app/sepa-debit-mandate.js:836
+#: src/app/sepa-debit-mandate.js:837
 msgid "Do you really want to reactivate the current bank-account?"
 msgstr "Möchten Sie wirklich die angezeigte Bankverbindung reaktivieren?"
 
-#: src/app/sepa-debit-mandate.js:838
+#: src/app/sepa-debit-mandate.js:839
 msgid "Do you really want to reactiveate the current debit-mandate?"
 msgstr "Möchten Sie wirklich das angezeigte Lastschrift-Mandat reaktivieren?"
 
-#: src/app/sepa-debit-mandate.js:847
+#: src/app/sepa-debit-mandate.js:848
 msgid "Do you really want to delete the current bank-account?"
 msgstr "Möchten Sie wirklich die angezeigte Bankverbindung löschen?"
 
-#: src/app/sepa-debit-mandate.js:849
+#: src/app/sepa-debit-mandate.js:850
 msgid "Do you really want to delete the current debit-mandate?"
 msgstr "Möchten Sie wirklich das angezeigte Lastschriftmandat löschen?"
 
-#: src/app/sepa-debit-mandate.js:860
+#: src/app/sepa-debit-mandate.js:861
 msgid "Unconfirmed, doing nothing"
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
-#: src/app/sepa-debit-mandate.js:885 src/app/sepa-debit-mandate.js:1002
+#: src/app/sepa-debit-mandate.js:886 src/app/sepa-debit-mandate.js:1003
 msgid "Suggested alternatives based on common human mis-transcriptions:"
 msgstr "Mögliche Alternativen ausgehend von den üblichen Übertragungsfehlern:"
 
-#: src/app/sepa-debit-mandate.js:889 src/app/sepa-debit-mandate.js:1006
+#: src/app/sepa-debit-mandate.js:890 src/app/sepa-debit-mandate.js:1007
 msgid "Please do not accept these alternatives lightly!"
 msgstr "Bitte die Alternativen nicht leichtsinnig übernehmen!"
 
-#: src/app/sepa-debit-mandate.js:1469
+#: src/app/sepa-debit-mandate.js:1470
 msgid "Update canceled by user"
 msgstr "Benutzer:in hat den Vorgang abgebrochen"
 
-#: src/app/sepa-debit-mandate.js:1641
+#: src/app/sepa-debit-mandate.js:1642
 msgid ""
 "The bank-account-owner is already set but differs from the project-"
 "participant. Shall we replace the current bank-account-owner by the project-"
@@ -16564,11 +16559,11 @@ msgstr ""
 "vom Projektmitglied. Soll der/die/das Kontoinhaber:in durch das "
 "Projektmitglied ersetzt werden?"
 
-#: src/app/sepa-debit-mandate.js:1643
+#: src/app/sepa-debit-mandate.js:1644
 msgid "Set Bank-Account-Owner to Project-Participant?"
 msgstr "Kontoinhaber:in durch Projekt-Mitglied ersetzen?"
 
-#: src/app/sepa-debit-mandate.js:1698
+#: src/app/sepa-debit-mandate.js:1699
 msgid ""
 "Project-participant is already set but differs from the bank-account-owner. "
 "Shall we set the project-participant to the bank-account-owner?"
@@ -16577,7 +16572,7 @@ msgstr ""
 "der/die/das Kontoinhaber:in. Sollt das Projektmitglied durch der/die/das "
 "Kontoinhaber:in ersetzt werden?"
 
-#: src/app/sepa-debit-mandate.js:1700
+#: src/app/sepa-debit-mandate.js:1701
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr "Projekt-Mitlied durch Kontoinhaber:in ersetzen?"
 
@@ -16659,49 +16654,49 @@ msgstr "Vue JS Frontend"
 msgid "Resolve JS Sourceode"
 msgstr "Orte im JS-Quellcode auflösen"
 
-#: src/files-hooks.ts:207
+#: src/files-hooks.ts:205
 msgid "Perform mail-merge operation with this template file."
 msgstr "Serienbrief-Operationen mit dieser Vorlage ausführen."
 
-#: src/files-hooks.ts:288 src/files-hooks.ts:315
+#: src/files-hooks.ts:286 src/files-hooks.ts:313
 msgid "New Supporting Document"
 msgstr "Neuer Beleg"
 
-#: src/files-hooks.ts:313
+#: src/files-hooks.ts:311
 msgid "New Year Folder"
 msgstr "Neuer Jahreszahl-Ordner."
 
-#: src/files-hooks.ts:338
+#: src/files-hooks.ts:336
 msgid "Year determined as {year}."
 msgstr "Nehme {year} als Jahreszahl."
 
-#: src/files-hooks.ts:354 src/files-hooks.ts:398
+#: src/files-hooks.ts:352 src/files-hooks.ts:396
 msgid "Created new folder \"{name}\""
 msgstr "Neuen Ordner \"{name}\" erzeugt"
 
-#: src/files-hooks.ts:381
+#: src/files-hooks.ts:379
 msgid "Document sequence determined as {sequence}."
 msgstr "Belegnummer als {sequence} ermittelt."
 
-#: src/files-hooks.ts:434
+#: src/files-hooks.ts:432
 msgid "Generate Invoice Document"
 msgstr "Rechnungsdokument erzeugen"
 
-#: src/files-hooks.ts:454
+#: src/files-hooks.ts:452
 msgid "Starting mail-merge, this may take some time ..."
 msgstr "(Serien-)Brief wird erzeugt, das kann dauern ..."
 
-#: src/files-hooks.ts:461
+#: src/files-hooks.ts:459
 msgid "Mail-merge completed, moving document into the proper place ..."
 msgstr ""
 "(Serien-)Brief-Erzeugung abgeschlossen, verschiebe das Ergebnis an die "
 "richtige Stelle ..."
 
-#: src/files-hooks.ts:483
+#: src/files-hooks.ts:481
 msgid "Reloading file list."
 msgstr "Lade die Datei-Liste neu."
 
-#: src/files-hooks.ts:493
+#: src/files-hooks.ts:492
 msgid "Mail-merge operation has failed"
 msgstr "Die Serienbrief-Operation ist fehlgeschlagen"
 
@@ -16709,53 +16704,53 @@ msgstr "Die Serienbrief-Operation ist fehlgeschlagen"
 msgid "Unknown mountable component: \"{name}\"."
 msgstr "Unbekannte UI-Komponente: \"{name}\"."
 
-#: src/stores/app-data.ts:180
+#: src/stores/app-data.ts:184
 msgid "An error occurred in the app-data store."
 msgstr "Es ist ein Fehler im App-Data-Magazin aufgetreten."
 
-#: src/stores/app-data.ts:289
+#: src/stores/app-data.ts:293
 msgid "Unable to fetch the poject-ids from the database."
 msgstr "Kann die Projekt-Kennungen nicht aus der Datenbank laden."
 
-#: src/stores/history.ts:188
+#: src/stores/history.ts:203
 msgid "Either \"hash\" or \"post\" have to be specified."
 msgstr ""
 "Wenigstens einer der beiden Parameter \"hash\" und \"post\" muss angegeben "
 "werden."
 
-#: src/stores/history.ts:446
+#: src/stores/history.ts:465
 msgid "Unable to find key {key} in current history stack."
 msgstr ""
 "Kann den Eintrag zum Index {key} im aktuellen Browserverlauf nicht finden."
 
-#: src/stores/history.ts:516
+#: src/stores/history.ts:538
 msgid "Mutation promise has been rejected."
 msgstr "Ändern des Browserverlaufs wurde abgelehnt."
 
-#: src/stores/history.ts:568
+#: src/stores/history.ts:594
 msgid "History already contains more than the initial setup item."
 msgstr "Der Browserverlauf enthält bereits mehr als nur das Anfangselement."
 
-#: src/stores/history.ts:683
+#: src/stores/history.ts:709
 msgid "Unexpected transition type: {transition}."
 msgstr "Unerwarteter Übergangs-Typ: {operation}"
 
-#: src/stores/history.ts:720
+#: src/stores/history.ts:747
 msgid "Unable to load the timestamps of the available history states."
 msgstr "Kann die Zeitstempel der gespeicherten Browserverläufe nicht laden."
 
-#: src/stores/history.ts:738
+#: src/stores/history.ts:765
 msgid "Unable to load the available history states."
 msgstr "Kann die gespeicherten Browserverläufe nicht laden."
 
-#: src/stores/history.ts:740
+#: src/stores/history.ts:767
 msgid ""
 "Unable to load the history states at time {time} (timestamp: {timestamp})."
 msgstr ""
 "Kann den gespeicherten Browserverlauf zum Zeitpunkt {time}\n"
 "(Zeitstempel: {timestamp}) nicht laden."
 
-#: src/stores/history.ts:745
+#: src/stores/history.ts:772
 msgid ""
 "Unable to load the history state data for \"{key}\" at time {time} "
 "(timestamp: {timestamp})."
@@ -16763,19 +16758,19 @@ msgstr ""
 "Kann den gespeicherten Browserverlauf zum Index \"{key}\" zum Zeitpunkt\n"
 "{time} (Zeitstempel: {timestamp}) nicht laden."
 
-#: src/stores/history.ts:805
+#: src/stores/history.ts:832
 msgid "The current history state has already been saved."
 msgstr "Der aktuelle Browserverlauf wurde bereits gespeichert."
 
-#: src/stores/history.ts:808
+#: src/stores/history.ts:835
 msgid "Unable to persist current history state to the database."
 msgstr "Kann den akutellen Browserverlauf nicht in der Datenbank speichern."
 
-#: src/stores/history.ts:825
+#: src/stores/history.ts:854
 msgid "The history state at time {time} has been deleted."
 msgstr "Der Browserverlauf zum Zeitpunkt {time} wurde gelöscht."
 
-#: src/stores/history.ts:829
+#: src/stores/history.ts:858
 msgid ""
 "The history state at time {time} could not be delete as it does not seem to "
 "exist on the server."
@@ -16783,12 +16778,12 @@ msgstr ""
 "Der Browserverlauf zum Zeitpunkt {time} konnte nicht gelöscht werden, da er "
 "scheinbar nicht (mehr?) auf dem Server gespeichert ist."
 
-#: src/stores/history.ts:832
+#: src/stores/history.ts:861
 msgid "Unable to delete the history state at time {time} from the database."
 msgstr ""
 "Kann den Browserverlauf zum Zeitpunkt {time} nicht aus der Datenbank löschen."
 
-#: src/stores/history.ts:849
+#: src/stores/history.ts:878
 msgid ""
 "The key \"{posKey}\" of the final destination does not point into the "
 "provided history chain."
@@ -16796,393 +16791,36 @@ msgstr ""
 "Der Index \"{posKey}\" des letztendlichen Ziels kommt im angegebenen\n"
 "Browserverlauf gar nicht vor."
 
-#: src/stores/history.ts:893
+#: src/stores/history.ts:922
 msgid "Error during page transitions."
 msgstr "Fehler beim Seitenwechsel."
 
-#: src/stores/history.ts:980
+#: src/stores/history.ts:1011
 msgid "Unable to replace the current view."
 msgstr "Kann die aktuelle Ansicht nicht ersetzen."
 
-#: src/stores/history.ts:1048
+#: src/stores/history.ts:1079
 msgid "Unable to go to the desired view."
 msgstr "Kann nicht zur gewünschten Ansicht springen."
 
-#: src/stores/history.ts:1076
+#: src/stores/history.ts:1107
 msgid "Unable to push the desired view."
 msgstr "Kann die gewünschte Ansicht nicht hinzufügen."
 
-#: src/stores/history.ts:1105
+#: src/stores/history.ts:1140
 msgid "Unable to go to the end of the history stack."
 msgstr "Kann nicht zum Ende des Browserverlaufs springen."
 
-#: src/stores/history.ts:1134
+#: src/stores/history.ts:1173
 msgid "Unable to go to the start of the history stack."
 msgstr "Kann nicht zum Anfang des Browserverlaufs springen."
 
-#: src/stores/tooltips.ts:76
+#: src/stores/tooltips.ts:78
 msgid ""
 "No information available, fetching the tooltip with key \"{key}\" failed."
 msgstr ""
 "Kein Hilfetext verfügbar, Anfordern des Texts zum Schlüssel \"{key}\" ist "
 "fehlgeschlagen."
-
-#. TRANSLATORS: Textual description of HTTP status code 202, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:40
-msgid "Accepted"
-msgstr "Akzeptiert"
-
-#. TRANSLATORS: Textual description of HTTP status code 203, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:42
-msgid "Non-Authoritative Information"
-msgstr "Unverbindliche Information"
-
-#. TRANSLATORS: Textual description of HTTP status code 204, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:44
-msgid "No Content"
-msgstr "Antwort enthält keine Daten"
-
-#. TRANSLATORS: Textual description of HTTP status code 205, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:46
-msgid "Reset Content"
-msgstr "Inhalt zurückgesetzt"
-
-#. TRANSLATORS: Textual description of HTTP status code 206, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:48
-msgid "Partial Content"
-msgstr "Unvollständige Antwort"
-
-#. TRANSLATORS: Textual description of HTTP status code 207, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:50
-msgid "Multi-Status (WebDAV)"
-msgstr "Multi-Status (WebDAV)"
-
-#. TRANSLATORS: Textual description of HTTP status code 208, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:52
-msgid "Already Reported (WebDAV)"
-msgstr "Bereits berichtet (WebDAV)"
-
-#. TRANSLATORS: Textual description of HTTP status code 226, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:54
-msgid "IM Used"
-msgstr "IM verwendet"
-
-#. TRANSLATORS: Textual description of HTTP status code 300, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:56
-msgid "Multiple Choices"
-msgstr "Mehrere Wahlmöglichkeiten"
-
-#. TRANSLATORS: Textual description of HTTP status code 301, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:58
-msgid "Moved Permanently"
-msgstr "Permanent verschoben"
-
-#. TRANSLATORS: Textual description of HTTP status code 302, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:60
-msgid "Found"
-msgstr "Gefunden"
-
-#. TRANSLATORS: Textual description of HTTP status code 303, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:62
-msgid "See Other"
-msgstr "Siehe andere Web-Adresse"
-
-#. TRANSLATORS: Textual description of HTTP status code 304, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:64
-msgid "Not Modified"
-msgstr "Unverändert"
-
-#. TRANSLATORS: Textual description of HTTP status code 305, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:66
-msgid "Use Proxy"
-msgstr "Benutze einen Proxy"
-
-#. TRANSLATORS: Textual description of HTTP status code 306, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:68
-msgid "(Unused)"
-msgstr "(Unbenutzt)"
-
-#. TRANSLATORS: Textual description of HTTP status code 307, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:70
-msgid "Temporary Redirect"
-msgstr "Zeitweilige Umleitung"
-
-#. TRANSLATORS: Textual description of HTTP status code 308, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:72
-msgid "Permanent Redirect (experimental)"
-msgstr "Permanente Umleitung"
-
-#. TRANSLATORS: Textual description of HTTP status code 400, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:74
-msgid "Bad Request"
-msgstr "Ungültige Anfrage"
-
-#. TRANSLATORS: Textual description of HTTP status code 401, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:76
-msgid "Unauthorized"
-msgstr "Nicht autorisiert"
-
-#. TRANSLATORS: Textual description of HTTP status code 402, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:78
-msgid "Payment Required"
-msgstr "Bezahlung erforderlich"
-
-#. TRANSLATORS: Textual description of HTTP status code 403, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:80
-msgid "Forbidden"
-msgstr "Verboten"
-
-#. TRANSLATORS: Textual description of HTTP status code 404, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:82
-msgid "Not Found"
-msgstr "Unauffindbar"
-
-#. TRANSLATORS: Textual description of HTTP status code 405, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:84
-msgid "Method Not Allowed"
-msgstr "Anfragemethode nicht zulässig"
-
-#. TRANSLATORS: Textual description of HTTP status code 406, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:86
-msgid "Not Acceptable"
-msgstr "Nicht akzeptabel"
-
-#. TRANSLATORS: Textual description of HTTP status code 407, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:88
-msgid "Proxy Authentication Required"
-msgstr "Proxy-Authentifizierung erforderlich"
-
-#. TRANSLATORS: Textual description of HTTP status code 408, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:90
-msgid "Request Timeout"
-msgstr "Anfrage-Zeitüberschreitung"
-
-#. TRANSLATORS: Textual description of HTTP status code 409, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:92
-msgid "Conflict"
-msgstr "Konflikt"
-
-#. TRANSLATORS: Textual description of HTTP status code 410, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:94
-msgid "Gone"
-msgstr "Weg"
-
-#. TRANSLATORS: Textual description of HTTP status code 411, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:96
-msgid "Length Required"
-msgstr "Länge benötigt"
-
-#. TRANSLATORS: Textual description of HTTP status code 412, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:98
-msgid "Precondition Failed"
-msgstr "Vorbedingung nicht erfüllt"
-
-#. TRANSLATORS: Textual description of HTTP status code 413, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:100
-msgid "Request Entity Too Large"
-msgstr "Anfrage-Daten zu groß"
-
-#. TRANSLATORS: Textual description of HTTP status code 414, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:102
-msgid "Request-URI Too Long"
-msgstr "Anfrage-URI zu lang"
-
-#. TRANSLATORS: Textual description of HTTP status code 415, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:104
-msgid "Unsupported Media Type"
-msgstr "Nicht unterstützter Medien-Typ"
-
-#. TRANSLATORS: Textual description of HTTP status code 416, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:106
-msgid "Requested Range Not Satisfiable"
-msgstr "Angeforderter Bereich nicht möglich"
-
-#. TRANSLATORS: Textual description of HTTP status code 417, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:108
-msgid "Expectation Failed"
-msgstr "Erwartete Operation Fehlgeschlagen"
-
-#. TRANSLATORS: Textual description of HTTP status code 418, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:110
-msgid "I'm a teapot (RFC 2324)"
-msgstr "Ich bin eine Teekanne (RFC 2324)"
-
-#. TRANSLATORS: Textual description of HTTP status code 420, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:112
-msgid "Enhance Your Calm (Twitter)"
-msgstr "Verstärke Deine Ruhe (Twitter)"
-
-#. TRANSLATORS: Textual description of HTTP status code 422, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:114
-msgid "Unprocessable Entity (WebDAV)"
-msgstr "Nicht-verarbeitbarer Entrag (WebDAV)"
-
-#. TRANSLATORS: Textual description of HTTP status code 423, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:116
-msgid "Locked (WebDAV)"
-msgstr "Gesperrt (WebDAV)"
-
-#. TRANSLATORS: Textual description of HTTP status code 424, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:118
-msgid "Failed Dependency (WebDAV)"
-msgstr "Abhängigkeit fehlgeschlagen (WebDAV)"
-
-#. TRANSLATORS: Textual description of HTTP status code 425, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:120
-msgid "Reserved for WebDAV"
-msgstr "Reserviert für WebDAV"
-
-#. TRANSLATORS: Textual description of HTTP status code 426, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:122
-msgid "Upgrade Required"
-msgstr "Aufwertung benötigt"
-
-#. TRANSLATORS: Textual description of HTTP status code 428, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:124
-msgid "Precondition Required"
-msgstr "Vorbedingung erforderlich"
-
-#. TRANSLATORS: Textual description of HTTP status code 429, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:126
-msgid "Too Many Requests"
-msgstr "Zu viele Anfragen."
-
-#. TRANSLATORS: Textual description of HTTP status code 431, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:128
-msgid "Request Header Fields Too Large"
-msgstr "Anfrage-Kopfzeilen zu lang"
-
-#. TRANSLATORS: Textual description of HTTP status code 444, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:130
-msgid "No Response (Nginx)"
-msgstr "Keine Antwort (Nginx)"
-
-#. TRANSLATORS: Textual description of HTTP status code 449, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:132
-msgid "Retry With (Microsoft)"
-msgstr "Wiederholen mit (Microsoft)"
-
-#. TRANSLATORS: Textual description of HTTP status code 450, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:134
-msgid "Blocked by Windows Parental Controls (Microsoft)"
-msgstr "Blockiert von Windows-Kindersicherung (Microsoft)"
-
-#. TRANSLATORS: Textual description of HTTP status code 451, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:136
-msgid "Unavailable For Legal Reasons"
-msgstr "Nicht verfügbar aus rechtlichen Gründen"
-
-#. TRANSLATORS: Textual description of HTTP status code 599, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:138
-msgid "Client Closed Request (Nginx)"
-msgstr "Anwender-Programm hat die Anfrage beendet (Nginx)"
-
-#. TRANSLATORS: Textual description of HTTP status code 500, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:140
-msgid "Internal Server Error"
-msgstr "Interner Server-Fehler"
-
-#. TRANSLATORS: Textual description of HTTP status code 501, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:142
-msgid "Not Implemented"
-msgstr "Nicht implementiert"
-
-#. TRANSLATORS: Textual description of HTTP status code 502, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:144
-msgid "Bad Gateway"
-msgstr "Schlechte Netzübergangseinheit"
-
-#. TRANSLATORS: Textual description of HTTP status code 503, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:146
-msgid "Service Unavailable"
-msgstr "Dienst nicht verfügbar"
-
-#. TRANSLATORS: Textual description of HTTP status code 504, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:148
-msgid "Gateway Timeout"
-msgstr "Zeitüberschreitung bei der Netzübergangseinheit"
-
-#. TRANSLATORS: Textual description of HTTP status code 505, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:150
-msgid "HTTP Version Not Supported"
-msgstr "HTTP-Version nicht unterstützt"
-
-#. TRANSLATORS: Textual description of HTTP status code 506, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:152
-msgid "Variant Also Negotiates (Experimental)"
-msgstr "Variante handelt außerdem aus (Experimenmtell)"
-
-#. TRANSLATORS: Textual description of HTTP status code 507, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:154
-msgid "Insufficient Storage (WebDAV)"
-msgstr "Zu wenig Speicherplatz (WebDAV)"
-
-#. TRANSLATORS: Textual description of HTTP status code 508, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:156
-msgid "Loop Detected (WebDAV)"
-msgstr "Zirkel entdeckt (WebDAV)"
-
-#. TRANSLATORS: Textual description of HTTP status code 509, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:158
-msgid "Bandwidth Limit Exceeded (Apache)"
-msgstr "Bandbreiten-Beschränkung überschritten (Apache)"
-
-#. TRANSLATORS: Textual description of HTTP status code 510, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:160
-msgid "Not Extended"
-msgstr "Nicht erweitert"
-
-#. TRANSLATORS: Textual description of HTTP status code 511, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:162
-msgid "Network Authentication Required"
-msgstr "Netzwerk-Authentifizierung erforderlich"
-
-#. TRANSLATORS: Textual description of HTTP status code 598, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:164
-msgid "Network read timeout error"
-msgstr "Netzwerk Lese-Zeitüberschreitung"
-
-#. TRANSLATORS: Textual description of HTTP status code 599, see e.g. https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-#: src/toolkit/util/ajax.js:166
-msgid "Network connect timeout error"
-msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
-
-#: src/toolkit/util/ajax.js:264
-msgid "System Administrator"
-msgstr "System-Administrator"
-
-#: src/toolkit/util/ajax.js:299
-msgid "Feedback email: {AutoReport}"
-msgstr "Rückmeldung per Email: {AutoReport}"
-
-#: src/toolkit/util/ajax.js:325
-msgid ""
-"If it should be the case that you are already logged in for a long time "
-"without interacting with the app, then the reason for this error is probably "
-"a simple timeout."
-msgstr ""
-"Falls Du bereits längere Zeit angemeldet bist, ohne mit der Web-App zu\n"
-"interagieren, dann ist das der Grund für den Fehler."
-
-#: src/toolkit/util/ajax.js:330
-msgid ""
-"In any case it may help to logoff and logon again, as a temporary "
-"workaround. You will be redirected to the login page when you close this "
-"window."
-msgstr ""
-"Als einstweiligen `Work-Around' kann man in jedem Fall versuchen, sich\n"
-"ab- und wieder an zu melden und den Vorgang zu wiederholen. Wenn Du\n"
-"dieses Fenster schließt, wirst Du zur Login-Seite weiter geleitet."
-
-#: src/toolkit/util/ajax.js:380
-msgid "Unrecoverable unknown internal error, no details available"
-msgstr ""
-"Tut uns leid, unbekannte interner Fehler, weitere Informationen sind\n"
-"leider nicht verfügbar."
-
-#: src/toolkit/util/ajax.js:468
-msgid "HTTP error response to AJAX call: {code} / {error}"
-msgstr "HTTP Fehler-Antwort auf AJAX-Anfrage: {code} / {error}"
 
 #. TRANSLATORS: This should be a pangram in the target language, please have a look at
 #. TRANSLATORS: https://en.wikipedia.org/wiki/Pangram where you can
@@ -17227,11 +16865,11 @@ msgstr "Der Wert der Einstellung \"{setting}\" wurde gelöscht."
 msgid "Could not set value for \"{settingsKey}\" to \"{value}\": {message}"
 msgstr "Konnte \"{settingsKey}\" nicht auf \"{value}\" setzen: {message}"
 
-#: src/util/address-popup.ts:29
+#: src/util/address-popup.ts:30
 msgid "{item}: unknown"
 msgstr "{item}: unbekannt"
 
-#: src/util/address-popup.ts:33
+#: src/util/address-popup.ts:34
 msgid "selects all musicians"
 msgstr "alle Personen auswählen"
 
@@ -20538,6 +20176,229 @@ msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr "Zeigt einfach alle Spalten an."
+
+#~ msgid "Accepted"
+#~ msgstr "Akzeptiert"
+
+#~ msgid "Non-Authoritative Information"
+#~ msgstr "Unverbindliche Information"
+
+#~ msgid "No Content"
+#~ msgstr "Antwort enthält keine Daten"
+
+#~ msgid "Reset Content"
+#~ msgstr "Inhalt zurückgesetzt"
+
+#~ msgid "Partial Content"
+#~ msgstr "Unvollständige Antwort"
+
+#~ msgid "Multi-Status (WebDAV)"
+#~ msgstr "Multi-Status (WebDAV)"
+
+#~ msgid "Already Reported (WebDAV)"
+#~ msgstr "Bereits berichtet (WebDAV)"
+
+#~ msgid "IM Used"
+#~ msgstr "IM verwendet"
+
+#~ msgid "Multiple Choices"
+#~ msgstr "Mehrere Wahlmöglichkeiten"
+
+#~ msgid "Moved Permanently"
+#~ msgstr "Permanent verschoben"
+
+#~ msgid "Found"
+#~ msgstr "Gefunden"
+
+#~ msgid "See Other"
+#~ msgstr "Siehe andere Web-Adresse"
+
+#~ msgid "Not Modified"
+#~ msgstr "Unverändert"
+
+#~ msgid "Use Proxy"
+#~ msgstr "Benutze einen Proxy"
+
+#~ msgid "(Unused)"
+#~ msgstr "(Unbenutzt)"
+
+#~ msgid "Temporary Redirect"
+#~ msgstr "Zeitweilige Umleitung"
+
+#~ msgid "Permanent Redirect (experimental)"
+#~ msgstr "Permanente Umleitung"
+
+#~ msgid "Bad Request"
+#~ msgstr "Ungültige Anfrage"
+
+#~ msgid "Unauthorized"
+#~ msgstr "Nicht autorisiert"
+
+#~ msgid "Payment Required"
+#~ msgstr "Bezahlung erforderlich"
+
+#~ msgid "Forbidden"
+#~ msgstr "Verboten"
+
+#~ msgid "Not Found"
+#~ msgstr "Unauffindbar"
+
+#~ msgid "Method Not Allowed"
+#~ msgstr "Anfragemethode nicht zulässig"
+
+#~ msgid "Not Acceptable"
+#~ msgstr "Nicht akzeptabel"
+
+#~ msgid "Proxy Authentication Required"
+#~ msgstr "Proxy-Authentifizierung erforderlich"
+
+#~ msgid "Request Timeout"
+#~ msgstr "Anfrage-Zeitüberschreitung"
+
+#~ msgid "Conflict"
+#~ msgstr "Konflikt"
+
+#~ msgid "Gone"
+#~ msgstr "Weg"
+
+#~ msgid "Length Required"
+#~ msgstr "Länge benötigt"
+
+#~ msgid "Precondition Failed"
+#~ msgstr "Vorbedingung nicht erfüllt"
+
+#~ msgid "Request Entity Too Large"
+#~ msgstr "Anfrage-Daten zu groß"
+
+#~ msgid "Request-URI Too Long"
+#~ msgstr "Anfrage-URI zu lang"
+
+#~ msgid "Unsupported Media Type"
+#~ msgstr "Nicht unterstützter Medien-Typ"
+
+#~ msgid "Requested Range Not Satisfiable"
+#~ msgstr "Angeforderter Bereich nicht möglich"
+
+#~ msgid "Expectation Failed"
+#~ msgstr "Erwartete Operation Fehlgeschlagen"
+
+#~ msgid "I'm a teapot (RFC 2324)"
+#~ msgstr "Ich bin eine Teekanne (RFC 2324)"
+
+#~ msgid "Enhance Your Calm (Twitter)"
+#~ msgstr "Verstärke Deine Ruhe (Twitter)"
+
+#~ msgid "Unprocessable Entity (WebDAV)"
+#~ msgstr "Nicht-verarbeitbarer Entrag (WebDAV)"
+
+#~ msgid "Locked (WebDAV)"
+#~ msgstr "Gesperrt (WebDAV)"
+
+#~ msgid "Failed Dependency (WebDAV)"
+#~ msgstr "Abhängigkeit fehlgeschlagen (WebDAV)"
+
+#~ msgid "Reserved for WebDAV"
+#~ msgstr "Reserviert für WebDAV"
+
+#~ msgid "Upgrade Required"
+#~ msgstr "Aufwertung benötigt"
+
+#~ msgid "Precondition Required"
+#~ msgstr "Vorbedingung erforderlich"
+
+#~ msgid "Too Many Requests"
+#~ msgstr "Zu viele Anfragen."
+
+#~ msgid "Request Header Fields Too Large"
+#~ msgstr "Anfrage-Kopfzeilen zu lang"
+
+#~ msgid "No Response (Nginx)"
+#~ msgstr "Keine Antwort (Nginx)"
+
+#~ msgid "Retry With (Microsoft)"
+#~ msgstr "Wiederholen mit (Microsoft)"
+
+#~ msgid "Blocked by Windows Parental Controls (Microsoft)"
+#~ msgstr "Blockiert von Windows-Kindersicherung (Microsoft)"
+
+#~ msgid "Unavailable For Legal Reasons"
+#~ msgstr "Nicht verfügbar aus rechtlichen Gründen"
+
+#~ msgid "Client Closed Request (Nginx)"
+#~ msgstr "Anwender-Programm hat die Anfrage beendet (Nginx)"
+
+#~ msgid "Internal Server Error"
+#~ msgstr "Interner Server-Fehler"
+
+#~ msgid "Not Implemented"
+#~ msgstr "Nicht implementiert"
+
+#~ msgid "Bad Gateway"
+#~ msgstr "Schlechte Netzübergangseinheit"
+
+#~ msgid "Service Unavailable"
+#~ msgstr "Dienst nicht verfügbar"
+
+#~ msgid "Gateway Timeout"
+#~ msgstr "Zeitüberschreitung bei der Netzübergangseinheit"
+
+#~ msgid "HTTP Version Not Supported"
+#~ msgstr "HTTP-Version nicht unterstützt"
+
+#~ msgid "Variant Also Negotiates (Experimental)"
+#~ msgstr "Variante handelt außerdem aus (Experimenmtell)"
+
+#~ msgid "Insufficient Storage (WebDAV)"
+#~ msgstr "Zu wenig Speicherplatz (WebDAV)"
+
+#~ msgid "Loop Detected (WebDAV)"
+#~ msgstr "Zirkel entdeckt (WebDAV)"
+
+#~ msgid "Bandwidth Limit Exceeded (Apache)"
+#~ msgstr "Bandbreiten-Beschränkung überschritten (Apache)"
+
+#~ msgid "Not Extended"
+#~ msgstr "Nicht erweitert"
+
+#~ msgid "Network Authentication Required"
+#~ msgstr "Netzwerk-Authentifizierung erforderlich"
+
+#~ msgid "Network read timeout error"
+#~ msgstr "Netzwerk Lese-Zeitüberschreitung"
+
+#~ msgid "Network connect timeout error"
+#~ msgstr "Netzwerk Verbindungs-Zeitüberschreitung"
+
+#~ msgid "System Administrator"
+#~ msgstr "System-Administrator"
+
+#~ msgid "Feedback email: {AutoReport}"
+#~ msgstr "Rückmeldung per Email: {AutoReport}"
+
+#~ msgid ""
+#~ "If it should be the case that you are already logged in for a long time "
+#~ "without interacting with the app, then the reason for this error is "
+#~ "probably a simple timeout."
+#~ msgstr ""
+#~ "Falls Du bereits längere Zeit angemeldet bist, ohne mit der Web-App zu\n"
+#~ "interagieren, dann ist das der Grund für den Fehler."
+
+#~ msgid ""
+#~ "In any case it may help to logoff and logon again, as a temporary "
+#~ "workaround. You will be redirected to the login page when you close this "
+#~ "window."
+#~ msgstr ""
+#~ "Als einstweiligen `Work-Around' kann man in jedem Fall versuchen, sich\n"
+#~ "ab- und wieder an zu melden und den Vorgang zu wiederholen. Wenn Du\n"
+#~ "dieses Fenster schließt, wirst Du zur Login-Seite weiter geleitet."
+
+#~ msgid "Unrecoverable unknown internal error, no details available"
+#~ msgstr ""
+#~ "Tut uns leid, unbekannte interner Fehler, weitere Informationen sind\n"
+#~ "leider nicht verfügbar."
+
+#~ msgid "HTTP error response to AJAX call: {code} / {error}"
+#~ msgstr "HTTP Fehler-Antwort auf AJAX-Anfrage: {code} / {error}"
 
 #, php-format
 #~ msgid "Insurance Fee %d"
