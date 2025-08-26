@@ -1589,7 +1589,16 @@ Whatever.',
     $oldPageName = $this->projectWikiLink($oldName);
     $newPageName = $this->projectWikiLink($newName);
 
-    $wikiRPC->renamePage($oldPageName, $newPageName, fn($oldContent) => str_replace($oldName, $newName, $oldContent));
+    $wikiRPC->renamePage($oldPageName, $newPageName);
+    $page = $wikiRPC->getPage($newPageName);
+    $page = str_replace($oldName, $newName, $page);
+    $wikiRPC->putPage(
+      $newPageName, $page,
+      [
+        "sum" => "Automatic CAFEVDB synchronization, rename project.",
+        "minor" => true,
+      ],
+    );
 
     $this->generateWikiOverview();
   }
@@ -3066,8 +3075,14 @@ Whatever.',
   {
     // This may be inside a transaction where the project-entity
     // already reflects the new state, so rather rely on the data.
+    $identifier = is_array($projectOrId) ? ['id' => $projectOrId['id']] : $projectOrId;
     /** @var Entities\Project $project */
-    $project = $this->repository->ensureProject($projectOrId);
+    $project = $this->repository->ensureProject($identifier);
+    if ($project === null) {
+      throw new Exceptions\DatabaseEntityNotFoundException(
+        $this->l->t('Unable to find the project specified by given data (%s)', print_r($projectOrId, true)),
+      );
+    }
     $projectId = $project->getId();
 
     $oldName = $projectOrId['name'] ?? $project->getName();
@@ -3133,8 +3148,19 @@ Whatever.',
         function() use ($oldProject, $newProject) {
           $systemTagManager = $this->systemTagManager();
           try {
-            $tag = $systemTagManager->getTag($oldProject['name'], userVisible: true, userAssignable: true);
-            $systemTagManager->updateTag($tag->getId(), $newProject['name'], userVisible: true, userAssignable: true);
+            /** @var ISystemTag $tag */
+            $tag = $systemTagManager->getTag(
+              tagName: $oldProject['name'],
+              userVisible: true,
+              userAssignable: true,
+            );
+            $systemTagManager->updateTag(
+              tagId: $tag->getId(),
+              newName: $newProject['name'],
+              userVisible: true,
+              userAssignable: true,
+              color: $tag->getColor(),
+            );
           } catch (TagNotFoundException $e) {
             $tag = $systemTagManager->createTag($newProject['name'], userVisible: true, userAssignable: true);
           }
