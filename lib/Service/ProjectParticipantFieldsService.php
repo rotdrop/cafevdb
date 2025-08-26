@@ -324,16 +324,16 @@ class ProjectParticipantFieldsService
   public static function participantMonetaryObligations(Entities\Musician $musician, ?Entities\Project $project = null):array
   {
     $obligations = [
-      'sum' => 0.0, // total sum
-      'received' => 0.0, // sum of payments
+      'sum' => RationalNumber::zero(), // total sum
+      'received' => RationalNumber::zero(), // sum of payments
     ];
 
     if (empty($project)) {
       /** @var Entities\ProjectParticipant $projectParticipant */
       foreach ($musician->getProjectParticipation() as $projectParticipant) {
         list('sum' => $sum, 'received' => $received) = self::participantMonetaryObligations($musician, $projectParticipant->getProject());
-        $obligations['sum'] += $sum;
-        $obligations['received'] += $received;
+        $obligations['sum']->addEq($sum);
+        $obligations['received']->addEq($received);
       }
       return $obligations;
     }
@@ -345,8 +345,8 @@ class ProjectParticipantFieldsService
       switch ($fieldDataType) {
         case DataType::RECEIVABLES:
         case DataType::LIABILITIES:
-          $obligations['sum'] += $fieldDatum->amountPayable();
-          $obligations['received'] += $fieldDatum->amountPaid();
+          $obligations['sum']->addEq($fieldDatum->amountPayable());
+          $obligations['received']->addEq($fieldDatum->amountPaid());
           break;
       }
     }

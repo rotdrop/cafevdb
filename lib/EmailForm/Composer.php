@@ -39,6 +39,7 @@ use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
 use OCA\CAFEVDB\Common\PHPMailer;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
@@ -832,7 +833,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           return $keyArg[0];
         }
         $obligations = ProjectParticipantFieldsService::participantMonetaryObligations($musician, $this->project);
-        return $this->moneyValue($obligations['sum'] - $obligations['received']);
+        return $this->moneyValue($obligations['sum']->sub($obligations['received']));
       };
 
       // per-participant project-data
@@ -1052,7 +1053,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             $header = str_replace('[CSSCLASS]', $cssClass, $header);
             $html .= /* self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_STYLE . */ $header;
 
-            $totalSum = array_fill_keys($replacementKeys, 0.0);
+            $totalSum = array_map(fn(mixed $any) => RationalNumber::zero(), array_fill_keys($replacementKeys, null));
             $totalSum['label'] = $this->l->t('Total Amount');
             $totalSum['dueDate'] = null;
 
@@ -1110,10 +1111,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
                         break;
                       case 'deposit':
                         $totals = $fieldData->depositAmount();
-                        $received = min($totals, $fieldData->amountPaid());
+                        $received = RationalNumber::min($totals, $fieldData->amountPaid());
                         break;
                     }
-                    $remaining = $totals - $received;
+                    $remaining = $totals->sub($received);
 
                     if ($field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE
                         || $field->getMultiplicity() == FieldMultiplicity::GROUPSOFPEOPLE) {
@@ -1148,7 +1149,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
                     }
                     if (${$key} != '--') {
                       $nonZeroData = $nonZeroData || !empty(${$key});
-                      $totalSum[$key] += ${$key};
+                      $totalSum[$key]->addEq(${$key});
                       $replacements[$key] = $this->moneyValue(${$key});
                     } else {
                       $replacements[$key] = ${$key};
@@ -1478,7 +1479,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           ];
 
           $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
-          $totalSum = array_fill_keys($replacementKeys, 0.0);
+          $totalSum = array_fill_keys($replacementKeys, RationalNumber::zero());
           $totalSum['purpose'] = $this->l->t('Total Amount');
 
           $rowTemplate = $tableTemplate['row'];
@@ -1513,7 +1514,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
                 $replacements[$key] = ${$key};
                 continue;
               }
-              $totalSum[$key] += ${$key};
+              $totalSum[$key]->addEq(${$key});
               $replacements[$key] = $this->moneyValue(${$key});
             }
 

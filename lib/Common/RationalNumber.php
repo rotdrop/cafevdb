@@ -543,6 +543,37 @@ class RationalNumber extends Rational
   }
 
   /**
+   * Convenience, return the minimum using exact arithmetic.
+   *
+   * @param mixed $a
+   *
+   * @param mixed $b
+   *
+   * @return RationalNumber
+   */
+  public static function min(mixed $a, mixed $b): RationalNumber
+  {
+    $aNumber = self::ensureRationalNumber($a);
+    return $aNumber->le($b) ? $aNumber : self::ensureRationalNumber($b);
+  }
+
+  /**
+   * Convenience, return the maximum using exact arithmetic.
+   *
+   * @param mixed $a
+   *
+   * @param mixed $b
+   *
+   * @return RationalNumber
+   */
+  public static function max(mixed $a, mixed $b): RationalNumber
+  {
+    $aNumber = self::ensureRationalNumber($a);
+    $bNumber = self::ensureRationalNumber($b);
+    return $aNumber->ge($bNumber) ? $aNumber : $bNumber;
+  }
+
+  /**
    * Generate an instance of RationalNumber from $other if it is not already
    * an instance of RationalNumber.
    *
