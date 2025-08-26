@@ -78,6 +78,7 @@ const modalizer = function(open) {
     try {
       overlayIndex = parseInt(modalizer.dialog('widget').css('z-index'));
     } catch (e) {
+      console.error('overlay index error', e);
       $('body').removeClass(cssTag);
       return true;
     }
@@ -87,7 +88,7 @@ const modalizer = function(open) {
       const $this = $(this);
       const thisIndex = $this.data('z-index') || parseInt($this.css('z-index'));
       console.debug('that index: ', thisIndex);
-      if (thisIndex >= overlayIndex) {
+      if (thisIndex >= overlayIndex && $this.is(':visible')) {
         ++numDialogs;
       }
     });

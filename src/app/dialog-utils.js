@@ -38,7 +38,7 @@ function manageDialogToBackButtons() {
   console.info('OVERLAY Z-INDEX', overlayIndex);
   const relevantDialogs = $('.ui-dialog.ui-widget')
     .not('.' + appPrefix('modalizer'))
-    .elements().filter(([index, element]) => parseInt(getComputedStyle(element)?.getPropertyValue('z-index')) > overlayIndex);
+    .elements().filter(([index, element]) => parseInt(getComputedStyle(element)?.getPropertyValue('z-index')) > overlayIndex && $(element).is(':visible'));
   console.info('RELEVANT DIALOGS', relevantDialogs);
   const disabledState = relevantDialogs.length < 2;
   for (const [, element] of relevantDialogs) {
