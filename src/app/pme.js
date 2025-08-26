@@ -111,7 +111,7 @@ const pmePageRenderer = PMEState.pageRenderer;
  * @param {jQuery} $container TBD.
  */
 const pmeDestroyVueComponents = function($container) {
-  console.info('CLEANUP TO BE ORPHANCED VUE COMPONENTS', {
+  console.info('CLEANUP TO BE ORPHANED VUE COMPONENTS', {
     $container,
     vueComponents: $container?.data('vueComponents'),
   });
