@@ -77,6 +77,7 @@
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Project Notes')"
                     :href="projectNotesLink"
+                    :close-after-click="true"
                     @click="openProjectNotes"
       >
         <template #icon>
@@ -87,6 +88,7 @@
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Events')"
                     :href="projectEventsLink"
+                    :close-after-click="true"
                     @click="openProjectEvents"
       >
         <template #icon>
