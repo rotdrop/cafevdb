@@ -329,6 +329,11 @@ const ready = function(selector, resizeCB) {
 
   // @todo Most of the stuff below is a no-op in list-view. We should
   // bail-out early.
+  const viewOperation = !PHPMyEdit.hasEditableData($container);
+  if (viewOperation) {
+    resizeCB();
+    return;
+  }
 
   const $tableTab = $container.find('select.tab');
   const $newTab = $container.find('input.new-tab');
