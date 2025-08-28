@@ -136,12 +136,7 @@ const pmeHasEditableData = function(form) {
   if ($form.length === 0) {
     return false;
   }
-  for (const cssClass of pmeToken(pmeFormEditSuffixes)) {
-    if ($form.hasClass(cssClass)) {
-      return true;
-    }
-  }
-  return false;
+  return $form.is(pmeClassSelectors('', pmeFormEditSuffixes));
 };
 
 /**
