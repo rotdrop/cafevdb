@@ -36,6 +36,7 @@
 
 @use "sass:list";
 @use "local";
+@use './mixins/wysiwyg-editors.scss' as *;
 
 // Hide selected elements by default, elementShownIf() will then override the visibility again
 @mixin defaultHiddenElement($element, $prefix: "&", $relation: "~") {
@@ -361,11 +362,14 @@
     }
     &:not(.pme-view, .pme-delete) {
       table.pme-main {
-        textarea.field-data,
-        textarea.field-balancingAccount,
-        textarea.field-tooltip,
-        textarea.participant-field-tooltip {
-          overflow-x:hidden; /* fix FF extra-line bug */
+        textarea {
+          &.field-data,
+          &.field-balancingAccount,
+          &.field-tooltip,
+          &.participant-field-tooltip {
+            overflow-x:hidden; /* fix FF extra-line bug */
+          }
+          @include wysiwygEditors;
         }
         tr {
           &.multiplicity {

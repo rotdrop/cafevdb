@@ -28,6 +28,7 @@
  */
 
 @use './pme-table-tabs.scss' as *;
+@use './mixins/wysiwyg-editors.scss' as *;
 
 form.pme-form.project-participant-fields-display {
 
@@ -230,15 +231,18 @@ form.pme-form.project-participant-fields-display {
   }
 
   &.pme-add, &.pme-change, &.pme-copy {
+    width:100%;
     td.pme-key.single-valued {
       &.receivables,
       &.liabilities {
         position:relative;
       }
     }
-    width:100%;
     .file-upload-wrapper td.input {
       width:100%;
+    }
+    textarea {
+      @include wysiwygEditors;
     }
   }
 
