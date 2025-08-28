@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { appName } from '../config.ts';
 import $ from './jquery.js';
+
+const delay = 50; // ms
+const events = ['mouseup', 'mousemove'].map(eventName => eventName + '.' + appName + 'TextAreaResize').join(' ');
+
+console.debug('RESIZE EVENTS', { events });
+
+const handler = function(event) {
+  const textarea = this;
+  const $textarea = $(textarea);
+  const data = $textarea.data();
+  if (data.oldWidth === undefined) {
+    $textarea.data('oldWidth', textarea.style.width);
+    $textarea.data('oldHeight', textarea.style.height);
+  }
+  if (textarea.style.width !== data.oldWidth || textarea.style.height !== data.oldHeight) {
+    if (data.resizeTimeout) {
+      clearTimeout(data.resizeTimeout);
+    }
+    $textarea.data(
+      'resizeTimeout',
+      setTimeout(function() {
+        console.debug('TEXTAREA TRIGGER RESIZE', { $textarea, data });
+        $textarea.trigger('resize');
+      }, delay),
+    );
+    $textarea.data('oldWidth', textarea.style.width);
+    $textarea.data('oldHeight', textarea.style.height);
+  }
+};
 
 /**
  * Unfortunately, the textare element does not fire a resize
@@ -30,65 +60,15 @@ import $ from './jquery.js';
  * @param {object} container selector or jQuery of container for event
  * delegation.
  *
- * @param {object} textarea selector or jQuery
- *
- * @param {number} delay Optional, defaults to 50. If true, fire the event
- * immediately, if set, then this is a delay in ms.
+ * @param {object} textareaSelector selector or jQuery
  */
-function textareaResize(container, textarea, delay) {
-  if (typeof textarea === 'undefined' && typeof delay === 'undefined') {
+const textareaResize = (container, textareaSelector) => {
+  if (typeof textareaSelector === 'undefined') {
     // Variant with one argument, argument must be textarea.
-    textarea = container;
-    delay = textarea;
-    container = null;
-  } else if (delay === 'undefined' && $.isNumeric(textarea)) {
-    // Variant with two argument, argument must be textarea.
-    textarea = container;
-    delay = textarea;
-    container = null;
-  }
-
-  // otherwise first two arguments are container and textarea.
-  if (typeof delay === 'undefined') {
-    delay = 50; // ms
-  }
-
-  const handler = function(event) {
-    const textarea = this;
-    const $this = $(textarea);
-    if (textarea.oldwidth === null) {
-      textarea.oldwidth = textarea.style.width;
-    }
-    if (textarea.oldheight === null) {
-      textarea.oldheight = textarea.style.height;
-    }
-    if (textarea.style.width !== textarea.oldwidth || textarea.style.height !== textarea.oldheight) {
-      if (delay > 0) {
-        if (textarea.resize_timeout) {
-          clearTimeout(textarea.resize_timeout);
-        }
-        textarea.resizeTimeout = setTimeout(function() {
-          $this.resize();
-        }, delay);
-      } else {
-        $this.resize();
-      }
-      textarea.oldwidth = textarea.style.width;
-      textarea.oldheight = textarea.style.height;
-    }
-    return true;
-  };
-  const events = 'mouseup mousemove';
-  if (container) {
-    $(container).off(events, textarea).on(events, textarea, handler);
+    $(container).off(events).on(events, handler);
   } else {
-    $(textarea).off(events).on(events, handler);
+    $(container).off(events, textareaSelector).on(events, textareaSelector, handler);
   }
-}
+};
 
 export default textareaResize;
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

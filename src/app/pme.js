@@ -1101,7 +1101,7 @@ const pmeTableDialogOpen = async function(tableOptions, post) {
 
             // install delegate handlers on the widget s.t. we
             // can call .off() on the container
-            dialogWidget.on('resize', containerSel, function(event) {
+            dialogWidget.on('resize.' + appName, containerSel, function(event) {
               resizeHandler(event);
             });
             dialogWidget.on('pmedialog:changed', containerSel, function(event) {

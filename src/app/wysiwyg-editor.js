@@ -32,9 +32,8 @@ import { globalState } from './cafevdb.js';
  * @param {Function} initCallback TBD.
  */
 const addEditor = function(selector, initCallback) {
-  console.info('ADD EDITOR');
   const $editorElements = $(selector);
-  console.debug('WysiwygEditor.addEditor', $editorElements.length);
+  console.debug('WysiwygEditor.addEditor', $editorElements);
   initCallback = (typeof initCallback === 'function') ? initCallback : () => {};
   if (!$editorElements.length) {
     console.info('ADD EDITOR: NO ELEMENTS, INVOKING SUCCESS CALLBACK');
@@ -100,7 +99,10 @@ const addEditor = function(selector, initCallback) {
               const $editorElement = $(editorElement);
               let mceDeferred = $editorElement.data('mceDeferred');
               if (mceDeferred) {
-                console.error('RACE CONDITION ADDING TINYMCE TOO FAST TOO OFTEN');
+                console.error('RACE CONDITION ADDING TINYMCE TOO FAST TOO OFTEN', {
+                  $editorElements,
+                  editorElement,
+                });
                 return $.Deferred().resolveWith(this, ['race']);
               }
               mceDeferred = $.Deferred();
@@ -146,8 +148,8 @@ const addEditor = function(selector, initCallback) {
                 });
             }).get(),
           )
-          .then(function() {
-            console.debug('tinyMCE promise(s) settled.', arguments);
+          .then(function(...args) {
+            console.debug('tinyMCE promise(s) settled.', args);
             initCallback();
           });
       });

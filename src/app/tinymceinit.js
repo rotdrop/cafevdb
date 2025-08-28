@@ -23,7 +23,10 @@
 
 /* eslint camelcase: ["error", {properties: "never"}] */
 
-import { globalState, appName, webRoot, $ } from './globals.js';
+import { appName } from '../config.ts';
+import { getLanguage } from '@nextcloud/l10n';
+import { getAppRootUrl } from '@nextcloud/router';
+import $ from './jquery.js';
 import 'tinymce';
 import '@tinymce/tinymce-jquery';
 
@@ -64,7 +67,7 @@ const myConfig = {
   // theme_advanced_resizing: true,
   // theme_advanced_resizing_use_cookie : false,
   theme: 'silver',
-  language: globalState.language || 'en',
+  language: getLanguage().split('-')[0],
   //    width: 300,
   //    height: 100,
   //    forced_root_block : '',
@@ -75,7 +78,7 @@ const myConfig = {
   file_picker_types: 'file image media',
   // convert_urls: false,
   relative_urls: true,
-  base_url: webRoot + '3rdparty/tinymce',
+  base_url: getAppRootUrl(appName) + '/3rdparty/tinymce',
   // document_base_url: OC.appswebroots[appName] + '/3rdparty/tinymce',
   suffix: '.min',
   promotion: false,
@@ -139,9 +142,16 @@ const myConfig = {
       if (!myGlobalState.resizeTimeout) {
         const width = mceWindow.innerWidth;
         const height = mceWindow.innerHeight;
-        if ((myGlobalState.oldWidth[0] !== width && myGlobalState.oldWidth[1] !== width)
+        if (myGlobalState.oldWidth[0] < 0) {
+          myGlobalState.oldWidth[0] = width;
+          myGlobalState.oldHeight[0] = height;
+        } else if ((myGlobalState.oldWidth[0] !== width && myGlobalState.oldWidth[1] !== width)
             || (myGlobalState.oldHeight[0] !== height && myGlobalState.oldHeight[1] !== height)) {
-          console.debug('tinymce size change', width, myGlobalState.oldWidth, height, myGlobalState.oldHeight);
+          console.debug('tinymce size change', {
+            width,
+            height,
+            ...myGlobalState,
+          });
           myGlobalState.resizeTimeout = setTimeout(
             function() {
               myGlobalState.resizeTimeout = null;
@@ -273,7 +283,7 @@ const myInit = function(lang) {
 };
 
 $(function() {
-  myInit(globalState.language);
+  myInit(getLanguage().split('-')[0]);
 });
 
 export {

@@ -25,24 +25,38 @@ import { appName } from '../config.ts';
 import globalState from './globalstate.js';
 import $ from './jquery.js';
 
-const attachWindowResizeHandler = () => {
+const delay = 50;
 
-  globalState.oldWidth = -1;
-  globalState.oldHeight = -1;
+globalState.oldWidth = -1;
+globalState.oldHeight = -1;
+
+const getWindowSize = () => {
+  return {
+    width: (window.innerWidth > 0) ? window.innerWidth : screen.width,
+    height: (window.innerHeight > 0) ? window.innerHeight : screen.height,
+  };
+};
+
+const attachWindowResizeHandler = () => {
 
   $(window)
     .off('resize.' + appName)
     .on('resize.' + appName, function(event) {
       if (!globalState.windowResizeTimeout) {
-        const delay = 50;
-        const width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-        const height = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+        const { width, height } = getWindowSize();
         if (globalState.oldWidth !== width || globalState.oldHeight !== height) {
-          console.debug('cafevdb window size change', width, globalState.oldWidth, height, globalState.oldHeight);
+          console.debug('cafevdb window size change', {
+            width,
+            height,
+            oldWidth: globalState.oldWidth,
+            oldHeight: globalState.oldHeight,
+            event,
+          });
           globalState.windowResizeTimeout = setTimeout(
             function() {
               globalState.windowResizeTimeout = null;
-              $('.resize-target, .ui-dialog-content').trigger('resize');
+              console.debug('WINDOW TRIGGER RESIZE');
+              $('.resize-target, .ui-dialog-content').trigger('resize.' + appName);
             }, delay);
           globalState.oldHeight = height;
           globalState.oldWidth = width;
@@ -50,5 +64,11 @@ const attachWindowResizeHandler = () => {
       }
     });
 };
+
+$(() => {
+  const { width, height } = getWindowSize();
+  globalState.oldWidth = width;
+  globalState.oldHeight = height;
+});
 
 export default attachWindowResizeHandler;
