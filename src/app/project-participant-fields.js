@@ -1217,9 +1217,9 @@ const ready = function(selector, resizeCB) {
   });
 
   const fieldType = fieldTypeData();
-  setFieldTypeCssClass(fieldType);
-
-  allowedHeaderVisibility();
+  // Done by "trigger('change')" on multiplicity select
+  // setFieldTypeCssClass(fieldType);
+  // allowedHeaderVisibility();
 
   // set autocomplete for generator selection
   const generatorRow = $container.find('tr.data-options.generator');
@@ -1249,7 +1249,7 @@ const ready = function(selector, resizeCB) {
 
   // synthesize resize events for textareas.
   // @todo use a resize observer instead of timers
-  textareaResize($container, 'textarea.field-tooltip, textarea.participant-field-tooltip, .pme-input');
+  textareaResize($container, 'textarea.field-tooltip, textarea.participant-field-tooltip, textarea.pme-input');
   resizeCB();
 };
 
