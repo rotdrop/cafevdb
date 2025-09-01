@@ -808,7 +808,7 @@ class EventsService
       $datestring = $times['start']['date'];
       if (!$times['allday']) {
         $startTime = $times['start']['time'];
-        $datestring .= ', ' . ($startTime == '00:00' ? $this->l->t('till %s', $times['end']['time']) : $startTime);
+        $datestring .= ', ' . ($startTime == '00:00' ? $this->l->t('until %s', $times['end']['time']) : $startTime);
       }
     } else {
       $datestring = $times['start']['date'].' - '.$times['end']['date'];

@@ -818,7 +818,7 @@ const briefEventDate = (event: EventMatrixEvent) => {
       return times.start.date
     }
     if (times.start.time === '00:00') {
-      return `${times.start.date}, till ${times.end.time}`
+      return t(appName, '{startDate}, until {endTime}', { startDate: times.start.date, endTime: times.end.time })
     }
     return `${times.start.date}, ${times.start.time}`
   } else {
