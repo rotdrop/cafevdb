@@ -40,22 +40,21 @@ use Sabre\VObject\Component\VEvent;
 use Sabre\VObject\Component as VComponent;
 use Sabre\DAV\Exception\Forbidden as DavForbiddenException;
 
+use OCA\DAV\Events\CalendarDeletedEvent;
+use OCA\DAV\Events\CalendarMovedToTrashEvent;
+use OCA\DAV\Events\CalendarUpdatedEvent;
+use OCP\Calendar\Events\CalendarObjectCreatedEvent;
+use OCP\Calendar\Events\CalendarObjectDeletedEvent;
+use OCP\Calendar\Events\CalendarObjectMovedEvent;
+use OCP\Calendar\Events\CalendarObjectMovedToTrashEvent;
+use OCP\Calendar\Events\CalendarObjectRestoredEvent;
+use OCP\Calendar\Events\CalendarObjectUpdatedEvent;
 use OCP\IDateTimeFormatter;
 use OCP\IL10N;
 use OCP\IUserSession;
 use OCP\SystemTag\ISystemTagManager;
 use OCP\SystemTag\TagAlreadyExistsException;
 use OCP\SystemTag\TagNotFoundException;
-
-use OCA\DAV\Events\CalendarDeletedEvent;
-use OCA\DAV\Events\CalendarMovedToTrashEvent;
-use OCA\DAV\Events\CalendarObjectCreatedEvent;
-use OCA\DAV\Events\CalendarObjectDeletedEvent;
-use OCA\DAV\Events\CalendarObjectMovedEvent;
-use OCA\DAV\Events\CalendarObjectMovedToTrashEvent;
-use OCA\DAV\Events\CalendarObjectRestoredEvent;
-use OCA\DAV\Events\CalendarObjectUpdatedEvent;
-use OCA\DAV\Events\CalendarUpdatedEvent;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
@@ -151,7 +150,9 @@ class EventsService
     }
     $objectData['calendaruri'] = $calendarData['uri'];
 
-    $this->syncCalendarObject($objectData, unregister: false);
+    if ($this->syncCalendarObject($objectData, unregister: false) === null) {
+      $event->clearEtag();
+    }
   }
 
   /**
@@ -172,7 +173,9 @@ class EventsService
     $calendarData = $event->getCalendarData();
     $objectData['calendaruri'] = $calendarData['uri'];
 
-    $this->syncCalendarObject($objectData);
+    if ($this->syncCalendarObject($objectData) === null) {
+      $event->clearEtag();
+    }
   }
 
   /**
@@ -1258,8 +1261,10 @@ class EventsService
   }
 
   /**
-   * Parse the respective event data and make sure the ProjectEvents
-   * table is uptodate.
+   * Parse the respective event data and make sure the ProjectEvents table is
+   * up to date. Potentially sanitize the event, in this case null is
+   * returned. The "created" and "updated" event handlers should then clear
+   * the etag in order to notify the CalDAV client app.
    *
    * @param array $objectData Calendar object data provided by event. The
    * calendar data may define a repeating event. Each recurrence instance will
@@ -1272,7 +1277,7 @@ class EventsService
    * @param bool $unregister Whether to unregister the event from projects not
    * mentioned in its category list.
    *
-   * @return array
+   * @return null|array
    * ```
    * [
    *   'registered' => [ PROJECT_ID, ... ],
@@ -1280,8 +1285,11 @@ class EventsService
    * ]
    * ```
    */
-  public function syncCalendarObject(array $objectData, ?array $sourceCalendar = null, bool $unregister = true):array
-  {
+  public function syncCalendarObject(
+    array $objectData,
+    ?array $sourceCalendar = null,
+    bool $unregister = true,
+  ):array {
     $eventURI = $objectData['uri'];
     $calId = $objectData['calendarid'];
     $vCalendar = VCalendarService::getVCalendar($objectData);
@@ -1363,7 +1371,7 @@ class EventsService
 
       if ($needUpdate) {
         $this->calDavService->updateCalendarObject($calId, $eventURI, $vCalendar);
-        return []; // there will be another event which then is used to update the project links.
+        return null; // there will be another event which then is used to update the project links.
       }
 
       // Perhaps add another hack and turn any full-day multi-day event into
@@ -1398,7 +1406,7 @@ class EventsService
             $vEvent->{'LAST-MODIFIED'} =
               $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
             $this->calDavService->updateCalendarObject($calId, $eventURI, $vCalendar);
-            return []; // there will be another event which then is used to update the project links.
+            return null; // there will be another event which then is used to update the project links.
           }
         } else {
           $hours = ($end->getTimestamp() - $start->getTimestamp()) / 3600;
@@ -1460,7 +1468,7 @@ class EventsService
             $this->calDavService->updateCalendarObject($calId, $eventURI, $vCalendar);
             $this->calDavService->createCalendarObject($calId, null, $vStart);
             $this->calDavService->createCalendarObject($calId, null, $vEnd);
-            return []; // there will be other events which then are used to update the project links.
+            return null; // there will be other events which then are used to update the project links.
           }
         }
       }
