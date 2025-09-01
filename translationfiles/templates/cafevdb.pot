@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-08-26 11:10+0200\n"
+"POT-Creation-Date: 2025-09-01 17:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2319,7 +2319,7 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:916
-#: lib/Service/ProjectService.php:2951
+#: lib/Service/ProjectService.php:2969
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr ""
@@ -2334,7 +2334,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:950
-#: lib/Service/ProjectService.php:3215
+#: lib/Service/ProjectService.php:3250
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -2636,7 +2636,7 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:1734
-#: lib/Settings/PersonalForm.php:399
+#: lib/Settings/PersonalForm.php:404
 #, php-format
 msgid "%d days"
 msgstr ""
@@ -4324,33 +4324,33 @@ msgid ""
 "substitution data."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:542
+#: lib/EmailForm/Composer.php:543
 msgid "announcement"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:627
+#: lib/EmailForm/Composer.php:628
 msgid "ExampleFormletter"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:640
+#: lib/EmailForm/Composer.php:641
 #: src/app/email.js:1430
 msgid "Unknown Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1033
+#: lib/EmailForm/Composer.php:1034
 msgid "Option"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1034
-#: lib/EmailForm/Composer.php:1056
-#: lib/EmailForm/Composer.php:1482
-#: lib/EmailForm/Composer.php:1534
+#: lib/EmailForm/Composer.php:1035
+#: lib/EmailForm/Composer.php:1057
+#: lib/EmailForm/Composer.php:1483
+#: lib/EmailForm/Composer.php:1535
 #: lib/PageRenderer/Invoices.php:778
 #: lib/PageRenderer/ProjectPayments.php:663
 msgid "Total Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1034
+#: lib/EmailForm/Composer.php:1035
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:580
 #: lib/PageRenderer/ProjectParticipantFields.php:650
 #: lib/PageRenderer/ProjectParticipantFields.php:1726
@@ -4358,17 +4358,17 @@ msgstr ""
 msgid "Deposit"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1035
-#: lib/EmailForm/Composer.php:1535
+#: lib/EmailForm/Composer.php:1036
+#: lib/EmailForm/Composer.php:1536
 msgid "Received"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1036
-#: lib/EmailForm/Composer.php:1536
+#: lib/EmailForm/Composer.php:1037
+#: lib/EmailForm/Composer.php:1537
 msgid "Remaining"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1037
+#: lib/EmailForm/Composer.php:1038
 #: lib/PageRenderer/InstrumentInsurances.php:635
 #: lib/PageRenderer/Invoices.php:899
 #: lib/PageRenderer/Invoices.php:910
@@ -4376,47 +4376,47 @@ msgstr ""
 msgid "Due Date"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1176
+#: lib/EmailForm/Composer.php:1177
 msgid "members"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1312
+#: lib/EmailForm/Composer.php:1313
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:145
 #: lib/PageRenderer/ProjectParticipantFields.php:883
 #: lib/PageRenderer/ProjectParticipantFields.php:889
 msgid "yes"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1313
+#: lib/EmailForm/Composer.php:1314
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:149
 #: lib/PageRenderer/ProjectParticipantFields.php:883
 msgid "no"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1532
+#: lib/EmailForm/Composer.php:1533
 msgid "Purpose"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1533
+#: lib/EmailForm/Composer.php:1534
 msgid "Invoice Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1646
+#: lib/EmailForm/Composer.php:1647
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1730
+#: lib/EmailForm/Composer.php:1731
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1847
-#: lib/EmailForm/Composer.php:3632
+#: lib/EmailForm/Composer.php:1848
+#: lib/EmailForm/Composer.php:3633
 #, php-format
 msgid "Unable to find a payment for the musician \"%s\" (transaction %d)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2503
+#: lib/EmailForm/Composer.php:2504
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -4442,158 +4442,158 @@ msgid ""
 "</html>"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2755
-#: lib/EmailForm/Composer.php:3266
+#: lib/EmailForm/Composer.php:2756
+#: lib/EmailForm/Composer.php:3267
 msgid "DO NOT REPLY"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3466
+#: lib/EmailForm/Composer.php:3467
 msgid "*** empty content ***"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3520
+#: lib/EmailForm/Composer.php:3521
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3522
+#: lib/EmailForm/Composer.php:3523
 msgid "Prewiew generation detected errors!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3585
+#: lib/EmailForm/Composer.php:3586
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3588
+#: lib/EmailForm/Composer.php:3589
 msgid "The email text contains personalized substitutions."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3591
+#: lib/EmailForm/Composer.php:3592
 msgid "The email contains personalized attachments."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3851
+#: lib/EmailForm/Composer.php:3852
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
 #. TRANSLATORS: email prefix when writing to all musicians
-#: lib/EmailForm/Composer.php:3888
+#: lib/EmailForm/Composer.php:3889
 msgid "ALL_PERSONS: musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3973
-#: lib/EmailForm/Composer.php:3989
+#: lib/EmailForm/Composer.php:3974
+#: lib/EmailForm/Composer.php:3990
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4096
-#: lib/EmailForm/Composer.php:4226
-#: lib/EmailForm/Composer.php:4236
+#: lib/EmailForm/Composer.php:4097
+#: lib/EmailForm/Composer.php:4227
+#: lib/EmailForm/Composer.php:4237
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
 #. TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
 #. TRANSLATORS: team, like e.g. "treasurer".
-#: lib/EmailForm/Composer.php:4118
+#: lib/EmailForm/Composer.php:4119
 #, php-format
 msgid "Nothing known about \"%s\""
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4122
+#: lib/EmailForm/Composer.php:4123
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4128
+#: lib/EmailForm/Composer.php:4129
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4155
+#: lib/EmailForm/Composer.php:4156
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4158
+#: lib/EmailForm/Composer.php:4159
 msgid "PROJECT_PUBLIC_SHARE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4168
+#: lib/EmailForm/Composer.php:4169
 msgid "PROJECT_PUBLIC_SHARE_EXPIRATION"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4180
+#: lib/EmailForm/Composer.php:4181
 msgid "phrase"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4197
+#: lib/EmailForm/Composer.php:4198
 #, php-format
 msgid "(expires at %s)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4337
+#: lib/EmailForm/Composer.php:4342
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4694
+#: lib/EmailForm/Composer.php:4699
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4706
+#: lib/EmailForm/Composer.php:4711
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4730
+#: lib/EmailForm/Composer.php:4735
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4764
+#: lib/EmailForm/Composer.php:4769
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4824
-#: lib/EmailForm/Composer.php:4951
+#: lib/EmailForm/Composer.php:4829
+#: lib/EmailForm/Composer.php:4956
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4860
+#: lib/EmailForm/Composer.php:4865
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4885
+#: lib/EmailForm/Composer.php:4890
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5625
+#: lib/EmailForm/Composer.php:5630
 msgid "Blank Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5626
+#: lib/EmailForm/Composer.php:5631
 msgid "blank"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5629
+#: lib/EmailForm/Composer.php:5634
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5632
+#: lib/EmailForm/Composer.php:5637
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5635
+#: lib/EmailForm/Composer.php:5640
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5761
+#: lib/EmailForm/Composer.php:5766
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
@@ -6385,7 +6385,7 @@ msgstr ""
 msgid "Address Book"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:98
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:100
 #. TRANSLATORS src/components/ProjectEventsListing.vue:82
 #: lib/PageRenderer/PME/Config.php:64
 #: lib/PageRenderer/PMETableViewBase.php:654
@@ -6975,7 +6975,7 @@ msgstr ""
 #: lib/PageRenderer/Projects.php:399
 #: lib/PageRenderer/Projects.php:476
 #: lib/PageRenderer/Projects.php:915
-#: src/app/pme.js:1559
+#: src/app/pme.js:1554
 msgid "Clear"
 msgstr ""
 
@@ -7510,73 +7510,73 @@ msgid ""
 "key."
 msgstr ""
 
-#: lib/Service/EventsService.php:210
+#: lib/Service/EventsService.php:213
 #, php-format
 msgid ""
 "Calendar entry \"%1$s\" is in use by the finance sub-system and cannot be "
 "moved away from the %2$s calendar."
 msgstr ""
 
-#: lib/Service/EventsService.php:221
+#: lib/Service/EventsService.php:224
 #, php-format
 msgid ""
 "Calendar entry \"%1$s\" is a project registration event and must not be "
 "moved away from the %2$s calendar."
 msgstr ""
 
-#: lib/Service/EventsService.php:266
+#: lib/Service/EventsService.php:269
 #, php-format
 msgid ""
 "Calendar entry \"%1$s\" is in use by the finance sub-system and must not be "
 "deleted."
 msgstr ""
 
-#: lib/Service/EventsService.php:808
+#: lib/Service/EventsService.php:811
 #, php-format
-msgid "till %s"
+msgid "until %s"
 msgstr ""
 
-#: lib/Service/EventsService.php:870
-#: lib/Service/EventsService.php:997
+#: lib/Service/EventsService.php:873
+#: lib/Service/EventsService.php:1000
 msgid "Unknown Calendar"
 msgstr ""
 
-#: lib/Service/EventsService.php:885
+#: lib/Service/EventsService.php:888
 msgid "Miscellaneous Calendars"
 msgstr ""
 
-#: lib/Service/EventsService.php:1242
+#: lib/Service/EventsService.php:1245
 #, php-format
 msgid "Unable to ensure the existence of the system tag \"%s\"."
 msgstr ""
 
-#: lib/Service/EventsService.php:1676
-#: lib/Service/EventsService.php:1900
+#: lib/Service/EventsService.php:1684
+#: lib/Service/EventsService.php:1908
 #, php-format
 msgid "Unable to unregister the deleted calendar event with uri \"%s\"."
 msgstr ""
 
-#: lib/Service/EventsService.php:2601
+#: lib/Service/EventsService.php:2609
 msgid "Found more than one project registration calendar event."
 msgstr ""
 
-#: lib/Service/EventsService.php:2634
+#: lib/Service/EventsService.php:2642
 msgid "Unsupported argument type."
 msgstr ""
 
-#: lib/Service/EventsService.php:2683
+#: lib/Service/EventsService.php:2691
 #, php-format
 msgid "Registration for %s"
 msgstr ""
 
-#: lib/Service/EventsService.php:2689
+#: lib/Service/EventsService.php:2697
 #, php-format
 msgid ""
 "Project registation period for the project \"%1$s\". Participants can apply "
 "for participation using the public url %2$s."
 msgstr ""
 
-#: lib/Service/EventsService.php:2693
+#: lib/Service/EventsService.php:2701
 msgid "CyberSpace"
 msgstr ""
 
@@ -8357,33 +8357,33 @@ msgid ""
 "actual data-type is \"%3$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:506
+#: lib/Service/ProjectService.php:515
 msgid "templates"
 msgstr ""
 
-#: lib/Service/ProjectService.php:717
+#: lib/Service/ProjectService.php:726
 #, php-format
 msgid "Unable to ensure existence of folder \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:983
+#: lib/Service/ProjectService.php:992
 #, php-format
 msgid ""
 "Unable set expiration date for the public download link \"%1$s\" for the "
 "project \"%2$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:993
+#: lib/Service/ProjectService.php:1002
 #, php-format
 msgid "Unable to create the public donwload link for the project \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1410
+#: lib/Service/ProjectService.php:1419
 #, php-format
 msgid "Projects of %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1474
+#: lib/Service/ProjectService.php:1483
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -8414,154 +8414,159 @@ msgid ""
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:166
-#: lib/Service/ProjectService.php:1654
+#: lib/Service/ProjectService.php:1672
 #: specialVueFakeDummyForL10nScript.js:2266
 msgid "Preview"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1656
-#: lib/Service/ProjectService.php:1711
-#: lib/Service/ProjectService.php:1884
-#: lib/Service/ProjectService.php:1929
-#: lib/Service/ProjectService.php:1989
-#: lib/Settings/PersonalForm.php:304
+#: lib/Service/ProjectService.php:1674
+#: lib/Service/ProjectService.php:1729
+#: lib/Service/ProjectService.php:1902
+#: lib/Service/ProjectService.php:1947
+#: lib/Service/ProjectService.php:2007
+#: lib/Settings/PersonalForm.php:309
 msgid "Rehearsals"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1658
+#: lib/Service/ProjectService.php:1676
 msgid "Archive"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1660
+#: lib/Service/ProjectService.php:1678
 msgid "Trashbin"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1705
+#: lib/Service/ProjectService.php:1723
 msgid "Empty project."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1732
+#: lib/Service/ProjectService.php:1750
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1757
+#: lib/Service/ProjectService.php:1775
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1778
+#: lib/Service/ProjectService.php:1796
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1822
+#: lib/Service/ProjectService.php:1840
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1866
+#: lib/Service/ProjectService.php:1884
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2037
+#: lib/Service/ProjectService.php:2055
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2101
+#: lib/Service/ProjectService.php:2119
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2121
+#: lib/Service/ProjectService.php:2139
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2271
+#: lib/Service/ProjectService.php:2289
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2277
+#: lib/Service/ProjectService.php:2295
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
 "instrumentation list for the project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2285
+#: lib/Service/ProjectService.php:2303
 #, php-format
 msgid ""
 "Selecting \"%1$s\" as instrument of the musician %2$s for the project "
 "\"%3$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2330
+#: lib/Service/ProjectService.php:2348
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2341
+#: lib/Service/ProjectService.php:2359
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2397
+#: lib/Service/ProjectService.php:2415
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2463
+#: lib/Service/ProjectService.php:2481
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2607
+#: lib/Service/ProjectService.php:2625
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2632
+#: lib/Service/ProjectService.php:2650
 #, php-format
 msgid "Unable to fetch the project for id \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2709
+#: lib/Service/ProjectService.php:2727
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2750
+#: lib/Service/ProjectService.php:2768
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2780
+#: lib/Service/ProjectService.php:2798
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr ""
 
-#: lib/Service/ProjectService.php:3295
+#: lib/Service/ProjectService.php:3083
+#, php-format
+msgid "Unable to find the project specified by given data (%s)"
+msgstr ""
+
+#: lib/Service/ProjectService.php:3330
 msgid "Project not found."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3328
+#: lib/Service/ProjectService.php:3363
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
 "background and a resolution of 600 DPI or more."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3334
+#: lib/Service/ProjectService.php:3369
 msgid "Validation of projects not yet implemented."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3422
+#: lib/Service/ProjectService.php:3457
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr ""
@@ -11664,33 +11669,33 @@ msgstr ""
 msgid "Default Event Notification"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:197
+#: lib/Settings/PersonalForm.php:196
 msgid "ClubMembers"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:199
+#: lib/Settings/PersonalForm.php:198
 msgid "ExecutiveBoardMembers"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:303
+#: lib/Settings/PersonalForm.php:308
 msgid "Concerts"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:305
+#: lib/Settings/PersonalForm.php:310
 msgid "Other"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:306
+#: lib/Settings/PersonalForm.php:311
 msgid "Management"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:271
-#: lib/Settings/PersonalForm.php:307
+#: lib/Settings/PersonalForm.php:312
 #: specialVueFakeDummyForL10nScript.js:1682
 msgid "Finance"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:310
+#: lib/Settings/PersonalForm.php:315
 msgid "Miscellaneous"
 msgstr ""
 
@@ -13105,32 +13110,32 @@ msgstr ""
 msgid "Project Notes"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:88
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:89
 #: specialVueFakeDummyForL10nScript.js:3883
 msgid "Events"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:109
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:111
 #: specialVueFakeDummyForL10nScript.js:3887
 msgid "Business Contacts / Associates"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:120
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:122
 #: specialVueFakeDummyForL10nScript.js:3889
 msgid "Debit Mandates"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:131
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:133
 #: specialVueFakeDummyForL10nScript.js:3891
 msgid "Payments"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:142
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:144
 #: specialVueFakeDummyForL10nScript.js:3893
 msgid "Invoices"
 msgstr ""
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:152
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:154
 #: specialVueFakeDummyForL10nScript.js:3895
 msgid "Financial Balance"
 msgstr ""
@@ -13138,6 +13143,10 @@ msgstr ""
 #: specialVueFakeDummyForL10nScript.js:4145
 #: templates/emailform/part.emailform.composer.php:279
 msgid "Project Events"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:4378
+msgid "{startDate}, until {endTime}"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:4530
@@ -13229,7 +13238,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::RECORD_ABSENCE_CATEGORY = 'record absence';
 #: specialVueFakeDummyForL10nScript.js:4898
-#: lib/Service/EventsService.php:1203
+#: lib/Service/EventsService.php:1206
 #, php-format
 msgid "record absence"
 msgstr ""
@@ -14072,21 +14081,21 @@ msgstr ""
 msgid "Confirmation Required!"
 msgstr ""
 
-#: src/app/pme.js:781
+#: src/app/pme.js:776
 msgid ""
 "An error occurred. The data has not been saved. Unfortunately, no further "
 "information is available. Sorry for that."
 msgstr ""
 
-#: src/app/pme.js:1442
+#: src/app/pme.js:1437
 msgid "#columns"
 msgstr ""
 
-#: src/app/pme.js:1451
+#: src/app/pme.js:1446
 msgid "#rows"
 msgstr ""
 
-#: src/app/pme.js:1552
+#: src/app/pme.js:1547
 msgid "Remove"
 msgstr ""
 
@@ -14134,7 +14143,7 @@ msgstr ""
 msgid "{musicianName}, {receivableLabel}: \"{message}\"."
 msgstr ""
 
-#: src/app/project-participant-fields.js:587
+#: src/app/project-participant-fields.js:592
 msgid ""
 "This field already is filled out for some participants. Changing the "
 "multiplicity is still possible in some cases, but generally irrevertible. "
@@ -14145,11 +14154,11 @@ msgid ""
 "or \"HTML-text\"."
 msgstr ""
 
-#: src/app/project-participant-fields.js:588
+#: src/app/project-participant-fields.js:593
 msgid "Really allow changing the multiplicity?"
 msgstr ""
 
-#: src/app/project-participant-fields.js:609
+#: src/app/project-participant-fields.js:614
 msgid ""
 "This field already is filled out for some participants. Changing the data-"
 "type is still possible in some cases, but does not always make sense. The "
@@ -14157,7 +14166,7 @@ msgid ""
 "prepared that the results might look unexpected."
 msgstr ""
 
-#: src/app/project-participant-fields.js:610
+#: src/app/project-participant-fields.js:615
 msgid "Really allow changing the data-type?"
 msgstr ""
 
@@ -17676,7 +17685,7 @@ msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::PROJECT_REGISTRATION_CATEGORY = 'project registration';
-#: lib/Service/EventsService.php:1189
+#: lib/Service/EventsService.php:1192
 #, php-format
 msgid "project registration"
 msgstr ""
@@ -17732,21 +17741,21 @@ msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_SKELETON_FOLDER = 'skeleton';
-#: lib/Service/ProjectService.php:592
+#: lib/Service/ProjectService.php:601
 #, php-format
 msgid "skeleton"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_MANAGEMENT_SKELETON_FOLDER = 'management';
-#: lib/Service/ProjectService.php:599
+#: lib/Service/ProjectService.php:608
 #, php-format
 msgid "management"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER = 'forename.surname';
-#: lib/Service/ProjectService.php:612 lib/Service/ProjectService.php:657
+#: lib/Service/ProjectService.php:621 lib/Service/ProjectService.php:666
 #, php-format
 msgid "forename.surname"
 msgstr ""
