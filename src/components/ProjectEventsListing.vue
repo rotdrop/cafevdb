@@ -239,7 +239,7 @@
               <NcActionButton v-tooltip="hints['projectevents:event:absence-field:check']"
                               type="checkbox"
                               :close-after-click="true"
-                              :disabled="!mutationsAllowed || !!event.deleted"
+                              :disabled="!mutationsAllowed || !!event.deleted || !projectEventMatrix?.calendars?.[matrixEntry.uri]?.public"
                               @click="toggleAbsenceField(event)"
               >
                 <template #icon>

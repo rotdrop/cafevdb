@@ -1289,7 +1289,7 @@ class EventsService
     array $objectData,
     ?array $sourceCalendar = null,
     bool $unregister = true,
-  ):array {
+  ):?array {
     $eventURI = $objectData['uri'];
     $calId = $objectData['calendarid'];
     $vCalendar = VCalendarService::getVCalendar($objectData);
@@ -1325,9 +1325,28 @@ class EventsService
         }
       }
 
+      $defaultCalendars = array_flip($this->defaultCalendars());
+      $recordAbsenceCategory = $this->getRecordAbsenceCategory();
+
+      if (ConfigService::CALENDARS[$defaultCalendars[$calId]]['public'] === false) {
+        // remove any record absence category
+        $absenceCategories = [ $recordAbsenceCategory, self::RECORD_ABSENCE_CATEGORY ];
+        /** @var VEvent $vEvent */
+        foreach (VCalendarService::getAllVObjects($vCalendar) as $vEvent) {
+          $categories = VCalendarService::getCategories($vEvent);
+          $newCategories = array_diff($categories, $absenceCategories);
+          if (count($categories) != count($newCategories)) {
+            $this->logInfo('REMOVING RECORD ABSENCE CATEGORY');
+            VCalendarService::setCategories($vEvent, $newCategories);
+            $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+            $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+            $needUpdate = true;
+          }
+        }
+      }
+
       // Try to adjust our default categories and event names, if they have not been altered
       if ($sourceCalendar !== null) {
-        $defaultCalendars = array_flip($this->defaultCalendars());
         $sourceCalId = $sourceCalendar['id'];
         if (!empty($defaultCalendars[$calId]) && !empty($defaultCalendars[$sourceCalId])) {
           $l = $this->appL10n();
@@ -1352,7 +1371,7 @@ class EventsService
               $vEvent->SUMMARY = $summary;
             }
             if (self::absenceFieldsDefault($calendarUri)) {
-              $categories[] = $this->getRecordAbsenceCategory();
+              $categories[] = $recordAbsenceCategory;
             }
             VCalendarService::setCategories($vEvent, $categories);
             $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
