@@ -440,9 +440,11 @@ const handleDetailsRequest = (data: { viewName: string, title: string, props: ob
 
 const openProjectOverview = () => {
   closeNavigation()
-  asyncEmit(BusEvents.PROJECT_POPUP, {
+  asyncEmit(BusEvents.LEGACY_RECORD_POPUP, {
+    entityId: currentProjectId.value,
     projectId: currentProjectId.value,
     projectName: currentProjectName.value,
+    template: 'projects',
   })
 }
 

@@ -36,7 +36,6 @@ export const POP_BUSY_STATE = appEventName('pop-busy-state');
 export const PROJECT_EVENTS_LISTING = appEventName('project-events-listing');
 export const PROJECT_INSTRUMENTATION_NUMBERS_POPUP = appEventName('project-instrumentation-numbers-popup');
 export const PROJECT_PARTICIPANT_FIELDS_POPUP = appEventName('project-participant-fields-popup');
-export const PROJECT_POPUP = appEventName('project-popup');
 export const PUSH_BUSY_STATE = appEventName('push-busy-state');
 export const SET_BUSY_FLAG = appEventName('set-busy-flag');
 export const TOGGLE_TOOLTIPS = appEventName('toggle-tooltips');
