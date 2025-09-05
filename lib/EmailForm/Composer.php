@@ -398,8 +398,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   /**@var int */
   private $donationReceiptId;
 
-  /** @var float */
-  private $paymentSign = 1.0;
+  /** @var int */
+  private int $paymentSign = 1;
 
   /** @var bool */
   private $constructionMode;
@@ -544,8 +544,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           list($template,) = $this->normalizeTemplateName($template);
         }
         $this->paymentSign = ($this->bulkTransaction instanceof Entities\SepaDebitNote)
-          ? 1.0
-          : -1.0;
+          ? 1
+          : -1;
       }
     }
 
@@ -558,7 +558,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $template = Entities\DonationReceipt::NOTIFICATION_EMAIL_TEMPLATE;
         list($template,) = $this->normalizeTemplateName($template);
       }
-      $this->paymentSign = 1.0;
+      $this->paymentSign = 1;
     }
 
     if (!empty($template)) {
@@ -1283,7 +1283,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
           $compositePayment = $this->getCompositePayment($musician);
           if (!empty($compositePayment)) {
-            $amount = $this->paymentSign * $compositePayment->getDonationAmount();
+            $amount = $compositePayment->getDonationAmount()->mul($this->paymentSign);
             return $this->moneyValue($amount);
           }
           return $keyArg[0];
@@ -1296,7 +1296,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
           $compositePayment = $this->getCompositePayment($musician);
           if (!empty($compositePayment)) {
-            $amount = $this->paymentSign * $compositePayment->getNonDonationAmount();
+            $amount = $compositePayment->getNonDonationAmount()->mul($this->paymentSign);
             return $this->moneyValue($amount);
           }
           return $keyArg[0];
@@ -1326,7 +1326,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
         $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
-          $amount = $this->paymentSign * $compositePayment->getAmount();
+          $amount = $compositePayment->getAmount()->mul($this->paymentSign);
           return $this->moneyValue($amount);
         }
         return $keyArg[0];
@@ -1479,8 +1479,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           ];
 
           $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
-          $totalSum = array_fill_keys($replacementKeys, RationalNumber::zero());
-          $totalSum['purpose'] = $this->l->t('Total Amount');
+          $totalSum = array_map(fn(mixed $any) => RationalNumber::zero(), array_fill_keys($replacementKeys, null));
+	  $totalSum['purpose'] = $this->l->t('Total Amount');
 
           $rowTemplate = $tableTemplate['row'];
 
@@ -1491,20 +1491,20 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           $payments = $compositePayment->getProjectPayments();
           /** @var Entities\ProjectPayment $payment */
           foreach ($payments as $payment) {
-            $invoiced = $this->paymentSign * $payment->getAmount();
+            $invoiced = $payment->getAmount()->mul($this->paymentSign);
 
-            $totals = $this->paymentSign * $payment->getReceivable()->amountPayable();
-            $received = $this->paymentSign * $payment->getReceivable()->amountPaid();
+            $totals = $payment->getReceivable()->amountPayable()->mul($this->paymentSign);
+            $received = $payment->getReceivable()->amountPaid()->mul($this->paymentSign);
 
             // otherwise one would have to account for the dueDate,
             // so keep it simple and just remove the current payment.
-            $received -= $invoiced;
+            $received->subEq($invoiced);
 
-            if (!empty($received)) {
+            if (!$received->eq(0)) {
               $receivedIsZero = false;
             }
 
-            $remaining = $totals - $received;
+            $remaining = $totals->sub($received);
 
             $purpose = $payment->getSubject();
 
