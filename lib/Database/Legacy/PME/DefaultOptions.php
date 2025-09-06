@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,8 +27,10 @@ namespace OCA\CAFEVDB\Database\Legacy\PME;
 use OCA\CAFEVDB\Common\Util;
 
 /** Default legacy PME options object. */
-class DefaultOptions extends \ArrayObject implements IOptions
+class DefaultOptions implements IOptions
 {
+  private array $options;
+
   /**
    * @param array $options
    */
@@ -73,6 +75,36 @@ class DefaultOptions extends \ArrayObject implements IOptions
     if (!isset($options['cgi']['append'][$options['cgi']['prefix']['sys'].'fl'])) {
       $options['cgi']['append'][$options['cgi']['prefix']['sys'].'fl'] = 0;
     }
-    parent::__construct($options);
+    $this->options = $options;
+  }
+
+  /**  {@inheritdoc} */
+  public function offsetExists(mixed $offset): bool
+  {
+    return isset($this->options[$offset]);
+  }
+
+  /**  {@inheritdoc} */
+  public function offsetGet(mixed $offset): mixed
+  {
+    return $this->options[$offset];
+  }
+
+  /**  {@inheritdoc} */
+  public function offsetSet(mixed $offset, mixed $value): void
+  {
+    $this->options[$offset] = $value;
+  }
+
+  /**  {@inheritdoc} */
+  public function offsetUnset(mixed $offset): void
+  {
+    unset($this->options[$offset]);
+  }
+
+  /**  {@inheritdoc} */
+  public function toArray(): array
+  {
+    return $this->options;
   }
 }
