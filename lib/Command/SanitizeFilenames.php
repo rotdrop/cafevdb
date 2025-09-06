@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Command;
 use Throwable;
 
 use OCP\AppFramework\IAppContainer;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\IRootFolder;
 use OCP\IL10N;
@@ -35,6 +36,9 @@ use OCP\IUserSession;
 use OCP\L10N\IFactory as IL10NFactory;
 use OC\Files\FilenameValidator;
 use Psr\Log\LoggerInterface;
+
+use OCA\Files\Service\SettingsService;
+use OCA\Files\Command\SanitizeFilenames as FilesSanitizeFilenames;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -46,7 +50,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Exceptions;
 
 /** Authenticated sanitize-filenames which is thus also able to scan the database-backed mounts */
-class SanitizeFilenames extends \OCA\Files\Command\SanitizeFilenames
+class SanitizeFilenames extends FilesSanitizeFilenames
 {
   use AuthenticatedCommandTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\SanitizeFilenameTrait;
@@ -58,9 +62,11 @@ class SanitizeFilenames extends \OCA\Files\Command\SanitizeFilenames
     protected IL10N $l,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    IRootFolder $rootFolder,
-    IL10NFactory $l10nFactory,
     FilenameValidator $filenameValidator,
+    IAppConfig $appConfig,
+    IL10NFactory $l10nFactory,
+    IRootFolder $rootFolder,
+    SettingsService $settingsService,
   ) {
     parent::__construct(
       userManager: $this->userManager,
@@ -68,6 +74,8 @@ class SanitizeFilenames extends \OCA\Files\Command\SanitizeFilenames
       session: $this->userSession,
       l10nFactory: $l10nFactory,
       filenameValidator: $filenameValidator,
+      service: $settingsService,
+      appConfig: $appConfig,
     );
   }
   // phpcs:enable
