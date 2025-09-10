@@ -646,7 +646,7 @@ class ConfigService
    */
   public function isSubAdminOfGroup($userId = null, $groupId = null):bool
   {
-    $user = empty($userId) ? $this->user : $this->getUserManager()->get($userId);
+    $user = empty($userId) ? $this->getUser() : $this->getUserManager()->get($userId);
     $group = empty($groupId) ? $this->getGroup() : $this->getGroupManager()->get($groupId);
 
     if (empty($user) || empty($group)) {
