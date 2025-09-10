@@ -133,15 +133,24 @@ const message = function({
 };
 
 const alert = function(content, title, callback, modal, allowHtml) {
-  return message({
-    content,
-    title,
+  const defaultArg = {
     dialogType: 'alert',
     buttons: OC.dialogs.OK_BUTTONS,
-    callback,
-    modal,
-    allowHtml,
-  });
+    callback: () => {},
+    modal: false,
+    allowHtml: false,
+  };
+  return message(
+    typeof content !== 'string' && content.content
+      ? { ...defaultArg, ...content }
+      : {
+        ...defaultArg,
+        content,
+        title,
+        callback,
+        modal: modal || false,
+        allowHtml: allowHtml || false,
+      });
 };
 
 const info = function(content, title, callback, modal, allowHtml) {
@@ -262,6 +271,15 @@ const attachDialogHandlers = function() {
     .on('dblclick', dialogContainerSelector + ' .dialog__name', function(event) {
       $(this).closest(dialogContainerSelector).toggleClass('maximize-width');
       event.stopImmediatePropagation();
+      return false;
+    });
+
+  $container
+    .off('dblclick', dialogContainerSelector + ' .exception.error')
+    .on('dblclick', dialogContainerSelector + ' .exception.error', function(event) {
+      $(this).closest(dialogContainerSelector).find('.trace').toggleClass('visible');
+      event.stopImmediatePropagation();
+      return false;
     });
 };
 

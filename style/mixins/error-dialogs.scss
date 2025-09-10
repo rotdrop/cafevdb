@@ -65,15 +65,19 @@
         color:red;
         margin-left:2em;
       }
+      .prefix {
+        font-style: italic;
+        font-weight: bold;
+      }
 
-      &.trace {
+      &.trace, .trace {
         display:none;
         font-weight:bold;
         color:blue;
         margin: 0 2em 0 2em;
         max-width:100%;
         overflow:auto;
-        /* white-space:nowrap; */
+        white-space:pre;
         &.visible {
           display: block;
         }
@@ -86,16 +90,6 @@
       /* Exception extracted from Nextcloud HTML response */
       h3 {
         font-weight:bold;
-      }
-      .trace {
-        display:none;
-        color:blue;
-        margin: 0 2em 0 2em;
-        max-width:100%;
-        overflow:auto;
-        &.visible {
-          display: block;
-        }
       }
       ul.technical li {
         &.class, &.code, &.file, &.line {
