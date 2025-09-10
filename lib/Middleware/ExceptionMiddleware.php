@@ -160,8 +160,12 @@ class ExceptionMiddleware extends Middleware
     );
     // $this->logInfo('LOG_ENTRY ' . print_r($logEntry, true));
     // $this->logInfo('LOG_ENTRY ' . \OCA\CAFEVDB\Common\Functions\dump($logEntry));
-    array_walk_recursive($logEntry, fn(&$value) => $value = str_replace(\OC::$SERVERROOT, '', $value));
+    if (is_array($logEntry)) {
+      array_walk_recursive($logEntry, fn(&$value) => $value = str_replace(\OC::$SERVERROOT, '', $value));
+    } else {
+      $this->logError('Log entry is null');
+    }
     $this->logDebug('LOG_ENTRY ' . print_r($logEntry, true));
-    return new JSONResponse($logEntry, $httpStatusCode);
+    return new JSONResponse($logEntry ?? [], $httpStatusCode);
   }
 }
