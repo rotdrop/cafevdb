@@ -200,7 +200,7 @@ class CalDavService
     $targetShare = self::makeGroupShare($groupId, $readOnly);
     $shares = $this->calDavBackend->getShares($calendarId);
     foreach ($shares as $share) {
-      if ($share['href'] === $targetShare['href'] && $share['readOnly'] == $targetShare['readonly']) {
+      if ($share['href'] === $targetShare['href'] && $share['readOnly'] == $targetShare['readOnly']) {
         return true;
       }
     }
