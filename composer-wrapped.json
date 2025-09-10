@@ -21,7 +21,7 @@
     "cjh/doctrine-on-update-extension": "dev-master",
     "doctrine/annotations": "*",
     "doctrine/dbal": "^3.2",
-    "doctrine/orm": "dev-production/3.5.x/cafevdb",
+    "doctrine/orm": "dev-production/3.6.x/cafevdb",
     "gedmo/doctrine-extensions": "3.x-dev",
     "maennchen/zipstream-php": "^3.0.0",
     "mediamonks/doctrine-extensions": "0.1.x-dev",
