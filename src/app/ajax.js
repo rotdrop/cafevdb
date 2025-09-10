@@ -27,6 +27,7 @@ import globalState from './globalstate.js';
 import * as Dialogs from './dialogs.js';
 import { isPlainObject } from 'is-plain-object';
 import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
+import { getLanguage } from '@nextcloud/l10n';
 import { emit as asyncEmit, hasSubscriptions } from '../services/async-event-bus.ts';
 import { LEGACY_AJAX_ERROR } from '../event-bus-events.ts';
 import l10nHttpStatus from '@http-util/status-i18n';
@@ -34,7 +35,16 @@ import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
 
 const cloudWebRoot = getCloudRootUrl() || '/';
 
-const httpStatusText = (code, lang = undefined) => l10nHttpStatus(code, lang || globalState.cloudLanguage || 'en_US');
+const httpStatusText = (code, lang = undefined) => l10nHttpStatus(code, lang || globalState.cloudLanguage || getLanguage() || 'en_US');
+
+const stringifyTrace = (trace) => {
+  const traceAsString = [];
+  let count = 1;
+  for (const traceLine of trace) {
+    traceAsString.push(`${count++}. ${traceLine.file} - ${t(appName, 'line')} ${traceLine.line}: ${traceLine.class}${traceLine.type}${traceLine.function}()`);
+  }
+  return traceAsString.join('\n');
+};
 
 /**
  * Generate some diagnostic output, mostly needed during application
@@ -141,16 +151,33 @@ const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) 
           + '</span>';
       }
       if (failData.message) {
+        const classes = appName + (failData.exception ? ' exception' : '');
         for (const msg of failData.message) {
-          info += '<div class="' + appName + ' error toastify">' + msg + '</div>';
+          info += '<div class="' + classes + ' error toastify">' + msg + '</div>';
         }
       }
       let exceptionData = failData;
-      if (exceptionData.exception !== undefined) {
+      if (exceptionData?.exception?.Exception) {
+        // log entry
+        exceptionData = exceptionData.exception;
+        const exception = exceptionData.Exception;
+        const trace = stringifyTrace(exceptionData.Trace);
+        info += '<div class="exception error name"><pre>' + exception + '</pre></div>'
+          + '<div class="exception error trace"><pre>' + trace + '</pre></div>';
+        while ((exceptionData = exceptionData.Previous) != null) {
+          const message = exceptionData.Message;
+          const exception = exceptionData.Exception;
+          const trace = stringifyTrace(exceptionData.Trace);
+          info += '<div class="exception error toastify"><span class="prefix">' + t(appName, 'Prevous') + ': </span><span class="message">' + message + '</span></div>';
+          info += '<div class="exception error name"><pre>' + exception + '</pre></div>'
+            + '<div class="exception error trace"><pre>' + trace + '</pre></div>';
+        }
+      } else if (exceptionData.exception) {
+        // legacy
         info += '<div class="exception error name"><pre>' + exceptionData.exception + '</pre></div>'
           + '<div class="exception error trace"><pre>' + exceptionData.trace + '</pre></div>';
         while ((exceptionData = exceptionData.previous) != null) {
-          info += '<div class="bold error toastify">' + exceptionData.message + '</div>';
+          info += '<div class="exception error toastify">' + exceptionData.message + '</div>';
           info += '<div class="exception error name"><pre>' + exceptionData.exception + '</pre></div>'
             + '<div class="exception error trace"><pre>' + exceptionData.trace + '</pre></div>';
         }
@@ -158,7 +185,14 @@ const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) 
       if (failData.info) {
         info += '<div class="' + appName + ' error-page">' + failData.info + '</div>';
       }
-      Dialogs.alert(info, caption, function() { callbacks.cleanup(failData); }, true, true);
+      Dialogs.alert({
+        content: info,
+        title: caption,
+        callback() { callbacks.cleanup(failData); },
+        allowHtml: true,
+        modal: true,
+        dialogClasses: 'maximize-width',
+      });
     }
     break;
   }
@@ -188,7 +222,14 @@ certain security token could not be refreshed regularly which may
 produce the error your see. A simple page reload may help. This is
 done automatically when cloud click "ok" or close this dialog window.
 </div>`;
-    Dialogs.alert(info, caption, function() { callbacks.cleanup(failData); }, true, true);
+    Dialogs.alert({
+      content: info,
+      title: caption,
+      callback() { callbacks.cleanup(failData); },
+      allowHtml: true,
+      modal: true,
+      dialogClasses: 'maximize-width',
+    });
     break;
   case HttpStatusCodes.UNAUTHORIZED: {
     // no point in continuing, direct the user to the login page
@@ -207,7 +248,14 @@ done automatically when cloud click "ok" or close this dialog window.
           + 'temporary work-around. You will be redirected to the '
           + 'log-in page when you close this window.');
     info += '<div class="error general">' + generalHint + '</div>';
-    Dialogs.alert(info, caption, function() { callbacks.cleanup(failData); }, true, true);
+    Dialogs.alert({
+      content: info,
+      title: caption,
+      callback() { callbacks.cleanup(failData); },
+      allowHtml: true,
+      modal: true,
+      dialogClasses: 'maximize-width',
+    });
     break;
   }
   }
