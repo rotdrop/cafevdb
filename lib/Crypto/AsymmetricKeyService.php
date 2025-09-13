@@ -259,6 +259,11 @@ class AsymmetricKeyService
     $cryptor = self::$cryptors[$ownerId] ?? null;
     if (empty($cryptor)) {
       $keyPair = self::$keyPairs[$ownerId] ?? null;
+      if (empty($keyPair)) {
+        // effect of LazyGhosts: EncryptionService CTOR has not been run
+        $this->initEncryptionKeyPair($ownerId);
+        $keyPair = self::$keyPairs[$ownerId] ?? null;
+      }
       $privKey = $keyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG] ?? null;
       $pubKey = $keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG] ?? $this->keyStorage->getPublicKey($ownerId);
       $cryptor = clone $this->cryptorPrototype;
