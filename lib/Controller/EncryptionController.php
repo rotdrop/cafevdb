@@ -27,25 +27,26 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use OCP\AppFramework\OCSController;
-use OCP\AppFramework\OCS;
-use OCP\IRequest;
+use Throwable;
+
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\IAppContainer;
+use OCP\AppFramework\OCS;
+use OCP\AppFramework\OCSController;
+use OCP\IL10N;
+use OCP\IRequest;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 
 use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
-use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Service\AuthorizationService;
-use OCA\CAFEVDB\Exceptions;
-
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\EncryptionService;
 
 /** AJAX end-points in order to support encryption. */
 class EncryptionController extends OCSController
@@ -183,7 +184,7 @@ class EncryptionController extends OCSController
         'userId' => $userId,
         'access' => 'revoked',
       ]);
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       if ($allowFailure) {
         return new DataResponse([
           'userId' => $userId,
@@ -211,7 +212,7 @@ class EncryptionController extends OCSController
     try {
       try {
         $appEncryptionKey = $this->recryptForUser($userId);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         if ($allowFailure) {
           return new DataResponse([
             'userId' => $userId,
@@ -294,7 +295,7 @@ class EncryptionController extends OCSController
             $userId = $musician->getUserIdSlug();
             $this->recryptForUser($userId);
             return [ 'userId' => $userId, 'status' => $grantAccess ? 'granted' : 'revoked' ];
-          } catch (\Throwable $t) {
+          } catch (Throwable $t) {
             $this->logException($t);
             return [ 'userId' => $userId, 'status' => 'failure' ];
           }
@@ -328,7 +329,7 @@ class EncryptionController extends OCSController
         }
         $this->flush();
         $this->entityManager->commit();
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->entityManager->rollback();
         $this->keyService->setSharedPrivateValue($userId, self::ROW_ACCESS_TOKEN_KEY, null);
         $this->logException($t, 'Unable to set row access-token for user ' . $userId);
@@ -344,7 +345,7 @@ class EncryptionController extends OCSController
       }
       try {
         $this->entityManager->recryptEntityList($encryptedEntities);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t, 'Unable to recrypt encrypted data for user ' . $userId);
         throw new OCS\OCSBadRequestException($this->l->t('Unable to recrypt encrypted data for user "%s".', $userId), $t);
       }
