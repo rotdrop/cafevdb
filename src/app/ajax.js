@@ -168,7 +168,7 @@ const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) 
           const message = exceptionData.Message;
           const exception = exceptionData.Exception;
           const trace = stringifyTrace(exceptionData.Trace);
-          info += '<div class="exception error toastify"><span class="prefix">' + t(appName, 'Prevous') + ': </span><span class="message">' + message + '</span></div>';
+          info += '<div class="exception error toastify"><span class="prefix">' + t(appName, 'Previous') + ': </span><span class="message">' + message + '</span></div>';
           info += '<div class="exception error name"><pre>' + exception + '</pre></div>'
             + '<div class="exception error trace"><pre>' + trace + '</pre></div>';
         }
