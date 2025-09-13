@@ -169,7 +169,7 @@ class MusicianEntityListener
   /**
    * {@inheritdoc}
    *
-   * Remove should in principle not be neccessary as soft-deletion shoujld
+   * Remove should in principle not be neccessary as soft-deletion should
    * trigger the pre-update hook which already will break the addressbook
    * link.
    */
