@@ -158,7 +158,7 @@ const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) 
       }
       let exceptionData = failData;
       if (exceptionData?.exception?.Exception) {
-        // log entry
+        // exception log entry
         exceptionData = exceptionData.exception;
         const exception = exceptionData.Exception;
         const trace = stringifyTrace(exceptionData.Trace);
@@ -171,19 +171,6 @@ const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) 
           info += '<div class="exception error toastify"><span class="prefix">' + t(appName, 'Prevous') + ': </span><span class="message">' + message + '</span></div>';
           info += '<div class="exception error name"><pre>' + exception + '</pre></div>'
             + '<div class="exception error trace"><pre>' + trace + '</pre></div>';
-        }
-      } else if (exceptionData.exception) {
-        // legacy
-        const exception = exceptionData.exception;
-        info += '<div class="exception error toastify">' + exceptionData.brief + '</div>';
-        info += '<div class="exception error name"><pre>' + exception.class + '</pre></div>'
-          + '<div class="exception error trace"><pre>' + exception.trace + '</pre></div>';
-        while ((exceptionData = exceptionData.previous) != null) {
-          const exception = exceptionData.exception;
-          info += '<div class="exception error toastify">' + exceptionData.message + '</div>';
-          info += '<div class="exception error toastify">' + exceptionData.brief + '</div>';
-          info += '<div class="exception error name"><pre>' + exception.class + '</pre></div>'
-            + '<div class="exception error trace"><pre>' + exception.trace + '</pre></div>';
         }
       }
       if (failData.info) {
