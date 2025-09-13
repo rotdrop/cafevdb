@@ -174,12 +174,16 @@ const ajaxHandleError = async function(xhr, textStatus, errorThrown, callbacks) 
         }
       } else if (exceptionData.exception) {
         // legacy
-        info += '<div class="exception error name"><pre>' + exceptionData.exception + '</pre></div>'
-          + '<div class="exception error trace"><pre>' + exceptionData.trace + '</pre></div>';
+        const exception = exceptionData.exception;
+        info += '<div class="exception error toastify">' + exceptionData.brief + '</div>';
+        info += '<div class="exception error name"><pre>' + exception.class + '</pre></div>'
+          + '<div class="exception error trace"><pre>' + exception.trace + '</pre></div>';
         while ((exceptionData = exceptionData.previous) != null) {
+          const exception = exceptionData.exception;
           info += '<div class="exception error toastify">' + exceptionData.message + '</div>';
-          info += '<div class="exception error name"><pre>' + exceptionData.exception + '</pre></div>'
-            + '<div class="exception error trace"><pre>' + exceptionData.trace + '</pre></div>';
+          info += '<div class="exception error toastify">' + exceptionData.brief + '</div>';
+          info += '<div class="exception error name"><pre>' + exception.class + '</pre></div>'
+            + '<div class="exception error trace"><pre>' + exception.trace + '</pre></div>';
         }
       }
       if (failData.info) {
