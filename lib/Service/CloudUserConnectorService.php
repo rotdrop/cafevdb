@@ -32,12 +32,12 @@ use OCP\IL10N;
 use OCP\App\IAppManager;
 use OCP\AppFramework\IAppContainer;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Exceptions;
-
-use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException as DBALDriverException;
 
 /**
  * Manage database-views and grants in order to selectively provide only the
@@ -64,6 +64,8 @@ class CloudUserConnectorService
 
   const GROUP_ID_PREFIX = '%2$s' . self::GROUP_ID_SEPARATOR;
 
+  private const CHECK_OPTION_ON_NON_UPDATABLE_VIEW_ERROR = 1368;
+
   /**
    * @var string
    *
@@ -81,7 +83,7 @@ SELECT CONVERT((CONCAT(_ascii "' . self::GROUP_ID_PREFIX. '" , p.id) COLLATE asc
        0 AS is_admin
 FROM Projects p
 WHERE p.type IN ("temporary", "permanent") AND p.deleted IS NULL
-WITH CHECK OPTION';
+';
 
   const USER_SQL_USER_GROUP_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
@@ -91,8 +93,8 @@ SELECT CONVERT(m.user_id_slug USING ' . DBConstants::CHARACTER_SET . ') AS uid,
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
 LEFT JOIN Projects p ON p.id = pp.project_id
-WHERE pp.deleted IS NULL';
-  // WITH CHECK OPTION. But view is not updatable. Ok.
+WHERE pp.deleted IS NULL
+';
 
   /**
    * @var string
@@ -119,7 +121,7 @@ SELECT CONVERT(m.user_id_slug USING ' . DBConstants::CHARACTER_SET . ') AS uid,
        NULL AS salt
 FROM Musicians m
 WHERE m.email IS NOT NULL AND m.email <> ""
-WITH CHECK OPTION'; // But view is not updatable. Ok.
+';
 
   const USER_SQL_VIEWS = [
     'User' => self::USER_SQL_USER_VIEW,
@@ -130,7 +132,7 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
   const MUSICIAN_ID_TABLES = [
     'SepaBankAccounts' => 'musician_id',
     'SepaDebitMandates' => 'musician_id',
-    'MusicianRowAccessTokens' => 'musician_id',
+    // 'MusicianRowAccessTokens' => 'musician_id',
     'ProjectApplications' => 'musician_id',
     'ProjectParticipants' => 'musician_id',
     'MusicianInstruments' => 'musician_id',
@@ -331,7 +333,18 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
         foreach ($statements as $sql) {
           $currentStatement = $sql;
           $this->logDebug('SQL ' . $currentStatement);
-          $this->connection->prepare($sql)->execute();
+          if (str_starts_with($sql, 'CREATE')) {
+            try {
+              $this->connection->prepare($sql . ' WITH CHECK OPTION')->execute();
+            } catch (DBALDriverException $e) {
+              if ($e->getCode() != self::CHECK_OPTION_ON_NON_UPDATABLE_VIEW_ERROR) {
+                throw $e;
+              }
+              $this->connection->prepare($sql)->execute();
+            }
+          } else {
+            $this->connection->prepare($sql)->execute();
+          }
         }
       }
     } catch (Throwable $t) {
@@ -625,11 +638,27 @@ BEGIN
     WHERE t.user_id = @CLOUD_USER_ID AND t.access_token_hash = @ROW_ACCESS_TOKEN;
   RETURN musician_id;
 END",
+      'ROW_ACCESS_TOKEN' => "()
+  RETURNS CHAR(128)
+  DETERMINISTIC
+  NO SQL
+  SQL SECURITY INVOKER
+BEGIN
+  RETURN @ROW_ACCESS_TOKEN;
+END",
+      'CLOUD_USER_ID' => "()
+  RETURNS VARCHAR(256)
+  DETERMINISTIC
+  NO SQL
+  SQL SECURITY INVOKER
+BEGIN
+  RETURN @CLOUD_USER_ID;
+END",
       'BIN_TO_UUID' => "(`b` BINARY(16), `f` BOOLEAN)
   RETURNS CHAR(36) CHARSET ascii
   DETERMINISTIC
-  NO SQL SQL
-  SECURITY INVOKER
+  NO SQL
+  SQL SECURITY INVOKER
 BEGIN
   DECLARE hexStr CHAR(32);
   SET hexStr = HEX(b);
@@ -673,20 +702,15 @@ BEGIN
 END",
     ];
 
+    $functionPrefix = empty($dataBaseName) ? '' : $dataBaseName . '.';
+
     $statements = [];
 
     // fetch the authorized musician-id from the token table by examining the secret.
-    $accessFunction = 'ROW_ACCESS_ID';
-    if (!empty($dataBaseName)) {
-      $accessFunction = $dataBaseName . '.' . $accessFunction;
-    }
-    $accessFunction .= '()';
+    $accessFunction = $functionPrefix . 'ROW_ACCESS_ID' . '()';
 
     foreach ($functions as $name => $definition) {
-      if (!empty($dataBaseName)) {
-        $name = $dataBaseName . '.`' . $name . '`';
-      }
-      $statements[$name] = "CREATE OR REPLACE FUNCTION " . $name . $definition;
+      $statements[$functionPrefix . $name] = "CREATE OR REPLACE FUNCTION " . $functionPrefix . $name . $definition;
     }
 
     $musicianViewName = $this->personalizedViewName($dataBaseName, 'Musicians');
@@ -698,15 +722,15 @@ SELECT *
 FROM Musicians m
 WHERE m.id = " . $accessFunction;
 
-//     /** Export the MusicianRowAccessTokens table be directly matching user-id and access token */
-//     $musicianRowAccessTokenViewName = $this->personalizedViewName($dataBaseName, 'MusicianRowAccessTokens');
-//     $statements[$musicianRowAccessTokenViewName] = "CREATE OR REPLACE
-// SQL SECURITY DEFINER
-// VIEW " . $musicianRowAccessTokenViewName . "
-// AS
-// SELECT *
-// FROM MusicianRowAccessTokens mrat
-// WHERE mrat.user_id = @CLOUD_USER_ID AND mrat.access_token_hash = @ROW_ACCESS_TOKEN";
+    $musicianRowAccessTokenViewName = $this->personalizedViewName($dataBaseName, 'MusicianRowAccessTokens');
+    $statements[$musicianRowAccessTokenViewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $musicianRowAccessTokenViewName . "
+AS
+SELECT *
+FROM MusicianRowAccessTokens mrat
+WHERE mrat.access_token_hash = " . $functionPrefix . "ROW_ACCESS_TOKEN()
+  AND mrat.user_id = " . $functionPrefix . "CLOUD_USER_ID()";
 
     foreach (self::MUSICIAN_ID_TABLES as $table => $column) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
@@ -867,7 +891,7 @@ SELECT t.* FROM " . $table . " t";
    *
    * @param string|null $dataBaseName The name of the database where the views
    * will be created. The cafevdb database user must have GRANT rights on the
-   * databse. If null the views are created in the standard databse.
+   * database. If null the views are created in the standard databse.
    *
    * @return void
    *
@@ -883,11 +907,18 @@ SELECT t.* FROM " . $table . " t";
       foreach ($statements as $viewName => $statement) {
         $currentStatement = $statement;
         $this->logDebug('SQL ' . $currentStatement);
-        $this->connection->prepare($currentStatement)->execute();
         if (strpos($statement, 'FUNCTION') !== false) {
-          $this->logInfo($currentStatement);
+          $this->connection->prepare($currentStatement)->execute();
           $currentStatement = "GRANT EXECUTE ON FUNCTION " . $viewName . " TO " . $cloudDbUser . "@'localhost'";
         } else {
+          try {
+            $this->connection->prepare($currentStatement . ' WITH CHECK OPTION')->execute();
+          } catch (DBALDriverException $e) {
+            if ($e->getCode() != self::CHECK_OPTION_ON_NON_UPDATABLE_VIEW_ERROR) {
+              throw $e;
+            }
+            $this->connection->prepare($currentStatement)->execute();
+          }
           $currentStatement = sprintf(self::GRANT_SELECT, $viewName, $cloudDbUser);
         }
         $this->logDebug('SQL ' . $currentStatement);
