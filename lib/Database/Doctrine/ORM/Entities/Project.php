@@ -112,26 +112,29 @@ class Project implements \ArrayAccess
   private $registrationDeadline;
 
   #[ORM\OneToMany(targetEntity: ProjectInstrumentationNumber::class, mappedBy: 'project', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
-  private $instrumentationNumbers;
+  private Collection $instrumentationNumbers;
 
   /**
    * @todo this should cascade deletes
    */
   #[ORM\OneToMany(targetEntity: ProjectWebPage::class, mappedBy: 'project', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
-  private $webPages;
+  private Collection $webPages;
 
   /**
    * @todo This does not work well with _AT_Gedmo\Translatable
    */
   #[ORM\OneToMany(targetEntity: ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id')]
   #[ORM\OrderBy(['displayOrder' => 'DESC'])]
-  private $participantFields;
+  private Collection $participantFields;
 
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'project', fetch: 'EXTRA_LAZY')]
-  private $participantFieldsData;
+  private Collection $participantFieldsData;
 
   #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'project', indexBy: 'musician_id')]
-  private $participants;
+  private Collection $participants;
+
+  #[ORM\OneToMany(targetEntity: ProjectApplication::class, mappedBy: 'project', indexBy: 'id')]
+  private Collection $applications;
 
   #[ORM\OneToMany(targetEntity: SepaDebitMandate::class, mappedBy: 'project')]
   private $sepaDebitMandates;

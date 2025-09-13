@@ -278,6 +278,10 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
   private $instruments;
 
+  #[ORM\OneToMany(targetEntity: ProjectApplication::class, mappedBy: 'musician', indexBy: 'project_id', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+  #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
+  private $projectApplications;
+
   #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'musician', indexBy: 'project_id', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
   private $projectParticipation;
@@ -361,6 +365,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->emailAddresses = new ArrayCollection();
     $this->instruments = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
+    $this->projectApplications = new ArrayCollection();
     $this->projectParticipation = new ArrayCollection();
     $this->projectParticipantFieldsData = new ArrayCollection();
     $this->instrumentInsurances = new ArrayCollection();
@@ -1119,6 +1124,30 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->instruments->set($instrument->getId(), $musicianInstrument);
 
     return $this;
+  }
+
+  /**
+   * Set projectApplications.
+   *
+   * @param Collection $projectApplications
+   *
+   * @return Musician
+   */
+  public function setProjectApplications(Collection $projectApplications):Musician
+  {
+    $this->projectApplications = $projectApplications;
+
+    return $this;
+  }
+
+  /**
+   * Get projectApplications.
+   *
+   * @return Collection
+   */
+  public function getProjectApplications():Collection
+  {
+    return $this->projectApplications;
   }
 
   /**

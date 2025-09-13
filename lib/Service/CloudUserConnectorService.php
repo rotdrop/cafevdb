@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Throwable;
+
 use OCP\IConfig;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
@@ -128,6 +130,8 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
   const MUSICIAN_ID_TABLES = [
     'SepaBankAccounts' => 'musician_id',
     'SepaDebitMandates' => 'musician_id',
+    'MusicianRowAccessTokens' => 'musician_id',
+    'ProjectApplications' => 'musician_id',
     'ProjectParticipants' => 'musician_id',
     'MusicianInstruments' => 'musician_id',
     'ProjectInstruments' => 'musician_id',
@@ -330,7 +334,7 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
           $this->connection->prepare($sql)->execute();
         }
       }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       throw new Exceptions\DatabaseCloudConnectorViewException(
         $this->l->t('Unable to create or update the user-sql cloud-connector views: %s.', $currentStatement),
         $t->getCode(),
@@ -358,7 +362,7 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
         $this->logDebug('SQL ' . $currentStatement);
         $this->connection->prepare($currentStatement)->execute();
       }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       throw new Exceptions\DatabaseCloudConnectorViewException(
         $this->l->t('Unable to delete the user-sql cloud-connector views: %s.', $currentStatement),
         $t->getCode(),
@@ -608,6 +612,67 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
    */
   private function generateMusicianPersonalizedViewsStatements(?string $dataBaseName):array
   {
+    $functions = [
+      'ROW_ACCESS_ID' => "()
+  RETURNS INT(11)
+  READS SQL DATA
+  SQL SECURITY DEFINER
+BEGIN
+  DECLARE musician_id INT;
+  SET musician_id = 0;
+  SELECT t.musician_id INTO musician_id
+    FROM `" . $this->appDbName . "`.MusicianRowAccessTokens t
+    WHERE t.user_id = @CLOUD_USER_ID AND t.access_token_hash = @ROW_ACCESS_TOKEN;
+  RETURN musician_id;
+END",
+      'BIN_TO_UUID' => "(`b` BINARY(16), `f` BOOLEAN)
+  RETURNS CHAR(36) CHARSET ascii
+  DETERMINISTIC
+  NO SQL SQL
+  SECURITY INVOKER
+BEGIN
+  DECLARE hexStr CHAR(32);
+  SET hexStr = HEX(b);
+  RETURN LOWER(CONCAT(
+           IF(f,SUBSTR(hexStr, 9, 8),SUBSTR(hexStr, 1, 8)), '-',
+           IF(f,SUBSTR(hexStr, 5, 4),SUBSTR(hexStr, 9, 4)), '-',
+           IF(f,SUBSTR(hexStr, 1, 4),SUBSTR(hexStr, 13, 4)), '-',
+           SUBSTR(hexStr, 17, 4), '-',
+           SUBSTR(hexStr, 21)
+        ));
+END",
+      'BIN2UUID' => "(`b` BINARY(16))
+  RETURNS CHAR(36) CHARSET ascii
+  DETERMINISTIC
+  NO SQL
+  SQL SECURITY INVOKER
+BEGIN
+  RETURN BIN_TO_UUID(b, 0);
+END",
+      'UUID_TO_BIN' => "(`uuid` CHAR(36), `f` BOOLEAN)
+  RETURNS BINARY(16)
+  DETERMINISTIC
+  NO SQL
+  SQL SECURITY INVOKER
+BEGIN
+  RETURN UNHEX(CONCAT(
+  IF(f,SUBSTRING(uuid, 15, 4),SUBSTRING(uuid, 1, 8)),
+  SUBSTRING(uuid, 10, 4),
+  IF(f,SUBSTRING(uuid, 1, 8),SUBSTRING(uuid, 15, 4)),
+  SUBSTRING(uuid, 20, 4),
+  SUBSTRING(uuid, 25))
+  );
+END",
+      'UUID2BIN' => "(`uuid` CHAR(36))
+  RETURNS BINARY(16)
+  DETERMINISTIC
+  NO SQL
+  SQL SECURITY INVOKER
+BEGIN
+  RETURN UUID_TO_BIN(uuid, 0);
+END",
+    ];
+
     $statements = [];
 
     // fetch the authorized musician-id from the token table by examining the secret.
@@ -615,18 +680,14 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
     if (!empty($dataBaseName)) {
       $accessFunction = $dataBaseName . '.' . $accessFunction;
     }
-
-    $statements[$accessFunction] = "CREATE OR REPLACE FUNCTION " . $accessFunction . "() RETURNS INT(11)
-    READS SQL DATA
-    SQL SECURITY DEFINER
-BEGIN
-  DECLARE musician_id INT;
-  SET musician_id = 0;
-  SELECT t.musician_id INTO musician_id FROM `" . $this->appDbName . "`.MusicianRowAccessTokens t WHERE t.user_id = @CLOUD_USER_ID AND t.access_token_hash = @ROW_ACCESS_TOKEN;
-  RETURN musician_id;
-END";
-
     $accessFunction .= '()';
+
+    foreach ($functions as $name => $definition) {
+      if (!empty($dataBaseName)) {
+        $name = $dataBaseName . '.`' . $name . '`';
+      }
+      $statements[$name] = "CREATE OR REPLACE FUNCTION " . $name . $definition;
+    }
 
     $musicianViewName = $this->personalizedViewName($dataBaseName, 'Musicians');
     $statements[$musicianViewName] = "CREATE OR REPLACE
@@ -636,6 +697,16 @@ AS
 SELECT *
 FROM Musicians m
 WHERE m.id = " . $accessFunction;
+
+//     /** Export the MusicianRowAccessTokens table be directly matching user-id and access token */
+//     $musicianRowAccessTokenViewName = $this->personalizedViewName($dataBaseName, 'MusicianRowAccessTokens');
+//     $statements[$musicianRowAccessTokenViewName] = "CREATE OR REPLACE
+// SQL SECURITY DEFINER
+// VIEW " . $musicianRowAccessTokenViewName . "
+// AS
+// SELECT *
+// FROM MusicianRowAccessTokens mrat
+// WHERE mrat.user_id = @CLOUD_USER_ID AND mrat.access_token_hash = @ROW_ACCESS_TOKEN";
 
     foreach (self::MUSICIAN_ID_TABLES as $table => $column) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
@@ -814,6 +885,7 @@ SELECT t.* FROM " . $table . " t";
         $this->logDebug('SQL ' . $currentStatement);
         $this->connection->prepare($currentStatement)->execute();
         if (strpos($statement, 'FUNCTION') !== false) {
+          $this->logInfo($currentStatement);
           $currentStatement = "GRANT EXECUTE ON FUNCTION " . $viewName . " TO " . $cloudDbUser . "@'localhost'";
         } else {
           $currentStatement = sprintf(self::GRANT_SELECT, $viewName, $cloudDbUser);
@@ -821,7 +893,7 @@ SELECT t.* FROM " . $table . " t";
         $this->logDebug('SQL ' . $currentStatement);
         $this->connection->prepare($currentStatement)->execute();
       }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       throw new Exceptions\DatabaseCloudConnectorViewException(
         $this->l->t('Unable to create or update the personalized view: %s.', $currentStatement),
         $t->getCode(),
@@ -857,7 +929,7 @@ SELECT t.* FROM " . $table . " t";
         $this->logDebug('SQL ' . $currentStatement);
         $this->connection->prepare($currentStatement)->execute();
       }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       throw new Exceptions\DatabaseCloudConnectorViewException(
         $this->l->t('Unable to delete personalized view: %s.', $currentStatement),
         $t->getCode(),
