@@ -71,7 +71,7 @@ class MusicianRowAccessToken implements \ArrayAccess
    * hashed, if the hashes and the user-id match then the user gets access to
    * its data. Storage is a hex-string
    */
-  #[ORM\Column(type: 'string', length: 128, unique: true, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
+  #[ORM\Column(type: 'string', length: self::HASH_LENGTH/4, unique: true, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
   private $accessTokenHash;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
