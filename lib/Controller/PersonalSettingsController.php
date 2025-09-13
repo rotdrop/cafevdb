@@ -226,8 +226,10 @@ class PersonalSettingsController extends Controller
           $this->encryptionService()->setUserEncryptionKey($encryptionkey);
           $this->encryptionService()->setAppEncryptionKey($encryptionkey);
         } catch (Throwable $t) {
-          $this->logException($t);
-          return self::grumble($this->exceptionChainData($t));
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Unable to store the app encryption key for user "%s".', $this->userId()),
+            previous: $t,
+          );
         }
         return self::response($this->l->t('Encryption key stored.'));
       case 'emailDraftAutoSave':
@@ -305,8 +307,11 @@ class PersonalSettingsController extends Controller
               return self::grumble($this->l->t('DB-test failed with stored password (empty input ignored).'));
             }
           }
-        } catch (Exception $e) {
-          return self::grumble($this->l->t('DB-test failed with exception "%s".', [$e->getMessage()]));
+        } catch (Throwable $t) {
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('DB-test failed with an exception'),
+            previous: $t,
+          );
         }
       case 'systemkey':
         foreach (['systemkey', 'oldkey'] as $key) {
@@ -346,9 +351,11 @@ class PersonalSettingsController extends Controller
           // load all config values and decrypt with the old key
           $configValues = $this->configService->decryptConfigValues();
         } catch (Throwable $t) {
-          $this->logException($t);
           $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
-          return self::grumble($this->exceptionChainData($t));
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Unable to decrypt the config values with the old encryptionkey.'),
+            previous: $t,
+          );
         }
 
         //$this->logInfo(print_r($configValues, true));
@@ -372,7 +379,10 @@ class PersonalSettingsController extends Controller
             }
           }
           $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
-          return self::grumble($this->exceptionChainData($t));
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Unable to take a backup of the decrypted config values.'),
+            previouws: $t,
+          );
         }
 
         try {
@@ -403,11 +413,9 @@ class PersonalSettingsController extends Controller
           $entityManager->recryptEncryptedProperties($newDatabaseCryptor, $oldDatabaseCryptor);
 
         } catch (Throwable $t) {
-          $this->logException($t);
           $encryptionService->setAppEncryptionKey($oldKey);
           $encryptionService->restoreAppKeyPair();
-          $responseData = $this->exceptionChainData($t);
-          $messages = [ $responseData['message'] ];
+          $messages = [];
           $failed = [];
           foreach (array_keys($configValues) as $configKey) {
             $backupConfigKey = $configKey . $backupSuffix;
@@ -419,8 +427,7 @@ class PersonalSettingsController extends Controller
             }
           }
           if (!empty($failed)) {
-            $responseData['message'] =
-              $messages[] = $this->l->t('Failed to restore config-values %s, keeping all backup values with suffix "%s".', [ implode(', ', $failed), $backupSuffix ]);
+            $messages[] = $this->l->t('Failed to restore config-values %s, keeping all backup values with suffix "%s".', [ implode(', ', $failed), $backupSuffix ]);
           } else {
             $failed = [];
             foreach (array_keys($configValues) as $configKey) {
@@ -439,12 +446,10 @@ class PersonalSettingsController extends Controller
               $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
             }
           }
-          $responseData = [
-            'message' => $messages,
-            'distributeStatus' => null,
-            'keyStatus' => Http::STATUS_BAD_REQUEST,
-          ];
-          return self::grumble($responseData);
+          throw new Exceptions\EnduserNotificationException(
+            message: implode(' ', $messages),
+            previous: $t,
+          );
         }
 
         $messages = [];
@@ -866,9 +871,11 @@ class PersonalSettingsController extends Controller
               $this->setConfigValue($projectParameter.'Id', $project['id']);
             }
           } catch (Throwable $t) {
-            throw new Exception($this->l->t(
-              'Unable to create project with name "%s".', $projectName), $t->getCode(), $t);
-          }
+            throw new Exceptions\EnduserNotificationException(
+              message: $this->l->t('Unable to create project with name "%s".', $projectName),
+              previous: $t,
+            );
+         }
 
           $data = [
             'message' => [
@@ -888,9 +895,11 @@ class PersonalSettingsController extends Controller
           try {
             $this->projectService->sanitizeProject($project);
           } catch (Throwable $t) {
-            return self::grumble($this->exceptionChainData($t));
+            throw new Exceptions\EnduserNotificationException(
+              message: $this->l->t('Unable to sanitize the project "%s".', $projectName),
+              previous: $t,
+            );
           }
-
           $data['message'][] = $this->l->t('Project "%s" successfully validated.', $project->getName());
         }
 
@@ -911,11 +920,10 @@ class PersonalSettingsController extends Controller
           ];
           return self::dataResponse($data);
         } catch (Throwable $t) {
-          throw new Exception(
-            $this->l->t(
-              'Failed to remove project "%s", id "%d".', [ $projectName, $projectId ]),
-            $t->getCode(),
-            $t);
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Failed to remove project "%s", id "%d".', [ $projectName, $projectId ]),
+            prevous: $t,
+          );
         }
         break;
       case 'memberProjectRename':
@@ -933,7 +941,7 @@ class PersonalSettingsController extends Controller
             $this->setConfigValue($projectParameter, $project['name']);
             $this->setConfigValue($projectParameter.'Id', $project['id']);
           } else {
-            throw new Exception($this->l->t('Result of rename is empty without throwing an exception.'));
+            throw new Exceptions\EnduserNotificationException($this->l->t('Result of rename is empty without throwing an exception.'));
           }
 
           $data = [
@@ -945,11 +953,13 @@ class PersonalSettingsController extends Controller
           ];
           return self::dataResponse($data);
         } catch (Throwable $t) {
-          throw new Exception(
-            $this->l->t(
-              'Failed to rename project "%s", id "%d" to new name "%s".', [ $projectName, $projectId, $newName ]),
-            $t->getCode(),
-            $t);
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t(
+              'Failed to rename project "%s", id "%d" to new name "%s".',
+              [ $projectName, $projectId, $newName ],
+            ),
+            previous: $t,
+          );
         }
         break;
       case 'presidentUserId':
@@ -1037,7 +1047,10 @@ class PersonalSettingsController extends Controller
           try {
             $this->userStorage->get($templatesFolder . $value);
           } catch (Throwable $t) {
-            return self::grumble($this->l->t('Unable to find the file "%s".', $value));
+            throw new Exceptions\EnduserNotificationException(
+              message: $this->l->t('Unable to find the file "%s".', $value),
+              previous: $t,
+            );
           }
           $this->setConfigValue($parameter, $value);
           $messages[] = $this->l->t(
@@ -1119,11 +1132,10 @@ class PersonalSettingsController extends Controller
             return self::grumble($this->l->t('"%s" does not exist or is unaccessible.', [$actual]));
           }
         } catch (Throwable $t) {
-          $this->logException($t);
-          return self::grumble(
-            $this->l->t(
-              'Failure checking folder "%s", caught an exception "%s".',
-              [ $real, $t->getMessage() ]));
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Failure checking folder "%s", caught an exception.', $real),
+            previous: $t
+          );
         }
         // return self::valueResponse('hello', print_r($value, true)); unreached
       case ConfigService::POSTBOX_FOLDER:
@@ -1272,12 +1284,11 @@ class PersonalSettingsController extends Controller
           } else {
             return self::grumble($this->l->t('"%s" does not exist or is unaccessible.', $prefixFolder . $actual));
           }
-        } catch (Exception $e) {
-          $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
-          return self::grumble(
-            $this->l->t(
-              'Failure checking folder "%s", caught an exception "%s".',
-              [ $prefixFolder . $real, $e->getMessage() ]));
+        } catch (Throwable $t) {
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Failure checking folder "%s", caught an exception.', $prefixFolder . $real),
+            previous: $t,
+          );
         }
       case 'concertscalendar':
       case 'rehearsalscalendar':
@@ -1304,12 +1315,11 @@ class PersonalSettingsController extends Controller
           } else {
             return self::grumble($this->l->t('Failed to create new shared calendar "%s".', [$real]));
           }
-        } catch (Exception $e) {
-          $this->logException($e, sprintf('Failure checking calendar "%1$s".', $real));
-          return self::grumble(
-            $this->l->t(
-              'Failure checking calendar "%s", caught an exception "%s".',
-              [ $real, $e->getMessage() ]));
+        } catch (Throwable $t) {
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Failure checking calendar "%s", caught an exception.', $real),
+            previous: $t,
+          );
         }
       case 'generaladdressbook':
         $real = trim($value);
@@ -1328,12 +1338,11 @@ class PersonalSettingsController extends Controller
           return self::valueResponse(
             ['name' => $real, 'id' => $newId],
             $this->l->t('Created and shared new address book "%s".', $real));
-        } catch (Exception $e) {
-          $this->logError('Exception ' . $e->getMessage() . ' ' . $e->getTraceAsString());
-          return self::grumble(
-            $this->l->t(
-              'Failure checking address book "%s", caught an exception "%s".',
-              [ $real, $e->getMessage() ]));
+        } catch (Throwable $t) {
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Failure checking address book "%s", caught an exception.', $real),
+            previous: $t,
+          );
         }
 
       case 'musiciansaddressbook':
@@ -1396,8 +1405,12 @@ class PersonalSettingsController extends Controller
             $userConnectorService->writeUserSqlConfig($cloudUserViewsDatabase, delete: true);
           }
         } catch (Throwable $t) {
-          $this->logException($t);
-          return self::grumble($this->exceptionChainData($t));
+          throw new Exceptions\EnduserNotificationException(
+            message: $realValue
+            ? $this->l->t('Unable to configure the club-member\'s cloud user backend.')
+            : $this->l->t('Unable to disable the club-member\'s cloud user backend.'),
+            previous: $t,
+          );
         }
         return $this->setSimpleConfigValue($parameter, $stringValue, furtherData: [
           'messages' => $hints,
@@ -1420,12 +1433,17 @@ class PersonalSettingsController extends Controller
             $userConnectorService->configureCloudUserBackend();
             $userConnectorService->setCloudUserSubAdmins();
           } catch (Throwable $t) {
-            $this->logException($t, 'Unable to configure "' . CloudUserConnectorService::CLOUD_USER_BACKEND . '".');
+            throw new Exceptions\EnduserNotificationException(
+              // TRANSLATORS: Parameter is the name of a user backend.
+              message: $this->l->t('Unable to configure "%1$s".', CloudUserConnectorService::CLOUD_USER_BACKEND),
+              previous: $t,
+            );
           }
-
         } catch (Throwable $t) {
-          $this->logException($t);
-          return self::grumble($this->exceptionChainData($t));
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Unable to recreate the views for the cloud user backend.'),
+            previous: $t,
+          );
         }
         $messages = array_merge(
           [ $this->l->t('Cloud-user-views have been regenerated successfully.'), ],
@@ -1453,8 +1471,10 @@ class PersonalSettingsController extends Controller
             $userConnectorService->removeMusicianPersonalizedViews($oldValue);
             $userConnectorService->updateMusicianPersonalizedViews($newValue);
           } catch (Throwable $t) {
-            $this->logException($t);
-            return self::grumble($this->exceptionChainData($t));
+            throw new Exceptions\EnduserNotificationException(
+              message: $this->l->t('Unable to reconfigure the database for the cloud - orchestra member interaction.'),
+              previous: $t,
+            );
           }
         }
         return $this->setSimpleConfigValue($parameter, $value, furtherData: [
@@ -1481,8 +1501,12 @@ class PersonalSettingsController extends Controller
             $userConnectorService->removeMusicianPersonalizedViews($cloudUserViewsDatabase);
           }
         } catch (Throwable $t) {
-          $this->logException($t);
-          return self::grumble($this->exceptionChainData($t));
+          throw new Exceptions\EnduserNotificationException(
+            message: $realValue
+            ? $this->l->t('Unable to regenerate the views for the personal access of club-members to their data.')
+            : $this->l->t('Unable to remove the view for the personal access of club-members to their data.'),
+            previous: $t,
+          );
         }
         return $this->setSimpleConfigValue($parameter, $stringValue, furtherData: [
           'messages' => $hints,
@@ -1499,8 +1523,10 @@ class PersonalSettingsController extends Controller
           list('hints' => $hints,) = $userConnectorService->checkRequirements($cloudUserViewsDatabase);
           $userConnectorService->updateMusicianPersonalizedViews($cloudUserViewsDatabase);
         } catch (Throwable $t) {
-          $this->logException($t);
-          return self::grumble($this->exceptionChainData($t));
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Unable to regenerate the views for the personal access of club-members to their data.'),
+            previous: $t,
+          );
         }
         $messages = array_merge(
           [ $this->l->t('Personalized single-row database-views have been regenerated successfully.'), ],
@@ -1686,15 +1712,15 @@ class PersonalSettingsController extends Controller
             $listInfo = $listsService->getListInfo($realValue);
             $this->logInfo('LIST INFO ' . print_r($listInfo, true));
           } catch (Throwable $t) {
-            $this->logException($t);
+            $logMessage = $this->l->t(
+              'The Mailing list "%1$s" does not seem to exist on the configured mailing-list service.',
+              $realValue,
+            );
+            $this->logException($t, $logMessage);
             /** @var MailingListsService $listsService */
             $listsService = $this->di(MailingListsService::class);
             $furtherData = Util::arrayMergeRecursive($furtherData, [
-              'message' => [
-                $this->l->t('The Mailing list "%1$s" does not seem to exist on the configured mailing-list service.', [
-                  $realValue,
-                ])
-              ],
+              'message' => $logMessage,
             ]);
           }
           // try to create the template folder even if the list does not exist
@@ -1773,9 +1799,10 @@ class PersonalSettingsController extends Controller
             }
           } catch (Throwable $t) {
             $this->setConfigValue($parameter, $oldValue);
-            $this->logException($t);
-            return self::grumble(
-              $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListRestUrl));
+            throw new Exceptions\EndUserNotificationException(
+              message: $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListRestUrl),
+              previous: $t,
+            );
           }
 
           // try to generate the template directories
