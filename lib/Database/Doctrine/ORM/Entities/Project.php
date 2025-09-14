@@ -170,17 +170,18 @@ class Project implements \ArrayAccess
   public function __construct()
   {
     $this->arrayCTOR();
+    $this->applications = new ArrayCollection();
+    $this->compositePayments = new ArrayCollection();
     $this->instrumentationNumbers = new ArrayCollection();
-    $this->webPages = new ArrayCollection();
+    $this->invoices = new ArrayCollection();
     $this->participantFields = new ArrayCollection();
     $this->participantFieldsData = new ArrayCollection();
-    $this->participants = new ArrayCollection();
     $this->participantInstruments = new ArrayCollection();
-    $this->sepaDebitMandates = new ArrayCollection();
-    $this->compositePayments = new ArrayCollection();
+    $this->participants = new ArrayCollection();
     $this->payments = new ArrayCollection();
-    $this->invoices = new ArrayCollection();
     $this->sentEmail = new ArrayCollection();
+    $this->sepaDebitMandates = new ArrayCollection();
+    $this->webPages = new ArrayCollection();
   }
 
   /** {@inheritdoc} */
@@ -414,6 +415,30 @@ class Project implements \ArrayAccess
   public function getWebPages()
   {
     return $this->webPages;
+  }
+
+  /**
+   * Set applications.
+   *
+   * @param Collection $applications
+   *
+   * @return Project
+   */
+  public function setApplications(Collection $applications):Project
+  {
+    $this->applications = $applications;
+
+    return $this;
+  }
+
+  /**
+   * Get applications.
+   *
+   * @return Collection
+   */
+  public function getApplications():Collection
+  {
+    return $this->applications;
   }
 
   /**
