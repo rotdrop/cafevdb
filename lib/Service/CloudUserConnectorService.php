@@ -64,6 +64,12 @@ class CloudUserConnectorService
 
   const GROUP_ID_PREFIX = '%2$s' . self::GROUP_ID_SEPARATOR;
 
+  private const CREATE_FUNCTION_PREFIX = 'CREATE OR REPLACE FUNCTION';
+
+  private const CREATE_FUNCTION_REGEXP = '/^' . self::CREATE_FUNCTION_PREFIX . '/';
+
+  private const CREATE_VIEW_REGEXP = '/^CREATE OR REPLACE.*VIEW/';
+
   private const CHECK_OPTION_ON_NON_UPDATABLE_VIEW_ERROR = 1368;
 
   /**
@@ -158,8 +164,17 @@ WHERE m.email IS NOT NULL AND m.email <> ""
     'TableFieldTranslations',
   ];
 
+  const GRANT_EXECUTE = 'GRANT EXECUTE ON FUNCTION %1$s TO %2$s@\'localhost\'';
+  const GRANT_INSERT = 'GRANT INSERT ON %1$s TO %2$s@\'localhost\'';
   const GRANT_SELECT = 'GRANT SELECT ON %1$s TO %2$s@\'localhost\'';
   const GRANT_FIELD_UPDATE = 'GRANT UPDATE (%3$s) ON %1$s TO %2$s@\'localhost\'';
+
+  const PRIVILEGES = [
+    'ProjectApplications' => [
+      self::GRANT_INSERT => true,
+      self::GRANT_FIELD_UPDATE => [ 'data' ],
+    ],
+  ];
 
   /** @var Connection */
   private $connection;
@@ -710,8 +725,10 @@ END",
     $accessFunction = $functionPrefix . 'ROW_ACCESS_ID' . '()';
 
     foreach ($functions as $name => $definition) {
-      $statements[$functionPrefix . $name] = "CREATE OR REPLACE FUNCTION " . $functionPrefix . $name . $definition;
+      $statements[$functionPrefix . $name] = self::CREATE_FUNCTION_PREFIX . " " . $functionPrefix . $name . $definition;
     }
+
+    $cloudDbUser = $this->checkAndGetCloudDbUser();
 
     $musicianViewName = $this->personalizedViewName($dataBaseName, 'Musicians');
     $statements[$musicianViewName] = "CREATE OR REPLACE
@@ -722,15 +739,16 @@ SELECT *
 FROM Musicians m
 WHERE m.id = " . $accessFunction;
 
-    $musicianRowAccessTokenViewName = $this->personalizedViewName($dataBaseName, 'MusicianRowAccessTokens');
-    $statements[$musicianRowAccessTokenViewName] = "CREATE OR REPLACE
+    $tableName = 'MusicianRowAccessTokens';
+    $viewName = $this->personalizedViewName($dataBaseName, $tableName);
+    $statements[$viewName] = "CREATE OR REPLACE
 SQL SECURITY DEFINER
-VIEW " . $musicianRowAccessTokenViewName . "
+VIEW " . $viewName . "
 AS
 SELECT *
-FROM MusicianRowAccessTokens mrat
-WHERE mrat.access_token_hash = " . $functionPrefix . "ROW_ACCESS_TOKEN()
-  AND mrat.user_id = " . $functionPrefix . "CLOUD_USER_ID()";
+FROM " . $tableName . " t
+WHERE t.access_token_hash = " . $functionPrefix . "ROW_ACCESS_TOKEN()
+  AND t.user_id = " . $functionPrefix . "CLOUD_USER_ID()";
 
     foreach (self::MUSICIAN_ID_TABLES as $table => $column) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
@@ -740,6 +758,15 @@ VIEW " . $viewName . "
 AS
 SELECT t.* FROM " . $table . " t
     WHERE t." . $column . " = " . $accessFunction;
+      foreach ((self::PRIVILEGES[$table] ?? []) as $privilege => $columns) {
+        if (is_array($columns)) {
+          foreach ($columns as $column) {
+            $statements[] = sprintf($privilege, $viewName, $cloudDbUser, $column);
+          }
+        } else {
+          $statements[] = sprintf($privilege, $viewName, $cloudDbUser);
+        }
+      }
     }
 
     $memberProjectId = $this->encryptionService->getConfigValue('memberProjectId', -1);
@@ -906,11 +933,12 @@ SELECT t.* FROM " . $table . " t";
     try {
       foreach ($statements as $viewName => $statement) {
         $currentStatement = $statement;
-        $this->logDebug('SQL ' . $currentStatement);
-        if (strpos($statement, 'FUNCTION') !== false) {
+        if (preg_match(self::CREATE_FUNCTION_REGEXP, $statement)) {
+          $this->logInfo('SQL ' . $currentStatement);
           $this->connection->prepare($currentStatement)->execute();
-          $currentStatement = "GRANT EXECUTE ON FUNCTION " . $viewName . " TO " . $cloudDbUser . "@'localhost'";
-        } else {
+          $currentStatement = sprintf(self::GRANT_EXECUTE, $viewName, $cloudDbUser);
+        } elseif (preg_match(self::CREATE_VIEW_REGEXP, $statement)) {
+          $this->logInfo('SQL ' . $currentStatement);
           try {
             $this->connection->prepare($currentStatement . ' WITH CHECK OPTION')->execute();
           } catch (DBALDriverException $e) {
@@ -921,7 +949,7 @@ SELECT t.* FROM " . $table . " t";
           }
           $currentStatement = sprintf(self::GRANT_SELECT, $viewName, $cloudDbUser);
         }
-        $this->logDebug('SQL ' . $currentStatement);
+        $this->logInfo('SQL ' . $currentStatement);
         $this->connection->prepare($currentStatement)->execute();
       }
     } catch (Throwable $t) {
