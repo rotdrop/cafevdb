@@ -25,6 +25,9 @@
 namespace OCA\CAFEVDB\Middleware;
 
 use Exception;
+use ReflectionMethod;
+
+use Psr\Log\LoggerInterface;
 
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Middleware;
@@ -32,22 +35,25 @@ use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
 use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
 
+use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Service\ConfigService;
 
 /**
- * Verifies whether an user has at least subadmin rights.
- * To enforce use the `@SubadminRequired` annotation
+ * Verifies whether an user has at least sub-admin rights.
+ * To enforce use the `@SubAdminRequired` annotation
  */
-class SubadminMiddleware extends Middleware
+class SubAdminMiddleware extends Middleware
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\HasAnnotationOrAttributeTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected IControllerMethodReflector $reflector,
     protected ConfigService $configService,
-    protected IL10N $l
+    protected IControllerMethodReflector $reflector,
+    protected IL10N $l,
+    protected LoggerInterface $logger,
   ) {
   }
   // phpcs:enable
@@ -59,12 +65,14 @@ class SubadminMiddleware extends Middleware
    */
   public function beforeController($controller, $methodName)
   {
-    if ($this->reflector->hasAnnotation('SubadminRequired')) {
+    $reflectionMethod = new ReflectionMethod($controller, $methodName);
+    if ($this->hasAnnotationOrAttribute($reflectionMethod, Attributes\SubAdminRequired::class)) {
+      $this->logInfo('Middleware attribute match');
       if (!$this->configService->isSubAdminOfGroup()) {
-        throw new NotAdminException($this->l->t('Logged in user must be a subadmin of the orchestra group'));
+        throw new NotAdminException($this->l->t('Logged in user must be a sub-admin of the orchestra group'));
       }
     }
-    if ($this->reflector->hasAnnotation('ServiceAccountRequired')) {
+    if ($this->hasAnnotationOrAttribute($reflectionMethod, Attributes\ServiceAccountRequired::class)) {
       if ($this->configService->getUserId() != $this->configService->getConfigValue(ConfigService::SHAREOWNER_KEY)) {
         throw new NotAdminException($this->l->t('Logged in user account must be the service-account of the orchester app'));
       }

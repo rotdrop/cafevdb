@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Middleware;
 
 use Exception;
 use InvalidArgumentException;
+use ReflectionMethod;
 use Throwable;
 
 use Psr\Log\LoggerInterface;
@@ -41,19 +42,21 @@ use OCP\IRequest;
 use OC\AppFramework\Utility\QueryNotFoundException;
 
 use OCA\CAFEVDB\AppInfo\Application as App;
+use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse;
 
 /**
- * Turn an exception into a data response which can be parsed by the frontend
- * if the controller method has the @CatchExceptions annotation.
+ * Turn an exception into a data response which can be parsed by the
+ * frontend. Can be disabled by the DoNotCatchExceptions attribute.
  */
 class ExceptionMiddleware extends Middleware
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\HasAnnotationOrAttributeTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -77,7 +80,9 @@ class ExceptionMiddleware extends Middleware
    */
   public function afterController($controller, $methodName, Response $response)
   {
-    if ($this->reflector->hasAnnotation('DoNotCatchExceptions') || !($response instanceof PreRenderedTemplateResponse)) {
+    $reflectionMethod = new ReflectionMethod($controller, $methodName);
+    if ($this->hasAnnotationOrAttribute($reflectionMethod, Attributes\DoNotCatchExceptions::class)
+        || !($response instanceof PreRenderedTemplateResponse)) {
       return $response;
     }
     try {
@@ -102,7 +107,8 @@ class ExceptionMiddleware extends Middleware
   /** {@inheritdoc} */
   protected function afterThrowable($controller, $methodName, Throwable $exception)
   {
-    if ($this->reflector->hasAnnotation('DoNotCatchExceptions')) {
+    $reflectionMethod = new ReflectionMethod($controller, $methodName);
+    if ($this->hasAnnotationOrAttribute($reflectionMethod, Attributes\DoNotCatchExceptions::class)) {
       throw $exception;
     }
     if (!($exception instanceof Exceptions\EnduserNotificationException)) {

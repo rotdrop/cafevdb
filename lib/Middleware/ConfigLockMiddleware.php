@@ -25,12 +25,16 @@
 namespace OCA\CAFEVDB\Middleware;
 
 use Exception;
+use ReflectionMethod;
+
+use Psr\Log\LoggerInterface;
 
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -41,12 +45,14 @@ use OCA\CAFEVDB\Service\ConfigService;
 class ConfigLockMiddleware extends Middleware
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\HasAnnotationOrAttributeTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected IControllerMethodReflector $reflector,
     protected ConfigService $configService,
+    protected IControllerMethodReflector $reflector,
     protected IL10N $l,
+    protected LoggerInterface $logger,
   ) {
   }
   // phpcs:enable
@@ -58,7 +64,8 @@ class ConfigLockMiddleware extends Middleware
    */
   public function beforeController($controller, $methodName)
   {
-    if ($this->reflector->hasAnnotation('IgnoreConfigLock')) {
+    $reflectionMethod = new ReflectionMethod($controller, $methodName);
+    if ($this->hasAnnotationOrAttribute($reflectionMethod, Attributes\IgnoreConfigLock::class)) {
       return;
     }
     if (!empty($this->configService->getConfigValue(ConfigService::CONFIG_LOCK_KEY))) {

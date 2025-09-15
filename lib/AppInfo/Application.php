@@ -207,7 +207,7 @@ class Application extends App implements IBootstrap
 
     // Register Middleware
     $context->registerMiddleWare(Middleware\ExceptionMiddleware::class); // must come first
-    $context->registerMiddleWare(Middleware\SubadminMiddleware::class);
+    $context->registerMiddleWare(Middleware\SubAdminMiddleware::class);
     $context->registerMiddleWare(Middleware\GroupMemberMiddleware::class);
     $context->registerMiddleWare(Middleware\DebugModeMiddleware::class);
     $context->registerMiddleware(Middleware\ConfigLockMiddleware::class);
