@@ -28,11 +28,13 @@ use Psr\Log\LoggerInterface;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
 
+use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Service\ProblemReportService;
 
 /**
@@ -68,10 +70,9 @@ class ProblemReportController extends Controller
    * @param null|string $userComment Optional comment submitted alongside the user. May be markdown.
    *
    * @return Http\DataResponse
-   *
-   * @NoAdminRequired
-   * @NoGroupMemberRequired
    */
+  #[CoreAttributes\NoAdminRequired]
+  #[Attributes\NoGroupMemberRequired]
   public function post(
     array $user,
     array $errorData,

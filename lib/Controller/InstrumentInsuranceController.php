@@ -28,6 +28,7 @@ use \PHP_IBAN\IBAN;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
@@ -65,9 +66,8 @@ class InstrumentInsuranceController extends Controller
    * @param string $template
    *
    * @return Http\Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function validate(string $control, string $template):Http\Response
   {
     $errorMessages = [];
@@ -323,9 +323,8 @@ class InstrumentInsuranceController extends Controller
    * @param int $insuranceId
    *
    * @return Http\DataDownloadResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function download(int $musicianId, int $insuranceId):Http\DataDownloadResponse
   {
     $overview = $this->insuranceService->musicianOverview($musicianId);

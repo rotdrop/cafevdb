@@ -31,6 +31,7 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\Response;
@@ -103,9 +104,8 @@ class SepaBulkTransactionsController extends Controller
    * @param int $bulkTransactionId Existing bulk transaction entity id.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function serviceSwitch(
     string $topic,
     int $projectId = 0,

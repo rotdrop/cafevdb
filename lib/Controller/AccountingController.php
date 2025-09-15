@@ -29,6 +29,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
@@ -66,10 +67,9 @@ class AccountingController extends Controller
    *
    * @return DataResponse
    *
-   * @NoAdminRequired
-   *
    * @throws Exceptions\End
    */
+  #[CoreAttributes\NoAdminRequired]
   public function autocompleteGnuCashAccounts(
     null|int|string $project,
   ):DataResponse {

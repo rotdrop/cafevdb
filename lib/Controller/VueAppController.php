@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2025
+ * @copyright Claus-Justus Heine 2025
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ namespace OCA\CAFEVDB\Controller;
 use Throwable;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Services\IInitialState;
@@ -36,6 +37,7 @@ use OCP\IInitialStateService;
 use OCP\IRequest;
 use OCP\Util;
 
+use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\Util as CommonUtil;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Exceptions;
@@ -76,11 +78,10 @@ class VueAppController extends Controller
    * Render default template
    *
    * @return TemplateResponse
-   *
-   * @NoAdminRequired
-   * @NoCSRFRequired
-   * @AllowIFrameSelf
    */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\NoCSRFRequired]
+  #[Attributes\AllowIFrameSelf]
   public function index():TemplateResponse
   {
     // add the vue assets
@@ -156,10 +157,8 @@ class VueAppController extends Controller
    * @param null|string $projectName
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
-   * _AT_NoCSRFRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function navigation(string $template, ?int $projectId = null, ?string $projectName = null)
   {
     $template = urldecode($template);

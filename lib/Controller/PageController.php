@@ -33,6 +33,7 @@ use Psr\Log\LoggerInterface;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
@@ -42,6 +43,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OC\AppFramework\Utility\QueryNotFoundException;
 
+use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Exceptions;
@@ -108,10 +110,9 @@ class PageController extends Controller
    * @param string $renderAs
    *
    * @return Http\Response
-   *
-   * @NoAdminRequired
-   * @AllowIFrameSelf
    */
+  #[CoreAttributes\NoAdminRequired]
+  #[Attributes\AllowIFrameSelf]
   public function remember(string $renderAs):Http\Response
   {
     $this->historyService->save($this->request->getParams());
@@ -141,10 +142,9 @@ class PageController extends Controller
    * @param string $historyAction
    *
    * @return Http\Response
-   *
-   * @NoAdminRequired
-   * @AllowIFrameSelf
    */
+  #[CoreAttributes\NoAdminRequired]
+  #[Attributes\AllowIFrameSelf]
   public function loader(
     string $renderAs,
     ?string $template,

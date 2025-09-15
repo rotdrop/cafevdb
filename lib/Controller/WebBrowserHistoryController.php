@@ -31,6 +31,7 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IDateTimeFormatter;
 use OCP\IL10N;
@@ -164,9 +165,8 @@ class WebBrowserHistoryController extends Controller
    * @param string $modeOrKey
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function get(string|float $timestamp, string $modeOrKey = self::GET_MODE_SHALLOW)
   {
     $repository = $this->getDatabaseRepository(Entities\WebBrowserHistoryState::class);
@@ -225,9 +225,8 @@ class WebBrowserHistoryController extends Controller
    * @return DataResponse
    *
    * @throws Exceptions\DatabaseException
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function put(float $timestamp, string $position, array $history, array $requestData):DataResponse
   {
     $historyState = new Entities\WebBrowserHistoryState($timestamp, $this->userId);
@@ -295,9 +294,8 @@ class WebBrowserHistoryController extends Controller
    * @param float $timestamp
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function delete(float $timestamp):DataResponse
   {
     /** @var OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository $repository */

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\IL10N;
@@ -124,9 +125,8 @@ class ProjectParticipantFieldsController extends Controller
    * @param null|array $data
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function serviceSwitch(string $topic, ?string $subTopic, ?array $data = null):Response
   {
     $projectValues = $this->getPrefixParams($this->pme->cgiDataName());
@@ -760,9 +760,8 @@ class ProjectParticipantFieldsController extends Controller
    * @param string $subTopic Minor topic.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function get(int $fieldId, string $topic = '', string $subTopic = ''):DataResponse
   {
     /** @var Entities\ProjectParticipantField $field */
@@ -801,9 +800,8 @@ class ProjectParticipantFieldsController extends Controller
    * @param string $objectId The identifier of the object to patch.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function patch(string $topic, int $fieldId, string $objectId):Response
   {
     /** @var Entities\ProjectParticipantField $field */

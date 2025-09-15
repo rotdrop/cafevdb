@@ -28,6 +28,7 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\IAppContainer;
@@ -95,9 +96,8 @@ class EmailFormController extends Controller
    * @param null|string $emailTemplate Name of an email template.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function webForm(
     ?int $projectId = null,
     ?string $projectName = '',
@@ -279,9 +279,8 @@ class EmailFormController extends Controller
    * @param null|string $projectName Name of a linked project, if any.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function composer(
     string $operation,
     string $topic,
@@ -818,9 +817,8 @@ class EmailFormController extends Controller
    * transaction if any.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function recipientsFilter(
     ?int $projectId,
     ?string $projectName,
@@ -920,9 +918,8 @@ class EmailFormController extends Controller
    * @param string $operation Operation to perform.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function contacts(string $operation):Response
   {
     switch ($operation) {
@@ -1048,9 +1045,8 @@ class EmailFormController extends Controller
    * @param string $source Attachment origin.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function attachment(string $source):DataResponse
   {
     $composer = $this->appContainer->query(Composer::class);

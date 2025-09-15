@@ -28,6 +28,7 @@ use DateTime;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -79,9 +80,8 @@ class ProjectsController extends Controller
    * @param string $topic What to validate.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function validate(string $topic):DataResponse
   {
     $projectValues = $this->getPrefixParams($this->pme->cgiDataName());
@@ -191,9 +191,8 @@ class ProjectsController extends Controller
    * @param string $voices The name of the voices select.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function changeInstrumentation(string $instruments, string $voices):DataResponse
   {
     $instrumentsKey = str_replace('[]', '', $instruments);
@@ -242,9 +241,8 @@ class ProjectsController extends Controller
    * @param bool $force Whether to enforce the operation.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function mailingLists(string $operation, int $projectId, bool $force = false):DataResponse
   {
     switch ($operation) {
@@ -418,9 +416,8 @@ class ProjectsController extends Controller
    * Return all project indices as flat array.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function getIndices()
   {
     /** @var ProjectService $projectService */
@@ -438,9 +435,8 @@ class ProjectsController extends Controller
    * @param string $subTopic Item in major topic.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function get(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
     if (!($projectId > 0)) {
@@ -585,9 +581,8 @@ class ProjectsController extends Controller
    * @param string $subTopic Item in major topic.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function post(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
     /** @var ProjectService $projectService */
@@ -627,9 +622,8 @@ class ProjectsController extends Controller
    * @param string $subTopic Item in major topic.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function delete(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
     /** @var ProjectService $projectService */
@@ -678,9 +672,8 @@ class ProjectsController extends Controller
    * @param string $subTopic Item in major topic.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function patch(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
     /** @var ProjectService $projectService */
@@ -735,9 +728,8 @@ class ProjectsController extends Controller
    * @param null|int $year
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function searchProjects(string $pattern, ?int $limit = null, ?int $offset = null, ?int $year = null):DataResponse
   {
     $repository = $this->getDatabaseRepository(Entities\Project::class);

@@ -30,6 +30,7 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -122,9 +123,8 @@ class ProjectEventsController extends Controller
 
   /**
    * @return Http\Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function download():Http\Response
   {
     $projectId = $this->request->getParam('projectId');

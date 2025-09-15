@@ -29,10 +29,10 @@ namespace OCA\CAFEVDB\Controller;
 
 use InvalidArgumentException;
 use Throwable;
-use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\IAppContainer;
@@ -61,6 +61,7 @@ use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
 
 /**
  * Make the stored personal data accessible for the web-interface. This is
@@ -137,9 +138,8 @@ class MailMergeController extends Controller
    * @param null|int $offset
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function merge(
     null|Int|string $senderId = null,
     ?string $fileName = null,

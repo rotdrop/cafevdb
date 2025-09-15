@@ -63,9 +63,8 @@ class ProjectWebPagesController extends Controller
    * @param array $articleData
    *
    * @return Http\Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function serviceSwitch(
     string $topic,
     ?int $projectId = null,

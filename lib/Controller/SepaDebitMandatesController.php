@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\Files\SimpleFS\ISimpleFile;
@@ -98,12 +99,11 @@ class SepaDebitMandatesController extends Controller
    *
    * @return Response
    *
-   * @NoAdminRequired
-   *
    * @throws Exceptions\EnduserNotificationException
    *
    * @SuppressWarnings(PHPMD.CamelCaseVariableName)
    */
+  #[CoreAttributes\NoAdminRequired]
   public function mandateValidate(string $changed):Response
   {
     $requiredKeys = [
@@ -548,9 +548,8 @@ class SepaDebitMandatesController extends Controller
    * @return Response
    *
    * @throws Exceptions\EnduserNotificationException
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function mandateForm(
     int $projectId,
     int $musicianId,
@@ -762,9 +761,8 @@ class SepaDebitMandatesController extends Controller
 
   /**
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function mandateStore(
     $projectId,
     // SEPA "id"
@@ -1074,9 +1072,8 @@ class SepaDebitMandatesController extends Controller
    * @param int $bankAccountSequence The bank-account-sequence.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function preFilledMandateForm(
     ?int $projectId,
     int $musicianId,
@@ -1116,9 +1113,8 @@ class SepaDebitMandatesController extends Controller
    * @param int $mandateSequence The mandate sequence.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function mandateDelete(int $musicianId, int $mandateSequence):Response
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'delete');
@@ -1130,9 +1126,8 @@ class SepaDebitMandatesController extends Controller
    * @param int $mandateSequence The mandate sequence.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function mandateDisable(int $musicianId, int $mandateSequence):Response
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'disable');
@@ -1144,9 +1139,8 @@ class SepaDebitMandatesController extends Controller
    * @param int $mandateSequence The mandate sequence.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function mandateReactivate(int $musicianId, int $mandateSequence):Reponse
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'reactivate');
@@ -1162,9 +1156,8 @@ class SepaDebitMandatesController extends Controller
    * @param bool $force Whether to enforce the operation.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function mandateHardcopy(string $operation, int $musicianId, ?int $mandateSequence, bool $force = false):Response
   {
     switch ($operation) {
@@ -1576,9 +1569,8 @@ class SepaDebitMandatesController extends Controller
    * @param int $bankAccountSequence The bank-account sequence.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function accountDelete(int $musicianId, int $bankAccountSequence):Response
   {
     return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'delete');
@@ -1590,9 +1582,8 @@ class SepaDebitMandatesController extends Controller
    * @param int $bankAccountSequence The bank-account sequence.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function accountDisable(int $musicianId, int $bankAccountSequence):Response
   {
     return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'disable');
@@ -1604,9 +1595,8 @@ class SepaDebitMandatesController extends Controller
    * @param int $bankAccountSequence The bank-account sequence.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function accountReactivate(int $musicianId, int $bankAccountSequence):Response
   {
     return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'reactivate');

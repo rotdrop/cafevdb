@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ use GuzzleHttp\Exception\ConnectException as HttpClientConnectException;
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
@@ -87,9 +88,8 @@ class MailingListsController extends Controller
    * @param null|string $role Rold, member vs. moderator vs. owner.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function serviceSwitch(
     string $operation,
     string $list,
@@ -150,9 +150,8 @@ class MailingListsController extends Controller
    *   'status' => { 'subscribed', 'unsubscribed', 'invited', 'waiting' }
    * ]
    * ```
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function getStatus(string $listId, string $email):DataResponse
   {
     if (empty($listId)) {

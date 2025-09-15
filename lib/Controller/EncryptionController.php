@@ -30,6 +30,7 @@ namespace OCA\CAFEVDB\Controller;
 use Throwable;
 
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\IAppContainer;
@@ -40,6 +41,7 @@ use OCP\IRequest;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -76,10 +78,9 @@ class EncryptionController extends OCSController
    * @param null|string $userId
    *
    * @return Response
-   *
-   * @NoAdminRequired
-   * @NoGroupMemberRequired
    */
+  #[CoreAttributes\NoAdminRequired]
+  #[Attributes\NoGroupMemberRequired]
   public function getRecryptRequests(?string $userId = null):Response
   {
     if (!$this->isMatchingUserOrAdmin($userId)) {
@@ -113,9 +114,8 @@ class EncryptionController extends OCSController
    * @param bool $notifyUser
    *
    * @return Response
-   *
-   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
+  #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
   public function deleteRecryptRequest(string $userId, bool $notifyUser = true):Response
   {
     try {
@@ -135,10 +135,9 @@ class EncryptionController extends OCSController
    * @param null|string $userId
    *
    * @return Response
-   *
-   * @NoAdminRequired
-   * @NoGroupMemberRequired
    */
+  #[CoreAttributes\NoAdminRequired]
+  #[Attributes\NoGroupMemberRequired]
   public function putRecryptRequest(string $userId):Response
   {
     if (!$this->isMatchingUserOrAdmin($userId)) {
@@ -161,9 +160,8 @@ class EncryptionController extends OCSController
    * @param bool $allowFailure
    *
    * @return Response
-   *
-   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
+  #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
   public function revokeCloudAccess(string $userId, bool $allowFailure = false):Response
   {
     try {
@@ -204,9 +202,8 @@ class EncryptionController extends OCSController
    * @param bool $allowFailure
    *
    * @return Response
-   *
-   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
+  #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
   public function handleRecryptRequest(string $userId, bool $notifyUser = true, bool $allowFailure = false):Response
   {
     try {
@@ -256,9 +253,8 @@ class EncryptionController extends OCSController
    * @param int $projectId
    *
    * @return Response
-   *
-   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
+  #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
   public function bulkRecryptionRequest(bool $grantAccess, bool $includeDisabled, bool $includeDeactivated, int $offset, int $limit = 1, int $projectId = 0):Response
   {
     $this->entityManager = $this->appContainer->get(EntityManager::class);

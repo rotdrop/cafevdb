@@ -31,6 +31,7 @@ use UnexpectedValueException;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\IL10N;
@@ -109,9 +110,8 @@ class ProjectParticipantsController extends Controller
    * @return Response
    *
    * @todo Throw exceptions< s.t. the middleware error reporting code can do its work.
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function addMusicians(
     int $projectId,
     string|ParticipationContext $participationContext,
@@ -233,9 +233,8 @@ class ProjectParticipantsController extends Controller
    * @param null|string $exclude It non-empty exclude instrumets of this family.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function validateInstrumentsSelection(
     string|EnumValidateInstrumentsContext $context,
     null|string|array $recordId = [],
@@ -456,9 +455,8 @@ class ProjectParticipantsController extends Controller
    * @param null|string $files Uploaded files, JSON encoded, null if this is not a file-upload.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function files(
     string $operation,
     int $musicianId,
@@ -1032,9 +1030,8 @@ class ProjectParticipantsController extends Controller
    * @param bool $force Enforce the operation.
    *
    * @return OCP\AppFramework\Http\Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function mailingListSubscriptions(
     string $operation,
     int $projectId,

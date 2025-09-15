@@ -28,6 +28,7 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\IDateTimeZone;
@@ -78,9 +79,8 @@ class BlogController extends Controller
    * Return template for editor.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function editEntry():Response
   {
     $author   = $this->request->getParam('author', $this->userId);
@@ -156,9 +156,8 @@ class BlogController extends Controller
    * @param string $operation
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function action(string $operation):Response
   {
     $author    = $this->request->getParam('author', $this->userId);

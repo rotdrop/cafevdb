@@ -31,6 +31,7 @@ use PHP_IBAN\IBAN;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\Response;
 use OCP\Files\File;
 use OCP\IRequest;
@@ -127,9 +128,8 @@ class DocumentStorageUploadController extends Controller
    * @param string $conflict fail, replace, rename on conflict.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function documents(
     string $section,
     string $topic,

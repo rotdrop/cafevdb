@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\IAppContainer;
@@ -76,9 +77,8 @@ class PmeTableController extends Controller
    * @param string $topic
    *
    * @return Http\DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function serviceSwitch(string $topic):Http\Response
   {
     switch ($topic) {

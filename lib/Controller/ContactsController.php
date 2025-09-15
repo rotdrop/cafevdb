@@ -28,6 +28,7 @@
 namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\IAppContainer;
@@ -69,9 +70,8 @@ class ContactsController extends Controller
    * @param int $contactUid
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function get(int $contactUid):DataResponse
   {
     return self::grumble($this->l->t('UNIMPLEMENTED'));
@@ -93,9 +93,8 @@ class ContactsController extends Controller
    * @param array $onlyAddressBooks
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function search(
     string $pattern,
     ?int $limit = null,
@@ -148,9 +147,8 @@ class ContactsController extends Controller
    * Just return the list of addressbooks. Could also be made an "initial state".
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function getAddressBooks():DataResponse
   {
     $addressBooks = $this->contactsManager->getUserAddressBooks();

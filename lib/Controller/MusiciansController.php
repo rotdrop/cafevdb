@@ -28,6 +28,7 @@
 namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\IAppContainer;
@@ -94,9 +95,8 @@ class MusiciansController extends Controller
    * @param int $musicianId
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function get(int $musicianId):DataResponse
   {
     $musician = $this->musiciansRepository->find($musicianId);
@@ -124,9 +124,8 @@ class MusiciansController extends Controller
    * @param string $scope
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function search(
     string $pattern,
     ?int $limit = null,
