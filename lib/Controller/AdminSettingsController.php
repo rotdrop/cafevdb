@@ -28,10 +28,12 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\AuthorizedAdminSetting;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
@@ -88,11 +90,9 @@ class AdminSettingsController extends Controller
    * @param string $parameter
    *
    * @return DataResponse
-   *
-   * @NoGroupMemberRequired
-   * _AT_SubAdminRequired
-   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
+  #[AuthorizedAdminSetting(settings: AdminSettings::class)]
+  #[Attributes\NoGroupMemberRequired]
   public function get(string $parameter):DataResponse
   {
     $value = null;
@@ -171,10 +171,9 @@ class AdminSettingsController extends Controller
    *
    * @return DataResponse
    *
-   * @NoGroupMemberRequired
-   *
    * @throw Exceptions\EnduserNotificationException
    */
+  #[Attributes\NoGroupMemberRequired]
   public function postAdminOnly(string $parameter, mixed $value):DataResponse
   {
     return $this->post($parameter, $value);
@@ -189,11 +188,10 @@ class AdminSettingsController extends Controller
    *
    * @return DataResponse
    *
-   * @NoGroupMemberRequired
-   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
-   *
    * @throw Exceptions\EnduserNotificationException
    */
+  #[AuthorizedAdminSetting(settings: AdminSettings::class)]
+  #[Attributes\NoGroupMemberRequired]
   public function postDelegated(string $parameter, mixed $value = null, ?string $operation = null):DataResponse
   {
     if (array_search($parameter, self::DELEGATABLE_POST_REQUESTS) !== false) {

@@ -34,6 +34,7 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
@@ -43,6 +44,7 @@ use OCP\IRequest;
 use OCA\BAV\Service\BAV as BankAccountValidator;
 
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
+use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -120,9 +122,8 @@ class PersonalSettingsController extends Controller
 
   /**
    * @return Http\Response Return settings form.
-   *
-   * @NoAdminRequired
    */
+  #[NoAdminRequired]
   public function form():Http\Response
   {
     return $this->personalSettings->getForm();
@@ -136,9 +137,8 @@ class PersonalSettingsController extends Controller
    * @param mixed $value
    *
    * @return Http\Response
-   *
-   * @NoAdminRequired
    */
+  #[NoAdminRequired]
   public function set(string $parameter, mixed $value):Http\Response
   {
     $parameter = Util::dashesToCamelCase($parameter);
@@ -260,13 +260,12 @@ class PersonalSettingsController extends Controller
    *
    * @return Http\Response
    *
-   * @NoAdminRequired
-   * @SubAdminRequired
-   *
    * @bug This function is too big.
    *
    * @SuppressWarnings(PHPMD.UndefinedVariable)
    */
+  #[NoAdminRequired]
+  #[Attributes\SubAdminRequired]
   public function setApp(string $parameter, mixed $value):Http\Response
   {
     switch ($parameter) {
@@ -1903,9 +1902,8 @@ class PersonalSettingsController extends Controller
    * @param string $parameter
    *
    * @return Http\Response
-   *
-   * @NoAdminRequired
    */
+  #[NoAdminRequired]
   public function get(string $parameter):Http\Response
   {
     switch ($parameter) {
@@ -1966,10 +1964,9 @@ class PersonalSettingsController extends Controller
    * @param string $parameter
    *
    * @return Http\Response
-   *
-   * @NoAdminRequired
-   * @SubAdminRequired
    */
+  #[NoAdminRequired]
+  #[Attributes\SubAdminRequired]
   public function getApp(string $parameter):Http\Response
   {
     switch ($parameter) {
