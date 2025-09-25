@@ -37,7 +37,7 @@ use OCP\IL10N;
 use OCP\ITempManager;
 use OCP\Image;
 
-use OCA\CAFEVDB\Storage\AppStorageDisclosure;
+use OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure;
 use OCA\CAFEVDB\Exceptions;
 
 /**

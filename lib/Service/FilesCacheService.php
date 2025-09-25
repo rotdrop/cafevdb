@@ -37,7 +37,7 @@ use OCP\Cache\CappedMemoryCache;
 use OCP\Files\IRootFolder;
 
 use OCA\CAFEVDB\Constants;
-use OCA\CAFEVDB\Storage\AppStorageDisclosure;
+use OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure;
 
 /**
  * Some services for icons/images.

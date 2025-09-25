@@ -1,11 +1,9 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024, Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,24 +20,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Storage;
+namespace OCA\RotDrop\Toolkit\Service;
 
 use RuntimeException;
-use InvalidArgumentException;
 
 use OCP\IL10N;
-use Psr\Log\LoggerInterface as ILogger;
+use Psr\Log\LoggerInterface;
 use OCP\IConfig as CloudConfig;
 use OCP\Files\IAppData;
 use OCP\Files\Mount\IMountManager;
 use OCP\Files\IRootFolder;
-use OCP\Files\FileInfo;
 use OCP\Files\Folder;
 use OCP\Files\NotFoundException as FileNotFoundException;
 
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Constants;
+use OCA\RotDrop\Toolkit\Traits\Constants;
 
 /**
  * Disclose the app-storage folder as ordinary file-system Folder instance
@@ -47,12 +41,9 @@ use OCA\CAFEVDB\Constants;
  */
 class AppStorageDisclosure
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
-  public const PATH_SEP = Constants::PATH_SEP;
-
-  public const UPLOAD_FOLDER = 'uploads';
-  public const DRAFTS_FOLDER = 'drafts';
+  public const PATH_SEP = Constants::PATH_SEPARATOR;
 
   private const APP_DATA_PREFIX = 'appdata_';
 
@@ -63,7 +54,7 @@ class AppStorageDisclosure
     private IRootFolder $rootFolder,
     private IMountManager $mountManager,
     private CloudConfig $cloudConfig,
-    protected ILogger $logger,
+    protected LoggerInterface $logger,
     protected IL10N $l,
   ) {
   }
@@ -131,7 +122,7 @@ class AppStorageDisclosure
       $folder = $appFolder->newFolder($path);
       if (empty($folder)) {
         throw new RuntimeException($this->l->t(
-          'App-storage sub-folder "%s" oes not exist and cannot be created.', $path
+          'App-storage sub-folder "%s" does not exist and cannot be created.', $path
         ));
       }
     }
