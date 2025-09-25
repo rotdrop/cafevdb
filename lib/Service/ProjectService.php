@@ -2431,6 +2431,7 @@ Whatever.',
         'preferred_language' =>  $this->getLanguage($this->appLocale()),
         'max_message_size' => 0,
         'max_num_recipients' => 0,
+        'dmarc_mitigate_action' => 'munge_from',
       ];
       $listsService->setListConfig($listId, $configuration);
 
