@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\SimpleSharingService;
+use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /** AJAX controller for projects. */
 class ProjectsController extends Controller

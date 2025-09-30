@@ -1,11 +1,9 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,16 +20,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Service;
+namespace OCA\RotDrop\Toolkit\Service;
 
-use Throwable;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Throwable;
 
-use OCP\Share\IManager as IShareManager;
-use OCP\Share\IShare;
 use OCP\Files\Node as FileSystemNode;
 use OCP\IURLGenerator;
+use OCP\IUserSession;
+use OCP\Share\IManager as IShareManager;
+use OCP\Share\IShare;
 use Psr\Log\LoggerInterface as ILogger;
 
 /**
@@ -40,15 +39,15 @@ use Psr\Log\LoggerInterface as ILogger;
  */
 class SimpleSharingService
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** {@inheritdoc} */
   public function __construct(
-    protected ConfigService $configService,
     private IShareManager $shareManager,
     private IURLGenerator $urlGenerator,
+    private IUserSession $userSession,
+    protected LoggerInterface $logger,
   ) {
-    $this->l = $this->l10n();
   }
 
   /**
@@ -86,15 +85,15 @@ class SimpleSharingService
 
     $shareType = IShare::TYPE_LINK;
 
-    if (empty($shareOwner)) {
-      $shareOwner = $this->userId();
+    if ($shareOwner === null) {
+      $shareOwner = $this->userSession->getUser()?->getUID();
     }
 
     if ($expirationDate instanceof DateTimeInterface) {
       // make sure it is UTC midnight
       $expirationDate = new DateTimeImmutable($expirationDate->format('Y-m-d'));
     }
-    $expirationTimeStamp = empty($expirationDate) ? -1 : $expirationDate->getTimestamp();
+    $expirationTimeStamp = $expirationDate === null ? -1 : $expirationDate->getTimestamp();
 
     /** @var IShare $share */
     foreach ($this->shareManager->getSharesBy($shareOwner, $shareType, $node, false, -1) as $share) {
@@ -107,7 +106,7 @@ class SimpleSharingService
         // check expiration time
         $shareExpirationDate = $share->getExpirationDate();
 
-        $shareExpirationStamp = empty($shareExpirationDate) ? -1 : $shareExpirationDate->getTimestamp();
+        $shareExpirationStamp = $shareExpirationDate === null ? -1 : $shareExpirationDate->getTimestamp();
 
         if ($shareExpirationStamp != $expirationTimeStamp) {
           continue;
@@ -117,8 +116,8 @@ class SimpleSharingService
       // check permissions
       if ($share->getPermissions() === $sharePerms) {
         $token = $share->getToken();
-        $filesSharing = $this->urlGenerator()->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
-        $dav = $this->urlGenerator()->getAbsoluteURL('/public.php/dav/files/' . $token);
+        $filesSharing = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
+        $dav = $this->urlGenerator->getAbsoluteURL('/public.php/dav/files/' . $token);
         $this->logInfo('Reuse existing link-share ' . $filesSharing . ' || ' . $dav);
         return [
           'files_sharing' => $filesSharing,
@@ -148,8 +147,8 @@ class SimpleSharingService
     }
 
     $token = $share->getToken();
-    $filesSharing = $this->urlGenerator()->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
-    $dav = $this->urlGenerator()->getAbsoluteURL('/public.php/dav/files/' . $token);
+    $filesSharing = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
+    $dav = $this->urlGenerator->getAbsoluteURL('/public.php/dav/files/' . $token);
 
     $this->logInfo('Created new link-share ' . $filesSharing . ' || ' . $dav);
 
@@ -179,11 +178,11 @@ class SimpleSharingService
     ?\DateTimeInterface $expirationDate = null,
     int $shareType = IShare::TYPE_LINK,
   ):int {
-    if (empty($shareOwner)) {
-      $shareOwner = $this->userId();
+    if ($shareOwner === null) {
+      $shareOwner = $this->userSession->getUser()?->getUID();
     }
 
-    if (empty($expirationDate)) {
+    if ($expirationDate === null) {
       $expirationDate = new DateTimeImmutable;
     }
 
@@ -192,7 +191,7 @@ class SimpleSharingService
     /** @var IShare $share */
     foreach ($this->shareManager->getSharesBy($shareOwner, $shareType, $node, false, -1) as $share) {
       $shareExpirationDate = $share->getExpirationDate();
-      if (empty($shareExpirationDate) || $shareExpirationDate > $expirationDate) {
+      if ($shareExpirationDate === null || $shareExpirationDate > $expirationDate) {
         $share->setExpirationDate($expirationDate);
         $this->shareManager->updateShare($share);
         ++$numChanged;
@@ -215,8 +214,8 @@ class SimpleSharingService
    */
   public function delete(FileSystemNode $node, ?string $shareOwner, int $shareType = IShare::TYPE_LINK)
   {
-    if (empty($shareOwner)) {
-      $shareOwner = $this->userId();
+    if ($shareOwner === null) {
+      $shareOwner = $this->userSession->getUser()?->getUID();
     }
 
     $numDeleted = 0;
@@ -237,10 +236,10 @@ class SimpleSharingService
    *
    * @return bool Execution status.
    */
-  public function deleteLinkShare(string $token)
+  public function deleteLinkShare(string $token): bool
   {
     $share = $this->getShareFromUrl($token);
-    if (empty($share)) {
+    if ($share === null) {
       return false;
     }
     $this->shareManager->deleteShare($share);
@@ -264,19 +263,19 @@ class SimpleSharingService
   public function expireLinkShare(string $token, ?\DateTimeInterface $expirationDate = null):?DateTimeInterface
   {
     $share = $this->getShareFromUrl($token);
-    if (empty($share)) {
+    if ($share === null) {
       return null;
     }
 
-    if (empty($expirationDate)) {
+    if ($expirationDate === null) {
       $now = new DateTimeImmutable;
       $shareExpirationDate = $share->getExpirationDate();
-      if (empty($shareExpirationDate) || $shareExpirationDate > $now) {
+      if ($shareExpirationDate === null || $shareExpirationDate > $now) {
         $expirationDate = $now;
       }
     }
 
-    if (!empty($expirationDate)) {
+    if ($expirationDate !== null) {
       $shareExpirationDate = $expirationDate;
       $share->setExpirationDate($expirationDate);
       $this->shareManager->updateShare($share);
@@ -294,7 +293,7 @@ class SimpleSharingService
   public function getLinkExpirationDate(string $token):mixed
   {
     $share = $this->getShareFromUrl($token);
-    if (empty($share)) {
+    if ($share === null) {
       return false;
     }
     $shareExpirationDate = $share->getExpirationDate();
@@ -313,7 +312,7 @@ class SimpleSharingService
 
     $share = $this->shareManager->getShareByToken($token);
 
-    return empty($share) ? null : $share;
+    return $share;
   }
 
   /**
@@ -340,13 +339,9 @@ class SimpleSharingService
     int $permissions = \OCP\Constants::PERMISSION_READ,
     bool $sharedByOwner = false,
   ):bool {
-    $owner = $node->getOwner();
-    if (empty($owner)) {
-      $ownerId = $this->userId();
-    } else {
-      $ownerId = $owner->getUID();
-    }
-    $sharedById = $sharedByOwner ? $ownerId : $this->userId();
+    $ownerId = ($node->getOwner() ?? $this->userSession->getUser())?->getUID();
+    $sharedById = $sharedByOwner ? $ownerId : $this->userSession->getUser()?->getUID();
+
     /** @var IShare $share */
     foreach ($this->shareManager->getSharesBy(userId: $ownerId, shareType: IShare::TYPE_GROUP, reshares: true) as $share) {
       if ($share->getNodeId() === $node->getId() && $share->getSharedWith() == $groupId) {

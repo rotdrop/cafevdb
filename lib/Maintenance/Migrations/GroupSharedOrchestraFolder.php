@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\GroupFoldersService;
-use OCA\CAFEVDB\Service\SimpleSharingService;
+use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /**
  * Decrypt the shareowner config value.
