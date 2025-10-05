@@ -97,6 +97,8 @@ class InstrumentationService
         ->setMobilePhone('0815')
         ->setFixedLinePhone('4711')
         ->setDeleted(new DateTimeImmutable)
+        ->setCreated(new DateTimeImmutable)
+        ->setUpdated(new DateTimeImmutable)
         ->setUuid(Uuid::NIL);
       if ($persist) {
         $this->persist($dummy);
@@ -133,8 +135,10 @@ class InstrumentationService
 
     if (!empty($project)) {
       $participant = (new Entities\ProjectParticipant)
-                   ->setMusician($dummy)
-                   ->setProject($project);
+        ->setMusician($dummy)
+        ->setProject($project)
+        ->setCreated(new DateTimeImmutable)
+        ->setUpdated(new DateTimeImmutable);
       $dummy->getProjectParticipation()->set($project->getId(), $participant);
     }
 
