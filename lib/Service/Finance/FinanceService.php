@@ -265,7 +265,7 @@ class FinanceService
         $result = $bankAccount;
       }
     }
-    return $bankAccount;
+    return $result;
   }
 
   /**
