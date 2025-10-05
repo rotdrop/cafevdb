@@ -1998,6 +1998,7 @@ class PersonalSettingsController extends Controller
         $format = $this->request->getParam('format');
 
         $project = $this->projectService->findById($this->getClubMembersProjectId());
+        $this->entityManager = $this->di(EntityManager::class);
         $flatProject = $this->flattenProject($project);
 
         /** @var InstrumentationService $instrumentationService */
