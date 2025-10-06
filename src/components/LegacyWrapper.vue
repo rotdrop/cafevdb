@@ -410,8 +410,9 @@ const doLoadLegacy = async () => {
   const post: TemplatePostData = {
     template: props.template,
     ...props.templateParameters,
+    ...Object.fromEntries(Object.entries(currentRoute.query).filter(([key, _value]) => key !== 'hash')),
   }
-  // TODO: when chaning template, post-data exception project-id, project-name, musician-id should probably be cleared ...
+  // TODO: when changing template, post-data exception project-id, project-name, musician-id should probably be cleared ...
   Object.assign(post, currentHistoryState.value.post, { ...post /* spread is necessary here */ })
   // Object.assign(historyAppData, post)
   logger.debug('POST including history state', {
