@@ -83,6 +83,7 @@ const initialState = getInitialState<FilesInitialState>({ section: 'files' });
 const projectBalancesFolder = initialState?.sharing.files.folders.projectBalances;
 const projectManagementFolder = initialState?.sharing.files.folders.projectManagement;
 const supportingDocumentsFolder = initialState?.sharing.files.subFolders.supportingDocuments;
+const projectParticipantsFolder = initialState?.sharing.files.subFolders.projectParticipants;
 
 // @todo: we can of course support much more ...
 const supportedMimeTypes = [
@@ -128,6 +129,13 @@ const isProjectManagementParentFolder = (folder: Folder) => (
   folder.path === projectManagementFolder
     || (folder.dirname === projectManagementFolder
       && (/^\d{4}$/.test(folder.basename) || folder.basename === t(appName, 'templates'))));
+
+const isProjectParticipantsFolder = (folder: Folder) => {
+  if (!projectManagementFolder || !folder.dirname.startsWith(projectManagementFolder)) {
+    return false;
+  }
+  return folder.basename === projectParticipantsFolder;
+};
 
 const isProjectBalanceSupportingDocumentsTopFolder = (folder: Folder, projectName: string|null) => {
   projectName = projectName || getProjectNameFromProjectBalancesFolder(folder);
@@ -444,21 +452,12 @@ class ProjectManagementFolderEntry implements NewMenuEntry {
   }
 
   public enabled(folder: Folder) {
-    logger.info(
-      'MENU ENTRY', {
-        folder,
-        selector: `[data-cy-upload-picker-menu-entry="${this.id}"]`,
-        el: document.querySelector('[data-cy-upload-picker-menu-entry="' + this.id + '"]'),
-      },
-    );
-
     this.isManagementFolder = isProjectManagementParentFolder(folder);
 
     return this.isManagementFolder;
   }
 
-  public async handler(folder: Folder, content: Node[]) {
-    logger.info('HANDLER', { folder, content });
+  public async handler(_folder: Folder, _content: Node[]) {
     const route = generateAppUrl('p/projects', {
       // eslint-disable-next-line camelcase
       PME_sys_qfyear: (new Date()).getFullYear() - 1,
@@ -473,7 +472,6 @@ class ProjectManagementFolderEntry implements NewMenuEntry {
         'New projects have to be created using the "{buttonName}" button on the {pageName} page.', {
           pageName: `@ANCHOR@${t(appName, 'project overview')}@ROHCNA@`,
           buttonName: t(appName, 'New Project'),
-          route,
         },
       )
         .replace('@ANCHOR@', `<a target="_blank" style="text-decoration: revert; font-style: italic;" href="${route}">`)
@@ -487,6 +485,52 @@ class ProjectManagementFolderEntry implements NewMenuEntry {
 const projectManagementFolderEntry = new ProjectManagementFolderEntry(appName);
 
 addNewFileMenuEntry(projectManagementFolderEntry);
+
+/**
+ * Replace "new directory" by a suitable "new participant" menu entry.
+ */
+class ProjectParticipantFolderEntry implements NewMenuEntry {
+
+  public id: string;
+  public displayName: string;
+  public iconClass: string = 'icon-folder';
+  public order: number = 1000000;
+
+  public constructor(appName: string) {
+    this.id = appName + '-project-participant-folder';
+    this.displayName = t(appName, 'New Project-Participant');
+  }
+
+  public enabled(folder: Folder) {
+    return isProjectParticipantsFolder(folder);
+  }
+
+  public async handler(folder: Folder, _content: Node[]) {
+    // the project-name is the basename of folder.dirname
+    const projectName = folder.dirname.substring(folder.dirname.lastIndexOf('/') + 1);
+    const route = generateAppUrl('p/project-participants/{projectName}', {
+      projectName,
+    });
+    // <a target="_blank" style="text-decoration: revert; font-style: italic;" href="{route}">project overview</a> page.', {
+    await dialogAlert({
+      title: t(appName, 'Please use the "{appName}" app!', { appName }),
+      text: t(
+        appName,
+        'Participants have to be managed on the {pageName} page.', {
+          pageName: `@ANCHOR@${t(appName, 'project participants')}@ROHCNA@`,
+        },
+      )
+        .replace('@ANCHOR@', `<a target="_blank" style="text-decoration: revert; font-style: italic;" href="${route}">`)
+        .replace('@ROHCNA@', '</a>'),
+      allowHtml: true,
+    });
+  }
+
+}
+
+const projectParticipantFolderEntry = new ProjectParticipantFolderEntry(appName);
+
+addNewFileMenuEntry(projectParticipantFolderEntry);
 
 // invoices are also special, and perhaps later on contracts
 
@@ -591,10 +635,12 @@ const newFileMenuEntryNeedsTweak = (entry: NewMenuEntry) => (
   entry !== supportingDocumentsEntry
     && entry !== invoicesEntry
     && entry !== projectManagementFolderEntry
+    && entry !== projectParticipantFolderEntry
     && entry.id !== 'rich-workspace-init');
 
 const isSpecialEntryEnabled = (folder: Folder) => (
   projectManagementFolderEntry.enabled(folder)
+    || projectParticipantFolderEntry.enabled(folder)
     || supportingDocumentsEntry.enabled(folder)
     || invoicesEntry.enabled(folder)
 );
@@ -603,8 +649,7 @@ const isSpecialEntryEnabled = (folder: Folder) => (
 // unconditionally enabled if the underlying mount is writable. So we
 // remove the upload-items by a brute-force approach. This is
 // unfortunate and error prone but works.
-const observer = new MutationObserver(async (mutationList, observer) => {
-  logger.info('MUTATION OBSERVER', { mutationList, observer });
+const observer = new MutationObserver(async (mutationList, _observer) => {
   for (const mutationRecord of mutationList) {
     for (const element of mutationRecord.addedNodes) {
       if (!(element instanceof HTMLElement)) {
@@ -627,8 +672,7 @@ const observer = new MutationObserver(async (mutationList, observer) => {
   }
 });
 
-subscribe('files:list:updated', ({ folder, contents, view }) => {
-  logger.info('FILES LIST UPDATA', { folder, contents, view });
+subscribe('files:list:updated', ({ folder }) => {
   if (isSpecialEntryEnabled(folder)) {
     observer.observe(document.body, { childList: true });
   } else {
@@ -641,7 +685,6 @@ subscribe('files:list:updated', ({ folder, contents, view }) => {
  */
 window.addEventListener('DOMContentLoaded', () => {
   const newFileMenuEntries = getNewFileMenuEntries();
-  logger.info('NEW FILE MENU ENTRIES', newFileMenuEntries);
   for (const entry of newFileMenuEntries) {
     if (newFileMenuEntryNeedsTweak(entry)) {
       const enabledMethod = entry.enabled;

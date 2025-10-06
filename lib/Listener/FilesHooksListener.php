@@ -161,6 +161,7 @@ class FilesHooksListener implements IEventListener
       $balancesFolder = $encryptionService->getConfigValue(ConfigService::BALANCES_FOLDER);
       $projectsFolder = $encryptionService->getConfigValue(ConfigService::PROJECTS_FOLDER);
       $supportingDocumentsFolder = $this->getSupportingDocumentsFolderName();
+      $projectParticipantsFolder = $encryptionService->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
 
       /** @var EntityManager $entityManager */
       $entityManager = $this->appContainer->get(EntityManager::class);
@@ -202,6 +203,7 @@ class FilesHooksListener implements IEventListener
             'subFolders' => [
               // relative paths
               'supportingDocuments' => $supportingDocumentsFolder,
+              'projectParticipants' => $projectParticipantsFolder,
             ],
           ],
         ],

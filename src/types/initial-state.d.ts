@@ -40,6 +40,7 @@ export interface FilesInitialState {
       subFolders: {
         // relative paths
         supportingDocuments: string,
+        projectParticipants: string,
       },
     },
   },
