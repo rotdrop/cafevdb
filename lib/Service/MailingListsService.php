@@ -35,6 +35,7 @@ use OCP\Files\FileInfo;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /** Handle participant mailing-list services. */
 class MailingListsService

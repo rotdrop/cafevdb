@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Common\Util; // some static helpers, only for explode
 use OCA\CAFEVDB\Common\PHPMailer;
+use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /** Check for a usable configuration. */
 class ConfigCheckService
