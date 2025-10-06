@@ -17,6 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { appName } from '../../config.ts';
 import {
   getDialogBuilder,
   DialogSeverity,
@@ -35,7 +36,7 @@ const dialogAlert = async ({ title, text, allowHtml }: DialogAlertArgs) => {
     .setText(allowHtml === true ? '' : text)
     .setSeverity(DialogSeverity.Info)
     .addButton({
-      label: t('core', 'Close'),
+      label: t(appName, 'close'),
       type: 'primary',
       callback() {},
     })
