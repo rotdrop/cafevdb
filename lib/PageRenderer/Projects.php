@@ -185,7 +185,6 @@ class Projects extends PMETableViewBase
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
     $instrumentInfo  = $this->getInstrumentInfo();
@@ -797,16 +796,16 @@ class Projects extends PMETableViewBase
             // fetch the basic list-info from the lists-server
             $listInfo = $this->listsService->getListInfo($value);
             if (empty($listInfo)) {
-                $l10nStatus = $this->l->t($status = 'unset');
+              $l10nStatus = $this->l->t($status = 'unset');
             } else {
-                $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
-                if (empty($this->listsService->getListConfig($value, 'emergency'))) {
-                    $l10nStatus = $this->l->t($status = 'active');
-                } else {
-                    $l10nStatus = $this->l->t($status = 'closed');
-                }
-                $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
-                // $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
+              $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
+              if (empty($this->listsService->getListConfig($value, 'emergency'))) {
+                $l10nStatus = $this->l->t($status = 'active');
+              } else {
+                $l10nStatus = $this->l->t($status = 'closed');
+              }
+              $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
+              // $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
             }
           } catch (Throwable $t) {
             $this->logException($t, 'Unable to communicate with mailing list server.');
