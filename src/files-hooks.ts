@@ -39,6 +39,7 @@ import {
   Permission,
   View,
   addNewFileMenuEntry,
+  getFileActions,
   getNewFileMenuEntries,
   registerFileAction,
 } from '@nextcloud/files';
@@ -672,7 +673,10 @@ const observer = new MutationObserver(async (mutationList, _observer) => {
   }
 });
 
+let currentFolder: Folder|undefined;
+
 subscribe('files:list:updated', ({ folder }) => {
+  currentFolder = folder;
   if (isSpecialEntryEnabled(folder)) {
     observer.observe(document.body, { childList: true });
   } else {
@@ -689,6 +693,23 @@ window.addEventListener('DOMContentLoaded', () => {
     if (newFileMenuEntryNeedsTweak(entry)) {
       const enabledMethod = entry.enabled;
       entry.enabled = (folder: Folder) => !isSpecialEntryEnabled(folder) && (enabledMethod ? enabledMethod.call(entry, folder) : true);
+    }
+  }
+  const fileActionEntries = getFileActions();
+  for (const fileAction of fileActionEntries) {
+    switch (fileAction.id) {
+      case 'delete':
+      case 'move-copy':
+      case 'rename': {
+        const enabledMethod = fileAction._action.enabled;
+        fileAction._action.enabled = (nodes: Node[], view: View) =>
+          (currentFolder && isSpecialEntryEnabled(currentFolder)
+            ? false
+            : (enabledMethod ? enabledMethod.call(fileAction._action, nodes, view) : true));
+        break;
+      }
+      default:
+        break;
     }
   }
 });
