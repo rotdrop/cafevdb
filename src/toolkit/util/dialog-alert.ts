@@ -26,19 +26,28 @@ import { translate as t } from '@nextcloud/l10n';
 export interface DialogAlertArgs {
   title: string,
   text: string,
+  allowHtml: boolean,
 }
 
-const dialogAlert = async ({ title, text }: DialogAlertArgs) => {
-  await getDialogBuilder(title)
-    .setText(text)
+const dialogAlert = async ({ title, text, allowHtml }: DialogAlertArgs) => {
+  console.info('START');
+  const dialog = getDialogBuilder(title)
+    .setText(allowHtml === true ? '' : text)
     .setSeverity(DialogSeverity.Info)
     .addButton({
-      label: t('core', 'Yes'),
+      label: t('core', 'Close'),
       type: 'primary',
       callback() {},
     })
-    .build()
-    .show();
+    .build();
+  console.info('AFTER BUILD');
+  if (allowHtml === true) {
+    dialog.setHTML(text);
+  }
+  console.info('BEFORE SHOW()');
+  const result = dialog.show();
+  console.info('AFTER SHOW()');
+  return result;
 };
 
 export default dialogAlert;
