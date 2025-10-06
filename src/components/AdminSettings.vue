@@ -501,7 +501,7 @@ import SettingsSelectUsers from './SettingsSelectUsers.vue'
 import useTooltipsStore from '../stores/tooltips.ts'
 import formatDate from '../util/formatDate.js'
 import { showErrorToast } from '../util/toasts.ts'
-import dialogConfirm from '../util/dialogs.ts'
+import dialogConfirm from '../toolkit/util/dialog-confirm.ts'
 import type { AxiosResponse } from 'axios'
 // eslint-disable-next-line n/no-missing-import
 import type { OCSResponse } from '@nextcloud/typings/ocs'
@@ -859,33 +859,16 @@ const saveSetting = async (settingsKey: string, value?: string) => {
     const response: AdminSettingPostResponse = await axios.post(generateAppUrl('settings/admin/{settingsKey}', { settingsKey }), { value })
     const responseData = response.data
     if (responseData.status === 'unconfirmed') {
-      await new Promise(resolve => {
-        dialogConfirm(
-          t(appId, 'Confirmation Required'),
-          responseData.feedback as string,
-          (answer) => {
-            if (answer) {
-              saveSetting(settingsKey, value)
-            } else {
-              showInfo(t(appId, 'Unconfirmed, reverting to old value.'))
-              getSettingsData()
-            }
-            resolve(answer)
-          },
-        )
+      const answer = await dialogConfirm({
+        title: t(appId, 'Confirmation Required'),
+        text: responseData.feedback as string,
       })
-      // OC.dialogs.confirm(
-      //   responseData.feedback,
-      //   t(appId, 'Confirmation Required'),
-      //   (answer) => {
-      //     if (answer) {
-      //       saveSetting(settingsKey, value, true)
-      //     } else {
-      //       showInfo(t(appId, 'Unconfirmed, reverting to old value.'))
-      //       getSettingsData()
-      //     }
-      //   },
-      //   true)
+      if (answer === true) {
+        saveSetting(settingsKey, value)
+      } else {
+        showInfo(t(appId, 'Unconfirmed, reverting to old value.'))
+        getSettingsData()
+      }
     } else {
       const messages = responseData.messages || {}
       const transient = messages.transient || []
