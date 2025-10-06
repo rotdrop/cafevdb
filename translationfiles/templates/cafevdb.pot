@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-10-06 17:02+0200\n"
+"POT-Creation-Date: 2025-10-06 18:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4895,12 +4895,12 @@ msgstr ""
 msgid "by day and month"
 msgstr ""
 
-#: lib/Listener/FilesHooksListener.php:185
+#: lib/Listener/FilesHooksListener.php:186
 #: lib/Traits/ConfigTrait.php:783
 msgid "invoices"
 msgstr ""
 
-#: lib/Listener/FilesHooksListener.php:186
+#: lib/Listener/FilesHooksListener.php:187
 #: lib/Traits/ConfigTrait.php:769
 msgid "donation-receipts"
 msgstr ""
@@ -6068,8 +6068,8 @@ msgid "Rate"
 msgstr ""
 
 #: lib/PageRenderer/Invoices.php:354
-#: src/files-hooks.ts:502
-#: src/files-hooks.ts:516
+#: src/files-hooks.ts:546
+#: src/files-hooks.ts:560
 msgid "New Invoice"
 msgstr ""
 
@@ -7000,8 +7000,8 @@ msgid "Filing Date"
 msgstr ""
 
 #: lib/PageRenderer/Projects.php:142
-#: src/files-hooks.ts:443
-#: src/files-hooks.ts:475
+#: src/files-hooks.ts:451
+#: src/files-hooks.ts:474
 msgid "New Project"
 msgstr ""
 
@@ -8418,7 +8418,7 @@ msgid ""
 msgstr ""
 
 #: lib/Service/ProjectService.php:516
-#: src/files-hooks.ts:130
+#: src/files-hooks.ts:131
 msgid "templates"
 msgstr ""
 
@@ -14300,7 +14300,6 @@ msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr ""
 
 #: src/app/sepa-debit-mandate.js:637
-#: src/toolkit/util/dialog-alert.ts:38
 msgid "Close"
 msgstr ""
 
@@ -14507,63 +14506,76 @@ msgstr ""
 msgid "Resolve JS Sourceode"
 msgstr ""
 
-#: src/files-hooks.ts:216
+#: src/files-hooks.ts:224
 msgid "Perform mail-merge operation with this template file."
 msgstr ""
 
-#: src/files-hooks.ts:302
-#: src/files-hooks.ts:334
+#: src/files-hooks.ts:310
+#: src/files-hooks.ts:342
 msgid "New Supporting Document"
 msgstr ""
 
-#: src/files-hooks.ts:332
+#: src/files-hooks.ts:340
 msgid "New Year Folder"
 msgstr ""
 
-#: src/files-hooks.ts:357
+#: src/files-hooks.ts:365
 msgid "Year determined as {year}."
 msgstr ""
 
-#: src/files-hooks.ts:373
-#: src/files-hooks.ts:417
+#: src/files-hooks.ts:381
+#: src/files-hooks.ts:425
 msgid "Created new folder \"{name}\""
 msgstr ""
 
-#: src/files-hooks.ts:400
+#: src/files-hooks.ts:408
 msgid "Document sequence determined as {sequence}."
 msgstr ""
 
-#: src/files-hooks.ts:470
+#: src/files-hooks.ts:469
+#: src/files-hooks.ts:516
 msgid "Please use the \"{appName}\" app!"
 msgstr ""
 
-#: src/files-hooks.ts:474
+#: src/files-hooks.ts:473
 msgid "project overview"
 msgstr ""
 
-#: src/files-hooks.ts:473
+#: src/files-hooks.ts:472
 msgid ""
 "New projects have to be created using the \"{buttonName}\" button on the "
 "{pageName} page."
 msgstr ""
 
-#: src/files-hooks.ts:518
+#: src/files-hooks.ts:501
+msgid "New Project-Participant"
+msgstr ""
+
+#: src/files-hooks.ts:520
+msgid "project participants"
+msgstr ""
+
+#: src/files-hooks.ts:519
+msgid "Participants have to be managed on the {pageName} page."
+msgstr ""
+
+#: src/files-hooks.ts:562
 msgid "Generate Invoice Document"
 msgstr ""
 
-#: src/files-hooks.ts:538
+#: src/files-hooks.ts:582
 msgid "Starting mail-merge, this may take some time ..."
 msgstr ""
 
-#: src/files-hooks.ts:545
+#: src/files-hooks.ts:589
 msgid "Mail-merge completed, moving document into the proper place ..."
 msgstr ""
 
-#: src/files-hooks.ts:567
+#: src/files-hooks.ts:611
 msgid "Reloading file list."
 msgstr ""
 
-#: src/files-hooks.ts:578
+#: src/files-hooks.ts:622
 msgid "Mail-merge operation has failed"
 msgstr ""
 
@@ -14673,6 +14685,11 @@ msgstr ""
 #: src/stores/tooltips.ts:78
 msgid ""
 "No information available, fetching the tooltip with key \"{key}\" failed."
+msgstr ""
+
+#: src/toolkit/util/dialog-alert.ts:39
+#: templates/fragments/projects/project-mailing-list.php:96
+msgid "close"
 msgstr ""
 
 #. TRANSLATORS: This should be a pangram in the target language, please have a look at
@@ -15577,10 +15594,6 @@ msgstr ""
 
 #: templates/fragments/projects/project-mailing-list.php:78
 msgid "manage"
-msgstr ""
-
-#: templates/fragments/projects/project-mailing-list.php:96
-msgid "close"
 msgstr ""
 
 #: templates/fragments/projects/project-mailing-list.php:105

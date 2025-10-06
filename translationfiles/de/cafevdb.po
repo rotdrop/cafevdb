@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-10-06 16:58+0200\n"
-"PO-Revision-Date: 2025-10-06 17:01+0200\n"
+"POT-Creation-Date: 2025-10-06 18:22+0200\n"
+"PO-Revision-Date: 2025-10-06 18:28+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -5488,11 +5488,11 @@ msgstr "nach Wochennummer(n)"
 msgid "by day and month"
 msgstr "nach Tag im Monat"
 
-#: lib/Listener/FilesHooksListener.php:185 lib/Traits/ConfigTrait.php:783
+#: lib/Listener/FilesHooksListener.php:186 lib/Traits/ConfigTrait.php:783
 msgid "invoices"
 msgstr "Rechnungen"
 
-#: lib/Listener/FilesHooksListener.php:186 lib/Traits/ConfigTrait.php:769
+#: lib/Listener/FilesHooksListener.php:187 lib/Traits/ConfigTrait.php:769
 msgid "donation-receipts"
 msgstr "Zuwendungsbestätigungen"
 
@@ -6725,8 +6725,8 @@ msgstr "Bereich"
 msgid "Rate"
 msgstr "Rate"
 
-#: lib/PageRenderer/Invoices.php:354 src/files-hooks.ts:502
-#: src/files-hooks.ts:516
+#: lib/PageRenderer/Invoices.php:354 src/files-hooks.ts:546
+#: src/files-hooks.ts:560
 msgid "New Invoice"
 msgstr "Neue Rechnung"
 
@@ -7664,8 +7664,8 @@ msgstr "Sammelauftrag"
 msgid "Filing Date"
 msgstr "Einreichungsdatum"
 
-#: lib/PageRenderer/Projects.php:142 src/files-hooks.ts:443
-#: src/files-hooks.ts:475
+#: lib/PageRenderer/Projects.php:142 src/files-hooks.ts:451
+#: src/files-hooks.ts:474
 msgid "New Project"
 msgstr "Neues Projekt"
 
@@ -9200,7 +9200,7 @@ msgstr ""
 "Vielfachheit von \"%1$s\" auf \"%2s\" ist deshalb nur noch für Tesxt- oder\n"
 "HTML-Felder möglich, aber der Datetyp ist \"%3$s\"."
 
-#: lib/Service/ProjectService.php:516 src/files-hooks.ts:130
+#: lib/Service/ProjectService.php:516 src/files-hooks.ts:131
 msgid "templates"
 msgstr "Vorlagen"
 
@@ -16505,7 +16505,7 @@ msgstr "Schließt das Formular und speichert die Daten in der Datenbank."
 msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr "Speichert die Daten in der Datenbank. Das Formular bleibt offen."
 
-#: src/app/sepa-debit-mandate.js:637 src/toolkit/util/dialog-alert.ts:38
+#: src/app/sepa-debit-mandate.js:637
 msgid "Close"
 msgstr "Schließen"
 
@@ -16724,63 +16724,75 @@ msgstr "Vue JS Frontend"
 msgid "Resolve JS Sourceode"
 msgstr "Orte im JS-Quellcode auflösen"
 
-#: src/files-hooks.ts:216
+#: src/files-hooks.ts:224
 msgid "Perform mail-merge operation with this template file."
 msgstr "Serienbrief-Operationen mit dieser Vorlage ausführen."
 
-#: src/files-hooks.ts:302 src/files-hooks.ts:334
+#: src/files-hooks.ts:310 src/files-hooks.ts:342
 msgid "New Supporting Document"
 msgstr "Neuer Beleg"
 
-#: src/files-hooks.ts:332
+#: src/files-hooks.ts:340
 msgid "New Year Folder"
 msgstr "Neuer Jahreszahl-Ordner."
 
-#: src/files-hooks.ts:357
+#: src/files-hooks.ts:365
 msgid "Year determined as {year}."
 msgstr "Nehme {year} als Jahreszahl."
 
-#: src/files-hooks.ts:373 src/files-hooks.ts:417
+#: src/files-hooks.ts:381 src/files-hooks.ts:425
 msgid "Created new folder \"{name}\""
 msgstr "Neuen Ordner \"{name}\" erzeugt"
 
-#: src/files-hooks.ts:400
+#: src/files-hooks.ts:408
 msgid "Document sequence determined as {sequence}."
 msgstr "Belegnummer als {sequence} ermittelt."
 
-#: src/files-hooks.ts:470
+#: src/files-hooks.ts:469 src/files-hooks.ts:516
 msgid "Please use the \"{appName}\" app!"
 msgstr "Bitte benutzt die \"{appName}\"-App!"
 
-#: src/files-hooks.ts:474
+#: src/files-hooks.ts:473
 msgid "project overview"
 msgstr "Projekt-Übersicht"
 
-#: src/files-hooks.ts:473
+#: src/files-hooks.ts:472
 msgid ""
 "New projects have to be created using the \"{buttonName}\" button on the "
 "{pageName} page."
-msgstr "Neue Projekte müssen mit dem \"{buttonName}\"-Knopf auf der {pageName} Seite angelegt werden. Es reicht nicht, einfach nur einen Unterordner zu erzeugen."
+msgstr "Neue Projekte müssen mit dem \"{buttonName}\"-Knopf auf der \"{pageName}\"-Seite angelegt werden. Es reicht nicht, einfach nur einen Unterordner zu erzeugen oder zu löschen."
 
-#: src/files-hooks.ts:518
+#: src/files-hooks.ts:501
+msgid "New Project-Participant"
+msgstr "Neues Projekt-Mitglied"
+
+#: src/files-hooks.ts:520
+msgid "project participants"
+msgstr "Projekt-Teilnehmende"
+
+#: src/files-hooks.ts:519
+msgid "Participants have to be managed on the {pageName} page."
+msgstr "Teilnehmende müssen auf der \"{pageName}\"-Seite verwaltet werden. Es reicht nicht, einfach nur einen Unterordner zu erzeugen oder zu löschen."
+
+#: src/files-hooks.ts:562
 msgid "Generate Invoice Document"
 msgstr "Rechnungsdokument erzeugen"
 
-#: src/files-hooks.ts:538
+#: src/files-hooks.ts:582
 msgid "Starting mail-merge, this may take some time ..."
 msgstr "(Serien-)Brief wird erzeugt, das kann dauern ..."
 
-#: src/files-hooks.ts:545
+#: src/files-hooks.ts:589
 msgid "Mail-merge completed, moving document into the proper place ..."
 msgstr ""
 "(Serien-)Brief-Erzeugung abgeschlossen, verschiebe das Ergebnis an die "
 "richtige Stelle ..."
 
-#: src/files-hooks.ts:567
+#: src/files-hooks.ts:611
 msgid "Reloading file list."
 msgstr "Lade die Datei-Liste neu."
 
-#: src/files-hooks.ts:578
+#: src/files-hooks.ts:622
 msgid "Mail-merge operation has failed"
 msgstr "Die Serienbrief-Operation ist fehlgeschlagen"
 
@@ -16905,6 +16917,11 @@ msgid ""
 msgstr ""
 "Kein Hilfetext verfügbar, Anfordern des Texts zum Schlüssel \"{key}\" ist "
 "fehlgeschlagen."
+
+#: src/toolkit/util/dialog-alert.ts:39
+#: templates/fragments/projects/project-mailing-list.php:96
+msgid "close"
+msgstr "schließen"
 
 #. TRANSLATORS: This should be a pangram in the target language, please have a look at
 #. TRANSLATORS: https://en.wikipedia.org/wiki/Pangram where you can
@@ -17931,10 +17948,6 @@ msgstr "z.B. 29.04.2032"
 #: templates/fragments/projects/project-mailing-list.php:78
 msgid "manage"
 msgstr "verwalten"
-
-#: templates/fragments/projects/project-mailing-list.php:96
-msgid "close"
-msgstr "schließen"
 
 #: templates/fragments/projects/project-mailing-list.php:105
 msgid "reopen"
