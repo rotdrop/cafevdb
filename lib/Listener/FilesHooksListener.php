@@ -181,6 +181,7 @@ class FilesHooksListener implements IEventListener
       $financeFolder = $sharedFolder . '/' . $financeFolder;
       $balancesFolder = $financeFolder . '/' . $balancesFolder;
       $projectBalancesFolder = $balancesFolder . '/' . $projectsFolder;
+      $projectManagementFolder = $sharedFolder . '/' . $projectsFolder;
       $invoicesFolder = $financeFolder . '/' . $appL10n->t('invoices');
       $donationReceiptsFolder = $financeFolder . '/' . $appL10n->t('donation-receipts');
 
@@ -195,6 +196,7 @@ class FilesHooksListener implements IEventListener
               'finance' => $financeFolder,
               'invoices' => $invoicesFolder,
               'projectBalances' => $projectBalancesFolder,
+              'projectManagement' => $projectManagementFolder,
               'templates' => $templatesFolder,
             ],
             'subFolders' => [

@@ -21,14 +21,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue';
+import Vue, { nextTick as vueNextTick } from 'vue';
 import { appName } from './config.ts';
 import getInitialState from './toolkit/util/initial-state.ts';
 import { basename } from 'path';
+import dialogAlert from './toolkit/util/dialog-alert.ts';
 import { getCurrentUser } from '@nextcloud/auth';
 import { generateFilePath } from '@nextcloud/router';
 import { generateUrl as generateAppUrl } from './toolkit/util/generate-url.ts';
-import { emit } from '@nextcloud/event-bus';
+import { emit, subscribe } from '@nextcloud/event-bus';
 import { showError, showInfo, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import {
   FileAction,
@@ -80,6 +81,7 @@ if (!window.OCA.CAFEVDB) {
 const initialState = getInitialState<FilesInitialState>({ section: 'files' });
 
 const projectBalancesFolder = initialState?.sharing.files.folders.projectBalances;
+const projectManagementFolder = initialState?.sharing.files.folders.projectManagement;
 const supportingDocumentsFolder = initialState?.sharing.files.subFolders.supportingDocuments;
 
 // @todo: we can of course support much more ...
@@ -87,24 +89,28 @@ const supportedMimeTypes = [
   'application/vnd.oasis.opendocument.text',
 ];
 
-const acceptableMimeType = function(mimeType: string|undefined) {
+const acceptableMimeType = (mimeType: string|undefined) => {
   return mimeType !== undefined && supportedMimeTypes.indexOf(mimeType) >= 0;
 };
 
-const validTemplatePath = function(path: string) {
+const validTemplatePath = (path: string) => {
   return initialState && path.startsWith(initialState?.sharing.files.folders.templates);
 };
 
-const getProjectNameFromProjectBalancesFolders = function(folder: Folder) {
+const getProjectNameFromProjectFolder = (folder: Folder, prefixPath?: string) => {
   let dirName = folder.dirname;
-  if (!initialState || !dirName.startsWith(initialState?.sharing.files.folders.projectBalances)) {
+  if (!prefixPath || !dirName.startsWith(prefixPath)) {
     return null;
   }
-  dirName = dirName.substring(initialState?.sharing.files.folders.projectBalances.length);
-  dirName = dirName.replace(/^\/?(\d{4}|)\/?/, '');
+  dirName = dirName.substring(prefixPath.length); // strip prefix
+  dirName = dirName.replace(/^\/?(\d{4}|)\/?/, ''); // get rid of optional year subfolder
   const slashPos = dirName.indexOf('/');
   const projectName = slashPos >= 0 ? dirName.substring(0, dirName.indexOf('/')) : dirName;
   return projectName;
+};
+
+const getProjectNameFromProjectBalancesFolder = (folder: Folder) => {
+  return getProjectNameFromProjectFolder(folder, projectBalancesFolder);
 };
 
 const getProjectYearFromProjectName = function(projectName: string|null) {
@@ -118,8 +124,13 @@ const getProjectYearFromProjectName = function(projectName: string|null) {
   return null;
 };
 
-const isProjectBalanceSupportingDocumentsTopFolder = function(folder: Folder, projectName: string|null) {
-  projectName = projectName || getProjectNameFromProjectBalancesFolders(folder);
+const isProjectManagementParentFolder = (folder: Folder) => (
+  folder.path === projectManagementFolder
+    || (folder.dirname === projectManagementFolder
+      && (/^\d{4}$/.test(folder.basename) || folder.basename === t(appName, 'templates'))));
+
+const isProjectBalanceSupportingDocumentsTopFolder = (folder: Folder, projectName: string|null) => {
+  projectName = projectName || getProjectNameFromProjectBalancesFolder(folder);
   if (!projectName || !projectBalancesFolder) {
     return false;
   }
@@ -129,8 +140,8 @@ const isProjectBalanceSupportingDocumentsTopFolder = function(folder: Folder, pr
     && baseName === supportingDocumentsFolder;
 };
 
-const isProjectBalanceSupportingDocumentsFolder = function(folder: Folder, projectName: string|null, projectYear: string|null) {
-  projectName = projectName || getProjectNameFromProjectBalancesFolders(folder);
+const isProjectBalanceSupportingDocumentsFolder = (folder: Folder, projectName: string|null, projectYear: string|null) => {
+  projectName = projectName || getProjectNameFromProjectBalancesFolder(folder);
   if (!projectName) {
     return false;
   }
@@ -151,7 +162,7 @@ const isInvoicesFolder = (folder: Folder) =>
 
 const getDataFromInvoiceFolder = (folder: Folder) => {
   let path = folder.path;
-  logger.info('TEST INVOICE FOLDER', { folder, path });
+  logger.debug('TEST INVOICE FOLDER', { folder, path });
   if (!initialState || !path.startsWith(initialState?.sharing.files.folders.invoices)) {
     return null;
   }
@@ -172,7 +183,7 @@ const getDataFromInvoiceFolder = (folder: Folder) => {
     organization: matches[6],
     person: matches[7],
   };
-  logger.info('INVOICE DATA', { path, invoice });
+  logger.debug('INVOICE DATA', { path, invoice });
 
   return invoice;
 };
@@ -270,6 +281,11 @@ const createNewFolder = async (root: Folder, name: string): Promise<createFolder
   };
 };
 
+/**
+ * Menu-entry for generating either a new year-folder or a new
+   supporting document folder for a project. Replace the general "new
+   directory" entry.
+ */
 class SupportingDocumentEntry implements NewMenuEntry {
 
   private projectName: string|null = null;
@@ -289,9 +305,14 @@ class SupportingDocumentEntry implements NewMenuEntry {
   public enabled(folder: Folder) {
     // tweak further?
     // class="action upload-picker__menu-entry" data-cy-upload-picker-menu-entry="cafevdb-project-supporting-document-folder"><
-    logger.info('MENU ENTRY', { el: document.querySelector('[data-cy-upload-picker-menu-entry="' + supportingDocumentsEntry.id + '"]') });
+    logger.debug(
+      'MENU ENTRY', {
+        folder,
+        el: document.querySelector('[data-cy-upload-picker-menu-entry="' + this.id + '"]'),
+      },
+    );
 
-    const projectName = getProjectNameFromProjectBalancesFolders(folder);
+    const projectName = getProjectNameFromProjectBalancesFolder(folder);
     const projectYear = getProjectYearFromProjectName(projectName);
 
     const isTopFolder = !!projectName && isProjectBalanceSupportingDocumentsTopFolder(folder, projectName);
@@ -405,6 +426,68 @@ const supportingDocumentsEntry = new SupportingDocumentEntry(appName);
 
 addNewFileMenuEntry(supportingDocumentsEntry);
 
+/**
+ * Replace "new directory" by a suitable "new project" menu entry.
+ */
+class ProjectManagementFolderEntry implements NewMenuEntry {
+
+  private isManagementFolder: boolean = false;
+
+  public id: string;
+  public displayName: string;
+  public iconClass: string = 'icon-folder';
+  public order: number = 1000000;
+
+  public constructor(appName: string) {
+    this.id = appName + '-project-management-folder';
+    this.displayName = t(appName, 'New Project');
+  }
+
+  public enabled(folder: Folder) {
+    logger.info(
+      'MENU ENTRY', {
+        folder,
+        selector: `[data-cy-upload-picker-menu-entry="${this.id}"]`,
+        el: document.querySelector('[data-cy-upload-picker-menu-entry="' + this.id + '"]'),
+      },
+    );
+
+    this.isManagementFolder = isProjectManagementParentFolder(folder);
+
+    return this.isManagementFolder;
+  }
+
+  public async handler(folder: Folder, content: Node[]) {
+    logger.info('HANDLER', { folder, content });
+    const route = generateAppUrl('p/projects', {
+      // eslint-disable-next-line camelcase
+      PME_sys_qfyear: (new Date()).getFullYear() - 1,
+      // eslint-disable-next-line camelcase
+      PME_sys_qfyear_comp: '>=',
+    });
+    // <a target="_blank" style="text-decoration: revert; font-style: italic;" href="{route}">project overview</a> page.', {
+    await dialogAlert({
+      title: t(appName, 'Please use the "{appName}" app!', { appName }),
+      text: t(
+        appName,
+        'New projects have to be created using the "{buttonName}" button on the {pageName} page.', {
+          pageName: `@ANCHOR@${t(appName, 'project overview')}@ROHCNA@`,
+          buttonName: t(appName, 'New Project'),
+          route,
+        },
+      )
+        .replace('@ANCHOR@', `<a target="_blank" style="text-decoration: revert; font-style: italic;" href="${route}">`)
+        .replace('@ROHCNA@', '</a>'),
+      allowHtml: true,
+    });
+  }
+
+}
+
+const projectManagementFolderEntry = new ProjectManagementFolderEntry(appName);
+
+addNewFileMenuEntry(projectManagementFolderEntry);
+
 // invoices are also special, and perhaps later on contracts
 
 class InvoicesEntry implements NewMenuEntry {
@@ -420,7 +503,10 @@ class InvoicesEntry implements NewMenuEntry {
   }
 
   public enabled(folder: Folder) {
-    logger.info('FOLDER', { folder });
+    logger.debug('FOLDER', {
+      folder,
+    },
+    );
     if (!isInvoicesFolder(folder)) {
       return false;
     }
@@ -436,7 +522,7 @@ class InvoicesEntry implements NewMenuEntry {
   }
 
   public async handler(folder: Folder, content: Node[]) {
-    logger.info('FOLDER', { folder, content });
+    logger.debug('FOLDER', { folder, content });
     // fixup later
 
     const invoiceData = getDataFromInvoiceFolder(folder);
@@ -472,7 +558,7 @@ class InvoicesEntry implements NewMenuEntry {
 
         const moveResponse = await axios.post(moveUrl, moveData);
 
-        logger.info('MAIL MERGE RESPONSES', {
+        logger.debug('MAIL MERGE RESPONSES', {
           moveResponse,
           response,
         });
@@ -501,6 +587,55 @@ const invoicesEntry = new InvoicesEntry(appName);
 
 addNewFileMenuEntry(invoicesEntry);
 
+const newFileMenuEntryNeedsTweak = (entry: NewMenuEntry) => (
+  entry !== supportingDocumentsEntry
+    && entry !== invoicesEntry
+    && entry !== projectManagementFolderEntry
+    && entry.id !== 'rich-workspace-init');
+
+const isSpecialEntryEnabled = (folder: Folder) => (
+  projectManagementFolderEntry.enabled(folder)
+    || supportingDocumentsEntry.enabled(folder)
+    || invoicesEntry.enabled(folder)
+);
+
+// At the time of this writing the standard uploads actions are
+// unconditionally enabled if the underlying mount is writable. So we
+// remove the upload-items by a brute-force approach. This is
+// unfortunate and error prone but works.
+const observer = new MutationObserver(async (mutationList, observer) => {
+  logger.info('MUTATION OBSERVER', { mutationList, observer });
+  for (const mutationRecord of mutationList) {
+    for (const element of mutationRecord.addedNodes) {
+      if (!(element instanceof HTMLElement)) {
+        continue;
+      }
+      if (!element.classList.contains('v-popper__popper')) {
+        continue;
+      }
+      await vueNextTick(); // wait for the child-nodes to appear ...
+      const uploadAddItem = element.querySelector('li.action[data-cy-upload-picker-add]');
+      if (!uploadAddItem) {
+        logger.error('No upload menu item', element);
+      }
+      uploadAddItem?.previousElementSibling?.remove();
+      uploadAddItem?.nextElementSibling?.nextElementSibling?.remove();
+      uploadAddItem?.nextElementSibling?.remove();
+      uploadAddItem?.remove();
+      // observer.disconnect(); // one-time action when the files-list is updated.
+    }
+  }
+});
+
+subscribe('files:list:updated', ({ folder, contents, view }) => {
+  logger.info('FILES LIST UPDATA', { folder, contents, view });
+  if (isSpecialEntryEnabled(folder)) {
+    observer.observe(document.body, { childList: true });
+  } else {
+    observer.disconnect();
+  }
+});
+
 /*
  * In special locations generic "new file" action should be very restricted.
  */
@@ -508,11 +643,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const newFileMenuEntries = getNewFileMenuEntries();
   logger.info('NEW FILE MENU ENTRIES', newFileMenuEntries);
   for (const entry of newFileMenuEntries) {
-    if (entry !== supportingDocumentsEntry && entry !== invoicesEntry && entry.id !== 'rich-workspace-init') {
+    if (newFileMenuEntryNeedsTweak(entry)) {
       const enabledMethod = entry.enabled;
-      entry.enabled = (folder: Folder) => {
-        return !invoicesEntry.enabled(folder) && !supportingDocumentsEntry.enabled(folder) && (enabledMethod ? enabledMethod(folder) : true);
-      };
+      entry.enabled = (folder: Folder) => !isSpecialEntryEnabled(folder) && (enabledMethod ? enabledMethod.call(entry, folder) : true);
     }
   }
 });

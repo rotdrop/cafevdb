@@ -34,6 +34,7 @@ export interface FilesInitialState {
         finance: string,
         invoices: string,
         projectBalances: string,
+        projectManagement: string,
         templates: string,
       },
       subFolders: {
