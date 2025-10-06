@@ -49,7 +49,8 @@
                              v-tooltip.right="item.tooltip"
                              :to="{
                                name: 'legacy-page',
-                               params: { template: item.template, ...item.templateParameters }
+                               params: { template: item.template, ...item.templateParameters },
+                               query: { ...item.templateParameters },
                              }"
                              :class="{ 'finance-item': (item.permissions & PERMISSION_FINANCE) }"
                              :name="item.name"
