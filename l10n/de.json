@@ -473,7 +473,7 @@
     "Value \"%s\" for set \"%s\" is not convertible to boolean." : "Wert \"%s\" für \"%s\" kann nicht als Wahrheitswert interpretiert werden.",
     "Unable to configure the club-member's cloud user backend." : "Kann das User-Backend für die Vereinsmitglieder nicht konfigurieren.",
     "Unable to disable the club-member's cloud user backend." : "Kann das User-Backend für die Vereinsmitglieder nicht deaktivieren.",
-    "Unable to configure \"%1$s\"." : "Kann \"%1$f\" nicht konfigurieren.",
+    "Unable to configure \"%1$s\"." : "Kann \"%1$s\" nicht konfigurieren.",
     "Unable to recreate the views for the cloud user backend." : "Kann die Tabellen-Ansichten für das Cloud User-Backend nicht erzeugen.",
     "Cloud-user-views have been regenerated successfully." : "Cloud User-Views wurden erfolgreich erzeugt.",
     "Unable to reconfigure the database for the cloud - orchestra member interaction." : "Kann die Datenbank für die Cloud-Vereinsmitglieder-Interaktion nicht neu konfigurieren.",

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-10-06 18:22+0200\n"
-"PO-Revision-Date: 2025-10-06 18:28+0200\n"
+"POT-Creation-Date: 2025-10-07 10:36+0200\n"
+"PO-Revision-Date: 2025-10-07 10:33+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2884,7 +2884,7 @@ msgstr "Kann das User-Backend für die Vereinsmitglieder nicht deaktivieren."
 #: lib/Controller/PersonalSettingsController.php:1437
 #, php-format
 msgid "Unable to configure \"%1$s\"."
-msgstr "Kann \"%1$f\" nicht konfigurieren."
+msgstr "Kann \"%1$s\" nicht konfigurieren."
 
 #: lib/Controller/PersonalSettingsController.php:1443
 msgid "Unable to recreate the views for the cloud user backend."
@@ -6725,8 +6725,8 @@ msgstr "Bereich"
 msgid "Rate"
 msgstr "Rate"
 
-#: lib/PageRenderer/Invoices.php:354 src/files-hooks.ts:546
-#: src/files-hooks.ts:560
+#: lib/PageRenderer/Invoices.php:354 src/files-hooks.ts:547
+#: src/files-hooks.ts:561
 msgid "New Invoice"
 msgstr "Neue Rechnung"
 
@@ -7664,8 +7664,8 @@ msgstr "Sammelauftrag"
 msgid "Filing Date"
 msgstr "Einreichungsdatum"
 
-#: lib/PageRenderer/Projects.php:142 src/files-hooks.ts:451
-#: src/files-hooks.ts:474
+#: lib/PageRenderer/Projects.php:142 src/files-hooks.ts:452
+#: src/files-hooks.ts:475
 msgid "New Project"
 msgstr "Neues Projekt"
 
@@ -9200,7 +9200,7 @@ msgstr ""
 "Vielfachheit von \"%1$s\" auf \"%2s\" ist deshalb nur noch für Tesxt- oder\n"
 "HTML-Felder möglich, aber der Datetyp ist \"%3$s\"."
 
-#: lib/Service/ProjectService.php:516 src/files-hooks.ts:131
+#: lib/Service/ProjectService.php:516 src/files-hooks.ts:132
 msgid "templates"
 msgstr "Vorlagen"
 
@@ -16724,75 +16724,80 @@ msgstr "Vue JS Frontend"
 msgid "Resolve JS Sourceode"
 msgstr "Orte im JS-Quellcode auflösen"
 
-#: src/files-hooks.ts:224
+#: src/files-hooks.ts:225
 msgid "Perform mail-merge operation with this template file."
 msgstr "Serienbrief-Operationen mit dieser Vorlage ausführen."
 
-#: src/files-hooks.ts:310 src/files-hooks.ts:342
+#: src/files-hooks.ts:311 src/files-hooks.ts:343
 msgid "New Supporting Document"
 msgstr "Neuer Beleg"
 
-#: src/files-hooks.ts:340
+#: src/files-hooks.ts:341
 msgid "New Year Folder"
 msgstr "Neuer Jahreszahl-Ordner."
 
-#: src/files-hooks.ts:365
+#: src/files-hooks.ts:366
 msgid "Year determined as {year}."
 msgstr "Nehme {year} als Jahreszahl."
 
-#: src/files-hooks.ts:381 src/files-hooks.ts:425
+#: src/files-hooks.ts:382 src/files-hooks.ts:426
 msgid "Created new folder \"{name}\""
 msgstr "Neuen Ordner \"{name}\" erzeugt"
 
-#: src/files-hooks.ts:408
+#: src/files-hooks.ts:409
 msgid "Document sequence determined as {sequence}."
 msgstr "Belegnummer als {sequence} ermittelt."
 
-#: src/files-hooks.ts:469 src/files-hooks.ts:516
+#: src/files-hooks.ts:470 src/files-hooks.ts:517
 msgid "Please use the \"{appName}\" app!"
 msgstr "Bitte benutzt die \"{appName}\"-App!"
 
-#: src/files-hooks.ts:473
+#: src/files-hooks.ts:474
 msgid "project overview"
 msgstr "Projekt-Übersicht"
 
-#: src/files-hooks.ts:472
+#: src/files-hooks.ts:473
 msgid ""
 "New projects have to be created using the \"{buttonName}\" button on the "
 "{pageName} page."
-msgstr "Neue Projekte müssen mit dem \"{buttonName}\"-Knopf auf der \"{pageName}\"-Seite angelegt werden. Es reicht nicht, einfach nur einen Unterordner zu erzeugen oder zu löschen."
+msgstr ""
+"Neue Projekte müssen mit dem \"{buttonName}\"-Knopf auf der \"{pageName}\"-"
+"Seite angelegt werden. Es reicht nicht, einfach nur einen Unterordner zu "
+"erzeugen oder zu löschen."
 
-#: src/files-hooks.ts:501
+#: src/files-hooks.ts:502
 msgid "New Project-Participant"
 msgstr "Neues Projekt-Mitglied"
 
-#: src/files-hooks.ts:520
+#: src/files-hooks.ts:521
 msgid "project participants"
 msgstr "Projekt-Teilnehmende"
 
-#: src/files-hooks.ts:519
+#: src/files-hooks.ts:520
 msgid "Participants have to be managed on the {pageName} page."
-msgstr "Teilnehmende müssen auf der \"{pageName}\"-Seite verwaltet werden. Es reicht nicht, einfach nur einen Unterordner zu erzeugen oder zu löschen."
+msgstr ""
+"Teilnehmende müssen auf der \"{pageName}\"-Seite verwaltet werden. Es reicht "
+"nicht, einfach nur einen Unterordner zu erzeugen oder zu löschen."
 
-#: src/files-hooks.ts:562
+#: src/files-hooks.ts:563
 msgid "Generate Invoice Document"
 msgstr "Rechnungsdokument erzeugen"
 
-#: src/files-hooks.ts:582
+#: src/files-hooks.ts:583
 msgid "Starting mail-merge, this may take some time ..."
 msgstr "(Serien-)Brief wird erzeugt, das kann dauern ..."
 
-#: src/files-hooks.ts:589
+#: src/files-hooks.ts:590
 msgid "Mail-merge completed, moving document into the proper place ..."
 msgstr ""
 "(Serien-)Brief-Erzeugung abgeschlossen, verschiebe das Ergebnis an die "
 "richtige Stelle ..."
 
-#: src/files-hooks.ts:611
+#: src/files-hooks.ts:612
 msgid "Reloading file list."
 msgstr "Lade die Datei-Liste neu."
 
-#: src/files-hooks.ts:622
+#: src/files-hooks.ts:623
 msgid "Mail-merge operation has failed"
 msgstr "Die Serienbrief-Operation ist fehlgeschlagen"
 

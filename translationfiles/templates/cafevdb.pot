@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-10-06 18:28+0200\n"
+"POT-Creation-Date: 2025-10-07 10:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -6068,8 +6068,8 @@ msgid "Rate"
 msgstr ""
 
 #: lib/PageRenderer/Invoices.php:354
-#: src/files-hooks.ts:546
-#: src/files-hooks.ts:560
+#: src/files-hooks.ts:547
+#: src/files-hooks.ts:561
 msgid "New Invoice"
 msgstr ""
 
@@ -7000,8 +7000,8 @@ msgid "Filing Date"
 msgstr ""
 
 #: lib/PageRenderer/Projects.php:142
-#: src/files-hooks.ts:451
-#: src/files-hooks.ts:474
+#: src/files-hooks.ts:452
+#: src/files-hooks.ts:475
 msgid "New Project"
 msgstr ""
 
@@ -8418,7 +8418,7 @@ msgid ""
 msgstr ""
 
 #: lib/Service/ProjectService.php:516
-#: src/files-hooks.ts:131
+#: src/files-hooks.ts:132
 msgid "templates"
 msgstr ""
 
@@ -14506,76 +14506,76 @@ msgstr ""
 msgid "Resolve JS Sourceode"
 msgstr ""
 
-#: src/files-hooks.ts:224
+#: src/files-hooks.ts:225
 msgid "Perform mail-merge operation with this template file."
 msgstr ""
 
-#: src/files-hooks.ts:310
-#: src/files-hooks.ts:342
+#: src/files-hooks.ts:311
+#: src/files-hooks.ts:343
 msgid "New Supporting Document"
 msgstr ""
 
-#: src/files-hooks.ts:340
+#: src/files-hooks.ts:341
 msgid "New Year Folder"
 msgstr ""
 
-#: src/files-hooks.ts:365
+#: src/files-hooks.ts:366
 msgid "Year determined as {year}."
 msgstr ""
 
-#: src/files-hooks.ts:381
-#: src/files-hooks.ts:425
+#: src/files-hooks.ts:382
+#: src/files-hooks.ts:426
 msgid "Created new folder \"{name}\""
 msgstr ""
 
-#: src/files-hooks.ts:408
+#: src/files-hooks.ts:409
 msgid "Document sequence determined as {sequence}."
 msgstr ""
 
-#: src/files-hooks.ts:469
-#: src/files-hooks.ts:516
+#: src/files-hooks.ts:470
+#: src/files-hooks.ts:517
 msgid "Please use the \"{appName}\" app!"
 msgstr ""
 
-#: src/files-hooks.ts:473
+#: src/files-hooks.ts:474
 msgid "project overview"
 msgstr ""
 
-#: src/files-hooks.ts:472
+#: src/files-hooks.ts:473
 msgid ""
 "New projects have to be created using the \"{buttonName}\" button on the "
 "{pageName} page."
 msgstr ""
 
-#: src/files-hooks.ts:501
+#: src/files-hooks.ts:502
 msgid "New Project-Participant"
 msgstr ""
 
-#: src/files-hooks.ts:520
+#: src/files-hooks.ts:521
 msgid "project participants"
 msgstr ""
 
-#: src/files-hooks.ts:519
+#: src/files-hooks.ts:520
 msgid "Participants have to be managed on the {pageName} page."
 msgstr ""
 
-#: src/files-hooks.ts:562
+#: src/files-hooks.ts:563
 msgid "Generate Invoice Document"
 msgstr ""
 
-#: src/files-hooks.ts:582
+#: src/files-hooks.ts:583
 msgid "Starting mail-merge, this may take some time ..."
 msgstr ""
 
-#: src/files-hooks.ts:589
+#: src/files-hooks.ts:590
 msgid "Mail-merge completed, moving document into the proper place ..."
 msgstr ""
 
-#: src/files-hooks.ts:611
+#: src/files-hooks.ts:612
 msgid "Reloading file list."
 msgstr ""
 
-#: src/files-hooks.ts:622
+#: src/files-hooks.ts:623
 msgid "Mail-merge operation has failed"
 msgstr ""
 
