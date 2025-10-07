@@ -1,0 +1,60 @@
+diff --git a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
+index ebfee56..daa6536 100644
+--- a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
++++ b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
+@@ -18,6 +18,7 @@ import useCalendarObjectsStore from '../store/calendarObjects.js'
+ import useCalendarObjectInstanceStore from '../store/calendarObjectInstance.js'
+ import { mapStores, mapState } from 'pinia'
+ import { loadState } from '@nextcloud/initial-state'
++import { isNavigationFailure, NavigationFailureType } from 'vue-router'
+ 
+ /**
+  * This is a mixin for the editor. It contains common Vue stuff, that is
+@@ -423,10 +424,20 @@ export default {
+ 					params,
+ 				})
+ 			} catch (error) {
+-				console.error('Caught an error returning to the base view', error)
++				if (isNavigationFailure(error, NavigationFailureType.redirected)) {
++					console.debug('Redirect on return to CalendarView', {
++						to: { ...error.to },
++						from: { ...error.from },
++					})
++				} else if (isNavigationFailure(error, NavigationFailureType.aborted)) {
++					console.debug('Navigation abort on return to CalendarView', {
++						to: { ...error.to },
++						from: { ...error.from },
++					})
++				} else {
++					console.error('Caught an error returning to the base view', error)
++				}
+ 			}
+-
+-			this.calendarObjectInstanceStore.resetCalendarObjectInstanceObjectIdAndRecurrenceId()
+ 		},
+ 		/**
+ 		 * Closes the editor and returns to normal calendar-view without running any action.
+@@ -979,4 +990,7 @@ export default {
+ 			next(false)
+ 		}
+ 	},
++	unmounted() {
++		this.calendarObjectInstanceStore.resetCalendarObjectInstanceObjectIdAndRecurrenceId()
++	},
+ }
+diff --git a/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js b/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js
+index e8526cf..5057e0f 100644
+--- a/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js
++++ b/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js
+@@ -593,7 +593,10 @@ export default defineStore('calendarObjectInstance', {
+ 		 */
+ 		addCategory({ calendarObjectInstance, category }) {
+ 			calendarObjectInstance.eventComponent.addCategory(category)
+-			calendarObjectInstance.categories.push(category)
++			const index = calendarObjectInstance.categories.indexOf(category)
++			if (index === -1) {
++				calendarObjectInstance.categories.push(category)
++			}
+ 		},
+ 
+ 		/**
