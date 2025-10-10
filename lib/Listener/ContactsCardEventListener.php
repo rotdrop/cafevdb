@@ -92,6 +92,7 @@ class ContactsCardEventListener implements IEventListener
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected IAppContainer $appContainer,
+    private bool $isCLI,
   ) {
   }
   // phpcs:enable
@@ -126,7 +127,11 @@ class ContactsCardEventListener implements IEventListener
       $encryptionService = $this->appContainer->get(EncryptionService::class);
       $orchestraGroup = $encryptionService->getConfigValue(ConfigService::USER_GROUP_KEY);
       if (empty($orchestraGroup)) {
-        throw new UnexpectedValueException('The orchestra group is not set.');
+        if (!$this->isCLI) {
+          // Do not complain in CLI mode, as of now we have to run unauthenticated.
+          throw new UnexpectedValueException('The orchestra group is not set.');
+        }
+        return;
       }
       $this->entityManager = $this->appContainer->get(EntityManager::class);
       if (!$this->entityManager->bound()) {
