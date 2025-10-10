@@ -68,7 +68,7 @@ class CloudUserConnectorService
 
   private const CREATE_FUNCTION_REGEXP = '/^' . self::CREATE_FUNCTION_PREFIX . '/';
 
-  private const CREATE_VIEW_REGEXP = '/^CREATE OR REPLACE.*VIEW/';
+  private const CREATE_VIEW_REGEXP = '/^CREATE OR REPLACE.*VIEW/s';
 
   private const CHECK_OPTION_ON_NON_UPDATABLE_VIEW_ERROR = 1368;
 
@@ -172,7 +172,14 @@ WHERE m.email IS NOT NULL AND m.email <> ""
   const PRIVILEGES = [
     'ProjectApplications' => [
       self::GRANT_INSERT => true,
-      self::GRANT_FIELD_UPDATE => [ 'passwordHash', 'musician_id', 'data' ],
+      self::GRANT_FIELD_UPDATE => [
+        'password_hash',
+        'musician_id',
+        'data',
+        'created',
+        'updated',
+        'deleted',
+      ],
     ],
   ];
 
@@ -773,6 +780,15 @@ SELECT *
 FROM " . $tableName . " t
 WHERE FIND_IN_SET(SHA2(t.email, 256), " . $functionPrefix . "APPLICATION_TOKENS()) > 0
   OR (t.musician_id IS NOT NULL AND t.musician_id = " . $accessFunction . ")";
+    foreach (self::PRIVILEGES[$tableName] as $privilege => $columns) {
+      if (is_array($columns)) {
+        foreach ($columns as $column) {
+          $statements[] = sprintf($privilege, $viewName, $cloudDbUser, $column);
+        }
+      } else {
+        $statements[] = sprintf($privilege, $viewName, $cloudDbUser);
+      }
+    }
 
     foreach (self::MUSICIAN_ID_TABLES as $table => $column) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
