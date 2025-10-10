@@ -37,24 +37,21 @@ class CreateTableProjectApplications extends AbstractMigration
   protected static $sql = [
     self::STRUCTURAL => [
       "CREATE TABLE IF NOT EXISTS ProjectApplications (
+  email VARCHAR(254) NOT NULL COLLATE `ascii_general_ci`,
   project_id INT NOT NULL,
-  musician_id INT NOT NULL,
+  musician_id INT DEFAULT NULL,
+  password_hash VARCHAR(254) DEFAULT NULL COLLATE `ascii_general_ci`,
   data JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
   deleted DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
   created DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
   updated DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
   INDEX IDX_5F0E8E19166D1F9C (project_id),
   INDEX IDX_5F0E8E199523AA8A (musician_id),
-  PRIMARY KEY(project_id, musician_id)
-)",
+  PRIMARY KEY(project_id, email))",
       "ALTER TABLE ProjectApplications
-  ADD CONSTRAINT FK_5F0E8E19166D1F9C
-  FOREIGN KEY IF NOT EXISTS
-  (project_id) REFERENCES Projects (id)",
+  ADD CONSTRAINT FK_5F0E8E19166D1F9C FOREIGN KEY IF NOT EXISTS (project_id) REFERENCES Projects (id)",
       "ALTER TABLE ProjectApplications
-  ADD CONSTRAINT FK_5F0E8E199523AA8A
-  FOREIGN KEY IF NOT EXISTS
-  (musician_id) REFERENCES Musicians (id)",
+  ADD CONSTRAINT FK_5F0E8E199523AA8A FOREIGN KEY IF NOT EXISTS (musician_id) REFERENCES Musicians (id)",
     ],
   ];
 

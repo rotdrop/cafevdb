@@ -54,14 +54,31 @@ class ProjectApplication implements \ArrayAccess
   private Project $project;
 
   /**
+   * The email address used for registration.
+   */
+  #[ORM\Column(type: 'string', length: 254, nullable: false, options: ['collation' => 'ascii_general_ci'])]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'NONE')]
+  private string $email;
+
+  /**
+   * In order to revisit their registration data people have to provide a
+   * password or -- if they have cloud account -- have to be logged in.
+   */
+  #[ORM\Column(type: 'string', length: 254, nullable: true, options: ['collation' => 'ascii_general_ci'])]
+  private ?string $passwordHash =  null;
+
+  /**
    * @var Musician
    *
-   * The related musician (i.e. persons). The applicants are inserted in to
-   * the database as Musician entity when they submit their application.
+   * The related musician (i.e. person). Maybe null. As we do not know how
+   * people try to register themselves we need a manual review of the
+   * registation data. For the case that applicants first logged into the
+   * cloud this field will be set and accurate.
    */
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectApplications', fetch: 'EXTRA_LAZY')]
-  #[ORM\Id]
-  private Musician $musician;
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'id', nullable: true)]
+  private ?Musician $musician = null;
 
   /**
    * @var array
@@ -71,38 +88,21 @@ class ProjectApplication implements \ArrayAccess
   #[ORM\Column(type: 'json', nullable: false, options: ['default' => '{}'])]
   private array $data;
 
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(Project $project, Musician $musician, array $data = [])
+  /**
+   * @param Project $project Mandatory.
+   *
+   * @param string $email Mandatory.
+   *
+   * @param null|Musician $musician Optional already existing person.
+   *
+   * @param array $data Registration data. Maybe empty in the CTOR, but of course is mandatory.
+   */
+  public function __construct(Project $project, string $email, ?Musician $musician = null, array $data = [])
   {
     $this->arrayCTOR();
     $this->project = $project;
     $this->musician = $musician;
     $this->data = $data;
-  }
-  // phpcs:enable
-
-  /**
-   * Set musician.
-   *
-   * @param Musician $musician
-   *
-   * @return ProjectApplication
-   */
-  public function setMusician(Musician $musician):ProjectApplication
-  {
-    $this->musician = $musician;
-
-    return $this;
-  }
-
-  /**
-   * Get musician.
-   *
-   * @return Musician
-   */
-  public function getMusician():Musician
-  {
-    return $this->musician;
   }
 
   /**
@@ -127,6 +127,78 @@ class ProjectApplication implements \ArrayAccess
   public function getProject():Project
   {
     return $this->project;
+  }
+
+  /**
+   * Set email.
+   *
+   * @param string $email
+   *
+   * @return ProjectApplication
+   */
+  public function setEmail(string $email):ProjectApplication
+  {
+    $this->email = $email;
+
+    return $this;
+  }
+
+  /**
+   * Get email.
+   *
+   * @return string
+   */
+  public function getEmail():string
+  {
+    return $this->email;
+  }
+
+  /**
+   * Set passwordHash.
+   *
+   * @param string $passwordHash
+   *
+   * @return ProjectApplication
+   */
+  public function setPasswordHash(string $passwordHash):ProjectApplication
+  {
+    $this->passwordHash = $passwordHash;
+
+    return $this;
+  }
+
+  /**
+   * Get passwordHash.
+   *
+   * @return string
+   */
+  public function getPasswordHash():string
+  {
+    return $this->passwordHash;
+  }
+
+  /**
+   * Set musician.
+   *
+   * @param Musician $musician
+   *
+   * @return ProjectApplication
+   */
+  public function setMusician(Musician $musician):ProjectApplication
+  {
+    $this->musician = $musician;
+
+    return $this;
+  }
+
+  /**
+   * Get musician.
+   *
+   * @return Musician
+   */
+  public function getMusician():Musician
+  {
+    return $this->musician;
   }
 
   /**

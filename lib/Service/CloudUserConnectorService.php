@@ -139,7 +139,7 @@ WHERE m.email IS NOT NULL AND m.email <> ""
     'SepaBankAccounts' => 'musician_id',
     'SepaDebitMandates' => 'musician_id',
     // 'MusicianRowAccessTokens' => 'musician_id',
-    'ProjectApplications' => 'musician_id',
+    // 'ProjectApplications' => 'musician_id',
     'ProjectParticipants' => 'musician_id',
     'MusicianInstruments' => 'musician_id',
     'ProjectInstruments' => 'musician_id',
@@ -172,7 +172,7 @@ WHERE m.email IS NOT NULL AND m.email <> ""
   const PRIVILEGES = [
     'ProjectApplications' => [
       self::GRANT_INSERT => true,
-      self::GRANT_FIELD_UPDATE => [ 'data' ],
+      self::GRANT_FIELD_UPDATE => [ 'passwordHash', 'musician_id', 'data' ],
     ],
   ];
 
@@ -640,19 +640,9 @@ WHERE m.email IS NOT NULL AND m.email <> ""
    */
   private function generateMusicianPersonalizedViewsStatements(?string $dataBaseName):array
   {
+    $functionPrefix = empty($dataBaseName) ? '' : $dataBaseName . '.';
+
     $functions = [
-      'ROW_ACCESS_ID' => "()
-  RETURNS INT(11)
-  READS SQL DATA
-  SQL SECURITY DEFINER
-BEGIN
-  DECLARE musician_id INT;
-  SET musician_id = 0;
-  SELECT t.musician_id INTO musician_id
-    FROM `" . $this->appDbName . "`.MusicianRowAccessTokens t
-    WHERE t.user_id = @CLOUD_USER_ID AND t.access_token_hash = @ROW_ACCESS_TOKEN;
-  RETURN musician_id;
-END",
       'ROW_ACCESS_TOKEN' => "()
   RETURNS CHAR(128)
   DETERMINISTIC
@@ -668,6 +658,26 @@ END",
   SQL SECURITY INVOKER
 BEGIN
   RETURN @CLOUD_USER_ID;
+END",
+      'ROW_ACCESS_ID' => "()
+  RETURNS INT(11)
+  READS SQL DATA
+  SQL SECURITY DEFINER
+BEGIN
+  DECLARE musician_id INT;
+  SET musician_id = 0;
+  SELECT t.musician_id INTO musician_id
+    FROM `" . $this->appDbName . "`.MusicianRowAccessTokens t
+    WHERE t.user_id = " . $functionPrefix . "CLOUD_USER_ID() AND t.access_token_hash = " . $functionPrefix . "ROW_ACCESS_TOKEN();
+  RETURN musician_id;
+END",
+      'APPLICATION_TOKENS' => "()
+  RETURNS VARCHAR(1024) CHARSET ascii
+  DETERMINISTIC
+  NO SQL
+  SQL SECURITY INVOKER
+BEGIN
+  RETURN @PROJECT_APPLICATION_TOKENS;
 END",
       'BIN_TO_UUID' => "(`b` BINARY(16), `f` BOOLEAN)
   RETURNS CHAR(36) CHARSET ascii
@@ -717,8 +727,6 @@ BEGIN
 END",
     ];
 
-    $functionPrefix = empty($dataBaseName) ? '' : $dataBaseName . '.';
-
     $statements = [];
 
     // fetch the authorized musician-id from the token table by examining the secret.
@@ -739,6 +747,7 @@ SELECT *
 FROM Musicians m
 WHERE m.id = " . $accessFunction;
 
+    // Grant access to the one row of the row access tokens table
     $tableName = 'MusicianRowAccessTokens';
     $viewName = $this->personalizedViewName($dataBaseName, $tableName);
     $statements[$viewName] = "CREATE OR REPLACE
@@ -749,6 +758,21 @@ SELECT *
 FROM " . $tableName . " t
 WHERE t.access_token_hash = " . $functionPrefix . "ROW_ACCESS_TOKEN()
   AND t.user_id = " . $functionPrefix . "CLOUD_USER_ID()";
+
+    // Grant access to all relevant rows in the project application
+    // table. Grant access also if there is a related user account and the
+    // user is logged in. The fancy FIND_IN_SET() is there to handle the case
+    // of email aliases resp. multiple difference emails.
+    $tableName = 'ProjectApplications';
+    $viewName = $this->personalizedViewName($dataBaseName, $tableName);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT *
+FROM " . $tableName . " t
+WHERE FIND_IN_SET(SHA2(t.email, 256), " . $functionPrefix . "APPLICATION_TOKENS()) > 0
+  OR (t.musician_id IS NOT NULL AND t.musician_id = " . $accessFunction . ")";
 
     foreach (self::MUSICIAN_ID_TABLES as $table => $column) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
