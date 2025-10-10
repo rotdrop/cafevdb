@@ -622,13 +622,14 @@ class EntityManager extends EntityManagerDecorator
   {
     // $config->addCustomStringFunction('timestampdiff', \OCA\CAFEVDB\Wrapped\Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff::class);
     $config->addCustomDatetimeFunction('timestampdiff', DoctrineExtensions\Query\Mysql\TimestampDiff::class);
+    $config->addCustomStringFunction('bin2uuid', Functions\BinToUuid::class);
+    $config->addCustomStringFunction('convert', Functions\ConvertUsing::class);
     $config->addCustomStringFunction('greatest', DoctrineExtensions\Query\Mysql\Greatest::class);
-    $config->addCustomStringFunction('year', DoctrineExtensions\Query\Mysql\Year::class);
     $config->addCustomStringFunction('group_concat', DoctrineExtensions\Query\Mysql\GroupConcat::class);
     $config->addCustomStringFunction('if', DoctrineExtensions\Query\Mysql\IfElse::class);
     $config->addCustomStringFunction('regexp', DoctrineExtensions\Query\Mysql\Regexp::class);
-    $config->addCustomStringFunction('bin2uuid', Functions\BinToUuid::class);
-    $config->addCustomStringFunction('convert', Functions\ConvertUsing::class);
+    $config->addCustomStringFunction('sha2', DoctrineExtensions\Query\Mysql\Sha2::class);
+    $config->addCustomStringFunction('year', DoctrineExtensions\Query\Mysql\Year::class);
   }
 
   /**
