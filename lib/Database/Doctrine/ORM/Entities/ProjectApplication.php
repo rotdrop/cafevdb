@@ -101,6 +101,7 @@ class ProjectApplication implements \ArrayAccess
   {
     $this->arrayCTOR();
     $this->project = $project;
+    $this->email = $email;
     $this->musician = $musician;
     $this->data = $data;
   }
@@ -156,11 +157,11 @@ class ProjectApplication implements \ArrayAccess
   /**
    * Set passwordHash.
    *
-   * @param string $passwordHash
+   * @param null|string $passwordHash
    *
    * @return ProjectApplication
    */
-  public function setPasswordHash(string $passwordHash):ProjectApplication
+  public function setPasswordHash(?string $passwordHash):ProjectApplication
   {
     $this->passwordHash = $passwordHash;
 
@@ -170,9 +171,9 @@ class ProjectApplication implements \ArrayAccess
   /**
    * Get passwordHash.
    *
-   * @return string
+   * @return null|string
    */
-  public function getPasswordHash():string
+  public function getPasswordHash():?string
   {
     return $this->passwordHash;
   }
@@ -180,11 +181,11 @@ class ProjectApplication implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param Musician $musician
+   * @param null|Musician $musician
    *
    * @return ProjectApplication
    */
-  public function setMusician(Musician $musician):ProjectApplication
+  public function setMusician(?Musician $musician):ProjectApplication
   {
     $this->musician = $musician;
 
@@ -194,9 +195,9 @@ class ProjectApplication implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return Musician
+   * @return null|Musician
    */
-  public function getMusician():Musician
+  public function getMusician():?Musician
   {
     return $this->musician;
   }
