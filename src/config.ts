@@ -23,8 +23,7 @@
 
 import type { AppName } from '../build/ts-types/app-config.ts';
 import { appName } from '../build/ts-types/app-config.ts';
-import type { JoinLiterals } from './util/string-literals.ts';
-import { joinLiterals } from './util/string-literals.ts';
+import { type JoinLiterals, joinLiterals } from './toolkit/util/string-literals.ts';
 
 function appPrefix<T extends string>(id: T): JoinLiterals<[AppName, T], '-'>;
 function appPrefix<T1 extends string, T2 extends string>(id: T1, join: T2): JoinLiterals<[AppName, T1], T2>;
