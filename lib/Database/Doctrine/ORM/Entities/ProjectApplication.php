@@ -62,8 +62,12 @@ class ProjectApplication implements \ArrayAccess
   private string $email;
 
   /**
+   * @var null|string
+   *
    * In order to revisit their registration data people have to provide a
-   * password or -- if they have cloud account -- have to be logged in.
+   * password or -- if they have cloud account -- have to be logged in. This
+   * is the cryptographically strong password hash obtained from the NC hasher
+   * which in turn uses the PHP password_hash() function.
    */
   #[ORM\Column(type: 'string', length: 254, nullable: true, options: ['collation' => 'ascii_general_ci'])]
   private ?string $passwordHash =  null;

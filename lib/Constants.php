@@ -33,4 +33,10 @@ class Constants extends TraitsConstants
   const OLD_CONTENT_SEPARATOR = "\n\n----------------------\n\n";
   const PATH_SEP = self::PATH_SEPARATOR;
   const RENDER_AS_PARTS = 'parts'; // silly name
+  // SQL variables in order to grant access to personal data
+  const SQL_ROW_ACCESS_TOKEN = 'ROW_ACCESS_TOKEN';
+  const SQL_CLOUD_USER_ID = 'CLOUD_USER_ID';
+  const SQL_PROJECT_APPLICATION_ROW_ACCESS_TOKEN = 'PROJECT_APPLICATION_ROW_ACCESS_TOKEN';
+  const SQL_PROJECT_APPLICATION_SHARE_TOKENS = 'PROJECT_APPLICATION_SHARE_TOKENS';
+  const SQL_PROJECT_APPLICATION_PROJECT_NAME = 'PROJECT_APPLICATION_PROJECT_NAME';
 }

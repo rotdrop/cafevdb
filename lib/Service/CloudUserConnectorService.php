@@ -26,13 +26,14 @@ namespace OCA\CAFEVDB\Service;
 
 use Throwable;
 
-use OCP\IConfig;
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
-use OCP\App\IAppManager;
 use OCP\AppFramework\IAppContainer;
+use OCP\App\IAppManager;
+use OCP\IConfig;
+use OCP\IL10N;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
@@ -648,43 +649,86 @@ WHERE m.email IS NOT NULL AND m.email <> ""
   private function generateMusicianPersonalizedViewsStatements(?string $dataBaseName):array
   {
     $functionPrefix = empty($dataBaseName) ? '' : $dataBaseName . '.';
-
     $functions = [
       'ROW_ACCESS_TOKEN' => "()
-  RETURNS CHAR(128)
+  RETURNS CHAR(128) CHARSET ascii
   DETERMINISTIC
   NO SQL
   SQL SECURITY INVOKER
 BEGIN
-  RETURN @ROW_ACCESS_TOKEN;
+  RETURN @" . Constants::SQL_ROW_ACCESS_TOKEN . ";
+END",
+      'PROJECT_APPLICATION_ROW_ACCESS_TOKEN' => "()
+  RETURNS CHAR(128) CHARSET ascii
+  DETERMINISTIC
+  NO SQL
+  SQL SECURITY INVOKER
+BEGIN
+  RETURN @" . Constants::SQL_PROJECT_APPLICATION_ROW_ACCESS_TOKEN . ";
 END",
       'CLOUD_USER_ID' => "()
-  RETURNS VARCHAR(256)
+  RETURNS VARCHAR(256) CHARSET ascii
   DETERMINISTIC
   NO SQL
   SQL SECURITY INVOKER
 BEGIN
-  RETURN @CLOUD_USER_ID;
+  RETURN @" . Constants::SQL_CLOUD_USER_ID . ";
 END",
-      'ROW_ACCESS_ID' => "()
+      'CLOUD_USER_MUSICIAN_ID' => "()
   RETURNS INT(11)
   READS SQL DATA
   SQL SECURITY DEFINER
 BEGIN
   DECLARE musician_id INT;
   SET musician_id = 0;
-  SELECT t.musician_id INTO musician_id
-    FROM `" . $this->appDbName . "`.MusicianRowAccessTokens t
-    WHERE t.user_id = " . $functionPrefix . "CLOUD_USER_ID() AND t.access_token_hash = " . $functionPrefix . "ROW_ACCESS_TOKEN();
+  SELECT t.musician_id INTO musician_id FROM
+      `" . $this->appDbName . "`.MusicianRowAccessTokens t
+  WHERE
+    (t.user_id = " . $functionPrefix . "CLOUD_USER_ID()
+      AND t.access_token_hash = " . $functionPrefix . "ROW_ACCESS_TOKEN());
   RETURN musician_id;
 END",
-      'APPLICATION_TOKENS' => "()
+      'PROJECT_APPLICATION_PROJECT_NAME' => "()
   RETURNS VARCHAR(1024) CHARSET ascii
   DETERMINISTIC
   NO SQL
   SQL SECURITY INVOKER
 BEGIN
-  RETURN @PROJECT_APPLICATION_TOKENS;
+  RETURN @" . Constants::SQL_PROJECT_APPLICATION_PROJECT_NAME . ";
+END",
+      'PROJECT_APPLICATION_SHARE_TOKENS' => "()
+  RETURNS VARCHAR(1024) CHARSET ascii
+  DETERMINISTIC
+  NO SQL
+  SQL SECURITY INVOKER
+BEGIN
+  RETURN @" . Constants::SQL_PROJECT_APPLICATION_SHARE_TOKENS . ";
+END",
+      'PROJECT_APPLICATION_MUSICIAN_ID' => "()
+  RETURNS INT(11)
+  READS SQL DATA
+  SQL SECURITY DEFINER
+BEGIN
+  DECLARE musician_id INT;
+  SET musician_id = 0;
+  SELECT t.musician_id INTO musician_id FROM
+      `" . $this->appDbName . "`.ProjectApplications t
+    WHERE
+      (FIND_IN_SET(SHA2(t.email, 256), " . $functionPrefix . "PROJECT_APPLICATION_SHARE_TOKENS()) > 0
+        AND t.password_hash = " . $functionPrefix . "PROJECT_APPLICATION_ROW_ACCESS_TOKEN());
+  RETURN musician_id;
+END",
+      'AUTHORIZED_MUSICIAN_ID' => "()
+  RETURNS INT(11)
+  READS SQL DATA
+  SQL SECURITY INVOKER
+BEGIN
+  DECLARE musician_id INT;
+  SET musician_id = " . $functionPrefix . "CLOUD_USER_MUSICIAN_ID();
+  IF musician_id > 0 THEN
+    RETURN musician_id;
+  END IF;
+  RETURN " . $functionPrefix . "PROJECT_APPLICATION_MUSICIAN_ID();
 END",
       'BIN_TO_UUID' => "(`b` BINARY(16), `f` BOOLEAN)
   RETURNS CHAR(36) CHARSET ascii
@@ -737,7 +781,7 @@ END",
     $statements = [];
 
     // fetch the authorized musician-id from the token table by examining the secret.
-    $accessFunction = $functionPrefix . 'ROW_ACCESS_ID' . '()';
+    $accessFunction = $functionPrefix . 'AUTHORIZED_MUSICIAN_ID' . '()';
 
     foreach ($functions as $name => $definition) {
       $statements[$functionPrefix . $name] = self::CREATE_FUNCTION_PREFIX . " " . $functionPrefix . $name . $definition;
@@ -776,10 +820,13 @@ WHERE t.access_token_hash = " . $functionPrefix . "ROW_ACCESS_TOKEN()
 SQL SECURITY DEFINER
 VIEW " . $viewName . "
 AS
-SELECT *
+SELECT t.*
 FROM " . $tableName . " t
-WHERE FIND_IN_SET(SHA2(t.email, 256), " . $functionPrefix . "APPLICATION_TOKENS()) > 0
-  OR (t.musician_id IS NOT NULL AND t.musician_id = " . $accessFunction . ")";
+INNER JOIN Projects p
+WHERE
+  (FIND_IN_SET(SHA2(t.email, 256), " . $functionPrefix . "PROJECT_APPLICATION_SHARE_TOKENS()) > 0
+     AND p.name = " . $functionPrefix . "PROJECT_APPLICATION_PROJECT_NAME())
+    OR t.musician_id = " . $functionPrefix . "CLOUD_USER_MUSICIAN_ID()";
     foreach (self::PRIVILEGES[$tableName] as $privilege => $columns) {
       if (is_array($columns)) {
         foreach ($columns as $column) {
