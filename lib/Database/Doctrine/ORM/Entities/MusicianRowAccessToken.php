@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -136,6 +136,16 @@ class MusicianRowAccessToken implements \ArrayAccess
   }
 
   /**
+   * @param string $value
+   *
+   * @return string
+   */
+  public static function computeHash(string $value):string
+  {
+    return \hash('sha' . self::HASH_LENGTH, $value, binary: false);
+  }
+
+  /**
    * Set accessToken.
    *
    * @param string $accessToken Unhashed binary token, only a sha-hash is stored.
@@ -144,7 +154,7 @@ class MusicianRowAccessToken implements \ArrayAccess
    */
   public function setAccessToken(string $accessToken):MusicianRowAccessToken
   {
-    $this->accessTokenHash = $this->computeHash($accessToken);
+    $this->accessTokenHash = self::computeHash($accessToken);
 
     return $this;
   }
@@ -171,15 +181,5 @@ class MusicianRowAccessToken implements \ArrayAccess
   public function getAccessTokenHash():?string
   {
     return $this->accessTokenHash;
-  }
-
-  /**
-   * @param string $value
-   *
-   * @return string
-   */
-  private function computeHash(string $value):string
-  {
-    return \hash('sha' . self::HASH_LENGTH, $value, binary: false);
   }
 }
