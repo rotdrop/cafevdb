@@ -2516,7 +2516,7 @@ Whatever.',
   }
 
   /**
-   * Subscribe the participant to the mailing list if it is not already
+   * Subscribe the participant to the project mailing list if it is not already
    * subscribed.
    *
    * @param Entities\ProjectParticipant $participant The victim.
@@ -2552,7 +2552,7 @@ Whatever.',
     $deliveryStatus = ($participationStatus == ParticipationStatus::CONDUCTOR
         || $participationStatus == ParticipationStatus::ASSOCIATED
         || $participationStatus == ParticipationStatus::SOLOIST
-      || $participationStatus == ParticipationStatus::TEMPORARY)
+        /* || $participationStatus == ParticipationStatus::TEMPORARY */)
       ? MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER
       : MailingListsService::DELIVERY_STATUS_ENABLED;
 
