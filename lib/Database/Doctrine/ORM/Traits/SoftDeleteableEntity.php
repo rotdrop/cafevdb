@@ -39,7 +39,7 @@ trait SoftDeleteableEntity
    * @var DateTimeInterface|null
    */
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected ?DateTimeInterface $deleted;
+  protected ?DateTimeInterface $deleted = null;
 
   /**
    * Set or clear the deleted at timestamp.
@@ -62,7 +62,7 @@ trait SoftDeleteableEntity
    */
   public function getDeleted():?DateTimeInterface
   {
-    return $this->deleted;
+    return $this->deleted ?? null;
   }
 
   /**
@@ -72,7 +72,7 @@ trait SoftDeleteableEntity
    */
   public function isDeleted():bool
   {
-    return null !== $this->deleted;
+    return null !== $this->getDeleted();
   }
 
   /**
