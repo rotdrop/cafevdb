@@ -41,11 +41,12 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findNonInstruments(?array $only = null)
   {
+    $l = $this->entityManagerDecorator->getTranslatableL10n();
     $criteria = [
-      'families.family' => Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY,
+      'families.family' => [ Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY, $l->t(Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY) ],
     ];
     if (!empty($only)) {
-      $criteria['name'] = $only;
+      $criteria['name'] = array_unique(array_merge($only, array_map(fn(string $name) => $l->t($name), $only)));
     }
     return $this->findBy($criteria, orderBy: [ 'id' => 'INDEX' ]);
   }
@@ -59,7 +60,8 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findByName(string $name)
   {
-    return $this->findOneBy([ 'name' => $name ], [ 'sortOrder' => 'ASC', 'name' => 'ASC' ]);
+    $l = $this->entityManagerDecorator->getTranslatableL10n();
+    return $this->findOneBy([ 'name' => array_unique([$name, $l->t($name)]) ], [ 'sortOrder' => 'ASC', 'name' => 'ASC' ]);
   }
 
   /**
@@ -83,12 +85,13 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findNames(?array $only = null, ?array $exclude = null):array
   {
+    $l = $this->entityManagerDecorator->getTranslatableL10n();
     $criteria = [ 'deleted' => null ];
     if (!empty($only)) {
-      $criteria[] = [ 'family.family' => $only ];
+      $criteria[] = [ 'family.family' => array_unique(array_merge($only, array_map(fn(string $name) => $l->t($name)))) ];
     }
     if (!empty($exclude)) {
-      $criteria[] = [ '!family.family' => $exclude ];
+      $criteria[] = [ '!family.family' => array_unique(array_merge($exclude, array_map(fn(string $name) => $l->t($name)))) ];
     }
     $result = $this->findBy($criteria, [ 'sortOrder' => 'ASC', 'name' => 'ASC' ]);
     $names = array_map(fn(Entities\Instrument $entity) => $entity->getName(), $result);
