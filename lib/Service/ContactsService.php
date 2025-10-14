@@ -961,10 +961,27 @@ class ContactsService
     $this->entityManager->registerPreCommitAction(
       new GenericUndoable(
         function() use ($musician, $oldAddressBookUri, $listener) {
-          $addressBookUri = $oldAddressBookUri ?? $musician->getAddressBookUri();
-          if (empty($addressBookUri)) {
+          if ($listener->isActive()) {
+            // avoid recursion, the listener may cause change events which
+            // should not in turn cause modifications in the address books.
+            unset($this->contactSynchronizations[$musician->getId()]);
             return null;
           }
+          if ($musician->isExpired() && $this->entityManager->contains($musician)) {
+            $musician->setAddressBookUri(null);
+            $this->flush();
+          }
+          if ($musician->getAddressBookUri() === null) {
+            // addressbook has been unlinked, do nothing.
+            unset($this->contactSynchronizations[$musician->getId()]);
+            return null;
+          }
+          $addressBookUri = $oldAddressBookUri ?? $musician->getAddressBookUri();
+          if (empty($addressBookUri)) {
+            unset($this->contactSynchronizations[$musician->getId()]);
+            return null;
+          }
+          $oldAddressBook = $this->addressBookByUri($addressBookUri);
           $oldContact = $this->findMusicianContact($musician, $addressBookUri);
           if ($oldContact === null) {
             $this->logError(
@@ -972,25 +989,32 @@ class ContactsService
               . ', addressbook "' . $musician->getAddressBookUri() . '"'
               . ', uuid "' . $musician->getUuid() . '".',
             );
+            unset($this->contactSynchronizations[$musician->getId()]);
             return null;
           }
           $newContact = $this->mergeMusician($oldContact, $musician);
-          $addressBook = $this->addressBookByUri($addressBookUri);
-          if ($musician->getDeleted() !== null && $this->entityManager->contains($musician)) {
-            $musician->setAddressBookUri(null);
-            $this->flush();
+          if ($addressBookUri != $musician->getAddressBookUri()) {
+            $addressBook = $this->addressBookByUri($musician->getAddressBookUri());
+          } else {
+            $addressBook = $oldAddressBook;
           }
           $oldState = $listener->setEnabled(false);
           $addressBook->createOrUpdate($newContact);
           $listener->setEnabled($oldState);
+          if ($oldAddressBook !== $addressBook) {
+            $oldAddressBook->delete($oldContact['id']);
+          }
           unset($this->contactSynchronizations[$musician->getId()]);
-          return [ $addressBook, $oldContact ];
+          return [ $addressBook, $newContact, $oldAddressBook, $oldContact ];
         },
         function (?array $oldData) use ($musician, $listener) {
           if ($oldData !== null) {
-            list($addressBook, $oldContact) = $oldData;
             $oldState = $listener->setEnabled(false);
-            $addressBook->createOrUpdate($oldContact);
+            list($newAddressBook, $newContact, $oldAddressBook, $oldContact) = $oldData;
+            if ($newAddressBook !== $oldAddressBook) {
+              $newAddressBook->delete($newContact['id']);
+            }
+            $oldAddressBook->createOrUpdate($oldContact);
             $listener->setEnabled($oldState);
             $this->contactSynchronizations[$musician->getId()] = $musician;
             // the rollback should restore the addressbook link.

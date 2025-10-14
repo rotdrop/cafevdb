@@ -85,9 +85,19 @@ class ContactsCardEventListener implements IEventListener
   /**
    * @var bool
    *
-   * Prevent ping-pong when updating contacts programmatically.
+   * Prevent ping-pong when updating contacts programmatically. This is set
+   * from outside and prevents the execution of the handler if set to \false.
    */
   private bool $enabled = true;
+
+  /**
+   * @var bool
+   *
+   * Prevent ping-pong when updating contacts programmatically. This is set to
+   * \true when the handler is running and can be queried from outside with
+   * isActive().
+   */
+  private bool $active = false;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -113,6 +123,14 @@ class ContactsCardEventListener implements IEventListener
     return $oldEnabled;
   }
 
+  /**
+   * @return bool Whether the handler has been entered.
+   */
+  public function isActive():bool
+  {
+    return $this->active;
+  }
+
   /** {@inheritdoc} */
   public function handle(Event $event):void
   {
@@ -133,6 +151,7 @@ class ContactsCardEventListener implements IEventListener
         }
         return;
       }
+      $this->active = true;
       $this->entityManager = $this->appContainer->get(EntityManager::class);
       if (!$this->entityManager->bound()) {
         throw new UnexpectedValueException('The entity manager is not bound.');
@@ -256,7 +275,7 @@ class ContactsCardEventListener implements IEventListener
           $cardData = $event->getCardData();
           $cardUri = $cardData['uri'];
           if (!empty($this->alreadyHandled[$addressBookUri][$cardUri])) {
-            $this->logInfo('Avoid event recursion ' . $addressBookUri . '->' . $cardUri);
+            $this->logDebug('Avoid event recursion ' . $addressBookUri . '->' . $cardUri);
             break;
           }
           if (empty($this->alreadyHandled[$addressBookUri])) {
@@ -308,6 +327,7 @@ class ContactsCardEventListener implements IEventListener
             if (in_array($appName, $categories)) {
 
               // we actually may change parts of the contact, so clear the etag
+              $this->logDebug('CLEARING ETAG');
               $event->clearEtag();
 
               $organization = (string)$vCard->ORG;
@@ -391,12 +411,15 @@ class ContactsCardEventListener implements IEventListener
             } else {
               // Arguably we should perhaps delete the musician. We do not,
               // but instead set its address-book uri to NULL.
+              $uri = $musician->getAddressBookUri();
               $musician->setAddressBookUri(null);
+              $this->logDebug('Unlinking ' . $musician->getPublicName() . ' from ' . $uri);
               // @todo: change the UUID?
             }
           }
           $this->flush();
           $this->entityManager->commit();
+          $this->alreadyHandled[$addressBookUri][$cardUri] = false;
           break;
       }
     } catch (Throwable $t) {
@@ -407,6 +430,7 @@ class ContactsCardEventListener implements IEventListener
         $this->logException($t);
       }
     }
+    $this->active = false;
   }
 
   /**
