@@ -126,7 +126,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   )]
   #[Gedmo\SlugHandler(
     class: CAFEVDB\Listeners\Sluggable\LoginNameSlugHandler::class,
-    options: [ 'separator' => '-', 'preferred' => [1, 2] ],
+    options: [ 'separator' => '-', 'preferred' => ['nickName', 'surName'] ],
   )]
   private $userIdSlug;
 

@@ -29,6 +29,8 @@ use DateTimeZone;
 use Exception;
 use Throwable;
 
+use function Symfony\Component\String\u;
+
 use Sabre\VObject\Component\VCard;
 use Sabre\VObject\Property;
 
@@ -44,6 +46,7 @@ use OCP\Image;
 use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
+use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus;
@@ -53,7 +56,6 @@ use OCA\CAFEVDB\Listener\ContactsCardEventListener;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\Util\Urlizer as Transliterator;
 
 /** Contacts handling. */
 class ContactsService
@@ -92,11 +94,12 @@ class ContactsService
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected ConfigService $configService,
-    private IContactsManager $contactsManager,
     private IAvatarManager $avatarManager,
-    protected IAppContainer $appContainer,
+    private IContactsManager $contactsManager,
+    private Transliterator $transliterator,
+    protected ConfigService $configService,
     protected EntityManager $entityManager,
+    protected IAppContainer $appContainer,
   ) {
     $this->l = $this->configService->getAppL10n();
   }
@@ -421,13 +424,11 @@ class ContactsService
         ? [ $entity->getFirstName() ]
         : [ $entity->getNickName() ];
       $parts[] = $entity->getSurName();
-      $slug = implode(
-        '.',
-        array_map(
-          fn(string $part) => Transliterator::transliterate($this->transliterate($part), '-'),
-          $parts,
-        ),
-      );
+      $slug = $this->transliterator->generateUserIdSlug([
+        'firstName' => $entity->getFirstName(),
+        'nickName' => $entity->getNickName(),
+        'surName' => $entity->getSurName(),
+      ]);
       $entity->setUserIdSlug($slug);
     }
 

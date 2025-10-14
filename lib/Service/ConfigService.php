@@ -48,6 +48,7 @@ use OCP\Security\ISecureRandom;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\Transliterator;;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
@@ -1283,12 +1284,12 @@ class ConfigService
    */
   public function transliterate(string $string, ?string $locale = null):string
   {
-    $oldlocale = setlocale(LC_CTYPE, '0');
+    /** @var Transliterator $transliterator */
+    $transliterator = $this->appContainer->get(Transliterator::class);
+
     empty($locale) && $locale = $this->getAppLocale();
-    setlocale(LC_CTYPE, $locale);
-    $result = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
-    setlocale(LC_CTYPE, $oldlocale);
-    return $result;
+
+    return $transliterator->transliterate($string, ' ', $locale);
   }
 
   /**
