@@ -42,4 +42,14 @@ class Constants
   public const MONETARY_PRECISION = 7;
   public const MONETARY_SCALE = 2;
   public const MONETARY_TYPE = 'DECIMAL(' . self::MONETARY_PRECISION . ', ' . self::MONETARY_SCALE . ')';
+
+  /**
+   * @var string
+   *
+   * The very first array element to findBy() as defined in
+   * \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait may contain
+   * options if it is strictly equal to this value.
+   */
+  public const QUERY_OPTIONS_KEY = '__OPTIONS__';
+  public const QUERY_OPTION_WILDCARDS = 'LIKE';
 }

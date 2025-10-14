@@ -29,21 +29,26 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Expr;
 
+use OCA\CAFEVDB\Database\Constants;
+
 /** Trait for entity repositories which adds kind of a symbolic query "language". */
 trait FindLikeTrait
 {
   use LogTrait;
-  private static $modifiers = [
+
+  public const OPTIONS_KEY = Constants::QUERY_OPTIONS_KEY;
+
+  private const MODIFIERS = [
     '!' => 'not',
   ];
-  private static $comparisons = [
+  private const COMPARISONS = [
     '<=' => 'lte',
     '>=' => 'gte',
     '=' => 'eq',
     '<' => 'lt',
     '>' => 'gt',
   ];
-  private static $junctors = [
+  private const JUNCTORS = [
     '(|' => [ 'orX' ],
     '(&' => [ 'andX' ],
     '!(|' => [ 'not', 'orX', ],
@@ -159,9 +164,10 @@ trait FindLikeTrait
    *   master entity.
    * - allow sorting by association fields
    * - allow indexing by adding an 'INDEX' option to $orderBy.
-   * - allow wild-cards, uses "LIKE" in comparison. '*' and '%' are
-   *   allowed wild-cards, where '*' is internally simply replaced by
-   *   '%'.
+   * - allow wild-cards, uses "LIKE" or "REGEXP" in comparison if specified by
+   *   query-options (see below $criteria). Wildcards unescaped '%' and '_' as
+   *   in vanilla LIKE. When REGEXP is used then '%' maps to '.*' and '_' maps
+   *   to '.?'.
    * - allow the basic comparators =, <, >, ! in prefix notation,
    *   e.g. ```!>FIELD => SOMETHING``` will be translated to the
    *   expression ```!(FIELD > SOMETHING)```
@@ -177,6 +183,7 @@ trait FindLikeTrait
    *   Example:
    *   ```
    *   [
+   *     __OPTIONS__ => [ 'LIKE' => false ], // default
    *     ... STUFF
    *     '!fieldId' => 13,       // search for field_id != 13
    *     '(|optionValue' => ''   // and (option_value the empty string ...
@@ -189,17 +196,24 @@ trait FindLikeTrait
    *                             // implicitly close the first or group
    *   ],
    *   ```
+   *
    * - supports Collections\Criteria, these are applied at the end.
    *
    * - support group-functions in order to collect grouped data, e.g.
    *   ```
-   *   [ foo.bar@GROUP_CONCAT(%s) => '%SEARCH%' ]
+   *   [
+   *     __OPTIONS__ => [ 'LIKE' => true ],
+   *     [ foo.bar@GROUP_CONCAT(%s) => '%SEARCH%' ],
+   *   ]
    *   ```
    *   Such search criteria will end up in the having clause.
    *
    * - support ordinary-functions in the where part with the syntax
    *   ```
-   *   [ foo.bar#BIN_TO_UUID(%s) => '%SEARCH%' ]
+   *   [
+   *     __OPTIONS__ => [ 'LIKE' => true ],
+   *     [ foo.bar#BIN_TO_UUID(%s) => '%SEARCH%' ],
+   *   ]
    *   ```
    *   The difference to the '@' syntax is that these criteria will end up in
    *   the WHERE clause.
@@ -315,12 +329,21 @@ trait FindLikeTrait
    *
    * @param null|array $orderBy Order-by criteria.
    *
-   * @return null|object The single result or null.
+   * @return array Query-parts descriptor.
    *
    * @see findBy()
    */
-  protected function prepareFindBy(array $criteria, ?array $orderBy = null)
+  protected function prepareFindBy(array $criteria, ?array $orderBy = null): array
   {
+    $options = [
+      Constants::QUERY_OPTION_WILDCARDS => false,
+    ];
+    if (!empty($criteria)
+        && array_keys($criteria)[0] === self::OPTIONS_KEY
+        && is_array($criteria[self::OPTIONS_KEY])) {
+      $options = array_merge($options, $criteria[self::OPTIONS_KEY]);
+    }
+
     $orderBy = $orderBy?:[];
 
     // filter out instances of criteria
@@ -390,7 +413,7 @@ trait FindLikeTrait
             $operators = str_replace('!!', '', $operators);
           }
           // (&, (|, !(|, !(&
-          foreach (self::$junctors as $abbr => $junctor) {
+          foreach (self::JUNCTORS as $abbr => $junctor) {
             $pos = strpos($operators, $abbr);
             if ($pos === 0) {
               $operators = substr($operators, strlen($abbr));
@@ -401,7 +424,7 @@ trait FindLikeTrait
             }
           }
           // this is only !
-          foreach (self::$modifiers as $abbr => $modifier) {
+          foreach (self::MODIFIERS as $abbr => $modifier) {
             $pos = strpos($operators, $abbr);
             if ($pos === 0) {
               $operators = substr($operators, strlen($abbr));
@@ -411,7 +434,7 @@ trait FindLikeTrait
               break 2;
             }
           }
-          foreach (self::$comparisons as $abbr => $comparator) {
+          foreach (self::COMPARISONS as $abbr => $comparator) {
             $pos = strpos($operators, $abbr);
             if ($pos === 0) {
               if (!empty($criterion['comparator'])) {
@@ -493,6 +516,7 @@ trait FindLikeTrait
 
     // modify and also return
     $queryParts = [
+      'options' => $options,
       'criteria' => [
         'where' => $whereCriteria,
         'having' => $havingCriteria,
@@ -529,6 +553,39 @@ trait FindLikeTrait
       $qb->select($select);
     }
     return $qb;
+  }
+
+  /**
+   * Check whether the given string contains an unescaped LIKE wildcard.
+   *
+   * @param string $value
+   *
+   * @return bool
+   */
+  protected static function containsWildcards(string $value):bool
+  {
+    foreach (['%', '_'] as $c) {
+      if (str_contains(str_replace('\\' . $c, '', $value), $c)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Replace the unescaped LIKE wildcards '%' and '_' by '.*' and '.?'.
+   *
+   * @param string $value
+   *
+   * @return string
+   */
+  protected static function wildcardsToRegexp(string $value):string
+  {
+    return preg_replace_callback(
+      '/(?<!\\\\)([%_])/',
+      fn(array $matches) => $matches[0] == '%' ? '.*' : '.?',
+      $value,
+    );
   }
 
   /**
@@ -655,9 +712,9 @@ trait FindLikeTrait
               $expr = $qb->expr()->eq(1, 0);
             } else {
               // array values could contain wildcards
-              $value = str_replace('*', '%', $value);
-              if (!empty(array_filter($value, fn($x) => strpos($x, '%') !== false))) {
-                $value = implode('|', array_map(fn($x) => str_replace('%', '.*', preg_quote($x)), $value));
+              if (($options[Constants::QUERY_OPTION_WILDCARDS] ?? false) === true
+                  && !empty(array_filter($value, fn($x) => self::containsWildcards($x)))) {
+                $value = implode('|', array_map(fn($x) => self::wildcardsToRegexp($x), $value));
                 $value = '^' . $value . '$';
                 $expr = $qb->expr()->eq(new Expr\Func('REGEXP', [ $field, ':' . $param ]), 1);
                 $criterion['value'] = $value;
@@ -666,8 +723,7 @@ trait FindLikeTrait
               }
             }
           } elseif (is_string($value)) {
-            $value = str_replace('*', '%', $value);
-            if (strpos($value, '%') !== false) {
+            if (($options[Constants::QUERY_OPTION_WILDCARDS] ?? false) === true && self::containsWildcards($value)) {
               $expr = $qb->expr()->like($field, ':' . $param);
               $criterion['value'] = $value;
             } else {

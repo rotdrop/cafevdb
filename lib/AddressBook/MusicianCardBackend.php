@@ -33,6 +33,7 @@ use \Sabre\DAV\Exception\NotFound as SabreNotFoundException;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Database;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -113,6 +114,8 @@ class MusicianCardBackend implements ICardBackend
       $empty = true;
       $likePattern = '%' . $pattern . '%';
       $criteria = [
+        // The very first entry is interpreted as an options array
+        Database\Constants::QUERY_OPTIONS_KEY => [ Database\Constants::QUERY_OPTION_WILDCARDS => true ],
         'addressBookUri' => null,
         [ '(|' => true ],
       ];
