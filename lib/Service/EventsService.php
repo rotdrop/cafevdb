@@ -2713,7 +2713,7 @@ class EventsService
         $projectName,
         $this->getCalendarDisplayName(ConfigService::OTHER_CALENDAR_URI),
       ],
-      'description' => $l->t('Project registation period for the project "%1$s". Participants can apply for participation using the public url %2$s.', [
+      'description' => $l->t('Project registration period for the project "%1$s". Participants can apply for participation using the public url %2$s.', [
         $projectName,
         $registrationUrl,
       ]),
