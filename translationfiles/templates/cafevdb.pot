@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-10-07 10:36+0200\n"
+"POT-Creation-Date: 2025-10-14 14:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4314,39 +4314,39 @@ msgstr ""
 msgid "The entity-manager is unable to connect to the database."
 msgstr ""
 
-#: lib/Database/EntityManager.php:980
+#: lib/Database/EntityManager.php:981
 msgid ""
 "There is no active database transaction, cannot register pre-commit actions."
 msgstr ""
 
-#: lib/Database/EntityManager.php:989
-#: lib/Database/EntityManager.php:1041
-#: lib/Database/EntityManager.php:1255
+#: lib/Database/EntityManager.php:990
+#: lib/Database/EntityManager.php:1042
+#: lib/Database/EntityManager.php:1256
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1006
+#: lib/Database/EntityManager.php:1007
 msgid ""
 "There is no active database transaction, cannot execute pre-commit actions."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1211
+#: lib/Database/EntityManager.php:1212
 msgid "The connection is marked for rollback only."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1444
+#: lib/Database/EntityManager.php:1445
 #, php-format
 msgid "Unexpected locale settings \"%1$s\" vs. \"%2$s\"."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1533
+#: lib/Database/EntityManager.php:1534
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1559
+#: lib/Database/EntityManager.php:1560
 msgid "EntityManager is not connected to database."
 msgstr ""
 
@@ -5041,7 +5041,7 @@ msgstr ""
 msgid "Provide a table modelling legal persons."
 msgstr ""
 
-#: lib/Maintenance/Migrations/CreateTableProjectApplications.php:64
+#: lib/Maintenance/Migrations/CreateTableProjectApplications.php:61
 msgid "Provide a table for project applications via a web-form."
 msgstr ""
 
@@ -5510,7 +5510,7 @@ msgstr ""
 #. TRANSLATORS src/components/AdminSettings.vue:207
 #. TRANSLATORS src/views/FilesTab.vue:77
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:97
-#: lib/Service/CloudUserConnectorService.php:429
+#: lib/Service/CloudUserConnectorService.php:437
 #: specialVueFakeDummyForL10nScript.js:1645
 #: specialVueFakeDummyForL10nScript.js:6577
 #: specialVueFakeDummyForL10nScript.js:6589
@@ -7454,13 +7454,13 @@ msgid ""
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:252
+#: lib/Service/CloudUserConnectorService.php:260
 #, php-format
 msgid ""
 "Cloud database server \"%s\" and app database server \"%s\" must coincide."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:282
+#: lib/Service/CloudUserConnectorService.php:290
 #, php-format
 msgid ""
 "In order to be able to import the orchestra club-members as cloud-users the\n"
@@ -7468,7 +7468,7 @@ msgid ""
 "instance to install and unconditionally enable this app."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:287
+#: lib/Service/CloudUserConnectorService.php:295
 #, php-format
 msgid ""
 "The requird user-backend \"%1$s\" seems to be installed and enabled, "
@@ -7476,34 +7476,34 @@ msgid ""
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:295
+#: lib/Service/CloudUserConnectorService.php:303
 #, php-format
 msgid ""
 "Please make sure that the user \"%1$s@%2$s\" has all -- and in particular: "
 "GRANT -- privileges on the database \"%3$s\"."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:367
+#: lib/Service/CloudUserConnectorService.php:375
 #, php-format
 msgid "Unable to create or update the user-sql cloud-connector views: %s."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:395
+#: lib/Service/CloudUserConnectorService.php:403
 #, php-format
 msgid "Unable to delete the user-sql cloud-connector views: %s."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:557
+#: lib/Service/CloudUserConnectorService.php:565
 #, php-format
 msgid "\"%s\" configuration may have succeeded."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:957
+#: lib/Service/CloudUserConnectorService.php:1044
 #, php-format
 msgid "Unable to create or update the personalized view: %s."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:993
+#: lib/Service/CloudUserConnectorService.php:1080
 #, php-format
 msgid "Unable to delete personalized view: %s."
 msgstr ""
@@ -7632,7 +7632,7 @@ msgstr ""
 #: lib/Service/EventsService.php:2716
 #, php-format
 msgid ""
-"Project registation period for the project \"%1$s\". Participants can apply "
+"Project registration period for the project \"%1$s\". Participants can apply "
 "for participation using the public url %2$s."
 msgstr ""
 
@@ -11836,7 +11836,7 @@ msgstr ""
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_INVOICE_NAME = 'invoice';
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:361
 #: lib/Storage/Database/InvoicesStorage.php:105
-#: lib/Service/ConfigService.php:271
+#: lib/Service/ConfigService.php:272
 #, php-format
 msgid "invoice"
 msgstr ""
@@ -17024,7 +17024,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME = 'general debit-note mandate';
 #: templates/settings/orchestra-settings.php:142
-#: lib/Service/ConfigService.php:269
+#: lib/Service/ConfigService.php:270
 #, php-format
 msgid "general debit-note mandate"
 msgstr ""
@@ -17032,7 +17032,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME = 'project debit-note mandate';
 #: templates/settings/orchestra-settings.php:142
-#: lib/Service/ConfigService.php:268
+#: lib/Service/ConfigService.php:269
 #, php-format
 msgid "project debit-note mandate"
 msgstr ""
@@ -17045,7 +17045,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME = 'instrument insurance record template';
 #: templates/settings/orchestra-settings.php:142
-#: lib/Service/ConfigService.php:274
+#: lib/Service/ConfigService.php:275
 #, php-format
 msgid "instrument insurance record template"
 msgstr ""
@@ -17120,7 +17120,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_LOGO_NAME = 'orchestra logo';
 #: templates/settings/orchestra-settings.php:156
-#: lib/Service/ConfigService.php:265
+#: lib/Service/ConfigService.php:266
 #, php-format
 msgid "orchestra logo"
 msgstr ""
@@ -17134,7 +17134,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_SEAL_NAME = 'orchestra seal';
 #: templates/settings/orchestra-settings.php:159
-#: lib/Service/ConfigService.php:266
+#: lib/Service/ConfigService.php:267
 #, php-format
 msgid "orchestra seal"
 msgstr ""
@@ -17352,7 +17352,7 @@ msgstr ""
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME = 'member data update';
 #: lib/EmailForm/Composer.php:4016
 #: templates/settings/orchestra-settings.php:180
-#: lib/Service/ConfigService.php:270
+#: lib/Service/ConfigService.php:271
 #, php-format
 msgid "member data update"
 msgstr ""
@@ -17750,21 +17750,21 @@ msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME = 'standard letter';
-#: lib/Service/ConfigService.php:267
+#: lib/Service/ConfigService.php:268
 #, php-format
 msgid "standard letter"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME = 'standard receipt';
-#: lib/Service/ConfigService.php:272
+#: lib/Service/ConfigService.php:273
 #, php-format
 msgid "standard receipt"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME = 'donation receipt';
-#: lib/Service/ConfigService.php:273
+#: lib/Service/ConfigService.php:274
 #, php-format
 msgid "donation receipt"
 msgstr ""

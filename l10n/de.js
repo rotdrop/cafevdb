@@ -1464,7 +1464,7 @@ OC.L10N.register(
     "Found more than one project registration calendar event." : "Es wurden mehrere Anmeldetermin im Kalender gefunden.",
     "Unsupported argument type." : "Nicht unterstützter Argument-Typ",
     "Registration for %s" : "Bewerbungszeitraum für %s",
-    "Project registation period for the project \"%1$s\". Participants can apply for participation using the public url %2$s." : "Anmeldezeitraum für das Projekt \"%1$s\". Interessierte können sich während dieser Zeit über den öffentlichen Link %2$s online bewerben.",
+    "Project registration period for the project \"%1$s\". Participants can apply for participation using the public url %2$s." : "Anmeldezeitraum für das Projekt \"%1$s\". Interessierte können sich während dieser Zeit über den öffentlichen Link %2$s online bewerben.",
     "CyberSpace" : "CyberSpace",
     "Recompute all Receivables" : "Alle Forderungen neu berechnen",
     "Recompute all Liabilities" : "Alle Verbindlichkeiten neu berechnen",
