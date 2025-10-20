@@ -151,6 +151,9 @@ class TaxExemptionNotices extends PMETableViewBase
     // Type of key field (int/real/string/date etc.)
     $opts['key_type'] = 'int';
 
+    $opts['groupby_fields'] = [ 'id' ];
+    $opts['groupby_where'] = true;
+
     // Sorting field(s)
     $opts['sort_field'] = [
       // 'tax_type',
