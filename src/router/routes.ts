@@ -37,7 +37,7 @@ const routes: RouteConfig[] = [
   {
     path: '/',
     name: 'home',
-    props: (/* router */) => ({
+    props: (/* route */) => ({
       routeTitle: t(appName, 'Home'),
     }),
   },
@@ -46,7 +46,7 @@ const routes: RouteConfig[] = [
     path: '/p/:template/:projectName?',
     component: () => import('../components/LegacyWrapperRouterReactivity.vue'),
     name: 'legacy-page',
-    props: true,
+    props: false,
     children: [
       addContactsToProjectsRoute,
       calendarRoutes,
