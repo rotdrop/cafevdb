@@ -54,7 +54,7 @@
     "@nextcloud/initial-state": "^2.0.0",
     "@nextcloud/l10n": "^3.1.0",
     "@nextcloud/moment": "~1.3.2",
-    "@nextcloud/password-confirmation": "*",
+    "@nextcloud/password-confirmation": "^5.3.1",
     "@nextcloud/router": "^2.2.1",
     "@nextcloud/typings": "^1.9.1",
     "@nextcloud/vue": "^8.17.1",

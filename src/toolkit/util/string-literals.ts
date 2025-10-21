@@ -21,25 +21,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
-import { translate as t } from '@nextcloud/l10n';
-import { getDialogBuilder } from '@nextcloud/dialogs';
+export type JoinLiterals<T extends string[], S extends string> =
+  T extends []
+     ? ''
+     : T extends [string]
+       ? `${T[0]}`
+       : T extends [string, ...infer U extends string[]]
+         ? `${T[0]}${S}${JoinLiterals<U, S>}`
+         : string;
 
-const dialogConfirm = (title: string, body: string, confirmationCallback: (answer: boolean) => void) => {
-  return getDialogBuilder(title)
-    .addButton({
-      label: t(appName, 'No'),
-      callback: () => confirmationCallback(false),
-      type: 'primary',
-    })
-    .addButton({
-      label: t(appName, 'Yes'),
-      callback: () => confirmationCallback(true),
-      type: 'secondary',
-    })
-    .setText(body)
-    .build()
-    .show();
+function joinLiterals(): <T extends string[]>(...strings: T) => JoinLiterals<T, ''>;
+function joinLiterals<Separator extends string>(separator: Separator): <T extends string[]>(...strings: T) => JoinLiterals<T, Separator>;
+
+/**
+ * Return a function which joins literals with the given separator.
+ *
+ * @param separator Separator.
+ */
+function joinLiterals(separator = '') {
+  return function<T extends string[]>(...strings: T): JoinLiterals<T, typeof separator> {
+    return strings.join(separator) as JoinLiterals<T, typeof separator>;
+  };
+}
+
+export {
+  joinLiterals,
 };
-
-export default dialogConfirm;

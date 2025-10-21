@@ -37,7 +37,7 @@ export function dokuWikiSection(path: string[]) {
  */
 export function dokuWikiUrl(path: string|string[]) {
   const wikiPage = Array.isArray(path) ? dokuWikiSection(path) : path;
-  return nextcloudGenerateUrl('/apps/dokuwiki/page/index?wikiPage=' + wikiPage);
+  return nextcloudGenerateUrl('/apps/dokuwiki/{wikiPage}', { wikiPage });
 }
 
 /**

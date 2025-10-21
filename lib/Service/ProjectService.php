@@ -55,6 +55,7 @@ use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo\Service\RPC as WebPagesRPC;
 

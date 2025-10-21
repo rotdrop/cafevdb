@@ -34,11 +34,13 @@ export interface FilesInitialState {
         finance: string,
         invoices: string,
         projectBalances: string,
+        projectManagement: string,
         templates: string,
       },
       subFolders: {
         // relative paths
         supportingDocuments: string,
+        projectParticipants: string,
       },
     },
   },
