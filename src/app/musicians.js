@@ -802,7 +802,7 @@ const ready = function(container) {
 
   contactValidation($container);
 
-  const selectMusicianInstruments = container.find('.pme-value select.musician-instruments');
+  const selectMusicianInstruments = $container.find('.pme-value select.musician-instruments');
 
   selectMusicianInstruments.data(
     selectedOptionsKey,
@@ -812,8 +812,8 @@ const ready = function(container) {
   selectMusicianInstruments.on('change', function(event) {
     const $self = $(this);
 
-    PHPMyEdit.tableDialogLock(container, true);
-    PHPMyEdit.tableDialogLoadIndicator(container, true);
+    PHPMyEdit.tableDialogLock($container, true);
+    PHPMyEdit.tableDialogLoadIndicator($container, true);
 
     const fail = (data) => {
       // failure case
@@ -824,8 +824,8 @@ const ready = function(container) {
 
       selectedValues($self, oldInstruments);
 
-      PHPMyEdit.tableDialogLoadIndicator(container, false);
-      PHPMyEdit.tableDialogLock(container, false);
+      PHPMyEdit.tableDialogLoadIndicator($container, false);
+      PHPMyEdit.tableDialogLock($container, false);
     };
 
     ProjectParticipants.validateInstrumentChoices({
