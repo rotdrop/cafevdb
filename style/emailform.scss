@@ -261,12 +261,14 @@ $editorHeight: 20em;
                 // --bs-btn-bg: var(--color-primary-element-light);
                 --bs-btn-hover-bg: var(--color-primary-element-light-hover);
                 --bs-btn-bg: var(--color-main-background);
-                font-weight: bold;
-                background-repeat: no-repeat, no-repeat;
-                background-size: auto 60%;
-                background-position-x: 47%, 53%;
-                background-position-y: center, center;
-                text-indent: -200vw;
+                &.moveall, &.removeall {
+                  font-weight: bold;
+                  background-repeat: no-repeat, no-repeat;
+                  background-size: auto 60%;
+                  background-position-x: 47%, 53%;
+                  background-position-y: center, center;
+                  text-indent: -200vw;
+                }
                 &.moveall {
                   $icon: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/arrow-right.svg');
                   background-image: $icon, $icon;
