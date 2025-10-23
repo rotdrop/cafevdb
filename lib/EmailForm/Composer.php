@@ -33,6 +33,9 @@ use UnexpectedValueException;
 use array_search;
 use stdClass;
 
+use Malkusch\Lock\Mutex;
+
+use OCP\AppFramework\Http;
 use OCP\IDateTimeFormatter;
 
 use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
@@ -682,7 +685,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   }
 
   /**
-   * @param null|Entities\Musician
+   * @param null|Entities\Musician $musician
    *
    * @return null|Entities\CompositePayment
    */
@@ -1480,7 +1483,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
           $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
           $totalSum = array_map(fn(mixed $any) => RationalNumber::zero(), array_fill_keys($replacementKeys, null));
-	  $totalSum['purpose'] = $this->l->t('Total Amount');
+          $totalSum['purpose'] = $this->l->t('Total Amount');
 
           $rowTemplate = $tableTemplate['row'];
 
@@ -1717,23 +1720,62 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    */
   public function sendMessages():bool
   {
-    $this->diagnostics[self::DIAGNOSTICS_STAGE] = self::DIAGNOSTICS_STAGE_SEND;
+    $redisKey = $this->appName() . '-email-send-lock';
+    try {
+      /** @var \OC\RedisFactory $redisFactory */
+      $redisFactory = \OCP\Server::get('RedisFactory');
+      if (!$redisFactory->isAvailable()) {
+        throw new Exceptions\EnduserNotificationException(
+          message: $this->l->t('Unable to lock the email-sending action, Redis ist not available. This is an internal error, please report this to the system administrator.'),
+          httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+        );
+      }
+      $redis = $redisFactory->getInstance();
+      $mutex = new Mutex\RedisMutex(
+        $redis,
+        $redisKey,
+        acquireTimeout: 0,
+        expireTimeout: 1800,
+      );
 
-    if (!$this->preComposeValidation($this->recipients)) {
-      return false;
+      $result = $mutex->synchronized(function() {
+        $this->diagnostics[self::DIAGNOSTICS_STAGE] = self::DIAGNOSTICS_STAGE_SEND;
+
+        if (!$this->preComposeValidation($this->recipients)) {
+          return false;
+        }
+
+        // Checks passed, let's see what happens. The mailer may throw
+        // any kind of "nasty" exceptions.
+        $this->doSendMessages();
+        if (!$this->errorStatus()) {
+          // Hurray!!!
+          $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Message(s) sent out successfully!');
+
+          // If sending out a draft, remove the draft.
+          $this->deleteDraft();
+        }
+        return $this->executionStatus;
+      });
+      return $result;
+    } catch (Lock\Exception\LockAcquireTimeoutException $e) {
+      // someone is already sending email
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Someone is already sending email, please try again later.'),
+        previous: $e,
+        httpStatusCode: Http::STATUS_LOCKED,
+      );
+    } catch (Lock\Exception\LockReleaseException $e) {
+      $this->logError('Unable to release the email-sending lock "' . $redisKey . '"', [
+        'exception' => $e,
+      ]);
+      $codeException = $e->getCodeException();
+      if ($codeException !== null) {
+        throw $codeException;
+      } else {
+        return $e->getCodeResult();
+      }
     }
-
-    // Checks passed, let's see what happens. The mailer may throw
-    // any kind of "nasty" exceptions.
-    $this->doSendMessages();
-    if (!$this->errorStatus()) {
-      // Hurray!!!
-      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Message(s) sent out successfully!');
-
-      // If sending out a draft, remove the draft.
-      $this->deleteDraft();
-    }
-    return $this->executionStatus;
   }
 
   /**
@@ -5303,7 +5345,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
       ini_set('user_agent', $originalUserAgent);
       if ($headers && count($headers) > 0) {
-	$this->logInfo('STATUS HEADER ' . $headers[0]);
+        $this->logInfo('STATUS HEADER ' . $headers[0]);
         $code = (int)substr($headers[0], 9, 3);
         if ($code >= 200 && $code < 400) {
           $thisLinkGood = true;
