@@ -10,7 +10,8 @@
   ],
   "config": {
     "allow-plugins": {
-      "bamarni/composer-bin-plugin": true
+      "bamarni/composer-bin-plugin": true,
+      "cweagans/composer-patches": true
     }
   },
   "scripts": {
@@ -34,6 +35,7 @@
     "kwn/number-to-words": "^2.8",
     "league/commonmark": "^2.6",
     "league/html-to-markdown": "^5.1",
+    "malkusch/lock": "*",
     "markrogoyski/math-php": "2.*",
     "mathiasreker/php-svg-optimizer": "^5.2",
     "mpdf/mpdf": "^8.0",
@@ -50,6 +52,7 @@
   },
   "require-dev": {
     "bamarni/composer-bin-plugin": "^1.8",
+    "cweagans/composer-patches": "^1.7",
     "phpmd/phpmd": "@stable",
     "squizlabs/php_codesniffer": "^3.6.0",
     "zebra-north/phpcs-short-types": "^1.0"
@@ -70,6 +73,11 @@
       "bin-links": false,
       "target-directory": "vendor-bin",
       "forward-command": true
+    },
+    "patches": {
+      "malkusch/lock": {
+        "Allow a timeout of 0 in order to fail immediately when the lock is not available.": "composer-patches/malkusch/lock/loop-timeout-zero.patch"
+      }
     }
   }
 }
