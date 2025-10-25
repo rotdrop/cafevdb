@@ -696,6 +696,20 @@ END",
 BEGIN
   RETURN @" . Constants::SQL_PROJECT_APPLICATION_PROJECT_NAME . ";
 END",
+      'PROJECT_APPLICATION_PROJECT_ID' => "()
+  RETURNS INT(11)
+  DETERMINISTIC
+  READS SQL DATA
+  SQL SECURITY INVOKER
+BEGIN
+  DECLARE project_id INT;
+  SET project_id = 0;
+  SELECT p.id INTO project_id FROM
+    `" . $this->appDbName . "`.Projects p
+  WHERE
+    p.name = " . $functionPrefix . "PROJECT_APPLICATION_PROJECT_NAME();
+  RETURN project_id;
+END",
       'PROJECT_APPLICATION_SHARE_TOKENS' => "()
   RETURNS VARCHAR(1024) CHARSET ascii
   DETERMINISTIC
@@ -822,10 +836,9 @@ VIEW " . $viewName . "
 AS
 SELECT t.*
 FROM " . $tableName . " t
-INNER JOIN Projects p
 WHERE
   (FIND_IN_SET(SHA2(t.email, 256), " . $functionPrefix . "PROJECT_APPLICATION_SHARE_TOKENS()) > 0
-     AND p.name = " . $functionPrefix . "PROJECT_APPLICATION_PROJECT_NAME())
+    AND t.project_id = " . $functionPrefix . "PROJECT_APPLICATION_PROJECT_ID())
     OR t.musician_id = " . $functionPrefix . "CLOUD_USER_MUSICIAN_ID()";
     foreach (self::PRIVILEGES[$tableName] as $privilege => $columns) {
       if (is_array($columns)) {
