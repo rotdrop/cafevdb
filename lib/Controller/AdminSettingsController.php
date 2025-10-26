@@ -134,6 +134,8 @@ class AdminSettingsController extends Controller
         }
         break;
       case AdminSettings::WIKI_NAME_SPACE_KEY:
+        $value = $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY);
+        break;
       case AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY:
       case AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY:
       case AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY:

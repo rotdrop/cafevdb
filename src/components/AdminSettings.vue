@@ -126,6 +126,7 @@
                    type="text"
                    :label="t(appId, 'Wiki Name-Space')"
                    :hint="hints['settings:admin:wiki-name-space']"
+                   :disabled="loading.general || !config.isAdmin"
                    @submit="saveSetting('wikiNameSpace', settings.wikiNameSpace)"
         />
       </div>
