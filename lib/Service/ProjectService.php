@@ -959,16 +959,12 @@ class ProjectService
       /** @var SimpleSharingService $sharingService */
       $sharingService = $this->di(SimpleSharingService::class);
 
-      if ($this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
-        $shareOwnerUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
-      } else {
-        $shareOwnerUid = $this->userId();
-      }
+      $shareOwnerUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
 
       // try to create or use the folder and share it by a public link
       ['files_sharing' => $url,] = $sharingService->linkShare(
         $node,
-        $shareOwnerUid,
+        shareOwner: $shareOwnerUid,
         sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE,
         expirationDate: false, // ignore
         noCreate: $noCreate,
@@ -2084,7 +2080,7 @@ Whatever.',
    * @param Entities\Project $project Database entity.
    *
    * @param string|ParticipationContext $participationContext Either
-   * ParticipationContext::PARTICIPANTS or ParticipationContext::ASSOCIATES
+   * ParticipationContext::PARTICIPANTS or ParticipationContext::ASSOCIATES.
    *
    * @param array $status Status array by reference.
    *
