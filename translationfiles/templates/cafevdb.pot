@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-10-14 14:58+0200\n"
+"POT-Creation-Date: 2025-10-26 19:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: lib/AddressBook/MusicianCardBackend.php:73
+#: lib/AddressBook/MusicianCardBackend.php:74
 #, php-format
 msgid "%s Musicians"
 msgstr ""
@@ -4378,33 +4378,106 @@ msgid ""
 "substitution data."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:543
+#: lib/EmailForm/Composer.php:546
 msgid "announcement"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:628
+#: lib/EmailForm/Composer.php:631
 msgid "ExampleFormletter"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:641
-#: src/app/email.js:1430
+#: lib/EmailForm/Composer.php:644
+#: src/app/email.js:1436
 msgid "Unknown Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1034
+#: lib/EmailForm/Composer.php:742
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "STREET_AND_NUMBER"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:750
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "EMAIL"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:757
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "NICK_NAME"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:764
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "DISPLAY_NAME"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:771
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "COUNTRY"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:785
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "LANGUAGE"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:796
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "BIRTHDAY"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:809
+#: lib/EmailForm/Composer.php:4259
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "DATE"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:818
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "TOTAL_FEES"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:826
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "AMOUNT_PAID"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:834
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "MISSING_AMOUNT"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:843
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "PROJECT_DATA"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1037
 msgid "Option"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1035
-#: lib/EmailForm/Composer.php:1057
-#: lib/EmailForm/Composer.php:1483
-#: lib/EmailForm/Composer.php:1535
+#: lib/EmailForm/Composer.php:1038
+#: lib/EmailForm/Composer.php:1060
+#: lib/EmailForm/Composer.php:1486
+#: lib/EmailForm/Composer.php:1538
 #: lib/PageRenderer/Invoices.php:778
 #: lib/PageRenderer/ProjectPayments.php:663
 msgid "Total Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1035
+#: lib/EmailForm/Composer.php:1038
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:580
 #: lib/PageRenderer/ProjectParticipantFields.php:650
 #: lib/PageRenderer/ProjectParticipantFields.php:1726
@@ -4412,17 +4485,17 @@ msgstr ""
 msgid "Deposit"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1036
-#: lib/EmailForm/Composer.php:1536
+#: lib/EmailForm/Composer.php:1039
+#: lib/EmailForm/Composer.php:1539
 msgid "Received"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1037
-#: lib/EmailForm/Composer.php:1537
+#: lib/EmailForm/Composer.php:1040
+#: lib/EmailForm/Composer.php:1540
 msgid "Remaining"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1038
+#: lib/EmailForm/Composer.php:1041
 #: lib/PageRenderer/InstrumentInsurances.php:635
 #: lib/PageRenderer/Invoices.php:899
 #: lib/PageRenderer/Invoices.php:910
@@ -4430,47 +4503,123 @@ msgstr ""
 msgid "Due Date"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1177
+#: lib/EmailForm/Composer.php:1180
 msgid "members"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1313
+#: lib/EmailForm/Composer.php:1282
+msgid "DONATION_AMOUNT"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1295
+msgid "WAIVED_AMOUNT"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1308
+msgid "WAIVING_OF_REIMBURSEMENT"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1316
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:145
 #: lib/PageRenderer/ProjectParticipantFields.php:883
 #: lib/PageRenderer/ProjectParticipantFields.php:889
 msgid "yes"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1314
+#: lib/EmailForm/Composer.php:1317
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:149
 #: lib/PageRenderer/ProjectParticipantFields.php:883
 msgid "no"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1533
+#: lib/EmailForm/Composer.php:1325
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_AMOUNT"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1338
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_PURPOSE"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1351
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "SEPA_MANDATE_REFERENCE"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1368
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "SEPA_MANDATE_DATE"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1385
+#: lib/EmailForm/Composer.php:570 lib/EmailForm/Composer.php:235
+#, php-format
+msgid "BANK_ACCOUNT_IBAN"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1402
+#: lib/EmailForm/Composer.php:570 lib/EmailForm/Composer.php:235
+#, php-format
+msgid "BANK_ACCOUNT_BIC"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1419
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "BANK_ACCOUNT_BANK"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1447
+#: lib/EmailForm/Composer.php:570 lib/EmailForm/Composer.php:235
+#, php-format
+msgid "BANK_ACCOUNT_OWNER"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1464
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_PARTS"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1536
 msgid "Purpose"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1534
+#: lib/EmailForm/Composer.php:1537
 msgid "Invoice Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1647
+#: lib/EmailForm/Composer.php:1650
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1731
+#: lib/EmailForm/Composer.php:1729
+msgid ""
+"Unable to lock the email-sending action, Redis ist not available. This is an "
+"internal error, please report this to the system administrator."
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1753
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1848
-#: lib/EmailForm/Composer.php:3633
+#: lib/EmailForm/Composer.php:1764
+msgid "Someone is already sending email, please try again later."
+msgstr ""
+
+#: lib/EmailForm/Composer.php:1890
+#: lib/EmailForm/Composer.php:3675
 #, php-format
 msgid "Unable to find a payment for the musician \"%s\" (transaction %d)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2504
+#: lib/EmailForm/Composer.php:2546
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -4496,158 +4645,247 @@ msgid ""
 "</html>"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2756
-#: lib/EmailForm/Composer.php:3267
+#: lib/EmailForm/Composer.php:2798
+#: lib/EmailForm/Composer.php:3309
 msgid "DO NOT REPLY"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3467
+#: lib/EmailForm/Composer.php:3509
 msgid "*** empty content ***"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3521
+#: lib/EmailForm/Composer.php:3563
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3523
+#: lib/EmailForm/Composer.php:3565
 msgid "Prewiew generation detected errors!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3586
+#: lib/EmailForm/Composer.php:3628
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3589
+#: lib/EmailForm/Composer.php:3631
 msgid "The email text contains personalized substitutions."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3592
+#: lib/EmailForm/Composer.php:3634
 msgid "The email contains personalized attachments."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3852
+#: lib/EmailForm/Composer.php:3894
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
 #. TRANSLATORS: email prefix when writing to all musicians
-#: lib/EmailForm/Composer.php:3889
+#: lib/EmailForm/Composer.php:3931
 msgid "ALL_PERSONS: musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3974
-#: lib/EmailForm/Composer.php:3990
+#: lib/EmailForm/Composer.php:4016
+#: lib/EmailForm/Composer.php:4032
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4097
-#: lib/EmailForm/Composer.php:4227
-#: lib/EmailForm/Composer.php:4237
+#: lib/EmailForm/Composer.php:4139
+#: lib/EmailForm/Composer.php:4269
+#: lib/EmailForm/Composer.php:4279
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
 #. TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
 #. TRANSLATORS: team, like e.g. "treasurer".
-#: lib/EmailForm/Composer.php:4119
+#: lib/EmailForm/Composer.php:4161
 #, php-format
 msgid "Nothing known about \"%s\""
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4123
+#: lib/EmailForm/Composer.php:4165
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4129
+#: lib/EmailForm/Composer.php:4171
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4156
-msgid "no project involved"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:4159
-msgid "PROJECT_PUBLIC_SHARE"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:4169
-msgid "PROJECT_PUBLIC_SHARE_EXPIRATION"
-msgstr ""
-
 #: lib/EmailForm/Composer.php:4181
-msgid "phrase"
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "ORGANIZER"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4184
+msgid "PRESIDENT"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4185
+msgid "TREASURER"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4186
+msgid "SECRETARY"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4187
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "CREDITOR_IDENTIFIER"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4190
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "ADDRESS"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4193
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_ACCOUNT"
+msgstr ""
+
+#. TRANSLATORS: The expression in the sourcecode was
+#. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\GnuCashConnectorService::PROJECT_KEY = 'PROJECT';
+#: lib/EmailForm/Composer.php:4197
+#: templates/settings/share-settings.php:209
+#: templates/settings/share-settings.php:222
+#: templates/settings/share-settings.php:246
+#: templates/settings/share-settings.php:269
+#: templates/settings/share-settings.php:344
+#: lib/Service/Finance/GnuCashConnectorService.php:262
+#, php-format
+msgid "PROJECT"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:4198
+msgid "no project involved"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4201
+msgid "PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4211
+msgid "PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE_EXPIRATION"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4223
+msgid "phrase"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4240
 #, php-format
 msgid "(expires at %s)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4342
+#: lib/EmailForm/Composer.php:4246
+#: lib/EmailForm/Composer.php:4294
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_DUE_DATE"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4247
+#: lib/EmailForm/Composer.php:4288
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_DUE_DAYS"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4248
+#: lib/EmailForm/Composer.php:4297
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_SUBMIT_DATE"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4249
+#: lib/EmailForm/Composer.php:4291
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "BANK_TRANSACTION_SUBMIT_DAYS"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4262
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "TIME"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4272
+#: lib/EmailForm/Composer.php:570
+#, php-format
+msgid "DATETIME"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:4384
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4699
+#: lib/EmailForm/Composer.php:4741
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4711
+#: lib/EmailForm/Composer.php:4753
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4735
+#: lib/EmailForm/Composer.php:4777
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4769
+#: lib/EmailForm/Composer.php:4811
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4829
-#: lib/EmailForm/Composer.php:4956
+#: lib/EmailForm/Composer.php:4871
+#: lib/EmailForm/Composer.php:4998
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4865
+#: lib/EmailForm/Composer.php:4907
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4890
+#: lib/EmailForm/Composer.php:4932
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5630
+#: lib/EmailForm/Composer.php:5672
 msgid "Blank Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5631
+#: lib/EmailForm/Composer.php:5673
 msgid "blank"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5634
+#: lib/EmailForm/Composer.php:5676
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5637
+#: lib/EmailForm/Composer.php:5679
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5640
+#: lib/EmailForm/Composer.php:5682
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5766
+#: lib/EmailForm/Composer.php:5808
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
@@ -5222,7 +5460,7 @@ msgid "User Recryption Request for {fancy}"
 msgstr ""
 
 #: lib/Notifications/Notifier.php:110
-#: src/app/email.js:1958
+#: src/app/email.js:1964
 msgid "Accept"
 msgstr ""
 
@@ -5409,7 +5647,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectAssociates.php:1147
 #: lib/PageRenderer/ProjectParticipants.php:1405
 #: lib/PageRenderer/Projects.php:1019
-#: lib/PageRenderer/TaxExemptionNotices.php:444
+#: lib/PageRenderer/TaxExemptionNotices.php:447
 msgid "Last Updated"
 msgstr ""
 
@@ -5417,7 +5655,7 @@ msgstr ""
 #: lib/PageRenderer/Musicians.php:1008
 #: lib/PageRenderer/ProjectAssociates.php:1159
 #: lib/PageRenderer/ProjectParticipants.php:1417
-#: lib/PageRenderer/TaxExemptionNotices.php:457
+#: lib/PageRenderer/TaxExemptionNotices.php:460
 msgid "Created"
 msgstr ""
 
@@ -5510,7 +5748,7 @@ msgstr ""
 #. TRANSLATORS src/components/AdminSettings.vue:207
 #. TRANSLATORS src/views/FilesTab.vue:77
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:97
-#: lib/Service/CloudUserConnectorService.php:437
+#: lib/Service/CloudUserConnectorService.php:438
 #: specialVueFakeDummyForL10nScript.js:1645
 #: specialVueFakeDummyForL10nScript.js:6577
 #: specialVueFakeDummyForL10nScript.js:6589
@@ -5647,7 +5885,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:390
 #: lib/PageRenderer/ProjectParticipants.php:590
 #: lib/PageRenderer/Projects.php:323
-#: lib/PageRenderer/TaxExemptionNotices.php:253
+#: lib/PageRenderer/TaxExemptionNotices.php:256
 #: lib/PageRenderer/TaxationStatutorySources.php:304
 msgid "Deleted"
 msgstr ""
@@ -6437,7 +6675,7 @@ msgstr ""
 #: lib/PageRenderer/Musicians.php:939
 #: lib/PageRenderer/ProjectAssociates.php:1092
 #: lib/PageRenderer/ProjectParticipants.php:1347
-#: src/app/email.js:1957
+#: src/app/email.js:1963
 #: templates/emailform/part.emailform.composer.php:172
 #: templates/emailform/part.emailform.composer.php:191
 msgid "Address Book"
@@ -6817,7 +7055,7 @@ msgid "name of new tab"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:993
-#: lib/PageRenderer/TaxExemptionNotices.php:210
+#: lib/PageRenderer/TaxExemptionNotices.php:213
 msgid "Context"
 msgstr ""
 
@@ -7336,7 +7574,7 @@ msgid "Recipients"
 msgstr ""
 
 #: lib/PageRenderer/SepaBulkTransactions.php:613
-#: lib/PageRenderer/TaxExemptionNotices.php:261
+#: lib/PageRenderer/TaxExemptionNotices.php:264
 msgid "From"
 msgstr ""
 
@@ -7357,44 +7595,44 @@ msgstr ""
 msgid "Tax Exemption Notices"
 msgstr ""
 
-#: lib/PageRenderer/TaxExemptionNotices.php:238
+#: lib/PageRenderer/TaxExemptionNotices.php:241
 msgid "Tax Types"
 msgstr ""
 
-#: lib/PageRenderer/TaxExemptionNotices.php:267
-#: lib/PageRenderer/TaxExemptionNotices.php:282
+#: lib/PageRenderer/TaxExemptionNotices.php:270
+#: lib/PageRenderer/TaxExemptionNotices.php:285
 msgid "YYYY"
 msgstr ""
 
-#: lib/PageRenderer/TaxExemptionNotices.php:276
+#: lib/PageRenderer/TaxExemptionNotices.php:279
 msgid "To"
 msgstr ""
 
-#: lib/PageRenderer/TaxExemptionNotices.php:291
+#: lib/PageRenderer/TaxExemptionNotices.php:294
 msgid "Tax Office"
 msgstr ""
 
-#: lib/PageRenderer/TaxExemptionNotices.php:300
+#: lib/PageRenderer/TaxExemptionNotices.php:303
 msgid "Tax Number"
 msgstr ""
 
-#: lib/PageRenderer/TaxExemptionNotices.php:311
+#: lib/PageRenderer/TaxExemptionNotices.php:314
 msgid "Issued at"
 msgstr ""
 
-#: lib/PageRenderer/TaxExemptionNotices.php:316
+#: lib/PageRenderer/TaxExemptionNotices.php:319
 msgid "Membership Fees"
 msgstr ""
 
-#: lib/PageRenderer/TaxExemptionNotices.php:333
+#: lib/PageRenderer/TaxExemptionNotices.php:336
 msgid "Beneficiary Purpose"
 msgstr ""
 
-#: lib/PageRenderer/TaxExemptionNotices.php:353
+#: lib/PageRenderer/TaxExemptionNotices.php:356
 msgid "Written Notice"
 msgstr ""
 
-#: lib/PageRenderer/TaxExemptionNotices.php:429
+#: lib/PageRenderer/TaxExemptionNotices.php:432
 msgid "Invalid Since"
 msgstr ""
 
@@ -7454,13 +7692,13 @@ msgid ""
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:260
+#: lib/Service/CloudUserConnectorService.php:261
 #, php-format
 msgid ""
 "Cloud database server \"%s\" and app database server \"%s\" must coincide."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:290
+#: lib/Service/CloudUserConnectorService.php:291
 #, php-format
 msgid ""
 "In order to be able to import the orchestra club-members as cloud-users the\n"
@@ -7468,7 +7706,7 @@ msgid ""
 "instance to install and unconditionally enable this app."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:295
+#: lib/Service/CloudUserConnectorService.php:296
 #, php-format
 msgid ""
 "The requird user-backend \"%1$s\" seems to be installed and enabled, "
@@ -7476,46 +7714,46 @@ msgid ""
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:303
+#: lib/Service/CloudUserConnectorService.php:304
 #, php-format
 msgid ""
 "Please make sure that the user \"%1$s@%2$s\" has all -- and in particular: "
 "GRANT -- privileges on the database \"%3$s\"."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:375
+#: lib/Service/CloudUserConnectorService.php:376
 #, php-format
 msgid "Unable to create or update the user-sql cloud-connector views: %s."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:403
+#: lib/Service/CloudUserConnectorService.php:404
 #, php-format
 msgid "Unable to delete the user-sql cloud-connector views: %s."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:565
+#: lib/Service/CloudUserConnectorService.php:566
 #, php-format
 msgid "\"%s\" configuration may have succeeded."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:1044
+#: lib/Service/CloudUserConnectorService.php:1058
 #, php-format
 msgid "Unable to create or update the personalized view: %s."
 msgstr ""
 
-#: lib/Service/CloudUserConnectorService.php:1080
+#: lib/Service/CloudUserConnectorService.php:1094
 #, php-format
 msgid "Unable to delete personalized view: %s."
 msgstr ""
 
-#: lib/Service/ConfigCheckService.php:819
-#: lib/Service/ConfigCheckService.php:897
+#: lib/Service/ConfigCheckService.php:820
+#: lib/Service/ConfigCheckService.php:898
 #: lib/Service/MailingListsService.php:1188
 #, php-format
 msgid "Folder \\`%s' could not be created"
 msgstr ""
 
-#: lib/Service/ConfigCheckService.php:1258
+#: lib/Service/ConfigCheckService.php:1259
 #, php-format
 msgid "Unapplied migrations: %s."
 msgstr ""
@@ -12109,28 +12347,87 @@ msgstr ""
 msgid "Please install the \"%s\" program on the server."
 msgstr ""
 
-#: php-toolkit/Service/RequestService.php:214
+#: php-toolkit/Service/GroupFoldersServiceNC32.php:178
+#: php-toolkit/Service/GroupFoldersServicePreNC32.php:177
+#, php-format
+msgid "Unknown search topic \"%1$s\""
+msgstr ""
+
+#: php-toolkit/Service/GroupFoldersServiceNC32.php:212
+#: php-toolkit/Service/GroupFoldersServicePreNC32.php:207
+#, php-format
+msgid "Shared folder with id \"%1$s\" does not exist."
+msgstr ""
+
+#: php-toolkit/Service/GroupFoldersServiceNC32.php:247
+#: php-toolkit/Service/GroupFoldersServicePreNC32.php:241
+#, php-format
+msgid ""
+"Shared folder for mount-point \"%1$s\" already exists, cannot create it."
+msgstr ""
+
+#: php-toolkit/Service/GroupFoldersServiceNC32.php:286
+#: php-toolkit/Service/GroupFoldersServicePreNC32.php:279
+#, php-format
+msgid ""
+"Shared folder for mount-point \"%1$s\" does not exist, cannot add group "
+"\"%2$s\"."
+msgstr ""
+
+#: php-toolkit/Service/GroupFoldersServiceNC32.php:317
+#: php-toolkit/Service/GroupFoldersServicePreNC32.php:310
+#, php-format
+msgid ""
+"Shared folder for mount-point \"%1$s\" does not exist, cannot remove group "
+"\"%2$s\"."
+msgstr ""
+
+#: php-toolkit/Service/GroupFoldersServiceNC32.php:347
+#: php-toolkit/Service/GroupFoldersServicePreNC32.php:337
+#, php-format
+msgid ""
+"Shared folder for mount-point \"%1$s\" does not exist, cannot modify manager "
+"\"%2$s\"."
+msgstr ""
+
+#: php-toolkit/Service/GroupFoldersServiceNC32.php:422
+#: php-toolkit/Service/GroupFoldersServicePreNC32.php:409
+#, php-format
+msgid ""
+"Shared folder for mount-point \"%1$s\" does not exist, cannot set "
+"permissions for group \"%2$s\"."
+msgstr ""
+
+#: php-toolkit/Service/GroupFoldersServiceNC32.php:457
+#: php-toolkit/Service/GroupFoldersServicePreNC32.php:441
+#, php-format
+msgid ""
+"Shared folder for mount-point \"%1$s\" does not exist, cannot change its "
+"mount-point to \"%2$s\"."
+msgstr ""
+
+#: php-toolkit/Service/RequestService.php:200
 #, php-format
 msgid ""
 "Supported data formats are \"%1$s\" and \"%2$s\", specified was \"%3$s\"."
 msgstr ""
 
-#: php-toolkit/Service/RequestService.php:277
+#: php-toolkit/Service/RequestService.php:263
 #, php-format
 msgid "Invalid response from API call: \"%s\""
 msgstr ""
 
-#: php-toolkit/Service/RequestService.php:286
+#: php-toolkit/Service/RequestService.php:272
 #, php-format
 msgid "Error response from call to internal route \"%1$s\": %2$s"
 msgstr ""
 
-#: php-toolkit/Service/RequestService.php:297
+#: php-toolkit/Service/RequestService.php:283
 #, php-format
 msgid "Invalid OCS response from call to internal route \"%1$s\": %2$s"
 msgstr ""
 
-#: php-toolkit/Service/RequestService.php:303
+#: php-toolkit/Service/RequestService.php:289
 #, php-format
 msgid "Error response from call to internal route \"%1$s\": %2$s --  %3$s"
 msgstr ""
@@ -13546,9 +13843,9 @@ msgstr ""
 #: src/app/blog.js:386
 #: src/app/cloud-file-picker-dialog.js:60
 #: src/app/cloud-file-picker-dialog.js:88
-#: src/app/email.js:97
-#: src/app/email.js:851
-#: src/app/email.js:977
+#: src/app/email.js:98
+#: src/app/email.js:852
+#: src/app/email.js:978
 #: src/app/project-participant-fields.js:313
 #: src/app/settings.js:1360
 #: src/app/settings.js:1373
@@ -13802,100 +14099,100 @@ msgstr ""
 msgid "Debug Information"
 msgstr ""
 
-#: src/app/email.js:97
+#: src/app/email.js:98
 msgid "Not called from main email-form."
 msgstr ""
 
-#: src/app/email.js:233
+#: src/app/email.js:234
 msgid "Move all"
 msgstr ""
 
-#: src/app/email.js:234
+#: src/app/email.js:235
 msgid "Select all"
 msgstr ""
 
-#: src/app/email.js:235
+#: src/app/email.js:236
 msgid "Move selected"
 msgstr ""
 
-#: src/app/email.js:236
+#: src/app/email.js:237
 msgid "Remove selected"
 msgstr ""
 
-#: src/app/email.js:237
 #: src/app/email.js:238
+#: src/app/email.js:239
 msgid "Remove all"
 msgstr ""
 
-#: src/app/email.js:239
+#: src/app/email.js:240
 msgid "Remaining Recipients"
 msgstr ""
 
-#: src/app/email.js:240
+#: src/app/email.js:241
 msgid "Selected Recipients"
 msgstr ""
 
-#: src/app/email.js:243
+#: src/app/email.js:244
 msgid "Filtered"
 msgstr ""
 
-#: src/app/email.js:245
+#: src/app/email.js:246
 msgid "from"
 msgstr ""
 
-#: src/app/email.js:247
+#: src/app/email.js:248
 msgid "Empty list"
 msgstr ""
 
-#: src/app/email.js:248
+#: src/app/email.js:249
 msgid "Filter"
 msgstr ""
 
-#: src/app/email.js:249
+#: src/app/email.js:250
 msgid "show all"
 msgstr ""
 
-#: src/app/email.js:256
+#: src/app/email.js:257
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
-#: src/app/email.js:850
+#: src/app/email.js:851
 msgid "Unknown form element: {formElement}"
 msgstr ""
 
-#: src/app/email.js:894
-#: src/app/email.js:2126
+#: src/app/email.js:895
+#: src/app/email.js:2132
 msgid "Em@il Form for {projectName}"
 msgstr ""
 
-#: src/app/email.js:896
-#: src/app/email.js:2128
+#: src/app/email.js:897
+#: src/app/email.js:2134
 msgid "Em@il Form"
 msgstr ""
 
-#: src/app/email.js:976
+#: src/app/email.js:977
 msgid "Unknown request: {operation} / {topic}"
 msgstr ""
 
-#: src/app/email.js:1036
+#: src/app/email.js:1041
 msgid "Sending message {active} out of {total}"
 msgstr ""
 
-#: src/app/email.js:1038
+#: src/app/email.js:1043
 msgid "Message delivery in progress"
 msgstr ""
 
-#: src/app/email.js:1067
+#: src/app/email.js:1072
 msgid "Message Delivery Status"
 msgstr ""
 
-#: src/app/email.js:1103
+#: src/app/email.js:1108
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
 msgstr ""
 
-#: src/app/email.js:1274
+#: src/app/email.js:1280
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -13903,92 +14200,92 @@ msgid ""
 "someone else deletes it manually."
 msgstr ""
 
-#: src/app/email.js:1279
+#: src/app/email.js:1285
 msgid "Delete Auto-Save Draft?"
 msgstr ""
 
-#: src/app/email.js:1340
+#: src/app/email.js:1346
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr ""
 
-#: src/app/email.js:1341
+#: src/app/email.js:1347
 msgid "Draft-auto-save switched off"
 msgstr ""
 
-#: src/app/email.js:1373
+#: src/app/email.js:1379
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
 msgstr ""
 
-#: src/app/email.js:1375
+#: src/app/email.js:1381
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: src/app/email.js:1412
+#: src/app/email.js:1418
 msgid ""
 "Do you really want to delete the template with the name "
 "`{emailTemplateName}'?"
 msgstr ""
 
-#: src/app/email.js:1414
+#: src/app/email.js:1420
 msgid "Really Delete Template?"
 msgstr ""
 
-#: src/app/email.js:1428
+#: src/app/email.js:1434
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 
-#: src/app/email.js:1445
+#: src/app/email.js:1451
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
 msgstr ""
 
-#: src/app/email.js:1448
+#: src/app/email.js:1454
 msgid "Really Delete Draft?"
 msgstr ""
 
-#: src/app/email.js:1490
+#: src/app/email.js:1496
 msgid "There are currently no stored draft messages available."
 msgstr ""
 
-#: src/app/email.js:1491
+#: src/app/email.js:1497
 msgid "No Drafts Available"
 msgstr ""
 
-#: src/app/email.js:1555
+#: src/app/email.js:1561
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
 msgstr ""
 
-#: src/app/email.js:1557
+#: src/app/email.js:1563
 msgid "Really disclose the recipients?"
 msgstr ""
 
-#: src/app/email.js:1739
+#: src/app/email.js:1745
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: src/app/email.js:1740
-#: src/app/email.js:1899
+#: src/app/email.js:1746
+#: src/app/email.js:1905
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: src/app/email.js:1857
+#: src/app/email.js:1863
 msgid "Select Attachment"
 msgstr ""
 
-#: src/app/email.js:1898
+#: src/app/email.js:1904
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: src/app/email.js:1961
+#: src/app/email.js:1967
 msgid "Save Contacts"
 msgstr ""
 
-#: src/app/email.js:1964
+#: src/app/email.js:1970
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
@@ -16676,18 +16973,6 @@ msgstr ""
 msgid "Project folder"
 msgstr ""
 
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\GnuCashConnectorService::PROJECT_KEY = 'PROJECT';
-#: templates/settings/share-settings.php:209
-#: templates/settings/share-settings.php:222
-#: templates/settings/share-settings.php:246
-#: templates/settings/share-settings.php:269
-#: templates/settings/share-settings.php:344
-#: lib/Service/Finance/GnuCashConnectorService.php:262
-#, php-format
-msgid "PROJECT"
-msgstr ""
-
 #: templates/settings/share-settings.php:229
 msgid "Participants Folder"
 msgstr ""
@@ -17159,81 +17444,6 @@ msgstr ""
 msgid "DebitnoteInsurance"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "ADDRESS"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "BANK_ACCOUNT"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570 lib/EmailForm/Composer.php:235
-#, php-format
-msgid "BANK_ACCOUNT_BIC"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570 lib/EmailForm/Composer.php:235
-#, php-format
-msgid "BANK_ACCOUNT_IBAN"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570 lib/EmailForm/Composer.php:235
-#, php-format
-msgid "BANK_ACCOUNT_OWNER"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "BANK_TRANSACTION_AMOUNT"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "BANK_TRANSACTION_DUE_DATE"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "BANK_TRANSACTION_DUE_DAYS"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "BANK_TRANSACTION_PURPOSE"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "BANK_TRANSACTION_PARTS"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "BANK_TRANSACTION_SUBMIT_DATE"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "BANK_TRANSACTION_SUBMIT_DAYS"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "CREDITOR_IDENTIFIER"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "DATE"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "DATETIME"
-msgstr ""
-
 #: lib/EmailForm/Composer.php:590 lib/EmailForm/Composer.php:621
 #, php-format
 msgid "GLOBAL"
@@ -17242,16 +17452,6 @@ msgstr ""
 #: lib/EmailForm/Composer.php:590 lib/EmailForm/Composer.php:621
 #, php-format
 msgid "MEMBER"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "ORGANIZER"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:570
-#, php-format
-msgid "TIME"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:2257
@@ -17381,22 +17581,7 @@ msgstr ""
 
 #: lib/EmailForm/Composer.php:235
 #, php-format
-msgid "BIRTHDAY"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
 msgid "CITY"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
-msgid "COUNTRY"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
-msgid "LANGUAGE"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:235
@@ -17412,16 +17597,6 @@ msgstr ""
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "DEPOSIT"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
-msgid "DISPLAY_NAME"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
-msgid "EMAIL"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:235
@@ -17446,17 +17621,7 @@ msgstr ""
 
 #: lib/EmailForm/Composer.php:235
 #, php-format
-msgid "MISSING_AMOUNT"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
 msgid "MOBILE_PHONE"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
-msgid "NICK_NAME"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:235
@@ -17471,37 +17636,7 @@ msgstr ""
 
 #: lib/EmailForm/Composer.php:235
 #, php-format
-msgid "BANK_ACCOUNT_BANK"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
-msgid "SEPA_MANDATE_REFERENCE"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
-msgid "SEPA_MANDATE_DATE"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
 msgid "SERVICE_FEE"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
-msgid "TOTAL_FEES"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
-msgid "AMOUNT_PAID"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
-msgid "PROJECT_DATA"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:235
@@ -17512,11 +17647,6 @@ msgstr ""
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "STREET_NUMBER"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:235
-#, php-format
-msgid "STREET_AND_NUMBER"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:235
@@ -17740,6 +17870,7 @@ msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY = 'not an instrument';
+#: lib/Database/Doctrine/ORM/Repositories/InstrumentsRepository.php:46
 #: lib/Maintenance/Migrations/EnsureNotAnInstrumentBusinessRelation.php:70
 #: lib/Maintenance/Migrations/EnsureNotAnInstrumentBusinessRelation.php:74
 #: lib/PageRenderer/FieldTraits/InstrumentsTrait.php:66
