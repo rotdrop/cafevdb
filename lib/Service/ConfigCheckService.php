@@ -566,10 +566,10 @@ class ConfigCheckService
 
     // $this->logInfo('FOLDER INFO ' . print_r($folderInfo, true));
     foreach ($shareGroupIds as $groupId) {
-      if (empty($folderInfo['groups'][$groupId])) {
+      if (empty($folderInfo->groups[$groupId])) {
         return false;
       }
-      if ($folderInfo['groups'][$groupId]['permissions'] != self::SHARE_PERMISSIONS) {
+      if ($folderInfo->groups[$groupId]['permissions'] != self::SHARE_PERMISSIONS) {
         return false;
       }
     }
