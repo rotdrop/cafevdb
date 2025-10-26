@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Maintenance\IMigration;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Service\GroupFoldersService;
+use OCA\CAFEVDB\Toolkit\Service\GroupFoldersService;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /**

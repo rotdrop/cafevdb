@@ -24,26 +24,27 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Throwable;
 use Exception;
 use RuntimeException;
+use Throwable;
 
-use OCP\IUserManager;
-use OCP\IGroupManager;
-use OCP\Contacts\IManager as IContactsManager;
-use OCP\Share\IManager as IShareManager;
 use OCP\Calendar\IManager as ICalendarManager;
-use OCP\IUserSession;
-use OCP\IUser;
-use OCP\IConfig;
-use OCP\Share\IShare;
-use OCP\Files\IRootFolder;
+use OCP\Contacts\IManager as IContactsManager;
 use OCP\Files\FileInfo;
+use OCP\Files\IRootFolder;
+use OCP\IConfig;
+use OCP\IGroupManager;
+use OCP\IUser;
+use OCP\IUserManager;
+use OCP\IUserSession;
+use OCP\Share\IManager as IShareManager;
+use OCP\Share\IShare;
 
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
-use OCA\CAFEVDB\Common\Util; // some static helpers, only for explode
 use OCA\CAFEVDB\Common\PHPMailer;
+use OCA\CAFEVDB\Common\Util; // some static helpers, only for explode
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Toolkit\Service\GroupFoldersService;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /** Check for a usable configuration. */

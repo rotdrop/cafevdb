@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Toolkit\Service\RequestService;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException as DBALDriverException;
 
 /**
