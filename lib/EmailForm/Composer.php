@@ -739,7 +739,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       };
     }
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['STREET_AND_NUMBER'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('STREET_AND_NUMBER')] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
           return $keyArg[0];
       }
@@ -747,28 +747,28 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return $musician->getStreet() . ' ' . $musician->getStreetNumber();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['EMAIL'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('EMAIL')] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
           return $keyArg[0];
       }
       return $musician->getEmail();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['NICK_NAME'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('NICK_NAME')] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
       return $musician->getNickName()?:$musician->getFirstName();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['DISPLAY_NAME'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('DISPLAY_NAME')] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
       return $musician->getPublicName(true); // rather firstName lastName than last, first
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['COUNTRY'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('COUNTRY')] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -782,7 +782,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     };
 
     $languageNames = $this->localeLanguageNames();
-    $this->substitutions[self::MEMBER_NAMESPACE]['LANGUAGE'] = function(array $keyArg, ?Entities\Musician $musician) use ($languageNames) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('LANGUAGE')] = function(array $keyArg, ?Entities\Musician $musician) use ($languageNames) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -793,7 +793,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return $languageNames[$language] ?? $language;
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['BIRTHDAY'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('BIRTHDAY')] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -806,7 +806,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return $result;
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['DATE'] =  function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('DATE')] =  function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -815,7 +815,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     if (!empty($this->project)) {
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['TOTAL_FEES'] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('TOTAL_FEES')] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -823,7 +823,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $this->moneyValue($obligations['sum']);
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['AMOUNT_PAID'] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('AMOUNT_PAID')] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -831,7 +831,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $this->moneyValue($obligations['received']);
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['MISSING_AMOUNT'] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('MISSING_AMOUNT')] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -840,7 +840,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       };
 
       // per-participant project-data
-      $this->substitutions[self::MEMBER_NAMESPACE]['PROJECT_DATA'] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('PROJECT_DATA')] =  function(array $keyArg, ?Entities\Musician $musician) {
 
         if (empty($musician) || count($keyArg) > 2) {
           return implode(':', $keyArg);
@@ -1279,7 +1279,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     if (!empty($this->bulkTransaction) || !empty($this->donationReceipt)) {
 
       if (!empty($this->donationReceipt)) {
-        $this->substitutions[self::MEMBER_NAMESPACE]['DONATION_AMOUNT'] = function(array $keyArg, ?Entities\Musician $musician) {
+        $this->substitutions[self::MEMBER_NAMESPACE][self::t('DONATION_AMOUNT')] = function(array $keyArg, ?Entities\Musician $musician) {
           if (empty($musician)) {
             return $keyArg[0];
           }
@@ -1292,7 +1292,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           return $keyArg[0];
         };
 
-        $this->substitutions[self::MEMBER_NAMESPACE]['WAIVED_AMOUNT'] = function(array $keyArg, ?Entities\Musician $musician) {
+        $this->substitutions[self::MEMBER_NAMESPACE][self::t('WAIVED_AMOUNT')] = function(array $keyArg, ?Entities\Musician $musician) {
           if (empty($musician)) {
             return $keyArg[0];
           }
@@ -1305,7 +1305,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           return $keyArg[0];
         };
 
-        $this->substitutions[self::MEMBER_NAMESPACE]['WAIVING_OF_REIMBURSEMENT'] = function(array $keyArg, ?Entities\Musician $musician) {
+        $this->substitutions[self::MEMBER_NAMESPACE][self::t('WAIVING_OF_REIMBURSEMENT')] = function(array $keyArg, ?Entities\Musician $musician) {
           if (empty($musician)) {
             return $keyArg[0];
           }
@@ -1322,7 +1322,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         // maybe add more, however, the proper receipt will be send out as attachjment.
       }
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_TRANSACTION_AMOUNT'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_TRANSACTION_AMOUNT')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1335,7 +1335,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_TRANSACTION_PURPOSE'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_TRANSACTION_PURPOSE')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1348,7 +1348,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['SEPA_MANDATE_REFERENCE'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('SEPA_MANDATE_REFERENCE')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1365,7 +1365,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['SEPA_MANDATE_DATE'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][sekf::t('SEPA_MANDATE_DATE')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1382,7 +1382,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_IBAN'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_IBAN')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1399,7 +1399,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_BIC'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_BIC')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1416,7 +1416,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_BANK'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_BANK')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1444,7 +1444,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_OWNER'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_OWNER')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1461,7 +1461,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_TRANSACTION_PARTS'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_TRANSACTION_PARTS')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -3816,7 +3816,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     // Validate message contents, e.g. reachability of links
     $this->validateMessageHtml($this->messageContents);
 
-    if (strpos($this->messageContents, 'GLOBAL::PROJECT_PUBLIC_SHARE') !== false) {
+    if (strpos($this->messageContents, 'GLOBAL::PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE') !== false) {
       $shareStatus = true;
 
       $projectService = $this->di(ProjectService::class);
@@ -4178,23 +4178,23 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     };
 
     $this->substitutions[self::GLOBAL_NAMESPACE] = [
-      'ORGANIZER' => function($key) {
+      self::t('ORGANIZER') => function($key) {
         return $this->fetchExecutiveBoard();
       },
-      'PRESIDENT' => $organizationalRoleContact,
-      'TREASURER' => $organizationalRoleContact,
-      'SECRETARY' => $organizationalRoleContact,
-      'CREDITOR_IDENTIFIER' => function($key) {
+      self::t('PRESIDENT') => $organizationalRoleContact,
+      self::t('TREASURER') => $organizationalRoleContact,
+      self::t('SECRETARY') => $organizationalRoleContact,
+      self::t('CREDITOR_IDENTIFIER') => function($key) {
         return $this->getConfigValue('bankAccountCreditorIdentifier');
       },
-      'ADDRESS' => function($key) {
+      self::t('ADDRESS') => function($key) {
         return $this->streetAddress();
       },
-      'BANK_ACCOUNT' => function($key) {
+      self::t('BANK_ACCOUNT') => function($key) {
         return $this->bankAccount();
       },
 
-      'PROJECT' => function($key) {
+      self::t('PROJECT') => function($key) {
         return $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
 
@@ -4243,10 +4243,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
       },
 
-      'BANK_TRANSACTION_DUE_DATE' => fn($key) => '',
-      'BANK_TRANSACTION_DUE_DAYS' => fn($key) => '',
-      'BANK_TRANSACTION_SUBMIT_DATE' => fn($key) => '',
-      'BANK_TRANSACTION_SUBMIT_DAYS' => fn($key) => '',
+      self::t('BANK_TRANSACTION_DUE_DATE') => fn($key) => '',
+      self::t('BANK_TRANSACTION_DUE_DAYS') => fn($key) => '',
+      self::t('BANK_TRANSACTION_SUBMIT_DATE') => fn($key) => '',
+      self::t('BANK_TRANSACTION_SUBMIT_DAYS') => fn($key) => '',
 
       /**
        * Support date substitutions. Format is
@@ -4256,10 +4256,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
        *
        * @todo Revise concerning timezone and locale settings
        */
-      'DATE' => function(array $arg) {
+      self::t('DATE') => function(array $arg) {
         return $this->dateSubstitution($arg, self::GLOBAL_NAMESPACE);
       },
-      'TIME' => function(array $arg) use ($formatter) {
+      self::t('TIME') => function(array $arg) use ($formatter) {
         try {
           $dateString = $arg[1];
           $dateFormat = $arg[2]?:'long';
@@ -4269,7 +4269,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
         }
       },
-      'DATETIME' => function(array $arg) {
+      self::t('DATETIME') => function(array $arg) {
         try {
           $dateString = $arg[1];
           $dateFormat = $arg[2]?:'long';
@@ -4285,16 +4285,16 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       $this->substitutions[self::GLOBAL_NAMESPACE] = array_merge(
         $this->substitutions[self::GLOBAL_NAMESPACE], [
-          'BANK_TRANSACTION_DUE_DAYS' => function($key) {
+          self::t('BANK_TRANSACTION_DUE_DAYS') => function($key) {
             return (new DateTimeImmutable())->diff($this->bulkTransaction->getDueDate())->format('%r%a');
           },
-          'BANK_TRANSACTION_SUBMIT_DAYS' => function($key) {
+          self::t('BANK_TRANSACTION_SUBMIT_DAYS') => function($key) {
             return (new DateTimeImmutable())->diff($this->bulkTransaction->getSubmissionDeadline())->format('%r%a');
           },
-          'BANK_TRANSACTION_DUE_DATE' => function($key) {
+          self::t('BANK_TRANSACTION_DUE_DATE') => function($key) {
             return $this->formatDate($this->bulkTransaction->getDueDate(), 'medium');
           },
-          'BANK_TRANSACTION_SUBMIT_DATE' => function($key) {
+          self::t('BANK_TRANSACTION_SUBMIT_DATE') => function($key) {
             return $this->formatDate($this->bulkTransaction->getSubmissionDeadline(), 'medium');
           },
         ]);
