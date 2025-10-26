@@ -4198,7 +4198,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
 
-      self::t('PROJECT_PUBLIC_SHARE') => function(array $key) {
+      self::t('PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE') => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
@@ -4208,7 +4208,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $share;
       },
 
-      self::t('PROJECT_PUBLIC_SHARE_EXPIRATION') => function(array $key) {
+      self::t('PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE_EXPIRATION') => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
