@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,10 +24,14 @@
 
 namespace OCA\CAFEVDB\Command;
 
-use OCP\IL10N;
-use OCP\IUserSession;
-use OCP\IUserManager;
 use OCP\AppFramework\IAppContainer;
+use OCP\Files\Node;
+use OCP\IAppConfig;
+use OCP\IGroupManager;
+use OCP\IL10N;
+use OCP\IUser;
+use OCP\IUserManager;
+use OCP\IUserSession;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
@@ -39,13 +43,14 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\DescriptorHelper;
 
-use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /** Create all participant sub-folder for each project. */
 class ProjectFolders extends Command
@@ -54,11 +59,13 @@ class ProjectFolders extends Command
 
   /** {@inheritdoc} */
   public function __construct(
-    protected string $appName,
+    protected IAppConfig $appConfig,
+    protected IAppContainer $appContainer,
+    protected IGroupManager $groupManager,
     protected IL10N $l,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    protected IAppContainer $appContainer,
+    protected string $appName,
   ) {
     parent::__construct();
   }
@@ -189,9 +196,47 @@ class ProjectFolders extends Command
     $output->writeln('PROJECT CRIT ' . print_r($projectCriteria, true));
     $projects = $projectsRepository->findBy($projectCriteria, [ 'year' => 'DESC', 'name' => 'ASC' ]);
 
+    $group = $this->appConfig->getValueString($this->appName, ConfigService::USER_GROUP_KEY);
+    if ($group) {
+      $groupMembers = array_map(fn(IUSER $user) => $user->getUID(), $this->groupManager->get($group)->getUsers());
+      $sharingService = $this->appContainer->get(SimpleSharingService::class);
+      $shareOwner = $this->appConfig->getValueString($this->appName, ConfigService::SHAREOWNER_KEY);
+    } else {
+      $groupMembers = [];
+    }
+    $output->writeln(print_r($groupMembers, true) . ' ' . $group . ' ' . $shareOwner);
+
     foreach ($projects as $project) {
       $folders = $projectService->ensureProjectFolders($project, $folder, $dry);
       $output->writeln('PROJECT ' . $project->getName() . ': ' . implode(', ', $folders));
+
+      // ensure the music sheet downloads are owned by the correct owner
+      if (!empty($groupMembers) && !empty($shareOwner)) {
+        $downloadsPath = $folders[ProjectService::FOLDER_TYPE_DOWNLOADS];
+        $userStorage->folderWalk(
+          $downloadsPath,
+          function(Node $node, int $depth) use ($groupMembers, $sharingService, $shareOwner, $project, $output) {
+            if ($node->getType() == Node::TYPE_FILE) {
+              return;
+            }
+            $shareIds = [];
+            foreach ($groupMembers as $shareOwnerCandidate) {
+              ['files_sharing' => $url, 'share' => $share] = $sharingService->linkShare(
+                $node,
+                shareOwner: $shareOwnerCandidate,
+                newShareOwner: $shareOwner,
+                sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE,
+                expirationDate: false,
+                noCreate: true,
+              );
+              if ($share && !in_array($share->getId(), $shareIds)) {
+                $shareIds[] = $share->getId();
+                $output->writeln('PROJECT ' . $project->getName() . ': download share is ' . $url);
+              }
+            }
+          },
+        );
+      }
     }
 
     return 0;
