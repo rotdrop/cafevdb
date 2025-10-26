@@ -74,7 +74,7 @@ class SimpleSharingService
    *
    * @return null|array The absolute URLs for the share or null.
    * ```
-   * [ 'files_sharing': URL, 'webdav' => DAV_URL ]
+   * [ 'files_sharing': URL, 'webdav' => DAV_URL, 'share' => ISHARE_INSTANCE ]
    * ```
    */
   public function linkShare(
@@ -175,6 +175,7 @@ class SimpleSharingService
     return [
       'files_sharing' => $filesSharing,
       'dav' => $dav,
+      'share' => $share,
     ];
   }
 
@@ -392,7 +393,16 @@ class SimpleSharingService
     $share->setSharedBy($sharedById);
 
     try {
-      $this->shareManager->createShare($share);
+      $share = $this->shareManager->createShare($share);
+      if ($share->getShareOwner() != $ownerId || $share->getSharedBy() != $sharedById) {
+        // the manager insist on $node->getOwner() on created, but for the
+        // time being allows modification later on.
+        $share->setShareOwner($ownerId);
+        $share->setSharedBy($sharedById);
+        $this->shareManager->updateShare($share);
+      }
+
+
       return true;
     } catch (Throwable $t) {
       $this->logException($t);
