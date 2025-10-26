@@ -69,6 +69,9 @@ class SimpleSharingService
    * @param bool $noCreate Do not create a new share, but return an existing
    * share if it exists.
    *
+   * @param null|string $newShareOwner If given try to modify the share to use
+   * the new owner.
+   *
    * @return null|array The absolute URLs for the share or null.
    * ```
    * [ 'files_sharing': URL, 'webdav' => DAV_URL ]
@@ -80,6 +83,7 @@ class SimpleSharingService
     int $sharePerms = \OCP\Constants::PERMISSION_CREATE,
     mixed $expirationDate = null,
     bool $noCreate = false,
+    ?string $newShareOwner = null,
   ):?array {
     $this->logDebug('shared folder id ' . $node->getId());
 
@@ -94,10 +98,13 @@ class SimpleSharingService
       $expirationDate = new DateTimeImmutable($expirationDate->format('Y-m-d'));
     }
 
+    $share = null;
+
     /** @var IShare $share */
     foreach ($this->shareManager->getSharesBy($shareOwner, $shareType, $node, false, -1) as $share) {
       // check permissions
       if ($share->getPermissions() !== $sharePerms) {
+        $share = null;
         continue;
       }
 
@@ -110,48 +117,45 @@ class SimpleSharingService
         $shareExpirationStamp = $shareExpirationDate === null ? -1 : $shareExpirationDate->getTimestamp();
 
         if ($shareExpirationStamp != $expirationTimeStamp) {
+          $share = null;
           continue;
         }
       }
 
       // check permissions
       if ($share->getPermissions() === $sharePerms) {
-        $token = $share->getToken();
-        $filesSharing = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
-        $dav = $this->urlGenerator->getAbsoluteURL('/public.php/dav/files/' . $token);
-        $this->logInfo('Reuse existing link-share ' . $filesSharing . ' || ' . $dav);
-        return [
-          'files_sharing' => $filesSharing,
-          'dav' => $dav,
-        ];
+        if ($newShareOwner !== null && $newShareOwner !== $shareOwner) {
+          $share->setShareOwner($newShareOwner);
+          $this->shareManager->updateShare($share);
+        }
       }
     }
 
-    if ($noCreate) {
-      return null;
-    }
+    if ($share === null) {
+      if ($noCreate) {
+        return null;
+      }
 
-    // None found, generate a new one
-    /** @var IShare $share */
-    $share = $this->shareManager->newShare();
-    $share->setNode($node);
-    $share->setPermissions($sharePerms);
-    $share->setShareType($shareType);
-    $share->setShareOwner($shareOwner);
-    $share->setSharedBy($shareOwner);
-    if ($expirationDate !== false) {
-      $share->setExpirationDate($expirationDate);
-    }
+      // None found, generate a new one
+      /** @var IShare $share */
+      $share = $this->shareManager->newShare();
+      $share->setNode($node);
+      $share->setPermissions($sharePerms);
+      $share->setShareType($shareType);
+      $share->setShareOwner($shareOwner);
+      $share->setSharedBy($shareOwner);
+      if ($expirationDate !== false) {
+        $share->setExpirationDate($expirationDate);
+      }
 
-    if (!$this->shareManager->createShare($share)) {
-      return null;
+      if (!$this->shareManager->createShare($share)) {
+        return null;
+      }
     }
 
     $token = $share->getToken();
     $filesSharing = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
     $dav = $this->urlGenerator->getAbsoluteURL('/public.php/dav/files/' . $token);
-
-    $this->logInfo('Created new link-share ' . $filesSharing . ' || ' . $dav);
 
     return [
       'files_sharing' => $filesSharing,
