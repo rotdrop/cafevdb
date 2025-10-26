@@ -100,57 +100,72 @@ class SimpleSharingService
 
     $share = null;
 
-    /** @var IShare $share */
-    foreach ($this->shareManager->getSharesBy($shareOwner, $shareType, $node, false, -1) as $share) {
-      // check permissions
-      if ($share->getPermissions() !== $sharePerms) {
-        $share = null;
-        continue;
-      }
-
-      if ($expirationDate !== false) {
-        $expirationTimeStamp = $expirationDate === null ? -1 : $expirationDate->getTimestamp();
-
-        // check expiration time
-        $shareExpirationDate = $share->getExpirationDate();
-
-        $shareExpirationStamp = $shareExpirationDate === null ? -1 : $shareExpirationDate->getTimestamp();
-
-        if ($shareExpirationStamp != $expirationTimeStamp) {
+    try {
+      /** @var IShare $share */
+      foreach ($this->shareManager->getSharesBy($shareOwner, $shareType, $node, false, -1) as $share) {
+        // check permissions
+        if ($share->getPermissions() !== $sharePerms) {
           $share = null;
           continue;
         }
+
+        if ($expirationDate !== false) {
+          $expirationTimeStamp = $expirationDate === null ? -1 : $expirationDate->getTimestamp();
+
+          // check expiration time
+          $shareExpirationDate = $share->getExpirationDate();
+
+          $shareExpirationStamp = $shareExpirationDate === null ? -1 : $shareExpirationDate->getTimestamp();
+
+          if ($shareExpirationStamp != $expirationTimeStamp) {
+            $share = null;
+            continue;
+          }
+        }
+
+        // check permissions
+        if ($share->getPermissions() === $sharePerms) {
+          if ($newShareOwner !== null && $newShareOwner !== $shareOwner) {
+            $share->setShareOwner($newShareOwner);
+            $share->setSharedBy($newShareOwner);
+            $this->shareManager->updateShare($share);
+          }
+        }
       }
 
-      // check permissions
-      if ($share->getPermissions() === $sharePerms) {
+      if ($share === null) {
+        if ($noCreate) {
+          return null;
+        }
+
+        // None found, generate a new one
+
         if ($newShareOwner !== null && $newShareOwner !== $shareOwner) {
-          $share->setShareOwner($newShareOwner);
+          $shareOwner = $newShareOwner;
+        }
+
+        /** @var IShare $share */
+        $share = $this->shareManager->newShare();
+        $share->setNode($node);
+        $share->setPermissions($sharePerms);
+        $share->setShareType($shareType);
+        $share->setShareOwner($shareOwner);
+        $share->setSharedBy($shareOwner);
+        if ($expirationDate !== false) {
+          $share->setExpirationDate($expirationDate);
+        }
+
+        $share = $this->shareManager->createShare($share);
+        if ($share->getShareOwner() != $shareOwner || $share->getSharedBy() != $shareOwner) {
+          // the manager insist on $node->getOwner() on created, but for the
+          // time being allows modification later on.
+          $share->setShareOwner($shareOwner);
+          $share->setSharedBy($shareOwner);
           $this->shareManager->updateShare($share);
         }
       }
-    }
-
-    if ($share === null) {
-      if ($noCreate) {
-        return null;
-      }
-
-      // None found, generate a new one
-      /** @var IShare $share */
-      $share = $this->shareManager->newShare();
-      $share->setNode($node);
-      $share->setPermissions($sharePerms);
-      $share->setShareType($shareType);
-      $share->setShareOwner($shareOwner);
-      $share->setSharedBy($shareOwner);
-      if ($expirationDate !== false) {
-        $share->setExpirationDate($expirationDate);
-      }
-
-      if (!$this->shareManager->createShare($share)) {
-        return null;
-      }
+    } catch (Throwable $t) {
+      $this->logException('Unable to find, modify or generate link-share for "' . $node->getPath() . '".');
     }
 
     $token = $share->getToken();
