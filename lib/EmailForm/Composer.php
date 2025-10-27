@@ -3816,8 +3816,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     // Validate message contents, e.g. reachability of links
     $this->validateMessageHtml($this->messageContents);
 
-    if (strpos($this->messageContents, 'GLOBAL::PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE') !== false
-        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE')) !== false
+    if (strpos($this->messageContents, 'GLOBAL::PROJECT_MUSIC_SHEETS_SHARE') !== false
+        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('PROJECT_MUSIC_SHEETS_SHARE')) !== false
     ) {
       $shareStatus = true;
 
@@ -4250,7 +4250,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
 
-      self::t('PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE') => function(array $key) {
+      self::t('PROJECT_MUSIC_SHEETS_SHARE') => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
@@ -4260,7 +4260,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $share;
       },
 
-      self::t('PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE_EXPIRATION') => function(array $key) {
+      self::t('PROJECT_MUSIC_SHEETS_SHARE_EXPIRATION') => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
@@ -4314,9 +4314,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         /** @var ProjectGroupService $projectGroupService */
         $projectGroupService = $this->di(ProjectGroupService::class);
 
-        ['share' => $share,] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+        ['share' => $share, 'mount_point' => $mountPoint] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
 
-        return $share?->getNode()?->getPath();
+        return $mountPoint;
       },
 
       self::t('BANK_TRANSACTION_DUE_DATE') => fn($key) => '',
@@ -5410,12 +5410,22 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $this->logInfo('KEEP HREF UNCHECKED ' . $href);
         continue;
       }
+      if (!str_starts_with($href, 'http')) {
+        $href = $this->urlGenerator()->getAbsoluteUrl($href);
+      }
       $this->logInfo('CHECK HREF ' . $href);
       $text = $item->nodeValue;
       $originalUserAgent = ini_get('user_agent');
+      // ini_set('user_agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1'); // 'Orgacloud/1.0');
       ini_set('user_agent', 'Orgacloud/1.0');
       try {
-        $headers = get_headers($href);
+        $context = stream_context_create([
+          'http' => [
+            'method' => 'HEAD',
+            'header' => 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          ],
+        ]);
+        $headers = get_headers($href, false, $context);
       } catch (Throwable $t) {
         $headers = null;
       }
@@ -5425,6 +5435,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $code = (int)substr($headers[0], 9, 3);
         if ($code >= 200 && $code < 400) {
           $thisLinkGood = true;
+        } else {
+          $this->logError('LINK BAD ' . $href . ' ' . print_r($headers, true));
         }
       }
       $linkStatus[] = [
