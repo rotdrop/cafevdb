@@ -373,12 +373,12 @@ You can edit the link-target in the message editor by using the context menu (ri
  * Public downloads folder which is somehow broken
  *
  */
-if (!$diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['status']) {
-
-  $output = true;
-  $folder = $diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['folder'];
-  $appLink = $diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['appLink'];
-  $httpCode = $diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['httpCode'];
+foreach ($diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION] as $validationContext) {
+  if (!$validationContext['status']) {
+    $output = true;
+    $folder = $validationContext['folder'];
+    $appLink = $validationContext['appLink'];
+    $httpCode = $validationContext['httpCode'];
   ?>
   <div class="emailform error group broken-public-download">
     <div class="error contents broken-public-download">
@@ -386,7 +386,7 @@ if (!$diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['status']) {
         <?php p($l->t('There is something wrong with the pariticipants downloads folder.')); ?>
       </div>
       <dl>
-        <?php if ($diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['filesCount'] == 0) { ?>
+        <?php if ($validationContext['filesCount'] == 0) { ?>
           <dt><?php p($l->t('The folder contains no data.')); ?></dt>
           <dd>
             <p><?php p($l->t('Please visit the following link to examine the situation:')); ?></p>
@@ -403,6 +403,7 @@ if (!$diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['status']) {
     </div>
   </div>
   <?php
+  }
 }
 
 /*-****************************************************************************

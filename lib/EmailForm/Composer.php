@@ -38,6 +38,8 @@ use Malkusch\Lock\Mutex;
 use OCP\AppFramework\Http;
 use OCP\IDateTimeFormatter;
 
+use OCA\CAFeVDBMembers\Service\ProjectGroupService;
+
 use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
 use OCA\CAFEVDB\Common\PHPMailer;
 use OCA\CAFEVDB\Common\Util;
@@ -607,9 +609,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         'Files' => [],
         'Events' => [],
       ],
-      self::DIAGNOSTICS_SHARE_LINK_VALIDATION => [
-        'status' => true,
-      ],
+      self::DIAGNOSTICS_SHARE_LINK_VALIDATION => [],
       // start of sent-messages for log window
       self::DIAGNOSTICS_TOTAL_PAYLOAD => 0,
       self::DIAGNOSTICS_TOTAL_COUNT => 0,
@@ -3816,7 +3816,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     // Validate message contents, e.g. reachability of links
     $this->validateMessageHtml($this->messageContents);
 
-    if (strpos($this->messageContents, 'GLOBAL::PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE') !== false) {
+    if (strpos($this->messageContents, 'GLOBAL::PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE') !== false
+        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE')) !== false
+    ) {
       $shareStatus = true;
 
       $projectService = $this->di(ProjectService::class);
@@ -3839,7 +3841,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       if ($filesCount == 0) {
         $shareStatus = false;
       }
-      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION] = [
+      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
         'status' => $shareStatus,
         'filesCount' => $filesCount,
         'httpCode' => $code,
@@ -3850,7 +3852,57 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       $this->executionStatus = $this->executionStatus && $shareStatus;
     } else {
-      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION] = [
+      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
+        'status' => true,
+        'filesCount' => 0,
+        'httpCode' => 200,
+        'folder' => null,
+        'appLink' => null,
+        'share' => null,
+      ];
+    }
+
+    if (strpos($this->messageContents, 'GLOBAL::POST_PROJECT_MEDIA_SHARE') !== false
+        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('POST_PROJECT_MEDIA_SHARE')) !== false
+        || strpos($this->messageContents, 'GLOBAL::POST_PROJECT_MEDIA_FOLDER') !== false
+        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('POST_PROJECT_MEDIA_FOLDER')) !== false
+    ) {
+      $shareStatus = true;
+
+      /** @var ProjectGroupService $projectGroupService */
+      $projectGroupService = $this->di(ProjectGroupService::class);
+      ['files_sharing' => $url, 'share' => $share] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+
+      try {
+        $headers = get_headers($url);
+      } catch (Throwable $t) {
+        $headers = null;
+      }
+      if ($headers && count($headers) > 0) {
+        $code = (int)substr($headers[0], 9, 3);
+        if ($code < 200 && $code >= 400) {
+          $shareStatus = false;
+        }
+      }
+
+      $folder = $share?->getNode();
+      if ($folder) {
+        $appLink = $this->userStorage->getFilesAppLink($folder, subDir: true);
+      }
+
+      $filesCount = -1; // do not care
+      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
+        'status' => $shareStatus,
+        'filesCount' => $filesCount,
+        'httpCode' => $code,
+        'folder' => $folder,
+        'appLink' => $appLink,
+        'share' => $share,
+      ];
+
+      $this->executionStatus = $this->executionStatus && $shareStatus;
+    } else {
+      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
         'status' => true,
         'filesCount' => 0,
         'httpCode' => 200,
@@ -4241,6 +4293,30 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         } else {
           return $date;
         }
+      },
+
+      self::t('POST_PROJECT_MEDIA_SHARE') => function(array $key) {
+        if (empty($this->project)) {
+          return $key[0];
+        }
+        /** @var ProjectGroupService $projectGroupService */
+        $projectGroupService = $this->di(ProjectGroupService::class);
+
+        ['files_sharing' => $url,] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+
+        return $url;
+      },
+
+      self::t('POST_PROJECT_MEDIA_FOLDER') => function(array $key) {
+        if (empty($this->project)) {
+          return $key[0];
+        }
+        /** @var ProjectGroupService $projectGroupService */
+        $projectGroupService = $this->di(ProjectGroupService::class);
+
+        ['share' => $share,] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+
+        return $share?->getNode()?->getPath();
       },
 
       self::t('BANK_TRANSACTION_DUE_DATE') => fn($key) => '',
