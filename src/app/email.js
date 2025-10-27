@@ -591,8 +591,8 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     });
 
   panelHolder
-    .off('resize')
-    .on('resize', function() {
+    .off('resize.' + appName)
+    .on('resize.' + appName, function() {
       emailTabResize(dialogHolder.dialog('widget'), panelHolder);
     });
 
@@ -2041,8 +2041,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    * The usual resize madness with dialog popups
    */
 
-  panelHolder.off('resize');
-  panelHolder.on('resize', function(event, eventData) {
+  panelHolder.off('resize.' + appName);
+  panelHolder.on('resize.' + appName, function(event, eventData) {
     //    const eventData = event.data;
     emailTabResize(dialogWidget, panelHolder);
     if (eventData && eventData.position === 'bottom') {
