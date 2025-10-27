@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-10-26 19:59+0100\n"
+"POT-Creation-Date: 2025-10-27 02:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -857,23 +857,23 @@ msgstr ""
 msgid "Allowed read access to %d absence-fields."
 msgstr ""
 
-#: lib/Command/ProjectFolders.php:132
+#: lib/Command/ProjectFolders.php:139
 msgid ""
 "One of the options \"years=RANGE\", \"--folder=FOLDER\", \"--"
 "project=PROJECT\" or \"--all\" has to be specified."
 msgstr ""
 
-#: lib/Command/ProjectFolders.php:138
+#: lib/Command/ProjectFolders.php:145
 msgid ""
 "\"--all\" cannot be compbined with \"years=RANGE\", \"--folder=FOLDER\" or "
 "\"--project=PROJECT\"."
 msgstr ""
 
-#: lib/Command/ProjectFolders.php:143
+#: lib/Command/ProjectFolders.php:150
 msgid "SKELETON must be one of \"omit\", \"overwrite\" or \"clean\"."
 msgstr ""
 
-#: lib/Command/ProjectFolders.php:148
+#: lib/Command/ProjectFolders.php:155
 #, php-format
 msgid "FOLDER must be one of \"%s\""
 msgstr ""
@@ -1253,23 +1253,23 @@ msgstr ""
 msgid "failed"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:201
+#: lib/Controller/AdminSettingsController.php:203
 #, php-format
 msgid "Settings is reserved to cloud-administrators: \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:228
+#: lib/Controller/AdminSettingsController.php:230
 #: lib/Controller/PersonalSettingsController.php:1686
 #, php-format
 msgid "Unable to parse email address \"%1$s\": %2$s"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:250
+#: lib/Controller/AdminSettingsController.php:252
 #, php-format
 msgid "Setting the problem report email recipient to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:254
+#: lib/Controller/AdminSettingsController.php:256
 #, php-format
 msgid ""
 "A verification email has been sent to \"%s\".\n"
@@ -1277,106 +1277,106 @@ msgid ""
 "settings form."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:269
+#: lib/Controller/AdminSettingsController.php:271
 #, php-format
 msgid "Submitted verification code \"%s\" differs from sent email challenge."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:276
+#: lib/Controller/AdminSettingsController.php:278
 #, php-format
 msgid "Setting the problem report email verification code to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:288
+#: lib/Controller/AdminSettingsController.php:290
 #, php-format
 msgid ""
 "Setting user and group backend to \"%s\". Please have a look at the action-"
 "menu for additional actions."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:312
+#: lib/Controller/AdminSettingsController.php:314
 #, php-format
 msgid ""
 "Setting orchestra group to \"%s\". Please login as group administrator and "
 "configure the Camerata DB application."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:320
+#: lib/Controller/AdminSettingsController.php:322
 msgid "Expecting a list of user-ids."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:324
+#: lib/Controller/AdminSettingsController.php:326
 msgid "Orchestra management group is unset or non-existent"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:333
+#: lib/Controller/AdminSettingsController.php:335
 #, php-format
 msgid "Already as sub-admin of \"%1$s\" configured: %2$s."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:339
+#: lib/Controller/AdminSettingsController.php:341
 #, php-format
 msgid "Added \"%1$s\" as sub-admin of \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:342
+#: lib/Controller/AdminSettingsController.php:344
 #, php-format
 msgid "Failed to add \"%1$s\" as sub-admin to \"%2$s\": %3$s"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:349
+#: lib/Controller/AdminSettingsController.php:351
 #, php-format
 msgid "Deleted \"%1$s\" as sub-admin from \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:352
+#: lib/Controller/AdminSettingsController.php:354
 #, php-format
 msgid "Failed to delete \"%1$s\" as sub-admin from \"%2$s\": %3$s"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:379
+#: lib/Controller/AdminSettingsController.php:381
 #, php-format
 msgid "Setting wiki name-space to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:393
+#: lib/Controller/AdminSettingsController.php:395
 #, php-format
 msgid "Setting the GnuCash instrument insurance balancing account to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:407
+#: lib/Controller/AdminSettingsController.php:409
 #, php-format
 msgid "Setting the GnuCash participant receivables account to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:425
+#: lib/Controller/AdminSettingsController.php:427
 #, php-format
 msgid "Setting the GnuCash accounts tree data file to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:444
+#: lib/Controller/AdminSettingsController.php:446
 #, php-format
 msgid "\"%1$s\" controller answered with \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:453
+#: lib/Controller/AdminSettingsController.php:455
 #, php-format
 msgid ""
 "Please head over to the %1$s settings and check the generated \"%2$s\"-"
 "configuration."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:470
+#: lib/Controller/AdminSettingsController.php:472
 #, php-format
 msgid "Default office font reset to default \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:473
+#: lib/Controller/AdminSettingsController.php:475
 #, php-format
 msgid "Default office font set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:486
+#: lib/Controller/AdminSettingsController.php:488
 #: lib/Controller/PersonalSettingsController.php:1896
 #: lib/Controller/PersonalSettingsController.php:1933
 #: lib/Controller/ProjectParticipantsController.php:1020
@@ -1384,22 +1384,22 @@ msgstr ""
 msgid "Unknown Request: \"%s\""
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:545
+#: lib/Controller/AdminSettingsController.php:547
 #, php-format
 msgid "Unknown font cache operation: \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:549
+#: lib/Controller/AdminSettingsController.php:551
 #, php-format
 msgid "Font operation \"%1$s\" failed with exception \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:555
+#: lib/Controller/AdminSettingsController.php:557
 #, php-format
 msgid "Font operation \"%s\" successful."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:560
+#: lib/Controller/AdminSettingsController.php:562
 #, php-format
 msgid "Unknown internal error during font-cache operation: \"%s\"."
 msgstr ""
@@ -2336,7 +2336,7 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:923
-#: lib/Service/ProjectService.php:2971
+#: lib/Service/ProjectService.php:2967
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr ""
@@ -2351,7 +2351,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:957
-#: lib/Service/ProjectService.php:3252
+#: lib/Service/ProjectService.php:3248
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -4378,7 +4378,7 @@ msgid ""
 "substitution data."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:546
+#: lib/EmailForm/Composer.php:548
 msgid "announcement"
 msgstr ""
 
@@ -4434,7 +4434,7 @@ msgid "BIRTHDAY"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:809
-#: lib/EmailForm/Composer.php:4259
+#: lib/EmailForm/Composer.php:4335
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "DATE"
@@ -4676,77 +4676,92 @@ msgstr ""
 msgid "The email contains personalized attachments."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3894
+#: lib/EmailForm/Composer.php:3820
+#: lib/EmailForm/Composer.php:4253
+msgid "PROJECT_MUSIC_SHEETS_SHARE"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:3866
+#: lib/EmailForm/Composer.php:4298
+msgid "POST_PROJECT_MEDIA_SHARE"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:3868
+#: lib/EmailForm/Composer.php:4310
+msgid "POST_PROJECT_MEDIA_FOLDER"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:3946
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
 #. TRANSLATORS: email prefix when writing to all musicians
-#: lib/EmailForm/Composer.php:3931
+#: lib/EmailForm/Composer.php:3983
 msgid "ALL_PERSONS: musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4016
-#: lib/EmailForm/Composer.php:4032
+#: lib/EmailForm/Composer.php:4068
+#: lib/EmailForm/Composer.php:4084
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4139
-#: lib/EmailForm/Composer.php:4269
-#: lib/EmailForm/Composer.php:4279
+#: lib/EmailForm/Composer.php:4191
+#: lib/EmailForm/Composer.php:4345
+#: lib/EmailForm/Composer.php:4355
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
 #. TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
 #. TRANSLATORS: team, like e.g. "treasurer".
-#: lib/EmailForm/Composer.php:4161
+#: lib/EmailForm/Composer.php:4213
 #, php-format
 msgid "Nothing known about \"%s\""
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4165
+#: lib/EmailForm/Composer.php:4217
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4171
+#: lib/EmailForm/Composer.php:4223
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4181
+#: lib/EmailForm/Composer.php:4233
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "ORGANIZER"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4184
+#: lib/EmailForm/Composer.php:4236
 msgid "PRESIDENT"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4185
+#: lib/EmailForm/Composer.php:4237
 msgid "TREASURER"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4186
+#: lib/EmailForm/Composer.php:4238
 msgid "SECRETARY"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4187
+#: lib/EmailForm/Composer.php:4239
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "CREDITOR_IDENTIFIER"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4190
+#: lib/EmailForm/Composer.php:4242
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "ADDRESS"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4193
+#: lib/EmailForm/Composer.php:4245
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_ACCOUNT"
@@ -4754,7 +4769,7 @@ msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\GnuCashConnectorService::PROJECT_KEY = 'PROJECT';
-#: lib/EmailForm/Composer.php:4197
+#: lib/EmailForm/Composer.php:4249
 #: templates/settings/share-settings.php:209
 #: templates/settings/share-settings.php:222
 #: templates/settings/share-settings.php:246
@@ -4765,127 +4780,123 @@ msgstr ""
 msgid "PROJECT"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4198
+#: lib/EmailForm/Composer.php:4250
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4201
-msgid "PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE"
+#: lib/EmailForm/Composer.php:4263
+msgid "PROJECT_MUSIC_SHEETS_SHARE_EXPIRATION"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4211
-msgid "PROJECT_MUSIC_SHEETS_DOWNLOAD_SHARE_EXPIRATION"
-msgstr ""
-
-#: lib/EmailForm/Composer.php:4223
+#: lib/EmailForm/Composer.php:4275
 msgid "phrase"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4240
+#: lib/EmailForm/Composer.php:4292
 #, php-format
 msgid "(expires at %s)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4246
-#: lib/EmailForm/Composer.php:4294
+#: lib/EmailForm/Composer.php:4322
+#: lib/EmailForm/Composer.php:4370
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_DUE_DATE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4247
-#: lib/EmailForm/Composer.php:4288
+#: lib/EmailForm/Composer.php:4323
+#: lib/EmailForm/Composer.php:4364
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_DUE_DAYS"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4248
-#: lib/EmailForm/Composer.php:4297
+#: lib/EmailForm/Composer.php:4324
+#: lib/EmailForm/Composer.php:4373
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_SUBMIT_DATE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4249
-#: lib/EmailForm/Composer.php:4291
+#: lib/EmailForm/Composer.php:4325
+#: lib/EmailForm/Composer.php:4367
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_SUBMIT_DAYS"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4262
+#: lib/EmailForm/Composer.php:4338
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "TIME"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4272
+#: lib/EmailForm/Composer.php:4348
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "DATETIME"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4384
+#: lib/EmailForm/Composer.php:4460
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4741
+#: lib/EmailForm/Composer.php:4817
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4753
+#: lib/EmailForm/Composer.php:4829
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4777
+#: lib/EmailForm/Composer.php:4853
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4811
+#: lib/EmailForm/Composer.php:4887
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4871
-#: lib/EmailForm/Composer.php:4998
+#: lib/EmailForm/Composer.php:4947
+#: lib/EmailForm/Composer.php:5074
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4907
+#: lib/EmailForm/Composer.php:4983
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4932
+#: lib/EmailForm/Composer.php:5008
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5672
+#: lib/EmailForm/Composer.php:5748
 msgid "Blank Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5673
+#: lib/EmailForm/Composer.php:5749
 msgid "blank"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5676
+#: lib/EmailForm/Composer.php:5752
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5679
+#: lib/EmailForm/Composer.php:5755
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5682
+#: lib/EmailForm/Composer.php:5758
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5808
+#: lib/EmailForm/Composer.php:5884
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
@@ -5745,7 +5756,7 @@ msgstr ""
 msgid "Next Total Insurance Amount from %s"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:207
+#. TRANSLATORS src/components/AdminSettings.vue:208
 #. TRANSLATORS src/views/FilesTab.vue:77
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:97
 #: lib/Service/CloudUserConnectorService.php:438
@@ -6979,7 +6990,7 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:203
+#. TRANSLATORS src/components/AdminSettings.vue:204
 #: lib/PageRenderer/ProjectParticipantFields.php:277
 #: specialVueFakeDummyForL10nScript.js:1643
 msgid "Access Control"
@@ -8450,11 +8461,11 @@ msgstr ""
 
 #: lib/Service/ProblemReportService.php:152
 #: templates/emailform/part.emailform.statuspage.php:263
-#: templates/emailform/part.emailform.statuspage.php:471
-#: templates/emailform/part.emailform.statuspage.php:511
-#: templates/emailform/part.emailform.statuspage.php:580
-#: templates/emailform/part.emailform.statuspage.php:636
-#: templates/emailform/part.emailform.statuspage.php:686
+#: templates/emailform/part.emailform.statuspage.php:472
+#: templates/emailform/part.emailform.statuspage.php:512
+#: templates/emailform/part.emailform.statuspage.php:581
+#: templates/emailform/part.emailform.statuspage.php:637
+#: templates/emailform/part.emailform.statuspage.php:687
 msgid "Explanations"
 msgstr ""
 
@@ -8665,24 +8676,24 @@ msgstr ""
 msgid "Unable to ensure existence of folder \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:993
+#: lib/Service/ProjectService.php:989
 #, php-format
 msgid ""
 "Unable set expiration date for the public download link \"%1$s\" for the "
 "project \"%2$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1003
+#: lib/Service/ProjectService.php:999
 #, php-format
 msgid "Unable to create the public donwload link for the project \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1420
+#: lib/Service/ProjectService.php:1416
 #, php-format
 msgid "Projects of %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1484
+#: lib/Service/ProjectService.php:1480
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -8713,159 +8724,159 @@ msgid ""
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:166
-#: lib/Service/ProjectService.php:1673
+#: lib/Service/ProjectService.php:1669
 #: specialVueFakeDummyForL10nScript.js:2251
 msgid "Preview"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1675
-#: lib/Service/ProjectService.php:1730
-#: lib/Service/ProjectService.php:1903
-#: lib/Service/ProjectService.php:1948
-#: lib/Service/ProjectService.php:2008
+#: lib/Service/ProjectService.php:1671
+#: lib/Service/ProjectService.php:1726
+#: lib/Service/ProjectService.php:1899
+#: lib/Service/ProjectService.php:1944
+#: lib/Service/ProjectService.php:2004
 #: lib/Settings/PersonalForm.php:309
 msgid "Rehearsals"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1677
+#: lib/Service/ProjectService.php:1673
 msgid "Archive"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1679
+#: lib/Service/ProjectService.php:1675
 msgid "Trashbin"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1724
+#: lib/Service/ProjectService.php:1720
 msgid "Empty project."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1751
+#: lib/Service/ProjectService.php:1747
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1776
+#: lib/Service/ProjectService.php:1772
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1797
+#: lib/Service/ProjectService.php:1793
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1841
+#: lib/Service/ProjectService.php:1837
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1885
+#: lib/Service/ProjectService.php:1881
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2056
+#: lib/Service/ProjectService.php:2052
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2120
+#: lib/Service/ProjectService.php:2116
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2140
+#: lib/Service/ProjectService.php:2136
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2290
+#: lib/Service/ProjectService.php:2286
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2296
+#: lib/Service/ProjectService.php:2292
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
 "instrumentation list for the project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2304
+#: lib/Service/ProjectService.php:2300
 #, php-format
 msgid ""
 "Selecting \"%1$s\" as instrument of the musician %2$s for the project "
 "\"%3$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2349
+#: lib/Service/ProjectService.php:2345
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2360
+#: lib/Service/ProjectService.php:2356
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2416
+#: lib/Service/ProjectService.php:2412
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2483
+#: lib/Service/ProjectService.php:2479
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2627
+#: lib/Service/ProjectService.php:2623
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2652
+#: lib/Service/ProjectService.php:2648
 #, php-format
 msgid "Unable to fetch the project for id \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2729
+#: lib/Service/ProjectService.php:2725
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2770
+#: lib/Service/ProjectService.php:2766
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2800
+#: lib/Service/ProjectService.php:2796
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr ""
 
-#: lib/Service/ProjectService.php:3085
+#: lib/Service/ProjectService.php:3081
 #, php-format
 msgid "Unable to find the project specified by given data (%s)"
 msgstr ""
 
-#: lib/Service/ProjectService.php:3332
+#: lib/Service/ProjectService.php:3328
 msgid "Project not found."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3365
+#: lib/Service/ProjectService.php:3361
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
 "background and a resolution of 600 DPI or more."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3371
+#: lib/Service/ProjectService.php:3367
 msgid "Validation of projects not yet implemented."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3459
+#: lib/Service/ProjectService.php:3455
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr ""
@@ -11988,7 +11999,7 @@ msgstr ""
 msgid "Management"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:271
+#. TRANSLATORS src/components/AdminSettings.vue:272
 #: lib/Settings/PersonalForm.php:312
 #: specialVueFakeDummyForL10nScript.js:1667
 msgid "Finance"
@@ -12831,222 +12842,222 @@ msgstr ""
 msgid "Wiki Name-Space"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:133
+#. TRANSLATORS src/components/AdminSettings.vue:134
 #: specialVueFakeDummyForL10nScript.js:1619
 msgid "Configure User Backend"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:141
+#. TRANSLATORS src/components/AdminSettings.vue:142
 #: specialVueFakeDummyForL10nScript.js:1621
 msgid "Autoconfigure \"{cloudUserBackend}\" app"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:150
+#. TRANSLATORS src/components/AdminSettings.vue:151
 #: specialVueFakeDummyForL10nScript.js:1623
 msgid "Recryption Requests"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:162
+#. TRANSLATORS src/components/AdminSettings.vue:163
 #: specialVueFakeDummyForL10nScript.js:1625
 #: specialVueFakeDummyForL10nScript.js:1637
 msgid "recrypt"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:165
+#. TRANSLATORS src/components/AdminSettings.vue:166
 #: specialVueFakeDummyForL10nScript.js:1627
 #: specialVueFakeDummyForL10nScript.js:1639
 #: templates/fragments/mailing-lists/announcements-list-controls.php:84
 msgid "reject"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:172
+#. TRANSLATORS src/components/AdminSettings.vue:173
 #: specialVueFakeDummyForL10nScript.js:1629
 msgid "organizer"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:174
+#. TRANSLATORS src/components/AdminSettings.vue:175
 #: specialVueFakeDummyForL10nScript.js:1631
 msgid "group-admin"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:184
+#. TRANSLATORS src/components/AdminSettings.vue:185
 #: specialVueFakeDummyForL10nScript.js:1633
 msgid "mark/unmark all."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:186
+#. TRANSLATORS src/components/AdminSettings.vue:187
 #: specialVueFakeDummyForL10nScript.js:1635
 msgid "With the marked requests perform the following action:"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:198
+#. TRANSLATORS src/components/AdminSettings.vue:199
 #: specialVueFakeDummyForL10nScript.js:1641
 msgid "No recryption requests are pending."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:208
+#. TRANSLATORS src/components/AdminSettings.vue:209
 #. TRANSLATORS src/views/FilesTab.vue:133
 #: specialVueFakeDummyForL10nScript.js:1647
 #: specialVueFakeDummyForL10nScript.js:6591
 msgid "e.g. Jane Doe"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:219
+#. TRANSLATORS src/components/AdminSettings.vue:220
 #: specialVueFakeDummyForL10nScript.js:1649
 msgid "Restrict User Selection to Project"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:220
+#. TRANSLATORS src/components/AdminSettings.vue:221
 #. TRANSLATORS src/views/FilesTab.vue:144
 #: specialVueFakeDummyForL10nScript.js:1651
 #: specialVueFakeDummyForL10nScript.js:6595
 msgid "e.g. Auvergne2019"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:231
+#. TRANSLATORS src/components/AdminSettings.vue:232
 #: specialVueFakeDummyForL10nScript.js:1653
 msgid "include disabled accounts"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:240
+#. TRANSLATORS src/components/AdminSettings.vue:241
 #: specialVueFakeDummyForL10nScript.js:1655
 msgid "include deactivated accounts"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:247
+#. TRANSLATORS src/components/AdminSettings.vue:248
 #: specialVueFakeDummyForL10nScript.js:1657
 msgid "Remove the status feedback from the last action."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:250
+#. TRANSLATORS src/components/AdminSettings.vue:251
 #: specialVueFakeDummyForL10nScript.js:1659
 msgid "Ok"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:259
+#. TRANSLATORS src/components/AdminSettings.vue:260
 #: specialVueFakeDummyForL10nScript.js:1661
 msgid "With the selected musicians perform the following action:"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:263
+#. TRANSLATORS src/components/AdminSettings.vue:264
 #: specialVueFakeDummyForL10nScript.js:1663
 msgid "deny access"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:266
+#. TRANSLATORS src/components/AdminSettings.vue:267
 #: specialVueFakeDummyForL10nScript.js:1665
 msgid "grant access"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:274
-#. TRANSLATORS src/components/AdminSettings.vue:280
+#. TRANSLATORS src/components/AdminSettings.vue:275
+#. TRANSLATORS src/components/AdminSettings.vue:281
 #: specialVueFakeDummyForL10nScript.js:1669
 #: specialVueFakeDummyForL10nScript.js:1671
 msgid "GnuCash Participant Receivables Account"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:281
+#. TRANSLATORS src/components/AdminSettings.vue:282
 #: specialVueFakeDummyForL10nScript.js:1673
 msgid ""
 "e.g. &quot;assets:receivables:participants:{PERSON}:{PROJECT}:{GENERATOR_TAG}"
 "&quot;."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:286
-#. TRANSLATORS src/components/AdminSettings.vue:292
+#. TRANSLATORS src/components/AdminSettings.vue:287
+#. TRANSLATORS src/components/AdminSettings.vue:293
 #: specialVueFakeDummyForL10nScript.js:1675
 #: specialVueFakeDummyForL10nScript.js:1677
 msgid "GnuCash Instrument Insurances Balancing Account"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:293
+#. TRANSLATORS src/components/AdminSettings.vue:294
 #: specialVueFakeDummyForL10nScript.js:1679
 msgid ""
 "e.g. &quot;outside-capital:escrow-accounts:insurances:receivables:{BROKER}"
 "&quot;."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:298
+#. TRANSLATORS src/components/AdminSettings.vue:299
 #: specialVueFakeDummyForL10nScript.js:1681
 msgid "GnuCash Accounts Tree"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:304
+#. TRANSLATORS src/components/AdminSettings.vue:305
 #: specialVueFakeDummyForL10nScript.js:1683
 msgid "GnuCash Accounts Tree (CSV export)"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:305
+#. TRANSLATORS src/components/AdminSettings.vue:306
 #: specialVueFakeDummyForL10nScript.js:1685
 msgid "e.g. &quot;{sharedFolder}/finance/ledger/accounts.csv&quot;."
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:311
+#. TRANSLATORS src/components/AdminSettings.vue:312
 #: specialVueFakeDummyForL10nScript.js:1687
 msgid "choose"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:325
+#. TRANSLATORS src/components/AdminSettings.vue:326
 #: specialVueFakeDummyForL10nScript.js:1689
 msgid "Configure Office Fonts for Office Exports"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:328
+#. TRANSLATORS src/components/AdminSettings.vue:329
 #: specialVueFakeDummyForL10nScript.js:1691
 msgid "Font Data Folder"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:349
+#. TRANSLATORS src/components/AdminSettings.vue:350
 #: specialVueFakeDummyForL10nScript.js:1693
 msgid "Default Font"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:354
+#. TRANSLATORS src/components/AdminSettings.vue:355
 #: specialVueFakeDummyForL10nScript.js:1695
 msgid "Update Font Data"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:357
+#. TRANSLATORS src/components/AdminSettings.vue:358
 #: specialVueFakeDummyForL10nScript.js:1697
 msgid "Rescan Font Data"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:360
+#. TRANSLATORS src/components/AdminSettings.vue:361
 #: specialVueFakeDummyForL10nScript.js:1699
 msgid "Purge Font Data"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:367
+#. TRANSLATORS src/components/AdminSettings.vue:368
 #: specialVueFakeDummyForL10nScript.js:1701
 msgid "Configure Problem Report Handling"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:373
+#. TRANSLATORS src/components/AdminSettings.vue:374
 #: specialVueFakeDummyForL10nScript.js:1703
 msgid "Problem Report Email Recipient"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:398
+#. TRANSLATORS src/components/AdminSettings.vue:399
 #: specialVueFakeDummyForL10nScript.js:1705
 msgid "Email Verification Code"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:416
+#. TRANSLATORS src/components/AdminSettings.vue:417
 #: specialVueFakeDummyForL10nScript.js:1707
 msgid "resend verification code"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:424
+#. TRANSLATORS src/components/AdminSettings.vue:425
 #: specialVueFakeDummyForL10nScript.js:1709
 msgid "cancel verification"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:438
+#. TRANSLATORS src/components/AdminSettings.vue:439
 #: specialVueFakeDummyForL10nScript.js:1711
 msgid "Enable Vue DevTools Support"
 msgstr ""
 
-#. TRANSLATORS src/components/AdminSettings.vue:441
+#. TRANSLATORS src/components/AdminSettings.vue:442
 #: specialVueFakeDummyForL10nScript.js:1713
 msgid "Check to enable Vue Devtools support (also needs unsafe-eval CSP)"
 msgstr ""
@@ -15549,87 +15560,87 @@ msgstr ""
 msgid "Please visit the following link to examine the situation:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:419
+#: templates/emailform/part.emailform.statuspage.php:420
 msgid "Please do not try to add custom privacy notices"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:422
+#: templates/emailform/part.emailform.statuspage.php:423
 #, php-format
 msgid ""
 "The message contains an explicit link to the opt-out email-address \"%s\". "
 "Do not do this! Please read on:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:424
+#: templates/emailform/part.emailform.statuspage.php:425
 msgid ""
 "Mailing list traffic does not need it, it has its own privacy notices. Also, "
 "people can unregister themselves from a mailing list."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:425
+#: templates/emailform/part.emailform.statuspage.php:426
 msgid ""
 "Project emails do not need it, because we have a justified reason to contact "
 "project-participants."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:426
+#: templates/emailform/part.emailform.statuspage.php:427
 msgid "@All email is routed automatically to mailing lists (see above)."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:427
+#: templates/emailform/part.emailform.statuspage.php:428
 msgid ""
 "All remaining cases are handled by the cloud-software and a pre-configured "
 "privacy notice is attached automatically."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:449
+#: templates/emailform/part.emailform.statuspage.php:450
 msgid ""
 "The files(s) with the following name(s) could not be attached;\n"
 "they do not seem to exists:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:465
-#: templates/emailform/part.emailform.statuspage.php:505
+#: templates/emailform/part.emailform.statuspage.php:466
+#: templates/emailform/part.emailform.statuspage.php:506
 msgid ""
 "This is probably an internal error.\n"
 "It may be possible to simply click on the red, underlined text\n"
 "in order to compose a useful message."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:492
+#: templates/emailform/part.emailform.statuspage.php:493
 msgid ""
 "The event(s) with the following id(s) could not be attached;\n"
 "they do not seem to exists:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:534
+#: templates/emailform/part.emailform.statuspage.php:535
 msgid ""
 "While sending the message the following recipients failed.\n"
 "All other recipients were successfully sumitted to the email-server,\n"
 "but you should still monitor the email-inbox for messages returned later."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:567
+#: templates/emailform/part.emailform.statuspage.php:568
 msgid ""
 "While trying to send the message(s), the following exception(s) were caught:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:577
+#: templates/emailform/part.emailform.statuspage.php:578
 msgid "This is an internal error. Please submit an error report."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:599
+#: templates/emailform/part.emailform.statuspage.php:600
 msgid "Message Duplicates Detected!"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:613
+#: templates/emailform/part.emailform.statuspage.php:614
 #, php-format
 msgid ""
 "The message has already been sent at time(s) %s to the following "
 "recipient(s):"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:626
+#: templates/emailform/part.emailform.statuspage.php:627
 msgid ""
 "The email-form refuses to send email twice to the same recipients.\n"
 "In order to send out your email you have either to change the subject\n"
@@ -15644,25 +15655,25 @@ msgid ""
 "that the error is not on your side."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:657
+#: templates/emailform/part.emailform.statuspage.php:658
 msgid "Copy to Sent-Folder has Failed"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:665
+#: templates/emailform/part.emailform.statuspage.php:666
 #, php-format
 msgid "Could not authenticate with the IMAP-server: %s"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:670
+#: templates/emailform/part.emailform.statuspage.php:671
 msgid "IMAP_FOLDER: Sent"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:674
+#: templates/emailform/part.emailform.statuspage.php:675
 #, php-format
 msgid "Copy to folder %s has failed: %s"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:679
+#: templates/emailform/part.emailform.statuspage.php:680
 msgid ""
 "If no other error messages are echoed on this page, then\n"
 "the emails have probably been sent successfully. However, copying\n"
@@ -15670,19 +15681,19 @@ msgid ""
 "This is nothing you can solve on your own, please report the error."
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:707
+#: templates/emailform/part.emailform.statuspage.php:708
 msgid "The Following Events have been attached to the Message:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:735
+#: templates/emailform/part.emailform.statuspage.php:736
 msgid "The following files have been attached to the message:"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:763
+#: templates/emailform/part.emailform.statuspage.php:764
 msgid "First Few Lines of Sent Message"
 msgstr ""
 
-#: templates/emailform/part.emailform.statuspage.php:780
+#: templates/emailform/part.emailform.statuspage.php:781
 msgid ""
 "The most recent status messages are always saved to the status panel. Please "
 "see there for detailed diagnostics."
