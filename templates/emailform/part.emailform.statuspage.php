@@ -340,7 +340,7 @@ if (!$diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Status']) {
 <div class="emailform error group broken-external-links">
   <div class="error contents broken-external-links">
     <div class="error caption broken-external-links">'
-    . Util::htmlEscape($l->t('The message contains references to external links which could not be followed.'))
+    . Util::htmlEscape($l->t('The message contains references to web pages which are problematic or could not be followed.'))
     . '</div>
     <div class="error hint broken-external-links">'
     . Util::htmlEscape(
@@ -354,11 +354,13 @@ You can edit the link-target in the message editor by using the context menu (ri
   foreach ($diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Bad'] as $info) {
     $url = $info['url'];
     $text = $info['text'];
+    $hint = $info['explanations'] ?? $l->t('unknown error');
     echo '
       <li>
         <dl>
            <dt>' . Util::htmlEscape($l->t('Link-Target')) . '</dt><dd>' . Util::htmlEscape($url) . '</dd>
            <dt>' . Util::htmlEscape($l->t('Link-Text')) . '</dt><dd>' . Util::htmlEscape($text) . '</dd>
+           <dt>' . Util::htmlEscape($l->t('Explanations')) . '</dt><dd>' . Util::htmlEscape($hint) . '</dd>
         </dl>
       </li>';
   }

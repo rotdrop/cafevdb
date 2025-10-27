@@ -37,6 +37,8 @@ use Malkusch\Lock\Mutex;
 
 use OCP\AppFramework\Http;
 use OCP\IDateTimeFormatter;
+use OCP\Files\IRootFolder;
+use OCP\Files\Node;
 
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
@@ -45,6 +47,7 @@ use OCA\CAFEVDB\Common\PHPMailer;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
@@ -5397,6 +5400,17 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     $linkStatus = [];
     $hasErrors = false;
 
+    $baseUrl = $this->urlGenerator()->getBaseUrl();
+    if ($this->project) {
+      $projectService = $this->di(ProjectService::class);
+      list('share' => $downloadsShare, 'folder' => $downloadsPath) = $projectService->ensureDownloadsShare($this->project, noCreate: true);
+      if ($downloadsShare !== null) {
+        $downloadsShare = $this->simpleSharingService->getShareFromUrl($downloadsShare);
+        $downloadsFolder = $downloadsShare->getNode();
+        $downloadsPath .= Constants::PATH_SEP;
+      }
+    }
+
     $doc = new DOMDocument();
     $doc->loadHTML('<html><head><meta charset="utf-8"></head><body>' . $message . '</body></html>');
     $links = $doc->getElementsByTagName('a');
@@ -5404,6 +5418,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     foreach ($links as $item) {
       $thisLinkGood = false;
       $href = $item->getAttribute('href');
+      $text = $item->nodeValue;
       if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))
           || str_starts_with($href, 'mailto:')
       ) {
@@ -5414,7 +5429,46 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $href = $this->urlGenerator()->getAbsoluteUrl($href);
       }
       $this->logInfo('CHECK HREF ' . $href);
-      $text = $item->nodeValue;
+      if (!empty($downloadsShare) && str_starts_with($href, $baseUrl . '/s/')) {
+        $share = $this->simpleSharingService->getShareFromUrl($href);
+        if ($share !== null) {
+          $node = $share->getNode();
+          $level = 0;
+          $path = $node->getType() === Node::TYPE_FOLDER ? Constants::PATH_SEP : '';
+          do {
+            $path =  Constants::PATH_SEP . $node->getName() . $path;
+            $node = $node->getParent();
+            ++$level;
+          } while ($node->getId() != $downloadsFolder->getId() && !($node instanceof IRootFolder));
+          $path = ltrim($path, Constants::PATH_SEP);
+          $this->logInfo('FOUND SHARE OF "' . $share->getNode()->getPath() . '" LEVEL ' . $level);
+          if (($level > 0 || $share->getId() != $downloadsShare->getId()) && $node->getId() == $downloadsFolder->getId()) {
+            if ($level > 0) {
+              $explanation = $this->l->t(
+                'The link refers to a file or folder "%1$s" inside the music sheets download folder "%2$s".', [
+                  $path,
+                  $downloadsPath,
+                ]);
+            } else {
+              $explanation = $this->l->t('The link is a manually generated referenc to the music sheets download folder "%1$s".', $downloadsFolder);
+            }
+            $explanation .= ' ' . $this->l->t(
+              'Please use the substitution "%1$s" instead. Otherwise proper link expiration cannot be guarenteed and the link is tied
+to your user name and will be invalidated in the unfortunate case that you leave the executive board.', [
+                '${GLOBAL::' . $this->l->t('PROJECT_MUSIC_SHEETS_SHARE') . '}' . ($level > 0 ? '?dir=' . $path : ''),
+              ],
+            );
+            $linkStatus[] = [
+              'url' => $href,
+              'text' => $text,
+              'status' => false,
+              'explanations' => $explanation,
+            ];
+            $hasErrors = true;
+            continue;
+          }
+        }
+      }
       $originalUserAgent = ini_get('user_agent');
       // ini_set('user_agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1'); // 'Orgacloud/1.0');
       ini_set('user_agent', 'Orgacloud/1.0');
@@ -5443,8 +5497,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         'url' => $href,
         'text' => $text,
         'status' => $thisLinkGood,
+        'explanations' => $thisLinkGood ?: $this->l->t('The link could not be opened.'),
       ];
-      $hasErrors = $hasErrors || ! $thisLinkGood;
+      $hasErrors = $hasErrors || !$thisLinkGood;
     }
 
     $goodLinks = array_filter($linkStatus, fn($info) => $info['status']);
