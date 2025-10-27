@@ -211,7 +211,7 @@ class ProjectFolders extends Command
       $output->writeln('PROJECT ' . $project->getName() . ': ' . implode(', ', $folders));
 
       // ensure the music sheet downloads are owned by the correct owner
-      if (!empty($groupMembers) && !empty($shareOwner)) {
+      if (!$dry && !empty($groupMembers) && !empty($shareOwner)) {
         $downloadsPath = $folders[ProjectService::FOLDER_TYPE_DOWNLOADS];
         $userStorage->folderWalk(
           $downloadsPath,
