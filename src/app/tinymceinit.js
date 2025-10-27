@@ -62,6 +62,9 @@ const replaceImageSource = (editor, src, id) => {
   });
 };
 
+// borrowed from tinyMCE
+const isAbsoluteUrl = (url) => /^https?:\/\/[\w\-/+=.,!;:&%@^~(){}?#]+$/i.test(url);
+
 const myConfig = {
   // auto_focus: 'mce_0',
   // theme_advanced_resizing: true,
@@ -95,8 +98,12 @@ const myConfig = {
     // editor.on('init', function(event) {
     //   alert('editor is shown');
     // });
+    editor.on('PastePreProcess', function(event) {
+      if (isAbsoluteUrl(event.content) && editor.selection.isCollapsed()) {
+        event.content = '<a href="' + event.content + '">' + event.content + '</a>';
+      }
+    });
     editor.on('PastePostProcess', function(event) {
-      console.info('PastPostProcess Event', { event });
       $(event.node).find('img').each(function() {
         const id = 'i' + Date.now();
 
