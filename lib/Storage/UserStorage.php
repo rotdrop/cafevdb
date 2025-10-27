@@ -814,9 +814,9 @@ class UserStorage
     } else {
       throw new InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
     }
-    $this->nodes[$pathOrNode] = $node;
-
     $nodePath = $node->getPath();
+    $this->nodeCache[$nodePath] = $node;
+
     if ($subDir === false || $node->getType() != FileInfo::TYPE_FOLDER) {
       // $node = $node->getParent();
       $nodePath = dirname($nodePath);
