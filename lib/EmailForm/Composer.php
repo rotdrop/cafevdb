@@ -4319,7 +4319,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
         ['share' => $share, 'mount_point' => $mountPoint] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
 
-        return $mountPoint;
+        return $this->urlGenerator()->getAbsoluteUrl($this->userStorage->getFilesAppLink($mountPoint, subDir: true));
       },
 
       self::t('BANK_TRANSACTION_DUE_DATE') => fn($key) => '',
@@ -5806,7 +5806,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
       $value = $attachment[$attachment['value']];
       $name = $attachment['name'];
       if (isset($attachment['size'])) {
-        $size = \OC_Helper::humanFileSize($attachment['size']);
+        $size = \OCP\Util::humanFileSize($attachment['size']);
         $name .= ' (' . $size . ')';
       }
       $origin = $attachment['origin'];
