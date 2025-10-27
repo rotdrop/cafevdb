@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-10-27 14:42+0100\n"
+"POT-Creation-Date: 2025-10-27 23:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -7954,88 +7954,88 @@ msgid ""
 "The business-day and calendar-day offset must have the same sign (%d / %d)"
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:478
+#: lib/Service/Finance/FinanceService.php:480
 #, php-format
 msgid "The composite payment \"%s\" does not refer to a donation."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:480
+#: lib/Service/Finance/FinanceService.php:482
 #, php-format
 msgid ""
 "The composite pamynet \"%s\" contains more than one donation. This is not "
 "yet supported."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:489
+#: lib/Service/Finance/FinanceService.php:491
 #, php-format
 msgid ""
 "The donation in the composite payment \"%s\" sums up to less or equal zero: "
 "%s"
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:499
+#: lib/Service/Finance/FinanceService.php:501
 #, php-format
 msgid ""
 "The non-donation parts of the composite payment \"%s\" sum up to an income "
 "of %s. This is unsupported."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:572
+#: lib/Service/Finance/FinanceService.php:574
 #, php-format
 msgid ""
 "Bankaccount belongs to musician \"%s\", but specified musician is \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:786
-#: lib/Service/Finance/FinanceService.php:858
+#: lib/Service/Finance/FinanceService.php:788
+#: lib/Service/Finance/FinanceService.php:860
 msgid "finance"
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:907
+#: lib/Service/Finance/FinanceService.php:909
 #, php-format
 msgid ""
 "Unable to find calendar entry with identifier \"%2$s\" in calendar with id "
 "\"%1$s\"."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:1024
+#: lib/Service/Finance/FinanceService.php:1026
 msgid "The given mandate does not contain a valid project-id."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:1040
+#: lib/Service/Finance/FinanceService.php:1042
 msgid "The given mandate does not contain a valid musician-id."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:1066
+#: lib/Service/Finance/FinanceService.php:1068
 #, php-format
 msgid "SEPA mandate-reference \"%s\" is too long (%d > %d)."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:1385
+#: lib/Service/Finance/FinanceService.php:1387
 msgid "Illegal characters in bank account owner field."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:1396
+#: lib/Service/Finance/FinanceService.php:1398
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:1405
+#: lib/Service/Finance/FinanceService.php:1407
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:1411
+#: lib/Service/Finance/FinanceService.php:1413
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:1415
+#: lib/Service/Finance/FinanceService.php:1417
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr ""
 
-#: lib/Service/Finance/FinanceService.php:1420
+#: lib/Service/Finance/FinanceService.php:1422
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr ""
