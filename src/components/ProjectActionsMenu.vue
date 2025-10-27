@@ -45,6 +45,7 @@
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Instrumentation Numbers')"
                     :href="getRouteHref(toProjectRouteData('project-instrumentation-numbers'))"
+                    :close-after-click="true"
                     @click="openInstrumentationNumbers"
       >
         <template #icon>
@@ -55,6 +56,7 @@
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Participant Fields')"
                     :href="getRouteHref(toProjectRouteData('project-participant-fields'))"
+                    :close-after-click="true"
                     @click="openParticipantFields"
       >
         <template #icon>
@@ -98,6 +100,7 @@
       <NcActionButton v-tooltip.right="tooltips['project-action:email']"
                       :class="[appName + '-project-actions']"
                       :name="t(appName, 'Em@il')"
+                      :close-after-click="true"
                       @click="openProjectEmail"
       >
         <template #icon>
