@@ -348,7 +348,7 @@ class SimpleSharingService
    *
    * @return null|IShare The share if is found, null otherwise.
    */
-  private function getShareFromUrl(string $url):?IShare
+  public function getShareFromUrl(string $url):?IShare
   {
     $token = basename($url); // allow an URL.
 
