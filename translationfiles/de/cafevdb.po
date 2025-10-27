@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-10-27 02:51+0100\n"
-"PO-Revision-Date: 2025-10-27 02:52+0100\n"
+"POT-Creation-Date: 2025-10-27 14:42+0100\n"
+"PO-Revision-Date: 2025-10-27 14:50+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -4954,90 +4954,90 @@ msgstr ""
 "Keine Daten für den Abschnitt \"%1$s\", Pfad \"%2$s\", in den Feld-"
 "Ersetzungen gefunden."
 
-#: lib/EmailForm/Composer.php:548
+#: lib/EmailForm/Composer.php:551
 msgid "announcement"
 msgstr "Ankündigung"
 
-#: lib/EmailForm/Composer.php:631
+#: lib/EmailForm/Composer.php:634
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:644 src/app/email.js:1436
+#: lib/EmailForm/Composer.php:647 src/app/email.js:1436
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
-#: lib/EmailForm/Composer.php:742 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:745 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "STREET_AND_NUMBER"
 msgstr "STRASSE_UND_NUMMER"
 
-#: lib/EmailForm/Composer.php:750 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:753 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "EMAIL"
 msgstr "EMAIL"
 
-#: lib/EmailForm/Composer.php:757 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:760 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "NICK_NAME"
 msgstr "RUFNAME"
 
-#: lib/EmailForm/Composer.php:764 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:767 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "DISPLAY_NAME"
 msgstr "ANZEIGENAME"
 
-#: lib/EmailForm/Composer.php:771 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:774 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "COUNTRY"
 msgstr "LAND"
 
-#: lib/EmailForm/Composer.php:785 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:788 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "LANGUAGE"
 msgstr "SPRACHE"
 
-#: lib/EmailForm/Composer.php:796 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:799 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BIRTHDAY"
 msgstr "GEBURTSTAG"
 
-#: lib/EmailForm/Composer.php:809 lib/EmailForm/Composer.php:4335
+#: lib/EmailForm/Composer.php:812 lib/EmailForm/Composer.php:4338
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "DATE"
 msgstr "DATUM"
 
-#: lib/EmailForm/Composer.php:818 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:821 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "TOTAL_FEES"
 msgstr "GESAMTKOSTEN"
 
-#: lib/EmailForm/Composer.php:826 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:829 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "AMOUNT_PAID"
 msgstr "ZAHLUNGSSUMME"
 
-#: lib/EmailForm/Composer.php:834 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:837 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "MISSING_AMOUNT"
 msgstr "FEHLBETRAG"
 
-#: lib/EmailForm/Composer.php:843 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:846 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "PROJECT_DATA"
 msgstr "PROJEKT_DATEN"
 
-#: lib/EmailForm/Composer.php:1037
+#: lib/EmailForm/Composer.php:1040
 msgid "Option"
 msgstr "Option"
 
-#: lib/EmailForm/Composer.php:1038 lib/EmailForm/Composer.php:1060
-#: lib/EmailForm/Composer.php:1486 lib/EmailForm/Composer.php:1538
+#: lib/EmailForm/Composer.php:1041 lib/EmailForm/Composer.php:1063
+#: lib/EmailForm/Composer.php:1489 lib/EmailForm/Composer.php:1541
 #: lib/PageRenderer/Invoices.php:778 lib/PageRenderer/ProjectPayments.php:663
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
 
-#: lib/EmailForm/Composer.php:1038
+#: lib/EmailForm/Composer.php:1041
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:580
 #: lib/PageRenderer/ProjectParticipantFields.php:650
 #: lib/PageRenderer/ProjectParticipantFields.php:1726
@@ -5045,112 +5045,112 @@ msgstr "Gesamtbetrag"
 msgid "Deposit"
 msgstr "Anzahlung"
 
-#: lib/EmailForm/Composer.php:1039 lib/EmailForm/Composer.php:1539
+#: lib/EmailForm/Composer.php:1042 lib/EmailForm/Composer.php:1542
 msgid "Received"
 msgstr "Eingegangen"
 
-#: lib/EmailForm/Composer.php:1040 lib/EmailForm/Composer.php:1540
+#: lib/EmailForm/Composer.php:1043 lib/EmailForm/Composer.php:1543
 msgid "Remaining"
 msgstr "Fehlbetrag"
 
-#: lib/EmailForm/Composer.php:1041
+#: lib/EmailForm/Composer.php:1044
 #: lib/PageRenderer/InstrumentInsurances.php:635
 #: lib/PageRenderer/Invoices.php:899 lib/PageRenderer/Invoices.php:910
 #: lib/PageRenderer/PMETableViewBase.php:700
 msgid "Due Date"
 msgstr "Fälligkeit"
 
-#: lib/EmailForm/Composer.php:1180
+#: lib/EmailForm/Composer.php:1183
 msgid "members"
 msgstr "Mitglieder"
 
-#: lib/EmailForm/Composer.php:1282
+#: lib/EmailForm/Composer.php:1285
 msgid "DONATION_AMOUNT"
 msgstr "SPENDEN_BETRAG"
 
-#: lib/EmailForm/Composer.php:1295
+#: lib/EmailForm/Composer.php:1298
 msgid "WAIVED_AMOUNT"
 msgstr "VERZICHTS_BETRAG"
 
-#: lib/EmailForm/Composer.php:1308
+#: lib/EmailForm/Composer.php:1311
 msgid "WAIVING_OF_REIMBURSEMENT"
 msgstr "VERZICHT_AUF_ERSTATTUNG"
 
-#: lib/EmailForm/Composer.php:1316
+#: lib/EmailForm/Composer.php:1319
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:145
 #: lib/PageRenderer/ProjectParticipantFields.php:883
 #: lib/PageRenderer/ProjectParticipantFields.php:889
 msgid "yes"
 msgstr "ja"
 
-#: lib/EmailForm/Composer.php:1317
+#: lib/EmailForm/Composer.php:1320
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:149
 #: lib/PageRenderer/ProjectParticipantFields.php:883
 msgid "no"
 msgstr "nein"
 
-#: lib/EmailForm/Composer.php:1325 lib/EmailForm/Composer.php:570
+#: lib/EmailForm/Composer.php:1328 lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_AMOUNT"
 msgstr "BANK_AUFTRAG_BETRAG"
 
-#: lib/EmailForm/Composer.php:1338 lib/EmailForm/Composer.php:570
+#: lib/EmailForm/Composer.php:1341 lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_PURPOSE"
 msgstr "BANK_AUFTRAG_ZWECK"
 
-#: lib/EmailForm/Composer.php:1351 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:1354 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "SEPA_MANDATE_REFERENCE"
 msgstr "SEPA_MANDAT_REFERENZ"
 
-#: lib/EmailForm/Composer.php:1368 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:1371 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "SEPA_MANDATE_DATE"
 msgstr "SEPA_MANDAT_DATUM"
 
-#: lib/EmailForm/Composer.php:1385 lib/EmailForm/Composer.php:570
+#: lib/EmailForm/Composer.php:1388 lib/EmailForm/Composer.php:570
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BANK_ACCOUNT_IBAN"
 msgstr "BANK_KONTO_IBAN"
 
-#: lib/EmailForm/Composer.php:1402 lib/EmailForm/Composer.php:570
+#: lib/EmailForm/Composer.php:1405 lib/EmailForm/Composer.php:570
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BANK_ACCOUNT_BIC"
 msgstr "BANK_KONTO_BIC"
 
-#: lib/EmailForm/Composer.php:1419 lib/EmailForm/Composer.php:235
+#: lib/EmailForm/Composer.php:1422 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BANK_ACCOUNT_BANK"
 msgstr "BANK_KONTO_BANK"
 
-#: lib/EmailForm/Composer.php:1447 lib/EmailForm/Composer.php:570
+#: lib/EmailForm/Composer.php:1450 lib/EmailForm/Composer.php:570
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BANK_ACCOUNT_OWNER"
 msgstr "BANK_KONTO_INHABER"
 
-#: lib/EmailForm/Composer.php:1464 lib/EmailForm/Composer.php:570
+#: lib/EmailForm/Composer.php:1467 lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_PARTS"
 msgstr "BANK_AUFTRAG_POSTEN"
 
-#: lib/EmailForm/Composer.php:1536
+#: lib/EmailForm/Composer.php:1539
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
-#: lib/EmailForm/Composer.php:1537
+#: lib/EmailForm/Composer.php:1540
 msgid "Invoice Amount"
 msgstr "Rechnungsbetrag"
 
-#: lib/EmailForm/Composer.php:1650
+#: lib/EmailForm/Composer.php:1653
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 
-#: lib/EmailForm/Composer.php:1729
+#: lib/EmailForm/Composer.php:1732
 msgid ""
 "Unable to lock the email-sending action, Redis ist not available. This is an "
 "internal error, please report this to the system administrator."
@@ -5159,21 +5159,21 @@ msgstr ""
 "weil Redis ist nicht verfügbar ist. Das ist ein interner Fehler, bitte\n"
 "einen Fehlerbericht senden."
 
-#: lib/EmailForm/Composer.php:1753
+#: lib/EmailForm/Composer.php:1756
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:1764
+#: lib/EmailForm/Composer.php:1767
 msgid "Someone is already sending email, please try again later."
 msgstr ""
 "Jemand anders sendet gerade eine Email, bitte später noch einmal probieren."
 
-#: lib/EmailForm/Composer.php:1890 lib/EmailForm/Composer.php:3675
+#: lib/EmailForm/Composer.php:1893 lib/EmailForm/Composer.php:3678
 #, php-format
 msgid "Unable to find a payment for the musician \"%s\" (transaction %d)"
 msgstr "Kann keine Buchung für die Person \"%s\" finden (Banktransaktion %d)"
 
-#: lib/EmailForm/Composer.php:2546
+#: lib/EmailForm/Composer.php:2549
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -5221,23 +5221,23 @@ msgstr ""
 "  </body>\n"
 "</html>"
 
-#: lib/EmailForm/Composer.php:2798 lib/EmailForm/Composer.php:3309
+#: lib/EmailForm/Composer.php:2801 lib/EmailForm/Composer.php:3312
 msgid "DO NOT REPLY"
 msgstr "NICHT ANTWORTEN"
 
-#: lib/EmailForm/Composer.php:3509
+#: lib/EmailForm/Composer.php:3512
 msgid "*** empty content ***"
 msgstr "*** leeres Dokument ***"
 
-#: lib/EmailForm/Composer.php:3563
+#: lib/EmailForm/Composer.php:3566
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:3565
+#: lib/EmailForm/Composer.php:3568
 msgid "Prewiew generation detected errors!"
 msgstr "Bei der Erzeugung der Vorschauen gab es Fehler!"
 
-#: lib/EmailForm/Composer.php:3628
+#: lib/EmailForm/Composer.php:3631
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
@@ -5246,59 +5246,60 @@ msgstr ""
 "einfügen. Personalisierte Emails müssen einzeln an jeden Empfänger\n"
 "versendet werden."
 
-#: lib/EmailForm/Composer.php:3631
+#: lib/EmailForm/Composer.php:3634
 msgid "The email text contains personalized substitutions."
 msgstr "Der Email-Text enthält personalisierte Ersetzungen."
 
-#: lib/EmailForm/Composer.php:3634
+#: lib/EmailForm/Composer.php:3637
 msgid "The email contains personalized attachments."
 msgstr "Die Email enhält personalisierte Anhänge."
 
-#: lib/EmailForm/Composer.php:3820 lib/EmailForm/Composer.php:4253
+#: lib/EmailForm/Composer.php:3823 lib/EmailForm/Composer.php:4256
+#: lib/EmailForm/Composer.php:5458
 msgid "PROJECT_MUSIC_SHEETS_SHARE"
 msgstr "PROJEKT_NOTEN_FREIGABE"
 
-#: lib/EmailForm/Composer.php:3866 lib/EmailForm/Composer.php:4298
+#: lib/EmailForm/Composer.php:3869 lib/EmailForm/Composer.php:4301
 msgid "POST_PROJECT_MEDIA_SHARE"
 msgstr "POST_PROJEKT_MEDIEN_FREIGABE"
 
-#: lib/EmailForm/Composer.php:3868 lib/EmailForm/Composer.php:4310
+#: lib/EmailForm/Composer.php:3871 lib/EmailForm/Composer.php:4313
 msgid "POST_PROJECT_MEDIA_FOLDER"
 msgstr "POST_PROJEKT_MEDIEN_ORDNER"
 
-#: lib/EmailForm/Composer.php:3946
+#: lib/EmailForm/Composer.php:3949
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
 #. TRANSLATORS: email prefix when writing to all musicians
-#: lib/EmailForm/Composer.php:3983
+#: lib/EmailForm/Composer.php:3986
 msgid "ALL_PERSONS: musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:4068 lib/EmailForm/Composer.php:4084
+#: lib/EmailForm/Composer.php:4071 lib/EmailForm/Composer.php:4087
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:4191 lib/EmailForm/Composer.php:4345
-#: lib/EmailForm/Composer.php:4355
+#: lib/EmailForm/Composer.php:4194 lib/EmailForm/Composer.php:4348
+#: lib/EmailForm/Composer.php:4358
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
 #. TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
 #. TRANSLATORS: team, like e.g. "treasurer".
-#: lib/EmailForm/Composer.php:4213
+#: lib/EmailForm/Composer.php:4216
 #, php-format
 msgid "Nothing known about \"%s\""
 msgstr "Die Rolle \"%s\" scheint nicht besetzt zu sein."
 
-#: lib/EmailForm/Composer.php:4217
+#: lib/EmailForm/Composer.php:4220
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr "Kontakt-Datenfeld für \"%1$s feht, bekannte Datenfelder sind %2$s."
 
-#: lib/EmailForm/Composer.php:4223
+#: lib/EmailForm/Composer.php:4226
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
@@ -5306,41 +5307,41 @@ msgstr ""
 "Kontakt-Datenfeld \"%3$s\" für \"%1$s\" ist unbekannt, bekannte Datenfelder "
 "sind %2$s."
 
-#: lib/EmailForm/Composer.php:4233 lib/EmailForm/Composer.php:570
+#: lib/EmailForm/Composer.php:4236 lib/EmailForm/Composer.php:570
 #, php-format
 msgid "ORGANIZER"
 msgstr "ORGANISATOREN"
 
-#: lib/EmailForm/Composer.php:4236
+#: lib/EmailForm/Composer.php:4239
 msgid "PRESIDENT"
 msgstr "VORSITZ"
 
-#: lib/EmailForm/Composer.php:4237
+#: lib/EmailForm/Composer.php:4240
 msgid "TREASURER"
 msgstr "KASSENFÜHRUNG"
 
-#: lib/EmailForm/Composer.php:4238
+#: lib/EmailForm/Composer.php:4241
 msgid "SECRETARY"
 msgstr "SCHRIFTFÜHRUNG"
 
-#: lib/EmailForm/Composer.php:4239 lib/EmailForm/Composer.php:570
+#: lib/EmailForm/Composer.php:4242 lib/EmailForm/Composer.php:570
 #, php-format
 msgid "CREDITOR_IDENTIFIER"
 msgstr "GLÄUBIGER_IDENTIFIKATION"
 
-#: lib/EmailForm/Composer.php:4242 lib/EmailForm/Composer.php:570
+#: lib/EmailForm/Composer.php:4245 lib/EmailForm/Composer.php:570
 #, php-format
 msgid "ADDRESS"
 msgstr "ADRESSE"
 
-#: lib/EmailForm/Composer.php:4245 lib/EmailForm/Composer.php:570
+#: lib/EmailForm/Composer.php:4248 lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_ACCOUNT"
 msgstr "BANK_KONTO"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\GnuCashConnectorService::PROJECT_KEY = 'PROJECT';
-#: lib/EmailForm/Composer.php:4249 templates/settings/share-settings.php:209
+#: lib/EmailForm/Composer.php:4252 templates/settings/share-settings.php:209
 #: templates/settings/share-settings.php:222
 #: templates/settings/share-settings.php:246
 #: templates/settings/share-settings.php:269
@@ -5350,118 +5351,153 @@ msgstr "BANK_KONTO"
 msgid "PROJECT"
 msgstr "PROJEKT"
 
-#: lib/EmailForm/Composer.php:4250
+#: lib/EmailForm/Composer.php:4253
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:4263
+#: lib/EmailForm/Composer.php:4266
 msgid "PROJECT_MUSIC_SHEETS_SHARE_EXPIRATION"
 msgstr "PROJEKT_NOTEN_FREIGABE_ABLAUF"
 
-#: lib/EmailForm/Composer.php:4275
+#: lib/EmailForm/Composer.php:4278
 msgid "phrase"
 msgstr "Phrase"
 
-#: lib/EmailForm/Composer.php:4292
+#: lib/EmailForm/Composer.php:4295
 #, php-format
 msgid "(expires at %s)"
 msgstr "(läuft ab am %s)"
 
-#: lib/EmailForm/Composer.php:4322 lib/EmailForm/Composer.php:4370
+#: lib/EmailForm/Composer.php:4325 lib/EmailForm/Composer.php:4373
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_DUE_DATE"
 msgstr "BANK_AUFTRAG_FÄLLIGKEIT_DATUM"
 
-#: lib/EmailForm/Composer.php:4323 lib/EmailForm/Composer.php:4364
+#: lib/EmailForm/Composer.php:4326 lib/EmailForm/Composer.php:4367
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_DUE_DAYS"
 msgstr "BANK_AUFTRAG_FÄLLIGKEIT_TAGE"
 
-#: lib/EmailForm/Composer.php:4324 lib/EmailForm/Composer.php:4373
+#: lib/EmailForm/Composer.php:4327 lib/EmailForm/Composer.php:4376
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_SUBMIT_DATE"
 msgstr "BANK_AUFTRAG_EINREICHUNG_DATUM"
 
-#: lib/EmailForm/Composer.php:4325 lib/EmailForm/Composer.php:4367
+#: lib/EmailForm/Composer.php:4328 lib/EmailForm/Composer.php:4370
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_SUBMIT_DAYS"
 msgstr "BANK_AUFTRAG_EINREICHUNG_TAGE"
 
-#: lib/EmailForm/Composer.php:4338 lib/EmailForm/Composer.php:570
+#: lib/EmailForm/Composer.php:4341 lib/EmailForm/Composer.php:570
 #, php-format
 msgid "TIME"
 msgstr "ZEIT"
 
-#: lib/EmailForm/Composer.php:4348 lib/EmailForm/Composer.php:570
+#: lib/EmailForm/Composer.php:4351 lib/EmailForm/Composer.php:570
 #, php-format
 msgid "DATETIME"
 msgstr "DATUMZEIT"
 
-#: lib/EmailForm/Composer.php:4460
+#: lib/EmailForm/Composer.php:4463
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr "Am %1$s um %2$s schrieb %3$s:"
 
-#: lib/EmailForm/Composer.php:4817
+#: lib/EmailForm/Composer.php:4820
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:4829
+#: lib/EmailForm/Composer.php:4832
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:4853
+#: lib/EmailForm/Composer.php:4856
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 "Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" "
 "löschen."
 
-#: lib/EmailForm/Composer.php:4887
+#: lib/EmailForm/Composer.php:4890
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4947 lib/EmailForm/Composer.php:5074
+#: lib/EmailForm/Composer.php:4950 lib/EmailForm/Composer.php:5077
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4983
+#: lib/EmailForm/Composer.php:4986
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:5008
+#: lib/EmailForm/Composer.php:5011
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:5748
+#: lib/EmailForm/Composer.php:5448
+#, php-format
+msgid ""
+"The link refers to a file or folder \"%1$s\" inside the music sheets "
+"download folder \"%2$s\"."
+msgstr ""
+"Der Web-Link verweist auf eine Datei oder einen Unterordner \"%1$s\"\n"
+"innerhalb des Noten-Download-Ordners \"%2$s\"."
+
+#: lib/EmailForm/Composer.php:5453
+#, php-format
+msgid ""
+"The link is a manually generated referenc to the music sheets download "
+"folder \"%1$s\"."
+msgstr ""
+"Der Web-Link ist scheinbar eine händisch generierter Verweis auf den Noten-"
+"Downloads-Ordner \"%1$s\"."
+
+#: lib/EmailForm/Composer.php:5456
+#, php-format
+msgid ""
+"Please use the substitution \"%1$s\" instead. Otherwise proper link "
+"expiration cannot be guarenteed and the link is tied\n"
+"to your user name and will be invalidated in the unfortunate case that you "
+"leave the executive board."
+msgstr ""
+"Bitte stattdessen den Platzhalter \"%1$s\" versenden. Andernfalls kann\n"
+"das Ablaufdatum des Links nicht automatisch verwaltet werden und im\n"
+"unglücklichen Fall, dass Du den Vorstand verlässt, wird die Freigabe\n"
+"automatisch gelöscht."
+
+#: lib/EmailForm/Composer.php:5500
+msgid "The link could not be opened."
+msgstr "Der Web-Link konnte nicht geöffnet werden."
+
+#: lib/EmailForm/Composer.php:5815
 msgid "Blank Template"
 msgstr "Blanko-Vorlage"
 
-#: lib/EmailForm/Composer.php:5749
+#: lib/EmailForm/Composer.php:5816
 msgid "blank"
 msgstr "blanko"
 
-#: lib/EmailForm/Composer.php:5752
+#: lib/EmailForm/Composer.php:5819
 msgid "Personalized"
 msgstr "Personifiziert"
 
-#: lib/EmailForm/Composer.php:5755
+#: lib/EmailForm/Composer.php:5822
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:5758
+#: lib/EmailForm/Composer.php:5825
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/EmailForm/Composer.php:5884
+#: lib/EmailForm/Composer.php:5951
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
@@ -7303,7 +7339,7 @@ msgstr "Instrumentenversicherung"
 msgid "Address Book"
 msgstr "Adressbuch"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:100
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:102
 #. TRANSLATORS src/components/ProjectEventsListing.vue:82
 #: lib/PageRenderer/PME/Config.php:64 lib/PageRenderer/PMETableViewBase.php:654
 #: specialVueFakeDummyForL10nScript.js:3871
@@ -7961,7 +7997,7 @@ msgstr "nicht erzeugen"
 msgid "Public Downloads"
 msgstr "Öffentliche Freigabe"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:56
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:57
 #: lib/PageRenderer/Projects.php:888 specialVueFakeDummyForL10nScript.js:3863
 msgid "Participant Fields"
 msgstr "Tabellen-Spalten"
@@ -9186,11 +9222,12 @@ msgstr "%1s: Anfrage zur Verifikation der Em@il-Adresse für Fehlerberichte"
 
 #: lib/Service/ProblemReportService.php:152
 #: templates/emailform/part.emailform.statuspage.php:263
-#: templates/emailform/part.emailform.statuspage.php:472
-#: templates/emailform/part.emailform.statuspage.php:512
-#: templates/emailform/part.emailform.statuspage.php:581
-#: templates/emailform/part.emailform.statuspage.php:637
-#: templates/emailform/part.emailform.statuspage.php:687
+#: templates/emailform/part.emailform.statuspage.php:363
+#: templates/emailform/part.emailform.statuspage.php:474
+#: templates/emailform/part.emailform.statuspage.php:514
+#: templates/emailform/part.emailform.statuspage.php:583
+#: templates/emailform/part.emailform.statuspage.php:639
+#: templates/emailform/part.emailform.statuspage.php:689
 msgid "Explanations"
 msgstr "Erläuterungen:"
 
@@ -15277,6 +15314,7 @@ msgid "Your problem-report has been submitted."
 msgstr "Dein Fehlerbericht wurde abgeschickt."
 
 #: specialVueFakeDummyForL10nScript.js:2173 src/app/file-download.js:60
+#: templates/emailform/part.emailform.statuspage.php:357
 msgid "unknown error"
 msgstr "irgendein Fehler"
 
@@ -15564,42 +15602,42 @@ msgstr "Zeile {line}"
 msgid "Project Wiki for {projectName}"
 msgstr "Wiki Projekt-Seite für {projectName}"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:67
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:69
 #: specialVueFakeDummyForL10nScript.js:3865
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:78
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:80
 #: specialVueFakeDummyForL10nScript.js:3867
 msgid "Project Notes"
 msgstr "Projekt-Notizen"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:89
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:91
 #: specialVueFakeDummyForL10nScript.js:3869
 msgid "Events"
 msgstr "Termine"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:111
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:114
 #: specialVueFakeDummyForL10nScript.js:3873
 msgid "Business Contacts / Associates"
 msgstr "Geschäftskontakte und Assoziierte"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:122
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:125
 #: specialVueFakeDummyForL10nScript.js:3875
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:133
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:136
 #: specialVueFakeDummyForL10nScript.js:3877
 msgid "Payments"
 msgstr "Zahlungen"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:144
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:147
 #: specialVueFakeDummyForL10nScript.js:3879
 msgid "Invoices"
 msgstr "Rechnungen"
 
-#. TRANSLATORS src/components/ProjectActionsMenu.vue:154
+#. TRANSLATORS src/components/ProjectActionsMenu.vue:157
 #: specialVueFakeDummyForL10nScript.js:3881
 msgid "Financial Balance"
 msgstr "Gewinn-/Verlustrechung"
@@ -17791,11 +17829,11 @@ msgstr ""
 
 #: templates/emailform/part.emailform.statuspage.php:343
 msgid ""
-"The message contains references to external links which could not be "
-"followed."
+"The message contains references to web pages which are problematic or could "
+"not be followed."
 msgstr ""
-"Die Nachricht verweist auf externe Web-Adressen, die nicht angesprochen "
-"werden konnten."
+"Die Nachricht verweist auf Web-Adressen, die problematisch scheinen oder "
+"nicht angesprochen werden konnten."
 
 #: templates/emailform/part.emailform.statuspage.php:348
 msgid ""
@@ -17811,31 +17849,31 @@ msgstr ""
 "Maustaste). Ggf. findet sich auch ein Button oder Menüeintrag in der\n"
 "Button- bzw. Menüleiste des Editors."
 
-#: templates/emailform/part.emailform.statuspage.php:360
+#: templates/emailform/part.emailform.statuspage.php:361
 msgid "Link-Target"
 msgstr "Link-Ziel"
 
-#: templates/emailform/part.emailform.statuspage.php:361
+#: templates/emailform/part.emailform.statuspage.php:362
 msgid "Link-Text"
 msgstr "Link-Text"
 
-#: templates/emailform/part.emailform.statuspage.php:386
+#: templates/emailform/part.emailform.statuspage.php:388
 msgid "There is something wrong with the pariticipants downloads folder."
 msgstr "Mit dem Download-Ordner für die Teilnehmenden stimmt etwas nicht."
 
-#: templates/emailform/part.emailform.statuspage.php:390
+#: templates/emailform/part.emailform.statuspage.php:392
 msgid "The folder contains no data."
 msgstr "Der Ordner enthält keine Daten, er ist leer."
 
-#: templates/emailform/part.emailform.statuspage.php:392
+#: templates/emailform/part.emailform.statuspage.php:394
 msgid "Please visit the following link to examine the situation:"
 msgstr "Bitte dem angezeigten Link folgen, um sich das anzusehen."
 
-#: templates/emailform/part.emailform.statuspage.php:420
+#: templates/emailform/part.emailform.statuspage.php:422
 msgid "Please do not try to add custom privacy notices"
 msgstr "Bitte keine eigenen Datenschutz-Bemerkungen einfügen."
 
-#: templates/emailform/part.emailform.statuspage.php:423
+#: templates/emailform/part.emailform.statuspage.php:425
 #, php-format
 msgid ""
 "The message contains an explicit link to the opt-out email-address \"%s\". "
@@ -17844,7 +17882,7 @@ msgstr ""
 "Die Nachricht enthält explizit einen Verweis auf die Opt-Out\n"
 "Email-Adresse \"%s\". Das ist unnötig und kontraproduktiv, denn:"
 
-#: templates/emailform/part.emailform.statuspage.php:425
+#: templates/emailform/part.emailform.statuspage.php:427
 msgid ""
 "Mailing list traffic does not need it, it has its own privacy notices. Also, "
 "people can unregister themselves from a mailing list."
@@ -17853,7 +17891,7 @@ msgstr ""
 "eigenen Datenschutz-Hinweise. Außerdem können sich Empfänger selbst\n"
 "aus der jeweiligen Mailing-Liste austragen."
 
-#: templates/emailform/part.emailform.statuspage.php:426
+#: templates/emailform/part.emailform.statuspage.php:428
 msgid ""
 "Project emails do not need it, because we have a justified reason to contact "
 "project-participants."
@@ -17862,12 +17900,12 @@ msgstr ""
 "denn wir haben einen gerechtfertigten Grund, Projekt-Teilnehmende zu "
 "kontaktieren."
 
-#: templates/emailform/part.emailform.statuspage.php:427
+#: templates/emailform/part.emailform.statuspage.php:429
 msgid "@All email is routed automatically to mailing lists (see above)."
 msgstr ""
 "Nachrichten \"an alle\" werden automatisch über die Mailinglisten verschickt."
 
-#: templates/emailform/part.emailform.statuspage.php:428
+#: templates/emailform/part.emailform.statuspage.php:430
 msgid ""
 "All remaining cases are handled by the cloud-software and a pre-configured "
 "privacy notice is attached automatically."
@@ -17876,7 +17914,7 @@ msgstr ""
 "berücksichtigt und ein konfigurierbarer Datenschutzhinweis wird\n"
 "automatisch an die Nachrichten angefügt."
 
-#: templates/emailform/part.emailform.statuspage.php:450
+#: templates/emailform/part.emailform.statuspage.php:452
 msgid ""
 "The files(s) with the following name(s) could not be attached;\n"
 "they do not seem to exists:"
@@ -17884,8 +17922,8 @@ msgstr ""
 "Die Dateien mit den folgenden Namen konnten nicht angehängt werden;\n"
 "weil sie scheinbar nicht auf dem Server zu finden sind:"
 
-#: templates/emailform/part.emailform.statuspage.php:466
-#: templates/emailform/part.emailform.statuspage.php:506
+#: templates/emailform/part.emailform.statuspage.php:468
+#: templates/emailform/part.emailform.statuspage.php:508
 msgid ""
 "This is probably an internal error.\n"
 "It may be possible to simply click on the red, underlined text\n"
@@ -17896,7 +17934,7 @@ msgstr ""
 "Text klicken, um eine sinnvoll vor-formulierte Em@il zu verfassen. Das\n"
 "Ding bitte einfach so absenden."
 
-#: templates/emailform/part.emailform.statuspage.php:493
+#: templates/emailform/part.emailform.statuspage.php:495
 msgid ""
 "The event(s) with the following id(s) could not be attached;\n"
 "they do not seem to exists:"
@@ -17904,7 +17942,7 @@ msgstr ""
 "Die Veranstaltung(en) zu den folgenden Id(s) konnten nicht angehängt\n"
 "werden; die scheinen gar nicht zu existieren:"
 
-#: templates/emailform/part.emailform.statuspage.php:535
+#: templates/emailform/part.emailform.statuspage.php:537
 msgid ""
 "While sending the message the following recipients failed.\n"
 "All other recipients were successfully sumitted to the email-server,\n"
@@ -17915,21 +17953,21 @@ msgstr ""
 "erfolgreich übermittelt. Dennoch sollten Sie den Posteingang auf\n"
 "später eingehende Rückläufer überprüfen."
 
-#: templates/emailform/part.emailform.statuspage.php:568
+#: templates/emailform/part.emailform.statuspage.php:570
 msgid ""
 "While trying to send the message(s), the following exception(s) were caught:"
 msgstr ""
 "Während des Sendeversuchs wurden die folgenden PHP-Ausnahmen `gefangen':"
 
-#: templates/emailform/part.emailform.statuspage.php:578
+#: templates/emailform/part.emailform.statuspage.php:580
 msgid "This is an internal error. Please submit an error report."
 msgstr "Das ist ein interner Fehler. Bitte eine Fehlerbericht absenden."
 
-#: templates/emailform/part.emailform.statuspage.php:600
+#: templates/emailform/part.emailform.statuspage.php:602
 msgid "Message Duplicates Detected!"
 msgstr "Nachrichten-Duplikat entdeckt!"
 
-#: templates/emailform/part.emailform.statuspage.php:614
+#: templates/emailform/part.emailform.statuspage.php:616
 #, php-format
 msgid ""
 "The message has already been sent at time(s) %s to the following "
@@ -17938,7 +17976,7 @@ msgstr ""
 "Die Nachricht wurde zum Zeitpunkt %s bereits schon einmal versendet,\n"
 "und zwar an die folgenden Adressaten:"
 
-#: templates/emailform/part.emailform.statuspage.php:627
+#: templates/emailform/part.emailform.statuspage.php:629
 msgid ""
 "The email-form refuses to send email twice to the same recipients.\n"
 "In order to send out your email you have either to change the subject\n"
@@ -17962,25 +18000,25 @@ msgstr ""
 "Fehlerbericht absenden. Aber bitte vorher noch einmal darüber\n"
 "nachdenken, ob es nicht vielleicht doch ein Duplikat ist ..."
 
-#: templates/emailform/part.emailform.statuspage.php:658
+#: templates/emailform/part.emailform.statuspage.php:660
 msgid "Copy to Sent-Folder has Failed"
 msgstr "Das Kopieren in `Gesendete Nachrichten' ist fehlgeschlagen."
 
-#: templates/emailform/part.emailform.statuspage.php:666
+#: templates/emailform/part.emailform.statuspage.php:668
 #, php-format
 msgid "Could not authenticate with the IMAP-server: %s"
 msgstr "Anmeldung am IMAP-Server fehlgeschlagen: %s"
 
-#: templates/emailform/part.emailform.statuspage.php:671
+#: templates/emailform/part.emailform.statuspage.php:673
 msgid "IMAP_FOLDER: Sent"
 msgstr "Gesendet"
 
-#: templates/emailform/part.emailform.statuspage.php:675
+#: templates/emailform/part.emailform.statuspage.php:677
 #, php-format
 msgid "Copy to folder %s has failed: %s"
 msgstr "Das Kopieren in den Ordner %s ist fehlgeschlagen: %s"
 
-#: templates/emailform/part.emailform.statuspage.php:680
+#: templates/emailform/part.emailform.statuspage.php:682
 msgid ""
 "If no other error messages are echoed on this page, then\n"
 "the emails have probably been sent successfully. However, copying\n"
@@ -17993,19 +18031,19 @@ msgstr ""
 "werden. Den Fehler kann man nicht selbst beheben, bitte eine\n"
 "Fehlerbericht absenden."
 
-#: templates/emailform/part.emailform.statuspage.php:708
+#: templates/emailform/part.emailform.statuspage.php:710
 msgid "The Following Events have been attached to the Message:"
 msgstr "Die folgenden Termin-Einträge wurden der Nachricht angehängt:"
 
-#: templates/emailform/part.emailform.statuspage.php:736
+#: templates/emailform/part.emailform.statuspage.php:738
 msgid "The following files have been attached to the message:"
 msgstr "Die folgenden Dateien wurden der Nachricht angehängt:"
 
-#: templates/emailform/part.emailform.statuspage.php:764
+#: templates/emailform/part.emailform.statuspage.php:766
 msgid "First Few Lines of Sent Message"
 msgstr "Die ersten paar Zeilen der gesendeten Nachricht"
 
-#: templates/emailform/part.emailform.statuspage.php:781
+#: templates/emailform/part.emailform.statuspage.php:783
 msgid ""
 "The most recent status messages are always saved to the status panel. Please "
 "see there for detailed diagnostics."
@@ -20404,6 +20442,9 @@ msgid ""
 "Simply blends in all the columns of the table as if all the tabs would be "
 "activated at the same time."
 msgstr "Zeigt einfach alle Spalten an."
+
+#~ msgid "Explanation"
+#~ msgstr "Erläuterungen"
 
 #~ msgid "Error, caught an exception."
 #~ msgstr "Interner Fehler, Ausnahme \"aufgefangen\"."
@@ -23403,9 +23444,6 @@ msgstr "Zeigt einfach alle Spalten an."
 
 #~ msgid "Unable to create view for slug `%s`"
 #~ msgstr "Kann Datenbank-Ansicht für Slug \"%s\" nicht erzeugen"
-
-#~ msgid "Template could not be saved"
-#~ msgstr "Die Vorlage konnte nicht gespeichert werden."
 
 #~ msgid "PHP Exception Caught"
 #~ msgstr "PHP `Ausnahme' `gefangen'"
