@@ -32,8 +32,8 @@ $editorHeight: 20em;
   ~ .tox.tox-tinymce {
     height:$editorHeight;
     &.tox-fullscreen {
-      top: 50px;
-      height: calc(100% - 50px) !important;
+      top: var(--header-height);
+      height: calc(100% - var(--header-height)) !important;
       .tox-menubar {
         margin-left:44px;
       }

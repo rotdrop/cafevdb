@@ -29,7 +29,7 @@ $editorHeight: 20em;
 
 .ui-widget.ui-dialog.emailform.#{$appNameTag} {
   overflow:hidden;
-  max-height: 90%;
+  max-height: calc(100vh - var(--header-height));
   padding:0;
 
   /* dialog popup, header */
