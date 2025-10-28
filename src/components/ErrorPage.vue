@@ -153,7 +153,7 @@
           <h6>{{ t(appName, 'Optional Comment') }}</h6>
           <div>
             {{ t(appName, 'You can optionally add comments. Markdown is supported.') }}
-            <span>(</span><a :href="markDownDocLink" :target="md5(markDownDocLink)">Markdown</a><span>).</span>
+            <span>(</span><a :href="markDownDocLink" :target="md5(markDownDocLink)">{{ t(appName, 'manual') }}</a><span>).</span>
             {{ t(appName, 'A preview of the error report is shown below.') }}
           </div>
           <textarea v-model="userComment"
