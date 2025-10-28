@@ -497,6 +497,10 @@ WHERE dsf.id IS NOT NULL',
             'tooltip' => $this->l->t('General invoice data'),
             'name' => $this->l->t('Invoice Data'),
           ], [
+            'id' => 'taxes',
+            'tooltip' => $this->l->t('Tax rate and constitutory sources'),
+            'name' => $this->l->t('Taxes'),
+          ], [
             'id' => 'documents',
             'tooltip' => $this->toolTipsService['page-renderer:invoices:documents'],
             'name' => $this->l->t('Documents'),
@@ -817,6 +821,7 @@ WHERE dsf.id IS NOT NULL',
     $this->makeJoinTableField(
       $opts['fdd'], self::TAXATION_STATUTORY_SOURCES_TABLE, 'id', [
         'name' => $this->l->t('Sales Tax'),
+        'tab' => [ 'id' => 'taxes' ],
         'css' => [ 'postfix' => [ 'sales-tax' ], ],
         'php|LF' => [$this, 'compositeRowOnly'],
         'sql|LF' => '$join_table.rate * 100',
@@ -827,10 +832,10 @@ WHERE dsf.id IS NOT NULL',
         'input' => 'M',
         'values|ACP' => [
           'description' => [
-            'columns' => [ '$table.rate * 100', '$table.law' ],
+            'columns' => [ '$table.rate * 100', '$table.law', '$table.hint' ],
             'ifnull' => false,
             'cast' => false,
-            'divs' => [ '%, ' ],
+            'divs' => [ '%, ', ' (', ')' ],
           ],
           PHPMyEdit::OPT_FILTERS => [ '$table.tax_type = "' . TaxType::SALES . '"' ],
         ],
@@ -839,8 +844,10 @@ WHERE dsf.id IS NOT NULL',
     $this->makeJoinTableField(
       $opts['fdd'], self::TAXATION_STATUTORY_SOURCES_TABLE, 'law', [
         'name' => $this->l->t('Legal Basis'),
+        'tab' => [ 'id' => 'taxes' ],
         'css' => [ 'postfix' => [ 'statutory-source' ], ],
         'php|LF' => [$this, 'compositeRowOnly'],
+        'sql|LF' => 'CONCAT($join_col_fqn, " (", $table.hint, ")")',
         'select' => 'T',
         'input' => 'HR',
         'input|LFVD' => 'R',
@@ -851,6 +858,7 @@ WHERE dsf.id IS NOT NULL',
       Util::arrayMergeRecursive(
         $this->defaultFDD['money'], [
           'sql' => '$main_table.amount - $join_table.total_amount',
+          'tab' => [ 'id' => 'invoice' ],
           'css' => [ 'postfix' => [ 'tooltip-auto', ] ],
           'name' => $this->l->t('Inconsistency'),
           'input|LF' => 'VHR',
