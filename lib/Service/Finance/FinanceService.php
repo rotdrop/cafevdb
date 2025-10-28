@@ -423,8 +423,11 @@ class FinanceService
       'recipient' => $this->flattenMusician($invoice->getDebitor()),
       'invoice' => [
         // amount need not be the donation amount
-        'amount' => $amount,
+        'amount' => $amount->toDecimal(2),
         'dueDate' => $invoice->getDueDate(),
+        'number' => $invoice->getInvoiceNumber(),
+        'subject' => $invoice->getSubject(),
+        'purpose' => $invoice->getPurpose(),
         'l10n' => [
           'locale' => $locale,
           'amount' => $numberFormatter->formatCurrency($amount),
@@ -440,7 +443,7 @@ class FinanceService
     foreach ($invoiceItems as $item) {
       $value = $item->getAmount();
       $templateData['invoice']['items'][] = [
-        'amount' => $value,
+        'amount' => $value->toDecimal(2),
         'isIncome' => $value->gt(0),
         'dueDate' => $item->getReceivable()->getField()->getDueDate(),
         'subject' => $item->getSubject(),

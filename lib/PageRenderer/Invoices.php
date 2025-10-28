@@ -925,6 +925,23 @@ WHERE dsf.id IS NOT NULL',
         'php|LF' => [$this, 'compositeRowOnly'],
       ]);
 
+    $opts['fdd']['purpose'] = [
+      'name' => $this->l->t('Cover Text'),
+      'css'  => [ 'postfix' => [ 'purpose', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
+      'sql|LFVD' => 'REPLACE($main_table.subject, \'; \', \'<br/>\')',
+      'input|LFVD' => 'HRM',
+      'select' => 'T',
+      'display|LF' => [ 'popup' => 'data' ],
+      'escape' => true,
+      'sort' => true,
+      'textarea|ACP' => [
+        'css' => 'wysiwyg-editor',
+        'rows' => 4,
+        'cols' => 35,
+      ],
+      'tooltip' => $this->toolTipsService['page-renderer:invoices:purpose'],
+    ];
+
     $opts['fdd']['subject'] = [
       'name' => $this->l->t('Subject'),
       'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
@@ -932,7 +949,6 @@ WHERE dsf.id IS NOT NULL',
       'input|LFVD' => 'HRM',
       'select' => 'T',
       'display|LF' => [ 'popup' => 'data' ],
-
       'escape' => true,
       'sort' => true,
       'maxlen' => FinanceService::SEPA_PURPOSE_LENGTH,
@@ -941,6 +957,7 @@ WHERE dsf.id IS NOT NULL',
         'rows' => 4,
         'cols' => 35,
       ],
+      'tooltip' => $this->toolTipsService['page-renderer:invoices:subject'],
     ];
 
     $this->makeJoinTableField(
@@ -964,6 +981,7 @@ WHERE dsf.id IS NOT NULL',
           'rows' => 4,
           'cols' => 35,
         ],
+        'tooltip' => $this->toolTipsService['page-renderer:invoices:subject'],
       ]);
 
     /**

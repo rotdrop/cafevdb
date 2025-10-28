@@ -153,6 +153,16 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   private $subject;
 
   /**
+   * @var string
+   * Free-text lead-in of the invoice letter.
+   *
+   * @todo Should be remove and replaced by a table listing just the
+   * individual invoice items which just should be enough.
+   */
+  #[ORM\Column(type: 'text', nullable: true)]
+  private $purpose;
+
+  /**
    * @var Collection
    */
   #[ORM\OneToMany(targetEntity: InvoiceItem::class, mappedBy: 'invoice', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
@@ -511,6 +521,30 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   public function getSubject():?string
   {
     return $this->subject;
+  }
+
+  /**
+   * Set purpose.
+   *
+   * @param null|string $purpose
+   *
+   * @return Invoice
+   */
+  public function setPurpose(?string $purpose):Invoice
+  {
+    $this->purpose = $purpose;
+
+    return $this;
+  }
+
+  /**
+   * Get purpose.
+   *
+   * @return null|string
+   */
+  public function getPurpose():?string
+  {
+    return $this->purpose;
   }
 
   /**

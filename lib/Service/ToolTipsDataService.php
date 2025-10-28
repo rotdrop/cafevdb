@@ -483,6 +483,8 @@ amount. In this case this donation is a waiving of reimbursement'),
           'invoice-items' => [
             'imbalance' => self::t('This is the difference between invoiced amount and the sum of the amount of the individual invoice items and thus must be 0. If not, the invoice data has to be corrected.'),
           ],
+          'subject' => self::t('The subject the payee should use -- together with the invoice number -- as transfer purpose.'),
+          'purpose' => self::t('An introductory text which will be placed on the invoice document.'),
         ],
 
         'add-musicians' => [
