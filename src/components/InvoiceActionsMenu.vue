@@ -81,6 +81,9 @@ import * as BusEvents from '../event-bus-events.ts'
 import { INVOICE_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
 import type { MailMergePayload, MailMergeOperation } from '../types/ajax/mail-merge.ts'
 import { MailMergeDownload, MailMergeDataset } from '../types/ajax/mail-merge.ts'
+import Console from '../util/console.ts'
+
+const logger = new Console(COMPONENT_NAME)
 
 const errorHandlerProvider = useErrorHandlerStore()
 
@@ -151,7 +154,11 @@ const handleInvoiceDownload = async (operation: MailMergeOperation = MailMergeDo
     asyncEmit(BusEvents.POP_BUSY_STATE)
   } catch (error) {
     asyncEmit(BusEvents.POP_BUSY_STATE)
-    const messageData = { error, invoiceNumber: props.invoiceNumber }
+    logger.error('Unable to download invoice', { props, error })
+    const messageData = {
+      error: error.message || t(appName, 'unknown error'),
+      invoiceNumber: props.invoiceNumber,
+    }
     const message = (operation === MailMergeDownload)
       ? t(appName, 'Unable to download the invoice with invoice-number {invoiceNumber}: {error}.', messageData)
       : t(appName, 'Unable to download the mail-merge substituions for invoice-number {invoiceNumber}: {error}.', messageData)
