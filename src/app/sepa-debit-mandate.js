@@ -164,7 +164,8 @@ const mandatesInit = function(data, onChangeCallback) {
     });
   };
 
-  popup.on('blur', mandateFormSelector + ' ' + 'input[type="text"]:not(.no-validation)', validateInput);
+  popup.on('blur', mandateFormSelector + ' ' + 'input[type="text"]:not(.no-validation):not(.selectize-input-element)', validateInput);
+  popup.on('change', mandateFormSelector + ' ' + 'select:not(.no-validation)', validateInput);
 
   // on request disable instant validation while editing, but apply
   // and save buttons stay disabled until validation is reenabled.

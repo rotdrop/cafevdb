@@ -108,7 +108,6 @@ class SepaDebitMandatesController extends Controller
   {
     $requiredKeys = [
       'mandateProjectId',
-      'projectId',
       'musicianId',
       'mandateReference',
       'bankAccountSequence',
@@ -130,7 +129,6 @@ class SepaDebitMandatesController extends Controller
       }
     }
 
-    $projectId  = $this->request['projectId'];
     $musicianId = $this->request['musicianId'];
     $reference  = $this->request['mandateReference'];
     $mandateProjectId  = $this->request['mandateProjectId'];
@@ -179,10 +177,10 @@ class SepaDebitMandatesController extends Controller
 
       $newValidations = [];
       switch ($changed) {
-        case 'projectId':
+        case 'mandateProjectId':
           $newValidations[] = [
             'changed' => 'orchestraMember',
-            'value' => ($projectId === $memberProjectId) ? 'member' : '',
+            'value' => ($mandateProjectId === $memberProjectId) ? 'member' : '',
           ];
           $newValidations[] = [
             'changed' => 'musicianId',
@@ -192,7 +190,7 @@ class SepaDebitMandatesController extends Controller
         case 'orchestraMember':
           // tricky, for now just generate a new reference
           // @todo This has be made foolproof!
-          $newProjectId = ($value === 'member') ? $memberProjectId : $projectId;
+          $newProjectId = ($value === 'member') ? $memberProjectId : $mandateProjectId;
           $mandate = $this->financeService->fetchSepaMandate($newProjectId, $musicianId);
           if (!empty($mandate)) {
             $reference = $mandate['mandateReference'];
@@ -256,20 +254,20 @@ class SepaDebitMandatesController extends Controller
             ];
             break;
           }
-          if (empty($projectId)) {
+          if (empty($mandateProjectId)) {
             break;
           }
-          $participant = $this->projectService->findParticipant($projectId, $musicianId);
+          $participant = $this->projectService->findParticipant($mandateProjectId, $musicianId);
           if (empty($participant)) {
             throw new Exceptions\EnduserNotificationException(
-              $this->l->t('Participant %d not found in project %d.', [ $musicianId, $projectId ]),
+              $this->l->t('Participant %d not found in project %d.', [ $musicianId, $mandateProjectId ]),
             );
           }
-          $newOwner = $participant['musician']['surName'].', '.$participant['musician']['firstName'];
-          if (!empty($projectId)) {
+          $newOwner = $participant['musician']['surName'] . ', ' . $participant['musician']['firstName'];
+          if (!empty($mandateProjectId)) {
             $newValidations[] = [
-              'changed' => 'projectId',
-              'value' => $projectId,
+              'changed' => 'mandateProjectId',
+              'value' => $mandateProjectId,
             ];
           }
           if (true || empty($owner)) {
@@ -282,6 +280,7 @@ class SepaDebitMandatesController extends Controller
           }
           break;
         case 'bankAccountOwner':
+          $this->logInfo('OWNER ' . $value . ' ' . $this->financeService->sepaTranslit($value));
           $value = $this->financeService->sepaTranslit($value);
           if (!$this->financeService->validateSepaString($value)) {
             throw new Exceptions\EnduserNotificationException(
@@ -487,8 +486,8 @@ class SepaDebitMandatesController extends Controller
               'Unknown Request: %s / %s / %s',
               [
                 'validate',
-                print_r($changed, true),
-                print_r($value, true),
+                empty($changed) ? $this->l->t('nothing changed') : print_r($changed, true),
+                empty($value) ? $this->l->t('no data') : print_r($value, true),
               ]),
             context: [
               'changed' => $changed,

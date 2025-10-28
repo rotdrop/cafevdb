@@ -1409,7 +1409,7 @@ and contact the treasurer for further instructions.',
             FinanceService::SEPA_MANDATE_EXPIRE_MONTHS
           ),
           'only-for-project' => self::t('Use this debit-mandate only for the given project. Note that debit-mandates of club-members are always general debit-mandates for all receivables.'),
-          'for-all-receivables' => self::t('Use this as a general debit-mandate for all receivables of this person.'),
+          'for-all-receivables' => self::t('Use this as a general debit-mandate for all receivables of this person. Note that we accept general debit mandates only for club-members.'),
           'download' => [
             'default' => self::t('Download the existing signed hard-copy of the debit mandate.'),
             'form' => self::t('Download a prefilled debit-mandate form with the name and bank-account of this person, suitable to be handed to the person in order to be signed. Note that the email-form has also access to such pre-filled debit-mandates which can be attached to personalized mail-merged emails.'),
