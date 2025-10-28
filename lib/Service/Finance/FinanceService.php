@@ -28,6 +28,7 @@ use DateTimeImmutable as DateTime;
 use DateTimeInterface;
 use InvalidArgumentException;
 use RuntimeException;
+use UnexpectedValueException;
 
 use Cmixin\BusinessDay;
 use PHP_IBAN;
@@ -418,6 +419,17 @@ class FinanceService
 
     // now compose the dataset for the document template engine
     $amount = $invoice->getAmount();
+    $taxes = $invoice->getTaxationStatutorySource();
+
+    if ($taxes->getTaxType() != Types\EnumTaxType::SALES) {
+      throw new UnexpectedValueException(
+        $this->l->t('Unsupported tax type "%1$s", should be "%2$s".', [
+          $this->l->t($taxes->getTaxType()),
+          Types\EnumTaxType::SALES,
+        ]),
+      );
+    }
+
     $templateData = [
       'originator' => $this->flattenMusician($invoice->getOriginator()),
       'recipient' => $this->flattenMusician($invoice->getDebitor()),
@@ -428,6 +440,12 @@ class FinanceService
         'number' => $invoice->getInvoiceNumber(),
         'subject' => $invoice->getSubject(),
         'purpose' => $invoice->getPurpose(),
+        'tax' => [
+          'type' => $taxes->getTaxType(),
+          'law' => $taxes->getLaw(),
+          'hint' => $taxes->getHint(),
+          'rate' => $taxes->getRate()->toDecimal(2),
+        ],
         'l10n' => [
           'locale' => $locale,
           'amount' => $numberFormatter->formatCurrency($amount),
