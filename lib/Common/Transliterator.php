@@ -24,13 +24,15 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use Symfony\Component\String\UnicodeString;
-use Symfony\Component\String\Slugger\AsciiSlugger;
-
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+// hacked versions ...
+use OCA\CAFEVDB\Wrapped\Symfony\Component\String\Slugger\AsciiSlugger;
+use OCA\CAFEVDB\Wrapped\Symfony\Component\String\UnicodeString;
 
 /**
- * Transliterate any given name into an ASCII login name.
+ * Transliterate any given name into an ASCII login name. In principle the
+ * Symfony AsciiSlugger does all this, but unfortunately also replaces all
+ * non-[a-zA-Z0-9] characters by the separator.
  */
 class Transliterator
 {
@@ -67,15 +69,13 @@ class Transliterator
   /**
    * @param string $data The data to transliterate.
    *
-   * @param string $separator Default to ' ' (ASCII 32).
-   *
    * @param null|string $locale The locale to use for transliteration.
    *
    * @return string Pure ASCII transliterated string.
    */
-  public function transliterate(string $data, string $separator = ' ', ?string $locale = null):string
+  public function transliterate(string $data, ?string $locale = null):string
   {
-    return $this->slugger->slug($data, $separator, $locale ?? $this->locale)->toString();
+    return $this->slugger->transliterate($data, $locale ?? $this->locale)->toString();
   }
 
   /**

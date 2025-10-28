@@ -50,9 +50,14 @@ class TransliteratorTest extends TestCase
     $this->transliterator = new Transliterator('de_DE.UTF-8');
   }
 
+  private const ASCII_STRING = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+
   const TRANSLITERATIONS = [
     'oeOeaeAeueUess' => [ 'data' => 'öÖäÄüÜß', 'locale' => 'de_DE.UTF-8' ],
-    'oeOeae@AeueUess' => [ 'data' => 'öÖä ÄüÜß', 'locale' => 'de_DE.UTF-8', 'separator' => '@' ],
+    'oeOeae AeueUess' => [ 'data' => 'öÖä ÄüÜß', 'locale' => 'de_DE.UTF-8' ],
+    'Doe, John' => [ 'data' => 'Doe, John', 'locale' => 'de_DE.UTF-8' ],
+    'Doe; John' => [ 'data' => 'Doe; John', 'locale' => 'de_DE.UTF-8' ],
+    self::ASCII_STRING => [ 'data' => self::ASCII_STRING, 'locale' => 'de_DE.UTF-8' ],
   ];
 
   const LOGIN_NAMES = [

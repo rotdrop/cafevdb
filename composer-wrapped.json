@@ -29,7 +29,8 @@
     "nesbot/carbon": "^2.46",
     "ramsey/uuid": "^4",
     "ramsey/uuid-doctrine": "^1.6",
-    "symfony/cache": "^6"
+    "symfony/cache": "^6",
+    "symfony/string": "*"
   },
   "repositories": [
     {
@@ -76,6 +77,9 @@
       },
       "doctrine/dbal": {
         "Fix Index::spansColumns() to also check the number of columns": "../composer-patches/doctrine/dbal/fix-index-spans-columns.patch"
+      },
+      "symfony/string": {
+        "Add AsciiSlugger::transliterate($string, $locale), transliterate only": "../composer-patches/symfony/string/enhance-ascii-slugger.patch"
       }
     }
   }
