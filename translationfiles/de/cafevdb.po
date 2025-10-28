@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-10-27 23:43+0100\n"
-"PO-Revision-Date: 2025-10-27 23:42+0100\n"
+"POT-Creation-Date: 2025-10-28 12:10+0100\n"
+"PO-Revision-Date: 2025-10-28 12:15+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1717,7 +1717,7 @@ msgstr "Unbekannte Anfrage."
 #: lib/Controller/ContactsController.php:77
 #: lib/Controller/DocumentStorageUploadController.php:435
 #: lib/Controller/EmailFormController.php:1039
-#: lib/Controller/SepaDebitMandatesController.php:1265
+#: lib/Controller/SepaDebitMandatesController.php:1264
 msgid "UNIMPLEMENTED"
 msgstr "MUSS NOCH IMPLEMENTIERT WERDEN"
 
@@ -1726,8 +1726,8 @@ msgid "The encryption service is not available."
 msgstr "Der Verschlüsselungsservice ist nicht erreichbar."
 
 #: lib/Controller/DocumentStorageUploadController.php:173
-#: lib/Controller/SepaDebitMandatesController.php:1182
-#: lib/Controller/SepaDebitMandatesController.php:1491
+#: lib/Controller/SepaDebitMandatesController.php:1181
+#: lib/Controller/SepaDebitMandatesController.php:1490
 #, php-format
 msgid "Required information \"%s\" not provided."
 msgstr "Die Information \"%s\" wird benötigt, fehlt aber."
@@ -1742,14 +1742,14 @@ msgstr ""
 "\"%3$s\" nicht finden."
 
 #: lib/Controller/DocumentStorageUploadController.php:202
-#: lib/Controller/SepaDebitMandatesController.php:1281
+#: lib/Controller/SepaDebitMandatesController.php:1280
 #, php-format
 msgid "Upload error \"%s\"."
 msgstr "Hochlade-Fehler \"%s\"."
 
 #: lib/Controller/DocumentStorageUploadController.php:223
 #: lib/Controller/ProjectParticipantsController.php:700
-#: lib/Controller/SepaDebitMandatesController.php:1298
+#: lib/Controller/SepaDebitMandatesController.php:1297
 msgid ""
 "Move operation requested, but the original file path has not been specified."
 msgstr ""
@@ -1758,7 +1758,7 @@ msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:230
 #: lib/Controller/ProjectParticipantsController.php:704
-#: lib/Controller/SepaDebitMandatesController.php:1302
+#: lib/Controller/SepaDebitMandatesController.php:1301
 #, php-format
 msgid "Move operation requested, but the original file \"%s\" cannot be found."
 msgstr ""
@@ -1767,7 +1767,7 @@ msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:238
 #: lib/Controller/ProjectParticipantsController.php:716
-#: lib/Controller/SepaDebitMandatesController.php:1308
+#: lib/Controller/SepaDebitMandatesController.php:1307
 msgid ""
 "Link operation requested, but the id of the original file has not been "
 "specified."
@@ -1777,7 +1777,7 @@ msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:244
 #: lib/Controller/ProjectParticipantsController.php:720
-#: lib/Controller/SepaDebitMandatesController.php:1312
+#: lib/Controller/SepaDebitMandatesController.php:1311
 #, php-format
 msgid ""
 "Link operation requested, but the existing original file with id \"%s\" "
@@ -1800,7 +1800,7 @@ msgstr "Das Ziel-Dokukemnt existiert bereits unter dem Namen \"%s\"."
 
 #: lib/Controller/DocumentStorageUploadController.php:325
 #: lib/Controller/ProjectParticipantsController.php:832
-#: lib/Controller/SepaDebitMandatesController.php:1373
+#: lib/Controller/SepaDebitMandatesController.php:1372
 #, php-format
 msgid ""
 "Link operation requested, but the existing original file is the same as the "
@@ -1810,29 +1810,29 @@ msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:349
 #: lib/Controller/DocumentStorageUploadController.php:428
-#: lib/Controller/SepaDebitMandatesController.php:1256
-#: lib/Controller/SepaDebitMandatesController.php:1403
-#: lib/Controller/SepaDebitMandatesController.php:1723
+#: lib/Controller/SepaDebitMandatesController.php:1255
+#: lib/Controller/SepaDebitMandatesController.php:1402
+#: lib/Controller/SepaDebitMandatesController.php:1722
 msgid "Error, caught an exception. No changes were performed."
 msgstr "Interner Fehler. Es wurden deshalb keine Änderungen gespeichert."
 
 #: lib/Controller/DocumentStorageUploadController.php:378
 #: lib/Controller/ProjectParticipantsController.php:968
-#: lib/Controller/SepaDebitMandatesController.php:1438
+#: lib/Controller/SepaDebitMandatesController.php:1437
 #, php-format
 msgid "Upload of \"%s\" as \"%s\" successful."
 msgstr "Hochladen von \"%s\" als \"%s\" erfolgreich."
 
 #: lib/Controller/DocumentStorageUploadController.php:381
 #: lib/Controller/ProjectParticipantsController.php:971
-#: lib/Controller/SepaDebitMandatesController.php:1441
+#: lib/Controller/SepaDebitMandatesController.php:1440
 #, php-format
 msgid "Move of \"%s\" to \"%s\" successful."
 msgstr "Verschieben von \"%s\" nach \"%s\" erfolgreich."
 
 #: lib/Controller/DocumentStorageUploadController.php:384
 #: lib/Controller/ProjectParticipantsController.php:974
-#: lib/Controller/SepaDebitMandatesController.php:1444
+#: lib/Controller/SepaDebitMandatesController.php:1443
 #, php-format
 msgid "Linking of file id \"%s\" to \"%s\" successful."
 msgstr "Verknüpfen der Datei \"%s\" zum Ziel \"%s\" erfolgreich."
@@ -2546,7 +2546,7 @@ msgstr "Einstellung für Parameter \"%s\" gelöscht."
 #: lib/Controller/PersonalSettingsController.php:708
 #: lib/Controller/PersonalSettingsController.php:729
 #: lib/Controller/PersonalSettingsController.php:744
-#: lib/Controller/SepaDebitMandatesController.php:502
+#: lib/Controller/SepaDebitMandatesController.php:501
 #, php-format
 msgid "Value for \"%s\" set to \"%s\"."
 msgstr "Wert für \"%s\" auf \"%s\" gesetzt."
@@ -4279,104 +4279,112 @@ msgstr "Unbekannter Export-Zeck: \"%s\"."
 msgid "Unable to export the bulktransaction with id \"%d\"."
 msgstr "Kann den Sammelauftrag mit Id \"%d\" nicht exportieren."
 
-#: lib/Controller/SepaDebitMandatesController.php:124
+#: lib/Controller/SepaDebitMandatesController.php:123
 #, php-format
 msgid "Required information %s not provided."
 msgstr "Die Information %s wird benötigt, fehlt aber."
 
-#: lib/Controller/SepaDebitMandatesController.php:202
+#: lib/Controller/SepaDebitMandatesController.php:200
 #, php-format
 msgid "Found exisiting mandate with reference \"%s\""
 msgstr "Mandat mit Referenz \"%s\" ist bereits vorhanden."
 
-#: lib/Controller/SepaDebitMandatesController.php:208
+#: lib/Controller/SepaDebitMandatesController.php:206
 #, php-format
 msgid "Generated new reference \"%s\""
 msgstr "Neue Referenz \"%s\" erzeugt."
 
-#: lib/Controller/SepaDebitMandatesController.php:211
+#: lib/Controller/SepaDebitMandatesController.php:209
 msgid "No project, delete mandate-reference."
 msgstr "Kein Projekt, lösche Mandatsreferenz."
 
-#: lib/Controller/SepaDebitMandatesController.php:230
+#: lib/Controller/SepaDebitMandatesController.php:228
 #, php-format
 msgid "Failed setting `%s' to `%s'."
 msgstr "Konnte die Einstellung '%s' nicht auf den Wert '%s' setzen."
 
-#: lib/Controller/SepaDebitMandatesController.php:247
+#: lib/Controller/SepaDebitMandatesController.php:245
 #, php-format
 msgid "Value for `%s' set to `%s'."
 msgstr "Wert für `%s' auf `%s' gesetzt."
 
-#: lib/Controller/SepaDebitMandatesController.php:265
+#: lib/Controller/SepaDebitMandatesController.php:263
 #, php-format
 msgid "Participant %d not found in project %d."
 msgstr "Person %d wurde im Projekt %d nicht gefunden."
 
-#: lib/Controller/SepaDebitMandatesController.php:281
+#: lib/Controller/SepaDebitMandatesController.php:279
 msgid "Set bank-account owner to musician's name?"
 msgstr "Namen des/der Musizierenden als Kontoinhaber:in verwenden?"
 
-#: lib/Controller/SepaDebitMandatesController.php:288
+#: lib/Controller/SepaDebitMandatesController.php:287
 #, php-format
 msgid "Account owner contains invalid characters: \"%s\""
 msgstr "Kontoinhaber:in enthält ungültige Buchstaben: \"%s\""
 
-#: lib/Controller/SepaDebitMandatesController.php:311
+#: lib/Controller/SepaDebitMandatesController.php:310
 msgid "BLZ not given, cannot validate the bank account."
 msgstr ""
 "BLZ wurde noch nicht angegeben, kann die Kontonummer deshalb nicht "
 "verifizieren."
 
-#: lib/Controller/SepaDebitMandatesController.php:319
+#: lib/Controller/SepaDebitMandatesController.php:318
 #, php-format
 msgid "A German bank id consists of exactly 8 digits: %s."
 msgstr "Eine Deutsche Bankleitzahl besteht aus genau 8 Ziffern: %s."
 
-#: lib/Controller/SepaDebitMandatesController.php:329
-#: lib/Controller/SepaDebitMandatesController.php:394
+#: lib/Controller/SepaDebitMandatesController.php:328
+#: lib/Controller/SepaDebitMandatesController.php:393
 #, php-format
 msgid "Invalid German(?) bank id \"%s\"."
 msgstr "Ungültige Deutsche(?) Bankleitzahl \"%s\"."
 
-#: lib/Controller/SepaDebitMandatesController.php:340
-#: lib/Controller/SepaDebitMandatesController.php:408
+#: lib/Controller/SepaDebitMandatesController.php:339
+#: lib/Controller/SepaDebitMandatesController.php:407
 #, php-format
 msgid "Invalid German(?) bank account number %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/Controller/SepaDebitMandatesController.php:359
+#: lib/Controller/SepaDebitMandatesController.php:358
 #, php-format
 msgid "Invalid IBAN: `%s'."
 msgstr "Ungültige IBAN: `%s'."
 
-#: lib/Controller/SepaDebitMandatesController.php:445
-#: lib/Controller/SepaDebitMandatesController.php:479
+#: lib/Controller/SepaDebitMandatesController.php:444
+#: lib/Controller/SepaDebitMandatesController.php:478
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr "Der Wert für `%s' ist ungültig: `%s'."
 
-#: lib/Controller/SepaDebitMandatesController.php:487
+#: lib/Controller/SepaDebitMandatesController.php:489
+msgid "nothing changed"
+msgstr "keine Änderungen"
+
+#: lib/Controller/SepaDebitMandatesController.php:490
+msgid "no data"
+msgstr "keine Daten"
+
+#: lib/Controller/SepaDebitMandatesController.php:486
 #, php-format
 msgid "Unknown Request: %s / %s / %s"
 msgstr "Unbekannte Anfrage %s / %s / %s"
 
-#: lib/Controller/SepaDebitMandatesController.php:565
+#: lib/Controller/SepaDebitMandatesController.php:564
 msgid "Parameter musicianId must be set, but is empty."
 msgstr "Parameter \"musicianId\" darf nicht leer sein."
 
-#: lib/Controller/SepaDebitMandatesController.php:592
+#: lib/Controller/SepaDebitMandatesController.php:591
 #, php-format
 msgid "Unable to load SEPA debit mandate for musician %s/%d, sequence count %d"
 msgstr "Kann das SEPA-Lastschriftmandat für %s/%d, lfd. Nr. %d, nicht laden."
 
-#: lib/Controller/SepaDebitMandatesController.php:817
-#: lib/Controller/SepaDebitMandatesController.php:1620
+#: lib/Controller/SepaDebitMandatesController.php:816
+#: lib/Controller/SepaDebitMandatesController.php:1619
 #, php-format
 msgid "Required information `%s' not provided."
 msgstr "Informationen zu `%s' fehlen."
 
-#: lib/Controller/SepaDebitMandatesController.php:847
+#: lib/Controller/SepaDebitMandatesController.php:846
 msgid ""
 "The current bank account has already been used for payments or is bound to "
 "debit-mandates. Therefore the IBAN must not be changed. Please create a new "
@@ -4387,12 +4395,12 @@ msgstr ""
 "nicht mehr verändert werden. Bitte eine neue eingegben. Die aktuelle\n"
 "darf deaktiviert werden, um sie für zukünftige Zahlungen zu sperren."
 
-#: lib/Controller/SepaDebitMandatesController.php:863
+#: lib/Controller/SepaDebitMandatesController.php:862
 #, php-format
 msgid "Bank-account failed to validate: %s."
 msgstr "Bankverbindung konnte nicht verifiziert werden: %s."
 
-#: lib/Controller/SepaDebitMandatesController.php:882
+#: lib/Controller/SepaDebitMandatesController.php:881
 #, php-format
 msgid ""
 "The IBAN %1$s, account-owner %2$s, has already been recorded for the "
@@ -4400,19 +4408,19 @@ msgid ""
 msgstr ""
 "Die IBAN %1$s, Kontoinhaber:in %2$s, wurde bereits für %3$s registriert."
 
-#: lib/Controller/SepaDebitMandatesController.php:899
+#: lib/Controller/SepaDebitMandatesController.php:898
 msgid "Unable to modify already used bank-account."
 msgstr ""
 "Bereits verwendete Bankverbindungen können nicht mehr verändert werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:916
+#: lib/Controller/SepaDebitMandatesController.php:915
 #, php-format
 msgid "Successfully stored the bank account with IBAN \"%s\" and owner \"%s\""
 msgstr ""
 "Bankverbindung für Kontoinhaber:in \"%s\" und IBAN \"%s\" erfolgreich "
 "gespeichert."
 
-#: lib/Controller/SepaDebitMandatesController.php:944
+#: lib/Controller/SepaDebitMandatesController.php:943
 #, php-format
 msgid ""
 "The bank-account with IBAN %1$s bound to the existing mandate does not match "
@@ -4421,7 +4429,7 @@ msgstr ""
 "Die Bankverbindung mit IBAN %1$s, die an das aktuelle Mandat gebunden\n"
 "ist, stimmt nicht mit der übermittelten Bankverbindung mit IBAN %2$s überein."
 
-#: lib/Controller/SepaDebitMandatesController.php:965
+#: lib/Controller/SepaDebitMandatesController.php:964
 msgid ""
 "The current debit-mandate already has been used for payments. Therefore the "
 "date of the debit-mandate must not be changed. Please create a new debit-"
@@ -4432,7 +4440,7 @@ msgstr ""
 "werden. Falls nötig bitte ein neues Mandat erstellen und as alte "
 "deaktivieren."
 
-#: lib/Controller/SepaDebitMandatesController.php:974
+#: lib/Controller/SepaDebitMandatesController.php:973
 msgid ""
 "The current debit-mandate already has been used for more than a single "
 "payment. Therefore it can non longer be changed from \"recurring\" to \"non-"
@@ -4442,7 +4450,7 @@ msgstr ""
 "verwendet. Daher darf der Typ nicht mehr von \"mehrfach\" auf \"einmalig\" "
 "verändert werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:981
+#: lib/Controller/SepaDebitMandatesController.php:980
 msgid ""
 "The current debit-mandate already has been used for payments. Therefore the "
 "project-binding can no longer be changed."
@@ -4450,7 +4458,7 @@ msgstr ""
 "Das aktuelle Mandat wurde bereits für Zahlungen verwendet. Deshalb\n"
 "darf die Projekt-Bindung nicht mehr verändert werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:986
+#: lib/Controller/SepaDebitMandatesController.php:985
 msgid ""
 "The current debit-mandate alrady has been used for payments. Therefore the "
 "stored copy of the written mandate cannot be deleted."
@@ -4459,20 +4467,20 @@ msgstr ""
 "darf die elektronische Kopie des schriftlichen Mandats nicht mehr\n"
 "gelöscht werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:1011
+#: lib/Controller/SepaDebitMandatesController.php:1010
 msgid "Unable to modify already used debit-mandate."
 msgstr ""
 "Das Lastschriftmandat wurde bereits verwendet und kann deshalb nicht mehr "
 "verändert werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:1025
+#: lib/Controller/SepaDebitMandatesController.php:1024
 #, php-format
 msgid "Successfully stored the bank-account with IBAN \"%s\" and owner \"%s\""
 msgstr ""
 "Bankverbindung zu IBAN \"%s\" und Kontoinhaber:in \"%s\" erfolgreich "
 "gespeichert."
 
-#: lib/Controller/SepaDebitMandatesController.php:1029
+#: lib/Controller/SepaDebitMandatesController.php:1028
 #, php-format
 msgid ""
 "Successfully stored the debit-mandate with reference \"%s\" for the IBAN "
@@ -4481,11 +4489,11 @@ msgstr ""
 "Lastschriftmandate mit Referenz \"%s\" und IBAN \"%s\" erfolgreich "
 "gespeichert."
 
-#: lib/Controller/SepaDebitMandatesController.php:1040
+#: lib/Controller/SepaDebitMandatesController.php:1039
 msgid "Unknown upload failure."
 msgstr "Irgendein Hochlade-Fehler"
 
-#: lib/Controller/SepaDebitMandatesController.php:1092
+#: lib/Controller/SepaDebitMandatesController.php:1091
 #, php-format
 msgid ""
 "General debit-mandate requested but musician \"%s\" is not a club member."
@@ -4493,18 +4501,18 @@ msgstr ""
 "Allgemeines Lastschrift-Mandat angefordert, aber die Person \"%s\" ist kein "
 "Vereinsmitglied."
 
-#: lib/Controller/SepaDebitMandatesController.php:1103
+#: lib/Controller/SepaDebitMandatesController.php:1102
 msgid "Unable to find a fillable debit mandate form."
 msgstr "Kann kein ausfüllbares Lastschriftmandatsformular finden."
 
-#: lib/Controller/SepaDebitMandatesController.php:1196
+#: lib/Controller/SepaDebitMandatesController.php:1195
 #, php-format
 msgid ""
 "Unable to find a debit mandate for musician id \"%1$d\" with sequence "
 "\"%2$d\"."
 msgstr "Kann die Person mit der Id \"%1$d\" nicht im Projekt \"%2$s\" nicht."
 
-#: lib/Controller/SepaDebitMandatesController.php:1217
+#: lib/Controller/SepaDebitMandatesController.php:1216
 #, php-format
 msgid ""
 "We have no hard-copy of the written-mandate for \"%1$s\", so we cannot "
@@ -4513,7 +4521,7 @@ msgstr ""
 "Es ist keine Kopie des schriftlichen Lastschrift-Mandats für \"%1$s\" "
 "gespeichert, ein Löschen ist also nicht möglich."
 
-#: lib/Controller/SepaDebitMandatesController.php:1221
+#: lib/Controller/SepaDebitMandatesController.php:1220
 #, php-format
 msgid ""
 "The debit mandate \"%1$s\" is already in use, the hard-copy of the written-"
@@ -4524,11 +4532,11 @@ msgstr ""
 "Mandats bestenfalls zur Korrektur ausgetauscht, aber nicht gelöscht\n"
 "werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:1223
+#: lib/Controller/SepaDebitMandatesController.php:1222
 msgid "Are you sure you want to proceed?"
 msgstr "Sind Sie sicher, dass Sie fortfahren wollen?"
 
-#: lib/Controller/SepaDebitMandatesController.php:1263
+#: lib/Controller/SepaDebitMandatesController.php:1262
 #, php-format
 msgid ""
 "Successfully deleted the hard-copy of the written-mandate for \"%1$s\", "
@@ -4537,40 +4545,40 @@ msgstr ""
 "Kopie des schriftlichen Lastschrift-Mandats für \"%1$s\" gelöscht, bitte "
 "eine neue hochladen!"
 
-#: lib/Controller/SepaDebitMandatesController.php:1514
+#: lib/Controller/SepaDebitMandatesController.php:1513
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" is already disabled."
 msgstr "Das SEPA-Lastaschriftmandat mit Referenz \"%s\" ist bereits entwertet."
 
-#: lib/Controller/SepaDebitMandatesController.php:1523
+#: lib/Controller/SepaDebitMandatesController.php:1522
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" is already active."
 msgstr ""
 "Das SEPA-Lastaschriftmandat mit Referenz \"%s\" ist bereits aktiv und kann "
 "deshalb nicht aktiviert werden."
 
-#: lib/Controller/SepaDebitMandatesController.php:1531
-#: lib/Controller/SepaDebitMandatesController.php:1711
+#: lib/Controller/SepaDebitMandatesController.php:1530
+#: lib/Controller/SepaDebitMandatesController.php:1710
 #, php-format
 msgid "Unknown revocation action: \"%s\"."
 msgstr "Unbekannte Deaktivierungs-/Aktivierungsanfrage: \"%s\"."
 
-#: lib/Controller/SepaDebitMandatesController.php:1542
+#: lib/Controller/SepaDebitMandatesController.php:1541
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been invalidated."
 msgstr "Das SEPA-Lastaschriftmandat mit Referenz \"%s\" wurde entwertet."
 
-#: lib/Controller/SepaDebitMandatesController.php:1545
+#: lib/Controller/SepaDebitMandatesController.php:1544
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been reactivated."
 msgstr "Das SEPA-Lastaschriftmandat mit Referenz \"%s\" wurde reaktiviert."
 
-#: lib/Controller/SepaDebitMandatesController.php:1557
+#: lib/Controller/SepaDebitMandatesController.php:1556
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been deleted."
 msgstr "Das SEPA-Lastschriftmandat zur Referenz \"%s\" wurde gelöscht."
 
-#: lib/Controller/SepaDebitMandatesController.php:1651
+#: lib/Controller/SepaDebitMandatesController.php:1650
 #, php-format
 msgid ""
 "The account with IBAN \"%s\" cannot be deleted as the following associated "
@@ -4579,12 +4587,12 @@ msgstr ""
 "Die Bankverbindung mit der IBAN \"%s\" kann nicht gelöscht werden, weil\n"
 "sie von den folgenden aktiven Lastschriftmandaten verwendet wird: %s."
 
-#: lib/Controller/SepaDebitMandatesController.php:1674
+#: lib/Controller/SepaDebitMandatesController.php:1673
 #, php-format
 msgid "Bank account with IBAN \"%s\" is already disabled."
 msgstr "Die Bankverbindung mit der IBAN \"%s\" ist bereits deaktiviert."
 
-#: lib/Controller/SepaDebitMandatesController.php:1686
+#: lib/Controller/SepaDebitMandatesController.php:1685
 #, php-format
 msgid ""
 "The account with IBAN \"%s\" cannot be disabled as the following associated "
@@ -4593,22 +4601,22 @@ msgstr ""
 "Die Bankverbindung mit der IBAN \"%s\" kann nicht deaktiviert werden, weil\n"
 "sie von den folgenden aktiven Lastschriftmandaten verwendet wird: %s."
 
-#: lib/Controller/SepaDebitMandatesController.php:1703
+#: lib/Controller/SepaDebitMandatesController.php:1702
 #, php-format
 msgid "Bank account with IBAN \"%s\" is already active."
 msgstr "Die Bankverbindung mit der IBAN \"%s\" ist bereits aktiv."
 
-#: lib/Controller/SepaDebitMandatesController.php:1733
+#: lib/Controller/SepaDebitMandatesController.php:1732
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been invalidated."
 msgstr "Die Bankverbindung mit der IBAN \"%s\" wurde deaktiviert."
 
-#: lib/Controller/SepaDebitMandatesController.php:1735
+#: lib/Controller/SepaDebitMandatesController.php:1734
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been reactivated."
 msgstr "Die Bankverbindung mit der IBAN \"%s\" wurde reaktiviert."
 
-#: lib/Controller/SepaDebitMandatesController.php:1736
+#: lib/Controller/SepaDebitMandatesController.php:1735
 msgid ""
 "Please note that associated debit-mandates need to be reactivated "
 "separately, they are still disabled."
@@ -4616,7 +4624,7 @@ msgstr ""
 "Bitte beachten, dass die Lastschriftmandate, die die Bankverbindung "
 "verwenden, separatat reaktiviert werden müssen."
 
-#: lib/Controller/SepaDebitMandatesController.php:1739
+#: lib/Controller/SepaDebitMandatesController.php:1738
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been deleted."
 msgstr "Die Bankverbindung mit der IBAN \"%s\" wurde gelöscht."
@@ -6284,7 +6292,7 @@ msgstr "Konsistenztests waren erfolgreich"
 #: lib/PageRenderer/ProjectParticipantFields.php:334
 #: lib/PageRenderer/ProjectPayments.php:585
 #: lib/PageRenderer/SepaBulkTransactions.php:369
-#: specialVueFakeDummyForL10nScript.js:6593
+#: specialVueFakeDummyForL10nScript.js:6595
 msgid "Project"
 msgstr "Projekt"
 
@@ -6423,8 +6431,8 @@ msgstr "Gesamtversicherungssumme ab %s"
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:97
 #: lib/Service/CloudUserConnectorService.php:438
 #: specialVueFakeDummyForL10nScript.js:1645
-#: specialVueFakeDummyForL10nScript.js:6577
-#: specialVueFakeDummyForL10nScript.js:6589
+#: specialVueFakeDummyForL10nScript.js:6579
+#: specialVueFakeDummyForL10nScript.js:6591
 msgid "Musicians"
 msgstr "Personen"
 
@@ -6817,7 +6825,7 @@ msgstr "Kurzinformation; Makler, vers. Person, versicherter Gegenstand"
 
 #. TRANSLATORS src/components/LegacyPageActionsMenu.vue:45
 #: lib/PageRenderer/InstrumentInsurances.php:227
-#: specialVueFakeDummyForL10nScript.js:2612
+#: specialVueFakeDummyForL10nScript.js:2614
 msgid "Overview"
 msgstr "Übersicht"
 
@@ -6956,13 +6964,13 @@ msgstr "Kurzbezeichnung"
 #: lib/PageRenderer/InsuranceBrokers.php:168
 #: lib/PageRenderer/ProjectAssociates.php:436
 #: lib/PageRenderer/ProjectParticipants.php:487
-#: specialVueFakeDummyForL10nScript.js:6235
+#: specialVueFakeDummyForL10nScript.js:6237
 msgid "Name"
 msgstr "Name"
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:63
 #: lib/PageRenderer/InsuranceBrokers.php:176
-#: specialVueFakeDummyForL10nScript.js:6241
+#: specialVueFakeDummyForL10nScript.js:6243
 msgid "Address"
 msgstr "Adresse"
 
@@ -7342,8 +7350,8 @@ msgstr "Adressbuch"
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:102
 #. TRANSLATORS src/components/ProjectEventsListing.vue:82
 #: lib/PageRenderer/PME/Config.php:64 lib/PageRenderer/PMETableViewBase.php:654
-#: specialVueFakeDummyForL10nScript.js:3871
-#: specialVueFakeDummyForL10nScript.js:4860
+#: specialVueFakeDummyForL10nScript.js:3873
+#: specialVueFakeDummyForL10nScript.js:4862
 msgid "Em@il"
 msgstr "Em@il"
 
@@ -7355,7 +7363,7 @@ msgstr[1] "%n Daten-Felder betroffen"
 
 #. TRANSLATORS src/components/LegacyQueryLog.vue:25
 #: lib/PageRenderer/PMETableViewBase.php:362
-#: specialVueFakeDummyForL10nScript.js:2671
+#: specialVueFakeDummyForL10nScript.js:2673
 msgid "Query Log"
 msgstr "Abfrage-Protokoll"
 
@@ -7586,7 +7594,7 @@ msgstr "Besetzungszahlen für `%s'"
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:46
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:121
 #: lib/Service/ToolTipsDataService.php:1525
-#: specialVueFakeDummyForL10nScript.js:3861
+#: specialVueFakeDummyForL10nScript.js:3863
 msgid "Instrumentation Numbers"
 msgstr "Besetzungszahlen"
 
@@ -7998,13 +8006,13 @@ msgid "Public Downloads"
 msgstr "Öffentliche Freigabe"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:57
-#: lib/PageRenderer/Projects.php:888 specialVueFakeDummyForL10nScript.js:3863
+#: lib/PageRenderer/Projects.php:888 specialVueFakeDummyForL10nScript.js:3865
 msgid "Participant Fields"
 msgstr "Tabellen-Spalten"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:36
 #: lib/PageRenderer/Projects.php:951 lib/Service/ToolTipsDataService.php:1527
-#: specialVueFakeDummyForL10nScript.js:3859
+#: specialVueFakeDummyForL10nScript.js:3861
 msgid "Participants"
 msgstr "Teilnehmende"
 
@@ -8030,7 +8038,7 @@ msgid "Copy of %s"
 msgstr "Kopie von %s"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:273
-#: lib/PageRenderer/Projects.php:1120 specialVueFakeDummyForL10nScript.js:4888
+#: lib/PageRenderer/Projects.php:1120 specialVueFakeDummyForL10nScript.js:4890
 msgid "edit"
 msgstr "bearbeiten"
 
@@ -8168,7 +8176,7 @@ msgid "Bank account associated to this debit mandate."
 msgstr "Bankverbindung, die zu diesem Mandat gehört."
 
 #: lib/PageRenderer/SepaBankAccounts.php:1070
-#: templates/sepa-debit-mandate.php:121
+#: templates/sepa-debit-mandate.php:123
 #: templates/settings/orchestra-settings.php:164
 #: templates/settings/orchestra-settings.php:166
 msgid "Bank Account"
@@ -8255,7 +8263,7 @@ msgstr "Vorankündigung"
 
 #. TRANSLATORS src/views/FilesTab.vue:94
 #: lib/PageRenderer/SepaBulkTransactions.php:610
-#: specialVueFakeDummyForL10nScript.js:6581 templates/emailform/form.php:36
+#: specialVueFakeDummyForL10nScript.js:6583 templates/emailform/form.php:36
 #: templates/emailform/part.emailform.composer.php:125
 msgid "Recipients"
 msgstr "Empfänger*innen"
@@ -9548,7 +9556,7 @@ msgstr ""
 "Was auch immer."
 
 #. TRANSLATORS src/components/ErrorPage.vue:166
-#: lib/Service/ProjectService.php:1669 specialVueFakeDummyForL10nScript.js:2251
+#: lib/Service/ProjectService.php:1669 specialVueFakeDummyForL10nScript.js:2253
 msgid "Preview"
 msgstr "Vorschau"
 
@@ -13285,10 +13293,14 @@ msgstr ""
 "gegenüber dem Mitglied sind."
 
 #: lib/Service/ToolTipsDataService.php:1412
-msgid "Use this as a general debit-mandate for all receivables of this person."
+msgid ""
+"Use this as a general debit-mandate for all receivables of this person. Note "
+"that we accept general debit mandates only for club-members."
 msgstr ""
 "Dieses Lastschriftmandat als allgemeines Mandat für alle Forderungen\n"
-"des Vereins gegenüber der Person verwenden."
+"des Vereins gegenüber der Person verwenden. Man beachte, dass\n"
+"allgemeine Lastschriftmandate nur von Vereinsmitgliedern akzeptiert\n"
+"werden."
 
 #: lib/Service/ToolTipsDataService.php:1414
 msgid "Download the existing signed hard-copy of the debit mandate."
@@ -14764,7 +14776,7 @@ msgstr "Kontakte hinzufügen"
 #. TRANSLATORS src/components/AddContactsToProject.vue:33
 #. TRANSLATORS src/views/FilesTab.vue:154
 #: specialVueFakeDummyForL10nScript.js:706
-#: specialVueFakeDummyForL10nScript.js:6597
+#: specialVueFakeDummyForL10nScript.js:6599
 #: templates/settings/share-settings.php:103
 msgid "Contacts"
 msgstr "Kontakte"
@@ -14772,14 +14784,14 @@ msgstr "Kontakte"
 #. TRANSLATORS src/components/AddContactsToProject.vue:34
 #. TRANSLATORS src/views/FilesTab.vue:155
 #: specialVueFakeDummyForL10nScript.js:708
-#: specialVueFakeDummyForL10nScript.js:6599
+#: specialVueFakeDummyForL10nScript.js:6601
 msgid "e.g. Bilbo Baggins"
 msgstr "z.B. Bilbo Beutlin"
 
 #. TRANSLATORS src/components/AddContactsToProject.vue:46
 #. TRANSLATORS src/views/FilesTab.vue:167
 #: specialVueFakeDummyForL10nScript.js:710
-#: specialVueFakeDummyForL10nScript.js:6601
+#: specialVueFakeDummyForL10nScript.js:6603
 msgid "Address-Books"
 msgstr "Adressbücher"
 
@@ -14802,7 +14814,7 @@ msgstr "unzugänglich"
 #: specialVueFakeDummyForL10nScript.js:1415
 #: specialVueFakeDummyForL10nScript.js:1484
 #: specialVueFakeDummyForL10nScript.js:1539
-#: specialVueFakeDummyForL10nScript.js:6532
+#: specialVueFakeDummyForL10nScript.js:6534
 #: src/toolkit/util/settings-sync.ts:66 src/toolkit/util/settings-sync.ts:107
 #: src/toolkit/util/settings-sync.ts:186 src/toolkit/util/settings-sync.ts:304
 msgid "reason unknown"
@@ -14813,7 +14825,7 @@ msgid "Could not fetch the value for \"{key}\": {message}"
 msgstr "Konnte den Wert für die Einstellung \"{key}\" nicht laden: {message}"
 
 #: specialVueFakeDummyForL10nScript.js:1128 src/app/project-participants.js:886
-#: src/app/projects.js:498 src/app/sepa-debit-mandate.js:858
+#: src/app/projects.js:498 src/app/sepa-debit-mandate.js:859
 #: src/toolkit/util/settings-sync.ts:261
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
@@ -15016,7 +15028,7 @@ msgstr "Keine Neuverschlüsselungs-Anfragen anhängig."
 #. TRANSLATORS src/components/AdminSettings.vue:209
 #. TRANSLATORS src/views/FilesTab.vue:133
 #: specialVueFakeDummyForL10nScript.js:1647
-#: specialVueFakeDummyForL10nScript.js:6591
+#: specialVueFakeDummyForL10nScript.js:6593
 msgid "e.g. Jane Doe"
 msgstr "z.B. Maximiliane Musterfrau"
 
@@ -15028,7 +15040,7 @@ msgstr "Benutzerauswahl auf ein Projekt einschränken"
 #. TRANSLATORS src/components/AdminSettings.vue:221
 #. TRANSLATORS src/views/FilesTab.vue:144
 #: specialVueFakeDummyForL10nScript.js:1651
-#: specialVueFakeDummyForL10nScript.js:6595
+#: specialVueFakeDummyForL10nScript.js:6597
 msgid "e.g. Auvergne2019"
 msgstr "z.B. Auvergne2019"
 
@@ -15210,7 +15222,7 @@ msgstr "Aktive Seite zum Zeitpunkt des Speicherns des Browserverlaufs."
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:68
 #. TRANSLATORS src/components/ProjectEventsListing.vue:148
 #: specialVueFakeDummyForL10nScript.js:1901
-#: specialVueFakeDummyForL10nScript.js:4872
+#: specialVueFakeDummyForL10nScript.js:4874
 msgid "Toggle Details"
 msgstr "Details ein- oder ausblenden"
 
@@ -15230,7 +15242,7 @@ msgid "Append to Current"
 msgstr "An aktuellen Verlauf anhängen"
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:109
-#: specialVueFakeDummyForL10nScript.js:1909 src/app/sepa-debit-mandate.js:646
+#: specialVueFakeDummyForL10nScript.js:1909 src/app/sepa-debit-mandate.js:647
 #: templates/blog/blogthreads.php:100
 msgid "Delete"
 msgstr "Löschen"
@@ -15398,32 +15410,37 @@ msgid "You can optionally add comments. Markdown is supported."
 msgstr ""
 "Du kannst fakultative Kommentare hinzufügen. Markdown wird unterstützt."
 
-#. TRANSLATORS src/components/ErrorPage.vue:157
+#. TRANSLATORS src/components/ErrorPage.vue:156
 #: specialVueFakeDummyForL10nScript.js:2247
+msgid "manual"
+msgstr "Handbuch"
+
+#. TRANSLATORS src/components/ErrorPage.vue:157
+#: specialVueFakeDummyForL10nScript.js:2249
 msgid "A preview of the error report is shown below."
 msgstr "Eine Vorschau des Fehlerberichts findet sich unten."
 
 #. TRANSLATORS src/components/ErrorPage.vue:164
-#: specialVueFakeDummyForL10nScript.js:2249
+#: specialVueFakeDummyForL10nScript.js:2251
 msgid "Please add your personal notes here."
 msgstr "Eigene Anmerkungen gerne hier einfügen."
 
-#: specialVueFakeDummyForL10nScript.js:2271
+#: specialVueFakeDummyForL10nScript.js:2273
 msgid "Sorry, an Error Occurred"
 msgstr "'Tschuldigung, da gab es einen Fehler"
 
 #. TRANSLATORS src/components/HtmlErrorModal.vue:30
-#: specialVueFakeDummyForL10nScript.js:2300
+#: specialVueFakeDummyForL10nScript.js:2302
 msgid "An Error Occurred"
 msgstr "'Tschuldigung, da gab es einen Fehler"
 
-#: specialVueFakeDummyForL10nScript.js:2391
+#: specialVueFakeDummyForL10nScript.js:2393
 msgid ""
 "Unable to download the invoice with invoice-number {invoiceNumber}: {error}."
 msgstr ""
 "Kann die Rechnung zur Rechnungsnummer {invoiceNumber} nicht laden: {error}."
 
-#: specialVueFakeDummyForL10nScript.js:2392
+#: specialVueFakeDummyForL10nScript.js:2394
 msgid ""
 "Unable to download the mail-merge substituions for invoice-number "
 "{invoiceNumber}: {error}."
@@ -15432,357 +15449,357 @@ msgstr ""
 "nicht laden: {error}."
 
 #. TRANSLATORS src/components/InvoiceActionsMenu.vue:35
-#: specialVueFakeDummyForL10nScript.js:2414
+#: specialVueFakeDummyForL10nScript.js:2416
 msgid "Download Standard Invoice"
 msgstr "Standard Rechnung laden"
 
 #. TRANSLATORS src/components/InvoiceActionsMenu.vue:45
-#: specialVueFakeDummyForL10nScript.js:2416
+#: specialVueFakeDummyForL10nScript.js:2418
 msgid "Email Standard Invoice"
 msgstr "Standard-Rechnung per Email"
 
 #. TRANSLATORS src/components/InvoiceActionsMenu.vue:55
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:78
-#: specialVueFakeDummyForL10nScript.js:2418
-#: specialVueFakeDummyForL10nScript.js:5031
+#: specialVueFakeDummyForL10nScript.js:2420
+#: specialVueFakeDummyForL10nScript.js:5033
 msgid "Download Substitution Data"
 msgstr "Ersetzungsdaten laden"
 
-#: specialVueFakeDummyForL10nScript.js:2716
+#: specialVueFakeDummyForL10nScript.js:2718
 msgid "Query has been copied to the clipboard."
 msgstr "Die Abfrage wurde in die Zwischenablage kopiert."
 
-#: specialVueFakeDummyForL10nScript.js:2719
+#: specialVueFakeDummyForL10nScript.js:2721
 msgid "Failed copying query to the clipboard: {error}."
 msgstr ""
 "Die Abfrage konnte nicht in die Zwischenablage kopiert werden: {error}."
 
 #. TRANSLATORS src/components/LegacyQueryLogModal.vue:36
-#: specialVueFakeDummyForL10nScript.js:2725
+#: specialVueFakeDummyForL10nScript.js:2727
 msgid "Legacy Sql Query Log"
 msgstr "SQL Altlast-Abfrage-Protokoll"
 
 #. TRANSLATORS src/components/LegacyQueryLogModal.vue:48
-#: specialVueFakeDummyForL10nScript.js:2727
+#: specialVueFakeDummyForL10nScript.js:2729
 msgid "SQL Query"
 msgstr "SQL Abfrage"
 
 #. TRANSLATORS src/components/LegacyQueryLogModal.vue:55
-#: specialVueFakeDummyForL10nScript.js:2729
 #: specialVueFakeDummyForL10nScript.js:2731
+#: specialVueFakeDummyForL10nScript.js:2733
 msgid "Copy to Clipboard"
 msgstr "In die Zwischenablage kopieren"
 
-#: specialVueFakeDummyForL10nScript.js:2925
-#: specialVueFakeDummyForL10nScript.js:4131 src/app/user-manual.js:72
+#: specialVueFakeDummyForL10nScript.js:2927
+#: specialVueFakeDummyForL10nScript.js:4133 src/app/user-manual.js:72
 msgid "User Manual: {section}"
 msgstr "Benutzerhandbuch: {section}"
 
-#: specialVueFakeDummyForL10nScript.js:2985
+#: specialVueFakeDummyForL10nScript.js:2987
 msgid "Error updating legacy route from {template} to {newTemplate}."
 msgstr "Fehler beim Ändern der App-Route von {template} auf {newTemplate}."
 
-#: specialVueFakeDummyForL10nScript.js:3073
+#: specialVueFakeDummyForL10nScript.js:3075
 msgid "Error loading view \"{template}\"."
 msgstr "Fehler beim Laden der Ansicht \"{template}\"."
 
-#: specialVueFakeDummyForL10nScript.js:3178
+#: specialVueFakeDummyForL10nScript.js:3180
 msgid "Error synchronizing history state for template \"{template}\"."
 msgstr ""
 "Fehler beim Synchronisieren der Browser-Historie für das Template "
 "\"{template}\"."
 
-#: specialVueFakeDummyForL10nScript.js:3267
+#: specialVueFakeDummyForL10nScript.js:3269
 msgid "An error occured during communication with the server."
 msgstr ""
 "Es ist ein Fehler während der Kommunikation mit dem Server aufgetreten."
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:28
-#: specialVueFakeDummyForL10nScript.js:3303
+#: specialVueFakeDummyForL10nScript.js:3305
 msgid "Navigate to the previous view in the browser history stack."
 msgstr "Zurück zur vorigen Ansicht in der Seiten-Historie."
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:39
-#: specialVueFakeDummyForL10nScript.js:3305
+#: specialVueFakeDummyForL10nScript.js:3307
 msgid "Reload the current view."
 msgstr "Aktuelle Ansicht neu laden."
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:49
-#: specialVueFakeDummyForL10nScript.js:3307
+#: specialVueFakeDummyForL10nScript.js:3309
 msgid "Navigate to the next view in the browser history stack."
 msgstr "Zur nächsten Ansicht in der Seiten-Historie wechseln."
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:59
-#: specialVueFakeDummyForL10nScript.js:3309
+#: specialVueFakeDummyForL10nScript.js:3311
 msgid "Go to the start page of the app."
 msgstr "Zur Startseite der App springen."
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:76
-#: specialVueFakeDummyForL10nScript.js:3311
+#: specialVueFakeDummyForL10nScript.js:3313
 msgid "Tooltips"
 msgstr "Kontext-Hilfe"
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:82
 #. TRANSLATORS src/components/ProjectEventsListing.vue:106
-#: specialVueFakeDummyForL10nScript.js:3313
-#: specialVueFakeDummyForL10nScript.js:4864
+#: specialVueFakeDummyForL10nScript.js:3315
+#: specialVueFakeDummyForL10nScript.js:4866
 msgid "Manual (other tab or window)"
 msgstr "Handbuch (anderes Fenster/Tab)"
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:87
 #. TRANSLATORS src/components/ProjectEventsListing.vue:114
-#: specialVueFakeDummyForL10nScript.js:3315
-#: specialVueFakeDummyForL10nScript.js:4866 templates/emailform/form.php:62
+#: specialVueFakeDummyForL10nScript.js:3317
+#: specialVueFakeDummyForL10nScript.js:4868 templates/emailform/form.php:62
 msgid "Manual (popup)"
 msgstr "Handbuch (dieses Fenster, Popup)"
 
-#: specialVueFakeDummyForL10nScript.js:3502
-#: specialVueFakeDummyForL10nScript.js:3511
+#: specialVueFakeDummyForL10nScript.js:3504
+#: specialVueFakeDummyForL10nScript.js:3513
 msgid "Log entry successfully copied"
 msgstr "Protokolleintrag erfolgreich kopiert"
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:17
-#: specialVueFakeDummyForL10nScript.js:3516
+#: specialVueFakeDummyForL10nScript.js:3518
 msgid "Level"
 msgstr "Stufe"
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:19
-#: specialVueFakeDummyForL10nScript.js:3518
+#: specialVueFakeDummyForL10nScript.js:3520
 msgid "App"
 msgstr "App"
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:21
-#: specialVueFakeDummyForL10nScript.js:3520
+#: specialVueFakeDummyForL10nScript.js:3522
 msgid "No app in context"
 msgstr "Keine App im Kontext"
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:23
-#: specialVueFakeDummyForL10nScript.js:3522
+#: specialVueFakeDummyForL10nScript.js:3524
 msgid "Time"
 msgstr "Zeit"
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:26
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:30
-#: specialVueFakeDummyForL10nScript.js:3524
 #: specialVueFakeDummyForL10nScript.js:3526
+#: specialVueFakeDummyForL10nScript.js:3528
 msgid "Copy raw entry"
 msgstr "Roheintrag kopieren"
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:32
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:36
-#: specialVueFakeDummyForL10nScript.js:3528
 #: specialVueFakeDummyForL10nScript.js:3530
+#: specialVueFakeDummyForL10nScript.js:3532
 msgid "Copy formatted entry"
 msgstr "Formatierten Eintrag kopieren"
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:42
-#: specialVueFakeDummyForL10nScript.js:3532
+#: specialVueFakeDummyForL10nScript.js:3534
 msgid "Hide exception details"
 msgstr "Ausnahmedetails ausblenden"
 
-#: specialVueFakeDummyForL10nScript.js:3532
+#: specialVueFakeDummyForL10nScript.js:3534
 msgid "View exception details"
 msgstr "Ausnahmedetails anzeigen"
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:53
-#: specialVueFakeDummyForL10nScript.js:3534
+#: specialVueFakeDummyForL10nScript.js:3536
 msgid "Raw log entry"
 msgstr "Roh-Protokoll Eintrag"
 
-#: specialVueFakeDummyForL10nScript.js:3564
+#: specialVueFakeDummyForL10nScript.js:3566
 msgid "Caused by {exception}"
 msgstr "Verursacht von {exception}"
 
 #. TRANSLATORS src/components/LogEntry/exception/TraceLine.vue:10
-#: specialVueFakeDummyForL10nScript.js:3613
+#: specialVueFakeDummyForL10nScript.js:3615
 msgid "Line {line}"
 msgstr "Zeile {line}"
 
-#: specialVueFakeDummyForL10nScript.js:3818
+#: specialVueFakeDummyForL10nScript.js:3820
 msgid "Project Wiki for {projectName}"
 msgstr "Wiki Projekt-Seite für {projectName}"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:69
-#: specialVueFakeDummyForL10nScript.js:3865
+#: specialVueFakeDummyForL10nScript.js:3867
 msgid "Project Files"
 msgstr "Projekt-Dateien"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:80
-#: specialVueFakeDummyForL10nScript.js:3867
+#: specialVueFakeDummyForL10nScript.js:3869
 msgid "Project Notes"
 msgstr "Projekt-Notizen"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:91
-#: specialVueFakeDummyForL10nScript.js:3869
+#: specialVueFakeDummyForL10nScript.js:3871
 msgid "Events"
 msgstr "Termine"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:114
-#: specialVueFakeDummyForL10nScript.js:3873
+#: specialVueFakeDummyForL10nScript.js:3875
 msgid "Business Contacts / Associates"
 msgstr "Geschäftskontakte und Assoziierte"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:125
-#: specialVueFakeDummyForL10nScript.js:3875
+#: specialVueFakeDummyForL10nScript.js:3877
 msgid "Debit Mandates"
 msgstr "Lastschriftmandate"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:136
-#: specialVueFakeDummyForL10nScript.js:3877
+#: specialVueFakeDummyForL10nScript.js:3879
 msgid "Payments"
 msgstr "Zahlungen"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:147
-#: specialVueFakeDummyForL10nScript.js:3879
+#: specialVueFakeDummyForL10nScript.js:3881
 msgid "Invoices"
 msgstr "Rechnungen"
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:157
-#: specialVueFakeDummyForL10nScript.js:3881
+#: specialVueFakeDummyForL10nScript.js:3883
 msgid "Financial Balance"
 msgstr "Gewinn-/Verlustrechung"
 
-#: specialVueFakeDummyForL10nScript.js:4131
+#: specialVueFakeDummyForL10nScript.js:4133
 #: templates/emailform/part.emailform.composer.php:279
 msgid "Project Events"
 msgstr "Projekt-Termine"
 
-#: specialVueFakeDummyForL10nScript.js:4364
+#: specialVueFakeDummyForL10nScript.js:4366
 msgid "{startDate}, until {endTime}"
 msgstr "{startDate}, bis {endTime}"
 
-#: specialVueFakeDummyForL10nScript.js:4516
+#: specialVueFakeDummyForL10nScript.js:4518
 msgid "Unable to export selected events."
 msgstr "Kann die ausgewählten Termine nicht exportieren."
 
-#: specialVueFakeDummyForL10nScript.js:4673
+#: specialVueFakeDummyForL10nScript.js:4675
 msgid "Unable to modify the absence field."
 msgstr "Kann das Abwesenheitsfeld nicht modifizieren."
 
-#: specialVueFakeDummyForL10nScript.js:4716
+#: specialVueFakeDummyForL10nScript.js:4718
 msgid "Unable to detach events from the project."
 msgstr "Kann die Termine nicht vom Projekt lösen."
 
-#: specialVueFakeDummyForL10nScript.js:4793
+#: specialVueFakeDummyForL10nScript.js:4795
 msgid "Unable to delete events."
 msgstr "Kann die Termine nicht löschen."
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:26
-#: specialVueFakeDummyForL10nScript.js:4850
+#: specialVueFakeDummyForL10nScript.js:4852
 msgid "{name} - Appointments"
 msgstr "{name} - Termine"
 
-#: specialVueFakeDummyForL10nScript.js:4850
+#: specialVueFakeDummyForL10nScript.js:4852
 msgid "Appointments"
 msgstr "Termine"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:36
-#: specialVueFakeDummyForL10nScript.js:4852
+#: specialVueFakeDummyForL10nScript.js:4854
 msgid "create a new appointment"
 msgstr "Einen neuen Termin erstellen"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:57
-#: specialVueFakeDummyForL10nScript.js:4854
+#: specialVueFakeDummyForL10nScript.js:4856
 msgid "mark all events"
 msgstr "alle Termine markieren"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:66
-#: specialVueFakeDummyForL10nScript.js:4856
+#: specialVueFakeDummyForL10nScript.js:4858
 msgid "unmark all events"
 msgstr "alle Markierungen entfernen"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:75
-#: specialVueFakeDummyForL10nScript.js:4858
+#: specialVueFakeDummyForL10nScript.js:4860
 msgid "open email editor"
 msgstr "Termin-Editor öffnen"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:85
-#: specialVueFakeDummyForL10nScript.js:4862
+#: specialVueFakeDummyForL10nScript.js:4864
 msgid "export events"
 msgstr "Termine exportieren"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:120
-#: specialVueFakeDummyForL10nScript.js:4868
+#: specialVueFakeDummyForL10nScript.js:4870
 msgid "reload the project appointments"
 msgstr "Projekt-Termine neu laden"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:133
-#: specialVueFakeDummyForL10nScript.js:4870
+#: specialVueFakeDummyForL10nScript.js:4872
 msgid "no events"
 msgstr "keine Termine"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:164
-#: specialVueFakeDummyForL10nScript.js:4874
+#: specialVueFakeDummyForL10nScript.js:4876
 msgid "select a year"
 msgstr "Jahr auswählen"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:180
-#: specialVueFakeDummyForL10nScript.js:4876
+#: specialVueFakeDummyForL10nScript.js:4878
 msgid "detached"
 msgstr "losgelöst"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:216
-#: specialVueFakeDummyForL10nScript.js:4878
+#: specialVueFakeDummyForL10nScript.js:4880
 msgid "act only on this event"
 msgstr "nur dieser Termin"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:226
-#: specialVueFakeDummyForL10nScript.js:4880
+#: specialVueFakeDummyForL10nScript.js:4882
 msgid "act on the event series"
 msgstr "Terminserie"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:236
-#: specialVueFakeDummyForL10nScript.js:4882
+#: specialVueFakeDummyForL10nScript.js:4884
 msgid "act on all related events"
 msgstr "alle zugehörigen Termine"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:249
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::RECORD_ABSENCE_CATEGORY = 'record absence';
-#: specialVueFakeDummyForL10nScript.js:4884 lib/Service/EventsService.php:1206
+#: specialVueFakeDummyForL10nScript.js:4886 lib/Service/EventsService.php:1206
 #, php-format
 msgid "record absence"
 msgstr "Abwesenheit erfassen"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:263
-#: specialVueFakeDummyForL10nScript.js:4886
+#: specialVueFakeDummyForL10nScript.js:4888
 msgid "mark for download / em@il"
 msgstr "markieren für Em@il / Export"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:284
-#: specialVueFakeDummyForL10nScript.js:4890
 #: specialVueFakeDummyForL10nScript.js:4892
+#: specialVueFakeDummyForL10nScript.js:4894
 msgid "open in calendar-app"
 msgstr "in der Kalender-App öffnen"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:305
-#: specialVueFakeDummyForL10nScript.js:4894
+#: specialVueFakeDummyForL10nScript.js:4896
 #: templates/fragments/projects/project-mailing-list.php:114
 msgid "delete"
 msgstr "löschen"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:316
-#: specialVueFakeDummyForL10nScript.js:4896
+#: specialVueFakeDummyForL10nScript.js:4898
 msgid "detach from project"
 msgstr "vom Projekt lösen"
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:327
-#: specialVueFakeDummyForL10nScript.js:4898
+#: specialVueFakeDummyForL10nScript.js:4900
 msgid "reattach to project"
 msgstr "mit dem Projekt verknüpfen"
 
-#: specialVueFakeDummyForL10nScript.js:4978
-#: specialVueFakeDummyForL10nScript.js:4984
+#: specialVueFakeDummyForL10nScript.js:4980
+#: specialVueFakeDummyForL10nScript.js:4986
 msgid "Sending receipts by email is not yet supported."
 msgstr ""
 "Das Versenden von Quittungen per Email wird derzeit noch nicht unterstützt."
 
-#: specialVueFakeDummyForL10nScript.js:5009
+#: specialVueFakeDummyForL10nScript.js:5011
 msgid ""
 "Unable to download the receipt for the payment with id {paymentId}: {error}."
 msgstr "Kann die Quittung zur Zahlungs-Id {paymentId} nicht laden: {error}."
 
-#: specialVueFakeDummyForL10nScript.js:5010
+#: specialVueFakeDummyForL10nScript.js:5012
 msgid ""
 "Unable to download the mail-merge substituions for the payment with id "
 "{paymentId}: {error}."
@@ -15791,27 +15808,27 @@ msgstr ""
 "{error}."
 
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:34
-#: specialVueFakeDummyForL10nScript.js:5023
+#: specialVueFakeDummyForL10nScript.js:5025
 msgid "Download Donation Receipt"
 msgstr "Zuwendungsbestätigung laden"
 
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:45
-#: specialVueFakeDummyForL10nScript.js:5025
+#: specialVueFakeDummyForL10nScript.js:5027
 msgid "Email Donation Receipt"
 msgstr "Zuwendungsbestätigung per Email"
 
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:56
-#: specialVueFakeDummyForL10nScript.js:5027
+#: specialVueFakeDummyForL10nScript.js:5029
 msgid "Download Standard Receipt"
 msgstr "Standard-Quittung laden"
 
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:67
-#: specialVueFakeDummyForL10nScript.js:5029
+#: specialVueFakeDummyForL10nScript.js:5031
 msgid "Email Standard Receipt"
 msgstr "Standard-Quittung per Email"
 
-#: specialVueFakeDummyForL10nScript.js:5274
-#: specialVueFakeDummyForL10nScript.js:5574
+#: specialVueFakeDummyForL10nScript.js:5276
+#: specialVueFakeDummyForL10nScript.js:5576
 msgid "** everybody **"
 msgstr "*** alle ***"
 
@@ -15819,30 +15836,30 @@ msgstr "*** alle ***"
 #. TRANSLATORS src/components/SelectMusicians.vue:45
 #. TRANSLATORS src/components/SettingsSelectGroup.vue:47
 #. TRANSLATORS src/components/SettingsSelectUsers.vue:60
-#: specialVueFakeDummyForL10nScript.js:5385
 #: specialVueFakeDummyForL10nScript.js:5387
 #: specialVueFakeDummyForL10nScript.js:5389
 #: specialVueFakeDummyForL10nScript.js:5391
-#: specialVueFakeDummyForL10nScript.js:5642
+#: specialVueFakeDummyForL10nScript.js:5393
 #: specialVueFakeDummyForL10nScript.js:5644
 #: specialVueFakeDummyForL10nScript.js:5646
 #: specialVueFakeDummyForL10nScript.js:5648
-#: specialVueFakeDummyForL10nScript.js:6002
+#: specialVueFakeDummyForL10nScript.js:5650
 #: specialVueFakeDummyForL10nScript.js:6004
 #: specialVueFakeDummyForL10nScript.js:6006
 #: specialVueFakeDummyForL10nScript.js:6008
-#: specialVueFakeDummyForL10nScript.js:6110
+#: specialVueFakeDummyForL10nScript.js:6010
 #: specialVueFakeDummyForL10nScript.js:6112
 #: specialVueFakeDummyForL10nScript.js:6114
 #: specialVueFakeDummyForL10nScript.js:6116
+#: specialVueFakeDummyForL10nScript.js:6118
 msgid "undefined"
 msgstr "nicht definiert"
 
-#: specialVueFakeDummyForL10nScript.js:5739
+#: specialVueFakeDummyForL10nScript.js:5741
 msgid "Permanent"
 msgstr "Permanent"
 
-#: specialVueFakeDummyForL10nScript.js:5870
+#: specialVueFakeDummyForL10nScript.js:5872
 msgid ""
 "Unable to export the bank import-data for the bulktransaction with id "
 "\"{entityId}\"."
@@ -15850,7 +15867,7 @@ msgstr ""
 "Kann die Bank-Importdaten für den Sammelauftrag mit der Id \"{entityId}\" "
 "nicht exportieren."
 
-#: specialVueFakeDummyForL10nScript.js:5906
+#: specialVueFakeDummyForL10nScript.js:5908
 msgid ""
 "Unable to export the balancing items for the bulktransaction with id "
 "\"{entityId}\"."
@@ -15859,120 +15876,120 @@ msgstr ""
 "nicht exportieren."
 
 #. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:35
-#: specialVueFakeDummyForL10nScript.js:5915
+#: specialVueFakeDummyForL10nScript.js:5917
 msgid "Bank Transaction Data"
 msgstr "Importdaten für die Bank"
 
 #. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:45
-#: specialVueFakeDummyForL10nScript.js:5917
+#: specialVueFakeDummyForL10nScript.js:5919
 msgid "Email Pre-Notification"
 msgstr "Email-Vorankündigung"
 
 #. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:55
-#: specialVueFakeDummyForL10nScript.js:5919
+#: specialVueFakeDummyForL10nScript.js:5921
 msgid "GnuCash Balance Data"
 msgstr "GnuCash Ausgleichsbuchungen"
 
-#: specialVueFakeDummyForL10nScript.js:6124
+#: specialVueFakeDummyForL10nScript.js:6126
 msgid "copy"
 msgstr "kopieren"
 
-#: specialVueFakeDummyForL10nScript.js:6124
+#: specialVueFakeDummyForL10nScript.js:6126
 msgid "move"
 msgstr "verschieben"
 
-#: specialVueFakeDummyForL10nScript.js:6124
+#: specialVueFakeDummyForL10nScript.js:6126
 msgid "link"
 msgstr "verknüpfen"
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:43
-#: specialVueFakeDummyForL10nScript.js:6237 templates/settings.php:67
+#: specialVueFakeDummyForL10nScript.js:6239 templates/settings.php:67
 msgid "Email"
 msgstr "Email"
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:51
-#: specialVueFakeDummyForL10nScript.js:6239
+#: specialVueFakeDummyForL10nScript.js:6241
 msgid "Phone"
 msgstr "Telefon"
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:79
-#: specialVueFakeDummyForL10nScript.js:6243
+#: specialVueFakeDummyForL10nScript.js:6245
 msgid "Propability"
 msgstr "Wahrscheinlichkeit"
 
-#: specialVueFakeDummyForL10nScript.js:6372
+#: specialVueFakeDummyForL10nScript.js:6374
 msgid "Required."
 msgstr "Benötigt."
 
-#: specialVueFakeDummyForL10nScript.js:6514
+#: specialVueFakeDummyForL10nScript.js:6516
 msgid "File download failed for {fileName}."
 msgstr "Laden der Datei {fileName} ist fehlgeschlagen."
 
-#: specialVueFakeDummyForL10nScript.js:6550
+#: specialVueFakeDummyForL10nScript.js:6552
 msgid "no response received from {ajaxUrl}"
 msgstr "keine Antwort von {ajaxUrl} erhalten"
 
-#: specialVueFakeDummyForL10nScript.js:6554
+#: specialVueFakeDummyForL10nScript.js:6556
 msgid "Could not perform mail-merge: {message}"
 msgstr "Konnte die Vorlage nicht ausfüllen: {message}"
 
 #. TRANSLATORS src/views/FilesTab.vue:31
-#: specialVueFakeDummyForL10nScript.js:6561
+#: specialVueFakeDummyForL10nScript.js:6563
 msgid "Mail merge operations"
 msgstr "Serienbrief-Operation"
 
 #. TRANSLATORS src/views/FilesTab.vue:40
-#: specialVueFakeDummyForL10nScript.js:6563
+#: specialVueFakeDummyForL10nScript.js:6565
 msgid "Download Merged Document"
 msgstr "Ausgefüllte Vorlage laden"
 
 #. TRANSLATORS src/views/FilesTab.vue:43
-#: specialVueFakeDummyForL10nScript.js:6565
+#: specialVueFakeDummyForL10nScript.js:6567
 msgid "download locally"
 msgstr "lokal laden"
 
 #. TRANSLATORS src/views/FilesTab.vue:48
-#: specialVueFakeDummyForL10nScript.js:6567
+#: specialVueFakeDummyForL10nScript.js:6569
 msgid "Merge Document into Cloud"
 msgstr "Ergebnis in der Cloud speichern"
 
 #. TRANSLATORS src/views/FilesTab.vue:54
-#: specialVueFakeDummyForL10nScript.js:6569
+#: specialVueFakeDummyForL10nScript.js:6571
 msgid "save to cloud"
 msgstr "in die Cloud speichern"
 
 #. TRANSLATORS src/views/FilesTab.vue:59
-#: specialVueFakeDummyForL10nScript.js:6571
+#: specialVueFakeDummyForL10nScript.js:6573
 msgid "Download Replacement Data"
 msgstr "Ersetzungs-Datensatz laden"
 
 #. TRANSLATORS src/views/FilesTab.vue:65
-#: specialVueFakeDummyForL10nScript.js:6573
+#: specialVueFakeDummyForL10nScript.js:6575
 msgid "download data"
 msgstr "Daten laden"
 
 #. TRANSLATORS src/views/FilesTab.vue:72
-#: specialVueFakeDummyForL10nScript.js:6575
+#: specialVueFakeDummyForL10nScript.js:6577
 msgid "Sender"
 msgstr "Absender*in"
 
 #. TRANSLATORS src/views/FilesTab.vue:80
-#: specialVueFakeDummyForL10nScript.js:6579
+#: specialVueFakeDummyForL10nScript.js:6581
 msgid "e.g. John Doe"
 msgstr "z.B. Max Mustermann"
 
 #. TRANSLATORS src/views/FilesTab.vue:106
-#: specialVueFakeDummyForL10nScript.js:6583
+#: specialVueFakeDummyForL10nScript.js:6585
 msgid "Musician's Datebase"
 msgstr "Musiker-Datenbank"
 
 #. TRANSLATORS src/views/FilesTab.vue:115
-#: specialVueFakeDummyForL10nScript.js:6585
+#: specialVueFakeDummyForL10nScript.js:6587
 msgid "Addressbooks"
 msgstr "Adressbücher"
 
 #. TRANSLATORS src/views/FilesTab.vue:125
-#: specialVueFakeDummyForL10nScript.js:6587
+#: specialVueFakeDummyForL10nScript.js:6589
 msgid "Enter Address"
 msgstr "Anschrift eingeben"
 
@@ -16154,7 +16171,7 @@ msgstr "Fehlende Eingabedaten"
 msgid "Choose some Options"
 msgstr "Wähle aus den Optionen"
 
-#: src/app/chosen-popup.js:41 src/app/sepa-debit-mandate.js:590
+#: src/app/chosen-popup.js:41 src/app/sepa-debit-mandate.js:591
 #: templates/settings/share-settings.php:238
 #: templates/settings/share-settings.php:261
 #: templates/settings/share-settings.php:284
@@ -16200,7 +16217,7 @@ msgstr "Auswahl der Dateioperation"
 msgid "Operation has been cancelled."
 msgstr "Benutzer:in hat den Vorgang abgebrochen"
 
-#: src/app/cloud-file-picker-dialog.js:170 src/app/sepa-debit-mandate.js:610
+#: src/app/cloud-file-picker-dialog.js:170 src/app/sepa-debit-mandate.js:611
 msgid "Apply"
 msgstr "Anwenden"
 
@@ -16819,27 +16836,27 @@ msgstr "Web-Seite mit Id {articleId} löschen?"
 msgid "No values match"
 msgstr "Kein Wert passt."
 
-#: src/app/sepa-debit-mandate.js:199
+#: src/app/sepa-debit-mandate.js:200
 msgid "Unable to download pre-filled mandate form."
 msgstr "Kann das personalisierte Mandatsformular nicht herunter laden."
 
-#: src/app/sepa-debit-mandate.js:303
+#: src/app/sepa-debit-mandate.js:304
 msgid "Select debit mandate for {musicianName}"
 msgstr "Lastschrift-Formular für {musicianName} auswählen"
 
-#: src/app/sepa-debit-mandate.js:591
+#: src/app/sepa-debit-mandate.js:592
 msgid "Close the form and save the data in the underlying data-base storage."
 msgstr "Schließt das Formular und speichert die Daten in der Datenbank."
 
-#: src/app/sepa-debit-mandate.js:611
+#: src/app/sepa-debit-mandate.js:612
 msgid "Save the data in the underlying data-base storage. Keep the form open."
 msgstr "Speichert die Daten in der Datenbank. Das Formular bleibt offen."
 
-#: src/app/sepa-debit-mandate.js:637
+#: src/app/sepa-debit-mandate.js:638
 msgid "Close"
 msgstr "Schließen"
 
-#: src/app/sepa-debit-mandate.js:638
+#: src/app/sepa-debit-mandate.js:639
 msgid ""
 "Discard all filled-in data and close the form. Note that this will not undo "
 "any changes previously stored in the data-base by pressing the \"Apply\" "
@@ -16849,7 +16866,7 @@ msgstr ""
 "Änderungen, die vorher über den `Anwenden'-Knopf gespeichert wurden,\n"
 "nicht rückgängig gemacht."
 
-#: src/app/sepa-debit-mandate.js:647
+#: src/app/sepa-debit-mandate.js:648
 msgid ""
 "Delete this bank-account from the data-base. Normally, this should only be "
 "done in case of desinformation or misunderstanding. Use with care."
@@ -16858,11 +16875,11 @@ msgstr ""
 "sollte das aufgrund falscher Eintragungen oder Mißverständnissen mit\n"
 "der Person nötig sein."
 
-#: src/app/sepa-debit-mandate.js:659
+#: src/app/sepa-debit-mandate.js:660
 msgid "Reactivate"
 msgstr "Reaktivieren"
 
-#: src/app/sepa-debit-mandate.js:660
+#: src/app/sepa-debit-mandate.js:661
 msgid ""
 "Reactivate the debit-mandate or bank-account in case it has been deleted in "
 "error."
@@ -16870,11 +16887,11 @@ msgstr ""
 "Das Lastschriftmandat oder die Bankverbindung reaktivieren, falls die "
 "versehentlich deaktiviert wurde."
 
-#: src/app/sepa-debit-mandate.js:671
+#: src/app/sepa-debit-mandate.js:672
 msgid "Disable"
 msgstr "Deaktivieren"
 
-#: src/app/sepa-debit-mandate.js:672
+#: src/app/sepa-debit-mandate.js:673
 msgid ""
 "Disable the debit-mandate or bank-account in case the bank account has "
 "changed, or on request of the participant. The bank account can only be "
@@ -16884,17 +16901,17 @@ msgstr ""
 "erst dann gesperrt werden, wenn alle assoziierten Lastschriftmandate\n"
 "entwertet wurden."
 
-#: src/app/sepa-debit-mandate.js:685
+#: src/app/sepa-debit-mandate.js:686
 msgid "Reload"
 msgstr "Neu laden"
 
-#: src/app/sepa-debit-mandate.js:686
+#: src/app/sepa-debit-mandate.js:687
 msgid "Reload the form and locks it. Unsaved changes are lost."
 msgstr ""
 "Eingabeformular neu laden und sperren. Ungespeicherte Eingaben gehen "
 "verloren."
 
-#: src/app/sepa-debit-mandate.js:781
+#: src/app/sepa-debit-mandate.js:782
 msgid ""
 "Please either upload a copy of the written and signed debit-mandate or at "
 "least check the \"upload later\" option"
@@ -16903,53 +16920,53 @@ msgstr ""
 "Mandats hochladen, oder doch zuallermindest die \"später hochladen\"-Option\n"
 "aktivieren. "
 
-#: src/app/sepa-debit-mandate.js:781
+#: src/app/sepa-debit-mandate.js:782
 msgid "Missing Data"
 msgstr "Fehlende Daten"
 
-#: src/app/sepa-debit-mandate.js:828
+#: src/app/sepa-debit-mandate.js:829
 msgid "Do you really want to disable the current bank-account?"
 msgstr ""
 "Möchten Sie wirklich die angezeigte Bankverbindung als inaktiv markieren?"
 
-#: src/app/sepa-debit-mandate.js:830
+#: src/app/sepa-debit-mandate.js:831
 msgid "Do you really want to disable the current debit-mandate?"
 msgstr ""
 "Möchten Sie wirklich das angezeigte Lastschrift-Mandat als inaktiv markieren?"
 
-#: src/app/sepa-debit-mandate.js:837
+#: src/app/sepa-debit-mandate.js:838
 msgid "Do you really want to reactivate the current bank-account?"
 msgstr "Möchten Sie wirklich die angezeigte Bankverbindung reaktivieren?"
 
-#: src/app/sepa-debit-mandate.js:839
+#: src/app/sepa-debit-mandate.js:840
 msgid "Do you really want to reactiveate the current debit-mandate?"
 msgstr "Möchten Sie wirklich das angezeigte Lastschrift-Mandat reaktivieren?"
 
-#: src/app/sepa-debit-mandate.js:848
+#: src/app/sepa-debit-mandate.js:849
 msgid "Do you really want to delete the current bank-account?"
 msgstr "Möchten Sie wirklich die angezeigte Bankverbindung löschen?"
 
-#: src/app/sepa-debit-mandate.js:850
+#: src/app/sepa-debit-mandate.js:851
 msgid "Do you really want to delete the current debit-mandate?"
 msgstr "Möchten Sie wirklich das angezeigte Lastschriftmandat löschen?"
 
-#: src/app/sepa-debit-mandate.js:861
+#: src/app/sepa-debit-mandate.js:862
 msgid "Unconfirmed, doing nothing"
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
-#: src/app/sepa-debit-mandate.js:886 src/app/sepa-debit-mandate.js:1003
+#: src/app/sepa-debit-mandate.js:887 src/app/sepa-debit-mandate.js:1004
 msgid "Suggested alternatives based on common human mis-transcriptions:"
 msgstr "Mögliche Alternativen ausgehend von den üblichen Übertragungsfehlern:"
 
-#: src/app/sepa-debit-mandate.js:890 src/app/sepa-debit-mandate.js:1007
+#: src/app/sepa-debit-mandate.js:891 src/app/sepa-debit-mandate.js:1008
 msgid "Please do not accept these alternatives lightly!"
 msgstr "Bitte die Alternativen nicht leichtsinnig übernehmen!"
 
-#: src/app/sepa-debit-mandate.js:1470
+#: src/app/sepa-debit-mandate.js:1471
 msgid "Update canceled by user"
 msgstr "Benutzer:in hat den Vorgang abgebrochen"
 
-#: src/app/sepa-debit-mandate.js:1642
+#: src/app/sepa-debit-mandate.js:1643
 msgid ""
 "The bank-account-owner is already set but differs from the project-"
 "participant. Shall we replace the current bank-account-owner by the project-"
@@ -16959,11 +16976,11 @@ msgstr ""
 "vom Projektmitglied. Soll der/die/das Kontoinhaber:in durch das "
 "Projektmitglied ersetzt werden?"
 
-#: src/app/sepa-debit-mandate.js:1644
+#: src/app/sepa-debit-mandate.js:1645
 msgid "Set Bank-Account-Owner to Project-Participant?"
 msgstr "Kontoinhaber:in durch Projekt-Mitglied ersetzen?"
 
-#: src/app/sepa-debit-mandate.js:1699
+#: src/app/sepa-debit-mandate.js:1700
 msgid ""
 "Project-participant is already set but differs from the bank-account-owner. "
 "Shall we set the project-participant to the bank-account-owner?"
@@ -16972,7 +16989,7 @@ msgstr ""
 "der/die/das Kontoinhaber:in. Sollt das Projektmitglied durch der/die/das "
 "Kontoinhaber:in ersetzt werden?"
 
-#: src/app/sepa-debit-mandate.js:1701
+#: src/app/sepa-debit-mandate.js:1702
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr "Projekt-Mitlied durch Kontoinhaber:in ersetzen?"
 
@@ -18464,42 +18481,42 @@ msgstr "Lösche diese öffentliche Web-Seite."
 msgid "SEPA Bank Information for %s"
 msgstr "SEPA Bankinformationen für %s"
 
-#: templates/sepa-debit-mandate.php:57
+#: templates/sepa-debit-mandate.php:55
 msgid "only for"
 msgstr "nur für"
 
-#: templates/sepa-debit-mandate.php:58
+#: templates/sepa-debit-mandate.php:56
 #, php-format
 msgid "only for \"%s\""
 msgstr "nur für \"%s\""
 
-#: templates/sepa-debit-mandate.php:61 templates/sepa-debit-mandate.php:62
+#: templates/sepa-debit-mandate.php:59 templates/sepa-debit-mandate.php:60
 msgid "for all receivables"
 msgstr "für alle Forderungen"
 
-#: templates/sepa-debit-mandate.php:100
+#: templates/sepa-debit-mandate.php:102
 msgid "expired"
 msgstr "abgelaufen"
 
-#: templates/sepa-debit-mandate.php:128
+#: templates/sepa-debit-mandate.php:130
 msgid "owner of the bank account, probably same as musician"
 msgstr "Kontoinhaber:in, in der Regel identisch mit der Person"
 
-#: templates/sepa-debit-mandate.php:131
+#: templates/sepa-debit-mandate.php:133
 #: templates/settings/orchestra-settings.php:172
 msgid "owner of bank account"
 msgstr "Kontoinhaber:in"
 
-#: templates/sepa-debit-mandate.php:137
+#: templates/sepa-debit-mandate.php:139
 msgid "Optional BLZ of the musician's bank account"
 msgstr "Optionale Bankleitzahl des Kontos"
 
-#: templates/sepa-debit-mandate.php:138
+#: templates/sepa-debit-mandate.php:140
 #: templates/settings/orchestra-settings.php:178
 msgid "BLZ of bank account"
 msgstr "Bankleitzahl"
 
-#: templates/sepa-debit-mandate.php:144
+#: templates/sepa-debit-mandate.php:146
 msgid ""
 "IBAN or number of the bank account. If this is a account number, then please "
 "first enter the BLZ"
@@ -18507,12 +18524,12 @@ msgstr ""
 "IBAN oder Kontonummer des Kontos. Falls eine Kontonummer\n"
 "angegeben wird, muss die Bankleitzahl zuerst angegeben werden"
 
-#: templates/sepa-debit-mandate.php:145
+#: templates/sepa-debit-mandate.php:147
 #: templates/settings/orchestra-settings.php:184
 msgid "IBAN or no. of bank account"
 msgstr "IBAN oder Kontonummer"
 
-#: templates/sepa-debit-mandate.php:150
+#: templates/sepa-debit-mandate.php:152
 msgid ""
 "Optionally the BIC of the account; will be computed automatically if left "
 "blank."
@@ -18521,77 +18538,82 @@ msgstr ""
 "bzw. BLZ auch automatisch errechnet, man kann das Feld auch leer\n"
 "lassen."
 
-#: templates/sepa-debit-mandate.php:151
+#: templates/sepa-debit-mandate.php:153
 #: templates/settings/orchestra-settings.php:190
 msgid "BIC of bank account"
 msgstr "BIC der Bankverbindung"
 
-#: templates/sepa-debit-mandate.php:156
+#: templates/sepa-debit-mandate.php:158
 msgid "Instant IBAN Validation:"
 msgstr "IBAN Überprüfung:"
 
-#: templates/sepa-debit-mandate.php:174
+#: templates/sepa-debit-mandate.php:179
+#, php-format
+msgid "%s is not yet a club-member and did not yet participate in any project."
+msgstr "%s ist bislang kein Vereinsmitglied und ist auch für kein Projekt eingetragen."
+
+#: templates/sepa-debit-mandate.php:183
 msgid "New Debit-Mandate"
 msgstr "Neues Lastschriftmandat"
 
-#: templates/sepa-debit-mandate.php:183
+#: templates/sepa-debit-mandate.php:193
 #, php-format
 msgid "Mandate-Reference: %s"
 msgstr "Mandatsreferenz: %s"
 
-#: templates/sepa-debit-mandate.php:210
+#: templates/sepa-debit-mandate.php:220
 msgid "Select a Project"
 msgstr "Projekt auswählen"
 
-#: templates/sepa-debit-mandate.php:255
+#: templates/sepa-debit-mandate.php:272
 msgid "Project-binding:"
 msgstr "Project-Bindung:"
 
-#: templates/sepa-debit-mandate.php:265
+#: templates/sepa-debit-mandate.php:282
 msgid "Reusable:"
 msgstr "Wiederverwendbar:"
 
-#: templates/sepa-debit-mandate.php:266
+#: templates/sepa-debit-mandate.php:283
 msgid "once"
 msgstr "einmalig"
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::PERMANENT = 'permanent';
-#: templates/sepa-debit-mandate.php:267
+#: templates/sepa-debit-mandate.php:284
 #: lib/Database/Doctrine/DBAL/Types/EnumProjectTemporalType.php:48
 #, php-format
 msgid "permanent"
 msgstr "permanent"
 
-#: templates/sepa-debit-mandate.php:270
+#: templates/sepa-debit-mandate.php:287
 msgid "Date issued:"
 msgstr "Ausstellungsdatum:"
 
-#: templates/sepa-debit-mandate.php:276
+#: templates/sepa-debit-mandate.php:293
 msgid "Date of mandate grant"
 msgstr "Datum der Mandatserteilung"
 
-#: templates/sepa-debit-mandate.php:277
+#: templates/sepa-debit-mandate.php:294
 msgid "mandate date"
 msgstr "Mandatsdatum"
 
-#: templates/sepa-debit-mandate.php:279
+#: templates/sepa-debit-mandate.php:296
 msgid "Date of last usage:"
 msgstr "Letztes Einzugsdatum:"
 
-#: templates/sepa-debit-mandate.php:286
+#: templates/sepa-debit-mandate.php:303
 msgid "Date of last usage of debit-mandate"
 msgstr "Datum des letzten Bankeinzugs zu diesem Mandat"
 
-#: templates/sepa-debit-mandate.php:287
+#: templates/sepa-debit-mandate.php:304
 msgid "last used date"
 msgstr "letzte Verwendung"
 
-#: templates/sepa-debit-mandate.php:308
+#: templates/sepa-debit-mandate.php:325
 msgid "Upload filled SEPA debit mandate"
 msgstr "Ausgefülltes SEPA Lastschriftmandat hochladen"
 
-#: templates/sepa-debit-mandate.php:325
+#: templates/sepa-debit-mandate.php:342
 msgid "upload later"
 msgstr "später hochladen"
 
@@ -22791,9 +22813,6 @@ msgstr "Zeigt einfach alle Spalten an."
 
 #~ msgid "Association is not simple."
 #~ msgstr "Die Verknüpfung ist nicht \"einfach\"."
-
-#~ msgid "no data"
-#~ msgstr "keine Daten"
 
 #~ msgid "Permission denied"
 #~ msgstr "Erlaubnis verwehrt"
