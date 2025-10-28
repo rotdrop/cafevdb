@@ -116,7 +116,7 @@
     <div v-if="legacyAjaxError" class="flex-container flex-justify-center">
       <ErrorPageModal :show="showLegacyAjaxError"
                       :error="legacyAjaxError"
-                      initial-view="details"
+                      initial-view="summary"
                       @update:show="handleLegacyAjaxErrorClose"
       />
     </div>
