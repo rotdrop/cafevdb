@@ -48,7 +48,7 @@ use OCP\Security\ISecureRandom;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\RationalNumber;
-use OCA\CAFEVDB\Common\Transliterator;;
+use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
