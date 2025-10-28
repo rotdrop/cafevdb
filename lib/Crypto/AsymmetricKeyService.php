@@ -259,7 +259,7 @@ class AsymmetricKeyService
     $cryptor = self::$cryptors[$ownerId] ?? null;
     if (empty($cryptor)) {
       $keyPair = self::$keyPairs[$ownerId] ?? null;
-      if (empty($keyPair)) {
+      if (empty($keyPair) && $ownerId == $this->getSessionUserId()) {
         // effect of LazyGhosts: EncryptionService CTOR has not been run
         $this->initEncryptionKeyPair($ownerId);
         $keyPair = self::$keyPairs[$ownerId] ?? null;
