@@ -35,6 +35,7 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant as Entity;
@@ -240,7 +241,8 @@ class ProjectParticipantEntityListener
     /** @var EncryptionService $encryptionService */
     $encryptionService = $this->appContainer->get(EncryptionService::class);
     $executiveBoardProjectId = $encryptionService->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, -1);
-    if ($entity->getProject()->getId() != $executiveBoardProjectId) {
+    if ($entity->getParticipationContext() == ParticipationContext::ASSOCIATES
+        || $entity->getProject()->getId() != $executiveBoardProjectId) {
       // nothing to do
       return;
     }
