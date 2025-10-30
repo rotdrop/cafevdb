@@ -44,9 +44,10 @@ use OCA\CAFEVDB\Database\EntityManager;
  */
 class OrganizationalRolesService
 {
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\CloudAdminTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const CLOUD_ADMIN_ROLE = 'cloudAdmin';
   const GROUP_ADMIN_ROLE = 'groupAdmin';
@@ -544,5 +545,12 @@ class OrganizationalRolesService
     $clubMembersGid = $cloudService->projectGroupId($clubMembersProjectId);
 
     return $this->inGroup($userId, $clubMembersGid);
+  }
+
+  protected static function l10nDummy(): void
+  {
+    self::t(self::TREASURER_ROLE);
+    self::t(self::SECRETARY_ROLE);
+    self::t(self::PRESIDENT_ROLE);
   }
 }
