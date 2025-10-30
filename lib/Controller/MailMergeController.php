@@ -254,7 +254,7 @@ class MailMergeController extends Controller
       // fill also some financial tax exemption notice abbreviations ...
       $taxTypes = array_map(fn(string $value) => Util::dashesToCamelCase($value, dashes: ' -_'), TaxType::values());
       foreach ($taxTypes as $taxType) {
-        $blocks[$taxType . 'TaxExemption'] = 'org.taxAuthorities.exemptionNotices.' . $taxType;
+        $blocks[$taxType . 'Exemption'] = 'org.taxAuthorities.exemptionNotices.' . $taxType;
       }
 
       if ($noRecipients) {
