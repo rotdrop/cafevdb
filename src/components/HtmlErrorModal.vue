@@ -23,14 +23,35 @@
  -->
 <template>
   <NcModal v-if="htmlString"
+           ref="modal"
+           :close-on-click-outside="false"
            :show="open"
            size="large"
            :has-previous="false"
            :has-next="false"
            :name="t(appName, 'An Error Occurred')"
            container="#body-user"
-           @update:show="$emit('update:open', false)"
+           @update:show="emit('update:open', false)"
   >
+    <template #actions>
+      <NcActionButton ref="modalActionsReportError"
+                      :name="t(appName, 'report error')"
+                      close-after-click
+                      @click="handleReportError"
+      >
+        <template #icon>
+          <IconReportError :size="20" />
+        </template>
+      </NcActionButton>
+      <NcActionButton :name="t(appName, 'close details')"
+                      close-after-click
+                      @click="emit('update:open', false)"
+      >
+        <template #icon>
+          <IconClose :size="20" />
+        </template>
+      </NcActionButton>
+    </template>
     <template #default>
       <!-- eslint-disable-next-line vue/no-v-html  -->
       <div class="error-html-container" v-html="htmlString" />
@@ -41,26 +62,63 @@
 import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
 import {
+  NcActionButton,
   NcModal,
 } from '@nextcloud/vue'
+import { onMounted, ref, watch } from 'vue'
+import IconClose from 'vue-material-design-icons/Close.vue'
+import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
+
 // import Console from '../util/console.ts'
 
 // const COMPONENT_NAME = 'HtmlErrorPage'
 // const logger = new Console(COMPONENT_NAME)
 
-defineProps <{
+const props = defineProps<{
   open: boolean,
   htmlString: string,
 }>()
+
+const emit = defineEmits([
+  'update:open',
+  'problem-report:show',
+])
+
+const handleReportError = () => {
+  emit('update:open', false)
+  emit('problem-report:show', true)
+}
+
+const modal = ref(null)
+
+const openMenu = () => {
+  for (const child of (modal.value?.$children || [])) {
+    if (child?.actionsMenuSemanticType === 'menu') {
+      child.openMenu()
+    }
+  }
+}
+
+watch(() => props.open, value => {
+  if (value) {
+    openMenu()
+  }
+})
+
+onMounted(() => {
+  if (props.open) {
+    openMenu()
+  }
+})
 
 </script>
 <style lang="scss">
 @use '../../style/mixins/flex.scss';
 @include flex.flexRules;
 .error-html-container {
+  padding: 24px; // do not overlap with the close button
   // so the many nth mean that this is tied closely to the core
   // exception template ...
-  padding: 12px;
   // heading
   // > h1 {
   // }

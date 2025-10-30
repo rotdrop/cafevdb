@@ -22,7 +22,8 @@
  -
  -->
 <template>
-  <NcModal :close-on-click-outside="false"
+  <NcModal ref="modal"
+           :close-on-click-outside="false"
            :has-next="false"
            :has-previous="false"
            :label-id="errorPageHeadingId"

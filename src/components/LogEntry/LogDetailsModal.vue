@@ -3,7 +3,8 @@
         SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-  <NcModal :show="open"
+  <NcModal ref="modal"
+           :show="open"
            size="large"
            :has-previous="false"
            :has-next="false"
@@ -11,6 +12,25 @@
            container="#body-user"
            @update:show="$emit('update:open', false)"
   >
+    <template #actions>
+      <NcActionButton ref="modalActionsReportError"
+                      :name="t(appName, 'report error')"
+                      close-after-click
+                      @click="handleReportError"
+      >
+        <template #icon>
+          <IconReportError :size="20" />
+        </template>
+      </NcActionButton>
+      <NcActionButton :name="t(appName, 'close details')"
+                      close-after-click
+                      @click="emit('update:open', false)"
+      >
+        <template #icon>
+          <IconClose :size="20" />
+        </template>
+      </NcActionButton>
+    </template>
     <template #default>
       <div class="log-details">
         <dl :class="cssLevelClass">
@@ -60,18 +80,22 @@
 </template>
 
 <script setup lang="ts">
+import { appName } from '../../config.ts'
 import type { ILogEntry } from '@nextcloud/app-logreader/src/interfaces/index.ts'
-
 import { translate as t } from '@nextcloud/l10n'
 import { showSuccess } from '@nextcloud/dialogs'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import { copyToCipboard } from '@nextcloud/app-logreader/src/utils/clipboard.ts'
 import { useLogFormatting } from '@nextcloud/app-logreader/src/utils/format.ts'
 import { LOGGING_LEVEL, LOGGING_LEVEL_NAMES } from '@nextcloud/app-logreader/src/constants.ts'
-
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
+import {
+  NcActionButton,
+  NcButton,
+  NcModal,
+} from '@nextcloud/vue'
 import IconContentCopy from 'vue-material-design-icons/ContentCopy.vue'
+import IconClose from 'vue-material-design-icons/Close.vue'
+import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 import hljs from 'highlight.js/lib/core'
 import json from 'highlight.js/lib/languages/json'
 
@@ -87,6 +111,11 @@ const props = withDefaults(defineProps<{
 }>(), {
   name: undefined,
 })
+
+const emit = defineEmits([
+  'update:open',
+  'problem-report:show',
+])
 
 const { formatTime, formatLogEntry } = useLogFormatting()
 
@@ -146,6 +175,36 @@ const copyFormatted = async () => {
     showSuccess(t('logreader', 'Log entry successfully copied'))
   }
 }
+
+const handleReportError = () => {
+  emit('update:open', false)
+  emit('problem-report:show', true)
+}
+
+const modal = ref(null)
+
+const openMenu = () => {
+  console.info('OPEN MENU', { modal: modal.value })
+  for (const child of (modal.value?.$children || [])) {
+    if (child?.actionsMenuSemanticType === 'menu') {
+      child.openMenu()
+    }
+  }
+}
+
+watch(() => props.open, value => {
+  console.info('OPEN WATCHER', { value })
+  if (value) {
+    openMenu()
+  }
+})
+
+onMounted(() => {
+  if (props.open) {
+    openMenu()
+  }
+})
+
 </script>
 
 <style lang="scss" scoped>

@@ -42,10 +42,12 @@
                              :current-entry="logEntry"
                              :translations-loaded="translationsLoaded"
                              :name="t(appName, 'Error Details')"
+                             @problem-report:show="showProblemReport = true"
           />
           <HtmlErrorModal v-if="htmlString"
                           :open.sync="detailsModalOpen"
                           :html-string="htmlString"
+                          @problem-report:show="showProblemReport = true"
           />
           <div v-if="false">
             <!-- TODO: split the message to have a nice continuation, see nextcloud-vue -->
@@ -55,21 +57,38 @@
         <template #actions>
           <NcActionButton :name="t(appName, 'report error')"
                           close-after-click
-                          @click="showProblemReport = !showProblemReport"
-          />
+                          :disabled="showProblemReport"
+                          @click="showProblemReport = true"
+          >
+            <template #icon>
+              <IconReportError :size="20" />
+            </template>
+          </NcActionButton>
           <NcActionButton v-if="logEntry || htmlString"
                           close-after-click
                           :name="t(appName, 'show details')"
                           @click="detailsModalOpen = true"
-          />
+          >
+            <template #icon>
+              <IconErrorDetails :size="20" />
+            </template>
+          </NcActionButton>
           <NcActionButton :name="t(appName, 'go to previous page')"
                           close-after-click
                           @click="router.back()"
-          />
+          >
+            <template #icon>
+              <IconBack />
+            </template>
+          </NcActionButton>
           <NcActionButton :name="t(appName, 'try to reload')"
                           close-after-click
                           @click="router.go(0)"
-          />
+          >
+            <template #icon>
+              <IconReload />
+            </template>
+          </NcActionButton>
         </template>
       </NcListItem>
       <NcListItem v-else-if="originalError && isAxiosErrorResponse"
@@ -206,6 +225,10 @@ import IconSubmit from 'vue-material-design-icons/Send.vue'
 import IconCancel from 'vue-material-design-icons/Cancel.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
 import IconEdit from 'vue-material-design-icons/TextBoxEdit.vue'
+import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
+import IconErrorDetails from 'vue-material-design-icons/Details.vue'
+import IconReload from 'vue-material-design-icons/Reload.vue'
+import IconBack from 'vue-material-design-icons/ArrowLeft.vue'
 import { getCurrentUser } from '@nextcloud/auth'
 import NextcloudLogModal from './LogEntry/LogDetailsModal.vue'
 import HtmlErrorModal from './HtmlErrorModal.vue'
