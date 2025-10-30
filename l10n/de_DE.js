@@ -2427,7 +2427,7 @@ OC.L10N.register(
     "Please add your personal notes here." : "Eigene Anmerkungen gerne hier einfügen.",
     "Sorry, an Error Occurred" : "'Tschuldigung, da gab es einen Fehler",
     "An Error Occurred" : "'Tschuldigung, da gab es einen Fehler",
-    "close details view" : "Einzelheiten anzeigen",
+    "close details view" : "Detailansicht schließen",
     "Unable to download the invoice with invoice-number {invoiceNumber}: {error}." : "Kann die Rechnung zur Rechnungsnummer {invoiceNumber} nicht laden: {error}.",
     "Unable to download the mail-merge substituions for invoice-number {invoiceNumber}: {error}." : "Kann die Serienbrief-Ersetzungsdaten zur Rechnungsnummer {invoiceNumber} nicht laden: {error}.",
     "Download Standard Invoice" : "Standard Rechnung laden",
