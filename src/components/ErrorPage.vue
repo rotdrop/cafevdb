@@ -73,7 +73,15 @@
               <IconErrorDetails :size="20" />
             </template>
           </NcActionButton>
-          <NcActionButton :name="t(appName, 'go to previous page')"
+          <NcActionButton :name="t(appName, 'close')"
+                          close-after-click
+                          @click="$emit('close')"
+          >
+            <template #icon>
+              <IconClose :size="20" />
+            </template>
+          </NcActionButton>
+          <!-- <NcActionButton :name="t(appName, 'go to previous page')"
                           close-after-click
                           @click="router.back()"
           >
@@ -88,7 +96,7 @@
             <template #icon>
               <IconReload />
             </template>
-          </NcActionButton>
+          </NcActionButton> -->
         </template>
       </NcListItem>
       <NcListItem v-else-if="originalError && isAxiosErrorResponse"
@@ -213,7 +221,7 @@ import {
 } from 'vue'
 import { appName } from '../config.ts'
 import { translate as t, loadTranslations } from '@nextcloud/l10n'
-import { useRouter } from 'vue-router/composables'
+// import { useRouter } from 'vue-router/composables'
 import {
   NcActionButton,
   NcButton,
@@ -227,8 +235,8 @@ import IconClose from 'vue-material-design-icons/Close.vue'
 import IconEdit from 'vue-material-design-icons/TextBoxEdit.vue'
 import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 import IconErrorDetails from 'vue-material-design-icons/Details.vue'
-import IconReload from 'vue-material-design-icons/Reload.vue'
-import IconBack from 'vue-material-design-icons/ArrowLeft.vue'
+// import IconReload from 'vue-material-design-icons/Reload.vue'
+// import IconBack from 'vue-material-design-icons/ArrowLeft.vue'
 import { getCurrentUser } from '@nextcloud/auth'
 import NextcloudLogModal from './LogEntry/LogDetailsModal.vue'
 import HtmlErrorModal from './HtmlErrorModal.vue'
@@ -271,7 +279,7 @@ const tooltipsProvider = useTooltipsStore()
 tooltipsProvider.provideTooltips(tooltipKeys)
 const hints = tooltipsProvider.tooltipsData
 
-const router = useRouter()
+// const router = useRouter()
 
 const envelopeError = computed(() =>
   (props.error instanceof AppError || props.error instanceof JQueryAjaxError) && (props.error.cause instanceof Error || isJqXHRGuard(props.error.cause))
