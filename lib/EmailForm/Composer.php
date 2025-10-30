@@ -1368,7 +1368,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][sekf::t('SEPA_MANDATE_DATE')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('SEPA_MANDATE_DATE')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
