@@ -43,7 +43,7 @@
           <IconReportError :size="20" />
         </template>
       </NcActionButton>
-      <NcActionButton :name="t(appName, 'close details')"
+      <NcActionButton :name="t(appName, 'close details view')"
                       close-after-click
                       @click="emit('update:open', false)"
       >
