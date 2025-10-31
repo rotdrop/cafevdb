@@ -1291,14 +1291,45 @@ WHERE dsf.id IS NOT NULL',
 
     $opts['fdd']['notification_message_id'] = [
       'name' => $this->l->t('Message-ID'),
-      'input'  => 'R',
-      'options' => 'LFVD',
+      'input'  => '',
+      'options'  => 'ACDFLPV',
       'css'  => [ 'postfix' => [ 'message-id', 'hide-subsequent-lines', ], ],
       'select' => 'T',
       'escape' => true,
       'sort' => true,
       'tooltip' => $this->toolTipsService['page-renderer:invoices:notification-message-id'],
       'display|LF' => [ 'popup' => 'data' ],
+      'php|LF' => [$this, 'compositeRowOnly'],
+      'display' => [
+        'popup' => 'data',
+      ],
+      'display|ACP' => [
+        'attributes' => function($op, $k, $row, $pme) {
+          $attributes = [
+            'placeholder' => '<abcdefghijk@domain.tld>',
+          ];
+          if (!empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
+            $attributes['readonly'] = true;
+          }
+          return $attributes;
+        },
+        'popup' => 'data',
+        'postfix' => function($op, $pos, $k, $row, $pme) {
+          if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
+            // default unlocked if value is empty.
+            $checked = '';
+          } else {
+            $checked = 'checked="checked" ';
+          }
+          return '<input id="pme-message-id-lock"
+  ' . $checked . '
+  type="checkbox"
+  class="pme-input pme-input-lock lock-unlock"/>
+<label class="pme-input pme-input-lock lock-unlock"
+       title="' . $this->toolTipsService['pme:input:lock:unlock'].'"
+       for="pme-message-id-lock"></label>';
+        },
+      ],
     ];
 
     $opts['fdd']['balance_documents_folder_id'] = [
@@ -1660,18 +1691,6 @@ WHERE dsf.id IS NOT NULL',
         'css'  => [ 'postfix' => [ 'mandate-reference', ] ],
         'php|LF' => [$this, 'compositeRowOnly'],
       ]);
-
-    $opts['fdd']['notification_message_id'] = [
-      'name' => $this->l->t('Message-ID'),
-      'input'  => 'R',
-      'options' => 'LFVD',
-      'css'  => [ 'postfix' => [ 'message-id', 'hide-subsequent-lines', ], ],
-      'select' => 'T',
-      'escape' => true,
-      'sort' => true,
-      'tooltip' => $this->toolTipsService['debit-note-email-message-id'],
-      'display|LF' => [ 'popup' => 'data' ],
-    ];
 
     $readOnlySafeGuard = function(&$pme, $op, $step, &$row) use ($opts) {
 
