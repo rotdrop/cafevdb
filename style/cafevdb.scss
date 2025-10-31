@@ -216,7 +216,7 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
  *
  */
 
-.ui-dialog.chosen-popup-dialog {
+.ui-dialog.select-popup-dialog {
   max-height: 75% !important;
   overflow: visible;
   padding: 0;
@@ -226,8 +226,9 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
     padding: 0;
     overflow: visible;
 
-    .chosen-choices {
+    .selectize-control, .selectize-input.items {
       min-height:4.4em;
+      width: 100%;
     }
   }
 
@@ -249,7 +250,7 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
       float:right;
     }
   }
-} /* .ui-dialog.chosen-popup-dialog */
+} /* .ui-dialog.select-popup-dialog */
 
 /*******************************************************************************
  *

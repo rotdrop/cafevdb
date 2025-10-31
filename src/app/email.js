@@ -33,17 +33,18 @@ import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
 import { show as notificationShow } from './notification.js';
 import * as SelectUtils from './select-utils.js';
+import * as Ajax from './ajax.js';
 import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
 import { setPersonalUrl } from './settings-urls.js';
 import print_r from './print-r.js';
-import chosenPopup from './chosen-popup.js';
+import selectPopup from './select-popup.js';
 import debounce from './debounce.js';
 import queryData from './query-data.js';
 import modalizer from './modalizer.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
 import fileDownload from './file-download.js';
-import { token as pmeToken } from './pme-selectors.js';
+import { token as pmeToken, data as pmeData } from './pme-selectors.js';
 import {
   LEGACY_UPDATE_EVENTS_SELECTION,
   PROJECT_EVENTS_LISTING,
@@ -1959,9 +1960,47 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             cleanup();
             return;
           }
-          chosenPopup(data.contents, {
+
+          selectPopup(data.contents, {
             title: t(appName, 'Address Book'),
             saveText: t(appName, 'Accept'),
+            selectize: {
+              plugins: ['remove_button', 'drag_drop', 'restore_on_backspace'],
+              createOnBlur: true,
+              persist: true,
+              // compare with pme.js
+              valueField: 'email',
+              labelField: 'email',
+              searchField: ['email'],
+              lockOptgroupOrder: true,
+              create(input, setterCallback) {
+                const selectize = this;
+                $.post(generateAppUrl('validate/musicians/email'), {
+                  failure: 'error',
+                  [pmeData('email')]: input,
+                })
+                  .fail(function(xhr, status, errorThrown) {
+                    Ajax.handleError(xhr, status, errorThrown);
+                    setterCallback(false);
+                  })
+                  .done(function(data) {
+                    if (!data || !data.email) {
+                      setterCallback(false);
+                    }
+                    const optgroup = t(appName, 'Form Input');
+                    data.optgroup = optgroup;
+                    if (selectize.optgroups[optgroup] === undefined) {
+                      selectize.registerOptionGroup({
+                        $order: 1,
+                        label: data.optgroup,
+                        value: data.optgroup,
+                        disable: false,
+                      });
+                    }
+                    setterCallback(data);
+                  });
+              },
+            },
             buttons: [
               {
                 text: t(appName, 'Save Contacts'),
@@ -1974,7 +2013,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                   // We are interested in all selected options
                   // inside the first options group
                   const selectedFreeForm = [];
-                  SelectUtils.children(selectElement).filter('optgroup.free-form option:selected').each(function(idx) {
+                  SelectUtils.children(selectElement).filter('optgroup.free-form').find('option:selected').each(function(idx) {
                     const self = $(this);
                     selectedFreeForm[idx] = {
                       value: self.val(),
@@ -2011,7 +2050,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             },
             openCallback(selectElement) {
               cleanup();
-              if (selectElement.find('optgroup.free-form').length === 0) {
+              if (SelectUtils.children(selectElement).filter('optgroup.free-form').length === 0) {
                 $(this).dialog('widget')
                   .find('button.save-contacts').prop('disabled', true);
               }

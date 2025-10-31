@@ -25,11 +25,14 @@ import $ from './jquery.js';
 import { appName } from '../config.ts';
 import { toolTipsInit } from './cafevdb.js';
 import './jquery-extensions.js';
+import 'selectize';
+import 'selectize/dist/css/selectize.bootstrap.css';
+require('cafevdb-selectize.scss');
 
 /*
- * jQuery dialog popup with one chosen multi-selelct box inside.
+ * jQuery dialog popup with one multi-select widget in it.
  */
-const chosenPopup = function(contents, userOptions) {
+const selectPopup = function(contents, userOptions) {
   const defaultOptions = {
     title: t(appName, 'Choose some Options'),
     position: {
@@ -51,10 +54,18 @@ const chosenPopup = function(contents, userOptions) {
     openCallback: false,
     saveCallback: false,
     closeCallback: false,
+    selectize: {
+      plugins: ['remove_button'],
+      openOnFocus: true,
+      closeAfterSelect: true,
+    },
   };
-  const options = { ...defaultOptions, ...userOptions };
+  const options = {
+    ...defaultOptions,
+    ...userOptions,
+  };
 
-  const cssClass = (options.dialogClass ? options.dialogClass + ' ' : '') + 'chosen-popup-dialog';
+  const cssClass = (options.dialogClass ? options.dialogClass + ' ' : '') + 'select-popup-dialog';
   const dialogHolder = $('<div class="' + cssClass + '"></div>');
   dialogHolder.html(contents);
   const selectElement = dialogHolder.find('select');
@@ -107,10 +118,10 @@ const chosenPopup = function(contents, userOptions) {
     resizable: false,
     buttons,
     open() {
-      selectElement.chosen(); // {disable_search_threshold: 10});
+      selectElement.selectize(options.selectize);
       const dialogWidget = dialogHolder.dialog('widget');
       toolTipsInit(dialogWidget);
-      dialogHolder.find('.chosen-container')
+      dialogHolder.find('.selectize-input')
         .off('dblclick')
         .on('dblclick', function(event) {
           dialogWidget.find('.ui-dialog-buttonset .ui-button.save').trigger('click');
@@ -133,9 +144,4 @@ const chosenPopup = function(contents, userOptions) {
   });
 };
 
-export default chosenPopup;
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+export default selectPopup;
