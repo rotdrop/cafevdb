@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -2139,6 +2140,17 @@ WHERE dsf.id IS NOT NULL',
           persist: true,
           flush: false,
         );
+        if ($sentEmail === null) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t(
+              'Unable to find an email message on the imap-server for the given message id "%1$s".',
+              $newValues[$tag],
+            ),
+            context: [
+              'message-id' => $newValues[$tag],
+            ],
+          );
+        }
         $sentEmail->setProject($this->project);
       }
     }
