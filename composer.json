@@ -30,7 +30,7 @@
     "ezyang/htmlpurifier": "^4.13.0",
     "giggsey/libphonenumber-for-php": "^9.0.0",
     "globalcitizen/php-iban": "^4.0",
-    "guzzlehttp/guzzle": "^7.0",
+    "guzzlehttp/guzzle": "7.9.3",
     "html2text/html2text": "^4.3",
     "jpgraph/jpgraph": "*",
     "kwn/number-to-words": "^2.8",
@@ -49,18 +49,26 @@
     "symfony/var-dumper": "^5.2",
     "tecnickcom/tcpdf": "^6.3",
     "tinybutstrong/opentbs": "dev-production/cafevdb",
-    "tuqqu/gender-detector": "^0.5.2"
+    "tuqqu/gender-detector": "^0.5.2",
+    "guzzlehttp/promises": "2.2.0",
+    "guzzlehttp/psr7": "2.7.1",
+    "paragonie/constant_time_encoding": "v2.6.3",
+    "symfony/polyfill-php83": "v1.32.0",
+    "symfony/translation-contracts": "v3.4.2",
+    "symfony/translation": "v6.4.4"
   },
   "require-dev": {
     "bamarni/composer-bin-plugin": "^1.8",
     "cweagans/composer-patches": "^1.7",
     "phpmd/phpmd": "@stable",
     "squizlabs/php_codesniffer": "^3.6.0",
-    "vildanbina/composer-upgrader": "^1.0",
-    "zebra-north/phpcs-short-types": "^1.0"
+    "zebra-north/phpcs-short-types": "^1.0",
+    "vildanbina/composer-upgrader": "^1.0"
   },
   "autoload": {
-    "classmap": ["3rdparty/phpMyEdit/."]
+    "classmap": [
+      "3rdparty/phpMyEdit/."
+    ]
   },
   "repositories": [
     {
