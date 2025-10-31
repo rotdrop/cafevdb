@@ -2133,11 +2133,13 @@ WHERE dsf.id IS NOT NULL',
       $tag = 'notification_message_id';
       if (in_array($tag, $changed) && !empty($newValues[$tag])) {
         $sentEmailsService = $this->di(SentEmailsService::class);
-        $sentEmailsService->sentEmailFromMessageId(
+        /** @var Entities\SentEmail $sentEmail */
+        $sentEmail = $sentEmailsService->sentEmailFromMessageId(
           $newValues[$tag],
           persist: true,
           flush: false,
         );
+        $sentEmail->setProject($this->project);
       }
     }
 
