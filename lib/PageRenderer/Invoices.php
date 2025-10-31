@@ -2133,6 +2133,7 @@ WHERE dsf.id IS NOT NULL',
     $nullables = [
       'sepa_transaction_id',
       'balance_documents_folder_id',
+      'notification_message_id',
       $this->joinTableFieldName(self::INVOICE_ITEMS_TABLE, 'balance_documents_folder_id'),
     ];
     foreach ($nullables as $key) {
