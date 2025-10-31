@@ -10,6 +10,7 @@ return [
   'exclude-classes' => [
     'OC',
   ],
+  'expose-global-classes' => false,
   'exclude-namespaces' => [
     // 'OC',
     //'OCA',
