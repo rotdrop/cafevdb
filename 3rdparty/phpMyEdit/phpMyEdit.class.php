@@ -36,8 +36,6 @@
 	original table view (Pass 1).
 */
 
-use RuntimeException;
-
 class phpMyEdit_timer /* {{{ */
 {
 	public $startTime;
@@ -4245,7 +4243,7 @@ EOT;
 		if (intval($this->fdd[$k]['textarea']['cols']) > 0) {
 			$ret .= ' cols="'.$this->fdd[$k]['textarea']['cols'].'"';
 		}
-		if (intval($this->fdd[$k]['maxlen']) > 0) {
+		if (intval($this->fdd[$k]['maxlen'] ?? null) > 0) {
 			$ret .= ' maxlength="'.$this->fdd[$k]['maxlen'].'"';
 		}
 		if (isset($this->fdd[$k]['textarea']['wrap'])) {
