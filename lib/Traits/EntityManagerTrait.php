@@ -39,8 +39,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository as BaseEntityRepository;
  */
 trait EntityManagerTrait
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-
   /** @var EntityManager */
   protected EntityManager $entityManager;
 
@@ -275,7 +273,7 @@ trait EntityManagerTrait
           $this->entityManager->pushTransactionException($t);
           $this->entityManager->rollback();
         } else {
-          $this->logException($t);
+          \OCP\Service::get(\Psr\Log\LoggerInterface::class)->error('Exception during flush()', [ 'exception' => $t ]);
         }
       }
     } else {
