@@ -39,6 +39,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository as BaseEntityRepository;
  */
 trait EntityManagerTrait
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+
   /** @var EntityManager */
   protected EntityManager $entityManager;
 
@@ -269,7 +271,12 @@ trait EntityManagerTrait
         $this->entityManager->flush();
         $this->entityManager->commit();
       } catch (Throwable $t) {
-        $this->entityManager->rollback();
+        if ($this->entityManager->isTransactionActive()) {
+          $this->entityManager->pushTransactionException($t);
+          $this->entityManager->rollback();
+        } else {
+          $this->logException($t);
+        }
       }
     } else {
       $this->entityManager->flush();
