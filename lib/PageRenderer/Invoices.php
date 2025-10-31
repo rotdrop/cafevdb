@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\SentEmailsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -2127,6 +2128,16 @@ WHERE dsf.id IS NOT NULL',
         unset($newValues[$tag]);
         unset($oldValues[$tag]);
         Util::unsetValue($changed, $tag);
+      }
+
+      $tag = 'notification_message_id';
+      if (in_array($tag, $changed) && !empty($newValues[$tag])) {
+        $sentEmailsService = $this->di(SentEmailsService::class);
+        $sentEmailsService->sentEmailFromMessageId(
+          $newValues[$tag],
+          persist: true,
+          flush: false,
+        );
       }
     }
 
