@@ -31,12 +31,12 @@ declare(strict_types=1);
 namespace OCA\CAFEVDB\Service\IMAP;
 
 use Exception;
-use Horde_Imap_Client;
-use Horde_Imap_Client_DateTime;
-use Horde_Mime_Headers_MessageId;
-use Horde_Mime_Part;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_DateTime;
+use OCA\CAFEVDB\Wrapped\Horde_Mime_Headers_MessageId;
+use OCA\CAFEVDB\Wrapped\Horde_Mime_Part;
 use JsonSerializable;
-use OCA\Mail\AddressList;
+use OCA\CAFEVDB\Service\IMAP\AddressList;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
 use ReturnTypeWillChange;
