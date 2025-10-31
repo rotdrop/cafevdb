@@ -36,6 +36,8 @@
 	original table view (Pass 1).
 */
 
+use RuntimeException;
+
 class phpMyEdit_timer /* {{{ */
 {
 	public $startTime;
@@ -3371,9 +3373,7 @@ EOT;
 			$len_props .= ' maxlength="'.$maxlen.'"';
 		}
 		echo '<input class="',$this->getCSSclass('value', null, true, $css_postfix),'" type="password"';
-		if ($help) {
-			echo ' title="'.$this->enc($help).'"';
-		}
+		echo $this->printTooltip($help);
 		echo ($this->disabled($k) ? ' disabled' : '');
 		echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
 		echo $this->enc($row[self::QUERY_FIELD . $k]),'"',$len_props,' />',"\n";
@@ -3392,7 +3392,7 @@ EOT;
 	{
 		$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? null;
 		$css_class_name = $this->getCSSclass('value', null, true, $css_postfix);
-		$title          = !empty($cell_popup) ? ' title="'.$this->enc($cell_popup).'"' : '';
+		$title          = $this->printTooltip($cell_popup);
 		echo '<td class="',$css_class_name,'"',$this->getColAttributes($k),$title,">\n";
 		if (isset($this->fdd[$k][self::FDD_DISPLAY]['prefix'])) {
 			$prefix = $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
@@ -3584,7 +3584,7 @@ EOT;
 		$prefix_found  || $urllink = array_shift($prefix_ar).$urllink;
 		$postfix_found || $urllink = $urllink.array_shift($postfix_ar);
 		if (strlen($urllink) <= 0 || strlen($urldisp) <= 0) {
-			$ret = $escape ? '&nbsp;' : '';
+			$ret = ''; // $escape ? '&nbsp;' : ''; // why &nbsp;?
 		} else {
 			if ($escape) {
 				$urldisp = $this->enc($urldisp);
@@ -3754,7 +3754,7 @@ EOT;
 			return $this->call_display_closure($k, $value, self::OPERATION_DISPLAY, $row, $key_rec);
 		}
 		if (strlen($value ?? '') <= 0) {
-			return $escape ? '&nbsp;' : ''; // ??? why
+			return ''; // $escape ? '&nbsp;' : ''; // ??? why
 		}
 		if ($escape) {
 			$value = $this->enc($value);
@@ -3772,7 +3772,7 @@ EOT;
 
 	protected function printTooltip($tooltip)
 	{
-		if (!empty($tooltip)) {
+		if (!empty(trim(html_entity_decode($tooltip)))) {
 			return ' title="' . $this->enc($tooltip) . '"';
 		}
 		return '';
