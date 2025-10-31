@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-10-30 23:16+0100\n"
-"PO-Revision-Date: 2025-10-30 23:18+0100\n"
+"POT-Creation-Date: 2025-10-31 12:36+0100\n"
+"PO-Revision-Date: 2025-10-31 12:38+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1233,7 +1233,7 @@ msgstr "Benenne \"%1$s\" zu \"%2$s\" um."
 msgid "Unable to sanitize filenames, caught an exception."
 msgstr "Kann die Dateinamen nicht anpassen, Ausnahme \"aufgefangen\"."
 
-#: lib/Command/SentNotifications.php:108
+#: lib/Command/SentNotifications.php:110
 msgid ""
 "Consistency checks for sent emails for bank transactions and donation "
 "receipts."
@@ -1241,7 +1241,7 @@ msgstr ""
 "Konsistenztests für gesendete Ankündigungsemails für Banktransaktionen\n"
 "und Zuwendungsbestätigungen."
 
-#: lib/Command/SentNotifications.php:114
+#: lib/Command/SentNotifications.php:116
 msgid ""
 "List message-ids referenced in the payment and donation entities which are "
 "not recorded in the \"SentEmails\" table and ask the IMAP server whether it "
@@ -1252,7 +1252,7 @@ msgstr ""
 "sind. Prüfe, ob auf dem IMAP-Server Nachrichten mit diesen Message-Ids\n"
 "existieren."
 
-#: lib/Command/SentNotifications.php:123
+#: lib/Command/SentNotifications.php:125
 msgid ""
 "Add any missing emails which are referenced in the payments and donation "
 "tables but are missing in the SentEmails table back to the SentEmails table "
@@ -1263,7 +1263,7 @@ msgstr ""
 "hinzu, falls eine passende Nachricht auf dem IMAP-Server vorhanden\n"
 "ist."
 
-#: lib/Command/SentNotifications.php:133
+#: lib/Command/SentNotifications.php:135
 #, php-format
 msgid ""
 "If \"%s / %s\" has also been specified, then try to recreate the missing "
@@ -1273,7 +1273,7 @@ msgstr ""
 "Eintrag in der \"SentEmails\"-Tabelle zu erzeugen, aber speichere das\n"
 "Ergebnis noch nicht in der Datenbank."
 
-#: lib/Command/SentNotifications.php:144
+#: lib/Command/SentNotifications.php:146
 msgid ""
 "Override the configured imap-host. Simple URI-like hosts are support, e.g. "
 "\"tls:://USER:PASSWORD@example.com:143\". If a user is given but no password "
@@ -1285,7 +1285,7 @@ msgstr ""
 "Anmeldename aber kein Passwort angegeben wurde, wird später nach dem\n"
 "Passwort gefragt."
 
-#: lib/Command/SentNotifications.php:153
+#: lib/Command/SentNotifications.php:155
 msgid ""
 "Restrict the operation to the given message ids. The option can be given "
 "more than once in order to support multiple message ids."
@@ -1293,39 +1293,39 @@ msgstr ""
 "Die Bearbeitung auf die angegebene Message-Id einschränken. Die Option\n"
 "kann mehrfach angegeben werden, um mehrere Message-Ids zu bearbeiten."
 
-#: lib/Command/SentNotifications.php:208
+#: lib/Command/SentNotifications.php:210
 msgid "All email notifications seem to be recorded in the database."
 msgstr ""
 "Alle Email-Ankündigungen scheinen in der Datenbank eingetragen zu\n"
 "sein."
 
-#: lib/Command/SentNotifications.php:215
+#: lib/Command/SentNotifications.php:217
 msgid "IMAP Password"
 msgstr "IMAP Passwort"
 
-#: lib/Command/SentNotifications.php:240
+#: lib/Command/SentNotifications.php:242
 #, php-format
 msgid "Found %1$d of %2$d messages on the server."
 msgstr "Auf dem Server wurden %1$d von %2$d Nachrichten gefunden."
 
-#: lib/Command/SentNotifications.php:257
+#: lib/Command/SentNotifications.php:259
 msgid "found"
 msgstr "gefunden"
 
-#: lib/Command/SentNotifications.php:261
+#: lib/Command/SentNotifications.php:263
 msgid "Missing in DB"
 msgstr "Fehlt in der DB"
 
-#: lib/Command/SentNotifications.php:262
+#: lib/Command/SentNotifications.php:264
 #: lib/PageRenderer/DonationReceipts.php:497
 #: lib/PageRenderer/ProjectPayments.php:720
 msgid "Date of Receipt"
 msgstr "Eingangsdatum"
 
-#: lib/Command/SentNotifications.php:263
+#: lib/Command/SentNotifications.php:265
 #: lib/PageRenderer/DonationReceipts.php:474
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1616
-#: lib/PageRenderer/Invoices.php:954 lib/PageRenderer/Invoices.php:975
+#: lib/PageRenderer/Invoices.php:956 lib/PageRenderer/Invoices.php:977
 #: lib/PageRenderer/ProjectPayments.php:725
 #: lib/PageRenderer/ProjectPayments.php:746
 #: lib/PageRenderer/SepaBulkTransactions.php:516
@@ -1334,11 +1334,11 @@ msgstr "Eingangsdatum"
 msgid "Subject"
 msgstr "Betreff"
 
-#: lib/Command/SentNotifications.php:264
+#: lib/Command/SentNotifications.php:266
 msgid "IMAP Server"
 msgstr "IMAP Server"
 
-#: lib/Command/SentNotifications.php:296
+#: lib/Command/SentNotifications.php:298
 #, php-format
 msgid "Reconstruction of \"%1$s\" failed: %2$s."
 msgstr "Die Rekonstruktion von \"%1$s\" ist fehlgeschlagen: %2$s."
@@ -2188,7 +2188,7 @@ msgstr "Fehler während der Serienbrief-Erstellung: \"%s\""
 #. TRANSLATORS: folder-name
 #: lib/Controller/MailMergeController.php:495
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1578
-#: lib/PageRenderer/Invoices.php:506
+#: lib/PageRenderer/Invoices.php:508
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:65
 msgid "Documents"
 msgstr "Dokumente"
@@ -5032,7 +5032,7 @@ msgstr "Option"
 
 #: lib/EmailForm/Composer.php:1041 lib/EmailForm/Composer.php:1063
 #: lib/EmailForm/Composer.php:1489 lib/EmailForm/Composer.php:1541
-#: lib/PageRenderer/Invoices.php:782 lib/PageRenderer/ProjectPayments.php:663
+#: lib/PageRenderer/Invoices.php:784 lib/PageRenderer/ProjectPayments.php:663
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
 
@@ -5054,7 +5054,7 @@ msgstr "Fehlbetrag"
 
 #: lib/EmailForm/Composer.php:1044
 #: lib/PageRenderer/InstrumentInsurances.php:635
-#: lib/PageRenderer/Invoices.php:907 lib/PageRenderer/Invoices.php:918
+#: lib/PageRenderer/Invoices.php:909 lib/PageRenderer/Invoices.php:920
 #: lib/PageRenderer/PMETableViewBase.php:700
 msgid "Due Date"
 msgstr "Fälligkeit"
@@ -6231,7 +6231,7 @@ msgstr "Verschiedenes"
 
 #: lib/PageRenderer/DonationReceipts.php:323
 #: lib/PageRenderer/InstrumentInsurances.php:247
-#: lib/PageRenderer/Invoices.php:514 lib/PageRenderer/Musicians.php:284
+#: lib/PageRenderer/Invoices.php:516 lib/PageRenderer/Musicians.php:284
 #: lib/PageRenderer/ProjectParticipantFields.php:287
 #: lib/PageRenderer/ProjectParticipants.php:1798
 #: lib/PageRenderer/ProjectPayments.php:497
@@ -6251,7 +6251,7 @@ msgid "Musician"
 msgstr "Person"
 
 #: lib/PageRenderer/DonationReceipts.php:381
-#: lib/PageRenderer/DonationReceipts.php:387 lib/PageRenderer/Invoices.php:740
+#: lib/PageRenderer/DonationReceipts.php:387 lib/PageRenderer/Invoices.php:742
 #: lib/PageRenderer/Musicians.php:547
 #: lib/PageRenderer/ProjectAssociates.php:594
 #: lib/PageRenderer/ProjectParticipants.php:645
@@ -6264,7 +6264,7 @@ msgstr "Benutzerkennung"
 msgid "Payment Id"
 msgstr "Zahlungs-Id"
 
-#: lib/PageRenderer/DonationReceipts.php:511 lib/PageRenderer/Invoices.php:806
+#: lib/PageRenderer/DonationReceipts.php:511 lib/PageRenderer/Invoices.php:808
 #: lib/PageRenderer/ProjectParticipantFields.php:2068
 #: lib/PageRenderer/ProjectPayments.php:678
 #: lib/PageRenderer/SepaBankAccounts.php:1083
@@ -6285,7 +6285,7 @@ msgid "consistency checks passed"
 msgstr "Konsistenztests waren erfolgreich"
 
 #. TRANSLATORS src/views/FilesTab.vue:143
-#: lib/PageRenderer/DonationReceipts.php:575 lib/PageRenderer/Invoices.php:605
+#: lib/PageRenderer/DonationReceipts.php:575 lib/PageRenderer/Invoices.php:607
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:197
 #: lib/PageRenderer/ProjectParticipantFields.php:334
 #: lib/PageRenderer/ProjectPayments.php:585
@@ -6294,19 +6294,19 @@ msgstr "Konsistenztests waren erfolgreich"
 msgid "Project"
 msgstr "Projekt"
 
-#: lib/PageRenderer/DonationReceipts.php:605 lib/PageRenderer/Invoices.php:637
+#: lib/PageRenderer/DonationReceipts.php:605 lib/PageRenderer/Invoices.php:639
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:237
 #: lib/PageRenderer/ProjectPayments.php:615
 msgid "Project Name"
 msgstr "Projekt-Name"
 
-#: lib/PageRenderer/DonationReceipts.php:612 lib/PageRenderer/Invoices.php:644
+#: lib/PageRenderer/DonationReceipts.php:612 lib/PageRenderer/Invoices.php:646
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:244
 #: lib/PageRenderer/ProjectPayments.php:622
 msgid "Project Year"
 msgstr "Projekt-Jahr"
 
-#: lib/PageRenderer/DonationReceipts.php:617 lib/PageRenderer/Invoices.php:1197
+#: lib/PageRenderer/DonationReceipts.php:617 lib/PageRenderer/Invoices.php:1199
 msgid "Local Copy"
 msgstr "Lokale Kopie"
 
@@ -6744,7 +6744,7 @@ msgid "SEPA Bank Accounts"
 msgstr "SEPA Bankverbindungen"
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:185
-#: lib/PageRenderer/Invoices.php:1614 lib/PageRenderer/ProjectPayments.php:1363
+#: lib/PageRenderer/Invoices.php:1647 lib/PageRenderer/ProjectPayments.php:1363
 #: lib/PageRenderer/SepaBankAccounts.php:623
 #: lib/PageRenderer/SepaBankAccounts.php:701
 #: lib/PageRenderer/SepaBulkTransactions.php:450
@@ -6753,7 +6753,7 @@ msgid "Fetching decrypted values in the background."
 msgstr "Entschlüssele Werte im Hintergrund."
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:187
-#: lib/PageRenderer/Invoices.php:1616 lib/PageRenderer/ProjectPayments.php:1365
+#: lib/PageRenderer/Invoices.php:1649 lib/PageRenderer/ProjectPayments.php:1365
 #: lib/PageRenderer/SepaBankAccounts.php:625
 #: lib/PageRenderer/SepaBankAccounts.php:703
 #: lib/PageRenderer/SepaBulkTransactions.php:452
@@ -6988,178 +6988,184 @@ msgstr "Bereich"
 msgid "Rate"
 msgstr "Rate"
 
-#: lib/PageRenderer/Invoices.php:354 src/files-hooks.ts:547
+#: lib/PageRenderer/Invoices.php:356 src/files-hooks.ts:547
 #: src/files-hooks.ts:561
 msgid "New Invoice"
 msgstr "Neue Rechnung"
 
-#: lib/PageRenderer/Invoices.php:362
+#: lib/PageRenderer/Invoices.php:364
 #, php-format
 msgid "Invoicing for project \"%s\""
 msgstr "Rechnungsstellung für das Projekt \"%s\""
 
-#: lib/PageRenderer/Invoices.php:363
+#: lib/PageRenderer/Invoices.php:365
 msgid "Invoicing for all projects"
 msgstr "Rechnungsstellung für alle Projekte"
 
-#: lib/PageRenderer/Invoices.php:497
+#: lib/PageRenderer/Invoices.php:499
 msgid "General invoice data"
 msgstr "Allgemeine Rechnungsdaten"
 
-#: lib/PageRenderer/Invoices.php:498
+#: lib/PageRenderer/Invoices.php:500
 msgid "Invoice Data"
 msgstr "Rechnungsdaten"
 
-#: lib/PageRenderer/Invoices.php:501
+#: lib/PageRenderer/Invoices.php:503
 msgid "Tax rate and constitutory sources"
 msgstr "Steuersatz und Rechtsgrundlage"
 
-#: lib/PageRenderer/Invoices.php:502
+#: lib/PageRenderer/Invoices.php:504
 msgid "Taxes"
 msgstr "Steuern"
 
-#: lib/PageRenderer/Invoices.php:509 lib/PageRenderer/ProjectPayments.php:492
+#: lib/PageRenderer/Invoices.php:511 lib/PageRenderer/ProjectPayments.php:492
 msgid "Bulk-transaction data"
 msgstr "Sammelauftragsddaten"
 
-#: lib/PageRenderer/Invoices.php:510 lib/PageRenderer/Invoices.php:1566
+#: lib/PageRenderer/Invoices.php:512 lib/PageRenderer/Invoices.php:1599
 #: lib/PageRenderer/ProjectPayments.php:493
 msgid "Bank Transaction"
 msgstr "Bankgeschäfte"
 
-#: lib/PageRenderer/Invoices.php:524
+#: lib/PageRenderer/Invoices.php:526
 msgid "Invoice Id"
 msgstr "Rechnungs Id"
 
-#: lib/PageRenderer/Invoices.php:549
+#: lib/PageRenderer/Invoices.php:551
 msgid "Debitor-Musician-Id"
 msgstr "Schuldner-Personen-Id"
 
-#: lib/PageRenderer/Invoices.php:560 lib/PageRenderer/ProjectAssociates.php:348
+#: lib/PageRenderer/Invoices.php:562 lib/PageRenderer/ProjectAssociates.php:348
 #: lib/PageRenderer/ProjectParticipants.php:403
 #: lib/PageRenderer/ProjectPayments.php:540
 msgid "Project-Id"
 msgstr "Projekt-Id"
 
-#: lib/PageRenderer/Invoices.php:585 lib/PageRenderer/ProjectPayments.php:565
+#: lib/PageRenderer/Invoices.php:587 lib/PageRenderer/ProjectPayments.php:565
 msgid "Bulk-Transaction Id"
 msgstr "Sammelauftrags-Id"
 
-#: lib/PageRenderer/Invoices.php:649
+#: lib/PageRenderer/Invoices.php:651
 msgid "Author"
 msgstr "Urheber*in"
 
-#: lib/PageRenderer/Invoices.php:693
+#: lib/PageRenderer/Invoices.php:695
 msgid "Debitor"
 msgstr "Schuldner"
 
-#: lib/PageRenderer/Invoices.php:724 lib/PageRenderer/Musicians.php:508
+#: lib/PageRenderer/Invoices.php:726 lib/PageRenderer/Musicians.php:508
 #: lib/PageRenderer/ProjectAssociates.php:553
 #: lib/PageRenderer/ProjectParticipants.php:604
 msgid "Display-Name (pers.)"
 msgstr "Anzeigename (pers.)"
 
-#: lib/PageRenderer/Invoices.php:734 lib/PageRenderer/Musicians.php:364
+#: lib/PageRenderer/Invoices.php:736 lib/PageRenderer/Musicians.php:364
 #: lib/PageRenderer/ProjectAssociates.php:420
 #: lib/PageRenderer/ProjectParticipants.php:469
 msgid "Organization"
 msgstr "Körperschaft"
 
-#: lib/PageRenderer/Invoices.php:745
+#: lib/PageRenderer/Invoices.php:747
 msgid "Invoice Number"
 msgstr "Rechnungsnummer"
 
-#: lib/PageRenderer/Invoices.php:756 lib/PageRenderer/Invoices.php:763
+#: lib/PageRenderer/Invoices.php:758 lib/PageRenderer/Invoices.php:765
 msgid "automatically determined"
 msgstr "wird automatisch ermittelt"
 
-#: lib/PageRenderer/Invoices.php:823
+#: lib/PageRenderer/Invoices.php:825
 msgid "Sales Tax"
 msgstr "Umsatzsteuer"
 
-#: lib/PageRenderer/Invoices.php:846
+#: lib/PageRenderer/Invoices.php:848
 #: lib/PageRenderer/TaxationStatutorySources.php:263
 msgid "Legal Basis"
 msgstr "Rechtsgrundlage"
 
-#: lib/PageRenderer/Invoices.php:863
+#: lib/PageRenderer/Invoices.php:865
 msgid "Inconsistency"
 msgstr "Inkonsistenz"
 
-#: lib/PageRenderer/Invoices.php:895
+#: lib/PageRenderer/Invoices.php:897
 msgid "Invoice Date"
 msgstr "Rechnungsdatum"
 
-#: lib/PageRenderer/Invoices.php:919
+#: lib/PageRenderer/Invoices.php:921
 msgid "Item Due Date"
 msgstr "Fälligkeit (Unterpunkt)"
 
-#: lib/PageRenderer/Invoices.php:930
+#: lib/PageRenderer/Invoices.php:932
 msgid "Balanced Date"
 msgstr "Zahlungseingang"
 
-#: lib/PageRenderer/Invoices.php:937
+#: lib/PageRenderer/Invoices.php:939
 msgid "Cover Text"
 msgstr "Anschreiben"
 
 #. TRANSLATORS: folder-name
-#: lib/PageRenderer/Invoices.php:1003 lib/PageRenderer/Invoices.php:1093
+#: lib/PageRenderer/Invoices.php:1005 lib/PageRenderer/Invoices.php:1095
 #: lib/PageRenderer/ProjectPayments.php:791
 #: lib/PageRenderer/ProjectPayments.php:877
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:99
 msgid "Receivables"
 msgstr "Forderungen"
 
-#: lib/PageRenderer/Invoices.php:1077 lib/PageRenderer/Invoices.php:1155
+#: lib/PageRenderer/Invoices.php:1079 lib/PageRenderer/Invoices.php:1157
 #: lib/PageRenderer/ProjectPayments.php:861
 #: lib/PageRenderer/ProjectPayments.php:937
 msgid "Single Options"
 msgstr "Einfachauswahl"
 
-#: lib/PageRenderer/Invoices.php:1080 lib/PageRenderer/ProjectPayments.php:864
+#: lib/PageRenderer/Invoices.php:1082 lib/PageRenderer/ProjectPayments.php:864
 msgid "Operations"
 msgstr "Operationen"
 
-#: lib/PageRenderer/Invoices.php:1081 lib/PageRenderer/ProjectPayments.php:865
+#: lib/PageRenderer/Invoices.php:1083 lib/PageRenderer/ProjectPayments.php:865
 msgid "Add a new Receivable"
 msgstr "Eine neue Forderung hinzufügen"
 
-#: lib/PageRenderer/Invoices.php:1293 lib/PageRenderer/Invoices.php:1665
-#: lib/PageRenderer/ProjectPayments.php:1414
+#: lib/PageRenderer/Invoices.php:1295 lib/PageRenderer/ProjectPayments.php:1414
 msgid "Message-ID"
 msgstr "Message-ID"
 
-#: lib/PageRenderer/Invoices.php:1305 lib/PageRenderer/ProjectPayments.php:1054
+#: lib/PageRenderer/Invoices.php:1338 lib/PageRenderer/ProjectPayments.php:1054
 msgid "Financial Project Balance"
 msgstr "Gewinn-/Verlustrechung"
 
-#: lib/PageRenderer/Invoices.php:1418 lib/PageRenderer/ProjectPayments.php:1167
+#: lib/PageRenderer/Invoices.php:1451 lib/PageRenderer/ProjectPayments.php:1167
 msgid "Parts Project Balances"
 msgstr "Projekt-Bilanz Teilzahlungen"
 
-#: lib/PageRenderer/Invoices.php:1584
+#: lib/PageRenderer/Invoices.php:1617
 msgid "Date of Bank Transaction"
 msgstr "Datum des Bankauftrags"
 
-#: lib/PageRenderer/Invoices.php:1595 lib/PageRenderer/ProjectPayments.php:1344
+#: lib/PageRenderer/Invoices.php:1628 lib/PageRenderer/ProjectPayments.php:1344
 #: lib/PageRenderer/SepaBulkTransactions.php:428
 msgid "IBAN"
 msgstr "IBAN"
 
-#: lib/PageRenderer/Invoices.php:1657 lib/PageRenderer/ProjectPayments.php:1406
+#: lib/PageRenderer/Invoices.php:1690 lib/PageRenderer/ProjectPayments.php:1406
 #: lib/PageRenderer/SepaBankAccounts.php:808
 #: lib/PageRenderer/SepaBulkTransactions.php:490
 msgid "Mandate Reference"
 msgstr "Mandatsreferenz"
 
-#: lib/PageRenderer/Invoices.php:1683 lib/PageRenderer/ProjectPayments.php:1432
+#: lib/PageRenderer/Invoices.php:1704 lib/PageRenderer/ProjectPayments.php:1432
 msgid "Payments resulting from direct debit transfers cannot be changed."
 msgstr ""
 "Zahlung, die von Lastschriften herrühren, können nicht geändert werden."
 
-#: lib/PageRenderer/Invoices.php:1800 lib/PageRenderer/ProjectPayments.php:1525
+#: lib/PageRenderer/Invoices.php:1821 lib/PageRenderer/ProjectPayments.php:1525
 msgid "Project Balance"
 msgstr "Projekt-Bilanz"
+
+#: lib/PageRenderer/Invoices.php:2146
+#, php-format
+msgid ""
+"Unable to find an email message on the imap-server for the given message id "
+"\"%1$s\"."
+msgstr "Auf dem IMAP-Server scheint es keine Email zur Nachrichten-Id \"%1$s\" zu geben."
 
 #: lib/PageRenderer/Musicians.php:148
 msgid "New Musician"
@@ -20852,10 +20858,6 @@ msgstr "Zeigt einfach alle Spalten an."
 #, php-format
 #~ msgid "Path \"%s\" seems to be invalid."
 #~ msgstr "Der Dateipfad \"%s\" scheint ungültig zu sein."
-
-#, php-format
-#~ msgid "Unable to find a matching entity for the given path \"%s\"."
-#~ msgstr "Kann die Datenbank-Entität zum Pfad \"%s\" nicht finden."
 
 #, fuzzy
 #~| msgid "Written Notice"

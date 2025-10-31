@@ -1232,6 +1232,7 @@
     "Mandate Reference" : "Mandatsreferenz",
     "Payments resulting from direct debit transfers cannot be changed." : "Zahlung, die von Lastschriften herrühren, können nicht geändert werden.",
     "Project Balance" : "Projekt-Bilanz",
+    "Unable to find an email message on the imap-server for the given message id \"%1$s\"." : "Auf dem IMAP-Server scheint es keine Email zur Nachrichten-Id \"%1$s\" zu geben.",
     "New Musician" : "Neue Person",
     "Remove all data of the displayed person?" : "Alle Daten der angezeigten Person entfernen?",
     "Copy the displayed musician?" : "Die angezeigten Personen kopieren?",
