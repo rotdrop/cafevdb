@@ -70,14 +70,14 @@ class SentEmailsService
     $bulkRecipients = [];
     /** @var Address $address */
     foreach ($imapMessage->getTo()->iterate() as $address) {
-      $bulkRecipients[] = $address->getLabel() . '<' . $address->getEmail() . '>';
+      $bulkRecipients[] = $address->getLabel() . ' <' . $address->getEmail() . '>';
     }
     foreach ($imapMessage->getBCC()->iterate() as $address) {
-      $bulkRecipients[] = $address->getLabel() . '<' . $address->getEmail() . '>';
+      $bulkRecipients[] = $address->getLabel() . ' <' . $address->getEmail() . '>';
     }
     $carbonCopy = [];
     foreach ($imapMessage->getCC()->iterate() as $address) {
-      $carbonCopy[] = $address->getLabel() . '<' . $address->getEmail() . '>';
+      $carbonCopy[] = $address->getLabel() . ' <' . $address->getEmail() . '>';
     }
 
     /** @var Entities\SentEmail $sentEmail */
