@@ -343,16 +343,17 @@ class IMAPService
    *
    * @param string|array $messageId
    *
-   * @param null|bool $useFirst Defaults to \true. If false return an array with
-   * all messages with the given id, althoung in principle all messages with
-   * the same id should be identical.
+   * @param null|bool $useFirst Defaults to \true. If false return an array
+   * with all messages with the given id, althoung in principle all messages
+   * with the same id should be identical. If \true null may be returned if no
+   * message can be found.
    *
-   * @return array|IMAPMessage
+   * @return array|IMAPMessage|null
    */
   public function searchMessageId(
     string|array $messageId,
     null|bool $useFirst = null,
-  ):array|IMAPMessage {
+  ):array|IMAPMessage|null {
     if ($useFirst === null) {
       $useFirst = !is_array($messageId);
     }
@@ -370,9 +371,10 @@ class IMAPService
    *
    * @param bool $fuzzy See RFC 6203.
    *
-   * @param bool $useFirst Stop at the first match.
+   * @param bool $useFirst Stop at the first match. If \true then \null is
+   * returned if no message could be found.
    *
-   * @return array|IMAPMessage The array of found matches.
+   * @return array|IMAPMessage|null The array of found matches.
    *
    * @SuppressWarnings(PHPMD.ShortVariable)
    */
@@ -382,7 +384,7 @@ class IMAPService
     ?string $mbox = null,
     bool $fuzzy = false,
     bool $useFirst = false,
-  ):array|IMAPMessage {
+  ):array|IMAPMessage|null {
     $mailboxes = $this->fetchMailboxes();
     if ($mbox !== null) {
       $mailboxes = array_filter([ $mbox => $mailboxes[$mbox] ?? null ]);
@@ -474,10 +476,10 @@ class IMAPService
           iterator_to_array($fetchResults),
         ),
       );
-      if ($useFirst) {
+      if (!empty($results) && $useFirst) {
         return reset($results);
       }
     }
-    return $results;
+    return $useFirst ? null : $results;
   }
 }
