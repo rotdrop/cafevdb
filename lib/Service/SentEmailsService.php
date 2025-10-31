@@ -29,6 +29,7 @@ use Psr\Log\LoggerInterface;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\IMAPService;
 use OCA\CAFEVDB\Service\IMAP\IMAPMessage;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**
  * Some support functions for dealing with SentEmail entities.
@@ -36,6 +37,7 @@ use OCA\CAFEVDB\Service\IMAP\IMAPMessage;
 class SentEmailsService
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -60,21 +62,21 @@ class SentEmailsService
    *
    * @return Entities\SentEmail
    */
-  protected function sentEmailFromMessage(
+  public function sentEmailFromMessage(
     IMAPMessage $imapMessage,
     bool $persist = true,
     bool $flush = false,
   ): Entities\SentEmail {
     $bulkRecipients = [];
     /** @var Address $address */
-    foreach ($imapMessage->getTo() as $address) {
+    foreach ($imapMessage->getTo()->iterate() as $address) {
       $bulkRecipients[] = $address->getLabel() . '<' . $address->getEmail() . '>';
     }
-    foreach ($imapMessage->getBCC() as $address) {
+    foreach ($imapMessage->getBCC()->iterate() as $address) {
       $bulkRecipients[] = $address->getLabel() . '<' . $address->getEmail() . '>';
     }
     $carbonCopy = [];
-    foreach ($imapMessage->getCC() as $address) {
+    foreach ($imapMessage->getCC()->iterate() as $address) {
       $carbonCopy[] = $address->getLabel() . '<' . $address->getEmail() . '>';
     }
 
@@ -97,7 +99,7 @@ class SentEmailsService
 
     if ($persist) {
       $this->persist($sentEmail);
-      if ($this->flush) {
+      if ($flush) {
         $this->flush(useTransaction: true);
       }
     }
@@ -119,11 +121,15 @@ class SentEmailsService
    *
    * @return Entities\SentEmail
    */
-  protected function sentEmailFromMessageId(
+  public function sentEmailFromMessageId(
     string $messageId,
     bool $persist = true,
     bool $flush = false,
   ): ?Entities\SentEmail {
+    $sentEmail = $this->getDatabaseRepository(Entities\SentEmail::class)->find($messageId);
+    if ($sentEmail !== null) {
+      return $sentEmail;
+    }
     $imapMessage = $this->imapService->searchMessageId($messageId);
     if ($imapMessage === null) {
       return null;
