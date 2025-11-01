@@ -1961,10 +1961,13 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             return;
           }
 
+          const freeFormLabel = t(appName, 'Form Input');
+
           selectPopup(data.contents, {
             title: t(appName, 'Address Book'),
             saveText: t(appName, 'Accept'),
             selectize: {
+              openOnFocus: false,
               plugins: ['remove_button', 'drag_drop', 'restore_on_backspace'],
               createOnBlur: true,
               persist: true,
@@ -1987,7 +1990,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                     if (!data || !data.email) {
                       setterCallback(false);
                     }
-                    const optgroup = t(appName, 'Form Input');
+                    const optgroup = freeFormLabel;
                     data.optgroup = optgroup;
                     if (selectize.optgroups[optgroup] === undefined) {
                       selectize.registerOptionGroup({
@@ -1998,6 +2001,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                       });
                     }
                     setterCallback(data);
+                    selectize
+                      .$input
+                      .closest('.ui-dialog.address-book-emails')
+                      .find('button.save-contacts').prop('disabled', false);
                   });
               },
             },
@@ -2008,19 +2015,19 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                 title: t(
                   appName, 'Save the selected supplementary emails to the address-book for later reusal.'),
                 click() {
-                  const dialogHolder = $(this);
-                  const selectElement = dialogHolder.find('select');
-                  // We are interested in all selected options
-                  // inside the first options group
-                  const selectedFreeForm = [];
-                  SelectUtils.children(selectElement).filter('optgroup.free-form').find('option:selected').each(function(idx) {
-                    const self = $(this);
-                    selectedFreeForm[idx] = {
-                      value: self.val(),
-                      html: self.html(),
-                      text: self.text(),
-                    };
-                  });
+                  const $dialogHolder = $(this);
+                  const $selectElement = $dialogHolder.find('select');
+                  const selectize = $selectElement[0].selectize;
+                  const selectedValues = SelectUtils.selected($selectElement);
+                  const selectedFreeForm = selectize.items
+                    .map(email => selectize.options[email])
+                    .filter(option => option.optgroup === freeFormLabel)
+                    .map(option => ({
+                      value: option.email,
+                      html: option.email,
+                      text: option.email,
+                    }),
+                    );
                   const innerPost = { addressBookCandidates: selectedFreeForm };
                   $.post(generateEmailFormUrl('contacts/save'), innerPost)
                     .fail(ajaxHandleError)
@@ -2032,11 +2039,12 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                             return;
                           }
                           const newOptions = $(data.contents).html();
-                          SelectUtils.replaceOptions(selectElement, newOptions);
-                          if (selectElement.find('optgroup.free-form').length === 0) {
-                            dialogHolder.dialog('widget')
-                              .find('button.save-contacts').prop('disabled', true);
-                          }
+                          SelectUtils.replaceOptions($selectElement, newOptions);
+                          SelectUtils.selected($selectElement, selectedValues);
+                          selectize
+                            .$input
+                            .closest('.ui-dialog.address-book-emails')
+                            .find('button.save-contacts').prop('disabled', true);
                         });
                     });
                 },
