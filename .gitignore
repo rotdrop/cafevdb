@@ -38,3 +38,5 @@ build-flavour
 .phpunit.result.cache
 /vendor-bin/**/vendor/
 /vendor-bin/**/composer.lock
+.php-cs-fixer.cache
+.phpunit.cache
