@@ -233,7 +233,7 @@ This is a virtual folder giving direct access to stored copies -- probably scans
 TaxExemptionNotice-TAX_TYPE-YYYY-YYYY
 ```
 
-where `TAX_TYPE` is one of "%1$s".
+where `TAX_TYPE` is one of `%1$s`.
 
 - it is to some extend possible to rename the entries and push back the changes to the overview table of existing notices of exemption
 
@@ -242,13 +242,7 @@ where `TAX_TYPE` is one of "%1$s".
 - so if you are well-behaved and polite, then changing the years and the tax-types is allowed *and* those changes will be written back to the [overview table in the database](%2$s).
 ',
             [
-              fn(IL10N $l) => implode(
-                '", "',
-                array_map(
-                  fn(string $value) => $l->t($value),
-                  array_values(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::toArray()),
-                ),
-              ),
+              fn(IL10N $l) => implode('", "', \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::getL10NValues($l)),
               fn(IL10N $l, IAppContainer $appContainer) => $appContainer->get('appName'),
               function(IL10N $l, IAppContainer $appContainer) {
                 $appName = $appContainer->get('appName');
@@ -351,10 +345,10 @@ of this button.'),
             'tag' => self::t('A very short (around 3 characters) tag which is used to construct the subject of a bulk email. More specifically, the subject has the form "[TAG-ProjectNameYYYY] Example Subject" where "TAG" is just the short tag entered here, "ProjectName" is the short project-name, "YYYY" the year of the project, "Example Subject" is just any custom subject string which is supplied through the email editor.'),
           ],
           'recipients' => [
-            'listing' => self::t('List of selected musicians; can be changed in the `Em@il-Recipients\' panel.'),
+            'listing' => self::t('List of selected musicians; can be changed in the "Em@il-Recipients" panel.'),
             'freeform-BCC' => self::t('Add arbitrary further hidden recipients.'),
             'freeform-CC' => self::t('Add arbitrary further recipients.'),
-            'address-book' => self::t('Opens a select-box with choices from the shared Cloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Cloud `Contacts\'-App.'),
+            'address-book' => self::t('Opens a select-box with choices from the shared Cloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Cloud "Contacts"-App.'),
             'disclosed-recipients' => self::t('Unchecking this option discloses the bulk-recipients of this message. Only recipients of project-related emails can be disclosed. Normally this should be left checked, in which case the email is sent with a hidden recipients list.'),
           ],
           'attachments' => [
@@ -377,7 +371,7 @@ of this button.'),
           'send' => self::t('Attempt to send the stuff you have composed out to your selection of
 recipients. Please think thrice about it. In case of an error
 additional diagnostic messages may (or may not ...) be available in
-the `Debug\' tab'),
+the "Debug" tab'),
           'export' => self::t('Export the email text as HTML. In the case of per-member variable
 substitutions this will result in a multi-page document with proper page breaks after each message, with all variables substituted.'),
           'cancel' => self::t('Cancel the email composition and close the input form. This has the
@@ -436,7 +430,7 @@ you can also simply double-click inside the boxed filter-region in order to acti
 
       'executive-board-project' => self::t('Name of the pseudo-project listing the members of the executive board.'),
 
-      'expert-mode' => self::t('Display additional ``expert\'\' settings. Despite the name you are
+      'expert-mode' => self::t('Display additional "expert" settings. Despite the name you are
 invited to have a look, but please do not change anything unless you know what your are doing. Thanks!'),
 
       'expert-operations' => self::t('For those who know what they are doing, which essentially means: don\'t.'),
@@ -923,7 +917,7 @@ musicians on all pages will be added.'),
           'plus' => self::t('  Click me to pre-select
 all musicians on all pages
 for the current project.
-Please click the ``Add all\'\'-button to
+Please click the "Add all"-button to
 actually add them.'),
 
           'minus' => self::t('  Click me to remove
@@ -934,7 +928,7 @@ the current project.'),
           'check' => self::t('  Check me to pre-select
 this musician for the current
 project. Please click the
- ``Add all\'\'-button to
+ "Add all"-button to
 actually add all selected
 musicians.'),
         ],
@@ -977,13 +971,13 @@ und Abbruchmöglichkeit.'),
 
         'debit' => [
           'note' => [
-            'default' => self::t('Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool `aqbanking-cli\'. Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account.'),
+            'default' => self::t('Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool "aqbanking-cli". Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account.'),
 
             '+' => self::t('Select all displayed debit-notes for export.'),
 
             '-' => self::t('Deselect all displayed debit-notes from export selection.'),
 
-            'check' => self::t('Select this debit note for debiting the project fees. In order to actually export the debit-note you have to hit the `Debit\' button above.'),
+            'check' => self::t('Select this debit note for debiting the project fees. In order to actually export the debit-note you have to hit the "Debit" button above.'),
           ],
         ],
 
@@ -1001,7 +995,7 @@ VORSICHT!.'),
           'email' => self::t('Klick mich, um eine Em@il an die ausgewählten
 Musiker zu versenden. Auf der folgenden Seite kann
 die Auswahl dann noch modifiziert werden.
-`ausgewält\' bedeutet: nicht
+"ausgewält" bedeutet: nicht
 nur die auf der aktuellen
 Anzeige-Seite, sondern
 alle, die den Such-Kriterien
@@ -1013,7 +1007,7 @@ entsprechen.'),
             'email' => self::t('Klick mich, um alle gerade
 angezeigten Musiker zu der
 Em@il-Auswahl hinzuzufügen.
-`angezeigt\' bedeutet: nicht
+"angezeigt" bedeutet: nicht
 nur die auf der aktuellen
 Anzeige-Seite, sondern
 alle, die den Such-Kriterien
@@ -1043,7 +1037,7 @@ korrigieren.'),
         ],
 
         'export' => [
-          'choice' => self::t('Export the visible part of the data-base to an office-format. The `Excel\'-export should produce useful input for either Libre- or OpenOffice or for the product of some well-known software-corporation with seat in Redmond, USA.'),
+          'choice' => self::t('Export the visible part of the data-base to an office-format. The "Excel"-export should produce useful input for either Libre- or OpenOffice or for the product of some well-known software-corporation with seat in Redmond, USA.'),
 
           'csv' => self::t('Export in CSV-format using a semicolon as delimiter (Excel convention)'),
 
@@ -1051,7 +1045,7 @@ korrigieren.'),
 
           'pdf' => self::t('Export as PDF in A3/Landscape, scaled to fit the page size'),
 
-          'excel' => self::t('Export as `full-featured\' Excel-2007 table, `.xslx\'.'),
+          'excel' => self::t('Export as "full-featured" Excel-2007 table, ".xslx".'),
 
           'html' => self::t('Export as HTML page without navigation elements; can also be loaded into your office-programs.'),
         ],
@@ -1064,7 +1058,7 @@ Short explanation: simply type somthing and press <code>ENTER</code>.
 In more detail: For numerical fields there is a select-box with comparison
 operators on the left. For text-fields
 <ul>
-<li>there are `catch-all\' wildcards `%%\' and `*\'</li>
+<li>there are &quot;catch-all&quot; wildcards &quot;%%&quot; and &quot;*&quot;</li>
 <li>wildcards in quoted strings are ignored</li>
 <li>space around unquoted strings is removed</li>
 <li>single or double quotes have the same meaning</li>
@@ -1078,24 +1072,24 @@ search-string):
 <dd>search for the wild-card expression %%SOMETHING%%</dd>
 <dt>SOME%%THING</dt>
 <dd>search for any expression starting with SOME and ending with THING</dd>
-<dt>"SOME*THING"</dt>
-<dd>search for exactly the expression SOME*THING, the wildcard "*" is not taken in to account</dd>
+<dt>&quot;SOME*THING&quot;</dt>
+<dd>search for exactly the expression SOME*THING, the wildcard &quot;*&quot; is not taken in to account</dd>
 <dt>!SOMETHING</dt>
 <dd>match everything not being matched by SOMETHING</dd>
 </dl>
 <br/>
 Further
 <ul>
-<li>instead of `!\' one may use as well use `!=\'</li>
-<li>instead of using quotes it is also possible to prefix the search expression by either `=\' or `==\'</li>
+<li>instead of &quot;!&quot; one may use as well use &quot;!=&quot;</li>
+<li>instead of using quotes it is also possible to prefix the search expression by either &quot;=&quot; or &quot;==&quot;</li>
 </ul>
 It is also possible to match empty fields, in particular:
 <br/>
 <dl>
 <dt>%%</dt>
-<dt>!""</dt>
+<dt>!&quot;&quot;</dt>
 <dd>match any row with something non-empty in the search-field</dd>
-<dt>""</dt>
+<dt>&quot;&quot;</dt>
 <dt>!%%</dt>
 <dd>match any row with empty search-field</dd>
 </dl>', options: [ ToolTipsService::OPTION_HTML => true ]),
@@ -1138,7 +1132,7 @@ Suchkriterien zu verstecken.'),
           'default' => self::t('Klick mich, um die
 aktuellen Suchkriterien anzuwenden. Suchkriterien
 können in den Feldern eingegeben werden.
-Als Platzhalter verwendet man `%%\'.'),
+Als Platzhalter verwendet man "%%".'),
         ],
 
         'reload' => [
@@ -1229,7 +1223,7 @@ fields for double-/single-room preference, room-mates and such.'),
 
         'financial-balance' => self::t('Change to the folder with the financial balance
 sheets for the project (only available after the project
-has been ``closed\'\'.'),
+has been "closed".'),
 
         'project-instrumentation-numbers' => self::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.'),
 
@@ -1247,7 +1241,7 @@ mandates.'),
 
       'project-instrumentation-tab' => self::t('Displays the columns directly related to the instrumentation for the project.'),
 
-      'project-metadata-tab' => self::t('Displays `meta-data\' like project fees, single/double room preferences, debit-mandates and the like.'),
+      'project-metadata-tab' => self::t('Displays "meta-data" like project fees, single/double room preferences, debit-mandates and the like.'),
 
       // TRANSLATORS: intentionally contains HTML
       'project-name' => self::t('Please enter here a <b>SHORT</b> project name, rather a project tag. The software will try very hard to confine you to the following rules:
@@ -1255,9 +1249,9 @@ mandates.'),
 <dt>BE SHORT, PLEASE</dt>
 <dd>No more than 20 characters, s.v.p. Please: rather <b>MUCH</b> shorter.</dd>
 <dt>NO SPACES, PLEASE</dt>
-<dd>Please use "camel case" instead.</dd>
+<dd>Please use &quot;camel case&quot; instead.</dd>
 </dl>
-Please <b>DO NOT TRY</b> to "work around" those "limitations. Just don\'t. Thanks.', options: [ ToolTipsService::OPTION_HTML => true ]),
+Please <b>DO NOT TRY</b> to &quot;work around&quot; those &quot;limitations&quot;. Just don\'t. Thanks.', options: [ ToolTipsService::OPTION_HTML => true ]),
 
       'project-name-yearattach' => self::t('Append the year to the name if checked.
 Regardless of this checkbox any decimal digit will first be stripped from the end
@@ -1272,9 +1266,9 @@ of the project name before the year is added.'),
       'project-web-article-delete' => self::t('Delete the currently displayed web-page fromthe project. The web page will be "detached" from the project and moved to the trash-bin
 "category" (folger) inside the CMS.'),
 
-      'project-web-article-linkpage' => self::t('Link existing pages to the project. This can be used, for instance, in order to add a page to the project which has not been created by hitting the `+\'-button above, but was created directly in the CMS backend. When linking articles from the `trashbin\' category then those articles will automatically moved to the `preview\' category; this is some not-so-hidden undelete feature.z'),
+      'project-web-article-linkpage' => self::t('Link existing pages to the project. This can be used, for instance, in order to add a page to the project which has not been created by hitting the "+"-button above, but was created directly in the CMS backend. When linking articles from the "trashbin" category then those articles will automatically moved to the "preview" category; this is some not-so-hidden undelete feature.z'),
 
-      'project-web-article-linkpage-select' => self::t('Please select articles to link to the current project. The articles will be immediately added to the project if you select them. In order to remove the article, please use the `-\' button above.'),
+      'project-web-article-linkpage-select' => self::t('Please select articles to link to the current project. The articles will be immediately added to the project if you select them. In order to remove the article, please use the "-" button above.'),
 
       'project-web-article-unlinkpage' => self::t('Detach the currently displayed event announcement from the project. Primarily meant to provide means to undo erroneous linking of articles.'),
 
