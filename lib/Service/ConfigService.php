@@ -305,7 +305,7 @@ class ConfigService
   /** @var string Config-key for the announcements mailing list */
   public const ANNOUNCEMENTS_MAILING_LIST_KEY = 'announcementsMailingList';
   /** @var string Config-key for the announcements mailing list */
-  const ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME = 'announcementsMailingListName';
+  const ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY = 'announcementsMailingListName';
 
   /** @var string */
   const USER_GROUP_KEY = 'usergroup';
@@ -321,6 +321,9 @@ class ConfigService
 
   /** @var string */
   public const EMAIL_FROM_NAME_KEY = 'emailfromname';
+
+  /** @var string */
+  public const EMAIL_FROM_DOMAIN_KEY = 'emailFromDomain';
 
   /** @var string */
   public const EMAIL_FROM_ADDRESS_KEY = 'emailfromaddress';

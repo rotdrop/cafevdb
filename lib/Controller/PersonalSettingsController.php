@@ -1698,9 +1698,10 @@ class PersonalSettingsController extends Controller
               $reportValue = $displayName . ' <' . $realValue . '>';
               break;
             case ConfigService::EMAIL_TEST_ADDRESS_KEY:
-              // fallthrough
+              $this->setSimpleConfigValue(ConfigService::EMAIL_TEST_NAME_KEY, $displayName, responseData: $furtherData);
+              break;
             case ConfigService::EMAIL_FROM_ADDRESS_KEY:
-              $this->setSimpleConfigValue($parameter, $displayName, responseData: $furtherData);
+              $this->setSimpleConfigValue(ConfigService::EMAIL_FROM_NAME_KEY, $displayName, responseData: $furtherData);
               break;
           }
         }
@@ -1728,7 +1729,7 @@ class PersonalSettingsController extends Controller
           $this->logInfo('SHARE URI ' . $shareUri);
         }
         // fall through
-      case 'announcementsMailingListName':
+      case ConfigService::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY:
       case 'bulkEmailSubjectTag':
       case 'emailuser':
       case 'emailpassword':

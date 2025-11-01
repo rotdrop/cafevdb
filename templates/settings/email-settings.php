@@ -28,6 +28,18 @@ use OCA\CAFEVDB\Controller\PersonalSettingsController;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service\ConfigService;
 
+if (!empty($_[ConfigService::EMAIL_TEST_NAME_KEY])) {
+  $emailTestAddressValue = $_[ConfigService::EMAIL_TEST_NAME_KEY] . ' <' . $_[ConfigService::EMAIL_TEST_ADDRESS_KEY] . '>';
+} else {
+  $emailTestAddressValue = $_[ConfigService::EMAIL_TEST_ADDRESS_KEY];
+}
+
+if (!empty($_[ConfigService::EMAIL_FROM_NAME_KEY])) {
+  $emailAddressValue = $_[ConfigService::EMAIL_FROM_NAME_KEY] . ' <' . $_[ConfigService::EMAIL_FROM_ADDRESS_KEY] . '>';
+} else {
+  $emailAddressValue = $_[ConfigService::EMAIL_FROM_ADDRESS_KEY];
+}
+
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin email">
   <div id="email-settings">
@@ -153,27 +165,16 @@ use OCA\CAFEVDB\Service\ConfigService;
       </fieldset>
       <fieldset class="emailidentity">
         <legend><?php p($l->t('Bulk Email Identity')); ?></legend>
-        <label for="emailfromname"
-               title="<?php echo $toolTips['emailform:sender:address']; ?>"
-        >
-          <input type="text"
-                 name="emailfromname"
-                 id="emailfromname"
-                 value="<?php echo $_['emailfromname']; ?>"
-                 placeholder="<?php echo $l->t('Real Sender Name');?>"
-          />
-          <?php echo $l->t('From: name');?>
-        </label>
         <label for="emailfromaddress"
-               title="<?php echo $toolTips['emailform:sender:address']; ?>"
+               title="<?= $toolTips['emailform:sender:address']; ?>"
         >
           <input type="text"
                  name="<?= ConfigService::EMAIL_FROM_ADDRESS_KEY ?>"
                  id="<?= ConfigService::EMAIL_FROM_ADDRESS_KEY ?>"
-                value="<?= $_[ConfigService::EMAIL_FROM_ADDRESS_KEY]; ?>"
-                 placeholder="<?php echo $l->t('Email From Adress');?>"
+                 value="<?= $emailAddressValue ?>"
+                 placeholder="<?= $l->t('e.g. Orchestra <name@domain.tld>');?>"
           />
-          <?php echo $l->t('From: address');?>
+          <?php echo $l->t('From: name and address');?>
         </label>
       </fieldset>
       <fieldset class="bulk-email-subject">
@@ -398,12 +399,11 @@ use OCA\CAFEVDB\Service\ConfigService;
              title="<?php echo $l->t('Email test-mode; send emails only to the email test-address.') ?>">
         <?php echo $l->t('Test-Mode'); ?>
       </label>
-      <input type="text" name="emailtestaddress" id="emailtestaddress"
-             <?php echo $_['emailtestmode'] == 'on' ? '' : 'disabled' ?>
-             value="<?php echo $_['emailtestaddress']; ?>"
-             placeholder="<?php echo $l->t('Test Email Adress');?>"
+      <input type="text" name="<?= ConfigService::EMAIL_TEST_ADDRESS_KEY ?>" id="<?= ConfigService::EMAIL_TEST_ADDRESS_KEY?>"
+             value="<?= $emailTestAddressValue ?>"
+             placeholder="<?php echo $l->t('e.g. John Doe <john@doe.org>');?>"
       />
-      <label for="emailtestaddress"><?php echo $l->t('Test address');?></label>
+      <label for="<?= ConfigService::EMAIL_TEST_ADDRESS_KEY ?>"><?php echo $l->t('Test address');?></label>
     </form>
   </div>
 </div>
