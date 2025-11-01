@@ -4131,7 +4131,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
   /**
    * Set the catch-all email address. If in "construction mode" then emails
-   * are only send to the configured 'emailtestaddress' in the app
+   * are only sent to the configured 'emailtestaddress' in the app
    * config-space.
    *
    *  @return void

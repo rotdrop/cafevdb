@@ -320,7 +320,7 @@ class ConfigService
   const CONFIG_LOCK_KEY = EncryptionService::CONFIG_LOCK_KEY;
 
   /** @var string */
-  public const EMAIL_FORM_ADDRESS_KEY = 'emailfromaddress';
+  public const EMAIL_FROM_ADDRESS_KEY = 'emailfromaddress';
 
   /** @var string */
   public const EMAIL_TEST_ADDRESS_KEY = 'emailtestaddress';

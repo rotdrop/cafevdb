@@ -1678,7 +1678,7 @@ class PersonalSettingsController extends Controller
         );
       case ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY:
       case ConfigService::EMAIL_TEST_ADDRESS_KEY:
-      case ConfigService::EMAIL_FORM_ADDRESS_KEY:
+      case ConfigService::EMAIL_FROM_ADDRESS_KEY:
         $realValue = Util::normalizeSpaces($value);
         try {
           $parsedEmail = $this->emailAddressService->parseAddressString($realValue);
