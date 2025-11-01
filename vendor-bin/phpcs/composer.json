@@ -1,0 +1,10 @@
+{
+  "platform": {
+    "php": "8.4"
+  },
+  "sort-packages": true,
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.6.0",
+    "zebra-north/phpcs-short-types": "^1.0"
+  }
+}
