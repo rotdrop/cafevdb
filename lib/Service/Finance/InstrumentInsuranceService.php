@@ -27,9 +27,7 @@ namespace OCA\CAFEVDB\Service\Finance;
 use DateTimeZone;
 use DateTimeImmutable as DateTime;
 use DateTimeInterface;
-use RoundingMode;
 
-use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -42,7 +40,6 @@ use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /** Collective instrument insurance. */
 class InstrumentInsuranceService

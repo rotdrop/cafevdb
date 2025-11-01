@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\BackgroundJob;
 
-use OCP\BackgroundJob\TimedJob;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig as ICloudConfig;
 

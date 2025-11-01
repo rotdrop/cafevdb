@@ -56,7 +56,6 @@ use OCP\SystemTag\ISystemTagManager;
 use OCP\SystemTag\TagAlreadyExistsException;
 use OCP\SystemTag\TagNotFoundException;
 
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;

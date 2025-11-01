@@ -28,8 +28,6 @@ use DateInterval;
 use RuntimeException;
 use DateTimeImmutable;
 
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;

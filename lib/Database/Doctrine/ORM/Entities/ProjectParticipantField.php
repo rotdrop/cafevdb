@@ -28,23 +28,16 @@ use DateTimeImmutable;
 use DateTimeInterface;
 
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Common\UndoableFolderRename;
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener as TranslatableListener;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 

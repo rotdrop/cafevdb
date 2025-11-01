@@ -39,7 +39,6 @@ use Sabre\VObject\Component\VEvent;
 use Sabre\VObject\Component as VComponent;
 use Sabre\VObject\Property\ICalendar;
 
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
 
 /** Operation/Builder for VCalendar objects */

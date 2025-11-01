@@ -27,11 +27,9 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
-use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Events;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**
  * Listen to renamed and deleted events in order to keep the

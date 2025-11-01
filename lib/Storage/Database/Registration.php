@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Storage\Database;
 
 use Psr\Container\ContainerInterface;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
-use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Service\ConfigService;
 

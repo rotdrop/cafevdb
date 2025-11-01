@@ -23,7 +23,6 @@
  */
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /** Helper for Gedmo "translatable" entities. */

@@ -24,9 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
 
 /** Repository for per-participant field definitions. */
 class ProjectParticipantFieldsRepository extends EntityRepository

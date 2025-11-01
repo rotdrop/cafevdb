@@ -25,7 +25,6 @@
 namespace OCA\CAFEVDB\Service;
 
 use Exception;
-use InvalidArgumentException;
 use Sabre\DAV;
 
 use OCP\Calendar\IManager as CalendarManager;

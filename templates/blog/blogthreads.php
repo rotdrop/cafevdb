@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Common\Util;
 
 /**
  * @param OCA\CAFEVDB\PageRenderer\BlogRenderer $renderer

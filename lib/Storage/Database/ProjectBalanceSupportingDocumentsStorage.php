@@ -24,13 +24,10 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
-use DateTimeImmutable;
 use Throwable;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;

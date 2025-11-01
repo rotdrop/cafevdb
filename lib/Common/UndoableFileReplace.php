@@ -27,11 +27,8 @@ namespace OCA\CAFEVDB\Common;
 use Closure;
 
 use OCP\AppFramework\IAppContainer;
-use OCP\Files\Node as FileSystemNode;
-use OCP\Files\FileInfo;
 use OCP\Files;
 
-use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Replace one file by another, maintaining an undo history in the cloud. Both

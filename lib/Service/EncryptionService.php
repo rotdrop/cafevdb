@@ -30,7 +30,6 @@ use OCP\IConfig;
 use OCP\IUserSession;
 use OCP\Security\IHasher;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
-use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;

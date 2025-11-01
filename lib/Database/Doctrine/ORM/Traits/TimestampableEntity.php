@@ -33,7 +33,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /** Union of CreatedAtEntity and UpdatedAtEntry traits. */
 trait TimestampableEntity

@@ -30,13 +30,9 @@ declare(strict_types=1);
 namespace OCA\CAFEVDB\AddressBook;
 
 use Sabre\VObject\Component\VCard;
-use Sabre\VObject\Property;
 
-use OC\Security\CSRF\CsrfTokenManager;
 use OCP\Constants;
 use OCP\IAddressBook;
-use OCP\IConfig;
-use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;

@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\Common;
 use Exception;
 use InvalidArgumentException;
 
-use OCP\AppFramework\IAppContainer;
 use OCP\Files\NotFoundException as FileNotFoundException;
 
 use OCA\CAFEVDB\Storage\UserStorage;

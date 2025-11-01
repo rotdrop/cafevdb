@@ -25,7 +25,6 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTime;
 use OCA\CAFEVDB\Common\Util;
 
 $containerClass = $appName.'-'.'container';

@@ -39,15 +39,10 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Maintenance\SanitizerRegistration;
-use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Service\ProjectService;
 
 /** Run various databse sanitizers on request. */
 class DatabaseSanitizers extends Command

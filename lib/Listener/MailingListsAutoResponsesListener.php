@@ -50,7 +50,6 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Listen to renamed and deleted events in order to keep the

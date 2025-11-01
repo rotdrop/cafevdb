@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Command;
 
-use Throwable;
 
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
@@ -32,14 +31,10 @@ use OCP\IUserSession;
 use OCP\IUserManager;
 use OCP\AppFramework\IAppContainer;
 
-use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\DescriptorHelper;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Question\Question;
 
 use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;

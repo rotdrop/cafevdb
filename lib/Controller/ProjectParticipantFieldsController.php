@@ -33,9 +33,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
-use OCP\IL10N;
 use OCP\IRequest;
-use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;

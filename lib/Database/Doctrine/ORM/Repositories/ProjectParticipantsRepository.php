@@ -24,10 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-use OCA\CAFEVBD\Common\Util;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
 
 /** Repository for project participants. */
 class ProjectParticipantsRepository extends EntityRepository

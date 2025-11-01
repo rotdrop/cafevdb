@@ -25,7 +25,6 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 

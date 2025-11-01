@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Controller\MailingListsController;
 
 /**
  * @param string $mailingListActionName The name of the radio control

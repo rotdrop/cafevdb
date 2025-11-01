@@ -43,11 +43,9 @@ use OCA\Files\Event\LoadSidebar;
 
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\AuthorizationService;
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Settings\ConfigConstants;

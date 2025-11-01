@@ -29,12 +29,10 @@ use UnexpectedValueException;
 
 use Sabre\VObject;
 use Sabre\VObject\Component\VCard;
-use Sabre\VObject\Property;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\IAddressBook;
 use Psr\Log\LoggerInterface;
 
 use OCA\DAV\Events\CardCreatedEvent;
@@ -43,12 +41,9 @@ use OCA\DAV\Events\CardMovedEvent;
 use OCA\DAV\Events\CardUpdatedEvent;
 
 use OCA\CAFEVDB\Common\Functions;
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\CardDavService;
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ProjectService;

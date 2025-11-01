@@ -36,10 +36,7 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
-use OCA\CAFEVDB\Maintenance\IMigration;
-use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\MigrationsService;
 
 /** Database (and non-database) migration management. */

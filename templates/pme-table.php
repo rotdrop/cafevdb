@@ -31,7 +31,6 @@
 
 namespace OCA\CAFEVDB;
 
-use Throwable;
 
 /**
  * Expected parameters:

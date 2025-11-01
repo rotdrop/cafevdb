@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use InvalidArgumentException;
 use RuntimeException;
 use Throwable;
 

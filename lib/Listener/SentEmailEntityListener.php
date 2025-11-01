@@ -24,9 +24,7 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
-use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\EntityManager;

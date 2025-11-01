@@ -39,7 +39,6 @@ use Symfony\Component\Console\Helper\DescriptorHelper;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
-use Symfony\Component\Console\Question\Question;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
@@ -49,7 +48,6 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as ReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
-use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Traits\ConfigTrait;
 
 /**

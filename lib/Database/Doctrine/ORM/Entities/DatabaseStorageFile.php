@@ -26,17 +26,12 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Constants;
 
 /**
  * File-node entry for a database-backed file.

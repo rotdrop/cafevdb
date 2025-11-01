@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Crypto;
 
 use OCA\CAFEVDB\Exceptions;
 use Psr\Log\LoggerInterface as ILogger;
-use Psr\Log\LogLevel;
 
 /** Use the encryption service provided by the ambient cloud software. */
 class SealCryptor implements ICryptor

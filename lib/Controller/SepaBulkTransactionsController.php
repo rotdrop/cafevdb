@@ -26,11 +26,9 @@ namespace OCA\CAFEVDB\Controller;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use PHP_IBAN\IBAN;
 use Throwable;
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\RedirectResponse;
@@ -38,10 +36,6 @@ use OCP\AppFramework\Http\Response;
 use OCP\IDateTimeFormatter;
 use OCP\IRequest;
 
-use OCA\CAFEVDB\Common\GenericUndoable;
-use OCA\CAFEVDB\Common\IUndoable;
-use OCA\CAFEVDB\Common\UndoableFolderRename;
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -50,7 +44,6 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
-use OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\ProjectService;
 

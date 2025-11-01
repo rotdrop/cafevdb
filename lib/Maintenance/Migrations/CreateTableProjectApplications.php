@@ -24,10 +24,7 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-use Throwable;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /**
  * Create the ProjectApplications.

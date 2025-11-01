@@ -29,7 +29,6 @@ use Throwable;
 use UnexpectedValueException;
 
 use OCP\AppFramework\IAppContainer;
-use OCP\IDateTimeFormatter;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 

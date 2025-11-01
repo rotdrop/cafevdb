@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Listener;
 
 use Throwable;
 
-use OCP\Accounts\IAccount;
 use OCP\Accounts\IAccountManager;
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
@@ -34,19 +33,11 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\Group\Events\BeforeUserAddedEvent;
 use OCP\Group\Events\UserAddedEvent;
 use OCP\Group\Events\UserRemovedEvent;
-use OCP\Group\ISubAdmin as SubAdminManager;
 use OCP\IConfig as ICloudConfig;
-use OCP\IGroupManager;
-use OCP\IUserBackend;
-use OCP\IUserManager;
-use OCP\User\Backend\ICreateUserBackend;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\CloudAccountsService;
-use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;

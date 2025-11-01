@@ -25,17 +25,12 @@
 namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\IConfig;
 use OCP\IRequest;
-use OCP\IL10N;
 
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Common\Util;
 

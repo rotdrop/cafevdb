@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 
 $alloff = $_['orchestra'] == '' ? $alloff = 'disabled' : '';

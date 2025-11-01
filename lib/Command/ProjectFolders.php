@@ -35,22 +35,17 @@ use OCP\IUserSession;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\DescriptorHelper;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /** Create all participant sub-folder for each project. */
 class ProjectFolders extends Command

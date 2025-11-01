@@ -29,7 +29,6 @@ use NumberToWords\NumberToWords;
 use NumberToWords\CurrencyTransformer\CurrencyTransformer;
 use NumberToWords\NumberTransformer\NumberTransformer;
 
-use OCP\IL10N;
 
 /**
  * A wrapper around https://github.com/kwn/number-to-words to make it even

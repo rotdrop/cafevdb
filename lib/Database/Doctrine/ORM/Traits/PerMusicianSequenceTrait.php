@@ -27,8 +27,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager as DecoratedEntityManager;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * A special trait for a repository for entities with per-musician

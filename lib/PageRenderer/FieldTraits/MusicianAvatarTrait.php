@@ -29,7 +29,6 @@ use Throwable;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Common\Util;
 
 /**
  * Traits class for visualizing the user avatar for musicians which also have

@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 
 /**
  * @param string $projectType The type of the project, temporary, permanent, template.

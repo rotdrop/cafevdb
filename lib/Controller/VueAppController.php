@@ -39,7 +39,6 @@ use OCP\Util;
 
 use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\Util as CommonUtil;
-use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service\AssetService;

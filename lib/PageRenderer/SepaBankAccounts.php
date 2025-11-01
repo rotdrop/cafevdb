@@ -26,21 +26,17 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use OCP\IRequest;
 
-use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller\DownloadsController;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
-use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;

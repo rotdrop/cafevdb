@@ -32,27 +32,21 @@ use Throwable;
 use UnexpectedValueException;
 
 use OCP\AppFramework\IAppContainer;
-use OCP\IDateTimeFormatter;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\RationalNumber;
-use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNote as DebitNote;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNoteData as DataEntity;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\VCalendarService;
-use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\Database\BankTransactionsStorage;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 
 /**
  * Service class for generating bulk-transactions for submittance to the

@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-use DateTimeInterface;
-use DateTimeImmutable;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice as Entity;
 

@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\AppInfo;
 
-use SimpleXMLElement;
 use Exception;
 
 /*-*********************************************************
@@ -46,10 +45,8 @@ use OCP\AppFramework\IAppContainer;
  * Navigation and settings depending on the group-membership
  *
  */
-use OCP\IURLGenerator;
 use OCP\Settings\IManager as ISettingsManager;
 
-use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Settings\PersonalSection;
@@ -62,7 +59,6 @@ use OCA\CAFEVDB\Settings\PersonalSection;
  *
  */
 
-use OCP\EventDispatcher\IEventDispatcher;
 
 use OCA\CAFEVDB\AddressBook\Registration as AddressBookRegistration;
 use OCA\CAFEVDB\Crypto\Registration as CryptoRegistration;
@@ -80,8 +76,6 @@ use OCA\CAFEVDB\Storage\Database\Registration as StorageRegistration;
 use OCA\CAFEVDB\AddressBook\ContactsAddressBook;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Middleware;
-use OCA\CAFEVDB\Service\DatabaseService;
-use OCA\CAFEVDB\Service\EventsService;
 
 /*
  *

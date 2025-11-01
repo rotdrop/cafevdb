@@ -29,8 +29,6 @@ use OCP\IConfig;
 use OCP\IL10N;
 use Psr\Container\ContainerInterface;
 
-use OCA\CAFEVDB\Crypto\CloudSymmetricCryptor;
-use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
 use OCA\CAFEVDB\Settings\ConfigConstants;

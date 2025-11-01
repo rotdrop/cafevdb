@@ -30,7 +30,6 @@ use Exception;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager as DecoratedEntityManager;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
 
 /**
  * @method Entities\SepaDebitMandate find($id)

@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\Controller;
 use Throwable;
 use UnexpectedValueException;
 
-use PHP_IBAN\IBAN;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -37,17 +36,14 @@ use OCP\Files\File;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common;
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /** AJAX endpoint to support maintenance of tax exemption notices. */
 class DocumentStorageUploadController extends Controller

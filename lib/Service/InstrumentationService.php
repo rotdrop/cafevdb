@@ -30,7 +30,6 @@ use Throwable;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Legacy\Util as DataBaseUtil;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 

@@ -34,7 +34,6 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\Mapping\Event\SluggableAdapter;
 use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;
 
 use OCA\CAFEVDB\Common\Transliterator;
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoSluggableListener;
 
 /**

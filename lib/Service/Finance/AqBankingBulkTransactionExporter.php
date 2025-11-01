@@ -25,7 +25,6 @@
 namespace OCA\CAFEVDB\Service\Finance;
 
 use RuntimeException;
-use DateTimeImmutable as DateTime;
 use PHP_IBAN\IBAN as PHP_IBAN;
 
 use OCA\CAFEVDB\Service\ConfigService;

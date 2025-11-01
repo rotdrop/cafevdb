@@ -25,9 +25,6 @@
 namespace OCA\CAFEVDB\Common;
 
 use NumberFormatter;
-use DateTimeImmutable;
-use DateTime;
-use DateTimeZone;
 use InvalidArgumentException;
 
 use League\HTMLToMarkdown\HtmlConverter as HtmlToMarkDown;

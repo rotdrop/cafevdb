@@ -24,13 +24,11 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use Throwable;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\Group\Events\GroupChangedEvent;
 use OCP\Group\Events\GroupCreatedEvent;
 use OCP\IGroup;
-use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\CloudAccountsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;

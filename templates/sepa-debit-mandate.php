@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNaviation;
 
 $title = $l->t("SEPA Bank Information for %s", $musicianName);

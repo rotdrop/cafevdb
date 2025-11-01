@@ -31,7 +31,6 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\AuthorizedAdminSetting;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
-use OCP\IL10N;
 
 use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\Util;

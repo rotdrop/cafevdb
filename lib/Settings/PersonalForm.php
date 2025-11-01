@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\Settings;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\App\IAppManager;
 use OCP\IInitialStateService;
-use OCP\Settings\ISettings;
 
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Common\Util;
@@ -36,13 +35,11 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as Particip
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\DatabaseService;
 use OCA\CAFEVDB\Service\ErrorService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo\Service\RPC as WebPagesRPC;

@@ -39,7 +39,6 @@ use OCA\CAFEVDB\Wrapped\Horde_ListHeaders;
 use OCA\CAFEVDB\Wrapped\Horde_Mime_Exception;
 use OCA\CAFEVDB\Wrapped\Horde_Mime_Headers;
 use OCA\CAFEVDB\Wrapped\Horde_Mime_Part;
-use OCA\CAFEVDB\Service\IMAP\AddressList;
 use OCP\AppFramework\Db\DoesNotExistException;
 use function str_starts_with;
 use function strtolower;

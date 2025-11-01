@@ -27,18 +27,12 @@ namespace OCA\CAFEVDB\Controller;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\ContentSecurityPolicy;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\IAppContainer;
-use OCP\IL10N;
 use OCP\IRequest;
 use OCP\ITempManager;
-use OCP\IUserSession;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;

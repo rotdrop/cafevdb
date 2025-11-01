@@ -30,13 +30,9 @@ use UnexpectedValueException;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Database\Constants;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 

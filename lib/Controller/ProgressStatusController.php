@@ -30,8 +30,6 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IDBConnection;
-use OCP\IUserSession;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;

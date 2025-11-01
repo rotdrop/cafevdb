@@ -27,10 +27,8 @@ namespace OCA\CAFEVDB\Traits;
 use Throwable;
 
 use OCP\AppFramework\IAppContainer;
-use OCP\IConfig;
 use OCP\IInitialStateService;
 use OCP\IL10N;
-use OCP\IUser;
 
 use OCA\Calendar\Service\CalendarInitialStateService;
 
@@ -39,7 +37,6 @@ use OCA\CAFEVDB\Documents\TemplateService;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;

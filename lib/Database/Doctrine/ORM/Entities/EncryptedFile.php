@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use \RuntimeException;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;

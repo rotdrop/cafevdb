@@ -28,7 +28,6 @@ use Throwable;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
-use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\AppFramework\IAppContainer;
 
@@ -37,7 +36,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Common\GenericUndoable;
 
-use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\CalDavService;
 

@@ -24,10 +24,8 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 // hacked versions ...
 use OCA\CAFEVDB\Wrapped\Symfony\Component\String\Slugger\AsciiSlugger;
-use OCA\CAFEVDB\Wrapped\Symfony\Component\String\UnicodeString;
 
 /**
  * Transliterate any given name into an ASCII login name. In principle the

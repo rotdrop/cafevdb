@@ -28,14 +28,11 @@ use chillerlan\QRCode\QRCode;
 
 use OCP\IRequest;
 
-use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;

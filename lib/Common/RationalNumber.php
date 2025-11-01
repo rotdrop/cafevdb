@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Common;
 
 use InvalidArgumentException;
 use OutOfBoundsException;
-use Throwable;
 
 use MathPHP\Number\Rational;
 

@@ -31,25 +31,17 @@ use InvalidArgumentException;
 use Throwable;
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\IAppContainer;
 use OCP\Contacts\IManager as IContactsManager;
-use OCP\Files\File;
-use OCP\Files\FileInfo;
 use OCP\Files\Folder;
-use OCP\Files\Node;
 use OCP\IAddressBook;
-use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;

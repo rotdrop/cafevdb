@@ -28,7 +28,6 @@ use Throwable;
 use RuntimeException;
 use InvalidArgumentException;
 use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
-use OCA\CAFEVDB\Wrapped\ZipStream\Option\Archive as ArchiveOptions;
 
 use OC\Files\Storage\Wrapper\Wrapper as WrapperStorage;
 

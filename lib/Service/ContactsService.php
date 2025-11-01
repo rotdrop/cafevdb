@@ -25,27 +25,21 @@
 namespace OCA\CAFEVDB\Service;
 
 use DateTimeImmutable;
-use DateTimeZone;
-use Exception;
 use Throwable;
 
-use function Symfony\Component\String\u;
 
 use Sabre\VObject\Component\VCard;
 use Sabre\VObject\Property;
 
 use OCP\AppFramework\IAppContainer;
-use OCP\Constants;
 use OCP\Contacts\IManager as IContactsManager;
 use OCP\IAddressBook;
 use OCP\IAvatar;
 use OCP\IAvatarManager;
-use OCP\IL10N;
 use OCP\Image;
 
 use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 use OCA\CAFEVDB\Common\GenericUndoable;
-use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
@@ -53,9 +47,6 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Listener\ContactsCardEventListener;
-use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /** Contacts handling. */
 class ContactsService

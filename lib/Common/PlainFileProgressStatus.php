@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use DateTimeImmutable;
 use RuntimeException;
 
 use Psr\Log\LoggerInterface as ILogger;
@@ -32,9 +31,7 @@ use OCP\IL10N;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
 
-use OCA\CAFEVDB\Storage\AppStorage;
-use OCA\CAFEVDB\Common\IProgressStatus;
-use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Storage\AppStorage;use OCA\CAFEVDB\Exceptions;
 
 /** Progress status with a plain local file as storage. */
 class PlainFileProgressStatus extends AbstractProgressStatus

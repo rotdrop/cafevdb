@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Maintenance;
 
-use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**

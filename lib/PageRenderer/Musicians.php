@@ -29,14 +29,11 @@ use chillerlan\QRCode\QRCode;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Controller\MailingListsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
@@ -44,10 +41,8 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Abstract table generator for Musicians table. */
 abstract class Musicians extends PMETableViewBase

@@ -26,17 +26,11 @@
 namespace OCA\CAFEVDB\Controller;
 
 use InvalidArgumentException;
-use OutOfBoundsException;
-use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\ContentSecurityPolicy;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\IAppContainer;
-use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OC\AppFramework\Utility\QueryNotFoundException;
@@ -46,7 +40,6 @@ use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Listener\BeforeMessageLoggedEventListener;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
 use OCA\CAFEVDB\PageRenderer\Registration as RendererRegistration;
@@ -57,7 +50,6 @@ use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\HistoryService;
-use OCA\CAFEVDB\Service\MigrationsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;

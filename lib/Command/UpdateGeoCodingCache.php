@@ -33,13 +33,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Helper\ProgressBar;
 
-use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
 use OCA\CAFEVDB\Service\GeoCodingService;
 

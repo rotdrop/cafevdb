@@ -28,17 +28,11 @@ use DateTimeInterface;
 use JsonSerializable;
 use ArrayAccess;
 
-use Sabre\VObject\Component\VCard;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
-use OCA\CAFEVDB\Common\Uuid;
 
 /**
  * Although a donation in principle is just a payment there is some meta-data

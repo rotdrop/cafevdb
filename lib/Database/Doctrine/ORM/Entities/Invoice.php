@@ -27,22 +27,17 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use Closure;
 use DateTimeImmutable;
 use DateTimeInterface;
-use UnexpectedValueException;
 use InvalidArgumentException;
 
 use OCA\CAFEVDB\Common\RationalNumber;
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;
 
 /**
  * Invoices collects a couple of InvoiceItems of the same Musician.

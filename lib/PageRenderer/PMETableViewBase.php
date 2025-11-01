@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\PageRenderer;
 use ArrayObject;
 use Exception;
 use RuntimeException;
-use UnexpectedValueException;
 use Throwable;
 
 use OCP\IL10N;
@@ -41,12 +40,9 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Base for phpMyEdit based table-views. */
 abstract class PMETableViewBase extends AbstractPageRenderer

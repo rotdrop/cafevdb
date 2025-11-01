@@ -32,11 +32,8 @@ use UnexpectedValueException;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
-use OCP\IL10N;
 use OCP\IRequest;
-use Psr\Log\LoggerInterface as ILogger;
 
 
 use OCA\CAFEVDB\Common;
@@ -49,12 +46,10 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\UserStorage;
 

@@ -25,7 +25,6 @@
 namespace OCA\CAFEVDB\Storage\Database;
 
 use UnexpectedValueException;
-use DateTimeImmutable;
 use DateTimeInterface;
 
 use OCP\EventDispatcher\IEventDispatcher;
@@ -35,8 +34,6 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Service\ProjectService;

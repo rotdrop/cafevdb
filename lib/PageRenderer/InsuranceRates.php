@@ -33,7 +33,6 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Table generator for Instruments table. */

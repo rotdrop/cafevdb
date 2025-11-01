@@ -33,11 +33,8 @@ use OC\FilesMetadata\FilesMetadataManager;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Question\Question;
 
 /** Authenticated files-scan which is thus also able to scan the database-backed mounts */
 class FilesScan extends \OCA\Files\Command\Scan

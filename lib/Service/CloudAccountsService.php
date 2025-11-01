@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Exception;
-use RuntimeException;
 use Throwable;
 
 use OCA\Settings\Mailer\NewUserMailHelper;
@@ -49,12 +47,7 @@ use OCP\UserInterface;
 use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\AuthorizationService;
-use OCA\CAFEVDB\Service\CloudUserConnectorService;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Database\EntityManager;use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Add some cloud account service related actions which are needed by the

@@ -39,9 +39,6 @@ use Icewind\Streams\CallbackWrapper;
 use Icewind\Streams\CountWrapper;
 use Icewind\Streams\IteratorDirectory;
 
-use OCA\Text\Service\WorkspaceService;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;

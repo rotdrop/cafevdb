@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use \PHP_IBAN\IBAN;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;

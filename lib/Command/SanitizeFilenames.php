@@ -28,23 +28,18 @@ use Throwable;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Services\IAppConfig;
-use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\IRootFolder;
 use OCP\IL10N;
 use OCP\IUserManager;
 use OCP\IUserSession;
 use OCP\L10N\IFactory as IL10NFactory;
 use OC\Files\FilenameValidator;
-use Psr\Log\LoggerInterface;
 
 use OCA\Files\Service\SettingsService;
 use OCA\Files\Command\SanitizeFilenames as FilesSanitizeFilenames;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Exceptions;

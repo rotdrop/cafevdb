@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use DateTimeInterface;
 use JsonSerializable;
 use ArrayAccess;
 

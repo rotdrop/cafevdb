@@ -31,17 +31,13 @@ use GuzzleHttp\Exception\ConnectException as HttpClientConnectException;
 
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MailingListsService;
 
-use OCA\CAFEVDB\Common\Util;
 
 /** Handle subscription management callbacks */
 class MailingListsController extends Controller

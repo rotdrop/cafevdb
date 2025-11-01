@@ -30,7 +30,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
-use Psr\Log\LoggerInterface as ILogger;
 
 /**
  * TranslationKey

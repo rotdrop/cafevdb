@@ -40,10 +40,8 @@ use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception as DBALException;
 
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Exceptions;
 
 /** Fetch one or multiple tooltip via AJAX. */

@@ -33,7 +33,6 @@ use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Database\Cloud\Entities\Blog as BlogEntry;
-use OCA\CAFEVDB\PageRenderer\Renderer as PageRenderer;
 
 /** Mapper for the blog entities. */
 class BlogMapper extends Mapper

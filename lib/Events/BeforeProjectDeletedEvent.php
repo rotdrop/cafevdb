@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Events;
 
-use OCP\EventDispatcher\Event;
 
 /** Fired before the project is actually deleted or soft-deleted. */
 class BeforeProjectDeletedEvent extends ProjectEvent

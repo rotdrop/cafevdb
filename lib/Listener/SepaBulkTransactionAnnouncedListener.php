@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
-use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Events;

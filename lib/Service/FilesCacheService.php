@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use InvalidArgumentException;
 
 use Psr\Log\LoggerInterface;
 
@@ -36,7 +35,6 @@ use OCP\IL10N;
 use OCP\Cache\CappedMemoryCache;
 use OCP\Files\IRootFolder;
 
-use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure;
 
 /**

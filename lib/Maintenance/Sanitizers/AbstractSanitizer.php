@@ -25,9 +25,7 @@
 namespace OCA\CAFEVDB\Maintenance\Sanitizers;
 
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 
-use Symfony\Component\Console\Output\Output;
 
 use OCA\CAFEVDB\Maintenance\ISanitizer;
 use OCA\CAFEVDB\Database\EntityManager;

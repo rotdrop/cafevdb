@@ -24,16 +24,13 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use DateTimeImmutable;
 use DateTimeInterface;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
-use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 /**

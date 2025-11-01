@@ -26,11 +26,8 @@ namespace OCA\CAFEVDB\EmailForm;
 
 use DOMDocument;
 use DateTimeImmutable;
-use DateTimeInterface;
 use PHP_IBAN;
 use Throwable;
-use UnexpectedValueException;
-use array_search;
 use stdClass;
 
 use Malkusch\Lock\Mutex;
@@ -54,10 +51,8 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as Particip
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\EventsService;

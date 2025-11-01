@@ -25,7 +25,6 @@
 namespace OCA\CAFEVDB\Traits;
 
 use DateTime;
-use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 

@@ -29,13 +29,11 @@ use DateTimeImmutable;
 use DateTimeInterface;
 
 use clsTinyButStrong as OpenDocumentFillerBackend;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ExecutableFinder;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\Files\File;
 use OCP\Files\IMimeTypeDetector;
-use OCP\IL10N;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
@@ -44,7 +42,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ImagesService;

@@ -26,14 +26,12 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use OCP\IRequest;
 
-use OCA\CAFEVDB\Common\Navigation;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Table generator for Instruments table. */

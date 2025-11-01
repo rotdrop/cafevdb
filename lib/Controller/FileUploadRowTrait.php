@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http\Response;
 
-use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Common\Util;

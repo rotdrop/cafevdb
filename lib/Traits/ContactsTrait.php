@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Traits;
 
 use OCP\IAddressBook;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /** Convert address-book data to flat arrays. */
 trait ContactsTrait

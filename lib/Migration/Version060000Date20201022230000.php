@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\Migration;
 
-use Doctrine\DBAL\Types\Types;
 use Closure;
 use OCP\DB\ISchemaWrapper;
 use OCP\IDBConnection;

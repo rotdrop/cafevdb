@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine;
 
-use Psr\Log\LoggerInterface as CloudLogger;
 use OCP\ILogger;
 
 /**

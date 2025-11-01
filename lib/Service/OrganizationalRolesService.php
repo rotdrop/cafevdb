@@ -26,12 +26,7 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\Accounts\IAccount;
 use OCP\Accounts\IAccountManager;
-use OCP\IConfig;
-use OCP\IGroupManager;
-use OCP\IL10N;
-use OCP\IUserManager;
 use OCP\Image;
-use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;

@@ -31,7 +31,6 @@ use RuntimeException;
 use OCP\Files as CloudFiles;
 
 use OCA\CAFEVDB\Common;
-use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
@@ -45,16 +44,10 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
-use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
-use OCA\CAFEVDB\Service\Finance\MembershipFeesReceivablesGenerator;
-use OCA\CAFEVDB\Service\Finance\PeriodicReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
-use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
 use OCA\CAFEVDB\Storage\Database\Factory as DatabaseStorageFactory;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
 
 /**
  * General support service, kind of inconsequent glue between

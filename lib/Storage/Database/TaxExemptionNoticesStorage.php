@@ -24,21 +24,17 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
-use DateTimeImmutable;
 use UnexpectedValueException;
 use Throwable;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Constants;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TaxExemptionNotice as Entity;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Storage\StorageUtil;
 
 /**
  * Storage implementation for data-base storage, including access to

@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Events;
 
-use OCP\EventDispatcher\Event;
 
 /**
  * Dispatched before flushing entities to the data-base.

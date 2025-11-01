@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use Throwable;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 

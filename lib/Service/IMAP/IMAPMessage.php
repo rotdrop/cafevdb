@@ -36,14 +36,10 @@ use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_DateTime;
 use OCA\CAFEVDB\Wrapped\Horde_Mime_Headers_MessageId;
 use OCA\CAFEVDB\Wrapped\Horde_Mime_Part;
 use JsonSerializable;
-use OCA\CAFEVDB\Service\IMAP\AddressList;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
 use ReturnTypeWillChange;
 use function in_array;
-use function mb_convert_encoding;
-use function mb_strcut;
-use function trim;
 
 class IMAPMessage implements JsonSerializable
 {

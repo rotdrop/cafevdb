@@ -40,7 +40,6 @@ use OCP\Mail\IMessage;
 
 use OCA\CAFEVDB\Common\Html2Text;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 

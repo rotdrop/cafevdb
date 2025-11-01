@@ -25,8 +25,6 @@
 namespace OCA\CAFEVDB\Listener;
 
 use OCP\AppFramework\IAppContainer;
-use OCP\IAddressBook;
-use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianInstrument as Entity;

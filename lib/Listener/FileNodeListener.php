@@ -28,7 +28,6 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Files\Events\Node\NodeDeletedEvent;
 use OCP\Files\Events\Node\NodeRenamedEvent;
-use OCP\IUser;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IUserSession;
 use OCP\Files\IRootFolder;
@@ -36,7 +35,6 @@ use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Listen to renamed and deleted events in order to keep the

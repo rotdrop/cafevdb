@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\Service;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface;
 
-use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Constants;
 
 /**

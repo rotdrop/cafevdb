@@ -28,8 +28,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * GeoStatesProvinces, localized first-level administrative regions, states,

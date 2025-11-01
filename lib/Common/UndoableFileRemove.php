@@ -26,12 +26,8 @@ namespace OCA\CAFEVDB\Common;
 
 use Closure;
 
-use OCP\AppFramework\IAppContainer;
-use OCP\Files\Node as FileSystemNode;
 use OCP\Files\FileInfo;
-use OCP\Files;
 
-use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Remove the given node, which must be a regular file.

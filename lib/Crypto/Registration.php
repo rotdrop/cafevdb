@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Crypto;
 
 use Psr\Container\ContainerInterface;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
-use OCP\IConfig;
 
 /** App container service registration. */
 class Registration

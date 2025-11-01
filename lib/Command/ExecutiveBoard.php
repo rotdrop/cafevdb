@@ -43,9 +43,7 @@ use OCP\IUserSession;
 use OC\Authentication\TwoFactorAuth\ProviderLoader as TFAProviderLoader;
 use OC\Security\SecureRandom;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Events\PostPersistMusicianEmail;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ProjectService;

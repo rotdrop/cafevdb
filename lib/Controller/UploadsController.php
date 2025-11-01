@@ -29,13 +29,10 @@ use Throwable;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\Constants as CloudConstants;
 use OCP\Files\File;
 use OCP\Files\FileInfo;
-use OCP\IConfig;
-use OCP\IL10N;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;

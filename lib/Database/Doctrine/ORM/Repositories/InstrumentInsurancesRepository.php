@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /** Repository for instrument insurances. */
 class InstrumentInsurancesRepository extends EntityRepository

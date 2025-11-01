@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\Service;
 use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\IMAPService;
 use OCA\CAFEVDB\Service\IMAP\IMAPMessage;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 

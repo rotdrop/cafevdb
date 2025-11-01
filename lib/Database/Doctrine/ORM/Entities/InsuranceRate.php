@@ -24,9 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use DateTimeImmutable;
 use DateTimeInterface;
-use InvalidArgumentException;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;

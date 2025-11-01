@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Wrapped\Gedmo\Loggable;
 
 /** Repository for the entity lifecycle log-table. */

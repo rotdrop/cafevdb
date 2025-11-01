@@ -38,7 +38,6 @@ use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Exceptions\EnduserNotificationException;
 use OCA\CAFEVDB\Maintenance\IMigration;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception as DBALException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\InvalidFieldNameException;

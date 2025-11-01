@@ -45,7 +45,6 @@ use OCA\CAFEVDB\AppInfo\Application as App;
 use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse;
 
 /**

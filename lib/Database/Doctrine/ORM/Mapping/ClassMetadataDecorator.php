@@ -36,7 +36,6 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\ConversionException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\AssociationMapping;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\PersistentCollection;

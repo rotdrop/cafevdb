@@ -29,7 +29,6 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Wrapped\Horde_Mail_Exception;
 use OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822;
-use OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822_List;
 use OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822_Address;
 
 use OCA\CAFEVDB\Common\PHPMailer;

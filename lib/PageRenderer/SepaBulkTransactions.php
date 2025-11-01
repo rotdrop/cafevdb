@@ -27,11 +27,8 @@ namespace OCA\CAFEVDB\PageRenderer;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Service\GeoCodingService;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;

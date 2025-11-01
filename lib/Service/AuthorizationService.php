@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\Service;
 use OCP\Group\ISubAdmin as IGroupSubAdminManager;
 use OCP\IConfig;
 use OCP\IGroupManager;
-use OCP\IL10N;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface as ILogger;
 

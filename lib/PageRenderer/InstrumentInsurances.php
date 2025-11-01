@@ -38,7 +38,6 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
-use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\UserStorage;

@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\QueryBuilder;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types;

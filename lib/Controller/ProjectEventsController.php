@@ -24,21 +24,16 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use DateTimeZone;
 use InvalidArgumentException;
-use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\IRequest;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
-use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** AJAX end-points to manage events linked to projects */
 class ProjectEventsController extends Controller

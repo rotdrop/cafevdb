@@ -26,13 +26,11 @@ namespace OCA\CAFEVDB\Service;
 
 use Closure;
 use RuntimeException;
-use count;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Tool-tips management with translations. */

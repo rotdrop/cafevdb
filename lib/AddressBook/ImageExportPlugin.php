@@ -27,7 +27,6 @@
 
 namespace OCA\CAFEVDB\AddressBook;
 
-use Sabre\CardDAV\ICard;
 use Sabre\DAV\Server;
 use Sabre\DAV\ServerPlugin;
 use Sabre\HTTP\RequestInterface;

@@ -24,13 +24,11 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use DateTime;
 
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Constants;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;

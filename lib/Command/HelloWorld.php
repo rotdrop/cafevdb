@@ -34,9 +34,7 @@ use Symfony\Component\Console\Helper\DescriptorHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
-use OCA\CAFEVDB\Service\EncryptionService;
 
 /** Test-command in order to see if the abstract framework is functional. */
 class HelloWorld extends Command

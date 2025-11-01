@@ -30,7 +30,6 @@ use Throwable;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\EventDispatcher\Event;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\IConfig;

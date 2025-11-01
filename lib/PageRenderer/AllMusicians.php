@@ -29,7 +29,6 @@ use OCP\IRequest;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;

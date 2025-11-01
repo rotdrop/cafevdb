@@ -28,7 +28,6 @@ use Closure;
 use Throwable;
 
 use OCP\AppFramework\Db\DoesNotExistException;
-use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Exception;
 use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Socket;
@@ -36,10 +35,7 @@ use OCA\CAFEVDB\Wrapped\Horde_Imap_Client;
 use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Data_Fetch;
 use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Data_Envelope;
 use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Fetch_Query;
-use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Ids;
 use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Search_Query;
-use OCA\CAFEVDB\Wrapped\Horde_Mime_Headers;
-use OCA\CAFEVDB\Wrapped\Horde_Mime_Part;
 
 /** Maybe clone the stuff, but for now we just (ab-)use it */
 use OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher;

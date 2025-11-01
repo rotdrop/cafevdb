@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use InvalidArgumentException;
 use Exception;
 
 use GenderDetector;
@@ -35,8 +34,6 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;

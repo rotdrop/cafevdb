@@ -29,7 +29,6 @@ use DateTimeImmutable;
 use DateTimeZone;
 
 use PhpOffice\PhpSpreadsheet;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
@@ -37,7 +36,6 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\PageRenderer;
 
 use OCA\CAFEVDB\Service\FontService;
-use OCA\CAFEVDB\Service\ConfigService;
 
 /**
  * Exporter for the instrument insurances. This is special as it must only

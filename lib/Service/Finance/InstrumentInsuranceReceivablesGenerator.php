@@ -28,13 +28,11 @@ use DateTimeImmutable as DateTime;
 use RuntimeException;
 use UnexpectedValueException;
 
-use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;

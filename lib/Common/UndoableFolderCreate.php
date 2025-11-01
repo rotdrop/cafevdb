@@ -30,12 +30,9 @@ use Closure;
 use OCP\AppFramework\IAppContainer;
 use OCP\Files\Node as FileSystemNode;
 use OCP\Files\FileInfo;
-use OCP\IL10N;
-use Psr\Log\LoggerInterface as ILogger;
 use OCP\IDateTimeFormatter;
 use OCP\Files\AlreadyExistsException as FileAlreadyExistsException;
 
-use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**

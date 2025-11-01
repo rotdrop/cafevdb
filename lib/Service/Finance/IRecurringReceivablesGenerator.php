@@ -29,7 +29,6 @@ use DateTimeInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\IProgressStatus;
-use \DateTimeImmutable as DateTime;
 
 /**
  * Generate recurring receivables and manifest them as recurring

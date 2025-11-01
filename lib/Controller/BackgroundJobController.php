@@ -29,7 +29,6 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
-use OCP\IL10N;
 
 use OCA\CAFEVDB\BackgroundJob\LazyUpdateGeoCoding;
 use OCA\CAFEVDB\Service\ConfigService;

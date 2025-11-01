@@ -28,14 +28,11 @@
 namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;

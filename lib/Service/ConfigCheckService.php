@@ -32,11 +32,6 @@ use OCP\Calendar\IManager as ICalendarManager;
 use OCP\Contacts\IManager as IContactsManager;
 use OCP\Files\FileInfo;
 use OCP\Files\IRootFolder;
-use OCP\IConfig;
-use OCP\IGroupManager;
-use OCP\IUser;
-use OCP\IUserManager;
-use OCP\IUserSession;
 use OCP\Share\IManager as IShareManager;
 use OCP\Share\IShare;
 

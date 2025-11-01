@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use OutOfBoundsException;
 
 use Psr\Log\LoggerInterface as ILogger;
 

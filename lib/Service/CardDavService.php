@@ -28,7 +28,6 @@ use Exception;
 
 use Sabre\DAV\PropPatch as SabrePropPatch;
 
-use OCP\AppFramework\IAppContainer;
 use OCP\Contacts\IManager as AddressBookManager;
 use OCP\IL10N;
 use OCP\IAddressBook;

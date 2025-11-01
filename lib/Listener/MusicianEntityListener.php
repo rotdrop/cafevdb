@@ -24,10 +24,8 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use Throwable;
 
 use OCP\AppFramework\IAppContainer;
-use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\GenericUndoable;

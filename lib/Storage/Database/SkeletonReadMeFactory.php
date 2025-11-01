@@ -30,14 +30,12 @@ use Psr\Log\LoggerInterface;
 
 use OCP\IConfig;
 use OCP\IL10N;
-use OCP\IUserSession;
 use OCP\Files\File;
 use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
-use OCA\CAFEVDB\Service\AppMTimeService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 

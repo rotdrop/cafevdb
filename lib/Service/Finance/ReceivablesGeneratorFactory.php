@@ -36,8 +36,6 @@ use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Common\IProgressStatus;
 
 /** Factory for receivables generators. */
