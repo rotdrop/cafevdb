@@ -949,11 +949,11 @@ const afterLoad = function(container) {
       simpleSetValueHandler(
         container.find('#emailtestmode'), 'change', undefined, {
           success(element, data) {
-            if (element.is(':checked')) {
-              emailTestAddress.prop('disabled', false);
-            } else {
-              emailTestAddress.prop('disabled', true);
-            }
+            // if (element.is(':checked')) {
+            //   emailTestAddress.prop('disabled', false);
+            // } else {
+            //   emailTestAddress.prop('disabled', true);
+            // }
           },
         });
     }
