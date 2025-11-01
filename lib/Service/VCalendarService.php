@@ -40,7 +40,6 @@ use Sabre\VObject\Component as VComponent;
 use Sabre\VObject\Property\ICalendar;
 
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
 
 /** Operation/Builder for VCalendar objects */
@@ -68,7 +67,6 @@ class VCalendarService
   /** {@inheritdoc} */
   public function __construct(
     protected ConfigService $configService,
-    private OC_Calendar_Object $legacyCalendarObject,
   ) {
   }
 
@@ -355,16 +353,6 @@ class VCalendarService
     $this->addRelations($vCalendar, $vCalendar->VEVENT, $objectData);
 
     return $vCalendar;
-  }
-
-  /**
-   * @return OC_Calendar_Object The old Owncloud inherited calendar object.
-   *
-   * @todo Get rid of it.
-   */
-  public function legacyEventObject():OC_Calendar_Object
-  {
-    return $this->legacyCalendarObject;
   }
 
   /**
