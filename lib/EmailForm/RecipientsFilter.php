@@ -62,7 +62,7 @@ class RecipientsFilter
   public const FROM_PROJECT_CONFIRMED_KEY = 'fromProjectConfirmed';
   public const FROM_PROJECT_PRELIMINARY_KEY = 'fromProjectPreliminary';
   public const EXCEPT_PROJECT_KEY = 'exceptProject';
-  public const ANNOUNCEMENTS_MAILING_LIST_KEY = ConfigService::ANNOUNCEMENTS_MAILING_LIST_FQDN_NAME;
+  public const ANNOUNCEMENTS_MAILING_LIST_KEY = ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY;
   public const PROJECT_MAILING_LIST_KEY = 'projectMailingList';
 
   public const MUSICIANS_FROM_PROJECT_PRELIMINARY = (1 << 0);
@@ -1324,7 +1324,7 @@ class RecipientsFilter
           $listId = $this->project->getMailingListId();
           break;
         case self::ANNOUNCEMENTS_MAILING_LIST_KEY:
-          $listId = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_FQDN_NAME);
+          $listId = $this->getConfigValue($which);
           break;
       }
       if (!empty($listId)) {
@@ -1449,7 +1449,7 @@ class RecipientsFilter
       MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_ENABLED,
       MailingListsService::MEMBER_DELIVERY_MODE => MailingListsService::DELIVERY_MODE_REGULAR,
     ]);
-    $bulkEmailFromAddress = $this->getConfigValue('emailfromaddress');
+    $bulkEmailFromAddress = $this->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY);
     Util::unsetValue($listMembers, $bulkEmailFromAddress);
     $recipientsByEmail = [];
     foreach ($selectedRecipients as $recipient) {

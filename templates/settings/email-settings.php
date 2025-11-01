@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Controller\PersonalSettingsController;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Service\ConfigService;
 
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin email">
@@ -167,9 +168,9 @@ use OCA\CAFEVDB\Common\Util;
                title="<?php echo $toolTips['emailform:sender:address']; ?>"
         >
           <input type="text"
-                 name="emailfromaddress"
-                 id="emailfromaddress"
-                 value="<?php echo $_['emailfromaddress']; ?>"
+                 name="<?= ConfigService::EMAIL_FROM_ADDRESS_KEY ?>"
+                 id="<?= ConfigService::EMAIL_FROM_ADDRESS_KEY ?>"
+                value="<?= $_[ConfigService::EMAIL_FROM_ADDRESS_KEY]; ?>"
                  placeholder="<?php echo $l->t('Email From Adress');?>"
           />
           <?php echo $l->t('From: address');?>

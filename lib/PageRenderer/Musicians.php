@@ -1031,7 +1031,7 @@ GROUP BY t.id';
 
       // invite, subscribe or do nothing. If the person is already subscribed
       // then it can unsubscribe by itself, so nothing more is needed here.
-      $list = $this->getConfigValue('announcementsMailingList');
+      $list = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
       if (!empty($list)) {
         try {
           switch ($newVals['mailing_list'] ?? '') {

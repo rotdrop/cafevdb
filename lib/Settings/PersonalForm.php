@@ -388,13 +388,13 @@ class PersonalForm
         foreach (['user', 'password', 'fromname', 'fromaddress', 'testaddress', 'testmode'] as $key) {
           $this->parameterFromConfig($templateParameters, 'email'.$key);
         }
-        $announcementsMailingList = $this->getConfigValue('announcementsMailingList');
+        $announcementsMailingList = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
         $announcementsMailingListName = $this->getConfigValue('announcementsMailingListName');
         if (!empty($announcementsMailingListName)) {
           $announcementsMailingList =  $announcementsMailingListName . ' <' . $announcementsMailingList . '>';
         }
-        $templateParameters['announcementsMailingList'] = $announcementsMailingList;
-        // $this->parameterFromConfig($templateParameters, 'announcementsMailingList');
+        $templateParameters[ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY] = $announcementsMailingList;
+        // $this->parameterFromConfig($templateParameters, ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
         $this->parameterFromConfig($templateParameters, 'bulkEmailSubjectTag');
         $this->parameterFromConfig($templateParameters, 'bulkEmailPrivacyNotice');
 

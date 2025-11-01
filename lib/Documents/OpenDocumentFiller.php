@@ -335,7 +335,7 @@ class OpenDocumentFiller
         'city' => $this->getConfigValue('streetAddressCity'),
         'postalCode' => $this->getConfigValue('streetAddressZIP'),
         'country' => $this->getConfigValue('streetAddressCountry'),
-        'email' => $this->getConfigValue('emailfromaddress'),
+        'email' => $this->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY),
       ],
     ];
 

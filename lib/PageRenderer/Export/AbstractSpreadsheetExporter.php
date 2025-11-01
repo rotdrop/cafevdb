@@ -118,8 +118,8 @@ abstract class AbstractSpreadsheetExporter
   {
     $format = new ExportFormat(strtolower($format));
 
-    $creator   = $this->getConfigValue('emailfromname', 'Bilbo Baggins');
-    $email     = $this->getConfigValue('emailfromaddress', 'bilbo@nowhere.com');
+    $creator   = $this->getConfigValue(ConfigService::EMAIL_FROM_NAME_KEY, 'Bilbo Baggins');
+    $email     = $this->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY, 'bilbo@nowhere.com');
 
     $locale = $this->getLocale();
 

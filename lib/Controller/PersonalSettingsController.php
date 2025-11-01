@@ -874,7 +874,7 @@ class PersonalSettingsController extends Controller
               message: $this->l->t('Unable to create project with name "%s".', $projectName),
               previous: $t,
             );
-         }
+          }
 
           $data = [
             'message' => [
@@ -1658,7 +1658,7 @@ class PersonalSettingsController extends Controller
       case 'announcementsMailingListAutoconf':
         /** @var MailingListsService $listsService */
         $listsService = $this->di(MailingListsService::class);
-        $announcementsMailingList = $this->getConfigValue('announcementsMailingList');
+        $announcementsMailingList = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
         if (empty($announcementsMailingList)) {
           return self::grumble($this->l->t('Please configure the mailing-list address first, otherweise I do not know which list I have to work on.'));
         }
@@ -1693,18 +1693,18 @@ class PersonalSettingsController extends Controller
         $furtherData = [];
         if (!empty($displayName)) {
           switch ($parameter) {
-            case 'announcementsMailingList':
-              $this->setSimpleConfigValue('announcementsMailingListName', $displayName, responseData: $furtherData);
+            case ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY:
+              $this->setSimpleConfigValue($parameter, $displayName, responseData: $furtherData);
               $reportValue = $displayName . ' <' . $realValue . '>';
               break;
-            case 'emailtestaddress':
-              break; // ignore
-            case 'emailfromaddress':
-              $this->setSimpleConfigValue('emailfromname', $displayName, responseData: $furtherData);
+            case ConfigService::EMAIL_TEST_ADDRESS_KEY:
+              // fallthrough
+            case ConfigService::EMAIL_FROM_ADDRESS_KEY:
+              $this->setSimpleConfigValue($parameter, $displayName, responseData: $furtherData);
               break;
           }
         }
-        if ($parameter === 'announcementsMailingList') {
+        if ($parameter === ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY) {
           /** @var MailingListsService $listsService */
           $listsService = $this->di(MailingListsService::class);
           try {
@@ -1732,7 +1732,8 @@ class PersonalSettingsController extends Controller
       case 'bulkEmailSubjectTag':
       case 'emailuser':
       case 'emailpassword':
-      case 'emailfromname':
+      case ConfigService::EMAIL_FROM_NAME_KEY:
+      case ConfigService::EMAIL_TEST_NAME_KEY:
         return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, furtherData: $furtherData ?? []);
       case 'bulkEmailPrivacyNotice':
         $value = $this->fuzzyInputService->purifyHTML($value);

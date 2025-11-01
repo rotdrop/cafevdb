@@ -222,7 +222,7 @@ class MailingListsAutoResponsesListener implements IEventListener
           }
           $lists = $projectLists;
         } else {
-          $lists = [ $configService->getConfigValue('announcementsMailingList'), ];
+          $lists = [ $configService->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY), ];
         }
         break;
       }

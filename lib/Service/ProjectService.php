@@ -2449,8 +2449,8 @@ Whatever.',
       }
 
       // subscribe the bulk-email-sender address if it is not already subscribed
-      $bulkEmailFromAddress = $this->getConfigValue('emailfromaddress');
-      $bulkEmailFromName = $this->getConfigValue('emailfromname');
+      $bulkEmailFromAddress = $this->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY);
+      $bulkEmailFromName = $this->getConfigValue(ConfigService::EMAIL_FROM_NAME_KEY);
 
       if (!empty($bulkEmailFromAddress)) {
         if (empty($listsService->getSubscription($listId, $bulkEmailFromAddress, MailingListsService::ROLE_MEMBER))) {

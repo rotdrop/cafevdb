@@ -166,7 +166,7 @@ class MusicianService
    */
   public function generateDisabledEmailAddress(Entities\Musician $musician, ?string $email = null):string
   {
-    $orchestraAddress = $this->getConfigValue('emailfromaddress');
+    $orchestraAddress = $this->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY);
     if (!empty($email)) {
       $email = '_' . preg_replace('|[@+!./]|', '_', $email);
     }
@@ -314,7 +314,7 @@ class MusicianService
   public function deleteMusician(Entities\Musician $musician):void
   {
     // Unsubscribe the musician from the mailing-list
-    $list = $this->getConfigValue('announcementsMailingList');
+    $list = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
     try {
       $this->listsService->unsubscribe($list, $musician->getEmail());
     } catch (\Throwable $t) {

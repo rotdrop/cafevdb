@@ -303,7 +303,7 @@ class ConfigService
     'moderator' => 'mailingListDefaultModerator',
   ];
   /** @var string Config-key for the announcements mailing list */
-  const ANNOUNCEMENTS_MAILING_LIST_FQDN_NAME = 'announcementsMailingList';
+  public const ANNOUNCEMENTS_MAILING_LIST_KEY = 'announcementsMailingList';
   /** @var string Config-key for the announcements mailing list */
   const ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME = 'announcementsMailingListName';
 
@@ -320,13 +320,16 @@ class ConfigService
   const CONFIG_LOCK_KEY = EncryptionService::CONFIG_LOCK_KEY;
 
   /** @var string */
+  public const EMAIL_FROM_NAME_KEY = 'emailfromname';
+
+  /** @var string */
   public const EMAIL_FROM_ADDRESS_KEY = 'emailfromaddress';
 
   /** @var string */
-  public const EMAIL_TEST_ADDRESS_KEY = 'emailtestaddress';
+  public const EMAIL_TEST_NAME_KEY = 'emailtestname';
 
   /** @var string */
-  public const ANNOUNCEMENTS_MAILING_LIST_KEY = 'announcementsMailingList';
+  public const EMAIL_TEST_ADDRESS_KEY = 'emailtestaddress';
 
   /** @var string */
   public const EXECUTIVE_BOARD_PROJECT_KEY = 'executiveBoardProject';

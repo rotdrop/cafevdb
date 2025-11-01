@@ -4139,14 +4139,14 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   private function setCatchAll():void
   {
     if ($this->constructionMode) {
-      $this->catchAllEmail = $this->getConfigValue('emailtestaddress');
+      $this->catchAllEmail = $this->getConfigValue(ConfigService::EMAIL_TEST_ADDRESS_KEY);
       $this->catchAllName  = $this->getConfigValue(
-        'emailtestname',
-        $this->getConfigValue('emailfromname')
+        ConfigService::EMAIL_TEST_NAME_KEY,
+        $this->getConfigValue(ConfigService::EMAIL_FROM_NAME_KEY)
       );
     } else {
-      $this->catchAllEmail = $this->getConfigValue('emailfromaddress');
-      $this->catchAllName  = $this->getConfigValue('emailfromname');
+      $this->catchAllEmail = $this->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY);
+      $this->catchAllName  = $this->getConfigValue(ConfigService::EMAIL_FROM_NAME_KEY);
     }
   }
 
