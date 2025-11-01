@@ -43,6 +43,10 @@ class ToolTipsService implements \ArrayAccess, \Countable
 
   public const SUB_KEY_SEP = ':';
   public const PARAGRAPH = '<p class="tooltip-paragraph">';
+  public const OPTION_HTML = 'html';
+  public const DEFAULT_OPTIONS = [
+    self::OPTION_HTML => false,
+  ];
 
   /** @var bool */
   private $debug = false;
@@ -134,7 +138,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
   /** {@inheritdoc} */
   public function offsetGet(mixed $offset):mixed
   {
-    return $this->fetch($offset);
+    return $this->fetch($offset, escape: true);
   }
 
   /** {@inheritdoc} */
@@ -208,6 +212,8 @@ class ToolTipsService implements \ArrayAccess, \Countable
       $tip = null;
     }
 
+    $options = $tip['options'] ?? self::DEFAULT_OPTIONS;
+
     if (empty($tip)) {
       $this->failedKeys[] = $this->lastKey;
       if ($this->debug) {
@@ -227,7 +233,15 @@ class ToolTipsService implements \ArrayAccess, \Countable
 
     if (!empty($tip)) {
       $tip = preg_replace('/(^\s*[\n])+/m', self::PARAGRAPH . "\n", $tip);
-      $this->lastToolTip = $escape ? htmlspecialchars($tip) : $tip;
+      if ($escape) {
+        $tip = htmlspecialchars($tip);
+        if (!$options[self::OPTION_HTML]) {
+          // all tooltips are rendered as HTML, this implies that non-HTML
+          // tips have to be encoded twice.
+          $tip = htmlspecialchars($tip);
+        }
+      }
+      $this->lastToolTip = $tip;
     } else {
       $this->lastToolTip = null;
     }

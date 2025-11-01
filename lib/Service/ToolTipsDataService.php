@@ -47,11 +47,13 @@ class ToolTipsDataService
    *
    * @param mixed $parameters
    *
+   * @param array $options
+   *
    * @return string
    *
    * @SuppressWarnings(PHPMD.ShortMethodName)
    */
-  private static function t(string $text, mixed $parameters = []):array
+  private static function t(string $text, mixed $parameters = [], array $options = ToolTipsService::DEFAULT_OPTIONS):array
   {
     if (!is_array($parameters)
         || (isset($parameter['text'])
@@ -307,8 +309,7 @@ dialog" for the respective record. If disabled, clicking on a data-row will open
       'emailtest' => self::t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
       'emailform' => [
         'sender' => [
-          'name' => self::t('Real name part of the sender address.'),
-          'address' => self::t('Email address part of the sender address.'),
+          'address' => self::t('DEBUG Name and address of the sender address, e.g. "Orchestra <orchestra@domain.tld>".'),
         ],
         'transport' => [
           'announcements' => [
@@ -390,7 +391,8 @@ same effect as clicking the close button on top of the dialog-window. No email w
 or from the complement set. Obviously, selecting both options will
 give you the choice to select any musician as recipient.'),
               'from-project' => self::t('Choose among all musicians currently registered for this project.'),
-              'except-project' => self::t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
+              // TRANSLATORS: intentionally contains HTML
+              'except-project' => self::t('Choose among all musicians currently <b>NOT</b> registered for this project.', options: [ ToolTipsService::OPTION_HTML => true ]),
               'project-mailing-list' => self::t('Send the email to the project-mailing list. The project mailing-list is an open discussion list where all CONFIRMED project members are subscribed (unless they changed it by themselves). Replies to such emails normally end up again in the list and are thus also delivered to all project participants.'),
               'announcements-mailing-list' => self::t('Post to the global announcements mailing list instead of sending to the musicians registered in the data-base. Using the mailing list should be the preferred transport for global @all emails as it has less legal problems concerning the regulations for data privacy. Posting to the list does not make sense if any of the instrument filters is selected or if recipients are explicitly selected.'),
               'database' => self::t('Post to the musicians registered in the database. Unless instrument-filters are active or specific recipients are explicitly selected the global announcement mailing list should be preferred for @all emails.'),
@@ -402,11 +404,12 @@ are excluded from receiving mass-email. Please be careful when modifying the def
 -you can also simply double-click inside the boxed filter-region in order to activate your filter-choice.'),
             'undo' => self::t('Undo the last recipient filter operation and restore the previous selection of musicians.'),
             'redo' => self::t('Redo the last operation undone by the undo button.'),
+            // TRANSLATORS: intentionally contains HTML
             'reset' => self::t('Reset to the initial pre-selection which was activ when entering this
 form. This will <b>REALLY</b> void all your recipient selections and
 reset the form to the initial state. Note, however, that the text of
 your email will be maintained, the reset only applies to the recipient
-list.'),
+list.', options: [ ToolTipsService::OPTION_HTML => true ]),
 
             'instruments' => [
               'filter' => self::t('Restrict the basic set of musicians to the instruments selected
@@ -524,6 +527,7 @@ make sure that the musicians are also automatically added to the
             ],
           ],
 
+          // TRANSLATORS: intentionally contains HTML
           'participation-status' => self::t('A flag which indicates not so much social or functional status, but
 default behaviour for mass-emails as follows
 <br/>
@@ -541,7 +545,7 @@ default behaviour for mass-emails as follows
 </dl>
 <br/>
 All classes of members can be explicitly added to a specific mass-emails through the controls
-in the email form.'),
+in the email form.', options: [ ToolTipsService::OPTION_HTML => true ]),
 
           'address-supplement' => self::t('Additional required address parts like "c/o X Y" or "Apt. N"'),
           'emails' => [
@@ -799,15 +803,17 @@ data-base, but simply mark the field as unused and hide it from sight.'),
       'participant-fields-display-order' => self::t('Define the display priority. Larger values will move the item more to
 the left or the top inside its table-tab.'),
 
-      'participant-fields-encrypted' => self::t('Expert use: store encrypted values in the data-base. If unsure: <em>DON\'T</em>'),
+      // TRANSLATORS: intentionally contains HTML
+      'participant-fields-encrypted' => self::t('Expert use: store encrypted values in the data-base. If unsure: <em>DON\'T</em>', options: [ ToolTipsService::OPTION_HTML => true ]),
 
       'participant-fields-extra-tab' => self::t('Extra-tab to group project-specific data which just didn\'t fit
 somewhere else.'),
 
+      // TRANSLATORS: intentionally contains HTML
       'participant-fields-field-name' => self::t('Just the name for this option. Please keep the name as <em>short</em> as
 possible, but try to be descriptive. If further explanations are
 needed, then please enter those in the <strong>Tooltip</strong> field in the
-<strong>Display</strong> tab.'),
+<strong>Display</strong> tab.', options: [ ToolTipsService::OPTION_HTML => true ]),
 
       'participant-fields-maximum-group-size' => self::t('The maximum number of peopel allowed in the group.'),
 
@@ -829,7 +835,7 @@ may contain HTML formatting.'),
 
       'filter-visibility' => self::t('Toggle the initial display of the search-filters for data-base tables
 in order to make the table view a little less crowded. Search-filters
-can be reenabled at any time by clicking the ``Search\'\' button in
+can be reenabled at any time by clicking the "Search" button in
 each individual table view.'),
 
       'further-settings' => self::t('Further personal settings, normally not needed use with care.'),
@@ -880,6 +886,7 @@ simply marked as "disabled" and normally are hidden from sight.'),
 
       'clouddev-link' => self::t('Web-link to the current Cloud developer documentation.'),
 
+      // TRANSLATORS: intentionally contains HTML
       'payment-status' => self::t(
         'Status of outstanding project fees:
 <dl>
@@ -894,7 +901,8 @@ simply marked as "disabled" and normally are hidden from sight.'),
 <dt>%s</dt>
 <dd>Final payment has been received.</dd>
 </dl>',
-        array('&empty;', '&#9972;', '&#9684;', '&#9951;', '&#10004;')
+        array('&empty;', '&#9972;', '&#9684;', '&#9951;', '&#10004;'),
+        options: [ ToolTipsService::OPTION_HTML => true ],
       ),
 
       'phpmyadmin-link' => self::t('Link to the data-base administration tool for the underlying data-base. Swiss-army-knife-like.'),
@@ -1049,6 +1057,7 @@ korrigieren.'),
         ],
 
         'filter' => [
+          // TRANSLATORS: intentionally contains HTML
           'default' => self::t('Field for filter/search criteria.
 Short explanation: simply type somthing and press <code>ENTER</code>.
 <br/>
@@ -1089,10 +1098,11 @@ It is also possible to match empty fields, in particular:
 <dt>""</dt>
 <dt>!%%</dt>
 <dd>match any row with empty search-field</dd>
-</dl>'),
+</dl>', options: [ ToolTipsService::OPTION_HTML => true ]),
+          // TRANSLATORS: intentionally contains HTML
           'numeric' => self::t('Field for filter/search criteria.
 Short explanation: simply type somthing and press <code>ENTER</code>.
-This is a numeric field, you can choose from the comparison operators to the left.'),
+This is a numeric field, you can choose from the comparison operators to the left.', options: [ ToolTipsService::OPTION_HTML => true ]),
           'comp' => self::t('Numeric comparison operators. To submit the query double-click into the search-field to the right or click on the "query" button.'),
           'select' => self::t('Select from the pull-down menu. Double-click will submit the form. The pull-down can be closed by clicking anywhere outside the menu.'),
           'negate' => self::t('Negate the filter, i.e. search for anything not matching the selected options.'),
@@ -1239,6 +1249,7 @@ mandates.'),
 
       'project-metadata-tab' => self::t('Displays `meta-data\' like project fees, single/double room preferences, debit-mandates and the like.'),
 
+      // TRANSLATORS: intentionally contains HTML
       'project-name' => self::t('Please enter here a <b>SHORT</b> project name, rather a project tag. The software will try very hard to confine you to the following rules:
 <dl>
 <dt>BE SHORT, PLEASE</dt>
@@ -1246,7 +1257,7 @@ mandates.'),
 <dt>NO SPACES, PLEASE</dt>
 <dd>Please use "camel case" instead.</dd>
 </dl>
-Please <b>DO NOT TRY</b> to "work around" those "limitations. Just don\'t. Thanks.'),
+Please <b>DO NOT TRY</b> to "work around" those "limitations. Just don\'t. Thanks.', options: [ ToolTipsService::OPTION_HTML => true ]),
 
       'project-name-yearattach' => self::t('Append the year to the name if checked.
 Regardless of this checkbox any decimal digit will first be stripped from the end
