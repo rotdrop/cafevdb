@@ -121,6 +121,19 @@ foreach ($eventAttachmentOptions as $option) {
                value="<?php echo $l->t('Delete Message'); ?>"/>
       </td>
     </tr>
+    <tr>
+      <td class="caption"><?php echo $l->t('Sender-Name'); ?></td>
+      <td colspan="2">
+        <input value="<?php echo $sender; ?>"
+               class="sender-name"
+               size="40" value="CAFEV"
+               name="emailComposer[fromName]"
+               type="text"></td>
+    </tr>
+    <tr>
+      <td class="caption"><?php echo $l->t('Sender-Email'); ?></td>
+      <td colspan="2"><?php echo $l->t('Tied to "%s"', $catchAllEmail); ?></td>
+    </tr>
     <tr class="email-address">
       <td class="email-address email-recipients caption"><?php echo $l->t('Recipients'); ?></td>
       <td class="email-address email-recipients display" colspan="2">
@@ -231,19 +244,6 @@ foreach ($eventAttachmentOptions as $option) {
           <?php echo htmlspecialchars($message); ?>
         </textarea>
       </td>
-    </tr>
-    <tr>
-      <td class="caption"><?php echo $l->t('Sender-Name'); ?></td>
-      <td colspan="2">
-        <input value="<?php echo $sender; ?>"
-               class="sender-name"
-               size="40" value="CAFEV"
-               name="emailComposer[fromName]"
-               type="text"></td>
-    </tr>
-    <tr>
-      <td class="caption"><?php echo $l->t('Sender-Email'); ?></td>
-      <td colspan="2"><?php echo $l->t('Tied to "%s"', $catchAllEmail); ?></td>
     </tr>
     <tr class="all-attachments">
       <td class="attachments caption"><?php echo $l->t('Add Attachment'); ?></td>
