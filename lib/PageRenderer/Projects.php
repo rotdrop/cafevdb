@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-, 20252025 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,6 +45,7 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**Table generator for Projects table. */
@@ -147,9 +148,9 @@ class Projects extends PMETableViewBase
   public function shortTitle()
   {
     if (!empty($this->projectName)) {
-      return $this->l->t("%s Project %s", [ ucfirst($this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY)), $this->projectName]);
+      return $this->l->t("%s Project %s", [ ucfirst($this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY)), $this->projectName]);
     } else {
-      return $this->l->t("%s Projects", [ ucfirst($this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY)) ]);
+      return $this->l->t("%s Projects", [ ucfirst($this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY)) ]);
     }
   }
 

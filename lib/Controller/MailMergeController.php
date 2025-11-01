@@ -60,6 +60,7 @@ use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
 
@@ -197,8 +198,8 @@ class MailMergeController extends Controller
 
     // determine if we have a special template
     if ($fileName !== null) {
-      foreach (ConfigService::DOCUMENT_TEMPLATES as $templateName => $templateMeta) {
-        if ($templateMeta['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE) {
+      foreach (ConfigConstants::DOCUMENT_TEMPLATES as $templateName => $templateMeta) {
+        if ($templateMeta['type'] != ConfigConstants::DOCUMENT_TYPE_TEMPLATE) {
           continue;
         }
         $templateFileName = $this->getDocumentTemplatesPath($templateName);

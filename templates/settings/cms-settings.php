@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2020, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation;
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Common\Util;
 
 $probablyOffline = empty($webPageCategories);
@@ -73,7 +73,7 @@ foreach ($webPageTemplates as $template) {
   <form id="cmssettings">
     <fieldset id="redaxocategories"><legend><?php echo $l->t('Redaxo Categories');?></legend>
       <?php
-      foreach (ConfigService::CMS_CATEGORIES as $categorySlug) {
+      foreach (ConfigConstants::CMS_CATEGORIES as $categorySlug) {
         $class = 'redaxo';
         $ucSlug = ucfirst($categorySlug);
         $id = $class.$ucSlug;
@@ -103,7 +103,7 @@ foreach ($webPageTemplates as $template) {
     </fieldset>
     <fieldset id="redaxotemplates"><legend><?php echo $l->t('Redaxo Templates');?></legend>
       <?php
-      foreach (ConfigService::CMS_TEMPLATES as $templateSlug) {
+      foreach (ConfigConstants::CMS_TEMPLATES as $templateSlug) {
         $class = 'redaxo';
         $ucSlug = Util::dashesToCamelCase($templateSlug, true);
         $id = $class.$ucSlug.'Template';
@@ -133,7 +133,7 @@ foreach ($webPageTemplates as $template) {
     </fieldset>
     <fieldset id="redaxomodules"><legend><?php echo $l->t('Redaxo Modules');?></legend>
       <?php
-      foreach (ConfigService::CMS_MODULES as $moduleSlug) {
+      foreach (ConfigConstants::CMS_MODULES as $moduleSlug) {
         $class = 'redaxo';
         $ucSlug = ucfirst($moduleSlug);
         $id = $class.$ucSlug.'Module';

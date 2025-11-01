@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,18 +26,18 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Controller\PersonalSettingsController;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
-if (!empty($_[ConfigService::EMAIL_TEST_NAME_KEY])) {
-  $emailTestAddressValue = $_[ConfigService::EMAIL_TEST_NAME_KEY] . ' <' . $_[ConfigService::EMAIL_TEST_ADDRESS_KEY] . '>';
+if (!empty($_[ConfigConstants::EMAIL_TEST_NAME_KEY])) {
+  $emailTestAddressValue = $_[ConfigConstants::EMAIL_TEST_NAME_KEY] . ' <' . $_[ConfigConstants::EMAIL_TEST_ADDRESS_KEY] . '>';
 } else {
-  $emailTestAddressValue = $_[ConfigService::EMAIL_TEST_ADDRESS_KEY];
+  $emailTestAddressValue = $_[ConfigConstants::EMAIL_TEST_ADDRESS_KEY];
 }
 
-if (!empty($_[ConfigService::EMAIL_FROM_NAME_KEY])) {
-  $emailAddressValue = $_[ConfigService::EMAIL_FROM_NAME_KEY] . ' <' . $_[ConfigService::EMAIL_FROM_ADDRESS_KEY] . '>';
+if (!empty($_[ConfigConstants::EMAIL_FROM_NAME_KEY])) {
+  $emailAddressValue = $_[ConfigConstants::EMAIL_FROM_NAME_KEY] . ' <' . $_[ConfigConstants::EMAIL_FROM_ADDRESS_KEY] . '>';
 } else {
-  $emailAddressValue = $_[ConfigService::EMAIL_FROM_ADDRESS_KEY];
+  $emailAddressValue = $_[ConfigConstants::EMAIL_FROM_ADDRESS_KEY];
 }
 
 ?>
@@ -169,8 +169,8 @@ if (!empty($_[ConfigService::EMAIL_FROM_NAME_KEY])) {
                title="<?= $toolTips['emailform:sender:address']; ?>"
         >
           <input type="text"
-                 name="<?= ConfigService::EMAIL_FROM_ADDRESS_KEY ?>"
-                 id="<?= ConfigService::EMAIL_FROM_ADDRESS_KEY ?>"
+                 name="<?= ConfigConstants::EMAIL_FROM_ADDRESS_KEY ?>"
+                 id="<?= ConfigConstants::EMAIL_FROM_ADDRESS_KEY ?>"
                  value="<?= $emailAddressValue ?>"
                  placeholder="<?= $l->t('e.g. Orchestra <name@domain.tld>');?>"
           />
@@ -399,11 +399,11 @@ if (!empty($_[ConfigService::EMAIL_FROM_NAME_KEY])) {
              title="<?php echo $l->t('Email test-mode; send emails only to the email test-address.') ?>">
         <?php echo $l->t('Test-Mode'); ?>
       </label>
-      <input type="text" name="<?= ConfigService::EMAIL_TEST_ADDRESS_KEY ?>" id="<?= ConfigService::EMAIL_TEST_ADDRESS_KEY?>"
+      <input type="text" name="<?= ConfigConstants::EMAIL_TEST_ADDRESS_KEY ?>" id="<?= ConfigConstants::EMAIL_TEST_ADDRESS_KEY?>"
              value="<?= $emailTestAddressValue ?>"
              placeholder="<?php echo $l->t('e.g. John Doe <john@doe.org>');?>"
       />
-      <label for="<?= ConfigService::EMAIL_TEST_ADDRESS_KEY ?>"><?php echo $l->t('Test address');?></label>
+      <label for="<?= ConfigConstants::EMAIL_TEST_ADDRESS_KEY ?>"><?php echo $l->t('Test address');?></label>
     </form>
   </div>
 </div>

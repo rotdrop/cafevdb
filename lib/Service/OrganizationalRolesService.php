@@ -24,19 +24,19 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-
-use OCP\IUserManager;
-use OCP\IGroupManager;
-use OCP\Accounts\IAccountManager;
 use OCP\Accounts\IAccount;
+use OCP\Accounts\IAccountManager;
 use OCP\IConfig;
-use Psr\Log\LoggerInterface as ILogger;
+use OCP\IGroupManager;
 use OCP\IL10N;
+use OCP\IUserManager;
 use OCP\Image;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /**
  * Check for authorization and supply contact information for several
@@ -236,7 +236,7 @@ class OrganizationalRolesService
     /** @var Entities\ProjectParticipantFieldDatum */
     $signatureData = $fieldsService->filterByFieldName(
       $participant->getParticipantFieldsData(),
-      ConfigService::SIGNATURE_FIELD_NAME);
+      ConfigConstants::SIGNATURE_FIELD_NAME);
     if (!($signatureData instanceof Entities\ProjectParticipantFieldDatum)) {
       // did not work out
       return null;

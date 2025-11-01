@@ -98,7 +98,7 @@ class MailingListsController extends Controller
     ?string $role = null,
   ):DataResponse {
     if ($list == 'announcements') {
-      $list = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
+      $list = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
     }
     try {
       switch ($operation) {

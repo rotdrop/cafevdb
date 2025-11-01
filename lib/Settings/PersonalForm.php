@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo\Service\RPC as WebPagesRPC;
@@ -186,7 +187,7 @@ class PersonalForm
         'expertMode' => $this->getUserValue('expertMode', 'off'),
         'financeMode' => $this->getUserValue('financeMode', 'off'),
         'wysiwygEditor' => $this->getUserValue('wysiwygEditor', self::DEFAULT_EDITOR),
-        'wysiwygOptions' => ConfigService::WYSIWYG_EDITORS,
+        'wysiwygOptions' => ConfigConstants::WYSIWYG_EDITORS,
         'webPageCategories' => $webPageCategories,
         'webPageTemplates' => $webPageTemplates,
         'webPageModules' => $webPageModules,
@@ -243,7 +244,7 @@ class PersonalForm
           ->getContactsAddressBook()
           ->getDisplayName();
 
-        $sharedFolder = $this->getConfigValue(ConfigService::SHARED_FOLDER);
+        $sharedFolder = $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
         try {
           if (!empty($sharedFolder)) {
             $sharedFolderLink = $this->userStorage->getFilesAppLink($sharedFolder, true);
@@ -251,10 +252,10 @@ class PersonalForm
         } catch (\Throwable $t) {
           // don't care
         }
-        $documentTemplatesFolder = $this->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER);
-        $postboxFolder = $this->getConfigValue(ConfigService::POSTBOX_FOLDER);
-        $postboxFolderShareLink = $this->getConfigValue(ConfigService::POSTBOX_FOLDER . 'ShareLink');
-        $outboxFolder = $this->getConfigValue(ConfigService::OUTBOX_FOLDER);
+        $documentTemplatesFolder = $this->getConfigValue(ConfigConstants::DOCUMENT_TEMPLATES_FOLDER);
+        $postboxFolder = $this->getConfigValue(ConfigConstants::POSTBOX_FOLDER);
+        $postboxFolderShareLink = $this->getConfigValue(ConfigConstants::POSTBOX_FOLDER . 'ShareLink');
+        $outboxFolder = $this->getConfigValue(ConfigConstants::OUTBOX_FOLDER);
 
         $translations = null;
         try {
@@ -266,7 +267,7 @@ class PersonalForm
         $templateParameters = array_merge(
           $templateParameters,
           [
-            Admin::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue(ConfigService::USER_GROUP_KEY),
+            Admin::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue(ConfigConstants::USER_GROUP_KEY),
             'streetAddressName01' => $this->getConfigValue('streetAddressName01'),
             'streetAddressName02' => $this->getConfigValue('streetAddressName02'),
             'streetAddressStreet' => $this->getConfigValue('streetAddressStreet'),
@@ -290,7 +291,7 @@ class PersonalForm
             'userGroups' => array_map(function($group) {
               return [ 'value' => $group->getGID(), 'name' => $group->getDisplayName(), ];
             }, $this->groupManager()->search('')),
-            ConfigService::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY),
+            ConfigConstants::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY),
 
             'cloudUserRequirements' => $this->cloudUserService->checkRequirements(
               $this->getConfigValue('cloudUserViewsDatabase')
@@ -304,7 +305,7 @@ class PersonalForm
             'dbuser' => $this->getConfigValue('dbuser'),
             'dbpassword' => $this->getConfigValue('dbpassword'),
 
-            ConfigService::SHAREOWNER_KEY => $this->getConfigValue(ConfigService::SHAREOWNER_KEY, ''),
+            ConfigConstants::SHAREOWNER_KEY => $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY, ''),
             'concertscalendar' => $this->getConfigValue('concertscalendar', $this->l->t('Concerts')),
             'rehearsalscalendar' => $this->getConfigValue('rehearsalscalendar', $this->l->t('Rehearsals')),
             'othercalendar' => $this->getConfigValue('othercalendar', $this->l->t('Other')),
@@ -315,23 +316,23 @@ class PersonalForm
             'generaladdressbook' => $this->getConfigValue('generaladdressbook', $this->l->t('Miscellaneous')),
             'musiciansaddressbook' => $musiciansAddressBookName,
 
-            ConfigService::SHARED_FOLDER => $sharedFolder,
+            ConfigConstants::SHARED_FOLDER => $sharedFolder,
             'sharedFolderLink' => $sharedFolderLink,
-            ConfigService::POSTBOX_FOLDER => $postboxFolder,
+            ConfigConstants::POSTBOX_FOLDER => $postboxFolder,
             'postboxFolderShareLink' => $postboxFolderShareLink,
-            ConfigService::OUTBOX_FOLDER => $outboxFolder,
-            ConfigService::DOCUMENT_TEMPLATES_FOLDER => $documentTemplatesFolder,
-            ConfigService::PROJECTS_FOLDER => $this->getConfigValue(ConfigService::PROJECTS_FOLDER, ''),
-            ConfigService::PROJECT_PARTICIPANTS_FOLDER => $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER, ''),
-            ConfigService::PROJECT_POSTERS_FOLDER => $this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER, ''),
-            ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER => $this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER, ''),
-            ConfigService::FINANCE_FOLDER => $this->getConfigValue(ConfigService::FINANCE_FOLDER, ''),
-            ConfigService::TRANSACTIONS_FOLDER => $this->getConfigValue(ConfigService::TRANSACTIONS_FOLDER, ''),
-            ConfigService::BALANCES_FOLDER => $this->getConfigValue(ConfigService::BALANCES_FOLDER, ''),
+            ConfigConstants::OUTBOX_FOLDER => $outboxFolder,
+            ConfigConstants::DOCUMENT_TEMPLATES_FOLDER => $documentTemplatesFolder,
+            ConfigConstants::PROJECTS_FOLDER => $this->getConfigValue(ConfigConstants::PROJECTS_FOLDER, ''),
+            ConfigConstants::PROJECT_PARTICIPANTS_FOLDER => $this->getConfigValue(ConfigConstants::PROJECT_PARTICIPANTS_FOLDER, ''),
+            ConfigConstants::PROJECT_POSTERS_FOLDER => $this->getConfigValue(ConfigConstants::PROJECT_POSTERS_FOLDER, ''),
+            ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER => $this->getConfigValue(ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER, ''),
+            ConfigConstants::FINANCE_FOLDER => $this->getConfigValue(ConfigConstants::FINANCE_FOLDER, ''),
+            ConfigConstants::TRANSACTIONS_FOLDER => $this->getConfigValue(ConfigConstants::TRANSACTIONS_FOLDER, ''),
+            ConfigConstants::BALANCES_FOLDER => $this->getConfigValue(ConfigConstants::BALANCES_FOLDER, ''),
 
             'translations' => $translations,
 
-            'documentTemplates' => ConfigService::DOCUMENT_TEMPLATES,
+            'documentTemplates' => ConfigConstants::DOCUMENT_TEMPLATES,
 
             'uploadMaxFilesize' => Util::maxUploadSize(),
             'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
@@ -340,7 +341,7 @@ class PersonalForm
           ]);
 
         // bank account settings
-        foreach (ConfigService::BANK_ACCOUNT_CONFIG_KEYS as $configKey) {
+        foreach (ConfigConstants::BANK_ACCOUNT_CONFIG_KEYS as $configKey) {
           $this->parameterFromConfig($templateParameters, $configKey);
         }
 
@@ -349,7 +350,7 @@ class PersonalForm
           $folder = UserStorage::PATH_SEP
                   . $sharedFolder . UserStorage::PATH_SEP
                   . $documentTemplatesFolder . UserStorage::PATH_SEP;
-          foreach (ConfigService::DOCUMENT_TEMPLATES as $documentTemplate => $templateInfo) {
+          foreach (ConfigConstants::DOCUMENT_TEMPLATES as $documentTemplate => $templateInfo) {
             $fileName = $this->getConfigValue($documentTemplate);
             $templateParameters[$documentTemplate . 'FileName'] = $fileName;
             $subFolder = $templateInfo['folder']??'';
@@ -388,13 +389,13 @@ class PersonalForm
         foreach (['user', 'password', 'fromname', 'fromaddress', 'testname', 'testaddress', 'testmode'] as $key) {
           $this->parameterFromConfig($templateParameters, 'email'.$key);
         }
-        $announcementsMailingList = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
-        $announcementsMailingListName = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY);
+        $announcementsMailingList = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
+        $announcementsMailingListName = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY);
         if (!empty($announcementsMailingListName)) {
           $announcementsMailingList =  $announcementsMailingListName . ' <' . $announcementsMailingList . '>';
         }
-        $templateParameters[ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY] = $announcementsMailingList;
-        // $this->parameterFromConfig($templateParameters, ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
+        $templateParameters[ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY] = $announcementsMailingList;
+        // $this->parameterFromConfig($templateParameters, ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
         $this->parameterFromConfig($templateParameters, 'bulkEmailSubjectTag');
         $this->parameterFromConfig($templateParameters, 'bulkEmailPrivacyNotice');
 
@@ -410,10 +411,10 @@ class PersonalForm
           $templateParameters[$key] = $this->humanFileSize($templateParameters[$key]);
         }
 
-        foreach (ConfigService::MAILING_LIST_REST_CONFIG as $listConfig) {
+        foreach (ConfigConstants::MAILING_LIST_REST_CONFIG as $listConfig) {
           $this->parameterFromConfig($templateParameters, $listConfig);
         }
-        foreach (ConfigService::MAILING_LIST_CONFIG as $listConfig) {
+        foreach (ConfigConstants::MAILING_LIST_CONFIG as $listConfig) {
           $this->parameterFromConfig($templateParameters, $listConfig);
         }
 

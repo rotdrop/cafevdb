@@ -68,6 +68,7 @@ use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Listen to changes to the configured participant-field cloud-folder
@@ -291,7 +292,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     }
     unset($nodeInfo); // break reference
 
-    $participantsFolder = Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER) . Constants::PATH_SEP;
+    $participantsFolder = Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::PROJECT_PARTICIPANTS_FOLDER) . Constants::PATH_SEP;
     foreach ($nodes as $key => $nodeInfo) {
       $nodePath = $nodeInfo[self::NODE_PARTIAL_PATH];
       if (strpos($nodePath, $participantsFolder) === false) {

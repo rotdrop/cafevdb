@@ -67,6 +67,7 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Storage\UserStorage;
 
@@ -178,11 +179,11 @@ class PersonalSettingsController extends Controller
         foreach ($debugModes as $item) {
           $debug |= $item['value'];
         }
-        if ($debug > ConfigService::DEBUG_ALL) {
+        if ($debug > ConfigConstants::DEBUG_ALL) {
           return grumble($this->l->t('Unknown debug modes in request: %s$s', [print_r($debugModes, true)]));
         }
         $this->setConfigValue('debugmode', $debug);
-        if ($debug & ConfigService::DEBUG_CSP) {
+        if ($debug & ConfigConstants::DEBUG_CSP) {
           // generate a random magic key for sort-of authentication
           $this->setAppValue('cspfailuretoken', $this->generateRandomBytes(128));
         } else {
@@ -193,7 +194,7 @@ class PersonalSettingsController extends Controller
           'value' => $debug
         ]);
       case 'wysiwygEditor':
-        if (!isset(ConfigService::WYSIWYG_EDITORS[$value])) {
+        if (!isset(ConfigConstants::WYSIWYG_EDITORS[$value])) {
           return grumble($this->l->t('Unknown WYSIWYG-editor: %s$s', [ $value ]));
         }
         $this->setUserValue($parameter, $value);
@@ -237,7 +238,7 @@ class PersonalSettingsController extends Controller
         if ($realValue === false) {
           $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
           if ($realValue === true) {
-            $realValue = ConfigService::DEFAULT_AUTOSAVE_INTERVAL;
+            $realValue = ConfigConstants::DEFAULT_AUTOSAVE_INTERVAL;
           } elseif ($realValue === false) {
             $realValue = 0;
           } else {
@@ -278,7 +279,7 @@ class PersonalSettingsController extends Controller
           'localeInfo' => $this->generateLocaleInfo('app'),
         ]);
         // fall through
-      case ConfigService::ORCHESTRA_NAME_KEY:
+      case ConfigConstants::ORCHESTRA_NAME_KEY:
         $value = strtolower(Util::removeSpaces($value));
         // fall through
       case 'dbserver': // could check for valid hostname
@@ -333,14 +334,14 @@ class PersonalSettingsController extends Controller
         $encryptionService->setAppEncryptionKey($oldKey);
 
         // do some rudimentary locking
-        $configLock = $this->getAppValue(ConfigService::CONFIG_LOCK_KEY);
+        $configLock = $this->getAppValue(ConfigConstants::CONFIG_LOCK_KEY);
         if (!empty($configLock)) {
           return self::grumble($this->l->t('Configuration locked, refusing to change encryption key.'));
         }
 
         $configLock = $this->generateRandomBytes(32);
-        $this->setAppValue(ConfigService::CONFIG_LOCK_KEY, $configLock);
-        if ($configLock !== $this->getAppValue(ConfigService::CONFIG_LOCK_KEY)) {
+        $this->setAppValue(ConfigConstants::CONFIG_LOCK_KEY, $configLock);
+        if ($configLock !== $this->getAppValue(ConfigConstants::CONFIG_LOCK_KEY)) {
           return self::grumble($this->l->t('Configuration locked, refusing to change encryption key.'));
         }
 
@@ -350,7 +351,7 @@ class PersonalSettingsController extends Controller
           // load all config values and decrypt with the old key
           $configValues = $this->configService->decryptConfigValues();
         } catch (Throwable $t) {
-          $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
+          $this->deleteAppValue(ConfigConstants::CONFIG_LOCK_KEY);
           throw new Exceptions\EnduserNotificationException(
             message: $this->l->t('Unable to decrypt the config values with the old encryptionkey.'),
             previous: $t,
@@ -377,7 +378,7 @@ class PersonalSettingsController extends Controller
               //$this->logException($t1);
             }
           }
-          $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
+          $this->deleteAppValue(ConfigConstants::CONFIG_LOCK_KEY);
           throw new Exceptions\EnduserNotificationException(
             message: $this->l->t('Unable to take a backup of the decrypted config values.'),
             previouws: $t,
@@ -442,7 +443,7 @@ class PersonalSettingsController extends Controller
               $messages[] = $this->l->t('Failed to remove backups for config-values %s.', implode(', ', $failed));
             } else {
               $this->logInfo('Deleting config-lock');
-              $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
+              $this->deleteAppValue(ConfigConstants::CONFIG_LOCK_KEY);
             }
           }
           throw new Exceptions\EnduserNotificationException(
@@ -467,7 +468,7 @@ class PersonalSettingsController extends Controller
         }
 
         $this->logInfo('Deleting config-lock');
-        $this->deleteAppValue(ConfigService::CONFIG_LOCK_KEY);
+        $this->deleteAppValue(ConfigConstants::CONFIG_LOCK_KEY);
 
         // this should be it: the new encryption key is stored in the
         // config space, encrypted with itself.
@@ -501,18 +502,18 @@ class PersonalSettingsController extends Controller
         $this->setConfigValue($parameter, $realValue);
         return self::valueResponse($realValue, $this->l->t(' "%s" set to "%s".', [$parameter, $realValue]));
         break;
-      case ConfigService::SHAREOWNER_KEY:
-        if (!isset($value[ConfigService::SHAREOWNER_KEY])
+      case ConfigConstants::SHAREOWNER_KEY:
+        if (!isset($value[ConfigConstants::SHAREOWNER_KEY])
             || !isset($value['shareowner-saved'])
             || !isset($value['shareowner-force'])) {
           return self::grumble($this->l->t('Invalid request parameters: ') . print_r($value, true));
         }
-        $uid = $value[ConfigService::SHAREOWNER_KEY];
+        $uid = $value[ConfigConstants::SHAREOWNER_KEY];
         $savedUid = $value['shareowner-saved'];
         $force = filter_var($value['shareowner-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
 
         // first check consistency of $savedUid with stored UID.
-        $confUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY, '');
+        $confUid = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY, '');
         if ($confUid != $savedUid) {
           return self::grumble($this->l->t(
             'Submitted "%s" != "%s" (stored)', [ $savedUid, $confUid ]));
@@ -987,7 +988,7 @@ class PersonalSettingsController extends Controller
         break;
 
       case 'shareownerpassword':
-        $shareOwnerUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
+        $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
         if (empty($shareOwnerUid)) {
           return self::grumble($this->l->t('Please create the share-owner user first.'));
         }
@@ -1007,7 +1008,7 @@ class PersonalSettingsController extends Controller
         }
         $this->setConfigValue($parameter, $realValue); // remember for remote API perhaps
         return self::response($this->l->t('Successfully changed passsword for "%s".', [$shareOwnerUid]));
-      case (!empty(ConfigService::DOCUMENT_TEMPLATES[substr($parameter, 0, -strlen('Delete'))]) ? $parameter : null):
+      case (!empty(ConfigConstants::DOCUMENT_TEMPLATES[substr($parameter, 0, -strlen('Delete'))]) ? $parameter : null):
         // Delete config value and file. The file can be undeleted in the cloud, if necessary.
 
         // Bit unclean, as a relict of previous implementation the
@@ -1016,7 +1017,7 @@ class PersonalSettingsController extends Controller
         $parameter = substr($parameter, 0, -strlen('Delete'));
         $value = '';
         // fallthrough
-      case (!empty(ConfigService::DOCUMENT_TEMPLATES[$parameter]) ? $parameter : null):
+      case (!empty(ConfigConstants::DOCUMENT_TEMPLATES[$parameter]) ? $parameter : null):
         $oldFileName = $this->getConfigValue($parameter);
         $sharedFolder = $this->getConfigValue('sharedfolder');
         if (empty($sharedFolder)) {
@@ -1031,7 +1032,7 @@ class PersonalSettingsController extends Controller
         $templatesFolder = UserStorage::PATH_SEP
           . $sharedFolder . UserStorage::PATH_SEP
           . $templatesFolder . UserStorage::PATH_SEP;
-        $subFolder = ConfigService::DOCUMENT_TEMPLATES[$parameter]['folder']??null;
+        $subFolder = ConfigConstants::DOCUMENT_TEMPLATES[$parameter]['folder']??null;
         if (!empty($subFolder)) {
           $subFolder = $this->getConfigValue($subFolder);
           if (!empty($subFolder)) {
@@ -1073,11 +1074,11 @@ class PersonalSettingsController extends Controller
           'message' => $messages,
         ]);
       case 'sharedfolder':
-        $appGroup = $this->getConfigValue(ConfigService::USER_GROUP_KEY);
+        $appGroup = $this->getConfigValue(ConfigConstants::USER_GROUP_KEY);
         if (empty($appGroup)) {
           return self::grumble($this->l->t('App user-group is not set.'));
         }
-        $shareOwner = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
+        $shareOwner = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
         if (empty($shareOwner)) {
           return self::grumble($this->l->t('Share-owner is not set.'));
         }
@@ -1137,21 +1138,21 @@ class PersonalSettingsController extends Controller
           );
         }
         // return self::valueResponse('hello', print_r($value, true)); unreached
-      case ConfigService::POSTBOX_FOLDER:
-      case ConfigService::OUTBOX_FOLDER:
-      case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
-      case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
-      case ConfigService::PROJECT_POSTERS_FOLDER:
-      case ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
-      case ConfigService::FINANCE_FOLDER:
-      case ConfigService::TRANSACTIONS_FOLDER:
-      case ConfigService::BALANCES_FOLDER:
-      case ConfigService::PROJECTS_FOLDER:
-        $appGroup = $this->getConfigValue(ConfigService::USER_GROUP_KEY);
+      case ConfigConstants::POSTBOX_FOLDER:
+      case ConfigConstants::OUTBOX_FOLDER:
+      case ConfigConstants::DOCUMENT_TEMPLATES_FOLDER:
+      case ConfigConstants::PROJECT_PARTICIPANTS_FOLDER:
+      case ConfigConstants::PROJECT_POSTERS_FOLDER:
+      case ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
+      case ConfigConstants::FINANCE_FOLDER:
+      case ConfigConstants::TRANSACTIONS_FOLDER:
+      case ConfigConstants::BALANCES_FOLDER:
+      case ConfigConstants::PROJECTS_FOLDER:
+        $appGroup = $this->getConfigValue(ConfigConstants::USER_GROUP_KEY);
         if (empty($appGroup)) {
           return self::grumble($this->l->t('App user-group is not set.'));
         }
-        $shareOwner = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
+        $shareOwner = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
         if (empty($shareOwner)) {
           return self::grumble($this->l->t('Share-owner is not set.'));
         }
@@ -1177,23 +1178,23 @@ class PersonalSettingsController extends Controller
         }
         // shortcut for participants and posters folder, which only exist as subdirectory
         switch ($parameter) {
-          case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
+          case ConfigConstants::PROJECT_PARTICIPANTS_FOLDER:
             $this->setConfigValue($parameter, $real);
             return self::valueResponse($real, $this->l->t('Participants-folder set to "%s".', $real));
-          case ConfigService::PROJECT_POSTERS_FOLDER:
+          case ConfigConstants::PROJECT_POSTERS_FOLDER:
             $this->setConfigValue($parameter, $real);
             return self::valueResponse($real, $this->l->t('Posters-folder set to "%s".', $real));
-          case ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
+          case ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
             $this->setConfigValue($parameter, $real);
             return self::valueResponse($real, $this->l->t('Participants downloads-folder set to "%s".', $real));
-          case ConfigService::BALANCES_FOLDER:
-          case ConfigService::TRANSACTIONS_FOLDER:
-            $prefixFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
+          case ConfigConstants::BALANCES_FOLDER:
+          case ConfigConstants::TRANSACTIONS_FOLDER:
+            $prefixFolder = $this->getConfigValue(ConfigConstants::FINANCE_FOLDER);
             if (empty($prefixFolder)) {
               return self::grumble(
                 $this->l->t(
                   '"%s" has to be defined first before defining "%s".',
-                  [ ConfigService::FINANCE_FOLDER, $parameter ]));
+                  [ ConfigConstants::FINANCE_FOLDER, $parameter ]));
             }
             $prefixFolder .= UserStorage::PATH_SEP;
             break;
@@ -1213,7 +1214,7 @@ class PersonalSettingsController extends Controller
                 $this->logException($t);
               }
               switch ($parameter) {
-                case ConfigService::POSTBOX_FOLDER:
+                case ConfigConstants::POSTBOX_FOLDER:
                   try {
                     $url = $this->configCheckService->checkLinkSharedFolder(
                       $sharedFolder . $prefixFolder . $real
@@ -1223,13 +1224,13 @@ class PersonalSettingsController extends Controller
                     $this->logException($t);
                   }
                   break;
-                case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
+                case ConfigConstants::DOCUMENT_TEMPLATES_FOLDER:
                   $skeletonPaths = $this->projectService->getProjectSkeletonPaths();
                   foreach ($skeletonPaths as $skeletonPath) {
                     $this->configCheckService->checkProjectFolder($skeletonPath);
                   }
                   break;
-                case ConfigService::FINANCE_FOLDER:
+                case ConfigConstants::FINANCE_FOLDER:
                   $taxOfficeFolder = $this->getTaxAuthoritiesPath();
                   $this->configCheckService->checkProjectFolder($taxOfficeFolder);
                   break;
@@ -1253,7 +1254,7 @@ class PersonalSettingsController extends Controller
             }
 
             switch ($parameter) {
-              case ConfigService::POSTBOX_FOLDER:
+              case ConfigConstants::POSTBOX_FOLDER:
                 try {
                   $url = $this->configCheckService->checkLinkSharedFolder(
                     $sharedFolder . UserStorage::PATH_SEP . $prefixFolder . $real
@@ -1263,13 +1264,13 @@ class PersonalSettingsController extends Controller
                   $this->logException($t);
                 }
                 break;
-              case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
+              case ConfigConstants::DOCUMENT_TEMPLATES_FOLDER:
                 $skeletonPaths = $this->projectService->getProjectSkeletonPaths();
                 foreach ($skeletonPaths as $skeletonPath) {
                   $this->configCheckService->checkProjectFolder($skeletonPath);
                 }
                 break;
-              case ConfigService::FINANCE_FOLDER:
+              case ConfigConstants::FINANCE_FOLDER:
                 $taxOfficeFolder = $this->getTaxAuthoritiesPath();
                 $this->configCheckService->checkProjectFolder($taxOfficeFolder);
                 break;
@@ -1658,12 +1659,12 @@ class PersonalSettingsController extends Controller
       case 'announcementsMailingListAutoconf':
         /** @var MailingListsService $listsService */
         $listsService = $this->di(MailingListsService::class);
-        $announcementsMailingList = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
+        $announcementsMailingList = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
         if (empty($announcementsMailingList)) {
           return self::grumble($this->l->t('Please configure the mailing-list address first, otherweise I do not know which list I have to work on.'));
         }
-        $owners = array_filter([ $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['owner']) ]);
-        $moderators = array_filter([ $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['moderator']) ]);
+        $owners = array_filter([ $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['owner']) ]);
+        $moderators = array_filter([ $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['moderator']) ]);
         $posters = $moderators;
         $listsService->configureAnnouncementsList($announcementsMailingList, $owners, $moderators, $posters);
 
@@ -1676,9 +1677,9 @@ class PersonalSettingsController extends Controller
             empty($templates) ? $this->l->t('none') : implode(', ', $templates),
           ])
         );
-      case ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY:
-      case ConfigService::EMAIL_TEST_ADDRESS_KEY:
-      case ConfigService::EMAIL_FROM_ADDRESS_KEY:
+      case ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY:
+      case ConfigConstants::EMAIL_TEST_ADDRESS_KEY:
+      case ConfigConstants::EMAIL_FROM_ADDRESS_KEY:
         $realValue = Util::normalizeSpaces($value);
         try {
           $parsedEmail = $this->emailAddressService->parseAddressString($realValue);
@@ -1693,19 +1694,19 @@ class PersonalSettingsController extends Controller
         $furtherData = [];
         if (!empty($displayName)) {
           switch ($parameter) {
-            case ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY:
+            case ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY:
               $this->setSimpleConfigValue($parameter, $displayName, responseData: $furtherData);
               $reportValue = $displayName . ' <' . $realValue . '>';
               break;
-            case ConfigService::EMAIL_TEST_ADDRESS_KEY:
-              $this->setSimpleConfigValue(ConfigService::EMAIL_TEST_NAME_KEY, $displayName, responseData: $furtherData);
+            case ConfigConstants::EMAIL_TEST_ADDRESS_KEY:
+              $this->setSimpleConfigValue(ConfigConstants::EMAIL_TEST_NAME_KEY, $displayName, responseData: $furtherData);
               break;
-            case ConfigService::EMAIL_FROM_ADDRESS_KEY:
-              $this->setSimpleConfigValue(ConfigService::EMAIL_FROM_NAME_KEY, $displayName, responseData: $furtherData);
+            case ConfigConstants::EMAIL_FROM_ADDRESS_KEY:
+              $this->setSimpleConfigValue(ConfigConstants::EMAIL_FROM_NAME_KEY, $displayName, responseData: $furtherData);
               break;
           }
         }
-        if ($parameter === ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY) {
+        if ($parameter === ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY) {
           /** @var MailingListsService $listsService */
           $listsService = $this->di(MailingListsService::class);
           try {
@@ -1729,12 +1730,12 @@ class PersonalSettingsController extends Controller
           $this->logInfo('SHARE URI ' . $shareUri);
         }
         // fall through
-      case ConfigService::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY:
+      case ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY:
       case 'bulkEmailSubjectTag':
       case 'emailuser':
       case 'emailpassword':
-      case ConfigService::EMAIL_FROM_NAME_KEY:
-      case ConfigService::EMAIL_TEST_NAME_KEY:
+      case ConfigConstants::EMAIL_FROM_NAME_KEY:
+      case ConfigConstants::EMAIL_TEST_NAME_KEY:
         return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, furtherData: $furtherData ?? []);
       case 'bulkEmailPrivacyNotice':
         $value = $this->fuzzyInputService->purifyHTML($value);
@@ -1770,17 +1771,17 @@ class PersonalSettingsController extends Controller
           : $this->humanFileSize($realValue);
         return $this->setSimpleConfigValue($parameter, $realValue, $reportValue);
 
-      case (in_array($parameter, ConfigService::MAILING_LIST_CONFIG) ? $parameter : null):
+      case (in_array($parameter, ConfigConstants::MAILING_LIST_CONFIG) ? $parameter : null):
         return $this->setSimpleConfigValue($parameter, $value);
 
-      case (in_array($parameter, ConfigService::MAILING_LIST_REST_CONFIG) ? $parameter : null):
+      case (in_array($parameter, ConfigConstants::MAILING_LIST_REST_CONFIG) ? $parameter : null):
         /** @var string $mailingListRestUrl */
-        foreach (ConfigService::MAILING_LIST_REST_CONFIG as $listConfig) {
+        foreach (ConfigConstants::MAILING_LIST_REST_CONFIG as $listConfig) {
           ${$listConfig} = $this->getConfigValue($listConfig);
         }
         ${$parameter} = Util::normalizeSpaces($value);
         $all = true;
-        foreach (ConfigService::MAILING_LIST_REST_CONFIG as $listConfig) {
+        foreach (ConfigConstants::MAILING_LIST_REST_CONFIG as $listConfig) {
           if (empty(${$listConfig})) {
             $all = false;
             break;
@@ -1990,8 +1991,8 @@ class PersonalSettingsController extends Controller
       case 'auto-fill-test':
       case 'auto-fill-test-data':
         $templateName = $this->request->getParam('documentTemplate');
-        if (empty(ConfigService::DOCUMENT_TEMPLATES[$templateName])
-            || ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE) {
+        if (empty(ConfigConstants::DOCUMENT_TEMPLATES[$templateName])
+            || ConfigConstants::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigConstants::DOCUMENT_TYPE_TEMPLATE) {
           return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
         }
         $format = $this->request->getParam('format');
@@ -2053,13 +2054,13 @@ class PersonalSettingsController extends Controller
         };
 
         switch ($templateName) {
-          case ConfigService::DOCUMENT_TEMPLATE_STANDARD_LETTER:
+          case ConfigConstants::DOCUMENT_TEMPLATE_STANDARD_LETTER:
             $templateData = [
               'project' => $flatProject,
               'recipient' => $flatRecipient,
             ];
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_DONATION_RECEIPT:
+          case ConfigConstants::DOCUMENT_TEMPLATE_DONATION_RECEIPT:
             $income = 13.57;
             $expenses = -13.57;
             $amount = round($income + $expenses, 2);
@@ -2086,7 +2087,7 @@ class PersonalSettingsController extends Controller
             ];
             $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.corporateIncomeTax';
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_STANDARD_RECEIPT:
+          case ConfigConstants::DOCUMENT_TEMPLATE_STANDARD_RECEIPT:
             $income = 42.57;
             $expenses = -12.13;
             $amount = round($income + $expenses, 2);
@@ -2103,7 +2104,7 @@ class PersonalSettingsController extends Controller
             ];
             $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.corporateIncomeTax';
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_INVOICE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_INVOICE:
             $amount = 13.57;
             $gracePeriodDays = 14;
             DateInterval::setLocale($this->getLanguage($this->appLocale()));
@@ -2132,7 +2133,7 @@ class PersonalSettingsController extends Controller
               ],
             ];
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
             if ($format == 'pdf') {
               list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
                 $dummyRecipient->getSepaBankAccounts()->first(),
@@ -2143,7 +2144,7 @@ class PersonalSettingsController extends Controller
               $templateData = [];
             }
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
             if ($format == 'pdf') {
               list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
                 $dummyRecipient->getSepaBankAccounts()->first(),
@@ -2154,7 +2155,7 @@ class PersonalSettingsController extends Controller
               $templateData = [];
             }
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
             if ($format == 'pdf') {
               list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
                 $dummyRecipient->getSepaBankAccounts()->first(),
@@ -2165,7 +2166,7 @@ class PersonalSettingsController extends Controller
               $templateData = [];
             }
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD:
+          case ConfigConstants::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD:
             /** @var InstrumentInsuranceService $insuranceService */
             $insuranceService = $this->di(InstrumentInsuranceService::class);
             $dummyRecipient = $insuranceService->getDummyMusician();

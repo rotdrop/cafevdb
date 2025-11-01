@@ -27,17 +27,17 @@ namespace OCA\CAFEVDB\Middleware;
 use Exception;
 use ReflectionMethod;
 
-use Psr\Log\LoggerInterface;
-
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
 use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
+use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Verifies whether an user has at least sub-admin rights.
@@ -73,7 +73,7 @@ class SubAdminMiddleware extends Middleware
       }
     }
     if ($this->hasAnnotationOrAttribute($reflectionMethod, Attributes\ServiceAccountRequired::class)) {
-      if ($this->configService->getUserId() != $this->configService->getConfigValue(ConfigService::SHAREOWNER_KEY)) {
+      if ($this->configService->getUserId() != $this->configService->getConfigValue(ConfigConstants::SHAREOWNER_KEY)) {
         throw new NotAdminException($this->l->t('Logged in user account must be the service-account of the orchester app'));
       }
     }

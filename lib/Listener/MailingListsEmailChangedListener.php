@@ -136,7 +136,7 @@ class MailingListsEmailChangedListener implements IEventListener
       $projectsRepository = $this->getDatabaseRepository(Entities\Project::class);
       $listIds = $projectsRepository->fetchMailingListIds();
 
-      $announcementsListId = $configService->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
+      $announcementsListId = $configService->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
       $listIds[] = $announcementsListId;
       $listIds = array_filter($listIds);
 

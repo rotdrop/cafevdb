@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Toolkit\Service\RequestService;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException as DBALDriverException;
 
@@ -434,7 +435,7 @@ WHERE m.email IS NOT NULL AND m.email <> ""
 
     $catchAllGroup = $this->encryptionService->getConfigValue('musiciansaddressbook');
     if (empty($catchAllGroup)) {
-      $orchestraName = ucfirst($this->encryptionService->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY));
+      $orchestraName = ucfirst($this->encryptionService->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY));
       $catchAllGroup = $orchestraName . ' ' . $this->l->t('Musicians');
     }
 
@@ -943,7 +944,7 @@ SELECT t.*
     // we also need the project events, however, only rehearsals and concerts
 
     $table = 'ProjectEvents';
-    $calendarUris = array_keys(array_filter(ConfigService::CALENDARS, fn($info) => $info['public'] == true));
+    $calendarUris = array_keys(array_filter(ConfigConstants::CALENDARS, fn($info) => $info['public'] == true));
     $viewName = $this->personalizedViewName($dataBaseName, $table);
     $statements[$viewName] = "CREATE OR REPLACE
 SQL SECURITY DEFINER

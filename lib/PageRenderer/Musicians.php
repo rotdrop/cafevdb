@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Abstract table generator for Musicians table. */
@@ -1031,7 +1032,7 @@ GROUP BY t.id';
 
       // invite, subscribe or do nothing. If the person is already subscribed
       // then it can unsubscribe by itself, so nothing more is needed here.
-      $list = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
+      $list = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
       if (!empty($list)) {
         try {
           switch ($newVals['mailing_list'] ?? '') {

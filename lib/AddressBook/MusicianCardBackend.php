@@ -29,16 +29,17 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\AddressBook;
 
-use \Sabre\DAV\Exception\NotFound as SabreNotFoundException;
+use Sabre\DAV\Exception\NotFound as SabreNotFoundException;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database;
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Database\Constants as DBConstants;
-use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Generate VCards from the musicians database. */
 class MusicianCardBackend implements ICardBackend
@@ -71,7 +72,7 @@ class MusicianCardBackend implements ICardBackend
   {
     $name = $this->getConfigValue('musiciansaddressbook');
     if (empty($name)) {
-      $name = $this->l->t('%s Musicians', ucfirst($this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY, 'unknown')));
+      $name = $this->l->t('%s Musicians', ucfirst($this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY, 'unknown')));
     }
     return $name;
   }

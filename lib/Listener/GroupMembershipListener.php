@@ -26,32 +26,31 @@ namespace OCA\CAFEVDB\Listener;
 
 use Throwable;
 
-use OCP\Group\Events\UserAddedEvent;
-use OCP\Group\Events\UserRemovedEvent;
-use OCP\Group\Events\BeforeUserAddedEvent;
-
-use OCP\EventDispatcher\Event;
-use OCP\EventDispatcher\IEventListener;
-use OCP\AppFramework\IAppContainer;
-use OCP\IConfig as ICloudConfig;
 use OCP\Accounts\IAccount;
 use OCP\Accounts\IAccountManager;
-use OCP\IGroupManager;
+use OCP\AppFramework\IAppContainer;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventListener;
+use OCP\Group\Events\BeforeUserAddedEvent;
+use OCP\Group\Events\UserAddedEvent;
+use OCP\Group\Events\UserRemovedEvent;
 use OCP\Group\ISubAdmin as SubAdminManager;
+use OCP\IConfig as ICloudConfig;
+use OCP\IGroupManager;
+use OCP\IUserBackend;
 use OCP\IUserManager;
 use OCP\User\Backend\ICreateUserBackend;
-use OCP\IUserBackend;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\CloudAccountsService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Do something special if the membership to the orchestra group changes.
@@ -87,13 +86,13 @@ class GroupMembershipListener implements IEventListener
 
     /** @var ICloudConfig $cloudConfig */
     $cloudConfig = $this->appContainer->get(ICloudConfig::class);
-    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigService::USER_GROUP_KEY);
+    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigConstants::USER_GROUP_KEY);
 
     if (empty($orchestraGroupId)) {
       return;
     }
 
-    $adminGroupId = $orchestraGroupId . ConfigService::ADMIN_GROUP_SUFFIX;
+    $adminGroupId = $orchestraGroupId . ConfigConstants::ADMIN_GROUP_SUFFIX;
     $managementGroupId = $orchestraGroupId . AuthorizationService::MANAGEMENT_GROUP_SUFFIX;
 
     /** @var CloudAccountsService $cloudAccountsService */
@@ -129,7 +128,7 @@ class GroupMembershipListener implements IEventListener
 
           /** @var EncryptionService $encryptionService */
           $encryptionService = $this->appContainer->get(EncryptionService::class);
-          list(, $emailFromDomain) = array_pad(explode('@', $encryptionService->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY)), null, 2);
+          list(, $emailFromDomain) = array_pad(explode('@', $encryptionService->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY)), null, 2);
 
           /** @var IAccountManager $accountManager */
           $accountManager = $this->appContainer->get(IAccountManager::class);
@@ -143,7 +142,7 @@ class GroupMembershipListener implements IEventListener
             case ($event instanceof BeforeUserAddedEvent):
               // make in particular sure that the person is also added to
               // the configured orchestra user backend
-              $orchestraUserAndGroupBackend = $cloudConfig->getAppValue($appName, ConfigService::USER_AND_GROUP_BACKEND_KEY);
+              $orchestraUserAndGroupBackend = $cloudConfig->getAppValue($appName, ConfigConstants::USER_AND_GROUP_BACKEND_KEY);
               if (!empty($orchestraUserAndGroupBackend)) {
                 $cloudAccountsService->addUserToBackend($user, $orchestraUserAndGroupBackend);
               }

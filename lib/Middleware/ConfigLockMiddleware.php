@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2022, 2024-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,17 +27,17 @@ namespace OCA\CAFEVDB\Middleware;
 use Exception;
 use ReflectionMethod;
 
-use Psr\Log\LoggerInterface;
-
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
+use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Deny all request while config-lock is active.
@@ -68,7 +68,7 @@ class ConfigLockMiddleware extends Middleware
     if ($this->hasAnnotationOrAttribute($reflectionMethod, Attributes\IgnoreConfigLock::class)) {
       return;
     }
-    if (!empty($this->configService->getConfigValue(ConfigService::CONFIG_LOCK_KEY))) {
+    if (!empty($this->configService->getConfigValue(ConfigConstants::CONFIG_LOCK_KEY))) {
       throw new Exceptions\ConfigLockedException;
     }
   }

@@ -40,19 +40,17 @@ use OCP\IDateTimeFormatter;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
 
-use OCA\CAFeVDBMembers\Service\ProjectGroupService;
-
 use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
 use OCA\CAFEVDB\Common\PHPMailer;
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -75,11 +73,13 @@ use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
 /**
  * This is the mass-email composer class. We try to be somewhat
@@ -2099,14 +2099,14 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $templateId = $attachment['template_id'];
         if (!empty($this->project)
             && $this->project->getId() == $this->getClubMembersProjectId()
-            && $templateId == ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE) {
-          $templateId = ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
+            && $templateId == ConfigConstants::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE) {
+          $templateId = ConfigConstants::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
         }
 
         /** @var FinanceService $financeService */
         $financeService = $this->di(FinanceService::class);
         switch ($templateId) {
-          case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
             $membersProject = $this->entityManager->find(
               Entities\Project::class,
               $this->getClubMembersProjectId()
@@ -2134,7 +2134,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
               ];
             };
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
             $membersProject = $this->entityManager->find(
               Entities\Project::class,
               $this->getClubMembersProjectId()
@@ -2162,13 +2162,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
               ];
             };
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
             if (empty($this->project)) {
               continue 2;
             }
             if ($musician->isMemberOf($this->getClubMembersProjectId())) {
               // switch to the member-data update which also inludes a mandate form
-              $templateId = ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
+              $templateId = ConfigConstants::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
             }
             /** @var FinanceService $financeService */
             $financeService = $this->di(FinanceService::class);
@@ -2190,7 +2190,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
               ];
             };
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD:
+          case ConfigConstants::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD:
             /** @var InstrumentInsuranceService $insuranceService */
             $insuranceService = $this->di(InstrumentInsuranceService::class);
             $insuranceOverview = $insuranceService->musicianOverview($musician);
@@ -2641,7 +2641,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         /** @var FinanceService $financeService */
         $financeService = $this->di(FinanceService::class);
         switch ($templateId) {
-          case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
             $membersProject = $this->entityManager->find(
               Entities\Project::class,
               $this->getClubMembersProjectId()
@@ -2652,7 +2652,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             list($fileData, $mimeType, $fileName) = $financeService->preFilledDebitMandateForm(
               null, $membersProject, null, formName: $templateId);
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
             $membersProject = $this->entityManager->find(
               Entities\Project::class,
               $this->getClubMembersProjectId()
@@ -2663,7 +2663,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             list($fileData, $mimeType, $fileName) = $financeService->preFilledDebitMandateForm(
               null, $membersProject, null, formName: $templateId);
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
             if (empty($this->project)) {
               continue 2;
             }
@@ -4139,14 +4139,14 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   private function setCatchAll():void
   {
     if ($this->constructionMode) {
-      $this->catchAllEmail = $this->getConfigValue(ConfigService::EMAIL_TEST_ADDRESS_KEY);
+      $this->catchAllEmail = $this->getConfigValue(ConfigConstants::EMAIL_TEST_ADDRESS_KEY);
       $this->catchAllName  = $this->getConfigValue(
-        ConfigService::EMAIL_TEST_NAME_KEY,
-        $this->getConfigValue(ConfigService::EMAIL_FROM_NAME_KEY)
+        ConfigConstants::EMAIL_TEST_NAME_KEY,
+        $this->getConfigValue(ConfigConstants::EMAIL_FROM_NAME_KEY)
       );
     } else {
-      $this->catchAllEmail = $this->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY);
-      $this->catchAllName  = $this->getConfigValue(ConfigService::EMAIL_FROM_NAME_KEY);
+      $this->catchAllEmail = $this->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY);
+      $this->catchAllName  = $this->getConfigValue(ConfigConstants::EMAIL_FROM_NAME_KEY);
     }
   }
 
@@ -5541,8 +5541,8 @@ to your user name and will be invalidated in the unfortunate case that you leave
     $origin = AttachmentOrigin::TEMPLATE;
 
     $templateAttachments = [];
-    foreach (ConfigService::DOCUMENT_TEMPLATES as $templateId => $documentTemplate) {
-      if ($documentTemplate['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE
+    foreach (ConfigConstants::DOCUMENT_TEMPLATES as $templateId => $documentTemplate) {
+      if ($documentTemplate['type'] != ConfigConstants::DOCUMENT_TYPE_TEMPLATE
           || !$documentTemplate['blank']) {
         continue;
       }
@@ -5671,8 +5671,8 @@ to your user name and will be invalidated in the unfortunate case that you leave
     }
 
     // add also the global document templates
-    foreach (ConfigService::DOCUMENT_TEMPLATES as $templateId => $documentTemplate) {
-      if ($documentTemplate['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE) {
+    foreach (ConfigConstants::DOCUMENT_TEMPLATES as $templateId => $documentTemplate) {
+      if ($documentTemplate['type'] != ConfigConstants::DOCUMENT_TYPE_TEMPLATE) {
         continue;
       }
       $attachment = [
@@ -5680,7 +5680,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
         'template_id' => $templateId,
         'name' => $this->l->t($documentTemplate['name']),
         'origin' => $origin,
-        'sub_topic' => ConfigService::DOCUMENT_TYPE_TEMPLATE,
+        'sub_topic' => ConfigConstants::DOCUMENT_TYPE_TEMPLATE,
         'sub_selection' => false,
       ];
       $status = 'inactive';
@@ -5688,12 +5688,12 @@ to your user name and will be invalidated in the unfortunate case that you leave
         $status = 'selected';
       } elseif (!empty($this->project) && !empty($this->bulkTransaction) && ($this->bulkTransaction instanceof Entities\SepaDebitNote)) {
         switch ($templateId) {
-          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
             if ($this->project->getId() != $this->getClubMembersProjectId()) {
               $status = 'selected';
             }
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
             if ($this->project->getId() == $this->getClubMembersProjectId()) {
               $status = 'selected';
             }

@@ -31,19 +31,19 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 $debugModes = [
-  ConfigService::DEBUG_GENERAL => $l->t('General Information'),
-  ConfigService::DEBUG_QUERY => $l->t('SQL Queries'),
-  ConfigService::DEBUG_CSP => $l->t('CSP Violations'),
-  ConfigService::DEBUG_L10N => $l->t('L10N'),
-  ConfigService::DEBUG_REQUEST => $l->t('HTTP Requests'),
-  ConfigService::DEBUG_TOOLTIPS => $l->t('Missing Context Help'),
-  ConfigService::DEBUG_EMAILFORM => $l->t('Mass Email Form'),
-  ConfigService::DEBUG_GEOCODING => $l->t('GeoCoding'),
-  ConfigService::DEBUG_VUE => $l->t('Vue JS Frontend'),
-  ConfigService::DEBUG_SMAPS => $l->t('Resolve JS Sourceode'),
+  ConfigConstants::DEBUG_GENERAL => $l->t('General Information'),
+  ConfigConstants::DEBUG_QUERY => $l->t('SQL Queries'),
+  ConfigConstants::DEBUG_CSP => $l->t('CSP Violations'),
+  ConfigConstants::DEBUG_L10N => $l->t('L10N'),
+  ConfigConstants::DEBUG_REQUEST => $l->t('HTTP Requests'),
+  ConfigConstants::DEBUG_TOOLTIPS => $l->t('Missing Context Help'),
+  ConfigConstants::DEBUG_EMAILFORM => $l->t('Mass Email Form'),
+  ConfigConstants::DEBUG_GEOCODING => $l->t('GeoCoding'),
+  ConfigConstants::DEBUG_VUE => $l->t('Vue JS Frontend'),
+  ConfigConstants::DEBUG_SMAPS => $l->t('Resolve JS Sourceode'),
 ];
 
 ?>

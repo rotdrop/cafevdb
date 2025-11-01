@@ -24,16 +24,18 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Throwable;
-use RuntimeException;
 use InvalidArgumentException;
+use RuntimeException;
+use Throwable;
+
 use GuzzleHttp\Client as RestClient;
 use GuzzleHttp\Exception\ConnectException;
 
-use OCP\Files\IRootFolder;
 use OCP\Files\FileInfo;
+use OCP\Files\IRootFolder;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
@@ -201,18 +203,18 @@ class MailingListsService
     $this->l = $this->l10n();
 
     $this->restClient = new RestClient([ 'base_uri' => $this->getConfigValue(
-      ConfigService::MAILING_LIST_REST_CONFIG['url'],
+      ConfigConstants::MAILING_LIST_REST_CONFIG['url'],
       self::DEFAULT_REST_URI) ]);
     $this->restAuth = [
-      $this->getConfigValue(ConfigService::MAILING_LIST_REST_CONFIG['user']),
-      $this->getConfigValue(ConfigService::MAILING_LIST_REST_CONFIG['password']),
+      $this->getConfigValue(ConfigConstants::MAILING_LIST_REST_CONFIG['user']),
+      $this->getConfigValue(ConfigConstants::MAILING_LIST_REST_CONFIG['password']),
     ];
   }
 
   /** @return bool Whether the mailing list service is configured. */
   public function isConfigured():bool
   {
-    foreach (ConfigService::MAILING_LIST_REST_CONFIG as $configKey) {
+    foreach (ConfigConstants::MAILING_LIST_REST_CONFIG as $configKey) {
       if (empty($this->getConfigValue($configKey))) {
         return false;
       }
@@ -633,7 +635,7 @@ class MailingListsService
   public function getConfigurationUrl(string $listId):string
   {
     $listId = $this->ensureListId($listId);
-    return $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['web']) . '/postorius/lists/' . $listId;
+    return $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['web']) . '/postorius/lists/' . $listId;
   }
 
   /**
@@ -645,7 +647,7 @@ class MailingListsService
   public function getArchiveUrl(string $listId):string
   {
     $listId = $this->ensureListId($listId);
-    return $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['web']) . '/hyperkitty/list/' . $listId;
+    return $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['web']) . '/hyperkitty/list/' . $listId;
   }
 
   /**
@@ -1153,7 +1155,7 @@ class MailingListsService
    */
   public function ensureTemplateFolder(string $folderName):?string
   {
-    $shareOwnerUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
+    $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
     $folderPath = $folderName[0] != '/'
       ? $folderPath = $this->templateFolderPath($folderName)
       : $folderName;

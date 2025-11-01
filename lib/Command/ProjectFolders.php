@@ -33,15 +33,13 @@ use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\DescriptorHelper;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -49,8 +47,10 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /** Create all participant sub-folder for each project. */
 class ProjectFolders extends Command
@@ -196,11 +196,11 @@ class ProjectFolders extends Command
     $output->writeln('PROJECT CRIT ' . print_r($projectCriteria, true));
     $projects = $projectsRepository->findBy($projectCriteria, [ 'year' => 'DESC', 'name' => 'ASC' ]);
 
-    $group = $this->appConfig->getValueString($this->appName, ConfigService::USER_GROUP_KEY);
+    $group = $this->appConfig->getValueString($this->appName, ConfigConstants::USER_GROUP_KEY);
     if ($group) {
       $groupMembers = array_map(fn(IUSER $user) => $user->getUID(), $this->groupManager->get($group)->getUsers());
       $sharingService = $this->appContainer->get(SimpleSharingService::class);
-      $shareOwner = $this->appConfig->getValueString($this->appName, ConfigService::SHAREOWNER_KEY);
+      $shareOwner = $this->appConfig->getValueString($this->appName, ConfigConstants::SHAREOWNER_KEY);
     } else {
       $groupMembers = [];
     }

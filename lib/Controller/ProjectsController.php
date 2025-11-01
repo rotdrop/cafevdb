@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /** AJAX controller for projects. */
@@ -377,16 +378,16 @@ class ProjectsController extends Controller
 
   const GET_PROJECT_FOLDER = 'folder';
   const FOLDER_TYPES = [
-    ProjectService::FOLDER_TYPE_PROJECT => ConfigService::PROJECTS_FOLDER,
-    ProjectService::FOLDER_TYPE_PARTICIPANTS => ConfigService::PROJECT_PARTICIPANTS_FOLDER,
-    ProjectService::FOLDER_TYPE_POSTERS => ConfigService::PROJECT_POSTERS_FOLDER,
-    ProjectService::FOLDER_TYPE_DOWNLOADS => ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
-    ProjectService::FOLDER_TYPE_BALANCE => ConfigService::BALANCES_FOLDER,
+    ProjectService::FOLDER_TYPE_PROJECT => ConfigConstants::PROJECTS_FOLDER,
+    ProjectService::FOLDER_TYPE_PARTICIPANTS => ConfigConstants::PROJECT_PARTICIPANTS_FOLDER,
+    ProjectService::FOLDER_TYPE_POSTERS => ConfigConstants::PROJECT_POSTERS_FOLDER,
+    ProjectService::FOLDER_TYPE_DOWNLOADS => ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
+    ProjectService::FOLDER_TYPE_BALANCE => ConfigConstants::BALANCES_FOLDER,
   ];
 
   const GET_PROJECT_SHARE = 'share';
   const SHARE_TYPES = [
-    ProjectService::FOLDER_TYPE_DOWNLOADS => ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
+    ProjectService::FOLDER_TYPE_DOWNLOADS => ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
   ];
 
   /**
@@ -535,7 +536,7 @@ class ProjectsController extends Controller
         $eventMatrix = $eventsService->eventMatrix($events, $dfltIds);
         // provide also some meta-info in order to avoid further bloats to the initial-state data.
         $data = [
-          'calendars' => ConfigService::CALENDARS,
+          'calendars' => ConfigConstants::CALENDARS,
           'categories' => [
             'C' => [
               'recordAbsence' => $eventsService->getRecordAbsenceCategory(translate: false),

@@ -35,8 +35,9 @@ use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
-use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events\EncryptionServiceBound as EncryptionServiceBoundEvent;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 use OCA\CAFEVDB\Crypto;
 
@@ -78,27 +79,27 @@ class EncryptionService
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  const PUBLIC_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG;
-  const PRIVATE_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG;
+  public const PUBLIC_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG;
+  public const PRIVATE_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG;
 
-  const USER_ENCRYPTION_KEY_KEY = 'encryptionkey';
-  const APP_ENCRYPTION_KEY_HASH_KEY = 'encryptionkeyhash';
+  public const USER_ENCRYPTION_KEY_KEY = 'encryptionkey';
+  public const APP_ENCRYPTION_KEY_HASH_KEY = 'encryptionkeyhash';
 
-  const CONFIG_LOCK_KEY = 'configlock';
+  public const CONFIG_LOCK_KEY = 'configlock';
 
   const NEVER_ENCRYPT = [
     'enabled',
     'installed_version',
     'types',
-    ConfigService::USER_GROUP_KEY, // cloud-admin setting
-    ConfigService::USER_AND_GROUP_BACKEND_KEY, // backend to use for the orchestra group
-    ConfigService::SHAREOWNER_KEY, // needed as calendar principal in the member's app
-    ConfigService::SHARED_FOLDER, // needed by some listeners in order to bail out early
-    ConfigService::PROJECT_PARTICIPANTS_FOLDER, // needed by some listeners in order to bail out early
-    ConfigService::WIKI_NAME_SPACE_KEY, // cloud-admin setting
+    ConfigConstants::USER_GROUP_KEY, // cloud-admin setting
+    ConfigConstants::USER_AND_GROUP_BACKEND_KEY, // backend to use for the orchestra group
+    ConfigConstants::SHAREOWNER_KEY, // needed as calendar principal in the member's app
+    ConfigConstants::SHARED_FOLDER, // needed by some listeners in order to bail out early
+    ConfigConstants::PROJECT_PARTICIPANTS_FOLDER, // needed by some listeners in order to bail out early
+    ConfigConstants::WIKI_NAME_SPACE_KEY, // cloud-admin setting
     'cspfailuretoken', // for public post route
     'configlock', // better kept open
-    ConfigService::ORCHESTRA_NAME_KEY, // used in the member's app for the front-page announcement
+    ConfigConstants::ORCHESTRA_NAME_KEY, // used in the member's app for the front-page announcement
     'orchestraLocale', // used in the member's app for consistent currencies etc.
     self::APP_ENCRYPTION_KEY_HASH_KEY,
   ];
@@ -285,7 +286,7 @@ class EncryptionService
    */
   public function initAppKeyPair(bool $forceNewKeyPair = false):void
   {
-    $group = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+    $group = $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
     $encryptionKey = $this->getAppEncryptionKey();
     if (empty($group) || empty($encryptionKey)) {
       $this->logDebug('Cannot initialize encryption key-pair without user-group and encryption key');
@@ -318,7 +319,7 @@ class EncryptionService
    */
   public function restoreAppKeyPair():void
   {
-    $group = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+    $group = $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
     $encryptionKey = $this->getAppEncryptionKey();
     if (empty($group) || empty($encryptionKey)) {
       $this->logDebug('Cannot restore encryption key-pair without user-group and encryption key');
@@ -593,7 +594,7 @@ class EncryptionService
    */
   public function getConfigValue(string $key, mixed $default = null, bool $ignoreLock = false)
   {
-    if (!$ignoreLock && !empty($this->getAppValue(self::CONFIG_LOCK_KEY))) {
+    if (!$ignoreLock && !empty($this->getAppValue(ConfigConstants::CONFIG_LOCK_KEY))) {
       throw new Exceptions\ConfigLockedException('Configuration locked, not retrieving value for ' . $key);
     }
     $value  = $this->getAppValue($key, $default);
@@ -645,7 +646,7 @@ class EncryptionService
    */
   public function setConfigValue(string $key, mixed $value, bool $ignoreLock = false):bool
   {
-    if (!$ignoreLock && !empty($this->getAppValue(self::CONFIG_LOCK_KEY))) {
+    if (!$ignoreLock && !empty($this->getAppValue(ConfigConstants::CONFIG_LOCK_KEY))) {
       throw new Exceptions\ConfigLockedException('Configuration locked, not storing value for config-key ' . $key);
     }
     if (in_array($key, self::NEVER_ENCRYPT)) {

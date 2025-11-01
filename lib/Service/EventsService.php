@@ -64,6 +64,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
 use OCA\CAFEVDB\Events\PreProjectUpdatedEvent;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /**
@@ -205,23 +206,23 @@ class EventsService
     $objectData['calendaruri'] = $calendarUri;
 
     $bulkTransactionsRepository = $this->entityManager->getRepository(Entities\SepaBulkTransaction::class);
-    if ($bulkTransactionsRepository->isCalendarObjectUsed($objectUri) && $calendarUri != ConfigService::FINANCE_CALENDAR_URI) {
+    if ($bulkTransactionsRepository->isCalendarObjectUsed($objectUri) && $calendarUri != ConfigConstants::FINANCE_CALENDAR_URI) {
       // undo the move
-      $forcedCalendarId = $this->getCalendarId(ConfigService::FINANCE_CALENDAR_URI);
+      $forcedCalendarId = $this->getCalendarId(ConfigConstants::FINANCE_CALENDAR_URI);
       $this->calDavService->moveCalendarObject($calendarId, $forcedCalendarId, $objectData);
 
-      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is in use by the finance sub-system and cannot be moved away from the %2$s calendar.', [ $objectUri, ConfigService::FINANCE_CALENDAR_URI ]);
+      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is in use by the finance sub-system and cannot be moved away from the %2$s calendar.', [ $objectUri, ConfigConstants::FINANCE_CALENDAR_URI ]);
       $this->logError($errorMessage);
       throw new DavForbiddenException($errorMessage);
     }
 
     $objectData['calendardata'] = VCalendarService::getVCalendar($objectData['calendardata']);
-    if ($this->isProjectRegistrationEvent($objectData['calendardata']) && $calendarUri != ConfigService::OTHER_CALENDAR_URI) {
+    if ($this->isProjectRegistrationEvent($objectData['calendardata']) && $calendarUri != ConfigConstants::OTHER_CALENDAR_URI) {
       // undo the move
-      $forcedCalendarId = $this->getCalendarId(ConfigService::OTHER_CALENDAR_URI);
+      $forcedCalendarId = $this->getCalendarId(ConfigConstants::OTHER_CALENDAR_URI);
       $this->calDavService->moveCalendarObject($calendarId, $forcedCalendarId, $objectData);
 
-      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is a project registration event and must not be moved away from the %2$s calendar.', [ $objectUri, ConfigService::OTHER_CALENDAR_URI ]);
+      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is a project registration event and must not be moved away from the %2$s calendar.', [ $objectUri, ConfigConstants::OTHER_CALENDAR_URI ]);
       $this->logError($errorMessage);
       throw new DavForbiddenException($errorMessage);
     }
@@ -297,7 +298,7 @@ class EventsService
          ->execute();
 
     // remove from config-space if found
-    foreach (ConfigService::CALENDARS as $cal) {
+    foreach (ConfigConstants::CALENDARS as $cal) {
       $uri = $cal['uri'];
       $calendarId = $this->getCalendarId($uri);
       if ($event->getCalendarId() == $calendarId) {
@@ -317,7 +318,7 @@ class EventsService
     if (!$this->inGroup()) {
       return;
     }
-    foreach (ConfigService::CALENDARS as $cal) {
+    foreach (ConfigConstants::CALENDARS as $cal) {
       $uri = $cal['uri'];
       $calendarId = $this->getCalendarId($uri);
       if ($event->getCalendarId() == $calendarId) {
@@ -959,7 +960,7 @@ class EventsService
    * @param int $projectId
    *
    * @param null|string|array $calendarIds null to get the events from all
-   * calendars or the 'uri' component from OCA\CAFEVDB\Service\ConfigService::CALENDARS.
+   * calendars or the 'uri' component from OCA\CAFEVDB\Service\ConfigConstants::CALENDARS.
    *
    * @param null|string $timezone
    *
@@ -1051,7 +1052,7 @@ class EventsService
             ."BEGIN:VCALENDAR".$eol
             ."VERSION:2.0".$eol
             ."PRODID:Nextloud cafevdb " . $this->appVersion() . $eol
-            ."X-WR-CALNAME:" . $projectName . ' (' . $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY) . ')' . $eol;
+            ."X-WR-CALNAME:" . $projectName . ' (' . $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY) . ')' . $eol;
 
     $selection = [];
     foreach ($events as $eventIdentifier) {
@@ -1116,12 +1117,12 @@ class EventsService
    *
    * @return array The IDs of the default calendars.
    *
-   * @see ConfigService::CALENDARS
+   * @see ConfigConstants::CALENDARS
    */
   public function defaultCalendars(bool $public = false):array
   {
     $result = [];
-    foreach (ConfigService::CALENDARS as $cal) {
+    foreach (ConfigConstants::CALENDARS as $cal) {
       if ($public && !$cal['public']) {
         continue;
       }
@@ -1224,7 +1225,7 @@ class EventsService
       $this->getRecordAbsenceCategory(),
       $this->getProjectRegistrationCategory(),
     ];
-    foreach (array_keys(ConfigService::CALENDARS) as $calendarUri) {
+    foreach (array_keys(ConfigConstants::CALENDARS) as $calendarUri) {
       $systemCategories[] = $appL10n->t($calendarUri);
     }
     foreach ($systemCategories as $category) {
@@ -1257,7 +1258,7 @@ class EventsService
    */
   public static function absenceFieldsDefault(string $calendarUri):bool
   {
-    return $calendarUri == ConfigService::CONCERTS_CALENDAR_URI || $calendarUri == ConfigService::REHEARSALS_CALENDAR_URI;
+    return $calendarUri == ConfigConstants::CONCERTS_CALENDAR_URI || $calendarUri == ConfigConstants::REHEARSALS_CALENDAR_URI;
   }
 
   /**
@@ -1328,7 +1329,7 @@ class EventsService
       $defaultCalendars = array_flip($this->defaultCalendars());
       $recordAbsenceCategory = $this->getRecordAbsenceCategory();
 
-      if (ConfigService::CALENDARS[$defaultCalendars[$calId]]['public'] === false) {
+      if (ConfigConstants::CALENDARS[$defaultCalendars[$calId]]['public'] === false) {
         // remove any record absence category
         $absenceCategories = [ $recordAbsenceCategory, self::RECORD_ABSENCE_CATEGORY ];
         /** @var VEvent $vEvent */
@@ -2618,10 +2619,10 @@ class EventsService
       $categories,
       $shareOwnerId,
       [
-        ConfigService::OTHER_CALENDAR_URI,
-        ConfigService::MANAGEMENT_CALENDAR_URI,
-        ConfigService::CONCERTS_CALENDAR_URI,
-        ConfigService::REHEARSALS_CALENDAR_URI,
+        ConfigConstants::OTHER_CALENDAR_URI,
+        ConfigConstants::MANAGEMENT_CALENDAR_URI,
+        ConfigConstants::CONCERTS_CALENDAR_URI,
+        ConfigConstants::REHEARSALS_CALENDAR_URI,
       ],
     );
     if (count($registrationEvents) > 1) {
@@ -2711,14 +2712,14 @@ class EventsService
       'categories' => [
         $this->getProjectRegistrationCategory(),
         $projectName,
-        $this->getCalendarDisplayName(ConfigService::OTHER_CALENDAR_URI),
+        $this->getCalendarDisplayName(ConfigConstants::OTHER_CALENDAR_URI),
       ],
       'description' => $l->t('Project registration period for the project "%1$s". Participants can apply for participation using the public url %2$s.', [
         $projectName,
         $registrationUrl,
       ]),
       'location' => $l->t('CyberSpace'),
-      'calendar' => $this->getCalendarId(ConfigService::OTHER_CALENDAR_URI),
+      'calendar' => $this->getCalendarId(ConfigConstants::OTHER_CALENDAR_URI),
       'allday' => true,
       'start' => $registrationStartDate,
       'end' => $registrationDeadline,

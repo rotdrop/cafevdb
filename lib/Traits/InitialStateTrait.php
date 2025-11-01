@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Settings\Admin;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Provide an "initial state" for JavaScript. */
 trait InitialStateTrait
@@ -105,7 +106,7 @@ trait InitialStateTrait
     try {
       /** @var TemplateService $templateService */
       $templateService = $this->appContainer->get(TemplateService::class);
-      $orchestraLogo = $templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
+      $orchestraLogo = $templateService->getDocumentTemplate(ConfigConstants::DOCUMENT_TEMPLATE_LOGO);
 
       if ($orchestraLogo) {
         /** @var ImagesService $imagesService */
@@ -126,7 +127,7 @@ trait InitialStateTrait
       [
         'appName' => $this->appName,
         // TRANSLATORS: default value for unconfigured setting.
-        ConfigService::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY, $this->l->t('unconfigured')),
+        ConfigConstants::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY, $this->l->t('unconfigured')),
         'orchestraLogo' => $orchestraLogo ?? '',
         'toolTipsEnabled' => $tooltips,
         'wysiwygEditor' => $editor,
@@ -146,7 +147,7 @@ trait InitialStateTrait
         'isGroupAdmin' => $authorizationService->isAdmin($this->userId()),
         'sharedFolder' => $this->getSharedFolderPath(),
         'projectsFolder' => $this->getProjectsFolderPath(),
-        Admin::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY),
+        Admin::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY),
         'uploadMaxFileSize' => Util::maxUploadSize(),
       ]);
 

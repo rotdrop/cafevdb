@@ -29,10 +29,11 @@ use OCP\IConfig;
 use OCP\IL10N;
 use Psr\Container\ContainerInterface;
 
-use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Crypto\CloudSymmetricCryptor;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Register some utiltiy services in order to ease dependency injection. */
 class Registration
@@ -74,7 +75,7 @@ class Registration
     $context->registerService(self::MANAGEMENT_GROUP_ID, function(ContainerInterface $container) {
       return $container->get(IConfig::class)->getAppValue(
         $container->get('AppName'),
-        ConfigService::USER_GROUP_KEY,
+        ConfigConstants::USER_GROUP_KEY,
         null
       );
     });

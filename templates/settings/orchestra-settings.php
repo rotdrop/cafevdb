@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,12 +25,14 @@
 namespace OCA\CAFEVDB;
 
 use Throwable;
+
+use Cmixin\BusinessDay;
+
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
-use Cmixin\BusinessDay;
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\GeoCodingService;
 
 /** @var GeoCodingService $geoCodingService */
 
@@ -248,7 +250,7 @@ if (!empty($appLocale)) {
           >
             <?php p(${$documentTemplate . 'FileName'}); ?>
           </a>
-          <?php if ($type == ConfigService::DOCUMENT_TYPE_TEMPLATE) {  ?>
+          <?php if ($type == ConfigConstants::DOCUMENT_TYPE_TEMPLATE) {  ?>
             <input type="button"
                    name="<?php p($documentTemplate); ?>AutoFillTest"
                    data-template="<?php p($documentTemplate); ?>"

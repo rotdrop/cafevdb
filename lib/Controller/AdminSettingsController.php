@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
 use OCA\CAFEVDB\Service\FontService;
 use OCA\CAFEVDB\Service\ProblemReportService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 
 /** AJAX end-points for admin setttings. */
@@ -120,10 +121,10 @@ class AdminSettingsController extends Controller
         }
         break;
       case AdminSettings::USER_AND_GROUP_BACKEND_KEY:
-        $value = $this->getAppValue(ConfigService::USER_AND_GROUP_BACKEND_KEY, AdminSettings::DEFAULT_USER_AND_GROUP_BACKEND);
+        $value = $this->getAppValue(ConfigConstants::USER_AND_GROUP_BACKEND_KEY, AdminSettings::DEFAULT_USER_AND_GROUP_BACKEND);
         break;
       case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
-        $value = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+        $value = $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
         break;
       case AdminSettings::ORCHESTRA_USER_GROUP_ADMINS_KEY:
         $admins = $this->configService->getGroupSubAdmins();
@@ -134,7 +135,7 @@ class AdminSettingsController extends Controller
         }
         break;
       case AdminSettings::WIKI_NAME_SPACE_KEY:
-        $value = $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY);
+        $value = $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY);
         break;
       case AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY:
       case AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY:
@@ -217,8 +218,8 @@ class AdminSettingsController extends Controller
    */
   private function post(string $parameter, mixed $value = null, ?string $operation = null):DataResponse
   {
-    $wikiNameSpace = $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY);
-    $orchestraUserGroup = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+    $wikiNameSpace = $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY);
+    $orchestraUserGroup = $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
     switch ($parameter) {
       case AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY:
         $value = Util::normalizeSpaces($value);
@@ -298,13 +299,13 @@ Please enter the confirmation code contained in the email into the admin-setting
           $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
         }
         $orchestraUserGroup = $realValue;
-        $this->setAppValue(ConfigService::USER_GROUP_KEY, $orchestraUserGroup);
+        $this->setAppValue(ConfigConstants::USER_GROUP_KEY, $orchestraUserGroup);
         $result = [
           $parameter => $orchestraUserGroup,
         ];
         if (empty($wikiNameSpace)) {
           $wikiNameSpace = $orchestraUserGroup;
-          $this->setAppValue(ConfigService::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
+          $this->setAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
           $result[AdminSettings::WIKI_NAME_SPACE_KEY] = $wikiNameSpace;
         }
         $this->grantWikiAccess($wikiNameSpace, $orchestraUserGroup);
@@ -368,7 +369,7 @@ Please enter the confirmation code contained in the email into the admin-setting
         }
         $realValue = trim($value);
         $wikiNameSpace = $realValue;
-        $this->setAppValue(ConfigService::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
+        $this->setAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
         $result[AdminSettings::WIKI_NAME_SPACE_KEY] = $wikiNameSpace;
 
         if (!empty($orchestraUserGroup)) {

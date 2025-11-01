@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Wrap the email filter form into a class to make things a little
@@ -62,7 +63,7 @@ class RecipientsFilter
   public const FROM_PROJECT_CONFIRMED_KEY = 'fromProjectConfirmed';
   public const FROM_PROJECT_PRELIMINARY_KEY = 'fromProjectPreliminary';
   public const EXCEPT_PROJECT_KEY = 'exceptProject';
-  public const ANNOUNCEMENTS_MAILING_LIST_KEY = ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY;
+  public const ANNOUNCEMENTS_MAILING_LIST_KEY = ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY;
   public const PROJECT_MAILING_LIST_KEY = 'projectMailingList';
 
   public const MUSICIANS_FROM_PROJECT_PRELIMINARY = (1 << 0);
@@ -548,7 +549,7 @@ class RecipientsFilter
 
     // Check for valid position.
     if ($newPosition >= $this->historySize || $newPosition < 0) {
-      if ($this->shouldDebug(ConfigService::DEBUG_EMAILFORM)) {
+      if ($this->shouldDebug(ConfigConstants::DEBUG_EMAILFORM)) {
         throw new OutOfBoundsException(
           $this->l->t(
             'Invalid history position %d request, history size is %d',
@@ -1449,7 +1450,7 @@ class RecipientsFilter
       MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_ENABLED,
       MailingListsService::MEMBER_DELIVERY_MODE => MailingListsService::DELIVERY_MODE_REGULAR,
     ]);
-    $bulkEmailFromAddress = $this->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY);
+    $bulkEmailFromAddress = $this->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY);
     Util::unsetValue($listMembers, $bulkEmailFromAddress);
     $recipientsByEmail = [];
     foreach ($selectedRecipients as $recipient) {

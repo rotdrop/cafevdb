@@ -41,16 +41,16 @@ use OCP\IUserSession;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\Files\Event\LoadSidebar;
 
-use OCA\CAFEVDB\Service\L10N\AppL10N;
+use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\AuthorizationService;
-use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-
-use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\L10N\AppL10N;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Listener for hooking up an additional context menu entry. */
 class FilesHooksListener implements IEventListener
@@ -155,13 +155,13 @@ class FilesHooksListener implements IEventListener
       $this->l = $this->appContainer->get(\OCP\IL10N::class);
       $appL10n = $this->appContainer->get(AppL10N::class);
 
-      $sharedFolder = $encryptionService->getConfigValue(ConfigService::SHARED_FOLDER, '');
-      $templatesFolder = $encryptionService->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER, '');
-      $financeFolder = $encryptionService->getConfigValue(ConfigService::FINANCE_FOLDER);
-      $balancesFolder = $encryptionService->getConfigValue(ConfigService::BALANCES_FOLDER);
-      $projectsFolder = $encryptionService->getConfigValue(ConfigService::PROJECTS_FOLDER);
+      $sharedFolder = $encryptionService->getConfigValue(ConfigConstants::SHARED_FOLDER, '');
+      $templatesFolder = $encryptionService->getConfigValue(ConfigConstants::DOCUMENT_TEMPLATES_FOLDER, '');
+      $financeFolder = $encryptionService->getConfigValue(ConfigConstants::FINANCE_FOLDER);
+      $balancesFolder = $encryptionService->getConfigValue(ConfigConstants::BALANCES_FOLDER);
+      $projectsFolder = $encryptionService->getConfigValue(ConfigConstants::PROJECTS_FOLDER);
       $supportingDocumentsFolder = $this->getSupportingDocumentsFolderName();
-      $projectParticipantsFolder = $encryptionService->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+      $projectParticipantsFolder = $encryptionService->getConfigValue(ConfigConstants::PROJECT_PARTICIPANTS_FOLDER);
 
       /** @var EntityManager $entityManager */
       $entityManager = $this->appContainer->get(EntityManager::class);

@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 $css_pfx = $renderer->cssPrefix();
 $css_class = $renderer->cssClass();
@@ -39,15 +39,15 @@ app-settings through the settings-menu in the upper right corner
 and specify a short-hand name for the orchestra in the
 "Administration"-tab. This is just a tag to provide defaults for
 user-ids and folders; it should be a short one-word identifier.'),
-  ConfigService::USER_GROUP_KEY => $l->t('You need to create a dedicatd user group.
+  ConfigConstants::USER_GROUP_KEY => $l->t('You need to create a dedicatd user group.
 You have to log-in as administrator to do so.'),
-  ConfigService::SHAREOWNER_KEY => $l->t(
+  ConfigConstants::SHAREOWNER_KEY => $l->t(
     'You need to create a dummy-user which owns all shared resources
 (calendars, files etc.). You need to be a group-admin for the
 orchestra user group "%s" to do so. You can create the share-owner
 uid by setting the respective field in the application settings menu in the
 "Sharing"-tab).',
-                        [$_[ConfigService::USER_GROUP_KEY]]),
+                        [$_[ConfigConstants::USER_GROUP_KEY]]),
   'sharedfolder' => $l->t(
     'You need to create a dedicated shared folder shared among the
 user-group "%s". You can do so through the respective web-form in the
@@ -55,7 +55,7 @@ application settings windows accessible through the settings-menu in the
 top-right corner. Choose the "Sharing"-tab in
 the settings-window. You need to be a group-admin, otherwise the
 application settings are not visible for you.',
-                          [$_[ConfigService::USER_GROUP_KEY]]),
+                          [$_[ConfigConstants::USER_GROUP_KEY]]),
   'sharedaddressbooks' => $l->t('Shared addressbooks do not exist or are inaccessible.'),
   'database' => $l->t(
     'You need to configure the database access. You can do so through the
@@ -63,7 +63,7 @@ respective web-form in the application settings windows accessible
 through the settings-menu in the upper right corner. You need to be a
 group-admin, otherwise the application settings are not visible for
 you.',
-                      [$_[ConfigService::USER_GROUP_KEY]]),
+                      [$_[ConfigConstants::USER_GROUP_KEY]]),
   'encryptionkey' => $l->t(
     'You may want to set an encryption key for encrypting configuration
 values and (in the future) sensitive data in the members- and project
@@ -73,7 +73,7 @@ upper right corner. You need to be a group-admin, otherwise the
 application settings are not visible for you. Note also that after
 installing a non-empty encryption key each user has to log-out and
 log-in again in order to be able to access the encrypted values.',
-                           [$_[ConfigService::USER_GROUP_KEY]]),
+                           [$_[ConfigConstants::USER_GROUP_KEY]]),
   ];
 
 ?>
@@ -114,11 +114,11 @@ log-in again in order to be able to access the encrypted values.',
 <?php
 
 $diagnosticItems = [
-  ConfigService::USER_GROUP_KEY,
+  ConfigConstants::USER_GROUP_KEY,
   'groupadmin',
   'encryptionkey',
   'orchestra',
-  ConfigService::SHAREOWNER_KEY,
+  ConfigConstants::SHAREOWNER_KEY,
   'sharedfolder',
   'sharedaddressbooks',
   'database',
@@ -150,7 +150,7 @@ foreach ($diagnosticItems as $key) {
                  'Ask a user with group-administrator rights to perform the required
 settings or ask the Owncloud-administror to assign to you the rol of a
 group-administrator for the group `%s\'.',
-                     array($_[ConfigService::USER_GROUP_KEY]))
+                     array($_[ConfigConstants::USER_GROUP_KEY]))
         : '');
 
       echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">

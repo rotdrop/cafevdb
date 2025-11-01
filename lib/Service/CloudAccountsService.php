@@ -24,22 +24,22 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Throwable;
 use Exception;
 use RuntimeException;
+use Throwable;
 
 use OCA\Settings\Mailer\NewUserMailHelper;
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Group\Backend\ICreateGroupBackend;
+use OCP\Group\Backend\IGetDisplayNameBackend;
+use OCP\Group\Backend\INamedBackend;
+use OCP\Group\Backend\ISetDisplayNameBackend;
+use OCP\Group\ISubAdmin as ISubAdminManager;
 use OCP\IAvatar;
 use OCP\IAvatarManager;
 use OCP\IConfig as CloudConfig;
-use OCP\EventDispatcher\IEventDispatcher;
-use OCP\Group\Backend\INamedBackend;
-use OCP\Group\Backend\IGetDisplayNameBackend;
-use OCP\Group\Backend\ISetDisplayNameBackend;
-use OCP\Group\Backend\ICreateGroupBackend;
 use OCP\IGroup;
 use OCP\IGroupManager;
-use OCP\Group\ISubAdmin as ISubAdminManager;
 use OCP\IUser;
 use OCP\IUserBackend;
 use OCP\IUserManager;
@@ -54,6 +54,7 @@ use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Add some cloud account service related actions which are needed by the
@@ -363,7 +364,7 @@ class CloudAccountsService
       $requiredBackends = [ 'Database' ];
       $orchestraUserAndGroupBackend = $this->cloudConfig->getAppValue(
         $this->appName,
-        ConfigService::USER_AND_GROUP_BACKEND_KEY,
+        ConfigConstants::USER_AND_GROUP_BACKEND_KEY,
         null,
       );
       if ($orchestraUserAndGroupBackend !== null) {
@@ -422,7 +423,7 @@ class CloudAccountsService
       $requiredBackends = [ 'Database' ];
       $orchestraUserAndGroupBackend = $this->cloudConfig->getAppValue(
         $this->appName,
-        ConfigService::USER_AND_GROUP_BACKEND_KEY,
+        ConfigConstants::USER_AND_GROUP_BACKEND_KEY,
         null,
       );
       if ($orchestraUserAndGroupBackend !== null) {
@@ -514,7 +515,7 @@ class CloudAccountsService
    */
   public function getAdministrableGroupsGIDs():array
   {
-    $orchestraGroupId = $this->cloudConfig->getAppValue($this->appName, ConfigService::USER_GROUP_KEY);
+    $orchestraGroupId = $this->cloudConfig->getAppValue($this->appName, ConfigConstants::USER_GROUP_KEY);
     $administrableGroupGids = [];
     foreach (AuthorizationService::GROUP_SUFFIX_LIST as $groupSuffix) {
       $administrableGroupGids[] = $orchestraGroupId . $groupSuffix;

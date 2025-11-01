@@ -47,6 +47,7 @@ use OCA\CAFEVDB\Documents\PDFFormFiller;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
@@ -112,7 +113,7 @@ class FinanceService
       CarbonImmutable::class,
     ]);
 
-    $bankHolidays = $this->getConfigValue(ConfigService::BANK_ACCOUNT_BANK_HOLIDAYS);
+    $bankHolidays = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS);
     if (!empty($bankHolidays)) {
       CarbonImmutable::setHolidaysRegion(strtolower($bankHolidays));
       CarbonImmutable::addHolidays(strtolower($bankHolidays), self::TARGET2_HOLIDAYS);
@@ -619,9 +620,9 @@ class FinanceService
 
     if (empty($formName)) {
       if ($this->isClubMembersProject($project)) {
-        $formName = ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE;
+        $formName = ConfigConstants::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE;
       } else {
-        $formName = ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE;
+        $formName = ConfigConstants::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE;
       }
     }
 

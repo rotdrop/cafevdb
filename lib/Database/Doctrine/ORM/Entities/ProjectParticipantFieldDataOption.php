@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
@@ -253,7 +253,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function setLabel(?string $label):ProjectParticipantFieldDataOption
   {
     $this->label = $label;
-    if ($this->getLocale() == ConfigService::DEFAULT_LOCALE) {
+    if ($this->getLocale() == ConfigConstants::DEFAULT_LOCALE) {
       $this->untranslatedLabel = $this->label;
     }
     return $this;

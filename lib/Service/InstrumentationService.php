@@ -24,14 +24,15 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Throwable;
 use DateTimeImmutable;
+use Throwable;
 
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\Util as DataBaseUtil;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -92,7 +93,7 @@ class InstrumentationService
         ->setPostalCode('Z-7')
         ->setCity($this->l->t('Nowhere'))
         ->setCountry('AQ')
-        ->setEmail($this->getConfigValue(ConfigService::EMAIL_TEST_ADDRESS_KEY, 'john.doe@nowhere.tld'))
+        ->setEmail($this->getConfigValue(ConfigConstants::EMAIL_TEST_ADDRESS_KEY, 'john.doe@nowhere.tld'))
         ->setBirthday(new DateTimeImmutable)
         ->setMobilePhone('0815')
         ->setFixedLinePhone('4711')

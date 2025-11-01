@@ -43,13 +43,14 @@ use OCP\IUser;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Constants;
 
 /**
  * Listen to renamed and deleted events in order to keep the
@@ -222,7 +223,7 @@ class MailingListsAutoResponsesListener implements IEventListener
           }
           $lists = $projectLists;
         } else {
-          $lists = [ $configService->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY), ];
+          $lists = [ $configService->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY), ];
         }
         break;
       }

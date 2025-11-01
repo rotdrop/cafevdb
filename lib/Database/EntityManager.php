@@ -55,8 +55,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions as CJH;
 use OCA\CAFEVDB\Wrapped\Doctrine as Doctrine;
 use OCA\CAFEVDB\Wrapped\DoctrineExtensions;
@@ -298,7 +298,7 @@ class EntityManager extends EntityManagerDecorator
       $this->userId = $userId;
       $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);
       $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) || 0;
-      $this->debug = 0 != ($debugMode & ConfigService::DEBUG_QUERY);
+      $this->debug = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
       $this->showSoftDeleted = $this->encryptionService->getUserValue($this->userId, 'showdisabled') === 'on';
       $this->decorateClassMetadata = true;
     }
@@ -763,7 +763,7 @@ class EntityManager extends EntityManagerDecorator
     $localeCode = $this->getLocaleCode($this->l);
     $this->translatableL10n = $this->l;
     $translatableListener->setTranslatableLocale($localeCode);
-    $translatableListener->setDefaultLocale(ConfigService::DEFAULT_LOCALE);
+    $translatableListener->setDefaultLocale(ConfigConstants::DEFAULT_LOCALE);
     $translatableListener->setTranslationFallback(true);
     $translatableListener->setPersistDefaultLocaleTranslation(true);
     $translatableListener->setAnnotationReader($attributeReader);
@@ -1420,7 +1420,7 @@ class EntityManager extends EntityManagerDecorator
   {
     $locale = $l10n->getLocaleCode();
     if ($locale === null) {
-      $locale = ConfigService::DEFAULT_LOCALE;
+      $locale = ConfigConstants::DEFAULT_LOCALE;
     } else {
       $locale = $this->l->getLocaleCode();
     }

@@ -45,6 +45,7 @@ use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Base for phpMyEdit based table-views. */
@@ -265,7 +266,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     $this->financeMode = $this->getUserValue('financeMode', false) === 'on';
     $this->filterVisibility = $this->getUserValue('filtervisibility', 'off') == 'on';
 
-    $this->debugRequests = 0 != ((int)$this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_REQUEST);
+    $this->debugRequests = 0 != ((int)$this->getConfigValue('debugmode', 0) & ConfigConstants::DEBUG_REQUEST);
 
     $this->membersProjectId = $this->getClubMembersProjectId();
 

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine
+ * @copyright 2024-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,9 +43,9 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\AuthorizationService;
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Entity listener for project participation.
@@ -232,7 +232,7 @@ class ProjectParticipantEntityListener
     $cloudConfig = $this->appContainer->get(IConfig::class);
 
     $appName = $this->appContainer->get('appName');
-    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigService::USER_GROUP_KEY);
+    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigConstants::USER_GROUP_KEY);
 
     if (empty($orchestraGroupId)) {
       return;
@@ -240,7 +240,7 @@ class ProjectParticipantEntityListener
 
     /** @var EncryptionService $encryptionService */
     $encryptionService = $this->appContainer->get(EncryptionService::class);
-    $executiveBoardProjectId = $encryptionService->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, -1);
+    $executiveBoardProjectId = $encryptionService->getConfigValue(ConfigConstants::EXECUTIVE_BOARD_PROJECT_ID_KEY, -1);
     if ($entity->getParticipationContext() == ParticipationContext::ASSOCIATES
         || $entity->getProject()->getId() != $executiveBoardProjectId) {
       // nothing to do

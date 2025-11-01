@@ -24,13 +24,14 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use OCP\IUserManager;
-use OCP\IGroupManager;
 use OCP\Group\ISubAdmin as IGroupSubAdminManager;
 use OCP\IConfig;
-use Psr\Log\LoggerInterface as ILogger;
+use OCP\IGroupManager;
 use OCP\IL10N;
+use OCP\IUserManager;
+use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
 /**
@@ -139,7 +140,7 @@ class AuthorizationService
     private IGroupSubAdminManager $groupSubAdminManager,
     protected ILogger $logger,
   ) {
-    $this->userGroupId = $this->config->getAppValue($this->appName, ConfigService::USER_GROUP_KEY);
+    $this->userGroupId = $this->config->getAppValue($this->appName, ConfigConstants::USER_GROUP_KEY);
   }
 
   /**

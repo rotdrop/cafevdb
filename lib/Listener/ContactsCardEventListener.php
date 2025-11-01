@@ -53,6 +53,7 @@ use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\VCalendarService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Act on newly created events and tasks.
@@ -143,7 +144,7 @@ class ContactsCardEventListener implements IEventListener
     try {
       /** @var EncryptionService $encryptionService */
       $encryptionService = $this->appContainer->get(EncryptionService::class);
-      $orchestraGroup = $encryptionService->getConfigValue(ConfigService::USER_GROUP_KEY);
+      $orchestraGroup = $encryptionService->getConfigValue(ConfigConstants::USER_GROUP_KEY);
       if (empty($orchestraGroup)) {
         if (!$this->isCLI) {
           // Do not complain in CLI mode, as of now we have to run unauthenticated.

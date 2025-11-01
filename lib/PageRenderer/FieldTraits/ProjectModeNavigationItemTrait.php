@@ -24,9 +24,9 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\PageRenderer;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Provide a navigationItem() method for page-renderers which need a current
@@ -60,14 +60,14 @@ trait ProjectModeNavigationItemTrait
           PageRenderer\SepaBankAccounts::navigationItem($this->projectId, $this->projectName),
           PageRenderer\SepaBulkTransactions::navigationItem($this->projectId, $this->projectName),
         ],
-        ($this->projectId == $this->getConfigValue(ConfigService::CLUB_MEMBER_PROJECT_ID_KEY, 0)
+        ($this->projectId == $this->getConfigValue(ConfigConstants::CLUB_MEMBER_PROJECT_ID_KEY, 0)
          ? [
            PageRenderer\InstrumentInsurances::navigationItem(),
            PageRenderer\InsuranceRates::navigationItem(),
            PageRenderer\InsuranceBrokers::navigationItem(),
          ]
          : []),
-        ($this->projectId == $this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0)
+        ($this->projectId == $this->getConfigValue(ConfigConstants::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0)
          ? [
            PageRenderer\TaxExemptionNotices::navigationItem(),
            PageRenderer\DonationReceipts::navigationItem($this->projectId, $this->projectName),

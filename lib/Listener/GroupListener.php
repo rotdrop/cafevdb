@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,14 +26,14 @@ namespace OCA\CAFEVDB\Listener;
 
 use Throwable;
 
-use OCP\Group\Events\GroupCreatedEvent;
-use OCP\Group\Events\GroupChangedEvent;
-use OCP\IGroup;
-
 use OCP\AppFramework\IAppContainer;
+use OCP\Group\Events\GroupChangedEvent;
+use OCP\Group\Events\GroupCreatedEvent;
+use OCP\IGroup;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\CloudAccountsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Make sure that the orchestra management groups also exist in the Db backend
@@ -78,7 +78,7 @@ class GroupListener implements IEventListener
 
     /** @var ICloudConfig $cloudConfig */
     $cloudConfig = $this->appContainer->get(ICloudConfig::class);
-    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigService::USER_GROUP_KEY);
+    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigConstants::USER_GROUP_KEY);
 
     if (empty($orchestraGroupId)) {
       return;

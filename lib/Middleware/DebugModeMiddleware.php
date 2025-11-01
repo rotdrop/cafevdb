@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Http\Response;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Sends CSP reports to a dedicated addresss for debugging.
@@ -57,13 +58,13 @@ class DebugModeMiddleware extends Middleware
     }
 
     try {
-      $debugMode = (int)$this->getConfigValue('debugmode', ConfigService::DEBUG_NONE);
+      $debugMode = (int)$this->getConfigValue('debugmode', ConfigConstants::DEBUG_NONE);
     } catch (Throwable $t) {
       // ignore
       return $response;
     }
 
-    if ($debugMode & ConfigService::DEBUG_CSP) {
+    if ($debugMode & ConfigConstants::DEBUG_CSP) {
       $reportLocation = $this->getConfigValue('cspfailurereporting', null);
       if (empty($this->reportLocation)) {
         $cspFailureToken = $this->getAppValue('cspfailuretoken');
@@ -74,7 +75,7 @@ class DebugModeMiddleware extends Middleware
       $csp->addReportTo($reportLocation);
     }
 
-    if ($debugMode & ConfigService::DEBUG_VUE) {
+    if ($debugMode & ConfigConstants::DEBUG_VUE) {
       // Vue devtools need script-source unsafe-eval, at least with FF.
       $csp = $response->getContentSecurityPolicy();
       $csp->allowEvalScript();

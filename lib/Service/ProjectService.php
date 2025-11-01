@@ -29,14 +29,15 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
+use RuntimeException;
+use Throwable;
+
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\SystemTag\ISystemTag;
 use OCP\SystemTag\ISystemTagManager;
 use OCP\SystemTag\TagAlreadyExistsException;
 use OCP\SystemTag\TagNotFoundException;
-use RuntimeException;
-use Throwable;
 
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;
@@ -44,8 +45,8 @@ use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -54,6 +55,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
@@ -83,11 +85,11 @@ class ProjectService
   const WEBPAGE_TYPE_REHEARSALS = 'rehearsals';
 
   public const PROJECT_FOLDER_CONFIG_KEYS = [
-    ConfigService::PROJECTS_FOLDER,
-    ConfigService::PROJECT_PARTICIPANTS_FOLDER,
-    ConfigService::PROJECT_POSTERS_FOLDER,
-    ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
-    ConfigService::BALANCES_FOLDER,
+    ConfigConstants::PROJECTS_FOLDER,
+    ConfigConstants::PROJECT_PARTICIPANTS_FOLDER,
+    ConfigConstants::PROJECT_POSTERS_FOLDER,
+    ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
+    ConfigConstants::BALANCES_FOLDER,
   ];
 
   /**
@@ -479,7 +481,7 @@ class ProjectService
 
     $events = array_filter(
       $eventsService->events($project) ?? [],
-      fn(array $event) => $event['calendarUri'] == ConfigService::REHEARSALS_CALENDAR_URI || $event['calendarUri'] == ConfigService::CONCERTS_CALENDAR_URI,
+      fn(array $event) => $event['calendarUri'] == ConfigConstants::REHEARSALS_CALENDAR_URI || $event['calendarUri'] == ConfigConstants::CONCERTS_CALENDAR_URI,
     );
 
     if (empty($events)) {
@@ -549,30 +551,30 @@ class ProjectService
   {
     $project = $this->repository->ensureProject($projectOrId);
     $pathPrefix = $this->getProjectPathPrefix($project);
-    $sharedFolder = Constants::PATH_SEP . $this->getConfigValue(ConfigService::SHARED_FOLDER);
+    $sharedFolder = Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
     $folders = $only ? [ $only ] : self::PROJECT_FOLDER_CONFIG_KEYS;
 
     $paths = [];
     foreach ($folders as $key) {
       switch ($key) {
-        case ConfigService::PROJECTS_FOLDER:
-        case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
-        case ConfigService::PROJECT_POSTERS_FOLDER:
-        case ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
+        case ConfigConstants::PROJECTS_FOLDER:
+        case ConfigConstants::PROJECT_PARTICIPANTS_FOLDER:
+        case ConfigConstants::PROJECT_POSTERS_FOLDER:
+        case ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
           $projectsFolder = $sharedFolder
-            . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+            . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::PROJECTS_FOLDER)
             . Constants::PATH_SEP . $pathPrefix;
-          if ($key == ConfigService::PROJECTS_FOLDER) {
+          if ($key == ConfigConstants::PROJECTS_FOLDER) {
             $paths[$key] = $projectsFolder;
             break;
           }
           $paths[$key] = $projectsFolder . Constants::PATH_SEP . $this->getConfigValue($key);
           break;
-        case ConfigService::BALANCES_FOLDER:
+        case ConfigConstants::BALANCES_FOLDER:
           $paths[$key] = $sharedFolder
-            . Constants::PATH_SEP . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
-            . Constants::PATH_SEP . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
-            . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+            . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::FINANCE_FOLDER)
+            . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::BALANCES_FOLDER)
+            . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::PROJECTS_FOLDER)
             . Constants::PATH_SEP . $pathPrefix;
           break;
       }
@@ -593,20 +595,20 @@ class ProjectService
   public function getProjectSkeletonPaths(?string $which = null):null|string|array
   {
     if ($this->skeletonPaths === null) {
-      $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
-      $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
+      $sharedFolder   = $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
+      $projectsFolder = $this->getConfigValue(ConfigConstants::PROJECTS_FOLDER);
       $skeletonPath = implode(Constants::PATH_SEP, [
         $sharedFolder,
-        $this->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER),
+        $this->getConfigValue(ConfigConstants::DOCUMENT_TEMPLATES_FOLDER),
         $projectsFolder,
-        $this->appL10n()->t(ConfigService::PROJECT_SKELETON_FOLDER),
+        $this->appL10n()->t(ConfigConstants::PROJECT_SKELETON_FOLDER),
       ]);
-      $participantsFolder = $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
-      $postersFolder = $this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
-      $downloadsFolder = $this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
-      $balancesFolder  = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
+      $participantsFolder = $this->getConfigValue(ConfigConstants::PROJECT_PARTICIPANTS_FOLDER);
+      $postersFolder = $this->getConfigValue(ConfigConstants::PROJECT_POSTERS_FOLDER);
+      $downloadsFolder = $this->getConfigValue(ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
+      $balancesFolder  = $this->getConfigValue(ConfigConstants::BALANCES_FOLDER);
 
-      $managementSkeleton = $skeletonPath . Constants::PATH_SEP . $this->appL10n()->t(ConfigService::PROJECT_MANAGEMENT_SKELETON_FOLDER);
+      $managementSkeleton = $skeletonPath . Constants::PATH_SEP . $this->appL10n()->t(ConfigConstants::PROJECT_MANAGEMENT_SKELETON_FOLDER);
       $balanceSkeleton = $skeletonPath . Constants::PATH_SEP . $balancesFolder;
 
       $this->skeletonPaths = [
@@ -619,7 +621,7 @@ class ProjectService
       $this->skeletonPaths[self::FOLDER_TYPE_PARTICIPANTS_TEMPLATE] =
         $this->skeletonPaths[self::FOLDER_TYPE_PARTICIPANTS]
       . Constants::PATH_SEP
-        . $this->appL10n()->t(ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER);
+        . $this->appL10n()->t(ConfigConstants::PROJECT_PARTICIPANTS_SKELETON_FOLDER);
     }
 
     return $which ? $this->skeletonPaths[$which] ?? null : $this->skeletonPaths;
@@ -653,18 +655,18 @@ class ProjectService
       throw new Exception('CANNOT FIND PROJECT FOR ID ' . $projectOrId);
     }
 
-    $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
-    $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
-    $financeFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
-    $participantsFolder = $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
-    $postersFolder = $this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
-    $downloadsFolder = $this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
-    $balancesFolder  = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
+    $sharedFolder   = $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
+    $projectsFolder = $this->getConfigValue(ConfigConstants::PROJECTS_FOLDER);
+    $financeFolder = $this->getConfigValue(ConfigConstants::FINANCE_FOLDER);
+    $participantsFolder = $this->getConfigValue(ConfigConstants::PROJECT_PARTICIPANTS_FOLDER);
+    $postersFolder = $this->getConfigValue(ConfigConstants::PROJECT_POSTERS_FOLDER);
+    $downloadsFolder = $this->getConfigValue(ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
+    $balancesFolder  = $this->getConfigValue(ConfigConstants::BALANCES_FOLDER);
 
     $skeletonPaths = $this->getProjectSkeletonPaths();
     // TRANSLATORS: this is a placeholder for the login id. It must in particular remain all lowercase.
     $skeletonExclude = [
-      self::FOLDER_TYPE_PROJECT => '/' . preg_quote($this->appL10n()->t(ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER), '/') . '/',
+      self::FOLDER_TYPE_PROJECT => '/' . preg_quote($this->appL10n()->t(ConfigConstants::PROJECT_PARTICIPANTS_SKELETON_FOLDER), '/') . '/',
       self::FOLDER_TYPE_BALANCE => '/' . preg_quote($this->getSupportingDocumentsFolderName()) . '/',
     ];
 
@@ -753,17 +755,17 @@ class ProjectService
 
     $pathPrefix = $this->getProjectPathPrefix($project);
 
-    $sharedFolder   = Constants::PATH_SEP . $this->getConfigValue(ConfigService::SHARED_FOLDER);
+    $sharedFolder   = Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
     $projectsFolder = $sharedFolder
-      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::PROJECTS_FOLDER)
       . Constants::PATH_SEP . $pathPrefix;
-    // $participantsFolder = $projectsFolder . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
-    // $postersFolder  = $projectsFolder . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
-    // $downloadsFolder = $projectsFolder . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
+    // $participantsFolder = $projectsFolder . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::PROJECT_PARTICIPANTS_FOLDER);
+    // $postersFolder  = $projectsFolder . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::PROJECT_POSTERS_FOLDER);
+    // $downloadsFolder = $projectsFolder . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
     $balanceFolder  = $sharedFolder
-      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
-      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
-      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::FINANCE_FOLDER)
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::BALANCES_FOLDER)
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::PROJECTS_FOLDER)
       . Constants::PATH_SEP . $pathPrefix;
 
     $projectPaths = [
@@ -796,14 +798,14 @@ class ProjectService
   {
     $pathPrefix = $this->getProjectPathPrefix($project);
 
-    $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
+    $sharedFolder   = $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
     $projectsFolder = $sharedFolder
-      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::PROJECTS_FOLDER)
       . Constants::PATH_SEP . $pathPrefix;
     $balanceFolder  = $sharedFolder
-      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
-      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
-      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::FINANCE_FOLDER)
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::BALANCES_FOLDER)
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigConstants::PROJECTS_FOLDER)
       . Constants::PATH_SEP . $pathPrefix;
 
     $projectPaths = [
@@ -843,10 +845,10 @@ class ProjectService
       $newProject['type'] = $oldProject['type'];
     }
 
-    $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
-    $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
-    $financeFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
-    $balancesFolder  = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
+    $sharedFolder   = $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
+    $projectsFolder = $this->getConfigValue(ConfigConstants::PROJECTS_FOLDER);
+    $financeFolder = $this->getConfigValue(ConfigConstants::FINANCE_FOLDER);
+    $balancesFolder  = $this->getConfigValue(ConfigConstants::BALANCES_FOLDER);
 
     $prefixPath = [
       self::FOLDER_TYPE_PROJECT => (
@@ -959,7 +961,7 @@ class ProjectService
       /** @var SimpleSharingService $sharingService */
       $sharingService = $this->di(SimpleSharingService::class);
 
-      $shareOwnerUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
+      $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
 
       // try to create or use the folder and share it by a public link
       ['files_sharing' => $url,] = $sharingService->linkShare(
@@ -1049,9 +1051,9 @@ class ProjectService
    */
   public function getParticipantFolder(Entities\Project $project, Entities\Musician $musician):string
   {
-    $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
-    $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
-    $participantsFolder = $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+    $sharedFolder   = $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
+    $projectsFolder = $this->getConfigValue(ConfigConstants::PROJECTS_FOLDER);
+    $participantsFolder = $this->getConfigValue(ConfigConstants::PROJECT_PARTICIPANTS_FOLDER);
     $userIdSlug = $musician->getUserIdSlug();
     if (empty($userIdSlug)) {
       return null;
@@ -1271,7 +1273,7 @@ class ProjectService
     foreach ($musician->getProjectParticipation() as $projectParticipant) {
       $project = $projectParticipant->getProject();
 
-      $participantsFolder = $this->getProjectFolder($project, ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+      $participantsFolder = $this->getProjectFolder($project, ConfigConstants::PROJECT_PARTICIPANTS_FOLDER);
 
       $newFolderPath = $participantsFolder . Constants::PATH_SEP . $newUserIdSlug;
 
@@ -1361,9 +1363,9 @@ class ProjectService
    */
   public function projectWikiLink(string $pageName):string
   {
-    $wikiNameSpace = $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY);
-    $wikiNameSpace = $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
-    $projectsNamespace = strtolower($this->getConfigValue(ConfigService::PROJECTS_FOLDER));
+    $wikiNameSpace = $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY);
+    $wikiNameSpace = $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
+    $projectsNamespace = strtolower($this->getConfigValue(ConfigConstants::PROJECTS_FOLDER));
 
     return $wikiNameSpace . ':' . $projectsNamespace . ':' . $pageName;
   }
@@ -1392,7 +1394,7 @@ class ProjectService
   ==== 2013 ====
   * [[Listenpunkt]]
   */
-    $orchestra = $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY);
+    $orchestra = $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY);
     $orchestra = $this->getConfigValue('streetAddressName01', $orchestra);
 
     $projects = [];
@@ -1443,7 +1445,7 @@ class ProjectService
       $page .= "  * [[".$this->projectWikiLink($name)."|".$bareName."]]\n";
     }
 
-    $projectsName = strtolower($this->getConfigValue(ConfigService::PROJECTS_FOLDER));
+    $projectsName = strtolower($this->getConfigValue(ConfigConstants::PROJECTS_FOLDER));
     $pageName = $this->projectWikiLink($projectsName);
 
     return $this->wikiRPC()->putPage(
@@ -2396,7 +2398,7 @@ Whatever.',
 
     if (empty($listId)) {
       $listId = strtolower($project->getName());
-      $listId .= '.' . $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['domain']);
+      $listId .= '.' . $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['domain']);
     }
     $this->logInfo('MAILING LIST ID ' . $listId);
     $new = false;
@@ -2433,7 +2435,7 @@ Whatever.',
       $listsService->setListConfig($listId, $configuration);
 
       // Configure Owner
-      $defaultOwner = $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['owner']);
+      $defaultOwner = $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['owner']);
       if (!empty($defaultOwner)) {
         if (empty($listsService->getSubscription($listId, $defaultOwner, MailingListsService::ROLE_OWNER))) {
           $listsService->subscribe($listId, email: $defaultOwner, role: MailingListsService::ROLE_OWNER);
@@ -2441,7 +2443,7 @@ Whatever.',
       }
 
       // Configure Moderator
-      $defaultModerator = $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['moderator']);
+      $defaultModerator = $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['moderator']);
       if (!empty($defaultModerator)) {
         if (empty($listsService->getSubscription($listId, $defaultModerator, MailingListsService::ROLE_MODERATOR))) {
           $listsService->subscribe($listId, email: $defaultModerator, role: MailingListsService::ROLE_MODERATOR);
@@ -2449,8 +2451,8 @@ Whatever.',
       }
 
       // subscribe the bulk-email-sender address if it is not already subscribed
-      $bulkEmailFromAddress = $this->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY);
-      $bulkEmailFromName = $this->getConfigValue(ConfigService::EMAIL_FROM_NAME_KEY);
+      $bulkEmailFromAddress = $this->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY);
+      $bulkEmailFromName = $this->getConfigValue(ConfigConstants::EMAIL_FROM_NAME_KEY);
 
       if (!empty($bulkEmailFromAddress)) {
         if (empty($listsService->getSubscription($listId, $bulkEmailFromAddress, MailingListsService::ROLE_MEMBER))) {
@@ -3338,7 +3340,7 @@ Whatever.',
 
       $participantFields = $project->getParticipantFields();
 
-      $signatureNames = $this->translationVariants(ConfigService::SIGNATURE_FIELD_NAME);
+      $signatureNames = $this->translationVariants(ConfigConstants::SIGNATURE_FIELD_NAME);
 
       /** @var Entities\ProjectParticipantField $field */
       $signatureFound = $participantFields->exists(function($id, $field) use ($signatureNames) {
@@ -3354,7 +3356,7 @@ Whatever.',
       });
       if (!$signatureFound) {
         $signatureField = $this->participantFieldsService->createField(
-          $this->l->t(ucfirst(ConfigService::SIGNATURE_FIELD_NAME)),
+          $this->l->t(ucfirst(ConfigConstants::SIGNATURE_FIELD_NAME)),
           FieldMultiplicity::SIMPLE,
           FieldDataType::DB_FILE,
           $this->l->t(

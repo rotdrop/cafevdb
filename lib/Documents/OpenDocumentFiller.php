@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Toolkit\Service\AnyToPdf;
 
@@ -335,14 +336,14 @@ class OpenDocumentFiller
         'city' => $this->getConfigValue('streetAddressCity'),
         'postalCode' => $this->getConfigValue('streetAddressZIP'),
         'country' => $this->getConfigValue('streetAddressCountry'),
-        'email' => $this->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY),
+        'email' => $this->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY),
       ],
     ];
 
     // Logo
     /** @var \OCP\Files\File */
-    $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
-    $substitutions['org'][ConfigService::DOCUMENT_TEMPLATE_LOGO] =
+    $logo = $this->templateService->getDocumentTemplate(ConfigConstants::DOCUMENT_TEMPLATE_LOGO);
+    $substitutions['org'][ConfigConstants::DOCUMENT_TEMPLATE_LOGO] =
       $this->imagesService->dataUriFromFile($logo, ImagesService::SVG_TEXT_TO_PATH|ImagesService::SVG_OPTIMIZE);
 
     /** @var OrganizationalRolesService $rolesService */

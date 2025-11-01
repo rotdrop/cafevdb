@@ -24,15 +24,15 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
-
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -166,7 +166,7 @@ class MusicianService
    */
   public function generateDisabledEmailAddress(Entities\Musician $musician, ?string $email = null):string
   {
-    $orchestraAddress = $this->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY);
+    $orchestraAddress = $this->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY);
     if (!empty($email)) {
       $email = '_' . preg_replace('|[@+!./]|', '_', $email);
     }
@@ -314,7 +314,7 @@ class MusicianService
   public function deleteMusician(Entities\Musician $musician):void
   {
     // Unsubscribe the musician from the mailing-list
-    $list = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
+    $list = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
     try {
       $this->listsService->unsubscribe($list, $musician->getEmail());
     } catch (\Throwable $t) {

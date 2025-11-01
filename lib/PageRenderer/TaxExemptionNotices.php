@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine
+ * @copyright 2024-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
@@ -102,8 +103,8 @@ class TaxExemptionNotices extends PMETableViewBase
     );
 
     if (empty($this->projectId)) {
-      $this->projectId = (int)$this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0);
-      $this->projectName = $this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_KEY, '');
+      $this->projectId = (int)$this->getConfigValue(ConfigConstants::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0);
+      $this->projectName = $this->getConfigValue(ConfigConstants::EXECUTIVE_BOARD_PROJECT_KEY, '');
     }
 
     $this->findProject(enforce: false);

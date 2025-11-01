@@ -24,11 +24,11 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Throwable;
-use RuntimeException;
+use DateTimeImmutable;
 use DateTimeZone;
 use NumberFormatter;
-use DateTimeImmutable;
+use RuntimeException;
+use Throwable;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -52,6 +52,7 @@ use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Configuration do-it-all class.
@@ -65,295 +66,6 @@ class ConfigService
   use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\TimeStampTrait;
-
-  /*-**************************************************************************
-   *
-   * Class constants.
-   *
-   */
-  const DEBUG_GENERAL   = (1 << 0);
-  const DEBUG_QUERY     = (1 << 1);
-  const DEBUG_CSP       = (1 << 2);
-  const DEBUG_L10N      = (1 << 3);
-  const DEBUG_REQUEST   = (1 << 4);
-  const DEBUG_TOOLTIPS  = (1 << 5);
-  const DEBUG_EMAILFORM = (1 << 6);
-  const DEBUG_GEOCODING = (1 << 7);
-  const DEBUG_VUE       = (1 << 8);
-  const DEBUG_SMAPS     = (1 << 9);
-  const DEBUG_ALL       = self::DEBUG_GENERAL
-    |self::DEBUG_QUERY
-    |self::DEBUG_CSP
-    |self::DEBUG_L10N
-    |self::DEBUG_REQUEST
-    |self::DEBUG_TOOLTIPS
-    |self::DEBUG_EMAILFORM
-    |self::DEBUG_GEOCODING
-    |self::DEBUG_VUE
-    |self::DEBUG_SMAPS
-    ;
-  const DEBUG_NONE      = 0;
-
-  const DEFAULT_LOCALE = 'en_US';
-
-  const APP_LOGO = 'logo-greyf.svg';
-
-  /*-**************************************************************************
-   *
-   * Some configuration constants
-   *
-   */
-  const SHAREOWNER_KEY = 'shareowner';
-  const SHAREOWNER_FOLDER_SERVICE_KEY = 'shareowner_folder';
-  const SHAREOWNER_CALENDAR_SERVICE_KEY = 'shareowner_calendar';
-  const SHAREOWNER_ADDRESSBOOK_SERVICE_KEY = 'shareowner_addressbook';
-
-  const SHARED_FOLDER = 'sharedfolder';
-  const PROJECTS_FOLDER = 'projectsfolder';
-  const PROJECT_PARTICIPANTS_FOLDER = 'projectparticipantsfolder';
-  const PROJECT_POSTERS_FOLDER = 'projectpostersfolder';
-  const PROJECT_PUBLIC_DOWNLOADS_FOLDER = 'projectpublicdownloadsfolder';
-  const FINANCE_FOLDER = 'financefolder';
-  const BALANCES_FOLDER = 'balancesfolder';
-  const TRANSACTIONS_FOLDER = 'transactionsfolder';
-  const DOCUMENT_TEMPLATES_FOLDER = 'documenttemplatesfolder';
-  const POSTBOX_FOLDER = 'postboxfolder';
-  const OUTBOX_FOLDER = 'outboxfolder';
-  const PROJECT_SKELETON_FOLDER = 'skeleton';
-  const PROJECT_PARTICIPANTS_SKELETON_FOLDER = 'forename.surname';
-  const PROJECT_MANAGEMENT_SKELETON_FOLDER = 'management';
-
-  const CMS_CATEGORIES = [
-    'preview',
-    'archive',
-    'rehearsals',
-    'trashbin',
-  ];
-  const CMS_MODULES = [
-    'concert',
-    'rehearsals',
-  ];
-  const CMS_TEMPLATES = [
-    'sub-page',
-  ];
-  const WYSIWYG_EDITORS = [
-    'tinymce' => [ 'name' => 'TinyMCE', 'enabled' => true],
-    // ckeditor still uses excessive inline js-code. So what?
-    'ckeditor' => [ 'name' => 'CKEditor', 'enabled' => true],
-  ];
-  const CONCERTS_CALENDAR_URI = 'concerts';
-  const REHEARSALS_CALENDAR_URI = 'rehearsals';
-  const OTHER_CALENDAR_URI = 'other';
-  const MANAGEMENT_CALENDAR_URI = 'management';
-  const FINANCE_CALENDAR_URI = 'finance';
-  const CALENDARS = [
-    self::CONCERTS_CALENDAR_URI => [ 'uri' => self::CONCERTS_CALENDAR_URI, 'public' => true ],
-    self::REHEARSALS_CALENDAR_URI => [ 'uri' => self::REHEARSALS_CALENDAR_URI, 'public' => true ],
-    self::OTHER_CALENDAR_URI => [ 'uri' => self::OTHER_CALENDAR_URI, 'public' => true ],
-    self::MANAGEMENT_CALENDAR_URI => [ 'uri' => self::MANAGEMENT_CALENDAR_URI, 'public' => false ],
-    self::FINANCE_CALENDAR_URI => [ 'uri' => self::FINANCE_CALENDAR_URI, 'public' => false ],
-  ];
-
-  const BANK_ACCOUNT_OWNER = 'bankAccountOwner';
-  const BANK_ACCOUNT_IBAN = 'bankAccountIBAN';
-  const BANK_ACCOUNT_BLZ = 'bankAccountBLZ';
-  const BANK_ACCOUNT_BIC = 'bankAccountBIC';
-  const BANK_ACCOUNT_NAME = 'bankAccountBankName';
-  const BANK_ACCOUNT_CREDITOR_IDENTIFIER = 'bankAccountCreditorIdentifier';
-  const BANK_ACCOUNT_BANK_HOLIDAYS = 'bankAccountBankHolidays';
-
-  const BANK_ACCOUNT_CONFIG_KEYS = [
-    self::BANK_ACCOUNT_OWNER,
-    self::BANK_ACCOUNT_IBAN,
-    self::BANK_ACCOUNT_BLZ,
-    self::BANK_ACCOUNT_BIC,
-    self::BANK_ACCOUNT_NAME,
-    self::BANK_ACCOUNT_CREDITOR_IDENTIFIER,
-    self::BANK_ACCOUNT_BANK_HOLIDAYS
-  ];
-
-  const DOCUMENT_TYPE_CONSTANT = 'constant';
-  const DOCUMENT_TYPE_TEMPLATE = 'template';
-
-  const DOCUMENT_TEMPLATE_LOGO = 'logo';
-  const DOCUMENT_TEMPLATE_LOGO_NAME = 'orchestra logo';
-  const DOCUMENT_TEMPLATE_SEAL = 'seal';
-  const DOCUMENT_TEMPLATE_SEAL_NAME = 'orchestra seal';
-  const DOCUMENT_TEMPLATE_STANDARD_LETTER = 'standardLetter';
-  const DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME = 'standard letter';
-  const DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD = 'instrumentInsuranceRecord';
-  const DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME = 'instrument insurance record template';
-  const DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE = 'projectDebitNoteMandateForm';
-  const DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME = 'project debit-note mandate';
-  const DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE = 'generalDebitNoteMandateForm';
-  const DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME = 'general debit-note mandate';
-  const DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE = 'memberDataUpdateForm';
-  const DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME = 'member data update';
-  const DOCUMENT_TEMPLATE_INVOICE = 'invoice';
-  const DOCUMENT_TEMPLATE_INVOICE_NAME = 'invoice';
-  const DOCUMENT_TEMPLATE_STANDARD_RECEIPT = 'standardReceipt';
-  const DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME = 'standard receipt';
-  const DOCUMENT_TEMPLATE_DONATION_RECEIPT = 'donationReceipt';
-  const DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME = 'donation receipt';
-
-  /** @var Dedicated document-templates used in various places. */
-  const DOCUMENT_TEMPLATES = [
-    self::DOCUMENT_TEMPLATE_LOGO => [
-      'name' => self::DOCUMENT_TEMPLATE_LOGO_NAME,
-      'type' => self::DOCUMENT_TYPE_CONSTANT,
-      'folder' => null,
-      'blank' => true,
-    ],
-    self::DOCUMENT_TEMPLATE_SEAL => [
-      'name' => self::DOCUMENT_TEMPLATE_SEAL_NAME,
-      'type' => self::DOCUMENT_TYPE_CONSTANT,
-      'folder' => null,
-      'blank' => true,
-    ],
-    self::DOCUMENT_TEMPLATE_STANDARD_LETTER => [
-      'name' => self::DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME,
-      'type' => self::DOCUMENT_TYPE_TEMPLATE,
-      'folder' => null,
-      'blank' => true,
-    ],
-    self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE => [
-      'name' => self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME,
-      'type' => self::DOCUMENT_TYPE_TEMPLATE,
-      'folder' => self::FINANCE_FOLDER,
-      'blank' => true,
-    ],
-    self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE => [
-      'name' => self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME,
-      'type' => self::DOCUMENT_TYPE_TEMPLATE,
-      'folder' => self::FINANCE_FOLDER,
-      'blank' => true,
-    ],
-    self::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE => [
-      'name' => self::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME,
-      'type' => self::DOCUMENT_TYPE_TEMPLATE,
-      'folder' => self::FINANCE_FOLDER,
-      'blank' => true,
-    ],
-    self::DOCUMENT_TEMPLATE_INVOICE => [
-      'name' => self::DOCUMENT_TEMPLATE_INVOICE_NAME,
-      'type' => self::DOCUMENT_TYPE_TEMPLATE,
-      'folder' => self::FINANCE_FOLDER,
-      'blank' => true,
-    ],
-    self::DOCUMENT_TEMPLATE_STANDARD_RECEIPT => [
-      'name' => self::DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME,
-      'type' => self::DOCUMENT_TYPE_TEMPLATE,
-      'folder' => self::FINANCE_FOLDER,
-      'blank' => true,
-    ],
-    self::DOCUMENT_TEMPLATE_DONATION_RECEIPT => [
-      'name' => self::DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME,
-      'type' => self::DOCUMENT_TYPE_TEMPLATE,
-      'folder' => self::FINANCE_FOLDER,
-      'blank' => true,
-    ],
-    self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD => [
-      'name' => self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME,
-      'type' => self::DOCUMENT_TYPE_TEMPLATE,
-      'folder' => self::FINANCE_FOLDER,
-      'blank' => false,
-    ],
-  ];
-
-  /** @return void */
-  protected static function documentsTemplatesTranslationHack():void
-  {
-    self::t(self::DOCUMENT_TEMPLATE_LOGO_NAME);
-    self::t(self::DOCUMENT_TEMPLATE_SEAL_NAME);
-    self::t(self::DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME);
-    self::t(self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME);
-    self::t(self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME);
-    self::t(self::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME);
-    self::t(self::DOCUMENT_TEMPLATE_INVOICE_NAME);
-    self::t(self::DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME);
-    self::t(self::DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME);
-    self::t(self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME);
-  }
-
-  /**
-   * @var string
-   * Name of a participant field holding a personal signature. This is used by
-   * the OrganizationalRolesService in order to find images of signatures of
-   * the organizing committee.
-   */
-  const SIGNATURE_FIELD_NAME = 'signature';
-
-  /**
-   * @var int
-   * Default auto-save interval in seconds. Used by the email-form
-   */
-  const DEFAULT_AUTOSAVE_INTERVAL = 300;
-
-  /** @var array Config-keys for the mailing-list server REST access */
-  const MAILING_LIST_REST_CONFIG = [
-    'url' => 'mailingListRestUrl',
-    'user' => 'mailingListRestUser',
-    'password' => 'mailingListRestPassword',
-  ];
-  /** @var array Config-keys for some general mailing list settings */
-  const MAILING_LIST_CONFIG = [
-    'domain' => 'mailingListEmailDomain',
-    'web' => 'mailingListWebPages',
-    'owner' => 'mailingListDefaultOwner',
-    'moderator' => 'mailingListDefaultModerator',
-  ];
-  /** @var string Config-key for the announcements mailing list */
-  public const ANNOUNCEMENTS_MAILING_LIST_KEY = 'announcementsMailingList';
-  /** @var string Config-key for the announcements mailing list */
-  const ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY = 'announcementsMailingListName';
-
-  /** @var string */
-  const USER_GROUP_KEY = 'usergroup';
-
-  /** @var string */
-  const USER_AND_GROUP_BACKEND_KEY = 'userAndGroupBackend';
-
-  /** @var string */
-  const ADMIN_GROUP_SUFFIX = '-admin';
-
-  /** @var string */
-  const CONFIG_LOCK_KEY = EncryptionService::CONFIG_LOCK_KEY;
-
-  /** @var string */
-  public const EMAIL_FROM_NAME_KEY = 'emailfromname';
-
-  /** @var string */
-  public const EMAIL_FROM_DOMAIN_KEY = 'emailFromDomain';
-
-  /** @var string */
-  public const EMAIL_FROM_ADDRESS_KEY = 'emailfromaddress';
-
-  /** @var string */
-  public const EMAIL_TEST_NAME_KEY = 'emailtestname';
-
-  /** @var string */
-  public const EMAIL_TEST_ADDRESS_KEY = 'emailtestaddress';
-
-  /** @var string */
-  public const EXECUTIVE_BOARD_PROJECT_KEY = 'executiveBoardProject';
-
-  /** @var string */
-  public const EXECUTIVE_BOARD_PROJECT_ID_KEY = self::EXECUTIVE_BOARD_PROJECT_KEY . 'Id';
-
-  /** @var string */
-  public const CLUB_MEMBERS_PROJECT_KEY = 'memberProject';
-
-  /** @var string */
-  public const CLUB_MEMBER_PROJECT_ID_KEY = self::CLUB_MEMBERS_PROJECT_KEY . 'Id';
-
-  /** @var string */
-  public const WIKI_NAME_SPACE_KEY = 'wikinamespace';
-
-  /** @var string */
-  public const DEBUG_MODE_KEY = 'debugmode';
-
-  /** @var string */
-  public const ORCHESTRA_NAME_KEY = 'orchestra';
 
   /**
    * @var array
@@ -491,7 +203,7 @@ class ConfigService
   public function getIcon():string
   {
     // @@todo make it configurable
-    return $this->getUrlGenerator()->imagePath($this->appName, self::APP_LOGO);
+    return $this->getUrlGenerator()->imagePath($this->appName, ConfigConstants::APP_LOGO);
   }
 
   /** @return IUserSession */
@@ -597,7 +309,7 @@ class ConfigService
   /** @return string The orchestra orga-group id. */
   public function getGroupId():string
   {
-    return $this->getAppValue(self::USER_GROUP_KEY);
+    return $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
   }
 
   /**
@@ -682,7 +394,7 @@ class ConfigService
    */
   public function getSubAdminGroupId():string
   {
-    return $this->getGroupId() . self::ADMIN_GROUP_SUFFIX;
+    return $this->getGroupId() . ConfigConstants::ADMIN_GROUP_SUFFIX;
   }
 
   /**
@@ -1406,7 +1118,7 @@ class ConfigService
   }
 
   /**
-   * Call ConfigService::formatTimeStamp() with the current date and time.
+   * Call ConfigConstants::formatTimeStamp() with the current date and time.
    *
    * @param null|string $format
    *

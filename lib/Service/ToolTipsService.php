@@ -24,15 +24,16 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Closure;
 use RuntimeException;
 use count;
-use Closure;
 
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
+use OCP\IL10N;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Tool-tips management with translations. */
 class ToolTipsService implements \ArrayAccess, \Countable
@@ -68,7 +69,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
   ) {
     try {
       $debugMode = $appContainer->get(EncryptionService::class)->getConfigValue('debugmode', 0);
-      if ($debugMode & ConfigService::DEBUG_TOOLTIPS) {
+      if ($debugMode & ConfigConstants::DEBUG_TOOLTIPS) {
         $this->debug = true;
       }
     } catch (\Throwable $t) {

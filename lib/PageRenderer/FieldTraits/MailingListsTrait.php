@@ -90,7 +90,7 @@ trait MailingListsTrait
         // Do not contact the mailing-list service here, as this really slows
         // down things if the mailing list service is unreachable.
         //
-        // $list = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_KEY);
+        // $list = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
         // try {
         //   $status = $this->getListsService()->getSubscriptionStatus($list, $email);
         // } catch (\Throwable $t) {

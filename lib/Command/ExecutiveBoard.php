@@ -26,29 +26,30 @@ namespace OCA\CAFEVDB\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
-use OCP\IL10N;
-use OCP\IUserSession;
-use OCP\IUserManager;
-use OCP\AppFramework\IAppContainer;
-use OCP\IUser;
 use OCP\Accounts\IAccountManager;
 use OCP\Accounts\IAccountProperty;
 use OCP\Accounts\PropertyDoesNotExistException;
-use OC\Security\SecureRandom;
-use OC\Authentication\TwoFactorAuth\ProviderLoader as TFAProviderLoader;
+use OCP\AppFramework\IAppContainer;
+use OCP\Authentication\TwoFactorAuth\IActivatableByAdmin as ITFAActivatableByAdmin;
 use OCP\Authentication\TwoFactorAuth\IProvider as ITFAProvider;
 use OCP\Authentication\TwoFactorAuth\IRegistry as ITFARegistry;
-use OCP\Authentication\TwoFactorAuth\IActivatableByAdmin as ITFAActivatableByAdmin;
+use OCP\IL10N;
+use OCP\IUser;
+use OCP\IUserManager;
+use OCP\IUserSession;
+use OC\Authentication\TwoFactorAuth\ProviderLoader as TFAProviderLoader;
+use OC\Security\SecureRandom;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Events\PostPersistMusicianEmail;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Sanitize some stuff for the members of the management board:
@@ -186,7 +187,7 @@ class ExecutiveBoard extends Command
       return 1;
     }
 
-    list(, $emailFromDomain) = array_pad(explode('@', $configService->getConfigValue(ConfigService::EMAIL_FROM_ADDRESS_KEY)), null, 2);
+    list(, $emailFromDomain) = array_pad(explode('@', $configService->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY)), null, 2);
     if (empty($emailFromDomain)) {
       $output->writeln('<error>' . $this->l->t('Error: Orchestra email contact address is not configured.') . '</error>');
     } else {
@@ -194,7 +195,7 @@ class ExecutiveBoard extends Command
     }
 
     $repository = $this->getDatabaseRepository(Entities\Project::class);
-    $executiveBoardProjectId = $configService->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY);
+    $executiveBoardProjectId = $configService->getConfigValue(ConfigConstants::EXECUTIVE_BOARD_PROJECT_ID_KEY);
     /** @var Entities\Project $executiveBoardProject */
     $executiveBoardProject = $repository->find($executiveBoardProjectId);
 

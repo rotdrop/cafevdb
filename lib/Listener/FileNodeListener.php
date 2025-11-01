@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2022, 2024 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,6 +35,7 @@ use OCP\Files\IRootFolder;
 use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
@@ -96,8 +97,8 @@ class FileNodeListener implements IEventListener
 
     $this->logger = $this->appContainer->get(ILogger::class);
 
-    $sharedFolder = $configService->getConfigValue(ConfigService::SHARED_FOLDER);
-    $templatesFolder = $configService->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER);
+    $sharedFolder = $configService->getConfigValue(ConfigConstants::SHARED_FOLDER);
+    $templatesFolder = $configService->getConfigValue(ConfigConstants::DOCUMENT_TEMPLATES_FOLDER);
     $templatesFolder = $userFolder . '/' . $sharedFolder . '/' . $templatesFolder . '/';
 
     switch ($eventClass) {
@@ -161,7 +162,7 @@ class FileNodeListener implements IEventListener
    */
   private function matchDocumentTemplates(string $path, ConfigService $configService)
   {
-    foreach (ConfigService::DOCUMENT_TEMPLATES as $templateKey => $templateInfo) {
+    foreach (ConfigConstants::DOCUMENT_TEMPLATES as $templateKey => $templateInfo) {
       $subFolder = $templateInfo['folder']??'';
       $subFolderName = empty($subFolder) ? '' : $configService->getConfigValue($subFolder);
       if (!empty($subFolderName)) {

@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /** Collective instrument insurance. */
@@ -565,7 +566,7 @@ class InstrumentInsuranceService
    */
   public function musicianOverviewLetter(array $overview, string $format = 'application/pdf')
   {
-    $templateName = ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD;
+    $templateName = ConfigConstants::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD;
     $templateFileName = $this->getDocumentTemplatesPath($templateName);
     if (empty($templateFileName)) {
       throw new Exceptions\EnduserNotificationException(

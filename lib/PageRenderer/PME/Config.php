@@ -24,10 +24,11 @@
 
 namespace OCA\CAFEVDB\PageRenderer\PME;
 
-use \OCP\IURLGenerator;
+use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Default Legacy PME options. */
@@ -56,7 +57,7 @@ class Config extends DefaultOptions
       'page_name' => $urlGenerator->linkToRoute($this->appName() . '.vueApp.index'),
       'tooltips' => $toolTipsService,
       'inc' => $this->getUserValue('pagerows', 20),
-      'debug' => 0 != ($debugMode & ConfigService::DEBUG_QUERY),
+      'debug' => 0 != ($debugMode & ConfigConstants::DEBUG_QUERY),
       'misc' => [
         'css' => [ 'minor' => 'email tooltip-right' ],
         'deselect_invisible' => $deselectInvisibleMiscRecs,
