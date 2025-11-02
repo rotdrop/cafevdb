@@ -107,6 +107,9 @@ class Composer
   private const HEADER_MARKER_SENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Self', ];
   private const DO_NOT_REPLY_SENDER = 'do-not-reply';
 
+  public const FROM_ORCHESTRA = 'orchestra';
+  public const FROM_PERSONAL = 'personal';
+
   public const DIAGNOSTICS_STAGE = 'stage';
   public const DIAGNOSTICS_CAPTION = 'caption';
   public const DIAGNOSTICS_TOTAL_COUNT = 'TotalCount';
@@ -4231,6 +4234,16 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       self::t('ORGANIZER') => function($key) {
         return $this->fetchExecutiveBoard();
       },
+      self::t('SENDER') => function($key) {
+        switch ($this->fromTag()) {
+          case self::FROM_ORCHESTRA:
+            return $this->l->t('your orchestra organizers (%s)', $this->fetchExecutiveBoard());
+          case self::FROM_PERSONAL:
+            $fullName = $this->fromName();
+            return explode(' ', $fullName)[0];
+        }
+        return $this->l->t('UNKNOWN');
+      },
       self::t('PRESIDENT') => $organizationalRoleContact,
       self::t('TREASURER') => $organizationalRoleContact,
       self::t('SECRETARY') => $organizationalRoleContact,
@@ -5293,18 +5306,44 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     return $this->messageTag;
   }
 
-  /** @return string The From: name. This is modifiable. The From: email
-   * address, however, is fixed in order to prevent abuse.
-   */
-  public function fromName():string
+  /** @return string One of self::FROM_ORCHESTRA or self::FROM_PERSONAL. */
+  public function fromTag():string
   {
-    return $this->cgiValue('fromName', $this->catchAllName);
+    return $this->cgiValue('fromTag', $this->getUserValue('defaultEmailFromAddress', self::FROM_ORCHESTRA));
   }
 
-  /** @return string The current From: addres. This is fixed and cannot be changed. */
-  public function fromAddress():string
+  /**
+   * @param null|string $fromTag Request the name of the given tag, either
+   * self::FROM_ORCHESTRA or self::FROM_PERSONAL.
+   *
+   * @return string The current or requested From: name.
+   */
+  public function fromName(?string $fromTag = null):string
   {
-    return htmlspecialchars($this->catchAllEmail);
+    switch (($fromTag ?? $this->fromTag())) {
+      case self::FROM_ORCHESTRA:
+        return $this->cgiValue('fromName', $this->catchAllName);
+      case self::FROM_PERSONAL:
+        return $this->user()?->getDisplayName() ?? '';
+    }
+  }
+
+  /**
+   * @param null|string $fromTag Request the name of the given tag, either
+   * self::FROM_ORCHESTRA or self::FROM_PERSONAL.
+   *
+   * @return string The current or requested From: addres.
+   */
+  public function fromAddress(?string $fromTag = null):string
+  {
+    switch (($fromTag ?? $this->fromTag())) {
+      case self::FROM_ORCHESTRA:
+        return htmlspecialchars($this->catchAllEmail);
+      case self::FROM_PERSONAL:
+        $domain = $this->getConfigValue(ConfigConstants::EMAIL_FROM_DOMAIN_KEY);
+        $user = $this->userId();
+        return $user . '@' . $domain;
+    }
   }
 
   /** @return string In principle the most important stuff: the message text. */
@@ -5949,5 +5988,12 @@ to your user name and will be invalidated in the unfortunate case that you leave
       $throwable->getLine(),
       $throwable->getMessage(),
     ]);
+  }
+
+  /** @return void */
+  protected static function l10nInjection():void
+  {
+    self::t(self::FROM_ORCHESTRA);
+    self::t(self::FROM_PERSONAL);
   }
 }

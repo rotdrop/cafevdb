@@ -187,6 +187,15 @@ class EmailFormController extends Controller
       'message' => $composer->messageText(),
       'sender' => $composer->fromName(),
       'catchAllEmail' => $composer->fromAddress(),
+      'fromTag' => $composer->fromTag(),
+      'fromName' => [
+        Composer::FROM_PERSONAL => $composer->fromName(Composer::FROM_PERSONAL),
+        Composer::FROM_ORCHESTRA => $composer->fromName(Composer::FROM_ORCHESTRA)
+      ],
+      'fromAddress' => [
+        Composer::FROM_PERSONAL => $composer->fromAddress(Composer::FROM_PERSONAL),
+        Composer::FROM_ORCHESTRA => $composer->fromAddress(Composer::FROM_ORCHESTRA),
+      ],
       'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
       'fileAttachmentData' => json_encode($fileAttachments),
       'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
@@ -412,6 +421,15 @@ class EmailFormController extends Controller
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),
               'catchAllEmail' => $composer->fromAddress(),
+              'fromTag' => $composer->fromTag(),
+              'fromName' => [
+                Composer::FROM_PERSONAL => $composer->fromName(Composer::FROM_PERSONAL),
+                Composer::FROM_ORCHESTRA => $composer->fromName(Composer::FROM_ORCHESTRA)
+              ],
+              'fromAddress' => [
+                Composer::FROM_PERSONAL => $composer->fromAddress(Composer::FROM_PERSONAL),
+                Composer::FROM_ORCHESTRA => $composer->fromAddress(Composer::FROM_ORCHESTRA),
+              ],
               'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
               'fileAttachmentData' => json_encode($fileAttachments),
               'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
@@ -513,6 +531,15 @@ class EmailFormController extends Controller
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),
               'catchAllEmail' => $composer->fromAddress(),
+              'fromTag' => $composer->fromTag(),
+              'fromName' => [
+                Composer::FROM_PERSONAL => $composer->fromName(Composer::FROM_PERSONAL),
+                Composer::FROM_ORCHESTRA => $composer->fromName(Composer::FROM_ORCHESTRA)
+              ],
+              'fromAddress' => [
+                Composer::FROM_PERSONAL => $composer->fromAddress(Composer::FROM_PERSONAL),
+                Composer::FROM_ORCHESTRA => $composer->fromAddress(Composer::FROM_ORCHESTRA),
+              ],
               'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
               'fileAttachmentData' => json_encode($fileAttachments),
               'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
@@ -641,6 +668,15 @@ class EmailFormController extends Controller
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),
               'catchAllEmail' => $composer->fromAddress(),
+              'fromTag' => $composer->fromTag(),
+              'fromName' => [
+                Composer::FROM_PERSONAL => $composer->fromName(Composer::FROM_PERSONAL),
+                Composer::FROM_ORCHESTRA => $composer->fromName(Composer::FROM_ORCHESTRA)
+              ],
+              'fromAddress' => [
+                Composer::FROM_PERSONAL => $composer->fromAddress(Composer::FROM_PERSONAL),
+                Composer::FROM_ORCHESTRA => $composer->fromAddress(Composer::FROM_ORCHESTRA),
+              ],
               'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
               'fileAttachmentData' => json_encode($fileAttachments),
               'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),

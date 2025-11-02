@@ -36,6 +36,7 @@ import * as SelectUtils from './select-utils.js';
 import * as Ajax from './ajax.js';
 import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
+import { generateOcsUrl } from '@nextcloud/router';
 import { setPersonalUrl } from './settings-urls.js';
 import print_r from './print-r.js';
 import selectPopup from './select-popup.js';
@@ -44,6 +45,7 @@ import queryData from './query-data.js';
 import modalizer from './modalizer.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
 import fileDownload from './file-download.js';
+import { showSuccess } from '@nextcloud/dialogs';
 import { token as pmeToken, data as pmeData } from './pme-selectors.js';
 import {
   LEGACY_UPDATE_EVENTS_SELECTION,
@@ -1547,6 +1549,50 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         $self.val($self.val().trim());
         return false;
       });
+
+  /**************************************************************************
+   *
+   */
+
+  fieldset.find('input.save-from-tag')
+    .off('click')
+    .on('click', function(event) {
+      const $selectedFrom = $(this).closest('td.email-from').find('input[type=radio]:checked');
+      const sender = $selectedFrom.next().text().trim();
+      const configKey = 'defaultEmailFromAddress';
+      const configValue = $selectedFrom.val();
+      const message = configValue === 'personal'
+        ? t(appName, 'Click "Yes" to use the selected personal sender address "{sender}" as default sender for future email communications.', { sender })
+        : t(appName, 'Click "Yes" to use the selected "global" sender address "{sender}" as default sender for future email communications.', { sender });
+      Dialogs.confirm(
+        message,
+        t(appName, 'Remember the sender choice?'),
+        {
+          callback(answer) {
+            if (!answer) {
+              return;
+            }
+            $.post(
+              generateOcsUrl('/apps/provisioning_api/api/v1/config/users/{appName}/{configKey}', {
+                appName,
+                configKey,
+              }),
+              { configValue },
+            )
+              .fail(ajaxHandleError)
+              .done(function(response) {
+                console.debug('RESPONSE', { response });
+                showSuccess(t(appName, 'Preference "{configKey}" set to "{senderTag}".', {
+                  configKey,
+                  senderTag: t(appName, configValue),
+                }));
+              });
+          },
+          allowHtml: true,
+        },
+      );
+      return false;
+    });
 
   /**************************************************************************
    *

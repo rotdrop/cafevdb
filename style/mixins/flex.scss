@@ -21,11 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 @mixin flexRules() {
+  td > .flex-container:only-child {
+    width: 100%;
+  }
   span.flex-container {
-    display:inline-flex;
+    display:inline-flex !important;
   }
   .flex-container {
-    display: flex;
+    display: flex !important;
     &:not(.flex-column) {
       flex-flow: row;
       &:not(.flex-wrap) {
@@ -42,7 +45,7 @@
     &.flex-column {
       flex-flow: column;
       &:not(.flex-wrap) {
-        flex-flow: column wrap;
+        flex-flow: column nowrap;
       }
     }
     &.flex-wrap {

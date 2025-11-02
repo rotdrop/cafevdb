@@ -27,5 +27,6 @@ $(document).off('ajaxSend.nextcloud').on('ajaxSend.nextcloud', function(elm, xhr
 	if (settings.crossDomain === false) {
 		xhr.setRequestHeader('requesttoken', getToken())
 		xhr.setRequestHeader('OCS-APIREQUEST', 'true')
+		xhr.setRequestHeader('OCS-APIRequest', 'true')
 	}
 })

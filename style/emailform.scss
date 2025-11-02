@@ -32,6 +32,13 @@ $editorHeight: 20em;
   max-height: calc(100vh - var(--header-height));
   padding:0;
 
+  .no-margin {
+    margin: 0;
+    &-right {
+      margin-right: 0;
+    }
+  }
+
   /* dialog popup, header */
 
   div.ui-dialog-titlebar {
@@ -48,14 +55,6 @@ $editorHeight: 20em;
     padding:0;
     border-top-right-radius:0;
     border-top-left-radius:0;
-
-    .flex-container {
-      display:flex;
-
-      > * {
-        float:none!important;
-      }
-    }
 
     div#emailformwrapper {
 
@@ -135,13 +134,15 @@ $editorHeight: 20em;
         span.checkbox-button.#{$cssPrefix}container {
           position:relative;
           vertical-align:middle;
+          width:var(--default-clickable-area);
+          height:var(--default-clickable-area);
 
           span.button {
             background-repeat:no-repeat;
             background-position:center;
             background-size:22px 22px;
             display:inline-block;
-            width:27px;
+            width:var(--default-clickable-area);
           }
 
           &:not(.inverted) input[type=checkbox]:checked,
@@ -537,10 +538,6 @@ $editorHeight: 20em;
                 }
               }
 
-              .flex-container {
-                display:flex;
-              }
-
               .email-body {
               }
 
@@ -795,20 +792,32 @@ $editorHeight: 20em;
             vertical-align:top;
           }
 
-          tr.stored-messages td {
-            border-bottom:1px solid #808080;
-            padding-bottom:0.5em;
+          tr.stored-messages {
+            td {
+              padding-bottom: 0.5em;
+            }
+            & > tr td {
+              border-top: 1px solid #808080;
+              padding-bottom:0.5em;
+            }
           }
 
+
+
           td.email-address.input input.address-book-emails,
-          td.stored-messages-storage input.submit {
+          td.stored-messages-storage input.submit,
+          td.email-from input[type=button] {
             background-repeat:no-repeat;
             background-size: 24px 24px;
             background-position: center;
-            width:27px;
-            height:27px;
+            width: var(--default-clickable-area);
+            height: var(--default-clickable-area);
             font-size:0pt;
             vertical-align:middle;
+          }
+
+          td.email-from input.save-from-tag {
+            background-image: var(--icon-settings-dark);
           }
 
           td.stored-messages-storage {
@@ -881,10 +890,6 @@ $editorHeight: 20em;
               }
             }
 
-            &.email-recipients {
-              padding-top:1em;
-            }
-
             width:100%;
             /*padding: 0 1em 0 0;*/
             .email-address-holder {
@@ -893,7 +898,6 @@ $editorHeight: 20em;
             }
 
             .flex-container {
-              width:100%;
               flex-wrap: nowrap;
               justify-content:space-between;
               flex-direction:row;
