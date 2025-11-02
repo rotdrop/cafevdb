@@ -1657,12 +1657,19 @@ class PersonalSettingsController extends Controller
         $listsService = $this->di(MailingListsService::class);
         $announcementsMailingList = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
         if (empty($announcementsMailingList)) {
-          return self::grumble($this->l->t('Please configure the mailing-list address first, otherwise I do not know which list I have to work on.'));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Please configure the mailing-list address first, otherwise I do not know which list I have to work on.'),
+          );
         }
+        $announcementsMailingListName = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY, null);
         $owners = array_filter([ $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['owner']) ]);
         $moderators = array_filter([ $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['moderator']) ]);
         $posters = $moderators;
-        $listsService->configureAnnouncementsList($announcementsMailingList, $owners, $moderators, $posters);
+        $listInfo = $listsService->getListInfo($announcementsMailingList);
+        if ($listInfo === null)  {
+          $listsService->createList($announcementsMailingList);
+        }
+        $listsService->configureAnnouncementsList($announcementsMailingList, $announcementsMailingListName, $owners, $moderators, $posters);
 
         // install message templates
         $templates = $listsService->installListTemplates($announcementsMailingList, MailingListsService::TEMPLATE_TYPE_ANNOUNCEMENTS);
@@ -1690,7 +1697,7 @@ class PersonalSettingsController extends Controller
         $furtherData = [ 'message' => [] ];
         if (!empty($displayName)) {
           switch ($parameter) {
-             case ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY:
+            case ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY:
               $this->setSimpleConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY, $displayName, responseData: $furtherData);
               $reportValue = $displayName . ' <' . $realValue . '>';
               break;
@@ -1794,8 +1801,9 @@ class PersonalSettingsController extends Controller
             $listsService = $this->di(MailingListsService::class);
             if (empty($listsService->getServerConfig())) {
               $this->setConfigValue($parameter, $oldValue);
-              return self::grumble(
-                $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListRestUrl));
+              throw new Exceptions\EnduserNotificationException(
+                message: $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListRestUrl),
+              );
             }
           } catch (Throwable $t) {
             $this->setConfigValue($parameter, $oldValue);
