@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-11-02 23:25+0100\n"
+"POT-Creation-Date: 2025-11-03 01:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1463,7 +1463,7 @@ msgstr ""
 #: lib/Controller/ContactsController.php:75
 #: lib/Controller/DocumentStorageUploadController.php:431
 #: lib/Controller/EmailFormController.php:1075
-#: lib/Controller/SepaDebitMandatesController.php:1261
+#: lib/Controller/SepaDebitMandatesController.php:1265
 msgid "UNIMPLEMENTED"
 msgstr ""
 
@@ -1472,8 +1472,8 @@ msgid "The encryption service is not available."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:169
-#: lib/Controller/SepaDebitMandatesController.php:1178
-#: lib/Controller/SepaDebitMandatesController.php:1487
+#: lib/Controller/SepaDebitMandatesController.php:1182
+#: lib/Controller/SepaDebitMandatesController.php:1491
 #, php-format
 msgid "Required information \"%s\" not provided."
 msgstr ""
@@ -1486,28 +1486,28 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:198
-#: lib/Controller/SepaDebitMandatesController.php:1277
+#: lib/Controller/SepaDebitMandatesController.php:1281
 #, php-format
 msgid "Upload error \"%s\"."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:219
 #: lib/Controller/ProjectParticipantsController.php:695
-#: lib/Controller/SepaDebitMandatesController.php:1294
+#: lib/Controller/SepaDebitMandatesController.php:1298
 msgid ""
 "Move operation requested, but the original file path has not been specified."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:226
 #: lib/Controller/ProjectParticipantsController.php:699
-#: lib/Controller/SepaDebitMandatesController.php:1298
+#: lib/Controller/SepaDebitMandatesController.php:1302
 #, php-format
 msgid "Move operation requested, but the original file \"%s\" cannot be found."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:234
 #: lib/Controller/ProjectParticipantsController.php:711
-#: lib/Controller/SepaDebitMandatesController.php:1304
+#: lib/Controller/SepaDebitMandatesController.php:1308
 msgid ""
 "Link operation requested, but the id of the original file has not been "
 "specified."
@@ -1515,7 +1515,7 @@ msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:240
 #: lib/Controller/ProjectParticipantsController.php:715
-#: lib/Controller/SepaDebitMandatesController.php:1308
+#: lib/Controller/SepaDebitMandatesController.php:1312
 #, php-format
 msgid ""
 "Link operation requested, but the existing original file with id \"%s\" "
@@ -1534,7 +1534,7 @@ msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:321
 #: lib/Controller/ProjectParticipantsController.php:827
-#: lib/Controller/SepaDebitMandatesController.php:1369
+#: lib/Controller/SepaDebitMandatesController.php:1373
 #, php-format
 msgid ""
 "Link operation requested, but the existing original file is the same as the "
@@ -1543,29 +1543,29 @@ msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:345
 #: lib/Controller/DocumentStorageUploadController.php:424
-#: lib/Controller/SepaDebitMandatesController.php:1252
-#: lib/Controller/SepaDebitMandatesController.php:1399
-#: lib/Controller/SepaDebitMandatesController.php:1719
+#: lib/Controller/SepaDebitMandatesController.php:1256
+#: lib/Controller/SepaDebitMandatesController.php:1403
+#: lib/Controller/SepaDebitMandatesController.php:1723
 msgid "Error, caught an exception. No changes were performed."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:374
 #: lib/Controller/ProjectParticipantsController.php:963
-#: lib/Controller/SepaDebitMandatesController.php:1434
+#: lib/Controller/SepaDebitMandatesController.php:1438
 #, php-format
 msgid "Upload of \"%s\" as \"%s\" successful."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:377
 #: lib/Controller/ProjectParticipantsController.php:966
-#: lib/Controller/SepaDebitMandatesController.php:1437
+#: lib/Controller/SepaDebitMandatesController.php:1441
 #, php-format
 msgid "Move of \"%s\" to \"%s\" successful."
 msgstr ""
 
 #: lib/Controller/DocumentStorageUploadController.php:380
 #: lib/Controller/ProjectParticipantsController.php:969
-#: lib/Controller/SepaDebitMandatesController.php:1440
+#: lib/Controller/SepaDebitMandatesController.php:1444
 #, php-format
 msgid "Linking of file id \"%s\" to \"%s\" successful."
 msgstr ""
@@ -2240,12 +2240,13 @@ msgstr ""
 #: lib/Controller/PersonalSettingsController.php:705
 #: lib/Controller/PersonalSettingsController.php:726
 #: lib/Controller/PersonalSettingsController.php:741
-#: lib/Controller/SepaDebitMandatesController.php:498
+#: lib/Controller/SepaDebitMandatesController.php:502
 #, php-format
 msgid "Value for \"%s\" set to \"%s\"."
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:671
+#: lib/Controller/SepaDebitMandatesController.php:355
 #, php-format
 msgid "Invalid IBAN: \"%s\"."
 msgstr ""
@@ -3861,251 +3862,261 @@ msgid "A German bank id consists of exactly 8 digits: %s."
 msgstr ""
 
 #: lib/Controller/SepaDebitMandatesController.php:325
-#: lib/Controller/SepaDebitMandatesController.php:390
+#: lib/Controller/SepaDebitMandatesController.php:394
 #, php-format
 msgid "Invalid German(?) bank id \"%s\"."
 msgstr ""
 
 #: lib/Controller/SepaDebitMandatesController.php:336
-#: lib/Controller/SepaDebitMandatesController.php:404
+#: lib/Controller/SepaDebitMandatesController.php:408
 #, php-format
 msgid "Invalid German(?) bank account number %s @ %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:355
-#, php-format
-msgid "Invalid IBAN: `%s'."
+#: lib/Controller/SepaDebitMandatesController.php:358
+#: templates/sepa-debit-mandate.php:157
+msgid "Instant IBAN Validation:"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:441
-#: lib/Controller/SepaDebitMandatesController.php:475
+#: lib/Controller/SepaDebitMandatesController.php:357
+#, php-format
+msgid ""
+"Hint: it is possible to disable instant validations by unchecking the "
+"checkbox labelled \"%s\". Please note, however, that it is impossible to "
+"save the entered IBAN if the validation is disabled. Therefore you have to "
+"enable the validation checkbox again before you are allowed to save the data "
+"to the database."
+msgstr ""
+
+#: lib/Controller/SepaDebitMandatesController.php:445
+#: lib/Controller/SepaDebitMandatesController.php:479
 #, php-format
 msgid "Value for `%s' invalid: `%s'."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:486
+#: lib/Controller/SepaDebitMandatesController.php:490
 msgid "nothing changed"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:487
+#: lib/Controller/SepaDebitMandatesController.php:491
 msgid "no data"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:483
+#: lib/Controller/SepaDebitMandatesController.php:487
 #, php-format
 msgid "Unknown Request: %s / %s / %s"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:561
+#: lib/Controller/SepaDebitMandatesController.php:565
 msgid "Parameter musicianId must be set, but is empty."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:588
+#: lib/Controller/SepaDebitMandatesController.php:592
 #, php-format
 msgid "Unable to load SEPA debit mandate for musician %s/%d, sequence count %d"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:813
-#: lib/Controller/SepaDebitMandatesController.php:1616
+#: lib/Controller/SepaDebitMandatesController.php:817
+#: lib/Controller/SepaDebitMandatesController.php:1620
 #, php-format
 msgid "Required information `%s' not provided."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:843
+#: lib/Controller/SepaDebitMandatesController.php:847
 msgid ""
 "The current bank account has already been used for payments or is bound to "
 "debit-mandates. Therefore the IBAN must not be changed. Please create a new "
 "account; you may disable the current account, at you option."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:859
+#: lib/Controller/SepaDebitMandatesController.php:863
 #, php-format
 msgid "Bank-account failed to validate: %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:878
+#: lib/Controller/SepaDebitMandatesController.php:882
 #, php-format
 msgid ""
 "The IBAN %1$s, account-owner %2$s, has already been recorded for the "
 "musician %3$s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:895
+#: lib/Controller/SepaDebitMandatesController.php:899
 msgid "Unable to modify already used bank-account."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:912
+#: lib/Controller/SepaDebitMandatesController.php:916
 #, php-format
 msgid "Successfully stored the bank account with IBAN \"%s\" and owner \"%s\""
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:940
+#: lib/Controller/SepaDebitMandatesController.php:944
 #, php-format
 msgid ""
 "The bank-account with IBAN %1$s bound to the existing mandate does not match "
 "the submitted bank-account with IBAN %2$s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:961
+#: lib/Controller/SepaDebitMandatesController.php:965
 msgid ""
 "The current debit-mandate already has been used for payments. Therefore the "
 "date of the debit-mandate must not be changed. Please create a new debit-"
 "mandate; you may disable the current mandate, at you option."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:970
+#: lib/Controller/SepaDebitMandatesController.php:974
 msgid ""
 "The current debit-mandate already has been used for more than a single "
 "payment. Therefore it can non longer be changed from \"recurring\" to \"non-"
 "recurring\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:977
+#: lib/Controller/SepaDebitMandatesController.php:981
 msgid ""
 "The current debit-mandate already has been used for payments. Therefore the "
 "project-binding can no longer be changed."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:982
+#: lib/Controller/SepaDebitMandatesController.php:986
 msgid ""
 "The current debit-mandate alrady has been used for payments. Therefore the "
 "stored copy of the written mandate cannot be deleted."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1007
+#: lib/Controller/SepaDebitMandatesController.php:1011
 msgid "Unable to modify already used debit-mandate."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1021
+#: lib/Controller/SepaDebitMandatesController.php:1025
 #, php-format
 msgid "Successfully stored the bank-account with IBAN \"%s\" and owner \"%s\""
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1025
+#: lib/Controller/SepaDebitMandatesController.php:1029
 #, php-format
 msgid ""
 "Successfully stored the debit-mandate with reference \"%s\" for the IBAN "
 "\"%s\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1036
+#: lib/Controller/SepaDebitMandatesController.php:1040
 msgid "Unknown upload failure."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1088
+#: lib/Controller/SepaDebitMandatesController.php:1092
 #, php-format
 msgid ""
 "General debit-mandate requested but musician \"%s\" is not a club member."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1099
+#: lib/Controller/SepaDebitMandatesController.php:1103
 msgid "Unable to find a fillable debit mandate form."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1192
+#: lib/Controller/SepaDebitMandatesController.php:1196
 #, php-format
 msgid ""
 "Unable to find a debit mandate for musician id \"%1$d\" with sequence "
 "\"%2$d\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1213
+#: lib/Controller/SepaDebitMandatesController.php:1217
 #, php-format
 msgid ""
 "We have no hard-copy of the written-mandate for \"%1$s\", so we cannot "
 "delete it."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1217
+#: lib/Controller/SepaDebitMandatesController.php:1221
 #, php-format
 msgid ""
 "The debit mandate \"%1$s\" is already in use, the hard-copy of the written-"
 "mandate should only be replaced, but not deleted."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1219
+#: lib/Controller/SepaDebitMandatesController.php:1223
 msgid "Are you sure you want to proceed?"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1259
+#: lib/Controller/SepaDebitMandatesController.php:1263
 #, php-format
 msgid ""
 "Successfully deleted the hard-copy of the written-mandate for \"%1$s\", "
 "please upload a new one!"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1510
+#: lib/Controller/SepaDebitMandatesController.php:1514
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" is already disabled."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1519
+#: lib/Controller/SepaDebitMandatesController.php:1523
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" is already active."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1527
-#: lib/Controller/SepaDebitMandatesController.php:1707
+#: lib/Controller/SepaDebitMandatesController.php:1531
+#: lib/Controller/SepaDebitMandatesController.php:1711
 #, php-format
 msgid "Unknown revocation action: \"%s\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1538
+#: lib/Controller/SepaDebitMandatesController.php:1542
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been invalidated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1541
+#: lib/Controller/SepaDebitMandatesController.php:1545
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been reactivated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1553
+#: lib/Controller/SepaDebitMandatesController.php:1557
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been deleted."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1647
+#: lib/Controller/SepaDebitMandatesController.php:1651
 #, php-format
 msgid ""
 "The account with IBAN \"%s\" cannot be deleted as the following associated "
 "mandates are still active: %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1670
+#: lib/Controller/SepaDebitMandatesController.php:1674
 #, php-format
 msgid "Bank account with IBAN \"%s\" is already disabled."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1682
+#: lib/Controller/SepaDebitMandatesController.php:1686
 #, php-format
 msgid ""
 "The account with IBAN \"%s\" cannot be disabled as the following associated "
 "mandates are still active: %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1699
+#: lib/Controller/SepaDebitMandatesController.php:1703
 #, php-format
 msgid "Bank account with IBAN \"%s\" is already active."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1729
+#: lib/Controller/SepaDebitMandatesController.php:1733
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been invalidated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1731
+#: lib/Controller/SepaDebitMandatesController.php:1735
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been reactivated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1732
+#: lib/Controller/SepaDebitMandatesController.php:1736
 msgid ""
 "Please note that associated debit-mandates need to be reactivated "
 "separately, they are still disabled."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1735
+#: lib/Controller/SepaDebitMandatesController.php:1739
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been deleted."
 msgstr ""
@@ -16039,10 +16050,6 @@ msgstr ""
 #: templates/sepa-debit-mandate.php:152
 #: templates/settings/orchestra-settings.php:192
 msgid "BIC of bank account"
-msgstr ""
-
-#: templates/sepa-debit-mandate.php:157
-msgid "Instant IBAN Validation:"
 msgstr ""
 
 #: templates/sepa-debit-mandate.php:178
