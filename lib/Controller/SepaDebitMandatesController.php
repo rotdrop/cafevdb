@@ -352,7 +352,11 @@ class SepaDebitMandatesController extends Controller
           }
           $iban = new IBAN($value);
           if (!$iban->Verify()) {
-            $message = $this->l->t("Invalid IBAN: `%s'.", $value);
+            $message = $this->l->t('Invalid IBAN: "%s".', $value);
+            $message .= ' ' . $this->l->t(
+              'Hint: it is possible to disable instant validations by unchecking the checkbox labelled "%s". Please note, however, that it is impossible to save the entered IBAN if the validation is disabled. Therefore you have to enable the validation checkbox again before you are allowed to save the data to the database.',
+              $this->l->t('Instant IBAN Validation:'),
+            );
             $suggestions = [];
             // $this->logInfo('Try Alternatives');
             foreach ($iban->MistranscriptionSuggestions() as $alternative) {
