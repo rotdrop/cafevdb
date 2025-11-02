@@ -44,6 +44,7 @@ class Registration
     // self::registerListener($context, PostProjectUpdatedEventListener::class);
     self::registerListener($context, AfterEncryptionKeyPairChangedListener::class);
     self::registerListener($context, BeforeEncryptionKeyPairChangedListener::class);
+    self::registerListener($context, BeforePreferenceMutatedEventListener::class);
     self::registerListener($context, BeforeTemplateRenderedListener::class);
     self::registerListener($context, CalendarDeletedEventListener::class);
     self::registerListener($context, CalendarDeletedEventListener::class);
