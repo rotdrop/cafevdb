@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\EmailForm\Composer;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 $containerClass = $appName.'-'.'container';
 
@@ -36,6 +37,12 @@ foreach ($fileAttachmentOptions as $option) {
 $selectedEventAttachments = 0;
 foreach ($eventAttachmentOptions as $option) {
   $selectedEventAttachments += (int)($option['flags'] &  PageNavigation::SELECTED);
+}
+
+function e(string $string)
+{
+  echo $string;
+  return true;
 }
 
 ?>
@@ -81,10 +88,10 @@ foreach ($eventAttachmentOptions as $option) {
                title="<?php echo $toolTips['emailform:storage:messages:new-template']; ?>"
                name="emailComposer[emailTemplateName]"
                type="text"
-               class="tooltip-bottom"
+               class="tooltip-bottom no-margin-right"
                id="emailCurrentTemplate"
                disabled>
-        <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button save-as-template">
+        <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button save-as-template flex-container flex-center">
           <input type="checkbox"
                  id="check-save-as-template"
                  class="save-as-template tooltip-wide tooltip-bottom"
@@ -92,15 +99,15 @@ foreach ($eventAttachmentOptions as $option) {
           <label for="check-save-as-template"
                  class="tip save-as-template"
                  title="<?php echo $toolTips['emailform:storage:messages:save-as-template']; ?>">
-            <span class="save-as-template button"></span>
+            <span class="save-as-template button no-margin-right"></span>
           </label>
         </span>
         <input title="<?php echo $toolTips['emailform:storage:messages:save-message']; ?>"
                type="submit"
-               class="submit save-message tooltip-wide tooltip-bottom"
+               class="submit save-message tooltip-wide tooltip-bottom no-margin-right"
                name="emailComposer[saveMessage]"
                value="<?php echo $l->t('Save Message'); ?>"/>
-        <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button draft-auto-save">
+        <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button draft-auto-save flex-container flex-center">
           <input type="checkbox"
                  id="check-draft-auto-save"
                  class="draft-auto-save tooltip-auto"
@@ -110,33 +117,55 @@ foreach ($eventAttachmentOptions as $option) {
           <label for="check-draft-auto-save"
                  class="draft-auto-save tooltip-auto"
                  title="<?php p($toolTips['emailform:storage:messages:draft-auto-save']); ?>">
-            <span class="draft-auto-save button"></span>
+            <span class="draft-auto-save button no-margin-right"></span>
           </label>
         </span>
         <input title="<?php echo $toolTips['emailform:storage:messages:delete-saved-message']; ?>"
                type="submit"
-               class="submit delete-message tooltip-bottom"
+               class="submit delete-message tooltip-bottom no-margin-right"
                name="emailComposer[deleteMessage]"
                value="<?php echo $l->t('Delete Message'); ?>"/>
       </td>
     </tr>
-    <tr>
-      <td class="caption"><?php echo $l->t('Sender-Name'); ?></td>
-      <td colspan="2">
-        <input value="<?php echo $sender; ?>"
-               class="sender-name"
-               size="40" value="CAFEV"
-               name="emailComposer[fromName]"
-               type="text"></td>
-    </tr>
-    <tr>
-      <td class="caption"><?php echo $l->t('Sender-Email'); ?></td>
-      <td colspan="2"><?php echo $l->t('Tied to "%s"', $catchAllEmail); ?></td>
+    <tr><td colspan="3" class="rule"><hr /></td></tr>
+    <tr class="email-from">
+      <td class="email-from caption"><?php echo $l->t('Sender'); ?></td>
+      <td class="email-from" colspan="2">
+        <span class="flex-container flex-justify-full">
+          <span class="flex-container flex-column flex-grow">
+            <span>
+              <input id="email-from-orchestra"
+                     class="radio"
+                     type="radio"
+                     name="emailComposer[fromTag]"
+                     value="<?= Composer::FROM_ORCHESTRA ?>"
+                     <?php $fromTag === Composer::FROM_ORCHESTRA && e('checked') ?>
+              />
+              <label for="email-from-orchestra">
+                <?php p($_['fromName'][Composer::FROM_ORCHESTRA] . ' <' . $_['fromAddress'][Composer::FROM_ORCHESTRA] . '>') ?>
+              </label>
+            </span>
+            <span>
+              <input id="email-from-personal"
+                     class="radio"
+                     type="radio"
+                     name="emailComposer[fromTag]"
+                     value="<?= Composer::FROM_PERSONAL ?>"
+                     <?php $fromTag === Composer::FROM_PERSONAL && e('checked') ?>
+              />
+              <label for="email-from-personal">
+                <?php p($_['fromName'][Composer::FROM_PERSONAL] . ' <' . $_['fromAddress'][Composer::FROM_PERSONAL] . '>') ?>
+              </label>
+            </span>
+          </span>
+          <input type="button" class="button no-margin-right save-from-tag flex-shrink" name="emailComposer[saveFromTag]">
+        </span>
+      </td>
     </tr>
     <tr class="email-address">
       <td class="email-address email-recipients caption"><?php echo $l->t('Recipients'); ?></td>
       <td class="email-address email-recipients display" colspan="2">
-        <span class="flex-container">
+        <span class="flex-container flex-center">
           <span class="email-address-holder email-recipients inner vmiddle tooltip-bottom tooltip-mostwide"
                 title="<?php echo $toolTips['emailform:composer:recipients-listing'].'</br>'.htmlspecialchars(implode(', ', $TO)); ?>"
                 data-placeholder="<?php echo $l->t('No recipients selected.'); ?>"
@@ -144,7 +173,7 @@ foreach ($eventAttachmentOptions as $option) {
           >
             <?php echo empty($TO) ? $l->t('No recipients selected.') : implode(', ', $TO); ?>
           </span>
-          <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button inverted disclosed-recipients tooltip-auto"
+          <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button inverted disclosed-recipients tooltip-auto flex-container flex-center"
                 title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:disclosed-recipients']); ?>"
           >
             <input type="checkbox"
@@ -157,7 +186,7 @@ foreach ($eventAttachmentOptions as $option) {
             <label for="check-disclosed-recipients"
                    <?php ($projectId <= 0) && p('disabled'); ?>
                    class="disclosed-recipients">
-              <span class="disclosed-recipients button">
+              <span class="disclosed-recipients button no-margin-right">
                 <span clas="label">BCC</span>
               </span>
             </label>
@@ -178,7 +207,7 @@ foreach ($eventAttachmentOptions as $option) {
                id="carbon-copy" />
         <input title="<?php echo $toolTips['emailform:composer:recipients:address-book']; ?>"
                type="submit"
-               class="submit address-book-emails CC tooltip-bottom"
+               class="submit address-book-emails CC tooltip-bottom no-margin-right"
                data-for="#carbon-copy"
                name="emailComposer[addressBookCC]"
                value="<?php echo $l->t('Address Book'); ?>"
@@ -197,7 +226,7 @@ foreach ($eventAttachmentOptions as $option) {
                id="blind-carbon-copy"/>
         <input title="<?php echo $toolTips['emailform:composer:recipients:address-book']; ?>"
                type="submit"
-               class="submit address-book-emails BCC tooltip-bottom"
+               class="submit address-book-emails BCC tooltip-bottom no-margin-right"
                data-for="#blind-carbon-copy"
                name="emailComposer[addressBookBCC]"
                value="<?php echo $l->t('Address Book'); ?>"
@@ -219,7 +248,7 @@ foreach ($eventAttachmentOptions as $option) {
             <span class="postfix">
               ]
             </span>
-            <input type="button" class="button edit-subject-tag display" name="emailComposer[editSubjectTag]">
+            <input type="button" class="button edit-subject-tag display no-margin-right" name="emailComposer[editSubjectTag]">
           </span>
           <span class="subject input">
             <input value="<?php p($subject); ?>"
@@ -344,7 +373,7 @@ foreach ($eventAttachmentOptions as $option) {
         </div>
       </td>
     </tr>
-    <tr class="spacer rule below"><td class="caption"></td><td></td><td></td></tr>
+    <tr><td colspan="3" class="rule"><hr /></td></tr>
     <tr class="submit">
       <td class="send cancel preview" colspan="3">
         <div class="container send preview">
