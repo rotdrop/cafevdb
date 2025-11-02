@@ -1657,7 +1657,7 @@ class PersonalSettingsController extends Controller
         $listsService = $this->di(MailingListsService::class);
         $announcementsMailingList = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
         if (empty($announcementsMailingList)) {
-          return self::grumble($this->l->t('Please configure the mailing-list address first, otherweise I do not know which list I have to work on.'));
+          return self::grumble($this->l->t('Please configure the mailing-list address first, otherwise I do not know which list I have to work on.'));
         }
         $owners = array_filter([ $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['owner']) ]);
         $moderators = array_filter([ $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['moderator']) ]);
@@ -1687,11 +1687,11 @@ class PersonalSettingsController extends Controller
         }
         $realValue = array_key_first($parsedEmail);
         $displayName = reset($parsedEmail);
-        $furtherData = [];
+        $furtherData = [ 'message' => [] ];
         if (!empty($displayName)) {
           switch ($parameter) {
-            case ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY:
-              $this->setSimpleConfigValue($parameter, $displayName, responseData: $furtherData);
+             case ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY:
+              $this->setSimpleConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY, $displayName, responseData: $furtherData);
               $reportValue = $displayName . ' <' . $realValue . '>';
               break;
             case ConfigConstants::EMAIL_TEST_ADDRESS_KEY:
@@ -1717,11 +1717,12 @@ class PersonalSettingsController extends Controller
             /** @var MailingListsService $listsService */
             $listsService = $this->di(MailingListsService::class);
             $furtherData = Util::arrayMergeRecursive($furtherData, [
-              'message' => $logMessage,
+              'message' => [ $logMessage ],
             ]);
           }
           // try to create the template folder even if the list does not exist
           $shareUri = $listsService->ensureTemplateFolder($this->l->t('announcements'));
+
           $furtherData['message'][] = $this->l->t('Link-shared auto-responses directory for the announcements mailing list is "%s".', $shareUri);
           $this->logInfo('SHARE URI ' . $shareUri);
         }
@@ -1732,6 +1733,7 @@ class PersonalSettingsController extends Controller
       case 'emailpassword':
       case ConfigConstants::EMAIL_FROM_NAME_KEY:
       case ConfigConstants::EMAIL_TEST_NAME_KEY:
+      case ConfigConstants::EMAIL_FROM_DOMAIN_KEY:
         return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, furtherData: $furtherData ?? []);
       case 'bulkEmailPrivacyNotice':
         $value = $this->fuzzyInputService->purifyHTML($value);
@@ -1797,7 +1799,7 @@ class PersonalSettingsController extends Controller
             }
           } catch (Throwable $t) {
             $this->setConfigValue($parameter, $oldValue);
-            throw new Exceptions\EndUserNotificationException(
+            throw new Exceptions\EnduserNotificationException(
               message: $this->l->t('Unable to connect to mailing list service at "%s"', $mailingListRestUrl),
               previous: $t,
             );

@@ -26,7 +26,12 @@
   }
   .flex-container {
     display: flex;
-    flex-flow: row nowrap;
+    &:not(.flex-column) {
+      flex-flow: row;
+      &:not(.flex-wrap) {
+        flex-flow: row nowrap;
+      }
+    }
     .flex-wrapper {
       width:100%;
       height:0;
@@ -36,6 +41,9 @@
     }
     &.flex-column {
       flex-flow: column;
+      &:not(.flex-wrap) {
+        flex-flow: column wrap;
+      }
     }
     &.flex-wrap {
       flex-wrap:wrap;

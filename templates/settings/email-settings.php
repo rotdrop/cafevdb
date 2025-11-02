@@ -138,19 +138,21 @@ if (!empty($_[ConfigConstants::EMAIL_FROM_NAME_KEY])) {
     </form>
     <h4><?php echo $l->t('Bulk Email Composition'); ?></h4>
     <form class="bulk-email-settings">
-      <fieldset class="emailtransport">
+      <fieldset class="emailtransport flex-container flex-column flex-grow">
         <legend><?php p($l->t('Bulk Email Transport')); ?></legend>
         <label for="announcements-mailing-list"
                title="<?php echo $toolTips['emailform:transport:announcements:mailing-list']; ?>"
+               class="settings-input-label"
         >
-          <input type="text"
-                 name="announcementsMailingList"
-                 id="announcements-mailing-list"
-                 value="<?php p($announcementsMailingList); ?>"
-                 placeholder="<?php p($l->t('Mailing List')); ?>"
-          />
-          <?php p($l->t('Announcements Mailing List')); ?>
+          <span><?php p($l->t('Announcements Mailing List')); ?></span>
         </label>
+        <input type="text"
+               name="announcementsMailingList"
+               id="announcements-mailing-list"
+               value="<?php p($announcementsMailingList); ?>"
+               placeholder="<?php p($l->t('e.g. Playground <playground@lists.domain.tld>')); ?>"
+               title="<?php echo $toolTips['emailform:transport:announcements:mailing-list']; ?>"
+        />
         <br class="input-field-separater"/>
         <label for ="announcements-mailing-list-autoconf"
                title="<?php echo $toolTips['mailing-list:announcements:autoconf']; ?>"
@@ -163,19 +165,38 @@ if (!empty($_[ConfigConstants::EMAIL_FROM_NAME_KEY])) {
           <?php p($l->t('auto-configure announcements mailing-list')); ?>
         </label>
       </fieldset>
-      <fieldset class="emailidentity">
+      <fieldset class="emailidentity flex-container">
         <legend><?php p($l->t('Bulk Email Identity')); ?></legend>
-        <label for="emailfromaddress"
-               title="<?= $toolTips['emailform:sender:address']; ?>"
-        >
+       <div class="flex-container flex-column flex-grow">
+          <label for="<?= ConfigConstants::EMAIL_FROM_ADDRESS_KEY ?>"
+                 class="settings-input-label"
+                 title="<?= $toolTips['emailform:sender:address']; ?>"
+          >
+            <span><?php echo $l->t('"From:" name and address');?></span>
+          </label>
           <input type="text"
                  name="<?= ConfigConstants::EMAIL_FROM_ADDRESS_KEY ?>"
                  id="<?= ConfigConstants::EMAIL_FROM_ADDRESS_KEY ?>"
                  value="<?= $emailAddressValue ?>"
                  placeholder="<?= $l->t('e.g. Orchestra <name@domain.tld>');?>"
+                 title="<?= $toolTips['emailform:sender:address']; ?>"
           />
-          <?php echo $l->t('From: name and address');?>
-        </label>
+        </div>
+        <div class="flex-container flex-column flex-grow">
+          <label for="<?= ConfigConstants::EMAIL_FROM_DOMAIN_KEY ?>"
+                 class="settings-input-label"
+                 title="<?= $toolTips['emailform:sender:domain']; ?>"
+          >
+            <span><?php echo $l->t('"From:" domain for individual senders');?></span>
+          </label>
+          <input type="text"
+                 name="<?= ConfigConstants::EMAIL_FROM_DOMAIN_KEY ?>"
+                 id="<?= ConfigConstants::EMAIL_FROM_DOMAIN_KEY ?>"
+                 value="<?= $_[ConfigConstants::EMAIL_FROM_DOMAIN_KEY] ?>"
+                 placeholder="<?= $l->t('e.g. domain.tld');?>"
+                 title="<?= $toolTips['emailform:sender:domain']; ?>"
+          />
+        </div>
       </fieldset>
       <fieldset class="bulk-email-subject">
         <legend><?php p($l->t('Bulk Email Subject')); ?></legend>

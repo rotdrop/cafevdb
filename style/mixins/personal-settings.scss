@@ -29,10 +29,31 @@
 
 @use 'sass:meta';
 @use './about.scss' as *;
+@use './flex.scss' as *;
 
 @mixin personalSettings($appNameTag) {
 
   #personal-settings-container {
+    @include flexRules;
+
+    .settings-input-label {
+      z-index: 1;
+      margin-bottom: -0.8em;
+      width: fit-content;
+      background-color: var(--color-background-plain-text);
+      margin-left: 1em;
+      padding: 0 0.5em;
+      font-style: italic;
+      font-weight: bold;
+      font-size: 80%;
+      span {
+        opacity: 0.5;
+      }
+      & + input {
+        width: unset;
+      }
+    }
+
     div.cfgerror {
       padding-left:2ex;
       padding-top:8ex;
@@ -260,51 +281,6 @@
       font-style:italic;
     }
 
-    div.flex-container {
-      display:flex;
-      flex-flow: row nowrap;
-    }
-    span.flex-container {
-      display:inline-flex;
-    }
-    .flex-container {
-      display: flex;
-      &.flex-wrap {
-        flex-wrap:wrap;
-      }
-      &.flex-center {
-        align-items:center;
-      }
-      &.flex-baseline {
-        align-items:baseline;
-      }
-      &.flex-justify-full {
-        justify-content:space-between;
-      }
-      .flex-wrapper {
-        width:100%;
-        height:0;
-      }
-    }
-    .flex-grow {
-      flex-grow: 10;
-      &-1 {
-        flex-grow: 1;
-      }
-      &-2 {
-        flex-grow: 2;
-      }
-      &-3 {
-        flex-grow: 3;
-      }
-      &-4 {
-        flex-grow: 4;
-      }
-      &-5 {
-        flex-grow: 5;
-      }
-    }
-
     #sharing-settings {
       form.sharedfolders {
         input#taxExcemptionNoticeTemplate {
@@ -396,11 +372,6 @@
 
     #email-settings {
       form.bulk-email-settings {
-        fieldset.emailtransport {
-          input#announcements-mailing-list {
-            width:32ex;
-          }
-        }
         fieldset.bulk-email-subject {
           span.bulk-email-subject {
             font-family:monospace;
