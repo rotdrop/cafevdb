@@ -207,7 +207,7 @@ class MusicianService
       );
     }
     if ($musician->getPayments()->count() > 0) {
-      throw new Exceptions\EndUserNotificationException(
+      throw new Exceptions\EnduserNotificationException(
         $this->l->t('Musician "%s" cannot be removed because there are financial records which depend on this musician.', $musician->getPublicName()));
     }
 

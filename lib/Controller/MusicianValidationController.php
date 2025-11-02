@@ -196,7 +196,7 @@ class MusicianValidationController extends Controller
 
         try {
           $emailArray = $this->emailAddressService->parseAddressString($email);
-        } catch (Exceptions\EndUserNotificationException $e) {
+        } catch (Exceptions\EnduserNotificationException $e) {
           $messages = $e->getMessage();
         }
 
