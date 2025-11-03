@@ -220,8 +220,11 @@ const updateEditor = function(selector, contents) {
     });
     break;
   case 'tinymce':
-    $editorElements.tinymce().setContent(contents);
-    $editorElements.tinymce().undoManager.add();
+    $editorElements.each(function() {
+      const tinymce = $(this).tinymce();
+      tinymce.setContent(contents);
+      tinymce.undoManager.add();
+    });
     break;
   default:
     if ($editorElements.ckeditor) {
@@ -256,7 +259,10 @@ const snapshotEditor = function(selector) {
     });
     break;
   case 'tinymce':
-    $editorElements.tinymce().undoManager.add();
+    $editorElements.each(function() {
+      const tinymce = $(this).tinymce();
+      tinymce.undoManager.add();
+    });
     break;
   default:
     if ($editorElements.ckeditor) {
