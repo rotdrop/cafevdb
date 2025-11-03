@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
 use OCA\CAFEVDB\Wrapped\Gedmo\Loggable\Mapping\Event\LoggableAdapter;
 use OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener as BaseLoggableListener;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\ObjectManager;
 
@@ -45,8 +45,8 @@ class GedmoLoggableListener extends BaseLoggableListener
    * @param null|string $remoteAddress string or null.
    */
   public function __construct(
-    private ?string $userId = null,
-    private ?string $remoteAddress = null,
+    protected $username,
+    private ?string $remoteAddress,
   ) {
     parent::__construct();
   }
@@ -68,7 +68,7 @@ class GedmoLoggableListener extends BaseLoggableListener
   {
     $config = parent::getConfiguration($objectManager, $class);
     if (!isset($config['logEntryClass'])) {
-      $config['logEntryClass'] = CAFEVDB\Entities\LogEntry::class;
+      $config['logEntryClass'] = Entities\LogEntry::class;
     }
     // @todo Perhaps make this configurable
     if (!isset($config['loggable'])) {
@@ -94,7 +94,7 @@ class GedmoLoggableListener extends BaseLoggableListener
   {
     return isset(self::$configurations[$this->name][$class]['logEntryClass']) ?
       self::$configurations[$this->name][$class]['logEntryClass'] :
-      CAFEVDB\Entities\LogEntry::class;
+      Entities\LogEntry::class;
   }
 
   /**
