@@ -175,6 +175,21 @@ class ProjectParticipantEntityListener
     }
   }
 
+ /**
+   * {@inheritdoc}
+   */
+  public function prePersist(Entity $entity, ORMEvent\PrePersistEventArgs $eventArgs)
+  {
+    /** @var Entities\ProjectParticipantField $field */
+    foreach ($entity->getProject()->getParticipantFields() as $field) {
+      $datum = Entities\ProjectParticipantFieldDatum::fromDefaultValue($field, $entity);
+      if ($datum === null) {
+        continue;
+      }
+      $this->entityManager->persist($datum);
+    }
+  }
+
   /**
    * {@inheritdoc}
    */

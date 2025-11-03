@@ -432,6 +432,41 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   }
 
   /**
+   * Generate a data-item referring to the default value of the given
+   * field. If the field does not have a default return \null.
+   *
+   * @param ProjectParticipantField $field
+   *
+   * @param ProjectParticipant $participant
+   *
+   * @return null|ProjectParticipantFieldDatum
+   */
+  public static function fromDefaultValue(ProjectParticipantField $field, ProjectParticipant $participant):?ProjectParticipantFieldDatum
+  {
+    $defaultValue = $field->getDefaultValue();
+    if ($defaultValue === null) {
+      return null;
+    }
+    $datum = (new ProjectParticipantFieldDatum)
+      ->setField($field)
+      ->setProjectParticipant($participant)
+      ->setDataOption($defaultValue);
+    switch ($field->getMultiplicity()) {
+      case Multiplicity::SIMPLE:
+        // value is stored in the the data item
+        $datum->setOptionValue($defaultValue->getData());
+        $datum->setDeposit($defaultValue->getDeposit());
+        break;
+      default:
+        break;
+    }
+    $field->getFieldData()->add($datum);
+    $defaultValue->getFieldData()->set($participant->getMusician()->getId(), $datum);
+
+    return $datum;
+  }
+
+  /**
    * The amount to pay for this service-fee option.
    *
    * Only meaningful if
