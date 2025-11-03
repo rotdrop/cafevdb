@@ -37,7 +37,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MailingListsService;
-
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Handle subscription management callbacks */
 class MailingListsController extends Controller
