@@ -36,9 +36,11 @@ import {
 import pageBusyIcon from './busy-icon.js';
 import generateAppUrl from './generate-url.js';
 import fileDownload from './file-download.js';
+import { selected as selectedValues } from './select-utils.js';
 import {
   formSelector as pmeFormSelector,
   inputSelector as pmeInputSelector,
+  inputClassSelector as pmeInputClassSelector,
 } from './pme-selectors.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
@@ -118,7 +120,7 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
     .off('click')
     .on('click', function(event) {
       const $self = $(this);
-      const $inputElement = $self.parent().find(pmeInputSelector);
+      const $inputElement = $self.parent().find(pmeInputClassSelector());
       const fieldId = $self.data('fieldId');
       const fieldProperty = $self.data('fieldProperty') || 'defaultValue';
 
@@ -136,9 +138,11 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
               return;
             }
             if ($inputElement.hasClass('wysiwyg-editor')) {
-              WysiwygEditor.updateEditor($inputElement, data.value);
+              WysiwygEditor.updateEditor($inputElement, data.value?.data || data.value);
+            } else if ($inputElement.is('select')) {
+              selectedValues($inputElement, data.value.key);
             } else {
-              $inputElement.val(data.value);
+              $inputElement.val(data.value.data || data.value);
             }
           });
       };

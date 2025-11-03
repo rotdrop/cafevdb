@@ -173,7 +173,10 @@ class ProjectParticipantFieldsController extends Controller
             switch ($property) {
               case 'defaultValue':
                 /** @var Entities\ProjectParticipantFieldDataOption $propertyValue */
-                $propertyValue = $propertyValue->getData();
+                $propertyValue = [
+                  'data' => $propertyValue->getData(),
+                  'key' => $propertyValue->getKey(),
+                ];
                 break;
               case 'defaultDeposit':
                 /** @var Entities\ProjectParticipantFieldDataOption $propertyValue */

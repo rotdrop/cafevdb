@@ -217,7 +217,7 @@ trait ParticipantFieldsTrait
           'name' => $this->l->t($fieldName),
           'tab' => $tab,
           'css'      => [ 'postfix' => $css, ],
-          'default|A'  => $field['default_value'],
+          'default|A'  => $field->getDefaultValue()?->getKey(),
           'filter' => [
             'having' => true,
           ],
@@ -337,6 +337,14 @@ trait ParticipantFieldsTrait
           }
         }
 
+        $defaultValue = $field->getDefaultValue();
+        $defaultButton = '<input type="button"
+       value="' . $this->l->t('Revert to default') . '"
+       class="display-postfix revert-to-default [BUTTON_STYLE]"
+       title="' . $this->toolTipsService[self::$toolTipsPrefix . ':revert-to-default'].'"
+       data-field-id="' . $fieldId . '"
+       data-field-property="[FIELD_PROPERTY]"
+/>';
         switch ($multiplicity) {
           case FieldMultiplicity::SIMPLE:
             /*-********************************************************************
@@ -352,14 +360,8 @@ trait ParticipantFieldsTrait
 
             $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_fqn, NULL))';
 
-            $defaultValue = $field->getDefaultValue();
-            $defaultButton = '<input type="button"
-       value="'.$this->l->t('Revert to default').'"
-       class="display-postfix revert-to-default [BUTTON_STYLE]"
-       title="'.$this->toolTipsService[self::$toolTipsPrefix . ':revert-to-default'].'"
-       data-field-id="'.$fieldId.'"
-       data-field-property="[FIELD_PROPERTY]"
-/>';
+            $keyFdd['default'] =
+              $valueFdd['default'] = $defaultValue?->getData();
 
             switch ($dataType) {
               case FieldType::RECEIVABLES:
@@ -371,7 +373,7 @@ trait ParticipantFieldsTrait
                   $fieldDescData, $tableName, 'supporting_document_id', [
                     'input' => 'SRH',
                     'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
-  IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_fqn, NULL)
+  IF($join_table.field_id = ' . $fieldId . $deletedSqlFilter . ', $join_col_fqn, NULL)
   ORDER BY $order_by))',
                     'values' => [
                       'orderby' => '$table.option_key ASC',
@@ -1201,6 +1203,14 @@ trait ParticipantFieldsTrait
                 $keyFdd['css']['postfix'][] = 'no-chosen';
                 $keyFdd['css']['postfix'][] = 'selectize';
                 $keyFdd['css']['postfix'][] = 'select-wide';
+
+                if (!empty($defaultValue)) {
+                  $keyFdd['display|ACP'] = $valueFdd['display|ACP'] ?? [];
+                  $keyFdd['display|ACP']['postfix'] =
+                    ($keyFdd['display|ACP']['postfix'] ?? '')
+                    . str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]', ], [ 'image-left-of-text', 'defaultValue', ], $defaultButton);
+                }
+
                 break;
             }
             break;
