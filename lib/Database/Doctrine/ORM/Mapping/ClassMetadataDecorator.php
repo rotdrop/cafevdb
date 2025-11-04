@@ -69,6 +69,16 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
   }
 
   /**
+   * @param bool $value
+   *
+   * @return void
+   */
+  public function setDebug(bool $value):void
+  {
+    $this->debug = $value;
+  }
+
+  /**
    * @return The wrapped object.
    */
   public function getWrappedObject():ClassMetadata
