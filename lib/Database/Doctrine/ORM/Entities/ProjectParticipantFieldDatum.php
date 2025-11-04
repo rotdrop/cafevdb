@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
@@ -447,6 +448,14 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     if ($defaultValue === null) {
       return null;
     }
+    $fieldContext = $field->getParticipationContext();
+    $participantContext = $participant->getParticipationContext();
+    if ($fieldContext != ParticipationContext::UNRESTRICTED
+        && $participantContext != ParticipationContext::UNRESTRICTED
+        && $fieldContext != $participantContext) {
+      return null;
+    }
+
     $datum = (new ProjectParticipantFieldDatum)
       ->setField($field)
       ->setProjectParticipant($participant)
