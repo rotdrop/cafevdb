@@ -26,9 +26,9 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use RuntimeException;
 
-use OCP\IRequest;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
-use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
@@ -47,6 +47,7 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 /**Table generator for Instruments table. */
 class ProjectParticipantFields extends PMETableViewBase
@@ -150,6 +151,14 @@ class ProjectParticipantFields extends PMETableViewBase
     ],
   ];
 
+  /**
+   * @var Uuid
+   *
+   * When creating new fields we need one instance-unique key for a single new
+   * option for multiplicty simple, groupofpeople and single.
+   */
+  protected UuidInterface $newOptionKey;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
@@ -194,6 +203,8 @@ class ProjectParticipantFields extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
+    $this->newOptionKey = Uuid::create();
+
     $template        = $this->template;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
@@ -664,6 +675,9 @@ class ProjectParticipantFields extends PMETableViewBase
           $dataType = $row[$this->queryField('data_type')]??null;
           list($entry,) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType, !empty($deleted));
           $key = $entry['key'];
+          if ($op == PHPMyEdit::OPERATION_ADD && empty($key)) {
+            $key = $this->newOptionKey;
+          }
           $name  = $this->pme->cgiDataName('data_options_' . $multiplicityVariant);
           $field = 'deposit';
           $value = htmlspecialchars($entry[$field]);
@@ -1376,14 +1390,14 @@ __EOT__;
     }
 
     // @todo is this still necessary?
-    $this->debug('ALLOWED BEFORE REEXPLODE '.print_r($allowed, true));
+    $this->debug('ALLOWED BEFORE REEXPLODE ' . print_r($allowed, true));
     $newValues['data_options'] =
       $this->participantFieldsService->explodeDataOptions(
         $this->participantFieldsService->implodeDataOptions($allowed), false);
 
     Util::unsetValue($changed, 'data_options');
 
-    $this->debug('ALLOWED BEFORE RESHAPE '.print_r($newValues['data_options'], true));
+    $this->debug('ALLOWED BEFORE RESHAPE ' . print_r($newValues['data_options'], true));
 
     // convert allowed values from array to table format as understood by
     // our PME legacy join table stuff.
@@ -1920,6 +1934,9 @@ __EOT__;
     $value = $entry['data'];
     if ($op === PHPMyEdit::OPERATION_DISPLAY) {
       return $this->currencyValue($value);
+    }
+    if ($op === PHPMyEdit::OPERATION_ADD && empty($entry['key'])) {
+      $entry['key'] = $this->newOptionKey;
     }
     $key = $entry['key'];
     $name  = $this->pme->cgiDataName('data_options_' . $multiplicityVariant);
