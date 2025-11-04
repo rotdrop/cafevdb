@@ -180,14 +180,25 @@ class ProjectParticipantEntityListener
    */
   public function prePersist(Entity $entity, ORMEvent\PrePersistEventArgs $eventArgs)
   {
-    /** @var Entities\ProjectParticipantField $field */
-    foreach ($entity->getProject()->getParticipantFields() as $field) {
-      $datum = Entities\ProjectParticipantFieldDatum::fromDefaultValue($field, $entity);
-      if ($datum === null) {
-        continue;
-      }
-      $this->entityManager->persist($datum);
-    }
+    $this->entityManager->registerPreCommitAction(
+      new GenericUndoable(
+        function() use ($entity) {
+          $needFlush = false;
+          /** @var Entities\ProjectParticipantField $field */
+          foreach ($entity->getProject()->getParticipantFields() as $field) {
+            $datum = Entities\ProjectParticipantFieldDatum::fromDefaultValue($field, $entity);
+            if ($datum === null) {
+              continue;
+            }
+            $this->entityManager->persist($datum);
+            $needFlush = true;
+          }
+          if ($needFlush) {
+            $this->entityManager->flush();
+          }
+        },
+      ),
+    );
   }
 
   /**

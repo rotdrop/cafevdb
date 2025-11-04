@@ -1187,7 +1187,7 @@ class ProjectParticipantFieldsService
 
   /**
    * Generate all user-folders with an optional README.md if the field has type
-   * CLOUD_FOLDER.
+   * CLOUD_FOLDER. Install also default values if any are given.
    *
    * @param Entities\ProjectParticipantField $field
    *
@@ -1195,6 +1195,34 @@ class ProjectParticipantFieldsService
    */
   public function handlePersistField(Entities\ProjectParticipantField $field):void
   {
+    $this->entityManager->registerPreCommitAction(
+      new Common\GenericUndoable(
+        function() use ($field) {
+          $defaultValue = $field->getDefaultValue();
+          if ($defaultValue === null) {
+            $this->logInfo('NO DEFAULT VALUE', [ 'exception' => new \Exception('BLAH') ]);
+            return;
+          }
+          $needFlush = false;
+          foreach ($field->getProject()->getParticipants() as $participant) {
+            $datum = Entities\ProjectParticipantFieldDatum::fromDefaultValue($field, $participant);
+            if ($datum === null) {
+              continue;
+            }
+            $this->entityManager->persist($datum);
+            $needFlush = true;
+          }
+          if ($needFlush) {
+            $this->entityManager->flush();
+          } else {
+            $this->logInfo('NEED FLUSH FALSE');
+          }
+        },
+        // no undo, the rollback will fix it and the entity manager is closed
+        // anyways after an error.
+      ),
+    );
+
     // check if we have to do something
     if ($field->getDataType() != DataType::CLOUD_FOLDER) {
       return;
