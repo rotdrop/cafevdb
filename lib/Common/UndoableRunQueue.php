@@ -86,7 +86,8 @@ class UndoableRunQueue
       throw new InvalidArgumentException($this->l->t('$action must be a Closure or an instance of "%s".', IUndoable::class));
     }
     $action->initialize($this->appContainer);
-    $this->actionQueue[] = $action; // at end
+    $this->actionQueue[] = $action;
+
     return $this;
   }
 
@@ -124,6 +125,7 @@ class UndoableRunQueue
     $this->runQueueExceptions = [];
     $this->undoExceptions = [];
     $this->undoStack = [];
+    usort($this->actionQueue, fn(IUndoable $a, IUndoable $b) =>  $a->getSortOrder() <=> $b->getSortOrder());
     while (!empty($this->actionQueue)) {
       try {
         $action = array_shift($this->actionQueue); // from front
