@@ -1,0 +1,26 @@
+diff --git a/node_modules/bootstrap/js/dist/tooltip.js b/node_modules/bootstrap/js/dist/tooltip.js
+index 033dd7b..1270cc7 100644
+--- a/node_modules/bootstrap/js/dist/tooltip.js
++++ b/node_modules/bootstrap/js/dist/tooltip.js
+@@ -252,8 +252,10 @@
+         if (!this._isHovered) {
+           this._disposePopper();
+         }
+-        this._element.removeAttribute('aria-describedby');
+-        EventHandler.trigger(this._element, this.constructor.eventName(EVENT_HIDDEN));
++        if (this._element) {
++          this._element.removeAttribute('aria-describedby');
++          EventHandler.trigger(this._element, this.constructor.eventName(EVENT_HIDDEN));
++        }
+       };
+       this._queueCallback(complete, this.tip, this._isAnimated());
+     }
+@@ -459,7 +461,7 @@
+       this._timeout = setTimeout(handler, timeout);
+     }
+     _isWithActiveTrigger() {
+-      return Object.values(this._activeTrigger).includes(true);
++      return Object.values(this._activeTrigger || {}).includes(true);
+     }
+     _getConfig(config) {
+       const dataAttributes = Manipulator.getDataAttributes(this._element);
