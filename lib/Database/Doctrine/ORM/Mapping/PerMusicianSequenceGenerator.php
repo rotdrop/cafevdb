@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Id\AbstractIdGenerator;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 class PerMusicianSequenceGenerator extends AbstractIdGenerator
 {
   /** {@inheritdoc} */
-  public function generate(EntityManager $entityManager, $entity)
+  public function generateId(EntityManagerInterface $entityManager, object|null $entity): mixed
   {
     if ($entity->getSequence() === null) {
       $musician = $entity->getMusician();

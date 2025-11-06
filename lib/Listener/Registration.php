@@ -56,6 +56,7 @@ class Registration
     self::registerListener($context, ContactsCardEventListener::class);
     self::registerListener($context, FileNodeListener::class);
     self::registerListener($context, FilesHooksListener::class);
+    self::registerListener($context, GroupListener::class);
     self::registerListener($context, GroupMembershipListener::class);
     self::registerListener($context, LoadAdditionalScriptsEventListener::class);
     self::registerListener($context, MailingListsAutoResponsesListener::class);

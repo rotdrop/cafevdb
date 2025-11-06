@@ -40,26 +40,6 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 
 use OCA\CAFEVDB\Crypto;
 
-// phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
-
-/**
- * This kludge is here as long as our slightly over-engineered
- * "missing-translation" event-handler is in action.
- *
- * @SuppressWarnings(PHPMD.ShortMethodName)
- */
-class FakeL10N
-{
-  /** {@inheritdoc} */
-  public function t($text, $parameters = [])
-  {
-    if (!is_array($parameters)) {
-      $parameters = [ $parameters ];
-    }
-    return vsprintf($text, $parameters);
-  }
-}
-
 /**
  * Handle some encryption tasks:
  *
@@ -140,7 +120,22 @@ class EncryptionService
   ) {
     $this->appCryptor = $cryptoFactory->getSymmetricCryptor();
 
-    $this->l = new FakeL10N(); // $l10n;
+    /**
+     * This kludge is here as long as our slightly over-engineered
+     * "missing-translation" event-handler is in action.
+     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
+     */
+    $this->l = new class {
+      /** {@inheritdoc} */
+      public function t($text, $parameters = [])
+      {
+        if (!is_array($parameters)) {
+          $parameters = [ $parameters ];
+        }
+        return vsprintf($text, $parameters);
+      }
+    };
 
     try {
       $userId = $userSession->getUser()->getUID();

@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-
 use OCP\AppFramework\IAppContainer;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventListener;
 use OCP\Group\Events\GroupChangedEvent;
 use OCP\Group\Events\GroupCreatedEvent;
 use OCP\IGroup;
@@ -44,7 +45,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
  * We also promote any display-name change to all backends.
  *
  * Deletion is ok, the core tries to delete the group in all backends. Just
- * that it stops with the first backend that succeeds upon creation, chaging
+ * that it stops with the first backend that succeeds upon creation, changing
  * display name and adding users.
  */
 class GroupListener implements IEventListener
