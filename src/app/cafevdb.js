@@ -166,89 +166,6 @@ const formSubmit = function(url, values, method) {
   form.submit();
 };
 
-const attachToolTip = function(selector, options) {
-  const defaultOptions = {
-    container: 'body',
-    html: true,
-    placement: 'auto',
-  };
-  options = { ...defaultOptions, ...options };
-  return $(selector).cafevTooltip(options);
-};
-
-/**
- * Exchange "tipsy" tooltips already attached to an element by
- * something different. This has to be done the "hard" way: first
- * unset data('tipsy') by setting it to null, then call the
- * tipsy-constructor with the new values.
- *
- * @param {string} selector jQuery element selector
- *
- * @param {object} options Tool-tip options
- *
- * @param {jQuery} container Optional container containing selected
- * elements, i.e. tool-tip stuff will be applied to all elements
- * inside @a container matching @a selector.
- */
-const applyToolTips = function(selector, options, container) {
-  let element;
-  if (selector instanceof jQuery) {
-    element = selector;
-  } else if (typeof container !== 'undefined') {
-    element = container.find(selector);
-  } else {
-    element = $(selector);
-  }
-  // remove any pending tooltip from the document
-  $.fn.cafevTooltip.remove();
-
-  // fetch suitable options from the elements class attribute
-  const classOptions = {
-    placement: 'auto',
-    html: true,
-  };
-  const classAttr = element.attr('class');
-  let extraClass = false;
-  if (options.cssclass) {
-    extraClass = options.cssclass;
-  }
-  if (typeof classAttr !== 'undefined') {
-    if (classAttr.match(/tooltip-off/) !== null) {
-      $(this).cafevTooltip('disable');
-      return;
-    }
-    const tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
-    if (tooltipClasses) {
-      for (let idx = 0; idx < tooltipClasses.length; ++idx) {
-        const tooltipClass = tooltipClasses[idx];
-        const placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
-        if (placement && placement.length === 2 && placement[1].length > 0) {
-          classOptions.placement = placement[1];
-          continue;
-        }
-        extraClass = tooltipClass;
-      }
-    }
-  }
-  if (typeof options === 'undefined') {
-    options = classOptions;
-  } else {
-    // supplied options override class options
-    options = { ...classOptions, ...options };
-  }
-
-  if (extraClass) {
-    options.template = '<div class="tooltip '
-      + extraClass
-      + '" role="tooltip">'
-      + '<div class="tooltip-arrow"></div>'
-      + '<div class="tooltip-inner"></div>'
-      + '</div>';
-  }
-  element.cafevTooltip('destroy'); // remove any already installed stuff
-  element.cafevTooltip(options); // make it new
-};
-
 const toolTipsOnOff = function(onOff) {
   onOff = !!onOff;
   if (onOff === globalState.toolTipsEnabled) {
@@ -456,8 +373,6 @@ export {
   modalWaitNotification,
   formSubmit,
   snapperClose,
-  attachToolTip,
-  applyToolTips,
   toolTipsOnOff,
   toolTipsInit,
   toolTipsEnabled,
