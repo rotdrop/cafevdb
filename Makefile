@@ -298,7 +298,7 @@ WEBPACK_DEPS =\
  $(JS_FILES)\
  $(L10N_FILES)\
  $(TS_APP_CONFIG)\
- $(TS_TYPE_FILES)
+ ts-type-files
 
 include $(DEV_LIB_DIR)/makefile/npm.mk
 
