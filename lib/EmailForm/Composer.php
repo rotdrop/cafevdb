@@ -3583,7 +3583,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    */
   private function exportMessages(?array $recipients = null):?array
   {
-    // @todo yield needs more care concerning error management
+    // @todo yield needs more care concerning error management, but would be
+    // preferrable as there can be many messages and each message is costly to
+    // generate.
     $messages = [];
 
     $this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT] =
@@ -3752,6 +3754,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
   /**
    * Generate a stream-context for use in link validation.
+   *
+   * @return mixed
    */
   private function linkValidationContext():mixed
   {
@@ -4219,7 +4223,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    *
    * @return void
    *
-   * @todo unify timezone and date and time formatting.
+   * @todo unify timezone and date and time formatting and perhaps remove the
+   * obsolete strftime() usage.
    */
   private function generateGlobalSubstitutionHandlers()
   {
@@ -4361,8 +4366,6 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
        * ${GLOBAL::DATE:dateformat:datestring} where dateformat
        * default to d.m.Y (see strftime) and datestring can be
        * everything understood by strtotime.
-       *
-       * @todo Revise concerning timezone and locale settings
        */
       self::t('DATE') => function(array $arg) {
         return $this->dateSubstitution($arg, self::GLOBAL_NAMESPACE);
@@ -4959,8 +4962,6 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * @param array $fileAttach List of files @b not to be removed.
    *
    * @return bool $this->executionStatus
-   *
-   * @todo use cloud storage
    */
   public function cleanTemporaries(array $fileAttach = []):bool
   {
