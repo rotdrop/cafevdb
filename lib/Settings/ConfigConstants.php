@@ -123,7 +123,7 @@ class ConfigConstants
   public const BANK_ACCOUNT_IBAN = 'bankAccountIBAN';
   public const BANK_ACCOUNT_BLZ = 'bankAccountBLZ';
   public const BANK_ACCOUNT_BIC = 'bankAccountBIC';
-  public const BANK_ACCOUNT_NAME = 'bankAccountBankName';
+  public const BANK_ACCOUNT_BANK_NAME = 'bankAccountBankName';
   public const BANK_ACCOUNT_CREDITOR_IDENTIFIER = 'bankAccountCreditorIdentifier';
   public const BANK_ACCOUNT_BANK_HOLIDAYS = 'bankAccountBankHolidays';
 
@@ -132,7 +132,7 @@ class ConfigConstants
     self::BANK_ACCOUNT_IBAN,
     self::BANK_ACCOUNT_BLZ,
     self::BANK_ACCOUNT_BIC,
-    self::BANK_ACCOUNT_NAME,
+    self::BANK_ACCOUNT_BANK_NAME,
     self::BANK_ACCOUNT_CREDITOR_IDENTIFIER,
     self::BANK_ACCOUNT_BANK_HOLIDAYS
   ];
@@ -271,6 +271,9 @@ class ConfigConstants
   public const ANNOUNCEMENTS_MAILING_LIST_KEY = 'announcementsMailingList';
   /** @var string Config-key for the announcements mailing list */
   public const ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY = 'announcementsMailingListName';
+
+  /** @var string Config-key for bulk-email message composition. */
+  public const BULK_EMAIL_SUBJECT_TAG = 'bulkEmailSubjectTag';
 
   /** @var string Config-key for pre-send validation. */
   public const PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY = 'preSendValidationExternalLinksSSLVerify';
