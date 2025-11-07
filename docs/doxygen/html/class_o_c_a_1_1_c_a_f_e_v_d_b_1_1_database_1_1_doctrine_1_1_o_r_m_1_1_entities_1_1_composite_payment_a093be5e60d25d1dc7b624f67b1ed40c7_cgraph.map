@@ -1,0 +1,5 @@
+<map id="getReceivablesDueDate" name="getReceivablesDueDate">
+<area shape="rect" id="Node000001" title="Return the maximum due&#45;date of all underlying receivables." alt="" coords="5,21,169,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a9816f1677e0a00492792cdab5b523555" title="Get receivable." alt="" coords="217,5,422,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,32,201,32,201,37,169,37"/>
+</map>

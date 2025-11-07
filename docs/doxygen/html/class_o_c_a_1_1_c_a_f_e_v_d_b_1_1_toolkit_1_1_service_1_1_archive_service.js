@@ -13,7 +13,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service =
     [ "isOpen", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ac21d0b99fadc55cd5e0b06aeecc73d26", null ],
     [ "open", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ad1d53e5cbdc6d39c917e86f2ae794aeb", null ],
     [ "restoreProcessEnvironment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a87dfcaf2c7108c861a562438f8810971", null ],
-    [ "setL10N", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#af90f86d01e7d58d8929f5b654a9ecaa5", null ],
     [ "setProcessEnvironment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a56b766aecb57ccbad85c7b5383311091", null ],
     [ "setSizeLimit", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ae8ccdc43698cdebeb934548ef7875c82", null ],
     [ "t", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ac4bb04636b9ff49d1eb1bce172994d36", null ],

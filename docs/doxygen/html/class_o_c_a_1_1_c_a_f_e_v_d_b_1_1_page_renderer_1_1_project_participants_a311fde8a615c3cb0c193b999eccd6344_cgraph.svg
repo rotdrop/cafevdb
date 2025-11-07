@@ -225,6 +225,25 @@ var sectionId = 'dynsection-14';
 </a>
 </g>
 </g>
+<!-- Node9 -->
+<g id="Node000009" class="node">
+<title>Node9</title>
+<g id="a_Node000009"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" target="_top" xlink:title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words.">
+<polygon fill="white" stroke="#666666" points="584.25,-32 452.75,-32 452.75,0 584.25,0 584.25,-32"/>
+<text text-anchor="start" x="460.75" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\Common</text>
+<text text-anchor="middle" x="518.5" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">\Util\camelCaseToDashes</text>
+</a>
+</g>
+</g>
+<!-- Node8&#45;&gt;Node9 -->
+<g id="edge11_Node000008_Node000009" class="edge">
+<title>Node8&#45;&gt;Node9</title>
+<g id="a_edge11_Node000008_Node000009"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M405.76,-16C417.6,-16 429.55,-16 441.02,-16"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="440.79,-19.5 450.79,-16 440.79,-12.5 440.79,-19.5"/>
+</a>
+</g>
+</g>
 </g>
 </svg>
 

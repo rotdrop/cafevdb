@@ -1,5 +1,5 @@
 <map id="defineJoinStructure" name="defineJoinStructure">
-<area shape="rect" id="Node000001" title="Define a basic join&#45;structure for phpMyEdit by using the information from self::$joinStructure." alt="" coords="303,280,436,307"/>
+<area shape="rect" id="Node000001" title="Define a basic join&#45;structure for phpMyEdit by using the information from self\$joinStructure." alt="" coords="303,280,436,307"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,5,233,48"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="360,266,347,221,326,166,295,110,276,84,253,62,232,49,235,44,256,58,280,81,300,107,331,164,353,219,365,265"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_insurances.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,72,233,115"/>

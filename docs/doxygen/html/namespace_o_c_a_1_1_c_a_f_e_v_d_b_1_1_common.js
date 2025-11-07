@@ -16,6 +16,8 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common =
     [ "NumberFormatter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter" ],
     [ "PHPMailer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_p_h_p_mailer.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_p_h_p_mailer" ],
     [ "PlainFileProgressStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_plain_file_progress_status.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_plain_file_progress_status" ],
+    [ "RationalNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number" ],
+    [ "Transliterator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_transliterator.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_transliterator" ],
     [ "UndoableFileRemove", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_remove.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_remove" ],
     [ "UndoableFileRename", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename" ],
     [ "UndoableFileReplace", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_replace.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_replace" ],

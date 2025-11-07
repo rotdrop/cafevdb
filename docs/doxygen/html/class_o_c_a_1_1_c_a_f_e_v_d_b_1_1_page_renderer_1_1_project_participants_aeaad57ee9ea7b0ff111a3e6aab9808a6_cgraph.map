@@ -13,4 +13,6 @@
 <area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="341,151,339,141,348,132,366,126,394,124,424,126,442,133,440,138,423,132,394,129,367,131,350,136,344,142,346,149"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a33027424113469f92dd6e70bcd90953f" title="Un&#45;escape delimiters in the given value." alt="" coords="588,151,763,193"/>
 <area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="482,169,572,169,572,175,482,175"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words." alt="" coords="588,217,763,260"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="525,236,572,236,572,241,525,241"/>
 </map>

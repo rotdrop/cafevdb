@@ -22,7 +22,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Slice the given entity id by the given keys and return a composite key joined with self::COMP_KEY_SEP...">
+<g id="a_Node000001"><a xlink:title="Slice the given entity id by the given keys and return a composite key joined with self\COMP_KEY_SEP.">
 <polygon fill="#999999" stroke="#666666" points="489,-122 389,-122 389,-102 489,-102 489,-122"/>
 <text text-anchor="middle" x="439" y="-108.5" font-family="Helvetica,sans-Serif" font-size="10.00">compositeKeySlice</text>
 </a>

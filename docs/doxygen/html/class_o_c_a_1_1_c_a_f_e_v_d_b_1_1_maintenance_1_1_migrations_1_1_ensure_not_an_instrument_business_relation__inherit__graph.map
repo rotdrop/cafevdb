@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title="Ensure that a virtual &quot;not&#45;an&#45;instrument&quot; instrument family exists and add a virtual &quot;business relati..." alt="" coords="5,155,221,197"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250601120000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="31,245,195,272"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="116,213,116,245,110,245,110,213"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html" title="Abstract migration class, the derived classes have to fill AbstractMigration::$sql." alt="" coords="51,80,175,107"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html" title="Abstract migration class, the derived classes have to fill AbstractMigration\$sql." alt="" coords="51,80,175,107"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,122,116,154,110,154,110,122"/>
 <area shape="rect" id="Node000003" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html" title="Uni&#45;directional migrations for the orchestra DB." alt="" coords="74,5,152,32"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,48,116,80,110,80,110,48"/>

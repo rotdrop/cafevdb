@@ -4,6 +4,7 @@ var dir_095beb5f4e18b81796dd7ad907492db1 =
     [ "AqBankingBulkTransactionExporter.php", "_aq_banking_bulk_transaction_exporter_8php_source.html", null ],
     [ "DoNothingReceivablesGenerator.php", "_do_nothing_receivables_generator_8php_source.html", null ],
     [ "FinanceService.php", "_finance_service_8php_source.html", null ],
+    [ "GnuCashBulkTransactionBalancingItemsExporter.php", "_gnu_cash_bulk_transaction_balancing_items_exporter_8php_source.html", null ],
     [ "GnuCashConnectorService.php", "_gnu_cash_connector_service_8php_source.html", null ],
     [ "IBulkTransactionExporter.php", "_i_bulk_transaction_exporter_8php_source.html", null ],
     [ "InstrumentInsuranceReceivablesGenerator.php", "_instrument_insurance_receivables_generator_8php_source.html", null ],

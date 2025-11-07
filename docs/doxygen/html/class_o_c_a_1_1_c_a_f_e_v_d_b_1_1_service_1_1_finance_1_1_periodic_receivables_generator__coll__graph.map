@@ -1,7 +1,11 @@
 <map id="PeriodicReceivablesGenerator" name="PeriodicReceivablesGenerator">
-<area shape="rect" id="Node000001" title="Always generate a new payment request." alt="" coords="12,155,209,181"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_abstract_receivables_generator.html" title="Base class for the specific receivable generators." alt="" coords="11,80,210,107"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,122,113,154,108,154,108,122"/>
+<area shape="rect" id="Node000001" title="Always generate a new payment request." alt="" coords="101,180,298,207"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_abstract_receivables_generator.html" title="Base class for the specific receivable generators." alt="" coords="11,81,210,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,118,190,178,186,182,130,121"/>
 <area shape="rect" id="Node000003" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_recurring_receivables_generator.html" title="Generate recurring receivables and manifest them as recurring Entities\ProjectParticipantField entity..." alt="" coords="5,5,216,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,48,113,80,108,80,108,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,47,113,81,108,81,108,47"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html" title="Rational numbers, exact fractions." alt="" coords="234,81,350,108"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="271,121,213,182,210,178,268,117"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="257,5,326,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="294,47,294,81,289,81,289,47"/>
 </map>

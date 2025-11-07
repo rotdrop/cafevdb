@@ -1,6 +1,11 @@
 var dir_b2a75fba6b19aafaa483ce8d873283c2 =
 [
+    [ "AbstractDecimalRationalType.php", "_abstract_decimal_rational_type_8php_source.html", null ],
     [ "AbstractEnumType.php", "_abstract_enum_type_8php_source.html", null ],
+    [ "DecimalRationalMonetaryType.php", "_decimal_rational_monetary_type_8php_source.html", null ],
+    [ "DecimalRationalP2S2Type.php", "_decimal_rational_p2_s2_type_8php_source.html", null ],
+    [ "DecimalRationalP4S4Type.php", "_decimal_rational_p4_s4_type_8php_source.html", null ],
+    [ "DecimalRationalP7S2Type.php", "_decimal_rational_p7_s2_type_8php_source.html", null ],
     [ "EnumAccessPermission.php", "_enum_access_permission_8php_source.html", null ],
     [ "EnumAttachmentOrigin.php", "_enum_attachment_origin_8php_source.html", null ],
     [ "EnumDataTransformation.php", "_enum_data_transformation_8php_source.html", null ],

@@ -1,7 +1,9 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer =
 [
+    [ "addBalancingItemsData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#ac9261ab9d616cfa0d6fa7265a3c0b54d", null ],
     [ "addPreNotificationEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#aa45d4ba53ddb22594f646450e4938787", null ],
     [ "addTransactionData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#aceea41102f7c182b5dcf827eb616ff5f", null ],
+    [ "getBalancingItemsData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#ab4651fa0be7baa3a463a9ed5ede0dcb9", null ],
     [ "getDueDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#ac59eecbef9a8d94b3c0948ce371742d5", null ],
     [ "getDueEventUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#a08f1479174c3370bd7e3286752b2c50d", null ],
     [ "getDueEventUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#a96733525beeefe97a02f595d1a9855c9", null ],
@@ -17,7 +19,9 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "getSubmissionTaskUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#af786dc0a11f02a98028933641483ba2f", null ],
     [ "getSubmissionTaskUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#a736b5f5201c83c7e0017d5b068377e1a", null ],
     [ "getSubmitDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#a6ddc0cfe0cba540c10983fa136d58167", null ],
+    [ "removeBalancingItemsData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#abf5bac66243b8e763c1d3a52f5c25c59", null ],
     [ "removeTransactionData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#a4971ad78c62bfb9f8be8d009e7785d2e", null ],
+    [ "setBalancingItemsData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#a46461770aad2658bca3ea9539b1c3348", null ],
     [ "setDueDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#ac79670cd30ec3c78ad97a8b8f50218b7", null ],
     [ "setDueEventUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#afd5ee1e1b459a46932ae2614915abed3", null ],
     [ "setDueEventUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#a510bdbfdd5247d9bb4df8cf03a49a209", null ],
@@ -30,5 +34,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setSubmissionTaskUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#a042bbb69def927dd30b1c87729c0548a", null ],
     [ "setSubmissionTaskUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#a951324d968df496e734ecc49353f5a88", null ],
     [ "setSubmitDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#a871220d595693ec53a364ee4b85e0974", null ],
+    [ "totals", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#ad00aef3585d6bbf4514b2d9505791ac1", null ],
     [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#afe55eae96aed06d16232a3b56fcf1ad3", null ]
 ];

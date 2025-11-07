@@ -1,0 +1,9 @@
+<map id="divEq" name="divEq">
+<area shape="rect" id="Node000001" title="Divide the current instance by the given argument and assign the result to $this." alt="" coords="5,31,60,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#ae01350f1c15f981356909ec29c53d846" title="Replace this instance by the given argument." alt="" coords="108,5,167,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="60,35,92,27,93,32,61,40"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#aa91a3e99e460d2af449ac556afbd3187" title="Shortcut for RationalNumber\divide()." alt="" coords="118,56,157,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="61,48,104,59,102,64,60,53"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a45eaba64c92c3d85f1253eeb14d93ec8" title="{}" alt="" coords="215,56,270,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="157,67,199,67,199,72,157,72"/>
+</map>

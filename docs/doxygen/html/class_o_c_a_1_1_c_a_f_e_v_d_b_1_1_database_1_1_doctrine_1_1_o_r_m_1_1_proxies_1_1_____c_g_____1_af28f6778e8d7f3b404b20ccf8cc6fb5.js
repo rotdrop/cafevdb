@@ -13,9 +13,10 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "setHint", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#aec1dd6bd73630c3db120af44be4ca4c0", null ],
     [ "setInvoices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#acc6484678c39494291ceb717748a5fea", null ],
     [ "setLaw", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#aff2fb24a25c5ad700a4166f60aab12bc", null ],
-    [ "setRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#a6fafb58c18a0f9b83f7d7207f8f42f5e", null ],
+    [ "setRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#a890d5b46634b3a8b3b63c96effe65b8b", null ],
     [ "setTaxExemptionNotices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#ad7ab81227e3920a676b98ada9f4a295c", null ],
     [ "setTaxType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#ad2232648d3b791c8384bedb8e3438f96", null ],
     [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
-    [ "$country", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#a40ac1973a558490bc2a8b8669c8abffc", null ]
+    [ "$country", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#a40ac1973a558490bc2a8b8669c8abffc", null ],
+    [ "$rate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#a9e90bbe291813c4e9dbdb58db928a814", null ]
 ];

@@ -1,7 +1,7 @@
 <map id="OrganizationalRolesService" name="OrganizationalRolesService">
-<area shape="rect" id="Node000001" title="Check for authorization and supply contact information for several administrative roles." alt="" coords="5,172,188,199"/>
+<area shape="rect" id="Node000001" title="Check for authorization and supply contact information for several administrative roles." alt="" coords="5,180,188,207"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html" title="Projects." alt="" coords="65,81,128,108"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,124,99,171,94,171,94,124"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,124,99,180,94,180,94,124"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="48,5,145,32"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,47,99,81,94,81,94,47"/>
 </map>

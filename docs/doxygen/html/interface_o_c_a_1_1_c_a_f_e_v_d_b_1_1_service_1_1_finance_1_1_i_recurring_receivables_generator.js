@@ -1,5 +1,6 @@
 var interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_recurring_receivables_generator =
 [
+    [ "balancingAccountSlug", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_recurring_receivables_generator.html#ae9f456dd6511091a4d9e85db5484901c", null ],
     [ "bind", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_recurring_receivables_generator.html#a321565924f86a84c114503164ad4008b", null ],
     [ "dueDate", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_recurring_receivables_generator.html#a06995119cd478dfdcfa64d3f7367d646", null ],
     [ "generateReceivables", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_recurring_receivables_generator.html#a54792b75ff728b792f40c9072ca716eb", null ],

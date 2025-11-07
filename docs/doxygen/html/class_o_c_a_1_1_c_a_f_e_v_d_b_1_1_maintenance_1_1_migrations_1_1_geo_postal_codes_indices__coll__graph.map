@@ -1,0 +1,7 @@
+<map id="GeoPostalCodesIndices" name="GeoPostalCodesIndices">
+<area shape="rect" id="Node000001" title="Get rid of some &quot;slow query&quot; complaints." alt="" coords="5,155,168,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html" title="Abstract migration class, the derived classes have to fill AbstractMigration\$sql." alt="" coords="25,80,148,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,122,89,154,84,154,84,122"/>
+<area shape="rect" id="Node000003" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html" title="Uni&#45;directional migrations for the orchestra DB." alt="" coords="47,5,126,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="89,48,89,80,84,80,84,48"/>
+</map>

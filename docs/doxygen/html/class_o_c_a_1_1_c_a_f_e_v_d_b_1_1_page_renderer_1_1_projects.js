@@ -51,7 +51,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects =
     [ "participantFieldDataTypeNames", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#a70922014838dcf52b61a93ee8aa38281", null ],
     [ "participantFieldMultiplicityNames", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#a27fdf3b277e6c340b90d611c80a3722e", null ],
     [ "preTrigger", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#ad2510cc19f162d29f04d2fe6d4d468df", null ],
-    [ "projectActionMenu", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#ad644e8d2f7f5d898d2de3ad484589c3f", null ],
     [ "projectProgram", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#a664b70abef5ee04e7cc265b3502704bb", null ],
     [ "render", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#ab91557ae1e08e1183c76c9ce39edfe33", null ],
     [ "requiredPermissions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#aad728d242612a5f3f601a1a334ffe435", null ],

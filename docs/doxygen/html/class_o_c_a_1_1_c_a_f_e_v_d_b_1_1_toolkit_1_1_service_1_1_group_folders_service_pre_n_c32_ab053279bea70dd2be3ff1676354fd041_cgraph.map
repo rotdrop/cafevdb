@@ -1,0 +1,10 @@
+<map id="searchFolders" name="searchFolders">
+<area shape="rect" id="Node000001" title="Return all shared folders matching the given regexp." alt="" coords="5,39,109,65"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="157,13,250,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,40,141,35,142,40,109,46"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="298,56,458,99"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="109,53,283,67,282,72,109,59"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="298,5,458,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="250,22,283,20,283,26,250,27"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="251,38,288,49,287,54,250,43"/>
+</map>

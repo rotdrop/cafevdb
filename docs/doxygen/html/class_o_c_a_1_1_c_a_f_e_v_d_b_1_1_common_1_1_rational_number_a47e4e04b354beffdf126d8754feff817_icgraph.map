@@ -1,0 +1,7 @@
+<map id="fromDecimal" name="fromDecimal">
+<area shape="rect" id="Node000001" title="Initialize an instance from a &quot;vanilla&quot; decimal string." alt="" coords="252,79,347,105"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_decimal_rational_type.html#a7329c43c0c089d47abc2818fccca545e" title="{}" alt="" coords="5,5,204,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="236,79,203,70,205,65,237,74"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_decimal_rational_type.html#a02576e237bf410008f15a806928d2374" title=" " alt="" coords="5,104,204,179"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="237,110,205,119,203,114,236,105"/>
+</map>

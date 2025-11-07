@@ -1,0 +1,9 @@
+<map id="ensureFile" name="ensureFile">
+<area shape="rect" id="Node000001" title="Ensure the given file exists, if it does not, create it." alt="" coords="5,31,87,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a43e2b8de357718737d0fa45498269a3f" title="Ensure a folder exists withtout throwing an exception." alt="" coords="135,31,231,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,41,119,41,119,47,87,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a330e8edf0ecc220b330e6e6c37058e49" title="Get the folder with name $name." alt="" coords="282,5,357,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="231,32,266,26,267,31,232,38"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a31956852c940764b8b48f73a7c547c67" title="Create a new folder named $name." alt="" coords="279,56,360,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="232,50,264,56,263,62,231,56"/>
+</map>

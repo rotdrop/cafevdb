@@ -67,7 +67,7 @@ var sectionId = 'dynsection-9';
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ad92070c3daaf56e870af042e4ebf3b78" target="_top" xlink:title="Slice the given entity id by the given keys and return a composite key joined with self::COMP_KEY_SEP...">
+<g id="a_Node000002"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ad92070c3daaf56e870af042e4ebf3b78" target="_top" xlink:title="Slice the given entity id by the given keys and return a composite key joined with self\COMP_KEY_SEP.">
 <polygon fill="white" stroke="#666666" points="269.38,-516 169.38,-516 169.38,-496 269.38,-496 269.38,-516"/>
 <text text-anchor="middle" x="219.38" y="-502.5" font-family="Helvetica,sans-Serif" font-size="10.00">compositeKeySlice</text>
 </a>
@@ -196,7 +196,7 @@ var sectionId = 'dynsection-9';
 <!-- Node11 -->
 <g id="Node000011" class="node">
 <title>Node11</title>
-<g id="a_Node000011"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a52152c1de369b4179e8e391899eca24a" target="_top" xlink:title="Inverse of self::joinTableFieldName().">
+<g id="a_Node000011"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a52152c1de369b4179e8e391899eca24a" target="_top" xlink:title="Inverse of self\joinTableFieldName().">
 <polygon fill="white" stroke="#666666" points="257,-208 181.75,-208 181.75,-188 257,-188 257,-208"/>
 <text text-anchor="middle" x="219.38" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00">joinTableField</text>
 </a>
@@ -229,32 +229,12 @@ var sectionId = 'dynsection-9';
 </a>
 </g>
 </g>
-<!-- Node13 -->
-<g id="Node000013" class="node">
-<title>Node13</title>
-<g id="a_Node000013"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" target="_top" xlink:title="The name of the master join table field which triggers PME to actually do the join.">
-<polygon fill="white" stroke="#666666" points="285.12,-132 153.62,-132 153.62,-112 285.12,-112 285.12,-132"/>
-<text text-anchor="middle" x="219.38" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">joinTableMasterFieldName</text>
-</a>
-</g>
-</g>
-<!-- Node1&#45;&gt;Node13 -->
-<g id="edge17_Node000001_Node000013" class="edge">
-<title>Node1&#45;&gt;Node13</title>
-<g id="a_edge17_Node000001_Node000013"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M63.92,-256.73C75.4,-232.68 107.36,-172.37 152.5,-141 154.45,-139.65 156.49,-138.39 158.6,-137.22"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="159.97,-140.45 167.52,-133.02 156.98,-134.11 159.97,-140.45"/>
-</a>
-</g>
-</g>
 <!-- Node14 -->
 <g id="Node000014" class="node">
 <title>Node14</title>
-<g id="a_Node000014"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#ac2f42dfc2f9ac43830897947d86cf3bc" target="_top" xlink:title="Enable or disable writing to the change&#45;log table.">
-<polygon fill="white" stroke="#666666" points="286.25,-94 152.5,-94 152.5,-50 286.25,-50 286.25,-94"/>
-<text text-anchor="start" x="160.5" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\Database</text>
-<text text-anchor="start" x="160.5" y="-68.5" font-family="Helvetica,sans-Serif" font-size="10.00">\Legacy\PME\PHPMyEdit</text>
-<text text-anchor="middle" x="219.38" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">\setLogging</text>
+<g id="a_Node000014"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" target="_top" xlink:title="The name of the master join table field which triggers PME to actually do the join.">
+<polygon fill="white" stroke="#666666" points="285.12,-132 153.62,-132 153.62,-112 285.12,-112 285.12,-132"/>
+<text text-anchor="middle" x="219.38" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">joinTableMasterFieldName</text>
 </a>
 </g>
 </g>
@@ -262,18 +242,19 @@ var sectionId = 'dynsection-9';
 <g id="edge18_Node000001_Node000014" class="edge">
 <title>Node1&#45;&gt;Node14</title>
 <g id="a_edge18_Node000001_Node000014"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M62.58,-256.75C72.19,-228.62 102.51,-149.28 152.5,-103 153.13,-102.42 153.77,-101.85 154.42,-101.29"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="156.35,-104.21 162.23,-95.4 152.14,-98.62 156.35,-104.21"/>
+<path fill="none" stroke="#63b8ff" d="M63.92,-256.73C75.4,-232.68 107.36,-172.37 152.5,-141 154.45,-139.65 156.49,-138.39 158.6,-137.22"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="159.97,-140.45 167.52,-133.02 156.98,-134.11 159.97,-140.45"/>
 </a>
 </g>
 </g>
 <!-- Node15 -->
 <g id="Node000015" class="node">
 <title>Node15</title>
-<g id="a_Node000015"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a62e9094de93176fae4478b7eae96d61f" target="_top" xlink:title="Unset all array elements with value $value.">
-<polygon fill="white" stroke="#666666" points="285.12,-32 153.62,-32 153.62,0 285.12,0 285.12,-32"/>
-<text text-anchor="start" x="161.62" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\Common</text>
-<text text-anchor="middle" x="219.38" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">\Util\unsetValue</text>
+<g id="a_Node000015"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#ac2f42dfc2f9ac43830897947d86cf3bc" target="_top" xlink:title="Enable or disable writing to the change&#45;log table.">
+<polygon fill="white" stroke="#666666" points="286.25,-94 152.5,-94 152.5,-50 286.25,-50 286.25,-94"/>
+<text text-anchor="start" x="160.5" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\Database</text>
+<text text-anchor="start" x="160.5" y="-68.5" font-family="Helvetica,sans-Serif" font-size="10.00">\Legacy\PME\PHPMyEdit</text>
+<text text-anchor="middle" x="219.38" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">\setLogging</text>
 </a>
 </g>
 </g>
@@ -281,6 +262,25 @@ var sectionId = 'dynsection-9';
 <g id="edge19_Node000001_Node000015" class="edge">
 <title>Node1&#45;&gt;Node15</title>
 <g id="a_edge19_Node000001_Node000015"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M62.58,-256.75C72.19,-228.62 102.51,-149.28 152.5,-103 153.13,-102.42 153.77,-101.85 154.42,-101.29"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="156.35,-104.21 162.23,-95.4 152.14,-98.62 156.35,-104.21"/>
+</a>
+</g>
+</g>
+<!-- Node16 -->
+<g id="Node000016" class="node">
+<title>Node16</title>
+<g id="a_Node000016"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a62e9094de93176fae4478b7eae96d61f" target="_top" xlink:title="Unset all array elements with value $value.">
+<polygon fill="white" stroke="#666666" points="285.12,-32 153.62,-32 153.62,0 285.12,0 285.12,-32"/>
+<text text-anchor="start" x="161.62" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\Common</text>
+<text text-anchor="middle" x="219.38" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">\Util\unsetValue</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node16 -->
+<g id="edge20_Node000001_Node000016" class="edge">
+<title>Node1&#45;&gt;Node16</title>
+<g id="a_edge20_Node000001_Node000016"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M60.59,-256.61C65.67,-221.32 86.9,-104.75 152.5,-41 153.13,-40.39 153.77,-39.8 154.42,-39.22"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="156.44,-42.08 162.45,-33.36 152.31,-36.43 156.44,-42.08"/>
 </a>
@@ -366,6 +366,25 @@ var sectionId = 'dynsection-9';
 <g id="a_edge14_Node000010_Node000010"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M193.77,-246.34C182.83,-254.98 191.37,-264 219.38,-264 234.69,-264 244.18,-261.3 247.85,-257.44"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="251.25,-256.61 245.36,-247.8 244.48,-258.36 251.25,-256.61"/>
+</a>
+</g>
+</g>
+<!-- Node13 -->
+<g id="Node000013" class="node">
+<title>Node13</title>
+<g id="a_Node000013"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" target="_top" xlink:title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words.">
+<polygon fill="white" stroke="#666666" points="453.75,-176 322.25,-176 322.25,-144 453.75,-144 453.75,-176"/>
+<text text-anchor="start" x="330.25" y="-162.5" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\Common</text>
+<text text-anchor="middle" x="388" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">\Util\camelCaseToDashes</text>
+</a>
+</g>
+</g>
+<!-- Node12&#45;&gt;Node13 -->
+<g id="edge17_Node000012_Node000013" class="edge">
+<title>Node12&#45;&gt;Node13</title>
+<g id="a_edge17_Node000012_Node000013"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M270.37,-160C283.02,-160 296.91,-160 310.55,-160"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="310.4,-163.5 320.4,-160 310.4,-156.5 310.4,-163.5"/>
 </a>
 </g>
 </g>

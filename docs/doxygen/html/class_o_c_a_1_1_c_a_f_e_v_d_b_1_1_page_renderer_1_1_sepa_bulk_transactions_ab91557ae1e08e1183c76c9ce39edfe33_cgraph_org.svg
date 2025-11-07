@@ -58,7 +58,7 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" target="_top" xlink:title="Define a basic join&#45;structure for phpMyEdit by using the information from self::$joinStructure.">
+<g id="a_Node000005"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" target="_top" xlink:title="Define a basic join&#45;structure for phpMyEdit by using the information from self\$joinStructure.">
 <polygon fill="white" stroke="#666666" points="275.38,-170.27 80.12,-170.27 80.12,-138.27 275.38,-138.27 275.38,-170.27"/>
 <text text-anchor="start" x="88.12" y="-156.77" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
 <text text-anchor="middle" x="177.75" y="-144.77" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\defineJoinStructure</text>
@@ -111,20 +111,20 @@
 </a>
 </g>
 </g>
-<!-- Node9 -->
-<g id="Node000009" class="node">
-<title>Node9</title>
-<g id="a_Node000009"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a4bc3294be95e06a40ae3bdc7d5419749" target="_top" xlink:title="Generate a join&#45;table field, given join&#45;table and field name.">
+<!-- Node10 -->
+<g id="Node000010" class="node">
+<title>Node10</title>
+<g id="a_Node000010"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a4bc3294be95e06a40ae3bdc7d5419749" target="_top" xlink:title="Generate a join&#45;table field, given join&#45;table and field name.">
 <polygon fill="white" stroke="#666666" points="276.5,-82.27 79,-82.27 79,-50.27 276.5,-50.27 276.5,-82.27"/>
 <text text-anchor="start" x="87" y="-68.77" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
 <text text-anchor="middle" x="177.75" y="-56.77" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\makeJoinTableField</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node9 -->
-<g id="edge10_Node000001_Node000009" class="edge">
-<title>Node1&#45;&gt;Node9</title>
-<g id="a_edge10_Node000001_Node000009"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node10 -->
+<g id="edge11_Node000001_Node000010" class="edge">
+<title>Node1&#45;&gt;Node10</title>
+<g id="a_edge11_Node000001_Node000010"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M33.79,-122.07C44.65,-112.78 61.89,-99.31 79,-91.27 82.52,-89.62 86.16,-88.07 89.87,-86.61"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="90.88,-89.97 99.08,-83.26 88.49,-83.39 90.88,-89.97"/>
 </a>
@@ -187,59 +187,59 @@
 </a>
 </g>
 </g>
-<!-- Node9&#45;&gt;Node3 -->
-<g id="edge15_Node000009_Node000003" class="edge">
-<title>Node9&#45;&gt;Node3</title>
-<g id="a_edge15_Node000009_Node000003"><a xlink:title=" ">
+<!-- Node9 -->
+<g id="Node000009" class="node">
+<title>Node9</title>
+<g id="a_Node000009"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" target="_top" xlink:title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words.">
+<polygon fill="white" stroke="#666666" points="689.5,-34.27 558,-34.27 558,-2.27 689.5,-2.27 689.5,-34.27"/>
+<text text-anchor="start" x="566" y="-20.77" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\Common</text>
+<text text-anchor="middle" x="623.75" y="-8.77" font-family="Helvetica,sans-Serif" font-size="10.00">\Util\camelCaseToDashes</text>
+</a>
+</g>
+</g>
+<!-- Node8&#45;&gt;Node9 -->
+<g id="edge10_Node000008_Node000009" class="edge">
+<title>Node8&#45;&gt;Node9</title>
+<g id="a_edge10_Node000008_Node000009"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M509.6,-18.27C521.92,-18.27 534.39,-18.27 546.33,-18.27"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="546.07,-21.77 556.07,-18.27 546.07,-14.77 546.07,-21.77"/>
+</a>
+</g>
+</g>
+<!-- Node10&#45;&gt;Node3 -->
+<g id="edge16_Node000010_Node000003" class="edge">
+<title>Node10&#45;&gt;Node3</title>
+<g id="a_edge16_Node000010_Node000003"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M262.56,-82.6C267.49,-85.1 272.19,-87.97 276.5,-91.27 302.39,-111.14 287.48,-134.32 312.5,-155.27 319.04,-160.75 326.51,-165.36 334.35,-169.25"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="332.88,-172.43 343.44,-173.33 335.75,-166.04 332.88,-172.43"/>
 </a>
 </g>
 </g>
-<!-- Node9&#45;&gt;Node6 -->
-<g id="edge17_Node000009_Node000006" class="edge">
-<title>Node9&#45;&gt;Node6</title>
-<g id="a_edge17_Node000009_Node000006"><a xlink:title=" ">
+<!-- Node10&#45;&gt;Node6 -->
+<g id="edge18_Node000010_Node000006" class="edge">
+<title>Node10&#45;&gt;Node6</title>
+<g id="a_edge18_Node000010_Node000006"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M244.36,-82.74C264.69,-87.84 287.56,-93.58 309.67,-99.13"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="308.78,-102.51 319.33,-101.55 310.48,-95.72 308.78,-102.51"/>
 </a>
 </g>
 </g>
-<!-- Node9&#45;&gt;Node8 -->
-<g id="edge16_Node000009_Node000008" class="edge">
-<title>Node9&#45;&gt;Node8</title>
-<g id="a_edge16_Node000009_Node000008"><a xlink:title=" ">
+<!-- Node10&#45;&gt;Node8 -->
+<g id="edge17_Node000010_Node000008" class="edge">
+<title>Node10&#45;&gt;Node8</title>
+<g id="a_edge17_Node000010_Node000008"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M257.97,-49.82C277.81,-45.7 299.25,-41.25 319.59,-37.02"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="320.2,-40.47 329.28,-35.01 318.78,-33.62 320.2,-40.47"/>
-</a>
-</g>
-</g>
-<!-- Node10 -->
-<g id="Node000010" class="node">
-<title>Node10</title>
-<g id="a_Node000010"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a8a9d6dd0754451d7214ed760a2179bd4" target="_top" xlink:title="Add a &quot;slug&quot; as tooltips&#45;index and css&#45;class.">
-<polygon fill="white" stroke="#666666" points="487.88,-84.27 333.88,-84.27 333.88,-52.27 487.88,-52.27 487.88,-84.27"/>
-<text text-anchor="start" x="341.88" y="-70.77" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
-<text text-anchor="middle" x="410.88" y="-58.77" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\addSlug</text>
-</a>
-</g>
-</g>
-<!-- Node9&#45;&gt;Node10 -->
-<g id="edge11_Node000009_Node000010" class="edge">
-<title>Node9&#45;&gt;Node10</title>
-<g id="a_edge11_Node000009_Node000010"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M276.77,-67.12C291.87,-67.25 307.37,-67.39 322.23,-67.52"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="321.9,-71.01 331.93,-67.6 321.96,-64.01 321.9,-71.01"/>
 </a>
 </g>
 </g>
 <!-- Node11 -->
 <g id="Node000011" class="node">
 <title>Node11</title>
-<g id="a_Node000011"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aee57cb8d60602879f6a65e257cdcbf63" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="892.25,-84.27 738.25,-84.27 738.25,-52.27 892.25,-52.27 892.25,-84.27"/>
-<text text-anchor="start" x="746.25" y="-70.77" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
-<text text-anchor="middle" x="815.25" y="-58.77" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\cssClass</text>
+<g id="a_Node000011"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a8a9d6dd0754451d7214ed760a2179bd4" target="_top" xlink:title="Add a &quot;slug&quot; as tooltips&#45;index and css&#45;class.">
+<polygon fill="white" stroke="#666666" points="487.88,-84.27 333.88,-84.27 333.88,-52.27 487.88,-52.27 487.88,-84.27"/>
+<text text-anchor="start" x="341.88" y="-70.77" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
+<text text-anchor="middle" x="410.88" y="-58.77" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\addSlug</text>
 </a>
 </g>
 </g>
@@ -247,36 +247,55 @@
 <g id="edge12_Node000010_Node000011" class="edge">
 <title>Node10&#45;&gt;Node11</title>
 <g id="a_edge12_Node000010_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M488.04,-70.28C506.75,-70.69 526.72,-71.07 545.25,-71.27 615.02,-72.06 632.48,-72.21 702.25,-71.27 710.21,-71.17 718.48,-71.02 726.77,-70.84"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="726.61,-74.35 736.53,-70.62 726.45,-67.35 726.61,-74.35"/>
+<path fill="none" stroke="#63b8ff" d="M276.77,-67.12C291.87,-67.25 307.37,-67.39 322.23,-67.52"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="321.9,-71.01 331.93,-67.6 321.96,-64.01 321.9,-71.01"/>
 </a>
 </g>
 </g>
 <!-- Node12 -->
 <g id="Node000012" class="node">
 <title>Node12</title>
-<g id="a_Node000012"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a166d2dbd24c4913a9461c5813bbb4232" target="_top" xlink:title="Generate a &quot;unified&quot; tooltip&#45;slug in order to obtain tool&#45;tips from the ToolTipsService.">
-<polygon fill="white" stroke="#666666" points="702.25,-62.27 545.25,-62.27 545.25,-30.27 702.25,-30.27 702.25,-62.27"/>
-<text text-anchor="start" x="553.25" y="-48.77" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
-<text text-anchor="middle" x="623.75" y="-36.77" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\tooltipSlug</text>
+<g id="a_Node000012"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aee57cb8d60602879f6a65e257cdcbf63" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="892.25,-106.27 738.25,-106.27 738.25,-74.27 892.25,-74.27 892.25,-106.27"/>
+<text text-anchor="start" x="746.25" y="-92.77" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
+<text text-anchor="middle" x="815.25" y="-80.77" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\cssClass</text>
 </a>
 </g>
 </g>
-<!-- Node10&#45;&gt;Node12 -->
-<g id="edge13_Node000010_Node000012" class="edge">
-<title>Node10&#45;&gt;Node12</title>
-<g id="a_edge13_Node000010_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M488.3,-60.3C502.96,-58.77 518.42,-57.16 533.44,-55.59"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="533.72,-59.08 543.31,-54.56 533,-52.12 533.72,-59.08"/>
+<!-- Node11&#45;&gt;Node12 -->
+<g id="edge13_Node000011_Node000012" class="edge">
+<title>Node11&#45;&gt;Node12</title>
+<g id="a_edge13_Node000011_Node000012"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M486.31,-84.74C505.42,-88.28 526.01,-91.49 545.25,-93.27 614.73,-99.73 632.48,-94.21 702.25,-93.27 710.21,-93.17 718.48,-93.02 726.77,-92.84"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="726.61,-96.35 736.53,-92.62 726.45,-89.35 726.61,-96.35"/>
 </a>
 </g>
 </g>
-<!-- Node12&#45;&gt;Node11 -->
-<g id="edge14_Node000012_Node000011" class="edge">
-<title>Node12&#45;&gt;Node11</title>
-<g id="a_edge14_Node000012_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M702.65,-55.32C710.56,-56.24 718.63,-57.17 726.63,-58.1"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="726.04,-61.56 736.37,-59.23 726.85,-54.6 726.04,-61.56"/>
+<!-- Node13 -->
+<g id="Node000013" class="node">
+<title>Node13</title>
+<g id="a_Node000013"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a166d2dbd24c4913a9461c5813bbb4232" target="_top" xlink:title="Generate a &quot;unified&quot; tooltip&#45;slug in order to obtain tool&#45;tips from the ToolTipsService.">
+<polygon fill="white" stroke="#666666" points="702.25,-84.27 545.25,-84.27 545.25,-52.27 702.25,-52.27 702.25,-84.27"/>
+<text text-anchor="start" x="553.25" y="-70.77" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
+<text text-anchor="middle" x="623.75" y="-58.77" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\tooltipSlug</text>
+</a>
+</g>
+</g>
+<!-- Node11&#45;&gt;Node13 -->
+<g id="edge14_Node000011_Node000013" class="edge">
+<title>Node11&#45;&gt;Node13</title>
+<g id="a_edge14_Node000011_Node000013"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M488.3,-68.27C502.96,-68.27 518.42,-68.27 533.44,-68.27"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="533.3,-71.77 543.3,-68.27 533.3,-64.77 533.3,-71.77"/>
+</a>
+</g>
+</g>
+<!-- Node13&#45;&gt;Node12 -->
+<g id="edge15_Node000013_Node000012" class="edge">
+<title>Node13&#45;&gt;Node12</title>
+<g id="a_edge15_Node000013_Node000012"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M702.65,-77.32C710.56,-78.24 718.63,-79.17 726.63,-80.1"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="726.04,-83.56 736.37,-81.23 726.85,-76.6 726.04,-83.56"/>
 </a>
 </g>
 </g>

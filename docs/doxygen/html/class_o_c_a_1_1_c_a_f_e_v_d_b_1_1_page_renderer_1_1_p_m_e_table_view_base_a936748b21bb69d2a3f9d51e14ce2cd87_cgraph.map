@@ -1,6 +1,6 @@
 <map id="beforeInsertDoInsertAll" name="beforeInsertDoInsertAll">
 <area shape="rect" id="Node000001" title="Before insert&#45;trigger which ideally should insert all data such that nothing remains to be done for p..." alt="" coords="5,324,161,351"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ad92070c3daaf56e870af042e4ebf3b78" title="Slice the given entity id by the given keys and return a composite key joined with self::COMP_KEY_SEP..." alt="" coords="231,5,364,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ad92070c3daaf56e870af042e4ebf3b78" title="Slice the given entity id by the given keys and return a composite key joined with self\COMP_KEY_SEP." alt="" coords="231,5,364,32"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,323,94,273,116,199,132,159,152,119,177,82,207,49,222,37,226,42,210,53,181,85,157,122,137,161,121,201,99,274,89,324"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a586e3ce7bc155a85dae0bbe3149e4181" title="Be noisy if debugging is enabled." alt="" coords="494,56,551,83"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="84,323,95,277,117,213,133,179,153,147,178,117,207,92,240,74,276,62,313,54,351,50,422,51,480,58,479,63,421,56,351,56,314,59,278,67,242,79,210,97,182,121,157,150,138,182,122,215,100,279,89,324"/>
@@ -14,16 +14,16 @@
 <area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="156,321,194,313,195,318,157,326"/>
 <area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a5974458d91d622f2f455643f17af9417" title="Find the recursion end&#45;point for a nested join description." alt="" coords="227,365,368,392"/>
 <area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="157,349,212,360,211,365,156,354"/>
-<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a52152c1de369b4179e8e391899eca24a" title="Inverse of self::joinTableFieldName()." alt="" coords="248,416,348,443"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a52152c1de369b4179e8e391899eca24a" title="Inverse of self\joinTableFieldName()." alt="" coords="248,416,348,443"/>
 <area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="108,349,154,375,210,402,233,410,232,415,208,406,152,380,105,353"/>
 <area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="230,467,366,493"/>
 <area shape="poly" id="edge16_Node000001_Node000012" title=" " alt="" coords="97,349,143,400,175,428,210,452,221,458,219,463,207,457,171,432,139,403,93,353"/>
-<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="210,517,386,544"/>
-<area shape="poly" id="edge17_Node000001_Node000013" title=" " alt="" coords="93,350,109,381,135,423,169,466,210,503,218,508,215,513,207,507,165,470,131,426,105,384,88,352"/>
-<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#ac2f42dfc2f9ac43830897947d86cf3bc" title="Enable or disable writing to the change&#45;log table." alt="" coords="209,568,387,627"/>
-<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="91,350,106,389,131,443,166,502,211,554,213,556,209,560,207,558,161,505,126,446,101,391,86,352"/>
-<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a62e9094de93176fae4478b7eae96d61f" title="Unset all array elements with value $value." alt="" coords="210,651,386,693"/>
-<area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="89,351,98,403,120,480,136,522,156,563,181,602,211,637,213,639,209,643,207,641,176,605,151,566,131,524,115,482,93,405,83,352"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="210,517,386,544"/>
+<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="93,350,109,381,135,423,169,466,210,503,218,508,215,513,207,507,165,470,131,426,105,384,88,352"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#ac2f42dfc2f9ac43830897947d86cf3bc" title="Enable or disable writing to the change&#45;log table." alt="" coords="209,568,387,627"/>
+<area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="91,350,106,389,131,443,166,502,211,554,213,556,209,560,207,558,161,505,126,446,101,391,86,352"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a62e9094de93176fae4478b7eae96d61f" title="Unset all array elements with value $value." alt="" coords="210,651,386,693"/>
+<area shape="poly" id="edge20_Node000001_Node000016" title=" " alt="" coords="89,351,98,403,120,480,136,522,156,563,181,602,211,637,213,639,209,643,207,641,176,605,151,566,131,524,115,482,93,405,83,352"/>
 <area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="359,104,479,76,480,82,360,109"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a709d772c597d8bc18d170300a8cabbb7" title=" " alt="" coords="435,107,610,149"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="359,119,420,122,419,127,359,125"/>
@@ -33,4 +33,6 @@
 <area shape="poly" id="edge10_Node000008_Node000006" title=" " alt="" coords="386,227,419,227,419,232,386,232"/>
 <area shape="poly" id="edge12_Node000009_Node000006" title=" " alt="" coords="371,272,433,253,434,258,373,277"/>
 <area shape="poly" id="edge14_Node000010_Node000010" title=" " alt="" coords="262,366,255,357,259,347,274,341,298,339,323,341,337,348,335,352,322,346,298,344,275,346,263,351,260,356,266,363"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words." alt="" coords="435,459,610,501"/>
+<area shape="poly" id="edge17_Node000012_Node000013" title=" " alt="" coords="366,477,419,477,419,483,366,483"/>
 </map>

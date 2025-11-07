@@ -1,0 +1,9 @@
+<map id="getAmount" name="getAmount">
+<area shape="rect" id="Node000001" title="Get amount." alt="" coords="496,75,580,101"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#ae069b825a4202152ac088173fb5504f0" title="The amount already invoiced as stored in the InvoiceItem entities." alt="" coords="242,5,438,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="480,78,438,68,439,63,481,72"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a87e0a5474b9500b0d65c98c87e553d75" title="Return the sum of the amounts of the individual payments, which should sum up to $this&#45;&gt;amount,..." alt="" coords="232,104,448,163"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="481,104,449,111,448,106,480,98"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#ae35fdeb166a10e05e98b98b7309deadb" title="Check whether the data is internally consistent, in particular if the invoice items sum up to the tot..." alt="" coords="5,104,184,163"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="216,136,184,136,184,131,216,131"/>
+</map>

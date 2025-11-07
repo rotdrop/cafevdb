@@ -13,6 +13,7 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions =
     [ "DatabaseInvalidFieldException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_invalid_field_exception.html", null ],
     [ "DatabaseLegacyException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_legacy_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_legacy_exception" ],
     [ "DatabaseMigrationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_migration_exception.html", null ],
+    [ "DatabaseMissingIdentifierException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_missing_identifier_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_missing_identifier_exception" ],
     [ "DatabaseNotConnectedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_not_connected_exception.html", null ],
     [ "DatabaseReadonlyException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_readonly_exception.html", null ],
     [ "DatabaseRollbackOnlyException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_rollback_only_exception.html", null ],
@@ -29,7 +30,6 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions =
     [ "MigrationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_migration_exception.html", null ],
     [ "MissingProjectsFolderException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_missing_projects_folder_exception.html", null ],
     [ "NotAuthorizedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_not_authorized_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_not_authorized_exception" ],
-    [ "PhpSessionException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_php_session_exception.html", null ],
     [ "ProgressStatusNotFoundException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_progress_status_not_found_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_progress_status_not_found_exception" ],
     [ "RecryptionFailedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_recryption_failed_exception.html", null ],
     [ "RecryptionRequestNotFoundException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_recryption_request_not_found_exception.html", null ],
@@ -37,7 +37,6 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions =
     [ "SanitizerFailedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_failed_exception.html", null ],
     [ "SanitizerNotImplementedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_not_implemented_exception.html", null ],
     [ "SanitizerNotNeededException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_not_needed_exception.html", null ],
-    [ "SessionStillOpenException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_session_still_open_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_session_still_open_exception" ],
     [ "SubstitutionException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_substitution_exception.html", null ],
     [ "TranslationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_translation_exception.html", null ],
     [ "UndoableRunQueueException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_undoable_run_queue_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_undoable_run_queue_exception" ]

@@ -1,0 +1,7 @@
+<map id="multiply" name="multiply">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="202,5,268,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a974970c3ea4e5852d315b77f71e722c9" title="Shortcut for RationalNumber\multiply()." alt="" coords="112,5,154,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,21,155,21,155,16,187,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#aaebdc80f713a093e356b9a614712ef64" title="Multiply the given argument with the current instance and assign the result to $this." alt="" coords="5,5,64,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,21,64,21,64,16,96,16"/>
+</map>

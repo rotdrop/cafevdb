@@ -1,0 +1,21 @@
+<map id="add" name="add">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="560,285,602,312"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#ab28908f64ebd43732050e9f437de07ab" title="Add the given argument to the current instance and assign the result to $this." alt="" coords="346,21,404,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="578,270,576,224,566,167,546,110,530,84,510,62,486,47,458,38,405,35,405,29,459,33,488,42,514,58,534,81,551,108,571,166,581,223,583,270"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#ae069b825a4202152ac088173fb5504f0" title="The amount already invoiced as stored in the InvoiceItem entities." alt="" coords="278,72,473,147"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="571,272,549,215,532,186,510,161,472,136,475,132,514,157,537,183,554,213,576,270"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#a1bf035a0cc5300ec7f481a02d0293765" title="The amount already paid as stored in the ProjectPayment entities." alt="" coords="278,171,473,245"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="546,279,511,260,472,243,474,238,513,255,548,274"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#afccad9f3b24ee744b6e16320dc740e58" title=" " alt="" coords="246,269,505,328"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="544,301,506,301,506,296,544,296"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a51e18c47775a07cdbc9c5b382721a156" title=" " alt="" coords="256,352,494,427"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="548,323,513,342,487,354,485,349,511,338,546,318"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#a87e0a5474b9500b0d65c98c87e553d75" title="Return the sum of the amounts of the individual payments, which should sum up to $this&#45;&gt;amount,..." alt="" coords="267,451,484,509"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="576,328,555,385,537,415,514,441,486,459,483,454,510,437,533,412,550,383,571,326"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a7a4baea6578468d4ebd178a5a2f3e876" title="Return the sum of the amounts of the individual payments, which should sum up to $this&#45;&gt;amount,..." alt="" coords="239,533,512,592"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="582,328,578,371,567,423,547,476,532,501,514,523,499,535,496,531,510,519,528,498,542,474,562,421,573,370,577,327"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html#ad00aef3585d6bbf4514b2d9505791ac1" title=" " alt="" coords="5,5,191,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="330,37,191,37,191,32,330,32"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#ae35fdeb166a10e05e98b98b7309deadb" title="Check whether the data is internally consistent, in particular if the invoice items sum up to the tot..." alt="" coords="9,451,187,509"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="252,483,188,483,188,477,252,477"/>
+</map>

@@ -1,7 +1,11 @@
 <map id="getAmount" name="getAmount">
-<area shape="rect" id="Node000001" title="Get amount." alt="" coords="313,67,397,93"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#afccad9f3b24ee744b6e16320dc740e58" title=" " alt="" coords="5,5,265,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="297,71,264,64,265,59,298,66"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a51e18c47775a07cdbc9c5b382721a156" title=" " alt="" coords="16,88,254,163"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="298,94,255,103,254,98,297,89"/>
+<area shape="rect" id="Node000001" title="Get amount." alt="" coords="327,165,411,192"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#a1bf035a0cc5300ec7f481a02d0293765" title="The amount already paid as stored in the ProjectPayment entities." alt="" coords="44,5,240,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="345,156,315,124,277,94,239,75,241,70,280,90,318,120,349,152"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#afccad9f3b24ee744b6e16320dc740e58" title=" " alt="" coords="12,104,272,163"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="311,170,271,162,272,157,312,165"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a51e18c47775a07cdbc9c5b382721a156" title=" " alt="" coords="23,187,261,261"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="312,193,262,203,261,197,311,187"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a7a4baea6578468d4ebd178a5a2f3e876" title="Return the sum of the amounts of the individual payments, which should sum up to $this&#45;&gt;amount,..." alt="" coords="5,285,279,344"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="351,206,321,242,280,276,258,287,256,282,277,271,317,238,347,203"/>
 </map>

@@ -1,0 +1,9 @@
+<map id="Version20250717120000" name="Version20250717120000">
+<area shape="rect" id="Node000001" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="24,229,187,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_use_decimal_for_exact_fractions.html" title="Do not use floats for monetary values and other exact fractions." alt="" coords="5,155,206,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,197,108,229,103,229,103,197"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html" title="Abstract migration class, the derived classes have to fill AbstractMigration\$sql." alt="" coords="44,80,167,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,122,108,154,103,154,103,122"/>
+<area shape="rect" id="Node000004" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html" title="Uni&#45;directional migrations for the orchestra DB." alt="" coords="66,5,145,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="108,48,108,80,103,80,103,48"/>
+</map>

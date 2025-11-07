@@ -2,6 +2,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transact
 [
     [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#ad457c8eb3e13bb7c78ec9b5f799c33a8", null ],
     [ "calculateDebitNoteDeadlines", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#a87a555bb6378fc0ed0ca22e2f522fa60", null ],
+    [ "getBalancingItemsExporter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#a9a2861d37e7eb4e36f3e0abb60a4937f", null ],
     [ "getTransactionExporter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#acc9134d5b786dd2f1bcd1463f23d6649", null ],
     [ "removeBulkTransaction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#ab20f3ad9c15ce483067508762d7287d7", null ],
     [ "restoreCalendarObjects", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html#a140fb83fcab1cc3efcefcfb1c2819e86", null ],

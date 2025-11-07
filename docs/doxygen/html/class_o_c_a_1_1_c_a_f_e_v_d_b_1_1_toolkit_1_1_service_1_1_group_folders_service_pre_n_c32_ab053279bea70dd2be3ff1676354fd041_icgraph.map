@@ -1,0 +1,8 @@
+<map id="searchFolders" name="searchFolders">
+<area shape="rect" id="Node000001" title="Return all shared folders matching the given regexp." alt="" coords="183,55,286,81"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#ae41bfe81b67dc7952c7a75d6dbc16c85" title="Change the given group&#45;shared folder – given by its old mount&#45;point – to a new mount&#45;point." alt="" coords="5,29,135,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,60,135,55,135,50,168,55"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#ad4fb86c5bb03d98824c51cfe67154a56" title=" " alt="" coords="20,80,120,107"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="168,81,121,88,120,83,167,76"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="98,16,88,10,70,8,53,10,44,15,42,20,46,28,42,30,37,21,40,11,52,5,70,3,90,5,100,12"/>
+</map>

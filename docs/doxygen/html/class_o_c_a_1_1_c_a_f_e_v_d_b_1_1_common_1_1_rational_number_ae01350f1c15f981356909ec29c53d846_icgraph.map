@@ -1,0 +1,19 @@
+<map id="assign" name="assign">
+<area shape="rect" id="Node000001" title="Replace this instance by the given argument." alt="" coords="345,157,404,184"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#aac7e1447574f95c30f77d1922d096f60" title="Make the current number non&#45;negative in&#45;place." alt="" coords="239,5,297,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="358,145,331,97,295,46,284,34,288,31,299,42,335,94,362,142"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#ab28908f64ebd43732050e9f437de07ab" title="Add the given argument to the current instance and assign the result to $this." alt="" coords="239,56,297,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="348,148,295,97,283,85,286,81,299,93,352,145"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#aabed16a344686af4a51c26bd5b1d11e9" title="Divide the current instance by the given argument and assign the result to $this." alt="" coords="241,107,295,133"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="330,153,294,135,297,130,332,148"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a5c28e7857c5e62c5f1428c161e9a8c7b" title="Invert the current instance in place." alt="" coords="241,157,295,184"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="330,173,295,173,295,168,330,168"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#aaebdc80f713a093e356b9a614712ef64" title="Multiply the given argument with the current instance and assign the result to $this." alt="" coords="239,208,297,235"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="332,194,299,210,296,205,330,189"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#af5b5be595c06061bae0d6ac59b2f5e4b" title="Negate the current instance in place." alt="" coords="239,259,297,285"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="352,197,299,249,286,260,283,256,295,245,348,193"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#af2c7b13bd92a580375fe04414bc35404" title="Subtract the given argument to the current instance." alt="" coords="239,309,297,336"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="362,199,335,247,299,299,288,311,284,307,295,296,331,244,358,197"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html#ad00aef3585d6bbf4514b2d9505791ac1" title=" " alt="" coords="5,40,191,99"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="223,72,191,72,191,67,223,67"/>
+</map>

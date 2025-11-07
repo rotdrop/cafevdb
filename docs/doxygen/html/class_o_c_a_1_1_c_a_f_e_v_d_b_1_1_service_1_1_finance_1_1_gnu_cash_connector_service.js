@@ -1,0 +1,4 @@
+var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service =
+[
+    [ "generateParticipantReceivablesAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html#a8584c592cfad3e648784d448b5729de3", null ]
+];

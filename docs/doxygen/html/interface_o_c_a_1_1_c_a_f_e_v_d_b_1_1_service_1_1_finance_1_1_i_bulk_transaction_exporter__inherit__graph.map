@@ -1,5 +1,7 @@
 <map id="IBulkTransactionExporter" name="IBulkTransactionExporter">
-<area shape="rect" id="Node000001" title="Extremely generic debit&#45;note exporter." alt="" coords="10,5,179,32"/>
+<area shape="rect" id="Node000001" title="Extremely generic debit&#45;note exporter." alt="" coords="124,5,292,32"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_aq_banking_bulk_transaction_exporter.html" title="Generate AqBanking data&#45;sets for submission to the bank." alt="" coords="5,80,184,123"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,48,97,80,92,80,92,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,43,125,82,122,77,176,39"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_bulk_transaction_balancing_items_exporter.html" title="Generate balancing items for a bank bulk transactions for use in an accounting software." alt="" coords="208,80,435,123"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="240,39,294,77,291,82,236,43"/>
 </map>

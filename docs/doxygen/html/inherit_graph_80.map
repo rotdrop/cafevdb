@@ -1,5 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,115,32"/>
-<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_mount_provider.html" title="Mount parts of the database&#45;storage somewhere." alt="" coords="163,5,268,32"/>
-<area shape="poly" id="edge434_Node000000_Node000001" title=" " alt="" coords="130,16,162,16,162,21,130,21"/>
+<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_attributes_1_1_ignore_config_lock.html" title="Indicate that the method should ignore the lock on the (encrypted) configuration space." alt="" coords="5,5,129,32"/>
 </map>

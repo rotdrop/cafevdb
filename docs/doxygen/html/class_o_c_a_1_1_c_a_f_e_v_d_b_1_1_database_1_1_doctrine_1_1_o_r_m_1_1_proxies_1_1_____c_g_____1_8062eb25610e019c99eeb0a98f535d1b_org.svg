@@ -20,8 +20,8 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="76,-76 0,-76 0,-56 76,-56 76,-76"/>
+<g id="a_Node000002"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html" target="_top" xlink:title="File with encrypted data.">
+<polygon fill="white" stroke="#666666" points="76,-76 0,-76 0,-56 76,-56 76,-76"/>
 <text text-anchor="middle" x="38" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00">EncryptedFile</text>
 </a>
 </g>

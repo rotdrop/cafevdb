@@ -2,9 +2,11 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mappin
 [
     [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#ab32809b192b3d2756082da56b1230a3f", null ],
     [ "__call", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a9f1179240d068c94a040021326032bed", null ],
-    [ "__get", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a6481e8cfc93c80885b3d72a6e1f15a1f", null ],
-    [ "__set", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a9b7f2b58fa3c9e81f142efb424433163", null ],
+    [ "__get", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a4ed10c56f9f47ee0856a2186d915c79e", null ],
+    [ "__isset", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a0ec983319db7bba8e598ac40fae83fe0", null ],
+    [ "__set", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a7567d8148c4743d0240aed6efa5cd1a7", null ],
     [ "__toString", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a7516ca30af0db3cdbf9a7739b48ce91d", null ],
+    [ "__unset", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a3c376b9668715b0d9678a2ca1a740a91", null ],
     [ "columnAssociations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#afc1808a55d8d17d9fa30cfbde05f7119", null ],
     [ "debug", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#ad452b57a4016de6f8649da035530a76f", null ],
     [ "doSetFieldValue", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a61d49815be7ac9d7c8b756e1c55e55eb", null ],
@@ -20,6 +22,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mappin
     [ "getName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a3d0963e68bb313b163a73f2803c64600", null ],
     [ "getReflectionClass", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#ac4db91c2eed199072ca9b1f18f70d9f0", null ],
     [ "getTypeOfField", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#ad69a523b9cd32b6a3577f7b6cbb3deac", null ],
+    [ "getWrappedObject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a8e577795b90166d1d13d7d97cd29d6d1", null ],
     [ "hasAssociation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a8b03be64522689830a9d007a64478026", null ],
     [ "hasField", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a544638a26ef66f24ee4f9f1cbd9f880f", null ],
     [ "identifierColumns", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a131c08a4f8f5da6402ae877ccfef356f", null ],
@@ -28,5 +31,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mappin
     [ "isIdentifier", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#adca0595e5051bdd6663c59bbefc9e84f", null ],
     [ "isSingleValuedAssociation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a3fc698c6814c720360fb577ebdccdac7", null ],
     [ "setColumnValue", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#aa35b2363e1e404c44bee1e85a35bbf02", null ],
+    [ "setDebug", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a6b68395de40f8cdd685ef8f7a0e7f4c8", null ],
     [ "updateInverseSide", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#afa9e2c4e8206fe32db562deb33c31aed", null ]
 ];

@@ -8,7 +8,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service =
     [ "isMobile", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service.html#abac0564af0134547ded00c16b5c873ea", null ],
     [ "metaData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service.html#ab5d979416900f9fed11ab7285356c356", null ],
     [ "normalize", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service.html#a5e70683882a307d0d4c7ef1b3e546747", null ],
-    [ "translateNumberType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service.html#ac21f7fb8408ebe0b0e46c11e280dcf24", null ],
+    [ "translateNumberType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service.html#ade7ba38e074b59322ecaed159bbccdb4", null ],
     [ "translationHack", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service.html#a4785a5297f434973cc0bbef2a45c32c5", null ],
     [ "validate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service.html#a8c950d27bc55749ec38cd0ade17222f5", null ]
 ];

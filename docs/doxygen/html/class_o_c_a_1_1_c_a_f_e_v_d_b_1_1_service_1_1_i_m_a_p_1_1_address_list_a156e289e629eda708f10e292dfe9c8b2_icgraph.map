@@ -1,0 +1,5 @@
+<map id="fromHorde" name="fromHorde">
+<area shape="rect" id="Node000001" title="Construct a new list from an horde list." alt="" coords="107,5,189,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list.html#ae5cad4df4d96ecb2d7c157737a846787" title="Parse an address (list) like &quot;a@b.c&quot; or &quot;a@b.c, d@e.f&quot;." alt="" coords="5,5,59,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,21,59,21,59,16,91,16"/>
+</map>

@@ -1,6 +1,6 @@
 <map id="numberToWordsPhp" name="numberToWordsPhp">
 <area shape="rect" id="Node000001" title="Convert the given number to words." alt="" coords="473,31,612,57"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html#a33f13030abfcda9765e75cbdc9c6774f" title="Convert the given number to words." alt="" coords="310,31,425,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html#a778bfbff66e5cb17833cdc03dbd7b9b1" title="Convert the given number to words." alt="" coords="310,31,425,57"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="458,47,425,47,425,41,458,41"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html#a108f8d972e1c13ecbe5133e1720b3601" title="Initialize locale dependent internal state from the given locale string." alt="" coords="143,31,262,57"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="294,47,262,47,262,41,294,41"/>

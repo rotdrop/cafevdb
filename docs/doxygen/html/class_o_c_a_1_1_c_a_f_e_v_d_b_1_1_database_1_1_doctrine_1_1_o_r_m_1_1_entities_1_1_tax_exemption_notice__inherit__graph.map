@@ -1,9 +1,5 @@
 <map id="TaxExemptionNotice" name="TaxExemptionNotice">
 <area shape="rect" id="Node000001" title="Record notices of tax exemption from the corporate income tax (or other taxes)." alt="" coords="58,80,200,107"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html" title="Cloud blog entity." alt="" coords="53,155,100,181"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="113,121,88,156,84,153,109,118"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html" title="Cloud progress status entity." alt="" coords="125,155,236,181"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="149,118,174,153,170,156,145,121"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,122,32"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,42,120,78,116,81,83,45"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="146,5,242,32"/>

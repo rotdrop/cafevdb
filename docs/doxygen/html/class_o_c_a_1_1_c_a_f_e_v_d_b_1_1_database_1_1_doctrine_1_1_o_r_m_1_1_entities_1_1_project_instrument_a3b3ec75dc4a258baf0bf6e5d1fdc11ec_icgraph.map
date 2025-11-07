@@ -1,33 +1,37 @@
 <map id="getInstrument" name="getInstrument">
-<area shape="rect" id="Node000001" title="Get instrument." alt="" coords="1547,112,1649,139"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#abe10d7b2125ddae4e2bd88edfb260b81" title=" " alt="" coords="1305,39,1499,113"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1532,111,1499,103,1501,98,1533,106"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a578e8c33654a919b7bee8fa4f37323b9" title="Get projectInstruments." alt="" coords="1306,137,1498,212"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1533,144,1499,153,1498,148,1531,139"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a8468e7235b577417fef77625a966d352" title=" " alt="" coords="1012,17,1256,76"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1310,132,1303,128,1280,108,1256,90,1232,79,1234,74,1258,86,1283,104,1307,123,1313,127"/>
-<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a3f568edcfe4fe4820ff96e69d3e7fcde" title=" " alt="" coords="1011,100,1257,159"/>
-<area shape="poly" id="edge12_Node000003_Node000011" title=" " alt="" coords="1291,159,1257,153,1258,148,1291,153"/>
-<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#afb93799095b3938fd9a48bbc6ad10916" title="Remove the given instrument." alt="" coords="1026,183,1242,257"/>
-<area shape="poly" id="edge15_Node000003_Node000012" title=" " alt="" coords="1292,196,1243,204,1242,199,1291,191"/>
-<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a8413454e6ddfb601e6585d9b45fc121b" title="Set the principal parent entity." alt="" coords="1063,281,1205,308"/>
-<area shape="poly" id="edge16_Node000003_Node000013" title=" " alt="" coords="1343,223,1302,249,1258,272,1206,287,1205,282,1256,267,1300,245,1340,219"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a8d166cbf9d3d0fcb09238cf2ac36640e" title="Determine if $this is only an associated member or business contact without double&#45;role as musician." alt="" coords="728,17,963,76"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="997,49,963,49,963,44,997,44"/>
-<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a095a4327094e520317f2cac30c767348" title="Determine if $this is only a musician without double&#45;role as associated member or business contact." alt="" coords="735,100,956,159"/>
-<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="1015,83,951,102,950,97,1014,78"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a75e2ce51a3811fbed7b601203380369b" title="Return the participation context of the participant." alt="" coords="458,5,680,80"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="713,47,681,47,681,42,713,42"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#ab8cd6a2002c99b50507b40f5bb199a26" title="Return the number of &quot;serious&quot; items which &quot;use&quot; this entity." alt="" coords="480,104,658,163"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="736,84,659,108,658,103,734,79"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a0292938ac501bd686542840ea8866ba9" title="Return a boolean to indicate that this entity is no longer used." alt="" coords="232,104,410,163"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="465,136,411,136,411,131,465,131"/>
-<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#acd81dda8a6f978bdab707300422e0432" title="Return a boolean to indicate that this field is used." alt="" coords="5,104,184,163"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="216,136,184,136,184,131,216,131"/>
-<area shape="poly" id="edge10_Node000010_Node000006" title=" " alt="" coords="735,97,680,80,681,75,736,92"/>
-<area shape="poly" id="edge11_Node000010_Node000007" title=" " alt="" coords="720,134,659,135,659,129,720,128"/>
-<area shape="poly" id="edge13_Node000011_Node000005" title=" " alt="" coords="1014,98,950,79,951,74,1015,93"/>
-<area shape="poly" id="edge14_Node000011_Node000010" title=" " alt="" coords="995,132,957,132,957,127,995,127"/>
-<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a858693df385e90259d79a6dc17cf9974" title="{}" alt="" coords="801,281,890,308"/>
-<area shape="poly" id="edge17_Node000013_Node000014" title=" " alt="" coords="1047,297,891,297,891,292,1047,292"/>
+<area shape="rect" id="Node000001" title="Get instrument." alt="" coords="1564,195,1666,221"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#abe10d7b2125ddae4e2bd88edfb260b81" title=" " alt="" coords="1322,121,1516,196"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1549,194,1516,186,1518,181,1550,189"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a578e8c33654a919b7bee8fa4f37323b9" title="Get projectInstruments." alt="" coords="1324,220,1515,295"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1550,227,1516,236,1515,230,1548,222"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a8468e7235b577417fef77625a966d352" title=" " alt="" coords="1029,100,1272,159"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1327,214,1320,210,1297,191,1273,173,1249,162,1251,157,1275,168,1300,187,1324,206,1330,210"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a3f568edcfe4fe4820ff96e69d3e7fcde" title=" " alt="" coords="1028,183,1274,241"/>
+<area shape="poly" id="edge14_Node000003_Node000013" title=" " alt="" coords="1308,241,1274,235,1275,230,1308,236"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#afb93799095b3938fd9a48bbc6ad10916" title="Remove the given instrument." alt="" coords="1043,265,1259,340"/>
+<area shape="poly" id="edge17_Node000003_Node000014" title=" " alt="" coords="1309,279,1260,287,1259,282,1308,273"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a8413454e6ddfb601e6585d9b45fc121b" title="Set the principal parent entity." alt="" coords="1080,364,1222,391"/>
+<area shape="poly" id="edge18_Node000003_Node000015" title=" " alt="" coords="1360,306,1319,332,1275,354,1223,370,1222,365,1273,350,1317,328,1357,302"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a8d166cbf9d3d0fcb09238cf2ac36640e" title="Determine if $this is only an associated member or business contact without double&#45;role as musician." alt="" coords="745,100,980,159"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1014,132,980,132,980,127,1014,127"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a095a4327094e520317f2cac30c767348" title="Determine if $this is only a musician without double&#45;role as associated member or business contact." alt="" coords="752,183,973,241"/>
+<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="1032,166,968,185,967,179,1031,161"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a75e2ce51a3811fbed7b601203380369b" title="Return the participation context of the participant." alt="" coords="475,88,697,163"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="730,130,698,130,698,124,730,125"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#ab8cd6a2002c99b50507b40f5bb199a26" title="Return the number of &quot;serious&quot; items which &quot;use&quot; this entity." alt="" coords="497,187,675,245"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="753,166,676,191,675,186,751,161"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#aad2e788b91f0eb007a6a5739efba85cd" title="Generate a data&#45;item referring to the default value of the given field." alt="" coords="232,88,427,163"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="459,128,427,128,427,123,459,123"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a74a90da0aba61e764a7808da186b4d03" title="Get participants." alt="" coords="240,5,418,64"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="464,85,414,67,415,62,465,80"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a0292938ac501bd686542840ea8866ba9" title="Return a boolean to indicate that this entity is no longer used." alt="" coords="240,187,418,245"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="482,219,419,219,419,213,482,213"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#acd81dda8a6f978bdab707300422e0432" title="Return a boolean to indicate that this field is used." alt="" coords="5,187,184,245"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="224,219,184,219,184,213,224,213"/>
+<area shape="poly" id="edge12_Node000012_Node000006" title=" " alt="" coords="752,180,697,163,698,158,753,175"/>
+<area shape="poly" id="edge13_Node000012_Node000009" title=" " alt="" coords="737,216,676,217,676,212,737,211"/>
+<area shape="poly" id="edge15_Node000013_Node000005" title=" " alt="" coords="1031,180,967,162,968,157,1032,175"/>
+<area shape="poly" id="edge16_Node000013_Node000012" title=" " alt="" coords="1012,215,974,215,974,209,1012,209"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a858693df385e90259d79a6dc17cf9974" title="{}" alt="" coords="818,364,907,391"/>
+<area shape="poly" id="edge19_Node000015_Node000016" title=" " alt="" coords="1064,380,908,380,908,375,1064,375"/>
 </map>

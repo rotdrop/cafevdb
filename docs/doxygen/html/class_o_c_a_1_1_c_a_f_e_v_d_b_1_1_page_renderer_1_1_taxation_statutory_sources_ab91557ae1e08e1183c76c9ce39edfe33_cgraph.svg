@@ -49,7 +49,7 @@
 <script type="application/ecmascript">
 var viewWidth = 540;
 var viewHeight = 274;
-var sectionId = 'dynsection-50';
+var sectionId = 'dynsection-51';
 </script>
 <script type="application/ecmascript" xlink:href="svg.min.js"/>
 <svg id="graph" class="graph">
@@ -86,7 +86,7 @@ var sectionId = 'dynsection-50';
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" target="_top" xlink:title="Define a basic join&#45;structure for phpMyEdit by using the information from self::$joinStructure.">
+<g id="a_Node000004"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" target="_top" xlink:title="Define a basic join&#45;structure for phpMyEdit by using the information from self\$joinStructure.">
 <polygon fill="white" stroke="#666666" points="295.25,-194 100,-194 100,-162 295.25,-162 295.25,-194"/>
 <text text-anchor="start" x="108" y="-180.5" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
 <text text-anchor="middle" x="197.62" y="-168.5" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\defineJoinStructure</text>

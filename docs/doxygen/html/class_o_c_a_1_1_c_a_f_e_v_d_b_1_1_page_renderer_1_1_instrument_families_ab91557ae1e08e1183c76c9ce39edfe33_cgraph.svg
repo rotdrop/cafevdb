@@ -49,7 +49,7 @@
 <script type="application/ecmascript">
 var viewWidth = 930;
 var viewHeight = 371;
-var sectionId = 'dynsection-51';
+var sectionId = 'dynsection-52';
 </script>
 <script type="application/ecmascript" xlink:href="svg.min.js"/>
 <svg id="graph" class="graph">
@@ -86,7 +86,7 @@ var sectionId = 'dynsection-51';
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" target="_top" xlink:title="Define a basic join&#45;structure for phpMyEdit by using the information from self::$joinStructure.">
+<g id="a_Node000004"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" target="_top" xlink:title="Define a basic join&#45;structure for phpMyEdit by using the information from self\$joinStructure.">
 <polygon fill="white" stroke="#666666" points="290.38,-292.06 95.12,-292.06 95.12,-260.06 290.38,-260.06 290.38,-292.06"/>
 <text text-anchor="start" x="103.12" y="-278.56" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
 <text text-anchor="middle" x="192.75" y="-266.56" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\defineJoinStructure</text>
@@ -266,9 +266,9 @@ var sectionId = 'dynsection-51';
 </g>
 </g>
 <!-- Node10&#45;&gt;Node5 -->
-<g id="edge18_Node000010_Node000005" class="edge">
+<g id="edge19_Node000010_Node000005" class="edge">
 <title>Node10&#45;&gt;Node5</title>
-<g id="a_edge18_Node000010_Node000005"><a xlink:title=" ">
+<g id="a_edge19_Node000010_Node000005"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M279.83,-242.49C299.16,-246.18 319.83,-250.13 339.67,-253.92"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="338.95,-257.35 349.43,-255.78 340.27,-250.47 338.95,-257.35"/>
 </a>
@@ -316,9 +316,9 @@ var sectionId = 'dynsection-51';
 <g id="Node000012" class="node">
 <title>Node12</title>
 <g id="a_Node000012"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aee57cb8d60602879f6a65e257cdcbf63" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="922.25,-183.06 768.25,-183.06 768.25,-151.06 922.25,-151.06 922.25,-183.06"/>
-<text text-anchor="start" x="776.25" y="-169.56" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
-<text text-anchor="middle" x="845.25" y="-157.56" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\cssClass</text>
+<polygon fill="white" stroke="#666666" points="922.25,-164.06 768.25,-164.06 768.25,-132.06 922.25,-132.06 922.25,-164.06"/>
+<text text-anchor="start" x="776.25" y="-150.56" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
+<text text-anchor="middle" x="845.25" y="-138.56" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\cssClass</text>
 </a>
 </g>
 </g>
@@ -326,8 +326,8 @@ var sectionId = 'dynsection-51';
 <g id="edge13_Node000011_Node000012" class="edge">
 <title>Node11&#45;&gt;Node12</title>
 <g id="a_edge13_Node000011_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M518.04,-169.06C536.75,-169.48 556.72,-169.85 575.25,-170.06 645.02,-170.84 662.48,-170.99 732.25,-170.06 740.21,-169.95 748.48,-169.8 756.77,-169.62"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="756.61,-173.13 766.53,-169.4 756.45,-166.13 756.61,-173.13"/>
+<path fill="none" stroke="#63b8ff" d="M518.03,-163.46C586.05,-160.25 685.65,-155.54 756.88,-152.18"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="756.73,-155.69 766.55,-151.72 756.4,-148.7 756.73,-155.69"/>
 </a>
 </g>
 </g>
@@ -335,9 +335,9 @@ var sectionId = 'dynsection-51';
 <g id="Node000013" class="node">
 <title>Node13</title>
 <g id="a_Node000013"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a166d2dbd24c4913a9461c5813bbb4232" target="_top" xlink:title="Generate a &quot;unified&quot; tooltip&#45;slug in order to obtain tool&#45;tips from the ToolTipsService.">
-<polygon fill="white" stroke="#666666" points="732.25,-161.06 575.25,-161.06 575.25,-129.06 732.25,-129.06 732.25,-161.06"/>
-<text text-anchor="start" x="583.25" y="-147.56" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
-<text text-anchor="middle" x="653.75" y="-135.56" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\tooltipSlug</text>
+<polygon fill="white" stroke="#666666" points="732.25,-142.06 575.25,-142.06 575.25,-110.06 732.25,-110.06 732.25,-142.06"/>
+<text text-anchor="start" x="583.25" y="-128.56" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\PageRenderer</text>
+<text text-anchor="middle" x="653.75" y="-116.56" font-family="Helvetica,sans-Serif" font-size="10.00">\PMETableViewBase\tooltipSlug</text>
 </a>
 </g>
 </g>
@@ -345,8 +345,8 @@ var sectionId = 'dynsection-51';
 <g id="edge14_Node000011_Node000013" class="edge">
 <title>Node11&#45;&gt;Node13</title>
 <g id="a_edge14_Node000011_Node000013"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M518.3,-159.08C532.96,-157.55 548.42,-155.94 563.44,-154.37"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="563.72,-157.86 573.31,-153.34 563,-150.9 563.72,-157.86"/>
+<path fill="none" stroke="#63b8ff" d="M518.3,-152.2C533.1,-149.32 548.72,-146.28 563.88,-143.33"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="564.18,-146.84 573.32,-141.5 562.84,-139.97 564.18,-146.84"/>
 </a>
 </g>
 </g>
@@ -354,8 +354,27 @@ var sectionId = 'dynsection-51';
 <g id="edge15_Node000013_Node000012" class="edge">
 <title>Node13&#45;&gt;Node12</title>
 <g id="a_edge15_Node000013_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M732.65,-154.1C740.56,-155.02 748.63,-155.95 756.63,-156.88"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="756.04,-160.34 766.37,-158.01 756.85,-153.38 756.04,-160.34"/>
+<path fill="none" stroke="#63b8ff" d="M732.65,-135.1C740.56,-136.02 748.63,-136.95 756.63,-137.88"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="756.04,-141.34 766.37,-139.01 756.85,-134.38 756.04,-141.34"/>
+</a>
+</g>
+</g>
+<!-- Node15 -->
+<g id="Node000015" class="node">
+<title>Node15</title>
+<g id="a_Node000015"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" target="_top" xlink:title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words.">
+<polygon fill="white" stroke="#666666" points="719.5,-233.06 588,-233.06 588,-201.06 719.5,-201.06 719.5,-233.06"/>
+<text text-anchor="start" x="596" y="-219.56" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\Common</text>
+<text text-anchor="middle" x="653.75" y="-207.56" font-family="Helvetica,sans-Serif" font-size="10.00">\Util\camelCaseToDashes</text>
+</a>
+</g>
+</g>
+<!-- Node14&#45;&gt;Node15 -->
+<g id="edge18_Node000014_Node000015" class="edge">
+<title>Node14&#45;&gt;Node15</title>
+<g id="a_edge18_Node000014_Node000015"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M539.6,-217.06C551.92,-217.06 564.39,-217.06 576.33,-217.06"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="576.07,-220.56 586.07,-217.06 576.07,-213.56 576.07,-220.56"/>
 </a>
 </g>
 </g>

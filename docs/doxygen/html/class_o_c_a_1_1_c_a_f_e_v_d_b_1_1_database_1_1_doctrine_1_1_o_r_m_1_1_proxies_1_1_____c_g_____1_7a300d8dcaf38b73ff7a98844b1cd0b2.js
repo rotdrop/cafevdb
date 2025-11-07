@@ -11,5 +11,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "setGeographicalScope", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_7a300d8dcaf38b73ff7a98844b1cd0b2.html#a850db4218354c59a76965679d005a50e", null ],
     [ "setInstrumentInsurances", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_7a300d8dcaf38b73ff7a98844b1cd0b2.html#ad4663e6089c7d45f3f23b4b81222a0ec", null ],
     [ "setPolicyNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_7a300d8dcaf38b73ff7a98844b1cd0b2.html#a884a1cc63250436819ac3dcc0ebcc9b9", null ],
-    [ "setRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_7a300d8dcaf38b73ff7a98844b1cd0b2.html#a6fafb58c18a0f9b83f7d7207f8f42f5e", null ]
+    [ "setRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_7a300d8dcaf38b73ff7a98844b1cd0b2.html#a890d5b46634b3a8b3b63c96effe65b8b", null ],
+    [ "$rate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_7a300d8dcaf38b73ff7a98844b1cd0b2.html#a9e90bbe291813c4e9dbdb58db928a814", null ]
 ];

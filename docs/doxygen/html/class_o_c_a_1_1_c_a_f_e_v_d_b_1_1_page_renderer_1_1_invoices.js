@@ -1,7 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices =
 [
     [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a43fbdfb33d315ce9c5dd6f8ba93b8907", null ],
-    [ "actionMenu", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a80ee7ec31302840a94a8697968e8e4b5", null ],
     [ "addOperation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#aab9f60dec77a4ef2a6e6da285185427a", null ],
     [ "addSlug", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a8a9d6dd0754451d7214ed760a2179bd4", null ],
     [ "beforeAnythingTrimAnything", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a33ebd2cd145951f1fc62fe8bdb24a315", null ],
@@ -11,7 +10,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices =
     [ "beforeInsertSanitizeFields", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#aa653839a82469b91dfa417e6cea4f18a", null ],
     [ "beforeUpdateDoUpdateAll", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a882a0897b82d354409342d1c195c2f4d", null ],
     [ "beforeUpdateRemoveUnchanged", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a3434e2886ed2011dd7a11751a552f605", null ],
-    [ "beforeUpdateSanitizeFields", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a8202a7769e79d42379eae567f6adaf3e", null ],
     [ "changeOperation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a7b8022d67f12132e31e2230161afcf46", null ],
     [ "componentRowOnly", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a8a3cf7d60bc6cf8338f547e086c93839", null ],
     [ "compositeKeySlice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#ad92070c3daaf56e870af042e4ebf3b78", null ],
@@ -29,6 +27,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices =
     [ "export", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a0b18fa2534a1bcc9a6db749fe1c75038", null ],
     [ "fieldIndex", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a313b024a1964fbcb383e097117af8bd3", null ],
     [ "findJoinColumnPivot", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a5974458d91d622f2f455643f17af9417", null ],
+    [ "generateActionMenuData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a2e3c27712ca1f36e6e4ddf3af146405f", null ],
     [ "generateBasePMEOptions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a540e76a933fa4da984bb45cc629a47b1", null ],
     [ "getProjectId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#aa36d0ad33bee7c190d64f0bfcb4ecb79", null ],
     [ "getProjectName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#af3ccd0a9156a4b7352208653f18aab6f", null ],

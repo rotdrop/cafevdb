@@ -13,6 +13,7 @@ var dir_16d5409a9de6cd6d4a848c0adf1b8b09 =
     [ "DatabaseInvalidFieldException.php", "_database_invalid_field_exception_8php_source.html", null ],
     [ "DatabaseLegacyException.php", "_database_legacy_exception_8php_source.html", null ],
     [ "DatabaseMigrationException.php", "_database_migration_exception_8php_source.html", null ],
+    [ "DatabaseMissingIdentifierException.php", "_database_missing_identifier_exception_8php_source.html", null ],
     [ "DatabaseNotConnectedException.php", "_database_not_connected_exception_8php_source.html", null ],
     [ "DatabaseReadonlyException.php", "_database_readonly_exception_8php_source.html", null ],
     [ "DatabaseRollbackOnlyException.php", "_database_rollback_only_exception_8php_source.html", null ],
@@ -29,7 +30,6 @@ var dir_16d5409a9de6cd6d4a848c0adf1b8b09 =
     [ "MigrationException.php", "_migration_exception_8php_source.html", null ],
     [ "MissingProjectsFolderException.php", "_missing_projects_folder_exception_8php_source.html", null ],
     [ "NotAuthorizedException.php", "_not_authorized_exception_8php_source.html", null ],
-    [ "PhpSessionException.php", "_exceptions_2_php_session_exception_8php_source.html", null ],
     [ "ProgressStatusNotFoundException.php", "_progress_status_not_found_exception_8php_source.html", null ],
     [ "RecryptionFailedException.php", "_recryption_failed_exception_8php_source.html", null ],
     [ "RecryptionRequestNotFoundException.php", "_recryption_request_not_found_exception_8php_source.html", null ],
@@ -37,7 +37,6 @@ var dir_16d5409a9de6cd6d4a848c0adf1b8b09 =
     [ "SanitizerFailedException.php", "_sanitizer_failed_exception_8php_source.html", null ],
     [ "SanitizerNotImplementedException.php", "_sanitizer_not_implemented_exception_8php_source.html", null ],
     [ "SanitizerNotNeededException.php", "_sanitizer_not_needed_exception_8php_source.html", null ],
-    [ "SessionStillOpenException.php", "_exceptions_2_session_still_open_exception_8php_source.html", null ],
     [ "SubstitutionException.php", "_substitution_exception_8php_source.html", null ],
     [ "TranslationException.php", "_translation_exception_8php_source.html", null ],
     [ "UndoableRunQueueException.php", "_undoable_run_queue_exception_8php_source.html", null ]

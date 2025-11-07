@@ -24,6 +24,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions =
     [ "export", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html#a0b18fa2534a1bcc9a6db749fe1c75038", null ],
     [ "fieldIndex", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html#a313b024a1964fbcb383e097117af8bd3", null ],
     [ "findJoinColumnPivot", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html#a5974458d91d622f2f455643f17af9417", null ],
+    [ "generateActionMenuData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html#a2e3c27712ca1f36e6e4ddf3af146405f", null ],
     [ "generateBasePMEOptions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html#a540e76a933fa4da984bb45cc629a47b1", null ],
     [ "getProjectId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html#aa36d0ad33bee7c190d64f0bfcb4ecb79", null ],
     [ "getProjectName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html#af3ccd0a9156a4b7352208653f18aab6f", null ],

@@ -1,11 +1,13 @@
 <map id="beforeInsertSanitizeFields" name="beforeInsertSanitizeFields">
-<area shape="rect" id="Node000001" title="Remap some join&#45;table fields used to &quot;pretty&#45;print&quot; to the real join&#45;columns." alt="" coords="5,80,178,107"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a0160798c24d6bddc98d5192235a59982" title=" " alt="" coords="232,39,482,81"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,80,216,75,217,80,178,85"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="226,105,488,148"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="178,102,211,106,210,111,178,107"/>
+<area shape="rect" id="Node000001" title="Remap some join&#45;table fields used to &quot;pretty&#45;print&quot; to the real join&#45;columns." alt="" coords="5,113,178,140"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a0160798c24d6bddc98d5192235a59982" title=" " alt="" coords="232,72,482,115"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,113,216,108,217,114,178,118"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="226,139,488,181"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="178,135,211,139,210,144,178,140"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a709d772c597d8bc18d170300a8cabbb7" title=" " alt="" coords="551,5,726,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="482,43,535,36,536,41,482,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="449,69,535,48,536,54,451,74"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a586e3ce7bc155a85dae0bbe3149e4181" title="Be noisy if debugging is enabled." alt="" coords="536,72,741,115"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="482,72,521,77,520,82,482,77"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="482,91,520,91,520,96,482,96"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words." alt="" coords="551,139,726,181"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="488,157,535,157,535,163,488,163"/>
 </map>

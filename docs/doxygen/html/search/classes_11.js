@@ -12,13 +12,14 @@ var searchData=
   ['undoabletextfileupdate_9',['UndoableTextFileUpdate',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_text_file_update.html',1,'OCA::CAFEVDB::Common']]],
   ['updateappmtimes_10',['UpdateAppMTimes',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_update_app_m_times.html',1,'OCA::CAFEVDB::BackgroundJob']]],
   ['updategeocodingcache_11',['UpdateGeoCodingCache',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_update_geo_coding_cache.html',1,'OCA::CAFEVDB::Command']]],
-  ['uploadscontroller_12',['UploadsController',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_uploads_controller.html',1,'OCA::CAFEVDB::Controller']]],
-  ['urlgeneratorservice_13',['UrlGeneratorService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_url_generator_service.html',1,'OCA::CAFEVDB::Service']]],
-  ['userloggedineventlistener_14',['UserLoggedInEventListener',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_user_logged_in_event_listener.html',1,'OCA::CAFEVDB::Listener']]],
-  ['userloggedouteventlistener_15',['UserLoggedOutEventListener',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_user_logged_out_event_listener.html',1,'OCA::CAFEVDB::Listener']]],
-  ['userscopeservice_16',['UserScopeService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service.html',1,'OCA::CAFEVDB::Toolkit::Service']]],
-  ['userstorage_17',['UserStorage',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html',1,'OCA::CAFEVDB::Storage']]],
-  ['util_18',['Util',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html',1,'Util'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html',1,'Util']]],
-  ['uuid_19',['Uuid',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_uuid.html',1,'OCA::CAFEVDB::Common']]],
-  ['uuidtype_20',['UuidType',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type.html',1,'OCA::CAFEVDB::Database::Doctrine::DBAL::Types']]]
+  ['updatetabletaxationstatutorysources_12',['UpdateTableTaxationStatutorySources',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_update_table_taxation_statutory_sources.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['uploadscontroller_13',['UploadsController',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_uploads_controller.html',1,'OCA::CAFEVDB::Controller']]],
+  ['usedecimalforexactfractions_14',['UseDecimalForExactFractions',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_use_decimal_for_exact_fractions.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['userloggedineventlistener_15',['UserLoggedInEventListener',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_user_logged_in_event_listener.html',1,'OCA::CAFEVDB::Listener']]],
+  ['userloggedouteventlistener_16',['UserLoggedOutEventListener',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_user_logged_out_event_listener.html',1,'OCA::CAFEVDB::Listener']]],
+  ['userscopeservice_17',['UserScopeService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service.html',1,'OCA::CAFEVDB::Toolkit::Service']]],
+  ['userstorage_18',['UserStorage',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html',1,'OCA::CAFEVDB::Storage']]],
+  ['util_19',['Util',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html',1,'Util'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html',1,'Util']]],
+  ['uuid_20',['Uuid',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_uuid.html',1,'OCA::CAFEVDB::Common']]],
+  ['uuidtype_21',['UuidType',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type.html',1,'OCA::CAFEVDB::Database::Doctrine::DBAL::Types']]]
 ];

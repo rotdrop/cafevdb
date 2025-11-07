@@ -1,18 +1,15 @@
 <map id="isCompositeRowTag" name="isCompositeRowTag">
-<area shape="rect" id="Node000001" title=" " alt="" coords="693,81,836,108"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a7d8b34fc0c961eb85894f3710b004a65" title="Sub&#45;payment aware delete." alt="" coords="413,5,645,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="714,78,645,53,583,35,585,30,646,48,715,73"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#aa653839a82469b91dfa417e6cea4f18a" title="Remap the input values in order to satisfy the data&#45;model:" alt="" coords="193,81,365,108"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="678,97,366,97,366,92,678,92"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a8202a7769e79d42379eae567f6adaf3e" title=" " alt="" coords="438,107,620,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="678,107,620,113,620,108,678,101"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#ac25db3eeb682f1b3bf9cc9518b437ba0" title="Decide whether the current row refers to the composite payment or to a &quot;split&quot; invoice&#45;item." alt="" coords="468,157,590,184"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="722,117,646,148,591,162,589,157,644,143,720,112"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="423,112,365,106,366,101,423,107"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a3bf6b46469ec58a4ff5f4905043bd64b" title=" " alt="" coords="207,157,351,184"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="453,173,351,173,351,168,453,168"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a8a3cf7d60bc6cf8338f547e086c93839" title="Print only the values for the component row." alt="" coords="5,132,145,159"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="191,162,145,157,146,151,191,157"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#ab89a5c45478d6ecd92794a6aab30c72f" title="Print only the values for the composite row." alt="" coords="7,183,143,209"/>
-<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="191,184,144,190,143,185,191,179"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="665,56,808,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a7d8b34fc0c961eb85894f3710b004a65" title="Sub&#45;payment aware delete." alt="" coords="385,5,617,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="656,55,566,35,567,30,657,50"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#aa653839a82469b91dfa417e6cea4f18a" title="Remap the input values in order to satisfy the data&#45;model:" alt="" coords="415,56,587,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="650,72,588,72,588,67,650,67"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#ac25db3eeb682f1b3bf9cc9518b437ba0" title="Decide whether the current row refers to the composite payment or to a &quot;split&quot; invoice&#45;item." alt="" coords="440,107,562,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="657,89,563,110,562,104,656,84"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a3bf6b46469ec58a4ff5f4905043bd64b" title=" " alt="" coords="193,107,337,133"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="425,123,337,123,337,117,425,117"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a8a3cf7d60bc6cf8338f547e086c93839" title="Print only the values for the component row." alt="" coords="5,81,145,108"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="177,111,145,107,145,101,177,106"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#ab89a5c45478d6ecd92794a6aab30c72f" title="Print only the values for the composite row." alt="" coords="7,132,143,159"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="178,134,143,139,143,134,177,129"/>
 </map>

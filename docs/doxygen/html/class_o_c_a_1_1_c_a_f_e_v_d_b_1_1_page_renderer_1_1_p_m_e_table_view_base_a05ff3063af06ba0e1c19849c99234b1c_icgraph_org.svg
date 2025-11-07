@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth...">
+<g id="a_Node000001"><a xlink:title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit\rec to somethi...">
 <polygon fill="#999999" stroke="#666666" points="308,-94 196,-94 196,-74 308,-74 308,-94"/>
 <text text-anchor="middle" x="252" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00">legacyRecordToEntity</text>
 </a>

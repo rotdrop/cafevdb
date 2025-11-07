@@ -1,0 +1,7 @@
+<map id="getParticipationContext" name="getParticipationContext">
+<area shape="rect" id="Node000001" title="Return the participation context of the participant." alt="" coords="249,75,406,101"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#aad2e788b91f0eb007a6a5739efba85cd" title="Generate a data&#45;item referring to the default value of the given field." alt="" coords="5,5,201,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="243,74,200,65,201,60,244,68"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a74a90da0aba61e764a7808da186b4d03" title="Get participants." alt="" coords="14,104,192,163"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="243,108,193,118,192,113,242,102"/>
+</map>

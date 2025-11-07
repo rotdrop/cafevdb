@@ -1,0 +1,7 @@
+<map id="searchFolders" name="searchFolders">
+<area shape="rect" id="Node000001" title="Return all shared folders matching the given regexp." alt="" coords="5,35,109,61"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="190,5,284,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,37,174,26,175,31,110,42"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="157,56,317,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="110,54,142,59,141,64,109,59"/>
+</map>

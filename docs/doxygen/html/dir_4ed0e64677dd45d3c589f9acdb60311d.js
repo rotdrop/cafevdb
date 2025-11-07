@@ -21,7 +21,6 @@ var dir_4ed0e64677dd45d3c589f9acdb60311d =
     [ "FontService.php", "_font_service_8php_source.html", null ],
     [ "FuzzyInputService.php", "_fuzzy_input_service_8php_source.html", null ],
     [ "GeoCodingService.php", "_geo_coding_service_8php_source.html", null ],
-    [ "GroupFoldersService.php", "_service_2_group_folders_service_8php_source.html", null ],
     [ "HistoryService.php", "_history_service_8php_source.html", null ],
     [ "ImagesService.php", "_images_service_8php_source.html", null ],
     [ "IMAPService.php", "_i_m_a_p_service_8php_source.html", null ],
@@ -36,10 +35,8 @@ var dir_4ed0e64677dd45d3c589f9acdb60311d =
     [ "ProjectParticipantFieldsService.php", "_project_participant_fields_service_8php_source.html", null ],
     [ "ProjectService.php", "_project_service_8php_source.html", null ],
     [ "Registration.php", "_service_2_registration_8php_source.html", null ],
-    [ "RequestService.php", "_service_2_request_service_8php_source.html", null ],
-    [ "SimpleSharingService.php", "_simple_sharing_service_8php_source.html", null ],
+    [ "SentEmailsService.php", "_sent_emails_service_8php_source.html", null ],
     [ "ToolTipsDataService.php", "_tool_tips_data_service_8php_source.html", null ],
     [ "ToolTipsService.php", "_tool_tips_service_8php_source.html", null ],
-    [ "UrlGeneratorService.php", "_url_generator_service_8php_source.html", null ],
     [ "VCalendarService.php", "_v_calendar_service_8php_source.html", null ]
 ];

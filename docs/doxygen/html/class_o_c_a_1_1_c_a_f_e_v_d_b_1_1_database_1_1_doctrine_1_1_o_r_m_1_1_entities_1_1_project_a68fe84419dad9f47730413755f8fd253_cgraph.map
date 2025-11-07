@@ -1,7 +1,10 @@
 <map id="getFinancialBalanceSupportingDocuments" name="getFinancialBalanceSupportingDocuments">
-<area shape="rect" id="Node000001" title="Recurse to the balance documents folder and return its contents." alt="" coords="5,21,206,64"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a213742d9e35e53456aad8935feb01a94" title="Get financialBalanceDocumentsFolder." alt="" coords="254,21,459,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,40,238,40,238,45,206,45"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_dir_entry.html#aad5f81bb01a9f12cfb3fc38ca462a90d" title=" " alt="" coords="507,5,685,80"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="460,40,491,40,491,45,460,45"/>
+<area shape="rect" id="Node000001" title="Recurse to the balance documents folder and return its contents." alt="" coords="5,45,206,88"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a213742d9e35e53456aad8935feb01a94" title="Get financialBalanceDocumentsFolder." alt="" coords="254,45,459,88"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,64,238,64,238,69,206,69"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_dir_entry.html#aad5f81bb01a9f12cfb3fc38ca462a90d" title=" " alt="" coords="507,29,685,104"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="460,64,491,64,491,69,460,69"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="551,28,554,18,563,10,577,5,596,3,619,5,634,13,631,18,618,11,596,8,578,10,565,14,558,21,556,30"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_dir_entry.html#a3fe1afc347cb81adf2ef14b20b557429" title=" " alt="" coords="733,29,912,104"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="686,64,717,64,717,69,686,69"/>
 </map>

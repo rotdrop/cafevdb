@@ -22,5 +22,6 @@ var searchData=
   ['translationlocationsrepository_19',['TranslationLocationsRepository',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_translation_locations_repository.html',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Repositories']]],
   ['translationnotfoundlistener_20',['TranslationNotFoundListener',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_translation_not_found_listener.html',1,'OCA::CAFEVDB::Listener']]],
   ['translationservice_21',['TranslationService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n_1_1_translation_service.html',1,'OCA::CAFEVDB::Service::L10N']]],
-  ['translationsrepository_22',['TranslationsRepository',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_translations_repository.html',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Repositories']]]
+  ['translationsrepository_22',['TranslationsRepository',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_translations_repository.html',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Repositories']]],
+  ['transliterator_23',['Transliterator',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_transliterator.html',1,'OCA::CAFEVDB::Common']]]
 ];

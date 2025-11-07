@@ -1,0 +1,13 @@
+<map id="convertToDatabaseValue" name="convertToDatabaseValue">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,80,172,107"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a33c34655658fb79ccc553a30b1ba1bca" title="Generator method." alt="" coords="231,5,406,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,77,227,50,229,55,138,82"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a47e4e04b354beffdf126d8754feff817" title="Initialize an instance from a &quot;vanilla&quot; decimal string." alt="" coords="220,72,417,115"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="172,91,204,91,204,96,172,96"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a42fc8aa8ab20f32f34b911187f0c0efb" title="Try to convert the given float into a RationalNumber." alt="" coords="229,139,408,181"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="138,105,229,131,227,136,137,110"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#af6961ffe244014428feb49f4de09bd4e" title="Generate a new instance from a given base&#45;class instance." alt="" coords="465,5,662,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="407,24,450,24,450,29,407,29"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a20f18f274f99496eee868f2195efa8d6" title="{}" alt="" coords="476,72,651,115"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="417,91,460,91,460,96,417,96"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="removeGroupFromFolder" name="removeGroupFromFolder">
+<area shape="rect" id="Node000001" title="Remove a group from the given shared folder." alt="" coords="5,39,171,65"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="219,39,294,65"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,49,203,49,203,55,171,55"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="342,13,445,40"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="294,42,326,36,327,42,295,48"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="635,56,795,99"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="295,51,619,69,619,75,294,57"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="493,13,587,40"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="446,24,478,24,478,29,446,29"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="635,5,794,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="587,22,620,20,620,26,587,27"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="588,38,625,49,624,54,586,43"/>
+</map>

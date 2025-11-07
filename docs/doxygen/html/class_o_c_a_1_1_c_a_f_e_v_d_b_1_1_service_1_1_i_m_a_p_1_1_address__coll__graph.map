@@ -1,0 +1,5 @@
+<map id="Address" name="Address">
+<area shape="rect" id="Node000001" title="@psalm&#45;immutable" alt="" coords="29,80,98,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,122,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,48,66,80,61,80,61,48"/>
+</map>

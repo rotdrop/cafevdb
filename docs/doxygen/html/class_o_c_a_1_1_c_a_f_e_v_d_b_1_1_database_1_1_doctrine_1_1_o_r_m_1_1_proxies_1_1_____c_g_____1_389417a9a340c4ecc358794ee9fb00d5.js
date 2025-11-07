@@ -18,13 +18,14 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "getProject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a5cb158509764d3c0103ece1443f4ee12", null ],
     [ "getProjectParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a222dfbdf28e944d58d77dcba96c67a0c", null ],
     [ "getProjectPayments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a5c6cf3286dd89e5d46f9cc6d31ee0a8a", null ],
+    [ "getReceivablesDueDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a093be5e60d25d1dc7b624f67b1ed40c7", null ],
     [ "getSepaBankAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#abb1e5bb76dcf8296246d04c1af1e86a0", null ],
     [ "getSepaDebitMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a8b1c7d057c005c35e5a0fd7c5fc053b8", null ],
     [ "getSepaTransaction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#acb4cd750306fdec5fb44137bce993d58", null ],
     [ "getSubject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a7ec8f5b794ded8f3c0df9afd96c8233c", null ],
     [ "getSupportingDocument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#ac685963a742728143bc6a9f9da1ec7b2", null ],
     [ "jsonSerialize", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#ad402d8679325bc514874370f02b5c2ac", null ],
-    [ "setAmount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a187f98639ba4ff0d719c29448d1b7641", null ],
+    [ "setAmount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a665b88c310e4272f43d75be8b398d5e4", null ],
     [ "setDateOfReceipt", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#ad9a45d00dc22533150346e66cc383a94", null ],
     [ "setDebitNote", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#af1f3079f1f4df8bedb3a57b0e4349b4a", null ],
     [ "setDonationReceipt", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a49aede4c94796251768108db466bd27f", null ],
@@ -39,5 +40,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "setSepaTransaction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a25520a76054b610127d47e884d9eecd2", null ],
     [ "setSubject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a3bf78a815e53a0b9effb9467601f3fe4", null ],
     [ "setSupportingDocument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a6d47bcc55b6b3917a8fe364af61ab527", null ],
+    [ "sumPaymentsAmount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a7a4baea6578468d4ebd178a5a2f3e876", null ],
     [ "updateSubject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a860ca58f7b2332d44f16da17c9345fe1", null ]
 ];

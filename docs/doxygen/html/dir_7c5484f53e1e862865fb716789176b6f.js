@@ -26,6 +26,7 @@ var dir_7c5484f53e1e862865fb716789176b6f =
     [ "ProjectPaymentsRepository.php", "_project_payments_repository_8php_source.html", null ],
     [ "ProjectsRepository.php", "_projects_repository_8php_source.html", null ],
     [ "ProjectWebPagesRepository.php", "_project_web_pages_repository_8php_source.html", null ],
+    [ "RepositoryFactory.php", "_repository_factory_8php_source.html", null ],
     [ "SentEmailsRepository.php", "_sent_emails_repository_8php_source.html", null ],
     [ "SepaBankAccountsRepository.php", "_sepa_bank_accounts_repository_8php_source.html", null ],
     [ "SepaBulkTransactionsRepository.php", "_sepa_bulk_transactions_repository_8php_source.html", null ],

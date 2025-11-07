@@ -1,5 +1,5 @@
 <map id="fileAttachmentOptions" name="fileAttachmentOptions">
-<area shape="rect" id="Node000001" title="A helper function to generate suitable select options for PageNavigation::selectOptions()." alt="" coords="5,31,156,57"/>
+<area shape="rect" id="Node000001" title="A helper function to generate suitable select options for PageNavigation\selectOptions()." alt="" coords="5,31,156,57"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#adda03ec92a7028324dd0f3d882e975ba" title="Return non&#45;personalized document templates for use in mass&#45;email." alt="" coords="204,5,383,32"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,32,188,29,188,34,156,38"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a56fae4bd1b4337dfe78d90b051c93a01" title="Return the file attachment data." alt="" coords="237,56,350,83"/>

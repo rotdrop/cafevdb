@@ -49,7 +49,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html" target="_top" xlink:title="Abstract migration class, the derived classes have to fill AbstractMigration::$sql.">
+<g id="a_Node000003"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html" target="_top" xlink:title="Abstract migration class, the derived classes have to fill AbstractMigration\$sql.">
 <polygon fill="white" stroke="#666666" points="131.12,-132 38.62,-132 38.62,-112 131.12,-112 131.12,-132"/>
 <text text-anchor="middle" x="84.88" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">AbstractMigration</text>
 </a>

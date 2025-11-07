@@ -2,9 +2,9 @@
 <area shape="rect" id="Node000001" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,237,63,264"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a3ad8a4109147715b8c5573d1dbdb2d3d" title="Merge $arrays recursively where later arguments in the list override the values of previous arguments..." alt="" coords="466,29,641,72"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="34,236,40,204,53,161,75,117,91,98,109,82,149,59,191,42,236,31,281,24,370,21,450,28,450,33,370,27,282,29,237,36,193,47,151,64,112,86,94,102,80,120,58,163,46,205,40,237"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aee57cb8d60602879f6a65e257cdcbf63" title=" " alt="" coords="990,155,1195,197"/>
-<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="42,263,65,315,85,343,112,364,148,381,179,389,209,392,237,390,298,377,374,364,466,352,558,334,739,290,898,242,1018,201,1020,206,899,247,740,295,560,339,466,357,374,369,299,382,238,395,208,397,178,395,146,386,109,369,82,347,61,318,37,265"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" title="Define a basic join&#45;structure for phpMyEdit by using the information from self::$joinStructure." alt="" coords="112,163,372,205"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aee57cb8d60602879f6a65e257cdcbf63" title=" " alt="" coords="990,151,1195,193"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="42,263,65,315,85,343,112,364,148,381,179,389,208,391,237,389,298,376,374,364,537,354,664,344,724,335,788,321,859,300,941,270,1001,238,1053,201,1056,205,1004,242,943,274,860,305,789,326,725,340,665,349,537,359,374,369,299,381,238,394,208,396,178,394,146,386,109,369,82,347,61,318,37,265"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" title="Define a basic join&#45;structure for phpMyEdit by using the information from self\$joinStructure." alt="" coords="112,163,372,205"/>
 <area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="62,235,110,215,132,208,134,213,112,220,64,239"/>
 <area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="140,229,345,272"/>
 <area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="63,248,124,248,124,253,63,253"/>
@@ -12,21 +12,23 @@
 <area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="64,261,112,282,129,288,128,293,110,286,62,266"/>
 <area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a4bc3294be95e06a40ae3bdc7d5419749" title="Generate a join&#45;table field, given join&#45;table and field name." alt="" coords="111,96,374,139"/>
 <area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="39,236,66,192,85,169,109,149,117,144,120,148,112,153,89,172,70,196,44,238"/>
-<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a9d773b8f093d7d70a3fb9b89b51ff7cd" title="Create a trivial description definition with no casts and no NULL coalescing." alt="" coords="120,429,365,472"/>
-<area shape="poly" id="edge17_Node000001_Node000013" title=" " alt="" coords="40,264,48,294,62,333,83,374,112,409,128,420,124,424,109,413,78,377,57,335,43,295,35,265"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a9d773b8f093d7d70a3fb9b89b51ff7cd" title="Create a trivial description definition with no casts and no NULL coalescing." alt="" coords="120,429,365,472"/>
+<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="40,264,48,294,62,333,83,374,112,409,128,420,124,424,109,413,78,377,57,335,43,295,35,265"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9396752fa41df5ffcd301d52263367f9" title="Inner work&#45;horse for arrayMergeRecursive." alt="" coords="738,29,936,72"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="641,48,723,48,723,53,641,53"/>
 <area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="789,29,787,19,795,10,812,5,837,3,864,5,881,11,879,16,863,10,837,8,813,10,798,15,792,21,794,28"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="434,229,673,288"/>
 <area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="335,203,419,224,418,229,334,209"/>
 <area shape="poly" id="edge14_Node000009_Node000002" title=" " alt="" coords="344,93,450,70,451,75,346,98"/>
-<area shape="poly" id="edge16_Node000009_Node000006" title=" " alt="" coords="355,137,376,149,392,165,401,183,408,199,424,215,430,219,427,224,420,219,404,202,396,185,388,168,372,153,352,142"/>
+<area shape="poly" id="edge17_Node000009_Node000006" title=" " alt="" coords="355,137,376,149,392,165,401,183,408,199,424,215,430,219,427,224,420,219,404,202,396,185,388,168,372,153,352,142"/>
 <area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a8a9d6dd0754451d7214ed760a2179bd4" title="Add a &quot;slug&quot; as tooltips&#45;index and css&#45;class." alt="" coords="450,96,656,139"/>
 <area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="374,115,435,115,435,120,374,120"/>
 <area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="422,163,684,205"/>
 <area shape="poly" id="edge15_Node000009_Node000012" title=" " alt="" coords="346,137,436,156,435,161,344,142"/>
-<area shape="poly" id="edge11_Node000010_Node000004" title=" " alt="" coords="657,136,733,148,857,161,974,168,974,174,857,166,732,153,656,141"/>
-<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a166d2dbd24c4913a9461c5813bbb4232" title="Generate a &quot;unified&quot; tooltip&#45;slug in order to obtain tool&#45;tips from the ToolTipsService." alt="" coords="732,96,942,139"/>
-<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="656,115,717,115,717,120,656,120"/>
-<area shape="poly" id="edge13_Node000011_Node000004" title=" " alt="" coords="933,137,982,148,981,153,932,142"/>
+<area shape="poly" id="edge11_Node000010_Node000004" title=" " alt="" coords="657,116,793,122,942,136,989,144,988,149,941,141,792,127,656,121"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a166d2dbd24c4913a9461c5813bbb4232" title="Generate a &quot;unified&quot; tooltip&#45;slug in order to obtain tool&#45;tips from the ToolTipsService." alt="" coords="732,151,942,193"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="657,135,718,146,717,152,656,140"/>
+<area shape="poly" id="edge13_Node000011_Node000004" title=" " alt="" coords="942,169,974,169,974,175,942,175"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words." alt="" coords="749,217,925,260"/>
+<area shape="poly" id="edge16_Node000012_Node000013" title=" " alt="" coords="668,203,735,216,734,222,667,209"/>
 </map>

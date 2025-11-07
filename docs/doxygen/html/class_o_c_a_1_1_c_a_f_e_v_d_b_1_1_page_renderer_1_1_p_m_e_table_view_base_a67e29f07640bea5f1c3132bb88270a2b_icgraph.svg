@@ -49,7 +49,7 @@
 <script type="application/ecmascript">
 var viewWidth = 841;
 var viewHeight = 826;
-var sectionId = 'dynsection-34';
+var sectionId = 'dynsection-35';
 </script>
 <script type="application/ecmascript" xlink:href="svg.min.js"/>
 <svg id="graph" class="graph">
@@ -103,7 +103,7 @@ var sectionId = 'dynsection-34';
 <!-- Node8 -->
 <g id="Node000008" class="node">
 <title>Node8</title>
-<g id="a_Node000008"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" target="_top" xlink:title="Define a basic join&#45;structure for phpMyEdit by using the information from self::$joinStructure.">
+<g id="a_Node000008"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" target="_top" xlink:title="Define a basic join&#45;structure for phpMyEdit by using the information from self\$joinStructure.">
 <polygon fill="white" stroke="#666666" points="606,-444 506,-444 506,-424 606,-424 606,-444"/>
 <text text-anchor="middle" x="556" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">defineJoinStructure</text>
 </a>

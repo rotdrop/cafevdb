@@ -7,7 +7,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "getVoice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_5f9b0effdfab28a8315a7a6f368d0601.html#a44fb6bcc3beb5c6a8b5f806f29897b59", null ],
     [ "setInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_5f9b0effdfab28a8315a7a6f368d0601.html#a31ad2de5be292fc303f136fdfc27a9ed", null ],
     [ "setProject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_5f9b0effdfab28a8315a7a6f368d0601.html#aec78c4546ef4c8c304ccda4d008c6b62", null ],
-    [ "setProjectProjectInstruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_5f9b0effdfab28a8315a7a6f368d0601.html#ae5857c333f965762556b935a7378e168", null ],
+    [ "setProjectInstruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_5f9b0effdfab28a8315a7a6f368d0601.html#ae2becd97351e58291e8694f84a4d5ee3", null ],
     [ "setQuantity", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_5f9b0effdfab28a8315a7a6f368d0601.html#a6aaf2dab8685fde29dbdf49b782017df", null ],
     [ "setVoice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_5f9b0effdfab28a8315a7a6f368d0601.html#a09e8087e0adbf405673e7b4f397b734c", null ],
     [ "$quantity", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_5f9b0effdfab28a8315a7a6f368d0601.html#a0d55a203c1637a8bee49083254bb6574", null ],

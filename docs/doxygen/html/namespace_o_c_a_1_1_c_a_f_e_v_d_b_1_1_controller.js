@@ -1,5 +1,6 @@
 var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller =
 [
+    [ "AccountingController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_accounting_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_accounting_controller" ],
     [ "AdminSettingsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_admin_settings_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_admin_settings_controller" ],
     [ "BackgroundJobController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_background_job_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_background_job_controller" ],
     [ "BlogController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_blog_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_blog_controller" ],

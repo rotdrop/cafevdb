@@ -1,0 +1,9 @@
+<map id="negEq" name="negEq">
+<area shape="rect" id="Node000001" title="Negate the current instance in place." alt="" coords="5,31,64,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#ae01350f1c15f981356909ec29c53d846" title="Replace this instance by the given argument." alt="" coords="112,5,171,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,34,96,27,97,32,65,40"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a0ebd76c7d4d35c0a9ebf06b7df6afba9" title="Shortcut for RationalNumber\negate()." alt="" coords="120,56,162,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="65,48,106,58,105,63,64,54"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#acca0e59aedeb60fe0ed4c2d5188f9ae5" title=" " alt="" coords="219,56,279,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="163,67,203,67,203,72,163,72"/>
+</map>

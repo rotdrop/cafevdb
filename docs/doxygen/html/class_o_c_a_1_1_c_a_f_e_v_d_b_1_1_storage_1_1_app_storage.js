@@ -2,6 +2,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage =
 [
     [ "copyFileSystemFile", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a5041a2b5f1f49158855c5ebb78e77722", null ],
     [ "draftExists", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#ac6bf6b7d24ab36073fa9a34068059fec", null ],
+    [ "ensureFile", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a72aabe6675aa31941fa13d4b286f3a6b", null ],
     [ "ensureFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a43e2b8de357718737d0fa45498269a3f", null ],
     [ "fileExistsInFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a46f1019db940db967eb1488e2eb2fb7a", null ],
     [ "getDirectoryListing", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#aa51899b6f0261142af120d4d3a72b822", null ],

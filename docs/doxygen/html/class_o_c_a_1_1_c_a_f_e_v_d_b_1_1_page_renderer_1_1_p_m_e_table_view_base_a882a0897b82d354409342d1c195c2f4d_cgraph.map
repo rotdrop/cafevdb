@@ -1,6 +1,6 @@
 <map id="beforeUpdateDoUpdateAll" name="beforeUpdateDoUpdateAll">
 <area shape="rect" id="Node000001" title="Before update&#45;trigger which ideally should update all data such that nothing remains to do for phpMyE..." alt="" coords="5,365,179,392"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ad92070c3daaf56e870af042e4ebf3b78" title="Slice the given entity id by the given keys and return a composite key joined with self::COMP_KEY_SEP..." alt="" coords="249,5,382,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ad92070c3daaf56e870af042e4ebf3b78" title="Slice the given entity id by the given keys and return a composite key joined with self\COMP_KEY_SEP." alt="" coords="249,5,382,32"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,364,102,307,125,223,142,177,164,131,191,87,225,49,240,37,244,41,228,53,196,90,169,133,147,179,130,225,107,309,98,365"/>
 <area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a586e3ce7bc155a85dae0bbe3149e4181" title="Be noisy if debugging is enabled." alt="" coords="512,56,569,83"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="92,364,102,312,125,236,142,196,164,157,192,122,225,92,258,74,294,61,331,53,368,49,439,50,497,58,497,63,439,56,368,55,332,59,295,66,260,79,228,97,195,125,168,160,147,198,130,238,107,313,98,365"/>
@@ -14,18 +14,18 @@
 <area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="129,362,241,321,243,326,131,367"/>
 <area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a5974458d91d622f2f455643f17af9417" title="Find the recursion end&#45;point for a nested join description." alt="" coords="245,365,386,392"/>
 <area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="179,376,230,376,230,381,179,381"/>
-<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a52152c1de369b4179e8e391899eca24a" title="Inverse of self::joinTableFieldName()." alt="" coords="266,416,366,443"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a52152c1de369b4179e8e391899eca24a" title="Inverse of self\joinTableFieldName()." alt="" coords="266,416,366,443"/>
 <area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="155,390,251,412,250,417,154,395"/>
 <area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="248,467,384,493"/>
 <area shape="poly" id="edge16_Node000001_Node000012" title=" " alt="" coords="115,390,165,421,228,452,245,459,243,464,226,457,163,425,112,395"/>
-<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="228,517,404,544"/>
-<area shape="poly" id="edge17_Node000001_Node000013" title=" " alt="" coords="106,391,155,445,189,476,228,503,239,509,237,513,225,508,186,480,151,449,102,394"/>
-<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#aa61d3de43b26061a4d0097306931c64f" title="Remove all whitespace." alt="" coords="228,568,404,611"/>
-<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="102,391,148,467,185,513,228,554,234,558,231,562,225,558,181,517,144,470,98,394"/>
-<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#ac2f42dfc2f9ac43830897947d86cf3bc" title="Enable or disable writing to the change&#45;log table." alt="" coords="227,635,405,693"/>
-<area shape="poly" id="edge20_Node000001_Node000016" title=" " alt="" coords="100,391,115,434,141,495,179,561,202,593,229,621,231,623,227,627,225,625,198,596,175,564,137,498,110,436,95,393"/>
-<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a62e9094de93176fae4478b7eae96d61f" title="Unset all array elements with value $value." alt="" coords="228,717,404,760"/>
-<area shape="poly" id="edge21_Node000001_Node000017" title=" " alt="" coords="98,392,108,449,130,532,147,578,169,623,196,666,229,703,231,706,227,710,225,707,192,669,165,626,143,580,125,534,103,450,92,393"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="228,517,404,544"/>
+<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="106,391,155,445,189,476,228,503,239,509,237,513,225,508,186,480,151,449,102,394"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#aa61d3de43b26061a4d0097306931c64f" title="Remove all whitespace." alt="" coords="228,568,404,611"/>
+<area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="102,391,148,467,185,513,228,554,234,558,231,562,225,558,181,517,144,470,98,394"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#ac2f42dfc2f9ac43830897947d86cf3bc" title="Enable or disable writing to the change&#45;log table." alt="" coords="227,635,405,693"/>
+<area shape="poly" id="edge21_Node000001_Node000017" title=" " alt="" coords="100,391,115,434,141,495,179,561,202,593,229,621,231,623,227,627,225,625,198,596,175,564,137,498,110,436,95,393"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a62e9094de93176fae4478b7eae96d61f" title="Unset all array elements with value $value." alt="" coords="228,717,404,760"/>
+<area shape="poly" id="edge22_Node000001_Node000018" title=" " alt="" coords="98,392,108,449,130,532,147,578,169,623,196,666,229,703,231,706,227,710,225,707,192,669,165,626,143,580,125,534,103,450,92,393"/>
 <area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="377,104,497,76,498,82,378,109"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a709d772c597d8bc18d170300a8cabbb7" title=" " alt="" coords="453,107,628,149"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="377,119,438,122,437,127,377,125"/>
@@ -35,6 +35,8 @@
 <area shape="poly" id="edge10_Node000008_Node000006" title=" " alt="" coords="404,227,437,227,437,232,404,232"/>
 <area shape="poly" id="edge12_Node000009_Node000006" title=" " alt="" coords="389,272,451,253,452,258,391,277"/>
 <area shape="poly" id="edge14_Node000010_Node000010" title=" " alt="" coords="278,366,271,357,276,347,291,341,316,339,342,341,357,348,354,352,341,346,316,344,292,346,280,351,277,356,282,363"/>
-<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a420255eaf134f40b32155f8138cde030" title="Normalize spaces and commas after and before spaces." alt="" coords="453,568,628,611"/>
-<area shape="poly" id="edge19_Node000014_Node000015" title=" " alt="" coords="404,587,437,587,437,592,404,592"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words." alt="" coords="453,459,628,501"/>
+<area shape="poly" id="edge17_Node000012_Node000013" title=" " alt="" coords="384,477,437,477,437,483,384,483"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a420255eaf134f40b32155f8138cde030" title="Normalize spaces and commas after and before spaces." alt="" coords="453,568,628,611"/>
+<area shape="poly" id="edge20_Node000015_Node000016" title=" " alt="" coords="404,587,437,587,437,592,404,592"/>
 </map>

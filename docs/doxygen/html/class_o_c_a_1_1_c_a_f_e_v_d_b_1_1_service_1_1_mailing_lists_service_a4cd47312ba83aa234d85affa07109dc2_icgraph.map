@@ -1,11 +1,9 @@
 <map id="combinedVersion" name="combinedVersion">
-<area shape="rect" id="Node000001" title="MAJOR.MINOR.REVISION." alt="" coords="544,31,666,57"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad654c2587cb078497126748b25639556" title=" " alt="" coords="368,31,496,57"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="528,47,497,47,497,41,528,41"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="243,31,320,57"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="352,47,320,47,320,41,352,41"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a9dcedfe5d7713b75758ec7098197aa8b" title="Configure the given list as an announcements&#45;only list." alt="" coords="5,5,195,32"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="227,39,195,35,195,29,227,34"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad9ddb4782eae69fecac300b4851f524a" title="Just send an invitation." alt="" coords="74,56,126,83"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="227,54,127,68,126,63,227,49"/>
+<area shape="rect" id="Node000001" title="MAJOR.MINOR.REVISION." alt="" coords="407,5,529,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad654c2587cb078497126748b25639556" title=" " alt="" coords="231,5,359,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="391,21,360,21,360,16,391,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="106,5,183,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="215,21,183,21,183,16,215,16"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad9ddb4782eae69fecac300b4851f524a" title="Just send an invitation." alt="" coords="5,5,58,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="90,21,58,21,58,16,90,16"/>
 </map>

@@ -1,0 +1,7 @@
+<map id="findByIdOrName" name="findByIdOrName">
+<area shape="rect" id="Node000001" title="Find a project by its Id or name." alt="" coords="155,31,273,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_projects_repository.html#a4fff6d6c3c1f3672aaffdf1764f93b16" title="Convenience function: just return the argument if it is already a project entity, otherwise fetch the..." alt="" coords="5,5,107,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,35,107,29,108,24,140,29"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_projects_repository.html#a9fc9cf81994a229ad5f826abe9ef3c87" title="Find a project by its Id." alt="" coords="21,56,91,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,59,91,66,91,61,139,53"/>
+</map>

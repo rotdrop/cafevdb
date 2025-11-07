@@ -1,0 +1,9 @@
+<map id="subEq" name="subEq">
+<area shape="rect" id="Node000001" title="Subtract the given argument to the current instance." alt="" coords="5,31,64,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#ae01350f1c15f981356909ec29c53d846" title="Replace this instance by the given argument." alt="" coords="112,5,171,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,34,96,27,97,32,65,40"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a8bc1911b84efc2137d55582bfe5f9d46" title="Shortcut for RationalNumber\subtract()." alt="" coords="120,56,162,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="65,48,106,58,105,63,64,54"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a9f7b75bffa8ed1a466f057d5c1fccc10" title="{}" alt="" coords="219,56,287,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="163,67,203,67,203,72,163,72"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="getFolderById" name="getFolderById">
+<area shape="rect" id="Node000001" title="Get the shared folder by its id." alt="" coords="5,35,108,61"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="156,5,316,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,37,140,32,141,37,108,42"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6ef3319f6875536039a7256a3b022fec" title="Log a debug message." alt="" coords="156,56,316,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,54,140,59,140,64,108,59"/>
+</map>

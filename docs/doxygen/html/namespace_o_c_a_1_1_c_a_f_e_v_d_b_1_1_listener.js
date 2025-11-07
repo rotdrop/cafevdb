@@ -2,6 +2,7 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener =
 [
     [ "AfterEncryptionKeyPairChangedListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_after_encryption_key_pair_changed_listener.html", null ],
     [ "BeforeEncryptionKeyPairChangedListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_before_encryption_key_pair_changed_listener.html", null ],
+    [ "BeforePreferenceMutatedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_before_preference_mutated_event_listener.html", null ],
     [ "BeforeTemplateRenderedListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_before_template_rendered_listener.html", null ],
     [ "CalendarDeletedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_deleted_event_listener.html", null ],
     [ "CalendarObjectCreatedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_object_created_event_listener.html", null ],

@@ -13,6 +13,8 @@ var dir_9128d6bfa9a663474c53da73f8f42098 =
     [ "NumberFormatter.php", "_number_formatter_8php_source.html", null ],
     [ "PHPMailer.php", "_p_h_p_mailer_8php_source.html", null ],
     [ "PlainFileProgressStatus.php", "_plain_file_progress_status_8php_source.html", null ],
+    [ "RationalNumber.php", "_rational_number_8php_source.html", null ],
+    [ "Transliterator.php", "_transliterator_8php_source.html", null ],
     [ "UndoableFileRemove.php", "_undoable_file_remove_8php_source.html", null ],
     [ "UndoableFileRename.php", "_undoable_file_rename_8php_source.html", null ],
     [ "UndoableFileReplace.php", "_undoable_file_replace_8php_source.html", null ],

@@ -1,0 +1,9 @@
+<map id="round" name="round">
+<area shape="rect" id="Node000001" title="Round &quot;half away from zero&quot;." alt="" coords="5,31,59,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a20f18f274f99496eee868f2195efa8d6" title="{}" alt="" coords="107,5,152,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,35,91,26,92,31,60,40"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a8bc1911b84efc2137d55582bfe5f9d46" title="Shortcut for RationalNumber\subtract()." alt="" coords="108,56,150,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="60,48,94,57,93,63,59,53"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a9f7b75bffa8ed1a466f057d5c1fccc10" title="{}" alt="" coords="200,56,268,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="151,67,184,67,184,72,151,72"/>
+</map>

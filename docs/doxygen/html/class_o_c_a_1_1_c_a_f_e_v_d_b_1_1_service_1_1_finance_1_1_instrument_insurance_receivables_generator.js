@@ -1,8 +1,10 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator =
 [
     [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator.html#a4d716e4a91a2148ba0796ce1a6ed12c1", null ],
+    [ "balancingAccountSlug", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator.html#ae9f456dd6511091a4d9e85db5484901c", null ],
     [ "bind", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator.html#a321565924f86a84c114503164ad4008b", null ],
     [ "dueDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator.html#a06995119cd478dfdcfa64d3f7367d646", null ],
+    [ "generateLegacyBalancingAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator.html#a4b7ac5aedc3c0a057b197f7590b0133b", null ],
     [ "generateReceivables", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator.html#a54792b75ff728b792f40c9072ca716eb", null ],
     [ "operationLabels", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator.html#aa84f861d9de3527fe26ef463f613a4bb", null ],
     [ "slug", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator.html#a5e011db241ccaea8d5c7f53261c017f2", null ],

@@ -42,6 +42,7 @@ var dir_bdb67f317cde52bd786341338dd4486f =
     [ "MusicianInstrument.php", "_musician_instrument_8php_source.html", null ],
     [ "MusicianRowAccessToken.php", "_musician_row_access_token_8php_source.html", null ],
     [ "Project.php", "_project_8php_source.html", null ],
+    [ "ProjectApplication.php", "_project_application_8php_source.html", null ],
     [ "ProjectEvent.php", "_database_2_doctrine_2_o_r_m_2_entities_2_project_event_8php_source.html", null ],
     [ "ProjectInstrument.php", "_project_instrument_8php_source.html", null ],
     [ "ProjectInstrumentationNumber.php", "_project_instrumentation_number_8php_source.html", null ],

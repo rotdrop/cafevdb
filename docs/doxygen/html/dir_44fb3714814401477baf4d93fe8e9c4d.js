@@ -1,5 +1,6 @@
 var dir_44fb3714814401477baf4d93fe8e9c4d =
 [
+    [ "AccountingController.php", "_accounting_controller_8php_source.html", null ],
     [ "AdminSettingsController.php", "_admin_settings_controller_8php_source.html", null ],
     [ "BackgroundJobController.php", "_background_job_controller_8php_source.html", null ],
     [ "BlogController.php", "_blog_controller_8php_source.html", null ],

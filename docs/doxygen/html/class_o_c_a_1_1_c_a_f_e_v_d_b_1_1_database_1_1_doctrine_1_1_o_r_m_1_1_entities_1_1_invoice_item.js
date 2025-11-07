@@ -13,7 +13,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "getReceivableOption", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a86356eb4c2a1dd6cfdc8c7597b45b2b4", null ],
     [ "getSubject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a7ec8f5b794ded8f3c0df9afd96c8233c", null ],
     [ "jsonSerialize", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#ad402d8679325bc514874370f02b5c2ac", null ],
-    [ "setAmount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a187f98639ba4ff0d719c29448d1b7641", null ],
+    [ "setAmount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a665b88c310e4272f43d75be8b398d5e4", null ],
     [ "setBalanceDocumentsFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#ad53712c439abc0fffefe24d47b6b319b", null ],
     [ "setDebitor", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a683b6a5df21addb7d1bf4a652799e694", null ],
     [ "setId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a02a5667ab1839b99445c63ed76e3eb39", null ],

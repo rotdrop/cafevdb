@@ -1,0 +1,7 @@
+<map id="inverse" name="inverse">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="194,5,257,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#aadb2d118864f41e3ad7c102358a4a211" title="Shortcut for RationalNumber\invsere()." alt="" coords="108,5,146,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,21,146,21,146,16,178,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a5c28e7857c5e62c5f1428c161e9a8c7b" title="Invert the current instance in place." alt="" coords="5,5,60,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="92,21,60,21,60,16,92,16"/>
+</map>

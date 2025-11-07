@@ -1,0 +1,8 @@
+<map id="count" name="count">
+<area shape="rect" id="Node000001" title=" " alt="" coords="237,29,290,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="282,16,276,10,264,8,252,10,246,14,245,20,248,28,243,30,239,20,242,11,250,5,264,3,278,5,286,12"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list.html#a156e289e629eda708f10e292dfe9c8b2" title="Construct a new list from an horde list." alt="" coords="107,29,189,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="222,45,189,45,189,40,222,40"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list.html#ae5cad4df4d96ecb2d7c157737a846787" title="Parse an address (list) like &quot;a@b.c&quot; or &quot;a@b.c, d@e.f&quot;." alt="" coords="5,29,59,56"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="91,45,59,45,59,40,91,40"/>
+</map>

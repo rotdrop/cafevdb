@@ -1,11 +1,15 @@
 <map id="isOnlyAssociated" name="isOnlyAssociated">
-<area shape="rect" id="Node000001" title="Determine if $this is only an associated member or business contact without double&#45;role as musician." alt="" coords="425,31,549,57"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a75e2ce51a3811fbed7b601203380369b" title="Return the participation context of the participant." alt="" coords="220,5,377,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="409,36,377,32,378,27,410,31"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#ab8cd6a2002c99b50507b40f5bb199a26" title="Return the number of &quot;serious&quot; items which &quot;use&quot; this entity." alt="" coords="270,56,327,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="410,57,328,68,327,63,409,52"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a0292938ac501bd686542840ea8866ba9" title="Return a boolean to indicate that this entity is no longer used." alt="" coords="109,56,172,83"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="255,72,173,72,173,67,255,67"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#acd81dda8a6f978bdab707300422e0432" title="Return a boolean to indicate that this field is used." alt="" coords="5,56,61,83"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="93,72,61,72,61,67,93,67"/>
+<area shape="rect" id="Node000001" title="Determine if $this is only an associated member or business contact without double&#45;role as musician." alt="" coords="557,153,681,180"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a75e2ce51a3811fbed7b601203380369b" title="Return the participation context of the participant." alt="" coords="352,120,509,147"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="542,156,509,150,510,145,543,150"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#ab8cd6a2002c99b50507b40f5bb199a26" title="Return the number of &quot;serious&quot; items which &quot;use&quot; this entity." alt="" coords="402,179,459,205"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="542,180,460,191,459,186,541,174"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#aad2e788b91f0eb007a6a5739efba85cd" title="Generate a data&#45;item referring to the default value of the given field." alt="" coords="109,5,304,80"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="380,116,299,83,301,78,382,111"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a74a90da0aba61e764a7808da186b4d03" title="Get participants." alt="" coords="117,104,296,163"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="337,136,296,136,296,131,337,131"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a0292938ac501bd686542840ea8866ba9" title="Return a boolean to indicate that this entity is no longer used." alt="" coords="175,187,238,213"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="387,196,239,202,239,196,387,191"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#acd81dda8a6f978bdab707300422e0432" title="Return a boolean to indicate that this field is used." alt="" coords="5,187,61,213"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="159,203,61,203,61,197,159,197"/>
 </map>

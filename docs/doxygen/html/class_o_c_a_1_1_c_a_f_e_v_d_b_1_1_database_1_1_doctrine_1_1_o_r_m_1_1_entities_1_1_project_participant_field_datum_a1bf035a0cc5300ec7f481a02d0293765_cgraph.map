@@ -1,0 +1,7 @@
+<map id="amountPaid" name="amountPaid">
+<area shape="rect" id="Node000001" title="The amount already paid as stored in the ProjectPayment entities." alt="" coords="5,51,96,77"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#adde00cbb96d3cbd50bea3d12fa11cead" title="{}" alt="" coords="149,5,324,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,52,133,45,134,50,97,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a4097b54f79b8353b00e8b6712f845562" title="Get amount." alt="" coords="144,72,329,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="97,70,129,77,128,82,96,76"/>
+</map>

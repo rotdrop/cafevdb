@@ -1,0 +1,9 @@
+<map id="fromAddress" name="fromAddress">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,101,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a0abfd59485d4c62afddeb31fcfbc7ec5" title=" " alt="" coords="149,5,250,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,33,133,27,134,33,101,38"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a800c350017f527bf880a7aa440dc0ea1" title=" " alt="" coords="165,56,234,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="101,50,150,58,149,63,101,55"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a35115d6c4451757ebad296254ead1c5a" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="298,56,368,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="234,67,283,67,283,72,234,72"/>
+</map>

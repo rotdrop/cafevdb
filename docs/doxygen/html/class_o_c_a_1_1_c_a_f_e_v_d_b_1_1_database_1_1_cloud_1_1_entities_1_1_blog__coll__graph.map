@@ -1,9 +1,17 @@
 <map id="Blog" name="Blog">
-<area shape="rect" id="Node000001" title="Cloud blog entity." alt="" coords="105,155,152,181"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html" title="Record notices of tax exemption from the corporate income tax (or other taxes)." alt="" coords="58,80,200,107"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,122,132,154,126,154,126,122"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,122,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,42,120,78,116,81,83,45"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="146,5,242,32"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="175,45,142,81,138,78,171,42"/>
+<area shape="rect" id="Node000001" title="Cloud blog entity." alt="" coords="124,355,172,381"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html" title="Invoices collects a couple of InvoiceItems of the same Musician." alt="" coords="116,279,180,305"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,320,151,354,146,354,146,320"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,81,102,108"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="60,123,69,163,85,205,111,246,138,276,134,280,107,249,80,208,64,165,55,124"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_taxation_statutory_source.html" title="A table for recording possible tax excemption reasons and their legal justification (link to the corr..." alt="" coords="95,180,260,207"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="83,116,163,177,160,182,80,120"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="265,81,381,108"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="331,123,334,154,333,189,325,225,306,257,285,269,252,279,181,290,180,285,251,274,283,264,302,253,320,223,328,188,329,154,326,124"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="293,119,198,182,195,177,290,115"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="158,220,152,232,148,256,149,278,143,278,142,256,147,230,153,217"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html" title="Rational numbers, exact fractions." alt="" coords="125,81,240,108"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="184,124,181,180,176,180,179,124"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="148,5,218,32"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="186,47,186,81,180,81,180,47"/>
 </map>

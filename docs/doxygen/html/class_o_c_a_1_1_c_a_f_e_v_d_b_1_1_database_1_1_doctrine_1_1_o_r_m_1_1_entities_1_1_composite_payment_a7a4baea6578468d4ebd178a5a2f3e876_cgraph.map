@@ -1,0 +1,7 @@
+<map id="sumPaymentsAmount" name="sumPaymentsAmount">
+<area shape="rect" id="Node000001" title="Return the sum of the amounts of the individual payments, which should sum up to $this&#45;&gt;amount,..." alt="" coords="5,51,156,77"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#adde00cbb96d3cbd50bea3d12fa11cead" title="{}" alt="" coords="209,5,384,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,48,193,42,194,47,156,54"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a4097b54f79b8353b00e8b6712f845562" title="Get amount." alt="" coords="204,72,389,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,74,189,80,188,85,155,80"/>
+</map>

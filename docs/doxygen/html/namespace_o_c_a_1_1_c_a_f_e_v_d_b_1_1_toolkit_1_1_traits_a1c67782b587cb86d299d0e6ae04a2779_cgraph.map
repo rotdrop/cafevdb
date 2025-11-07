@@ -1,0 +1,5 @@
+<map id="formatFloatValue" name="formatFloatValue">
+<area shape="rect" id="Node000001" title="Format a float value for display in the given or the default locale." alt="" coords="5,5,125,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad532b661eb33c3e755bd3fa8ff1bd7af" title="Return the locale as string, e.g." alt="" coords="173,5,250,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,16,157,16,157,21,125,21"/>
+</map>

@@ -1,11 +1,7 @@
 <map id="fileAttachments" name="fileAttachments">
-<area shape="rect" id="Node000001" title="Return the file attachment data." alt="" coords="390,56,502,83"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a64924c3e38450824617993e28ac40b3e" title="A helper function to generate suitable select options for PageNavigation::selectOptions()." alt="" coords="177,5,328,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="377,54,306,35,307,30,379,49"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a3022527659976cc7e4ce7ea8eed647a2" title="Pre&#45;message construction validation." alt="" coords="177,56,328,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="374,72,328,72,328,67,374,67"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a91e639d9817255254574e35ba821deab" title="Record diagnostic output from the actual message composition for the status page." alt="" coords="163,107,342,133"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="379,90,307,109,306,103,377,85"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ac9b7ecf11f96b66f5b50b296815ace81" title="Send out the messages with self::doSendMessages(), after checking them with self::preComposeValidatio..." alt="" coords="5,56,115,83"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="161,72,115,72,115,67,161,67"/>
+<area shape="rect" id="Node000001" title="Return the file attachment data." alt="" coords="233,31,345,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a64924c3e38450824617993e28ac40b3e" title="A helper function to generate suitable select options for PageNavigation\selectOptions()." alt="" coords="20,5,170,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,37,170,31,171,26,218,32"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a91e639d9817255254574e35ba821deab" title="Record diagnostic output from the actual message composition for the status page." alt="" coords="5,56,185,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,56,185,60,185,55,217,51"/>
 </map>

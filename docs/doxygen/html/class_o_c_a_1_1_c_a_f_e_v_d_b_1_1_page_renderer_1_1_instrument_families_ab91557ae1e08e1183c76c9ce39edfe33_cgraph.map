@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,241,63,268"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a3ad8a4109147715b8c5573d1dbdb2d3d" title="Merge $arrays recursively where later arguments in the list override the values of previous arguments..." alt="" coords="506,29,681,72"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="34,240,40,208,53,165,75,121,91,102,109,86,153,60,201,42,251,29,302,22,402,20,490,28,490,33,402,25,303,27,252,34,203,47,156,65,112,90,94,106,80,124,58,167,46,209,40,241"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" title="Define a basic join&#45;structure for phpMyEdit by using the information from self::$joinStructure." alt="" coords="132,100,392,143"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" title="Define a basic join&#45;structure for phpMyEdit by using the information from self\$joinStructure." alt="" coords="132,100,392,143"/>
 <area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="39,240,65,196,85,172,109,152,117,148,120,152,112,157,89,176,70,199,44,242"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="160,233,365,276"/>
 <area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="63,252,144,252,144,257,63,257"/>
@@ -21,14 +21,16 @@
 <area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="393,120,458,121,458,126,393,126"/>
 <area shape="poly" id="edge10_Node000009_Node000008" title=" " alt="" coords="415,415,463,419,462,424,414,420"/>
 <area shape="poly" id="edge16_Node000010_Node000002" title=" " alt="" coords="392,164,412,153,428,136,436,118,444,100,460,82,489,66,492,71,464,86,448,103,441,121,433,139,416,157,395,168"/>
-<area shape="poly" id="edge18_Node000010_Node000005" title=" " alt="" coords="378,163,458,148,459,153,379,169"/>
+<area shape="poly" id="edge19_Node000010_Node000005" title=" " alt="" coords="378,163,458,148,459,153,379,169"/>
 <area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a8a9d6dd0754451d7214ed760a2179bd4" title="Add a &quot;slug&quot; as tooltips&#45;index and css&#45;class." alt="" coords="490,245,696,288"/>
 <area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="365,207,415,219,492,238,491,244,413,224,364,213"/>
 <area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="462,179,724,221"/>
 <area shape="poly" id="edge17_Node000010_Node000014" title=" " alt="" coords="394,190,447,192,446,197,394,195"/>
-<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aee57cb8d60602879f6a65e257cdcbf63" title=" " alt="" coords="1030,245,1235,288"/>
-<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="696,261,772,260,982,260,1014,261,1014,266,982,265,772,265,696,267"/>
-<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a166d2dbd24c4913a9461c5813bbb4232" title="Generate a &quot;unified&quot; tooltip&#45;slug in order to obtain tool&#45;tips from the ToolTipsService." alt="" coords="772,275,982,317"/>
-<area shape="poly" id="edge14_Node000011_Node000013" title=" " alt="" coords="697,275,757,281,756,286,696,280"/>
-<area shape="poly" id="edge15_Node000013_Node000012" title=" " alt="" coords="982,281,1014,278,1014,283,983,287"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aee57cb8d60602879f6a65e257cdcbf63" title=" " alt="" coords="1030,271,1235,313"/>
+<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="696,269,1015,284,1014,289,696,274"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a166d2dbd24c4913a9461c5813bbb4232" title="Generate a &quot;unified&quot; tooltip&#45;slug in order to obtain tool&#45;tips from the ToolTipsService." alt="" coords="772,300,982,343"/>
+<area shape="poly" id="edge14_Node000011_Node000013" title=" " alt="" coords="697,284,758,296,757,301,696,289"/>
+<area shape="poly" id="edge15_Node000013_Node000012" title=" " alt="" coords="982,307,1014,303,1014,308,983,312"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words." alt="" coords="789,179,965,221"/>
+<area shape="poly" id="edge18_Node000014_Node000015" title=" " alt="" coords="725,197,774,197,774,203,725,203"/>
 </map>

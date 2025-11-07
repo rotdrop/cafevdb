@@ -1,0 +1,5 @@
+<map id="sumInvoiceItemsAmount" name="sumInvoiceItemsAmount">
+<area shape="rect" id="Node000001" title="Return the sum of the amounts of the individual payments, which should sum up to $this&#45;&gt;amount,..." alt="" coords="148,5,314,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice.html#ae35fdeb166a10e05e98b98b7309deadb" title="Check whether the data is internally consistent, in particular if the invoice items sum up to the tot..." alt="" coords="5,5,100,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,21,100,21,100,16,132,16"/>
+</map>

@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n_1_1_translation_service.html" title="Runtime translation service for recording untranslated phrases in a database." alt="" coords="5,5,135,32"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,130,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_gedmo_sluggable_listener.html" title="Sluggable listener wrapper giving access to the app&#45;container." alt="" coords="178,5,344,32"/>
+<area shape="poly" id="edge560_Node000000_Node000001" title=" " alt="" coords="145,16,177,16,177,21,145,21"/>
 </map>

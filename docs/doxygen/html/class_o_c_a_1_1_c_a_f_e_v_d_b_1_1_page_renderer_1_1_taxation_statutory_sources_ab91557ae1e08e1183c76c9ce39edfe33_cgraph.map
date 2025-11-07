@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,176,63,203"/>
 <area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a3ad8a4109147715b8c5573d1dbdb2d3d" title="Merge $arrays recursively where later arguments in the list override the values of previous arguments..." alt="" coords="181,33,356,76"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="39,174,65,131,85,107,109,87,136,73,165,64,167,69,138,78,112,92,89,111,70,134,44,177"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" title="Define a basic join&#45;structure for phpMyEdit by using the information from self::$joinStructure." alt="" coords="139,101,399,144"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" title="Define a basic join&#45;structure for phpMyEdit by using the information from self\$joinStructure." alt="" coords="139,101,399,144"/>
 <area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="62,173,110,153,136,146,137,151,112,159,64,178"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="166,168,372,211"/>
 <area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="63,187,151,187,151,192,63,192"/>

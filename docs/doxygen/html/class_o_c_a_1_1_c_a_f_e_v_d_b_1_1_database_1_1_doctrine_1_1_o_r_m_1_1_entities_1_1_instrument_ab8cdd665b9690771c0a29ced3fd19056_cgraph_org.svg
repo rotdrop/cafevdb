@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Check whether this is not a real instrument, but belongs to ProjectInstrument::NOT_AN_INSTRUMENT_FAMI...">
+<g id="a_Node000001"><a xlink:title="Check whether this is not a real instrument, but belongs to ProjectInstrumentNode1OT_AN_INSTRUMENT_FAMIL...">
 <polygon fill="#999999" stroke="#666666" points="97.75,-72 0,-72 0,-52 97.75,-52 97.75,-72"/>
 <text text-anchor="middle" x="48.88" y="-58.5" font-family="Helvetica,sans-Serif" font-size="10.00">isNotAnInstrument</text>
 </a>

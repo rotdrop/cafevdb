@@ -1,11 +1,7 @@
 <map id="subject" name="subject">
-<area shape="rect" id="Node000001" title=" " alt="" coords="387,31,450,57"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a3022527659976cc7e4ce7ea8eed647a2" title="Pre&#45;message construction validation." alt="" coords="188,5,339,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="371,39,339,34,340,28,372,34"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a983520de1e3cc2a8f002055bf82ad3a8" title="Take the text supplied by $contents and store it in the DB EmailTemplates table with tag $templateNam..." alt="" coords="212,56,315,83"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="372,54,316,64,315,58,371,49"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#ac9b7ecf11f96b66f5b50b296815ace81" title="Send out the messages with self::doSendMessages(), after checking them with self::preComposeValidatio..." alt="" coords="18,5,127,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="172,21,128,21,128,16,172,16"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a346f94effc8c8dfea565e54bc6a27ba7" title="Install a default email text if no tempalte is given." alt="" coords="5,56,140,83"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="196,72,140,72,140,67,196,67"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="339,5,402,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a983520de1e3cc2a8f002055bf82ad3a8" title="Take the text supplied by $contents and store it in the DB EmailTemplates table with tag $templateNam..." alt="" coords="188,5,291,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="324,21,292,21,292,16,324,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a346f94effc8c8dfea565e54bc6a27ba7" title="Install a default email text if no tempalte is given." alt="" coords="5,5,140,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="172,21,140,21,140,16,172,16"/>
 </map>

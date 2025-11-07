@@ -1,17 +1,21 @@
 <map id="getRealInstruments" name="getRealInstruments">
-<area shape="rect" id="Node000001" title=" " alt="" coords="597,31,732,57"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a8d166cbf9d3d0fcb09238cf2ac36640e" title="Determine if $this is only an associated member or business contact without double&#45;role as musician." alt="" coords="425,5,549,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="581,35,549,30,549,25,582,30"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a095a4327094e520317f2cac30c767348" title="Determine if $this is only a musician without double&#45;role as associated member or business contact." alt="" coords="432,56,542,83"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="582,58,543,64,542,59,581,53"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a75e2ce51a3811fbed7b601203380369b" title="Return the participation context of the participant." alt="" coords="220,5,377,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="410,21,378,21,378,16,410,16"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#ab8cd6a2002c99b50507b40f5bb199a26" title="Return the number of &quot;serious&quot; items which &quot;use&quot; this entity." alt="" coords="270,56,327,83"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="420,39,328,65,326,59,419,34"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a0292938ac501bd686542840ea8866ba9" title="Return a boolean to indicate that this entity is no longer used." alt="" coords="109,56,172,83"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="255,72,173,72,173,67,255,67"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#acd81dda8a6f978bdab707300422e0432" title="Return a boolean to indicate that this field is used." alt="" coords="5,56,61,83"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="93,72,61,72,61,67,93,67"/>
-<area shape="poly" id="edge7_Node000007_Node000003" title=" " alt="" coords="419,54,350,35,352,30,421,49"/>
-<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="416,72,327,72,327,67,416,67"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="729,137,864,164"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a8d166cbf9d3d0fcb09238cf2ac36640e" title="Determine if $this is only an associated member or business contact without double&#45;role as musician." alt="" coords="557,112,681,139"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="713,142,681,137,681,131,714,136"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a095a4327094e520317f2cac30c767348" title="Determine if $this is only a musician without double&#45;role as associated member or business contact." alt="" coords="564,163,674,189"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="714,165,675,171,674,165,713,160"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a75e2ce51a3811fbed7b601203380369b" title="Return the participation context of the participant." alt="" coords="352,112,509,139"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="542,128,510,128,510,123,542,123"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#ab8cd6a2002c99b50507b40f5bb199a26" title="Return the number of &quot;serious&quot; items which &quot;use&quot; this entity." alt="" coords="402,163,459,189"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="552,146,460,171,458,166,551,141"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#aad2e788b91f0eb007a6a5739efba85cd" title="Generate a data&#45;item referring to the default value of the given field." alt="" coords="109,88,304,163"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="337,128,305,128,305,123,337,123"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a74a90da0aba61e764a7808da186b4d03" title="Get participants." alt="" coords="117,5,296,64"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="380,108,280,67,282,62,382,103"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a0292938ac501bd686542840ea8866ba9" title="Return a boolean to indicate that this entity is no longer used." alt="" coords="175,187,238,213"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="388,183,239,199,238,194,387,178"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#acd81dda8a6f978bdab707300422e0432" title="Return a boolean to indicate that this field is used." alt="" coords="5,187,61,213"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="159,203,61,203,61,197,159,197"/>
+<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="551,161,482,142,484,137,553,155"/>
+<area shape="poly" id="edge10_Node000009_Node000006" title=" " alt="" coords="548,179,459,179,459,173,548,173"/>
 </map>

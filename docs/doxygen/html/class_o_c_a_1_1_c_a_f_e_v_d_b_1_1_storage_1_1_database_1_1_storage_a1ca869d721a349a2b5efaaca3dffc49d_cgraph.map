@@ -8,6 +8,6 @@
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="341,31,374,25,375,30,342,36"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#aa8e4fc68bcf28c10413b664b7d89ae81" title="Slightly modified pathinfo() function which also normalized directories before computing the componen..." alt="" coords="393,56,461,83"/>
 <area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="342,52,378,58,377,64,341,57"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self::PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="513,56,678,83"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self\PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="513,56,678,83"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="461,67,497,67,497,72,461,72"/>
 </map>

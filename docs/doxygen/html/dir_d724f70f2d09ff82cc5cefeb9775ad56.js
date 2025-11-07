@@ -1,5 +1,6 @@
 var dir_d724f70f2d09ff82cc5cefeb9775ad56 =
 [
+    [ "ActionMenuToggleTrait.php", "_action_menu_toggle_trait_8php_source.html", null ],
     [ "AllProjectsTrait.php", "_all_projects_trait_8php_source.html", null ],
     [ "CryptoTrait.php", "_crypto_trait_8php_source.html", null ],
     [ "FinanceModeNavigationItemTrait.php", "_finance_mode_navigation_item_trait_8php_source.html", null ],

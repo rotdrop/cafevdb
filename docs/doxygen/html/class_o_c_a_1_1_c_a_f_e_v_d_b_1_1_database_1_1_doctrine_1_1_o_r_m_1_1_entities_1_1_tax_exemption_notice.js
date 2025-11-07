@@ -14,7 +14,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "getTaxOffice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a090229650db5026123467e36d473e88e", null ],
     [ "getTaxTypes", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a0a46307ca4fae620ab3b3237a637810a", null ],
     [ "getWrittenNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a3d3ae6218fba4879c56233747a0325ea", null ],
-    [ "jsonSerialize", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#ad402d8679325bc514874370f02b5c2ac", null ],
     [ "setAssessmentPeriodEnd", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a7727574d2bc1e416b5b1bc251ff9605c", null ],
     [ "setAssessmentPeriodStart", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#ac460212a3af5737879f229147432dda5", null ],
     [ "setBeneficiaryPurpose", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a706f6473cfdc003434e419afece48aa0", null ],

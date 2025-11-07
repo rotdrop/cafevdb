@@ -2,6 +2,7 @@ var dir_8732a88a49b83212234194eaa7a5b67b =
 [
     [ "AfterEncryptionKeyPairChangedListener.php", "_after_encryption_key_pair_changed_listener_8php_source.html", null ],
     [ "BeforeEncryptionKeyPairChangedListener.php", "_before_encryption_key_pair_changed_listener_8php_source.html", null ],
+    [ "BeforePreferenceMutatedEventListener.php", "_before_preference_mutated_event_listener_8php_source.html", null ],
     [ "BeforeTemplateRenderedListener.php", "_before_template_rendered_listener_8php_source.html", null ],
     [ "CalendarDeletedEventListener.php", "_calendar_deleted_event_listener_8php_source.html", null ],
     [ "CalendarObjectCreatedEventListener.php", "_calendar_object_created_event_listener_8php_source.html", null ],

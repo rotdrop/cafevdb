@@ -70,6 +70,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fiel
     [ "$changeSetSize", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#a3086dd61e96f4adf573c78f9df0cda52", null ],
     [ "$debugRequests", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#adb8e1428cdc305ba1339afc2b65b0bf5", null ],
     [ "$joinTables", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#a29923f86ea37c3d16857d913127fedbc", null ],
+    [ "$newOptionKey", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ae8338b2345d8b6f3bb19c90a9d92ed57", null ],
     [ "$optionsTable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#a6ab01ee9ee41025cab997e05f5eb2b66", null ],
     [ "$reloadOuterForm", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#a98f7b0623f19af58a20c1d5673a06f58", null ],
     [ "CSS_TAG_PROJECT_PARTICIPANT_FIELDS_DISPLAY", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#aa4863ddb53a08437d57a2d462e84d3d7", null ],

@@ -15,6 +15,14 @@ var annotated_dup =
         [ "AppInfo", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info.html", [
           [ "Application", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application" ]
         ] ],
+        [ "Attributes", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_attributes.html", [
+          [ "AllowIFrameSelf", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_attributes_1_1_allow_i_frame_self.html", null ],
+          [ "DoNotCatchExceptions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_attributes_1_1_do_not_catch_exceptions.html", null ],
+          [ "IgnoreConfigLock", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_attributes_1_1_ignore_config_lock.html", null ],
+          [ "NoGroupMemberRequired", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_attributes_1_1_no_group_member_required.html", null ],
+          [ "ServiceAccountRequired", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_attributes_1_1_service_account_required.html", null ],
+          [ "SubAdminRequired", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_attributes_1_1_sub_admin_required.html", null ]
+        ] ],
         [ "BackgroundJob", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job.html", [
           [ "BulkUpdateGeoCoding", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_bulk_update_geo_coding.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_bulk_update_geo_coding" ],
           [ "CleanupExpiredDownloads", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_expired_downloads.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_expired_downloads" ],
@@ -57,6 +65,8 @@ var annotated_dup =
           [ "NumberFormatter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_number_formatter" ],
           [ "PHPMailer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_p_h_p_mailer.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_p_h_p_mailer" ],
           [ "PlainFileProgressStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_plain_file_progress_status.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_plain_file_progress_status" ],
+          [ "RationalNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number" ],
+          [ "Transliterator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_transliterator.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_transliterator" ],
           [ "UndoableFileRemove", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_remove.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_remove" ],
           [ "UndoableFileRename", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename" ],
           [ "UndoableFileReplace", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_replace.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_replace" ],
@@ -71,6 +81,7 @@ var annotated_dup =
           [ "VarDumper", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_var_dumper.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_var_dumper" ]
         ] ],
         [ "Controller", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html", [
+          [ "AccountingController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_accounting_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_accounting_controller" ],
           [ "AdminSettingsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_admin_settings_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_admin_settings_controller" ],
           [ "BackgroundJobController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_background_job_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_background_job_controller" ],
           [ "BlogController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_blog_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_blog_controller" ],
@@ -151,7 +162,12 @@ var annotated_dup =
                 [ "CloudLogger", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_logging_1_1_cloud_logger.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_logging_1_1_cloud_logger" ]
               ] ],
               [ "Types", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types.html", [
+                [ "AbstractDecimalRationalType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_decimal_rational_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_decimal_rational_type" ],
                 [ "AbstractEnumType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_enum_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_enum_type" ],
+                [ "DecimalRationalMonetaryType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_monetary_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_monetary_type" ],
+                [ "DecimalRationalP2S2Type", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p2_s2_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p2_s2_type" ],
+                [ "DecimalRationalP4S4Type", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p4_s4_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p4_s4_type" ],
+                [ "DecimalRationalP7S2Type", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p7_s2_type.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_decimal_rational_p7_s2_type" ],
                 [ "EnumAccessPermission", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_access_permission.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_access_permission" ],
                 [ "EnumAttachmentOrigin", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_attachment_origin.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_attachment_origin" ],
                 [ "EnumDataTransformation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_data_transformation.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_data_transformation" ],
@@ -217,6 +233,7 @@ var annotated_dup =
                 [ "MusicianInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_instrument" ],
                 [ "MusicianRowAccessToken", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_row_access_token.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_row_access_token" ],
                 [ "Project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project" ],
+                [ "ProjectApplication", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_application.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_application" ],
                 [ "ProjectEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_event.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_event" ],
                 [ "ProjectInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument" ],
                 [ "ProjectInstrumentationNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrumentation_number.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrumentation_number" ],
@@ -289,7 +306,6 @@ var annotated_dup =
                               [ "Instrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8d7fc91133b5bb23314a9ee3679a224c.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8d7fc91133b5bb23314a9ee3679a224c" ],
                               [ "InsuranceBroker", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_08cae4ee1394191aa0263f1c3bbc79d3.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_08cae4ee1394191aa0263f1c3bbc79d3" ],
                               [ "InsuranceRate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_7a300d8dcaf38b73ff7a98844b1cd0b2.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_7a300d8dcaf38b73ff7a98844b1cd0b2" ],
-                              [ "Invoice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_829381cdadb347944c16b20726008777.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_829381cdadb347944c16b20726008777" ],
                               [ "Musician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_4045ad3d1799dd17c3639bac4a84c2a1.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_4045ad3d1799dd17c3639bac4a84c2a1" ],
                               [ "MusicianInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_fcab19ab1703b7a3ddb5348c0e79b5a0.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_fcab19ab1703b7a3ddb5348c0e79b5a0" ],
                               [ "Project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_ca19055342d984fd4c383245d0c57404.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_ca19055342d984fd4c383245d0c57404" ],
@@ -302,9 +318,7 @@ var annotated_dup =
                               [ "SepaBankAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a5de61efc2f2d2909d49a031f34fda26.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a5de61efc2f2d2909d49a031f34fda26" ],
                               [ "SepaDebitMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_0cdd98cb4530645e5b8498a4de73709b.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_0cdd98cb4530645e5b8498a4de73709b" ],
                               [ "TaxationStatutorySource", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5" ],
-                              [ "WebBrowserHistoryData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_b3417d70ddf4f855a3e3b0302cc0542a.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_b3417d70ddf4f855a3e3b0302cc0542a" ],
-                              [ "WebBrowserHistoryEntry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8ded5e7c3b05b9cb209121064cc9ebe6.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8ded5e7c3b05b9cb209121064cc9ebe6" ],
-                              [ "WebBrowserHistoryState", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_70234111c966f814d7d8a6a9c30aa50f.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_70234111c966f814d7d8a6a9c30aa50f" ]
+                              [ "WebBrowserHistoryEntry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8ded5e7c3b05b9cb209121064cc9ebe6.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8ded5e7c3b05b9cb209121064cc9ebe6" ]
                             ] ]
                           ] ]
                         ] ]
@@ -340,6 +354,7 @@ var annotated_dup =
                 [ "ProjectPaymentsRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_payments_repository.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_payments_repository" ],
                 [ "ProjectsRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_projects_repository.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_projects_repository" ],
                 [ "ProjectWebPagesRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_web_pages_repository.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_web_pages_repository" ],
+                [ "RepositoryFactory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_repository_factory.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_repository_factory" ],
                 [ "SentEmailsRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sent_emails_repository.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sent_emails_repository" ],
                 [ "SepaBankAccountsRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_bank_accounts_repository.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_bank_accounts_repository" ],
                 [ "SepaBulkTransactionsRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_bulk_transactions_repository.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_bulk_transactions_repository" ],
@@ -367,7 +382,6 @@ var annotated_dup =
           [ "EntityManager", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager" ]
         ] ],
         [ "Documents", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents.html", [
-          [ "AnyToPdf", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_any_to_pdf.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_any_to_pdf" ],
           [ "OpenDocumentFiller", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_open_document_filler.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_open_document_filler" ],
           [ "PDFFormFiller", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_p_d_f_form_filler.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_p_d_f_form_filler" ],
           [ "TemplateService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_template_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_template_service" ]
@@ -415,6 +429,7 @@ var annotated_dup =
           [ "DatabaseInvalidFieldException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_invalid_field_exception.html", null ],
           [ "DatabaseLegacyException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_legacy_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_legacy_exception" ],
           [ "DatabaseMigrationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_migration_exception.html", null ],
+          [ "DatabaseMissingIdentifierException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_missing_identifier_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_missing_identifier_exception" ],
           [ "DatabaseNotConnectedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_not_connected_exception.html", null ],
           [ "DatabaseReadonlyException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_readonly_exception.html", null ],
           [ "DatabaseRollbackOnlyException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_rollback_only_exception.html", null ],
@@ -431,7 +446,6 @@ var annotated_dup =
           [ "MigrationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_migration_exception.html", null ],
           [ "MissingProjectsFolderException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_missing_projects_folder_exception.html", null ],
           [ "NotAuthorizedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_not_authorized_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_not_authorized_exception" ],
-          [ "PhpSessionException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_php_session_exception.html", null ],
           [ "ProgressStatusNotFoundException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_progress_status_not_found_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_progress_status_not_found_exception" ],
           [ "RecryptionFailedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_recryption_failed_exception.html", null ],
           [ "RecryptionRequestNotFoundException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_recryption_request_not_found_exception.html", null ],
@@ -439,19 +453,14 @@ var annotated_dup =
           [ "SanitizerFailedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_failed_exception.html", null ],
           [ "SanitizerNotImplementedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_not_implemented_exception.html", null ],
           [ "SanitizerNotNeededException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_not_needed_exception.html", null ],
-          [ "SessionStillOpenException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_session_still_open_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_session_still_open_exception" ],
           [ "SubstitutionException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_substitution_exception.html", null ],
           [ "TranslationException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_translation_exception.html", null ],
           [ "UndoableRunQueueException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_undoable_run_queue_exception.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_undoable_run_queue_exception" ]
         ] ],
-        [ "Legacy", null, [
-          [ "Calendar", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar.html", [
-            [ "OC_Calendar_Object", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object" ]
-          ] ]
-        ] ],
         [ "Listener", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener.html", [
           [ "AfterEncryptionKeyPairChangedListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_after_encryption_key_pair_changed_listener.html", null ],
           [ "BeforeEncryptionKeyPairChangedListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_before_encryption_key_pair_changed_listener.html", null ],
+          [ "BeforePreferenceMutatedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_before_preference_mutated_event_listener.html", null ],
           [ "BeforeTemplateRenderedListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_before_template_rendered_listener.html", null ],
           [ "CalendarDeletedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_deleted_event_listener.html", null ],
           [ "CalendarObjectCreatedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_object_created_event_listener.html", null ],
@@ -497,11 +506,13 @@ var annotated_dup =
         [ "Maintenance", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance.html", [
           [ "Migrations", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations.html", [
             [ "AbstractMigration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration" ],
+            [ "AddBalancingAccountToProjectParticipantFieldEntities", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_balancing_account_to_project_participant_field_entities.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_balancing_account_to_project_participant_field_entities" ],
             [ "AddDonationFlagToProjectPayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_donation_flag_to_project_payment.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_donation_flag_to_project_payment" ],
             [ "AddGenderToMusician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_gender_to_musician.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_gender_to_musician" ],
             [ "AddMoreAddressFieldsToMusician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_more_address_fields_to_musician.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_more_address_fields_to_musician" ],
             [ "AddParticipationContextToProjectParticipantFields", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_participation_context_to_project_participant_fields.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_participation_context_to_project_participant_fields" ],
             [ "AddProjectRegistrationDeadline", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_project_registration_deadline.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_project_registration_deadline" ],
+            [ "AddPurposeFieldToInvoices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_purpose_field_to_invoices.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_purpose_field_to_invoices" ],
             [ "AddRunCountToMigrationRecords", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_run_count_to_migration_records.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_run_count_to_migration_records" ],
             [ "CorrectLanguageField", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_correct_language_field.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_correct_language_field" ],
             [ "CreateExplodeFunction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_explode_function.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_explode_function" ],
@@ -510,6 +521,7 @@ var annotated_dup =
             [ "CreateTableInvoices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_invoices.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_invoices" ],
             [ "CreateTableInvoicesV2", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_invoices_v2.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_invoices_v2" ],
             [ "CreateTableLegalPersons", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_legal_persons.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_legal_persons" ],
+            [ "CreateTableProjectApplications", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_project_applications.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_project_applications" ],
             [ "CreateTableTaxationStatutorySources", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_taxation_statutory_sources.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_table_taxation_statutory_sources" ],
             [ "CreateTaxExemptionNotices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_tax_exemption_notices.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_tax_exemption_notices" ],
             [ "CreateWebBrowserHistoryTables", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_web_browser_history_tables.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_web_browser_history_tables" ],
@@ -518,17 +530,24 @@ var annotated_dup =
             [ "DropTableLegalPersons", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_drop_table_legal_persons.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_drop_table_legal_persons" ],
             [ "Dummy", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_dummy.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_dummy" ],
             [ "EnsureNotAnInstrumentBusinessRelation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_ensure_not_an_instrument_business_relation.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_ensure_not_an_instrument_business_relation" ],
+            [ "GeoPostalCodesIndices", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_geo_postal_codes_indices.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_geo_postal_codes_indices" ],
             [ "GroupSharedOrchestraFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_group_shared_orchestra_folder.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_group_shared_orchestra_folder" ],
             [ "InitialDatabaseSetup", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_initial_database_setup.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_initial_database_setup" ],
+            [ "MakeEmailDraftSubjectOptional", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_make_email_draft_subject_optional.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_make_email_draft_subject_optional" ],
+            [ "MakeProjectPaymentsSubjectNullable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_make_project_payments_subject_nullable.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_make_project_payments_subject_nullable" ],
             [ "ParticipantDropBankAccountColumns", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_drop_bank_account_columns.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_drop_bank_account_columns" ],
             [ "ParticipantFieldAccessEnum", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_field_access_enum.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_field_access_enum" ],
             [ "ParticipantFieldDropUnusedColumns", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_field_drop_unused_columns.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_field_drop_unused_columns" ],
             [ "ParticipantFieldsAddLiabilities", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_fields_add_liabilities.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_fields_add_liabilities" ],
             [ "ProjectEventsAddAbsenceFields", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_project_events_add_absence_fields.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_project_events_add_absence_fields" ],
+            [ "RenameInvoicesNotificationEmailColumn", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_rename_invoices_notification_email_column.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_rename_invoices_notification_email_column" ],
             [ "RenameMemberStatusParticipationStatus", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_rename_member_status_participation_status.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_rename_member_status_participation_status" ],
             [ "SanitizeDatabaseStorageIdentifiers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_sanitize_database_storage_identifiers.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_sanitize_database_storage_identifiers" ],
             [ "SanitizeMailmanTemplateFiles", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_sanitize_mailman_template_files.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_sanitize_mailman_template_files" ],
             [ "SanitizeSentEmailAssociations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_sanitize_sent_email_associations.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_sanitize_sent_email_associations" ],
+            [ "SepaBulkTransactionsBalancingData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_sepa_bulk_transactions_balancing_data.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_sepa_bulk_transactions_balancing_data" ],
+            [ "UpdateTableTaxationStatutorySources", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_update_table_taxation_statutory_sources.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_update_table_taxation_statutory_sources" ],
+            [ "UseDecimalForExactFractions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_use_decimal_for_exact_fractions.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_use_decimal_for_exact_fractions" ],
             [ "Version00000000000000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version00000000000000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version00000000000000" ],
             [ "Version20230206203000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230206203000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230206203000" ],
             [ "Version20230206204000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230206204000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230206204000" ],
@@ -560,7 +579,17 @@ var annotated_dup =
             [ "Version20250602180000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250602180000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250602180000" ],
             [ "Version20250610123000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250610123000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250610123000" ],
             [ "Version20250610233000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250610233000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250610233000" ],
-            [ "Version20250615150000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250615150000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250615150000" ]
+            [ "Version20250615150000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250615150000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250615150000" ],
+            [ "Version20250627130000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250627130000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250627130000" ],
+            [ "Version20250704180000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250704180000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250704180000" ],
+            [ "Version20250706170000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250706170000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250706170000" ],
+            [ "Version20250717120000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250717120000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250717120000" ],
+            [ "Version20250717210000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250717210000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250717210000" ],
+            [ "Version20250721120000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250721120000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250721120000" ],
+            [ "Version20250724160000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250724160000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250724160000" ],
+            [ "Version20250726000000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250726000000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250726000000" ],
+            [ "Version20250913140000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250913140000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20250913140000" ],
+            [ "Version20251028130000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20251028130000.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20251028130000" ]
           ] ],
           [ "Sanitizers", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers.html", [
             [ "AbstractSanitizer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_abstract_sanitizer.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_abstract_sanitizer" ],
@@ -576,7 +605,7 @@ var annotated_dup =
           [ "DebugModeMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_debug_mode_middleware.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_debug_mode_middleware" ],
           [ "ExceptionMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_exception_middleware.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_exception_middleware" ],
           [ "GroupMemberMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_group_member_middleware.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_group_member_middleware" ],
-          [ "SubadminMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_subadmin_middleware.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_subadmin_middleware" ]
+          [ "SubAdminMiddleware", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_sub_admin_middleware.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_sub_admin_middleware" ]
         ] ],
         [ "Migration", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_migration.html", [
           [ "RecordModificationTimes", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_migration_1_1_record_modification_times.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_migration_1_1_record_modification_times" ],
@@ -637,7 +666,8 @@ var annotated_dup =
             [ "AqBankingBulkTransactionExporter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_aq_banking_bulk_transaction_exporter.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_aq_banking_bulk_transaction_exporter" ],
             [ "DoNothingReceivablesGenerator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_do_nothing_receivables_generator.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_do_nothing_receivables_generator" ],
             [ "FinanceService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service" ],
-            [ "GnuCashConnectorService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html", null ],
+            [ "GnuCashBulkTransactionBalancingItemsExporter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_bulk_transaction_balancing_items_exporter.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_bulk_transaction_balancing_items_exporter" ],
+            [ "GnuCashConnectorService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_gnu_cash_connector_service" ],
             [ "IBulkTransactionExporter", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_bulk_transaction_exporter.html", "interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_bulk_transaction_exporter" ],
             [ "InstrumentInsuranceReceivablesGenerator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator" ],
             [ "InstrumentInsuranceService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_service" ],
@@ -648,6 +678,8 @@ var annotated_dup =
             [ "SepaBulkTransactionService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_sepa_bulk_transaction_service" ]
           ] ],
           [ "IMAP", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p.html", [
+            [ "Address", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address" ],
+            [ "AddressList", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_address_list" ],
             [ "IMAPMessage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_i_m_a_p_message.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_i_m_a_p_message" ],
             [ "ImapMessageFetcher", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_imap_message_fetcher.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_1_1_imap_message_fetcher" ]
           ] ],
@@ -671,12 +703,10 @@ var annotated_dup =
           [ "EncryptionService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service" ],
           [ "ErrorService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_error_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_error_service" ],
           [ "EventsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service" ],
-          [ "FakeL10N", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_fake_l10_n.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_fake_l10_n" ],
           [ "FilesCacheService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_files_cache_service" ],
           [ "FontService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service" ],
           [ "FuzzyInputService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_fuzzy_input_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_fuzzy_input_service" ],
           [ "GeoCodingService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service" ],
-          [ "GroupFoldersService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_group_folders_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_group_folders_service" ],
           [ "HistoryService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service" ],
           [ "ImagesService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_images_service" ],
           [ "IMAPService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p_service" ],
@@ -691,16 +721,15 @@ var annotated_dup =
           [ "ProjectParticipantFieldsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service" ],
           [ "ProjectService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service" ],
           [ "Registration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_registration.html", null ],
-          [ "RequestService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_request_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_request_service" ],
-          [ "SimpleSharingService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_simple_sharing_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_simple_sharing_service" ],
+          [ "SentEmailsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_sent_emails_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_sent_emails_service" ],
           [ "ToolTipsDataService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_data_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_data_service" ],
           [ "ToolTipsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service" ],
-          [ "UrlGeneratorService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_url_generator_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_url_generator_service" ],
           [ "VCalendarService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service" ]
         ] ],
         [ "Settings", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings.html", [
           [ "Admin", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_admin.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_admin" ],
           [ "AdminSection", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_admin_section.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_admin_section" ],
+          [ "ConfigConstants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_config_constants.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_config_constants" ],
           [ "Personal", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_personal.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_personal" ],
           [ "PersonalForm", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_personal_form.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_personal_form" ],
           [ "PersonalSection", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_personal_section.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_personal_section" ]
@@ -725,7 +754,6 @@ var annotated_dup =
             [ "TaxExemptionNoticesStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_tax_exemption_notices_storage.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_tax_exemption_notices_storage" ]
           ] ],
           [ "AppStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage" ],
-          [ "AppStorageDisclosure", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage_disclosure.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage_disclosure" ],
           [ "DatabaseStorageUtil", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_storage_util.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_storage_util" ],
           [ "StorageUtil", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_storage_util.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_storage_util" ],
           [ "UserStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage" ]
@@ -753,11 +781,16 @@ var annotated_dup =
             [ "PreRenderedTemplateResponse", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_pre_rendered_template_response.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_pre_rendered_template_response" ]
           ] ],
           [ "Service", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service.html", [
+            [ "AnyToPdf", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_any_to_pdf" ],
             [ "AppPasswordService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_password_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_password_service" ],
+            [ "AppStorageDisclosure", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_storage_disclosure.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_app_storage_disclosure" ],
             [ "ArchiveService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service" ],
-            [ "GroupFoldersService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service" ],
+            [ "ExecutableFinder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_executable_finder.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_executable_finder" ],
+            [ "GroupFoldersServiceNC32", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_n_c32" ],
+            [ "GroupFoldersServicePreNC32", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service_pre_n_c32" ],
             [ "MimeTypeService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service" ],
             [ "RequestService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service" ],
+            [ "SimpleSharingService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_simple_sharing_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_simple_sharing_service" ],
             [ "UserScopeService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service" ]
           ] ],
           [ "Traits", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html", [
