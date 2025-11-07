@@ -63,8 +63,8 @@ if (!empty($appLocale)) {
   if ($nationalKey !== false) {
     unset($holidayRegions[$nationalKey]);
     array_unshift($holidayRegions, $nationalTag);
-    if (empty($bankAccountBankHolidays)) {
-      $bankAccountBankHolidays = $nationalTag;
+    if (empty(${ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS}s)) {
+      ${ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS}s = $nationalTag;
     }
   }
 
@@ -86,7 +86,7 @@ if (!empty($appLocale)) {
       'value' =>  $region,
       'group' => $localeCountryNames[$country],
     ];
-    if ($region === $bankAccountBankHolidays) {
+    if ($region === ${ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS}s) {
       $option['flags'] = PageNavigation::SELECTED;
     }
     $holidayOptions[] = $option;
@@ -99,50 +99,58 @@ if (!empty($appLocale)) {
     <h4><?php echo $l->t('Street Address'); ?></h4>
     <fieldset <?php echo $off; ?> >
       <!-- <legend><?php echo $l->t('Street Address'); ?></legend> -->
-      <input class="streetAddressName" type="text"
+      <input class="streetAddressName"
+             type="text"
              id="streetAddressName01"
              name="streetAddressName01"
              value="<?php echo $_['streetAddressName01']; ?>"
              title="<?php echo $l->t('The name of the orchestra'); ?>"
              placeholder="<?php echo $l->t('name of orchestra'); ?>"/><br/>
-      <input class="streetAddressName" type="text"
+      <input class="streetAddressName"
+             type="text"
              id="streetAddressName02"
              name="streetAddressName02"
              value="<?php echo $_['streetAddressName02']; ?>"
              title="<?php echo $l->t('The name of the orchestra (line 2)'); ?>"
              placeholder="<?php echo $l->t('name of orchestra'); ?>"><br/>
-      <input class="registerName" type="text"
+      <input class="registerName"
+             type="text"
              id="registerName"
              name="registerName"
              value="<?php echo $_['registerName']; ?>"
              title="<?php echo $l->t('Name of the authority where the orchestra association is registered.'); ?>"
              placeholder="<?php echo $l->t('e.g. Local Court Denver'); ?>">
-      <input class="registerNumber" type="text"
+      <input class="registerNumber"
+             type="text"
              id="registerNumber"
              name="registerNumber"
              value="<?php echo $_['registerNumber']; ?>"
              title="<?php echo $l->t('Registration number of the orchestra association.'); ?>"
              placeholder="<?php echo $l->t('e.g. VR1234'); ?>">
       <br/>
-      <input class="streetAddressStreet" type="text"
+      <input class="streetAddressStreet"
+             type="text"
              id="streetAddressStreet"
              name="streetAddressStreet"
              value="<?php echo $_['streetAddressStreet']; ?>"
              title="<?php echo $l->t('street part of street address of orchestra'); ?>"
              placeholder="<?php echo $l->t('street part of street address of orchestra'); ?>">
-      <input class="streetAddressHouseNumber" type="text"
+      <input class="streetAddressHouseNumber"
+             type="text"
              id="streetAddressHouseNumber"
              name="streetAddressHouseNumber"
              value="<?php echo $_['streetAddressHouseNumber']; ?>"
              title="<?php echo $l->t('house number part of street address of orchestra'); ?>"
              placeholder="<?php echo $l->t('Nr'); ?>"><br/>
-      <input class="streetAddressZIP" type="text"
+      <input class="streetAddressZIP"
+             type="text"
              id="streetAddressZIP"
              name="streetAddressZIP"
              value="<?php echo $_['streetAddressZIP']; ?>"
              title="<?php echo $l->t('ZIP part of street address of orchestra'); ?>"
              placeholder="<?php echo $l->t('ZIP'); ?>">
-      <input class="streetAddressCity" type="text"
+      <input class="streetAddressCity"
+             type="text"
              id="streetAddressCity"
              name="streetAddressCity"
              value="<?php echo $_['streetAddressCity']; ?>"
@@ -156,7 +164,8 @@ if (!empty($appLocale)) {
         <option></option>
         <?php echo PageNavigation::selectOptions($countries); ?>
       </select><br/>
-      <input class="phoneNumber" type="text"
+      <input class="phoneNumber"
+             type="text"
              id="phoneNumber"
              name="phoneNumber"
              value="<?php echo $_['phoneNumber']; ?>"
@@ -166,45 +175,51 @@ if (!empty($appLocale)) {
     <h4><?php echo $l->t('Bank Account'); ?></h4>
     <fieldset <?php echo $off; ?> >
       <!-- <legend><?php echo $l->t('Bank Account'); ?></legend> -->
-      <input class="bankAccountOwner" type="text"
-             id="bankAccountOwner"
-             name="bankAccountOwner"
-             value="<?php echo $_['bankAccountOwner']; ?>"
+      <input class="<?= ConfigConstants::BANK_ACCOUNT_OWNER ?>"
+             type="text"
+             id="<?= ConfigConstants::BANK_ACCOUNT_OWNER ?>"
+             name="<?= ConfigConstants::BANK_ACCOUNT_OWNER ?>"
+             value="<?php echo $_[ConfigConstants::BANK_ACCOUNT_OWNER]; ?>"
              title="<?php echo $l->t('owner of the orchestra\'s bank account'); ?>"
              placeholder="<?php echo $l->t('owner of bank account'); ?>"/><br/>
-      <input class="bankAccountBLZ" type="text"
-             id="bankAccountBLZ"
-             name="bankAccountBLZ"
-             value="<?php echo $_['bankAccountBLZ']; ?>"
+      <input class="<?= ConfigConstants::BANK_ACCOUNT_BLZ ?>"
+             type="text"
+             id="<?= ConfigConstants::BANK_ACCOUNT_BLZ ?>"
+             name="<?= ConfigConstants::BANK_ACCOUNT_BLZ ?>"
+             value="<?php echo $_[ConfigConstants::BANK_ACCOUNT_BLZ]; ?>"
              title="<?php echo $l->t('Optional BLZ of the orchestra\'s bank account'); ?>"
              placeholder="<?php echo $l->t('BLZ of bank account'); ?>"/>
-      <input class="bankAccountIBAN" type="text"
-             id="bankAccountIBAN"
-             name="bankAccountIBAN"
-             value="<?php echo $_['bankAccountIBAN']; ?>"
+      <input class="<?= ConfigConstants::BANK_ACCOUNT_IBAN ?>"
+             type="text"
+             id="<?= ConfigConstants::BANK_ACCOUNT_IBAN ?>"
+             name="<?= ConfigConstants::BANK_ACCOUNT_IBAN ?>"
+             value="<?php echo $_[ConfigConstants::BANK_ACCOUNT_IBAN]; ?>"
              title="<?php echo $l->t('IBAN or number of the orchestra\'s bank account. If this is a account number,then please first enter the BLZ'); ?>"
              placeholder="<?php echo $l->t('IBAN or no. of bank account'); ?>"/>
-      <input class="bankAccountBIC" type="text"
-             id="bankAccountBIC"
-             name="bankAccountBIC"
-             value="<?php echo $_['bankAccountBIC']; ?>"
+      <input class="<?= ConfigConstants::BANK_ACCOUNT_BIC ?>"
+             type="text"
+             id="<?= ConfigConstants::BANK_ACCOUNT_BIC ?>"
+             name="<?= ConfigConstants::BANK_ACCOUNT_BIC ?>"
+             value="<?php echo $_[ConfigConstants::BANK_ACCOUNT_BIC]; ?>"
              title="<?php echo $l->t('Optional BIC of the orchestra\'s bank account'); ?>"
              placeholder="<?php echo $l->t('BIC of bank account'); ?>"/><br/>
-      <input class="bankAccountBankName" type="text"
-             id="bankAccountBankName"
-             name="bankAccountBankName"
-             value="<?php echo $_['bankAccountBankName']; ?>"
+      <input class="<?= ConfigConstants::BANK_ACCOUNT_BANK_NAME ?>"
+             type="text"
+             id="<?= ConfigConstants::BANK_ACCOUNT_BANK_NAME ?>"
+             name="<?= ConfigConstants::BANK_ACCOUNT_BANK_NAME ?>"
+             value="<?php echo $_[ConfigConstants::BANK_ACCOUNT_BANK_NAME]; ?>"
              title="<?php echo $l->t('Name of the bank holding the orchestra\'s bank account'); ?>"
              placeholder="<?php echo $l->t('e.g. Bank of Scotland'); ?>"/><br/>
-      <input class="bankAccountCreditorIdentifier" type="text"
-             id="bankAccountCreditorIdentifier"
-             name="bankAccountCreditorIdentifier"
-             value="<?php echo $_['bankAccountCreditorIdentifier']; ?>"
+      <input class="<?= ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER ?>"
+             type="text"
+             id="<?= ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER ?>"
+             name="<?= ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER ?>"
+             value="<?php echo $_[ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER]; ?>"
              title="<?php echo $l->t('Creditor identifier of the orchestra'); ?>"
              placeholder="<?php echo $l->t('orchestra\'s CI'); ?>"/><br/>
-      <select class="bankAccountBankHolidays"
-              id="bankAccountBankHolidays"
-              name="bankAccountBankHolidays"
+      <select class="<?= ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS ?>"
+              id="<?= ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS ?>"
+              name="<?= ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS ?>"
               title="<?php echo $l->t('Bank-holidays to take into account when generating bulk bank transactions.'); ?>"
       >
         <?php echo PageNavigation::selectOptions($holidayOptions); ?>
@@ -287,7 +302,8 @@ if (!empty($appLocale)) {
              value=""
              title="<?php echo $l->t('Ensure that the club-member\'s project and the necessary infrastructure exists.'); ?>"
       />
-      <input class="specialMemberProjects" type="text"
+      <input class="specialMemberProjects"
+             type="text"
              id="memberProject"
              name="memberProject"
              value="<?php echo $memberProject; ?>"
@@ -307,7 +323,8 @@ if (!empty($appLocale)) {
              data-project-id="<?php p($executiveBoardProjectId); ?>"
              title="<?php echo $l->t('Ensure that the executive-board project and the necessary infrastructure exists.'); ?>"
       />
-      <input class="specialMemberProjects" type="text"
+      <input class="specialMemberProjects"
+             type="text"
              id="executiveBoardProject"
              name="executiveBoardProject"
              value="<?php echo $executiveBoardProject; ?>"

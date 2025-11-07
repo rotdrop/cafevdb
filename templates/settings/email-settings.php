@@ -203,10 +203,10 @@ if (!empty($_[ConfigConstants::EMAIL_FROM_NAME_KEY])) {
         <div class="bulk-email-subject container">
           <span class="bulk-email-subject tag">[</span>
           <input type="text"
-                 name="bulkEmailSubjectTag"
-                 id="bulk-email-subject-tag"
+                 name="<?= ConfigConstants::BULK_EMAIL_SUBJECT_TAG ?>"
+                 id="<?= ConfigConstants::BULK_EMAIL_SUBJECT_TAG ?>"
                  class="tooltip-auto"
-                 value="<?php p($bulkEmailSubjectTag); ?>"
+                 value="<?php p(${ConfigConstants::BULK_EMAIL_SUBJECT_TAG}); ?>"
                  title="<?php echo $toolTips['emailform:composer:subject:tag']; ?>"
                  size="5"
           />

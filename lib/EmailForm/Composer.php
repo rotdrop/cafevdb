@@ -4274,7 +4274,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       self::t('TREASURER') => $organizationalRoleContact,
       self::t('SECRETARY') => $organizationalRoleContact,
       self::t('CREDITOR_IDENTIFIER') => function($key) {
-        return $this->getConfigValue('bankAccountCreditorIdentifier');
+        return $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER);
       },
       self::t('ADDRESS') => function($key) {
         return $this->streetAddress();
@@ -4427,13 +4427,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   /** @return string The formatted bank account of the orchestra. */
   private function bankAccount():string
   {
-    $iban = new PHP_IBAN\IBAN($this->getConfigValue('bankAccountIBAN'));
+    $iban = new PHP_IBAN\IBAN($this->getConfigValue(ConfigConstants::BANK_ACCOUNT_IBAN));
     $financeService = $this->di(FinanceService::class);
     $info = $financeService->getIbanInfo($iban->MachineFormat());
     return ($info['bank'] . "<br/>\n"
-          . $this->getConfigValue('bankAccountOwner') . "<br/>\n"
+          . $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_OWNER) . "<br/>\n"
           . "IBAN ".$iban->HumanFormat() . " (" . $iban->MachineFormat() . ")<br/>\n"
-          . "BIC " . $this->getConfigValue('bankAccountBIC')
+          . "BIC " . $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_BIC)
     );
   }
 

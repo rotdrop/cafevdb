@@ -606,7 +606,7 @@ class SepaBankAccounts extends PMETableViewBase
       ],
       'display' => [
         'attributes' => [
-          'data-meta-data' => 'bankAccountOwner',
+          'data-meta-data' => ConfigConstants::BANK_ACCOUNT_OWNER,
         ],
       ],
     ];

@@ -554,22 +554,22 @@ class PersonalSettingsController extends Controller
             'The phone number %s does not appear to be a valid phone number. ', [ $realValue, ]));
         }
         break;
-      case 'bankAccountBankHolidays':
+      case ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS:
         return $this->setSimpleConfigValue($parameter, $value);
-      case 'bankAccountOwner':
-      case 'bankAccountBLZ':
-      case 'bankAccountIBAN':
-      case 'bankAccountBIC':
-      case 'bankAccountBankName':
-      case 'bankAccountCreditorIdentifier':
+      case ConfigConstants::BANK_ACCOUNT_OWNER:
+      case ConfigConstants::BANK_ACCOUNT_BLZ:
+      case ConfigConstants::BANK_ACCOUNT_IBAN:
+      case ConfigConstants::BANK_ACCOUNT_BIC:
+      case ConfigConstants::BANK_ACCOUNT_BANK_NAME:
+      case ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER:
         $realValue = Util::normalizeSpaces($value);
         $data = [
-          'bankAccountIBAN' => $this->getConfigValue('bankAccountIBAN'),
-          'bankAccountBLZ' => $this->getConfigValue('bankAccountBLZ'),
-          'bankAccountBIC' => $this->getConfigValue('bankAccountBIC'),
-          'bankAccountCreditorIdentifier' => $this->getConfigValue('bankAccountCreditorIdentifer'),
-          'bankAccountOwner' => $this->getConfigValue('bankAccountOwner'),
-          'bankAccountBankName' => $this->getConfigValue('bankAccountBankName'),
+          ConfigConstants::BANK_ACCOUNT_IBAN => $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_IBAN),
+          ConfigConstants::BANK_ACCOUNT_BLZ => $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_BLZ),
+          ConfigConstants::BANK_ACCOUNT_BIC => $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_BIC),
+          ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER => $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER),
+          ConfigConstants::BANK_ACCOUNT_OWNER => $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_OWNER),
+          ConfigConstants::BANK_ACCOUNT_BANK_NAME => $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_BANK_NAME),
           'message' => '',
         ];
         if (empty($realValue) && !empty($data[$parameter])) {
@@ -580,7 +580,7 @@ class PersonalSettingsController extends Controller
           return self::dataResponse($data);
         }
         switch ($parameter) {
-          case 'bankAccountOwner':
+          case ConfigConstants::BANK_ACCOUNT_OWNER:
             $address = $this->getConfigValue('streetAddressName01');
             if ($realValue !== $address) {
               $data['suggestions'] = [ $address, ];
@@ -591,14 +591,14 @@ class PersonalSettingsController extends Controller
               $data['message'] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
             }
             return self::dataResponse($data);
-          case 'bankAccountBankName':
+          case ConfigConstants::BANK_ACCOUNT_BANK_NAME:
             if (!empty($realValue)) {
               $this->setConfigValue($parameter, $realValue);
               $data[$parameter] = $realValue;
               $data['message'] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
             }
             return self::dataResponse($data);
-          case 'bankAccountCreditorIdentifier':
+          case ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER:
             if (empty($realValue)) {
               return self::response('');
             }
@@ -609,7 +609,7 @@ class PersonalSettingsController extends Controller
               return self::dataResponse($data);
             }
             break;
-          case 'bankAccountIBAN':
+          case ConfigConstants::BANK_ACCOUNT_IBAN:
             if (empty($realValue)) {
               return self::response('');
             }
@@ -618,7 +618,7 @@ class PersonalSettingsController extends Controller
             if (!$iban->Verify() && is_numeric($realValue)) {
               // maybe simlpy the bank account number, if we have a BLZ,
               // then compute the IBAN
-              $blz = $data['bankAccountBLZ'];
+              $blz = $data[ConfigConstants::BANK_ACCOUNT_BLZ];
               if ($bav->isValidBank($blz)) {
                 $realValue = $this->financeService->makeIBAN($blz, $realValue);
                 $iban = new PHP_IBAN\IBAN($realValue);
@@ -637,7 +637,7 @@ class PersonalSettingsController extends Controller
               $blz = $iban->Bank();
               if ($bav->isValidBank($blz)) {
                 $realValue = $blz;
-                $parameter = 'bankAccountBLZ';
+                $parameter = ConfigConstants::BANK_ACCOUNT_BLZ;
                 $this->setConfigValue($parameter, $realValue);
                 if ($data[$parameter] != $realValue) {
                   $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
@@ -646,14 +646,14 @@ class PersonalSettingsController extends Controller
 
                 $bic = $bav->getMainAgency($blz)->getBIC();
                 $realValue = $bic;
-                $parameter = 'bankAccountBIC';
+                $parameter = ConfigConstants::BANK_ACCOUNT_BIC;
                 $this->setConfigValue($parameter, $realValue);
                 if ($data[$parameter] != $realValue) {
                   $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
                 }
                 $data[$parameter] = $realValue;
 
-                $parameter = 'bankAccountBankName';
+                $parameter = ConfigConstants::BANK_ACCOUNT_BANK_NAME;
                 $suggestedBankName = $bav->getMainAgency($blz)->getName();
                 $realValue = $this->getConfigValue($parameter);
                 if (empty($realValue) || $realValue != $suggestedBankName) {
@@ -663,8 +663,8 @@ class PersonalSettingsController extends Controller
                   $data[$parameter] = $realValue;
                 }
               } else {
-                unset($data['bankAccountBLZ']);
-                unset($data['bankAccountBIC']);
+                unset($data[ConfigConstants::BANK_ACCOUNT_BLZ]);
+                unset($data[ConfigConstants::BANK_ACCOUNT_BIC]);
               }
               return self::dataResponse($data);
             } else {
@@ -681,7 +681,7 @@ class PersonalSettingsController extends Controller
               return self::grumble($data);
             }
             break;
-          case 'bankAccountBLZ':
+          case ConfigConstants::BANK_ACCOUNT_BLZ:
             if (empty($realValue)) {
               return self::response('');
             }
@@ -698,7 +698,7 @@ class PersonalSettingsController extends Controller
               $agency = $bav->getMainAgency($realValue);
               $bic = $agency->getBIC();
               if ($this->financeService->validateSWIFT($bic)) {
-                $parameter = 'bankAccountBIC';
+                $parameter = ConfigConstants::BANK_ACCOUNT_BIC;
                 $realValue = $bic;
                 $this->setConfigValue($parameter, $realValue);
                 if ($data[$parameter] != $realValue) {
@@ -706,12 +706,12 @@ class PersonalSettingsController extends Controller
                 }
                 $data[$parameter] = $realValue;
               } else {
-                unset($data['bankAccountBIC']);
+                unset($data[ConfigConstants::BANK_ACCOUNT_BIC]);
               }
               return self::dataResponse($data);
             }
             break;
-          case 'bankAccountBIC':
+          case ConfigConstants::BANK_ACCOUNT_BIC:
             if (empty($realValue)) {
               return self::response('');
             }
@@ -720,7 +720,7 @@ class PersonalSettingsController extends Controller
               // maybe a BLZ
               $bav = $this->appContainer->get(BankAccountValidator::class);
               if ($bav->isValidBank($realValue)) {
-                $parameter = 'bankAccountBLZ';
+                $parameter = ConfigConstants::BANK_ACCOUNT_BLZ;
                 $this->setConfigValue($parameter, $realValue);
                 if ($data[$parameter] != $realValue) {
                   $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);
@@ -728,14 +728,14 @@ class PersonalSettingsController extends Controller
                 $data[$parameter] = $realValue;
                 $agency = $bav->getMainAgency($realValue);
                 $realValue = $agency->getBIC();
-                $parameter = 'bankAccountBIC';
+                $parameter = ConfigConstants::BANK_ACCOUNT_BIC;
                 // Set also the BIC
               } else {
-                unset($data['bankAccountBLZ']);
+                unset($data[ConfigConstants::BANK_ACCOUNT_BLZ]);
               }
             }
             if ($this->financeService->validateSWIFT($realValue)) {
-              $parameter = 'bankAccountBIC';
+              $parameter = ConfigConstants::BANK_ACCOUNT_BIC;
               $this->setConfigValue($parameter, $realValue);
               if ($data[$parameter] != $realValue) {
                 $data['message'][] = $this->l->t('Value for "%s" set to "%s".', [ $parameter, $realValue ]);

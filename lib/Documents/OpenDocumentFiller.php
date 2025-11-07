@@ -366,10 +366,10 @@ class OpenDocumentFiller
     }
 
     // bank account information
-    $iban = $this->getConfigValue('bankAccountIBAN');
+    $iban = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_IBAN);
     $substitutions['org']['iban'] = $iban??$this->l->t('unknown');
 
-    $bank = $this->getConfigValue('bankAccountBankName');
+    $bank = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_BANK_NAME);
     if (empty($bank)) {
       /** @var FinanceService $financeService */
       $financeService = $this->appContainer->get(FinanceService::class);
@@ -388,7 +388,7 @@ class OpenDocumentFiller
     $substitutions['org']['regNumber'] = $registrationNumber??$this->l->t('unknown');
 
     // creditor identifier
-    $substitutions['org']['CI'] = $this->getConfigValue('bankAccountCreditorIdentifier')??$this->l->t('unknown');
+    $substitutions['org']['CI'] = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER)??$this->l->t('unknown');
 
     // tax exemption notices
 

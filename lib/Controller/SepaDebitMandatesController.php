@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -136,10 +137,10 @@ class SepaDebitMandatesController extends Controller
 
     $memberProjectId = $this->getConfigValue('memberProjectId', null);
 
-    $IBAN = $this->request['bankAccountIBAN'];
-    $BLZ  = $this->request['bankAccountBLZ'];
-    $BIC  = $this->request['bankAccountBIC'];
-    $owner = $this->request['bankAccountOwner'];
+    $IBAN = $this->request[ConfigConstants::BANK_ACCOUNT_IBAN];
+    $BLZ  = $this->request[ConfigConstants::BANK_ACCOUNT_BLZ];
+    $BIC  = $this->request[ConfigConstants::BANK_ACCOUNT_BIC];
+    $owner = $this->request[ConfigConstants::BANK_ACCOUNT_OWNER];
 
     $changed = $this->request['changed'];
     $value = $this->request[$changed];
@@ -152,11 +153,11 @@ class SepaDebitMandatesController extends Controller
       ],
     ];
 
-    if ($changed != 'bankAccountIBAN'
+    if ($changed != ConfigConstants::BANK_ACCOUNT_IBAN
         && !empty($IBAN) && str_starts_with($IBAN, 'DE') && (empty($BLZ) || empty($BIC))) {
       // re-run the IBAN validation
       $validations[] = [
-        'changed' => 'bankAccountIBAN',
+        'changed' => ConfigConstants::BANK_ACCOUNT_IBAN,
         'value' => $IBAN,
       ];
     }
@@ -246,7 +247,7 @@ class SepaDebitMandatesController extends Controller
         case 'musicianId':
           if (empty($musicianId)) {
             $newValidations[] = [
-              'changed' => 'bankAccountOwner',
+              'changed' => ConfigConstants::BANK_ACCOUNT_OWNER,
               'value' => '',
             ];
             break;
@@ -269,14 +270,14 @@ class SepaDebitMandatesController extends Controller
           }
           if (true || empty($owner)) {
             $newValidations[] = [
-              'changed' => 'bankAccountOwner',
+              'changed' => ConfigConstants::BANK_ACCOUNT_OWNER,
               'value' => $newOwner,
             ];
           } else {
             $feedback['owner'] = $this->l->t('Set bank-account owner to musician\'s name?');
           }
           break;
-        case 'bankAccountOwner':
+        case ConfigConstants::BANK_ACCOUNT_OWNER:
           $this->logInfo('OWNER ' . $value . ' ' . $this->financeService->sepaTranslit($value));
           $value = $this->financeService->sepaTranslit($value);
           if (!$this->financeService->validateSepaString($value)) {
@@ -286,13 +287,13 @@ class SepaDebitMandatesController extends Controller
           }
           $owner = $value;
           break;
-        case 'bankAccountIBAN':
+        case ConfigConstants::BANK_ACCOUNT_IBAN:
           if (empty($value)) {
             $IBAN = '';
             $BLZ = '';
             $BIC = '';
-            $result['bankAccountBLZ'] = $BLZ;
-            $result['bankAccountBIC'] = $BIC;
+            $result[ConfigConstants::BANK_ACCOUNT_BLZ] = $BLZ;
+            $result[ConfigConstants::BANK_ACCOUNT_BIC] = $BIC;
             break;
           }
           $value = Util::removeSpaces($value);
@@ -431,10 +432,10 @@ class SepaDebitMandatesController extends Controller
             $BLZ = $blz;
             $BIC = $this->bav->getMainAgency($blz)->getBIC();
           }
-          $result['bankAccountBLZ'] = $BLZ;
-          $result['bankAccountBIC'] = $BIC;
+          $result[ConfigConstants::BANK_ACCOUNT_BLZ] = $BLZ;
+          $result[ConfigConstants::BANK_ACCOUNT_BIC] = $BIC;
           break;
-        case 'bankAccountBLZ':
+        case ConfigConstants::BANK_ACCOUNT_BLZ:
           if ($value == '') {
             $BLZ = '';
             break;
@@ -455,11 +456,11 @@ class SepaDebitMandatesController extends Controller
 
           // re-run the IBAN validation
           $newValidations[] = [
-            'changed' => 'bankAccountIBAN',
+            'changed' => ConfigConstants::BANK_ACCOUNT_IBAN,
             'value' => $IBAN,
           ];
           break;
-        case 'bankAccountBIC':
+        case ConfigConstants::BANK_ACCOUNT_BIC:
           if ($value == '') {
             $BIC = '';
             break;
@@ -721,11 +722,11 @@ class SepaDebitMandatesController extends Controller
       'mandateDeleted' => $mandate->getDeleted(),
 
       'bankAccountSequence' => $bankAccount->getSequence(),
-      'bankAccountOwner' => $bankAccount->getBankAccountOwner(),
+      ConfigConstants::BANK_ACCOUNT_OWNER => $bankAccount->getBankAccountOwner(),
 
-      'bankAccountIBAN' => $iban,
-      'bankAccountBLZ' => $blz,
-      'bankAccountBIC' => $bic,
+      ConfigConstants::BANK_ACCOUNT_IBAN => $iban,
+      ConfigConstants::BANK_ACCOUNT_BLZ => $blz,
+      ConfigConstants::BANK_ACCOUNT_BIC => $bic,
       'bankAccountInUse' => $bankAccount->inUse(),
       'bankAccountDeleted' => $bankAccount->getDeleted(),
 
@@ -788,8 +789,8 @@ class SepaDebitMandatesController extends Controller
   ) {
     $requiredKeys = [
       'musicianId',
-      'bankAccountIBAN',
-      'bankAccountOwner',
+      ConfigConstants::BANK_ACCOUNT_IBAN,
+      ConfigConstants::BANK_ACCOUNT_OWNER,
     ];
 
     if (!empty($mandateSequence) || !empty($mandateRegistration)) {
@@ -807,8 +808,8 @@ class SepaDebitMandatesController extends Controller
     }
 
     if (!empty($bankAccountIBAN) && str_starts_with($bankAccountIBAN, 'DE')) {
-      $requiredKeys[] = 'bankAccountBLZ';
-      $requiredKeys[] = 'bankAccountBIC';
+      $requiredKeys[] = ConfigConstants::BANK_ACCOUNT_BLZ;
+      $requiredKeys[] = ConfigConstants::BANK_ACCOUNT_BIC;
     }
 
     foreach ($requiredKeys as $required) {

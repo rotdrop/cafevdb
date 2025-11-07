@@ -873,13 +873,13 @@ const afterLoad = function(container?: JQuery) {
       console.log('************', container);
 
       const blurInputs = container.find([
-        'input#announcements-mailing-list',
-        'input#emailfromname',
-        'input#emailfromaddress',
-        'input#emailFromDomain',
-        'input#bulk-email-subject-tag',
-        'input.attachmentLinkSizeLimit',
-        'input.attachmentLinkExpirationLimit',
+        'input#' + ConfigConstants.ANNOUNCEMENTS_MAILING_LIST_KEY,
+        'input#' + ConfigConstants.EMAIL_FROM_NAME_KEY,
+        'input#' + ConfigConstants.EMAIL_FROM_ADDRESS_KEY,
+        'input#' + ConfigConstants.EMAIL_FROM_DOMAIN_KEY,
+        'input#' + ConfigConstants.BULK_EMAIL_SUBJECT_TAG,
+        'input.' + ConfigConstants.ATTACHMENT_LINK_SIZE_LIMIT,
+        'input.' + ConfigConstants.ATTACHMENT_LINK_EXPIRATION_LIMIT,
       ].join(','));
 
       const $bulkEmailPrivacyNotice = container.find('textarea.bulk-email-privacy-notice');
@@ -906,10 +906,9 @@ const afterLoad = function(container?: JQuery) {
       });
 
       const checkboxInputs = container.find([
-        'input#cloudAttachmentAlwaysLink',
-        // 'input#preSendValidationExternalLinksSSLVerify',
+        'input#' + ConfigConstants.CLOUD_ATTACHMENT_ALWAYS_LINK,
         'input#' + ConfigConstants.PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY,
-        'input#preSendValidationExternalLinksEnforceHttps',
+        'input#' + ConfigConstants.PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS,
       ].join(', '));
 
       console.info('CHECK BOX INPUTS', {
@@ -1175,10 +1174,10 @@ const afterLoad = function(container?: JQuery) {
     });
 
     const bankAccountProperties = [
-      'bankAccountIBAN',
-      'bankAccountBLZ',
-      'bankAccountBIC',
-      'bankAccountBankName',
+      ConfigConstants.BANK_ACCOUNT_IBAN,
+      ConfigConstants.BANK_ACCOUNT_BLZ,
+      ConfigConstants.BANK_ACCOUNT_BIC,
+      ConfigConstants.BANK_ACCOUNT_BANK_NAME,
     ];
 
     simpleSetValueHandler(
@@ -1209,7 +1208,7 @@ const afterLoad = function(container?: JQuery) {
       },
     );
 
-    simpleSetValueHandler($('select[name="bankAccountBankHolidays"]'), 'change', msg);
+    simpleSetValueHandler($('select[name="' + ConfigConstants.BANK_ACCOUNT_BANK_HOLIDAYS + '"]'), 'change', msg);
   }
 
   {

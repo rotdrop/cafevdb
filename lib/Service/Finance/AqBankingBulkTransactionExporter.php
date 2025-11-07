@@ -25,11 +25,13 @@
 namespace OCA\CAFEVDB\Service\Finance;
 
 use RuntimeException;
+
 use PHP_IBAN\IBAN as PHP_IBAN;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Generate AqBanking data-sets for submission to the bank. */
 class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
@@ -55,11 +57,11 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
   ) {
     $this->l = $this->l10n();
 
-    $iban = new PHP_IBAN($this->getConfigValue('bankAccountIBAN'));
+    $iban = new PHP_IBAN($this->getConfigValue(ConfigConstants::BANK_ACCOUNT_IBAN));
     $this->iban = $iban->MachineFormat();
-    $this->bic = $this->getConfigValue('bankAccountBIC');
-    $this->owner = $this->getConfigValue('bankAccountOwner');
-    $this->ci = $this->getConfigValue('bankAccountCreditorIdentifier');
+    $this->bic = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_BIC);
+    $this->owner = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_OWNER);
+    $this->ci = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER);
   }
   // phpcs:enable
 

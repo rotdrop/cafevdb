@@ -662,7 +662,7 @@ class FinanceService
 
       $formData = [
         'projectName' => $project->getName(),
-        'bankAccountOwner' => $musician->getPublicName(),
+        ConfigConstants::BANK_ACCOUNT_OWNER => $musician->getPublicName(),
         'projectParticipant' => $musician->getPublicName(),
         'memberName' => $musician->getPublicName(),
         'memberBirthday' => $this->formatDate($musician->getBirthday(), 'medium'),
@@ -681,9 +681,9 @@ class FinanceService
         $bank = $this->ellipsizeFirst($info['bank'], $info['city'], self::BANK_NAME_MAX);
 
         $formData = array_merge($formData, [
-          'bankAccountOwner' => $bankAccount->getBankAccountOwner(),
-          'bankAccountIBAN' => $bankAccount->getIban(),
-          'bankAccountBIC' => $bankAccount->getBic(),
+          ConfigConstants::BANK_ACCOUNT_OWNER => $bankAccount->getBankAccountOwner(),
+          ConfigConstants::BANK_ACCOUNT_IBAN => $bankAccount->getIban(),
+          ConfigConstants::BANK_ACCOUNT_BIC => $bankAccount->getBic(),
           'bankAccountBank' => $bank,
         ]);
       }
