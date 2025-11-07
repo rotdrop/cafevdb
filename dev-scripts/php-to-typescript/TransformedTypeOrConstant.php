@@ -22,7 +22,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\DevScripts;
+namespace OCA\CAFEVDB\DevScripts\PhpToTypeScript;
 
 use ReflectionClass;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;

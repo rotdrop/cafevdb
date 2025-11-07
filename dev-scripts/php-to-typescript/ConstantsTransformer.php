@@ -22,7 +22,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\DevScripts;
+namespace OCA\CAFEVDB\DevScripts\PhpToTypeScript;
 
 use ReflectionClass;
 use ReflectionClassConstant;
@@ -31,8 +31,10 @@ use Spatie\TypeScriptTransformer\Transformers\Transformer;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
 use Spatie\TypeScriptTransformer\Structures\TypesCollection;
 
+/** Transform class constants to TypeScript constants. */
 class ConstantsTransformer implements Transformer
 {
+  /** {@inheritdoc} */
   public function transform(ReflectionClass $class, string $name):null|TransformedType|TypesCollection
   {
     $constants = $this->resolveConstants($class);
@@ -61,6 +63,7 @@ class ConstantsTransformer implements Transformer
     return $collection;
   }
 
+  /** {@inheritdoc} */
   protected function canTransform(ReflectionClass $class): bool
   {
     // This is for const-only classes.
@@ -68,11 +71,13 @@ class ConstantsTransformer implements Transformer
     return count($this->resolveProperties()) == 0;
   }
 
+  /** {@inheritdoc} */
   protected function resolveConstants(ReflectionClass $class): array
   {
     return $class->getReflectionConstants(ReflectionClassConstant::IS_PUBLIC);
   }
 
+  /** {@inheritdoc} */
   protected function resolveProperties(ReflectionClass $class): array
   {
     $properties = array_filter(
