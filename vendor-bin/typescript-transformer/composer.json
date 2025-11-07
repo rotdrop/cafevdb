@@ -1,0 +1,15 @@
+{
+  "require-dev": {
+    "spatie/typescript-transformer": "dev-production/cafevdb",
+    "symfony/finder": "^7.3"
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../../3rdparty/typescript-transformer",
+      "options": {
+        "symlink": true
+      }
+    }
+  ]
+}
