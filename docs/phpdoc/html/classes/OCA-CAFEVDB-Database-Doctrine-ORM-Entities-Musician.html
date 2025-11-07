@@ -129,9 +129,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Musician</p>
@@ -182,6 +182,17 @@
     <dt class="phpdocumentor-argument-list__entry">
         #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\HasLifecycleCallbacks">HasLifecycleCallbacks</abbr>]
     </dt>
+    </dl>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Index">Index</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $name: &#039;country_postal_code_deleted&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $columns: [&#039;country&#039;, &#039;postal_code&#039;, &#039;deleted&#039;]
+    </dd>
     </dl>
                     <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
@@ -242,7 +253,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted">$deleted</a>
     <span>
-                        &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null            </span>
+                        &nbsp;: <abbr title="\DateTimeInterface">DateTimeInterface</abbr>|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -430,6 +441,12 @@
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_postalCode">$postalCode</a>
     <span>
                         &nbsp;: int|null            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_projectApplications">$projectApplications</a>
+    <span>
+                        &nbsp;: mixed            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -640,7 +657,7 @@ is not yet there.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_getDeleted">getDeleted()</a>
     <span>
-                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null    </span>
+                                &nbsp;: <abbr title="\DateTimeInterface">DateTimeInterface</abbr>|null    </span>
 </dt>
 <dd>Get the deleted at timestamp value. Will return null if
 the entity has not been soft deleted.</dd>
@@ -810,6 +827,13 @@ the entity has not been soft deleted.</dd>
     <span>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianEmailAddress.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress">MusicianEmailAddress</abbr></a>    </span>
 </dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getProjectApplications">getProjectApplications()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>    </span>
+</dt>
+<dd>Get projectApplications.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getProjectInstruments">getProjectInstruments()</a>
@@ -1257,6 +1281,13 @@ emails if not already there and set the principal email address.</dd>
 plain-text field $email.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setProjectApplications">setProjectApplications()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>    </span>
+</dt>
+<dd>Set projectApplications.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setProjectInstruments">setProjectInstruments()</a>
     <span>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>    </span>
@@ -1503,18 +1534,18 @@ through the collection for an entry matching the key.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php"><a href="files/database-doctrine-orm-traits-softdeleteableentity.html"><abbr title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php">SoftDeleteableEntity.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">41</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr>|null</span>
     <span class="phpdocumentor-signature__name">$deleted</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -1557,9 +1588,9 @@ through the collection for an entry matching the key.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">327</span>
+    <span class="phpdocumentor-element-found-in__line">329</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.327" class="phpdocumentor-element-found-in__source" data-line="327" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.329" class="phpdocumentor-element-found-in__source" data-line="329" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -1611,9 +1642,9 @@ through the collection for an entry matching the key.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">336</span>
+    <span class="phpdocumentor-element-found-in__line">338</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.336" class="phpdocumentor-element-found-in__source" data-line="336" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.338" class="phpdocumentor-element-found-in__source" data-line="338" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -1672,9 +1703,9 @@ of the contact data.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">176</span>
+    <span class="phpdocumentor-element-found-in__line">174</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.176" class="phpdocumentor-element-found-in__source" data-line="176" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.174" class="phpdocumentor-element-found-in__source" data-line="174" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -1736,9 +1767,9 @@ mail-merge operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">220</span>
+    <span class="phpdocumentor-element-found-in__line">218</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.218" class="phpdocumentor-element-found-in__source" data-line="218" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -1790,9 +1821,9 @@ mail-merge operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">150</span>
+    <span class="phpdocumentor-element-found-in__line">148</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.150" class="phpdocumentor-element-found-in__source" data-line="150" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -1847,9 +1878,9 @@ mail-merge operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">260</span>
+    <span class="phpdocumentor-element-found-in__line">258</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.260" class="phpdocumentor-element-found-in__source" data-line="260" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.258" class="phpdocumentor-element-found-in__source" data-line="258" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -1910,9 +1941,9 @@ admins and group-admins through the cloud admin UI.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">273</span>
+    <span class="phpdocumentor-element-found-in__line">271</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.273" class="phpdocumentor-element-found-in__source" data-line="273" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -1974,9 +2005,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">190</span>
+    <span class="phpdocumentor-element-found-in__line">188</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.190" class="phpdocumentor-element-found-in__source" data-line="190" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2034,9 +2065,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">236</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.236" class="phpdocumentor-element-found-in__source" data-line="236" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2091,9 +2122,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">100</span>
+    <span class="phpdocumentor-element-found-in__line">98</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Display name, replaces default &quot;$surName, $firstName&quot;</p>
@@ -2149,9 +2180,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">226</span>
+    <span class="phpdocumentor-element-found-in__line">224</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.226" class="phpdocumentor-element-found-in__source" data-line="226" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.224" class="phpdocumentor-element-found-in__source" data-line="224" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2209,9 +2240,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">232</span>
+    <span class="phpdocumentor-element-found-in__line">230</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.232" class="phpdocumentor-element-found-in__source" data-line="232" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.230" class="phpdocumentor-element-found-in__source" data-line="230" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2274,9 +2305,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">308</span>
+    <span class="phpdocumentor-element-found-in__line">310</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.308" class="phpdocumentor-element-found-in__source" data-line="308" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.310" class="phpdocumentor-element-found-in__source" data-line="310" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2342,9 +2373,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2399,9 +2430,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">214</span>
+    <span class="phpdocumentor-element-found-in__line">212</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.212" class="phpdocumentor-element-found-in__source" data-line="212" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2456,9 +2487,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">106</span>
+    <span class="phpdocumentor-element-found-in__line">104</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2510,9 +2541,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2577,9 +2608,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">290</span>
+    <span class="phpdocumentor-element-found-in__line">292</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.290" class="phpdocumentor-element-found-in__source" data-line="290" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2637,9 +2668,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">276</span>
+    <span class="phpdocumentor-element-found-in__line">274</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.276" class="phpdocumentor-element-found-in__source" data-line="276" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.274" class="phpdocumentor-element-found-in__source" data-line="274" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2711,9 +2742,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">315</span>
+    <span class="phpdocumentor-element-found-in__line">317</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.315" class="phpdocumentor-element-found-in__source" data-line="315" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.317" class="phpdocumentor-element-found-in__source" data-line="317" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2771,9 +2802,9 @@ the &quot;...Deactivated&quot; flag can be changed by the cloud administrator.</
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">353</span>
+    <span class="phpdocumentor-element-found-in__line">355</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.353" class="phpdocumentor-element-found-in__source" data-line="353" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.355" class="phpdocumentor-element-found-in__source" data-line="355" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2869,9 +2900,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">202</span>
+    <span class="phpdocumentor-element-found-in__line">200</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.202" class="phpdocumentor-element-found-in__source" data-line="202" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.200" class="phpdocumentor-element-found-in__source" data-line="200" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2929,9 +2960,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">208</span>
+    <span class="phpdocumentor-element-found-in__line">206</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.208" class="phpdocumentor-element-found-in__source" data-line="208" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.206" class="phpdocumentor-element-found-in__source" data-line="206" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -2986,9 +3017,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">90</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3043,9 +3074,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">344</span>
+    <span class="phpdocumentor-element-found-in__line">346</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.344" class="phpdocumentor-element-found-in__source" data-line="344" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.346" class="phpdocumentor-element-found-in__source" data-line="346" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3103,9 +3134,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">321</span>
+    <span class="phpdocumentor-element-found-in__line">323</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.321" class="phpdocumentor-element-found-in__source" data-line="321" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.323" class="phpdocumentor-element-found-in__source" data-line="323" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3163,9 +3194,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">293</span>
+    <span class="phpdocumentor-element-found-in__line">295</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.295" class="phpdocumentor-element-found-in__source" data-line="295" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3220,9 +3251,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">302</span>
+    <span class="phpdocumentor-element-found-in__line">304</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.302" class="phpdocumentor-element-found-in__source" data-line="302" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.304" class="phpdocumentor-element-found-in__source" data-line="304" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3280,9 +3311,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">184</span>
+    <span class="phpdocumentor-element-found-in__line">182</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.184" class="phpdocumentor-element-found-in__source" data-line="184" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.182" class="phpdocumentor-element-found-in__source" data-line="182" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3340,9 +3371,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">196</span>
+    <span class="phpdocumentor-element-found-in__line">194</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.196" class="phpdocumentor-element-found-in__source" data-line="196" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.194" class="phpdocumentor-element-found-in__source" data-line="194" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3390,6 +3421,80 @@ in the given organization.</p>
             -private
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="property_projectApplications">
+        $projectApplications
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_projectApplications" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">278</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.278" class="phpdocumentor-element-found-in__source" data-line="278" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">$projectApplications</span>
+    </code>
+
+    
+    
+    
+
+    
+    <section class="phpdocumentor-attributes">
+        <h5 class="phpdocumentor-elements__header" id="attributes">
+            Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_projectApplications#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h5>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\OneToMany">OneToMany</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $targetEntity: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectApplication::class
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $mappedBy: &#039;musician&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $indexBy: &#039;project_id&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $orphanRemoval: true
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $fetch: &#039;EXTRA_LAZY&#039;
+    </dd>
+    </dl>
+                    <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation\SoftDeleteableCascade">SoftDeleteableCascade</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $delete: true
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $undelete: true
+    </dd>
+    </dl>
+            </section>
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="property_projectInstruments">
         $projectInstruments
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_projectInstruments" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3400,9 +3505,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">284</span>
+    <span class="phpdocumentor-element-found-in__line">286</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.284" class="phpdocumentor-element-found-in__source" data-line="284" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.286" class="phpdocumentor-element-found-in__source" data-line="286" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3460,9 +3565,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">287</span>
+    <span class="phpdocumentor-element-found-in__line">289</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.287" class="phpdocumentor-element-found-in__source" data-line="287" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.289" class="phpdocumentor-element-found-in__source" data-line="289" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3523,9 +3628,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">280</span>
+    <span class="phpdocumentor-element-found-in__line">282</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.280" class="phpdocumentor-element-found-in__source" data-line="280" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.282" class="phpdocumentor-element-found-in__source" data-line="282" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3597,9 +3702,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">244</span>
+    <span class="phpdocumentor-element-found-in__line">242</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.242" class="phpdocumentor-element-found-in__source" data-line="242" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3654,9 +3759,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">144</span>
+    <span class="phpdocumentor-element-found-in__line">142</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.144" class="phpdocumentor-element-found-in__source" data-line="144" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3714,9 +3819,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">296</span>
+    <span class="phpdocumentor-element-found-in__line">298</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.296" class="phpdocumentor-element-found-in__source" data-line="296" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.298" class="phpdocumentor-element-found-in__source" data-line="298" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3774,9 +3879,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">299</span>
+    <span class="phpdocumentor-element-found-in__line">301</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.299" class="phpdocumentor-element-found-in__source" data-line="299" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.301" class="phpdocumentor-element-found-in__source" data-line="301" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3834,9 +3939,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">156</span>
+    <span class="phpdocumentor-element-found-in__line">154</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.156" class="phpdocumentor-element-found-in__source" data-line="156" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.154" class="phpdocumentor-element-found-in__source" data-line="154" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3891,9 +3996,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">164</span>
+    <span class="phpdocumentor-element-found-in__line">162</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.164" class="phpdocumentor-element-found-in__source" data-line="164" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.162" class="phpdocumentor-element-found-in__source" data-line="162" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -3951,9 +4056,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">78</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -4008,9 +4113,9 @@ in the given organization.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">119</span>
+    <span class="phpdocumentor-element-found-in__line">117</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.119" class="phpdocumentor-element-found-in__source" data-line="119" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">This should look like a suitable user id, e.g.</p>
@@ -4083,7 +4188,7 @@ the slug generator. It will just remove empty fields.</p>
         $class: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler::class
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
-        $options: [&#039;separator&#039; =&gt; &#039;-&#039;, &#039;preferred&#039; =&gt; [1, 2]]
+        $options: [&#039;separator&#039; =&gt; &#039;-&#039;, &#039;preferred&#039; =&gt; [&#039;nickName&#039;, &#039;surName&#039;]]
     </dd>
     </dl>
             </section>
@@ -4106,9 +4211,9 @@ the slug generator. It will just remove empty fields.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">138</span>
+    <span class="phpdocumentor-element-found-in__line">136</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -4232,9 +4337,9 @@ extensions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">357</span>
+    <span class="phpdocumentor-element-found-in__line">359</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.357" class="phpdocumentor-element-found-in__source" data-line="357" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.359" class="phpdocumentor-element-found-in__source" data-line="359" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -4268,9 +4373,9 @@ extensions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1728</span>
+    <span class="phpdocumentor-element-found-in__line">1755</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1728" class="phpdocumentor-element-found-in__source" data-line="1728" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1755" class="phpdocumentor-element-found-in__source" data-line="1755" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -4308,9 +4413,9 @@ extensions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">381</span>
+    <span class="phpdocumentor-element-found-in__line">384</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.381" class="phpdocumentor-element-found-in__source" data-line="381" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.384" class="phpdocumentor-element-found-in__source" data-line="384" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -4344,9 +4449,9 @@ extensions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">829</span>
+    <span class="phpdocumentor-element-found-in__line">832</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.829" class="phpdocumentor-element-found-in__source" data-line="829" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.832" class="phpdocumentor-element-found-in__source" data-line="832" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Add a new email-address to the collection</p>
@@ -4398,9 +4503,9 @@ extensions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1112</span>
+    <span class="phpdocumentor-element-found-in__line">1115</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1112" class="phpdocumentor-element-found-in__source" data-line="1112" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1115" class="phpdocumentor-element-found-in__source" data-line="1115" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Adds the given instrument to the list of the musician&#039;s instruments if it
@@ -4667,9 +4772,9 @@ is not yet there.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1614</span>
+    <span class="phpdocumentor-element-found-in__line">1641</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1614" class="phpdocumentor-element-found-in__source" data-line="1614" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1641" class="phpdocumentor-element-found-in__source" data-line="1641" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get addressBookUri.</p>
@@ -4707,9 +4812,9 @@ is not yet there.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">553</span>
+    <span class="phpdocumentor-element-found-in__line">556</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.553" class="phpdocumentor-element-found-in__source" data-line="553" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.556" class="phpdocumentor-element-found-in__source" data-line="556" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get addressSupplement.</p>
@@ -4747,9 +4852,9 @@ is not yet there.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">721</span>
+    <span class="phpdocumentor-element-found-in__line">724</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.721" class="phpdocumentor-element-found-in__source" data-line="721" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.724" class="phpdocumentor-element-found-in__source" data-line="724" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get birthday.</p>
@@ -4787,9 +4892,9 @@ is not yet there.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">481</span>
+    <span class="phpdocumentor-element-found-in__line">484</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.481" class="phpdocumentor-element-found-in__source" data-line="481" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.484" class="phpdocumentor-element-found-in__source" data-line="484" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get city.</p>
@@ -4827,9 +4932,9 @@ is not yet there.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1032</span>
+    <span class="phpdocumentor-element-found-in__line">1035</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1032" class="phpdocumentor-element-found-in__source" data-line="1032" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1035" class="phpdocumentor-element-found-in__source" data-line="1035" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get cloudAccountDeactivated.</p>
@@ -4867,9 +4972,9 @@ is not yet there.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1008</span>
+    <span class="phpdocumentor-element-found-in__line">1011</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1008" class="phpdocumentor-element-found-in__source" data-line="1008" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1011" class="phpdocumentor-element-found-in__source" data-line="1011" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get cloudAccountDisabled.</p>
@@ -4907,9 +5012,9 @@ is not yet there.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">625</span>
+    <span class="phpdocumentor-element-found-in__line">628</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.625" class="phpdocumentor-element-found-in__source" data-line="625" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.628" class="phpdocumentor-element-found-in__source" data-line="628" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get country.</p>
@@ -4947,9 +5052,9 @@ is not yet there.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">907</span>
+    <span class="phpdocumentor-element-found-in__line">910</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.907" class="phpdocumentor-element-found-in__source" data-line="907" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.910" class="phpdocumentor-element-found-in__source" data-line="910" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get participationStatus.</p>
@@ -4987,9 +5092,9 @@ is not yet there.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php"><a href="files/database-doctrine-orm-traits-softdeleteableentity.html"><abbr title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php">SoftDeleteableEntity.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">63</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the deleted at timestamp value. Will return null if
@@ -4997,7 +5102,7 @@ the entity has not been soft deleted.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getDeleted</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null</span></code>
+                    <span class="phpdocumentor-signature__name">getDeleted</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr>|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -5010,7 +5115,7 @@ the entity has not been soft deleted.</p>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null</span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr>|null</span>
             </section>
 
 </article>
@@ -5028,9 +5133,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1421</span>
+    <span class="phpdocumentor-element-found-in__line">1448</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1421" class="phpdocumentor-element-found-in__source" data-line="1421" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1448" class="phpdocumentor-element-found-in__source" data-line="1448" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get displayName.</p>
@@ -5068,9 +5173,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">793</span>
+    <span class="phpdocumentor-element-found-in__line">796</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.793" class="phpdocumentor-element-found-in__source" data-line="793" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.796" class="phpdocumentor-element-found-in__source" data-line="796" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get email.</p>
@@ -5108,9 +5213,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">817</span>
+    <span class="phpdocumentor-element-found-in__line">820</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.817" class="phpdocumentor-element-found-in__source" data-line="817" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.820" class="phpdocumentor-element-found-in__source" data-line="820" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get emailAddresses.</p>
@@ -5148,9 +5253,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1397</span>
+    <span class="phpdocumentor-element-found-in__line">1424</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1397" class="phpdocumentor-element-found-in__source" data-line="1397" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1424" class="phpdocumentor-element-found-in__source" data-line="1424" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get encryptedFiles.</p>
@@ -5188,9 +5293,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">457</span>
+    <span class="phpdocumentor-element-found-in__line">460</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.457" class="phpdocumentor-element-found-in__source" data-line="457" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.460" class="phpdocumentor-element-found-in__source" data-line="460" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get firstName.</p>
@@ -5228,9 +5333,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">697</span>
+    <span class="phpdocumentor-element-found-in__line">700</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.697" class="phpdocumentor-element-found-in__source" data-line="697" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.700" class="phpdocumentor-element-found-in__source" data-line="700" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get fixedLinePhone.</p>
@@ -5268,9 +5373,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">935</span>
+    <span class="phpdocumentor-element-found-in__line">938</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.935" class="phpdocumentor-element-found-in__source" data-line="935" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.938" class="phpdocumentor-element-found-in__source" data-line="938" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get gender.</p>
@@ -5308,9 +5413,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">406</span>
+    <span class="phpdocumentor-element-found-in__line">409</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.406" class="phpdocumentor-element-found-in__source" data-line="406" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.409" class="phpdocumentor-element-found-in__source" data-line="409" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get id.</p>
@@ -5348,9 +5453,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1494</span>
+    <span class="phpdocumentor-element-found-in__line">1521</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1494" class="phpdocumentor-element-found-in__source" data-line="1494" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1521" class="phpdocumentor-element-found-in__source" data-line="1521" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Compose initials from the public display name.</p>
@@ -5388,9 +5493,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1277</span>
+    <span class="phpdocumentor-element-found-in__line">1304</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1277" class="phpdocumentor-element-found-in__source" data-line="1277" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1304" class="phpdocumentor-element-found-in__source" data-line="1304" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get instrumentInsurances.</p>
@@ -5428,9 +5533,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1065</span>
+    <span class="phpdocumentor-element-found-in__line">1068</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1065" class="phpdocumentor-element-found-in__source" data-line="1065" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1068" class="phpdocumentor-element-found-in__source" data-line="1068" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get instruments.</p>
@@ -5493,9 +5598,9 @@ belonging to $family. Default \false.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1662</span>
+    <span class="phpdocumentor-element-found-in__line">1689</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1662" class="phpdocumentor-element-found-in__source" data-line="1662" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1689" class="phpdocumentor-element-found-in__source" data-line="1689" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get invoices.</p>
@@ -5533,9 +5638,9 @@ belonging to $family. Default \false.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1590</span>
+    <span class="phpdocumentor-element-found-in__line">1617</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1590" class="phpdocumentor-element-found-in__source" data-line="1590" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1617" class="phpdocumentor-element-found-in__source" data-line="1617" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get jobTitle.</p>
@@ -5573,9 +5678,9 @@ belonging to $family. Default \false.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">649</span>
+    <span class="phpdocumentor-element-found-in__line">652</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.649" class="phpdocumentor-element-found-in__source" data-line="649" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.652" class="phpdocumentor-element-found-in__source" data-line="652" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get language.</p>
@@ -5613,9 +5718,9 @@ belonging to $family. Default \false.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">673</span>
+    <span class="phpdocumentor-element-found-in__line">676</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.673" class="phpdocumentor-element-found-in__source" data-line="673" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.676" class="phpdocumentor-element-found-in__source" data-line="676" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get mobilePhone.</p>
@@ -5653,9 +5758,9 @@ belonging to $family. Default \false.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1445</span>
+    <span class="phpdocumentor-element-found-in__line">1472</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1445" class="phpdocumentor-element-found-in__source" data-line="1445" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1472" class="phpdocumentor-element-found-in__source" data-line="1472" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get nickName.</p>
@@ -5693,9 +5798,9 @@ belonging to $family. Default \false.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1089</span>
+    <span class="phpdocumentor-element-found-in__line">1092</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1089" class="phpdocumentor-element-found-in__source" data-line="1089" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1092" class="phpdocumentor-element-found-in__source" data-line="1092" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -5738,9 +5843,9 @@ roles) of the participant.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1566</span>
+    <span class="phpdocumentor-element-found-in__line">1593</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1566" class="phpdocumentor-element-found-in__source" data-line="1566" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1593" class="phpdocumentor-element-found-in__source" data-line="1593" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get organization.</p>
@@ -5778,9 +5883,9 @@ roles) of the participant.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1686</span>
+    <span class="phpdocumentor-element-found-in__line">1713</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1686" class="phpdocumentor-element-found-in__source" data-line="1686" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1713" class="phpdocumentor-element-found-in__source" data-line="1713" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get originatedInvoices.</p>
@@ -5818,9 +5923,9 @@ roles) of the participant.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1301</span>
+    <span class="phpdocumentor-element-found-in__line">1328</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1301" class="phpdocumentor-element-found-in__source" data-line="1301" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1328" class="phpdocumentor-element-found-in__source" data-line="1328" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get payableInsurances.</p>
@@ -5858,9 +5963,9 @@ roles) of the participant.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1325</span>
+    <span class="phpdocumentor-element-found-in__line">1352</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1325" class="phpdocumentor-element-found-in__source" data-line="1325" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1352" class="phpdocumentor-element-found-in__source" data-line="1352" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get payments.</p>
@@ -5898,9 +6003,9 @@ roles) of the participant.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">577</span>
+    <span class="phpdocumentor-element-found-in__line">580</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.577" class="phpdocumentor-element-found-in__source" data-line="577" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.580" class="phpdocumentor-element-found-in__source" data-line="580" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get poBox.</p>
@@ -5938,9 +6043,9 @@ roles) of the participant.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">601</span>
+    <span class="phpdocumentor-element-found-in__line">604</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.601" class="phpdocumentor-element-found-in__source" data-line="601" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.604" class="phpdocumentor-element-found-in__source" data-line="604" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get postalCode.</p>
@@ -5978,9 +6083,9 @@ roles) of the participant.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">751</span>
+    <span class="phpdocumentor-element-found-in__line">754</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.751" class="phpdocumentor-element-found-in__source" data-line="751" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.754" class="phpdocumentor-element-found-in__source" data-line="754" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -6009,6 +6114,46 @@ roles) of the participant.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getProjectApplications">
+        getProjectApplications()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getProjectApplications" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1145</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1145" class="phpdocumentor-element-found-in__source" data-line="1145" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get projectApplications.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getProjectApplications</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getProjectInstruments">
         getProjectInstruments()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getProjectInstruments" class="headerlink"><i class="fas fa-link"></i></a>
@@ -6017,9 +6162,9 @@ roles) of the participant.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1142</span>
+    <span class="phpdocumentor-element-found-in__line">1169</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1142" class="phpdocumentor-element-found-in__source" data-line="1142" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1169" class="phpdocumentor-element-found-in__source" data-line="1169" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get projectInstruments.</p>
@@ -6057,9 +6202,9 @@ roles) of the participant.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1240</span>
+    <span class="phpdocumentor-element-found-in__line">1267</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1240" class="phpdocumentor-element-found-in__source" data-line="1240" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1267" class="phpdocumentor-element-found-in__source" data-line="1267" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get projectParticipantFieldsData.</p>
@@ -6097,9 +6242,9 @@ roles) of the participant.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1253</span>
+    <span class="phpdocumentor-element-found-in__line">1280</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1253" class="phpdocumentor-element-found-in__source" data-line="1253" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1280" class="phpdocumentor-element-found-in__source" data-line="1280" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get one specific participant-field datum indexed by its key</p>
@@ -6151,9 +6296,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1191</span>
+    <span class="phpdocumentor-element-found-in__line">1218</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1191" class="phpdocumentor-element-found-in__source" data-line="1191" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1218" class="phpdocumentor-element-found-in__source" data-line="1218" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the project-participant entity for the given project or null if
@@ -6202,9 +6347,9 @@ $this is not a participant.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1166</span>
+    <span class="phpdocumentor-element-found-in__line">1193</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1166" class="phpdocumentor-element-found-in__source" data-line="1166" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1193" class="phpdocumentor-element-found-in__source" data-line="1193" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get projectParticipation.</p>
@@ -6242,9 +6387,9 @@ $this is not a participant.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1460</span>
+    <span class="phpdocumentor-element-found-in__line">1487</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1460" class="phpdocumentor-element-found-in__source" data-line="1460" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1487" class="phpdocumentor-element-found-in__source" data-line="1487" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the cooked display-name, taking nick-name into account and
@@ -6297,9 +6442,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1097</span>
+    <span class="phpdocumentor-element-found-in__line">1100</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1097" class="phpdocumentor-element-found-in__source" data-line="1097" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1100" class="phpdocumentor-element-found-in__source" data-line="1100" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
     
@@ -6340,9 +6485,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">984</span>
+    <span class="phpdocumentor-element-found-in__line">987</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.984" class="phpdocumentor-element-found-in__source" data-line="984" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.987" class="phpdocumentor-element-found-in__source" data-line="987" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get remarks.</p>
@@ -6380,9 +6525,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1638</span>
+    <span class="phpdocumentor-element-found-in__line">1665</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1638" class="phpdocumentor-element-found-in__source" data-line="1638" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1665" class="phpdocumentor-element-found-in__source" data-line="1665" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get rowAccessToken.</p>
@@ -6420,9 +6565,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1349</span>
+    <span class="phpdocumentor-element-found-in__line">1376</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1349" class="phpdocumentor-element-found-in__source" data-line="1349" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1376" class="phpdocumentor-element-found-in__source" data-line="1376" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaBankAccounts.</p>
@@ -6460,9 +6605,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1373</span>
+    <span class="phpdocumentor-element-found-in__line">1400</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1373" class="phpdocumentor-element-found-in__source" data-line="1373" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1400" class="phpdocumentor-element-found-in__source" data-line="1400" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaDebitMandates.</p>
@@ -6500,9 +6645,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">505</span>
+    <span class="phpdocumentor-element-found-in__line">508</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.505" class="phpdocumentor-element-found-in__source" data-line="505" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.508" class="phpdocumentor-element-found-in__source" data-line="508" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get street.</p>
@@ -6540,9 +6685,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">529</span>
+    <span class="phpdocumentor-element-found-in__line">532</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.529" class="phpdocumentor-element-found-in__source" data-line="529" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.532" class="phpdocumentor-element-found-in__source" data-line="532" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get streetNumber.</p>
@@ -6580,9 +6725,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">433</span>
+    <span class="phpdocumentor-element-found-in__line">436</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.433" class="phpdocumentor-element-found-in__source" data-line="433" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.436" class="phpdocumentor-element-found-in__source" data-line="436" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get surName.</p>
@@ -6620,9 +6765,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/UpdatedAt.php"><a href="files/database-doctrine-orm-traits-updatedat.html"><abbr title="Database/Doctrine/ORM/Traits/UpdatedAt.php">UpdatedAt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">68</span>
+    <span class="phpdocumentor-element-found-in__line">66</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/UpdatedAt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/UpdatedAt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns updated.</p>
@@ -6660,9 +6805,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1542</span>
+    <span class="phpdocumentor-element-found-in__line">1569</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1542" class="phpdocumentor-element-found-in__source" data-line="1542" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1569" class="phpdocumentor-element-found-in__source" data-line="1569" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get userIdSlug.</p>
@@ -6700,9 +6845,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1518</span>
+    <span class="phpdocumentor-element-found-in__line">1545</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1518" class="phpdocumentor-element-found-in__source" data-line="1518" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1545" class="phpdocumentor-element-found-in__source" data-line="1545" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get userPassphrase.</p>
@@ -6780,9 +6925,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">947</span>
+    <span class="phpdocumentor-element-found-in__line">950</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.947" class="phpdocumentor-element-found-in__source" data-line="947" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.950" class="phpdocumentor-element-found-in__source" data-line="950" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Guess the gender from the name.</p>
@@ -6874,9 +7019,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php"><a href="files/database-doctrine-orm-traits-softdeleteableentity.html"><abbr title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php">SoftDeleteableEntity.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check if the entity has been soft deleted.</p>
@@ -6914,9 +7059,9 @@ than &quot;LASTNAME, FIRSTNAME&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php"><a href="files/database-doctrine-orm-traits-softdeleteableentity.html"><abbr title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php">SoftDeleteableEntity.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return whether this object is expired and is about to be deleted on the
@@ -6955,9 +7100,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1178</span>
+    <span class="phpdocumentor-element-found-in__line">1205</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1178" class="phpdocumentor-element-found-in__source" data-line="1178" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1205" class="phpdocumentor-element-found-in__source" data-line="1205" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the given project is contained in projectParticipation.</p>
@@ -7005,9 +7150,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1707</span>
+    <span class="phpdocumentor-element-found-in__line">1734</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1707" class="phpdocumentor-element-found-in__source" data-line="1707" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1734" class="phpdocumentor-element-found-in__source" data-line="1734" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -7240,9 +7385,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1720</span>
+    <span class="phpdocumentor-element-found-in__line">1747</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1720" class="phpdocumentor-element-found-in__source" data-line="1720" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1747" class="phpdocumentor-element-found-in__source" data-line="1747" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -7407,9 +7552,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">859</span>
+    <span class="phpdocumentor-element-found-in__line">862</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.859" class="phpdocumentor-element-found-in__source" data-line="859" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.862" class="phpdocumentor-element-found-in__source" data-line="862" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Remove the given email address.</p>
@@ -7461,9 +7606,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1602</span>
+    <span class="phpdocumentor-element-found-in__line">1629</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1602" class="phpdocumentor-element-found-in__source" data-line="1602" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1629" class="phpdocumentor-element-found-in__source" data-line="1629" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set addressBookUri.</p>
@@ -7511,9 +7656,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">541</span>
+    <span class="phpdocumentor-element-found-in__line">544</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.541" class="phpdocumentor-element-found-in__source" data-line="541" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.544" class="phpdocumentor-element-found-in__source" data-line="544" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set addressSupplement.</p>
@@ -7561,9 +7706,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">709</span>
+    <span class="phpdocumentor-element-found-in__line">712</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.709" class="phpdocumentor-element-found-in__source" data-line="709" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.712" class="phpdocumentor-element-found-in__source" data-line="712" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set birthday.</p>
@@ -7611,9 +7756,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">469</span>
+    <span class="phpdocumentor-element-found-in__line">472</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.469" class="phpdocumentor-element-found-in__source" data-line="469" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.472" class="phpdocumentor-element-found-in__source" data-line="472" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set city.</p>
@@ -7661,9 +7806,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1020</span>
+    <span class="phpdocumentor-element-found-in__line">1023</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1020" class="phpdocumentor-element-found-in__source" data-line="1020" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1023" class="phpdocumentor-element-found-in__source" data-line="1023" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set cloudAccountDeactivated.</p>
@@ -7711,9 +7856,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">996</span>
+    <span class="phpdocumentor-element-found-in__line">999</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.996" class="phpdocumentor-element-found-in__source" data-line="996" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.999" class="phpdocumentor-element-found-in__source" data-line="999" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set cloudAccountDisabled.</p>
@@ -7761,9 +7906,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">613</span>
+    <span class="phpdocumentor-element-found-in__line">616</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.613" class="phpdocumentor-element-found-in__source" data-line="613" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.616" class="phpdocumentor-element-found-in__source" data-line="616" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set country.</p>
@@ -7811,9 +7956,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">891</span>
+    <span class="phpdocumentor-element-found-in__line">894</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.891" class="phpdocumentor-element-found-in__source" data-line="891" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.894" class="phpdocumentor-element-found-in__source" data-line="894" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set participationStatus.</p>
@@ -7861,9 +8006,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php"><a href="files/database-doctrine-orm-traits-softdeleteableentity.html"><abbr title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php">SoftDeleteableEntity.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set or clear the deleted at timestamp.</p>
@@ -7911,9 +8056,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1409</span>
+    <span class="phpdocumentor-element-found-in__line">1436</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1409" class="phpdocumentor-element-found-in__source" data-line="1409" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1436" class="phpdocumentor-element-found-in__source" data-line="1436" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set displayName.</p>
@@ -7961,9 +8106,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">764</span>
+    <span class="phpdocumentor-element-found-in__line">767</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.764" class="phpdocumentor-element-found-in__source" data-line="764" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.767" class="phpdocumentor-element-found-in__source" data-line="767" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set email. Update related associations, add to the collection of all
@@ -8012,9 +8157,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">805</span>
+    <span class="phpdocumentor-element-found-in__line">808</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.805" class="phpdocumentor-element-found-in__source" data-line="805" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.808" class="phpdocumentor-element-found-in__source" data-line="808" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set emailAddresses.</p>
@@ -8062,9 +8207,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1385</span>
+    <span class="phpdocumentor-element-found-in__line">1412</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1385" class="phpdocumentor-element-found-in__source" data-line="1385" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1412" class="phpdocumentor-element-found-in__source" data-line="1412" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set encryptedFiles.</p>
@@ -8112,9 +8257,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">445</span>
+    <span class="phpdocumentor-element-found-in__line">448</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.445" class="phpdocumentor-element-found-in__source" data-line="445" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.448" class="phpdocumentor-element-found-in__source" data-line="448" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set firstName.</p>
@@ -8162,9 +8307,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">685</span>
+    <span class="phpdocumentor-element-found-in__line">688</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.685" class="phpdocumentor-element-found-in__source" data-line="685" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.688" class="phpdocumentor-element-found-in__source" data-line="688" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set fixedLinePhone.</p>
@@ -8212,9 +8357,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">919</span>
+    <span class="phpdocumentor-element-found-in__line">922</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.919" class="phpdocumentor-element-found-in__source" data-line="919" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.922" class="phpdocumentor-element-found-in__source" data-line="922" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set gender.</p>
@@ -8262,9 +8407,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">394</span>
+    <span class="phpdocumentor-element-found-in__line">397</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.394" class="phpdocumentor-element-found-in__source" data-line="394" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.397" class="phpdocumentor-element-found-in__source" data-line="397" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set id.</p>
@@ -8312,9 +8457,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1265</span>
+    <span class="phpdocumentor-element-found-in__line">1292</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1265" class="phpdocumentor-element-found-in__source" data-line="1265" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1292" class="phpdocumentor-element-found-in__source" data-line="1292" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set instrumentInsurances.</p>
@@ -8362,9 +8507,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1044</span>
+    <span class="phpdocumentor-element-found-in__line">1047</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1044" class="phpdocumentor-element-found-in__source" data-line="1044" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1047" class="phpdocumentor-element-found-in__source" data-line="1047" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set instruments.</p>
@@ -8412,9 +8557,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1650</span>
+    <span class="phpdocumentor-element-found-in__line">1677</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1650" class="phpdocumentor-element-found-in__source" data-line="1650" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1677" class="phpdocumentor-element-found-in__source" data-line="1677" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set invoices.</p>
@@ -8462,9 +8607,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1578</span>
+    <span class="phpdocumentor-element-found-in__line">1605</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1578" class="phpdocumentor-element-found-in__source" data-line="1578" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1605" class="phpdocumentor-element-found-in__source" data-line="1605" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set jobTitle.</p>
@@ -8512,9 +8657,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">637</span>
+    <span class="phpdocumentor-element-found-in__line">640</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.637" class="phpdocumentor-element-found-in__source" data-line="637" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.640" class="phpdocumentor-element-found-in__source" data-line="640" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set language.</p>
@@ -8562,9 +8707,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">661</span>
+    <span class="phpdocumentor-element-found-in__line">664</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.661" class="phpdocumentor-element-found-in__source" data-line="661" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.664" class="phpdocumentor-element-found-in__source" data-line="664" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set mobilePhone.</p>
@@ -8612,9 +8757,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1433</span>
+    <span class="phpdocumentor-element-found-in__line">1460</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1433" class="phpdocumentor-element-found-in__source" data-line="1433" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1460" class="phpdocumentor-element-found-in__source" data-line="1460" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set nickName.</p>
@@ -8662,9 +8807,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1554</span>
+    <span class="phpdocumentor-element-found-in__line">1581</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1554" class="phpdocumentor-element-found-in__source" data-line="1554" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1581" class="phpdocumentor-element-found-in__source" data-line="1581" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set organization.</p>
@@ -8712,9 +8857,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1674</span>
+    <span class="phpdocumentor-element-found-in__line">1701</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1674" class="phpdocumentor-element-found-in__source" data-line="1674" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1701" class="phpdocumentor-element-found-in__source" data-line="1701" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set originatedInvoices.</p>
@@ -8762,9 +8907,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1289</span>
+    <span class="phpdocumentor-element-found-in__line">1316</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1289" class="phpdocumentor-element-found-in__source" data-line="1289" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1316" class="phpdocumentor-element-found-in__source" data-line="1316" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set payableInsurances.</p>
@@ -8812,9 +8957,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1313</span>
+    <span class="phpdocumentor-element-found-in__line">1340</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1313" class="phpdocumentor-element-found-in__source" data-line="1313" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1340" class="phpdocumentor-element-found-in__source" data-line="1340" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set payments.</p>
@@ -8862,9 +9007,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">565</span>
+    <span class="phpdocumentor-element-found-in__line">568</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.565" class="phpdocumentor-element-found-in__source" data-line="565" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.568" class="phpdocumentor-element-found-in__source" data-line="568" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set poBox.</p>
@@ -8912,9 +9057,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">589</span>
+    <span class="phpdocumentor-element-found-in__line">592</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.589" class="phpdocumentor-element-found-in__source" data-line="589" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.592" class="phpdocumentor-element-found-in__source" data-line="592" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set postalCode.</p>
@@ -8962,9 +9107,9 @@ emails if not already there and set the principal email address.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">734</span>
+    <span class="phpdocumentor-element-found-in__line">737</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.734" class="phpdocumentor-element-found-in__source" data-line="734" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.737" class="phpdocumentor-element-found-in__source" data-line="737" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the principal email address as address-entity. Updates also the
@@ -9005,6 +9150,56 @@ plain-text field $email.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setProjectApplications">
+        setProjectApplications()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setProjectApplications" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1133</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1133" class="phpdocumentor-element-found-in__source" data-line="1133" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set projectApplications.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setProjectApplications</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectApplications</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$projectApplications</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setProjectInstruments">
         setProjectInstruments()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setProjectInstruments" class="headerlink"><i class="fas fa-link"></i></a>
@@ -9013,9 +9208,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1130</span>
+    <span class="phpdocumentor-element-found-in__line">1157</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1130" class="phpdocumentor-element-found-in__source" data-line="1130" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1157" class="phpdocumentor-element-found-in__source" data-line="1157" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set projectInstruments.</p>
@@ -9063,9 +9258,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1228</span>
+    <span class="phpdocumentor-element-found-in__line">1255</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1228" class="phpdocumentor-element-found-in__source" data-line="1228" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1255" class="phpdocumentor-element-found-in__source" data-line="1255" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set projectParticipantFieldsData.</p>
@@ -9113,9 +9308,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1154</span>
+    <span class="phpdocumentor-element-found-in__line">1181</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1154" class="phpdocumentor-element-found-in__source" data-line="1154" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1181" class="phpdocumentor-element-found-in__source" data-line="1181" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set projectParticipation.</p>
@@ -9163,9 +9358,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">972</span>
+    <span class="phpdocumentor-element-found-in__line">975</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.972" class="phpdocumentor-element-found-in__source" data-line="972" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.975" class="phpdocumentor-element-found-in__source" data-line="975" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set remarks.</p>
@@ -9213,9 +9408,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1626</span>
+    <span class="phpdocumentor-element-found-in__line">1653</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1626" class="phpdocumentor-element-found-in__source" data-line="1626" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1653" class="phpdocumentor-element-found-in__source" data-line="1653" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set rowAccessToken.</p>
@@ -9263,9 +9458,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1337</span>
+    <span class="phpdocumentor-element-found-in__line">1364</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1337" class="phpdocumentor-element-found-in__source" data-line="1337" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1364" class="phpdocumentor-element-found-in__source" data-line="1364" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaBankAccounts.</p>
@@ -9313,9 +9508,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1361</span>
+    <span class="phpdocumentor-element-found-in__line">1388</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1361" class="phpdocumentor-element-found-in__source" data-line="1361" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1388" class="phpdocumentor-element-found-in__source" data-line="1388" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaDebitMandates.</p>
@@ -9363,9 +9558,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">493</span>
+    <span class="phpdocumentor-element-found-in__line">496</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.493" class="phpdocumentor-element-found-in__source" data-line="493" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.496" class="phpdocumentor-element-found-in__source" data-line="496" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set street.</p>
@@ -9413,9 +9608,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">517</span>
+    <span class="phpdocumentor-element-found-in__line">520</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.517" class="phpdocumentor-element-found-in__source" data-line="517" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.520" class="phpdocumentor-element-found-in__source" data-line="520" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set streetNumber.</p>
@@ -9463,9 +9658,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">418</span>
+    <span class="phpdocumentor-element-found-in__line">421</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.418" class="phpdocumentor-element-found-in__source" data-line="418" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.421" class="phpdocumentor-element-found-in__source" data-line="421" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set surName.</p>
@@ -9513,9 +9708,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/UpdatedAt.php"><a href="files/database-doctrine-orm-traits-updatedat.html"><abbr title="Database/Doctrine/ORM/Traits/UpdatedAt.php">UpdatedAt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/UpdatedAt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/UpdatedAt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets updated.</p>
@@ -9563,9 +9758,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1530</span>
+    <span class="phpdocumentor-element-found-in__line">1557</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1530" class="phpdocumentor-element-found-in__source" data-line="1530" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1557" class="phpdocumentor-element-found-in__source" data-line="1557" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set userIdSlug.</p>
@@ -9613,9 +9808,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1506</span>
+    <span class="phpdocumentor-element-found-in__line">1533</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1506" class="phpdocumentor-element-found-in__source" data-line="1506" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1533" class="phpdocumentor-element-found-in__source" data-line="1533" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set userPassphrase.</p>
@@ -9792,9 +9987,9 @@ plain-text field $email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Musician.php"><a href="files/database-doctrine-orm-entities-musician.html"><abbr title="Database/Doctrine/ORM/Entities/Musician.php">Musician.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1698</span>
+    <span class="phpdocumentor-element-found-in__line">1725</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1698" class="phpdocumentor-element-found-in__source" data-line="1698" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.1725" class="phpdocumentor-element-found-in__source" data-line="1725" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Musician.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the number of &quot;serious&quot; items which &quot;use&quot; this entity. For
@@ -9882,9 +10077,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/GetByUuidTrait.php"><a href="files/database-doctrine-orm-traits-getbyuuidtrait.html"><abbr title="Database/Doctrine/ORM/Traits/GetByUuidTrait.php">GetByUuidTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/GetByUuidTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/GetByUuidTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Try to fetch one element indexed by $key, if not found, search
@@ -10237,6 +10432,7 @@ new UUID if $this-&gt;uuid is empty.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_payments">$payments</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_poBox">$poBox</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_postalCode">$postalCode</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_projectApplications">$projectApplications</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_projectInstruments">$projectInstruments</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_projectParticipantFieldsData">$projectParticipantFieldsData</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#property_projectParticipation">$projectParticipation</a></li>
@@ -10298,6 +10494,7 @@ new UUID if $this-&gt;uuid is empty.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getPoBox">getPoBox()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getPostalCode">getPostalCode()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getPrincipalEmailAddress">getPrincipalEmailAddress()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getProjectApplications">getProjectApplications()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getProjectInstruments">getProjectInstruments()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getProjectParticipantFieldsData">getProjectParticipantFieldsData()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_getProjectParticipantFieldsDatum">getProjectParticipantFieldsDatum()</a></li>
@@ -10361,6 +10558,7 @@ new UUID if $this-&gt;uuid is empty.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setPoBox">setPoBox()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setPostalCode">setPostalCode()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setPrincipalEmailAddress">setPrincipalEmailAddress()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setProjectApplications">setProjectApplications()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setProjectInstruments">setProjectInstruments()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setProjectParticipantFieldsData">setProjectParticipantFieldsData()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html#method_setProjectParticipation">setProjectParticipation()</a></li>

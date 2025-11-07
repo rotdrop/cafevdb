@@ -25,33 +25,28 @@
 namespace OCA\CAFEVDB\Service;
 
 use DateTimeImmutable;
-use DateTimeZone;
-use Exception;
 use Throwable;
+
 
 use Sabre\VObject\Component\VCard;
 use Sabre\VObject\Property;
 
 use OCP\AppFramework\IAppContainer;
-use OCP\Constants;
 use OCP\Contacts\IManager as IContactsManager;
 use OCP\IAddressBook;
 use OCP\IAvatar;
 use OCP\IAvatarManager;
-use OCP\IL10N;
 use OCP\Image;
 
 use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\GenericUndoable;
-use OCA\CAFEVDB\Common\IUndoable;
+use OCA\CAFEVDB\Common\Transliterator;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\Util\Urlizer as Transliterator;
+use OCA\CAFEVDB\Listener\ContactsCardEventListener;
 
 /** Contacts handling. */
 class ContactsService
@@ -81,13 +76,21 @@ class ContactsService
   /** @var array<string, IAddressBook> */
   private array $addressBooksByUri = [];
 
+  /**
+   * @var array<int, Entities\Musician>
+   *
+   * Arrays id => musician for already registered contact syncs.
+   */
+  private array $contactSynchronizations = [];
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected ConfigService $configService,
-    private IContactsManager $contactsManager,
     private IAvatarManager $avatarManager,
-    protected IAppContainer $appContainer,
+    private IContactsManager $contactsManager,
+    private Transliterator $transliterator,
+    protected ConfigService $configService,
     protected EntityManager $entityManager,
+    protected IAppContainer $appContainer,
   ) {
     $this->l = $this->configService->getAppL10n();
   }
@@ -173,7 +176,6 @@ class ContactsService
       $bookName = $addressBook->getDisplayName();
       $contacts = $addressBook->search('', [ 'FN', 'EMAIL' ], [] /* options */);
       foreach ($contacts as $contact) {
-        // $this->logInfo('CONTACT: ' . print_r($contact, true));
         $uid = $contact['UID'];
         $fullName = $contact['FN']??'';
         $emails = $contact['EMAIL']??null;
@@ -361,8 +363,6 @@ class ContactsService
     bool $keepExisting = false,
   ):?Entities\Musician {
 
-    $this->logInfo('IMPORT ' . print_r($cardData, true) . ' ' . (int)$preferWork);
-
     if ($entity === null) {
       $keepExisting = false;
       $entity = new Entities\Musician();
@@ -415,13 +415,11 @@ class ContactsService
         ? [ $entity->getFirstName() ]
         : [ $entity->getNickName() ];
       $parts[] = $entity->getSurName();
-      $slug = implode(
-        '.',
-        array_map(
-          fn(string $part) => Transliterator::transliterate($this->transliterate($part), '-'),
-          $parts,
-        ),
-      );
+      $slug = $this->transliterator->generateUserIdSlug([
+        'firstName' => $entity->getFirstName(),
+        'nickName' => $entity->getNickName(),
+        'surName' => $entity->getSurName(),
+      ]);
       $entity->setUserIdSlug($slug);
     }
 
@@ -538,16 +536,13 @@ class ContactsService
         $address = explode(';', $address);
 
         $poBox = $address[0];
-        // $this->logInfo('POBOX ' . $poBox);
         $entityValues['addressSupplement'] = $address[1];
         $street = Util::normalizeSpaces($address[2]);
         // if the first word or the last word of the street start with a
         // digit, then we treat it as the street-number. This should hack most
         // of the cases for _us_ ...
-        // $this->logInfo('STREET IS "' . $street . '"');
         $lastWord = substr($street, strrpos($street, ' ') + 1);
         $firstWord = substr($street, 0, strpos($street, ' '));
-        // $this->logInfo('LAST FIRST' . $lastWord . ' / ' . $firstWord);
         if (!empty($lastWord) && ctype_digit($lastWord[0])) {
           $streetNumber = $lastWord;
           $street = substr($street, 0, -strlen($lastWord)-1);
@@ -594,7 +589,7 @@ class ContactsService
       $entity->setJobTitle($value);
     }
 
-    if (!$isWorkAddress && empty($entity->getAddressSupplement()) && !empty($value)) {
+    if (!$isWorkAddress && empty($entity->getAddressSupplement()) && !empty($entityValues)) {
       $publicName = $entity->getPublicName(firstNameFirst: true);
       $entity->setAddressSupplement('c/o ' . $publicName);
     }
@@ -655,6 +650,10 @@ class ContactsService
             break;
         }
       }
+    }
+
+    if (!empty($entity->getOrganization())) {
+      $entity->setDefaultParticipationStatus(EnumParticipationStatus::ASSOCIATED());
     }
 
     // Ignore image data.
@@ -873,7 +872,8 @@ class ContactsService
       unset($result['URI']);
     }
 
-    $categories = array_unique(array_merge($targetCategories, explode(',', $source['CATEGORIES'])));
+    $sourceCategories = explode(',', $source['CATEGORIES']);
+    $categories = array_unique(array_merge($targetCategories, $sourceCategories));
     sort($categories);
     $result['CATEGORIES'] = implode(',', $categories);
 
@@ -932,43 +932,87 @@ class ContactsService
    *
    * @param Entities\Musician $musician The musician which has been altered.
    *
-   * @return bool \true if a pre-commit action has been registered with the
-   * entity manager.
+   * @param null|string $oldAddressBookUri If $musician->getAddressBookUri() is
+   * null, then this specifies the addressbook of a linked contact which is to
+   * be unlinked.
+   *
+   * @return void
    */
-  public function registerContactSynchronization(Entities\Musician $musician):bool
+  public function registerContactSynchronization(Entities\Musician $musician, ?string $oldAddressBookUri = null):void
   {
-    $addressBookUri = $musician->getAddressBookUri();
-    if (empty($addressBookUri)) {
-      return false;
+    if (!empty($this->contactSynchronizations[$musician->getId()])) {
+      return;
     }
-    $oldContact = $this->findMusicianContact($musician);
-    if ($oldContact === null) {
-      $this->logError(
-        'Broken address-book link for musician "' . $musician->getPublicName(). '"'
-        . ', addressbook "' . $musician->getAddressBookUri() . '"'
-        . ', uuid "' . $musician->getUuid() . '".',
-      );
-      return false;
+    if (!$this->entityManager->isTransactionActive()) {
+      return;
     }
-    $newContact = $this->mergeMusician($oldContact, $musician);
-    $addressBook = $this->addressBookByUri($addressBookUri);
-
+    $this->contactSynchronizations[$musician->getId()] = $musician;
+    /** @var ContactsCardEventListener $listener */
+    $listener = $this->appContainer->get(ContactsCardEventListener::class);
     $this->entityManager->registerPreCommitAction(
       new GenericUndoable(
-        function() use ($addressBook, $newContact, $musician) {
-          if ($musician->getDeleted() !== null && $this->entityManager->contains($musician)) {
+        function() use ($musician, $oldAddressBookUri, $listener) {
+          if ($listener->isActive()) {
+            // avoid recursion, the listener may cause change events which
+            // should not in turn cause modifications in the address books.
+            unset($this->contactSynchronizations[$musician->getId()]);
+            return null;
+          }
+          if ($musician->isExpired() && $this->entityManager->contains($musician)) {
             $musician->setAddressBookUri(null);
             $this->flush();
           }
+          if ($musician->getAddressBookUri() === null) {
+            // addressbook has been unlinked, do nothing.
+            unset($this->contactSynchronizations[$musician->getId()]);
+            return null;
+          }
+          $addressBookUri = $oldAddressBookUri ?? $musician->getAddressBookUri();
+          if (empty($addressBookUri)) {
+            unset($this->contactSynchronizations[$musician->getId()]);
+            return null;
+          }
+          $oldAddressBook = $this->addressBookByUri($addressBookUri);
+          $oldContact = $this->findMusicianContact($musician, $addressBookUri);
+          if ($oldContact === null) {
+            $this->logError(
+              'Broken address-book link for musician "' . $musician->getPublicName(). '"'
+              . ', addressbook "' . $musician->getAddressBookUri() . '"'
+              . ', uuid "' . $musician->getUuid() . '".',
+            );
+            unset($this->contactSynchronizations[$musician->getId()]);
+            return null;
+          }
+          $newContact = $this->mergeMusician($oldContact, $musician);
+          if ($addressBookUri != $musician->getAddressBookUri()) {
+            $addressBook = $this->addressBookByUri($musician->getAddressBookUri());
+          } else {
+            $addressBook = $oldAddressBook;
+          }
+          $oldState = $listener->setEnabled(false);
           $addressBook->createOrUpdate($newContact);
+          $listener->setEnabled($oldState);
+          if ($oldAddressBook !== $addressBook) {
+            $oldAddressBook->delete($oldContact['id']);
+          }
+          unset($this->contactSynchronizations[$musician->getId()]);
+          return [ $addressBook, $newContact, $oldAddressBook, $oldContact ];
         },
-        function () use ($addressBook, $oldContact, $musician) {
-          $addressBook->createOrUpdate($oldContact);
-          // the rollback should restore the addressbook link.
+        function (?array $oldData) use ($musician, $listener) {
+          if ($oldData !== null) {
+            $oldState = $listener->setEnabled(false);
+            list($newAddressBook, $newContact, $oldAddressBook, $oldContact) = $oldData;
+            if ($newAddressBook !== $oldAddressBook) {
+              $newAddressBook->delete($newContact['id']);
+            }
+            $oldAddressBook->createOrUpdate($oldContact);
+            $listener->setEnabled($oldState);
+            $this->contactSynchronizations[$musician->getId()] = $musician;
+            // the rollback should restore the addressbook link.
+          }
         }
       ),
     );
-    return true;
   }
 
   /**
@@ -977,11 +1021,13 @@ class ContactsService
    *
    * @param Entities\Musician $musician
    *
+   * @param null|string $addressBookUri If given use this instead of $musician->getAddressBookUri()
+   *
    * @return null|array
    */
-  public function findMusicianContact(Entities\Musician $musician):?array
+  public function findMusicianContact(Entities\Musician $musician, ?string $addressBookUri = null):?array
   {
-    $addressBook = $this->addressBookByUri($musician->getAddressBookUri());
+    $addressBook = $this->addressBookByUri($addressBookUri ?? $musician->getAddressBookUri());
     if ($addressBook === null) {
       return null;
     }

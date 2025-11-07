@@ -29,26 +29,19 @@ namespace OCA\CAFEVDB\Controller;
 
 use InvalidArgumentException;
 use Throwable;
-use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\IAppContainer;
 use OCP\Contacts\IManager as IContactsManager;
-use OCP\Files\File;
-use OCP\Files\FileInfo;
 use OCP\Files\Folder;
-use OCP\Files\Node;
 use OCP\IAddressBook;
-use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
@@ -59,7 +52,9 @@ use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
 
 /**
  * Make the stored personal data accessible for the web-interface. This is
@@ -110,13 +105,14 @@ class MailMergeController extends Controller
    * Try to perform a mail-merge of a document which is assumed to need
    * somehow a sender/recipient context (i.e. a letter).
    *
-   * @param int|string $senderId
+   * @param null|int|string $senderId Database id or uid of sender. If null
+   * the current loggged on user is the sender.
    *
    * @param null|string $fileName
    *
    * @param null|string $templateName
    *
-   * @param array $recipientIds
+   * @param array $recipientIds Database ids of recipients (Musicians table).
    *
    * @param int $projectId
    *
@@ -126,7 +122,7 @@ class MailMergeController extends Controller
    *
    * @param array $compositePaymentIds
    *
-   * @param array $invoiceIds
+   * @param array $invoiceIds Database ids or invoice numbers of invoices.
    *
    * @param string $operation
    *
@@ -135,11 +131,10 @@ class MailMergeController extends Controller
    * @param null|int $offset
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function merge(
-    int|string $senderId,
+    null|Int|string $senderId = null,
     ?string $fileName = null,
     ?string $templateName = null,
     array $recipientIds = [],
@@ -162,12 +157,16 @@ class MailMergeController extends Controller
 
     $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
 
-    /** @var Entities\Musician $sender */
-    if (filter_var($senderId, FILTER_VALIDATE_INT, ['min_range' => 1]) === false) {
-      $sender = $musiciansRepository->findByUserId($senderId);
-    } else {
-      $sender = $musiciansRepository->find($senderId);
+    if ($senderId === null) {
+      $senderId = $this->userId();
     }
+
+    /** @var Entities\Musician $sender */
+    $sender = $musiciansRepository->findOneBy([
+      '(|id' => $senderId,
+      'userIdSlug' => $senderId,
+    ]);
+
     if (empty($sender)) {
       throw new Exceptions\EnduserNotificationException(
         $this->l->t('Unable to determine the sender given its id "%s"', $senderId),
@@ -191,8 +190,8 @@ class MailMergeController extends Controller
 
     // determine if we have a special template
     if ($fileName !== null) {
-      foreach (ConfigService::DOCUMENT_TEMPLATES as $templateName => $templateMeta) {
-        if ($templateMeta['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE) {
+      foreach (ConfigConstants::DOCUMENT_TEMPLATES as $templateName => $templateMeta) {
+        if ($templateMeta['type'] != ConfigConstants::DOCUMENT_TYPE_TEMPLATE) {
           continue;
         }
         $templateFileName = $this->getDocumentTemplatesPath($templateName);
@@ -246,7 +245,10 @@ class MailMergeController extends Controller
       $noRecipients = $limit === 0 || (empty($recipientIds) && empty($contactKeys) && empty($compositePaymentIds) && empty($invoiceIds));
 
       // fill also some financial tax exemption notice abbreviations ...
-      $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.corporateIncomeTax';
+      $taxTypes = array_map(fn(string $value) => Util::dashesToCamelCase($value, dashes: ' -_'), TaxType::values());
+      foreach ($taxTypes as $taxType) {
+        $blocks[$taxType . 'Exemption'] = 'org.taxAuthorities.exemptionNotices.' . $taxType;
+      }
 
       if ($noRecipients) {
         switch ($operation) {
@@ -297,7 +299,10 @@ class MailMergeController extends Controller
           $recipients = $this
             ->getDatabaseRepository(Entities\Invoice::class)
             ->findBy(
-              [ 'id' => $invoiceIds, ],
+              [
+                '(|id' => $invoiceIds,
+                'invoiceNumber' => $invoiceIds,
+              ],
               limit: $limit,
               offset: $offset,
             );
@@ -335,6 +340,8 @@ class MailMergeController extends Controller
           }
         }
 
+        $cloudFiles = [];
+
         foreach ($recipients as $recipient) {
 
           if ($recipient instanceof Entities\CompositePayment) {
@@ -355,9 +362,14 @@ class MailMergeController extends Controller
             $paymentData = [];
           }
           $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+          $recipientData = $this->flattenMusician($recipient);
+          if ($recipientData['addressSupplement'] == 'c/o ' . $recipientData['name']) {
+            // clear the name and just keep the addressSupplement
+            unset($recipientData['name']);
+          }
           $recipientTemplateData = array_merge(
             [
-              'recipient' => $this->flattenMusician($recipient),
+              'recipient' => $recipientData,
             ],
             $paymentData,
             $templateData,
@@ -402,7 +414,9 @@ class MailMergeController extends Controller
                 return self::dataResponse([
                   'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
                   'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+                  'cloudFiles' => [ $filledFileName ],
                   'count' => $mailMergeCount,
+                  'senderId' => $sender->getId(),
                 ]);
               case self::OPERATION_DOWNLOAD:
               case self::OPERATION_DATASET:
@@ -413,6 +427,7 @@ class MailMergeController extends Controller
           switch ($operation) {
             case self::OPERATION_CLOUD:
               $cloudFolder->newFile($filledFileName, $fileData);
+              $cloudFiles[] = $filledFileName;
               break;
             case self::OPERATION_DOWNLOAD:
             case self::OPERATION_DATASET:
@@ -427,7 +442,9 @@ class MailMergeController extends Controller
             return self::dataResponse([
               'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
               'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+              'cloudFiles' => $cloudFiles,
               'count' => $mailMergeCount,
+              'senderId' => $sender->getId(),
             ]);
           case self::OPERATION_DOWNLOAD:
           case self::OPERATION_DATASET:

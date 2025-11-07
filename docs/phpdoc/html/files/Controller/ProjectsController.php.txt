@@ -28,10 +28,9 @@ use DateTime;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IL10N;
 use OCP\IRequest;
-use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
@@ -45,7 +44,8 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\SimpleSharingService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /** AJAX controller for projects. */
 class ProjectsController extends Controller
@@ -79,9 +79,8 @@ class ProjectsController extends Controller
    * @param string $topic What to validate.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function validate(string $topic):DataResponse
   {
     $projectValues = $this->getPrefixParams($this->pme->cgiDataName());
@@ -191,9 +190,8 @@ class ProjectsController extends Controller
    * @param string $voices The name of the voices select.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function changeInstrumentation(string $instruments, string $voices):DataResponse
   {
     $instrumentsKey = str_replace('[]', '', $instruments);
@@ -242,9 +240,8 @@ class ProjectsController extends Controller
    * @param bool $force Whether to enforce the operation.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function mailingLists(string $operation, int $projectId, bool $force = false):DataResponse
   {
     switch ($operation) {
@@ -379,16 +376,16 @@ class ProjectsController extends Controller
 
   const GET_PROJECT_FOLDER = 'folder';
   const FOLDER_TYPES = [
-    ProjectService::FOLDER_TYPE_PROJECT => ConfigService::PROJECTS_FOLDER,
-    ProjectService::FOLDER_TYPE_PARTICIPANTS => ConfigService::PROJECT_PARTICIPANTS_FOLDER,
-    ProjectService::FOLDER_TYPE_POSTERS => ConfigService::PROJECT_POSTERS_FOLDER,
-    ProjectService::FOLDER_TYPE_DOWNLOADS => ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
-    ProjectService::FOLDER_TYPE_BALANCE => ConfigService::BALANCES_FOLDER,
+    ProjectService::FOLDER_TYPE_PROJECT => ConfigConstants::PROJECTS_FOLDER,
+    ProjectService::FOLDER_TYPE_PARTICIPANTS => ConfigConstants::PROJECT_PARTICIPANTS_FOLDER,
+    ProjectService::FOLDER_TYPE_POSTERS => ConfigConstants::PROJECT_POSTERS_FOLDER,
+    ProjectService::FOLDER_TYPE_DOWNLOADS => ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
+    ProjectService::FOLDER_TYPE_BALANCE => ConfigConstants::BALANCES_FOLDER,
   ];
 
   const GET_PROJECT_SHARE = 'share';
   const SHARE_TYPES = [
-    ProjectService::FOLDER_TYPE_DOWNLOADS => ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
+    ProjectService::FOLDER_TYPE_DOWNLOADS => ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
   ];
 
   /**
@@ -418,9 +415,8 @@ class ProjectsController extends Controller
    * Return all project indices as flat array.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function getIndices()
   {
     /** @var ProjectService $projectService */
@@ -438,9 +434,8 @@ class ProjectsController extends Controller
    * @param string $subTopic Item in major topic.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function get(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
     if (!($projectId > 0)) {
@@ -539,7 +534,7 @@ class ProjectsController extends Controller
         $eventMatrix = $eventsService->eventMatrix($events, $dfltIds);
         // provide also some meta-info in order to avoid further bloats to the initial-state data.
         $data = [
-          'calendars' => ConfigService::CALENDARS,
+          'calendars' => ConfigConstants::CALENDARS,
           'categories' => [
             'C' => [
               'recordAbsence' => $eventsService->getRecordAbsenceCategory(translate: false),
@@ -585,9 +580,8 @@ class ProjectsController extends Controller
    * @param string $subTopic Item in major topic.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function post(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
     /** @var ProjectService $projectService */
@@ -627,9 +621,8 @@ class ProjectsController extends Controller
    * @param string $subTopic Item in major topic.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function delete(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
     /** @var ProjectService $projectService */
@@ -678,9 +671,8 @@ class ProjectsController extends Controller
    * @param string $subTopic Item in major topic.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function patch(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
     /** @var ProjectService $projectService */
@@ -735,9 +727,8 @@ class ProjectsController extends Controller
    * @param null|int $year
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function searchProjects(string $pattern, ?int $limit = null, ?int $offset = null, ?int $year = null):DataResponse
   {
     $repository = $this->getDatabaseRepository(Entities\Project::class);

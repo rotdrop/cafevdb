@@ -24,19 +24,14 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-
-use OCP\IUserManager;
-use OCP\IGroupManager;
-use OCP\Accounts\IAccountManager;
 use OCP\Accounts\IAccount;
-use OCP\IConfig;
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
+use OCP\Accounts\IAccountManager;
 use OCP\Image;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /**
  * Check for authorization and supply contact information for several
@@ -44,9 +39,10 @@ use OCA\CAFEVDB\Database\EntityManager;
  */
 class OrganizationalRolesService
 {
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\CloudAdminTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const CLOUD_ADMIN_ROLE = 'cloudAdmin';
   const GROUP_ADMIN_ROLE = 'groupAdmin';
@@ -235,7 +231,7 @@ class OrganizationalRolesService
     /** @var Entities\ProjectParticipantFieldDatum */
     $signatureData = $fieldsService->filterByFieldName(
       $participant->getParticipantFieldsData(),
-      ConfigService::SIGNATURE_FIELD_NAME);
+      ConfigConstants::SIGNATURE_FIELD_NAME);
     if (!($signatureData instanceof Entities\ProjectParticipantFieldDatum)) {
       // did not work out
       return null;
@@ -544,5 +540,12 @@ class OrganizationalRolesService
     $clubMembersGid = $cloudService->projectGroupId($clubMembersProjectId);
 
     return $this->inGroup($userId, $clubMembersGid);
+  }
+
+  protected static function l10nDummy(): void
+  {
+    self::t(self::TREASURER_ROLE);
+    self::t(self::SECRETARY_ROLE);
+    self::t(self::PRESIDENT_ROLE);
   }
 }

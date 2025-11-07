@@ -26,11 +26,9 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
-use Psr\Log\LoggerInterface as ILogger;
 
 /**
  * MissingTranslations
@@ -39,7 +37,7 @@ use Psr\Log\LoggerInterface as ILogger;
  * the TranslationKey entities are found.
  */
 #[ORM\Table(name: 'MissingTranslations')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\Loggable(enabled: false)]
 class MissingTranslation implements \ArrayAccess

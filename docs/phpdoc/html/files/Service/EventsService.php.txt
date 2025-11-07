@@ -40,6 +40,15 @@ use Sabre\VObject\Component\VEvent;
 use Sabre\VObject\Component as VComponent;
 use Sabre\DAV\Exception\Forbidden as DavForbiddenException;
 
+use OCA\DAV\Events\CalendarDeletedEvent;
+use OCA\DAV\Events\CalendarMovedToTrashEvent;
+use OCA\DAV\Events\CalendarUpdatedEvent;
+use OCP\Calendar\Events\CalendarObjectCreatedEvent;
+use OCP\Calendar\Events\CalendarObjectDeletedEvent;
+use OCP\Calendar\Events\CalendarObjectMovedEvent;
+use OCP\Calendar\Events\CalendarObjectMovedToTrashEvent;
+use OCP\Calendar\Events\CalendarObjectRestoredEvent;
+use OCP\Calendar\Events\CalendarObjectUpdatedEvent;
 use OCP\IDateTimeFormatter;
 use OCP\IL10N;
 use OCP\IUserSession;
@@ -47,17 +56,6 @@ use OCP\SystemTag\ISystemTagManager;
 use OCP\SystemTag\TagAlreadyExistsException;
 use OCP\SystemTag\TagNotFoundException;
 
-use OCA\DAV\Events\CalendarDeletedEvent;
-use OCA\DAV\Events\CalendarMovedToTrashEvent;
-use OCA\DAV\Events\CalendarObjectCreatedEvent;
-use OCA\DAV\Events\CalendarObjectDeletedEvent;
-use OCA\DAV\Events\CalendarObjectMovedEvent;
-use OCA\DAV\Events\CalendarObjectMovedToTrashEvent;
-use OCA\DAV\Events\CalendarObjectRestoredEvent;
-use OCA\DAV\Events\CalendarObjectUpdatedEvent;
-use OCA\DAV\Events\CalendarUpdatedEvent;
-
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -65,6 +63,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
 use OCA\CAFEVDB\Events\PreProjectUpdatedEvent;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /**
@@ -151,7 +150,9 @@ class EventsService
     }
     $objectData['calendaruri'] = $calendarData['uri'];
 
-    $this->syncCalendarObject($objectData, unregister: false);
+    if ($this->syncCalendarObject($objectData, unregister: false) === null) {
+      $event->clearEtag();
+    }
   }
 
   /**
@@ -172,7 +173,9 @@ class EventsService
     $calendarData = $event->getCalendarData();
     $objectData['calendaruri'] = $calendarData['uri'];
 
-    $this->syncCalendarObject($objectData);
+    if ($this->syncCalendarObject($objectData) === null) {
+      $event->clearEtag();
+    }
   }
 
   /**
@@ -202,23 +205,23 @@ class EventsService
     $objectData['calendaruri'] = $calendarUri;
 
     $bulkTransactionsRepository = $this->entityManager->getRepository(Entities\SepaBulkTransaction::class);
-    if ($bulkTransactionsRepository->isCalendarObjectUsed($objectUri) && $calendarUri != ConfigService::FINANCE_CALENDAR_URI) {
+    if ($bulkTransactionsRepository->isCalendarObjectUsed($objectUri) && $calendarUri != ConfigConstants::FINANCE_CALENDAR_URI) {
       // undo the move
-      $forcedCalendarId = $this->getCalendarId(ConfigService::FINANCE_CALENDAR_URI);
+      $forcedCalendarId = $this->getCalendarId(ConfigConstants::FINANCE_CALENDAR_URI);
       $this->calDavService->moveCalendarObject($calendarId, $forcedCalendarId, $objectData);
 
-      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is in use by the finance sub-system and cannot be moved away from the %2$s calendar.', [ $objectUri, ConfigService::FINANCE_CALENDAR_URI ]);
+      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is in use by the finance sub-system and cannot be moved away from the %2$s calendar.', [ $objectUri, ConfigConstants::FINANCE_CALENDAR_URI ]);
       $this->logError($errorMessage);
       throw new DavForbiddenException($errorMessage);
     }
 
     $objectData['calendardata'] = VCalendarService::getVCalendar($objectData['calendardata']);
-    if ($this->isProjectRegistrationEvent($objectData['calendardata']) && $calendarUri != ConfigService::OTHER_CALENDAR_URI) {
+    if ($this->isProjectRegistrationEvent($objectData['calendardata']) && $calendarUri != ConfigConstants::OTHER_CALENDAR_URI) {
       // undo the move
-      $forcedCalendarId = $this->getCalendarId(ConfigService::OTHER_CALENDAR_URI);
+      $forcedCalendarId = $this->getCalendarId(ConfigConstants::OTHER_CALENDAR_URI);
       $this->calDavService->moveCalendarObject($calendarId, $forcedCalendarId, $objectData);
 
-      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is a project registration event and must not be moved away from the %2$s calendar.', [ $objectUri, ConfigService::OTHER_CALENDAR_URI ]);
+      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is a project registration event and must not be moved away from the %2$s calendar.', [ $objectUri, ConfigConstants::OTHER_CALENDAR_URI ]);
       $this->logError($errorMessage);
       throw new DavForbiddenException($errorMessage);
     }
@@ -294,7 +297,7 @@ class EventsService
          ->execute();
 
     // remove from config-space if found
-    foreach (ConfigService::CALENDARS as $cal) {
+    foreach (ConfigConstants::CALENDARS as $cal) {
       $uri = $cal['uri'];
       $calendarId = $this->getCalendarId($uri);
       if ($event->getCalendarId() == $calendarId) {
@@ -314,7 +317,7 @@ class EventsService
     if (!$this->inGroup()) {
       return;
     }
-    foreach (ConfigService::CALENDARS as $cal) {
+    foreach (ConfigConstants::CALENDARS as $cal) {
       $uri = $cal['uri'];
       $calendarId = $this->getCalendarId($uri);
       if ($event->getCalendarId() == $calendarId) {
@@ -805,7 +808,7 @@ class EventsService
       $datestring = $times['start']['date'];
       if (!$times['allday']) {
         $startTime = $times['start']['time'];
-        $datestring .= ', ' . ($startTime == '00:00' ? $this->l->t('till %s', $times['end']['time']) : $startTime);
+        $datestring .= ', ' . ($startTime == '00:00' ? $this->l->t('until %s', $times['end']['time']) : $startTime);
       }
     } else {
       $datestring = $times['start']['date'].' - '.$times['end']['date'];
@@ -956,7 +959,7 @@ class EventsService
    * @param int $projectId
    *
    * @param null|string|array $calendarIds null to get the events from all
-   * calendars or the 'uri' component from OCA\CAFEVDB\Service\ConfigService::CALENDARS.
+   * calendars or the 'uri' component from OCA\CAFEVDB\Service\ConfigConstants::CALENDARS.
    *
    * @param null|string $timezone
    *
@@ -1048,7 +1051,7 @@ class EventsService
             ."BEGIN:VCALENDAR".$eol
             ."VERSION:2.0".$eol
             ."PRODID:Nextloud cafevdb " . $this->appVersion() . $eol
-            ."X-WR-CALNAME:" . $projectName . ' (' . $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY) . ')' . $eol;
+            ."X-WR-CALNAME:" . $projectName . ' (' . $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY) . ')' . $eol;
 
     $selection = [];
     foreach ($events as $eventIdentifier) {
@@ -1113,12 +1116,12 @@ class EventsService
    *
    * @return array The IDs of the default calendars.
    *
-   * @see ConfigService::CALENDARS
+   * @see ConfigConstants::CALENDARS
    */
   public function defaultCalendars(bool $public = false):array
   {
     $result = [];
-    foreach (ConfigService::CALENDARS as $cal) {
+    foreach (ConfigConstants::CALENDARS as $cal) {
       if ($public && !$cal['public']) {
         continue;
       }
@@ -1221,7 +1224,7 @@ class EventsService
       $this->getRecordAbsenceCategory(),
       $this->getProjectRegistrationCategory(),
     ];
-    foreach (array_keys(ConfigService::CALENDARS) as $calendarUri) {
+    foreach (array_keys(ConfigConstants::CALENDARS) as $calendarUri) {
       $systemCategories[] = $appL10n->t($calendarUri);
     }
     foreach ($systemCategories as $category) {
@@ -1254,12 +1257,14 @@ class EventsService
    */
   public static function absenceFieldsDefault(string $calendarUri):bool
   {
-    return $calendarUri == ConfigService::CONCERTS_CALENDAR_URI || $calendarUri == ConfigService::REHEARSALS_CALENDAR_URI;
+    return $calendarUri == ConfigConstants::CONCERTS_CALENDAR_URI || $calendarUri == ConfigConstants::REHEARSALS_CALENDAR_URI;
   }
 
   /**
-   * Parse the respective event data and make sure the ProjectEvents
-   * table is uptodate.
+   * Parse the respective event data and make sure the ProjectEvents table is
+   * up to date. Potentially sanitize the event, in this case null is
+   * returned. The "created" and "updated" event handlers should then clear
+   * the etag in order to notify the CalDAV client app.
    *
    * @param array $objectData Calendar object data provided by event. The
    * calendar data may define a repeating event. Each recurrence instance will
@@ -1272,7 +1277,7 @@ class EventsService
    * @param bool $unregister Whether to unregister the event from projects not
    * mentioned in its category list.
    *
-   * @return array
+   * @return null|array
    * ```
    * [
    *   'registered' => [ PROJECT_ID, ... ],
@@ -1280,8 +1285,11 @@ class EventsService
    * ]
    * ```
    */
-  public function syncCalendarObject(array $objectData, ?array $sourceCalendar = null, bool $unregister = true):array
-  {
+  public function syncCalendarObject(
+    array $objectData,
+    ?array $sourceCalendar = null,
+    bool $unregister = true,
+  ):?array {
     $eventURI = $objectData['uri'];
     $calId = $objectData['calendarid'];
     $vCalendar = VCalendarService::getVCalendar($objectData);
@@ -1317,9 +1325,28 @@ class EventsService
         }
       }
 
+      $defaultCalendars = array_flip($this->defaultCalendars());
+      $recordAbsenceCategory = $this->getRecordAbsenceCategory();
+
+      if (ConfigConstants::CALENDARS[$defaultCalendars[$calId]]['public'] === false) {
+        // remove any record absence category
+        $absenceCategories = [ $recordAbsenceCategory, self::RECORD_ABSENCE_CATEGORY ];
+        /** @var VEvent $vEvent */
+        foreach (VCalendarService::getAllVObjects($vCalendar) as $vEvent) {
+          $categories = VCalendarService::getCategories($vEvent);
+          $newCategories = array_diff($categories, $absenceCategories);
+          if (count($categories) != count($newCategories)) {
+            $this->logInfo('REMOVING RECORD ABSENCE CATEGORY');
+            VCalendarService::setCategories($vEvent, $newCategories);
+            $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+            $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+            $needUpdate = true;
+          }
+        }
+      }
+
       // Try to adjust our default categories and event names, if they have not been altered
       if ($sourceCalendar !== null) {
-        $defaultCalendars = array_flip($this->defaultCalendars());
         $sourceCalId = $sourceCalendar['id'];
         if (!empty($defaultCalendars[$calId]) && !empty($defaultCalendars[$sourceCalId])) {
           $l = $this->appL10n();
@@ -1344,7 +1371,7 @@ class EventsService
               $vEvent->SUMMARY = $summary;
             }
             if (self::absenceFieldsDefault($calendarUri)) {
-              $categories[] = $this->getRecordAbsenceCategory();
+              $categories[] = $recordAbsenceCategory;
             }
             VCalendarService::setCategories($vEvent, $categories);
             $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
@@ -1363,7 +1390,7 @@ class EventsService
 
       if ($needUpdate) {
         $this->calDavService->updateCalendarObject($calId, $eventURI, $vCalendar);
-        return []; // there will be another event which then is used to update the project links.
+        return null; // there will be another event which then is used to update the project links.
       }
 
       // Perhaps add another hack and turn any full-day multi-day event into
@@ -1398,7 +1425,7 @@ class EventsService
             $vEvent->{'LAST-MODIFIED'} =
               $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
             $this->calDavService->updateCalendarObject($calId, $eventURI, $vCalendar);
-            return []; // there will be another event which then is used to update the project links.
+            return null; // there will be another event which then is used to update the project links.
           }
         } else {
           $hours = ($end->getTimestamp() - $start->getTimestamp()) / 3600;
@@ -1460,7 +1487,7 @@ class EventsService
             $this->calDavService->updateCalendarObject($calId, $eventURI, $vCalendar);
             $this->calDavService->createCalendarObject($calId, null, $vStart);
             $this->calDavService->createCalendarObject($calId, null, $vEnd);
-            return []; // there will be other events which then are used to update the project links.
+            return null; // there will be other events which then are used to update the project links.
           }
         }
       }
@@ -1596,8 +1623,9 @@ class EventsService
       $this->flush();
       $this->entityManager->commit();
     } catch (Throwable $t) {
+      $this->entityManager->pushTransactionException($t);
       $this->entityManager->rollback();
-      $this->logException($t);
+      // $this->logException($t, 'Do not throw in event handlers.');
     }
 
     $registered = array_unique($registered);
@@ -2590,10 +2618,10 @@ class EventsService
       $categories,
       $shareOwnerId,
       [
-        ConfigService::OTHER_CALENDAR_URI,
-        ConfigService::MANAGEMENT_CALENDAR_URI,
-        ConfigService::CONCERTS_CALENDAR_URI,
-        ConfigService::REHEARSALS_CALENDAR_URI,
+        ConfigConstants::OTHER_CALENDAR_URI,
+        ConfigConstants::MANAGEMENT_CALENDAR_URI,
+        ConfigConstants::CONCERTS_CALENDAR_URI,
+        ConfigConstants::REHEARSALS_CALENDAR_URI,
       ],
     );
     if (count($registrationEvents) > 1) {
@@ -2683,14 +2711,14 @@ class EventsService
       'categories' => [
         $this->getProjectRegistrationCategory(),
         $projectName,
-        $this->getCalendarDisplayName(ConfigService::OTHER_CALENDAR_URI),
+        $this->getCalendarDisplayName(ConfigConstants::OTHER_CALENDAR_URI),
       ],
-      'description' => $l->t('Project registation period for the project "%1$s". Participants can apply for participation using the public url %2$s.', [
+      'description' => $l->t('Project registration period for the project "%1$s". Participants can apply for participation using the public url %2$s.', [
         $projectName,
         $registrationUrl,
       ]),
       'location' => $l->t('CyberSpace'),
-      'calendar' => $this->getCalendarId(ConfigService::OTHER_CALENDAR_URI),
+      'calendar' => $this->getCalendarId(ConfigConstants::OTHER_CALENDAR_URI),
       'allday' => true,
       'start' => $registrationStartDate,
       'end' => $registrationDeadline,

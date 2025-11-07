@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\DriverManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\EventManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Configuration;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver;

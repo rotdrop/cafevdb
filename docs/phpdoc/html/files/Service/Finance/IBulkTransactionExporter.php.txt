@@ -25,7 +25,6 @@
 namespace OCA\CAFEVDB\Service\Finance;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use \DateTimeImmutable as DateTime;
 
 /**
  * Extremely generic debit-note exporter. The purpose of this class is

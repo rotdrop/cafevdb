@@ -25,7 +25,6 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata;
-use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\ObjectManager;
 use OCA\CAFEVDB\Wrapped\Gedmo\Exception\InvalidMappingException;
 use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\Mapping\Event\SluggableAdapter;
 use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;

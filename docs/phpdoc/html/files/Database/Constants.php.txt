@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,4 +33,23 @@ class Constants
   public const CHARACTER_SET = 'utf8mb4';
   public const SHORT_COLLATION = 'uca1400_ai_ci';
   public const FULL_COLLATION = self::CHARACTER_SET . '_' . self::SHORT_COLLATION;
+  /**
+   * @var int
+   *
+   * The number of signification digits for monetary values, this means we can
+   * handle values in the ragne of [-99,999.99, +99,999.99].
+   */
+  public const MONETARY_PRECISION = 7;
+  public const MONETARY_SCALE = 2;
+  public const MONETARY_TYPE = 'DECIMAL(' . self::MONETARY_PRECISION . ', ' . self::MONETARY_SCALE . ')';
+
+  /**
+   * @var string
+   *
+   * The very first array element to findBy() as defined in
+   * \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait may contain
+   * options if it is strictly equal to this value.
+   */
+  public const QUERY_OPTIONS_KEY = '__OPTIONS__';
+  public const QUERY_OPTION_WILDCARDS = 'LIKE';
 }

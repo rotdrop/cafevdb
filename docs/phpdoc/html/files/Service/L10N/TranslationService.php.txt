@@ -35,7 +35,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationKey;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TranslationLocation;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MissingTranslation;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Excpetions;
 
 /**
  * Runtime translation service for recording untranslated phrases in a

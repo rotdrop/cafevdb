@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020-2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,50 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use DateTimeInterface;
+
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Exceptions;
+
 /** Database repository for CompositePayments entities. */
 class CompositePaymentsRepository extends EntityRepository
 {
-  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
+
+  /**
+   * Fetch the maximum due-date of the underlying receivables.
+   *
+   * @param int|array|Entities\CompositePayment $identifier
+   *
+   * @return DateTimeInterface
+   *
+   * @throws Exceptions\DatabaseMissingIdentifierException
+   */
+  public function getReceivablesDueDate(int|array|Entities\CompositePayment $identifier):DateTimeInterface
+  {
+    $id = null;
+    if (filter_var($identifier, FILTER_VALIDATE_INT, ['min_range' => 1])) {
+      $id = $identifier;
+    } elseif (is_array[$identifier]) {
+      $id = $identifier['id'] ?? null;
+    } else {
+      $id = $identifier->getId();
+    }
+    if ($id === null) {
+      throw new Exceptions\DatabaseMissingIdentifierException(
+        sprintf(self::t('The identifier is missing for a query to find an instance of "%1$s".'), $this->entityName),
+        entityClassName: $this->entityName,
+        incompleteIdentifier: $identifier,
+      );
+    }
+
+    $qb = $this->createQueryBuilder('cp')
+      ->select('GREATEST(ppf.dueDate) AS dueDate')
+      ->leftJoin('cp.projectPayments', 'pp')
+      ->leftJoin('pp.field', 'ppf')
+      ->groupBy('cp')
+      ->where('cp.id', ':id')
+      ->setParameter('id', $id);
+    return $qb->getQuery()->getSingleScalarResult();
+  }
 }

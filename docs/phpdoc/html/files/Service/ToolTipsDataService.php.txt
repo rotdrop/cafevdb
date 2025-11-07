@@ -47,11 +47,13 @@ class ToolTipsDataService
    *
    * @param mixed $parameters
    *
+   * @param array $options
+   *
    * @return string
    *
    * @SuppressWarnings(PHPMD.ShortMethodName)
    */
-  private static function t(string $text, mixed $parameters = []):array
+  private static function t(string $text, mixed $parameters = [], array $options = ToolTipsService::DEFAULT_OPTIONS):array
   {
     if (!is_array($parameters)
         || (isset($parameter['text'])
@@ -176,11 +178,11 @@ application is AQBanking.'),
 
       'bulk-transaction-submission-deadline' => self::t('Date of latest submission of the debit note to our own bank.'),
 
-      'bulk-transaction-announce' => self::t('Inform all debitors of this debit-note by email; an email dialog is
-opened.'),
-
-      'bulk-transaction-download' => self::t('Download the data-set of this bulk-transaction for transferal to our bank
-institute.'),
+      'sepa-bulk-transaction' => [
+        'announce' => self::t('Inform all debitors of this debit-note by email; an email dialog is opened.'),
+        'download' => self::t('Download the data-set of this bulk-transaction for transferal to our bank institute.'),
+        'gnucash-balance' => self::t('Generate a CSV table in order to record balances in GnuCash. The records the amounts as receivables and inserts the appropriate balancing booking as income or expenses as appropriate.'),
+      ],
 
       'database-storage' => [
         'finance' => [
@@ -231,7 +233,7 @@ This is a virtual folder giving direct access to stored copies -- probably scans
 TaxExemptionNotice-TAX_TYPE-YYYY-YYYY
 ```
 
-where `TAX_TYPE` is one of "%1$s".
+where `TAX_TYPE` is one of `%1$s`.
 
 - it is to some extend possible to rename the entries and push back the changes to the overview table of existing notices of exemption
 
@@ -240,13 +242,7 @@ where `TAX_TYPE` is one of "%1$s".
 - so if you are well-behaved and polite, then changing the years and the tax-types is allowed *and* those changes will be written back to the [overview table in the database](%2$s).
 ',
             [
-              fn(IL10N $l) => implode(
-                '", "',
-                array_map(
-                  fn(string $value) => $l->t($value),
-                  array_values(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::toArray()),
-                ),
-              ),
+              fn(IL10N $l) => implode('", "', \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::getL10NValues($l)),
               fn(IL10N $l, IAppContainer $appContainer) => $appContainer->get('appName'),
               function(IL10N $l, IAppContainer $appContainer) {
                 $appName = $appContainer->get('appName');
@@ -307,8 +303,7 @@ dialog" for the respective record. If disabled, clicking on a data-row will open
       'emailtest' => self::t('Test the email-settings; try to connect to the SMTP-server and the IMAP-server in turn.'),
       'emailform' => [
         'sender' => [
-          'name' => self::t('Real name part of the sender address.'),
-          'address' => self::t('Email address part of the sender address.'),
+          'address' => self::t('DEBUG Name and address of the sender address, e.g. "Orchestra <orchestra@domain.tld>".'),
         ],
         'transport' => [
           'announcements' => [
@@ -317,7 +312,11 @@ dialog" for the respective record. If disabled, clicking on a data-row will open
         ],
         'storage' => [
           'messages' => [
-            'select' => self::t('Select either a message draft or template as base for the current message.'),
+            'select' => [
+              'template' => self::t('Select predefined templates or enter a name for a new template. Use the "save as template" checkbox and the "save-message" button to actually save the template.'),
+              'draft' => self::t('Select a previously stored draft message.'),
+              'sent' => self::t('Select a previously sent email for a follow-app. The message text of the old message will be pasted into the follow up message as quotation.'),
+            ],
             'new-template' => self::t('Enter a short, no-nonsense name for the new template. The name will be converted to "camel-case", e.g. "hello world" will yield the name "HelloWorld".'),
             'save-as-template' => self::t('Activate this checkbox in order to save the current email message as
 message template. If you leave this check-box unchecked, then messages
@@ -350,10 +349,10 @@ of this button.'),
             'tag' => self::t('A very short (around 3 characters) tag which is used to construct the subject of a bulk email. More specifically, the subject has the form "[TAG-ProjectNameYYYY] Example Subject" where "TAG" is just the short tag entered here, "ProjectName" is the short project-name, "YYYY" the year of the project, "Example Subject" is just any custom subject string which is supplied through the email editor.'),
           ],
           'recipients' => [
-            'listing' => self::t('List of selected musicians; can be changed in the `Em@il-Recipients\' panel.'),
+            'listing' => self::t('List of selected musicians; can be changed in the "Em@il-Recipients" panel.'),
             'freeform-BCC' => self::t('Add arbitrary further hidden recipients.'),
             'freeform-CC' => self::t('Add arbitrary further recipients.'),
-            'address-book' => self::t('Opens a select-box with choices from the shared Cloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Cloud `Contacts\'-App.'),
+            'address-book' => self::t('Opens a select-box with choices from the shared Cloud-addressbook. You can also add new em@il-addresses to the address-book for later reusal. The addresses can also be added in the Cloud "Contacts"-App.'),
             'disclosed-recipients' => self::t('Unchecking this option discloses the bulk-recipients of this message. Only recipients of project-related emails can be disclosed. Normally this should be left checked, in which case the email is sent with a hidden recipients list.'),
           ],
           'attachments' => [
@@ -373,10 +372,16 @@ of this button.'),
               'cloud-always' => self::t('If checked attachments originating from the cloud storage will always be replaced by a download-link. If unchecked "cloud-files" are just treated like uploaded attachments.'),
             ],
           ],
+          'validation' => [
+            'external-links' => [
+              'ssl' => self::t('Reject external web-links for valid SSL certificates. This can be disable in a testing environment, but should be left enabled in production mode.'),
+              'enforce-ssl' => self::t('Reject external links using the unencrypted http protocol, i.e. reject links starting with "http://" vs. "https://".'),
+            ],
+          ],
           'send' => self::t('Attempt to send the stuff you have composed out to your selection of
 recipients. Please think thrice about it. In case of an error
 additional diagnostic messages may (or may not ...) be available in
-the `Debug\' tab'),
+the "Debug" tab'),
           'export' => self::t('Export the email text as HTML. In the case of per-member variable
 substitutions this will result in a multi-page document with proper page breaks after each message, with all variables substituted.'),
           'cancel' => self::t('Cancel the email composition and close the input form. This has the
@@ -390,7 +395,8 @@ same effect as clicking the close button on top of the dialog-window. No email w
 or from the complement set. Obviously, selecting both options will
 give you the choice to select any musician as recipient.'),
               'from-project' => self::t('Choose among all musicians currently registered for this project.'),
-              'except-project' => self::t('Choose among all musicians currently <b>NOT</b> registered for this project.'),
+              // TRANSLATORS: intentionally contains HTML
+              'except-project' => self::t('Choose among all musicians currently <b>NOT</b> registered for this project.', options: [ ToolTipsService::OPTION_HTML => true ]),
               'project-mailing-list' => self::t('Send the email to the project-mailing list. The project mailing-list is an open discussion list where all CONFIRMED project members are subscribed (unless they changed it by themselves). Replies to such emails normally end up again in the list and are thus also delivered to all project participants.'),
               'announcements-mailing-list' => self::t('Post to the global announcements mailing list instead of sending to the musicians registered in the data-base. Using the mailing list should be the preferred transport for global @all emails as it has less legal problems concerning the regulations for data privacy. Posting to the list does not make sense if any of the instrument filters is selected or if recipients are explicitly selected.'),
               'database' => self::t('Post to the musicians registered in the database. Unless instrument-filters are active or specific recipients are explicitly selected the global announcement mailing list should be preferred for @all emails.'),
@@ -402,11 +408,12 @@ are excluded from receiving mass-email. Please be careful when modifying the def
 -you can also simply double-click inside the boxed filter-region in order to activate your filter-choice.'),
             'undo' => self::t('Undo the last recipient filter operation and restore the previous selection of musicians.'),
             'redo' => self::t('Redo the last operation undone by the undo button.'),
+            // TRANSLATORS: intentionally contains HTML
             'reset' => self::t('Reset to the initial pre-selection which was activ when entering this
 form. This will <b>REALLY</b> void all your recipient selections and
 reset the form to the initial state. Note, however, that the text of
 your email will be maintained, the reset only applies to the recipient
-list.'),
+list.', options: [ ToolTipsService::OPTION_HTML => true ]),
 
             'instruments' => [
               'filter' => self::t('Restrict the basic set of musicians to the instruments selected
@@ -433,7 +440,7 @@ you can also simply double-click inside the boxed filter-region in order to acti
 
       'executive-board-project' => self::t('Name of the pseudo-project listing the members of the executive board.'),
 
-      'expert-mode' => self::t('Display additional ``expert\'\' settings. Despite the name you are
+      'expert-mode' => self::t('Display additional "expert" settings. Despite the name you are
 invited to have a look, but please do not change anything unless you know what your are doing. Thanks!'),
 
       'expert-operations' => self::t('For those who know what they are doing, which essentially means: don\'t.'),
@@ -445,6 +452,8 @@ invited to have a look, but please do not change anything unless you know what y
         'bill' => self::t('Generate a PDF with detailed records of the insured items and the resulting insurance fee.'),
         'manufacturer' => self::t('Manufacturer and (brief) place of manufacture if know.'),
         'year-of-construction' => self::t('Year of manufacture, if known. "Fuzzy" expression like "unknown", "end of 19th century", "around 1900" etc. are allowed.'),
+        'opening-balance' => self::t('The opening balance can be used to compensate for payments not recorded by the orchestra app or to compensate for other special agreements.'),
+        'annual-service-fee' => self::t('Annual service fee for instrument insurances for the club-members and their relatives.'),
       ],
 
       'page-renderer' => [
@@ -481,6 +490,8 @@ amount. In this case this donation is a waiving of reimbursement'),
           'invoice-items' => [
             'imbalance' => self::t('This is the difference between invoiced amount and the sum of the amount of the individual invoice items and thus must be 0. If not, the invoice data has to be corrected.'),
           ],
+          'subject' => self::t('The subject the payee should use -- together with the invoice number -- as transfer purpose.'),
+          'purpose' => self::t('An introductory text which will be placed on the invoice document.'),
         ],
 
         'add-musicians' => [
@@ -520,6 +531,7 @@ make sure that the musicians are also automatically added to the
             ],
           ],
 
+          // TRANSLATORS: intentionally contains HTML
           'participation-status' => self::t('A flag which indicates not so much social or functional status, but
 default behaviour for mass-emails as follows
 <br/>
@@ -537,7 +549,7 @@ default behaviour for mass-emails as follows
 </dl>
 <br/>
 All classes of members can be explicitly added to a specific mass-emails through the controls
-in the email form.'),
+in the email form.', options: [ ToolTipsService::OPTION_HTML => true ]),
 
           'address-supplement' => self::t('Additional required address parts like "c/o X Y" or "Apt. N"'),
           'emails' => [
@@ -646,6 +658,7 @@ some easy cases like changing between liabilities and receivables and
 treating dates as text. Depending on the already filled data the
 results may be unexpected.'),
             ],
+            'balancing-account' => self::t('Balancing account for the accounting software for double-bookkeeping. This should either be an expenses or an income account and is used in order to generate import data for the accounting software.'),
           ],
 
           'display' => [
@@ -756,7 +769,8 @@ help text in order to inform others what this option is about.'),
         'single' => self::t('For a yes/no option please enter here the single item to select, e.g. the surcharge amount for a service-fee field.'),
         'groupofpeople' => self::t('For a yes/no option please enter here the single item to select, e.g. the surcharge amount for a service-fee field.'),
         'simple' => self::t('Please enter the default value for this free-text option.'),
-
+        'balancingAccount' => self::t('Balancing account for the accounting software for double-bookkeeping. This should either be an expenses or an income account and is used in order to generate import data for the accounting software.'),
+        'deposit' => self::t('If needed it is possible to split the total amount into a deposit and the remaining amount. Otherwise should be left empty.'),
       ],
 
       'participant-fields-recurring-data' => [
@@ -776,6 +790,7 @@ help text in order to inform others what this option is about.'),
           'skip' => self::t('During update of receivables skip the update of existing records and record inconsistencies for later processing.'),
           'exception' => self::t('During update of receivables compare with the newly computed value and throw an exception if the values differ. This is the default.'),
         ],
+        'set-balancing-account' => self::t('The balancing account for double book-keeping. This is used to generate import data for the account software.'),
       ],
 
       'participant-fields-default-multi-value' => self::t('Specify a default value for the custom field here. Leave blank if unsure.'),
@@ -792,15 +807,17 @@ data-base, but simply mark the field as unused and hide it from sight.'),
       'participant-fields-display-order' => self::t('Define the display priority. Larger values will move the item more to
 the left or the top inside its table-tab.'),
 
-      'participant-fields-encrypted' => self::t('Expert use: store encrypted values in the data-base. If unsure: <em>DON\'T</em>'),
+      // TRANSLATORS: intentionally contains HTML
+      'participant-fields-encrypted' => self::t('Expert use: store encrypted values in the data-base. If unsure: <em>DON\'T</em>', options: [ ToolTipsService::OPTION_HTML => true ]),
 
       'participant-fields-extra-tab' => self::t('Extra-tab to group project-specific data which just didn\'t fit
 somewhere else.'),
 
+      // TRANSLATORS: intentionally contains HTML
       'participant-fields-field-name' => self::t('Just the name for this option. Please keep the name as <em>short</em> as
 possible, but try to be descriptive. If further explanations are
 needed, then please enter those in the <strong>Tooltip</strong> field in the
-<strong>Display</strong> tab.'),
+<strong>Display</strong> tab.', options: [ ToolTipsService::OPTION_HTML => true ]),
 
       'participant-fields-maximum-group-size' => self::t('The maximum number of peopel allowed in the group.'),
 
@@ -822,7 +839,7 @@ may contain HTML formatting.'),
 
       'filter-visibility' => self::t('Toggle the initial display of the search-filters for data-base tables
 in order to make the table view a little less crowded. Search-filters
-can be reenabled at any time by clicking the ``Search\'\' button in
+can be reenabled at any time by clicking the "Search" button in
 each individual table view.'),
 
       'further-settings' => self::t('Further personal settings, normally not needed use with care.'),
@@ -873,6 +890,7 @@ simply marked as "disabled" and normally are hidden from sight.'),
 
       'clouddev-link' => self::t('Web-link to the current Cloud developer documentation.'),
 
+      // TRANSLATORS: intentionally contains HTML
       'payment-status' => self::t(
         'Status of outstanding project fees:
 <dl>
@@ -887,7 +905,8 @@ simply marked as "disabled" and normally are hidden from sight.'),
 <dt>%s</dt>
 <dd>Final payment has been received.</dd>
 </dl>',
-        array('&empty;', '&#9972;', '&#9684;', '&#9951;', '&#10004;')
+        array('&empty;', '&#9972;', '&#9684;', '&#9951;', '&#10004;'),
+        options: [ ToolTipsService::OPTION_HTML => true ],
       ),
 
       'phpmyadmin-link' => self::t('Link to the data-base administration tool for the underlying data-base. Swiss-army-knife-like.'),
@@ -908,7 +927,7 @@ musicians on all pages will be added.'),
           'plus' => self::t('  Click me to pre-select
 all musicians on all pages
 for the current project.
-Please click the ``Add all\'\'-button to
+Please click the "Add all"-button to
 actually add them.'),
 
           'minus' => self::t('  Click me to remove
@@ -919,7 +938,7 @@ the current project.'),
           'check' => self::t('  Check me to pre-select
 this musician for the current
 project. Please click the
- ``Add all\'\'-button to
+ "Add all"-button to
 actually add all selected
 musicians.'),
         ],
@@ -962,13 +981,13 @@ und Abbruchmöglichkeit.'),
 
         'debit' => [
           'note' => [
-            'default' => self::t('Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool `aqbanking-cli\'. Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account.'),
+            'default' => self::t('Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool "aqbanking-cli". Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account.'),
 
             '+' => self::t('Select all displayed debit-notes for export.'),
 
             '-' => self::t('Deselect all displayed debit-notes from export selection.'),
 
-            'check' => self::t('Select this debit note for debiting the project fees. In order to actually export the debit-note you have to hit the `Debit\' button above.'),
+            'check' => self::t('Select this debit note for debiting the project fees. In order to actually export the debit-note you have to hit the "Debit" button above.'),
           ],
         ],
 
@@ -986,7 +1005,7 @@ VORSICHT!.'),
           'email' => self::t('Klick mich, um eine Em@il an die ausgewählten
 Musiker zu versenden. Auf der folgenden Seite kann
 die Auswahl dann noch modifiziert werden.
-`ausgewält\' bedeutet: nicht
+"ausgewält" bedeutet: nicht
 nur die auf der aktuellen
 Anzeige-Seite, sondern
 alle, die den Such-Kriterien
@@ -998,7 +1017,7 @@ entsprechen.'),
             'email' => self::t('Klick mich, um alle gerade
 angezeigten Musiker zu der
 Em@il-Auswahl hinzuzufügen.
-`angezeigt\' bedeutet: nicht
+"angezeigt" bedeutet: nicht
 nur die auf der aktuellen
 Anzeige-Seite, sondern
 alle, die den Such-Kriterien
@@ -1028,7 +1047,7 @@ korrigieren.'),
         ],
 
         'export' => [
-          'choice' => self::t('Export the visible part of the data-base to an office-format. The `Excel\'-export should produce useful input for either Libre- or OpenOffice or for the product of some well-known software-corporation with seat in Redmond, USA.'),
+          'choice' => self::t('Export the visible part of the data-base to an office-format. The "Excel"-export should produce useful input for either Libre- or OpenOffice or for the product of some well-known software-corporation with seat in Redmond, USA.'),
 
           'csv' => self::t('Export in CSV-format using a semicolon as delimiter (Excel convention)'),
 
@@ -1036,19 +1055,20 @@ korrigieren.'),
 
           'pdf' => self::t('Export as PDF in A3/Landscape, scaled to fit the page size'),
 
-          'excel' => self::t('Export as `full-featured\' Excel-2007 table, `.xslx\'.'),
+          'excel' => self::t('Export as "full-featured" Excel-2007 table, ".xslx".'),
 
           'html' => self::t('Export as HTML page without navigation elements; can also be loaded into your office-programs.'),
         ],
 
         'filter' => [
+          // TRANSLATORS: intentionally contains HTML
           'default' => self::t('Field for filter/search criteria.
 Short explanation: simply type somthing and press <code>ENTER</code>.
 <br/>
 In more detail: For numerical fields there is a select-box with comparison
 operators on the left. For text-fields
 <ul>
-<li>there are `catch-all\' wildcards `%%\' and `*\'</li>
+<li>there are &quot;catch-all&quot; wildcards &quot;%%&quot; and &quot;*&quot;</li>
 <li>wildcards in quoted strings are ignored</li>
 <li>space around unquoted strings is removed</li>
 <li>single or double quotes have the same meaning</li>
@@ -1062,30 +1082,31 @@ search-string):
 <dd>search for the wild-card expression %%SOMETHING%%</dd>
 <dt>SOME%%THING</dt>
 <dd>search for any expression starting with SOME and ending with THING</dd>
-<dt>"SOME*THING"</dt>
-<dd>search for exactly the expression SOME*THING, the wildcard "*" is not taken in to account</dd>
+<dt>&quot;SOME*THING&quot;</dt>
+<dd>search for exactly the expression SOME*THING, the wildcard &quot;*&quot; is not taken in to account</dd>
 <dt>!SOMETHING</dt>
 <dd>match everything not being matched by SOMETHING</dd>
 </dl>
 <br/>
 Further
 <ul>
-<li>instead of `!\' one may use as well use `!=\'</li>
-<li>instead of using quotes it is also possible to prefix the search expression by either `=\' or `==\'</li>
+<li>instead of &quot;!&quot; one may use as well use &quot;!=&quot;</li>
+<li>instead of using quotes it is also possible to prefix the search expression by either &quot;=&quot; or &quot;==&quot;</li>
 </ul>
 It is also possible to match empty fields, in particular:
 <br/>
 <dl>
 <dt>%%</dt>
-<dt>!""</dt>
+<dt>!&quot;&quot;</dt>
 <dd>match any row with something non-empty in the search-field</dd>
-<dt>""</dt>
+<dt>&quot;&quot;</dt>
 <dt>!%%</dt>
 <dd>match any row with empty search-field</dd>
-</dl>'),
+</dl>', options: [ ToolTipsService::OPTION_HTML => true ]),
+          // TRANSLATORS: intentionally contains HTML
           'numeric' => self::t('Field for filter/search criteria.
 Short explanation: simply type somthing and press <code>ENTER</code>.
-This is a numeric field, you can choose from the comparison operators to the left.'),
+This is a numeric field, you can choose from the comparison operators to the left.', options: [ ToolTipsService::OPTION_HTML => true ]),
           'comp' => self::t('Numeric comparison operators. To submit the query double-click into the search-field to the right or click on the "query" button.'),
           'select' => self::t('Select from the pull-down menu. Double-click will submit the form. The pull-down can be closed by clicking anywhere outside the menu.'),
           'negate' => self::t('Negate the filter, i.e. search for anything not matching the selected options.'),
@@ -1121,7 +1142,7 @@ Suchkriterien zu verstecken.'),
           'default' => self::t('Klick mich, um die
 aktuellen Suchkriterien anzuwenden. Suchkriterien
 können in den Feldern eingegeben werden.
-Als Platzhalter verwendet man `%%\'.'),
+Als Platzhalter verwendet man "%%".'),
         ],
 
         'reload' => [
@@ -1212,7 +1233,7 @@ fields for double-/single-room preference, room-mates and such.'),
 
         'financial-balance' => self::t('Change to the folder with the financial balance
 sheets for the project (only available after the project
-has been ``closed\'\'.'),
+has been "closed".'),
 
         'project-instrumentation-numbers' => self::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.'),
 
@@ -1230,16 +1251,17 @@ mandates.'),
 
       'project-instrumentation-tab' => self::t('Displays the columns directly related to the instrumentation for the project.'),
 
-      'project-metadata-tab' => self::t('Displays `meta-data\' like project fees, single/double room preferences, debit-mandates and the like.'),
+      'project-metadata-tab' => self::t('Displays "meta-data" like project fees, single/double room preferences, debit-mandates and the like.'),
 
+      // TRANSLATORS: intentionally contains HTML
       'project-name' => self::t('Please enter here a <b>SHORT</b> project name, rather a project tag. The software will try very hard to confine you to the following rules:
 <dl>
 <dt>BE SHORT, PLEASE</dt>
 <dd>No more than 20 characters, s.v.p. Please: rather <b>MUCH</b> shorter.</dd>
 <dt>NO SPACES, PLEASE</dt>
-<dd>Please use "camel case" instead.</dd>
+<dd>Please use &quot;camel case&quot; instead.</dd>
 </dl>
-Please <b>DO NOT TRY</b> to "work around" those "limitations. Just don\'t. Thanks.'),
+Please <b>DO NOT TRY</b> to &quot;work around&quot; those &quot;limitations&quot;. Just don\'t. Thanks.', options: [ ToolTipsService::OPTION_HTML => true ]),
 
       'project-name-yearattach' => self::t('Append the year to the name if checked.
 Regardless of this checkbox any decimal digit will first be stripped from the end
@@ -1254,9 +1276,9 @@ of the project name before the year is added.'),
       'project-web-article-delete' => self::t('Delete the currently displayed web-page fromthe project. The web page will be "detached" from the project and moved to the trash-bin
 "category" (folger) inside the CMS.'),
 
-      'project-web-article-linkpage' => self::t('Link existing pages to the project. This can be used, for instance, in order to add a page to the project which has not been created by hitting the `+\'-button above, but was created directly in the CMS backend. When linking articles from the `trashbin\' category then those articles will automatically moved to the `preview\' category; this is some not-so-hidden undelete feature.z'),
+      'project-web-article-linkpage' => self::t('Link existing pages to the project. This can be used, for instance, in order to add a page to the project which has not been created by hitting the "+"-button above, but was created directly in the CMS backend. When linking articles from the "trashbin" category then those articles will automatically moved to the "preview" category; this is some not-so-hidden undelete feature.z'),
 
-      'project-web-article-linkpage-select' => self::t('Please select articles to link to the current project. The articles will be immediately added to the project if you select them. In order to remove the article, please use the `-\' button above.'),
+      'project-web-article-linkpage-select' => self::t('Please select articles to link to the current project. The articles will be immediately added to the project if you select them. In order to remove the article, please use the "-" button above.'),
 
       'project-web-article-unlinkpage' => self::t('Detach the currently displayed event announcement from the project. Primarily meant to provide means to undo erroneous linking of articles.'),
 
@@ -1404,7 +1426,7 @@ and contact the treasurer for further instructions.',
             FinanceService::SEPA_MANDATE_EXPIRE_MONTHS
           ),
           'only-for-project' => self::t('Use this debit-mandate only for the given project. Note that debit-mandates of club-members are always general debit-mandates for all receivables.'),
-          'for-all-receivables' => self::t('Use this as a general debit-mandate for all receivables of this person.'),
+          'for-all-receivables' => self::t('Use this as a general debit-mandate for all receivables of this person. Note that we accept general debit mandates only for club-members.'),
           'download' => [
             'default' => self::t('Download the existing signed hard-copy of the debit mandate.'),
             'form' => self::t('Download a prefilled debit-mandate form with the name and bank-account of this person, suitable to be handed to the person in order to be signed. Note that the email-form has also access to such pre-filled debit-mandates which can be attached to personalized mail-merged emails.'),
@@ -1520,7 +1542,7 @@ the individual table views.'),
             PageRenderer\ProjectInstrumentationNumbers::TEMPLATE => self::t('Instrumentation Numbers'),
             PageRenderer\ProjectParticipantFields::TEMPLATE => self::t('Project Participant-Fields'),
             PageRenderer\ProjectParticipants::TEMPLATE => self::t('Participants'),
-            PageRenderer\ProjectPayments::TEMPLATE => self::t('Received Payments'),
+            PageRenderer\ProjectPayments::TEMPLATE => self::t('Bank Transactions'),
             PageRenderer\Projects::TEMPLATE => self::t('All Projects'),
             PageRenderer\SepaBankAccounts::TEMPLATE => self::t('Create Bulk Transactions'),
             PageRenderer\SepaBulkTransactions::TEMPLATE => self::t('Issued Bulk Transactions'),
@@ -1531,6 +1553,7 @@ the individual table views.'),
             PageRenderer\AllMusicians::TEMPLATE => self::t('Display all musicians stored in the data-base, with detailed facilities for filtering and sorting.'),
             PageRenderer\Blog::TEMPLATE => self::t('Simplistic blog page with follow apps, used primarily to display hints
 if something has changed in the orchestra app.'),
+            PageRenderer\DonationReceipts::TEMPLATE => self::t('Display the list of donation receipts asserted by our organization. Donation receipts can also be reviewed by visiting the finance folder.'),
             PageRenderer\Instruments::TEMPLATE => self::t('Display the list of instruments known by the data-base, possibly add new ones as needed.'),
             PageRenderer\InstrumentFamilies::TEMPLATE => self::t('Display the list of instrument families and add or change them as needed.'),
             PageRenderer\InstrumentInsurances::TEMPLATE => self::t('Display a table with an overview about the current state of the member\'s instrument insurances.'),
@@ -1538,10 +1561,10 @@ if something has changed in the orchestra app.'),
             PageRenderer\InsuranceRates::TEMPLATE => self::t('Display a table with the insurance rates for the individual instrument insurances.'),
             PageRenderer\Invoices::TEMPLATE => self::t('Display a table with the sent-out invoices and support for issuing new invoices.'),
             PageRenderer\ProjectInstrumentationNumbers::TEMPLATE => self::t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.'),
-            PageRenderer\ProjectParticipantFields::TEMPLATE => self::t('Add additional data-fields to the instrumenation table for the project.'),
+            PageRenderer\ProjectParticipantFields::TEMPLATE => self::t('Add additional data-fields to the instrumenation table for the project. This just add project-specific columns to the table like project fees, reimbursements etc. Do not get nervous: just try! Its not that difficult and helps to keep the data together inside one table!'),
             PageRenderer\ProjectParticipants::TEMPLATE => self::t('Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.'),
             PageRenderer\ProjectAssociates::TEMPLATE => self::t('Detailed display of business partners or otherwise project related (legal) persons.'),
-            PageRenderer\ProjectPayments::TEMPLATE => self::t('A table holding the various payments of participants.'),
+            PageRenderer\ProjectPayments::TEMPLATE => self::t('A table holding the various payments and reimbursements of participants, as well as bank transfers to external parties.'),
             PageRenderer\Projects::TEMPLATE => self::t('Overview over all known projects (start-page).'),
             PageRenderer\SepaBankAccounts::TEMPLATE => self::t('Display a table with the bank accounts of the project participants,
 with the possibility to issued money transfers as well as debit-notes

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,11 +24,13 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\OCS;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
-use OCP\AppFramework\OCS;
-use OCP\AppFramework\Http\DataResponse;
 
+use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
 
@@ -70,12 +72,11 @@ class MaintenanceApiController extends OCSController
    * @return DataResponse
    *
    * @throws OCS\OCSNotFoundException
-   *
-   * @CORS
-   * @NoCSRFRequired
-   * @NoAdminRequired
-   * @ServiceAccountRequired
    */
+  #[CoreAttributes\CORS]
+  #[CoreAttributes\NoCSRFRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[Attributes\ServiceAccountRequired]
   public function serviceSwitch(string $topic, string $operation):DataResponse
   {
     switch ($topic) {
@@ -129,12 +130,11 @@ class MaintenanceApiController extends OCSController
    * @return DataResponse
    *
    * @throws OCS\OCSNotFoundException
-   *
-   * @CORS
-   * @NoCSRFRequired
-   * @NoAdminRequired
-   * @ServiceAccountRequired
    */
+  #[CoreAttributes\CORS]
+  #[CoreAttributes\NoCSRFRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[Attributes\ServiceAccountRequired]
   public function get(string $topic, string $subTopic):DataResponse
   {
     switch ($topic) {

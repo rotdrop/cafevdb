@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use InvalidArgumentException;
 use Exception;
 
 use GenderDetector;
@@ -35,8 +34,6 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
@@ -51,6 +48,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  */
 #[ORM\Table(name: 'Musicians')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository::class)]
+#[ORM\Index(name: 'country_postal_code_deleted', columns: ['country', 'postal_code', 'deleted'])]
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\EntityListeners([\OCA\CAFEVDB\Listener\MusicianEntityListener::class])]
@@ -125,7 +123,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   )]
   #[Gedmo\SlugHandler(
     class: CAFEVDB\Listeners\Sluggable\LoginNameSlugHandler::class,
-    options: [ 'separator' => '-', 'preferred' => [1, 2] ],
+    options: [ 'separator' => '-', 'preferred' => ['nickName', 'surName'] ],
   )]
   private $userIdSlug;
 
@@ -277,6 +275,10 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
   private $instruments;
 
+  #[ORM\OneToMany(targetEntity: ProjectApplication::class, mappedBy: 'musician', indexBy: 'project_id', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+  #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
+  private $projectApplications;
+
   #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'musician', indexBy: 'project_id', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
   private $projectParticipation;
@@ -360,6 +362,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->emailAddresses = new ArrayCollection();
     $this->instruments = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
+    $this->projectApplications = new ArrayCollection();
     $this->projectParticipation = new ArrayCollection();
     $this->projectParticipantFieldsData = new ArrayCollection();
     $this->instrumentInsurances = new ArrayCollection();
@@ -1118,6 +1121,30 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->instruments->set($instrument->getId(), $musicianInstrument);
 
     return $this;
+  }
+
+  /**
+   * Set projectApplications.
+   *
+   * @param Collection $projectApplications
+   *
+   * @return Musician
+   */
+  public function setProjectApplications(Collection $projectApplications):Musician
+  {
+    $this->projectApplications = $projectApplications;
+
+    return $this;
+  }
+
+  /**
+   * Get projectApplications.
+   *
+   * @return Collection
+   */
+  public function getProjectApplications():Collection
+  {
+    return $this->projectApplications;
   }
 
   /**

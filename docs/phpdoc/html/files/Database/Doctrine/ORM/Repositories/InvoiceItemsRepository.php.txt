@@ -24,12 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-use DateTimeInterface;
-use DateTimeImmutable;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TaxExemptionNotice as Entity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
-use OCA\CAFEVDB\Database\EntityManager as DecoratedEntityManager;
 
 /** Database repository for CompositePayments entities. */
 class InvoiceItemsRepository extends EntityRepository

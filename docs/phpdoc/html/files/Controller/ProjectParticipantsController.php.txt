@@ -26,15 +26,14 @@ namespace OCA\CAFEVDB\Controller;
 
 use InvalidArgumentException;
 use RuntimeException;
+use Throwable;
 use UnexpectedValueException;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\Response;
-use OCP\IL10N;
 use OCP\IRequest;
-use Psr\Log\LoggerInterface as ILogger;
 
 
 use OCA\CAFEVDB\Common;
@@ -47,12 +46,10 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\UserStorage;
 
@@ -108,9 +105,8 @@ class ProjectParticipantsController extends Controller
    * @return Response
    *
    * @todo Throw exceptions< s.t. the middleware error reporting code can do its work.
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function addMusicians(
     int $projectId,
     string|ParticipationContext $participationContext,
@@ -223,7 +219,7 @@ class ProjectParticipantsController extends Controller
    *
    * @param string|EnumValidateInstrumentsContext $context Either of 'musician' or 'project'.
    *
-   * @param array $recordId The database record id of the project participant.
+   * @param null|string|array $recordId The database record id of the project participant.
    *
    * @param array $instrumentValues The is of the selected instruments.
    *
@@ -232,12 +228,11 @@ class ProjectParticipantsController extends Controller
    * @param null|string $exclude It non-empty exclude instrumets of this family.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function validateInstrumentsSelection(
     string|EnumValidateInstrumentsContext $context,
-    array $recordId = [],
+    null|string|array $recordId = [],
     array $instrumentValues = [],
     ?string $only = null,
     ?string $exclude = null,
@@ -455,9 +450,8 @@ class ProjectParticipantsController extends Controller
    * @param null|string $files Uploaded files, JSON encoded, null if this is not a file-upload.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function files(
     string $operation,
     int $musicianId,
@@ -586,12 +580,11 @@ class ProjectParticipantsController extends Controller
           }
           $this->flush();
           $this->entityManager->commit();
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->entityManager->rollback();
           throw new RuntimeException($this->l->t('Unable to delete file "%s".', $filePath), $t->getCode(), $t);
         }
         return self::response($this->l->t('Successfully removed file "%s".', $filePath));
-        break;
 
       case self::FILE_ACTION_UPLOAD:
 
@@ -955,7 +948,7 @@ class ProjectParticipantsController extends Controller
               if (!empty($filesAppPath)) {
                 $filesAppLink = $userStorage->getFilesAppLink($filesAppPath, true);
               }
-            } catch (\Throwable $t) {
+            } catch (Throwable $t) {
               $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
             }
 
@@ -996,7 +989,7 @@ class ProjectParticipantsController extends Controller
             $this->flush();
 
             $this->entityManager->commit();
-          } catch (\Throwable $t) {
+          } catch (Throwable $t) {
             $this->entityManager->rollback();
             if ($fileCopied) {
               switch ($dataType) {
@@ -1032,9 +1025,8 @@ class ProjectParticipantsController extends Controller
    * @param bool $force Enforce the operation.
    *
    * @return OCP\AppFramework\Http\Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function mailingListSubscriptions(
     string $operation,
     int $projectId,

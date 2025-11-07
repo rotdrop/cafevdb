@@ -41,11 +41,12 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findNonInstruments(?array $only = null)
   {
+    $l = $this->entityManagerDecorator->getTranslatableL10n();
     $criteria = [
-      'families.family' => Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY,
+      'families.family' => [ Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY, $l->t(Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY) ],
     ];
     if (!empty($only)) {
-      $criteria['name'] = $only;
+      $criteria['name'] = array_unique(array_merge($only, array_map(fn(string $name) => $l->t($name), $only)));
     }
     return $this->findBy($criteria, orderBy: [ 'id' => 'INDEX' ]);
   }
@@ -59,7 +60,8 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findByName(string $name)
   {
-    return $this->findOneBy([ 'name' => $name ], [ 'sortOrder' => 'ASC' ]);
+    $l = $this->entityManagerDecorator->getTranslatableL10n();
+    return $this->findOneBy([ 'name' => array_unique([$name, $l->t($name)]) ], [ 'sortOrder' => 'ASC', 'name' => 'ASC' ]);
   }
 
   /**
@@ -69,7 +71,7 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findAll():array
   {
-    return $this->findBy(['deleted' => null], [ 'sortOrder' => 'ASC']);
+    return $this->findBy(['deleted' => null], [ 'sortOrder' => 'ASC', 'name' => 'ASC' ]);
   }
 
   /**
@@ -83,24 +85,18 @@ class InstrumentsRepository extends EntityRepository
    */
   public function findNames(?array $only = null, ?array $exclude = null):array
   {
-    $qb = $this->createQueryBuilder('i');
-    $qb->select('i.name AS instrument')
-      ->where($qb->expr()->isNull('i.deleted'));
-    if (!empty($only) || !empty($exclude)) {
-      $qb->leftJoin('i.families', 'if');
-      if (!empty($only)) {
-        $qb->andWhere($qb->expr()->in('if.family', ':only'))
-          ->setParameter('only', $only);
-      }
-      if (!empty($exclude)) {
-        $qb->andWhere($qb->expr()->notIn('if.family', ':exclude'))
-          ->setParameter('exclude', $exclude);
-      }
+    $l = $this->entityManagerDecorator->getTranslatableL10n();
+    $criteria = [ 'deleted' => null ];
+    if (!empty($only)) {
+      $criteria[] = [ 'family.family' => array_unique(array_merge($only, array_map(fn(string $name) => $l->t($name)))) ];
     }
-    $qb->orderBy('i.sortOrder', 'ASC')
-      ->addOrderBy('i.name', 'ASC');
+    if (!empty($exclude)) {
+      $criteria[] = [ '!family.family' => array_unique(array_merge($exclude, array_map(fn(string $name) => $l->t($name)))) ];
+    }
+    $result = $this->findBy($criteria, [ 'sortOrder' => 'ASC', 'name' => 'ASC' ]);
+    $names = array_map(fn(Entities\Instrument $entity) => $entity->getName(), $result);
 
-    return $qb->getQuery()->getResult('COLUMN_HYDRATOR');
+    return $names;
   }
 
   /**

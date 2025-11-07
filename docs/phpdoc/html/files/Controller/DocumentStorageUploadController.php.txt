@@ -27,25 +27,23 @@ namespace OCA\CAFEVDB\Controller;
 use Throwable;
 use UnexpectedValueException;
 
-use PHP_IBAN\IBAN;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\Response;
-use OCP\Files\SimpleFS\ISimpleFile;
+use OCP\Files\File;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common;
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /** AJAX endpoint to support maintenance of tax exemption notices. */
 class DocumentStorageUploadController extends Controller
@@ -112,35 +110,52 @@ class DocumentStorageUploadController extends Controller
    *
    * @param string $operation One of self::DOCUMENT_ACTION_UPLOAD or self::DOCUMENT_ACTION_DELETE.
    *
-   * @param null|int $entityId The id of the database entity.
-   *
    * @param null|int $musicianId Just passed on to the response.
    *
    * @param null|int $projectId Just passed on to the response.
    *
-   * @param string $data File upload data if this is a file-upload.
+   * @param array|string $data File upload data if this is a file-upload.
+   *
+   * @param null|string $cloudFile If given just the full path to a file in
+   * the cloud. request['files'] is ignored in this.case.
+   *
+   * @param string $uploadMode Upload mode for $cloudFile, link, copy, move.
+   *
+   * @param string $conflict fail, replace, rename on conflict.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function documents(
     string $section,
     string $topic,
     string $operation,
-    ?int $entityId,
     ?int $musicianId,
     ?int $projectId,
-    string $data = '{}'
+    array|string $data = '{}',
+    ?string $cloudFile = null,
+    string $uploadMode = UploadsController::UPLOAD_MODE_COPY,
+    string $conflict = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE,
   ):Response {
     switch ($operation) {
       case self::DOCUMENT_ACTION_UPLOAD:
         // we mis-use the participant-data upload form, so the actual identifiers
         // are in the "data" parameter and have to be remapped.
-        $uploadData = json_decode($data, true);
+        // {
+        //   "fieldId": 3,
+        //   "optionKey": 3,
+        //   "subDir": "",
+        //   "fileName": "Rechnung-Test2024-002-1-EineFirmaBlah-TesterAddressbookIntegration",
+        //   "fileBase": "Rechnung-Test2024-002-1-EineFirmaBlah-TesterAddressbookIntegration",
+        //   "participantFolder": "/camerata/Finanzen/Rechnungen/2025",
+        //   "filesAppPath": "/camerata/Finanzen/Rechnungen/2025",
+        //   "entityField": "option-value",
+        //   "storage": "db"
+        // }
+        $uploadData = is_string($data) ? json_decode($data, true) : $data;
         $entityId = $uploadData['optionKey'];
-        $fileName = $uploadData['fileName'];
-        $files = $this->request['files'];
+        $fileName = $uploadData['fileName'] ?? null;
+        $files = $this->request['files'] ?? null;
         $filesAppPath = $uploadData['filesAppPath'] ?? null;
         break;
       case self::DOCUMENT_ACTION_DELETE:
@@ -156,8 +171,7 @@ class DocumentStorageUploadController extends Controller
       }
     }
 
-    /** @var Entity $entity */
-    $entity = $this->findEntity(self::ENTITIES[$section][$topic], $entityId);
+    $entity = $this->fetchEntity($section, $topic, $entityId);
 
     if (empty($entity)) {
       throw new Exceptions\EnduserNotificationException(
@@ -171,24 +185,32 @@ class DocumentStorageUploadController extends Controller
     switch ($operation) {
       case self::DOCUMENT_ACTION_UPLOAD:
 
-        $files = $this->prepareUploadInfo($files, $entityId, multiple: false);
-        if ($files instanceof Http\Response) {
-          // error generated
-          return $files;
-        }
+        if (empty($cloudFile)) {
+          $files = $this->prepareUploadInfo($files, $entityId, multiple: false);
+          if ($files instanceof Http\Response) {
+            // error generated
+            return $files;
+          }
 
-        $file = array_shift($files); // only one
-        if ($file['error'] != UPLOAD_ERR_OK) {
-          throw new Exceptions\EnduserNotificationException(
-            $this->l->t('Upload error "%s".', $file['str_error']),
-          );
+          $file = array_shift($files); // only one
+          if ($file['error'] != UPLOAD_ERR_OK) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Upload error "%s".', $file['str_error']),
+            );
+          }
+          $originalFilePath = $file['original_name'] ?? null;
+          if ($file['upload_mode']) {
+            $uploadMode = $file['upload_mode'];
+          }
+        } else {
+          $originalFilePath = $cloudFile;
+          $file['original_name'] = $cloudFile;
+          $file['name'] = basename($originalFilePath);
+          $file['tmp_name'] = null;
         }
 
         /** @var UserStorage $userStorage */
         $userStorage = $this->di(UserStorage::class);
-
-        $originalFilePath = $file['original_name'] ?? null;
-        $uploadMode = $file['upload_mode'] ?? UploadsController::UPLOAD_MODE_COPY;
 
         switch ($uploadMode) {
           case UploadsController::UPLOAD_MODE_MOVE:
@@ -197,15 +219,16 @@ class DocumentStorageUploadController extends Controller
                 $this->l->t('Move operation requested, but the original file path has not been specified.'),
               );
             }
+            /** @var File $originalFile */
             $originalFile = $userStorage->get($originalFilePath);
-              if (empty($originalFile)) {
-                throw new Exceptions\EnduserNotificationException(
-                  $this->l->t('Move operation requested, but the original file "%s" cannot be found.', $originalFilePath),
-                );
+            if (empty($originalFile)) {
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('Move operation requested, but the original file "%s" cannot be found.', $originalFilePath),
+              );
             }
             break;
           case UploadsController::UPLOAD_MODE_LINK:
-            $originalFileId = $file['original_name']; // ?? check if this is correct
+            $originalFileId = $originalFilePath;
             if (empty($originalFileId)) {
               throw new Exceptions\EnduserNotificationException(
                 $this->l->t('Link operation requested, but the id of the original file has not been specified.'),
@@ -220,7 +243,15 @@ class DocumentStorageUploadController extends Controller
             $originalFilePath = $originalFile->getFileName();
             break;
           case UploadsController::UPLOAD_MODE_COPY:
-            // this is the default, nothing special
+            if ($cloudFile) {
+              /** @var File $originalFile */
+              $originalFile = $userStorage->get($originalFilePath);
+              if (empty($originalFile)) {
+                throw new Exceptions\EnduserNotificationException(
+                  $this->l->t('Copy operation requested, but the original file "%s" cannot be found.', $originalFilePath),
+                );
+              }
+            }
             break;
         }
 
@@ -229,8 +260,7 @@ class DocumentStorageUploadController extends Controller
         /** @var Entities\DatabaseStorageFile $fileNodeEntity */
         $fileNodeEntity = $this->getDocument($entity);
         $fileEntity = $fileNodeEntity ? $fileNodeEntity->getFile() : null;
-
-        $conflict = null;
+        $actualConflict = empty($fileEntity) ? null : $conflict;
 
         $this->entityManager->beginTransaction();
         try {
@@ -242,13 +272,17 @@ class DocumentStorageUploadController extends Controller
               $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
               // no break
             case UploadsController::UPLOAD_MODE_COPY:
-              $fileContent = $this->getUploadContent($file);
+              if ($cloudFile) {
+                $fileContent = $originalFile->getContent();
+              } else {
+                $fileContent = $this->getUploadContent($file);
+              }
 
               /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
               $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
               $mimeType = $mimeTypeDetector->detectString($fileContent);
 
-              if (!empty($fileEntity) && $fileEntity->getNumberOfLinks() > 1) {
+              if (!empty($fileEntity) && $fileEntity->getNumberOfLinks() > 1 && $conflict == DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE) {
                 // if the file has multiple links then it is probably
                 // better to remove the existing file rather than
                 // overwriting a file which has multiple links.
@@ -256,19 +290,24 @@ class DocumentStorageUploadController extends Controller
                 $fileEntity = null;
               }
 
-              if (empty($fileEntity)) {
+              if (empty($fileEntity) || $conflict == DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_RENAME) {
                 $fileEntity = new Entities\EncryptedFile(
                   data: $fileContent,
                   mimeType: $mimeType,
                   owner: $this->getOwner($entity),
                 );
                 $this->persist($fileEntity);
-              } else {
-                $conflict = 'replaced';
+              } elseif ($conflict == DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE) {
                 $fileEntity
                   ->setMimeType($mimeType)
                   ->setSize(strlen($fileContent))
                   ->getFileData()->setData($fileContent);
+              } else {
+                throw new Exceptions\EnduserNotificationException(
+                  $this->l->t(
+                    'The destination document already exists as "%s".', $fileNodeEntity->getPathName()
+                  ),
+                );
               }
               $fileEntity->setFileName($originalFileName);
 
@@ -290,7 +329,7 @@ class DocumentStorageUploadController extends Controller
               break;
           }
 
-          $fileNodeEntity = $this->addDocument($fileNodeEntity, $fileEntity, $entity, $storage);
+          $fileNodeEntity = $this->addDocument($fileNodeEntity, $fileEntity, $entity, $storage, $conflict);
 
           $this->flush();
 
@@ -299,14 +338,16 @@ class DocumentStorageUploadController extends Controller
           $this->entityManager->commit();
         } catch (Throwable $t) {
           $this->logException($t);
-          $this->entityManager->rollback();
+          if ($this->entityManager->isTransactionActive()) {
+            $this->entityManager->rollback();
+          }
           throw new Exceptions\EnduserNotificationException(
             $this->l->t('Error, caught an exception. No changes were performed.'),
             previous: $t,
           );
         }
 
-        if ($uploadMode != UploadsController::UPLOAD_MODE_LINK) {
+        if ($uploadMode != UploadsController::UPLOAD_MODE_LINK && empty($cloudFile)) {
           $this->removeStashedFile($file);
         }
 
@@ -356,7 +397,7 @@ class DocumentStorageUploadController extends Controller
           'storageBackend'  => 'db',
           'download' => $downloadLink,
           'filesApp' => $filesAppLink,
-          'conflict' => $conflict,
+          'conflict' => $actualConflict,
           'messages' => $message,
         ];
 
@@ -532,6 +573,8 @@ class DocumentStorageUploadController extends Controller
    *
    * @param DatabaseStorage $storage
    *
+   * @param string $conflict
+   *
    * @return Entities\DatabaseStorageFile
    *
    * @throws UnexpectedValueException
@@ -541,6 +584,7 @@ class DocumentStorageUploadController extends Controller
     Entities\EncryptedFile $fileEntity,
     mixed $entity,
     DatabaseStorage $storage,
+    string $conflict,
   ):Entities\DatabaseStorageFile {
     switch (true) {
       case ($entity instanceof Entities\CompositePayment):
@@ -548,7 +592,7 @@ class DocumentStorageUploadController extends Controller
         if (!empty($fileNodeEntity)) {
           $fileNodeEntity->setFile($fileEntity);
         } else {
-          $fileNodeEntity = $storage->addCompositePayment($entity, $fileEntity, flush: false);
+          $fileNodeEntity = $storage->addCompositePayment($entity, $fileEntity, flush: false, conflict: $conflict);
           $entity->setSupportingDocument($fileNodeEntity);
         }
         return $fileNodeEntity;
@@ -557,25 +601,21 @@ class DocumentStorageUploadController extends Controller
         if (!empty($fileNodeEntity)) {
           $fileNodeEntity->setFile($fileEntity);
         } else {
-          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false);
+          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflict: $conflict);
           $entity->setSupportingDocument($fileNodeEntity);
         }
         return $fileNodeEntity;
       case ($entity instanceof Entities\Invoice):
         /** @var Entities\Invoice $entity */
-        if (!empty($fileNodeEntity)) {
-          $fileNodeEntity->setFile($fileEntity);
-        } else {
-          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false);
-          $entity->setWrittenInvoice($fileNodeEntity);
-        }
+        $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflict: $conflict);
+        $entity->setWrittenInvoice($fileNodeEntity);
         return $fileNodeEntity;
       case ($entity instanceof Entities\TaxExemptionNotice):
         /** @var Entities\TaxExemptionNotice $entity */
         if (!empty($fileNodeEntity)) {
           $fileNodeEntity->setFile($fileEntity);
         } else {
-          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false);
+          $fileNodeEntity = $storage->addDocument($entity, $fileEntity, flush: false, conflict: $conflict);
           $entity->setWrittenNotice($fileNodeEntity);
         }
         return $fileNodeEntity;
@@ -586,5 +626,34 @@ class DocumentStorageUploadController extends Controller
         get_class($entity),
       )
     );
+  }
+
+  /**
+   * Fetch the associated databse entity by a unique identifier.
+   *
+   * @param string $section
+   *
+   * @param string $topic
+   *
+   * @param int|string $entityId
+   *
+   * @return mixed The entity if found, else null.
+   */
+  private function fetchEntity(string $section, string $topic, int|string $entityId):mixed
+  {
+    switch ($section) {
+      case self::SECTION_FINANCE:
+        switch ($topic) {
+          case self::FINANCE_TOPIC_INVOICES:
+            return $this->getDatabaseRepository(self::ENTITIES[$section][$topic])->findOneBy([
+              '(|id' => $entityId,
+              'invoiceNumber' => $entityId,
+            ]);
+          default:
+            return $this->findEntity(self::ENTITIES[$section][$topic], $entityId);
+        }
+      default:
+        return null;
+    }
   }
 }

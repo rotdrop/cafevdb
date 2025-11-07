@@ -24,34 +24,26 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
-
-use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Events;
-use OCA\CAFEVDB\Service\ConfigService;
-
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener as TranslatableListener;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
-
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**
  * ProjectParticipantFieldsDataOptions
  */
 #[ORM\Table(name: 'ProjectParticipantFieldsDataOptions')]
 #[ORM\Index(columns: ['key'])]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\TranslationEntity(class: 'TableFieldTranslation', idToString: ['key' => 'BIN2UUID(%s)'])]
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
@@ -100,25 +92,44 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $untranslatedLabel;
 
   /**
-   * Multi-purpose field. For FieldMultiplicity::RECURRING the PHP class
-   * name of the generator class.
-   *
    * @var string
+   *
+   * Multi-purpose field.
+   *
+   * - for FieldMultiplicity::RECURRING the generator option (Uuid::NIL) stores
+   *   the name of the PHP generator class.
+   * - the InstrumentInsuranceReceivablesGenertor uses this to store the year
+   *   and the broker.
+   * - the (yet unused) PeriodicReceivablesGenerator stores the timestamp of
+   *   the birth of its receivables.
    */
   #[ORM\Column(type: 'string', length: 1024, nullable: true)]
   private $data;
 
   /**
-   * @var float
+   * @var string
+   *
+   * Only for receivables and liabilities. The balancing account for
+   * double-entry accounting. Currently this is just the full path of the
+   * GnuCash account, separated by colons. The other account is implied by
+   * project name, musician name and potentially the receivables generator.
+   *
+   * @todo Quite hard-coded.
+   */
+  #[ORM\Column(type: 'string', length: 1024, nullable: true)]
+  private $balancingAccount;
+
+  /**
+   * @var string
    * Optional value of a deposit for monetary options.
    */
-  #[ORM\Column(type: 'float', nullable: true)]
-  private $deposit;
+  #[ORM\Column(type: 'decimal_rational_monetary', nullable: true)]
+  private ?RationalNumber $deposit;
 
   /**
    * @var int Limit on number of group members for
    * FieldMultiplicity::GROUPSOFPEOPLE, FieldMultiplicity::GROUPOFPEOPLE
-   * fields. Misused as starting date for recurring receivables
+   * fields. Also misused as starting date for recurring receivables
    * generators.
    */
   #[ORM\Column(type: 'bigint', nullable: true)]
@@ -142,7 +153,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $payments;
 
   /**
-   * @var ProjectPayment
+   * @var InvoiceItem
    */
   #[ORM\OneToMany(targetEntity: InvoiceItem::class, mappedBy: 'receivableOption')]
   private $invoiceItems;
@@ -237,7 +248,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function setLabel(?string $label):ProjectParticipantFieldDataOption
   {
     $this->label = $label;
-    if ($this->getLocale() == ConfigService::DEFAULT_LOCALE) {
+    if ($this->getLocale() == ConfigConstants::DEFAULT_LOCALE) {
       $this->untranslatedLabel = $this->label;
     }
     return $this;
@@ -297,20 +308,47 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return null|string
    */
-  public function getData():?string
+  public function getData(): ?string
   {
-    return $this->data;
+    return $this->data ?? null;
+  }
+
+  /**
+   * Set the balancingAccount.
+   *
+   * @param null|string $balancingAccount
+   *
+   * @return ProjectParticipantFieldBalancingAccountOption
+   */
+  public function setBalancingAccount(?string $balancingAccount):ProjectParticipantFieldDataOption
+  {
+    $this->balancingAccount = $balancingAccount;
+
+    return $this;
+  }
+
+  /**
+   * Get the balancingAccount.
+   *
+   * @return null|string
+   */
+  public function getBalancingAccount(): ?string
+  {
+    return $this->balancingAccount ?? ($this->field->getBalancingAccount() ?? null);
   }
 
   /**
    * Set deposit.
    *
-   * @param null|float $deposit
+   * @param null|int|float|string|RationalNumber $deposit
    *
    * @return ProjectParticipantFieldDatum
    */
-  public function setDeposit(?float $deposit):ProjectParticipantFieldDataOption
+  public function setDeposit(null|int|float|string|RationalNumber $deposit):ProjectParticipantFieldDataOption
   {
+    if ($deposit !== null) {
+      $deposit = RationalNumber::create($deposit);
+    }
     $this->deposit = $deposit;
 
     return $this;
@@ -319,11 +357,11 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Get deposit.
    *
-   * @return null|float
+   * @return null|RationalNumber
    */
-  public function getDeposit():?float
+  public function getDeposit():?RationalNumber
   {
-    return $this->deposit;
+    return $this->deposit ?? null;
   }
 
   /**

@@ -24,22 +24,24 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
-use \OutOfBoundsException;
-use \RuntimeException;
+use OutOfBoundsException;
+use RuntimeException;
+use DateTimeImmutable;
 
-use OCP\ISession;
 use OCP\IL10N;
+use OCP\ISession;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Common\PHPMailer;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Common\PHPMailer;
-use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Wrap the email filter form into a class to make things a little
@@ -61,7 +63,7 @@ class RecipientsFilter
   public const FROM_PROJECT_CONFIRMED_KEY = 'fromProjectConfirmed';
   public const FROM_PROJECT_PRELIMINARY_KEY = 'fromProjectPreliminary';
   public const EXCEPT_PROJECT_KEY = 'exceptProject';
-  public const ANNOUNCEMENTS_MAILING_LIST_KEY = ConfigService::ANNOUNCEMENTS_MAILING_LIST_FQDN_NAME;
+  public const ANNOUNCEMENTS_MAILING_LIST_KEY = ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY;
   public const PROJECT_MAILING_LIST_KEY = 'projectMailingList';
 
   public const MUSICIANS_FROM_PROJECT_PRELIMINARY = (1 << 0);
@@ -547,7 +549,7 @@ class RecipientsFilter
 
     // Check for valid position.
     if ($newPosition >= $this->historySize || $newPosition < 0) {
-      if ($this->shouldDebug(ConfigService::DEBUG_EMAILFORM)) {
+      if ($this->shouldDebug(ConfigConstants::DEBUG_EMAILFORM)) {
         throw new OutOfBoundsException(
           $this->l->t(
             'Invalid history position %d request, history size is %d',
@@ -651,6 +653,8 @@ class RecipientsFilter
       $criteria[] = [ 'projectParticipation.project' => $this->projectId ];
       $criteria[] = [ '!projectParticipation.participationStatus' => $this->participationStatusBlackList() ];
     }
+    $criteria[] = [ '(|deleted' => null ];
+    $criteria[] = [ '>=deleted' => new DateTimeImmutable() ];
 
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
 
@@ -834,13 +838,15 @@ class RecipientsFilter
       if (!$this->participationStatusNames) {
         $this->participationStatusNames = [];
       }
-      return array_keys($this->participationStatusNames);
+      $byStatusDefault = array_keys($this->participationStatusNames);
+    } else {
+      $byStatusDefault = [ DBTypes\EnumParticipationStatus::REGULAR ];
+      if ($this->projectId > 0 && !$this->recipientsExceptProject()) {
+        $byStatusDefault[] = DBTypes\EnumParticipationStatus::PASSIVE;
+        $byStatusDefault[] = DBTypes\EnumParticipationStatus::TEMPORARY;
+      }
     }
-    $byStatusDefault = [ DBTypes\EnumParticipationStatus::REGULAR ];
-    if ($this->projectId > 0 && !$this->recipientsExceptProject()) {
-      $byStatusDefault[] = DBTypes\EnumParticipationStatus::PASSIVE;
-      $byStatusDefault[] = DBTypes\EnumParticipationStatus::TEMPORARY;
-    }
+    sort($byStatusDefault);
     return $byStatusDefault;
   }
 
@@ -1319,7 +1325,7 @@ class RecipientsFilter
           $listId = $this->project->getMailingListId();
           break;
         case self::ANNOUNCEMENTS_MAILING_LIST_KEY:
-          $listId = $this->getConfigValue(ConfigService::ANNOUNCEMENTS_MAILING_LIST_FQDN_NAME);
+          $listId = $this->getConfigValue($which);
           break;
       }
       if (!empty($listId)) {
@@ -1407,10 +1413,10 @@ class RecipientsFilter
 
     $defaultByParticipationStatus = $this->defaultByParticipationStatus();
     $participationStatusFilter = $this->participationStatusFilter ?? [];
-    if (array_intersect($participationStatusFilter, $defaultByParticipationStatus) !== $defaultByParticipationStatus) {
+    if (array_intersect($participationStatusFilter, $defaultByParticipationStatus) != $defaultByParticipationStatus) {
       // intentionally not for the list as less than the default status type
       // were addressed
-      $this->logInfo('MEMBER FILTER INCOMPATIBLE');
+      $this->logInfo('MEMBER FILTER INCOMPATIBLE ' . print_r($defaultByParticipationStatus, true) . ' ' . print_r($participationStatusFilter, true));
       return false;
     }
 
@@ -1444,7 +1450,7 @@ class RecipientsFilter
       MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_ENABLED,
       MailingListsService::MEMBER_DELIVERY_MODE => MailingListsService::DELIVERY_MODE_REGULAR,
     ]);
-    $bulkEmailFromAddress = $this->getConfigValue('emailfromaddress');
+    $bulkEmailFromAddress = $this->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY);
     Util::unsetValue($listMembers, $bulkEmailFromAddress);
     $recipientsByEmail = [];
     foreach ($selectedRecipients as $recipient) {

@@ -24,29 +24,22 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use DateTimeImmutable;
+use DateTimeInterface;
+
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Common\UndoableFolderRename;
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
-use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Events;
-use OCA\CAFEVDB\Service\ConfigService;
-
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener as TranslatableListener;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
-
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ProjectParticipantFields
@@ -119,13 +112,13 @@ class ProjectParticipantField implements \ArrayAccess
   private $dataOptions;
 
   /**
-   * @var \DateTimeImmutable
+   * @var DateTimeImmutable
    */
   #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'Due-date for financial fields.'])]
   private $dueDate = null;
 
   /**
-   * @var \DateTimeImmutable
+   * @var DateTimeImmutable
    */
   #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'Due-date of deposit for financial fields.'])]
   private $depositDueDate = null;
@@ -137,6 +130,19 @@ class ProjectParticipantField implements \ArrayAccess
   #[ORM\JoinColumn(name: 'default_value', referencedColumnName: 'key', nullable: true)]
   #[ORM\OneToOne(targetEntity: ProjectParticipantFieldDataOption::class, cascade: ['persist'])]
   private $defaultValue = null;
+
+  /**
+   * @var string
+   *
+   * Only for receivables and liabilities. The balancing account for
+   * double-entry accounting. Currently this is just the full path of the
+   * GnuCash account, separated by colons. The other account is implied by
+   * project name, musician name and potentially the receivables generator.
+   *
+   * @todo Quite hard-coded.
+   */
+  #[ORM\Column(type: 'string', length: 1024, nullable: true)]
+  private $balancingAccount;
 
   /**
    * @var string
@@ -508,7 +514,7 @@ class ProjectParticipantField implements \ArrayAccess
   public function setName(?string $name):ProjectParticipantField
   {
     $this->name = $name;
-    if ($this->getLocale() == ConfigService::DEFAULT_LOCALE) {
+    if ($this->getLocale() == ConfigConstants::DEFAULT_LOCALE) {
       $this->untranslatedName = $this->name;
     }
     return $this;
@@ -597,7 +603,7 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set dueDate.
    *
-   * @param string|null|\DateTimeInterface $dueDate
+   * @param string|null|DateTimeInterface $dueDate
    *
    * @return ProjectParticipantField
    */
@@ -610,9 +616,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get dueDate.
    *
-   * @return \DateTimeImmutable|null
+   * @return DateTimeImmutable|null
    */
-  public function getDueDate():?\DateTimeImmutable
+  public function getDueDate():?DateTimeImmutable
   {
     return $this->dueDate;
   }
@@ -620,7 +626,7 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set depositDueDate.
    *
-   * @param string|null|\DateTimeInterface $depositDueDate
+   * @param string|null|DateTimeInterface $depositDueDate
    *
    * @return ProjectParticipantField
    */
@@ -633,9 +639,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get depositDueDate.
    *
-   * @return \DateTimeImmutable|null
+   * @return DateTimeImmutable|null
    */
-  public function getDepositDueDate():?\DateTimeImmutable
+  public function getDepositDueDate():?DateTimeImmutable
   {
     return $this->depositDueDate;
   }
@@ -662,6 +668,30 @@ class ProjectParticipantField implements \ArrayAccess
   public function getDefaultValue():?ProjectParticipantFieldDataOption
   {
     return $this->defaultValue;
+  }
+
+  /**
+   * Set the balancingAccount.
+   *
+   * @param null|string $balancingAccount
+   *
+   * @return ProjectParticipantFieldBalancingAccountOption
+   */
+  public function setBalancingAccount(?string $balancingAccount):ProjectParticipantField
+  {
+    $this->balancingAccount = $balancingAccount;
+
+    return $this;
+  }
+
+  /**
+   * Get the balancingAccount.
+   *
+   * @return null|string
+   */
+  public function getBalancingAccount(): ?string
+  {
+    return $this->balancingAccount ?? null;
   }
 
   /**

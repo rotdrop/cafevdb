@@ -40,8 +40,8 @@ use OCP\Mail\IMessage;
 
 use OCA\CAFEVDB\Common\Html2Text;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Collect problem reports and forward them to configured targets (e.g. submit
@@ -141,7 +141,7 @@ class ProblemReportService
   {
     $this->logInfo('Try send code "' . $token . '" to "' . $address . '".');
 
-    $orchestraName = $this->encryptionService->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY, $this->l->t('Unknown Orchestra'));
+    $orchestraName = $this->encryptionService->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY, $this->l->t('Unknown Orchestra'));
     $baseUrl = $this->urlGenerator->getBaseUrl();
     $settingsUrl = $this->urlGenerator->linkToRouteAbsolute('settings.AdminSettings.index', [ 'section' => $this->appName ]);
 
@@ -261,7 +261,7 @@ class ProblemReportService
 
     try {
       // ... do not assume decryption works at this point ...
-      $orchestraName = $this->encryptionService->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY, $this->l->t('Unknown Orchestra'));
+      $orchestraName = $this->encryptionService->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY, $this->l->t('Unknown Orchestra'));
       // TRANSLATORS: %s refers to the orchestra name, the configured name of
       // TRANSLATORS: the organization using the app. The entire string is the
       // TRANSLATORS: clear-test part of an email-address.

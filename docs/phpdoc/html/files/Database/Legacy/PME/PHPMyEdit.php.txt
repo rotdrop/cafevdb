@@ -123,7 +123,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
     $this->defaultOptions = [
       'language' => locale_get_primary_language($this->l->getLanguageCode()),
     ];
-    $this->setOptions($options->getArrayCopy());
+    $this->setOptions($options->toArray());
     $this->labelOverride = [];
     $this->queryLog = [];
   }

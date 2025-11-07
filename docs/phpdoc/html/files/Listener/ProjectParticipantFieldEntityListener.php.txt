@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2023, 2024 Claus-Justus Heine
+ * @copyright 2023-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use Throwable;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
@@ -59,7 +58,7 @@ class ProjectParticipantFieldEntityListener
   /** {@inheritdoc} */
   public function prePersist(Entities\ProjectParticipantField $entity, ORMEvent\PrePersistEventArgs $event)
   {
-    // make sure that the field is pulicly readable if it has an associated
+    // make sure that the field is publicly readable if it has an associated
     // ProjectEvent
     if ($entity->getParticipantAccess() == Types\EnumAccessPermission::NONE && !empty($entity->getProjectEvent())) {
       $this->setParticipantAccess(Types\EnumAccessPermission::READ);
@@ -79,7 +78,7 @@ class ProjectParticipantFieldEntityListener
   /** {@inheritdoc} */
   public function preUpdate(Entities\ProjectParticipantField $entity, ORMEvent\PreUpdateEventArgs $event)
   {
-    // make sure that the field is pulicly readable if it has an associated
+    // make sure that the field is publicly readable if it has an associated
     // ProjectEvent
     if ($entity->getParticipantAccess() == Types\EnumAccessPermission::NONE && !empty($entity->getProjectEvent())) {
       $this->setParticipantAccess(Types\EnumAccessPermission::READ);

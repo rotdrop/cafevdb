@@ -380,9 +380,12 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   public function jsonSerialize():array
   {
     $array = $this->toArray();
-    // short cut, in particular of mail merge
-    $array['taxType'] = $this->taxationStatutorySource->getTaxType();
-    $array['law'] = $this->taxationStatutorySource->getLaw();
+    $array['taxationStatutorySources'] = [];
+    /** @var TaxationStatutorySource $taxationStatutorySource */
+    foreach ($this->taxationStatutorySources as $taxationStatutorySource) {
+      $array['taxationStatutorySources'][(string)$taxationStatutorySource->getTaxType()] =
+        $taxationStatutorySource->jsonSerialize();
+    }
 
     return $array;
   }

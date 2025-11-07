@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024, 2024 Claus-Justus Heine
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,16 +24,18 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use DateTimeImmutable;
 use InvalidArgumentException;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
-use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
 
 /**
  * Folder entry for a database-backed file.
@@ -43,6 +45,10 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
 {
   /** @var string */
   protected static $type = DirEntryType::FOLDER;
+
+  public const ADD_DOCUMENT_CONFLICT_FAIL = 'fail';
+  public const ADD_DOCUMENT_CONFLICT_REPLACE = 'replace';
+  public const ADD_DOCUMENT_CONFLICT_RENAME = 'rename';
 
   /**
    * @var MusicianRowAccessToken
@@ -186,11 +192,11 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
    *
    * @param null|string $fileName
    *
-   * @param bool $replace Replace an existing entry's file by the given file.
+   * @param string $conflict Condflict resolution, fail, rename, replace.
    *
    * @return null|DatabaseStorageDirEntry The new or existing
    */
-  public function addDocument(EncryptedFile $file, ?string $fileName = null, bool $replace = false):?DatabaseStorageFile
+  public function addDocument(EncryptedFile $file, ?string $fileName = null, string $conflict = self::ADD_DOCUMENT_CONFLICT_FAIL):?DatabaseStorageFile
   {
     $fileName = $fileName ?? $file->getFileName();
     $fileName = trim($fileName, Constants::PATH_SEP);
@@ -203,20 +209,56 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     if ($existing->count() == 1) {
       /** @var DatabaseStorageFile $dirEntry */
       $dirEntry = $existing->first();
-      if (!($dirEntry instanceof DatabaseStorageFile)) {
-        throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' but the existing entry is not a file.');
+      switch ($conflict) {
+        case self::ADD_DOCUMENT_CONFLICT_RENAME:
+          $pathInfo = pathinfo($fileName);
+          $namePart = $pathInfo['filename'] . '~';
+          $extension = '.' . $pathInfo['extension'];
+          $backups = $this->directoryEntries
+            ->map(fn(DatabaseStorageDirEntry $value) => $value->getName())
+            ->filter(fn(string $name) => str_starts_with($name, $namePart) && str_ends_with($name, $extension))
+            ->toArray();
+          $count = count($backups);
+          do {
+            ++$count;
+            $backupName = $namePart . $count . $extension;
+          } while (in_array($backupName, $backups));
+          $dirEntry
+            ->setName($backupName)
+            ->setUpdated(new DateTimeImmutable);
+          $dirEntry = null;
+          // We now need to do a flush() to the database as there is a unique
+          // constraint on the dir-entry names. Might be an anti-pattern to
+          // put this into the entity ...
+          EntityManager::getInstance()->flush();
+          break;
+        case self::ADD_DOCUMENT_CONFLICT_REPLACE:
+          if (!($dirEntry instanceof DatabaseStorageFile)) {
+            throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' but the existing entry is not a file.');
+          }
+          $dirEntry
+            ->setFile($file)
+            ->setUpdated($dirEntry->getUpdated());
+          break;
+        default:
+        case self::ADD_DOCUMENT_CONFLICT_FAIL:
+          if (!($dirEntry instanceof DatabaseStorageFile)) {
+            throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' but the existing entry is not a file.');
+          }
+          if ($dirEntry->getFile() !== $file) {
+            throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' and the existing entry does not point to the same file.');
+          }
+          break;
       }
-      if (!$replace && $dirEntry->getFile() !== $file) {
-        throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' and the existing entry does not point to the same file.');
-      }
-    } else {
+    }
+
+    if (empty($dirEntry)) {
       // need a new one
       $dirEntry = (new DatabaseStorageFile)
         ->setName($fileName)
-        ->setParent($this);
+        ->setParent($this)
+        ->setFile($file);
     }
-
-    $dirEntry->setFile($file);
 
     return $dirEntry;
   }
@@ -352,5 +394,15 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
   public function isEmpty():bool
   {
     return $this->directoryEntries->count() == 0;
+  }
+
+  /**
+   * Get mimeType.
+   *
+   * @return string|null
+   */
+  public function getMimeType():?string
+  {
+    return 'httpd/unix-directory';
   }
 }

@@ -129,16 +129,24 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">48</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">CompositePayments collect a couple of ProjectPayments of the same
-Musician. In GnuCash this would be a &quot;split transactions&quot;. The transaction
-parts are ProjectPayment entities.</p>
+ProjectParticipant. In GnuCash this would be a &quot;split transactions&quot;. The
+transaction parts are ProjectPayment entities which is just a &quot;named joint
+table&quot; in order to avoid ManyToMany and add some stuff.</p>
 
 
+    <section class="phpdocumentor-description"><p>So: there are no other per-person payments, each payment thus is tied to a
+person and a project. For &quot;unprojected payments&quot; either the club members
+project has to be used or the executive board project. External parties
+also have first to be added to a project as &quot;associates&quot;, then they are
+also &quot;Musician&quot; entities (thow the name is misleading) and then can be used
+as ordinary participants for payments.</p>
+</section>
 
 
 
@@ -268,7 +276,7 @@ parts are ProjectPayment entities.</p>
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#property_amount">$amount</a>
     <span>
-                        &nbsp;: float            </span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -444,7 +452,7 @@ ProjectParticipantFieldDatum::paymentReference().</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getAmount">getAmount()</a>
     <span>
-                                &nbsp;: float    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>    </span>
 </dt>
 <dd>Get amount.</dd>
 
@@ -472,7 +480,7 @@ ProjectParticipantFieldDatum::paymentReference().</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getDonationAmount">getDonationAmount()</a>
     <span>
-                                &nbsp;: float    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -505,7 +513,7 @@ ProjectParticipantFieldDatum::paymentReference().</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getNonDonationAmount">getNonDonationAmount()</a>
     <span>
-                                &nbsp;: float    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -548,6 +556,13 @@ ProjectParticipantFieldDatum::paymentReference().</dd>
                                 &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>    </span>
 </dt>
 <dd>Get projectPayments.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getReceivablesDueDate">getReceivablesDueDate()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeInterface">DateTimeInterface</abbr>    </span>
+</dt>
+<dd>Return the maximum due-date of all underlying receivables.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getSepaBankAccount">getSepaBankAccount()</a>
@@ -734,7 +749,7 @@ ProjectParticipantFieldDatum::paymentReference().</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_sumPaymentsAmount">sumPaymentsAmount()</a>
     <span>
-                                &nbsp;: float    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>    </span>
 </dt>
 <dd>Return the sum of the amounts of the individual payments, which
 should sum up to $this-&gt;amount, of course.</dd>
@@ -818,6 +833,13 @@ bank-transactions.</dd>
 <dd>Generate a file-name for the given donation.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getInvoiceFolderName">getInvoiceFolderName()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Generate the folder-name for the given invoice.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyDebitMandateFileName">getLegacyDebitMandateFileName()</a>
     <span>
                                 &nbsp;: string    </span>
@@ -833,6 +855,13 @@ bank-transactions.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyinvoiceFileName">getLegacyinvoiceFileName()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>PME-legacy.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyInvoiceFolderName">getLegacyInvoiceFolderName()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
@@ -927,9 +956,9 @@ bank-transactions.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">67</span>
+    <span class="phpdocumentor-element-found-in__line">72</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -959,9 +988,9 @@ bank-transactions.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">63</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -991,9 +1020,9 @@ bank-transactions.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">64</span>
+    <span class="phpdocumentor-element-found-in__line">69</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1023,9 +1052,9 @@ bank-transactions.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">65</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1055,9 +1084,9 @@ bank-transactions.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">66</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1087,9 +1116,9 @@ bank-transactions.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1175,18 +1204,18 @@ Personal localization settings based on the app settings.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">91</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">float</span>
+        <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
     <span class="phpdocumentor-signature__name">$amount</span>
-     = <span class="phpdocumentor-signature__default-value">&#039;0.00&#039;</span></code>
+    </code>
 
     
         <section class="phpdocumentor-description"><p>The total amount for the bank transaction. This must equal the
@@ -1224,13 +1253,7 @@ field?</p>
         #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;decimal&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $precision: 7
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $scale: 2
+        $type: &#039;decimal_rational_monetary&#039;
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
         $nullable: false
@@ -1259,9 +1282,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">193</span>
+    <span class="phpdocumentor-element-found-in__line">198</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.193" class="phpdocumentor-element-found-in__source" data-line="193" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.198" class="phpdocumentor-element-found-in__source" data-line="198" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1313,9 +1336,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">97</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1367,9 +1390,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">199</span>
+    <span class="phpdocumentor-element-found-in__line">204</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.199" class="phpdocumentor-element-found-in__source" data-line="199" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.204" class="phpdocumentor-element-found-in__source" data-line="204" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1421,9 +1444,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">77</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1525,9 +1548,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">169</span>
+    <span class="phpdocumentor-element-found-in__line">174</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.169" class="phpdocumentor-element-found-in__source" data-line="169" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.174" class="phpdocumentor-element-found-in__source" data-line="174" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1590,9 +1613,9 @@ field?</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">147</span>
+    <span class="phpdocumentor-element-found-in__line">152</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.152" class="phpdocumentor-element-found-in__source" data-line="152" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1670,9 +1693,9 @@ existing entities in a migration step.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">155</span>
+    <span class="phpdocumentor-element-found-in__line">160</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.155" class="phpdocumentor-element-found-in__source" data-line="155" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1741,9 +1764,9 @@ existing entities in a migration step.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">162</span>
+    <span class="phpdocumentor-element-found-in__line">167</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.162" class="phpdocumentor-element-found-in__source" data-line="162" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.167" class="phpdocumentor-element-found-in__source" data-line="167" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1809,9 +1832,9 @@ existing entities in a migration step.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">173</span>
+    <span class="phpdocumentor-element-found-in__line">178</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.173" class="phpdocumentor-element-found-in__source" data-line="173" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1868,6 +1891,9 @@ existing entities in a migration step.</p>
         $targetEntity: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
+        $inversedBy: &#039;payments&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
         $fetch: &#039;EXTRA_LAZY&#039;
     </dd>
     </dl>
@@ -1891,9 +1917,9 @@ existing entities in a migration step.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">105</span>
+    <span class="phpdocumentor-element-found-in__line">110</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.105" class="phpdocumentor-element-found-in__source" data-line="105" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.110" class="phpdocumentor-element-found-in__source" data-line="110" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -1951,9 +1977,9 @@ existing entities in a migration step.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">120</span>
+    <span class="phpdocumentor-element-found-in__line">125</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -2039,9 +2065,9 @@ existing entities in a migration step.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">130</span>
+    <span class="phpdocumentor-element-found-in__line">135</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -2127,9 +2153,9 @@ existing entities in a migration step.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">111</span>
+    <span class="phpdocumentor-element-found-in__line">116</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.111" class="phpdocumentor-element-found-in__source" data-line="111" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -2195,9 +2221,9 @@ existing entities in a migration step.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">99</span>
+    <span class="phpdocumentor-element-found-in__line">104</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.99" class="phpdocumentor-element-found-in__source" data-line="99" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -2255,9 +2281,9 @@ Subject of the bank transaction.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">187</span>
+    <span class="phpdocumentor-element-found-in__line">192</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.187" class="phpdocumentor-element-found-in__source" data-line="187" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.192" class="phpdocumentor-element-found-in__source" data-line="192" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -2340,9 +2366,9 @@ addition to the individual supporting documents of the project payments.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">203</span>
+    <span class="phpdocumentor-element-found-in__line">208</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.203" class="phpdocumentor-element-found-in__source" data-line="203" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.208" class="phpdocumentor-element-found-in__source" data-line="208" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2376,9 +2402,9 @@ addition to the individual supporting documents of the project payments.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">881</span>
+    <span class="phpdocumentor-element-found-in__line">905</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.881" class="phpdocumentor-element-found-in__source" data-line="881" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.905" class="phpdocumentor-element-found-in__source" data-line="905" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2574,9 +2600,9 @@ addition to the individual supporting documents of the project payments.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">672</span>
+    <span class="phpdocumentor-element-found-in__line">678</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.672" class="phpdocumentor-element-found-in__source" data-line="672" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.678" class="phpdocumentor-element-found-in__source" data-line="678" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -2706,9 +2732,9 @@ addition to the individual supporting documents of the project payments.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">733</span>
+    <span class="phpdocumentor-element-found-in__line">743</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.733" class="phpdocumentor-element-found-in__source" data-line="733" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.743" class="phpdocumentor-element-found-in__source" data-line="743" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Automatic subject generation from receivables and linked
@@ -2767,16 +2793,16 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">262</span>
+    <span class="phpdocumentor-element-found-in__line">268</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.268" class="phpdocumentor-element-found-in__source" data-line="268" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get amount.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getAmount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">float</span></code>
+                    <span class="phpdocumentor-signature__name">getAmount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2789,7 +2815,7 @@ specified.</p>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">float</span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
             </section>
 
 </article>
@@ -2807,9 +2833,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">664</span>
+    <span class="phpdocumentor-element-found-in__line">670</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.664" class="phpdocumentor-element-found-in__source" data-line="664" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.670" class="phpdocumentor-element-found-in__source" data-line="670" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get balanceDocumentsFolder.</p>
@@ -2847,9 +2873,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">374</span>
+    <span class="phpdocumentor-element-found-in__line">380</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.374" class="phpdocumentor-element-found-in__source" data-line="374" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.380" class="phpdocumentor-element-found-in__source" data-line="380" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get dateOfReceipt.</p>
@@ -2887,9 +2913,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">422</span>
+    <span class="phpdocumentor-element-found-in__line">428</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.422" class="phpdocumentor-element-found-in__source" data-line="422" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.428" class="phpdocumentor-element-found-in__source" data-line="428" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get debitNote.</p>
@@ -2927,15 +2953,15 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">683</span>
+    <span class="phpdocumentor-element-found-in__line">689</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.683" class="phpdocumentor-element-found-in__source" data-line="683" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.689" class="phpdocumentor-element-found-in__source" data-line="689" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getDonationAmount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">float</span></code>
+                    <span class="phpdocumentor-signature__name">getDonationAmount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2948,7 +2974,7 @@ specified.</p>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">float</span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>The sum of all contained donation parts.</p>
 </section>
@@ -2970,9 +2996,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">578</span>
+    <span class="phpdocumentor-element-found-in__line">584</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.578" class="phpdocumentor-element-found-in__source" data-line="578" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.584" class="phpdocumentor-element-found-in__source" data-line="584" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get donationReceipt.</p>
@@ -3010,9 +3036,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">705</span>
+    <span class="phpdocumentor-element-found-in__line">715</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.705" class="phpdocumentor-element-found-in__source" data-line="705" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.715" class="phpdocumentor-element-found-in__source" data-line="715" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -3053,9 +3079,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">214</span>
+    <span class="phpdocumentor-element-found-in__line">220</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get id.</p>
@@ -3093,9 +3119,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">302</span>
+    <span class="phpdocumentor-element-found-in__line">306</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.302" class="phpdocumentor-element-found-in__source" data-line="302" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.306" class="phpdocumentor-element-found-in__source" data-line="306" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get musician.</p>
@@ -3133,15 +3159,15 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">694</span>
+    <span class="phpdocumentor-element-found-in__line">702</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.694" class="phpdocumentor-element-found-in__source" data-line="694" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.702" class="phpdocumentor-element-found-in__source" data-line="702" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getNonDonationAmount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">float</span></code>
+                    <span class="phpdocumentor-signature__name">getNonDonationAmount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3154,7 +3180,7 @@ specified.</p>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">float</span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>The sum of all contained non-donation parts.</p>
 </section>
@@ -3176,9 +3202,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">713</span>
+    <span class="phpdocumentor-element-found-in__line">723</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.713" class="phpdocumentor-element-found-in__source" data-line="713" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.723" class="phpdocumentor-element-found-in__source" data-line="723" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
     
@@ -3219,9 +3245,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">518</span>
+    <span class="phpdocumentor-element-found-in__line">524</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.518" class="phpdocumentor-element-found-in__source" data-line="518" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.524" class="phpdocumentor-element-found-in__source" data-line="524" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get notificationMessageId.</p>
@@ -3259,9 +3285,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">554</span>
+    <span class="phpdocumentor-element-found-in__line">560</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.554" class="phpdocumentor-element-found-in__source" data-line="554" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.560" class="phpdocumentor-element-found-in__source" data-line="560" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get preNotificationEmail.</p>
@@ -3299,9 +3325,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">326</span>
+    <span class="phpdocumentor-element-found-in__line">330</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.326" class="phpdocumentor-element-found-in__source" data-line="326" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.330" class="phpdocumentor-element-found-in__source" data-line="330" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get project.</p>
@@ -3339,9 +3365,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">350</span>
+    <span class="phpdocumentor-element-found-in__line">356</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.350" class="phpdocumentor-element-found-in__source" data-line="350" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.356" class="phpdocumentor-element-found-in__source" data-line="356" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get projectParticipant.</p>
@@ -3379,9 +3405,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">244</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get projectPayments.</p>
@@ -3411,6 +3437,46 @@ specified.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getReceivablesDueDate">
+        getReceivablesDueDate()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getReceivablesDueDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">889</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.889" class="phpdocumentor-element-found-in__source" data-line="889" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Return the maximum due-date of all underlying receivables.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getReceivablesDueDate</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getSepaBankAccount">
         getSepaBankAccount()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getSepaBankAccount" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3419,9 +3485,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">446</span>
+    <span class="phpdocumentor-element-found-in__line">452</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.446" class="phpdocumentor-element-found-in__source" data-line="446" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.452" class="phpdocumentor-element-found-in__source" data-line="452" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaBankAccount.</p>
@@ -3459,9 +3525,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">470</span>
+    <span class="phpdocumentor-element-found-in__line">476</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.470" class="phpdocumentor-element-found-in__source" data-line="470" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.476" class="phpdocumentor-element-found-in__source" data-line="476" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaDebitMandate.</p>
@@ -3499,9 +3565,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">494</span>
+    <span class="phpdocumentor-element-found-in__line">500</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.494" class="phpdocumentor-element-found-in__source" data-line="494" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.500" class="phpdocumentor-element-found-in__source" data-line="500" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaTransaction.</p>
@@ -3539,9 +3605,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">398</span>
+    <span class="phpdocumentor-element-found-in__line">404</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.398" class="phpdocumentor-element-found-in__source" data-line="398" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.404" class="phpdocumentor-element-found-in__source" data-line="404" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get subject.</p>
@@ -3579,9 +3645,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">612</span>
+    <span class="phpdocumentor-element-found-in__line">618</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.612" class="phpdocumentor-element-found-in__source" data-line="612" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.618" class="phpdocumentor-element-found-in__source" data-line="618" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get supportingDocument.</p>
@@ -3619,9 +3685,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">875</span>
+    <span class="phpdocumentor-element-found-in__line">899</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.875" class="phpdocumentor-element-found-in__source" data-line="875" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.899" class="phpdocumentor-element-found-in__source" data-line="899" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -3854,16 +3920,16 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">250</span>
+    <span class="phpdocumentor-element-found-in__line">256</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.256" class="phpdocumentor-element-found-in__source" data-line="256" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set amount.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setAmount</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">float|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$amount</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectPayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectPayment">ProjectPayment</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setAmount</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int|float|string|<a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$amount</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectPayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectPayment">ProjectPayment</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3873,7 +3939,7 @@ specified.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$amount</span>
-                : <span class="phpdocumentor-signature__argument__return-type">float|null</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int|float|string|<a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -3904,9 +3970,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">624</span>
+    <span class="phpdocumentor-element-found-in__line">630</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.624" class="phpdocumentor-element-found-in__source" data-line="624" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.630" class="phpdocumentor-element-found-in__source" data-line="630" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set balanceDocumentsFolder.</p>
@@ -3954,9 +4020,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">362</span>
+    <span class="phpdocumentor-element-found-in__line">368</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.362" class="phpdocumentor-element-found-in__source" data-line="362" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.368" class="phpdocumentor-element-found-in__source" data-line="368" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set dateOfReceipt.</p>
@@ -4004,9 +4070,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">410</span>
+    <span class="phpdocumentor-element-found-in__line">416</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.410" class="phpdocumentor-element-found-in__source" data-line="410" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.416" class="phpdocumentor-element-found-in__source" data-line="416" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set debitNote.</p>
@@ -4054,9 +4120,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">566</span>
+    <span class="phpdocumentor-element-found-in__line">572</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.566" class="phpdocumentor-element-found-in__source" data-line="566" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.572" class="phpdocumentor-element-found-in__source" data-line="572" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set donationReceipt.</p>
@@ -4104,9 +4170,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">290</span>
+    <span class="phpdocumentor-element-found-in__line">294</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.290" class="phpdocumentor-element-found-in__source" data-line="290" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.294" class="phpdocumentor-element-found-in__source" data-line="294" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set musician.</p>
@@ -4154,9 +4220,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">506</span>
+    <span class="phpdocumentor-element-found-in__line">512</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.506" class="phpdocumentor-element-found-in__source" data-line="506" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.512" class="phpdocumentor-element-found-in__source" data-line="512" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set notificationMessageId.</p>
@@ -4204,9 +4270,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">530</span>
+    <span class="phpdocumentor-element-found-in__line">536</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.530" class="phpdocumentor-element-found-in__source" data-line="530" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.536" class="phpdocumentor-element-found-in__source" data-line="536" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set preNotificationEmail.</p>
@@ -4254,9 +4320,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">314</span>
+    <span class="phpdocumentor-element-found-in__line">318</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.314" class="phpdocumentor-element-found-in__source" data-line="314" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.318" class="phpdocumentor-element-found-in__source" data-line="318" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set project.</p>
@@ -4304,9 +4370,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">338</span>
+    <span class="phpdocumentor-element-found-in__line">342</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.338" class="phpdocumentor-element-found-in__source" data-line="338" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.342" class="phpdocumentor-element-found-in__source" data-line="342" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set projectParticipant.</p>
@@ -4354,9 +4420,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">226</span>
+    <span class="phpdocumentor-element-found-in__line">232</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.226" class="phpdocumentor-element-found-in__source" data-line="226" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.232" class="phpdocumentor-element-found-in__source" data-line="232" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set projectPayments.</p>
@@ -4404,9 +4470,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">434</span>
+    <span class="phpdocumentor-element-found-in__line">440</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.434" class="phpdocumentor-element-found-in__source" data-line="434" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.440" class="phpdocumentor-element-found-in__source" data-line="440" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaBankAccount.</p>
@@ -4454,9 +4520,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">458</span>
+    <span class="phpdocumentor-element-found-in__line">464</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.458" class="phpdocumentor-element-found-in__source" data-line="458" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.464" class="phpdocumentor-element-found-in__source" data-line="464" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaDebitMandate.</p>
@@ -4504,9 +4570,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">482</span>
+    <span class="phpdocumentor-element-found-in__line">488</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.482" class="phpdocumentor-element-found-in__source" data-line="482" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.488" class="phpdocumentor-element-found-in__source" data-line="488" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaTransaction.</p>
@@ -4554,9 +4620,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">386</span>
+    <span class="phpdocumentor-element-found-in__line">392</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.386" class="phpdocumentor-element-found-in__source" data-line="386" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.392" class="phpdocumentor-element-found-in__source" data-line="392" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set subject.</p>
@@ -4604,9 +4670,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">590</span>
+    <span class="phpdocumentor-element-found-in__line">596</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.590" class="phpdocumentor-element-found-in__source" data-line="590" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.596" class="phpdocumentor-element-found-in__source" data-line="596" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set supportingDocument.</p>
@@ -4654,9 +4720,9 @@ specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">273</span>
+    <span class="phpdocumentor-element-found-in__line">279</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.273" class="phpdocumentor-element-found-in__source" data-line="273" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.279" class="phpdocumentor-element-found-in__source" data-line="279" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the sum of the amounts of the individual payments, which
@@ -4664,7 +4730,7 @@ should sum up to $this-&gt;amount, of course.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">sumPaymentsAmount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">float</span></code>
+                    <span class="phpdocumentor-signature__name">sumPaymentsAmount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -4677,7 +4743,7 @@ should sum up to $this-&gt;amount, of course.</p>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">float</span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Common-RationalNumber.html"><abbr title="\OCA\CAFEVDB\Common\RationalNumber">RationalNumber</abbr></a></span>
             </section>
 
 </article>
@@ -4734,9 +4800,9 @@ should sum up to $this-&gt;amount, of course.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/CompositePayment.php"><a href="files/database-doctrine-orm-entities-compositepayment.html"><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">868</span>
+    <span class="phpdocumentor-element-found-in__line">878</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.868" class="phpdocumentor-element-found-in__source" data-line="868" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.878" class="phpdocumentor-element-found-in__source" data-line="878" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/CompositePayment.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Update the stored payment-subject by calling
@@ -5060,9 +5126,9 @@ bank-transactions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">348</span>
+    <span class="phpdocumentor-element-found-in__line">378</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.348" class="phpdocumentor-element-found-in__source" data-line="348" data-modal="source-view" data-src="files/Storage/Database/DatabaseStorageNodeNameTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/Storage/Database/DatabaseStorageNodeNameTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate a file-name for the given donation.</p>
@@ -5157,9 +5223,9 @@ bank-transactions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">369</span>
+    <span class="phpdocumentor-element-found-in__line">419</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.369" class="phpdocumentor-element-found-in__source" data-line="369" data-modal="source-view" data-src="files/Storage/Database/DatabaseStorageNodeNameTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.419" class="phpdocumentor-element-found-in__source" data-line="419" data-modal="source-view" data-src="files/Storage/Database/DatabaseStorageNodeNameTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate a file-name for the given donation.</p>
@@ -5185,6 +5251,56 @@ bank-transactions.</p>
                 <span class="phpdocumentor-signature__argument__name">$extension</span>
                 : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getInvoiceFolderName">
+        getInvoiceFolderName()
+        <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getInvoiceFolderName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">399</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.399" class="phpdocumentor-element-found-in__source" data-line="399" data-modal="source-view" data-src="files/Storage/Database/DatabaseStorageNodeNameTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Generate the folder-name for the given invoice.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getInvoiceFolderName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$invoice</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$invoice</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a></span>
+                            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
@@ -5342,16 +5458,16 @@ bank-transactions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">321</span>
+    <span class="phpdocumentor-element-found-in__line">353</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.321" class="phpdocumentor-element-found-in__source" data-line="321" data-modal="source-view" data-src="files/Storage/Database/DatabaseStorageNodeNameTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.353" class="phpdocumentor-element-found-in__source" data-line="353" data-modal="source-view" data-src="files/Storage/Database/DatabaseStorageNodeNameTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">PME-legacy.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">getLegacyinvoiceFileName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$invoiceNumber</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$musicianName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$extension</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getLegacyinvoiceFileName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$invoiceNumber</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$organization</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$musicianName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$extension</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -5362,6 +5478,13 @@ bank-transactions.</p>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$invoiceNumber</span>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$organization</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -5384,6 +5507,77 @@ bank-transactions.</p>
                 <span class="phpdocumentor-signature__argument__name">$extension</span>
                 : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getLegacyInvoiceFolderName">
+        getLegacyInvoiceFolderName()
+        <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyInvoiceFolderName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">321</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#source-view.321" class="phpdocumentor-element-found-in__source" data-line="321" data-modal="source-view" data-src="files/Storage/Database/DatabaseStorageNodeNameTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">PME-legacy.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getLegacyInvoiceFolderName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$invoiceNumber</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$organization</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$musicianName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$invoiceNumber</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$organization</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$musicianName</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$projectName</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
@@ -6093,6 +6287,7 @@ documents.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getProject">getProject()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getProjectParticipant">getProjectParticipant()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getProjectPayments">getProjectPayments()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getReceivablesDueDate">getReceivablesDueDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getSepaBankAccount">getSepaBankAccount()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getSepaDebitMandate">getSepaDebitMandate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html#method_getSepaTransaction">getSepaTransaction()</a></li>
@@ -6131,9 +6326,11 @@ documents.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getDonationReceiptFileName">getDonationReceiptFileName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getDonationReceiptsFolderName">getDonationReceiptsFolderName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getInvoiceFileName">getInvoiceFileName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getInvoiceFolderName">getInvoiceFolderName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyDebitMandateFileName">getLegacyDebitMandateFileName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyDonationReceiptFileName">getLegacyDonationReceiptFileName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyinvoiceFileName">getLegacyinvoiceFileName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyInvoiceFolderName">getLegacyInvoiceFolderName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyPaymentRecordFileName">getLegacyPaymentRecordFileName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyTaxExemptionNoticeFileName">getLegacyTaxExemptionNoticeFileName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getPaymentRecordFileName">getPaymentRecordFileName()</a></li>

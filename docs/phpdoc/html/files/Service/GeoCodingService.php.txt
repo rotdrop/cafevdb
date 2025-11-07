@@ -24,18 +24,18 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \DateTimeImmutable;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Expr\Join;
+use DateTimeImmutable;
 
 use OCA\CAFEVDB\Common\Util;
-
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoContinent;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoCountry;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCode;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCodeTranslation;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Cache-service which fetches geo-coding information in the background in
@@ -76,8 +76,8 @@ class GeoCodingService
     protected EntityManager $entityManager,
   ) {
     $this->l = $this->l10n();
-    $this->userName = $this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY).'_'.$this->appName();
-    $this->debug = $this->shouldDebug(ConfigService::DEBUG_GEOCODING);
+    $this->userName = $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY).'_'.$this->appName();
+    $this->debug = $this->shouldDebug(ConfigConstants::DEBUG_GEOCODING);
   }
 
   /**
@@ -92,8 +92,8 @@ class GeoCodingService
    *
    * @return void
    *
-   * @see ConfigService::logDebug()
-   * @see ConfigService::logInfo()
+   * @see ConfigConstants::logDebug()
+   * @see ConfigConstants::logInfo()
    */
   protected function debug(string $message, array $context = [], int $shift = 0):void
   {

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2021-2022, 2024-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,9 @@
 
 namespace OCA\CAFEVDB\Traits;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TableFieldTranslation as TranslationEntity;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\Repository\TranslationRepository;
 
 /**
@@ -58,7 +58,7 @@ trait EntityTranslationTrait
       $this->translationRepository = $this->entityManager->getRepository(TranslationEntity::class);
     }
     if (empty($locale)) {
-      $locale = ConfigService::DEFAULT_LOCALE;
+      $locale = ConfigConstants::DEFAULT_LOCALE;
     }
     $this->translationRepository->translate($entity, $field, $locale, $value);
     return $this;

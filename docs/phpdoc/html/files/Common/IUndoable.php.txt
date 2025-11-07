@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -64,4 +64,11 @@ interface IUndoable
    * @return void
    */
   public function initialize(IAppContainer $appContainer):void;
+
+  /**
+   * Lower sort-orders are executed first.
+   *
+   * @return int
+   */
+  public function getSortOrder():int;
 }

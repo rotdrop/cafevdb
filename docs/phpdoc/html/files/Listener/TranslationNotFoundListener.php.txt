@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,15 +25,15 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use Psr\Log\LoggerInterface as ILogger;
+use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\AppFramework\IAppContainer;
 use OC\L10N\Events\TranslationNotFound as HandledEvent;
+use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\L10N\TranslationService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Recorded  untranslated strings. */
 class TranslationNotFoundListener implements IEventListener
@@ -73,13 +73,13 @@ class TranslationNotFoundListener implements IEventListener
 
     $this->logger = $this->appContainer->get(ILogger::class);
 
-    $debugMode = ConfigService::DEBUG_NONE;
+    $debugMode = ConfigConstants::DEBUG_NONE;
     try {
-      $debugMode = (int)$encryptionService->getConfigValue('debugmode', ConfigService::DEBUG_NONE);
+      $debugMode = (int)$encryptionService->getConfigValue('debugmode', ConfigConstants::DEBUG_NONE);
     } catch (\Throwable $t) {
       // just ignore
     }
-    if (($debugMode & ConfigService::DEBUG_L10N) == 0) {
+    if (($debugMode & ConfigConstants::DEBUG_L10N) == 0) {
       // $this->logDebug('Debugging L10N is not enabled, bailing out');
       return;
     }

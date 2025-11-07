@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  * EmailAttachments
  */
 #[ORM\Table(name: 'EmailAttachments')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class EmailAttachment implements \ArrayAccess
 {

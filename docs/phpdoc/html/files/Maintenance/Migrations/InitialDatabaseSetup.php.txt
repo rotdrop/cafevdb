@@ -29,7 +29,6 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Maintenance\IMigration;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**
  * The initial data-base structure. This just generates the table

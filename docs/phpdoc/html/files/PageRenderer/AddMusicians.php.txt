@@ -33,7 +33,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
@@ -235,7 +234,7 @@ GROUP BY __t1.instrument_id',
       $opts[PHPMyEdit::OPT_HAVING]['AND'] = '('
         . "({$projectsJoin}.project_id IS NULL)"
         . " OR "
-        . "(NOT {$projectsJoin}.project_id = {$this->projectId})"
+        . "({$projectsJoin}.deleted IS NOT NULL OR NOT {$projectsJoin}.project_id = {$this->projectId})"
         . " OR NOT "
         . "($participationStatus = '$associated' OR $instrumentFamily = '$notAnInstrumentFamily')"
         . ")";
@@ -246,7 +245,7 @@ GROUP BY __t1.instrument_id',
       $opts[PHPMyEdit::OPT_HAVING]['AND'] = '('
         . "({$projectsJoin}.project_id IS NULL)"
         . " OR "
-        . "(NOT {$projectsJoin}.project_id = {$this->projectId})"
+        . "({$projectsJoin}.deleted IS NOT NULL OR NOT {$projectsJoin}.project_id = {$this->projectId})"
         . " OR "
         . "($participationStatus = '$associated')"
         // . " OR "

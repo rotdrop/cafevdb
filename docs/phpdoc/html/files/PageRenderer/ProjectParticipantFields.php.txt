@@ -26,10 +26,11 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use RuntimeException;
 
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
+
 use OCP\IRequest;
 
-use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
-
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
@@ -42,12 +43,11 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Service\FuzzyInputService;
-use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 /**Table generator for Instruments table. */
 class ProjectParticipantFields extends PMETableViewBase
@@ -63,7 +63,7 @@ class ProjectParticipantFields extends PMETableViewBase
   const OPTIONS_TABLE = self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE;
   const DATA_TABLE = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE;
 
-  const OPTION_FIELDS = [ 'key', 'label', 'data', 'deposit', 'limit', 'tooltip', 'deleted', ];
+  const OPTION_FIELDS = [ 'key', 'label', 'data', 'deposit', 'limit', 'balancing_account', 'tooltip', 'deleted', ];
 
   const OPTION_DATA_SHOW_MASK = [
     'key' => [
@@ -89,6 +89,15 @@ class ProjectParticipantFields extends PMETableViewBase
       'not-data-type-date-hidden',
       'not-data-type-date-time-hidden',
       'not-show-data-hidden',
+    ],
+    'balancingAccount' => [
+      'default-hidden',
+      'not-data-type-receivables-hidden',
+      'not-data-type-liabilities-hidden',
+      'multiplicity-parallel-hidden',
+      'multiplicity-multiple-hidden',
+      'multiplicity-group-of-people-hidden',
+      'multiplicity-groups-of-people-hidden',
     ],
   ];
 
@@ -142,6 +151,14 @@ class ProjectParticipantFields extends PMETableViewBase
     ],
   ];
 
+  /**
+   * @var Uuid
+   *
+   * When creating new fields we need one instance-unique key for a single new
+   * option for multiplicty simple, groupofpeople and single.
+   */
+  protected UuidInterface $newOptionKey;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
@@ -186,6 +203,8 @@ class ProjectParticipantFields extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
+    $this->newOptionKey = Uuid::create();
+
     $template        = $this->template;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
@@ -516,7 +535,16 @@ class ProjectParticipantFields extends PMETableViewBase
           'input' => 'H',
           'sql' => ($column == 'key')
           ? "GROUP_CONCAT(DISTINCT BIN2UUID(\$join_col_fqn) ORDER BY \$join_col_fqn ASC)"
-          : "GROUP_CONCAT(DISTINCT CONCAT(BIN2UUID(\$join_table.key), '".parent::JOIN_KEY_SEP."', \$join_col_fqn) ORDER BY \$join_table.key ASC)",
+          : "GROUP_CONCAT(
+  DISTINCT
+  CONCAT(
+    BIN2UUID(\$join_table.key),
+    '" . self::JOIN_KEY_SEP . "',
+    REPLACE(\$join_col_fqn, '" . self::VALUES_SEP . "', '\\\\" . self::VALUES_SEP. "')
+  )
+  ORDER BY \$join_table.key ASC
+  SEPARATOR '" . self::VALUES_SEP . "'
+)",
         ]);
     }
 
@@ -581,6 +609,7 @@ class ProjectParticipantFields extends PMETableViewBase
     , "data", $join_table.data
     , "deposit", $join_table.deposit
     , "limit", $join_table.`limit`
+    , "balancingAccount", $join_table.balancing_account
     , "tooltip", $join_table.l10n_tooltip
     , "deleted", $join_table.deleted
 ) ORDER BY ' . self::ifFileSystemEntry('$join_table.label', '$join_table.l10n_label') . ' ASC, $join_table.data ASC),"]")',
@@ -646,6 +675,9 @@ class ProjectParticipantFields extends PMETableViewBase
           $dataType = $row[$this->queryField('data_type')]??null;
           list($entry,) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType, !empty($deleted));
           $key = $entry['key'];
+          if ($op == PHPMyEdit::OPERATION_ADD && empty($key)) {
+            $key = $this->newOptionKey;
+          }
           $name  = $this->pme->cgiDataName('data_options_' . $multiplicityVariant);
           $field = 'deposit';
           $value = htmlspecialchars($entry[$field]);
@@ -874,6 +906,21 @@ __EOT__;
       'size' => 30,
       'sort' => false,
       'tooltip' => $this->toolTipsService['participant-fields-default-single-value'],
+    ];
+
+    $opts['fdd']['balancing_account'] = [
+      'name' => $this->l->t('Balancing Account'),
+      'options' => 'ACPVD',
+      'css' => [
+        'postfix' => [
+          'balancing-account',
+          'default-hidden',
+          'not-data-type-receivables-hidden',
+          'not-data-type-liabilities-hidden',
+          'multiplicity-recurring-hidden',
+        ],
+      ],
+      'tooltip' => $this->toolTipsService[self::$toolTipsPrefix . ':balancing-account'],
     ];
 
     $opts['fdd']['tooltip'] = array_merge(
@@ -1343,14 +1390,14 @@ __EOT__;
     }
 
     // @todo is this still necessary?
-    $this->debug('ALLOWED BEFORE REEXPLODE '.print_r($allowed, true));
+    $this->debug('ALLOWED BEFORE REEXPLODE ' . print_r($allowed, true));
     $newValues['data_options'] =
       $this->participantFieldsService->explodeDataOptions(
         $this->participantFieldsService->implodeDataOptions($allowed), false);
 
     Util::unsetValue($changed, 'data_options');
 
-    $this->debug('ALLOWED BEFORE RESHAPE '.print_r($newValues['data_options'], true));
+    $this->debug('ALLOWED BEFORE RESHAPE ' . print_r($newValues['data_options'], true));
 
     // convert allowed values from array to table format as understood by
     // our PME legacy join table stuff.
@@ -1375,9 +1422,11 @@ __EOT__;
               $value = $date->setTimezone('UTC')->toIso8601String();
               break;
           }
+        } elseif ($field === 'deposit') {
+          $value = RationalNumber::create($value)->toDecimal(2);
         }
         $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
-        $optionValues[$field][] = $value === null ? null : $key.self::JOIN_KEY_SEP.$value;
+        $optionValues[$field][] = $value === null ? null : $key . self::JOIN_KEY_SEP . $value;
       }
       if (($newValues['multiplicity'] == Multiplicity::SIMPLE
            || $newValues['multiplicity'] == Multiplicity::SINGLE)
@@ -1452,7 +1501,7 @@ __EOT__;
   /**
    * @param null|int $fieldId May be null in add mode.
    *
-   * @return iterable All option kleys for the given field.
+   * @return iterable All option keys for the given field.
    */
   private function optionKeys(?int $fieldId):iterable
   {
@@ -1486,6 +1535,8 @@ __EOT__;
         'dataType' => $dataType,
         'inputName' => $this->pme->cgiDataName('data_options'),
         'toolTips' => $this->toolTipsService,
+        'dateTimeFormatter' => $this->dateTimeFormatter(),
+        'dateTimeZone' => $this->getDateTimeZone(),
       ],
     )->render();
   }
@@ -1686,6 +1737,7 @@ __EOT__;
         'data' => $this->l->t('Data'),
         'deposit' => $this->l->t('Deposit') . ' ['.$this->currencySymbol().']',
         'limit' => $this->l->t('Limit'),
+        'balancingAccount' => $this->l->t('Balancing Account'),
         'tooltip' => $this->l->t('Tooltip'),
       ];
     } else {
@@ -1695,6 +1747,7 @@ __EOT__;
         'data' => $this->currencyLabel($this->l->t('Data')),
         'deposit' => $this->l->t('Deposit') . ' ['.$this->currencySymbol().']',
         'limit' => $this->l->t('Limit'),
+        'balancingAccount' => $this->l->t('Balancing Account'),
         'tooltip' => $this->l->t('Tooltip'),
       ];
     }
@@ -1726,7 +1779,7 @@ __EOT__;
           $html .= '
     <tr>
       <td class="operations"></td>';
-          foreach (['key', 'label', 'data', 'deposit', 'limit', 'tooltip'] as $field) {
+          foreach (['key', 'label', 'data', 'deposit', 'limit', 'balancingAccount', 'tooltip'] as $field) {
             $fieldValue = $value[$field];
             if ($multiplicity == Multiplicity::RECURRING) {
               if ($field == 'limit' && !empty($fieldValue)) {
@@ -1734,38 +1787,34 @@ __EOT__;
                   Util::convertToDateTime($fieldValue),
                   'medium');
               }
-            } else {
+            } elseif ($field == 'data' && !empty($fieldValue)) {
               switch ($dataType) {
                 case DataType::RECEIVABLES:
                 case DataType::LIABILITIES:
                   $fieldValue = $this->currencyValue($fieldValue);
                   break;
                 case DataType::DATE:
-                  if (!empty($fieldValue)) {
-                    try {
-                      $reporting = error_reporting(0);
-                      $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
-                      $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
-                      error_reporting($reporting);
+                  try {
+                    $reporting = error_reporting(0);
+                    $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
+                    $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
+                    error_reporting($reporting);
                     } catch (\Throwable $t) {
-                      error_reporting($reporting);
-                      $this->logInfo('IGNORE DATE PARSE ERROR');
-                      // ignore
-                    }
+                    error_reporting($reporting);
+                    $this->logInfo('IGNORE DATE PARSE ERROR');
+                    // ignore
                   }
                   break;
                 case DataType::DATETIME:
-                  if (!empty($fieldValue)) {
-                    try {
-                      $reporting = error_reporting(0);
-                      $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
-                      $fieldValue = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
-                      error_reporting($reporting);
-                    } catch (\Throwable $t) {
-                      error_reporting($reporting);
-                      $this->logInfo('IGNORE DATE PARSE ERROR');
-                      // ignore
-                    }
+                  try {
+                    $reporting = error_reporting(0);
+                    $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
+                    $fieldValue = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+                    error_reporting($reporting);
+                  } catch (\Throwable $t) {
+                    error_reporting($reporting);
+                    $this->logInfo('IGNORE DATE PARSE ERROR: ' . $fieldValue);
+                    // ignore
                   }
                   break;
                 default:
@@ -1886,6 +1935,9 @@ __EOT__;
     if ($op === PHPMyEdit::OPERATION_DISPLAY) {
       return $this->currencyValue($value);
     }
+    if ($op === PHPMyEdit::OPERATION_ADD && empty($entry['key'])) {
+      $entry['key'] = $this->newOptionKey;
+    }
     $key = $entry['key'];
     $name  = $this->pme->cgiDataName('data_options_' . $multiplicityVariant);
     $field = 'data';
@@ -1956,7 +2008,7 @@ __EOT__;
 </span>
 __EOT__;
     // deposit displayed in own extra field
-    foreach (['key', 'label',/* 'deposit',*/ 'limit', 'tooltip', 'deleted'] as $field) {
+    foreach (['key', 'label',/* 'deposit',*/ 'limit', 'balancingAccount', 'tooltip', 'deleted'] as $field) {
       $value = htmlspecialchars($entry[$field]);
       $cssClass = implode(' ', array_merge(
         $cssBase, [
@@ -1981,7 +2033,7 @@ __EOT__;
       if ($multiplicity != Multiplicity::GROUPOFPEOPLE) {
         $option['deleted'] = (new DateTime)->getTimestamp();
       }
-      foreach (['key', 'label', 'data', 'deposit', 'limit', 'tooltip', 'deleted'] as $field) {
+      foreach (['key', 'label', 'data', 'deposit', 'limit', 'balancingAccount', 'tooltip', 'deleted'] as $field) {
         $value = htmlspecialchars($option[$field]);
         $html .=<<<__EOT__
 <input class="pme-input data-options-{$multiplicityVariant}"

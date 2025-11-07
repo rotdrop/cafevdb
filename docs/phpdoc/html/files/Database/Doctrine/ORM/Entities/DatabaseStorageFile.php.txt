@@ -26,17 +26,12 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Constants;
 
 /**
  * File-node entry for a database-backed file.
@@ -120,9 +115,9 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
   public function getUpdated():?DateTimeInterface
   {
     if (empty($this->file)) {
-      return self::ensureDate($this->updated);
+      return self::ensureDate($this->updated ?? null);
     }
-    return max(self::ensureDate($this->updated), self::ensureDate($this->file->getUpdated()));
+    return max(self::ensureDate($this->updated ?? null), self::ensureDate($this->file->getUpdated()));
   }
 
   const FILE_METHODS = [
@@ -147,7 +142,7 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
         && is_callable([ $this->file, $method ])) {
       return call_user_func_array([ $this->file, $method ], $args);
     }
-    throw new Exceptions\DatabaseException('Undefined method - ' . __CLASS__ . '::' . $method);
+    throw new Exceptions\DatabaseException('Undefined method "' . $method . '", id = ' . $this->id);
   }
 
   /** @return null|string */

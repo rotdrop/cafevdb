@@ -381,11 +381,11 @@ class SentEmail
   /**
    * Sets cc.
    *
-   * @param string $cc
+   * @param null|string $cc
    *
    * @return SentEmail $this
    */
-  public function setCc(string $cc):SentEmail
+  public function setCc(?string $cc):SentEmail
   {
     $this->cc = $cc;
 
@@ -395,9 +395,9 @@ class SentEmail
   /**
    * Returns cc.
    *
-   * @return string
+   * @return null|string
    */
-  public function getCc():string
+  public function getCc():?string
   {
     return $this->cc;
   }
@@ -405,11 +405,11 @@ class SentEmail
   /**
    * Sets bcc.
    *
-   * @param string $bcc
+   * @param null|string $bcc
    *
    * @return SentEmail $this
    */
-  public function setBcc(string $bcc):SentEmail
+  public function setBcc(?string $bcc):SentEmail
   {
     $this->bcc = $bcc;
 
@@ -419,9 +419,9 @@ class SentEmail
   /**
    * Returns bcc.
    *
-   * @return string
+   * @return null|string
    */
-  public function getBcc():string
+  public function getBcc():?string
   {
     return $this->bcc;
   }

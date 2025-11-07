@@ -113,7 +113,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\LoggerTrait">LoggerTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-BracedPlaceholderTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\BracedPlaceholderTrait">BracedPlaceholderTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Toolkit-Traits-FakeTranslationTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait">FakeTranslationTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\LoggerTrait">LoggerTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -124,9 +124,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Connect to a GnuCash account book stored in a MariaDB database. This is
@@ -161,6 +161,36 @@ security definer.</p>
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GENERATOR_TAG_KEY">GENERATOR_TAG_KEY</a>
+    <span>
+        &nbsp;= &#039;GENERATOR_TAG&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GNU_CASH_EXPENSE_KEY">GNU_CASH_EXPENSE_KEY</a>
+    <span>
+        &nbsp;= &#039;expense&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GNU_CASH_INCOME_KEY">GNU_CASH_INCOME_KEY</a>
+    <span>
+        &nbsp;= &#039;income&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_PERSON_KEY">PERSON_KEY</a>
+    <span>
+        &nbsp;= &#039;PERSON&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_PROJECT_KEY">PROJECT_KEY</a>
+    <span>
+        &nbsp;= &#039;PROJECT&#039;                            </span>
+</dt>
+
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_CREATE_VIEW_STMT">CREATE_VIEW_STMT</a>
     <span>
@@ -169,6 +199,12 @@ SQL SECURITY DEFINER
 VIEW %1$s AS
 SELECT *
 FROM %2$s&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE">GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE</a>
+    <span>
+        &nbsp;= &#039;gnucash/autocomplete-accounts.json&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -private">
@@ -262,6 +298,44 @@ FROM %2$s&#039;                            </span>
 <dd>Copy the data out of the given GnuCash data-base.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_exportBulkTransactionBalancingEntries">exportBulkTransactionBalancingEntries()</a>
+    <span>
+                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+</dt>
+<dd>Export a bulk transaction to a GnuCash multi-split transactions CSV import.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_exportCompositePaymentBalancingEntries">exportCompositePaymentBalancingEntries()</a>
+    <span>
+                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+</dt>
+<dd>Export a CompositePayment entity to a GnuCash transactions CSV import. We
+use multi-split mode as the composite payment may contain arbitrarily
+many splits with different transfer accounts.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_generateAccountsAutocompleteData">generateAccountsAutocompleteData()</a>
+    <span>
+                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
+</dt>
+<dd>Gnerate autocomplete data from an accounts CSV export from GnuCash. Only
+valid for autocompletion are income and expense accounts.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_generateParticipantReceivablesAccount">generateParticipantReceivablesAccount()</a>
+    <span>
+                                &nbsp;: null|string    </span>
+</dt>
+<dd>Generate the GnuCash account for the given receivable if the
+corresponding template is configured.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_getAccountsAutocompleteData">getAccountsAutocompleteData()</a>
+    <span>
+                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a>
     <span>
                                 &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
@@ -324,12 +398,51 @@ FROM %2$s&#039;                            </span>
 <dd>Return the stored appConmtainer instance.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_getAppCurrencyCode">getAppCurrencyCode()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>Map PSR log-levels to ILogger log-levels as the PsrLoggerAdapter only
 understands those.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-BracedPlaceholderTrait.html#method_replaceBracedPlaceholders">replaceBracedPlaceholders()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Replace braced placeholders in a template string.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-FakeTranslationTrait.html#method_t">t()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-BracedPlaceholderTrait.html#method_translateBracedTemplate">translateBracedTemplate()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Translate the braced placeholders contained in the given $template to the
+array values supplied by the $l10nTemplateKeys, that is, the keys of
+$l10nTemplateKeys matching the braced placeholders contained in $template
+will be replaced by their respective array value.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-BracedPlaceholderTrait.html#method_untranslateBracedTemplate">untranslateBracedTemplate()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Translate the braced placeholders contained in the given $template to the
+array keys supplied by the $l10nTemplateKeys, that is, the array values
+of $l10nTemplateKeys matching the braced placeholders contained in
+$template will be replaced by their respective array key.</dd>
 
     </dl>
 
@@ -342,6 +455,166 @@ understands those.</dd>
             <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
 
         </h3>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_GENERATOR_TAG_KEY">
+        GENERATOR_TAG_KEY
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GENERATOR_TAG_KEY" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">213</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.213" class="phpdocumentor-element-found-in__source" data-line="213" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">GENERATOR_TAG_KEY</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;GENERATOR_TAG&#039;</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_GNU_CASH_EXPENSE_KEY">
+        GNU_CASH_EXPENSE_KEY
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GNU_CASH_EXPENSE_KEY" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">66</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">GNU_CASH_EXPENSE_KEY</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;expense&#039;</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_GNU_CASH_INCOME_KEY">
+        GNU_CASH_INCOME_KEY
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GNU_CASH_INCOME_KEY" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">65</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">GNU_CASH_INCOME_KEY</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;income&#039;</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PERSON_KEY">
+        PERSON_KEY
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_PERSON_KEY" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">211</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.211" class="phpdocumentor-element-found-in__source" data-line="211" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PERSON_KEY</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;PERSON&#039;</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PROJECT_KEY">
+        PROJECT_KEY
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_PROJECT_KEY" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">212</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.212" class="phpdocumentor-element-found-in__source" data-line="212" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PROJECT_KEY</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;PROJECT&#039;</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
                     <article class="phpdocumentor-element -constant -private ">
     <h4 class="phpdocumentor-element__name" id="constant_CREATE_VIEW_STMT">
         CREATE_VIEW_STMT
@@ -352,9 +625,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">60</span>
+    <span class="phpdocumentor-element-found-in__line">77</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
     
@@ -379,6 +652,38 @@ FROM %2$s&#039;</span>
 
 </article>
                     <article class="phpdocumentor-element -constant -private ">
+    <h4 class="phpdocumentor-element__name" id="constant_GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE">
+        GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">64</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;gnucash/autocomplete-accounts.json&#039;</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -private ">
     <h4 class="phpdocumentor-element__name" id="constant_GNU_CASH_TABLES">
         GNU_CASH_TABLES
         <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GNU_CASH_TABLES" class="headerlink"><i class="fas fa-link"></i></a>
@@ -388,9 +693,9 @@ FROM %2$s&#039;</span>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">51</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
     
@@ -420,9 +725,9 @@ FROM %2$s&#039;</span>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">59</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
     
@@ -468,9 +773,9 @@ FROM %2$s&#039;</span>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">98</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
     
@@ -505,9 +810,9 @@ FROM %2$s&#039;</span>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">82</span>
+    <span class="phpdocumentor-element-found-in__line">99</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.99" class="phpdocumentor-element-found-in__source" data-line="99" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
     
@@ -542,9 +847,9 @@ FROM %2$s&#039;</span>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">81</span>
+    <span class="phpdocumentor-element-found-in__line">100</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.81" class="phpdocumentor-element-found-in__source" data-line="81" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
     
@@ -579,9 +884,9 @@ FROM %2$s&#039;</span>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">87</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.87" class="phpdocumentor-element-found-in__source" data-line="87" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
     
@@ -616,9 +921,9 @@ FROM %2$s&#039;</span>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">93</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
     
@@ -653,9 +958,9 @@ FROM %2$s&#039;</span>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">73</span>
+    <span class="phpdocumentor-element-found-in__line">90</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
     
@@ -690,9 +995,9 @@ FROM %2$s&#039;</span>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">67</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
     
@@ -727,9 +1032,9 @@ FROM %2$s&#039;</span>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">97</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
     
@@ -769,15 +1074,15 @@ FROM %2$s&#039;</span>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">79</span>
+    <span class="phpdocumentor-element-found-in__line">96</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"><abbr title="\OCA\CAFEVDB\Service\EncryptionService">EncryptionService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$encryptionService</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"><abbr title="\OCA\CAFEVDB\Service\EncryptionService">EncryptionService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$encryptionService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -786,15 +1091,15 @@ FROM %2$s&#039;</span>
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$appContainer</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+                <span class="phpdocumentor-signature__argument__name">$encryptionService</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"><abbr title="\OCA\CAFEVDB\Service\EncryptionService">EncryptionService</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$logger</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr></span>
+                <span class="phpdocumentor-signature__argument__name">$appContainer</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -807,8 +1112,8 @@ FROM %2$s&#039;</span>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$encryptionService</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"><abbr title="\OCA\CAFEVDB\Service\EncryptionService">EncryptionService</abbr></a></span>
+                <span class="phpdocumentor-signature__argument__name">$logger</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -835,9 +1140,9 @@ FROM %2$s&#039;</span>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">107</span>
+    <span class="phpdocumentor-element-found-in__line">124</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Copy the data out of the given GnuCash data-base.</p>
@@ -887,6 +1192,273 @@ FROM %2$s&#039;</span>
     
 
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_exportBulkTransactionBalancingEntries">
+        exportBulkTransactionBalancingEntries()
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_exportBulkTransactionBalancingEntries" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">406</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.406" class="phpdocumentor-element-found-in__source" data-line="406" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Export a bulk transaction to a GnuCash multi-split transactions CSV import.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">exportBulkTransactionBalancingEntries</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction">SepaBulkTransaction</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bulkTransaction</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$bulkTransaction</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction">SepaBulkTransaction</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_exportCompositePaymentBalancingEntries">
+        exportCompositePaymentBalancingEntries()
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_exportCompositePaymentBalancingEntries" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">424</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.424" class="phpdocumentor-element-found-in__source" data-line="424" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Export a CompositePayment entity to a GnuCash transactions CSV import. We
+use multi-split mode as the composite payment may contain arbitrarily
+many splits with different transfer accounts.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">exportCompositePaymentBalancingEntries</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment">CompositePayment</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$compositePayment</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$compositePayment</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment">CompositePayment</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_generateAccountsAutocompleteData">
+        generateAccountsAutocompleteData()
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_generateAccountsAutocompleteData" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">285</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.285" class="phpdocumentor-element-found-in__source" data-line="285" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Gnerate autocomplete data from an accounts CSV export from GnuCash. Only
+valid for autocompletion are income and expense accounts.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">generateAccountsAutocompleteData</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p><code class="prettyprint">[ 'income' =&gt; [ AC0, AC1, ... ], 'expense' =&gt; [ AC0, AC1, ... ] ]</code>
+<code class="prettyprint">[ 'income' =&gt; [ AC0, AC1, ... ], 'expense' =&gt; [ AC0, AC1, ... ] ]</code></p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_generateParticipantReceivablesAccount">
+        generateParticipantReceivablesAccount()
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_generateParticipantReceivablesAccount" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">223</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.223" class="phpdocumentor-element-found-in__source" data-line="223" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Generate the GnuCash account for the given receivable if the
+corresponding template is configured.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">generateParticipantReceivablesAccount</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDatum">ProjectParticipantFieldDatum</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$receivable</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$receivable</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantFieldDatum.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDatum">ProjectParticipantFieldDatum</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Return \null if no template is defined or the given data is not a receivable or liability.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getAccountsAutocompleteData">
+        getAccountsAutocompleteData()
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_getAccountsAutocompleteData" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">363</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.363" class="phpdocumentor-element-found-in__source" data-line="363" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getAccountsAutocompleteData</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|int|string|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$project</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$project</span>
+                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|int|string|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_getAccountsAutocompleteData#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">throws</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html"><abbr title="\OCA\CAFEVDB\Exceptions\EnduserNotificationException">EnduserNotificationException</abbr></a></span>
+                                                            
+                                             
+                                    </dd>
+                                            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1533,6 +2105,49 @@ FROM %2$s&#039;</span>
             -protected
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getAppCurrencyCode">
+        getAppCurrencyCode()
+        <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_getAppCurrencyCode" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/GnuCashConnectorService.php"><a href="files/service-finance-gnucashconnectorservice.html"><abbr title="Service/Finance/GnuCashConnectorService.php">GnuCashConnectorService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">392</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.392" class="phpdocumentor-element-found-in__source" data-line="392" data-modal="source-view" data-src="files/Service/Finance/GnuCashConnectorService.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getAppCurrencyCode</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The currency code used by the orchestra.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_mapLogLevels">
         mapLogLevels()
         <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1573,6 +2188,318 @@ understands those.</p>
     
 
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_replaceBracedPlaceholders">
+        replaceBracedPlaceholders()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-BracedPlaceholderTrait.html#method_replaceBracedPlaceholders" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/BracedPlaceholderTrait.php"><a href="files/toolkit-traits-bracedplaceholdertrait.html"><abbr title="Toolkit/Traits/BracedPlaceholderTrait.php">BracedPlaceholderTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">82</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/Toolkit/Traits/BracedPlaceholderTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Replace braced placeholders in a template string.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">replaceBracedPlaceholders</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$template</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$templateValues</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10nTemplateKeys</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>The general syntax of a replacement is {[C[N]|]KEY[|M[D]][@FILTER]}
+where anything in square brackets is optional.</p>
+<ul>
+<li>
+<p>'C' is any character used for optional padding to the left.</p>
+</li>
+<li>
+<p>'N' is the padding length. If ommitted, the value of 1 is assumed.</p>
+</li>
+<li>
+<p>'KEY' is the replacement key</p>
+</li>
+<li>
+<p>'FILTER' can be either</p>
+<ul>
+<li>a single character which is used to replace occurences of '/' in the
+replacement for KEY</li>
+<li>A=[B] in which case occurences of A are replaced by B. If B is omitted
+occurences of A are replaced by the empty string.</li>
+<li>the hash-algo passed to the PHP hash($algo, $data) in which case the replacement value
+is the hash w.r.t. FILTER of the replacement data</li>
+</ul>
+</li>
+<li>
+<p>'M' is a number of &quot;path&quot; components to include from the right from the
+expansion of KEY with path-delimiter 'D' (default: &quot;/&quot;). &quot;{KEY|2}&quot; for
+the value &quot;foo/bar/foobar&quot; would result in &quot;bar/foobar&quot;.</p>
+</li>
+</ul>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$template</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$templateValues</span>
+                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>An array of replacement values:</p>
+<pre class="prettyprint"><code class="prettyprint">[ KEY1 =&gt; VALUE1, KEY2 =&gt; [ 'value' =&gt; VALUE2, 'padding' =&gt; NUMBER|OTHER_KEY ], ... ]
+</code></pre>
+<p>where the second varian specifies a default padding either as number or
+implicitly as reference to another key in which case the default padding
+is the strlen() of the replacement value of the other key. If any value
+is a \DateTimeInterface then it will be formatted by interpreting any
+FILTER as format string with default 'c'.
+FILTER as format string with default 'c'.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$l10nTemplateKeys</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Optional translated keys as</p>
+<pre class="prettyprint"><code class="prettyprint">[
+   TRANSLATED_KEY =&gt; ORIGINAL_KEY
+]
+</code></pre>
+<p>The template may contain translated keys, but the $templateValues
+replacement array must not contain translated keys.
+replacement array must not contain translated keys.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-BracedPlaceholderTrait.html#method_replaceBracedPlaceholders#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">see</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><abbr title="\DateTimeInterface::format()">DateTimeInterface::format()</abbr></span>
+                                        
+                                             
+                                    </dd>
+                                            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_t">
+        t()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-FakeTranslationTrait.html#method_t" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/FakeTranslationTrait.php"><a href="files/toolkit-traits-faketranslationtrait.html"><abbr title="Toolkit/Traits/FakeTranslationTrait.php">FakeTranslationTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">40</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/Toolkit/Traits/FakeTranslationTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">t</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$text</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$parameters</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$text</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$parameters</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|array&lt;string|int, mixed&gt;</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">[]</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_translateBracedTemplate">
+        translateBracedTemplate()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-BracedPlaceholderTrait.html#method_translateBracedTemplate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/BracedPlaceholderTrait.php"><a href="files/toolkit-traits-bracedplaceholdertrait.html"><abbr title="Toolkit/Traits/BracedPlaceholderTrait.php">BracedPlaceholderTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">159</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.159" class="phpdocumentor-element-found-in__source" data-line="159" data-modal="source-view" data-src="files/Toolkit/Traits/BracedPlaceholderTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Translate the braced placeholders contained in the given $template to the
+array values supplied by the $l10nTemplateKeys, that is, the keys of
+$l10nTemplateKeys matching the braced placeholders contained in $template
+will be replaced by their respective array value.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">translateBracedTemplate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$template</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10nTemplateKeys</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$template</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$l10nTemplateKeys</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>If null, no replacement is performed
+and the $template argument is return unchanged.
+and the $template argument is return unchanged.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_untranslateBracedTemplate">
+        untranslateBracedTemplate()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-BracedPlaceholderTrait.html#method_untranslateBracedTemplate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/BracedPlaceholderTrait.php"><a href="files/toolkit-traits-bracedplaceholdertrait.html"><abbr title="Toolkit/Traits/BracedPlaceholderTrait.php">BracedPlaceholderTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">179</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#source-view.179" class="phpdocumentor-element-found-in__source" data-line="179" data-modal="source-view" data-src="files/Toolkit/Traits/BracedPlaceholderTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Translate the braced placeholders contained in the given $template to the
+array keys supplied by the $l10nTemplateKeys, that is, the array values
+of $l10nTemplateKeys matching the braced placeholders contained in
+$template will be replaced by their respective array key.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">untranslateBracedTemplate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$template</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10nTemplateKeys</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$template</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$l10nTemplateKeys</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>If null, no replacement is performed
+and the $template argument is return unchanged.
+and the $template argument is return unchanged.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
             </section>
 
@@ -1687,7 +2614,13 @@ understands those.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Constants</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GENERATOR_TAG_KEY">GENERATOR_TAG_KEY</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GNU_CASH_EXPENSE_KEY">GNU_CASH_EXPENSE_KEY</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GNU_CASH_INCOME_KEY">GNU_CASH_INCOME_KEY</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_PERSON_KEY">PERSON_KEY</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_PROJECT_KEY">PROJECT_KEY</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_CREATE_VIEW_STMT">CREATE_VIEW_STMT</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE">GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_GNU_CASH_TABLES">GNU_CASH_TABLES</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#constant_INSERT_STMT">INSERT_STMT</a></li>
                                             </ul>
@@ -1712,6 +2645,11 @@ understands those.</p>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_copyGnuCashTables">copyGnuCashTables()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_exportBulkTransactionBalancingEntries">exportBulkTransactionBalancingEntries()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_exportCompositePaymentBalancingEntries">exportCompositePaymentBalancingEntries()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_generateAccountsAutocompleteData">generateAccountsAutocompleteData()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_generateParticipantReceivablesAccount">generateParticipantReceivablesAccount()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_getAccountsAutocompleteData">getAccountsAutocompleteData()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logDebug">logDebug()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logError">logError()</a></li>
@@ -1721,7 +2659,12 @@ understands those.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logInfo">logInfo()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-GnuCashConnectorService.html#method_getAppCurrencyCode">getAppCurrencyCode()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-BracedPlaceholderTrait.html#method_replaceBracedPlaceholders">replaceBracedPlaceholders()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-FakeTranslationTrait.html#method_t">t()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-BracedPlaceholderTrait.html#method_translateBracedTemplate">translateBracedTemplate()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-BracedPlaceholderTrait.html#method_untranslateBracedTemplate">untranslateBracedTemplate()</a></li>
                                     </ul>
             </li>
                     </ul>

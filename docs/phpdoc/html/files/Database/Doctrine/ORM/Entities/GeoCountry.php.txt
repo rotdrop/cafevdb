@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  * locate TARGET_ISO, (e.g. en_UK).
  */
 #[ORM\Table(name: 'GeoCountries')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[Gedmo\Loggable(enabled: false)]
 #[ORM\HasLifecycleCallbacks]
 class GeoCountry implements \ArrayAccess

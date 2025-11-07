@@ -26,31 +26,33 @@ namespace OCA\CAFEVDB\EmailForm;
 
 use DOMDocument;
 use DateTimeImmutable;
-use DateTimeInterface;
 use PHP_IBAN;
 use Throwable;
-use UnexpectedValueException;
-use array_search;
 use stdClass;
 
+use Malkusch\Lock\Mutex;
+
+use OCP\AppFramework\Http;
 use OCP\IDateTimeFormatter;
+use OCP\Files\IRootFolder;
+use OCP\Files\Node;
 
 use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
 use OCA\CAFEVDB\Common\PHPMailer;
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\EventsService;
@@ -61,15 +63,18 @@ use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\IMAPService;
 use OCA\CAFEVDB\Service\InstrumentationService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\SimpleSharingService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
 /**
  * This is the mass-email composer class. We try to be somewhat
@@ -101,6 +106,9 @@ class Composer
   private const HEADER_MARKER_RECIPIENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Recipient', ];
   private const HEADER_MARKER_SENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Self', ];
   private const DO_NOT_REPLY_SENDER = 'do-not-reply';
+
+  public const FROM_ORCHESTRA = 'orchestra';
+  public const FROM_PERSONAL = 'personal';
 
   public const DIAGNOSTICS_STAGE = 'stage';
   public const DIAGNOSTICS_CAPTION = 'caption';
@@ -149,13 +157,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 Mit den besten Grüßen,
 <p>
 Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
-<p>
-P.s.:
-Sie erhalten diese Email, weil Sie schon einmal mit dem Orchester
-Camerata Academica Freiburg musiziert haben. Wenn wir Sie aus unserer Datenbank
-löschen sollen, teilen Sie uns das bitte kurz mit, indem Sie entsprechend
-auf diese Email antworten. Wir entschuldigen uns in diesem Fall für die
-Störung.';
+';
   // phpcs:enable
   const GLOBAL_NAMESPACE = 'GLOBAL';
   const MEMBER_NAMESPACE = 'MEMBER';
@@ -402,8 +404,8 @@ Störung.';
   /**@var int */
   private $donationReceiptId;
 
-  /** @var float */
-  private $paymentSign = 1.0;
+  /** @var int */
+  private int $paymentSign = 1;
 
   /** @var bool */
   private $constructionMode;
@@ -548,8 +550,8 @@ Störung.';
           list($template,) = $this->normalizeTemplateName($template);
         }
         $this->paymentSign = ($this->bulkTransaction instanceof Entities\SepaDebitNote)
-          ? 1.0
-          : -1.0;
+          ? 1
+          : -1;
       }
     }
 
@@ -562,11 +564,11 @@ Störung.';
         $template = Entities\DonationReceipt::NOTIFICATION_EMAIL_TEMPLATE;
         list($template,) = $this->normalizeTemplateName($template);
       }
-      $this->paymentSign = 1.0;
+      $this->paymentSign = 1;
     }
 
     if (!empty($template)) {
-      $this->cgiData['storedMessagesSelector'] = $template;
+      $this->cgiData['templateMessagesSelector'] = $template;
     }
 
     $this->setSubjectTag();
@@ -608,9 +610,7 @@ Störung.';
         'Files' => [],
         'Events' => [],
       ],
-      self::DIAGNOSTICS_SHARE_LINK_VALIDATION => [
-        'status' => true,
-      ],
+      self::DIAGNOSTICS_SHARE_LINK_VALIDATION => [],
       // start of sent-messages for log window
       self::DIAGNOSTICS_TOTAL_PAYLOAD => 0,
       self::DIAGNOSTICS_TOTAL_COUNT => 0,
@@ -625,7 +625,7 @@ Störung.';
     if (!$this->submitted) {
       // Leave everything at default state, except for an optional
       // initial template and subject
-      $initialTemplate = $this->cgiValue('storedMessagesSelector');
+      $initialTemplate = $this->cgiValue('templateMessagesSelector');
       if (!empty($initialTemplate)) {
         $template = $this->fetchTemplate($initialTemplate, exact: false);
         if (empty($template)) {
@@ -634,7 +634,7 @@ Störung.';
         $loadedTag = $template->getTag();
         if ((empty($this->bulkTransaction) && empty($this->donationReceipt)) || str_ends_with($loadedTag, $initialTemplate)) {
           $initialTemplate = $template->getTag();
-          $this->cgiData['storedMessagesSelector'] = $initialTemplate;
+          $this->cgiData['templateMessagesSelector'] = $initialTemplate;
           $this->templateName = $initialTemplate;
         } else {
           $this->templateName = $initialTemplate;
@@ -686,7 +686,7 @@ Störung.';
   }
 
   /**
-   * @param null|Entities\Musician
+   * @param null|Entities\Musician $musician
    *
    * @return null|Entities\CompositePayment
    */
@@ -740,7 +740,7 @@ Störung.';
       };
     }
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['STREET_AND_NUMBER'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('STREET_AND_NUMBER')] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
           return $keyArg[0];
       }
@@ -748,28 +748,28 @@ Störung.';
       return $musician->getStreet() . ' ' . $musician->getStreetNumber();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['EMAIL'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('EMAIL')] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
           return $keyArg[0];
       }
       return $musician->getEmail();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['NICK_NAME'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('NICK_NAME')] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
       return $musician->getNickName()?:$musician->getFirstName();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['DISPLAY_NAME'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('DISPLAY_NAME')] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
       return $musician->getPublicName(true); // rather firstName lastName than last, first
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['COUNTRY'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('COUNTRY')] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -783,7 +783,7 @@ Störung.';
     };
 
     $languageNames = $this->localeLanguageNames();
-    $this->substitutions[self::MEMBER_NAMESPACE]['LANGUAGE'] = function(array $keyArg, ?Entities\Musician $musician) use ($languageNames) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('LANGUAGE')] = function(array $keyArg, ?Entities\Musician $musician) use ($languageNames) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -794,7 +794,7 @@ Störung.';
       return $languageNames[$language] ?? $language;
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['BIRTHDAY'] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('BIRTHDAY')] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -807,7 +807,7 @@ Störung.';
       return $result;
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE]['DATE'] =  function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[self::MEMBER_NAMESPACE][self::t('DATE')] =  function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -816,7 +816,7 @@ Störung.';
 
     if (!empty($this->project)) {
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['TOTAL_FEES'] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('TOTAL_FEES')] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -824,7 +824,7 @@ Störung.';
         return $this->moneyValue($obligations['sum']);
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['AMOUNT_PAID'] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('AMOUNT_PAID')] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -832,16 +832,16 @@ Störung.';
         return $this->moneyValue($obligations['received']);
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['MISSING_AMOUNT'] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('MISSING_AMOUNT')] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
         $obligations = ProjectParticipantFieldsService::participantMonetaryObligations($musician, $this->project);
-        return $this->moneyValue($obligations['sum'] - $obligations['received']);
+        return $this->moneyValue($obligations['sum']->sub($obligations['received']));
       };
 
       // per-participant project-data
-      $this->substitutions[self::MEMBER_NAMESPACE]['PROJECT_DATA'] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('PROJECT_DATA')] =  function(array $keyArg, ?Entities\Musician $musician) {
 
         if (empty($musician) || count($keyArg) > 2) {
           return implode(':', $keyArg);
@@ -1057,7 +1057,7 @@ Störung.';
             $header = str_replace('[CSSCLASS]', $cssClass, $header);
             $html .= /* self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_STYLE . */ $header;
 
-            $totalSum = array_fill_keys($replacementKeys, 0.0);
+            $totalSum = array_map(fn(mixed $any) => RationalNumber::zero(), array_fill_keys($replacementKeys, null));
             $totalSum['label'] = $this->l->t('Total Amount');
             $totalSum['dueDate'] = null;
 
@@ -1115,10 +1115,10 @@ Störung.';
                         break;
                       case 'deposit':
                         $totals = $fieldData->depositAmount();
-                        $received = min($totals, $fieldData->amountPaid());
+                        $received = RationalNumber::min($totals, $fieldData->amountPaid());
                         break;
                     }
-                    $remaining = $totals - $received;
+                    $remaining = $totals->sub($received);
 
                     if ($field->getMultiplicity() == FieldMultiplicity::GROUPOFPEOPLE
                         || $field->getMultiplicity() == FieldMultiplicity::GROUPSOFPEOPLE) {
@@ -1153,7 +1153,7 @@ Störung.';
                     }
                     if (${$key} != '--') {
                       $nonZeroData = $nonZeroData || !empty(${$key});
-                      $totalSum[$key] += ${$key};
+                      $totalSum[$key]->addEq(${$key});
                       $replacements[$key] = $this->moneyValue(${$key});
                     } else {
                       $replacements[$key] = ${$key};
@@ -1280,33 +1280,33 @@ Störung.';
     if (!empty($this->bulkTransaction) || !empty($this->donationReceipt)) {
 
       if (!empty($this->donationReceipt)) {
-        $this->substitutions[self::MEMBER_NAMESPACE]['DONATION_AMOUNT'] = function(array $keyArg, ?Entities\Musician $musician) {
+        $this->substitutions[self::MEMBER_NAMESPACE][self::t('DONATION_AMOUNT')] = function(array $keyArg, ?Entities\Musician $musician) {
           if (empty($musician)) {
             return $keyArg[0];
           }
 
           $compositePayment = $this->getCompositePayment($musician);
           if (!empty($compositePayment)) {
-            $amount = $this->paymentSign * $compositePayment->getDonationAmount();
+            $amount = $compositePayment->getDonationAmount()->mul($this->paymentSign);
             return $this->moneyValue($amount);
           }
           return $keyArg[0];
         };
 
-        $this->substitutions[self::MEMBER_NAMESPACE]['WAIVED_AMOUNT'] = function(array $keyArg, ?Entities\Musician $musician) {
+        $this->substitutions[self::MEMBER_NAMESPACE][self::t('WAIVED_AMOUNT')] = function(array $keyArg, ?Entities\Musician $musician) {
           if (empty($musician)) {
             return $keyArg[0];
           }
 
           $compositePayment = $this->getCompositePayment($musician);
           if (!empty($compositePayment)) {
-            $amount = $this->paymentSign * $compositePayment->getNonDonationAmount();
+            $amount = $compositePayment->getNonDonationAmount()->mul($this->paymentSign);
             return $this->moneyValue($amount);
           }
           return $keyArg[0];
         };
 
-        $this->substitutions[self::MEMBER_NAMESPACE]['WAIVING_OF_REIMBURSEMENT'] = function(array $keyArg, ?Entities\Musician $musician) {
+        $this->substitutions[self::MEMBER_NAMESPACE][self::t('WAIVING_OF_REIMBURSEMENT')] = function(array $keyArg, ?Entities\Musician $musician) {
           if (empty($musician)) {
             return $keyArg[0];
           }
@@ -1323,20 +1323,20 @@ Störung.';
         // maybe add more, however, the proper receipt will be send out as attachjment.
       }
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_TRANSACTION_AMOUNT'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_TRANSACTION_AMOUNT')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
 
         $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
-          $amount = $this->paymentSign * $compositePayment->getAmount();
+          $amount = $compositePayment->getAmount()->mul($this->paymentSign);
           return $this->moneyValue($amount);
         }
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_TRANSACTION_PURPOSE'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_TRANSACTION_PURPOSE')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1349,7 +1349,7 @@ Störung.';
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['SEPA_MANDATE_REFERENCE'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('SEPA_MANDATE_REFERENCE')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1366,7 +1366,7 @@ Störung.';
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['SEPA_MANDATE_DATE'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('SEPA_MANDATE_DATE')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1383,7 +1383,7 @@ Störung.';
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_IBAN'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_IBAN')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1400,7 +1400,7 @@ Störung.';
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_BIC'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_BIC')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1417,7 +1417,7 @@ Störung.';
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_BANK'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_BANK')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1445,7 +1445,7 @@ Störung.';
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_ACCOUNT_OWNER'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_OWNER')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1462,7 +1462,7 @@ Störung.';
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE]['BANK_TRANSACTION_PARTS'] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_TRANSACTION_PARTS')] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1483,7 +1483,7 @@ Störung.';
           ];
 
           $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
-          $totalSum = array_fill_keys($replacementKeys, 0.0);
+          $totalSum = array_map(fn(mixed $any) => RationalNumber::zero(), array_fill_keys($replacementKeys, null));
           $totalSum['purpose'] = $this->l->t('Total Amount');
 
           $rowTemplate = $tableTemplate['row'];
@@ -1495,20 +1495,20 @@ Störung.';
           $payments = $compositePayment->getProjectPayments();
           /** @var Entities\ProjectPayment $payment */
           foreach ($payments as $payment) {
-            $invoiced = $this->paymentSign * $payment->getAmount();
+            $invoiced = $payment->getAmount()->mul($this->paymentSign);
 
-            $totals = $this->paymentSign * $payment->getReceivable()->amountPayable();
-            $received = $this->paymentSign * $payment->getReceivable()->amountPaid();
+            $totals = $payment->getReceivable()->amountPayable()->mul($this->paymentSign);
+            $received = $payment->getReceivable()->amountPaid()->mul($this->paymentSign);
 
             // otherwise one would have to account for the dueDate,
             // so keep it simple and just remove the current payment.
-            $received -= $invoiced;
+            $received->subEq($invoiced);
 
-            if (!empty($received)) {
+            if (!$received->eq(0)) {
               $receivedIsZero = false;
             }
 
-            $remaining = $totals - $received;
+            $remaining = $totals->sub($received);
 
             $purpose = $payment->getSubject();
 
@@ -1518,7 +1518,7 @@ Störung.';
                 $replacements[$key] = ${$key};
                 continue;
               }
-              $totalSum[$key] += ${$key};
+              $totalSum[$key]->addEq(${$key});
               $replacements[$key] = $this->moneyValue(${$key});
             }
 
@@ -1721,23 +1721,62 @@ Störung.';
    */
   public function sendMessages():bool
   {
-    $this->diagnostics[self::DIAGNOSTICS_STAGE] = self::DIAGNOSTICS_STAGE_SEND;
+    $redisKey = $this->appName() . '-email-send-lock';
+    try {
+      /** @var \OC\RedisFactory $redisFactory */
+      $redisFactory = \OCP\Server::get('RedisFactory');
+      if (!$redisFactory->isAvailable()) {
+        throw new Exceptions\EnduserNotificationException(
+          message: $this->l->t('Unable to lock the email-sending action, Redis ist not available. This is an internal error, please report this to the system administrator.'),
+          httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+        );
+      }
+      $redis = $redisFactory->getInstance();
+      $mutex = new Mutex\RedisMutex(
+        $redis,
+        $redisKey,
+        acquireTimeout: 0,
+        expireTimeout: 1800,
+      );
 
-    if (!$this->preComposeValidation($this->recipients)) {
-      return false;
+      $result = $mutex->synchronized(function() {
+        $this->diagnostics[self::DIAGNOSTICS_STAGE] = self::DIAGNOSTICS_STAGE_SEND;
+
+        if (!$this->preComposeValidation($this->recipients)) {
+          return false;
+        }
+
+        // Checks passed, let's see what happens. The mailer may throw
+        // any kind of "nasty" exceptions.
+        $this->doSendMessages();
+        if (!$this->errorStatus()) {
+          // Hurray!!!
+          $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Message(s) sent out successfully!');
+
+          // If sending out a draft, remove the draft.
+          $this->deleteDraft();
+        }
+        return $this->executionStatus;
+      });
+      return $result;
+    } catch (Lock\Exception\LockAcquireTimeoutException $e) {
+      // someone is already sending email
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Someone is already sending email, please try again later.'),
+        previous: $e,
+        httpStatusCode: Http::STATUS_LOCKED,
+      );
+    } catch (Lock\Exception\LockReleaseException $e) {
+      $this->logError('Unable to release the email-sending lock "' . $redisKey . '"', [
+        'exception' => $e,
+      ]);
+      $codeException = $e->getCodeException();
+      if ($codeException !== null) {
+        throw $codeException;
+      } else {
+        return $e->getCodeResult();
+      }
     }
-
-    // Checks passed, let's see what happens. The mailer may throw
-    // any kind of "nasty" exceptions.
-    $this->doSendMessages();
-    if (!$this->errorStatus()) {
-      // Hurray!!!
-      $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t('Message(s) sent out successfully!');
-
-      // If sending out a draft, remove the draft.
-      $this->deleteDraft();
-    }
-    return $this->executionStatus;
   }
 
   /**
@@ -1940,9 +1979,11 @@ Störung.';
       $this->flush();
       $this->entityManager->commit();
     } catch (Throwable $t) {
-      $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
     }
 
@@ -2056,14 +2097,14 @@ Störung.';
         $templateId = $attachment['template_id'];
         if (!empty($this->project)
             && $this->project->getId() == $this->getClubMembersProjectId()
-            && $templateId == ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE) {
-          $templateId = ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
+            && $templateId == ConfigConstants::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE) {
+          $templateId = ConfigConstants::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
         }
 
         /** @var FinanceService $financeService */
         $financeService = $this->di(FinanceService::class);
         switch ($templateId) {
-          case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
             $membersProject = $this->entityManager->find(
               Entities\Project::class,
               $this->getClubMembersProjectId()
@@ -2091,7 +2132,7 @@ Störung.';
               ];
             };
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
             $membersProject = $this->entityManager->find(
               Entities\Project::class,
               $this->getClubMembersProjectId()
@@ -2119,13 +2160,13 @@ Störung.';
               ];
             };
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
             if (empty($this->project)) {
               continue 2;
             }
             if ($musician->isMemberOf($this->getClubMembersProjectId())) {
               // switch to the member-data update which also inludes a mandate form
-              $templateId = ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
+              $templateId = ConfigConstants::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
             }
             /** @var FinanceService $financeService */
             $financeService = $this->di(FinanceService::class);
@@ -2147,7 +2188,7 @@ Störung.';
               ];
             };
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD:
+          case ConfigConstants::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD:
             /** @var InstrumentInsuranceService $insuranceService */
             $insuranceService = $this->di(InstrumentInsuranceService::class);
             $insuranceOverview = $insuranceService->musicianOverview($musician);
@@ -2598,7 +2639,7 @@ Störung.';
         /** @var FinanceService $financeService */
         $financeService = $this->di(FinanceService::class);
         switch ($templateId) {
-          case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
             $membersProject = $this->entityManager->find(
               Entities\Project::class,
               $this->getClubMembersProjectId()
@@ -2609,7 +2650,7 @@ Störung.';
             list($fileData, $mimeType, $fileName) = $financeService->preFilledDebitMandateForm(
               null, $membersProject, null, formName: $templateId);
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
             $membersProject = $this->entityManager->find(
               Entities\Project::class,
               $this->getClubMembersProjectId()
@@ -2620,7 +2661,7 @@ Störung.';
             list($fileData, $mimeType, $fileName) = $financeService->preFilledDebitMandateForm(
               null, $membersProject, null, formName: $templateId);
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
             if (empty($this->project)) {
               continue 2;
             }
@@ -3542,7 +3583,9 @@ Störung.';
    */
   private function exportMessages(?array $recipients = null):?array
   {
-    // @todo yield needs more care concerning error management
+    // @todo yield needs more care concerning error management, but would be
+    // preferrable as there can be many messages and each message is costly to
+    // generate.
     $messages = [];
 
     $this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT] =
@@ -3710,6 +3753,25 @@ Störung.';
   }
 
   /**
+   * Generate a stream-context for use in link validation.
+   *
+   * @return mixed
+   */
+  private function linkValidationContext():mixed
+  {
+    return stream_context_create([
+      'http' => [
+        'method' => 'HEAD',
+        'header' => 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      ],
+      'ssl' => [
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+      ],
+    ]);
+  }
+
+  /**
    * Pre-message construction validation. Collect all data and perform
    * some checks on it. As a side-effect $this->executionStatus is set.
    *
@@ -3776,7 +3838,9 @@ Störung.';
     // Validate message contents, e.g. reachability of links
     $this->validateMessageHtml($this->messageContents);
 
-    if (strpos($this->messageContents, 'GLOBAL::PROJECT_PUBLIC_SHARE') !== false) {
+    if (strpos($this->messageContents, 'GLOBAL::PROJECT_MUSIC_SHEETS_SHARE') !== false
+        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('PROJECT_MUSIC_SHEETS_SHARE')) !== false
+    ) {
       $shareStatus = true;
 
       $projectService = $this->di(ProjectService::class);
@@ -3792,6 +3856,8 @@ Störung.';
         if ($code < 200 && $code >= 400) {
           $shareStatus = false;
         }
+      } else {
+        $code = -1;
       }
 
       $filesCount = $this->userStorage->folderWalk($folder);
@@ -3799,7 +3865,7 @@ Störung.';
       if ($filesCount == 0) {
         $shareStatus = false;
       }
-      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION] = [
+      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
         'status' => $shareStatus,
         'filesCount' => $filesCount,
         'httpCode' => $code,
@@ -3810,7 +3876,59 @@ Störung.';
 
       $this->executionStatus = $this->executionStatus && $shareStatus;
     } else {
-      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION] = [
+      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
+        'status' => true,
+        'filesCount' => 0,
+        'httpCode' => 200,
+        'folder' => null,
+        'appLink' => null,
+        'share' => null,
+      ];
+    }
+
+    if (strpos($this->messageContents, 'GLOBAL::POST_PROJECT_MEDIA_SHARE') !== false
+        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('POST_PROJECT_MEDIA_SHARE')) !== false
+        || strpos($this->messageContents, 'GLOBAL::POST_PROJECT_MEDIA_FOLDER') !== false
+        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('POST_PROJECT_MEDIA_FOLDER')) !== false
+    ) {
+      $shareStatus = true;
+
+      /** @var ProjectGroupService $projectGroupService */
+      $projectGroupService = $this->di(ProjectGroupService::class);
+      ['files_sharing' => $url, 'share' => $share] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+
+      try {
+        $headers = get_headers($url);
+      } catch (Throwable $t) {
+        $headers = null;
+      }
+      if ($headers && count($headers) > 0) {
+        $code = (int)substr($headers[0], 9, 3);
+        if ($code < 200 && $code >= 400) {
+          $shareStatus = false;
+        }
+      } else {
+        $code = -1;
+      }
+
+      $folder = $share?->getNode();
+      if ($folder) {
+        $appLink = $this->userStorage->getFilesAppLink($folder, subDir: true);
+      }
+
+      $filesCount = -1; // do not care
+      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
+        'status' => $shareStatus,
+        'filesCount' => $filesCount,
+        'httpCode' => $code,
+        'folder' => $folder,
+        'appLink' => $appLink,
+        'share' => $share,
+      ];
+
+      $this->executionStatus = $this->executionStatus && $shareStatus;
+    } else {
+      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
         'status' => true,
         'filesCount' => 0,
         'httpCode' => 200,
@@ -3870,12 +3988,13 @@ Störung.';
    */
   private function setSubjectTag(?int $recipientsSet = null):void
   {
+    $userSubjectTag = $this->cgiValue('subjectTag');
     $recipientsSet = $recipientsSet ?? $this->recipientsFilter->getUserBase();
     if ($recipientsSet & RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST) {
       if ($this->projectId <= 0 || $this->projectName == '') {
         $this->messageTag = ''; // the mailing list has its own tag
       } else {
-        $this->messageTag = '[' . $this->projectName . ']'; // keep the project name as tag
+        $this->messageTag = '[' . $this->projectName . ']'; // keep the project name as tag in addition
       }
     } elseif ($recipientsSet & RecipientsFilter::PROJECT_MAILING_LIST) {
       $this->messageTag = ''; // the mailing list has its own tag
@@ -3884,12 +4003,15 @@ Störung.';
       if (!empty($tagPrefix)) {
         $tagPrefix = $tagPrefix . '-';
       }
-      if ($this->projectId <= 0 || $this->projectName == '') {
-        // TRANSLATORS: email prefix when writing to all musicians
-        $this->messageTag = '[' . $tagPrefix . ucfirst($this->l->t('ALL_PERSONS: musicians')) . ']';
-      } else {
-        $this->messageTag = '[' . $tagPrefix . $this->projectName . ']';
+      if (empty($userSubjectTag)) {
+        if ($this->projectId <= 0 || $this->projectName == '') {
+          // TRANSLATORS: email prefix when writing to all musicians
+          $userSubjectTag = ucfirst($this->l->t('ALL_PERSONS: musicians'));
+        } else {
+          $userSubjectTag = $this->projectName;
+        }
       }
+      $this->messageTag = '[' . $tagPrefix . $userSubjectTag . ']';
     }
   }
 
@@ -4032,7 +4154,7 @@ Störung.';
 
   /**
    * Set the catch-all email address. If in "construction mode" then emails
-   * are only send to the configured 'emailtestaddress' in the app
+   * are only sent to the configured 'emailtestaddress' in the app
    * config-space.
    *
    *  @return void
@@ -4040,14 +4162,14 @@ Störung.';
   private function setCatchAll():void
   {
     if ($this->constructionMode) {
-      $this->catchAllEmail = $this->getConfigValue('emailtestaddress');
+      $this->catchAllEmail = $this->getConfigValue(ConfigConstants::EMAIL_TEST_ADDRESS_KEY);
       $this->catchAllName  = $this->getConfigValue(
-        'emailtestname',
-        $this->getConfigValue('emailfromname')
+        ConfigConstants::EMAIL_TEST_NAME_KEY,
+        $this->getConfigValue(ConfigConstants::EMAIL_FROM_NAME_KEY)
       );
     } else {
-      $this->catchAllEmail = $this->getConfigValue('emailfromaddress');
-      $this->catchAllName  = $this->getConfigValue('emailfromname');
+      $this->catchAllEmail = $this->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY);
+      $this->catchAllName  = $this->getConfigValue(ConfigConstants::EMAIL_FROM_NAME_KEY);
     }
   }
 
@@ -4101,7 +4223,8 @@ Störung.';
    *
    * @return void
    *
-   * @todo unify timezone and date and time formatting.
+   * @todo unify timezone and date and time formatting and perhaps remove the
+   * obsolete strftime() usage.
    */
   private function generateGlobalSubstitutionHandlers()
   {
@@ -4134,27 +4257,37 @@ Störung.';
     };
 
     $this->substitutions[self::GLOBAL_NAMESPACE] = [
-      'ORGANIZER' => function($key) {
+      self::t('ORGANIZER') => function($key) {
         return $this->fetchExecutiveBoard();
       },
-      'PRESIDENT' => $organizationalRoleContact,
-      'TREASURER' => $organizationalRoleContact,
-      'SECRETARY' => $organizationalRoleContact,
-      'CREDITOR_IDENTIFIER' => function($key) {
-        return $this->getConfigValue('bankAccountCreditorIdentifier');
+      self::t('SENDER') => function($key) {
+        switch ($this->fromTag()) {
+          case self::FROM_ORCHESTRA:
+            return $this->l->t('your orchestra organizers (%s)', $this->fetchExecutiveBoard());
+          case self::FROM_PERSONAL:
+            $fullName = $this->fromName();
+            return explode(' ', $fullName)[0];
+        }
+        return $this->l->t('UNKNOWN');
       },
-      'ADDRESS' => function($key) {
+      self::t('PRESIDENT') => $organizationalRoleContact,
+      self::t('TREASURER') => $organizationalRoleContact,
+      self::t('SECRETARY') => $organizationalRoleContact,
+      self::t('CREDITOR_IDENTIFIER') => function($key) {
+        return $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER);
+      },
+      self::t('ADDRESS') => function($key) {
         return $this->streetAddress();
       },
-      'BANK_ACCOUNT' => function($key) {
+      self::t('BANK_ACCOUNT') => function($key) {
         return $this->bankAccount();
       },
 
-      'PROJECT' => function($key) {
+      self::t('PROJECT') => function($key) {
         return $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
 
-      self::t('PROJECT_PUBLIC_SHARE') => function(array $key) {
+      self::t('PROJECT_MUSIC_SHEETS_SHARE') => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
@@ -4164,7 +4297,7 @@ Störung.';
         return $share;
       },
 
-      self::t('PROJECT_PUBLIC_SHARE_EXPIRATION') => function(array $key) {
+      self::t('PROJECT_MUSIC_SHEETS_SHARE_EXPIRATION') => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
@@ -4199,23 +4332,45 @@ Störung.';
         }
       },
 
-      'BANK_TRANSACTION_DUE_DATE' => fn($key) => '',
-      'BANK_TRANSACTION_DUE_DAYS' => fn($key) => '',
-      'BANK_TRANSACTION_SUBMIT_DATE' => fn($key) => '',
-      'BANK_TRANSACTION_SUBMIT_DAYS' => fn($key) => '',
+      self::t('POST_PROJECT_MEDIA_SHARE') => function(array $key) {
+        if (empty($this->project)) {
+          return $key[0];
+        }
+        /** @var ProjectGroupService $projectGroupService */
+        $projectGroupService = $this->di(ProjectGroupService::class);
+
+        ['files_sharing' => $url,] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+
+        return $url;
+      },
+
+      self::t('POST_PROJECT_MEDIA_FOLDER') => function(array $key) {
+        if (empty($this->project)) {
+          return $key[0];
+        }
+        /** @var ProjectGroupService $projectGroupService */
+        $projectGroupService = $this->di(ProjectGroupService::class);
+
+        ['share' => $share, 'mount_point' => $mountPoint] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+
+        return $this->urlGenerator()->getAbsoluteUrl($this->userStorage->getFilesAppLink($mountPoint, subDir: true));
+      },
+
+      self::t('BANK_TRANSACTION_DUE_DATE') => fn($key) => '',
+      self::t('BANK_TRANSACTION_DUE_DAYS') => fn($key) => '',
+      self::t('BANK_TRANSACTION_SUBMIT_DATE') => fn($key) => '',
+      self::t('BANK_TRANSACTION_SUBMIT_DAYS') => fn($key) => '',
 
       /**
        * Support date substitutions. Format is
        * ${GLOBAL::DATE:dateformat:datestring} where dateformat
        * default to d.m.Y (see strftime) and datestring can be
        * everything understood by strtotime.
-       *
-       * @todo Revise concerning timezone and locale settings
        */
-      'DATE' => function(array $arg) {
+      self::t('DATE') => function(array $arg) {
         return $this->dateSubstitution($arg, self::GLOBAL_NAMESPACE);
       },
-      'TIME' => function(array $arg) use ($formatter) {
+      self::t('TIME') => function(array $arg) use ($formatter) {
         try {
           $dateString = $arg[1];
           $dateFormat = $arg[2]?:'long';
@@ -4225,7 +4380,7 @@ Störung.';
           throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
         }
       },
-      'DATETIME' => function(array $arg) {
+      self::t('DATETIME') => function(array $arg) {
         try {
           $dateString = $arg[1];
           $dateFormat = $arg[2]?:'long';
@@ -4241,16 +4396,16 @@ Störung.';
 
       $this->substitutions[self::GLOBAL_NAMESPACE] = array_merge(
         $this->substitutions[self::GLOBAL_NAMESPACE], [
-          'BANK_TRANSACTION_DUE_DAYS' => function($key) {
+          self::t('BANK_TRANSACTION_DUE_DAYS') => function($key) {
             return (new DateTimeImmutable())->diff($this->bulkTransaction->getDueDate())->format('%r%a');
           },
-          'BANK_TRANSACTION_SUBMIT_DAYS' => function($key) {
+          self::t('BANK_TRANSACTION_SUBMIT_DAYS') => function($key) {
             return (new DateTimeImmutable())->diff($this->bulkTransaction->getSubmissionDeadline())->format('%r%a');
           },
-          'BANK_TRANSACTION_DUE_DATE' => function($key) {
+          self::t('BANK_TRANSACTION_DUE_DATE') => function($key) {
             return $this->formatDate($this->bulkTransaction->getDueDate(), 'medium');
           },
-          'BANK_TRANSACTION_SUBMIT_DATE' => function($key) {
+          self::t('BANK_TRANSACTION_SUBMIT_DATE') => function($key) {
             return $this->formatDate($this->bulkTransaction->getSubmissionDeadline(), 'medium');
           },
         ]);
@@ -4272,13 +4427,13 @@ Störung.';
   /** @return string The formatted bank account of the orchestra. */
   private function bankAccount():string
   {
-    $iban = new PHP_IBAN\IBAN($this->getConfigValue('bankAccountIBAN'));
+    $iban = new PHP_IBAN\IBAN($this->getConfigValue(ConfigConstants::BANK_ACCOUNT_IBAN));
     $financeService = $this->di(FinanceService::class);
     $info = $financeService->getIbanInfo($iban->MachineFormat());
     return ($info['bank'] . "<br/>\n"
-          . $this->getConfigValue('bankAccountOwner') . "<br/>\n"
+          . $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_OWNER) . "<br/>\n"
           . "IBAN ".$iban->HumanFormat() . " (" . $iban->MachineFormat() . ")<br/>\n"
-          . "BIC " . $this->getConfigValue('bankAccountBIC')
+          . "BIC " . $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_BIC)
     );
   }
 
@@ -4294,12 +4449,16 @@ Störung.';
 
     $executiveBoardNames = $this
       ->getDatabaseRepository(Entities\ProjectParticipant::class)
-      ->fetchParticipantNames($executiveBoardId, [
-        'nickName' => 'ASC',
-        'firstName' => 'ASC',
-        'displayName' => 'ASC',
-        'surName' => 'ASC',
-      ]);
+      ->fetchParticipantNames(
+        projectId: $executiveBoardId,
+        orderBy: [
+          'nickName' => 'ASC',
+          'firstName' => 'ASC',
+          'displayName' => 'ASC',
+          'surName' => 'ASC',
+        ],
+        excludeStatus: ParticipationStatus::ASSOCIATED,
+      );
 
     $executiveBoardNickNames = [];
     foreach ($executiveBoardNames as $names) {
@@ -4362,7 +4521,14 @@ Störung.';
 
     $this->draftId = 0; // avoid accidental overwriting
 
+    $mailingLists = [];
+    foreach ([RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY, RecipientsFilter::PROJECT_MAILING_LIST_KEY] as $listKey) {
+      $mailingLists[$listKey] = $this->recipientsFilter->getMailingListInfo($listKey);
+    }
+    $mailingLists = array_filter($mailingLists);
+
     $recipients = [];
+    $mailingListMusicianIds = [];
     foreach (explode(';', $sentEmail->getBulkRecipients()) as $recipient) {
       try {
         $emailRecord = $this->emailAddressService->parseAddressString($recipient);
@@ -4373,9 +4539,31 @@ Störung.';
       if (count($emailRecord) != 1) {
         continue;
       }
-      $recipients[] = array_key_first($emailRecord);
+      $emailAddress = array_key_first($emailRecord);
+      foreach ($mailingLists as $listKey => $listInfo) {
+        if ($emailAddress != $listInfo[MailingListsService::LIST_INFO_FQDN_LISTNAME]) {
+          continue;
+        }
+        switch ($listKey) {
+          case RecipientsFilter::PROJECT_MAILING_LIST_KEY:
+            $participants = $this->getDatabaseRepository(Entities\ProjectParticipant::class)->findBy([
+              'registration' => 1,
+              'project' => $this->project,
+              '(|deleted' => null,
+              '>=deleted' => new DateTimeImmutable(),
+            ]);
+            $mailingListMusicianIds = array_map(fn(Entities\ProjectParticipant $participant) => $participant->getMusician()->getId(), $participants);
+            continue 3;
+          case RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY:
+            break;
+        }
+      }
+      $recipients[] = $emailAddress;
     }
-    $musicianIds = $this->getDatabaseRepository(Entities\Musician::class)->fetchIds([ 'email' => $recipients ]);
+    $musicianIds = array_merge(
+      $this->getDatabaseRepository(Entities\Musician::class)->fetchIds([ 'email' => $recipients ]),
+      $mailingListMusicianIds,
+    );
 
     $this->recipientsFilter->setSelectedRecipients($musicianIds);
     $this->recipients = $this->recipientsFilter->selectedRecipients();
@@ -4441,7 +4629,7 @@ Störung.';
    */
   public function loadTemplate(string $templateIdentifier):bool
   {
-    $template = $this->fetchTemplate($templateIdentifier);
+    $template = $this->fetchTemplate($templateIdentifier, exact: true);
     if (empty($template)) {
       return $this->executionStatus = false;
     }
@@ -4517,30 +4705,24 @@ Störung.';
   private function fetchTemplate($templateIdentifier, bool $exact = true):?Entities\EmailTemplate
   {
     if (!($templateIdentifier instanceof Entities\EmailTemplate)) {
-      if (filter_var($templateIdentifier, FILTER_VALIDATE_INT) !== false) {
+      if (filter_var($templateIdentifier, FILTER_VALIDATE_INT, ['min_range' => 1]) !== false) {
         $template = $this
           ->getDatabaseRepository(Entities\EmailTemplate::class)
           ->find($templateIdentifier);
       } else {
-        $templateNames = $this->normalizeTemplateName($templateIdentifier);
-
         if (!$exact) {
-          // $templateNames = array_merge($templateNames, array_map(fn($name) => '%-' . $name, $templateNames));
+          $templateNames = $this->normalizeTemplateName($templateIdentifier);
           $templateNames = implode('|', array_map(fn($name) => '([0-9]+-)?' . $name, $templateNames));
+          // Attention: DQL needs SINGLE quotes.
+          $criteria = [ "tag#REGEXP(%s, '^" . $templateNames . "$')" => 1 ];
+        } else {
+          $criteria = [ 'tag' => $templateIdentifier ];
         }
 
         /** @var Entities\EmailTemplate */
         $template = $this
           ->getDatabaseRepository(Entities\EmailTemplate::class)
-          ->findOneBy(
-            criteria: [
-              // Attention: DQL needs SINGLE quotes.
-              "tag#REGEXP(%s, '^" . $templateNames . "$')" => 1,
-            ],
-            orderBy: [
-              'tag' => 'ASC',
-            ],
-          );
+          ->findOneBy(criteria: $criteria, orderBy: [ 'tag' => 'ASC' ]);
       }
     }
 
@@ -4586,21 +4768,12 @@ Störung.';
   }
 
   /**
-   * Store a draft message. The only constraint on the "operator
-   * behaviour" is that the subject must not be empty. Otherwise in
-   * any way incomplete messages may be stored as drafts.
+   * Store a draft message.
    *
    * @return bool The execution status.
    */
   public function storeDraft():bool
   {
-    if ($this->subject() == '') {
-      $this->diagnostics[self::DIAGNOSTICS_SUBJECT_VALIDATION] = $this->messageTag;
-      return $this->executionStatus = false;
-    } else {
-      $this->diagnostics[self::DIAGNOSTICS_SUBJECT_VALIDATION] = true;
-    }
-
     // autoSave is the flag programmatically submitted by the ajax-call,
     // draftAutoSave is that state of the auto-save enable button.
     $autoSave = $this->requestParameters[self::POST_TAG]['autoSave'] ?? null;
@@ -4789,8 +4962,6 @@ Störung.';
    * @param array $fileAttach List of files @b not to be removed.
    *
    * @return bool $this->executionStatus
-   *
-   * @todo use cloud storage
    */
   public function cleanTemporaries(array $fileAttach = []):bool
   {
@@ -5101,20 +5272,23 @@ Störung.';
   }
 
   /**
-   * Export an option array suitable to load stored email messages,
-   * currently templates and message drafts.
+   * Stored draft messages.
    *
    * @return array
    */
-  public function storedEmails():array
+  public function draftEmails():array
   {
-    $drafts = $this->fetchDraftsList();
-    $templates = $this->fetchTemplatesList();
+    return $this->fetchDraftsList();
+  }
 
-    return [
-      'drafts' => $drafts,
-      'templates' => $templates,
-    ];
+  /**
+   * Stored email mailmerge templates.
+   *
+   * @return array
+   */
+  public function templateEmails():array
+  {
+    return $this->fetchTemplatesList();
   }
 
   /**
@@ -5151,18 +5325,44 @@ Störung.';
     return $this->messageTag;
   }
 
-  /** @return string The From: name. This is modifiable. The From: email
-   * address, however, is fixed in order to prevent abuse.
-   */
-  public function fromName():string
+  /** @return string One of self::FROM_ORCHESTRA or self::FROM_PERSONAL. */
+  public function fromTag():string
   {
-    return $this->cgiValue('fromName', $this->catchAllName);
+    return $this->cgiValue('fromTag', $this->getUserValue('defaultEmailFromAddress', self::FROM_ORCHESTRA));
   }
 
-  /** @return string The current From: addres. This is fixed and cannot be changed. */
-  public function fromAddress():string
+  /**
+   * @param null|string $fromTag Request the name of the given tag, either
+   * self::FROM_ORCHESTRA or self::FROM_PERSONAL.
+   *
+   * @return string The current or requested From: name.
+   */
+  public function fromName(?string $fromTag = null):string
   {
-    return htmlspecialchars($this->catchAllEmail);
+    switch (($fromTag ?? $this->fromTag())) {
+      case self::FROM_ORCHESTRA:
+        return $this->cgiValue('fromName', $this->catchAllName);
+      case self::FROM_PERSONAL:
+        return $this->user()?->getDisplayName() ?? '';
+    }
+  }
+
+  /**
+   * @param null|string $fromTag Request the name of the given tag, either
+   * self::FROM_ORCHESTRA or self::FROM_PERSONAL.
+   *
+   * @return string The current or requested From: addres.
+   */
+  public function fromAddress(?string $fromTag = null):string
+  {
+    switch (($fromTag ?? $this->fromTag())) {
+      case self::FROM_ORCHESTRA:
+        return htmlspecialchars($this->catchAllEmail);
+      case self::FROM_PERSONAL:
+        $domain = $this->getConfigValue(ConfigConstants::EMAIL_FROM_DOMAIN_KEY);
+        $user = $this->userId();
+        return $user . '@' . $domain;
+    }
   }
 
   /** @return string In principle the most important stuff: the message text. */
@@ -5253,6 +5453,17 @@ Störung.';
     $linkStatus = [];
     $hasErrors = false;
 
+    $baseUrl = $this->urlGenerator()->getBaseUrl();
+    if ($this->project) {
+      $projectService = $this->di(ProjectService::class);
+      list('share' => $downloadsShare, 'folder' => $downloadsPath) = $projectService->ensureDownloadsShare($this->project, noCreate: true);
+      if ($downloadsShare !== null) {
+        $downloadsShare = $this->simpleSharingService->getShareFromUrl($downloadsShare);
+        $downloadsFolder = $downloadsShare->getNode();
+        $downloadsPath .= Constants::PATH_SEP;
+      }
+    }
+
     $doc = new DOMDocument();
     $doc->loadHTML('<html><head><meta charset="utf-8"></head><body>' . $message . '</body></html>');
     $links = $doc->getElementsByTagName('a');
@@ -5260,35 +5471,92 @@ Störung.';
     foreach ($links as $item) {
       $thisLinkGood = false;
       $href = $item->getAttribute('href');
+      $text = $item->nodeValue;
       if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))
           || str_starts_with($href, 'mailto:')
       ) {
         $this->logInfo('KEEP HREF UNCHECKED ' . $href);
         continue;
       }
+      if (!str_starts_with($href, 'http')) {
+        $href = $this->urlGenerator()->getAbsoluteUrl($href);
+      }
       $this->logInfo('CHECK HREF ' . $href);
-      $text = $item->nodeValue;
+      if (!empty($downloadsShare) && str_starts_with($href, $baseUrl . '/s/')) {
+        $share = $this->simpleSharingService->getShareFromUrl($href);
+        if ($share !== null) {
+          $node = $share->getNode();
+          $level = 0;
+          $path = $node->getType() === Node::TYPE_FOLDER ? Constants::PATH_SEP : '';
+          do {
+            $path =  Constants::PATH_SEP . $node->getName() . $path;
+            $node = $node->getParent();
+            ++$level;
+          } while ($node->getId() != $downloadsFolder->getId() && !($node instanceof IRootFolder));
+          $path = ltrim($path, Constants::PATH_SEP);
+          $this->logInfo('FOUND SHARE OF "' . $share->getNode()->getPath() . '" LEVEL ' . $level);
+          if (($level > 0 || $share->getId() != $downloadsShare->getId()) && $node->getId() == $downloadsFolder->getId()) {
+            if ($level > 0) {
+              $explanation = $this->l->t(
+                'The link refers to a file or folder "%1$s" inside the music sheets download folder "%2$s".', [
+                  $path,
+                  $downloadsPath,
+                ]);
+            } else {
+              $explanation = $this->l->t('The link is a manually generated referenc to the music sheets download folder "%1$s".', $downloadsFolder);
+            }
+            $explanation .= ' ' . $this->l->t(
+              'Please use the substitution "%1$s" instead. Otherwise proper link expiration cannot be guarenteed and the link is tied
+to your user name and will be invalidated in the unfortunate case that you leave the executive board.', [
+                '${GLOBAL::' . $this->l->t('PROJECT_MUSIC_SHEETS_SHARE') . '}' . ($level > 0 ? '?dir=' . $path : ''),
+              ],
+            );
+            $linkStatus[] = [
+              'url' => $href,
+              'text' => $text,
+              'status' => false,
+              'explanations' => $explanation,
+            ];
+            $hasErrors = true;
+            continue;
+          }
+        }
+      }
       $originalUserAgent = ini_get('user_agent');
+      // ini_set('user_agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1'); // 'Orgacloud/1.0');
       ini_set('user_agent', 'Orgacloud/1.0');
       try {
-        $headers = get_headers($href);
+        $context = stream_context_create([
+          'http' => [
+            'method' => 'HEAD',
+            'header' => 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          ],
+          'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+          ],
+        ]);
+        $headers = get_headers($href, false, $context);
       } catch (Throwable $t) {
         $headers = null;
       }
       ini_set('user_agent', $originalUserAgent);
       if ($headers && count($headers) > 0) {
-	$this->logInfo('STATUS HEADER ' . $headers[0]);
+        $this->logInfo('STATUS HEADER ' . $headers[0]);
         $code = (int)substr($headers[0], 9, 3);
         if ($code >= 200 && $code < 400) {
           $thisLinkGood = true;
+        } else {
+          $this->logError('LINK BAD ' . $href . ' ' . print_r($headers, true));
         }
       }
       $linkStatus[] = [
         'url' => $href,
         'text' => $text,
         'status' => $thisLinkGood,
+        'explanations' => $thisLinkGood ?: $this->l->t('The link could not be opened.'),
       ];
-      $hasErrors = $hasErrors || ! $thisLinkGood;
+      $hasErrors = $hasErrors || !$thisLinkGood;
     }
 
     $goodLinks = array_filter($linkStatus, fn($info) => $info['status']);
@@ -5330,8 +5598,8 @@ Störung.';
     $origin = AttachmentOrigin::TEMPLATE;
 
     $templateAttachments = [];
-    foreach (ConfigService::DOCUMENT_TEMPLATES as $templateId => $documentTemplate) {
-      if ($documentTemplate['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE
+    foreach (ConfigConstants::DOCUMENT_TEMPLATES as $templateId => $documentTemplate) {
+      if ($documentTemplate['type'] != ConfigConstants::DOCUMENT_TYPE_TEMPLATE
           || !$documentTemplate['blank']) {
         continue;
       }
@@ -5460,8 +5728,8 @@ Störung.';
     }
 
     // add also the global document templates
-    foreach (ConfigService::DOCUMENT_TEMPLATES as $templateId => $documentTemplate) {
-      if ($documentTemplate['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE) {
+    foreach (ConfigConstants::DOCUMENT_TEMPLATES as $templateId => $documentTemplate) {
+      if ($documentTemplate['type'] != ConfigConstants::DOCUMENT_TYPE_TEMPLATE) {
         continue;
       }
       $attachment = [
@@ -5469,7 +5737,7 @@ Störung.';
         'template_id' => $templateId,
         'name' => $this->l->t($documentTemplate['name']),
         'origin' => $origin,
-        'sub_topic' => ConfigService::DOCUMENT_TYPE_TEMPLATE,
+        'sub_topic' => ConfigConstants::DOCUMENT_TYPE_TEMPLATE,
         'sub_selection' => false,
       ];
       $status = 'inactive';
@@ -5477,12 +5745,12 @@ Störung.';
         $status = 'selected';
       } elseif (!empty($this->project) && !empty($this->bulkTransaction) && ($this->bulkTransaction instanceof Entities\SepaDebitNote)) {
         switch ($templateId) {
-          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
             if ($this->project->getId() != $this->getClubMembersProjectId()) {
               $status = 'selected';
             }
             break;
-          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
+          case ConfigConstants::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
             if ($this->project->getId() == $this->getClubMembersProjectId()) {
               $status = 'selected';
             }
@@ -5595,7 +5863,7 @@ Störung.';
       $value = $attachment[$attachment['value']];
       $name = $attachment['name'];
       if (isset($attachment['size'])) {
-        $size = \OC_Helper::humanFileSize($attachment['size']);
+        $size = \OCP\Util::humanFileSize($attachment['size']);
         $name .= ' (' . $size . ')';
       }
       $origin = $attachment['origin'];
@@ -5743,5 +6011,12 @@ Störung.';
       $throwable->getLine(),
       $throwable->getMessage(),
     ]);
+  }
+
+  /** @return void */
+  protected static function l10nInjection():void
+  {
+    self::t(self::FROM_ORCHESTRA);
+    self::t(self::FROM_PERSONAL);
   }
 }

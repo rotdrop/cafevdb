@@ -23,6 +23,7 @@ class ProjectParticipantField extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entitie
 
     private const LAZY_OBJECT_PROPERTY_SCOPES = [
         "\0".'*'."\0".'deleted' => [parent::class, 'deleted', null, 8],
+        "\0".parent::class."\0".'balancingAccount' => [parent::class, 'balancingAccount', null, 16],
         "\0".parent::class."\0".'dataOptions' => [parent::class, 'dataOptions', null, 16],
         "\0".parent::class."\0".'dataType' => [parent::class, 'dataType', null, 16],
         "\0".parent::class."\0".'defaultValue' => [parent::class, 'defaultValue', null, 16],
@@ -45,6 +46,7 @@ class ProjectParticipantField extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entitie
         "\0".parent::class."\0".'translationChangeSet' => [parent::class, 'translationChangeSet', null, 16],
         "\0".parent::class."\0".'untranslatedName' => [parent::class, 'untranslatedName', null, 16],
         "\0".parent::class."\0".'untranslatedTab' => [parent::class, 'untranslatedTab', null, 16],
+        'balancingAccount' => [parent::class, 'balancingAccount', null, 16],
         'dataOptions' => [parent::class, 'dataOptions', null, 16],
         'dataType' => [parent::class, 'dataType', null, 16],
         'defaultValue' => [parent::class, 'defaultValue', null, 16],

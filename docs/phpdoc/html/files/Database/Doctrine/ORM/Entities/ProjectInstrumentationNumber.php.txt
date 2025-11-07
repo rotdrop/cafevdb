@@ -190,7 +190,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    *
    * @return ProjectInstrumentationNumber
    */
-  public function setProjectProjectInstruments(Collection $projectInstruments):ProjectInstrumentationNumber
+  public function setProjectInstruments(Collection $projectInstruments):ProjectInstrumentationNumber
   {
     $this->projectInstruments = $projectInstruments;
 

@@ -27,27 +27,23 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use Closure;
 use DateTimeImmutable;
 use DateTimeInterface;
-use UnexpectedValueException;
 use InvalidArgumentException;
 
-use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;
 
 /**
  * Invoices collects a couple of InvoiceItems of the same Musician.
  */
 #[ORM\Table(name: 'Invoices')]
-#[ORM\UniqueConstraint(columns: ['notification_email_id'])]
+#[ORM\UniqueConstraint(columns: ['notification_message_id'])]
 #[ORM\UniqueConstraint(columns: ['invoice_number'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InvoicesRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -113,7 +109,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   private $debitor;
 
   /**
-   * @var float
+   * @var RationalNumber
    *
    * The total amount for the bank transaction. This must equal the
    * sum of the self::$invoiceItems collection.
@@ -121,8 +117,8 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    * @todo If this is always the sum and thus can be computed, why then this
    * field?
    */
-  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: false, options: ['default' => '0.00'])]
-  private $amount = '0.00';
+  #[ORM\Column(type: 'decimal_rational_monetary', nullable: false, options: ['default' => '0.00'])]
+  private RationalNumber $amount;
 
   /**
    * @var \DateTimeImmutable|null
@@ -150,6 +146,16 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $subject;
+
+  /**
+   * @var string
+   * Free-text lead-in of the invoice letter.
+   *
+   * @todo Should be remove and replaced by a table listing just the
+   * individual invoice items which just should be enough.
+   */
+  #[ORM\Column(type: 'text', nullable: true)]
+  private $purpose;
 
   /**
    * @var Collection
@@ -195,7 +201,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
 
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
   #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
-  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'invoices', fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
   /**
@@ -207,7 +213,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * @var DatabaseStorageFile
    */
-  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'])]
   private ?DatabaseStorageFile $writtenInvoice;
 
   /**
@@ -222,7 +228,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * Pre notification email sent out to the recipients.
    */
-  #[ORM\JoinColumn(name: 'notification_email_id', referencedColumnName: 'message_id', nullable: true)]
+  #[ORM\JoinColumn(name: 'notification_message_id', referencedColumnName: 'message_id', nullable: true)]
   #[ORM\OneToOne(targetEntity: SentEmail::class, inversedBy: 'invoice')]
   private $notificationEmail;
 
@@ -231,6 +237,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   {
     $this->arrayCTOR();
     $this->invoiceItems = new ArrayCollection;
+    $this->setAmount(0);
   }
 
   /**
@@ -270,13 +277,13 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * Set amount.
    *
-   * @param float|null $amount
+   * @param int|float|string|RationalNumber $amount
    *
-   * @return InvoiceItem
+   * @return ProjectPayment
    */
-  public function setAmount(?float $amount):Invoice
+  public function setAmount(int|float|string|RationalNumber $amount):Invoice
   {
-    $this->amount = $amount;
+    $this->amount = RationalNumber::create($amount);
 
     return $this;
   }
@@ -284,9 +291,9 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * Get amount.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function getAmount():float
+  public function getAmount():RationalNumber
   {
     return $this->amount;
   }
@@ -295,16 +302,14 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    * Return the sum of the amounts of the individual payments, which
    * should sum up to $this->amount, of course.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function sumInvoiceItemsAmount():float
+  public function sumInvoiceItemsAmount():RationalNumber
   {
-    $totalAmount = 0.0;
-    /** @var InvoiceItem $invoiceItem */
-    foreach ($this->invoiceItems as $invoiceItem) {
-      $totalAmount += $invoiceItem->getAmount();
-    }
-    return $totalAmount;
+    return $this->invoiceItems->reduce(
+      fn(RationalNumber $accumulator, InvoiceItem $item) => $accumulator->add($item->getAmount()),
+      RationalNumber::zero(),
+    );
   }
 
   /**
@@ -511,6 +516,30 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   public function getSubject():?string
   {
     return $this->subject;
+  }
+
+  /**
+   * Set purpose.
+   *
+   * @param null|string $purpose
+   *
+   * @return Invoice
+   */
+  public function setPurpose(?string $purpose):Invoice
+  {
+    $this->purpose = $purpose;
+
+    return $this;
+  }
+
+  /**
+   * Get purpose.
+   *
+   * @return null|string
+   */
+  public function getPurpose():?string
+  {
+    return $this->purpose;
   }
 
   /**

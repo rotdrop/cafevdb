@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -80,9 +81,8 @@ class CryptoController extends Controller
    * @param null|string $metaData
    *
    * @return Http\DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function unseal(string $sealedData, ?string $metaData):Http\DataResponse
   {
     return self::dataResponse($this->getUnsealedData($sealedData, $metaData));
@@ -97,9 +97,8 @@ class CryptoController extends Controller
    * @param null|string $metaData
    *
    * @return Http\DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function batchUnseal(array $sealedData, ?string $metaData):Http\DataResponse
   {
     $start = hrtime(true);

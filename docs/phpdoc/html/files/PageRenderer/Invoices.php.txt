@@ -24,38 +24,35 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use \InvalidArgumentException;
 use \BadFunctionCallException;
 
 use OCP\IRequest;
 
-use OCA\CAFEVDB\Common\Functions;
-use OCA\CAFEVDB\Common\Navigation;
+use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Controller\DownloadsController;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
-use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\SentEmailsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;
 
 /** Table generator for Instruments table. */
 class Invoices extends PMETableViewBase
 {
+  use FieldTraits\ActionMenuToggleTrait;
   use FieldTraits\CryptoTrait;
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\MusicianInProjectTrait;
@@ -495,6 +492,10 @@ WHERE dsf.id IS NOT NULL',
             'tooltip' => $this->l->t('General invoice data'),
             'name' => $this->l->t('Invoice Data'),
           ], [
+            'id' => 'taxes',
+            'tooltip' => $this->l->t('Tax rate and constitutory sources'),
+            'name' => $this->l->t('Taxes'),
+          ], [
             'id' => 'documents',
             'tooltip' => $this->toolTipsService['page-renderer:invoices:documents'],
             'name' => $this->l->t('Documents'),
@@ -714,6 +715,22 @@ WHERE dsf.id IS NOT NULL',
       ]);
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'display_name_personal', [
+        'name'     => $this->l->t('Display-Name (pers.)'),
+        'css'      => [ 'postfix' => [ 'musician-personal-public-name' ], ],
+        'options'  => 'LFAVCPD',
+        'input' => $this->pmeBare ? 'R' : 'HR', // handy for export
+        'sql' => static::musicianPublicNameSql(firstNameFirst: true),
+        'maxlen'   => 384,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'organization', [
+        'name' => $this->l->t('Organization'),
+        'input' => 'RH',
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [
         'name' => $this->l->t('User Id'),
         'input' => 'RH',
@@ -721,6 +738,7 @@ WHERE dsf.id IS NOT NULL',
 
     $opts['fdd']['invoice_number'] = [
       'name'     => $this->l->t('Invoice Number'),
+      'tab' => [ 'id' => 'tab-all' ],
       'input'    => '', // 'M', automatically determined.
       'select'   => 'T',
       'options'  => 'LACPDV',
@@ -798,6 +816,7 @@ WHERE dsf.id IS NOT NULL',
     $this->makeJoinTableField(
       $opts['fdd'], self::TAXATION_STATUTORY_SOURCES_TABLE, 'id', [
         'name' => $this->l->t('Sales Tax'),
+        'tab' => [ 'id' => 'taxes' ],
         'css' => [ 'postfix' => [ 'sales-tax' ], ],
         'php|LF' => [$this, 'compositeRowOnly'],
         'sql|LF' => '$join_table.rate * 100',
@@ -808,10 +827,10 @@ WHERE dsf.id IS NOT NULL',
         'input' => 'M',
         'values|ACP' => [
           'description' => [
-            'columns' => [ '$table.rate * 100', '$table.law' ],
+            'columns' => [ '$table.rate * 100', '$table.law', '$table.hint' ],
             'ifnull' => false,
             'cast' => false,
-            'divs' => [ '%, ' ],
+            'divs' => [ '%, ', ' (', ')' ],
           ],
           PHPMyEdit::OPT_FILTERS => [ '$table.tax_type = "' . TaxType::SALES . '"' ],
         ],
@@ -820,8 +839,10 @@ WHERE dsf.id IS NOT NULL',
     $this->makeJoinTableField(
       $opts['fdd'], self::TAXATION_STATUTORY_SOURCES_TABLE, 'law', [
         'name' => $this->l->t('Legal Basis'),
+        'tab' => [ 'id' => 'taxes' ],
         'css' => [ 'postfix' => [ 'statutory-source' ], ],
         'php|LF' => [$this, 'compositeRowOnly'],
+        'sql|LF' => 'CONCAT($join_col_fqn, " (", $table.hint, ")")',
         'select' => 'T',
         'input' => 'HR',
         'input|LFVD' => 'R',
@@ -832,6 +853,7 @@ WHERE dsf.id IS NOT NULL',
       Util::arrayMergeRecursive(
         $this->defaultFDD['money'], [
           'sql' => '$main_table.amount - $join_table.total_amount',
+          'tab' => [ 'id' => 'invoice' ],
           'css' => [ 'postfix' => [ 'tooltip-auto', ] ],
           'name' => $this->l->t('Inconsistency'),
           'input|LF' => 'VHR',
@@ -906,6 +928,23 @@ WHERE dsf.id IS NOT NULL',
         'php|LF' => [$this, 'compositeRowOnly'],
       ]);
 
+    $opts['fdd']['purpose'] = [
+      'name' => $this->l->t('Cover Text'),
+      'css'  => [ 'postfix' => [ 'purpose', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
+      'sql|LFVD' => 'REPLACE($main_table.subject, \'; \', \'<br/>\')',
+      'input|LFVD' => 'HRM',
+      'select' => 'T',
+      'display|LF' => [ 'popup' => 'data' ],
+      'escape' => true,
+      'sort' => true,
+      'textarea|ACP' => [
+        'css' => 'wysiwyg-editor',
+        'rows' => 4,
+        'cols' => 35,
+      ],
+      'tooltip' => $this->toolTipsService['page-renderer:invoices:purpose'],
+    ];
+
     $opts['fdd']['subject'] = [
       'name' => $this->l->t('Subject'),
       'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
@@ -913,7 +952,6 @@ WHERE dsf.id IS NOT NULL',
       'input|LFVD' => 'HRM',
       'select' => 'T',
       'display|LF' => [ 'popup' => 'data' ],
-
       'escape' => true,
       'sort' => true,
       'maxlen' => FinanceService::SEPA_PURPOSE_LENGTH,
@@ -922,6 +960,7 @@ WHERE dsf.id IS NOT NULL',
         'rows' => 4,
         'cols' => 35,
       ],
+      'tooltip' => $this->toolTipsService['page-renderer:invoices:subject'],
     ];
 
     $this->makeJoinTableField(
@@ -945,6 +984,7 @@ WHERE dsf.id IS NOT NULL',
           'rows' => 4,
           'cols' => 35,
         ],
+        'tooltip' => $this->toolTipsService['page-renderer:invoices:subject'],
       ]);
 
     /**
@@ -1161,12 +1201,15 @@ WHERE dsf.id IS NOT NULL',
         }
 
         $invoiceNumber = $row[$this->queryField('invoice_number')];
-        $musicianName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
+        $organization = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'organization')];
+        // $musicianName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
+        $musicianNamePersonal = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'display_name_personal')];
         $projectName = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'name')];
 
         $fileName = $this->getLegacyInvoiceFileName(
           $invoiceNumber,
-          $musicianName,
+          $organization,
+          $musicianNamePersonal,
           $projectName,
         );
 
@@ -1174,8 +1217,6 @@ WHERE dsf.id IS NOT NULL',
         $invoiceDate = $row[$this->queryField('invoice_date')];
         $year = substr($invoiceDate, 0, 4);
         $dir .= UserStorage::PATH_SEP . $year;
-
-        $this->logInfo('INVOICE PATH ' . $dir . UserStorage::PATH_SEP . $fileName);
 
         return '<div class="file-upload-wrapper">
   <table class="file-upload">'
@@ -1202,11 +1243,25 @@ WHERE dsf.id IS NOT NULL',
         /** @var Entities\DatabaseStorageFile $file */
         $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
 
+        $invoiceNumber = $row[$this->queryField('invoice_number')];
+        $organization = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'organization')];
+        // $musicianName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
+        $musicianNamePersonal = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'display_name_personal')];
+        $projectName = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'name')];
+
+        $invoiceFolder = $this->getLegacyInvoiceFolderName(
+          $invoiceNumber,
+          $organization,
+          $musicianNamePersonal,
+          $projectName,
+        );
+
         $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($file);
         $invoiceDate = $row[$this->queryField('invoice_date')];
         $year = substr($invoiceDate, 0, 4);
         $dir = $this->getInvoicesPath()
-          . UserStorage::PATH_SEP . $year;
+          . UserStorage::PATH_SEP . $year
+          . UserStorage::PATH_SEP . $invoiceFolder;
 
         try {
           $filesAppLink = $this->userStorage->getFilesAppLink($dir, true);
@@ -1227,6 +1282,49 @@ WHERE dsf.id IS NOT NULL',
    href="' . $downloadLink . '">' . $file->getName() . '</a>
 </div>';
       },
+    ];
+
+    $opts['fdd']['notification_message_id'] = [
+      'name' => $this->l->t('Message-ID'),
+      'input'  => '',
+      'options'  => 'ACDFLPV',
+      'css'  => [ 'postfix' => [ 'message-id', 'hide-subsequent-lines', ], ],
+      'select' => 'T',
+      'escape' => true,
+      'sort' => true,
+      'tooltip' => $this->toolTipsService['page-renderer:invoices:notification-message-id'],
+      'display|LF' => [ 'popup' => 'data' ],
+      'php|LF' => [$this, 'compositeRowOnly'],
+      'display' => [
+        'popup' => 'data',
+      ],
+      'display|ACP' => [
+        'attributes' => function($op, $k, $row, $pme) {
+          $attributes = [
+            'placeholder' => '<abcdefghijk@domain.tld>',
+          ];
+          if (!empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
+            $attributes['readonly'] = true;
+          }
+          return $attributes;
+        },
+        'popup' => 'data',
+        'postfix' => function($op, $pos, $k, $row, $pme) {
+          if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
+            // default unlocked if value is empty.
+            $checked = '';
+          } else {
+            $checked = 'checked="checked" ';
+          }
+          return '<input id="pme-message-id-lock"
+  ' . $checked . '
+  type="checkbox"
+  class="pme-input pme-input-lock lock-unlock"/>
+<label class="pme-input pme-input-lock lock-unlock"
+       title="' . $this->toolTipsService['pme:input:lock:unlock'].'"
+       for="pme-message-id-lock"></label>';
+        },
+      ],
     ];
 
     $opts['fdd']['balance_documents_folder_id'] = [
@@ -1301,7 +1399,7 @@ WHERE dsf.id IS NOT NULL',
               : $filesAppParentLink . '/' . $value;
           } catch (\OCP\Files\NotFoundException $e) {
             $this->logInfo('No file found for ' . $documentParentPath);
-              $filesAppParentLink = $filesAppLink = '';
+            $filesAppParentLink = $filesAppLink = '';
           }
 
           $filesAppAnchor = '
@@ -1589,18 +1687,6 @@ WHERE dsf.id IS NOT NULL',
         'php|LF' => [$this, 'compositeRowOnly'],
       ]);
 
-    $opts['fdd']['notification_email_id'] = [
-      'name' => $this->l->t('Message-ID'),
-      'input'  => 'R',
-      'options' => 'LFVD',
-      'css'  => [ 'postfix' => [ 'message-id', 'hide-subsequent-lines', ], ],
-      'select' => 'T',
-      'escape' => true,
-      'sort' => true,
-      'tooltip' => $this->toolTipsService['debit-note-email-message-id'],
-      'display|LF' => [ 'popup' => 'data' ],
-    ];
-
     $readOnlySafeGuard = function(&$pme, $op, $step, &$row) use ($opts) {
 
       $bulkTransactionId = $row[$this->queryField('sepa_transaction_id')];
@@ -1767,35 +1853,43 @@ WHERE dsf.id IS NOT NULL',
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertSanitizeFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteDoDeleteSubPayments' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
+      $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] =
+      function($pme, $op, $step, &$row) {
+        if (!$this->listOperation() && !$this->addOperation()) {
+          $pme->buttons = $this->pageNavigation->prependTableButtons(buttons: []);
+          $menuData = $this->generateActionMenuData($pme->rec['id'], $row);
+          foreach (['C', 'P', 'D', 'V'] as $operationMode) {
+            foreach (['up', 'down'] as $position) {
+              $actionMenu = $this->generateActionMenuToggle($menuData);
+              $button = [
+                'code' => $actionMenu,
+                'name' => 'actions',
+              ];
+              array_unshift($pme->buttons[$operationMode][$position], $button);
+            }
+          }
+        }
+        return true;
+      };
 
     if ($projectMode) {
       // $opts['filters'] = 'FIND_IN_SET('.$this->projectId.', '.$joinTables[self::INVOICE_ITEMS_TABLE].'.project_ids)';
       $opts[PHPMyEdit::OPT_FILTERS] = '$table.project_id = ' . $this->projectId;
     }
 
-    $opts['display']['custom_navigation'] = function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme):string {
-      $rowTag = $row[$this->joinQueryField(self::INVOICE_ITEMS_TABLE, 'row_tag')];
-      if (!$this->isCompositeRowTag($rowTag)) {
-        return '';
-      }
-      return $this->actionMenu($rec['id'], $row, $pme);
-    };
+    $this->installActionMenuToggle(
+      $opts,
+      function(array $recordId, array $groupByRecordId, array $row, PHPMyEdit $pme) {
+        $rowTag = $row[$this->joinQueryField(self::INVOICE_ITEMS_TABLE, 'row_tag')];
+        if (!$this->isCompositeRowTag($rowTag)) {
+          return null;
+        }
+        return $this->generateActionMenuData($recordId['id'], $row);
+      },
+    );
 
     $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
-
-    $opts['buttons'] = $this->pageNavigation->prependTableButtons(buttons: []);
-    foreach (['C', 'P', 'D', 'V'] as $operationMode) {
-      foreach (['up' => 'down', 'down' => 'up'] as $position => $direction) {
-        $button = [
-          'code' => function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme) use ($direction):string {
-            return $this->actionMenu($rec['id'], $row, $pme, dropDirection: $direction);
-          },
-          'name' => 'actions',
-        ];
-        array_unshift($opts['buttons'][$operationMode][$position], $button);
-      }
-    }
-    // $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
 
     if ($execute) {
       $this->execute($opts);
@@ -1805,47 +1899,32 @@ WHERE dsf.id IS NOT NULL',
   }
 
   /**
-   * @param int $id Database entity id.
+   * @param int $entityId
    *
-   * @param array $row
+   * @param array $row Legacy DB data provided by PME.
    *
-   * @param PHPMyEdit $pme
-   *
-   * @param string $direction Menu direction left, right.
-   *
-   * @param string $dropDirection Drop up or down.
-   *
-   * @return string HTML.
+   * @return array
    */
-  protected function actionMenu(
-    int $id,
-    array $row,
-    PHPMyEdit $pme,
-    string $direction = 'left',
-    string $dropDirection = 'down',
-  ):string {
-    $templateParameters = [
-      'appName' => $this->appName(),
-      'cssClasses' => ['invoice-item-actions'],
-      'toolTips' => $this->toolTipsService,
-      'financeMode' => $this->financeMode,
-      'expertMode' => $this->expertMode,
-      'direction' => $direction,
-      'dropDirection' => $dropDirection,
-      'invoiceId' => $id,
-      'invoiceNumber' => $row[$this->queryField('invoice_number')],
+  protected function generateActionMenuData(int $entityId, array $row):array
+  {
+    $invoiceNumber = $row[$this->queryField('invoice_number')];
+    $amount = $row[$this->queryField('amount')];
+    $numberFormatter = new NumberFormatter($this->appLocale());
+    $l10nAmount = $numberFormatter->formatCurrency($amount);
+    $debitorName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
+    return [
+      'amount' => (float)$amount,
+      'currencyCode' => $this->currencyCode(),
+      'debitorId' => (int)$row[$this->queryField('debitor_id')],
       'debitorName' => $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')],
-      'debitorId' => $row[$this->queryField('debitor_id')],
+      'entityId' => (int)$entityId,
+      'invoiceNumber' => $invoiceNumber,
+      'menuCaption' => $invoiceNumber . ' - ' . $debitorName . ' - ' . $l10nAmount,
+      'originatorId' => (int)$row[$this->queryIndexField('originator_id')],
       'originatorName' => $row[$this->queryField('originator_id')],
-      'originatorId' => $row[$this->queryIndexField('originator_id')],
-      'amount' => $row[$this->queryField('amount')],
-      'appLocale' => $this->appLocale(),
-      'projectId' => $row[$this->queryField('project_id')],
+      'projectId' => (int)$row[$this->queryField('project_id')],
+      'projectName' => $row[$this->joinQueryField(self::PROJECTS_TABLE, 'name')],
     ];
-    return $this->templateResponse(
-      'fragments/invoices/action-menu',
-      $templateParameters,
-    )->render();
   }
 
   /**
@@ -1973,8 +2052,6 @@ WHERE dsf.id IS NOT NULL',
           $oldValues[$rowTagKey] = $invoiceItemId;
       }
 
-      $this->logInfo('COMPOSITE ' . $compositeKey);
-
       // extract project-id, field-id, receivable_key from the composite-option-key select
       list($projectId, $fieldId, $receivableKey) = explode(
         self::COMP_KEY_SEP,
@@ -2046,11 +2123,35 @@ WHERE dsf.id IS NOT NULL',
         unset($oldValues[$tag]);
         Util::unsetValue($changed, $tag);
       }
+
+      $tag = 'notification_message_id';
+      if (in_array($tag, $changed) && !empty($newValues[$tag])) {
+        $sentEmailsService = $this->di(SentEmailsService::class);
+        /** @var Entities\SentEmail $sentEmail */
+        $sentEmail = $sentEmailsService->sentEmailFromMessageId(
+          $newValues[$tag],
+          persist: true,
+          flush: false,
+        );
+        if ($sentEmail === null) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t(
+              'Unable to find an email message on the imap-server for the given message id "%1$s".',
+              $newValues[$tag],
+            ),
+            context: [
+              'message-id' => $newValues[$tag],
+            ],
+          );
+        }
+        $sentEmail->setProject($this->project);
+      }
     }
 
     $nullables = [
       'sepa_transaction_id',
       'balance_documents_folder_id',
+      'notification_message_id',
       $this->joinTableFieldName(self::INVOICE_ITEMS_TABLE, 'balance_documents_folder_id'),
     ];
     foreach ($nullables as $key) {
@@ -2163,6 +2264,9 @@ WHERE dsf.id IS NOT NULL',
 
     $debitorId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
     $newValues['debitor_id'] = $debitorId;
+
+    $newValues['taxation_statutory_source_id'] =
+      $newValues[$this->joinTableFieldName(self::TAXATION_STATUTORY_SOURCES_TABLE, 'id')];
 
     if (($newValues[$amountKey]??null) === null) {
       $newValues[$amountKey] = $newValues['amount'];

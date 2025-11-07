@@ -89,15 +89,19 @@ class DatabaseStorageFileEntityListener
     }
     $this->preCommitAction = new GenericUndoable(
       function() {
+        $needFlush = false;
         $orphans = Entities\DatabaseStorageFile::getOrphans();
         /** @var Entities\EncryptedFile $orphan */
         foreach ($orphans as $orphan) {
           if ($orphan->getNumberOfLinks() == 0) {
             $this->entityManager->remove($orphan);
+            $needFlush = true;
           }
         }
         Entities\DatabaseStorageFile::clearOrphans();
-        $this->flush();
+        if ($needFlush) {
+          $this->flush();
+        }
         return $orphans;
       },
       function($orphans) {

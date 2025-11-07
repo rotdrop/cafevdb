@@ -24,17 +24,15 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
-
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Exceptions;
-
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationgStatus;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
-
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -168,7 +166,7 @@ class MusicianService
    */
   public function generateDisabledEmailAddress(Entities\Musician $musician, ?string $email = null):string
   {
-    $orchestraAddress = $this->getConfigValue('emailfromaddress');
+    $orchestraAddress = $this->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY);
     if (!empty($email)) {
       $email = '_' . preg_replace('|[@+!./]|', '_', $email);
     }
@@ -209,7 +207,7 @@ class MusicianService
       );
     }
     if ($musician->getPayments()->count() > 0) {
-      throw new Exceptions\EndUserNotificationException(
+      throw new Exceptions\EnduserNotificationException(
         $this->l->t('Musician "%s" cannot be removed because there are financial records which depend on this musician.', $musician->getPublicName()));
     }
 
@@ -244,8 +242,10 @@ class MusicianService
         case FieldDataType::RECEIVABLES:
         case FieldDataType::LIABILITIES:
           $dbFile = $participantDatum->getSupportingDocument();
-          $this->remove($dbFile, true);
-          $participantDatum->setSupportingDocument(null);
+          if ($dbFile) {
+              $this->remove($dbFile, true);
+              $participantDatum->setSupportingDocument(null);
+          }
           $this->persist($participantDatum); // ??? needed ???
           break;
         default:
@@ -292,11 +292,6 @@ class MusicianService
     $musician->setDefaultParticipationStatus(ParticipationStatus::PASSIVE);
     $musician->setLanguage(null);
 
-    if (!empty($musician->getPhoto())) {
-      $this->remove($musician->getPhoto(), true);
-      $musician->setPhoto(null);
-    }
-
     $musician->setFirstName($this->l->t('Dummy'));
     $musician->setSurName((string)$musician->getUuid());
     $musician->setUserPassphrase(null);
@@ -319,7 +314,7 @@ class MusicianService
   public function deleteMusician(Entities\Musician $musician):void
   {
     // Unsubscribe the musician from the mailing-list
-    $list = $this->getConfigValue('announcementsMailingList');
+    $list = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
     try {
       $this->listsService->unsubscribe($list, $musician->getEmail());
     } catch (\Throwable $t) {

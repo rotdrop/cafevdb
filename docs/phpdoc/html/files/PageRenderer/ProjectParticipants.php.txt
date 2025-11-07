@@ -28,14 +28,11 @@ use chillerlan\QRCode\QRCode;
 
 use OCP\IRequest;
 
-use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -593,10 +590,10 @@ GROUP BY t.id';
         'dateformat' => 'medium',
         'timeformat' => 'short',
         'maxlen' => 19,
-        'input' => ($this->showDisabled ? '' : 'RH'),
       ]
     );
     Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'date');
+    // Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'hide-disabled-hidden');
     $opts['fdd']['deleted']['css']['postfix'][] = 'datetime';
 
     $this->makeJoinTableField(
@@ -1364,6 +1361,9 @@ GROUP BY t.id';
           case 'change':
           case 'display':
             list('musician' => $musician, 'categories' => $categories) = $this->musicianFromRow($row, $pme);
+            if ($musician === null) {
+              return '';
+            }
             $vcard = $this->contactsService->export($musician);
             unset($vcard->PHOTO); // too much information
             $categories = array_merge($categories, $vcard->CATEGORIES->getParts());
@@ -1440,7 +1440,8 @@ GROUP BY t.id';
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'ensureUserIdSlug' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateSanitizeParticipantFields' ];
-    // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
+    // FIXME: should be an entity listener
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateEnsureInstrumentationNumbers' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateRemoveDependentVoices' ];
     // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeUpdateCheckParticipationStatus' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'extractInstrumentRanking' ];

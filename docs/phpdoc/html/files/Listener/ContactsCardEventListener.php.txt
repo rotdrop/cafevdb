@@ -29,12 +29,10 @@ use UnexpectedValueException;
 
 use Sabre\VObject;
 use Sabre\VObject\Component\VCard;
-use Sabre\VObject\Property;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\IAddressBook;
 use Psr\Log\LoggerInterface;
 
 use OCA\DAV\Events\CardCreatedEvent;
@@ -43,16 +41,14 @@ use OCA\DAV\Events\CardMovedEvent;
 use OCA\DAV\Events\CardUpdatedEvent;
 
 use OCA\CAFEVDB\Common\Functions;
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\CardDavService;
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\VCalendarService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Act on newly created events and tasks.
@@ -82,18 +78,60 @@ class ContactsCardEventListener implements IEventListener
    */
   private array $alreadyHandled = [];
 
+  /**
+   * @var bool
+   *
+   * Prevent ping-pong when updating contacts programmatically. This is set
+   * from outside and prevents the execution of the handler if set to \false.
+   */
+  private bool $enabled = true;
+
+  /**
+   * @var bool
+   *
+   * Prevent ping-pong when updating contacts programmatically. This is set to
+   * \true when the handler is running and can be queried from outside with
+   * isActive().
+   */
+  private bool $active = false;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected IAppContainer $appContainer,
+    private bool $isCLI,
   ) {
   }
   // phpcs:enable
+
+  /**
+   * In order to disable the listener during programmatic contact updates.
+   *
+   * @param bool $enabled
+   *
+   * @return bool Old state.
+   */
+  public function setEnabled(bool $enabled):bool
+  {
+    $oldEnabled = $this->enabled;
+
+    $this->enabled = $enabled;
+
+    return $oldEnabled;
+  }
+
+  /**
+   * @return bool Whether the handler has been entered.
+   */
+  public function isActive():bool
+  {
+    return $this->active;
+  }
 
   /** {@inheritdoc} */
   public function handle(Event $event):void
   {
     $eventClass = get_class($event);
-    if (!in_array($eventClass, self::EVENT)) {
+    if (!$this->enabled || !in_array($eventClass, self::EVENT)) {
       return;
     }
     $this->logger = $this->appContainer->get(LoggerInterface::class);
@@ -101,10 +139,15 @@ class ContactsCardEventListener implements IEventListener
     try {
       /** @var EncryptionService $encryptionService */
       $encryptionService = $this->appContainer->get(EncryptionService::class);
-      $orchestraGroup = $encryptionService->getConfigValue(ConfigService::USER_GROUP_KEY);
+      $orchestraGroup = $encryptionService->getConfigValue(ConfigConstants::USER_GROUP_KEY);
       if (empty($orchestraGroup)) {
-        throw new UnexpectedValueException('The orchestra group is not set.');
+        if (!$this->isCLI) {
+          // Do not complain in CLI mode, as of now we have to run unauthenticated.
+          throw new UnexpectedValueException('The orchestra group is not set.');
+        }
+        return;
       }
+      $this->active = true;
       $this->entityManager = $this->appContainer->get(EntityManager::class);
       if (!$this->entityManager->bound()) {
         throw new UnexpectedValueException('The entity manager is not bound.');
@@ -228,7 +271,7 @@ class ContactsCardEventListener implements IEventListener
           $cardData = $event->getCardData();
           $cardUri = $cardData['uri'];
           if (!empty($this->alreadyHandled[$addressBookUri][$cardUri])) {
-            $this->logInfo('Avoid event recursion ' . $addressBookUri . '->' . $cardUri);
+            $this->logDebug('Avoid event recursion ' . $addressBookUri . '->' . $cardUri);
             break;
           }
           if (empty($this->alreadyHandled[$addressBookUri])) {
@@ -280,6 +323,7 @@ class ContactsCardEventListener implements IEventListener
             if (in_array($appName, $categories)) {
 
               // we actually may change parts of the contact, so clear the etag
+              $this->logDebug('CLEARING ETAG');
               $event->clearEtag();
 
               $organization = (string)$vCard->ORG;
@@ -363,20 +407,26 @@ class ContactsCardEventListener implements IEventListener
             } else {
               // Arguably we should perhaps delete the musician. We do not,
               // but instead set its address-book uri to NULL.
+              $uri = $musician->getAddressBookUri();
               $musician->setAddressBookUri(null);
+              $this->logDebug('Unlinking ' . $musician->getPublicName() . ' from ' . $uri);
               // @todo: change the UUID?
             }
           }
           $this->flush();
           $this->entityManager->commit();
+          $this->alreadyHandled[$addressBookUri][$cardUri] = false;
           break;
       }
     } catch (Throwable $t) {
-      $this->entityManager->pushTransactionException($t);
       if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
         $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
       }
     }
+    $this->active = false;
   }
 
   /**

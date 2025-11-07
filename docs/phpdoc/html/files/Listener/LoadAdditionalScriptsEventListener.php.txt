@@ -34,8 +34,6 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 use Psr\Log\LogLevel;
-use OCP\IConfig;
-use OCP\AppFramework\Services\IInitialState;
 
 use OCA\CAFEVDB\Service\AssetService;
 

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024 Claus-Justus Heine
+ * @copyright 2011-2022, 2024-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ use DateTimeImmutable;
 
 use PhpOffice\PhpSpreadsheet;
 
+use OCA\CAFEVDB\Service\ConfigConstants;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\FontService;
 
@@ -118,8 +119,8 @@ abstract class AbstractSpreadsheetExporter
   {
     $format = new ExportFormat(strtolower($format));
 
-    $creator   = $this->getConfigValue('emailfromname', 'Bilbo Baggins');
-    $email     = $this->getConfigValue('emailfromaddress', 'bilbo@nowhere.com');
+    $creator   = $this->getConfigValue(ConfigConstants::EMAIL_FROM_NAME_KEY, 'Bilbo Baggins');
+    $email     = $this->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY, 'bilbo@nowhere.com');
 
     $locale = $this->getLocale();
 

@@ -30,10 +30,8 @@ use PhpOffice\PhpSpreadsheet;
 
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\PageRenderer;
-use OCA\CAFEVDB\PageRenderer\Util\PhpSpreadsheetValueBinder;
 
 use OCA\CAFEVDB\Service\FontService;
-use OCA\CAFEVDB\Service\ConfigService;
 
 /** Export general PME-tables as spread-sheet. */
 class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter

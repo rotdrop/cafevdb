@@ -129,9 +129,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">40</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">MusicianRowAccessToken</p>
@@ -156,9 +156,6 @@ the user-id matches also.</p>
     <dt class="phpdocumentor-argument-list__entry">
         #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Entity">Entity</abbr>]
     </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class
-    </dd>
     </dl>
                     <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
@@ -263,6 +260,12 @@ the user-id matches also.</p>
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method_computeHash">computeHash()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method_getAccessTokenHash">getAccessTokenHash()</a>
     <span>
                                 &nbsp;: string    </span>
@@ -354,12 +357,6 @@ the user-id matches also.</p>
 automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method_computeHash">computeHash()</a>
-    <span>
-                                &nbsp;: string    </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_methodName">methodName()</a>
     <span>
                                 &nbsp;: string    </span>
@@ -392,9 +389,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">51</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
     
@@ -440,9 +437,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">71</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
     
@@ -477,7 +474,7 @@ its data. Storage is a hex-string</p>
         $type: &#039;string&#039;
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
-        $length: 128
+        $length: self::HASH_LENGTH / 4
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
         $unique: true
@@ -543,9 +540,9 @@ its data. Storage is a hex-string</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
     
@@ -605,9 +602,9 @@ its data. Storage is a hex-string</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">63</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
     
@@ -673,9 +670,9 @@ its data. Storage is a hex-string</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">78</span>
+    <span class="phpdocumentor-element-found-in__line">75</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
     
@@ -751,6 +748,55 @@ its data. Storage is a hex-string</p>
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_computeHash">
+        computeHash()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method_computeHash" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">140</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.140" class="phpdocumentor-element-found-in__source" data-line="140" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">computeHash</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$value</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_getAccessTokenHash">
@@ -761,9 +807,9 @@ its data. Storage is a hex-string</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">171</span>
+    <span class="phpdocumentor-element-found-in__line">178</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.171" class="phpdocumentor-element-found-in__source" data-line="171" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get accessTokenHash.</p>
@@ -801,9 +847,9 @@ its data. Storage is a hex-string</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">109</span>
+    <span class="phpdocumentor-element-found-in__line">106</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get musician.</p>
@@ -841,9 +887,9 @@ its data. Storage is a hex-string</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">133</span>
+    <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.133" class="phpdocumentor-element-found-in__source" data-line="133" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get userId.</p>
@@ -1076,9 +1122,9 @@ its data. Storage is a hex-string</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">145</span>
+    <span class="phpdocumentor-element-found-in__line">152</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.145" class="phpdocumentor-element-found-in__source" data-line="145" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.152" class="phpdocumentor-element-found-in__source" data-line="152" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set accessToken.</p>
@@ -1128,9 +1174,9 @@ its data. Storage is a hex-string</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">159</span>
+    <span class="phpdocumentor-element-found-in__line">166</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.159" class="phpdocumentor-element-found-in__source" data-line="159" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.166" class="phpdocumentor-element-found-in__source" data-line="166" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set accessTokenHash.</p>
@@ -1178,9 +1224,9 @@ its data. Storage is a hex-string</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">97</span>
+    <span class="phpdocumentor-element-found-in__line">94</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set musician.</p>
@@ -1228,9 +1274,9 @@ its data. Storage is a hex-string</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">121</span>
+    <span class="phpdocumentor-element-found-in__line">118</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.121" class="phpdocumentor-element-found-in__source" data-line="121" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set userId.</p>
@@ -1350,55 +1396,6 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
             </section>
 
     
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -private
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_computeHash">
-        computeHash()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method_computeHash" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php"><a href="files/database-doctrine-orm-entities-musicianrowaccesstoken.html"><abbr title="Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php">MusicianRowAccessToken.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">181</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#source-view.181" class="phpdocumentor-element-found-in__source" data-line="181" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/MusicianRowAccessToken.php.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">computeHash</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$value</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string</span>
-            </section>
-
 </article>
                     <article
         class="phpdocumentor-element
@@ -1637,6 +1634,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method___wakeup">__wakeup()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method_computeHash">computeHash()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method_getAccessTokenHash">getAccessTokenHash()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method_getMusician">getMusician()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method_getUserId">getUserId()</a></li>
@@ -1650,7 +1648,6 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method_setUserId">setUserId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_toArray">toArray()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR">arrayCTOR()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-MusicianRowAccessToken.html#method_computeHash">computeHash()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_methodName">methodName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetNormalize">offsetNormalize()</a></li>
                                     </ul>

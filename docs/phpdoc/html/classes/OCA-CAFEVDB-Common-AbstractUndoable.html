@@ -174,6 +174,12 @@ do-undo-list.</dd>    </dl>
                         &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
 </dt>
 
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#property_sortOrder">$sortOrder</a>
+    <span>
+                        &nbsp;: int            </span>
+</dt>
+
     </dl>
 
 <h4 id="toc-methods">
@@ -182,6 +188,13 @@ do-undo-list.</dd>    </dl>
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#method_getSortOrder">getSortOrder()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Lower sort-orders are executed first.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#method_initialize">initialize()</a>
     <span>
@@ -220,9 +233,9 @@ the actions and to inject the app-container if it is needed.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/AbstractUndoable.php"><a href="files/common-abstractundoable.html"><abbr title="Common/AbstractUndoable.php">AbstractUndoable.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">33</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#source-view.33" class="phpdocumentor-element-found-in__source" data-line="33" data-modal="source-view" data-src="files/Common/AbstractUndoable.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/Common/AbstractUndoable.php.txt"></a>
     </aside>
 
     
@@ -232,6 +245,43 @@ the actions and to inject the app-container if it is needed.</dd>
         <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
     <span class="phpdocumentor-signature__name">$appContainer</span>
     </code>
+
+    
+    
+    
+
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_sortOrder">
+        $sortOrder
+        <a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#property_sortOrder" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Common/AbstractUndoable.php"><a href="files/common-abstractundoable.html"><abbr title="Common/AbstractUndoable.php">AbstractUndoable.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">33</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#source-view.33" class="phpdocumentor-element-found-in__source" data-line="33" data-modal="source-view" data-src="files/Common/AbstractUndoable.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__type">int</span>
+    <span class="phpdocumentor-signature__name">$sortOrder</span>
+     = <span class="phpdocumentor-signature__default-value">0</span></code>
 
     
     
@@ -254,6 +304,46 @@ the actions and to inject the app-container if it is needed.</dd>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getSortOrder">
+        getSortOrder()
+        <a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#method_getSortOrder" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Common/AbstractUndoable.php"><a href="files/common-abstractundoable.html"><abbr title="Common/AbstractUndoable.php">AbstractUndoable.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">45</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Common/AbstractUndoable.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Lower sort-orders are executed first.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getSortOrder</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_initialize">
         initialize()
         <a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#method_initialize" class="headerlink"><i class="fas fa-link"></i></a>
@@ -262,9 +352,9 @@ the actions and to inject the app-container if it is needed.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/AbstractUndoable.php"><a href="files/common-abstractundoable.html"><abbr title="Common/AbstractUndoable.php">AbstractUndoable.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">36</span>
+    <span class="phpdocumentor-element-found-in__line">39</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/Common/AbstractUndoable.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/Common/AbstractUndoable.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Lazy initialization in order to have a more lightweight constructor for
@@ -409,12 +499,14 @@ the actions and to inject the app-container if it is needed.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#property_appContainer">$appContainer</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#property_sortOrder">$sortOrder</a></li>
                                             </ul>
                 </li>
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#method_getSortOrder">getSortOrder()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-AbstractUndoable.html#method_initialize">initialize()</a></li>
                                     </ul>
             </li>

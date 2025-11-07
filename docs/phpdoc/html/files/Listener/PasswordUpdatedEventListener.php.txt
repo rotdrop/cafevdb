@@ -32,7 +32,6 @@ use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
-use OCA\CAFEVDB\Service\AuthorizationService;
 
 /** Perform re-recryption action when the user password has been updated. */
 class PasswordUpdatedEventListener implements IEventListener

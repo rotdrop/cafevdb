@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Events;
 
-use \DateTimeInterface;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;

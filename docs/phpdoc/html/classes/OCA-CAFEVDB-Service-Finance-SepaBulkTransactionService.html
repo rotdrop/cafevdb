@@ -124,9 +124,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">63</span>
+    <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Service class for generating bulk-transactions for submittance to the
@@ -158,6 +158,12 @@ respective bank.</p>
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_BALANCING_ITEMS_EXPORTERS">BALANCING_ITEMS_EXPORTERS</a>
+    <span>
+        &nbsp;= [self::EXPORT_GNU_CASH]                            </span>
+</dt>
+
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_BANK_TRANSFER_SUBMISSION_DEADLINE">BANK_TRANSFER_SUBMISSION_DEADLINE</a>
     <span>
@@ -204,6 +210,24 @@ respective bank.</p>
     <a class="" href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORT_AQBANKING">EXPORT_AQBANKING</a>
     <span>
         &nbsp;= &#039;aqbanking&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORT_BALANCING_ITEMS_SERVICE_ALIAS">EXPORT_BALANCING_ITEMS_SERVICE_ALIAS</a>
+    <span>
+        &nbsp;= self::EXPORT_SERVICE_ALIAS . &#039;balancing-items:&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORT_GNU_CASH">EXPORT_GNU_CASH</a>
+    <span>
+        &nbsp;= &#039;gnucash&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORT_SERVICE_ALIAS">EXPORT_SERVICE_ALIAS</a>
+    <span>
+        &nbsp;= &#039;export:bank-bulk-transaction:&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
@@ -383,6 +407,13 @@ human readable time-stamp, providing defaults for $format and
 using the default time-zone if none is specified.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_generateBalancingItems">generateBalancingItems()</a>
+    <span>
+                                &nbsp;: null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile">DatabaseStorageFile</abbr></a>    </span>
+</dt>
+<dd>Generate import data for accounting software.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_generateProjectPayments">generateProjectPayments()</a>
     <span>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment">CompositePayment</abbr></a>    </span>
@@ -394,9 +425,15 @@ contain payments for different projects this is not implemented here.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_generateTransactionData">generateTransactionData()</a>
     <span>
-                                &nbsp;: null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile">EncryptedFile</abbr></a>    </span>
+                                &nbsp;: null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile">DatabaseStorageFile</abbr></a>    </span>
 </dt>
 <dd>Generate the export data for the given bulk-transaction and project.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_getBalancingItemsExporter">getBalancingItemsExporter()</a>
+    <span>
+                                &nbsp;: null|<a href="classes/OCA-CAFEVDB-Service-Finance-IBulkTransactionExporter.html"><abbr title="\OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter">IBulkTransactionExporter</abbr></a>    </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_getBulkTransactionSlug">getBulkTransactionSlug()</a>
@@ -420,7 +457,7 @@ contain payments for different projects this is not implemented here.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_getTransactionExporter">getTransactionExporter()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Service-Finance-IBulkTransactionExporter.html"><abbr title="\OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter">IBulkTransactionExporter</abbr></a>    </span>
+                                &nbsp;: null|<a href="classes/OCA-CAFEVDB-Service-Finance-IBulkTransactionExporter.html"><abbr title="\OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter">IBulkTransactionExporter</abbr></a>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -757,6 +794,38 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
 
         </h3>
                     <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_BALANCING_ITEMS_EXPORTERS">
+        BALANCING_ITEMS_EXPORTERS
+        <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_BALANCING_ITEMS_EXPORTERS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">129</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">BALANCING_ITEMS_EXPORTERS</span>
+    = <span class="phpdocumentor-signature__default-value">[self::EXPORT_GNU_CASH]</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_BANK_TRANSFER_SUBMISSION_DEADLINE">
         BANK_TRANSFER_SUBMISSION_DEADLINE
         <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_BANK_TRANSFER_SUBMISSION_DEADLINE" class="headerlink"><i class="fas fa-link"></i></a>
@@ -766,9 +835,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">90</span>
+    <span class="phpdocumentor-element-found-in__line">82</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -798,9 +867,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">124</span>
+    <span class="phpdocumentor-element-found-in__line">116</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -833,9 +902,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">117</span>
+    <span class="phpdocumentor-element-found-in__line">109</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -868,9 +937,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">104</span>
+    <span class="phpdocumentor-element-found-in__line">96</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -902,9 +971,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">77</span>
+    <span class="phpdocumentor-element-found-in__line">69</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -940,9 +1009,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">84</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -975,9 +1044,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">99</span>
+    <span class="phpdocumentor-element-found-in__line">91</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.99" class="phpdocumentor-element-found-in__source" data-line="99" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1007,9 +1076,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">127</span>
+    <span class="phpdocumentor-element-found-in__line">119</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.127" class="phpdocumentor-element-found-in__source" data-line="127" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.119" class="phpdocumentor-element-found-in__source" data-line="119" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1032,6 +1101,104 @@ to 2 days. Mmmh.</p>
 
 </article>
                     <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_EXPORT_BALANCING_ITEMS_SERVICE_ALIAS">
+        EXPORT_BALANCING_ITEMS_SERVICE_ALIAS
+        <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORT_BALANCING_ITEMS_SERVICE_ALIAS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">134</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.134" class="phpdocumentor-element-found-in__source" data-line="134" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">EXPORT_BALANCING_ITEMS_SERVICE_ALIAS</span>
+    = <span class="phpdocumentor-signature__default-value">self::EXPORT_SERVICE_ALIAS . &#039;balancing-items:&#039;</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_EXPORT_GNU_CASH">
+        EXPORT_GNU_CASH
+        <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORT_GNU_CASH" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">122</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.122" class="phpdocumentor-element-found-in__source" data-line="122" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">string</span>
+    <span class="phpdocumentor-signature__name">EXPORT_GNU_CASH</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;gnucash&#039;</span>
+</code>
+
+
+    
+        <section class="phpdocumentor-description"><p>Export format GnuCash e.g. for balancing items.</p>
+</section>
+
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_EXPORT_SERVICE_ALIAS">
+        EXPORT_SERVICE_ALIAS
+        <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORT_SERVICE_ALIAS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">133</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.133" class="phpdocumentor-element-found-in__source" data-line="133" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">EXPORT_SERVICE_ALIAS</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;export:bank-bulk-transaction:&#039;</span>
+</code>
+
+
+    
+    
+    
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_EXPORTERS">
         EXPORTERS
         <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORTERS" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1041,9 +1208,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">130</span>
+    <span class="phpdocumentor-element-found-in__line">125</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1075,9 +1242,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">100</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1107,9 +1274,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">101</span>
+    <span class="phpdocumentor-element-found-in__line">93</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1139,9 +1306,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">138</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1171,9 +1338,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">137</span>
+    <span class="phpdocumentor-element-found-in__line">139</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.137" class="phpdocumentor-element-found-in__source" data-line="137" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.139" class="phpdocumentor-element-found-in__source" data-line="139" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1203,9 +1370,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">138</span>
+    <span class="phpdocumentor-element-found-in__line">140</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.140" class="phpdocumentor-element-found-in__source" data-line="140" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1235,9 +1402,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">134</span>
+    <span class="phpdocumentor-element-found-in__line">136</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.134" class="phpdocumentor-element-found-in__source" data-line="134" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1267,9 +1434,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">135</span>
+    <span class="phpdocumentor-element-found-in__line">137</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.137" class="phpdocumentor-element-found-in__source" data-line="137" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1299,9 +1466,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">97</span>
+    <span class="phpdocumentor-element-found-in__line">89</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1331,9 +1498,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">98</span>
+    <span class="phpdocumentor-element-found-in__line">90</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1363,9 +1530,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">87</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.87" class="phpdocumentor-element-found-in__source" data-line="87" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1395,9 +1562,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">78</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1427,9 +1594,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1475,9 +1642,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">145</span>
+    <span class="phpdocumentor-element-found-in__line">147</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.145" class="phpdocumentor-element-found-in__source" data-line="145" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1623,9 +1790,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">142</span>
+    <span class="phpdocumentor-element-found-in__line">144</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.144" class="phpdocumentor-element-found-in__source" data-line="144" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1660,9 +1827,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">147</span>
+    <span class="phpdocumentor-element-found-in__line">149</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.149" class="phpdocumentor-element-found-in__source" data-line="149" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1697,9 +1864,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">146</span>
+    <span class="phpdocumentor-element-found-in__line">148</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.146" class="phpdocumentor-element-found-in__source" data-line="146" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1734,9 +1901,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">144</span>
+    <span class="phpdocumentor-element-found-in__line">146</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.144" class="phpdocumentor-element-found-in__source" data-line="144" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.146" class="phpdocumentor-element-found-in__source" data-line="146" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1771,9 +1938,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">143</span>
+    <span class="phpdocumentor-element-found-in__line">145</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.143" class="phpdocumentor-element-found-in__source" data-line="143" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.145" class="phpdocumentor-element-found-in__source" data-line="145" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -1813,9 +1980,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">141</span>
+    <span class="phpdocumentor-element-found-in__line">143</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.141" class="phpdocumentor-element-found-in__source" data-line="141" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.143" class="phpdocumentor-element-found-in__source" data-line="143" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1894,9 +2061,9 @@ to 2 days. Mmmh.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">348</span>
+    <span class="phpdocumentor-element-found-in__line">350</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.348" class="phpdocumentor-element-found-in__source" data-line="348" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.350" class="phpdocumentor-element-found-in__source" data-line="350" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Given the raw due-data calculate the deadlines for submission and
@@ -2042,6 +2209,84 @@ using the default time-zone if none is specified.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_generateBalancingItems">
+        generateBalancingItems()
+        <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_generateBalancingItems" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">898</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.898" class="phpdocumentor-element-found-in__source" data-line="898" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Generate import data for accounting software.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">generateBalancingItems</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction">SepaBulkTransaction</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bulkTransaction</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$format</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile">DatabaseStorageFile</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$bulkTransaction</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction">SepaBulkTransaction</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$format</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Format of the export file, defaults to self::EXPORT_GNU_CASH.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_generateBalancingItems#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">throws</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html"><abbr title="\OCA\CAFEVDB\Exceptions\EnduserNotificationException">EnduserNotificationException</abbr></a></span>
+                                                            
+                                             
+                                    </dd>
+                                            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile">DatabaseStorageFile</abbr></a></span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The generated export set.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_generateProjectPayments">
         generateProjectPayments()
         <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_generateProjectPayments" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2050,9 +2295,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">457</span>
+    <span class="phpdocumentor-element-found-in__line">468</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.457" class="phpdocumentor-element-found-in__source" data-line="457" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.468" class="phpdocumentor-element-found-in__source" data-line="468" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate the payments for the specified service-fee options. The payments
@@ -2139,16 +2384,16 @@ should only return more than one item if there are also deleted items.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">772</span>
+    <span class="phpdocumentor-element-found-in__line">785</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.772" class="phpdocumentor-element-found-in__source" data-line="772" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.785" class="phpdocumentor-element-found-in__source" data-line="785" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate the export data for the given bulk-transaction and project.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">generateTransactionData</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction">SepaBulkTransaction</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bulkTransaction</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$project</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$format</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">self::EXPORT_AQBANKING</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile">EncryptedFile</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">generateTransactionData</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBulkTransaction.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction">SepaBulkTransaction</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bulkTransaction</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$project</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$format</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile">DatabaseStorageFile</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2174,8 +2419,8 @@ should only return more than one item if there are also deleted items.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$format</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">self::EXPORT_AQBANKING</span>            </dt>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Format of the export file, defaults to self::EXPORT_AQBANKING.</p>
 </section>
@@ -2189,11 +2434,62 @@ should only return more than one item if there are also deleted items.</p>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile">EncryptedFile</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile">DatabaseStorageFile</abbr></a></span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>The generated export set.</p>
 </section>
 
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getBalancingItemsExporter">
+        getBalancingItemsExporter()
+        <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_getBalancingItemsExporter" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">396</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.396" class="phpdocumentor-element-found-in__source" data-line="396" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getBalancingItemsExporter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$format</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Service-Finance-IBulkTransactionExporter.html"><abbr title="\OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter">IBulkTransactionExporter</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$format</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Export format specifier such as 'gnucash'.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Service-Finance-IBulkTransactionExporter.html"><abbr title="\OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter">IBulkTransactionExporter</abbr></a></span>
             </section>
 
 </article>
@@ -2211,9 +2507,9 @@ should only return more than one item if there are also deleted items.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">401</span>
+    <span class="phpdocumentor-element-found-in__line">412</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.401" class="phpdocumentor-element-found-in__source" data-line="401" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.412" class="phpdocumentor-element-found-in__source" data-line="412" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -2272,9 +2568,9 @@ insurance fees) and otherwise just self::TRANSACTION_TYPE_DEBIT_NOTE.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">563</span>
+    <span class="phpdocumentor-element-found-in__line">576</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.563" class="phpdocumentor-element-found-in__source" data-line="563" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.576" class="phpdocumentor-element-found-in__source" data-line="576" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -2386,15 +2682,15 @@ insurance fees) and otherwise just self::TRANSACTION_TYPE_DEBIT_NOTE.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">384</span>
+    <span class="phpdocumentor-element-found-in__line">386</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.384" class="phpdocumentor-element-found-in__source" data-line="384" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.386" class="phpdocumentor-element-found-in__source" data-line="386" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getTransactionExporter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$format</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Service-Finance-IBulkTransactionExporter.html"><abbr title="\OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter">IBulkTransactionExporter</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">getTransactionExporter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$format</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Service-Finance-IBulkTransactionExporter.html"><abbr title="\OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter">IBulkTransactionExporter</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2419,7 +2715,7 @@ insurance fees) and otherwise just self::TRANSACTION_TYPE_DEBIT_NOTE.</p>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Service-Finance-IBulkTransactionExporter.html"><abbr title="\OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter">IBulkTransactionExporter</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">null|<a href="classes/OCA-CAFEVDB-Service-Finance-IBulkTransactionExporter.html"><abbr title="\OCA\CAFEVDB\Service\Finance\IBulkTransactionExporter">IBulkTransactionExporter</abbr></a></span>
             </section>
 
 </article>
@@ -2437,9 +2733,9 @@ insurance fees) and otherwise just self::TRANSACTION_TYPE_DEBIT_NOTE.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">264</span>
+    <span class="phpdocumentor-element-found-in__line">266</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.264" class="phpdocumentor-element-found-in__source" data-line="264" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.266" class="phpdocumentor-element-found-in__source" data-line="266" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Handle bulk transaction pre notifications and gradually complete the
@@ -3094,9 +3390,9 @@ pre-notification task.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">163</span>
+    <span class="phpdocumentor-element-found-in__line">165</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.163" class="phpdocumentor-element-found-in__source" data-line="163" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.165" class="phpdocumentor-element-found-in__source" data-line="165" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Mark the bulk-transaction as submitted. This will resolve all submittance
@@ -3154,9 +3450,9 @@ spectator and its date will be change to the given date.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">679</span>
+    <span class="phpdocumentor-element-found-in__line">692</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.679" class="phpdocumentor-element-found-in__source" data-line="679" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.692" class="phpdocumentor-element-found-in__source" data-line="692" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Remove the given bulk-transaction if it is essentially unused.</p>
@@ -3234,9 +3530,9 @@ spectator and its date will be change to the given date.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">660</span>
+    <span class="phpdocumentor-element-found-in__line">673</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.660" class="phpdocumentor-element-found-in__source" data-line="660" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.673" class="phpdocumentor-element-found-in__source" data-line="673" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
     
@@ -3296,9 +3592,9 @@ spectator and its date will be change to the given date.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">624</span>
+    <span class="phpdocumentor-element-found-in__line">637</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.624" class="phpdocumentor-element-found-in__source" data-line="624" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.637" class="phpdocumentor-element-found-in__source" data-line="637" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Make a backup-copy of the associated calendar entries in order to restore
@@ -3443,9 +3739,9 @@ them after failed database transactions and the like.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/SepaBulkTransactionService.php"><a href="files/service-finance-sepabulktransactionservice.html"><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">736</span>
+    <span class="phpdocumentor-element-found-in__line">749</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.736" class="phpdocumentor-element-found-in__source" data-line="736" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.749" class="phpdocumentor-element-found-in__source" data-line="749" data-modal="source-view" data-src="files/Service/Finance/SepaBulkTransactionService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Update the given bulk-transaction. ATM this &quot;just&quot; updates the
@@ -3553,9 +3849,9 @@ in case of success.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">508</span>
+    <span class="phpdocumentor-element-found-in__line">513</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.508" class="phpdocumentor-element-found-in__source" data-line="508" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.513" class="phpdocumentor-element-found-in__source" data-line="513" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the class meta-data for the given or most recently used
@@ -3646,9 +3942,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">491</span>
+    <span class="phpdocumentor-element-found-in__line">496</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.491" class="phpdocumentor-element-found-in__source" data-line="491" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.496" class="phpdocumentor-element-found-in__source" data-line="496" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the column names of the currently used database entity.</p>
@@ -3702,9 +3998,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">365</span>
+    <span class="phpdocumentor-element-found-in__line">370</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.365" class="phpdocumentor-element-found-in__source" data-line="365" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.370" class="phpdocumentor-element-found-in__source" data-line="370" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to EntityManager::contains().</p>
@@ -3752,9 +4048,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">479</span>
+    <span class="phpdocumentor-element-found-in__line">484</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.479" class="phpdocumentor-element-found-in__source" data-line="479" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.484" class="phpdocumentor-element-found-in__source" data-line="484" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Counts entities by a set of criteria.</p>
@@ -3917,9 +4213,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">437</span>
+    <span class="phpdocumentor-element-found-in__line">442</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.437" class="phpdocumentor-element-found-in__source" data-line="437" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.442" class="phpdocumentor-element-found-in__source" data-line="442" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convenience function to generate Collections\Criteria</p>
@@ -3957,9 +4253,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">447</span>
+    <span class="phpdocumentor-element-found-in__line">452</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.447" class="phpdocumentor-element-found-in__source" data-line="447" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.452" class="phpdocumentor-element-found-in__source" data-line="452" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convenience function to generate Collections\ExpressionBuilder</p>
@@ -3997,9 +4293,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">459</span>
+    <span class="phpdocumentor-element-found-in__line">464</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.459" class="phpdocumentor-element-found-in__source" data-line="459" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.464" class="phpdocumentor-element-found-in__source" data-line="464" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -4061,9 +4357,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">408</span>
+    <span class="phpdocumentor-element-found-in__line">413</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.413" class="phpdocumentor-element-found-in__source" data-line="413" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Disable the given filter. In contrast to the upstream-method does
@@ -4116,9 +4412,9 @@ not throw an exception if the filter is not enabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">393</span>
+    <span class="phpdocumentor-element-found-in__line">398</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.393" class="phpdocumentor-element-found-in__source" data-line="393" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.398" class="phpdocumentor-element-found-in__source" data-line="398" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Enable the given filter.</p>
@@ -4177,9 +4473,9 @@ not throw an exception if the filter is not enabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">465</span>
+    <span class="phpdocumentor-element-found-in__line">470</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.465" class="phpdocumentor-element-found-in__source" data-line="465" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.470" class="phpdocumentor-element-found-in__source" data-line="470" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -4212,9 +4508,9 @@ not throw an exception if the filter is not enabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">303</span>
+    <span class="phpdocumentor-element-found-in__line">308</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.303" class="phpdocumentor-element-found-in__source" data-line="303" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.308" class="phpdocumentor-element-found-in__source" data-line="308" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
@@ -4289,9 +4585,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">286</span>
+    <span class="phpdocumentor-element-found-in__line">291</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.286" class="phpdocumentor-element-found-in__source" data-line="286" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.291" class="phpdocumentor-element-found-in__source" data-line="291" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds all entities in the repository.</p>
@@ -4343,9 +4639,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">340</span>
+    <span class="phpdocumentor-element-found-in__line">345</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.340" class="phpdocumentor-element-found-in__source" data-line="340" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.345" class="phpdocumentor-element-found-in__source" data-line="345" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds entities by a set of criteria.</p>
@@ -4418,9 +4714,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">322</span>
+    <span class="phpdocumentor-element-found-in__line">327</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.322" class="phpdocumentor-element-found-in__source" data-line="322" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.327" class="phpdocumentor-element-found-in__source" data-line="327" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
@@ -4502,9 +4798,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">353</span>
+    <span class="phpdocumentor-element-found-in__line">358</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.353" class="phpdocumentor-element-found-in__source" data-line="353" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.358" class="phpdocumentor-element-found-in__source" data-line="358" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds a single entity by a set of criteria.</p>
@@ -4825,9 +5121,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">427</span>
+    <span class="phpdocumentor-element-found-in__line">432</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.427" class="phpdocumentor-element-found-in__source" data-line="427" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Select all elements from a selectable that match the expression and
@@ -4959,9 +5255,9 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">524</span>
+    <span class="phpdocumentor-element-found-in__line">529</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.524" class="phpdocumentor-element-found-in__source" data-line="524" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.529" class="phpdocumentor-element-found-in__source" data-line="529" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -5063,9 +5359,9 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">378</span>
+    <span class="phpdocumentor-element-found-in__line">383</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#source-view.383" class="phpdocumentor-element-found-in__source" data-line="383" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to EntityManager::refresh(), return the refreshed entity in order
@@ -5389,6 +5685,7 @@ or not. This parameter is ignored if $flush is false.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Constants</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_BALANCING_ITEMS_EXPORTERS">BALANCING_ITEMS_EXPORTERS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_BANK_TRANSFER_SUBMISSION_DEADLINE">BANK_TRANSFER_SUBMISSION_DEADLINE</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_BULK_TRANSACTION_EARLY_REMINDER_SECONDS">BULK_TRANSACTION_EARLY_REMINDER_SECONDS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_BULK_TRANSACTION_REMINDER_SECONDS">BULK_TRANSACTION_REMINDER_SECONDS</a></li>
@@ -5397,6 +5694,9 @@ or not. This parameter is ignored if $flush is false.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS">DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_DUE_EVENT">DUE_EVENT</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORT_AQBANKING">EXPORT_AQBANKING</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORT_BALANCING_ITEMS_SERVICE_ALIAS">EXPORT_BALANCING_ITEMS_SERVICE_ALIAS</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORT_GNU_CASH">EXPORT_GNU_CASH</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORT_SERVICE_ALIAS">EXPORT_SERVICE_ALIAS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_EXPORTERS">EXPORTERS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_PRE_NOTIFICATION_EVENT">PRE_NOTIFICATION_EVENT</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#constant_PRE_NOTIFICATION_TASK">PRE_NOTIFICATION_TASK</a></li>
@@ -5434,8 +5734,10 @@ or not. This parameter is ignored if $flush is false.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_calculateDebitNoteDeadlines">calculateDebitNoteDeadlines()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-TimeStampTrait.html#method_formatTimeStamp">formatTimeStamp()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_generateBalancingItems">generateBalancingItems()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_generateProjectPayments">generateProjectPayments()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_generateTransactionData">generateTransactionData()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_getBalancingItemsExporter">getBalancingItemsExporter()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_getBulkTransactionSlug">getBulkTransactionSlug()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Service-Finance-SepaBulkTransactionService.html#method_getCalendarObjects">getCalendarObjects()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-TimeStampTrait.html#method_getDateTimeZone">getDateTimeZone()</a></li>

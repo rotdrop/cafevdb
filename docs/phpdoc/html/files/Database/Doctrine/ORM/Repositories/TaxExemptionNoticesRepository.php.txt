@@ -88,12 +88,12 @@ class TaxExemptionNoticesRepository extends EntityRepository
 
     $result = $this->findOneBy(
       [
-        'taxationStatutorySource.taxType' => $taxType,
+        'taxationStatutorySources.taxType' => $taxType,
         '<=dateIssued' => $dateOfUsage,
-        '|(deleted' => null,
+        '(|deleted' => null,
         '>deleted' => $dateOfUsage,
       ],
-      orderBy: [ 'assessmentPeriodStart', 'DESC' ],
+      orderBy: [ 'assessmentPeriodStart' => 'DESC' ],
     );
 
     // $result = $qb->getQuery()->getOneOrNullResult();

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,6 @@ use NumberToWords\NumberToWords;
 use NumberToWords\CurrencyTransformer\CurrencyTransformer;
 use NumberToWords\NumberTransformer\NumberTransformer;
 
-use OCP\IL10N;
 
 /**
  * A wrapper around https://github.com/kwn/number-to-words to make it even
@@ -112,9 +111,6 @@ class NumberFormatter
     $this->numberTransformer = $this->numberToWords->getNumberTransformer($this->lang);
     $this->currencyTransformer = $this->numberToWords->getCurrencyTransformer($this->lang);
 
-    // KWN has some bugs
-
-
     $this->numberFormatter = new PhpNumberFormatter($locale, PhpNumberFormatter::DECIMAL);
     $this->numberSpeller = new PhpNumberFormatter($locale, PhpNumberFormatter::SPELLOUT);
 
@@ -155,17 +151,22 @@ class NumberFormatter
    * Convert the given currency value to words using the provided or the
    * implied three letter currency code.
    *
-   * @param float $value The value to convert.
+   * @param mixed $value The value to convert.
    *
    * @param null|string $currencyISOCode The currency ISO code to use. If \null
    * use the currency code implied by the locale setting.
    *
    * @return string Textual representation of the given currency value.
    */
-  public function currencyToWords(float $value, ?string $currencyISOCode = null):string
+  public function currencyToWords(mixed $value, ?string $currencyISOCode = null):string
   {
+    if ($value instanceof RationalNumber) {
+      $value = $value->mul(100)->round(0)->getWholePart();
+    } else {
+      $value = (int)round(self::ensureFloat($value) * 100.0, 0);
+    }
     $currencyISOCode = $currencyISOCode ?? $this->currencyIsoCode;
-    $words = $this->currencyTransformer->toWords((int)($value * 100.0), $currencyISOCode);
+    $words = $this->currencyTransformer->toWords($value, $currencyISOCode);
     return $this->kwnSanitizer($words, $currencyISOCode);
   }
 
@@ -173,16 +174,34 @@ class NumberFormatter
    * Convert the given currency value to a localize number representation the provided
    * or implied three letter currency code.
    *
-   * @param float $value The value to convert.
+   * @param mixed $value The value to convert.
    *
    * @param null|string $currencyISOCode The currency ISO code to use. If \null
    * use the currency code implied by the locale setting.
    *
    * @return string Textual representation of the given currency value.
    */
-  public function formatCurrency(float $value, ?string $currencyISOCode = null):string
+  public function formatCurrency(mixed $value, ?string $currencyISOCode = null):string
   {
-    return $this->currencyFormatter->formatCurrency((float)$value, $currencyISOCode ?? $this->currencyIsoCode);
+    return $this->currencyFormatter->formatCurrency(self::ensureFloat($value), $currencyISOCode ?? $this->currencyIsoCode);
+  }
+
+  /**
+   * Convert the given number to words.
+   *
+   * @param mixed $value The value to convert.
+   *
+   * @param int $minDigits Minimum number of digits to spell out. Defaults to
+   * 1.
+   *
+   * @param int $maxDigits Maximum number of digits to spell out. Defaults to
+   * 2.
+   *
+   * @return string Textual representation of the given currency value.
+   */
+  public function numberToWords(mixed $value, int $minDigits = 1, int $maxDigits = 2):string
+  {
+    return $this->numberToWordsPhp(self::ensureFloat($value, -1), $minDigits, $maxDigits);
   }
 
   /**
@@ -198,25 +217,7 @@ class NumberFormatter
    *
    * @return string Textual representation of the given currency value.
    */
-  public function numberToWords(float $value, int $minDigits = 1, int $maxDigits = 2):string
-  {
-    return $this->numberToWordsPhp($value, $minDigits, $maxDigits);
-  }
-
-  /**
-   * Convert the given number to words.
-   *
-   * @param float $value The value to convert.
-   *
-   * @param int $minDigits Minimum number of digits to spell out. Defaults to
-   * 1.
-   *
-   * @param int $maxDigits Maximum number of digits to spell out. Defaults to
-   * 2.
-   *
-   * @return string Textual representation of the given currency value.
-   */
-  public function numberToWordsKWN(float $value, int $minDigits = 1, int $maxDigits = 2):string
+  protected function numberToWordsKWN(float $value, int $minDigits = 1, int $maxDigits = 2):string
   {
     $minDigits = min($minDigits, $maxDigits);
     $maxDigits = max($minDigits, $maxDigits);
@@ -319,7 +320,7 @@ class NumberFormatter
    *
    * @return string Textual representation of the given currency value.
    */
-  public function numberToWordsPhp(float $value, int $minDigits = 1, int $maxDigits = 2):string
+  protected function numberToWordsPhp(float $value, int $minDigits = 1, int $maxDigits = 2):string
   {
     $minDigits = min($minDigits, $maxDigits);
     $maxDigits = max($minDigits, $maxDigits);
@@ -385,5 +386,20 @@ class NumberFormatter
     $this->numberFormatter->setAttribute(PhpNumberFormatter::MIN_FRACTION_DIGITS, $minDigits);
     $this->numberFormatter->setAttribute(PhpNumberFormatter::MAX_FRACTION_DIGITS, $maxDigits);
     return $this->numberFormatter->format((float)$value);
+  }
+
+  /**
+   * @param mixed $value
+   *
+   * @return float
+   */
+  private static function ensureFloat(mixed $value, int $scale = 2):float
+  {
+    if ($value instanceof RationalNumber) {
+      $value = $value->toDecimal($scale);
+    } elseif (!is_float($value)) {
+      $value = floatval($value);
+    }
+    return $value;
   }
 }

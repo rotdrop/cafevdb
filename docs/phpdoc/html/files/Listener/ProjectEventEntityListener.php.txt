@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use Throwable;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
@@ -37,12 +36,9 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Common\GenericUndoable;
 
-use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\EventsService;
-use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Exceptions;
 
-use OCA\CAFEVDB\Common\Util;
 
 /**
  * An entity listener for Entities\ProjectEvent. The task is to remove the

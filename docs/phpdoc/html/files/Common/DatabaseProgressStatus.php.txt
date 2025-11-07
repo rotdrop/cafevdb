@@ -24,19 +24,13 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use DateTimeImmutable;
 
 use OCP\IDBConnection;
-use OCP\AppFramework\Db\Entity;
-use OCP\AppFramework\Db;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
-use OCP\AppFramework\Db\DoesNotExistException;
 
 use OCA\CAFEVDB\Database\Cloud\Mapper;
-use OCA\CAFEVDB\Database\Cloud\Entities;
-use OCA\CAFEVDB\Common\IProgressStatus;
-use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Database\Cloud\Entities;use OCA\CAFEVDB\Exceptions;
 
 /** Progress-status via database table. */
 class DatabaseProgressStatus extends AbstractProgressStatus

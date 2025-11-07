@@ -29,26 +29,26 @@ use DateTimeImmutable;
 use DateTimeInterface;
 
 use clsTinyButStrong as OpenDocumentFillerBackend;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ExecutableFinder;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\Files\File;
 use OCP\Files\IMimeTypeDetector;
-use OCP\IL10N;
 
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\ImagesService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Service\AnyToPdf;
 
 /** Autofill for Libre-/Openoffice documents. */
 class OpenDocumentFiller
@@ -193,6 +193,8 @@ class OpenDocumentFiller
         $value = 1;
       } elseif ($value === false) {
         $value = 0;
+      } elseif ($value instanceof RationalNumber) {
+        $value = $value->toDecimal();
       } elseif ($value === null) {
         $value = '';
       }
@@ -229,7 +231,14 @@ class OpenDocumentFiller
           $value = $value[$index]??null;
         }
         if (empty($value)) {
-          throw new RuntimeException($this->l->t('Data for block "%s" using the path "%s" could not be found in the substitution data.', [ $key, $reference ]));
+          // throw new RuntimeException(
+          //   $this->l->t(
+          //     'Data for block "%1$s" using the path "%2$s" could not be found in the substitution data.',
+          //     [ $key, $reference ],
+          //   ),
+          // );
+          $this->logWarn('Data for block "' . $key . '" using the path "' . $reference . '" could not be found in the substitution data.');
+          continue;
         }
         $keys = array_keys($value);
         if ($keys != array_filter($keys, 'is_int')) {
@@ -324,14 +333,14 @@ class OpenDocumentFiller
         'city' => $this->getConfigValue('streetAddressCity'),
         'postalCode' => $this->getConfigValue('streetAddressZIP'),
         'country' => $this->getConfigValue('streetAddressCountry'),
-        'email' => $this->getConfigValue('emailfromaddress'),
+        'email' => $this->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY),
       ],
     ];
 
     // Logo
     /** @var \OCP\Files\File */
-    $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
-    $substitutions['org'][ConfigService::DOCUMENT_TEMPLATE_LOGO] =
+    $logo = $this->templateService->getDocumentTemplate(ConfigConstants::DOCUMENT_TEMPLATE_LOGO);
+    $substitutions['org'][ConfigConstants::DOCUMENT_TEMPLATE_LOGO] =
       $this->imagesService->dataUriFromFile($logo, ImagesService::SVG_TEXT_TO_PATH|ImagesService::SVG_OPTIMIZE);
 
     /** @var OrganizationalRolesService $rolesService */
@@ -357,10 +366,10 @@ class OpenDocumentFiller
     }
 
     // bank account information
-    $iban = $this->getConfigValue('bankAccountIBAN');
+    $iban = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_IBAN);
     $substitutions['org']['iban'] = $iban??$this->l->t('unknown');
 
-    $bank = $this->getConfigValue('bankAccountBankName');
+    $bank = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_BANK_NAME);
     if (empty($bank)) {
       /** @var FinanceService $financeService */
       $financeService = $this->appContainer->get(FinanceService::class);
@@ -379,13 +388,19 @@ class OpenDocumentFiller
     $substitutions['org']['regNumber'] = $registrationNumber??$this->l->t('unknown');
 
     // creditor identifier
-    $substitutions['org']['CI'] = $this->getConfigValue('bankAccountCreditorIdentifier')??$this->l->t('unknown');
+    $substitutions['org']['CI'] = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER)??$this->l->t('unknown');
 
     // tax exemption notices
 
     $substitutions['org']['taxAuthorities'] = [
       'exemptionNotices' => [],
     ];
+
+    $taxNames = TaxType::getL10NValues($this->appL10n());
+    $taxKeys = array_combine(
+      array_keys($taxNames),
+      array_map(fn(string $type) => Util::dashesToCamelCase($type, dashes: ' -_'), array_keys($taxNames)),
+    );
 
     /** @var Repositories\TaxExemptionNoticesRepository $repository */
     $repository = $this->getDatabaseRepository(Entities\TaxExemptionNotice::class);
@@ -394,12 +409,26 @@ class OpenDocumentFiller
       if ($notice === null) {
         continue;
       }
-      $noticeData = $notice->toArray();
+      $noticeData = $notice->jsonSerialize();
       if ($notice->getWrittenNotice()) {
         $noticeData['writtenNotice'] = $notice->getWrittenNotice()->getData(Entities\FileData::DATA_FORMAT_URI);
       }
-      $taxType = Util::dashesToCamelCase($taxType, dashes: ' -_');
-      $substitutions['org']['taxAuthorities']['exemptionNotices'][(string)$taxType] = $noticeData;
+      $noticeData['taxes'] = $noticeData['taxationStatutorySources'];
+      unset($noticeData['taxationStatutorySources']);
+      $noticeData['taxTypes'] = [];
+      foreach ($notice->getTaxTypes() as $type) {
+        $type = (string)$type;
+        $noticeData['taxTypes'][$taxKeys[$type]] = $taxNames[$type];
+      }
+      $taxes = [];
+      foreach ($noticeData['taxes'] as $type => &$tax) {
+        $tax['taxType'] = $taxKeys[$type];
+        $tax['name'] = $taxNames[$type];
+        $taxes[$taxKeys[$type]] = $tax;
+      }
+      unset($tax);
+      $noticeData['taxes'] = $taxes;
+      $substitutions['org']['taxAuthorities']['exemptionNotices'][$taxKeys[(string)$taxType]] = $noticeData;
     }
 
     return $substitutions;

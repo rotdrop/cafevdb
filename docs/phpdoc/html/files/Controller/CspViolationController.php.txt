@@ -26,10 +26,13 @@ namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
+use OCP\IConfig;
+use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
-use OCP\IConfig;
+
+use OCA\CAFEVDB\Attributes;
 
 /** AJAX endpoints for reporting CSP violation errors. */
 class CspViolationController extends Controller
@@ -55,12 +58,11 @@ class CspViolationController extends Controller
    * @param null|string $cspFailureToken
    *
    * @return Http\Response
-   *
-   * @NoCSRFRequired
-   * @NoAdminRequired
-   * @PublicPage
-   * @NoGroupMemberRequired
    */
+  #[CoreAttributes\PublicPage]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\NoCSRFRequired]
+  #[Attributes\NoGroupMemberRequired]
   public function post(string $operation, ?string $cspFailureToken = null):Http\Response
   {
     if ($operation != 'report') {

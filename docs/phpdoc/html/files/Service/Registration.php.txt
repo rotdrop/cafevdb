@@ -30,9 +30,8 @@ use OCP\IL10N;
 use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Service\L10N\AppL10N;
-use OCA\CAFEVDB\Crypto\CloudSymmetricCryptor;
-use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Register some utiltiy services in order to ease dependency injection. */
 class Registration
@@ -57,8 +56,12 @@ class Registration
   public static function register(IRegistrationContext $context):void
   {
     $context->registerServiceAlias(
-      'export:bank-bulk-transactions:aqbanking',
+      Finance\SepaBulkTransactionService::EXPORT_SERVICE_ALIAS . 'aqbanking',
       Finance\AqBankingBulkTransactionExporter::class);
+
+    $context->registerServiceAlias(
+      Finance\SepaBulkTransactionService::EXPORT_BALANCING_ITEMS_SERVICE_ALIAS . 'gnucash',
+      Finance\GnuCashBulkTransactionBalancingItemsExporter::class);
 
     $context->registerService('AppCryptor', function(ContainerInterface $container) {
       return $container->get(EncryptionService::class)->getAppCryptor();
@@ -70,7 +73,7 @@ class Registration
     $context->registerService(self::MANAGEMENT_GROUP_ID, function(ContainerInterface $container) {
       return $container->get(IConfig::class)->getAppValue(
         $container->get('AppName'),
-        ConfigService::USER_GROUP_KEY,
+        ConfigConstants::USER_GROUP_KEY,
         null
       );
     });

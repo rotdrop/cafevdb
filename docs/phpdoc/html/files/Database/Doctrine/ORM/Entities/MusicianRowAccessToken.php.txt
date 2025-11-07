@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,11 +25,8 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
 /**
  * MusicianRowAccessToken
@@ -41,7 +38,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
  * the user-id matches also.
  */
 #[ORM\Table(name: 'MusicianRowAccessTokens')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class MusicianRowAccessToken implements \ArrayAccess
 {
@@ -71,7 +68,7 @@ class MusicianRowAccessToken implements \ArrayAccess
    * hashed, if the hashes and the user-id match then the user gets access to
    * its data. Storage is a hex-string
    */
-  #[ORM\Column(type: 'string', length: 128, unique: true, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
+  #[ORM\Column(type: 'string', length: self::HASH_LENGTH/4, unique: true, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
   private $accessTokenHash;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
@@ -136,6 +133,16 @@ class MusicianRowAccessToken implements \ArrayAccess
   }
 
   /**
+   * @param string $value
+   *
+   * @return string
+   */
+  public static function computeHash(string $value):string
+  {
+    return \hash('sha' . self::HASH_LENGTH, $value, binary: false);
+  }
+
+  /**
    * Set accessToken.
    *
    * @param string $accessToken Unhashed binary token, only a sha-hash is stored.
@@ -144,7 +151,7 @@ class MusicianRowAccessToken implements \ArrayAccess
    */
   public function setAccessToken(string $accessToken):MusicianRowAccessToken
   {
-    $this->accessTokenHash = $this->computeHash($accessToken);
+    $this->accessTokenHash = self::computeHash($accessToken);
 
     return $this;
   }
@@ -171,15 +178,5 @@ class MusicianRowAccessToken implements \ArrayAccess
   public function getAccessTokenHash():?string
   {
     return $this->accessTokenHash;
-  }
-
-  /**
-   * @param string $value
-   *
-   * @return string
-   */
-  private function computeHash(string $value):string
-  {
-    return \hash('sha' . self::HASH_LENGTH, $value, binary: false);
   }
 }

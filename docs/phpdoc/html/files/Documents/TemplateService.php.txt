@@ -47,7 +47,7 @@ class TemplateService
    * Return the file-system path to the given template file. The
    * allowed keys are defined in
    *
-   * ConfigService::DOCUMENT_TEMPLATES
+   * ConfigConstants::DOCUMENT_TEMPLATES
    *
    * @param string $templateName Configuration key of the template.
    *
@@ -74,7 +74,7 @@ class TemplateService
    * Return the given template as a file-node or null if not
    * found. The allowed keys are defined in
    *
-   * ConfigService::DOCUMENT_TEMPLATES
+   * ConfigConstants::DOCUMENT_TEMPLATES
    *
    * @param string $templateName Configuration key of the template.
    *

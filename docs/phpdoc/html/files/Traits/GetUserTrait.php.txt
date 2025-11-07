@@ -28,8 +28,7 @@ use OCP\IUserManager;
 use OCP\IUser;
 
 /**
- * Convenience function to fetch the user either from the NC user-session or
- * if in CLI mode from a super-globals variable 'cafevdb-user'
+ * Convenience function to fetch the user either from the NC user-session.
  */
 trait GetUserTrait
 {

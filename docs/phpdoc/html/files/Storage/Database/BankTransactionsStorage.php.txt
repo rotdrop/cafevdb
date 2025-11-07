@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
-use DateTimeImmutable;
 
 use OCP\EventDispatcher\IEventDispatcher;
 

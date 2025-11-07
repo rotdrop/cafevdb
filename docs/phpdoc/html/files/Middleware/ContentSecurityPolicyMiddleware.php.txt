@@ -24,9 +24,15 @@
 
 namespace OCA\CAFEVDB\Middleware;
 
-use OCP\AppFramework\Middleware;
+use ReflectionMethod;
+
+use Psr\Log\LoggerInterface;
+
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
+
+use OCA\CAFEVDB\Attributes;
 
 /**
  * Tweak the CSP header, in particular allow iframe access for "local" iframes
@@ -34,11 +40,14 @@ use OCP\AppFramework\Utility\IControllerMethodReflector;
  */
 class ContentSecurityPolicyMiddleware extends Middleware
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\HasAnnotationOrAttributeTrait;
+
   /**
    * @param IControllerMethodReflector $reflector
    */
   public function __construct(
     protected IControllerMethodReflector $reflector,
+    protected LoggerInterface $logger,
   ) {
   }
 
@@ -47,8 +56,9 @@ class ContentSecurityPolicyMiddleware extends Middleware
    */
   public function afterController($controller, $methodName, Response $response)
   {
-    $csp = $response->getContentSecurityPolicy();
-    if ($this->reflector->hasAnnotation('AllowIFrameSelf')) {
+    $reflectionMethod = new ReflectionMethod($controller, $methodName);
+    if ($this->hasAnnotationOrAttribute($reflectionMethod, Attributes\AllowIFrameSelf::class)) {
+      $csp = $response->getContentSecurityPolicy();
       $csp->addAllowedFrameAncestorDomain("'self'");
     }
     return $response;

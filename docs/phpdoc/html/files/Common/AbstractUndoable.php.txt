@@ -29,6 +29,9 @@ use OCP\AppFramework\IAppContainer;
 /** Default implementation for some methods. */
 abstract class AbstractUndoable implements IUndoable
 {
+  /** @var int */
+  protected int $sortOrder = 0;
+
   /** @var IAppContainer */
   protected IAppContainer $appContainer;
 
@@ -36,5 +39,11 @@ abstract class AbstractUndoable implements IUndoable
   public function initialize(IAppContainer $appContainer):void
   {
     $this->appContainer = $appContainer;
+  }
+
+  /** {@inheritdoc} */
+  public function getSortOrder():int
+  {
+    return $this->sortOrder;
   }
 }

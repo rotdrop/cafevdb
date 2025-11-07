@@ -35,8 +35,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-
 /** Field $updated and setter/getter. */
 trait UpdatedAt
 {

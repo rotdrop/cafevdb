@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** DBAL logger implementation which logs to the cloud log. */
 class CloudLogger implements SQLLogger
@@ -59,14 +59,14 @@ class CloudLogger implements SQLLogger
     if ($this->encryptionService->bound()) {
       $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);
       $debugMode = (int)filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]);
-      $this->enabled = 0 != ($debugMode & ConfigService::DEBUG_QUERY);
+      $this->enabled = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
     } else {
       $this->eventDispatcher->addListener(
         Events\EntityManagerBoundEvent::class,
         function(Events\EntityManagerBoundEvent $event) {
           $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);
           $debugMode = (int)filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]);
-          $this->enabled = 0 != ($debugMode & ConfigService::DEBUG_QUERY);
+          $this->enabled = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
         }
       );
     }

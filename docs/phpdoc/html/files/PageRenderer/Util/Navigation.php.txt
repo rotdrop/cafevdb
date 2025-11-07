@@ -29,7 +29,6 @@ use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Support class to generate navigation buttons and the like.

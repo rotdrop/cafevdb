@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Maintenance\IMigration;

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,20 +24,21 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCP\Group\Events\SubAdminAddedEvent as AddedEvent;
-use OCP\Group\Events\SubAdminRemovedEvent as RemovedEvent;
+use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\AppFramework\IAppContainer;
-use OCP\IGroupManager;
 use OCP\Group\Backend\INamedBackend;
+use OCP\Group\Events\SubAdminAddedEvent as AddedEvent;
+use OCP\Group\Events\SubAdminRemovedEvent as RemovedEvent;
 use OCP\IConfig;
-use Psr\Log\LoggerInterface as ILogger;
+use OCP\IGroupManager;
 use OCP\IL10N;
+use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Track changes in sub-admins and act accordingly
@@ -68,7 +69,7 @@ class SubAdminEventListener implements IEventListener
     /** @var IConfig $cloudConfig */
     $cloudConfig = $this->appContainer->get(IConfig::class);
     $appName = $this->appContainer->get('appName');
-    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigService::USER_GROUP_KEY, null);
+    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigConstants::USER_GROUP_KEY, null);
 
     if ($group->getGID() != $orchestraGroupId) {
       return; // not for us
@@ -103,7 +104,7 @@ class SubAdminEventListener implements IEventListener
       $administrableGroupGids[] = $orchestraGroup->getGID() . $groupSuffix;
     }
 
-    $requestedBackend = $configService->getConfigValue(ConfigService::USER_AND_GROUP_BACKEND_KEY, 'Database');
+    $requestedBackend = $configService->getConfigValue(ConfigConstants::USER_AND_GROUP_BACKEND_KEY, 'Database');
 
     $backends = $groupManager->getBackends();
     $groupBackend = null;

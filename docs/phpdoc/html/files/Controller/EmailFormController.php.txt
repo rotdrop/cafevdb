@@ -27,9 +27,10 @@ namespace OCA\CAFEVDB\Controller;
 use Throwable;
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\IAppContainer;
 use OCP\Files\FileInfo;
 use OCP\IDateTimeFormatter;
@@ -48,6 +49,7 @@ use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Controller class for the mass-email form */
@@ -95,9 +97,8 @@ class EmailFormController extends Controller
    * @param null|string $emailTemplate Name of an email template.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function webForm(
     ?int $projectId = null,
     ?string $projectName = '',
@@ -138,6 +139,12 @@ class EmailFormController extends Controller
 
     $emailDraftAutoSave = $this->getEmailDraftAutoSave();
 
+    $subjectTagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+    $subjectTag = trim($composer->subjectTag(), '[]');
+    if (!empty($subjectTagPrefix) && str_starts_with($subjectTag, $subjectTagPrefix)) {
+      $subjectTag = substr($subjectTag, strlen($subjectTagPrefix) + 1);
+    }
+
     $templateParameters = [
       'appName' => $this->appName(),
       'appNameTag' => 'app-' . $this->appName,
@@ -151,7 +158,7 @@ class EmailFormController extends Controller
       'requesttoken' => \OCP\Util::callRegister(), // @todo: check
       'projectName' => $projectName,
       'projectId' => $projectId,
-      ConfigService::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY),
+      ConfigConstants::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY),
       'bulkTransactionId' => $bulkTransactionId,
       // Provide enough data s.t. a form-reload will bump the user to the
       // form the email-dialog was opened from. Ideally, we intercept the
@@ -169,17 +176,28 @@ class EmailFormController extends Controller
       'emailDraftAutoSave' => $emailDraftAutoSave,
       // Needed for the editor
       'emailTemplateName' => $composer->currentEmailTemplate(),
-      'storedEmails' => $composer->storedEmails(),
+      'templateEmails' => $composer->templateEmails(),
+      'draftEmails' => $composer->draftEmails(),
       'sentEmails' => $composer->sentEmails(),
       'disclosedRecipients' => $composer->discloseRecipients(),
       'TO' => $composer->toStringArray(),
       'BCC' => $composer->blindCarbonCopy(),
       'CC' => $composer->carbonCopy(),
-      'mailTag' => $composer->subjectTag(),
+      'subjectTagPrefix' => $subjectTagPrefix,
+      'subjectTag' => $subjectTag,
       'subject' => $composer->subject(),
       'message' => $composer->messageText(),
       'sender' => $composer->fromName(),
       'catchAllEmail' => $composer->fromAddress(),
+      'fromTag' => $composer->fromTag(),
+      'fromName' => [
+        Composer::FROM_PERSONAL => $composer->fromName(Composer::FROM_PERSONAL),
+        Composer::FROM_ORCHESTRA => $composer->fromName(Composer::FROM_ORCHESTRA)
+      ],
+      'fromAddress' => [
+        Composer::FROM_PERSONAL => $composer->fromAddress(Composer::FROM_PERSONAL),
+        Composer::FROM_ORCHESTRA => $composer->fromAddress(Composer::FROM_ORCHESTRA),
+      ],
       'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
       'fileAttachmentData' => json_encode($fileAttachments),
       'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
@@ -215,23 +233,46 @@ class EmailFormController extends Controller
   }
 
   /**
-   * Regenerate the stored-email options after updating drafts or
-   * templates.
+   * Regenerate the template emails selector.
    *
    * @param Composer $composer The email composer class.
    *
    * @return string Rendered HTML template.
    */
-  private function storedEmailOptions(Composer $composer):string
+  private function templateEmailOptions(Composer $composer, ?string $currentTemplate):string
   {
     $templateParamters = [
-      'storedEmails' => $composer->storedEmails(),
+      'templateEmails' => $composer->templateEmails(),
+      'dateTimeFormatter' => $this->dateTimeFormatter(),
+      'dateTimeZone' => $this->getDateTimeZone(),
+      'currentTemplate' => $currentTemplate,
+    ];
+    $this->logInfo('TEMPLATE TEMPLATE PARAMS ' . print_r($templateParameters['templateEmails'], true));
+
+    $tmpl = $this->templateResponse(
+      'emailform/part.template-email-options',
+      $templateParamters,
+    );
+    return $tmpl->render();
+  }
+
+  /**
+   * Regenerate the draft emails selector.
+   *
+   * @param Composer $composer The email composer class.
+   *
+   * @return string Rendered HTML template.
+   */
+  private function draftEmailOptions(Composer $composer):string
+  {
+    $templateParamters = [
+      'draftEmails' => $composer->draftEmails(),
       'dateTimeFormatter' => $this->dateTimeFormatter(),
       'dateTimeZone' => $this->getDateTimeZone(),
     ];
 
     $tmpl = $this->templateResponse(
-      'emailform/part.stored-email-options',
+      'emailform/part.draft-email-options',
       $templateParamters,
     );
     return $tmpl->render();
@@ -272,9 +313,8 @@ class EmailFormController extends Controller
    * @param null|string $projectName Name of a linked project, if any.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function composer(
     string $operation,
     string $topic,
@@ -338,7 +378,7 @@ class EmailFormController extends Controller
 
           // Update list of drafts after sending the message (draft has
           // been deleted)
-          $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
+          $requestData['draftEmailOptions'] = $this->draftEmailOptions($composer);
           $requestData['sendEmailOptions'] = $this->sentEmailOptions($composer);
         }
         break;
@@ -384,21 +424,38 @@ class EmailFormController extends Controller
 
             $emailDraftAutoSave = $this->getEmailDraftAutoSave();
 
+            $subjectTagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+            $subjectTag = trim($composer->subjectTag(), '[]');
+            if (!empty($subjectTagPrefix) && str_starts_with($subjectTag, $subjectTagPrefix)) {
+              $subjectTag = substr($subjectTag, strlen($subjectTagPrefix) + 1);
+            }
+
             $templateParameters = [
               'projectName' => $projectName,
               'projectId' => $projectId,
               'emailTemplateName' => $composer->currentEmailTemplate(),
-              'storedEmails' => $composer->storedEmails(),
+              'templateEmails' => $composer->templateEmails(),
+              'draftEmails' => $composer->draftEmails(),
               'sentEmails' => $composer->sentEmails(),
               'disclosedRecipients' => $composer->discloseRecipients(),
               'TO' => $composer->toStringArray(),
               'BCC' => $composer->blindCarbonCopy(),
               'CC' => $composer->carbonCopy(),
-              'mailTag' => $composer->subjectTag(),
+              'subjectTagPrefix' => $subjectTagPrefix,
+              'subjectTag' => $subjectTag,
               'subject' => $composer->subject(),
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),
               'catchAllEmail' => $composer->fromAddress(),
+              'fromTag' => $composer->fromTag(),
+              'fromName' => [
+                Composer::FROM_PERSONAL => $composer->fromName(Composer::FROM_PERSONAL),
+                Composer::FROM_ORCHESTRA => $composer->fromName(Composer::FROM_ORCHESTRA)
+              ],
+              'fromAddress' => [
+                Composer::FROM_PERSONAL => $composer->fromAddress(Composer::FROM_PERSONAL),
+                Composer::FROM_ORCHESTRA => $composer->fromAddress(Composer::FROM_ORCHESTRA),
+              ],
               'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
               'fileAttachmentData' => json_encode($fileAttachments),
               'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
@@ -424,7 +481,12 @@ class EmailFormController extends Controller
                   $elementData[$formElement] = $composer->toStringArray();
                   break;
                 case 'subjecttag':
-                  $elementData[$formElement] = $composer->subjectTag();
+                  $subjectTagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+                  $subjectTag = trim($composer->subjectTag(), '[]');
+                  if (!empty($subjectTagPrefix) && str_starts_with($subjectTag, $subjectTagPrefix)) {
+                    $subjectTag = substr($subjectTag, strlen($subjectTagPrefix) + 1);
+                  }
+                  $elementData[$formElement] = $subjectTag;
                   break;
                 case 'fileattachments':
                   $fileAttachments = $composer->fileAttachments();
@@ -467,6 +529,12 @@ class EmailFormController extends Controller
 
             $emailDraftAutoSave = $this->getEmailDraftAutoSave();
 
+            $subjectTagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+            $subjectTag = trim($composer->subjectTag(), '[]');
+            if (!empty($subjectTagPrefix) && str_starts_with($subjectTag, $subjectTagPrefix)) {
+              $subjectTag = substr($subjectTag, strlen($subjectTagPrefix) + 1);
+            }
+
             $templateParameters = [
               'appName' =>  $this->appName(),
               'appNameTag' => 'app-' . $this->appName,
@@ -477,17 +545,28 @@ class EmailFormController extends Controller
               'dateTimeZone' => $this->getDateTimeZone(),
 
               'emailTemplateName' => $composer->currentEmailTemplate(),
-              'storedEmails' => $composer->storedEmails(),
+              'templateEmails' => $composer->templateEmails(),
+              'draftEmails' => $composer->draftEmails(),
               'sentEmails' => $composer->sentEmails(),
               'disclosedRecipients' => $composer->discloseRecipients(),
               'TO' => $composer->toStringArray(),
               'BCC' => $composer->blindCarbonCopy(),
               'CC' => $composer->carbonCopy(),
-              'mailTag' => $composer->subjectTag(),
+              'subjectTagPrefix' => $subjectTagPrefix,
+              'subjectTag' => $subjectTag,
               'subject' => $composer->subject(),
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),
               'catchAllEmail' => $composer->fromAddress(),
+              'fromTag' => $composer->fromTag(),
+              'fromName' => [
+                Composer::FROM_PERSONAL => $composer->fromName(Composer::FROM_PERSONAL),
+                Composer::FROM_ORCHESTRA => $composer->fromName(Composer::FROM_ORCHESTRA)
+              ],
+              'fromAddress' => [
+                Composer::FROM_PERSONAL => $composer->fromAddress(Composer::FROM_PERSONAL),
+                Composer::FROM_ORCHESTRA => $composer->fromAddress(Composer::FROM_ORCHESTRA),
+              ],
               'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
               'fileAttachmentData' => json_encode($fileAttachments),
               'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
@@ -533,16 +612,19 @@ class EmailFormController extends Controller
 
             break;
           case 'template':
-            $value = $requestData['storedMessagesSelector'];
+            $value = $requestData['templateMessagesSelector'];
             if (!$composer->loadTemplate($value)) {
-              return self::grumble($this->l->t('Unable to load template "%s".', $value));
+              throw new Exceptions\EnduserNotificationException(
+                message: $this->l->t('Unable to load template "%s".', $value),
+                httpStatusCode: Http::STATUS_NOT_FOUND,
+              );
             }
             $requestData['emailTemplateName'] = $composer->currentEmailTemplate();
             $requestData['message'] = $composer->messageText();
             $requestData['subject'] = $composer->subject();
             break;
           case 'draft':
-            $value = $requestData['storedMessagesSelector'];
+            $value = $requestData['draftMessagesSelector'];
             if (!preg_match('/__draft-(-?[0-9]+)/', $value, $matches)) {
               return self::grumble($this->l->t('Invalid draft name "%s".', $value));
             }
@@ -588,6 +670,12 @@ class EmailFormController extends Controller
 
             $emailDraftAutoSave = $this->getEmailDraftAutoSave();
 
+            $subjectTagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+            $subjectTag = trim($composer->subjectTag(), '[]');
+            if (!empty($subjectTagPrefix) && str_starts_with($subjectTag, $subjectTagPrefix)) {
+              $subjectTag = substr($subjectTag, strlen($subjectTagPrefix) + 1);
+            }
+
             $templateParameters = [
               'appName' =>  $this->appName(),
               'appNameTag' => 'app-' . $this->appName,
@@ -598,17 +686,28 @@ class EmailFormController extends Controller
               'dateTimeZone' => $this->getDateTimeZone(),
 
               'emailTemplateName' => $composer->currentEmailTemplate(),
-              'storedEmails' => $composer->storedEmails(),
+              'templateEmails' => $composer->templateEmails(),
+              'draftEmails' => $composer->draftEmails(),
               'sentEmails' => $composer->sentEmails(),
               'disclosedRecipients' => $composer->discloseRecipients(),
               'TO' => $composer->toStringArray(),
               'BCC' => $composer->blindCarbonCopy(),
               'CC' => $composer->carbonCopy(),
-              'mailTag' => $composer->subjectTag(),
+              'subjectTagPrefix' => $subjectTagPrefix,
+              'subjectTag' => $subjectTag,
               'subject' => $composer->subject(),
               'message' => $composer->messageText(),
               'sender' => $composer->fromName(),
               'catchAllEmail' => $composer->fromAddress(),
+              'fromTag' => $composer->fromTag(),
+              'fromName' => [
+                Composer::FROM_PERSONAL => $composer->fromName(Composer::FROM_PERSONAL),
+                Composer::FROM_ORCHESTRA => $composer->fromName(Composer::FROM_ORCHESTRA)
+              ],
+              'fromAddress' => [
+                Composer::FROM_PERSONAL => $composer->fromAddress(Composer::FROM_PERSONAL),
+                Composer::FROM_ORCHESTRA => $composer->fromAddress(Composer::FROM_ORCHESTRA),
+              ],
               'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
               'fileAttachmentData' => json_encode($fileAttachments),
               'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
@@ -666,11 +765,15 @@ class EmailFormController extends Controller
         }
         break; // load
       case 'save':
+        $selected = null;
         switch ($topic) {
           case 'template':
-            $emailTemplateName = Util::normalizeSpaces($requestData['emailTemplateName']);
+            $selected =
+              $emailTemplateName = Util::normalizeSpaces($requestData['templateMessagesSelector']);
             if (empty($emailTemplateName)) {
-              return self::grumble($this->l->t('Email template name must not be empty'));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('Email template name must not be empty'),
+              );
             }
             if ($composer->validateTemplate()) {
               $composer->storeTemplate($emailTemplateName);
@@ -694,13 +797,15 @@ class EmailFormController extends Controller
           $requestData['diagnostics']['caption'] =
             $this->l->t('%s could not be saved', ucfirst($topic));
         } else {
-          $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
+          $emailOptions = $topic . 'EmailOptions';
+          $requestData[$emailOptions] = $this->$emailOptions($composer, $selected);
+          $this->logInfo($emailOptions . ' OPTIONS ' . print_r($requestData[$emailOptions], true));
         }
         break;
       case 'delete':
         switch ($topic) {
           case 'template':
-            $composer->deleteTemplate($requestData['emailTemplateName']);
+            $composer->deleteTemplate($requestData['templateMessagesSelector']);
             $composer->setDefaultTemplate();
             $requestData['emailTemplateName'] = $composer->currentEmailTemplate();
             $requestData['message'] = $composer->messageText();
@@ -718,7 +823,8 @@ class EmailFormController extends Controller
           default:
             return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
         }
-        $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
+        $emailOptions = $topic + 'EmailOptions';
+        $requestData[$emailOptions] = $this->$emailOptions($composer);
         break;
       case 'validateEmailRecipients':
         $composer->validateFreeFormAddresses(
@@ -785,9 +891,8 @@ class EmailFormController extends Controller
    * transaction if any.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function recipientsFilter(
     ?int $projectId,
     ?string $projectName,
@@ -887,9 +992,8 @@ class EmailFormController extends Controller
    * @param string $operation Operation to perform.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function contacts(string $operation):Response
   {
     switch ($operation) {
@@ -1015,9 +1119,8 @@ class EmailFormController extends Controller
    * @param string $source Attachment origin.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function attachment(string $source):DataResponse
   {
     $composer = $this->appContainer->query(Composer::class);

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-, 20252025 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,11 +45,13 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**Table generator for Projects table. */
 class Projects extends PMETableViewBase
 {
+  use FieldTraits\ActionMenuToggleTrait;
   use FieldTraits\InstrumentsTrait;
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
@@ -146,9 +148,9 @@ class Projects extends PMETableViewBase
   public function shortTitle()
   {
     if (!empty($this->projectName)) {
-      return $this->l->t("%s Project %s", [ ucfirst($this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY)), $this->projectName]);
+      return $this->l->t("%s Project %s", [ ucfirst($this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY)), $this->projectName]);
     } else {
-      return $this->l->t("%s Projects", [ ucfirst($this->getConfigValue(ConfigService::ORCHESTRA_NAME_KEY)) ]);
+      return $this->l->t("%s Projects", [ ucfirst($this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY)) ]);
     }
   }
 
@@ -184,7 +186,6 @@ class Projects extends PMETableViewBase
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
     $instrumentInfo  = $this->getInstrumentInfo();
@@ -243,7 +244,7 @@ class Projects extends PMETableViewBase
     // Navigation style: B - buttons (default), T - text links, G - graphic links
     // Buttons position: U - up, D - down (default)
     //$opts['navigation'] = 'DB';
-    $opts['navigation'] = self::PME_NAVIGATION_NO_MULTI . 'C';
+    // $opts['navigation'] = self::PME_NAVIGATION_NO_MULTI . 'C';
 
     // Display special page elements
     $opts['display'] = [
@@ -464,7 +465,7 @@ class Projects extends PMETableViewBase
   <div class="dropdown-menu">
 ';
           },
-          'postfix' => function($op, $when, $k, $row, $pme) {
+          'postfix' => function($op, $when, $k, $row, $pme) use ($instrumentInfo) {
             $html = '';
             if ($op == 'copy') {
               $html .= '
@@ -796,16 +797,16 @@ class Projects extends PMETableViewBase
             // fetch the basic list-info from the lists-server
             $listInfo = $this->listsService->getListInfo($value);
             if (empty($listInfo)) {
-                $l10nStatus = $this->l->t($status = 'unset');
+              $l10nStatus = $this->l->t($status = 'unset');
             } else {
-                $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
-                if (empty($this->listsService->getListConfig($value, 'emergency'))) {
-                    $l10nStatus = $this->l->t($status = 'active');
-                } else {
-                    $l10nStatus = $this->l->t($status = 'closed');
-                }
-                $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
-                // $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
+              $listAddress = $listInfo[MailingListsService::LIST_CONFIG_FQDN_LISTNAME];
+              if (empty($this->listsService->getListConfig($value, 'emergency'))) {
+                $l10nStatus = $this->l->t($status = 'active');
+              } else {
+                $l10nStatus = $this->l->t($status = 'closed');
+              }
+              $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
+              // $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
             }
           } catch (Throwable $t) {
             $this->logException($t, 'Unable to communicate with mailing list server.');
@@ -1062,19 +1063,24 @@ class Projects extends PMETableViewBase
       return true;
     };
 
-    $opts['display']['custom_navigation'] = function($rec, $groupby_rec, $row, $pme) {
-      $projectId = $rec['id'];
-      $projectName = $row[$this->queryField('name')];
-      return $this->projectActionMenu($projectId, $projectName, overview: true, direction: 'left');
-    };
+    $this->installActionMenuToggle(
+      $opts,
+      fn($rec, $groupby_rec, $row, $pme)
+      =>
+      [ 'entityId' => (int)$rec['id'], 'projectName' => $row[$this->queryField('name')] ],
+    );
 
     $opts = Util::arrayMergeRecursive($this->generateBasePMEOptions(), $opts);
 
     if ($this->projectId > 0) {
       $opts['buttons'] = $this->pageNavigation->prependTableButtons(buttons: []);
+      $menuData = [
+        'entityId' => (int)$this->projectId,
+        'projectName' => $this->projectName,
+      ];
       foreach (['C', 'P', 'D', 'V'] as $operationMode) {
-        foreach (['up' => 'down', 'down' => 'up'] as $position => $direction) {
-          $actionMenu = $this->projectActionMenu($this->projectId, $this->projectName, direction: 'left', dropDirection: $direction);
+        foreach (['up', 'down'] as $position) {
+          $actionMenu = $this->generateActionMenuToggle($menuData);
           $button = [
             'code' => $actionMenu,
             'name' => 'actions',
@@ -1113,46 +1119,6 @@ class Projects extends PMETableViewBase
    data-post="' . $post . '" data-json=\'' . $json . '\'
    title="' . $this->toolTipsService['page-renderer:projects:edit-' . $template] . '"
 >' . $this->l->t('edit') . '</a>';
-
-    return $html;
-  }
-
-  /**
-   * Generate a HTML snippet for the project actions menu, giving access to
-   * other pages and cloud services related to the project.
-   *
-   * @param int $projectId Entity id.
-   *
-   * @param string $projectName Project name.
-   *
-   * @param bool $overview Whether this is the overview in which page the
-   * overview menu entry is not generated.
-   *
-   * @param string $direction Menu direction left, right.
-   *
-   * @param string $dropDirection Drop up or down.
-   *
-   * @return string HTML.
-   */
-  public function projectActionMenu(
-    int $projectId,
-    string $projectName,
-    bool $overview = false,
-    string $direction = 'left',
-    string $dropDirection = 'down',
-  ):string {
-    $templateParameters = [
-      'projectId' => $projectId,
-      'projectName' => $projectName,
-      'toolTips' => $this->toolTipsService,
-      'direction' => $direction,
-      'dropDirection' => $dropDirection,
-    ];
-    $template = $this->templateResponse(
-      'fragments/projects/project-actions',
-      $templateParameters,
-    );
-    $html = $template->render();
 
     return $html;
   }

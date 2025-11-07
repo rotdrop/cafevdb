@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use OCP\IUser;
-use OCP\IDBConnection;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;

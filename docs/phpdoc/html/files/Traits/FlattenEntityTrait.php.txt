@@ -70,8 +70,9 @@ trait FlattenEntityTrait
     $musicianData['name'] = $musicianData['personalPublicName'];
     $musicianData['phone'] = $musicianData['fixedLinePhone'];
     $musicianData['mobile'] = $musicianData['mobilePhone'];
-    $musicianData['streetAndNumber'] = $musicianData['street'] . ' ' . $musicianData['streetNumber'];
-    $musicianData['numberAndStreet'] = $musicianData['streetNumber'] . ' ' . $musicianData['street'];
+    $musicianData['streetAndNumber'] = trim($musicianData['street'] . ' ' . $musicianData['streetNumber']);
+    $musicianData['numberAndStreet'] = trim($musicianData['streetNumber'] . ' ' . $musicianData['street']);
+    $musicianData['labelledPOBox'] = empty($musicianData['poBox']) ? '' : $this->l->t('P.O. Box') . ' ' . $musicianData['poBox'];
 
     if ($only === null) {
       $only = [

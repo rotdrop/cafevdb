@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Cloud\Entities;
 
-use Doctrine\DBAL\Types\Types;
 
 use OCP\AppFramework\Db\Entity;
 

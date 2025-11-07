@@ -26,36 +26,37 @@ namespace OCA\CAFEVDB\Middleware;
 
 use Exception;
 
+use Psr\Log\LoggerInterface;
+use ReflectionMethod;
+
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
 use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
 
+use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Service\AuthorizationService;
 
 /**
- * Verifies whether an user has at least subadmin rights.
- * To bypass use the `@NoSubadminRequired` annotation
+ * Verifies whether an user has at least subadmin rights. To bypass use the
+ * `@NoGroupMemberRequired` annotation or attribute.
  */
 class GroupMemberMiddleware extends Middleware
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\HasAnnotationOrAttributeTrait;
 
-  /**
-   * @param IControllerMethodReflector $reflector
-   *
-   * @param AuthorizationService $authorizationService
-   *
-   * @param IL10N $l
-   */
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected IControllerMethodReflector $reflector,
     protected AuthorizationService $authorizationService,
+    protected IControllerMethodReflector $reflector,
     protected IL10N $l,
+    protected LoggerInterface $logger,
   ) {
   }
+  // phpcs:enable
 
   /**
    * {@inheritdoc}
@@ -64,7 +65,8 @@ class GroupMemberMiddleware extends Middleware
    */
   public function beforeController($controller, $methodName)
   {
-    if (!$this->reflector->hasAnnotation('NoGroupMemberRequired')) {
+    $reflectionMethod = new ReflectionMethod($controller, $methodName);
+    if (!$this->hasAnnotationOrAttribute($reflectionMethod, Attributes\NoGroupMemberRequired::class)) {
       if (!$this->authorizationService->authorized(null, AuthorizationService::PERMISSION_FRONTEND)) {
         throw new NotAdminException($this->l->t('Logged in user must be a member of the orchestra group'));
       }

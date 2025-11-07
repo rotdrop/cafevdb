@@ -29,8 +29,6 @@ use OCP\User\Events\UserLoggedInWithCookieEvent as Event2;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
-use OCP\IGroupManager;
-use OCP\IConfig;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 

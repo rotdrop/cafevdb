@@ -31,7 +31,6 @@ use OCP\Files\Node as FileSystemNode;
 use OCP\Files\FileInfo;
 use OCP\Files;
 
-use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Remove the given path which may either point to a file or folder

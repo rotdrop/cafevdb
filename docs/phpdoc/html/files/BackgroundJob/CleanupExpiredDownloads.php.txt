@@ -38,8 +38,6 @@ use Psr\Log\LoggerInterface as ILogger;
 use OCP\Share\IManager as IShareManager;
 use OCP\Share\IShare;
 
-use OCA\CAFEVDB\Storage\AppStorage;
-use OCA\CAFEVDB\Common\PlainFileProgressStatus;
 
 /**
  * Cleanup temporary file downloads where the share-link has expired. This is

@@ -25,32 +25,31 @@
 namespace OCA\CAFEVDB\Traits;
 
 use DateTime;
-use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 
 use Behat\Transliterator\Transliterator;
 
-use OCP\IUser;
-use OCP\IConfig;
-use OCP\IGroup;
-use OCP\IL10N;
-use Psr\Log\LoggerInterface;
-use OCP\IUserSession;
 use OCP\AppFramework\IAppContainer;
-use OCP\IURLGenerator;
-use OCP\IDateTimeFormatter;
-use OCP\IUserManager;
-use OCP\IGroupManager;
-use OCP\Group\ISubAdmin;
 use OCP\App\IAppManager;
+use OCP\Group\ISubAdmin;
+use OCP\IConfig;
+use OCP\IDateTimeFormatter;
+use OCP\IGroup;
+use OCP\IGroupManager;
+use OCP\IL10N;
+use OCP\IURLGenerator;
+use OCP\IUser;
+use OCP\IUserManager;
+use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Common\Util;
-
-use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Too big a traits class to forward most of the ConfigService methods to the
@@ -442,7 +441,7 @@ trait ConfigTrait
   /** @return null|string the User id of the share-owner, if configured. */
   protected function shareOwnerId():?string
   {
-    return $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
+    return $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
   }
 
   /**
@@ -575,31 +574,31 @@ trait ConfigTrait
   /** @return int */
   protected function getClubMembersProjectId():int
   {
-    return (int)$this->getConfigValue(ConfigService::CLUB_MEMBER_PROJECT_ID_KEY, 0);
+    return (int)$this->getConfigValue(ConfigConstants::CLUB_MEMBER_PROJECT_ID_KEY, 0);
   }
 
   /** @return string */
   protected function getClubMembersProjectName():string
   {
-    return $this->getConfigValue(ConfigService::CLUB_MEMBERS_PROJECT_KEY, '');
+    return $this->getConfigValue(ConfigConstants::CLUB_MEMBERS_PROJECT_KEY, '');
   }
 
   /** @return int */
   protected function getExecutiveBoardProjectId():int
   {
-    return (int)$this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0);
+    return (int)$this->getConfigValue(ConfigConstants::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0);
   }
 
   /** @return string */
   protected function getExcutiveBoardProjectName():string
   {
-    return $this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_KEY, '');
+    return $this->getConfigValue(ConfigConstants::EXECUTIVE_BOARD_PROJECT_KEY, '');
   }
 
   /** @return null|string */
   protected function getSharedFolderPath():?string
   {
-    return $this->getConfigValue(ConfigService::SHARED_FOLDER, null);
+    return $this->getConfigValue(ConfigConstants::SHARED_FOLDER, null);
   }
 
   /**
@@ -628,7 +627,7 @@ trait ConfigTrait
    *
    * @param null|string $templateName If given return the full path to the
    * given document template which can be one of the array-keys of
-   * ConfigService::DOCUMENT_TEMPLATES.
+   * ConfigConstants::DOCUMENT_TEMPLATES.
    *
    * @param bool $dirName If $templateName is given return only the
    * dirname part of the path.
@@ -643,13 +642,13 @@ trait ConfigTrait
       return null;
     }
     $pathComponents[] = $sharedFolder;
-    $templatesFolder = $this->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER);
+    $templatesFolder = $this->getConfigValue(ConfigConstants::DOCUMENT_TEMPLATES_FOLDER);
     if (empty($templatesFolder)) {
       return null;
     }
     $pathComponents[] = $templatesFolder;
     if (!empty($templateName)) {
-      $subFolder = ConfigService::DOCUMENT_TEMPLATES[$templateName]['folder']??null;
+      $subFolder = ConfigConstants::DOCUMENT_TEMPLATES[$templateName]['folder']??null;
       if (!empty($subFolder)) {
         $subFolder = $this->getConfigValue($subFolder);
         if (!empty($subFolder)) {
@@ -670,7 +669,7 @@ trait ConfigTrait
    */
   protected function getProjectsFolderPath():?string
   {
-    return $this->getSharedSubFolderPath(ConfigService::PROJECTS_FOLDER);
+    return $this->getSharedSubFolderPath(ConfigConstants::PROJECTS_FOLDER);
   }
 
   /**
@@ -678,7 +677,7 @@ trait ConfigTrait
    */
   protected function getFinanceFolderPath():?string
   {
-    return $this->getSharedSubFolderPath(ConfigService::FINANCE_FOLDER);
+    return $this->getSharedSubFolderPath(ConfigConstants::FINANCE_FOLDER);
   }
 
   /**
@@ -690,7 +689,7 @@ trait ConfigTrait
     if (empty($financeFolder)) {
       return null;
     }
-    $transactionsFolder = $this->getConfigValue(ConfigService::TRANSACTIONS_FOLDER);
+    $transactionsFolder = $this->getConfigValue(ConfigConstants::TRANSACTIONS_FOLDER);
     if (empty($transactionsFolder)) {
       return null;
     }
@@ -706,7 +705,7 @@ trait ConfigTrait
     if (empty($financeFolder)) {
       return null;
     }
-    $balancesFolder = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
+    $balancesFolder = $this->getConfigValue(ConfigConstants::BALANCES_FOLDER);
     if (empty($balancesFolder)) {
       return null;
     }
@@ -722,7 +721,7 @@ trait ConfigTrait
     if (empty($balancesFolder)) {
       return null;
     }
-    $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
+    $projectsFolder = $this->getConfigValue(ConfigConstants::PROJECTS_FOLDER);
     if (empty($projectsFolder)) {
       return null;
     }
@@ -789,7 +788,7 @@ trait ConfigTrait
    */
   protected function getPostBoxFolderPath():?string
   {
-    return $this->getSharedSubFolderPath(ConfigService::POSTBOX_FOLDER);
+    return $this->getSharedSubFolderPath(ConfigConstants::POSTBOX_FOLDER);
   }
 
   /**
@@ -797,7 +796,7 @@ trait ConfigTrait
    */
   protected function getOutBoxFolderPath():?string
   {
-    return $this->getSharedSubFolderPath(ConfigService::OUTBOX_FOLDER);
+    return $this->getSharedSubFolderPath(ConfigConstants::OUTBOX_FOLDER);
   }
 
   /** @return string Image web-path to the app-icon. */
@@ -1057,7 +1056,7 @@ trait ConfigTrait
   }
 
   /**
-   * Call ConfigService::formatTimeStamp() with the current date and time.
+   * Call ConfigConstants::formatTimeStamp() with the current date and time.
    *
    * @param null|string $format
    *
@@ -1136,7 +1135,7 @@ trait ConfigTrait
     if (empty($this->toolTipsService)) {
       $this->toolTipsService = $this->di(ToolTipsService::class);
       if (!empty($this->toolTipsService)) {
-        $this->toolTipsService->debug($this->shouldDebug(ConfigService::DEBUG_TOOLTIPS));
+        $this->toolTipsService->debug($this->shouldDebug(ConfigConstants::DEBUG_TOOLTIPS));
       }
     }
     return $this->toolTipsService;

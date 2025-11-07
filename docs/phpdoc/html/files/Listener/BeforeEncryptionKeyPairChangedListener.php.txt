@@ -25,11 +25,11 @@
 
 namespace OCA\CAFEVDB\Listener;
 
+use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\AppFramework\IAppContainer;
-use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Events\BeforeEncryptionKeyPairChanged as HandledEvent;
 

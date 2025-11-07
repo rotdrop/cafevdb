@@ -25,7 +25,6 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 use OCP\ILogger;
 
 /** Debugging helper providing access to the cloud logger. */

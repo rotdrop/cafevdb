@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  * GeoPostalCodeTranslation
  */
 #[ORM\Table(name: 'GeoPostalCodeTranslations')]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[Gedmo\Loggable(enabled: false)]
 #[ORM\HasLifecycleCallbacks]
 class GeoPostalCodeTranslation implements \ArrayAccess

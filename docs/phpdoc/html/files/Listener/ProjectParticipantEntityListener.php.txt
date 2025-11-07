@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine
+ * @copyright 2024-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,6 +35,7 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant as Entity;
@@ -42,9 +43,9 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\AuthorizationService;
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Entity listener for project participation.
@@ -174,6 +175,32 @@ class ProjectParticipantEntityListener
     }
   }
 
+ /**
+   * {@inheritdoc}
+   */
+  public function prePersist(Entity $entity, ORMEvent\PrePersistEventArgs $eventArgs)
+  {
+    $this->entityManager->registerPreCommitAction(
+      new GenericUndoable(
+        function() use ($entity) {
+          $needFlush = false;
+          /** @var Entities\ProjectParticipantField $field */
+          foreach ($entity->getProject()->getParticipantFields() as $field) {
+            $datum = Entities\ProjectParticipantFieldDatum::fromDefaultValue($field, $entity);
+            if ($datum === null) {
+              continue;
+            }
+            $this->entityManager->persist($datum);
+            $needFlush = true;
+          }
+          if ($needFlush) {
+            $this->entityManager->flush();
+          }
+        },
+      ),
+    );
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -231,7 +258,7 @@ class ProjectParticipantEntityListener
     $cloudConfig = $this->appContainer->get(IConfig::class);
 
     $appName = $this->appContainer->get('appName');
-    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigService::USER_GROUP_KEY);
+    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigConstants::USER_GROUP_KEY);
 
     if (empty($orchestraGroupId)) {
       return;
@@ -239,8 +266,9 @@ class ProjectParticipantEntityListener
 
     /** @var EncryptionService $encryptionService */
     $encryptionService = $this->appContainer->get(EncryptionService::class);
-    $executiveBoardProjectId = $encryptionService->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, -1);
-    if ($entity->getProject()->getId() != $executiveBoardProjectId) {
+    $executiveBoardProjectId = $encryptionService->getConfigValue(ConfigConstants::EXECUTIVE_BOARD_PROJECT_ID_KEY, -1);
+    if ($entity->getParticipationContext() == ParticipationContext::ASSOCIATES
+        || $entity->getProject()->getId() != $executiveBoardProjectId) {
       // nothing to do
       return;
     }

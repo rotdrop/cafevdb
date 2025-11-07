@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  */
 #[ORM\Table(name: 'GeoPostalCodes')]
 #[ORM\UniqueConstraint(columns: ['country', 'postal_code', 'name'])]
+#[ORM\Index(name: 'updated', columns: ['updated'])]
 #[ORM\Entity]
 #[Gedmo\Loggable(enabled: false)]
 class GeoPostalCode implements \ArrayAccess

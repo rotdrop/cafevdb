@@ -24,10 +24,8 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use Throwable;
 
 use OCP\AppFramework\IAppContainer;
-use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
@@ -83,7 +81,7 @@ class MusicianEntityListener
   #[ORM\PreUpdate]
   public function preUpdate(Entities\Musician $musician, ORMEvent\PreUpdateEventArgs $event)
   {
-    $this->logInfo('CHGSET ' . print_r($event->getEntityChangeSet(), true));
+    // $this->logInfo('CHGSET ' . print_r($event->getEntityChangeSet(), true));
     $musicianId = $musician->getId();
     $field = 'userIdSlug';
     if ($event->hasChangedField($field)) {
@@ -127,6 +125,13 @@ class MusicianEntityListener
         [ $field => $event->getOldValue($field) ],
       );
     }
+    $field = 'addressBookUri';
+    if ($event->hasChangedField($field)) {
+      $this->preUpdateValues[$musicianId] = array_merge(
+        $this->preUpdateValues[$musicianId] ?? [],
+        [ $field => $event->getOldValue($field) ],
+      );
+    }
   }
 
   /**
@@ -162,21 +167,25 @@ class MusicianEntityListener
   /**
    * {@inheritdoc}
    *
-   * Remove should in principle not be neccessary as soft-deletion shoujld
+   * Remove should in principle not be neccessary as soft-deletion should
    * trigger the pre-update hook which already will break the addressbook
    * link.
    */
-  #[ORM\PrePersist]
-  #[ORM\PreUpdate]
+  #[ORM\PostPersist]
+  #[ORM\PostUpdate]
+  #[ORM\PostDelete]
   public function synchronizeContact(Entities\Musician $musician, LifecycleEventArgs $eventArgs)
   {
-    if (empty($musician->getAddressBookUri())) {
-      return;
+    if ($eventArgs instanceof ORMEvent\PostUpdateEventArgs) {
+      $field = 'addressBookUri';
+      $musicianId = $musician->getId();
+      $addressBookUri = $this->preUpdateValues[$musicianId][$field] ?? null;
+      unset($this->preUpdateValues[$musicianId][$field]);
+    } else {
+      $addressBookUri = $musician->getAddressBookUri();
     }
     /** @var ContactsService $contactsService */
     $contactsService = $this->appContainer->get(ContactsService::class);
-    if (!$contactsService->registerContactSynchronization($musician)) {
-      $this->logError('Contacts-synchronization could not be registered for ' . $musician->getPublicName());
-    }
+    $contactsService->registerContactSynchronization($musician, $addressBookUri);
   }
 }

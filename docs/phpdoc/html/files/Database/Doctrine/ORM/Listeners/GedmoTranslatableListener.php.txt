@@ -44,7 +44,7 @@ class GedmoTranslatableListener extends \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\
   const LOCALE_CLASS_APP = 'app';
   /**
    * @var string
-   * Translations should use default locale, i.e. ConfigService::DEFAULT_LOCALE
+   * Translations should use default locale, i.e. ConfigConstants::DEFAULT_LOCALE
    */
   const LOCALE_CLASS_DEFAULT = 'default';
   /**

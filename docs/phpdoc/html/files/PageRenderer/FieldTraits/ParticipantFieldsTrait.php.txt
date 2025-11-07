@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,31 +28,24 @@ use Throwable;
 use Exception;
 use RuntimeException;
 
-use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
-
-use OCP\Files as CloudFiles;
 use OCP\Files\NotFoundException;
 
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
-
+use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Common\Functions;
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
-
-use OCA\CAFEVDB\Controller\DownloadsController;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
-
-use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 /** Participant-fields. */
 trait ParticipantFieldsTrait
@@ -65,6 +58,8 @@ trait ParticipantFieldsTrait
   use ParticipantFieldsCgiNameTrait;
   use SubstituteSQLFragmentTrait;
   use MusicianFromRowTrait;
+
+  protected const MONETARY_TYPE = DBConstants::MONETARY_TYPE;
 
   /** @var UserStorage */
   protected UserStorage $userStorage;
@@ -222,7 +217,7 @@ trait ParticipantFieldsTrait
           'name' => $this->l->t($fieldName),
           'tab' => $tab,
           'css'      => [ 'postfix' => $css, ],
-          'default|A'  => $field['default_value'],
+          'default|A'  => $field->getDefaultValue()?->getKey(),
           'filter' => [
             'having' => true,
           ],
@@ -342,6 +337,14 @@ trait ParticipantFieldsTrait
           }
         }
 
+        $defaultValue = $field->getDefaultValue();
+        $defaultButton = '<input type="button"
+       value="' . $this->l->t('Revert to default') . '"
+       class="display-postfix revert-to-default [BUTTON_STYLE]"
+       title="' . $this->toolTipsService[self::$toolTipsPrefix . ':revert-to-default'].'"
+       data-field-id="' . $fieldId . '"
+       data-field-property="[FIELD_PROPERTY]"
+/>';
         switch ($multiplicity) {
           case FieldMultiplicity::SIMPLE:
             /*-********************************************************************
@@ -357,14 +360,8 @@ trait ParticipantFieldsTrait
 
             $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_fqn, NULL))';
 
-            $defaultValue = $field->getDefaultValue();
-            $defaultButton = '<input type="button"
-       value="'.$this->l->t('Revert to default').'"
-       class="display-postfix revert-to-default [BUTTON_STYLE]"
-       title="'.$this->toolTipsService[self::$toolTipsPrefix . ':revert-to-default'].'"
-       data-field-id="'.$fieldId.'"
-       data-field-property="[FIELD_PROPERTY]"
-/>';
+            $keyFdd['default'] =
+              $valueFdd['default'] = $defaultValue?->getData();
 
             switch ($dataType) {
               case FieldType::RECEIVABLES:
@@ -376,7 +373,7 @@ trait ParticipantFieldsTrait
                   $fieldDescData, $tableName, 'supporting_document_id', [
                     'input' => 'SRH',
                     'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
-  IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_fqn, NULL)
+  IF($join_table.field_id = ' . $fieldId . $deletedSqlFilter . ', $join_col_fqn, NULL)
   ORDER BY $order_by))',
                     'values' => [
                       'orderby' => '$table.option_key ASC',
@@ -400,7 +397,7 @@ trait ParticipantFieldsTrait
     ),
     0
   )
-  AS DECIMAL(7, 2)
+  AS ' . self::MONETARY_TYPE . '
 )',
                       'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
                       'align' => 'right',
@@ -1134,7 +1131,7 @@ trait ParticipantFieldsTrait
   ' . $this->joinTables[$optionsTableName] . '.data,
   NULL
 )';
-                    $sql = 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))';
+                    $sql = 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS ' . self::MONETARY_TYPE . ')';
                   } else {
                     // comparatively difficult because of the many multi-valued joins.
 
@@ -1142,7 +1139,7 @@ trait ParticipantFieldsTrait
   $join_table.field_id = ' . $fieldId . '
   AND $join_table.deleted IS NULL
   AND ' . $this->joinTables[$optionsTableName] . '.key = $join_col_fqn,
-  CAST(' . $this->joinTables[$optionsTableName] . '.data AS DECIMAL(7, 2)),
+  CAST(' . $this->joinTables[$optionsTableName] . '.data AS ' . self::MONETARY_TYPE . '),
   NULL
 )';
                     $optionKeySql = 'IF(
@@ -1152,7 +1149,7 @@ trait ParticipantFieldsTrait
   $join_col_fqn,
   NULL
 )';
-                    $sql = 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS DECIMAL(7, 2))';
+                    $sql = 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS ' . self::MONETARY_TYPE . ')';
                   }
 
                   list($subTotalsIndex, $subTotalsName) = $this->makeJoinTableField(
@@ -1206,6 +1203,14 @@ trait ParticipantFieldsTrait
                 $keyFdd['css']['postfix'][] = 'no-chosen';
                 $keyFdd['css']['postfix'][] = 'selectize';
                 $keyFdd['css']['postfix'][] = 'select-wide';
+
+                if (!empty($defaultValue)) {
+                  $keyFdd['display|ACP'] = $valueFdd['display|ACP'] ?? [];
+                  $keyFdd['display|ACP']['postfix'] =
+                    ($keyFdd['display|ACP']['postfix'] ?? '')
+                    . str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]', ], [ 'image-left-of-text', 'defaultValue', ], $defaultButton);
+                }
+
                 break;
             }
             break;
@@ -1260,7 +1265,7 @@ trait ParticipantFieldsTrait
   AND ' . $this->joinTables[$optionsTableName] . '.key = $join_col_fqn
   AND $join_table.option_value IS NOT NULL
   AND $join_table.option_value <> "",
-  CAST($join_table.option_value AS DECIMAL(7, 2)),
+  CAST($join_table.option_value AS ' . self::MONETARY_TYPE . '),
   NULL
 )';
               // in contrast to Multiplicity::PARALLEL and ::MULTIPLE the
@@ -1286,7 +1291,7 @@ trait ParticipantFieldsTrait
                     'select' => 'T',
                     'align' => 'right',
                     'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
-                    'sql' => $subTotalsSign . 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS DECIMAL(7, 2))',
+                    'sql' => $subTotalsSign . 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS ' . self::MONETARY_TYPE . ')',
                     'values' => [
                       'column' => 'option_key',
                       'encode' => 'BIN2UUID(%s)',
@@ -1352,6 +1357,41 @@ trait ParticipantFieldsTrait
       \''.self::JOIN_KEY_SEP.'\',
       BIN2UUID($join_table.key),
       COALESCE($join_table.l10n_label, "")
+    ),
+    NULL
+  )
+  ORDER BY $order_by)
+)',
+                'values' => [
+                  'grouped' => true,
+                  'filters' => ('$table.field_id = '.$fieldId
+                                .$deletedValueFilter),
+                  'orderby' => '$table.key ASC',
+                ],
+              ],
+            );
+            // $labelFdd = &$fieldDescData[$labelFddName];
+
+            // Allow update of the balancing account for recurring receivables.
+            /* list($labelFddIndex, $labelFddName) = */$this->makeJoinTableField(
+              $fieldDescData, $optionsTableName, 'balancing_account', [
+                'name' => $this->l->t('Balancing account for %s', $fieldName),
+                'tab'  => $tab,
+                'css'  => [ 'postfix' => [ 'participant-field-balancing account', 'field-id-'.$fieldId, ] ],
+                'select' => 'M',
+                'input' => ' HR',
+                'php' => fn() => '',
+                'filter' => [
+                  'having' => true,
+                ],
+                'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
+  DISTINCT
+  IF(
+    $join_table.field_id = '.$fieldId.$deletedSqlFilter.',
+    CONCAT_WS(
+      \''.self::JOIN_KEY_SEP.'\',
+      BIN2UUID($join_table.key),
+      COALESCE($join_table.balancing_account, "")
     ),
     NULL
   )
@@ -1518,6 +1558,9 @@ trait ParticipantFieldsTrait
               // generate the per-option input rows
 
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+              if (empty($musician)) {
+                return '';
+              }
               $subDir = $this->participantFieldsService->getFileSystemFieldName($field);
               $rowHtml = '';
               $hasEmptyLabelledValues = false;
@@ -1576,9 +1619,14 @@ trait ParticipantFieldsTrait
   <thead>
     <tr>
       <th class="operations"><span class="column-heading">' . $this->l->t('Actions') . '</span></th>
-      <th class="label"><span class="column-heading">'.$this->l->t('Subject').'</span></th>
-      <th class="input"><span class="column-heading">'.$valueLabel.'</span></th>
-      <th class="documents"><span class="column-heading">'.$invoiceLabel.'</</th>
+      <th class="label"><span class="column-heading">' . $this->l->t('Subject') . '</span></th>
+      <th class="input"><span class="column-heading">' . $valueLabel . '</span></th>';
+              if ($uiFlags & IRecurringReceivablesGenerator::UI_VISIBLE_BALANCING_ACCOUNT) {
+                $html .= '
+      <th class="balancing-account finance-mode-only"><span class="column-heading">' . $this->l->t('Balancing Account') . '</span></th>';
+              }
+              $html .= '
+      <th class="documents"><span class="column-heading">' . $invoiceLabel . '</</th>
     </tr>
   </thead>
   <tbody>';
@@ -2041,7 +2089,7 @@ GROUP BY " . $fdAlias . ".option_key",
                     'select' => 'T',
                     'align' => 'right',
                     'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
-                    'sql' => $subTotalsSign . 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))',
+                    'sql' => $subTotalsSign . 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS ' . self::MONETARY_TYPE . ')',
                     'values' => [
                       'column' => 'option_key',
                       'encode' => 'BIN2UUID(%s)',
@@ -2205,6 +2253,7 @@ GROUP BY " . $fdAlias . ".option_key",
     }
 
     $optionLabelName = $this->pme->cgiDataName(self::joinTableFieldName(self::participantFieldOptionsTableName($fieldId), 'label'));
+    $optionBalancingAccountName = $this->pme->cgiDataName(self::joinTableFieldName(self::participantFieldOptionsTableName($fieldId), 'balancing_account'));
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId));
     $optionKeyName = $this->pme->cgiDataName(self::participantFieldKeyFieldName($fieldId));
 
@@ -2236,6 +2285,7 @@ GROUP BY " . $fdAlias . ".option_key",
         'fieldOption' => $fieldOption,
         'optionValue' => $optionValue,
         'optionLabelName' => $optionLabelName,
+        'optionBalancingAccountName' => $optionBalancingAccountName,
         'optionKeyName' => $optionKeyName,
         'optionValueName' => $optionValueName,
         'optionIdx' => $optionIdx,
@@ -2290,13 +2340,14 @@ GROUP BY " . $fdAlias . ".option_key",
 
       $optionTableName = self::participantFieldOptionsTableName($fieldId);
       $optionLabelName = $this->joinTableFieldName($optionTableName, 'label');
-      $optionLabelKeyName = self::joinTableFieldName(self::participantFieldOptionsTableName($fieldId), 'key');
+      $optionBalancingAccountName = $this->joinTableFieldName($optionTableName, 'balancing_account');
+      $optionKeyName = self::joinTableFieldName($optionTableName, 'key');
 
       $supportingDocumentName = $this->joinTableFieldName($tableName, 'supporting_document_id');
 
-      // label may only be tweaked for recurring multiplicity
+      // label and balancing account may only be tweaked for recurring multiplicity
       if ($multiplicity != FieldMultiplicity::RECURRING) {
-        foreach ([$optionLabelName, $optionLabelKeyName] as $key) {
+        foreach ([$optionLabelName, $optionBalancingAccountName, $optionKeyName] as $key) {
           unset($newValues[$key]);
           unset($oldValues[$key]);
           Util::unsetValue($changed, $key);
@@ -2377,7 +2428,7 @@ GROUP BY " . $fdAlias . ".option_key",
           if ($dataType == FieldType::DB_FILE) {
             // these are handled immediately during upload and have to be
             // removed from the change-sets.
-            foreach ([$keyName, $valueName, $optionLabelName, $optionLabelKeyName] as $key) {
+            foreach ([$keyName, $valueName, $optionLabelName, $optionBalancingAccountName, $optionKeyName] as $key) {
               unset($newValues[$key]);
               unset($oldValues[$key]);
               Util::unsetValue($changed, $key);
@@ -2419,18 +2470,27 @@ GROUP BY " . $fdAlias . ".option_key",
               $keyedLabels[] = $key . self::JOIN_KEY_SEP . $label;
             }
             $dataSet[$optionLabelName] = implode(',', $keyedLabels);
+
+            if (!empty($dataSet[$optionBalancingAccountName])) {
+              $balancingAccounts = Util::explode(',', $dataSet[$optionBalancingAccountName], flags: Util::ESCAPED);
+              $keyedBalancingAccounts = [];
+              foreach (array_combine($keys, $balancingAccounts) as $key => $balancingAccount) {
+                $keyedBalancingAccounts[] = $key . self::JOIN_KEY_SEP . $balancingAccount;
+              }
+              $dataSet[$optionBalancingAccountName] = implode(',', $keyedBalancingAccounts);
+            }
           }
 
           // mark both as changed
-          foreach ([$keyName, $valueName, $optionLabelName] as $fieldName) {
+          foreach ([$keyName, $valueName, $optionLabelName, $optionBalancingAccountName] as $fieldName) {
             Util::unsetValue($changed, $fieldName);
             if ($oldValues[$fieldName] != $newValues[$fieldName]) {
               $changed[] = $fieldName;
             }
           }
-          if (array_search($optionLabelName, $changed)) {
+          if (array_search($optionLabelName, $changed) || array_search($optionBalancingAccountName, $changed)) {
             // make sure the key value is also there
-            $oldValues[$optionLabelKeyName] = $newValues[$optionLabelKeyName] = $newValues[$keyName];
+            $oldValues[$optionKeyName] = $newValues[$optionKeyName] = $newValues[$keyName];
           }
           break;
         case FieldMultiplicity::GROUPOFPEOPLE:
@@ -2587,9 +2647,6 @@ GROUP BY " . $fdAlias . ".option_key",
     $labelled = false;
     foreach (array_keys($values) as $key) {
       $options[$key] = $field->getDataOption($key);
-      if (empty($options[$key])) {
-        \OCP\Util::writeLog('cafevdb', 'KEY ' . (string)$key . ' / ' . $values[$key] . ' / ' . $field->getId() . ' / ' . print_r($values, true), \OCP\Util::INFO);
-      }
       if (!empty($options[$key]->getLabel())) {
         $labelled = true;
       }

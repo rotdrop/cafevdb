@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use InvalidArgumentException;
 
 use Psr\Log\LoggerInterface;
 
@@ -36,8 +35,7 @@ use OCP\IL10N;
 use OCP\Cache\CappedMemoryCache;
 use OCP\Files\IRootFolder;
 
-use OCA\CAFEVDB\Constants;
-use OCA\CAFEVDB\Storage\AppStorageDisclosure;
+use OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure;
 
 /**
  * Some services for icons/images.
@@ -51,7 +49,7 @@ class FilesCacheService
   private const CACHE_HASH_ALGORITHM = 'sha256';
   private const FILES_CACHE_FOLDER = 'files-cache';
 
-  public const FILE_HASH_KEY = 'hash:' . self::CACHE_HASH_ALGORITHM;
+  public const FILE_HASH_KEY = 'hash@' . self::CACHE_HASH_ALGORITHM;
 
   /** @var Folder */
   private Folder $filesCacheFolder;

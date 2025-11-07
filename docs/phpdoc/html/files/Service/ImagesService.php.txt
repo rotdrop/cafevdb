@@ -37,7 +37,7 @@ use OCP\IL10N;
 use OCP\ITempManager;
 use OCP\Image;
 
-use OCA\CAFEVDB\Storage\AppStorageDisclosure;
+use OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure;
 use OCA\CAFEVDB\Exceptions;
 
 /**
@@ -55,8 +55,8 @@ class ImagesService
   public const SVG_OPTIONS = self::SVG_OPTIMIZE|self::SVG_TEXT_TO_PATH;
   public const CONVERT_TO_SVG = (1 << 2);
 
-  private const SVG_FROM_FILE_TAG = 'svg-from-file:';
-  private const DATA_URI_TAG = 'data-uri:';
+  private const SVG_FROM_FILE_TAG = 'svg-from-file@';
+  private const DATA_URI_TAG = 'data-uri@';
   private const SVG_MIME_TYPE = 'image/svg+xml';
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing

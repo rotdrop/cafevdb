@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,7 @@ use Psr\Log\LoggerInterface as ILogger;
 use OCP\IConfig as CloudConfig;
 use OCP\Files\Folder;
 
-use OCA\CAFEVDB\Storage\AppStorageDisclosure;
+use OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure;
 use OCA\CAFEVDB\Constants;
 
 /** Office font-file locator, in particular for PhpOffice. */

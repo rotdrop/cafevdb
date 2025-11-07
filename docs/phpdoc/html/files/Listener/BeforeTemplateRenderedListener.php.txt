@@ -39,7 +39,7 @@ use OCP\IUserSession;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Documents\TemplateService;
 use OCA\CAFEVDB\Service\ImagesService;
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Install the navigation entries if the current user is logged and is
@@ -95,7 +95,7 @@ class BeforeTemplateRenderedListener implements IEventListener
     try {
       /** @var TemplateService $templateService */
       $templateService = $this->appContainer->get(TemplateService::class);
-      $customLogo = $templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
+      $customLogo = $templateService->getDocumentTemplate(ConfigConstants::DOCUMENT_TEMPLATE_LOGO);
 
       if ($customLogo) {
         /** @var ImagesService $imagesService */

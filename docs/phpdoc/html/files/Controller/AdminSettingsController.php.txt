@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,18 +28,21 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\AuthorizedAdminSetting;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
-use OCP\IL10N;
 
+use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EmailAddressService;
+use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
 use OCA\CAFEVDB\Service\FontService;
 use OCA\CAFEVDB\Service\ProblemReportService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 
 /** AJAX end-points for admin setttings. */
@@ -54,6 +57,9 @@ class AdminSettingsController extends Controller
     AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY,
     AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX,
     AdminSettings::WIKI_NAME_SPACE_KEY,
+    AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY,
+    AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY,
+    AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY,
     FontService::DEFAULT_OFFICE_FONT_CONFIG,
     self::POST_REQUEST_FONT_CACHE,
   ];
@@ -68,6 +74,7 @@ class AdminSettingsController extends Controller
     ?string $appName,
     IRequest $request,
     private EmailAddressService $emailAddressService,
+    private GnuCashConnectorService $gnuCashConnectorService,
     private ProblemReportService $problemReportService,
     private WikiRPC $wikiRPC,
     protected ConfigService $configService,
@@ -83,11 +90,9 @@ class AdminSettingsController extends Controller
    * @param string $parameter
    *
    * @return DataResponse
-   *
-   * @NoGroupMemberRequired
-   * _AT_SubAdminRequired
-   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
+  #[AuthorizedAdminSetting(settings: AdminSettings::class)]
+  #[Attributes\NoGroupMemberRequired]
   public function get(string $parameter):DataResponse
   {
     $value = null;
@@ -115,10 +120,10 @@ class AdminSettingsController extends Controller
         }
         break;
       case AdminSettings::USER_AND_GROUP_BACKEND_KEY:
-        $value = $this->getAppValue(ConfigService::USER_AND_GROUP_BACKEND_KEY, AdminSettings::DEFAULT_USER_AND_GROUP_BACKEND);
+        $value = $this->getAppValue(ConfigConstants::USER_AND_GROUP_BACKEND_KEY, AdminSettings::DEFAULT_USER_AND_GROUP_BACKEND);
         break;
       case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
-        $value = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+        $value = $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
         break;
       case AdminSettings::ORCHESTRA_USER_GROUP_ADMINS_KEY:
         $admins = $this->configService->getGroupSubAdmins();
@@ -129,7 +134,12 @@ class AdminSettingsController extends Controller
         }
         break;
       case AdminSettings::WIKI_NAME_SPACE_KEY:
-        $value = $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY);
+        $value = $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY);
+        break;
+      case AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY:
+      case AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY:
+      case AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY:
+        $value = $this->getAppValue($parameter);
         break;
       case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
         $value = $this->di(CloudUserConnectorService::class)->haveCloudUserBackendConfig();
@@ -149,6 +159,7 @@ class AdminSettingsController extends Controller
         $fontService = $this->di(FontService::class);
         $value = $fontService->getDefaultFontName();
         break;
+        break;
       default:
         return new DataResponse([ 'key' => $parameter ], Http::STATUS_NOT_FOUND);
     }
@@ -162,10 +173,9 @@ class AdminSettingsController extends Controller
    *
    * @return DataResponse
    *
-   * @NoGroupMemberRequired
-   *
    * @throw Exceptions\EnduserNotificationException
    */
+  #[Attributes\NoGroupMemberRequired]
   public function postAdminOnly(string $parameter, mixed $value):DataResponse
   {
     return $this->post($parameter, $value);
@@ -180,11 +190,10 @@ class AdminSettingsController extends Controller
    *
    * @return DataResponse
    *
-   * @NoGroupMemberRequired
-   * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
-   *
    * @throw Exceptions\EnduserNotificationException
    */
+  #[AuthorizedAdminSetting(settings: AdminSettings::class)]
+  #[Attributes\NoGroupMemberRequired]
   public function postDelegated(string $parameter, mixed $value = null, ?string $operation = null):DataResponse
   {
     if (array_search($parameter, self::DELEGATABLE_POST_REQUESTS) !== false) {
@@ -208,8 +217,8 @@ class AdminSettingsController extends Controller
    */
   private function post(string $parameter, mixed $value = null, ?string $operation = null):DataResponse
   {
-    $wikiNameSpace = $this->getAppValue(ConfigService::WIKI_NAME_SPACE_KEY);
-    $orchestraUserGroup = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+    $wikiNameSpace = $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY);
+    $orchestraUserGroup = $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
     switch ($parameter) {
       case AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY:
         $value = Util::normalizeSpaces($value);
@@ -289,13 +298,13 @@ Please enter the confirmation code contained in the email into the admin-setting
           $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
         }
         $orchestraUserGroup = $realValue;
-        $this->setAppValue(ConfigService::USER_GROUP_KEY, $orchestraUserGroup);
+        $this->setAppValue(ConfigConstants::USER_GROUP_KEY, $orchestraUserGroup);
         $result = [
           $parameter => $orchestraUserGroup,
         ];
         if (empty($wikiNameSpace)) {
           $wikiNameSpace = $orchestraUserGroup;
-          $this->setAppValue(ConfigService::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
+          $this->setAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
           $result[AdminSettings::WIKI_NAME_SPACE_KEY] = $wikiNameSpace;
         }
         $this->grantWikiAccess($wikiNameSpace, $orchestraUserGroup);
@@ -359,7 +368,7 @@ Please enter the confirmation code contained in the email into the admin-setting
         }
         $realValue = trim($value);
         $wikiNameSpace = $realValue;
-        $this->setAppValue(ConfigService::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
+        $this->setAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY, $wikiNameSpace);
         $result[AdminSettings::WIKI_NAME_SPACE_KEY] = $wikiNameSpace;
 
         if (!empty($orchestraUserGroup)) {
@@ -370,6 +379,52 @@ Please enter the confirmation code contained in the email into the admin-setting
           'messages' => [
             'transient' => [
               $this->l->t('Setting wiki name-space to "%s".', [$realValue]),
+            ],
+          ],
+        ];
+        return self::dataResponse($result);
+
+      case AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY:
+        $balancingAccount = trim($value);
+        $this->setAppValue(AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY, $balancingAccount);
+        $result[AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY] = $balancingAccount;
+
+        $result = [
+          'messages' => [
+            'transient' => [
+              $this->l->t('Setting the GnuCash instrument insurance balancing account to "%s".', [$balancingAccount]),
+            ],
+          ],
+        ];
+        return self::dataResponse($result);
+
+      case AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY:
+        $receivablesAccount = trim($value);
+        $this->setAppValue(AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY, $receivablesAccount);
+        $result[AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY] = $receivablesAccount;
+
+        $result = [
+          'messages' => [
+            'transient' => [
+              $this->l->t('Setting the GnuCash participant receivables account to "%s".', [$receivablesAccount]),
+            ],
+          ],
+        ];
+        return self::dataResponse($result);
+
+      case AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY:
+        $value = trim($value);
+        $this->setAppValue($parameter, $value);
+        $result[$parameter] = $value;
+
+        if (!empty($value)) {
+          $this->gnuCashConnectorService->generateAccountsAutocompleteData();
+        }
+
+        $result = [
+          'messages' => [
+            'transient' => [
+              $this->l->t('Setting the GnuCash accounts tree data file to "%s".', [$value]),
             ],
           ],
         ];

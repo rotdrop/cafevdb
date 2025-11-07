@@ -24,71 +24,60 @@
 
 namespace OCA\CAFEVDB\Database;
 
+use Closure;
 use InvalidArgumentException;
 use RuntimeException;
 use Throwable;
+use UnexpectedValueException;
 
+use OCP\AppFramework\IAppContainer;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
-use OCP\AppFramework\IAppContainer;
-use OCP\EventDispatcher\IEventDispatcher;
-use OCP\EventDispatcher\Event;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\ORMSetup;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager as ORMEntityManager;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\ConnectionEventArgs;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners as DBALEventListeners;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
-use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
-use OCA\CAFEVDB\Wrapped\Symfony\Component\Cache\Adapter\ArrayAdapter;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\ArrayCache;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\Psr6\CacheAdapter;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Cache\Psr6\DoctrineProvider;
-use OCA\CAFEVDB\Wrapped\Doctrine as Doctrine;
-use OCA\CAFEVDB\Wrapped\Gedmo;
-
-use OCA\CAFEVDB\Wrapped\DoctrineExtensions;
-
-use function class_exists;
-
-use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine as Ramsey;
-use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions as CJH;
-
-use OCA\CAFEVDB\Crypto;
-use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Exceptions;
-
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
-
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
-use OCA\CAFEVDB\Database\Doctrine\DeprecationLogger;
-
-use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Functions;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy;
-
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
+use OCA\CAFEVDB\Common\UndoableRunQueue;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Crypto;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DeprecationLogger;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Functions;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions as CJH;
+use OCA\CAFEVDB\Wrapped\Doctrine as Doctrine;
+use OCA\CAFEVDB\Wrapped\DoctrineExtensions;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\ConnectionEventArgs;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners as DBALEventListeners;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager as ORMEntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\ORMSetup;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
+use OCA\CAFEVDB\Wrapped\Gedmo;
+use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine as Ramsey;
+use OCA\CAFEVDB\Wrapped\Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 /**
  * Use this as the actual EntityManager in order to be able to
@@ -203,21 +192,16 @@ class EntityManager extends EntityManagerDecorator
   protected ?Listeners\GedmoTranslatableListener $translatable = null;
 
   /**
+   * Locale -provider of the translatable listener.
+   */
+  protected ?IL10N $translatableL10n;
+
+  /**
    * @var array
    *
    * Cache of the current database connection parameters
    */
   protected $databaseAccess = [];
-
-  /**
-   * @var array
-   *
-   * Event listeners only get access to the vanilla entity manager. In order
-   * to give access to the decorated manager we supply a static lookup which
-   * lets us determine the decorator for each decorated insance (ahem, "each":
-   * there is probably always only one ...).
-   */
-  protected static $wrappedManagers = [];
 
   /**
    * @var array<int, Throwable>
@@ -227,6 +211,13 @@ class EntityManager extends EntityManagerDecorator
    * code.
    */
   protected array $transactionExceptions = [];
+
+  /**
+   * @var EntityManager
+   *
+   * The entity manager is a singleton. There is only one.
+   */
+  protected static ?EntityManager $instance = null;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -258,6 +249,7 @@ class EntityManager extends EntityManagerDecorator
         $this->bind();
       });
     }
+    self::$instance = $this;
   }
 
   /**
@@ -300,7 +292,7 @@ class EntityManager extends EntityManagerDecorator
       $this->userId = $userId;
       $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);
       $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) || 0;
-      $this->debug = 0 != ($debugMode & ConfigService::DEBUG_QUERY);
+      $this->debug = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
       $this->showSoftDeleted = $this->encryptionService->getUserValue($this->userId, 'showdisabled') === 'on';
       $this->decorateClassMetadata = true;
     }
@@ -309,25 +301,18 @@ class EntityManager extends EntityManagerDecorator
     if ($this->connected()) {
       $this->registerTypes();
     }
-    self::$wrappedManagers[spl_object_id($this->entityManager)] = $this;
     $this->dispatchEvent(new Events\EntityManagerBoundEvent($this));
   }
 
   /**
-   * Give static access to the decorated entity manager.
+   * The entity manager is a singleton: there is only one. If there is any
+   * then return the instance, if there is no (yet) any return null.
    *
-   * @param EntityManagerInterface $entityManager A potentially vanilla entity
-   * manager. If the decorator is passed as argument, then it is gracefully
-   * passed through.
-   *
-   * @return EntityManager The decorated entity Manager.
+   * @return null|EntityManager
    */
-  public static function getDecorator(EntityManagerInterface $entityManager):?EntityManager
+  public static function getInstance():?EntityManager
   {
-    if ($entityManager instanceof EntityManager) {
-      return $entityManager;
-    }
-    return self::$wrappedManagers[spl_object_id($entityManager)] ?? null;
+    return self::$instance;
   }
 
   /** {@inheritdoc} */
@@ -491,7 +476,10 @@ class EntityManager extends EntityManagerDecorator
       // Ramsey\UuidType::class => null,
       // Ramsey\UuidBinaryType::class => 'binary',
       // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
-      Types\UuidType::class => 'binary',
+      Types\UuidType::class => 'uuid_binary',
+      Types\DecimalRationalP2S2Type::class => 'decimal_rational_2_2',
+      Types\DecimalRationalP4S4Type::class => 'decimal_rational_4_4',
+      Types\DecimalRationalMonetaryType::class => 'decimal_rational_monetary',
     ];
 
     $connection = $this->entityManager->getConnection();
@@ -503,6 +491,7 @@ class EntityManager extends EntityManagerDecorator
           Types\EnumType::registerEnumType($typeName, $phpType);
 
           // variant in lower case
+          // @todo: WHY?
           $blah = strtolower($typeName);
           Types\EnumType::registerEnumType($blah, $phpType);
           $platform->registerDoctrineTypeMapping($sqlType, $blah);
@@ -523,7 +512,7 @@ class EntityManager extends EntityManagerDecorator
       Type::overrideType('datetimetz', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
       Type::overrideType('datetimetz_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
       $this->typesBound = true;
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
     }
   }
@@ -627,13 +616,14 @@ class EntityManager extends EntityManagerDecorator
   {
     // $config->addCustomStringFunction('timestampdiff', \OCA\CAFEVDB\Wrapped\Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff::class);
     $config->addCustomDatetimeFunction('timestampdiff', DoctrineExtensions\Query\Mysql\TimestampDiff::class);
+    $config->addCustomStringFunction('bin2uuid', Functions\BinToUuid::class);
+    $config->addCustomStringFunction('convert', Functions\ConvertUsing::class);
     $config->addCustomStringFunction('greatest', DoctrineExtensions\Query\Mysql\Greatest::class);
-    $config->addCustomStringFunction('year', DoctrineExtensions\Query\Mysql\Year::class);
     $config->addCustomStringFunction('group_concat', DoctrineExtensions\Query\Mysql\GroupConcat::class);
     $config->addCustomStringFunction('if', DoctrineExtensions\Query\Mysql\IfElse::class);
     $config->addCustomStringFunction('regexp', DoctrineExtensions\Query\Mysql\Regexp::class);
-    $config->addCustomStringFunction('bin2uuid', Functions\BinToUuid::class);
-    $config->addCustomStringFunction('convert', Functions\ConvertUsing::class);
+    $config->addCustomStringFunction('sha2', DoctrineExtensions\Query\Mysql\Sha2::class);
+    $config->addCustomStringFunction('year', DoctrineExtensions\Query\Mysql\Year::class);
   }
 
   /**
@@ -655,12 +645,15 @@ class EntityManager extends EntityManagerDecorator
       {
         try {
           return parent::resolve($className);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->register($object = $this->appContainer->get($className));
           return $object;
         }
       }
     });
+    $config->setDefaultRepositoryClassName(Repositories\EntityRepository::class);
+    $config->setRepositoryFactory($this->appContainer->get(Repositories\RepositoryFactory::class));
+
     return [ $config, new Doctrine\Common\EventManager, ];
   }
 
@@ -761,12 +754,10 @@ class EntityManager extends EntityManagerDecorator
     $this->translatable = $translatableListener = $this->appContainer->get(Listeners\GedmoTranslatableListener::class);
     // current translation locale should be set from session or hook later into the listener
     // most important, before entity manager is flushed
-    $localeCode = $this->l->getLocaleCode();
-    if (strpos($localeCode, '_') === false) {
-      $localeCode = $localeCode . '_' . strtoupper($localeCode);
-    }
+    $localeCode = $this->getLocaleCode($this->l);
+    $this->translatableL10n = $this->l;
     $translatableListener->setTranslatableLocale($localeCode);
-    $translatableListener->setDefaultLocale(ConfigService::DEFAULT_LOCALE);
+    $translatableListener->setDefaultLocale(ConfigConstants::DEFAULT_LOCALE);
     $translatableListener->setTranslationFallback(true);
     $translatableListener->setPersistDefaultLocaleTranslation(true);
     $translatableListener->setAnnotationReader($attributeReader);
@@ -943,7 +934,7 @@ class EntityManager extends EntityManagerDecorator
 
           $meta->setFieldValue($entity, $property, $reference);
 
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           // can happen if the relation is allowed to be null
           // $this->logException($t);
         }
@@ -1225,6 +1216,7 @@ class EntityManager extends EntityManagerDecorator
    */
   public function pushTransactionException(Throwable $exception):void
   {
+    $this->logException($exception, 'Remembering transaction exception');
     $this->transactionExceptions[] = $exception;
   }
 
@@ -1412,28 +1404,59 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
-   * Set the locale for the translatable Listeners*
+   * Compute the locale code from an IL10N object.
    *
-   * @param null|string $locale A locale like de_DE (i.e. with language and
-   * region). If null the default locale of the translatable listener is used.
+   * @param null|IL10N $l10n Locale provider.
    *
    * @return string
    */
-  public function setTranslatableLocale(?string $locale):string
+  protected function getLocaleCode(?IL10N $l10n): string
   {
+    $locale = $l10n->getLocaleCode();
     if ($locale === null) {
-      $locale = ConfigService::DEFAULT_LOCALE;
+      $locale = ConfigConstants::DEFAULT_LOCALE;
+    } else {
+      $locale = $this->l->getLocaleCode();
     }
     if (strpos($locale, '_') === false) {
       $locale = $locale . '_' . strtoupper($locale);
     }
-    $oldLocale = $this->translatable->getTranslatableLocale();
+    return $locale;
+  }
+
+  /**
+   * Set the locale for the translatable Listeners*
+   *
+   * @param null|IL10N $l10n Locale provider.
+   *
+   * @return null|IL10N
+   */
+  public function setTranslatableL10N(?IL10N $l10n):?IL10N
+  {
+    $locale = $this->getLocaleCode($l10n);
+    $oldLocale = $this->getLocaleCode($this->translatableL10n);
+    if ($oldLocale != $this->translatable->getTranslatableLocale()) {
+      throw new UnexpectedValueException($this->l->t('Unexpected locale settings "%1$s" vs. "%2$s".', [
+        $oldLocale, $this->translatable->getTranslatableLocale(),
+      ]));
+    }
     $this->translatable->setTranslatableLocale($locale);
     $this->getConfiguration()->setDefaultQueryHint(
       Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
       $locale
     );
-    return $oldLocale;
+    $oldL10n = $this->translatableL10n;
+    $this->translatableL10n = $l10n;
+
+    return $oldL10n;
+  }
+
+  /**
+   * @return null|IL10N
+   */
+  public function getTranslatableL10n():?IL10N
+  {
+    return $this->translatableL10n;
   }
 
   /**
@@ -1496,7 +1519,7 @@ class EntityManager extends EntityManagerDecorator
 
       $this->commit();
 
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
 
       $this->logError('Recrypting encrypted database entries failed, rolling back ...');
       $this->rollback();
@@ -1560,7 +1583,7 @@ class EntityManager extends EntityManagerDecorator
       $transformer->setAppCryptor($oldAppCryptor);
       try {
         $this->reopen(); // in case the caller catches the exception.
-      } catch (\Throwable $t2) {
+      } catch (Throwable $t2) {
         $this->logException($t2, 'Reopening entity-manager failed.');
       }
 

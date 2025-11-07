@@ -25,17 +25,19 @@
 namespace OCA\CAFEVDB\Service\Finance;
 
 use DateTimeImmutable as DateTime;
+use DateTimeInterface;
 use InvalidArgumentException;
 use RuntimeException;
+use UnexpectedValueException;
 
 use Cmixin\BusinessDay;
-use DateTimeInterface;
 use PHP_IBAN;
 
 use OCA\BAV\Service\BAV as BankAccountValidator;
 
 use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -45,6 +47,7 @@ use OCA\CAFEVDB\Documents\PDFFormFiller;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
@@ -110,12 +113,38 @@ class FinanceService
       CarbonImmutable::class,
     ]);
 
-    $bankHolidays = $this->getConfigValue(ConfigService::BANK_ACCOUNT_BANK_HOLIDAYS);
+    $bankHolidays = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS);
     if (!empty($bankHolidays)) {
       CarbonImmutable::setHolidaysRegion(strtolower($bankHolidays));
       CarbonImmutable::addHolidays(strtolower($bankHolidays), self::TARGET2_HOLIDAYS);
     } else {
       CarbonImmutable::setHolidays('target2', self::TARGET2_HOLIDAYS);
+    }
+  }
+
+  /**
+   * Fetch the due-date from either the associated field or the receivable generator.
+   *
+   * @param Entities\ProjectParticipantFieldDatum|Entities\ProjectParticipantFieldDataOption $receivable
+   *
+   * @return DateTimeInterface
+   */
+  public function getDueDate(
+    Entities\ProjectParticipantFieldDatum|Entities\ProjectParticipantFieldDataOption $receivable,
+  ): DateTimeInterface
+  {
+    $field = $receivable->getField();
+    if ($field->getMultiplicity() == Types\EnumParticipantFieldMultiplicity::RECURRING) {
+      /** @var ReceivablesGeneratorFactory $factory */
+      $factory = $this->di(ReceivablesGeneratorFactory::class);
+      /** @var IRecurringReceivablesGenerator $generator */
+      $generator = $factory->getGenerator($field);
+      if ($receivable instanceof Entities\ProjectParticipantFieldDatum) {
+        $receivable = $receivable->getDataOption();
+      }
+      return $generator->dueDate($receivable);
+    } else {
+      return $field->getDueDate();
     }
   }
 
@@ -238,7 +267,7 @@ class FinanceService
         $result = $bankAccount;
       }
     }
-    return $bankAccount;
+    return $result;
   }
 
   /**
@@ -391,13 +420,33 @@ class FinanceService
 
     // now compose the dataset for the document template engine
     $amount = $invoice->getAmount();
+    $taxes = $invoice->getTaxationStatutorySource();
+
+    if ($taxes->getTaxType() != Types\EnumTaxType::SALES) {
+      throw new UnexpectedValueException(
+        $this->l->t('Unsupported tax type "%1$s", should be "%2$s".', [
+          $this->l->t($taxes->getTaxType()),
+          Types\EnumTaxType::SALES,
+        ]),
+      );
+    }
+
     $templateData = [
       'originator' => $this->flattenMusician($invoice->getOriginator()),
       'recipient' => $this->flattenMusician($invoice->getDebitor()),
       'invoice' => [
         // amount need not be the donation amount
-        'amount' => $amount,
+        'amount' => $amount->toDecimal(2),
         'dueDate' => $invoice->getDueDate(),
+        'number' => $invoice->getInvoiceNumber(),
+        'subject' => $invoice->getSubject(),
+        'purpose' => $invoice->getPurpose(),
+        'tax' => [
+          'type' => $taxes->getTaxType(),
+          'law' => $taxes->getLaw(),
+          'hint' => $taxes->getHint(),
+          'rate' => $taxes->getRate()->toDecimal(2),
+        ],
         'l10n' => [
           'locale' => $locale,
           'amount' => $numberFormatter->formatCurrency($amount),
@@ -413,16 +462,16 @@ class FinanceService
     foreach ($invoiceItems as $item) {
       $value = $item->getAmount();
       $templateData['invoice']['items'][] = [
-        'amount' => $value,
-        'isIncome' => (int)($value > 0),
+        'amount' => $value->toDecimal(2),
+        'isIncome' => $value->gt(0),
         'dueDate' => $item->getReceivable()->getField()->getDueDate(),
         'subject' => $item->getSubject(),
         'l10n' => [
           'locale' => $this->appLocale(),
           'amount' => $numberFormatter->formatCurrency($value),
           'amountText' => $numberFormatter->currencyToWords($value),
-          'absAmount' => $numberFormatter->formatCurrency(abs($value)),
-          'absAmountText' => $numberFormatter->currencyToWords(abs($value)),
+          'absAmount' => $numberFormatter->formatCurrency($value->abs()),
+          'absAmountText' => $numberFormatter->currencyToWords($value->abs()),
         ],
       ];
     }
@@ -571,9 +620,9 @@ class FinanceService
 
     if (empty($formName)) {
       if ($this->isClubMembersProject($project)) {
-        $formName = ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE;
+        $formName = ConfigConstants::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE;
       } else {
-        $formName = ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE;
+        $formName = ConfigConstants::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE;
       }
     }
 
@@ -613,7 +662,7 @@ class FinanceService
 
       $formData = [
         'projectName' => $project->getName(),
-        'bankAccountOwner' => $musician->getPublicName(),
+        ConfigConstants::BANK_ACCOUNT_OWNER => $musician->getPublicName(),
         'projectParticipant' => $musician->getPublicName(),
         'memberName' => $musician->getPublicName(),
         'memberBirthday' => $this->formatDate($musician->getBirthday(), 'medium'),
@@ -632,9 +681,9 @@ class FinanceService
         $bank = $this->ellipsizeFirst($info['bank'], $info['city'], self::BANK_NAME_MAX);
 
         $formData = array_merge($formData, [
-          'bankAccountOwner' => $bankAccount->getBankAccountOwner(),
-          'bankAccountIBAN' => $bankAccount->getIban(),
-          'bankAccountBIC' => $bankAccount->getBic(),
+          ConfigConstants::BANK_ACCOUNT_OWNER => $bankAccount->getBankAccountOwner(),
+          ConfigConstants::BANK_ACCOUNT_IBAN => $bankAccount->getIban(),
+          ConfigConstants::BANK_ACCOUNT_BIC => $bankAccount->getBic(),
           'bankAccountBank' => $bank,
         ]);
       }

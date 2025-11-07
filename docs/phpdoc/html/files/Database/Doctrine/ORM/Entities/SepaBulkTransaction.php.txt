@@ -24,21 +24,13 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use \DateTimeInterface;
-use \RuntimeException;
+use DateTimeInterface;
 
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
-
-use OCA\CAFEVDB\Events;
-use OCA\CAFEVDB\Database\EntityManager;
 
 /**
  * SepaBulkTransaction
@@ -56,8 +48,8 @@ class SepaBulkTransaction implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use CAFEVDB\Traits\TimestampableEntity;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @var int
@@ -74,6 +66,14 @@ class SepaBulkTransaction implements \ArrayAccess
   #[ORM\InverseJoinColumn(unique: true)]
   #[ORM\ManyToMany(targetEntity: DatabaseStorageFile::class, fetch: 'EXTRA_LAZY', cascade: ['persist'], orphanRemoval: true)]
   private $sepaTransactionData;
+
+  /**
+   * @var Collection
+   */
+  #[ORM\JoinTable(name: 'SepaBulkTransactionBalancingData')]
+  #[ORM\InverseJoinColumn(unique: true)]
+  #[ORM\ManyToMany(targetEntity: DatabaseStorageFile::class, fetch: 'EXTRA_LAZY', cascade: ['persist'], orphanRemoval: true)]
+  private $balancingItemsData;
 
   /**
    * @var \DateTimeImmutable
@@ -151,6 +151,7 @@ class SepaBulkTransaction implements \ArrayAccess
   {
     $this->arrayCTOR();
     $this->sepaTransactionData = new ArrayCollection();
+    $this->balancingItemsData = new ArrayCollection();
     $this->payments = new ArrayCollection();
     $this->preNotificationEmails = new ArrayCollection();
   }
@@ -212,6 +213,56 @@ class SepaBulkTransaction implements \ArrayAccess
   {
     if ($this->sepaTransactionData->contains($data)) {
       $this->sepaTransactionData->removeElement($data);
+    }
+    return $this;
+  }
+
+  /**
+   * Set balancingItemsData.
+   *
+   * @param Collection $balancingItemsData
+   *
+   * @return SepaBulkTransaction
+   */
+  public function setBalancingItemsData(Collection $balancingItemsData):SepaBulkTransaction
+  {
+    $this->balancingItemsData = $balancingItemsData;
+
+    return $this;
+  }
+
+  /**
+   * Get balancingItemsData.
+   *
+   * @return Collection
+   */
+  public function getBalancingItemsData():Collection
+  {
+    return $this->balancingItemsData;
+  }
+
+  /**
+   * @param DatabaseStorageFile $data
+   *
+   * @return SepaBulkTransaction
+   */
+  public function addBalancingItemsData(DatabaseStorageFile $data):SepaBulkTransaction
+  {
+    if (!$this->balancingItemsData->contains($data)) {
+      $this->balancingItemsData->add($data);
+    }
+    return $this;
+  }
+
+  /**
+   * @param DatabaseStorageFile $data
+   *
+   * @return SepaBulkTransaction
+   */
+  public function removeBalancingItemsData(DatabaseStorageFile $data):SepaBulkTransaction
+  {
+    if ($this->balancingItemsData->contains($data)) {
+      $this->balancingItemsData->removeElement($data);
     }
     return $this;
   }
@@ -538,20 +589,18 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
-   * @return The sum of all contained split transactions.
+   * @return RationalNumber The sum of all contained split transactions.
    */
-  public function totals():float
+  public function totals():RationalNumber
   {
-    $totals = 0.0;
-    /** @var CompositePayment $payment */
-    foreach ($this->payments as $payment) {
-      $totals += $payment->getAmount();
-    }
-    return $totals;
+    return $this->payments->reduce(
+      fn(RationalNumber $accumulator, CompositePayment $payment) => $accumulator->addEq($payment->getAmount()),
+      RationalNumber::zero(),
+    );
   }
 
   /**
-   * Return the number of related ProjectPayment entities.
+   * Return the number of related CompositePayment entities.
    *
    * @return int
    */

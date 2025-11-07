@@ -29,14 +29,11 @@ use chillerlan\QRCode\QRCode;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Controller\MailingListsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
@@ -44,9 +41,8 @@ use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Abstract table generator for Musicians table. */
 abstract class Musicians extends PMETableViewBase
@@ -350,8 +346,8 @@ ON t.id = __t2.instrument_id
 INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id
 ' . $join . '
-WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
 GROUP BY t.id';
+          // WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
           break;
         default:
           break;
@@ -408,8 +404,13 @@ GROUP BY t.id';
       'select'   => 'T',
       'maxlen'   => 380,
       'sort'     => true,
-      'display|ACP' => [
+      'display|CP' => [
         'attributes' => function($op, $k, $row, $pme) {
+          $this->logInfo('NICKNAME DISPLAY '
+                         . ' | ' . $op
+                         . ' | ' . $k
+                         . ' | ' . print_r($row, true),
+          );
           $nickNamePlaceholder = $this->l->t('e.g. Cathy');
           $firstName = $row[$this->queryField('first_name')];
           $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
@@ -546,7 +547,7 @@ GROUP BY t.id';
       'select'   => 'T',
       'maxlen'   => 256,
       'sort'     => true,
-      'display|ACP' => [
+      'display|CP' => [
         'attributes' => function($op, $k, $row, $pme) {
           $surName = $row[$this->queryField('sur_name')];
           $firstName = $row[$this->queryField('first_name')];
@@ -628,7 +629,8 @@ GROUP BY t.id';
         ],
       ],
     ];
-    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL AND $table.id NOT IN ("' . implode('","', $instrumentsFilter) . '")']);
+    // $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL AND $table.id NOT IN ("' . implode('","', $instrumentsFilter) . '")']);
+    $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL']);
 
     list($instrumentsFddIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
@@ -1025,7 +1027,7 @@ GROUP BY t.id';
 
       // invite, subscribe or do nothing. If the person is already subscribed
       // then it can unsubscribe by itself, so nothing more is needed here.
-      $list = $this->getConfigValue('announcementsMailingList');
+      $list = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
       if (!empty($list)) {
         try {
           switch ($newVals['mailing_list'] ?? '') {

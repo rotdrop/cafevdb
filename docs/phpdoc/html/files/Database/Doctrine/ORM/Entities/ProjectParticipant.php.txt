@@ -30,11 +30,8 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as Particip
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -97,6 +94,22 @@ class ProjectParticipant implements \ArrayAccess
   private $projectInstruments;
 
   /**
+   * @var Collection
+   *
+   * Link to composit payments, needed for the usage accounting.
+   */
+  #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'projectParticipant')]
+  private $payments;
+
+  /**
+   * @var Collection
+   *
+   * Link to composit payments, needed for the usage accounting.
+   */
+  #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'projectParticipant')]
+  private $invoices;
+
+  /**
    * @var DatabaseStorage
    *
    * The root-directory entry for the potentially encrypted participant
@@ -110,12 +123,13 @@ class ProjectParticipant implements \ArrayAccess
   public function __construct(?Musician $musician = null, ?Project $project = null)
   {
     $this->arrayCTOR();
+    $this->invoices = new ArrayCollection();
     $this->payments = new ArrayCollection();
     $this->participantFieldsData = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
     $this->musician = $musician;
     $this->project = $project;
-    $this->participationStatus = $musician ? $musician->getDefaultParticipationStatus() : Types\ParticipationStatus::REGULAR();
+    $this->participationStatus = $musician ? $musician->getDefaultParticipationStatus() : Types\EnumParticipationStatus::REGULAR();
   }
   // phpcs:enable
 
@@ -400,6 +414,30 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
+   * Set invoices.
+   *
+   * @param Collection $invoices
+   *
+   * @return ProjectParticipant
+   */
+  public function setInvoices(Collection $invoices):ProjectParticipant
+  {
+    $this->invoices = $invoices;
+
+    return $this;
+  }
+
+  /**
+   * Get invoices.
+   *
+   * @return Collection
+   */
+  public function getInvoices():Collection
+  {
+    return $this->invoices;
+  }
+
+  /**
    * Set databaseDocuments.
    *
    * @param null|DatabaseStorage $databaseDocuments
@@ -507,7 +545,7 @@ class ProjectParticipant implements \ArrayAccess
    */
   public function usage(string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED):int
   {
-    $usage = $this->payments->count();
+    $usage = $this->payments->count() + $this->invoices->count();
     switch ($participationContext) {
       case ParticipationContext::ASSOCIATES:
         $usage += (int)$this->isOnlyMusician();

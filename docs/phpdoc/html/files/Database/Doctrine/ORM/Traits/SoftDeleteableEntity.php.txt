@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
+use DateTimeInterface;
 use DateTimeImmutable;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -35,10 +36,10 @@ trait SoftDeleteableEntity
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
   /**
-   * @var DateTimeImmutable|null
+   * @var DateTimeInterface|null
    */
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected $deleted;
+  protected ?DateTimeInterface $deleted = null;
 
   /**
    * Set or clear the deleted at timestamp.
@@ -57,11 +58,11 @@ trait SoftDeleteableEntity
    * Get the deleted at timestamp value. Will return null if
    * the entity has not been soft deleted.
    *
-   * @return \DateTimeImmutable|null
+   * @return DateTimeInterface|null
    */
-  public function getDeleted()
+  public function getDeleted():?DateTimeInterface
   {
-    return $this->deleted;
+    return $this->deleted ?? null;
   }
 
   /**
@@ -71,7 +72,7 @@ trait SoftDeleteableEntity
    */
   public function isDeleted():bool
   {
-    return null !== $this->deleted;
+    return null !== $this->getDeleted();
   }
 
   /**

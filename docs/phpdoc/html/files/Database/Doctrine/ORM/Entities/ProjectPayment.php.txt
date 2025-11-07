@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -54,8 +54,8 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    * Project payments are actually also expenses in which case the sign of the
    * payment is negative. Receptions are positive.
    */
-  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: false, options: ['default' => '0.00'])]
-  private $amount = '0.00';
+  #[ORM\Column(type: 'decimal_rational_monetary', nullable: false, options: ['default' => '0.00'])]
+  private RationalNumber $amount;
 
   /**
    * @var bool
@@ -69,7 +69,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * @var string
    */
-  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
+  #[ORM\Column(type: 'string', length: 1024, nullable: true)]
   private $subject;
 
   /**
@@ -132,6 +132,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   public function __construct()
   {
     $this->arrayCTOR();
+    $this->setAmount(0);
   }
 
   /**
@@ -258,13 +259,13 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set amount.
    *
-   * @param float|null $amount
+   * @param int|float|string|RationalNumber $amount
    *
    * @return ProjectPayment
    */
-  public function setAmount(?float $amount):ProjectPayment
+  public function setAmount(int|float|string|RationalNumber $amount):ProjectPayment
   {
-    $this->amount = $amount;
+    $this->amount = RationalNumber::create($amount);
 
     return $this;
   }
@@ -272,9 +273,9 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Get amount.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function getAmount():?float
+  public function getAmount():RationalNumber
   {
     return $this->amount;
   }
@@ -288,7 +289,9 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function setSubject(?string $subject):ProjectPayment
   {
-    $this->subject = $subject;
+    $autoSubject = $this->receivable->paymentReference();
+
+    $this->subject = ($subject == $autoSubject) ? null : $subject;
 
     return $this;
   }
@@ -300,7 +303,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function getSubject():?string
   {
-    return $this->subject;
+    return $this->subject ?? $this->receivable->paymentReference();
   }
 
   /**

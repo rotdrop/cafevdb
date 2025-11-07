@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,12 +26,11 @@ namespace OCA\CAFEVDB\Command;
 
 use Throwable;
 
-use Psr\Log\LoggerInterface as ILogger;
-
-use OCP\IL10N;
-use OCP\IUserSession;
-use OCP\IUserManager;
 use OCP\AppFramework\IAppContainer;
+use OCP\IL10N;
+use OCP\IUserManager;
+use OCP\IUserSession;
+use Psr\Log\LoggerInterface as ILogger;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,16 +39,15 @@ use Symfony\Component\Console\Helper\DescriptorHelper;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
-use Symfony\Component\Console\Question\Question;
 
-use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as ReceivablesGenerator;
+use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
 use OCA\CAFEVDB\Traits\ConfigTrait;
 
 /**

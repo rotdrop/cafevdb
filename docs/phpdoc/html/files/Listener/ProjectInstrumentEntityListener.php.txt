@@ -26,14 +26,11 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
-use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrument as Entity;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 
 /**

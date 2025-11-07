@@ -28,17 +28,11 @@ use DateTimeInterface;
 use JsonSerializable;
 use ArrayAccess;
 
-use Sabre\VObject\Component\VCard;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
-use OCA\CAFEVDB\Common\Uuid;
 
 /**
  * Although a donation in principle is just a payment there is some meta-data
@@ -46,7 +40,7 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 #[ORM\Table(name: 'DonationReceipts')]
 #[ORM\UniqueConstraint(name: 'donation_receipt_unique', columns: ['donation_id', 'deleted'])]
-#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[ORM\Entity]
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[ORM\HasLifecycleCallbacks]
 class DonationReceipt implements JsonSerializable, ArrayAccess

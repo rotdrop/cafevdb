@@ -59,8 +59,6 @@ class InvoiceNumberHandler implements SlugHandlerInterface
     }
     $this->sluggable = $sluggable;
 
-    // $this->configService = $this->sluggable->getAppContainer()->get(ConfigService::class);
-
     // disable transliteration, done in postSlugBuild()
     $this->sluggable->setTransliterator(fn($slug) => $slug);
   }

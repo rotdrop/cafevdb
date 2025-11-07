@@ -28,6 +28,7 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -63,9 +64,8 @@ class MigrationsController extends Controller
    * @param string $what
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function get(string $what):DataResponse
   {
     switch ($what) {
@@ -83,9 +83,8 @@ class MigrationsController extends Controller
    * @param string $migrationVersion
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function getDescription(string $migrationVersion):DataResponse
   {
     return self::dataResponse([
@@ -100,9 +99,8 @@ class MigrationsController extends Controller
    * @param string $subTopic
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[CoreAttributes\NoAdminRequired]
   public function serviceSwitch(string $topic, string $subTopic):DataResponse
   {
     switch ($topic) {

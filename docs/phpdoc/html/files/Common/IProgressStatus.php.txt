@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use DateTimeInterface;
 
 /**
  * Simplistic progress-status interface.

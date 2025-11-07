@@ -25,9 +25,6 @@
 namespace OCA\CAFEVDB\Common;
 
 use NumberFormatter;
-use DateTimeImmutable;
-use DateTime;
-use DateTimeZone;
 use InvalidArgumentException;
 
 use League\HTMLToMarkdown\HtmlConverter as HtmlToMarkDown;
@@ -359,7 +356,7 @@ class Util
    * ```
    *
    * Only the first $keyDelimiter is taken into account. This means
-   * that it is not necessary to explode the key-delimiter.
+   * that it is not necessary to escape the key-delimiter.
    *
    * @param null|string $data
    *
@@ -602,7 +599,7 @@ class Util
     $excess = strlen($string) - $limit;
     if ($excess > 0) {
       $parts = explode(' ', Util::camelCaseToDashes($string, ' '));
-      \OCP\Util::writeLog('cafevdb', print_r($parts, true), \OCP\Util::INFO);
+      // \OCP\Util::writeLog('cafevdb', print_r($parts, true), \OCP\Util::INFO);
       do {
         $shortened = false;
         foreach ($parts as &$part) {

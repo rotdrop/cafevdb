@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,8 +42,9 @@ use OCA\CAFEVDB\Maintenance\IMigration;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Service\GroupFoldersService;
-use OCA\CAFEVDB\Service\SimpleSharingService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Toolkit\Service\GroupFoldersService;
+use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /**
  * Decrypt the shareowner config value.
@@ -117,7 +118,7 @@ class GroupSharedOrchestraFolder implements IMigration
       . ' Please note that this may be a long running operation, depending on the size of the shared orchestra folder.'
       . ' Please note also that the old folder is not removed by this automatic migration step.'
       . ' This also implies that there must be enough storage space left on the server in order to hold the new copy.',
-      $this->encryptionService->getConfigValue(ConfigService::SHAREOWNER_KEY)
+      $this->encryptionService->getConfigValue(ConfigConstants::SHAREOWNER_KEY)
     );
   }
 
@@ -137,8 +138,8 @@ class GroupSharedOrchestraFolder implements IMigration
       //
       // - rename the new group share to FOLDERNAME
 
-      $shareOwner = $this->encryptionService->getConfigValue(ConfigService::SHAREOWNER_KEY);
-      $sharedFolder = $this->encryptionService->getConfigValue(ConfigService::SHARED_FOLDER, false);
+      $shareOwner = $this->encryptionService->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+      $sharedFolder = $this->encryptionService->getConfigValue(ConfigConstants::SHARED_FOLDER, false);
       if (empty($sharedFolder)) {
         throw new Exceptions\EnduserNotificationException(
           $this->l->t('The shared orchester file-system folder is not configured, hence this migration cannot be performed.')
@@ -291,7 +292,7 @@ class GroupSharedOrchestraFolder implements IMigration
         $this->groupFoldersService->changeMountPoint($groupFolder, $sharedFolder, moveChildren: true);
       }
 
-      $orchestraGroup = $this->encryptionService->getConfigValue(ConfigService::USER_GROUP_KEY);
+      $orchestraGroup = $this->encryptionService->getConfigValue(ConfigConstants::USER_GROUP_KEY);
       // group-share the old folder in order to give the orchestra group
       // access for a while
       $this->sharingService->groupShareNode(
@@ -303,7 +304,7 @@ class GroupSharedOrchestraFolder implements IMigration
       );
 
       // Remember that we do no longer need the folder from the share-owner
-      $this->encryptionService->setConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, false);
+      $this->encryptionService->setConfigValue(ConfigConstants::SHAREOWNER_FOLDER_SERVICE_KEY, false);
 
     } catch (Throwable $t) {
       $this->logException($t);

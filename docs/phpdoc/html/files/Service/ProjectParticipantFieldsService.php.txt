@@ -30,33 +30,24 @@ use RuntimeException;
 
 use OCP\Files as CloudFiles;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
-
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission as AccessPermission;
+use OCA\CAFEVDB\Common;
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Storage\Database\Factory as DatabaseStorageFactory;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Common\Functions;
-
-use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
-use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
-use OCA\CAFEVDB\Service\Finance\PeriodicReceivablesGenerator;
-use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
-use OCA\CAFEVDB\Service\Finance\MembershipFeesReceivablesGenerator;
-use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
-use OCA\CAFEVDB\Exceptions;
-
-use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission as AccessPermission;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
+use OCA\CAFEVDB\Storage\Database\Factory as DatabaseStorageFactory;
+use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -193,12 +184,12 @@ class ProjectParticipantFieldsService
    */
   public function monetaryFields(
     Entities\Project $project,
-    string|ParticipationContext $participationConext = ParticipationContext::UNRESTRICTED,
+    string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED,
   ):iterable {
     // "matching" cannot work as our quasi-enums are objects which are not
     // singletons. "matching" uses === which only yields true for objects if
     // their refer to the same instance.
-    return $project->getParticipantFields($participationConext)->filter(function($field) {
+    return $project->getParticipantFields($participationContext)->filter(function($field) {
       switch ($field->getDataType()) {
         case DataType::RECEIVABLES:
         case DataType::LIABILITIES:
@@ -300,7 +291,7 @@ class ProjectParticipantFieldsService
           break;
       }
     }
-    return array_filter($selectOptions, fn($option) => !empty($option['name']));
+    return array_values(array_filter($selectOptions, fn($option) => !empty($option['name'])));
   }
 
   /**
@@ -326,16 +317,16 @@ class ProjectParticipantFieldsService
   public static function participantMonetaryObligations(Entities\Musician $musician, ?Entities\Project $project = null):array
   {
     $obligations = [
-      'sum' => 0.0, // total sum
-      'received' => 0.0, // sum of payments
+      'sum' => RationalNumber::zero(), // total sum
+      'received' => RationalNumber::zero(), // sum of payments
     ];
 
     if (empty($project)) {
       /** @var Entities\ProjectParticipant $projectParticipant */
       foreach ($musician->getProjectParticipation() as $projectParticipant) {
         list('sum' => $sum, 'received' => $received) = self::participantMonetaryObligations($musician, $projectParticipant->getProject());
-        $obligations['sum'] += $sum;
-        $obligations['received'] += $received;
+        $obligations['sum']->addEq($sum);
+        $obligations['received']->addEq($received);
       }
       return $obligations;
     }
@@ -347,8 +338,8 @@ class ProjectParticipantFieldsService
       switch ($fieldDataType) {
         case DataType::RECEIVABLES:
         case DataType::LIABILITIES:
-          $obligations['sum'] += $fieldDatum->amountPayable();
-          $obligations['received'] += $fieldDatum->amountPaid();
+          $obligations['sum']->addEq($fieldDatum->amountPayable());
+          $obligations['received']->addEq($fieldDatum->amountPaid());
           break;
       }
     }
@@ -357,28 +348,30 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * Internal function: given a surcharge choice compute the
-   * associated amount of money and return that as float.
+   * Internal function: given a surcharge choice compute the associated amount
+   * of money and return that as RationalNumber. This is used in the legacy
+   * display code in ParticipantTotalFeesTrait.
    *
    * @param string|null $key Key from the participant-fields data table. $key may
    * be a comma-separated list of keys.
    *
-   * @param string|null $value Value form the participant-fields data table.
+   * @param string|null $value Value from the participant-fields data
+   * table. This is a decimal number if non-null.
    *
    * @param Entities\ProjectParticipantField $participantField Field definition.
    *
-   * @return float
+   * @return RationalNumber
    */
-  public function participantFieldSurcharge(?string $key, ?string $value, Entities\ProjectParticipantField $participantField):float
+  public function participantFieldSurcharge(?string $key, ?string $value, Entities\ProjectParticipantField $participantField):RationalNumber
   {
     switch ($participantField->getMultiplicity()) {
       case Multiplicity::SIMPLE():
-        return (float)$value;
+        return RationalNumber::create($value);
       case Multiplicity::GROUPOFPEOPLE():
         if (empty($key)) {
           break;
         }
-        return (float)$participantField->getManagementOption()->getData();
+        return RationalNumber::create($participantField->getManagementOption()->getData());
       case Multiplicity::SINGLE():
         if (empty($key)) {
           break;
@@ -387,9 +380,9 @@ class ProjectParticipantFieldsService
         $dataOption = $participantField->getDataOptions()->first();
         // Non empty value means "yes".
         if ((string)$dataOption['key'] != $key) {
-          $this->logWarn('Stored value "'.$key.'" unequal to stored key "'.$dataOption['key'].'"');
+          $this->logWarn('Stored value "' . $key . '" unequal to stored key "' . $dataOption['key'] . '"');
         }
-        return (float)$dataOption['data'];
+        return RationalNumber::create($dataOption['data']);
       case Multiplicity::GROUPSOFPEOPLE():
       case Multiplicity::MULTIPLE():
         if (empty($key)) {
@@ -397,21 +390,22 @@ class ProjectParticipantFieldsService
         }
         foreach ($participantField->getDataOptions() as $dataOption) {
           if ((string)$dataOption['key'] == $key) {
-            return (float)$dataOption['data'];
+            return RationalNumber::create($dataOption['data']);
           }
         }
         $this->logError('No data item for multiple choice key "'.$key.'"');
-        return 0.0;
+        return RationalNumber::zero();
       case Multiplicity::PARALLEL():
         if (empty($key)) {
           break;
         }
         $keys = Util::explode(',', $key);
         $found = false;
-        $amount = 0.0;
+        /** @var RationalNumber $amount */
+        $amount = RationalNumber::zero();
         foreach ($participantField->getDataOptions() as $dataOption) {
           if (array_search((string)$dataOption['key'], $keys) !== false) {
-            $amount += (float)$dataOption['data'];
+            $amount->addEq($dataOption['data']);
             $found = true;
           }
         }
@@ -426,13 +420,15 @@ class ProjectParticipantFieldsService
         // $keys = Util::explode(',', $key);
         $values = Util::explodeIndexed($value);
 
-        $amount = 0.0;
+        $amount = RationalNumber::zero();
         foreach ($values as $key => $value) {
-          $amount += $value;
+          if (!empty($value)) {
+            $amount->addEq($value);
+          }
         }
         return $amount;
     }
-    return 0.0;
+    return RationalNumber::zero();
   }
 
   /**
@@ -588,7 +584,7 @@ class ProjectParticipantFieldsService
    * Return the effective value of the given datum. In particular
    * referenced files are returned as cloud file-node or DB
    * file-entity. Dates are converted to \DateTimeImmutable. Float
-   * values to float, int to int, boolean to boolean.
+   * values to RationalNumber, int to int, boolean to boolean.
    *
    * @param Entities\ProjectParticipantFieldDatum $datum
    *
@@ -609,9 +605,9 @@ class ProjectParticipantFieldsService
         return Util::convertToDateTime($value);
       case DataType::FLOAT:
       case DataType::RECEIVABLES:
-        return floatval($value);
+        return RationalNumber::create($value);
       case DataType::LIABILITIES:
-        return -floatval($value);
+        return RationalNumber::create($value)->neg();
       case DataType::INTEGER:
         return intval($value);
       case DataType::CLOUD_FILE:
@@ -716,6 +712,7 @@ class ProjectParticipantFieldsService
       'data' => false,
       'deposit' => false,
       'limit' => false,
+      'balancingAccount' => false,
       'tooltip' => false,
       'deleted' => false,
     ];
@@ -1190,7 +1187,7 @@ class ProjectParticipantFieldsService
 
   /**
    * Generate all user-folders with an optional README.md if the field has type
-   * CLOUD_FOLDER.
+   * CLOUD_FOLDER. Install also default values if any are given.
    *
    * @param Entities\ProjectParticipantField $field
    *
@@ -1198,6 +1195,34 @@ class ProjectParticipantFieldsService
    */
   public function handlePersistField(Entities\ProjectParticipantField $field):void
   {
+    $this->entityManager->registerPreCommitAction(
+      new Common\GenericUndoable(
+        function() use ($field) {
+          $defaultValue = $field->getDefaultValue();
+          if ($defaultValue === null) {
+            $this->logInfo('NO DEFAULT VALUE', [ 'exception' => new \Exception('BLAH') ]);
+            return;
+          }
+          $needFlush = false;
+          foreach ($field->getProject()->getParticipants() as $participant) {
+            $datum = Entities\ProjectParticipantFieldDatum::fromDefaultValue($field, $participant);
+            if ($datum === null) {
+              continue;
+            }
+            $this->entityManager->persist($datum);
+            $needFlush = true;
+          }
+          if ($needFlush) {
+            $this->entityManager->flush();
+          } else {
+            $this->logInfo('NEED FLUSH FALSE');
+          }
+        },
+        // no undo, the rollback will fix it and the entity manager is closed
+        // anyways after an error.
+      ),
+    );
+
     // check if we have to do something
     if ($field->getDataType() != DataType::CLOUD_FOLDER) {
       return;
@@ -1386,25 +1411,35 @@ class ProjectParticipantFieldsService
             // value is stored in the option, negate it
             foreach ($field->getDataOptions() as $option) {
               $option->setData(-$option->getData());
-              $option->setDeposit(-$option->getDeposit());
+              $deposit = $option->getDeposit();
+              if ($deposit) {
+                $option->setDeposit($deposit->neg());
+              }
             }
             break;
           case Multiplicity::GROUPOFPEOPLE:
             // value in management option of $field
             $option = $field->getManagementOption();
             $option->setData(-$option->getData());
-            $option->setDeposit(-$option->getDeposit());
+            $option->setDeposit($option->getDeposit()->neg());
             break;
           case Multiplicity::SIMPLE:
             /** @var Entities\ProjectParticipantFieldDatum $datum */
             foreach ($field->getFieldData() as $datum) {
               $datum->setOptionValue(-$datum->getOptionValue());
-              $datum->setDeposit(-$datum->getDeposit());
+              $deposit = $datum->getDeposit();
+              if ($deposit) {
+                $datum->setDeposit($deposit->neg());
+              }
             }
             $option = $field->getDefaultValue();
             if (!empty($option)) {
               $option->setData(-$option->getData());
-              $option->setDeposit(-$option->getDeposit());
+              $deposit = $option->getDeposit();
+              if ($deposit) {
+                $this->logInfo('CHANGE DEPOSIT ' . print_r($deposit, true) . ' -> ' . print_r($deposit->neg(), true));
+                $option->setDeposit($deposit->neg());
+              }
             }
             break;
           case Multiplicity::RECURRING:
@@ -1465,9 +1500,13 @@ class ProjectParticipantFieldsService
 
     if (!$this->isSupportedType($newMultiplicity, $dataType)) {
       $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
-      throw new Exceptions\EnduserNotificationException($this->l->t('Changing the multiplicity from "%1$s" to "%2$s" is not possible as the new multiplicity does not support the field data-type "%3$s".', [
-        $this->l->t($oldMultiplicity), $this->l->t($newMultiplicity), $this->l->t($dataType),
-      ]));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t(
+          'Changing the multiplicity from "%1$s" to "%2$s" is not possible as the new multiplicity does not support the field data-type "%3$s".', [
+            $this->l->t($oldMultiplicity), $this->l->t($newMultiplicity), $this->l->t($dataType),
+          ],
+        )
+      );
     }
 
     if ($field->usage() <= 0 || (!empty($field->getProjectEvent()) && $field->usage() < 1)) {

@@ -269,7 +269,12 @@ trait EntityManagerTrait
         $this->entityManager->flush();
         $this->entityManager->commit();
       } catch (Throwable $t) {
-        $this->entityManager->rollback();
+        if ($this->entityManager->isTransactionActive()) {
+          $this->entityManager->pushTransactionException($t);
+          $this->entityManager->rollback();
+        } else {
+          \OCP\Service::get(\Psr\Log\LoggerInterface::class)->error('Exception during flush()', [ 'exception' => $t ]);
+        }
       }
     } else {
       $this->entityManager->flush();

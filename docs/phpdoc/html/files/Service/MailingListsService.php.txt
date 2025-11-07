@@ -24,17 +24,20 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Throwable;
-use RuntimeException;
 use InvalidArgumentException;
+use RuntimeException;
+use Throwable;
+
 use GuzzleHttp\Client as RestClient;
 use GuzzleHttp\Exception\ConnectException;
 
-use OCP\Files\IRootFolder;
 use OCP\Files\FileInfo;
+use OCP\Files\IRootFolder;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /** Handle participant mailing-list services. */
 class MailingListsService
@@ -199,19 +202,23 @@ class MailingListsService
   ) {
     $this->l = $this->l10n();
 
-    $this->restClient = new RestClient([ 'base_uri' => $this->getConfigValue(
-      ConfigService::MAILING_LIST_REST_CONFIG['url'],
-      self::DEFAULT_REST_URI) ]);
+    $this->restClient = new RestClient([
+      'base_uri' => $this->getConfigValue(
+        ConfigConstants::MAILING_LIST_REST_CONFIG['url'],
+        self::DEFAULT_REST_URI,
+      ),
+    ],
+    );
     $this->restAuth = [
-      $this->getConfigValue(ConfigService::MAILING_LIST_REST_CONFIG['user']),
-      $this->getConfigValue(ConfigService::MAILING_LIST_REST_CONFIG['password']),
+      $this->getConfigValue(ConfigConstants::MAILING_LIST_REST_CONFIG['user']),
+      $this->getConfigValue(ConfigConstants::MAILING_LIST_REST_CONFIG['password']),
     ];
   }
 
   /** @return bool Whether the mailing list service is configured. */
   public function isConfigured():bool
   {
-    foreach (ConfigService::MAILING_LIST_REST_CONFIG as $configKey) {
+    foreach (ConfigConstants::MAILING_LIST_REST_CONFIG as $configKey) {
       if (empty($this->getConfigValue($configKey))) {
         return false;
       }
@@ -246,7 +253,7 @@ class MailingListsService
   public function getServerConfig():?array
   {
     $response = $this->restClient->get(
-      '/3.1/system/configuration', [
+      '3.1/system/configuration', [
         'auth' => $this->restAuth,
       ]);
     return empty($response->getBody()) ? null : json_decode($response->getBody(), true);
@@ -260,7 +267,7 @@ class MailingListsService
   public function getServerVersions(?array &$coreVersion = null):?array
   {
     $response = $this->restClient->get(
-      '/3.1/system/versions', [
+      '3.1/system/versions', [
         'auth' => $this->restAuth,
       ]);
     $result = empty($response->getBody()) ? null : json_decode($response->getBody(), true);
@@ -306,7 +313,7 @@ class MailingListsService
   public function getListConfig(string $fqdnName, ?string $resource = null)
   {
     $response = $this->restClient->get(
-      '/3.1/lists/' . $fqdnName . '/config' . (empty($resource) ? '' : '/' . $resource), [
+      '3.1/lists/' . $fqdnName . '/config' . (empty($resource) ? '' : '/' . $resource), [
         'auth' => $this->restAuth,
       ]);
     if (empty($response->getBody())) {
@@ -346,7 +353,7 @@ class MailingListsService
       }
     }
     /* $response = */ $this->restClient->patch(
-      '/3.1/lists/' . $fqdnName . '/config', [
+      '3.1/lists/' . $fqdnName . '/config', [
         'json' => $config,
         'auth' => $this->restAuth,
       ]);
@@ -362,7 +369,7 @@ class MailingListsService
   {
     try {
       $response = $this->restClient->get(
-        '/3.1/lists/' . $fqdnName, [
+        '3.1/lists/' . $fqdnName, [
           'auth' => $this->restAuth,
         ]);
     } catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -389,7 +396,7 @@ class MailingListsService
     if (strpos($fqdnName, '@') === false) {
       $fqdnName[strpos($fqdnName, '.')] = '@';
     }
-    /* $response = */ $this->restClient->post('/3.1/lists', [
+    /* $response = */ $this->restClient->post('3.1/lists', [
       'json' => [
         'fqdn_listname' => $fqdnName,
         'style_name' => $style,
@@ -413,7 +420,7 @@ class MailingListsService
     if (empty($listId)) {
       return false;
     }
-    /* $response = */ $this->restClient->delete('/3.1/lists/' . $listId, [
+    /* $response = */ $this->restClient->delete('3.1/lists/' . $listId, [
       'auth' => $this->restAuth,
     ]);
     return true;
@@ -454,7 +461,7 @@ class MailingListsService
       $displayName = $newDisplayName;
     }
     /* $response = */ $this->restClient->patch(
-      '/3.1/lists/' . $listId . '/config', [
+      '3.1/lists/' . $listId . '/config', [
         'json' => [
           self::LIST_CONFIG_DISPLAY_NAME => $displayName,
           self::LIST_CONFIG_ACCEPTABLE_ALIASES => $acceptableAliases,
@@ -493,6 +500,9 @@ class MailingListsService
    * @param string $listId The list-id or FQDN. If a list-fqdn, then an
    * additional query is needed to retrieve the list-id from the server.
    *
+   * @param null|string $displayName If given the display name of the list. If
+   * \null the display name remains unchanged.
+   *
    * @param string|array $owners Array of owners or the single owner as string.
    *
    * @param string|array $moderators Array of moderators or the single moderator as string.
@@ -503,21 +513,31 @@ class MailingListsService
    *
    * @return void
    */
-  public function configureAnnouncementsList(string $listId, $owners = [], $moderators = [], $posters = []):void
-  {
+  public function configureAnnouncementsList(
+    string $listId,
+    ?string $displayName = null,
+    $owners = [],
+    $moderators = [],
+    $posters = [],
+  ):void {
     $listId = $this->ensureListId($listId);
     $config = [
+      'advertised' => true,
       'allow_list_posts' => false,
-      'subscription_policy' => 'confirm',
-      'unsubscription_policy' => 'open', // check keyword
+      'archive_policy' => 'public',
       'default_member_action' => self::MEMBER_MODERATION_HOLD,
       'default_nonmember_action' => self::MEMBER_MODERATION_HOLD,
-      'archive_policy' => 'public',
-      'advertised' => true,
       'digests_enabled' => false,
-      'preferred_language' => $this->getLanguage($this->appLocale()),
+      'dmarc_mitigate_action' => 'munge_from',
       'max_message_size' => 0,
+      'preferred_language' => $this->getLanguage($this->appLocale()),
+      'subscription_policy' => 'confirm',
+      'unsubscription_policy' => 'open', // check keyword
     ];
+    if ($displayName !== null) {
+      $config['display_name'] = $displayName;
+      $config['subject_prefix'] = '[' . $displayName . ']';
+    }
     $this->setListConfig($listId, $config);
 
     $owners = is_array($owners) ? $owners : [ $owners ];
@@ -581,7 +601,7 @@ class MailingListsService
     if ($uri === null) {
       // delete
       try {
-        /* $response = */ $this->restClient->delete('/3.1/lists/' . $listId . '/uris/' . $template, [
+        /* $response = */ $this->restClient->delete('3.1/lists/' . $listId . '/uris/' . $template, [
           'auth' => $this->restAuth,
         ]);
       } catch (\GuzzleHttp\Exception\ClientException $e) {
@@ -593,7 +613,7 @@ class MailingListsService
         }
       }
     } else {
-      /* $response = */ $this->restClient->patch('/3.1/lists/' . $listId . '/uris', [
+      /* $response = */ $this->restClient->patch('3.1/lists/' . $listId . '/uris', [
         'json' => [
         $template => $uri,
         ],
@@ -632,7 +652,7 @@ class MailingListsService
   public function getConfigurationUrl(string $listId):string
   {
     $listId = $this->ensureListId($listId);
-    return $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['web']) . '/postorius/lists/' . $listId;
+    return $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['web']) . '/postorius/lists/' . $listId;
   }
 
   /**
@@ -644,7 +664,7 @@ class MailingListsService
   public function getArchiveUrl(string $listId):string
   {
     $listId = $this->ensureListId($listId);
-    return $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['web']) . '/hyperkitty/list/' . $listId;
+    return $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['web']) . '/hyperkitty/list/' . $listId;
   }
 
   /**
@@ -674,7 +694,7 @@ class MailingListsService
     ];
 
     $response = $this->restClient->post(
-      '/3.1/members/find', [
+      '3.1/members/find', [
         'json' => $post,
         'auth' => $this->restAuth,
       ]);
@@ -715,7 +735,7 @@ class MailingListsService
     }
 
     $response = $this->restClient->get(
-      '/3.1/lists/' . $listId . '/requests', [
+      '3.1/lists/' . $listId . '/requests', [
         'auth' => $this->restAuth,
       ]);
     if (empty($response->getBody())) {
@@ -765,7 +785,7 @@ class MailingListsService
         $postData['reason'] = $reason;
       }
       /* $response = */ $this->restClient->post(
-        '/3.1/lists/' . $listId . '/requests/' . $token, [
+        '3.1/lists/' . $listId . '/requests/' . $token, [
           'json' => $postData,
           'auth' => $this->restAuth,
         ]);
@@ -870,7 +890,7 @@ class MailingListsService
         $subscriptionData[$key] = 'False';
       }
     }
-    /* $response = */ $this->restClient->post('/3.1/members', [
+    /* $response = */ $this->restClient->post('3.1/members', [
       'json' => $subscriptionData,
       'auth' => $this->restAuth,
     ]);
@@ -1054,7 +1074,7 @@ class MailingListsService
 
     $criteria['list_id'] = $listId;
 
-    $response = $this->restClient->post('/3.1/members/find', [
+    $response = $this->restClient->post('3.1/members/find', [
       'json' => $criteria,
       'auth' => $this->restAuth,
     ]);
@@ -1152,7 +1172,7 @@ class MailingListsService
    */
   public function ensureTemplateFolder(string $folderName):?string
   {
-    $shareOwnerUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
+    $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
     $folderPath = $folderName[0] != '/'
       ? $folderPath = $this->templateFolderPath($folderName)
       : $folderName;

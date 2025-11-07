@@ -30,7 +30,6 @@ use Throwable;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\EventDispatcher\Event;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\IConfig;
@@ -259,6 +258,11 @@ class AsymmetricKeyService
     $cryptor = self::$cryptors[$ownerId] ?? null;
     if (empty($cryptor)) {
       $keyPair = self::$keyPairs[$ownerId] ?? null;
+      if (empty($keyPair) && $ownerId == $this->getSessionUserId()) {
+        // effect of LazyGhosts: EncryptionService CTOR has not been run
+        $this->initEncryptionKeyPair($ownerId);
+        $keyPair = self::$keyPairs[$ownerId] ?? null;
+      }
       $privKey = $keyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG] ?? null;
       $pubKey = $keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG] ?? $this->keyStorage->getPublicKey($ownerId);
       $cryptor = clone $this->cryptorPrototype;
