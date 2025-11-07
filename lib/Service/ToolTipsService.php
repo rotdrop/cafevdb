@@ -231,14 +231,15 @@ class ToolTipsService implements \ArrayAccess, \Countable
     }
 
     if (!empty($tip)) {
+      if ($escape && !$options[self::OPTION_HTML]) {
+        // all tooltips are rendered as HTML, this implies that non-HTML
+        // tips have to be encoded twice.
+        $tip = htmlspecialchars($tip);
+      }
+      // multiple lines consisting only of spaces and linebreaks are replaced by paragraphs
       $tip = preg_replace('/(^\s*[\n])+/m', self::PARAGRAPH . "\n", $tip);
       if ($escape) {
         $tip = htmlspecialchars($tip);
-        if (!$options[self::OPTION_HTML]) {
-          // all tooltips are rendered as HTML, this implies that non-HTML
-          // tips have to be encoded twice.
-          $tip = htmlspecialchars($tip);
-        }
       }
       $this->lastToolTip = $tip;
     } else {
