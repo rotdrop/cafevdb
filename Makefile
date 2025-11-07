@@ -29,6 +29,8 @@ BASH=$(shell which bash 2> /dev/null)
 SHELL := $(BASH)
 PHP = $(shell which php 2> /dev/null) # allow override
 PHP_SCOPER = $(ABSSRCDIR)/vendor-bin/php-scoper/vendor/bin/php-scoper
+TYPESCRIPT_CONVERTER = $(ABSSRCDIR)/dev-scripts/php-to-typescript.php
+TS_TYPES_DIR = $(ABSBUILDDIR)/ts-types
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
 COMPOSER = $(PHP) $(BUILD_TOOLS_DIR)/composer.phar
@@ -181,15 +183,13 @@ $(BUILDDIR)/vendor-wrapped: composer-wrapped.lock wrapper-build-hash
 $(BUILDDIR)/vendor-wrapped/autoload.php: $(BUILDDIR)/vendor-wrapped composer-wrapped.json Makefile
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) dump-autoload
 
+#@private
 .PHONY: composer-wrapped-suggest
 composer-wrapped-suggest:
 	@echo -e "\n*** Wrapped Composer Suggestions ***\n"
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) suggest --all
 
-.PHONY: composer-suggest
 composer-suggest: composer-wrapped-suggest
-	@echo -e "\n*** Regular Composer Suggestions ***\n"
-	$(COMPOSER) suggest --all
 
 $(PHP_SCOPER): php-scoper-install
 
@@ -231,6 +231,17 @@ APP_TOOLKIT_NS = CAFEVDB
 
 include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
+
+TS_TYPE_FILES = $(addprefix $(TS_TYPES_DIR)/, $(shell $(TYPESCRIPT_CONVERTER) --outputs))
+TS_TYPE_FILES_DEPS = $(addprefix $(ABSSRCDIR)/, $(shell $(TYPESCRIPT_CONVERTER) --sources))
+
+#@private
+$(TS_TYPE_FILES): $(TS_TYPE_FILES_DEPS)
+	$(TYPESCRIPT_CONVERTER) --output-prefix=$(TS_TYPES_DIR) --source-prefix=$(ABSSRCDIR)
+
+#@private
+ts-type-files: $(TS_TYPE_FILES)
+.PHONY: ts-type-files
 
 .PHONY: selectize
 selectize: $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
@@ -286,7 +297,8 @@ WEBPACK_DEPS =\
  $(CSS_FILES)\
  $(JS_FILES)\
  $(L10N_FILES)\
- $(TS_APP_CONFIG)
+ $(TS_APP_CONFIG)\
+ $(TS_TYPE_FILES)
 
 include $(DEV_LIB_DIR)/makefile/npm.mk
 
