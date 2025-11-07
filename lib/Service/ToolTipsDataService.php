@@ -312,7 +312,11 @@ dialog" for the respective record. If disabled, clicking on a data-row will open
         ],
         'storage' => [
           'messages' => [
-            'select' => self::t('Select either a message draft or template as base for the current message.'),
+            'select' => [
+              'template' => self::t('Select predefined templates or enter a name for a new template. Use the "save as template" checkbox and the "save-message" button to actually save the template.'),
+              'draft' => self::t('Select a previously stored draft message.'),
+              'sent' => self::t('Select a previously sent email for a follow-app. The message text of the old message will be pasted into the follow up message as quotation.'),
+            ],
             'new-template' => self::t('Enter a short, no-nonsense name for the new template. The name will be converted to "camel-case", e.g. "hello world" will yield the name "HelloWorld".'),
             'save-as-template' => self::t('Activate this checkbox in order to save the current email message as
 message template. If you leave this check-box unchecked, then messages
@@ -366,6 +370,12 @@ of this button.'),
               'size-limit' => self::t('Attachments exceeding this size limit will be replaced by download-links. Set to 0 to convert all attachments to download links. Set to a negative value in order to disable this feature. The size can be specified in bytes or any usual storage unit, e.g. "16.5 MiB".'),
               'expiration-limit' => self::t('Download-links will expire after this time after sending the email. Set to 0 in order to never expire download-links. The time interval may be given in "natural" notation, e.g. "7 days", "1 week". The interval will be rounded to full days.'),
               'cloud-always' => self::t('If checked attachments originating from the cloud storage will always be replaced by a download-link. If unchecked "cloud-files" are just treated like uploaded attachments.'),
+            ],
+          ],
+          'validation' => [
+            'external-links' => [
+              'ssl' => self::t('Reject external web-links for valid SSL certificates. This can be disable in a testing environment, but should be left enabled in production mode.'),
+              'enforce-ssl' => self::t('Reject external links using the unencrypted http protocol, i.e. reject links starting with "http://" vs. "https://".'),
             ],
           ],
           'send' => self::t('Attempt to send the stuff you have composed out to your selection of
