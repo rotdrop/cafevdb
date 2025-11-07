@@ -24,12 +24,14 @@
 import $ from './jquery.js';
 import { globalState } from './cafevdb.js';
 
+/* global JQuery */
+
 /**
  * Add a WYSIWYG editor to the element specified by @a selector.
  *
- * @param {string} selector TBD.
+ * @param {string|JQuery} selector TBD.
  *
- * @param {Function} initCallback TBD.
+ * @param {Function} [initCallback] TBD.
  */
 const addEditor = function(selector, initCallback) {
   const $editorElements = $(selector);

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ import generateAppUrl from './generate-url.js';
  *
  * @param {string} url TBD.
  *
- * @param {object} urlParams TBD.
+ * @param {object} [urlParams] TBD.
  *
  * @param {object} urlOptions TBD.
  *
@@ -43,9 +43,9 @@ function generateSettingsUrl(url, urlParams, urlOptions) {
  *
  * @param {string} url TBD.
  *
- * @param {object} urlParams TBD.
+ * @param {object} [urlParams] TBD.
  *
- * @param {object} urlOptions TBD.
+ * @param {object} [urlOptions] TBD.
  *
  * @returns {string}
  */
@@ -58,9 +58,9 @@ function setPersonalUrl(url, urlParams, urlOptions) {
  *
  * @param {string} url TBD.
  *
- * @param {object} urlParams TBD.
+ * @param {object} [urlParams] TBD.
  *
- * @param {object} urlOptions TBD.
+ * @param {object} [urlOptions] TBD.
  *
  * @returns {string}
  */
@@ -73,9 +73,9 @@ function setAppUrl(url, urlParams, urlOptions) {
  *
  * @param {string} url TBD.
  *
- * @param {object} urlParams TBD.
+ * @param {object} [urlParams] TBD.
  *
- * @param {object} urlOptions TBD.
+ * @param {object} [urlOptions] TBD.
  *
  * @returns {string}
  */
@@ -88,9 +88,9 @@ function getUrl(url, urlParams, urlOptions) {
  *
  * @param {string} url TBD.
  *
- * @param {object} urlParams TBD.
+ * @param {object} [urlParams] TBD.
  *
- * @param {object} urlOptions TBD.
+ * @param {object} [urlOptions] TBD.
  *
  * @returns {string}
  */
@@ -103,9 +103,9 @@ function getAppUrl(url, urlParams, urlOptions) {
  *
  * @param {string} url TBD.
  *
- * @param {object} urlParams TBD.
+ * @param {object} [urlParams] TBD.
  *
- * @param {object} urlOptions TBD.
+ * @param {object} [urlOptions] TBD.
  *
  * @returns {string}
  */

@@ -2,7 +2,7 @@
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": [
     "../../custom.d.ts",
-    "./build/ts-types/app-config.ts",
+    "./build/ts-types/**.ts",
     "./node_modules/@nextcloud/**.ts",
     "./node_modules/@types/**.ts",
     "./node_modules/axios/**.ts",
@@ -22,7 +22,9 @@
       "node",
       "vue",
       "vue-router",
-      "moment"
+      "moment",
+      "jquery",
+      "jqueryui"
     ],
     "lib": [ "ES2024", "DOM", "DOM.Iterable" ],
     "outDir": "./dist/",
@@ -37,7 +39,8 @@
     "noImplicitAny": false,
     "resolveJsonModule": true,
     "strict": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "esModuleInterop": true
   },
   "vueCompilerOptions": {
     "target": 2.7

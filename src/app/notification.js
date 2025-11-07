@@ -95,7 +95,7 @@ const showTemporary = function(text, options = {}) {
 /**
  * Display the given messages as "toasts".
  *
- * @param {Array} messages TBD.
+ * @param {Array|string|undefined} messages TBD.
  *
  * @param {object} options In particular the "timeout" property is
  * interesting.

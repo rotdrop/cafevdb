@@ -25,6 +25,19 @@
 
 const jQuery = require('jquery');
 
+/**
+ * jQuery object
+ * @global
+ * @external jQuery
+ */
+
+// eslint-disable-next-line jsdoc/require-property
+/**
+ * @global
+ * @typedef {object} JQuery
+ * @see {@link http://api.jquery.com/jQuery/}
+ */
+
 for (const property of [/* '$', 'jQuery' */]) {
   try {
     Object.defineProperty(window, property, {

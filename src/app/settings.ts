@@ -29,7 +29,7 @@ import * as Dialogs from './dialogs.js';
 import * as FileUpload from './file-upload.js';
 import * as SelectUtils from './select-utils.js';
 import generateAppUrl from './generate-url.js';
-import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.js';
+import { simpleSetHandler, simpleSetValueHandler, type GetValueResult } from './simple-set-value.js';
 import { toolTipsInit } from './cafevdb.js';
 import { setPersonalUrl, setAppUrl, getUrl } from './settings-urls.js';
 import fileDownload from './file-download.js';
@@ -37,6 +37,8 @@ import { makePlaceholder as selectPlaceholder } from './select-utils.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import personalSettingsAfterLoad, { updateCreditsTimer } from './personal-settings.js';
 import { showInfo } from '@nextcloud/dialogs';
+import { translate as t } from '@nextcloud/l10n';
+import ConfigConstants = OCA.CAFEVDB.Settings.ConfigConstants;
 
 require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -47,6 +49,8 @@ require('jquery-ui/ui/widgets/tabs');
 require('personal-settings.scss');
 require('about.scss');
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * Permanent DOM element holding the dynamically injected settings
  * forms.
@@ -54,9 +58,9 @@ require('about.scss');
 const containerSelector = 'div.app-admin-settings';
 const tabsSelector = '#personal-settings-container';
 
-let timeStampTimer;
+let timeStampTimer: NodeJS.Timeout;
 
-const localeUpdateOne = function(element) {
+const localeUpdateOne = function(element: HTMLElement|JQuery) {
   const $element = $(element);
   if (!$element.is(':visible')) {
     // avoid update if the element currently is hidden
@@ -69,14 +73,14 @@ const localeUpdateOne = function(element) {
     });
 };
 
-const localeUpdater = async function($localeInfo) {
+const localeUpdater = async function($localeInfo: JQuery) {
   if (!$localeInfo.filter(':visible').length) {
     clearTimeout(timeStampTimer);
     return;
   }
-  const promises = [];
+  const promises: JQuery.jqXHR<any>[] = [];
   for (const element of $localeInfo) {
-    promises.push(localeUpdateOne(element));
+    promises.push(localeUpdateOne(element)!);
   }
   for (const promise of promises) {
     await promise;
@@ -85,7 +89,7 @@ const localeUpdater = async function($localeInfo) {
   timeStampTimer = setTimeout(() => localeUpdater($localeInfo), 1000 + Math.floor(Math.random() * 29000.0));
 };
 
-const updateLocaleTimeStamps = function($container) {
+const updateLocaleTimeStamps = function($container: JQuery) {
   const $localeInfo = $container.find('.locale.information');
   localeUpdater($localeInfo);
 };
@@ -96,9 +100,9 @@ const updateLocaleTimeStamps = function($container) {
  * elements. Everything attached to the container is initialized in
  * the $(document).ready() callback.
  *
- * @param {jQuery} container Should be a permanent DOM element.
+ * @param container Should be a permanent DOM element.
  */
-const afterLoad = function(container) {
+const afterLoad = function(container?: JQuery) {
 
   container = container || $(containerSelector);
   const tabsHolder = $(tabsSelector);
@@ -108,18 +112,20 @@ const afterLoad = function(container) {
     return;
   }
 
+  // @ts-expect-error 2339
   tabsHolder.tabs({ selected: 0 });
 
   // Work around showPassword erasing the value and returns the
   // text input clone.
-  const showPassword = function(element) {
+  const showPassword = function(element: JQuery) {
     const tmp = element.val();
-    let showElement;
-    element.showPassword(function(args) {
+    let showElement: JQuery;
+    // @ts-expect-error 2339
+    element.showPassword(function(args: { input: JQuery, checkbox: JQuery, clone: JQuery }) {
       showElement = args.clone;
     });
-    element.val(tmp);
-    return showElement;
+    element.val(tmp || '');
+    return showElement!;
   };
 
   // 'show password' checkbox
@@ -128,7 +134,7 @@ const afterLoad = function(container) {
   showPassword(encryptionKey);
   showPassword(loginPassword);
 
-  $('#userkey input.button').click(function() {
+  $('#userkey input.button').on('click', function() {
     // We allow empty keys, meaning no encryption
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
@@ -187,22 +193,22 @@ const afterLoad = function(container) {
     const adminGeneral = $('#admingeneral');
     const msg = adminGeneral.find('.msg');
 
-    const afterSetOrchestraName = function(element, data, value, msg) {
+    const afterSetOrchestraName = function(_element: JQuery, _data: Record<string, any>, value: string, _msg: JQuery) {
       if (value === '') {
-        $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function(i, elm) {
-          $(elm).prop('disabled', true);
+        $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function() {
+          $(this).prop('disabled', true);
         });
       } else {
-        $('div.personalblock.admin').find('fieldset').each(function(i, elm) {
-          $(elm).removeAttr('disabled');
+        $('div.personalblock.admin').find('fieldset').each(function() {
+          $(this).removeAttr('disabled');
         });
         if ($('#shareowner #user-saved').val() !== '') {
-          $('div.personalblock.sharing').find('fieldset').each(function(i, elm) {
-            $(elm).removeAttr('disabled');
+          $('div.personalblock.sharing').find('fieldset').each(function() {
+            $(this).removeAttr('disabled');
           });
         } else {
-          $('#shareownerform').find('fieldset').each(function(i, elm) {
-            $(elm).removeAttr('disabled');
+          $('#shareownerform').find('fieldset').each(function() {
+            $(this).removeAttr('disabled');
           });
         }
       }
@@ -215,7 +221,7 @@ const afterLoad = function(container) {
 
     simpleSetValueHandler(
       adminGeneral.find('select[name="orchestraLocale"]'), 'change', msg, {
-        success(element, data, value, msg) {
+        success(_element, data, _value, _msg) {
           if (data.localeInfo) {
             const $localeInfo = adminGeneral.find('.locale.information');
             $localeInfo.children().remove();
@@ -303,12 +309,12 @@ const afterLoad = function(container) {
       return false;
     });
 
-    $('form#systemkey #keygenerate').on('click', function(event) {
+    $('form#systemkey #keygenerate').on('click', function(_event) {
       $('.statusmessage').hide();
 
       // show the visible password text input
       if ($('form#systemkey #key').is(':visible')) {
-        $('#systemkey-show').click();
+        $('#systemkey-show').trigger('click');
       }
 
       $.post(
@@ -325,10 +331,10 @@ const afterLoad = function(container) {
       return false;
     });
 
-    $('#keydistributebutton').on('click', function(even) {
+    $('#keydistributebutton').on('click', function(_event) {
       const msg = form.find('fieldset.keydistribute .statusmessage');
       form.find('.statusmessage').hide();
-      const name = $(this).attr('name');
+      const name = $(this).attr('name') as string;
       $.post(setAppUrl(name))
         .fail(function(xhr, status, errorThrown) {
           const failData = Ajax.handleError(xhr, status, errorThrown);
@@ -358,11 +364,11 @@ const afterLoad = function(container) {
     // test password
     simpleSetValueHandler(
       $(`fieldset.${appName}_dbpassword input.button`), 'click', $(`fieldset.${appName}_dbpassword .statusmessage`), {
-        success(element, data, value) {
+        success(_element, _data, _value) {
           // $(`fieldset.${appName}_dbpassword input[name="dbpassword"]`).val('');
           // $(`fieldset.${appName}_dbpassword input[name="dbpassword-clone"]`).val('');
         },
-        getValue(element, msg) {
+        getValue(_element, msg) {
           const val = { name: dbPassword.attr('name'), value: dbPassword.val() };
           if (val.value === '') {
             msg.html(t(appName, 'Empty password, trying to use configured credentials.')).show();
@@ -381,13 +387,13 @@ const afterLoad = function(container) {
   const enableFieldSets = function() {
     const shareOwnerSet = $('#shareowner').find('input#user').val() !== '';
 
-    $('#calendars, #contacts').find('fieldset').each(function(i, elm) {
-      $(elm).prop('disabled', !shareOwnerSet);
+    $('#calendars, #contacts').find('fieldset').each(function() {
+      $(this).prop('disabled', !shareOwnerSet);
     });
     const sharedFolder = $('input#sharedfolder').val() !== '';
     const projectsFolder = $('input#projectsfolder').val() !== '';
     const financeFolder = $('input#financefolder').val() !== '';
-    $('#sharedfolder-form').find('fieldset').each(function(i, element) {
+    $('#sharedfolder-form').find('fieldset').each(function(_i, element) {
       const $element = $(element);
       const disabled = (!shareOwnerSet
                       || ($element.hasClass('needs-sharedfolder') && !sharedFolder)
@@ -400,15 +406,15 @@ const afterLoad = function(container) {
   {
     const container = $('#shareowner');
     const msg = $('#shareownerform .statusmessage');
-    const shareOwner = container.find('#user');
-    const shareOwnerSaved = container.find('#user-saved');
+    const shareOwner = container.find('#user') as JQuery<HTMLInputElement>;
+    const shareOwnerSaved = container.find('#user-saved') as JQuery<HTMLInputElement>;
     const shareOwnerForce = container.find('#shareowner-force');
     const shareOwnerCheck = container.find('#check');
 
-    shareOwnerForce.on('change', function(event) {
+    shareOwnerForce.on('change', function(_event) {
       msg.hide();
       if (!$(this).is(':checked') && shareOwnerSaved.val() !== '') {
-        shareOwner.val(shareOwnerSaved.val());
+        shareOwner.val(shareOwnerSaved.val()!);
         shareOwner.prop('disabled', true);
       } else {
         shareOwner.prop('disabled', false);
@@ -416,19 +422,19 @@ const afterLoad = function(container) {
       return false;
     });
 
-    shareOwner.on('blur', function(event) {
+    shareOwner.on('blur', function(_event) {
       shareOwnerCheck.prop('disabled', shareOwner.val() === '');
       return false;
     });
 
     simpleSetValueHandler(
       shareOwnerCheck, 'click', msg, {
-        success(element, data, value, msg) { // done
-          shareOwnerSaved.val(shareOwner.val());
+        success(_element, _data, _value, _msg) { // done
+          shareOwnerSaved.val(shareOwner.val()!);
           shareOwner.prop('disabled', true);
           enableFieldSets();
         },
-        getValue(element, msg) { // getValue
+        getValue(_element, _msg) { // getValue
           return {
             name: 'shareowner',
             value: {
@@ -452,13 +458,13 @@ const afterLoad = function(container) {
 
     simpleSetValueHandler(
       change, 'click', msg, {
-        success(element, data, value, msg) { // done
+        success(_element, _data, _value, _msg) { // done
           // Why should we want to empty this except for security reasons?
           // password.val('');
           // passwordClone.val('');
         },
-        getValue(element, msg) {
-          let val = { name: password.attr('name'), value: password.val() };
+        getValue(_element, msg) {
+          let val: ReturnType<GetValueResult> = { name: password.attr('name'), value: password.val() };
           if (val.value === '') {
             msg.html(t(appName, 'Password field must not be empty')).show();
             val = undefined;
@@ -467,13 +473,13 @@ const afterLoad = function(container) {
         },
       });
 
-    container.find('#generate').on('click', function(event) {
+    container.find('#generate').on('click', function(_event) {
       $('.statusmessage').hide();
       msg.hide();
 
       // show the visible password input
       if (password.is(':visible')) {
-        $('#shareownerpassword-show').click();
+        $('#shareownerpassword-show').trigger('click');
       }
 
       $.post(
@@ -512,7 +518,7 @@ const afterLoad = function(container) {
       'blur',
       msg,
       {
-        success($self, data, value, msgElement) {
+        success($self, data, value, _msgElement) {
           if (data.value.name && data.value.name !== value) {
             $self.val(data.value.name);
           }
@@ -520,9 +526,12 @@ const afterLoad = function(container) {
       },
     );
 
-    container.find('#sharedfolder-form').submit(function() { return false; }); // @@TODO ???
+    container.find('#sharedfolder-form').on('submit', function() { return false; });
 
-    const sharedFolder = function(cssBase, callback) {
+    const sharedFolder = function(
+      cssBase: string,
+      callback?: (element: JQuery, css: string, data: { folderLink: string, url?: string }, value: string, msg: JQuery) => undefined,
+    ) {
       const css = cssBase;
       const cssSaved = cssBase + '-saved';
       const cssForce = cssBase + '-force';
@@ -532,14 +541,14 @@ const afterLoad = function(container) {
       const sharedObjectForce = container.find('#' + cssForce);
       const sharedObjectCheck = container.find('#' + cssCheck);
 
-      sharedObjectForce.blur(function(event) { // @@TODO ???
+      sharedObjectForce.on('blur', function(_event) { // @@TODO ???
         return false;
       });
 
-      sharedObjectForce.click(function(event) {
+      sharedObjectForce.on('click', function(_event) {
         msg.hide();
         if (!sharedObjectForce.is(':checked') && sharedObjectSaved.val() !== '') {
-          sharedObject.val(sharedObjectSaved.val());
+          sharedObject.val(sharedObjectSaved.val()!);
           sharedObject.prop('disabled', true);
         } else {
           sharedObject.prop('disabled', false);
@@ -560,7 +569,7 @@ const afterLoad = function(container) {
               callback(element, css, data, value, msg);
             }
           },
-          getValue(element, msg) { // getValue
+          getValue(_element, _msg) { // getValue
             return {
               name: css,
               value: {
@@ -573,7 +582,7 @@ const afterLoad = function(container) {
         });
     };
 
-    sharedFolder('sharedfolder', function(element, css, data, value, msg) {
+    sharedFolder('sharedfolder', function(_element, css, data, value, _msg) {
       $('div#sharing-settings span.sharedfolder').html(value[css]); // update display
       const $folderView = $('#sharedfolder-fieldset').find('a.sharedfolder-view');
       $folderView.attr('href', data.folderLink || '');
@@ -584,12 +593,12 @@ const afterLoad = function(container) {
       }
       enableFieldSets();
     });
-    sharedFolder('financefolder', function(element, css, data, value, msg) {
+    sharedFolder('financefolder', function(_element, css, _data, value, _msg) {
       // const emptyProjectsFolder = $('div#sharing-settings input[name="projectsfolder"]').val() === '';
       $('div#sharing-settings span.financefolder').html(value[css]); // update
       enableFieldSets();
     });
-    sharedFolder('projectsfolder', function(element, css, data, value, msg) {
+    sharedFolder('projectsfolder', function(_element, css, _data, value, _msg) {
       // const emptyFinanceFolder = $('div#sharing-settings input[name="financefolder"]').val() === '';
       $('div#sharing-settings span.projectsfolder').html(value[css]); // update
       enableFieldSets();
@@ -599,10 +608,10 @@ const afterLoad = function(container) {
     sharedFolder('projectpublicdownloadsfolder');
     sharedFolder('transactionsfolder');
     sharedFolder('balancesfolder');
-    sharedFolder('documenttemplatesfolder', function(element, css, data, value, msg) {
+    sharedFolder('documenttemplatesfolder', function(_element, css, _data, value, _msg) {
       $('fieldset.document-template input').prop('disabled', value[css] === '');
     });
-    sharedFolder('postboxfolder', function(element, css, data, value, msg) {
+    sharedFolder('postboxfolder', function(_element, _css, data, _value, _msg) {
       if (data.url) {
         $('div.postboxfolder-sharelink').html(data.url);
       }
@@ -627,7 +636,7 @@ const afterLoad = function(container) {
 
     const $cloudUserHints = $cloudUserForm.find('div.cloud-user.hints');
 
-    const updateHints = function(hints) {
+    const updateHints = function(hints?: Array<string>) {
       $cloudUserHints.empty();
       if (!Array.isArray(hints) || hints.length === 0) {
         $cloudUserHints.closest('fieldset').hide();
@@ -639,7 +648,7 @@ const afterLoad = function(container) {
       }
     };
 
-    const updateOtherOnImportChange = function($element) {
+    const updateOtherOnImportChange = function($element: JQuery) {
       const isChecked = $element.prop('checked');
       $cloudUserHints.closest('fieldset').toggleClass('hidden', !isChecked);
       $enabledIfImport.prop('disabled', !isChecked).find('*').prop('disabled', !isChecked);
@@ -648,7 +657,7 @@ const afterLoad = function(container) {
       $importClubMembersFieldSet.toggleClass('club-member-users-disabled', !isChecked);
     };
 
-    const updateOtherOnPersonalizedViewsChange = function($element) {
+    const updateOtherOnPersonalizedViewsChange = function($element: JQuery) {
       const isChecked = $element.prop('checked');
       $enabledIfPersonalizedViews.prop('disabled', !isChecked).find('*').prop('disabled', !isChecked);
     };
@@ -656,21 +665,21 @@ const afterLoad = function(container) {
     simpleSetValueHandler(
       $importClubMembersAsCloudUsers, 'change', undefined, {
         setup() {
-          const $this = $(this);
+          const $this = $(this) as JQuery;
           $this.addClass('busy');
           updateOtherOnImportChange($this);
         },
         cleanup() {
-          const $this = $(this);
+          const $this = $(this) as JQuery;
           updateOtherOnImportChange($this);
           $this.removeClass('busy');
         },
-        success($element, data) {
+        success(_$element, data) {
           console.info('DATA', data);
           updateHints(data.hints);
         },
         fail(xhr, textStatus, errorThrown) {
-          const $this = $(this);
+          const $this = $(this) as JQuery;
           Ajax.handleError(xhr, textStatus, errorThrown);
           // revert on failure
           $this.prop('checked', !$this.is(':checked'));
@@ -679,12 +688,12 @@ const afterLoad = function(container) {
       });
 
     const $cloudUserViewsDatabase = $importClubMembersFieldSet.find('input[name="cloudUserViewsDatabase"]');
-    const $cloudUserViewsDatabaseCheckbox = $importClubMembersFieldSet.find('input.checkbox.user-sql.separate-database');
+    const $cloudUserViewsDatabaseCheckbox = $importClubMembersFieldSet.find('input.checkbox.user-sql.separate-database') as JQuery<HTMLInputElement>;
 
     $cloudUserViewsDatabaseCheckbox
-      .on('change', function(event) {
+      .on('change', function(_event) {
         const $this = $cloudUserViewsDatabaseCheckbox;
-        const $databaseValue = $cloudUserViewsDatabase.val();
+        const $databaseValue = $cloudUserViewsDatabase.val()!;
         if ($this.prop('checked')) {
           if ($databaseValue !== ($this.data('savedDatabaseValue') || '')) {
             $cloudUserViewsDatabase.val($this.data('savedDatabaseValue'));
@@ -701,14 +710,14 @@ const afterLoad = function(container) {
       });
 
     simpleSetValueHandler($cloudUserViewsDatabase, 'blur', undefined, {
-      success($element, data) {
+      success(_$element, data) {
         updateHints(data.hints);
       },
     });
 
     simpleSetValueHandler($recreateViewsButton, 'click', undefined, {
       setup() { $recreateViewsButton.addClass('busy'); },
-      success($element, data) {
+      success(_$element, data) {
         updateHints(data.hints);
       },
       cleanup() { $recreateViewsButton.removeClass('busy'); },
@@ -717,21 +726,21 @@ const afterLoad = function(container) {
     simpleSetValueHandler(
       $musicianPersonalizedViews, 'change', undefined, {
         setup() {
-          const $this = $(this);
+          const $this = $(this) as JQuery;
           $this.addClass('busy');
           // updateOtherOnPersonalizedViewsChange($this);
         },
         cleanup() {
-          const $this = $(this);
+          const $this = $(this) as JQuery;
           updateOtherOnPersonalizedViewsChange($this);
           $this.removeClass('busy');
         },
-        success($element, data) {
+        success(_$element, data) {
           console.info('DATA', data);
           updateHints(data.hints);
         },
         fail(xhr, textStatus, errorThrown) {
-          const $this = $(this);
+          const $this = $(this) as JQuery;
           Ajax.handleError(xhr, textStatus, errorThrown);
           // revert on failure
           $this.prop('checked', !$this.is(':checked'));
@@ -741,7 +750,7 @@ const afterLoad = function(container) {
 
     simpleSetValueHandler($recreatePersonalizedViewsButton, 'click', undefined, {
       setup() { $recreatePersonalizedViewsButton.addClass('busy'); },
-      success($element, data) {
+      success(_$element, data) {
         updateHints(data.hints);
       },
       cleanup() { $recreatePersonalizedViewsButton.removeClass('busy'); },
@@ -762,8 +771,8 @@ const afterLoad = function(container) {
       heightStyle: 'content',
     });
 
-    $('#emailuser').blur(function(event) {
-      const name = $(this).attr('name');
+    $('#emailuser').on('blur', function(_event) {
+      const name = $(this).attr('name')!;
       const value = $(this).val();
       $.post(
         setAppUrl(name), { value })
@@ -787,7 +796,7 @@ const afterLoad = function(container) {
 
       passwordChange.on('click', function() {
         const value = password.val();
-        const name = password.attr('name');
+        const name = password.attr('name')!;
         if (value !== '') {
           $.post(
             setAppUrl(name), { value })
@@ -807,8 +816,8 @@ const afterLoad = function(container) {
     { // eslint-disable-line
       // const container = form.find('#emaildistribute');
 
-      $('#emaildistributebutton').click(function() {
-        const name = $(this).attr('name');
+      $('#emaildistributebutton').on('click', function() {
+        const name = $(this).attr('name')!;
         $.post(
           setAppUrl(name))
           .fail(function(xhr, status, errorThrown) {
@@ -824,8 +833,8 @@ const afterLoad = function(container) {
     {
       const container = emailContainer.find('form.serversettings');
 
-      $('[id$=security]:input').change(function(event) {
-        const name = $(this).attr('name');
+      $('[id$=security]:input').on('change', function(_event) {
+        const name = $(this).attr('name')!;
         const value = $(this).val();
         $.post(
           setAppUrl(name), { value })
@@ -841,9 +850,9 @@ const afterLoad = function(container) {
         return false;
       });
 
-      container.find('#smtpport,#imapport,#smtpserver,#imapserver').blur(function(event) {
+      container.find('#smtpport,#imapport,#smtpserver,#imapserver').on('blur', function(_event) {
         const $self = $(this);
-        const name = $(this).attr('name');
+        const name = $(this).attr('name')!;
         const value = $(this).val();
         $.post(setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
@@ -877,9 +886,9 @@ const afterLoad = function(container) {
       console.info('PRIV NOTICE', $bulkEmailPrivacyNotice);
       WysiwygEditor.addEditor($bulkEmailPrivacyNotice);
 
-      blurInputs.on('blur', function(event) {
+      blurInputs.on('blur', function(_event) {
         const $this = $(this);
-        const name = $this.attr('name');
+        const name = $this.attr('name')!;
         const value = $this.val();
         $.post(
           setAppUrl(name), { value })
@@ -898,7 +907,8 @@ const afterLoad = function(container) {
 
       const checkboxInputs = container.find([
         'input#cloudAttachmentAlwaysLink',
-        'input#preSendValidationExternalLinksSSLVerify',
+        // 'input#preSendValidationExternalLinksSSLVerify',
+        'input#' + ConfigConstants.PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY,
         'input#preSendValidationExternalLinksEnforceHttps',
       ].join(', '));
 
@@ -907,9 +917,9 @@ const afterLoad = function(container) {
         checkboxInputs,
       });
 
-      checkboxInputs.on('change', function(event) {
+      checkboxInputs.on('change', function(_event) {
         const $this = $(this);
-        const name = $this.attr('name');
+        const name = $this.attr('name')!;
         $.post(
           setAppUrl(name), { value: $this.prop('checked') })
           .fail(function(xhr, status, errorThrown) {
@@ -932,9 +942,9 @@ const afterLoad = function(container) {
       console.info('PRIV NOTICE', $bulkEmailPrivacyNotice);
       WysiwygEditor.addEditor($bulkEmailPrivacyNotice);
 
-      $bulkEmailPrivacyNotice.on('blur', function(event) {
+      $bulkEmailPrivacyNotice.on('blur', function(_event) {
         const $this = $(this);
-        const name = $this.attr('name');
+        const name = $this.attr('name')!;
         const value = $this.val();
         $.post(
           setAppUrl(name), { value })
@@ -960,7 +970,7 @@ const afterLoad = function(container) {
       simpleSetValueHandler(emailTestAddress, 'blur');
       simpleSetValueHandler(
         container.find('#emailtestmode'), 'change', undefined, {
-          success(element, data) {
+          success(_element, _data) {
             // if (element.is(':checked')) {
             //   emailTestAddress.prop('disabled', false);
             // } else {
@@ -989,8 +999,8 @@ const afterLoad = function(container) {
       const password = container.find('#mailingListRestPassword');
       showPassword(password);
 
-      $inputs.blur(function(event) {
-        const name = $(this).attr('name');
+      $inputs.on('blur', function(_event) {
+        const name = $(this).attr('name')!;
         const value = $(this).val();
         $.post(
           setAppUrl(name), { value })
@@ -1026,12 +1036,13 @@ const afterLoad = function(container) {
       $('input.phoneNumber'),
       'blur',
       msg, {
-        success(element, data, value, msgElement) {
+        success(element, data, _value, _msgElement) {
           element.val(data.number);
         },
       });
 
     const streetAddressCountry = $('select.streetAddressCountry');
+    // @ts-expect-error 2339
     streetAddressCountry.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
@@ -1050,7 +1061,7 @@ const afterLoad = function(container) {
 
     const projectsData = specialMemberProjects.data('projects');
     let autocompleteProjects = projectsData
-      ? specialMemberProjects.data('projects').map(v => v.name)
+      ? specialMemberProjects.data('projects').map((v: { name: string }) => v.name)
       : [];
 
     specialMemberProjects.autocomplete({
@@ -1059,7 +1070,7 @@ const afterLoad = function(container) {
       minLength: 0,
     });
 
-    specialMemberProjects.on('focus', function(event) {
+    specialMemberProjects.on('focus', function(_event) {
       const $self = $(this);
       if ($self.val() === '') {
         $self.autocomplete('search', '');
@@ -1067,14 +1078,14 @@ const afterLoad = function(container) {
     });
 
     simpleSetValueHandler(specialMemberProjects, 'blur', msg, {
-      success($self, data, value, msgElement) {
+      success($self, data, _value, _msgElement) {
         const name = $self.attr('name');
         $('input[name="' + name + 'Create"]').prop('disabled', data.projectId > -1);
         if (data.newName) {
           $self.val(data.newName);
         }
         if (data.suggestions) {
-          autocompleteProjects = data.suggestions.map(v => v.name);
+          autocompleteProjects = data.suggestions.map((v: { name: string }) => v.name);
           specialMemberProjects.autocomplete('option', 'source', autocompleteProjects);
         }
         if (data.feedback) {
@@ -1084,7 +1095,7 @@ const afterLoad = function(container) {
               Dialogs.confirm(
                 data.feedback[option].message,
                 data.feedback[option].title,
-                function(decision) {
+                function(decision: boolean) {
                   data.feedback = decision;
                   if (decision === true) {
                     $.post(
@@ -1104,7 +1115,7 @@ const afterLoad = function(container) {
                           msg.html(data.message.join('; ')).show();
                         }
                         if (data.suggestions) {
-                          autocompleteProjects = data.suggestions.map(v => v.name);
+                          autocompleteProjects = data.suggestions.map((v: { name: string }) => v.name);
                           specialMemberProjects.autocomplete('option', 'source', autocompleteProjects);
                         }
                         if (data.projectid) {
@@ -1123,8 +1134,8 @@ const afterLoad = function(container) {
     const specialMemberProjectsCreate = $('input[type="button"].specialMemberProjects');
     simpleSetValueHandler(
       specialMemberProjectsCreate, 'click', msg, {
-        success($self, data, value, msgElement) {},
-        getValue($self, msgElement) {
+        success(_$self, _data, _value, _msgElement) {},
+        getValue($self, _msgElement) {
           const name = $self.attr('name');
           return {
             name,
@@ -1138,6 +1149,7 @@ const afterLoad = function(container) {
       });
 
     const executiveBoardIds = $('select.executive-board-ids');
+    // @ts-expect-error 2339
     executiveBoardIds.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
@@ -1174,7 +1186,7 @@ const afterLoad = function(container) {
       'blur',
       msg,
       {
-        success(element, data, value, msg) { // done
+        success(element, data, value, _msg) { // done
           if (data.suggestions && data.suggestions.length > 0) {
             // TODO: make the autocomplete option(s) more visible
             element.autocomplete('option', 'source', data.suggestions);
@@ -1218,18 +1230,23 @@ const afterLoad = function(container) {
       $fieldset.find('input').prop('disabled', true);
     }
 
+    interface UploadFile {
+      original_name: string,
+      tmp_name: string,
+    }
+
     /**
-     * @param {string} file TBD.
+     * @param file TBD.
      *
-     * @param {jQuery} $container TBD.
+     * @param $container TBD.
      *
-     * @param {jQuery} $trigger TBD.
+     * @param $trigger TBD.
      *
      * @todo This is the only place which actually uses upload/move,
      * it should be replace by the things the other parts of the code
      * use.
      */
-    const moveIntoPlace = function(file, $container, $trigger) {
+    const moveIntoPlace = function(file: UploadFile, $container: JQuery, $trigger: JQuery) {
       const subFolderId = $container.data('documentTemplateSubFolder') || '';
       const destinationPath =
             '/' + $('#sharedfolder').val()
@@ -1282,7 +1299,7 @@ const afterLoad = function(container) {
     };
 
     simpleSetHandler($deleters, 'click', undefined, {
-      success($self, data, msgElement) {
+      success($self, _data, _msgElement) {
         $self.prop('disabled', true);
         $self.nextAll('input.upload-placeholder').val('').show();
         $self.nextAll('a.downloadlink')
@@ -1293,20 +1310,21 @@ const afterLoad = function(container) {
       },
     });
 
-    $autofillers.on('click', function(event) {
+    $autofillers.on('click', function(_event) {
       const $self = $(this);
 
       $self.addClass('busy');
 
       fileDownload(
         'settings/app/get/auto-fill-test', {
+          // @ts-expect-error 2353
           documentTemplate: $self.data('template'),
           format: $self.data('format'),
         }, {
           always() {
             $self.removeClass('busy');
           },
-          errorMessage(data, url) {
+          errorMessage(_data: object, _url: string) {
             return t(appName, 'Unable to download auto-fill result.');
           },
         });
@@ -1315,19 +1333,20 @@ const afterLoad = function(container) {
     });
 
     // get the test-data set as JSON for offline testing
-    $autofillersdata.on('click', function(event) {
+    $autofillersdata.on('click', function(_event) {
       const $self = $(this);
 
       $self.addClass('busy');
 
       fileDownload(
         'settings/app/get/auto-fill-test-data', {
+          // @ts-expect-error 2353
           documentTemplate: $self.data('template'),
         }, {
           always() {
             $self.removeClass('busy');
           },
-          errorMessage(data, url) {
+          errorMessage(_data: object, _url: string) {
             return t(appName, 'Unable to download auto-fill result.');
           },
         });
@@ -1335,7 +1354,7 @@ const afterLoad = function(container) {
       return false;
     });
 
-    $uploaders.on('click', function(event) {
+    $uploaders.on('click', function(_event) {
       const $this = $(this);
       const $container = $this.parent();
 
@@ -1343,11 +1362,11 @@ const afterLoad = function(container) {
 
       FileUpload.init({
         url: generateAppUrl('upload/stash'),
-        doneCallback(file, index, container) {
+        doneCallback(file: UploadFile, _index: number, _container: JQuery) {
           moveIntoPlace(file, $container, $this);
         },
         stopCallback: null,
-        failCallback(event, data) { $this.removeClass('busy'); },
+        failCallback(_event: any, _data: any) { $this.removeClass('busy'); },
         dropZone: $container,
         containerSelector: '.document-template-upload-wrapper',
         inputSelector: 'input[type="file"]',
@@ -1358,13 +1377,13 @@ const afterLoad = function(container) {
       return false;
     });
 
-    $cloudSelectors.on('click', function(event) {
+    $cloudSelectors.on('click', function(_event) {
       const $this = $(this);
       const $container = $this.closest('.template-upload');
 
       Dialogs.filePicker(
         $this.data('placeholder'),
-        function(path) {
+        function(path: string) {
 
           $this.addClass('busy');
 
@@ -1414,14 +1433,14 @@ const afterLoad = function(container) {
     const $deleteRecorded = $('#' + appName + '-translations-erase-all');
     const $msg = $('.translation.msg');
 
-    let $key;
-    let language;
-    let translations;
-    let translation;
+    let $key: JQuery;
+    let language: string;
+    let translations: { [key: string]: string };
+    let translation: string;
 
     const updateControls = function() {
       $key = SelectUtils.selectedOptions($translationKeys);
-      language = $locales.val();
+      language = $locales.val() as string;
       translation = '';
       translations = {};
 
@@ -1436,7 +1455,7 @@ const afterLoad = function(container) {
 
     const showHideTranslated = function() {
       const hide = $hideTranslated.prop('checked');
-      $translationKeys.find('option').each(function(idx, option) {
+      $translationKeys.find('option').each(function() {
         const $option = $(this);
         if (!hide || !language) {
           $option.show();
@@ -1456,46 +1475,48 @@ const afterLoad = function(container) {
       $translationKeys.trigger('change');
     };
 
+    // @ts-expect-error 2339
     $translationKeys.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
       width: '30%',
     });
 
+    // @ts-expect-error 2339
     $locales.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
       width: '10%',
     });
 
-    $translationKeys.on('change', function(event) {
+    $translationKeys.on('change', function(_event) {
       updateControls();
       return false;
     });
 
-    $locales.on('change', function(event) {
+    $locales.on('change', function(_event) {
       updateControls();
       showHideTranslated();
       return false;
     });
 
-    $hideTranslated.on('change', function(event) {
+    $hideTranslated.on('change', function(_event) {
       showHideTranslated();
       return false;
     });
 
     simpleSetValueHandler(
       $translationText, 'blur', $msg, {
-        success(element, data, value, $msg) { // done
+        success(_element, _data, _value, _$msg) { // done
           // no need to do any extra stuff?
         },
-        getValue(element, msg) {
-          let val;
+        getValue(_element, _msg) {
+          let val: GetValueResult;
           if (language && $key.length === 1) {
             // save it in order to restore, maybe we want to have an
             // "OK" button in order not to accidentally damage
             // existing translations.
-            translation = $translationText.val();
+            translation = $translationText.val() as string;
             translations[language] = translation;
             $key.data('translations', translations);
             val = {
@@ -1512,18 +1533,18 @@ const afterLoad = function(container) {
       });
 
     simpleSetHandler($deleteRecorded, 'click', $msg, {
-      success($self, data, msgElement) {
+      success(_$self, _data, _msgElement) {
         SelectUtils.replaceOptions($translationKeys, '');
         $translationKeys.trigger('change');
       },
     });
 
-    $downloadPoTemplates.on('click', function(event) {
+    $downloadPoTemplates.on('click', function(_event) {
 
       fileDownload(
         'settings/app/get/translation-templates',
         [], {
-          errorMessage(data, url) {
+          errorMessage(_data: any, _url: string) {
             return t(appName, 'Unable to download translation templates.');
           },
         });
@@ -1548,7 +1569,7 @@ const afterLoad = function(container) {
       setup() {
         devLinkTests.prop('disabled', true);
       },
-      success($self, data, value, msgElement) {
+      success($self, _data, value, _msgElement) {
         const $testLink = $self.parent().find('a.devlinktest');
         $testLink.attr('href', value);
       },
@@ -1581,25 +1602,27 @@ const afterLoad = function(container) {
   updateLocaleTimeStamps(tabsHolder);
 };
 
-const documentReady = function(container) {
+const documentReady = function(container?: JQuery|undefined) {
 
   if (container === undefined) {
     console.debug('default container');
     container = $(containerSelector);
   }
 
-  container.on('tabsbeforeactivate', container.is(tabsSelector) ? null : tabsSelector, function(event, ui) {
+  container.on('tabsbeforeactivate', container.is(tabsSelector) ? null : tabsSelector, function(_event, _ui) {
     $('div.statusmessage').hide();
     $('span.statusmessage').hide();
   });
 
-  container.on('tabsactivate', container.is(tabsSelector) ? null : tabsSelector, function(event, ui) {
+  container.on('tabsactivate', container.is(tabsSelector) ? null : tabsSelector, function(_event, ui) {
     updateCreditsTimer();
 
     updateLocaleTimeStamps($(this));
 
     if (ui.newPanel[0].id === 'tabs-5') {
+      // @ts-expect-error 2339
       $('#smtpsecure').chosen({ disable_search_threshold: 10 });
+      // @ts-expect-error 2339
       $('#imapsecure').chosen({ disable_search_threshold: 10 });
     } else if (ui.newPanel[0].id === 'tabs-4') {
       $('div#sharing-settings').accordion('refresh');
@@ -1610,6 +1633,7 @@ const documentReady = function(container) {
       // $('#imapsecure').chosen().remove();
     }
 
+    // @ts-expect-error 2339
     $.fn.cafevTooltip.remove(); // remove pending tooltips ...
   });
 

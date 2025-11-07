@@ -25,21 +25,56 @@ import { setAppUrl } from './settings-urls.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 
+/* global JQuery */
+// eslint-disable-next-line no-unused-vars
+/* global jqXHR */
+
+/**
+ * Success callback.
+ * @callback SuccessCallback
+ * @param {JQuery} element TBD.
+ * @param {object} data TBD.
+ * @param {string} value TBD.
+ * @param {JQuery} msg TBD.
+ *
+ * @typedef {object|undefined} GetValueResult
+ * @property {string} name TBD.
+ * @property {string|object} value TBD.
+ *
+ * Callback to fetch the returned value.
+ * @callback GetValueCallback
+ * @param {JQuery} element TBD.
+ * @param {JQuery} msg TBD.
+ * @returns {GetValueResult} TBD.
+ *
+ * Fail callback.
+ * @callback FailCallback
+ * @param {jqXHR} xhr TBD.
+ * @param {string} textStatus TBD.
+ * @param {string} errorThrown TBD.
+ */
+
 /**
  * AJAX call with a simple value
  *
- * @param {jQuery} element TBD.
+ * @param {JQuery} element TBD.
  *
  * @param {string} eventType Something like 'blue', 'change' etc.
  *
- * @param {jQuery} msgElement TBD.
+ * @param {JQuery|undefined} [msgElement] TBD.
  *
- * @param {object} userCallbacks If a function: success callback. If
+ * @param {object} [userCallbacks] If a function: success callback. If
  *    an object: partial object with keys 'setup', 'success', 'fail',
  *    'cleanup', 'getValue', each pointing to a function performing
  *    the respective task. The callback 'getValue' computes the value
  *    to be communication via Ajax to the server as payload { value:
  *    VALUE }.
+ * @param {Function} [userCallbacks.post] TBD.
+ * @param {Function} [userCallbacks.setup] TBD.
+ * @param {SuccessCallback} [userCallbacks.success] TBD.
+ * @param {FailCallback} [userCallbacks.fail] TBD.
+ * @param {Function} [userCallbacks.cleanup] TBD.
+ * @param {GetValueCallback} [userCallbacks.getValue] TBD.
  */
 const simpleSetValueHandler = function(element, eventType, msgElement, userCallbacks) {
   const defaultCallbacks = {
@@ -109,13 +144,18 @@ const simpleSetValueHandler = function(element, eventType, msgElement, userCallb
 /**
  * AJAX call without submitting a value.
  *
- * @param {jQuery} element TBD.
+ * @param {JQuery} element TBD.
  *
  * @param {string} eventType Something like 'blue', 'change' etc.
  *
- * @param {jQuery} msgElement TBD.
+ * @param {JQuery|undefined} [msgElement] TBD.
  *
- * @param {object} userCallbacks TBD.
+ * @param {object} [userCallbacks] TBD.
+ * @param {Function} [userCallbacks.post] TBD.
+ * @param {Function} [userCallbacks.setup] TBD.
+ * @param {SuccessCallback} [userCallbacks.success] TBD.
+ * @param {FailCallback} [userCallbacks.fail] TBD.
+ * @param {Function} [userCallbacks.cleanup] TBD.
  */
 const simpleSetHandler = function(element, eventType, msgElement, userCallbacks) {
   const defaultCallbacks = {

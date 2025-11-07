@@ -167,6 +167,27 @@ const info = function(content, title, callback, modal, allowHtml) {
   return message(options);
 };
 
+/**
+ * Confirm Callback.
+ * @callback ConfirmCallback
+ * @param {boolean} decision TBD.
+ */
+
+/**
+ * @param {string} content TBD.
+ *
+ * @param {string} title TBD.
+ *
+ * @param {object|ConfirmCallback} options TBD.
+ * @param {ConfirmCallback} [options.callback] TBD.
+ * @param {boolean} [options.modal] TBD.
+ * @param {boolean} [options.allowHtml] TBD.
+ * @param {string} [options.default] TBD.
+ *
+ * @param {boolean} [modal] TBD.
+ *
+ * @param {boolean} [allowHtml] TBD.
+ */
 const confirm = function(content, title, options, modal, allowHtml) {
   const defaultOptions = {
     callback() {},

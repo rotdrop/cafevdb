@@ -26,10 +26,12 @@ require('select-utils.scss');
 
 const $ = jQuery;
 
+/* global JQuery */
+
 /**
  * Fetch the selectize instance attached to the given $select if any.
  *
- * @param {jQuery} $select TBD.
+ * @param {JQuery} $select TBD.
  *
  * @returns {(object|undefined)}
  */
@@ -40,7 +42,7 @@ const getSelectize = function($select) {
 /**
  * Determine if the given element is managed by selectize.
  *
- * @param {jQuery} $select TBD.
+ * @param {JQuery} $select TBD.
  *
  * @returns {boolean}
  */
@@ -51,7 +53,7 @@ const selectizeActive = function($select) {
 /**
  * Determine if the given element is managed by jQuery chosen.
  *
- * @param {jQuery} $select TBD.
+ * @param {JQuery} $select TBD.
  *
  * @returns {boolean}
  */
@@ -62,7 +64,7 @@ const chosenActive = function($select) {
 /**
  * Check whether this $select is controlled by either chosen or selectize.
  *
- * @param {jQuery} $select Select element.
+ * @param {JQuery} $select Select element.
  *
  * @returns {boolean}
  */
@@ -73,7 +75,7 @@ const isVanilla = function($select) {
 /**
  * Fetch the control instance attached to the given $select if any.
  *
- * @param {jQuery} $select TBD.
+ * @param {JQuery} $select TBD.
  *
  * @returns {(object|undefined)}
  */
@@ -89,9 +91,9 @@ const getControlObject = function($select) {
  * Fetch the children of the underlying select regardless of the widget
  * used.
  *
- * @param {jQuery} $select TBD.
+ * @param {JQuery} $select TBD.
  *
- * @returns {jQuery} The set of children
+ * @returns {JQuery} The set of children
  */
 const getChildren = function($select) {
   const selectize = getSelectize($select);
@@ -112,9 +114,9 @@ const getChildren = function($select) {
  * Fetch the options of the underlying select regardless of the widget
  * used.
  *
- * @param {jQuery} $select TBD.
+ * @param {JQuery} $select TBD.
  *
- * @returns {jQuery} The set of options.
+ * @returns {JQuery} The set of options.
  */
 const getOptions = function($select) {
   const $children = getChildren($select);
@@ -124,7 +126,7 @@ const getOptions = function($select) {
 /**
  * Fetch the possible values as flat array.
  *
- * @param {jQuery} $select TBD.
+ * @param {JQuery} $select TBD.
  *
  * @returns {Array} The set of options.
  */
@@ -147,11 +149,11 @@ const getOptionValues = function($select) {
 /**
  * Find an option by its value
  *
- * @param {jQuery} $select TBD.
+ * @param {JQuery} $select TBD.
  *
  * @param {string} value The value to search for.
  *
- * @returns {jQuery} The found option as jQuery object, if any.
+ * @returns {JQuery} The found option as jQuery object, if any.
  */
 const findOptionByValue = function($select, value) {
   return getOptions($select).filter('option[value="' + value + '"]');
@@ -210,7 +212,7 @@ const deselectAll = function($select) {
  * underlying "selectize" or "chosen" widget. Works for "multiple" as
  * well as single selects.
  *
- * @param {jQuery} $select collection with a single select.
+ * @param {JQuery} $select collection with a single select.
  *
  * @param {(string|string[])} [values] If given then set the given
  * values into the select. If the select is not multiple and value is
@@ -269,9 +271,9 @@ const selectedValues = function($select, values, trigger) {
  * presence of selectize the original options are returned if they
  * match the selected selectize values.
  *
- * @param {jQuery} $select collection with a single select.
+ * @param {JQuery} $select collection with a single select.
  *
- * @returns {jQuery} The selected options as jQuery collection.
+ * @returns {JQuery} The selected options as jQuery collection.
  */
 const selectedOptions = function($select) {
   return getOptions($select).filter('option:selected');
@@ -287,7 +289,7 @@ const selectedOptions = function($select) {
  * of the selectize widget will be replaced by the children of $select
  * on entry to this function if the $select.children() is non empty.
  *
- * @param {jQuery} $select The select element.
+ * @param {JQuery} $select The select element.
  */
 const refreshSelectWidget = function($select) {
   $select.each(function() {
@@ -331,9 +333,9 @@ const refreshSelectWidget = function($select) {
 /**
  * Return the jQuery element which actually is shown on the screen.
  *
- * @param {jQuery} $select Select element.
+ * @param {JQuery} $select Select element.
  *
- * @returns {jQuery}
+ * @returns {JQuery}
  */
 const getWidget = function($select) {
   if (chosenActive($select)) {
@@ -357,7 +359,7 @@ const getSelectFromWidget = function($widget) {
  * Flush the readonly and disabled properties from $select to the
  * underlying widget, if any.
  *
- * @param {jQuery} $select The select element.
+ * @param {JQuery} $select The select element.
  */
 const refreshWidgetProperties = function($select) {
   $select.each(function() {
@@ -389,9 +391,9 @@ const refreshWidgetProperties = function($select) {
 /**
  * Replace the options of the given select by the given options.
  *
- * @param {jQuery} $select TBD.
+ * @param {JQuery} $select TBD.
  *
- * @param {(jQuery|string)} options TBD.
+ * @param {(JQuery|string)} options TBD.
  */
 const replaceSelectOptions = function($select, options) {
   const isDisabled = $select.prop('disabled');

@@ -55,9 +55,9 @@ const stringifyTrace = (trace) => {
  *
  * @param {string} textStatus TBD.
  *
- * @param {number} errorThrown TBD.
+ * @param {string} errorThrown TBD.
  *
- * @param {object} callbacks An object with hook-functions:
+ * @param {object} [callbacks] An object with hook-functions:
  *
  * ```
  * {
@@ -264,7 +264,7 @@ done automatically when cloud click "ok" or close this dialog window.
  *
  * @param {Array} required List of required fields in data.data.
  *
- * @param {Function} errorCB TBD.
+ * @param {Function} [errorCB] TBD.
  *
  * @returns {boolean} TBD.
  */

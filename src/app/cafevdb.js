@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, appNameTag, appContainerSelector, $, jQuery } from './globals.js';
+import { globalState, appName, appNameTag, appContainerSelector, $ } from './globals.js';
 import { urlDecode } from './url-decode.js';
 import {
   token as pmeToken,
@@ -37,6 +37,8 @@ import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/asyn
 import * as BusEvents from '../event-bus-events.ts';
 
 require('cafevdb.scss');
+
+/* global JQuery */
 
 // ok, this ain't pretty, but unless we really switch to object OOP we
 // need some global state which is accessible in all or most modules.
@@ -94,7 +96,7 @@ asyncSubscribe(BusEvents.LEGACY_PAGE_FINALIZE, async () => {
  * Steal the focus by moving it to a hidden element. Is there a
  * better way? The blur() method just does not work.
  *
- * @param {jQuery} element TBD.
+ * @param {JQuery} element TBD.
  */
 const unfocus = function(element) {
   $('#focusstealer').focus();
@@ -105,7 +107,7 @@ const unfocus = function(element) {
  *
  * @param {string} message TBD.
  *
- * @returns {jQuery}
+ * @returns {JQuery}
  */
 const modalWaitNotification = function(message) {
   const dialogHolder = $('<div class="' + appNameTag + ' modal-wait-notification"></div>');
@@ -301,7 +303,7 @@ const toolTipSelectors = [
 /**
  * Initialize our tipsy stuff. Only exchange for our own thingies, of course.
  *
- * @param {string|jQuery} containerSel TBD.
+ * @param {string|JQuery} containerSel TBD.
  *
  * @todo This function performs too much work and is too unstructured.
  */
