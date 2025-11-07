@@ -119,6 +119,15 @@ class ConfigConstants
     self::FINANCE_CALENDAR_URI => [ 'uri' => self::FINANCE_CALENDAR_URI, 'public' => false ],
   ];
 
+  public const STREET_ADDRESS_PREFIX = 'streetAddress';
+  public const STREET_ADDRESS_NAME_01 = self::STREET_ADDRESS_PREFIX . 'Name01';
+  public const STREET_ADDRESS_NAME_02 = self::STREET_ADDRESS_PREFIX . 'Name02';
+  public const STREET_ADDRESS_STREET = self::STREET_ADDRESS_PREFIX . 'Street';
+  public const STREET_ADDRESS_HOUSE_NUMBER = self::STREET_ADDRESS_PREFIX . 'HouseNumber';
+  public const STREET_ADDRESS_ZIP = self::STREET_ADDRESS_PREFIX . 'ZIP';
+  public const STREET_ADDRESS_CITY = self::STREET_ADDRESS_PREFIX . 'City';
+  public const STREET_ADDRESS_COUNTRY = self::STREET_ADDRESS_PREFIX . 'Country';
+
   public const BANK_ACCOUNT_OWNER = 'bankAccountOwner';
   public const BANK_ACCOUNT_IBAN = 'bankAccountIBAN';
   public const BANK_ACCOUNT_BLZ = 'bankAccountBLZ';
