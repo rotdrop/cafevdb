@@ -268,7 +268,7 @@ $.fn.cafevTooltip = function(argument) {
     try {
       $.fn.tooltip.apply(this, arguments);
     } catch (e) {
-      console.error('EXCEPTION DURING TOOLTIP HANDLING', this, arguments);
+      console.error('EXCEPTION DURING TOOLTIP HANDLING', { self: this, arguments });
     }
     if (argument === 'dispose') {
       const appTitle = $this.data(appTitleKey);
