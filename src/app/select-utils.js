@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -158,45 +158,51 @@ const findOptionByValue = function($select, value) {
 };
 
 const makePlaceholder = function($select) {
-  if (!chosenActive($select) && !selectizeActive($select)) {
-    // restore the data-placeholder as first option if chosen
-    // is not active
-    $select.each(function(index) {
-      const $self = $(this);
-      const placeHolder = $self.data('placeholder');
-      if (!placeHolder) {
-        return;
-      }
-      if ($self.hasClass('emulated-placeholder')) {
-        return;
-      }
-      if ($self.prop('required')) {
-        $self.addClass('value-required');
-      }
-      $self.prop('required', true)
-        .addClass('emulated-placeholder');
-      $self.find('option:first')
-        .attr('value', '')
-        .prop('hidden', true)
-        .prop('disabled', true)
-      // .prop('selected', true)
-        .html(placeHolder);
-    });
-  }
+  $select.each(function() {
+    const $select = $(this);
+    if (!chosenActive($select) && !selectizeActive($select)) {
+      // restore the data-placeholder as first option if chosen
+      // is not active
+      $select.each(function(index) {
+        const $self = $(this);
+        const placeHolder = $self.data('placeholder');
+        if (!placeHolder) {
+          return;
+        }
+        if ($self.hasClass('emulated-placeholder')) {
+          return;
+        }
+        if ($self.prop('required')) {
+          $self.addClass('value-required');
+        }
+        $self.prop('required', true)
+          .addClass('emulated-placeholder');
+        $self.find('option:first')
+          .attr('value', '')
+          .prop('hidden', true)
+          .prop('disabled', true)
+        // .prop('selected', true)
+          .html(placeHolder);
+      });
+    }
+  });
 };
 
 const deselectAll = function($select) {
-  if (selectizeActive($select)) {
-    const selectize = $select[0].selectize;
-    selectize.clear(true);
-    selectize.refreshItems(true);
-  } else {
-    // deselect option items
-    $select.find('option:selected').prop('selected', false);
-    if (chosenActive($select)) {
-      $select.trigger('chosen:updated');
+  $select.each(function() {
+    const $select = $(this);
+    if (selectizeActive($select)) {
+      const selectize = $select[0].selectize;
+      selectize.clear(true);
+      selectize.refreshItems(true);
+    } else {
+      // deselect option items
+      $select.find('option:selected').prop('selected', false);
+      if (chosenActive($select)) {
+        $select.trigger('chosen:updated');
+      }
     }
-  }
+  });
 };
 
 /**
@@ -278,41 +284,48 @@ const selectedOptions = function($select) {
  *
  * In the case of selectize the children of the original select were
  * removed by selectize. After calling this function the option list
- * of the selectize widget will be replace by the children of $select
+ * of the selectize widget will be replaced by the children of $select
  * on entry to this function if the $select.children() is non empty.
  *
  * @param {jQuery} $select The select element.
  */
 const refreshSelectWidget = function($select) {
-  const isDisabled = $select.prop('disabled');
-  const isReadonly = $select.prop('readonly');
-  if (chosenActive($select)) {
-    if (isReadonly && !isDisabled) {
-      $select.prop('disabled', true);
+  $select.each(function() {
+    const $select = $(this);
+    const isDisabled = $select.prop('disabled');
+    const isReadonly = $select.prop('readonly');
+    if (chosenActive($select)) {
+      if (isReadonly && !isDisabled) {
+        $select.prop('disabled', true);
+      }
+      $select.trigger('chosen:updated');
+      if (!isDisabled) {
+        $select.prop('disabled', false);
+      }
+    } else if (selectizeActive($select)) {
+      let selectize = $select[0].selectize;
+      const setupOptions = selectize.settings_user;
+      selectize.revertSettings.$children = $select.children().detach();
+      $select.trigger('change');
+      selectize.destroy();
+      $select.trigger('change');
+      if (isReadonly) {
+        $select.prop('readonly', false);
+      }
+      if (isDisabled) {
+        $select.prop('disabled', false);
+      }
+      $select.selectize(setupOptions);
+      $select.trigger('change');
+      selectize = $select[0].selectize;
+      if (isDisabled || isReadonly) {
+        selectize.disable();
+      } else {
+        selectize.enable();
+      }
+      $select.prop('disabled', isDisabled);
     }
-    $select.trigger('chosen:updated');
-    if (!isDisabled) {
-      $select.prop('disabled', false);
-    }
-  } else if (selectizeActive($select)) {
-    let selectize = $select[0].selectize;
-    const setupOptions = selectize.settings_user;
-    selectize.destroy();
-    if (isReadonly) {
-      $select.prop('readonly', false);
-    }
-    if (isDisabled) {
-      $select.prop('disabled', false);
-    }
-    $select.selectize(setupOptions);
-    selectize = $select[0].selectize;
-    if (isDisabled || isReadonly) {
-      selectize.disable();
-    } else {
-      selectize.enable();
-    }
-    $select.prop('disabled', isDisabled);
-  }
+  });
 };
 
 /**
@@ -347,28 +360,30 @@ const getSelectFromWidget = function($widget) {
  * @param {jQuery} $select The select element.
  */
 const refreshWidgetProperties = function($select) {
-  const isDisabled = $select.prop('disabled');
-  const isReadonly = $select.prop('readonly');
+  $select.each(function() {
+    const isDisabled = $select.prop('disabled');
+    const isReadonly = $select.prop('readonly');
 
-  if (chosenActive($select)) {
-    if (isReadonly) {
-      $select.prop('disabled', true);
+    if (chosenActive($select)) {
+      if (isReadonly) {
+        $select.prop('disabled', true);
+      }
+      $select.trigger('chosen:updated');
+      if (!isDisabled) {
+        $select.prop('disabled', false);
+      }
+    } else if (selectizeActive($select)) {
+      const selectize = getSelectize($select);
+      if (isDisabled || isReadonly) {
+        selectize.disable();
+      } else {
+        selectize.enable();
+      }
+      if (!isDisabled) {
+        $select.prop('disabled', false);
+      }
     }
-    $select.trigger('chosen:updated');
-    if (!isDisabled) {
-      $select.prop('disabled', false);
-    }
-  } else if (selectizeActive($select)) {
-    const selectize = getSelectize($select);
-    if (isDisabled || isReadonly) {
-      selectize.disable();
-    } else {
-      selectize.enable();
-    }
-    if (!isDisabled) {
-      $select.prop('disabled', false);
-    }
-  }
+  });
 };
 
 /**
