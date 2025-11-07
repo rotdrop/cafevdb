@@ -233,7 +233,7 @@ include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
 
 TS_TYPE_FILES = $(addprefix $(TS_TYPES_DIR)/, $(shell $(TYPESCRIPT_CONVERTER) --outputs))
-TS_TYPE_FILES_DEPS = $(addprefix $(ABSSRCDIR)/, $(shell $(TYPESCRIPT_CONVERTER) --sources))
+TS_TYPE_FILES_DEPS = $(shell for i in $(addprefix $(ABSSRCDIR)/, $(shell $(TYPESCRIPT_CONVERTER) --sources)); do { [ -d $$i ] && find $$i -name "*.php"; } || echo $$i ; done)
 
 #@private
 $(TS_TYPE_FILES): $(TS_TYPE_FILES_DEPS)
