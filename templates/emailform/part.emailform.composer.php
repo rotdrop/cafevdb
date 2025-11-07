@@ -58,20 +58,30 @@ function e(string $string)
     </tr>
     <tr class="stored-messages">
       <td colspan="2" class="stored-messages-choose stored-messages">
-        <div class="flex-container flex-center flex-justify-full">
-          <select size="<?php echo
-                        count($storedEmails['drafts']) +
-                        count($storedEmails['templates']); ?>"
-                  class="stored-messages-selector"
-                  title="<?php echo $toolTips['emailform:storage:messages:select']; ?>"
-                  data-placeholder="<?php echo $l->t("Select draft or template"); ?>"
-                  name="emailComposer[storedMessagesSelector]"
-                  id="cafevdb-stored-messages-selector"
+        <span class="select-container flex-container flex-center flex-justify-full">
+          <select size="<?php echo count($templateEmails); ?>"
+                  class="template email-message-selector"
+                  title="<?php echo $toolTips['emailform:storage:select:templates']; ?>"
+                  data-placeholder="<?php echo $l->t("Templates"); ?>"
+                  name="emailComposer[templateMessagesSelector]"
+                  id="cafevdb-template-messages-selector"
           >
-            <?php echo $this->inc('emailform/part.stored-email-options', []); ?>
+            <option></option>
+            <?php echo $this->inc('emailform/part.template-email-options', []); ?>
           </select>
-          <select class="sent-messages-selector"
-                  title="<?php echo $toolTips['emailform:storage:sent:select']; ?>"
+          <select size="<?php echo count($draftEmails); ?>"
+                  class="draft email-message-selector"
+                  title="<?php echo $toolTips['emailform:storage:select:drafts']; ?>"
+                  data-placeholder="<?php echo $l->t("Drafts"); ?>"
+                  name="emailComposer[draftMessagesSelector]"
+                  id="cafevdb-draft-messages-selector"
+          >
+            <option></option>
+            <?php echo $this->inc('emailform/part.draft-email-options', []); ?>
+          </select>
+          <select class="sent email-message-selector"
+                  size="<?php echo count($sentEmails); ?>"
+                  title="<?php echo $toolTips['emailform:storage:select:sent']; ?>"
                   data-placeholder="<?php p($l->t('Reply To')); ?>"
                   name="emailComposer[sentMessagesSelector]"
                   id="cafevdb-sent-messages-selector"
@@ -79,10 +89,10 @@ function e(string $string)
             <option></option>
             <?php echo $this->inc('emailform/part.sent-email-options', []); ?>
           </select>
-        </div>
+        </span>
       </td>
       <td class="stored-messages-storage stored-messages">
-        <input size="20"
+        <!-- <input size="20"
                placeholder="<?php echo $l->t('New Template Name'); ?>"
                value="<?php p($emailTemplateName); ?>"
                title="<?php echo $toolTips['emailform:storage:messages:new-template']; ?>"
@@ -90,41 +100,43 @@ function e(string $string)
                type="text"
                class="tooltip-bottom no-margin-right"
                id="emailCurrentTemplate"
-               disabled>
-        <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button save-as-template flex-container flex-center">
-          <input type="checkbox"
-                 id="check-save-as-template"
-                 class="save-as-template tooltip-wide tooltip-bottom"
-                 name="emailComposer[saveAsTemplate]"/>
-          <label for="check-save-as-template"
-                 class="tip save-as-template"
-                 title="<?php echo $toolTips['emailform:storage:messages:save-as-template']; ?>">
-            <span class="save-as-template button no-margin-right"></span>
-          </label>
+             disabled> -->
+        <span class="button-container flex-container flex-center">
+          <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button save-as-template flex-container flex-center">
+            <input type="checkbox"
+                   id="check-save-as-template"
+                   class="save-as-template tooltip-wide tooltip-bottom"
+                   name="emailComposer[saveAsTemplate]"/>
+            <label for="check-save-as-template"
+                   class="tip save-as-template"
+                   title="<?php echo $toolTips['emailform:storage:messages:save-as-template']; ?>">
+              <span class="save-as-template button no-margin-right"></span>
+            </label>
+          </span>
+          <input title="<?php echo $toolTips['emailform:storage:messages:save-message']; ?>"
+                 type="submit"
+                 class="submit save-message tooltip-wide tooltip-bottom no-margin-right"
+                 name="emailComposer[saveMessage]"
+                 value="<?php echo $l->t('Save Message'); ?>"/>
+          <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button draft-auto-save flex-container flex-center">
+            <input type="checkbox"
+                   id="check-draft-auto-save"
+                   class="draft-auto-save tooltip-auto"
+                   data-auto-save-interval="<?php p((int)$emailDraftAutoSave); ?>"
+                   <?php !empty($emailDraftAutoSave) && p('checked'); ?>
+                   name="emailComposer[draftAutoSave]"/>
+            <label for="check-draft-auto-save"
+                   class="draft-auto-save tooltip-auto"
+                   title="<?php p($toolTips['emailform:storage:messages:draft-auto-save']); ?>">
+              <span class="draft-auto-save button no-margin-right"></span>
+            </label>
+          </span>
+          <input title="<?php echo $toolTips['emailform:storage:messages:delete-saved-message']; ?>"
+                 type="submit"
+                 class="submit delete-message tooltip-bottom no-margin-right"
+                 name="emailComposer[deleteMessage]"
+                 value="<?php echo $l->t('Delete Message'); ?>"/>
         </span>
-        <input title="<?php echo $toolTips['emailform:storage:messages:save-message']; ?>"
-               type="submit"
-               class="submit save-message tooltip-wide tooltip-bottom no-margin-right"
-               name="emailComposer[saveMessage]"
-               value="<?php echo $l->t('Save Message'); ?>"/>
-        <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button draft-auto-save flex-container flex-center">
-          <input type="checkbox"
-                 id="check-draft-auto-save"
-                 class="draft-auto-save tooltip-auto"
-                 data-auto-save-interval="<?php p((int)$emailDraftAutoSave); ?>"
-                 <?php !empty($emailDraftAutoSave) && p('checked'); ?>
-                 name="emailComposer[draftAutoSave]"/>
-          <label for="check-draft-auto-save"
-                 class="draft-auto-save tooltip-auto"
-                 title="<?php p($toolTips['emailform:storage:messages:draft-auto-save']); ?>">
-            <span class="draft-auto-save button no-margin-right"></span>
-          </label>
-        </span>
-        <input title="<?php echo $toolTips['emailform:storage:messages:delete-saved-message']; ?>"
-               type="submit"
-               class="submit delete-message tooltip-bottom no-margin-right"
-               name="emailComposer[deleteMessage]"
-               value="<?php echo $l->t('Delete Message'); ?>"/>
       </td>
     </tr>
     <tr><td colspan="3" class="rule"><hr /></td></tr>

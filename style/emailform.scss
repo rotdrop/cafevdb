@@ -603,7 +603,7 @@ $editorHeight: 20em;
 
         div#emailformcomposer  {
           overflow-y: auto;
-          overflow-x: hidden;
+          overflow-x: auto;
           padding-bottom: 0px !important;
           display:flex;
           flex-wrap:nowrap;
@@ -823,6 +823,10 @@ $editorHeight: 20em;
           td.stored-messages-storage {
             text-align:right;
 
+            .button-container > * {
+              margin-left: 3px;
+            }
+
             input.save-message {
               background-image:url('../img/save.svg');
             }
@@ -852,14 +856,23 @@ $editorHeight: 20em;
           } /* td.stored-messages-storage */
 
           .stored-messages-choose {
-            .chosen-container {
+            --drop-down-min-width: 0px;
+            --drop-down-margin: 3px;
+            .select-container > * {
+              margin-right: var(--drop-down-margin);
+            }
+            .chosen-container, .selectize-control {
               flex-shrink:10;
               flex-basis:100%;
-              min-width:10px; /* in order to have something left ... */
+              max-width: calc(100% - 2 * var(--drop-down-min-width) - 2 * var(--drop-down-margin));
+              min-width: var(--drop-down-min-width); /* in order to have something left ... */
               width:0!important;
-              &.chosen-with-drop {
+              &.chosen-with-drop, &.dropdown-open, &.loading, &.expanded {
                 flex-grow:10;
                 flex-shrink:0;
+              }
+              &:not(.dropdown-open) {
+                overflow: hidden;
               }
             }
           }

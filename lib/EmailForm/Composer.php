@@ -568,7 +568,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
 
     if (!empty($template)) {
-      $this->cgiData['storedMessagesSelector'] = $template;
+      $this->cgiData['templateMessagesSelector'] = $template;
     }
 
     $this->setSubjectTag();
@@ -625,7 +625,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     if (!$this->submitted) {
       // Leave everything at default state, except for an optional
       // initial template and subject
-      $initialTemplate = $this->cgiValue('storedMessagesSelector');
+      $initialTemplate = $this->cgiValue('templateMessagesSelector');
       if (!empty($initialTemplate)) {
         $template = $this->fetchTemplate($initialTemplate, exact: false);
         if (empty($template)) {
@@ -634,7 +634,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $loadedTag = $template->getTag();
         if ((empty($this->bulkTransaction) && empty($this->donationReceipt)) || str_ends_with($loadedTag, $initialTemplate)) {
           $initialTemplate = $template->getTag();
-          $this->cgiData['storedMessagesSelector'] = $initialTemplate;
+          $this->cgiData['templateMessagesSelector'] = $initialTemplate;
           $this->templateName = $initialTemplate;
         } else {
           $this->templateName = $initialTemplate;
@@ -3751,6 +3751,23 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   }
 
   /**
+   * Generate a stream-context for use in link validation.
+   */
+  private function linkValidationContext():mixed
+  {
+    return stream_context_create([
+      'http' => [
+        'method' => 'HEAD',
+        'header' => 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      ],
+      'ssl' => [
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+      ],
+    ]);
+  }
+
+  /**
    * Pre-message construction validation. Collect all data and perform
    * some checks on it. As a side-effect $this->executionStatus is set.
    *
@@ -3835,6 +3852,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         if ($code < 200 && $code >= 400) {
           $shareStatus = false;
         }
+      } else {
+        $code = -1;
       }
 
       $filesCount = $this->userStorage->folderWalk($folder);
@@ -3884,6 +3903,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         if ($code < 200 && $code >= 400) {
           $shareStatus = false;
         }
+      } else {
+        $code = -1;
       }
 
       $folder = $share?->getNode();
@@ -4605,7 +4626,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    */
   public function loadTemplate(string $templateIdentifier):bool
   {
-    $template = $this->fetchTemplate($templateIdentifier);
+    $template = $this->fetchTemplate($templateIdentifier, exact: true);
     if (empty($template)) {
       return $this->executionStatus = false;
     }
@@ -4681,30 +4702,24 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   private function fetchTemplate($templateIdentifier, bool $exact = true):?Entities\EmailTemplate
   {
     if (!($templateIdentifier instanceof Entities\EmailTemplate)) {
-      if (filter_var($templateIdentifier, FILTER_VALIDATE_INT) !== false) {
+      if (filter_var($templateIdentifier, FILTER_VALIDATE_INT, ['min_range' => 1]) !== false) {
         $template = $this
           ->getDatabaseRepository(Entities\EmailTemplate::class)
           ->find($templateIdentifier);
       } else {
-        $templateNames = $this->normalizeTemplateName($templateIdentifier);
-
         if (!$exact) {
-          // $templateNames = array_merge($templateNames, array_map(fn($name) => '%-' . $name, $templateNames));
+          $templateNames = $this->normalizeTemplateName($templateIdentifier);
           $templateNames = implode('|', array_map(fn($name) => '([0-9]+-)?' . $name, $templateNames));
+          // Attention: DQL needs SINGLE quotes.
+          $criteria = [ "tag#REGEXP(%s, '^" . $templateNames . "$')" => 1 ];
+        } else {
+          $criteria = [ 'tag' => $templateIdentifier ];
         }
 
         /** @var Entities\EmailTemplate */
         $template = $this
           ->getDatabaseRepository(Entities\EmailTemplate::class)
-          ->findOneBy(
-            criteria: [
-              // Attention: DQL needs SINGLE quotes.
-              "tag#REGEXP(%s, '^" . $templateNames . "$')" => 1,
-            ],
-            orderBy: [
-              'tag' => 'ASC',
-            ],
-          );
+          ->findOneBy(criteria: $criteria, orderBy: [ 'tag' => 'ASC' ]);
       }
     }
 
@@ -5256,20 +5271,23 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   }
 
   /**
-   * Export an option array suitable to load stored email messages,
-   * currently templates and message drafts.
+   * Stored draft messages.
    *
    * @return array
    */
-  public function storedEmails():array
+  public function draftEmails():array
   {
-    $drafts = $this->fetchDraftsList();
-    $templates = $this->fetchTemplatesList();
+    return $this->fetchDraftsList();
+  }
 
-    return [
-      'drafts' => $drafts,
-      'templates' => $templates,
-    ];
+  /**
+   * Stored email mailmerge templates.
+   *
+   * @return array
+   */
+  public function templateEmails():array
+  {
+    return $this->fetchTemplatesList();
   }
 
   /**
@@ -5511,6 +5529,10 @@ to your user name and will be invalidated in the unfortunate case that you leave
           'http' => [
             'method' => 'HEAD',
             'header' => 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          ],
+          'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false,
           ],
         ]);
         $headers = get_headers($href, false, $context);

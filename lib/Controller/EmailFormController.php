@@ -30,6 +30,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\IAppContainer;
 use OCP\Files\FileInfo;
 use OCP\IDateTimeFormatter;
@@ -175,7 +176,8 @@ class EmailFormController extends Controller
       'emailDraftAutoSave' => $emailDraftAutoSave,
       // Needed for the editor
       'emailTemplateName' => $composer->currentEmailTemplate(),
-      'storedEmails' => $composer->storedEmails(),
+      'templateEmails' => $composer->templateEmails(),
+      'draftEmails' => $composer->draftEmails(),
       'sentEmails' => $composer->sentEmails(),
       'disclosedRecipients' => $composer->discloseRecipients(),
       'TO' => $composer->toStringArray(),
@@ -231,23 +233,46 @@ class EmailFormController extends Controller
   }
 
   /**
-   * Regenerate the stored-email options after updating drafts or
-   * templates.
+   * Regenerate the template emails selector.
    *
    * @param Composer $composer The email composer class.
    *
    * @return string Rendered HTML template.
    */
-  private function storedEmailOptions(Composer $composer):string
+  private function templateEmailOptions(Composer $composer, ?string $currentTemplate):string
   {
     $templateParamters = [
-      'storedEmails' => $composer->storedEmails(),
+      'templateEmails' => $composer->templateEmails(),
+      'dateTimeFormatter' => $this->dateTimeFormatter(),
+      'dateTimeZone' => $this->getDateTimeZone(),
+      'currentTemplate' => $currentTemplate,
+    ];
+    $this->logInfo('TEMPLATE TEMPLATE PARAMS ' . print_r($templateParameters['templateEmails'], true));
+
+    $tmpl = $this->templateResponse(
+      'emailform/part.template-email-options',
+      $templateParamters,
+    );
+    return $tmpl->render();
+  }
+
+  /**
+   * Regenerate the draft emails selector.
+   *
+   * @param Composer $composer The email composer class.
+   *
+   * @return string Rendered HTML template.
+   */
+  private function draftEmailOptions(Composer $composer):string
+  {
+    $templateParamters = [
+      'draftEmails' => $composer->draftEmails(),
       'dateTimeFormatter' => $this->dateTimeFormatter(),
       'dateTimeZone' => $this->getDateTimeZone(),
     ];
 
     $tmpl = $this->templateResponse(
-      'emailform/part.stored-email-options',
+      'emailform/part.draft-email-options',
       $templateParamters,
     );
     return $tmpl->render();
@@ -353,7 +378,7 @@ class EmailFormController extends Controller
 
           // Update list of drafts after sending the message (draft has
           // been deleted)
-          $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
+          $requestData['draftEmailOptions'] = $this->draftEmailOptions($composer);
           $requestData['sendEmailOptions'] = $this->sentEmailOptions($composer);
         }
         break;
@@ -409,7 +434,8 @@ class EmailFormController extends Controller
               'projectName' => $projectName,
               'projectId' => $projectId,
               'emailTemplateName' => $composer->currentEmailTemplate(),
-              'storedEmails' => $composer->storedEmails(),
+              'templateEmails' => $composer->templateEmails(),
+              'draftEmails' => $composer->draftEmails(),
               'sentEmails' => $composer->sentEmails(),
               'disclosedRecipients' => $composer->discloseRecipients(),
               'TO' => $composer->toStringArray(),
@@ -519,7 +545,8 @@ class EmailFormController extends Controller
               'dateTimeZone' => $this->getDateTimeZone(),
 
               'emailTemplateName' => $composer->currentEmailTemplate(),
-              'storedEmails' => $composer->storedEmails(),
+              'templateEmails' => $composer->templateEmails(),
+              'draftEmails' => $composer->draftEmails(),
               'sentEmails' => $composer->sentEmails(),
               'disclosedRecipients' => $composer->discloseRecipients(),
               'TO' => $composer->toStringArray(),
@@ -585,16 +612,19 @@ class EmailFormController extends Controller
 
             break;
           case 'template':
-            $value = $requestData['storedMessagesSelector'];
+            $value = $requestData['templateMessagesSelector'];
             if (!$composer->loadTemplate($value)) {
-              return self::grumble($this->l->t('Unable to load template "%s".', $value));
+              throw new Exceptions\EnduserNotificationException(
+                message: $this->l->t('Unable to load template "%s".', $value),
+                httpStatusCode: Http::STATUS_NOT_FOUND,
+              );
             }
             $requestData['emailTemplateName'] = $composer->currentEmailTemplate();
             $requestData['message'] = $composer->messageText();
             $requestData['subject'] = $composer->subject();
             break;
           case 'draft':
-            $value = $requestData['storedMessagesSelector'];
+            $value = $requestData['draftMessagesSelector'];
             if (!preg_match('/__draft-(-?[0-9]+)/', $value, $matches)) {
               return self::grumble($this->l->t('Invalid draft name "%s".', $value));
             }
@@ -656,7 +686,8 @@ class EmailFormController extends Controller
               'dateTimeZone' => $this->getDateTimeZone(),
 
               'emailTemplateName' => $composer->currentEmailTemplate(),
-              'storedEmails' => $composer->storedEmails(),
+              'templateEmails' => $composer->templateEmails(),
+              'draftEmails' => $composer->draftEmails(),
               'sentEmails' => $composer->sentEmails(),
               'disclosedRecipients' => $composer->discloseRecipients(),
               'TO' => $composer->toStringArray(),
@@ -734,11 +765,15 @@ class EmailFormController extends Controller
         }
         break; // load
       case 'save':
+        $selected = null;
         switch ($topic) {
           case 'template':
-            $emailTemplateName = Util::normalizeSpaces($requestData['emailTemplateName']);
+            $selected =
+              $emailTemplateName = Util::normalizeSpaces($requestData['templateMessagesSelector']);
             if (empty($emailTemplateName)) {
-              return self::grumble($this->l->t('Email template name must not be empty'));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('Email template name must not be empty'),
+              );
             }
             if ($composer->validateTemplate()) {
               $composer->storeTemplate($emailTemplateName);
@@ -762,13 +797,15 @@ class EmailFormController extends Controller
           $requestData['diagnostics']['caption'] =
             $this->l->t('%s could not be saved', ucfirst($topic));
         } else {
-          $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
+          $emailOptions = $topic . 'EmailOptions';
+          $requestData[$emailOptions] = $this->$emailOptions($composer, $selected);
+          $this->logInfo($emailOptions . ' OPTIONS ' . print_r($requestData[$emailOptions], true));
         }
         break;
       case 'delete':
         switch ($topic) {
           case 'template':
-            $composer->deleteTemplate($requestData['emailTemplateName']);
+            $composer->deleteTemplate($requestData['templateMessagesSelector']);
             $composer->setDefaultTemplate();
             $requestData['emailTemplateName'] = $composer->currentEmailTemplate();
             $requestData['message'] = $composer->messageText();
@@ -786,7 +823,8 @@ class EmailFormController extends Controller
           default:
             return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
         }
-        $requestData['storedEmailOptions'] = $this->storedEmailOptions($composer);
+        $emailOptions = $topic + 'EmailOptions';
+        $requestData[$emailOptions] = $this->$emailOptions($composer);
         break;
       case 'validateEmailRecipients':
         $composer->validateFreeFormAddresses(

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -217,18 +217,16 @@ function updateComposerElements($emailForm, elements) {
 const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
 
   if (dialogHolder.tabs('option', 'active') !== 0 // visible?
-      || fieldset.find('#member_status_filter_chosen').length > 0 // already initialized
+      || fieldset.find('#participation-status-filer.selectized').length > 0 // already initialized
   ) {
     return;
   }
 
   const $participationStatusFilter = fieldset.find('#participation-status-filter');
   $participationStatusFilter.selectize(selectizeOptions);
-  // $participationStatusFilter.chosen();
 
   const $instrumentsFilter = fieldset.find('#instruments-filter');
   $instrumentsFilter.selectize(selectizeOptions);
-  // $instrumentsFilter.chosen();
 
   const $recipientsSelect = fieldset.find('#recipients-select');
   $recipientsSelect.bootstrapDualListbox({
@@ -617,38 +615,83 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
  */
 const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, panelHolder) {
 
-  {
-    // @todo why is this so separated from rest???
-    WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'));
-
-    $('#' + appPrefix('stored-messages-selector')).chosen({ disable_search_threshold: 10 });
-    $('#' + appPrefix('sent-messages-selector')).chosen({ disable_search_threshold: 10 });
-
-    const composerPanel = $('#emailformcomposer');
-    const fileAttachmentsSelect = composerPanel.find('#file-attachments-selector');
-    fileAttachmentsSelect.chosen();
-    fileAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
-      composerPanel.stop().animate({
-        scrollTop: composerPanel.prop('scrollHeight'),
-      }, 2000);
-      return true;
-    });
-    const eventAttachmentsSelect = composerPanel.find('#event-attachments-selector');
-    eventAttachmentsSelect.chosen();
-    eventAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
-      composerPanel.stop().animate({
-        scrollTop: composerPanel.prop('scrollHeight'),
-      }, 2000);
-      return true;
-    });
-
-    toolTipsInit(dialogHolder.find('div#emailformcomposer'));
-  }
+  console.trace('COMPOSITION HANDLERS CALLED');
 
   const formData = form.find('fieldset.form-data');
   const $projectId = formData.find('input[name="projectId"]');
   const $projectName = formData.find('input[name="projectName"]');
   const $bulkTransactionId = formData.find('input[name="bulkTransactionId"]');
+  const debugOutput = form.find('#emailformdebug');
+  const $templateEmailsSelector = fieldset.find('select.template.email-message-selector');
+  const $draftEmailsSelector = fieldset.find('select.draft.email-message-selector');
+  const $sentEmailsSelector = fieldset.find('select.sent.email-message-selector');
+  const saveAsTemplate = fieldset.find('#check-save-as-template');
+  const draftAutoSave = fieldset.find('#check-draft-auto-save');
+  const discloseRecipients = fieldset.find('#check-disclosed-recipients');
+  const messageText = fieldset.find('textarea');
+  const eventAttachmentsRow = fieldset.find('tr.event-attachments');
+  const eventAttachmentsSelector = eventAttachmentsRow.find('select.event-attachments');
+  const fileAttachmentsRow = fieldset.find('tr.file-attachments');
+  const fileAttachmentsSelector = fileAttachmentsRow.find('select.file-attachments');
+  const sendButton = fieldset.find('input.submit.send');
+  const dialogWidget = dialogHolder.dialog('widget');
+
+  WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'));
+
+  const messageSelectorSelectizeOptions = {
+    onBeforeDropdownOpen($dropdown) { this.$wrapper.toggleClass('dropdown-open', true); },
+    onDropdownClose($dropdown) { this.$wrapper.toggleClass('dropdown-open', false); },
+    onChange(value) {
+      this.$wrapper.toggleClass('loading', !!value);
+    },
+    onClear() { this.$wrapper.toggleClass('loading', false); },
+    onOptionsRefresh($dropdown) { $dropdown.find('[class*="tooltip-"]').cafevTooltip(); },
+    closeAfterSelect: true,
+    openOnFocus: false,
+  };
+
+  $templateEmailsSelector.selectize({
+    ...messageSelectorSelectizeOptions,
+    inputClass: appName + '-email-current-template',
+    plugins: ['clear_button', 'restore_on_backspace'],
+    create: true,
+    persist: false,
+    render: {
+      // eslint-disable-next-line
+      option_create(data, escape) {
+        return '<div class="create">' + t(appName, 'Add') + ' <strong>' + escape(data.input) + '</strong>&#x2026;</div>';
+      },
+    },
+    onOptionAdd(value, data) {
+      this.$input.data('ignoreChange', value);
+    },
+    onInitialize() {
+      this.$wrapper.toggleClass('expanded', saveAsTemplate.is(':checked'));
+    },
+  });
+  $draftEmailsSelector.selectize(messageSelectorSelectizeOptions);
+  $sentEmailsSelector.selectize(messageSelectorSelectizeOptions);
+
+  const composerPanel = $('#emailformcomposer');
+  const fileAttachmentsSelect = composerPanel.find('#file-attachments-selector');
+  fileAttachmentsSelect.chosen();
+  fileAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
+    composerPanel.stop().animate({
+      scrollTop: composerPanel.prop('scrollHeight'),
+    }, 2000);
+    return true;
+  });
+  const eventAttachmentsSelect = composerPanel.find('#event-attachments-selector');
+  eventAttachmentsSelect.chosen();
+  eventAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
+    composerPanel.stop().animate({
+      scrollTop: composerPanel.prop('scrollHeight'),
+    }, 2000);
+    return true;
+  });
+
+  console.info('INITIALIZE TOOLTIPS');
+  toolTipsInit(dialogHolder.find('div#emailformcomposer'));
 
   const projectId = function(value) {
     if (value === undefined) {
@@ -680,21 +723,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       return value;
     }
   };
-
-  const debugOutput = form.find('#emailformdebug');
-  const storedEmailsSelector = fieldset.find('select.stored-messages-selector');
-  const sentEmailsSelector = fieldset.find('select.sent-messages-selector');
-  const currentTemplate = fieldset.find('#emailCurrentTemplate');
-  const saveAsTemplate = fieldset.find('#check-save-as-template');
-  const draftAutoSave = fieldset.find('#check-draft-auto-save');
-  const discloseRecipients = fieldset.find('#check-disclosed-recipients');
-  const messageText = fieldset.find('textarea');
-  const eventAttachmentsRow = fieldset.find('tr.event-attachments');
-  const eventAttachmentsSelector = eventAttachmentsRow.find('select.event-attachments');
-  const fileAttachmentsRow = fieldset.find('tr.file-attachments');
-  const fileAttachmentsSelector = fileAttachmentsRow.find('select.file-attachments');
-  const sendButton = fieldset.find('input.submit.send');
-  const dialogWidget = dialogHolder.dialog('widget');
 
   // Event dispatcher, so to say
   const applyComposerControls = function(request, validateLockCB) {
@@ -781,10 +809,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         const requestData = data.requestData;
         switch (operation) {
         case 'send':
-          storedEmailsSelector.html(requestData.storedEmailOptions);
-          SelectUtils.deselectAll(storedEmailsSelector);
-          sentEmailsSelector.html(requestData.sentEmailOptions);
-          SelectUtils.deselectAll(sentEmailsSelector);
+          SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions);
+          SelectUtils.replaceOptions($sentEmailsSelector, requestData.sentEmailOptions);
           if (data.message !== undefined && data.caption !== undefined) {
             Dialogs.info(data.message, data.caption, undefined, true, true);
             $('body').find('.modal-wrapper--small')
@@ -830,22 +856,19 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                 const fileAttachments = elementData.attachments;
                 const fileAttachmentsHolder = fieldset.find('input.file-attachments');
                 fileAttachmentsHolder.val(JSON.stringify(fileAttachments));
-                fileAttachmentsSelector.html(options);
                 fileAttachmentsRow.toggleClass('empty-selection', fileAttachmentsSelector.val().length === 0);
                 fileAttachmentsRow.toggleClass('no-attachments', options.length === 0);
-                fileAttachmentsSelector.trigger('chosen:updated');
+                SelectUtils.replaceOptions(fileAttachmentsSelector, options);
                 panelHolder.trigger('resize', { position: 'bottom' });
                 break;
               }
               case 'eventAttachments': {
                 const options = elementData.options;
                 // const eventAttachments = requestData.elementData.attachments;
-                eventAttachmentsSelector.html(options);
                 eventAttachmentsRow.toggleClass('no-attachments', options.length === 0);
                 eventAttachmentsRow.toggleClass('empty-selection', eventAttachmentsSelector.val().length === 0);
-                eventAttachmentsSelector.trigger('chosen:updated');
+                SelectUtils.replaceOptions(eventAttachmentsSelector, options);
                 panelHolder.trigger('resize');
-
                 break;
               }
               default:
@@ -872,9 +895,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             dataItem.val('');
             fieldset.find('input[name^="emailComposer[referencing]"]').remove();
             fieldset.find('input[name^="emailComposer[inReplyTo]"]').val('');
-            currentTemplate.val(requestData.emailTemplateName);
+            // currentTemplate.val(requestData.emailTemplateName);
             WysiwygEditor.updateEditor(messageText, requestData.message);
             fieldset.find('input.email-subject').val(requestData.subject);
+
+            $templateEmailsSelector.next().removeClass('loading');
             break;
           }
           case 'draft': {
@@ -910,6 +935,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             delete requestData.composerForm;
             delete requestData.recipientsForm;
 
+            // deselect menu item
+            SelectUtils.deselectAll($draftEmailsSelector);
             break;
           }
           case 'sent': {
@@ -939,40 +966,40 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
             updateComposerElements(form);
 
+            // deselect menu item
+            SelectUtils.deselectAll($sentEmailsSelector);
             break;
           }
           }
-          // deselect menu item
-          SelectUtils.deselectAll(storedEmailsSelector);
           break; // load
         case 'save':
           switch (topic) {
           case 'template':
+            SelectUtils.replaceOptions($templateEmailsSelector, requestData.templateEmailOptions);
             break;
           case 'draft': {
             // perhaps rather use data stuff in the future ...
             const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
             dataItem.val(requestData.messageDraftId);
+            SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions);
             break;
           }
           }
-          storedEmailsSelector.html(requestData.storedEmailOptions);
-          SelectUtils.deselectAll(storedEmailsSelector);
           break; // save
         case 'delete':
           switch (topic) {
           case 'template':
-            currentTemplate.val(requestData.emailTemplateName);
+            // currentTemplate.val(requestData.emailTemplateName);
             WysiwygEditor.updateEditor(messageText, requestData.message);
+            SelectUtils.replaceOptions($templateEmailsSelector, requestData.templateEmailOptions);
             break;
           case 'draft': {
             const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
             dataItem.val('');
+            SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions);
             break;
           }
           }
-          storedEmailsSelector.html(requestData.storedEmailOptions);
-          SelectUtils.deselectAll(storedEmailsSelector);
           break; // delete
         default:
           postponeEnable = true;
@@ -1276,7 +1303,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     if (draftId <= 0) {
       return;
     }
-    const autoGenerated = storedEmailsSelector.find('option[value="__draft-' + draftId + '"]').data('autoGenerated') || false;
+    const autoGenerated = $draftEmailsSelector.find('option[value="__draft-' + draftId + '"]').data('autoGenerated') || false;
     if (autoGenerated && (doDelete || draftAutoSave.prop('checked'))) {
       Dialogs.confirm(
         t(appName,
@@ -1362,7 +1389,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   saveAsTemplate
     .off('change')
     .on('change', function(event) {
-      currentTemplate.prop('disabled', !saveAsTemplate.is(':checked'));
+      $templateEmailsSelector.next().toggleClass('expanded', saveAsTemplate.is(':checked'));
       return false;
     });
 
@@ -1376,8 +1403,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         const request = { operation: 'save', topic: 'template', submitAll: true };
         // We do a quick client-side validation and ask the user for ok
         // when a template with the same name is already present.
-        const current = currentTemplate.val();
-        if (storedEmailsSelector.find('option').filter(function() { return $(this).html() === current; }).length > 0) {
+        const current = SelectUtils.selected($templateEmailsSelector);
+        if ($templateEmailsSelector.find('option').filter(function() { return $(this).html() === current; }).length > 0) {
           Dialogs.confirm(
             t(appName, 'A template with the name `{emailTemplateName}\' already exists, '
               + 'do you want to overwrite it?', { emailTemplateName: current }),
@@ -1413,8 +1440,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
       if (saveAsTemplate.is(':checked')) {
         // We do a quick client-side validation and ask the user for ok.
-        const current = currentTemplate.val();
-        if (storedEmailsSelector.find('option').filter(function() {
+        const current = SelectUtils.selected($templateEmailsSelector);
+        if ($templateEmailsSelector.find('option').filter(function() {
           return $(this).html().trim() === current;
         }).length > 0) {
           Dialogs.confirm(
@@ -1443,7 +1470,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
         if (draftId > 0) {
           // find the draft data in the select which we mis-use as data-storage here
-          const $draftOption = SelectUtils.optionByValue(storedEmailsSelector, '__draft-' + draftId);
+          const $draftOption = SelectUtils.optionByValue($draftEmailsSelector, '__draft-' + draftId);
           let draftMeta = '';
           if ($draftOption.length === 1) {
             const title = $draftOption.attr('title') || $draftOption.attr('data-original-title') || $draftOption.html();
@@ -1473,12 +1500,19 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       return false;
     });
 
-  storedEmailsSelector
+  $draftEmailsSelector
     .off('change')
     .on('change', function(event) {
 
-      const choice = storedEmailsSelector.val();
-      if (choice.match(/^__draft-[0-9]+$/)) {
+      const choice = $draftEmailsSelector.val();
+      if (choice.match(/__draft--1/)) {
+        Dialogs.alert(
+          t(appName, 'There are currently no stored draft messages available.'),
+          t(appName, 'No Drafts Available'),
+          function() {
+            SelectUtils.deselectAll($draftEmailsSelector);
+          });
+      } else {
         applyComposerControls.call(
           this, {
             operation: 'load',
@@ -1494,25 +1528,32 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
               dialogHolder.tabs('option', 'disabled', []);
             }
           });
-      } else if (choice.match(/__draft--1/)) {
-        Dialogs.alert(
-          t(appName, 'There are currently no stored draft messages available.'),
-          t(appName, 'No Drafts Available'),
-          function() {
-            SelectUtils.deselectAll(storedEmailsSelector);
-          });
-      } else {
+      }
+      return false;
+    });
+
+  $templateEmailsSelector
+    .off('change')
+    .on('change', function(event) {
+      console.info('CHANGE', this);
+      const $this = $(this);
+
+      if ($this.val() && $this.val() !== $this.data('ignoreChange')) {
         applyComposerControls.call(this, {
           operation: 'load',
           topic: 'template',
           projectId: projectId(),
           projectName: projectName(),
         });
+      } else {
+        $templateEmailsSelector.next().removeClass('loading');
+        $this.removeData('ignoreChange');
       }
+
       return false;
     });
 
-  sentEmailsSelector
+  $sentEmailsSelector
     .off('change')
     .on('change', function(event) {
 
@@ -1527,7 +1568,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           if (lock) {
             dialogWidget.addClass(pmeToken('table-dialog-blocked'));
           } else {
-            SelectUtils.deselectAll(sentEmailsSelector);
+            SelectUtils.deselectAll($sentEmailsSelector);
             dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
             dialogHolder.tabs('option', 'disabled', []);
           }
