@@ -25,8 +25,10 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Toolkit\Traits\Constants as TraitsConstants;
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /** General constants for the app. */
+#[TSAttributes\TypeScript]
 class Constants extends TraitsConstants
 {
   const README_NAME = 'README.md';
