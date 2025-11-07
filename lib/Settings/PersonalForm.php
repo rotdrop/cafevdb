@@ -396,13 +396,13 @@ class PersonalForm
         $this->parameterFromConfig($templateParameters, 'bulkEmailSubjectTag');
         $this->parameterFromConfig($templateParameters, 'bulkEmailPrivacyNotice');
 
-        $key = 'attachmentLinkExpirationLimit';
+        $key = ConfigConstants::ATTACHMENT_LINK_EXPIRATION_LIMIT;
         $templateParameters[$key] = $this->getConfigValue($key);
         if (!empty($templateParameters[$key])) {
           $templateParameters[$key] = $this->l->t('%d days', $templateParameters[$key]);
         }
 
-        $key = 'attachmentLinkSizeLimit';
+        $key = ConfigConstants::ATTACHMENT_LINK_SIZE_LIMIT;
         $templateParameters[$key] = $this->getConfigValue($key);
         if (!empty($templateParameters[$key])) {
           $templateParameters[$key] = $this->humanFileSize($templateParameters[$key]);

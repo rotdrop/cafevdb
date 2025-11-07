@@ -216,47 +216,73 @@ if (!empty($_[ConfigConstants::EMAIL_FROM_NAME_KEY])) {
       </fieldset>
       <fieldset class="email-attachments">
         <legend><?php p($l->t('Attachment Policy')); ?></legend>
-        <label for="attachmentLinkSizeLimit"
+        <label for="<?= ConfigConstants::ATTACHMENT_LINK_SIZE_LIMIT ?>"
                class="tooltip-auto"
                title="<?php echo $toolTips['emailform:composer:attachments:link:size-limit']; ?>"
         >
           <input type="text"
-                 id="attachmentLinkSizeLimit"
-                 name="attachmentLinkSizeLimit"
-                 class="attachmentLinkSizeLimit tooltip-auto"
-                 value="<?php p($attachmentLinkSizeLimit); ?>"
+                 id="<?= ConfigConstants::ATTACHMENT_LINK_SIZE_LIMIT ?>"
+                 name="<?= ConfigConstants::ATTACHMENT_LINK_SIZE_LIMIT ?>"
+                 class="<?= ConfigConstants::ATTACHMENT_LINK_SIZE_LIMIT ?> tooltip-auto"
+                 value="<?php p(${ConfigConstants::ATTACHMENT_LINK_SIZE_LIMIT}); ?>"
                  placeholder="<?php p($l->t('e.g. 4.7 GB')); ?>"
           />
           <?php p($l->t('Attachment Link Size Limit')); ?>
         </label>
         <br class="input-field-separater"/>
-        <label for="attachmentLinkExpirationLimit"
+        <label for="<?= ConfigConstants::ATTACHMENT_LINK_EXPIRATION_LIMIT ?>"
                class="tooltip-auto"
                title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:expiration-limit']); ?>"
         >
           <input type="text"
-                 id="attachmentLinkExpirationLimit"
-                 class="attachmentLinkExpirationLimit tooltip-auto"
-                 name="attachmentLinkExpirationLimit"
-                 value="<?php p($attachmentLinkExpirationLimit); ?>"
+                 id="<?= ConfigConstants::ATTACHMENT_LINK_EXPIRATION_LIMIT ?>"
+                 class="<?= ConfigConstants::ATTACHMENT_LINK_EXPIRATION_LIMIT ?> tooltip-auto"
+                 name="<?= ConfigConstants::ATTACHMENT_LINK_EXPIRATION_LIMIT ?>"
+                 value="<?php p(${ConfigConstants::ATTACHMENT_LINK_EXPIRATION_LIMIT}); ?>"
                  placeholder="<?php p($l->t('e.g. 7 days')); ?>"
           />
           <?php p($l->t('Attachment Link Expiration Limit')); ?>
         </label>
         <br class="input-field-separater"/>
-        <label for="cloudAttachmentAlwaysLink"
+        <label for="<?= ConfigConstants::CLOUD_ATTACHMENT_ALWAYS_LINK ?>"
                class="tooltip-auto hidden"
-               title="<?php echo Util::htmlEscape($toolTips['emailform:composer:attachments:link:cloud-always']); ?>"
+               title="<?= $toolTips['emailform:composer:attachments:link:cloud-always'] ?>"
                disabled
         >
           <input type="checkbox"
-                 id="cloudAttachmentAlwaysLink"
-                 class="cloudAttachmentAlwaysLink checkbox tooltip-auto hidden"
-                 name="cloudAttachmentAlwaysLink"
+                 id="<?= ConfigConstants::CLOUD_ATTACHMENT_ALWAYS_LINK ?>"
+                 class="<?= ConfigConstants::CLOUD_ATTACHMENT_ALWAYS_LINK ?> checkbox tooltip-auto hidden"
+                 name="<?= ConfigConstants::CLOUD_ATTACHMENT_ALWAYS_LINK ?>"
                  type="checkbox"
                  disabled
           />
           <?php p($l->t('Always Link Cloud Files')); ?>
+        </label>
+      </fieldset>
+      <fieldset class="pre-send-validation">
+        <legend><?php p($l->t('Pre-Send Validation')); ?></legend>
+        <input id="<?= ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY ?>"
+               type="checkbox"
+               class="checkbox"
+               name="<?= ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY ?>"
+               <?= (${ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY} ?? '') == 'off' ? '' : 'checked="checked"'; ?>
+        />
+        <label for="<?= ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY ?>"
+               title="<?= $toolTips['emailform:composer:validation:external-links:ssl'] ?>"
+        >
+          <?php p($l->t('Validate SSL certificates of external links')); ?>
+        </label>
+        <br class="input-field-separater"/>
+        <input id="<?= ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS ?>"
+               type="checkbox"
+               class="checkbox"
+               name="<?= ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS ?>"
+               <?= (${ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS} ?? '') == 'off' ? '' : 'checked="checked"'; ?>
+        />
+        <label for="<?= ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS ?>"
+               title="<?= $toolTips['emailform:composer:validation:external-links:enforce-ssl'] ?>"
+        >
+          <?php p($l->t('Enforce https:// for external links')); ?>
         </label>
       </fieldset>
     </form>
@@ -413,8 +439,8 @@ if (!empty($_[ConfigConstants::EMAIL_FROM_NAME_KEY])) {
       <input id="emailtestmode"
              type="checkbox"
              class="checkbox"
-             name="emailtestmode" <?php echo $_['emailtestmode'] == 'on' ? 'checked="checked"' : ''; ?>
-             id="emailtestmode"
+             name="emailtestmode"
+             <?= $_['emailtestmode'] == 'on' ? 'checked="checked"' : ''; ?>
       />
       <label for="emailtestmode"
              title="<?php echo $l->t('Email test-mode; send emails only to the email test-address.') ?>">

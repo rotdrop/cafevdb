@@ -1745,7 +1745,9 @@ class PersonalSettingsController extends Controller
       case 'bulkEmailPrivacyNotice':
         $value = $this->fuzzyInputService->purifyHTML($value);
         return $this->setSimpleConfigValue($parameter, $value);
-      case 'cloudAttachmentAlwaysLink':
+      case ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS:
+      case ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY:
+      case ConfigConstants::CLOUD_ATTACHMENT_ALWAYS_LINK:
         $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         if ($realValue === null) {
           return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not convertible to boolean.', [$value, $parameter]));
@@ -1756,7 +1758,7 @@ class PersonalSettingsController extends Controller
           $this->l->t($stringValue),
           $this->l->t($parameter),
         ]));
-      case 'attachmentLinkExpirationLimit':
+      case ConfigConstants::ATTACHMENT_LINK_EXPIRATION_LIMIT:
         $interval = $this->fuzzyInputService->dateIntervalValue($value);
         if (!empty($interval)) {
           // try to at least have some slightly useful number of days for things
@@ -1769,7 +1771,7 @@ class PersonalSettingsController extends Controller
           $realValue = $reportValue = null;
         }
         return $this->setSimpleConfigValue($parameter, $realValue, $reportValue);
-      case 'attachmentLinkSizeLimit':
+      case ConfigConstants::ATTACHMENT_LINK_SIZE_LIMIT:
         $realValue = $this->fuzzyInputService->storageValue($value);
         $reportValue = empty($realValue)
           ? null

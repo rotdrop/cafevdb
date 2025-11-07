@@ -272,6 +272,21 @@ class ConfigConstants
   /** @var string Config-key for the announcements mailing list */
   public const ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY = 'announcementsMailingListName';
 
+  /** @var string Config-key for pre-send validation. */
+  public const PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY = 'preSendValidationExternalLinksSSLVerify';
+
+  /** @var string Config-key for pre-send validation. */
+  public const PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS = 'preSendValidationExternalLinksEnforceHttps';
+
+  /** @var sting Config-key for attachment customization. */
+  public const CLOUD_ATTACHMENT_ALWAYS_LINK = 'cloudAttachmentAlwaysLink';
+
+  /** @var sting Config-key for attachment customization. */
+  public const ATTACHMENT_LINK_EXPIRATION_LIMIT = 'attachmentLinkExpirationLimit';
+
+  /** @var sting Config-key for attachment customization. */
+  public const ATTACHMENT_LINK_SIZE_LIMIT = 'attachmentLinkSizeLimit';
+
   /** @var string */
   public const USER_GROUP_KEY = 'usergroup';
 

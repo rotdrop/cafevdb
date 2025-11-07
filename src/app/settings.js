@@ -896,7 +896,18 @@ const afterLoad = function(container) {
         return false;
       });
 
-      container.find('input.cloudAttachmentAlwaysLink').on('change', function(event) {
+      const checkboxInputs = container.find([
+        'input#cloudAttachmentAlwaysLink',
+        'input#preSendValidationExternalLinksSSLVerify',
+        'input#preSendValidationExternalLinksEnforceHttps',
+      ].join(', '));
+
+      console.info('CHECK BOX INPUTS', {
+        blurInputs,
+        checkboxInputs,
+      });
+
+      checkboxInputs.on('change', function(event) {
         const $this = $(this);
         const name = $this.attr('name');
         $.post(
