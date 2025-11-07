@@ -171,7 +171,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   /** @var bool */
   protected $pmeBare;
 
-  /** @var ?array|mixed */
+  /** @var null|array|mixed */
   protected $pmeRecordId;
 
   /** @var bool */
