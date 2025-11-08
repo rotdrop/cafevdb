@@ -99,8 +99,18 @@ const myConfig = {
     //   alert('editor is shown');
     // });
     editor.on('PastePreProcess', function(event) {
-      if (isAbsoluteUrl(event.content) && editor.selection.isCollapsed()) {
-        event.content = '<a href="' + event.content + '">' + event.content + '</a>';
+      let textContent = event.content;
+      if (textContent.startsWith('<')) {
+        try {
+          textContent = $(event.content).text();
+        } catch (e) {
+          console.debug('UNFORMATTING FAILED', { e });
+        }
+      }
+      if (isAbsoluteUrl(textContent) && editor.selection.isCollapsed()) {
+        event.content = '<a href="' + textContent + '">' + event.content + '</a>';
+      } else {
+        console.debug('NOT AN ABSOLUTE URL', { content: textContent });
       }
     });
     editor.on('PastePostProcess', function(event) {
