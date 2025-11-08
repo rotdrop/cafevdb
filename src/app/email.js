@@ -2352,6 +2352,12 @@ function emailFormPopup(post, modal, single, afterInit) {
               const newTabId = ui.newTab.attr('id');
               const oldTabId = ui.oldTab.attr('id');
 
+              if (oldTabId === 'emailformcomposer-tab' && newTabId !== 'emailformcomposer-tab') {
+                // close TinyMCE overflow button pane
+                const $overflowButton = emailForm.find('.messagetext button[data-mce-name="overflow-button"].tox-tbtn.tox-tbtn--enabled');
+                $overflowButton.trigger('click');
+              }
+
               if (newTabId === 'emailformhelp-tab') {
                 event.preventDefault();
                 return true;
