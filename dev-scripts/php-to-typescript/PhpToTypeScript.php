@@ -41,6 +41,9 @@ class PhpToTypeScript extends Command
 {
   public const OPTION_OUTPUT_PREFIX = 'output-prefix';
   public const OPTION_SOURCE_PREFIX = 'source-prefix';
+  public const OPTION_CONSTANTS = 'constants';
+  public const OPTION_CONSTANTS_AS_CONSTANTS = 'constants';
+  public const OPTION_CONSTANTS_AS_PROPERTIES = 'properties';
   public const OPTION_SOURCES = 'sources';
   public const OPTION_OUTPUTS = 'outputs';
   public const OPTION_HELP = 'help';
@@ -76,6 +79,14 @@ class PhpToTypeScript extends Command
         's',
         InputOption::VALUE_REQUIRED,
         'The path to the source directory. Required.',
+      )
+      ->addOption(
+        self::OPTION_CONSTANTS,
+        null,
+        InputOption::VALUE_REQUIRED,
+        'Emit constants as'
+        . ' either literal type typed constants (--constants=' . self::OPTION_CONSTANTS_AS_CONSTANTS . ')'
+        . ' or literal type typed properties (--constants=' . self::OPTION_CONSTANTS_AS_PROPERTIES . ').',
       )
       ->addOption(
         self::OPTION_OUTPUTS,
@@ -128,6 +139,7 @@ class PhpToTypeScript extends Command
       return Command::SUCCESS;
     }
     $verbose = $input->getOption(self::OPTION_VERBOSE);
+    $verbosity = 0;
     if ($verbose !== []) {
       $verbosity = array_reduce(
         $verbose,
@@ -139,7 +151,7 @@ class PhpToTypeScript extends Command
         },
         0,
       );
-      $verbose = max($verbose, self::VERBOSITY_MAX);
+      $verbosity = max($verbosity, self::VERBOSITY_MAX);
     }
     if ($input->getOption(self::OPTION_QUIET)) {
       $output->setVerbosity(OutputInterface::VERBOSITY_QUIET);
@@ -194,7 +206,7 @@ class PhpToTypeScript extends Command
     }
 
     foreach ($this->configInfo as $outputName => $outputInfo) {
-      $config = TypeScriptTransformerConfig::create()
+      $config = ClassConstantsTransformerConfig::create()
         // path where your PHP classes are
         ->autoDiscoverTypes(...array_map(fn(string $path) => $sourcePrefix . $path, $outputInfo['paths']))
         ->autoDiscoverExclude(...array_map(fn(string $path) => $sourcePrefix . $path, $this->excludes))
@@ -202,6 +214,18 @@ class PhpToTypeScript extends Command
         ->transformers($outputInfo['transformers'])
         // file where TypeScript type definitions will be written
         ->outputFile($outputPrefix . self::PHP_PREFIX . $outputName . self::OUTPUT_SUFFIX);
+
+      switch ($input->getOption(self::OPTION_CONSTANTS)) {
+        case self::OPTION_CONSTANTS_AS_CONSTANTS:
+          $config->constantsAsConstants(true);
+          break;
+        case self::OPTION_CONSTANTS_AS_PROPERTIES:
+          $config->constantsAsProperties(true);
+          break;
+        default:
+          $config->constantsAsConstants(true);
+          break;
+      }
 
       $types = TypeScriptTransformer::create($config)->transform();
 

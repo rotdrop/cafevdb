@@ -37,7 +37,8 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 require_once(__DIR__ . '/../vendor-wrapped/autoload.php');
 require_once(__DIR__ . '/../vendor-bin/typescript-transformer/vendor/autoload.php');
 require_once(__DIR__ . '/php-to-typescript/TransformedTypeOrConstant.php');
-require_once(__DIR__ . '/php-to-typescript/ConstantsTransformer.php');
+require_once(__DIR__ . '/php-to-typescript/ClassConstantsTransformer.php');
+require_once(__DIR__ . '/php-to-typescript/ClassConstantsTransformerConfig.php');
 require_once(__DIR__ . '/php-to-typescript/PhpToTypeScript.php');
 
 use OCA\CAFEVDB\Wrapped;
@@ -64,7 +65,7 @@ $outputFiles = [
   ],
   'class-constants' => [
     'transformers' => [
-      PhpToTypeScript\ConstantsTransformer::class,
+      PhpToTypeScript\ClassConstantsTransformer::class,
     ],
     'paths' => [
       'lib/Settings',
