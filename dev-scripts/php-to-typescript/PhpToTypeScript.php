@@ -39,19 +39,23 @@ use Spatie\TypeScriptTransformer\Structures\TransformedType;
  */
 class PhpToTypeScript extends Command
 {
-  public const OPTION_OUTPUT_PREFIX = 'output-prefix';
-  public const OPTION_SOURCE_PREFIX = 'source-prefix';
-  public const OPTION_CONSTANTS = 'constants';
-  public const OPTION_CONSTANTS_AS_CONSTANTS = 'constants';
-  public const OPTION_CONSTANTS_AS_PROPERTIES = 'properties';
-  public const OPTION_SOURCES = 'sources';
-  public const OPTION_OUTPUTS = 'outputs';
-  public const OPTION_HELP = 'help';
-  public const OPTION_VERBOSE = 'verbose';
-  public const OPTION_QUIET = 'quiet';
-  public const OUTPUT_SUFFIX = '.d.ts';
-  public const VERBOSITY_MAX = 3;
-  public const PHP_PREFIX = 'php-';
+  private const OPTION_OUTPUT_PREFIX = 'output-prefix';
+  private const OPTION_SOURCE_PREFIX = 'source-prefix';
+  private const OPTION_CONSTANTS = 'constants';
+  private const OPTION_CONSTANTS_AS_CONSTANTS = 'constants';
+  private const OPTION_CONSTANTS_AS_PROPERTIES = 'properties';
+  private const OPTION_NS_PREFIX = 'ns-prefix';
+  private const OPTION_AS_MODULES = 'as-modules';
+  private const OPTION_SOURCES = 'sources';
+  private const OPTION_OUTPUTS = 'outputs';
+  private const OPTION_HELP = 'help';
+  private const OPTION_VERBOSE = 'verbose';
+  private const OPTION_QUIET = 'quiet';
+  private const OUTPUT_SUFFIX = '.d.ts';
+  private const VERBOSITY_MAX = 3;
+  private const PHP_PREFIX = 'php-';
+  private const LINE_SEPARATOR = "\r\n";
+  private const NS_DECLARATION = 'declare namespace';
 
   /** {@inheritdoc} */
   public function __construct(
@@ -87,6 +91,18 @@ class PhpToTypeScript extends Command
         'Emit constants as'
         . ' either literal type typed constants (--constants=' . self::OPTION_CONSTANTS_AS_CONSTANTS . ')'
         . ' or literal type typed properties (--constants=' . self::OPTION_CONSTANTS_AS_PROPERTIES . ').',
+      )
+      ->addOption(
+        self::OPTION_NS_PREFIX,
+        null,
+        InputOption::VALUE_REQUIRED,
+        'Specify a namespace prefix to remove, either in PHP notation or in TS notation.',
+      )
+      ->addOption(
+        self::OPTION_AS_MODULES,
+        null,
+        InputOption::VALUE_NONE,
+        'Convert the single-file namespace declaration to a multi-file module structure.',
       )
       ->addOption(
         self::OPTION_OUTPUTS,
@@ -205,7 +221,18 @@ class PhpToTypeScript extends Command
       $sourcePrefix .= '/';
     }
 
+    $tsNameSpacePrefix = $input->getOption(self::OPTION_NS_PREFIX);
+    if (!empty($tsNameSpacePrefix)) {
+      // convert from PHP to TypeScript notation.
+      $tsNameSpacePrefix = str_replace('\\', '.', $tsNameSpacePrefix);
+      if (!str_ends_with($tsNameSpacePrefix, '.')) {
+        $tsNameSpacePrefix .= '.';
+      }
+    }
+
     foreach ($this->configInfo as $outputName => $outputInfo) {
+      $outputFile = $outputPrefix . self::PHP_PREFIX . $outputName . self::OUTPUT_SUFFIX;
+
       $config = ClassConstantsTransformerConfig::create()
         // path where your PHP classes are
         ->autoDiscoverTypes(...array_map(fn(string $path) => $sourcePrefix . $path, $outputInfo['paths']))
@@ -213,7 +240,7 @@ class PhpToTypeScript extends Command
         // list of transformers
         ->transformers($outputInfo['transformers'])
         // file where TypeScript type definitions will be written
-        ->outputFile($outputPrefix . self::PHP_PREFIX . $outputName . self::OUTPUT_SUFFIX);
+        ->outputFile($outputFile);
 
       switch ($input->getOption(self::OPTION_CONSTANTS)) {
         case self::OPTION_CONSTANTS_AS_CONSTANTS:
@@ -228,6 +255,74 @@ class PhpToTypeScript extends Command
       }
 
       $types = TypeScriptTransformer::create($config)->transform();
+
+      $tsData = null;
+      if (!empty($tsNameSpacePrefix)) {
+        $tsData = str_replace(
+          'declare namespace ' . $tsNameSpacePrefix,
+          'declare namespace ',
+          file_get_contents($outputFile),
+        );
+        file_put_contents($outputFile, $tsData);
+      }
+
+      if ($input->getOption(self::OPTION_AS_MODULES)) {
+        $generator = basename(__FILE__);
+        $modulesDir = $outputPrefix . '/php-modules/';
+        mkdir($modulesDir);
+        if ($tsData === null) {
+          $tsData = file_get_contents($outputFile);
+        }
+        $separator = "\r\n";
+        $line = strtok($tsData, self::LINE_SEPARATOR);
+        $currentModule = null;
+        $currentData = null;
+        while ($line !== false) {
+          if (str_starts_with($line, self::NS_DECLARATION)) {
+            $nameSpaces = explode('.', trim(substr($line, strlen(self::NS_DECLARATION)), ' {'));
+            $modulesPath = $modulesDir;
+            while (!empty($nameSpaces)) {
+              $currentNs = array_shift($nameSpaces);
+              if (!empty($nameSpaces)) {
+                // emit trampoline modules
+                $nextNs = reset($nameSpaces);
+                $currentModule = $modulesPath . $currentNs . '.ts';
+                $newData = "export * as {$nextNs} from './{$currentNs}/${nextNs}.ts';";
+                $currentData = file_get_contents($currentModule);
+                if (!empty($currentData) && !str_contains($currentData, $newData)) {
+                  $currentData .= $newData . PHP_EOL;
+                } elseif (empty($currentData)) {
+                  $currentData = <<<EOF
+// Automatically generated by {$generator}, do not edit!
+
+
+EOF;
+                  $currentData .= $newData . PHP_EOL;
+                }
+                file_put_contents($currentModule, $currentData);
+                $modulesPath .= $currentNs . '/';
+                mkdir($modulesPath);
+              } else {
+                // emit the leaf module
+                $currentModule = $modulesPath . $currentNs . '.ts';
+                $currentData = <<<EOF
+// Automatically generated by {$generator}, do not edit!
+
+
+EOF;
+              }
+            }
+          } elseif ($line == '}') {
+            if ($currentData && $currentModule) {
+              file_put_contents($currentModule, $currentData);
+              $currentData = $currentModule = null;
+            }
+          } else {
+            $currentData .= trim($line) . PHP_EOL;
+          }
+          $line = strtok(self::LINE_SEPARATOR);
+        }
+      }
 
       if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
         $output->writeln();

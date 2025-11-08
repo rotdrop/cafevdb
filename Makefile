@@ -13,8 +13,10 @@ APP_INFO = $(SRCDIR)/appinfo/info.xml
 XPATH = $(shell which xpath 2> /dev/null)
 ifneq ($(XPATH),)
 APP_NAME = $(shell $(XPATH) -q -e '/info/id/text()' $(APP_INFO))
+APP_NAMESPACE = $(shell $(XPATH) -q -e '/info/namespace/text()' $(APP_INFO))
 else
 APP_NAME = $(notdir $(CURDIR))
+APP_NAMESPACE = $(shell grep -F '<namespace>' $(APP_INFO)|sed -E 's|.*<namespace>([^<]*)</namespace>.*|\\1|g')
 endif
 DEV_LIB_DIR = $(ABSSRCDIR)/dev-scripts/lib
 BUILDDIR = ./build
@@ -54,7 +56,7 @@ PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
 # Doctrine/ORM and all related packages.
 #
 
-WRAPPER_NAMESPACE = OCA\\CAFEVDB\\Wrapped
+WRAPPER_NAMESPACE = OCA\\$(APP_NAMESPACE)\\Wrapped
 
 # hash dependencies which occasionally are hacked
 WRAPPER_GIT_DEPENDENCIES =\
@@ -237,7 +239,7 @@ TS_TYPE_FILES_DEPS = $(shell for i in $(addprefix $(ABSSRCDIR)/, $(shell $(TYPES
 
 #@private
 $(TS_TYPE_FILES): $(TS_TYPE_FILES_DEPS)
-	$(TYPESCRIPT_CONVERTER) --output-prefix=$(TS_TYPES_DIR) --source-prefix=$(ABSSRCDIR)
+	$(TYPESCRIPT_CONVERTER) --output-prefix=$(TS_TYPES_DIR) --source-prefix=$(ABSSRCDIR) --as-modules --ns-prefix='OCA\$(APP_NAMESPACE)'
 
 #@private
 ts-type-files: $(TS_TYPE_FILES)

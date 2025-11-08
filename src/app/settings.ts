@@ -38,7 +38,7 @@ import * as WysiwygEditor from './wysiwyg-editor.js';
 import personalSettingsAfterLoad, { updateCreditsTimer } from './personal-settings.js';
 import { showInfo } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
-import ConfigConstants = OCA.CAFEVDB.Settings.ConfigConstants;
+import * as ConfigConstants from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -872,7 +872,7 @@ const afterLoad = function(container?: JQuery) {
       const container = emailContainer.find('form.bulk-email-settings');
       console.log('************', container);
 
-      const blurInputs = container.find([
+      const blurInputsSelector = [
         'input#' + ConfigConstants.ANNOUNCEMENTS_MAILING_LIST_KEY,
         'input#' + ConfigConstants.EMAIL_FROM_NAME_KEY,
         'input#' + ConfigConstants.EMAIL_FROM_ADDRESS_KEY,
@@ -880,7 +880,8 @@ const afterLoad = function(container?: JQuery) {
         'input#' + ConfigConstants.BULK_EMAIL_SUBJECT_TAG,
         'input.' + ConfigConstants.ATTACHMENT_LINK_SIZE_LIMIT,
         'input.' + ConfigConstants.ATTACHMENT_LINK_EXPIRATION_LIMIT,
-      ].join(','));
+      ].join(',');
+      const blurInputs = container.find(blurInputsSelector);
 
       const $bulkEmailPrivacyNotice = container.find('textarea.bulk-email-privacy-notice');
       console.info('PRIV NOTICE', $bulkEmailPrivacyNotice);
@@ -905,11 +906,13 @@ const afterLoad = function(container?: JQuery) {
         return false;
       });
 
-      const checkboxInputs = container.find([
-        'input#' + ConfigConstants.CLOUD_ATTACHMENT_ALWAYS_LINK,
-        'input#' + ConfigConstants.PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY,
-        'input#' + ConfigConstants.PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS,
-      ].join(', '));
+      const checkboxInputs = container.find(
+        [
+          'input#' + ConfigConstants.CLOUD_ATTACHMENT_ALWAYS_LINK,
+          'input#' + ConfigConstants.PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY,
+          'input#' + ConfigConstants.PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS,
+        ].join(','),
+      );
 
       console.info('CHECK BOX INPUTS', {
         blurInputs,
@@ -1029,7 +1032,7 @@ const afterLoad = function(container?: JQuery) {
 
     const msg = $('#orchestra #msg');
 
-    simpleSetValueHandler($('input[class^="streetAddress"], input[class^="register"]'), 'blur', msg);
+    simpleSetValueHandler($('input[class^="' + ConfigConstants.STREET_ADDRESS_PREFIX + '"], input[class^="register"]'), 'blur', msg);
 
     simpleSetValueHandler(
       $('input.phoneNumber'),
@@ -1040,14 +1043,14 @@ const afterLoad = function(container?: JQuery) {
         },
       });
 
-    const streetAddressCountry = $('select.streetAddressCountry');
+    const $streetAddressCountry = $('select.' + ConfigConstants.STREET_ADDRESS_COUNTRY);
     // @ts-expect-error 2339
-    streetAddressCountry.chosen({
+    $streetAddressCountry.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
       width: '30%',
     });
-    simpleSetValueHandler(streetAddressCountry, 'change', msg);
+    simpleSetValueHandler($streetAddressCountry, 'change', msg);
 
     /**************************************************************************
      *
@@ -1178,7 +1181,7 @@ const afterLoad = function(container?: JQuery) {
       ConfigConstants.BANK_ACCOUNT_BLZ,
       ConfigConstants.BANK_ACCOUNT_BIC,
       ConfigConstants.BANK_ACCOUNT_BANK_NAME,
-    ];
+    ] as const;
 
     simpleSetValueHandler(
       bankAccountInputs,
