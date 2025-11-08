@@ -374,7 +374,7 @@ of this button.'),
           ],
           'validation' => [
             'external-links' => [
-              'ssl' => self::t('Reject external web-links for valid SSL certificates. This can be disable in a testing environment, but should be left enabled in production mode.'),
+              'ssl' => self::t('Test external web-links for valid SSL certificates. This can be disabled in a testing environment, but should be left enabled in production mode.'),
               'enforce-ssl' => self::t('Reject external links using the unencrypted http protocol, i.e. reject links starting with "http://" vs. "https://".'),
             ],
           ],
