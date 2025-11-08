@@ -265,13 +265,13 @@ class PersonalForm
           $templateParameters,
           [
             Admin::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue(ConfigConstants::USER_GROUP_KEY),
-            'streetAddressName01' => $this->getConfigValue('streetAddressName01'),
-            'streetAddressName02' => $this->getConfigValue('streetAddressName02'),
-            'streetAddressStreet' => $this->getConfigValue('streetAddressStreet'),
-            'streetAddressHouseNumber' => $this->getConfigValue('streetAddressHouseNumber'),
-            'streetAddressCity' => $this->getConfigValue('streetAddressCity'),
-            'streetAddressZIP' => $this->getConfigValue('streetAddressZIP'),
-            'streetAddressCountry' => $this->getConfigValue('streetAddressCountry'),
+            ConfigConstants::STREET_ADDRESS_NAME_01 => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_01),
+            ConfigConstants::STREET_ADDRESS_NAME_02 => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_02),
+            ConfigConstants::STREET_ADDRESS_STREET => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_STREET),
+            ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER),
+            ConfigConstants::STREET_ADDRESS_CITY => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_CITY),
+            ConfigConstants::STREET_ADDRESS_ZIP => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_ZIP),
+            ConfigConstants::STREET_ADDRESS_COUNTRY => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_COUNTRY),
             'registerName' => $this->getConfigValue('registerName'),
             'registerNumber' => $this->getConfigValue('registerNumber'),
 
@@ -383,8 +383,8 @@ class PersonalForm
             $this->parameterFromConfig($templateParameters, $proto.$key);
           }
         }
-        foreach (['user', 'password', 'fromname', 'fromaddress', 'fromdomain', 'testname', 'testaddress', 'testmode'] as $key) {
-          $this->parameterFromConfig($templateParameters, 'email'.$key);
+        foreach (['user', 'password', 'fromname', 'fromaddress', 'FromDomain', 'testname', 'testaddress', 'testmode'] as $key) {
+          $this->parameterFromConfig($templateParameters, 'email' . $key);
         }
         $announcementsMailingList = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
         $announcementsMailingListName = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY);

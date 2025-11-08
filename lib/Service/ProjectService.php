@@ -1395,7 +1395,7 @@ class ProjectService
   * [[Listenpunkt]]
   */
     $orchestra = $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY);
-    $orchestra = $this->getConfigValue('streetAddressName01', $orchestra);
+    $orchestra = $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_01, $orchestra);
 
     $projects = [];
     foreach (ProjectType::toArray() as $projectType) {

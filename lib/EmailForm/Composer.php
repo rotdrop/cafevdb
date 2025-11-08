@@ -4416,12 +4416,12 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   private function streetAddress():string
   {
     return
-      $this->getConfigValue('streetAddressName01')."<br/>\n".
-      $this->getConfigValue('streetAddressName02')."<br/>\n".
-      $this->getConfigValue('streetAddressStreet')."&nbsp;".
-      $this->getConfigValue('streetAddressHouseNumber')."<br/>\n".
-      $this->getConfigValue('streetAddressZIP')."&nbsp;".
-      $this->getConfigValue('streetAddressCity');
+      $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_01)."<br/>\n".
+      $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_02)."<br/>\n".
+      $this->getConfigValue(ConfigConstants::STREET_ADDRESS_STREET)."&nbsp;".
+      $this->getConfigValue(ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER)."<br/>\n".
+      $this->getConfigValue(ConfigConstants::STREET_ADDRESS_ZIP)."&nbsp;".
+      $this->getConfigValue(ConfigConstants::STREET_ADDRESS_CITY);
   }
 
   /** @return string The formatted bank account of the orchestra. */

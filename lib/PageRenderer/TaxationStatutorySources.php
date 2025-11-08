@@ -211,7 +211,7 @@ class TaxationStatutorySources extends PMETableViewBase
       'select' => 'D',
       'input' => 'M',
       'sort' => true,
-      'default' => $this->getConfigValue('streetAddressCountry'),
+      'default' => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_COUNTRY),
       'values2' => $countries,
       'valueGroups' => $countryGroups,
     ];

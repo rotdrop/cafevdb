@@ -485,13 +485,13 @@ class PersonalSettingsController extends Controller
             'keyStatus' => Http::STATUS_OK,
           ],
           Http::STATUS_OK);
-      case 'streetAddressName01':
-      case 'streetAddressName02':
-      case 'streetAddressStreet':
-      case 'streetAddressHouseNumber':
-      case 'streetAddressCity':
-      case 'streetAddressZIP':
-      case 'streetAddressCountry':
+      case ConfigConstants::STREET_ADDRESS_NAME_01:
+      case ConfigConstants::STREET_ADDRESS_NAME_02:
+      case ConfigConstants::STREET_ADDRESS_STREET:
+      case ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER:
+      case ConfigConstants::STREET_ADDRESS_CITY:
+      case ConfigConstants::STREET_ADDRESS_ZIP:
+      case ConfigConstants::STREET_ADDRESS_COUNTRY:
       case 'registerName':
       case 'registerNumber':
         $realValue = trim($value);
@@ -581,7 +581,7 @@ class PersonalSettingsController extends Controller
         }
         switch ($parameter) {
           case ConfigConstants::BANK_ACCOUNT_OWNER:
-            $address = $this->getConfigValue('streetAddressName01');
+            $address = $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_01);
             if ($realValue !== $address) {
               $data['suggestions'] = [ $address, ];
             }

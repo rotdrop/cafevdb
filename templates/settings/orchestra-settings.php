@@ -63,8 +63,8 @@ if (!empty($appLocale)) {
   if ($nationalKey !== false) {
     unset($holidayRegions[$nationalKey]);
     array_unshift($holidayRegions, $nationalTag);
-    if (empty(${ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS}s)) {
-      ${ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS}s = $nationalTag;
+    if (empty(${ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS})) {
+      ${ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS} = $nationalTag;
     }
   }
 
@@ -86,7 +86,7 @@ if (!empty($appLocale)) {
       'value' =>  $region,
       'group' => $localeCountryNames[$country],
     ];
-    if ($region === ${ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS}s) {
+    if ($region === ${ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS}) {
       $option['flags'] = PageNavigation::SELECTED;
     }
     $holidayOptions[] = $option;
@@ -101,16 +101,16 @@ if (!empty($appLocale)) {
       <!-- <legend><?php echo $l->t('Street Address'); ?></legend> -->
       <input class="streetAddressName"
              type="text"
-             id="streetAddressName01"
-             name="streetAddressName01"
-             value="<?php echo $_['streetAddressName01']; ?>"
+             id="<?= ConfigConstants::STREET_ADDRESS_NAME_01 ?>"
+             name="<?= ConfigConstants::STREET_ADDRESS_NAME_01 ?>"
+             value="<?php echo $_[ConfigConstants::STREET_ADDRESS_NAME_01]; ?>"
              title="<?php echo $l->t('The name of the orchestra'); ?>"
              placeholder="<?php echo $l->t('name of orchestra'); ?>"/><br/>
       <input class="streetAddressName"
              type="text"
-             id="streetAddressName02"
-             name="streetAddressName02"
-             value="<?php echo $_['streetAddressName02']; ?>"
+             id="<?= ConfigConstants::STREET_ADDRESS_NAME_02 ?>"
+             name="<?= ConfigConstants::STREET_ADDRESS_NAME_02 ?>"
+             value="<?php echo $_[ConfigConstants::STREET_ADDRESS_NAME_02]; ?>"
              title="<?php echo $l->t('The name of the orchestra (line 2)'); ?>"
              placeholder="<?php echo $l->t('name of orchestra'); ?>"><br/>
       <input class="registerName"
@@ -128,37 +128,37 @@ if (!empty($appLocale)) {
              title="<?php echo $l->t('Registration number of the orchestra association.'); ?>"
              placeholder="<?php echo $l->t('e.g. VR1234'); ?>">
       <br/>
-      <input class="streetAddressStreet"
+      <input class="<?= ConfigConstants::STREET_ADDRESS_STREET ?>"
              type="text"
-             id="streetAddressStreet"
-             name="streetAddressStreet"
-             value="<?php echo $_['streetAddressStreet']; ?>"
+             id="<?= ConfigConstants::STREET_ADDRESS_STREET ?>"
+             name="<?= ConfigConstants::STREET_ADDRESS_STREET ?>"
+             value="<?php echo $_[ConfigConstants::STREET_ADDRESS_STREET]; ?>"
              title="<?php echo $l->t('street part of street address of orchestra'); ?>"
              placeholder="<?php echo $l->t('street part of street address of orchestra'); ?>">
-      <input class="streetAddressHouseNumber"
+      <input class="<?= ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER ?>"
              type="text"
-             id="streetAddressHouseNumber"
-             name="streetAddressHouseNumber"
-             value="<?php echo $_['streetAddressHouseNumber']; ?>"
+             id="<?= ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER ?>"
+             name="<?= ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER ?>"
+             value="<?php echo $_[ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER]; ?>"
              title="<?php echo $l->t('house number part of street address of orchestra'); ?>"
              placeholder="<?php echo $l->t('Nr'); ?>"><br/>
-      <input class="streetAddressZIP"
+      <input class="<?= ConfigConstants::STREET_ADDRESS_ZIP ?>"
              type="text"
-             id="streetAddressZIP"
-             name="streetAddressZIP"
-             value="<?php echo $_['streetAddressZIP']; ?>"
+             id="<?= ConfigConstants::STREET_ADDRESS_ZIP ?>"
+             name="<?= ConfigConstants::STREET_ADDRESS_ZIP ?>"
+             value="<?php echo $_[ConfigConstants::STREET_ADDRESS_ZIP]; ?>"
              title="<?php echo $l->t('ZIP part of street address of orchestra'); ?>"
              placeholder="<?php echo $l->t('ZIP'); ?>">
-      <input class="streetAddressCity"
+      <input class="<?= ConfigConstants::STREET_ADDRESS_CITY ?>"
              type="text"
-             id="streetAddressCity"
-             name="streetAddressCity"
-             value="<?php echo $_['streetAddressCity']; ?>"
+             id="<?= ConfigConstants::STREET_ADDRESS_CITY ?>"
+             name="<?= ConfigConstants::STREET_ADDRESS_CITY ?>"
+             value="<?php echo $_[ConfigConstants::STREET_ADDRESS_CITY]; ?>"
              title="<?php echo $l->t('city part of address of orchestra'); ?>"
              placeholder="<?php echo $l->t('city'); ?>"><br/>
-      <select class="streetAddressCountry"
-              id="streetAddressCountry"
-              name="streetAddressCountry"
+      <select class="<?= ConfigConstants::STREET_ADDRESS_COUNTRY ?>"
+              id="<?= ConfigConstants::STREET_ADDRESS_COUNTRY ?>"
+              name="<?= ConfigConstants::STREET_ADDRESS_COUNTRY ?>"
               title="<?php echo $l->t('country part of address of orchestra'); ?>"
               placeholder="<?php echo $l->t('country'); ?>">
         <option></option>

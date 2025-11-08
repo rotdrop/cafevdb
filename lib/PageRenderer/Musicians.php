@@ -835,7 +835,7 @@ GROUP BY t.id';
       'name'     => $this->l->t('Country'),
       'select'   => 'D',
       'maxlen'   => 128,
-      'default'  => $this->getConfigValue('streetAddressCountry'),
+      'default'  => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_COUNTRY),
       'css'      => [ 'postfix' => [ 'musician-address', 'country', 'chosen-dropup', 'allow-empty', ], ],
       'values2'     => $countries,
       'valueGroups' => $countryGroups,
