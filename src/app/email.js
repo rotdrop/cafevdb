@@ -57,11 +57,13 @@ import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
 require('cafevdb-selectize.scss');
 
+const selectizeOpenOnFocus = true;
+
 const selectizeOptions = {
   plugins: ['remove_button'],
   delimiter: ',',
   persist: false,
-  openOnFocus: false,
+  openOnFocus: selectizeOpenOnFocus,
   closeAfterSelect: true,
   hideSelected: false,
 };
@@ -212,23 +214,29 @@ function updateComposerElements($emailForm, elements) {
  *
  * @param {jQuery} dialogHolder TBD.
  *
- * @param {jQuery} fieldset TBD.
+ * @param {jQuery} $fieldset TBD.
  */
-const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
+const emailFormRecipientsSelectControls = function(dialogHolder, $fieldset) {
 
   if (dialogHolder.tabs('option', 'active') !== 0 // visible?
-      || fieldset.find('#participation-status-filer.selectized').length > 0 // already initialized
+      || $fieldset.find('#participation-status-filer.selectized').length > 0 // already initialized
   ) {
     return;
   }
 
-  const $participationStatusFilter = fieldset.find('#participation-status-filter');
-  $participationStatusFilter.selectize(selectizeOptions);
+  const $participationStatusFilter = $fieldset.find('#participation-status-filter');
+  $participationStatusFilter.selectize({
+    ...selectizeOptions,
+    closeAfterSelect: false,
+  });
 
-  const $instrumentsFilter = fieldset.find('#instruments-filter');
-  $instrumentsFilter.selectize(selectizeOptions);
+  const $instrumentsFilter = $fieldset.find('#instruments-filter');
+  $instrumentsFilter.selectize({
+    ...selectizeOptions,
+    closeAfterSelect: false,
+  });
 
-  const $recipientsSelect = fieldset.find('#recipients-select');
+  const $recipientsSelect = $fieldset.find('#recipients-select');
   $recipientsSelect.bootstrapDualListbox({
     // moveOnSelect: false,
     // preserveSelectionOnMove : 'all',
@@ -251,7 +259,7 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
     filterTextClear: t(appName, 'show all'),
     selectorMinimalHeight: 200,
   });
-  const $dualListBoxContainer = fieldset.find('.bootstrap-duallistbox-container');
+  const $dualListBoxContainer = $fieldset.find('.bootstrap-duallistbox-container');
   const dualSelect = $dualListBoxContainer.find('select');
   dualSelect.attr(
     'title',
@@ -269,31 +277,31 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
  * Add handlers to the control elements, and call the AJAX sciplets
  * for validation to update the recipients selection tab accordingly.
  *
- * @param {jQuery} fieldset The field-set enclosing the recipients selection part
+ * @param {jQuery} $fieldset The field-set enclosing the recipients selection part
  *
  * @param {jQuery} form TBD.
  *
  * @param {jQuery} dialogHolder The div holding the jQuery dialog for everything
  *
- * @param {jQuery} panelHolder The div enclosing the fieldset
+ * @param {jQuery} panelHolder The div enclosing the $fieldset
  *
  * @returns {boolean}
  */
-const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panelHolder) {
+const emailFormRecipientsHandlers = function($fieldset, form, dialogHolder, panelHolder) {
 
-  emailFormRecipientsSelectControls(dialogHolder, fieldset);
+  emailFormRecipientsSelectControls(dialogHolder, $fieldset);
 
-  const recipientsSelect = fieldset.find('select#recipients-select');
-  const missingAddresses = fieldset.find('.missing-email-addresses.names');
-  const missingLabel = fieldset.find('.missing-email-addresses.label');
-  const noMissingLabel = fieldset.find('.missing-email-addresses.label.empty');
-  const instrumentsFilter = fieldset.find('.instruments-filter.' + appPrefix('container'));
+  const recipientsSelect = $fieldset.find('select#recipients-select');
+  const missingAddresses = $fieldset.find('.missing-email-addresses.names');
+  const missingLabel = $fieldset.find('.missing-email-addresses.label');
+  const noMissingLabel = $fieldset.find('.missing-email-addresses.label.empty');
+  const instrumentsFilter = $fieldset.find('.instruments-filter.' + appPrefix('container'));
   const instrumentsSelect = instrumentsFilter.find('select');
-  const participationStatusFilter = fieldset.find('.participation-status-filter.' + appPrefix('container'));
+  const participationStatusFilter = $fieldset.find('.participation-status-filter.' + appPrefix('container'));
   const participationStatusSelect = participationStatusFilter.find('select');
-  const filterHistoryInput = fieldset.find('#recipients-filter-history');
+  const filterHistoryInput = $fieldset.find('#recipients-filter-history');
   const debugOutput = form.find('#emailformdebug');
-  const busyIndicator = fieldset.find('.busy-indicator');
+  const busyIndicator = $fieldset.find('.busy-indicator');
 
   let filterUpdateActive = false;
 
@@ -321,7 +329,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       busyIndicator.show();
     }
 
-    let post = fieldset.serialize();
+    let post = $fieldset.serialize();
     if (historySnapshot) {
       post += '&' + $.param({ emailRecipients: { HistorySnapshot: 'snapshot' } });
     } else {
@@ -369,8 +377,8 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
           // replace the entire tab.
           $.fn.cafevTooltip.remove();
           panelHolder.html(data.contents);
-          fieldset = panelHolder.find('fieldset.email-recipients.page');
-          emailFormRecipientsHandlers(fieldset, form, dialogHolder, panelHolder);
+          $fieldset = panelHolder.find('fieldset.email-recipients.page');
+          emailFormRecipientsHandlers($fieldset, form, dialogHolder, panelHolder);
           resize = true;
         } else {
           // partial update
@@ -404,15 +412,15 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         if (filterHistory.historyPosition >= 0
             && filterHistory.historyPosition < filterHistory.historySize - 1) {
           // enable the undo button
-          fieldset.find('#instruments-filter-undo').prop('disabled', false);
+          $fieldset.find('#instruments-filter-undo').prop('disabled', false);
         } else {
-          fieldset.find('#instruments-filter-undo').prop('disabled', true);
+          $fieldset.find('#instruments-filter-undo').prop('disabled', true);
         }
         if (filterHistory.historyPosition > 0) {
           // enable the redo button as well
-          fieldset.find('#instruments-filter-redo').prop('disabled', false);
+          $fieldset.find('#instruments-filter-redo').prop('disabled', false);
         } else {
-          fieldset.find('#instruments-filter-redo').prop('disabled', true);
+          $fieldset.find('#instruments-filter-redo').prop('disabled', true);
         }
 
         if (!historySnapshot) {
@@ -452,12 +460,12 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
    */
   const readonlyFilterControls = function(state, exceptions) {
 
-    fieldset.toggleClass('filter-controls-disabled', state);
+    $fieldset.toggleClass('filter-controls-disabled', state);
 
     exceptions = exceptions || [];
     exceptions.push('.action-menu-toggle.basic-recipients-set');
 
-    const $otherInputs = fieldset.find('input, select, button').not(exceptions.join(','));
+    const $otherInputs = $fieldset.find('input, select, button').not(exceptions.join(','));
     // Disable all recipient filters as they do not make any
     // sense. Sending to the mailing lists means to just send to
     // that list, further recipient choices are technically not possible.
@@ -469,7 +477,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   // Attach above function to almost every sensible control :)
 
   // Controls :..
-  const controlsContainer = fieldset.find('.filter-controls.' + appPrefix('container'));
+  const controlsContainer = $fieldset.find('.filter-controls.' + appPrefix('container'));
 
   instrumentsFilter
     .off('change')
@@ -491,7 +499,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     });
 
   // Basic recipients set (from project, except project, use mailing lists)
-  const basicRecipientsSetContainer = fieldset.find('.basic-recipients-set.' + appPrefix('container'));
+  const basicRecipientsSetContainer = $fieldset.find('.basic-recipients-set.' + appPrefix('container'));
   const basicRecipientsSet = basicRecipientsSetContainer.find('input[type="checkbox"], input[type="radio"]');
   const basicRecipientsSetProject = basicRecipientsSet.not('.mailing-list, .database');
   const basicRecipientsSetMailingList = basicRecipientsSet.filter('.mailing-list, .database');
@@ -604,16 +612,16 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
  * Add handlers to the control elements, and call the AJAX scriplets
  * for validation to update the message composition tab accordingly.
  *
- * @param {jQuery} fieldset The field-set enclosing the composition window part.
+ * @param {jQuery} $fieldset The field-set enclosing the composition window part.
  *
  * @param {jQuery} form TBD.
  *
  * @param {jQuery} dialogHolder The div holding the jQuery dialog for everything
  *
- * @param {jQuery} panelHolder The div enclosing the fieldset
+ * @param {jQuery} panelHolder The div enclosing the $fieldset
  *
  */
-const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, panelHolder) {
+const emailFormCompositionHandlers = function($fieldset, form, dialogHolder, panelHolder) {
 
   console.trace('COMPOSITION HANDLERS CALLED');
 
@@ -622,19 +630,20 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   const $projectName = formData.find('input[name="projectName"]');
   const $bulkTransactionId = formData.find('input[name="bulkTransactionId"]');
   const debugOutput = form.find('#emailformdebug');
-  const $templateEmailsSelector = fieldset.find('select.template.email-message-selector');
-  const $draftEmailsSelector = fieldset.find('select.draft.email-message-selector');
-  const $sentEmailsSelector = fieldset.find('select.sent.email-message-selector');
-  const saveAsTemplate = fieldset.find('#check-save-as-template');
-  const draftAutoSave = fieldset.find('#check-draft-auto-save');
-  const discloseRecipients = fieldset.find('#check-disclosed-recipients');
-  const messageText = fieldset.find('textarea');
-  const eventAttachmentsRow = fieldset.find('tr.event-attachments');
-  const eventAttachmentsSelector = eventAttachmentsRow.find('select.event-attachments');
-  const fileAttachmentsRow = fieldset.find('tr.file-attachments');
-  const fileAttachmentsSelector = fileAttachmentsRow.find('select.file-attachments');
-  const sendButton = fieldset.find('input.submit.send');
+  const $templateEmailsSelector = $fieldset.find('select.template.email-message-selector');
+  const $draftEmailsSelector = $fieldset.find('select.draft.email-message-selector');
+  const $sentEmailsSelector = $fieldset.find('select.sent.email-message-selector');
+  const saveAsTemplate = $fieldset.find('#check-save-as-template');
+  const draftAutoSave = $fieldset.find('#check-draft-auto-save');
+  const discloseRecipients = $fieldset.find('#check-disclosed-recipients');
+  const messageText = $fieldset.find('textarea');
+  const $eventAttachmentsRow = $fieldset.find('tr.event-attachments');
+  const $eventAttachmentsSelector = $eventAttachmentsRow.find('select#event-attachments-selector');
+  const $fileAttachmentsRow = $fieldset.find('tr.file-attachments');
+  const $fileAttachmentsSelector = $fileAttachmentsRow.find('select#file-attachments-selector');
+  const sendButton = $fieldset.find('input.submit.send');
   const dialogWidget = dialogHolder.dialog('widget');
+  const $composerPanel = $('#emailformcomposer');
 
   WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'));
 
@@ -647,7 +656,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     onClear() { this.$wrapper.toggleClass('loading', false); },
     onOptionsRefresh($dropdown) { $dropdown.find('[class*="tooltip-"]').cafevTooltip(); },
     closeAfterSelect: true,
-    openOnFocus: false,
+    openOnFocus: selectizeOpenOnFocus,
   };
 
   $templateEmailsSelector.selectize({
@@ -672,26 +681,18 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   $draftEmailsSelector.selectize(messageSelectorSelectizeOptions);
   $sentEmailsSelector.selectize(messageSelectorSelectizeOptions);
 
-  const composerPanel = $('#emailformcomposer');
-  const fileAttachmentsSelect = composerPanel.find('#file-attachments-selector');
-  fileAttachmentsSelect.chosen();
-  fileAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
-    composerPanel.stop().animate({
-      scrollTop: composerPanel.prop('scrollHeight'),
-    }, 2000);
-    return true;
-  });
-  const eventAttachmentsSelect = composerPanel.find('#event-attachments-selector');
-  eventAttachmentsSelect.chosen();
-  eventAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
-    composerPanel.stop().animate({
-      scrollTop: composerPanel.prop('scrollHeight'),
-    }, 2000);
-    return true;
+  $fileAttachmentsSelector.add($eventAttachmentsSelector).selectize({
+    ...selectizeOptions,
+    closeAfterSelect: false,
+    onDropdownOpen() {
+      $composerPanel.stop().animate({
+        scrollTop: $composerPanel.prop('scrollHeight'),
+      }, 2000);
+    },
   });
 
   console.info('INITIALIZE TOOLTIPS');
-  toolTipsInit(dialogHolder.find('div#emailformcomposer'));
+  toolTipsInit($composerPanel);
 
   const projectId = function(value) {
     if (value === undefined) {
@@ -761,7 +762,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         post = form.serialize();
       } else {
         // Serialize almost everything and submit it
-        post = fieldset.serialize();
+        post = $fieldset.serialize();
         post += '&' + form.find('fieldset.form-data').serialize();
       }
       const $this = $(this);
@@ -828,8 +829,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             $.fn.cafevTooltip.remove();
             WysiwygEditor.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
             panelHolder.html(requestData.elementData);
-            fieldset = panelHolder.find('fieldset.email-composition.page');
-            emailFormCompositionHandlers(fieldset, form, dialogHolder, panelHolder);
+            $fieldset = panelHolder.find('fieldset.email-composition.page');
+            emailFormCompositionHandlers($fieldset, form, dialogHolder, panelHolder);
             break;
           case 'element': {
             const formElements = Array.isArray(requestData.formElement)
@@ -839,7 +840,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
               const elementData = requestData.elementData[formElement];
               switch (formElement) {
               case 'to': {
-                const toSpan = fieldset.find('span.email-recipients');
+                const toSpan = $fieldset.find('span.email-recipients');
                 let rcpts = elementData;
                 if (rcpts.length === 0) {
                   rcpts = toSpan.data('placeholder');
@@ -854,20 +855,20 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
               case 'fileAttachments': {
                 const options = elementData.options;
                 const fileAttachments = elementData.attachments;
-                const fileAttachmentsHolder = fieldset.find('input.file-attachments');
+                const fileAttachmentsHolder = $fieldset.find('input.file-attachments');
                 fileAttachmentsHolder.val(JSON.stringify(fileAttachments));
-                fileAttachmentsRow.toggleClass('empty-selection', fileAttachmentsSelector.val().length === 0);
-                fileAttachmentsRow.toggleClass('no-attachments', options.length === 0);
-                SelectUtils.replaceOptions(fileAttachmentsSelector, options);
+                $fileAttachmentsRow.toggleClass('empty-selection', $fileAttachmentsSelector.val().length === 0);
+                $fileAttachmentsRow.toggleClass('no-attachments', options.length === 0);
+                SelectUtils.replaceOptions($fileAttachmentsSelector, options);
                 panelHolder.trigger('resize', { position: 'bottom' });
                 break;
               }
               case 'eventAttachments': {
                 const options = elementData.options;
                 // const eventAttachments = requestData.elementData.attachments;
-                eventAttachmentsRow.toggleClass('no-attachments', options.length === 0);
-                eventAttachmentsRow.toggleClass('empty-selection', eventAttachmentsSelector.val().length === 0);
-                SelectUtils.replaceOptions(eventAttachmentsSelector, options);
+                $eventAttachmentsRow.toggleClass('no-attachments', options.length === 0);
+                $eventAttachmentsRow.toggleClass('empty-selection', $eventAttachmentsSelector.val().length === 0);
+                SelectUtils.replaceOptions($eventAttachmentsSelector, options);
                 panelHolder.trigger('resize');
                 break;
               }
@@ -891,13 +892,13 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         case 'load':
           switch (topic) {
           case 'template': {
-            const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
+            const dataItem = $fieldset.find('input[name="emailComposer[messageDraftId]"]');
             dataItem.val('');
-            fieldset.find('input[name^="emailComposer[referencing]"]').remove();
-            fieldset.find('input[name^="emailComposer[inReplyTo]"]').val('');
+            $fieldset.find('input[name^="emailComposer[referencing]"]').remove();
+            $fieldset.find('input[name^="emailComposer[inReplyTo]"]').val('');
             // currentTemplate.val(requestData.emailTemplateName);
             WysiwygEditor.updateEditor(messageText, requestData.message);
-            fieldset.find('input.email-subject').val(requestData.subject);
+            $fieldset.find('input.email-subject').val(requestData.subject);
 
             $templateEmailsSelector.next().removeClass('loading');
             break;
@@ -908,8 +909,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             // replace the entire composer tab
             WysiwygEditor.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
             panelHolder.html(requestData.composerForm);
-            fieldset = panelHolder.find('fieldset.email-composition.page');
-            emailFormCompositionHandlers(fieldset, form, dialogHolder, panelHolder);
+            $fieldset = panelHolder.find('fieldset.email-composition.page');
+            emailFormCompositionHandlers($fieldset, form, dialogHolder, panelHolder);
 
             // replace the recipients tab as well ...
             const rcptPanelHolder = dialogHolder.find('div#emailformrecipients');
@@ -945,8 +946,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             // replace the entire composer tab
             WysiwygEditor.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
             panelHolder.html(requestData.composerForm);
-            fieldset = panelHolder.find('fieldset.email-composition.page');
-            emailFormCompositionHandlers(fieldset, form, dialogHolder, panelHolder);
+            $fieldset = panelHolder.find('fieldset.email-composition.page');
+            emailFormCompositionHandlers($fieldset, form, dialogHolder, panelHolder);
 
             // replace the recipients tab ...
             const rcptPanelHolder = dialogHolder.find('div#emailformrecipients');
@@ -954,11 +955,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             const rcptFieldSet = form.find('fieldset.email-recipients.page');
             emailFormRecipientsHandlers(rcptFieldSet, form, dialogHolder, rcptPanelHolder);
 
-            const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
+            const dataItem = $fieldset.find('input[name="emailComposer[messageDraftId]"]');
             dataItem.val('');
             saveAsTemplate.prop('checked', false).trigger('change');
             // WysiwygEditor.updateEditor(messageText, requestData.message);
-            // fieldset.find('input.email-subject').val(requestData.subject);
+            // $fieldset.find('input.email-subject').val(requestData.subject);
 
             // Make the debug output less verbose
             delete requestData.composerForm;
@@ -979,7 +980,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             break;
           case 'draft': {
             // perhaps rather use data stuff in the future ...
-            const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
+            const dataItem = $fieldset.find('input[name="emailComposer[messageDraftId]"]');
             dataItem.val(requestData.messageDraftId);
             SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions);
             break;
@@ -994,7 +995,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             SelectUtils.replaceOptions($templateEmailsSelector, requestData.templateEmailOptions);
             break;
           case 'draft': {
-            const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
+            const dataItem = $fieldset.find('input[name="emailComposer[messageDraftId]"]');
             dataItem.val('');
             SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions);
             break;
@@ -1156,7 +1157,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    *
    * Message export to html.
    */
-  fieldset
+  $fieldset
     .find('input.submit.message-export')
     .off('click')
     .on('click', function(event) {
@@ -1210,7 +1211,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       return false;
     });
 
-  // fieldset.find('input.submit.message-blah-export').
+  // $fieldset.find('input.submit.message-blah-export').
   //   off('click').
   //   on('click', function(event) {
 
@@ -1248,7 +1249,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    * Close the dialog
    */
 
-  fieldset
+  $fieldset
     .find('input.submit.cancel')
     .off('click')
     .on('click', function(event) {
@@ -1299,7 +1300,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   };
 
   const confirmAutoSaveDelete = function(doDelete) {
-    const draftId = parseInt(fieldset.find('input[name="emailComposer[messageDraftId]"]').val());
+    const draftId = parseInt($fieldset.find('input[name="emailComposer[messageDraftId]"]').val());
     if (draftId <= 0) {
       return;
     }
@@ -1393,7 +1394,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       return false;
     });
 
-  fieldset
+  $fieldset
     .find('input.submit.save-message')
     .off('click')
     .on('click', function(event) {
@@ -1432,7 +1433,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       return false;
     });
 
-  fieldset
+  $fieldset
     .find('input.submit.delete-message')
     .off('click')
     .on('click', function(event) {
@@ -1466,7 +1467,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             t(appName, 'Unknown Template'));
         }
       } else {
-        const draftId = fieldset.find('input[name="emailComposer[messageDraftId]"]').val();
+        const draftId = $fieldset.find('input[name="emailComposer[messageDraftId]"]').val();
 
         if (draftId > 0) {
           // find the draft data in the select which we mis-use as data-storage here
@@ -1581,7 +1582,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    *
    * Subject and sender name. We simply trim the spaces away.
    */
-  fieldset
+  $fieldset
     .off('blur', 'input.email-subject, input.sender-name')
     .on(
       'blur', 'input.email-subject, input.sender-name',
@@ -1595,7 +1596,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    *
    */
 
-  fieldset.find('input.save-from-tag')
+  $fieldset.find('input.save-from-tag')
     .off('click')
     .on('click', function(event) {
       const $selectedFrom = $(this).closest('td.email-from').find('input[type=radio]:checked');
@@ -1696,20 +1697,20 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     return false;
   };
 
-  fieldset
+  $fieldset
     .find('#carbon-copy')
     .off('blur')
     .on('blur', function(event) {
       return carbonCopyBlur.call(this, event, 'CC');
     });
-  fieldset
+  $fieldset
     .find('#blind-carbon-copy')
     .off('blur')
     .on('blur', function(event) {
       return carbonCopyBlur.call(this, event, 'BCC');
     });
 
-  const $subjectTagContainer = fieldset.find('.subject.tag.container');
+  const $subjectTagContainer = $fieldset.find('.subject.tag.container');
   const $subjectTagContentDisplay = $subjectTagContainer.find('.content .display');
   const $subjectTagContentEditable = $subjectTagContainer.find('.content .editable');
   $subjectTagContainer
@@ -1732,18 +1733,18 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    * Project events attachments
    */
 
-  fieldset
+  $fieldset
     .find('button.attachment.events')
     .off('click')
     .on('click', function(event) {
-      const wasVisible = eventAttachmentsRow.is(':visible');
-      let events = eventAttachmentsSelector.val();
+      const wasVisible = $eventAttachmentsRow.is(':visible');
+      let events = $eventAttachmentsSelector.val();
       if (!events) {
         events = [];
       }
-      eventAttachmentsRow.addClass('show-selectable');
+      $eventAttachmentsRow.addClass('show-selectable');
 
-      if (wasVisible !== eventAttachmentsRow.is(':visible')) {
+      if (wasVisible !== $eventAttachmentsRow.is(':visible')) {
         panelHolder.trigger('resize', { position: 'bottom' });
       }
 
@@ -1786,7 +1787,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       return false;
     });
 
-  fieldset
+  $fieldset
     .find('tr.attachments input.visibility-toggle')
     .off('click')
     .on('click', function(event) {
@@ -1796,7 +1797,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       panelHolder.trigger('resize', { position: 'bottom' });
     });
 
-  fieldset
+  $fieldset
     .find('tr.all-attachments button.visibility-toggle')
     .off('click')
     .on('click', function(event) {
@@ -1809,21 +1810,21 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       panelHolder.trigger('resize', { position: 'bottom' });
     });
 
-  fieldset
+  $fieldset
     .find('input.delete-all-event-attachments')
     .off('click')
     .on('click', function(event) {
-      const wasVisible = eventAttachmentsRow.is(':visible');
+      const wasVisible = $eventAttachmentsRow.is(':visible');
 
-      const numSelected = eventAttachmentsSelector.val().length;
-      const numOptions = eventAttachmentsSelector.find('option').length;
+      const numSelected = $eventAttachmentsSelector.val().length;
+      const numOptions = $eventAttachmentsSelector.find('option').length;
 
       // must this be here?
-      eventAttachmentsRow.toggleClass('no-attachments', numOptions === 0);
+      $eventAttachmentsRow.toggleClass('no-attachments', numOptions === 0);
 
       if (numSelected === 0) {
-        eventAttachmentsRow.removeClass('show-selectable');
-        if (wasVisible !== eventAttachmentsRow.is(':visible')) {
+        $eventAttachmentsRow.removeClass('show-selectable');
+        if (wasVisible !== $eventAttachmentsRow.is(':visible')) {
           panelHolder.trigger('resize', { position: 'bottom' });
         }
       } else {
@@ -1837,13 +1838,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
               return false;
             }
             // simply void the selection
-            eventAttachmentsSelector.val('');
-            eventAttachmentsSelector.trigger('change');
-            eventAttachmentsSelector.trigger('chosen:updated');
-            eventAttachmentsRow.removeClass('show-selectable');
-            eventAttachmentsRow.addClass('empty-selection');
+            SelectUtils.deselectAll($eventAttachmentsSelector);
+            $eventAttachmentsRow.removeClass('show-selectable');
+            $eventAttachmentsRow.addClass('empty-selection');
 
-            if (wasVisible !== eventAttachmentsRow.is(':visible')) {
+            if (wasVisible !== $eventAttachmentsRow.is(':visible')) {
               panelHolder.trigger('resize', { position: 'bottom' });
             }
 
@@ -1855,7 +1854,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       return false;
     });
 
-  eventAttachmentsSelector
+  $eventAttachmentsSelector
     .off('change')
     .on('change', function(event) {
       const $this = $(this);
@@ -1880,16 +1879,17 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    * File upload.
    */
 
-  fileAttachmentsSelector.on('change', function(event) {
+  $fileAttachmentsSelector.on('change', function(event) {
     const $this = $(this);
     $this.closest('tr')
       .toggleClass('empty-selection', $this.val().length === 0)
       .toggleClass('no-attachments', $this.find('option').length === 0);
+    return false;
   });
 
   const updateFileAttachments = function() {
-    const fileAttachments = fieldset.find('input.file-attachments').val();
-    const selectedAttachments = fileAttachmentsSelector.val();
+    const fileAttachments = $fieldset.find('input.file-attachments').val();
+    const selectedAttachments = $fileAttachmentsSelector.val();
 
     const requestData = {
       operation: 'update',
@@ -1921,7 +1921,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     containerSelector: '#attachment_upload_wrapper',
   });
 
-  fieldset
+  $fieldset
     .find('.attachment.upload')
     .off('click')
     .on('click', function() {
@@ -1929,7 +1929,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       return false;
     });
 
-  fieldset
+  $fieldset
     .find('.attachment.cloud')
     .off('click')
     .on('click', function() {
@@ -1957,32 +1957,32 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         });
     });
 
-  fieldset
+  $fieldset
     .find('.attachment.personal')
     .off('click')
     .on('click', function() {
-      const wasVisible = fileAttachmentsRow.is(':visible');
-      fileAttachmentsRow.addClass('show-selectable');
-      if (wasVisible !== fileAttachmentsRow.is(':visible')) {
+      const wasVisible = $fileAttachmentsRow.is(':visible');
+      $fileAttachmentsRow.addClass('show-selectable');
+      if (wasVisible !== $fileAttachmentsRow.is(':visible')) {
         panelHolder.trigger('resize', { position: 'bottom' });
       }
       return false;
     });
 
-  fieldset
+  $fieldset
     .find('input.delete-all-file-attachments')
     .off('click')
     .on('click', function(event) {
-      const wasVisible = fileAttachmentsRow.is(':visible');
+      const wasVisible = $fileAttachmentsRow.is(':visible');
 
-      const numSelected = fileAttachmentsSelector.val().length;
-      const numOptions = fileAttachmentsSelector.find('option').length;
+      const numSelected = $fileAttachmentsSelector.val().length;
+      const numOptions = $fileAttachmentsSelector.find('option').length;
 
-      fileAttachmentsRow.toggleClass('no-attachments', numOptions === 0);
+      $fileAttachmentsRow.toggleClass('no-attachments', numOptions === 0);
 
       if (numSelected === 0) {
-        fileAttachmentsRow.removeClass('show-selectable');
-        if (wasVisible !== fileAttachmentsRow.is(':visible')) {
+        $fileAttachmentsRow.removeClass('show-selectable');
+        if (wasVisible !== $fileAttachmentsRow.is(':visible')) {
           panelHolder.trigger('resize', { position: 'bottom' });
         }
       } else {
@@ -1996,13 +1996,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
               return false;
             }
             // simply void the selection
-            fileAttachmentsSelector.val('');
-            fileAttachmentsSelector.trigger('change');
-            fileAttachmentsSelector.trigger('chosen:updated');
-            fileAttachmentsRow.removeClass('show-selectable');
-            fileAttachmentsRow.addClass('empty-selection');
+            SelectUtils.deselectAll($fileAttachmentsSelector);
+            $fileAttachmentsRow.removeClass('show-selectable');
+            $fileAttachmentsRow.addClass('empty-selection');
 
-            if (wasVisible !== fileAttachmentsRow.is(':visible')) {
+            if (wasVisible !== $fileAttachmentsRow.is(':visible')) {
               panelHolder.trigger('resize', { position: 'bottom' });
             }
             return false;
@@ -2018,13 +2016,13 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
    * We try to be nice with Cc: and Bcc: and even provide an
    * address-book connector
    */
-  fieldset
+  $fieldset
     .find('input.address-book-emails')
     .off('click')
     .on('click', function(event) {
 
       const self = $(this);
-      const input = fieldset.find(self.data('for'));
+      const input = $fieldset.find(self.data('for'));
 
       self.addClass('loading');
       const cleanup = function() {
@@ -2054,7 +2052,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             title: t(appName, 'Address Book'),
             saveText: t(appName, 'Accept'),
             selectize: {
-              openOnFocus: false,
+              openOnFocus: selectizeOpenOnFocus,
               plugins: ['remove_button', 'drag_drop', 'restore_on_backspace'],
               createOnBlur: true,
               persist: true,
@@ -2257,9 +2255,9 @@ function emailFormPopup(post, modal, single, afterInit) {
       dialogHolder.html(data.contents);
       $('body').append(dialogHolder);
 
-      const emailForm = $('form#' + appPrefix('email-form'));
-      const recipientsPanel = dialogHolder.find('div#emailformrecipients');
-      const composerPanel = dialogHolder.find('div#emailformcomposer');
+      const $emailForm = $('form#' + appPrefix('email-form'));
+      const $recipientsPanel = dialogHolder.find('div#emailformrecipients');
+      const $composerPanel = dialogHolder.find('div#emailformcomposer');
 
       let dlgTitle = '';
       if (data.projectId > 0) {
@@ -2332,8 +2330,8 @@ function emailFormPopup(post, modal, single, afterInit) {
                   $('#attachment_upload_start').fileupload('option', 'dropZone', ui.newPanel);
                 } else {
                   $('#attachment_upload_start').fileupload('option', 'dropZone', null);
-                  const recipientsFieldSet = emailForm.find('fieldset.email-recipients.page');
-                  emailFormRecipientsSelectControls(dialogHolder, recipientsFieldSet);
+                  const $recipientsFieldSet = $emailForm.find('fieldset.email-recipients.page');
+                  emailFormRecipientsSelectControls(dialogHolder, $recipientsFieldSet);
                 }
 
                 // At least in FF there is also a resize event,
@@ -2354,7 +2352,7 @@ function emailFormPopup(post, modal, single, afterInit) {
 
               if (oldTabId === 'emailformcomposer-tab' && newTabId !== 'emailformcomposer-tab') {
                 // close TinyMCE overflow button pane
-                const $overflowButton = emailForm.find('.messagetext button[data-mce-name="overflow-button"].tox-tbtn.tox-tbtn--enabled');
+                const $overflowButton = $emailForm.find('.messagetext button[data-mce-name="overflow-button"].tox-tbtn.tox-tbtn--enabled');
                 $overflowButton.trigger('click');
               }
 
@@ -2371,7 +2369,7 @@ function emailFormPopup(post, modal, single, afterInit) {
                 return true;
               }
 
-              updateComposerElements(emailForm, ['to', 'subjectTag']);
+              updateComposerElements($emailForm, ['to', 'subjectTag']);
 
               return true;
             },
@@ -2379,22 +2377,22 @@ function emailFormPopup(post, modal, single, afterInit) {
 
           handleUserManualMenu(dialogHolder);
 
-          const recipientsFieldSet = emailForm.find('fieldset.email-recipients.page');
-          const composerFieldSet = emailForm.find('fieldset.email-composition.page');
+          const $recipientsFieldSet = $emailForm.find('fieldset.email-recipients.page');
+          const $composerFieldSet = $emailForm.find('fieldset.email-composition.page');
 
           // Fine, now add handlers and AJAX callbacks. We can
           // probably move some of the code above to the
           // respective tab-handler.
           emailFormRecipientsHandlers(
-            recipientsFieldSet,
-            emailForm,
+            $recipientsFieldSet,
+            $emailForm,
             dialogHolder,
-            recipientsPanel);
+            $recipientsPanel);
           emailFormCompositionHandlers(
-            composerFieldSet,
-            emailForm,
+            $composerFieldSet,
+            $emailForm,
             dialogHolder,
-            composerPanel);
+            $composerPanel);
 
           // download support
           dialogHolder.on('click', 'a.download-link.ajax-download', function(event) {
@@ -2404,7 +2402,7 @@ function emailFormPopup(post, modal, single, afterInit) {
           });
 
           // we have to recompute the tab size for the recipients controls
-          emailTabResize(dialogWidget, recipientsPanel);
+          emailTabResize(dialogWidget, $recipientsPanel);
 
           dialogHolder.dialog('moveToTop');
           dialogWidget.position(position);

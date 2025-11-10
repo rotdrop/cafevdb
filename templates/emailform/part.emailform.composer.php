@@ -337,52 +337,56 @@ function e(string $string)
       <td class="event-attachments caption">
         <?php echo $l->t('Attached Events'); ?>
       </td>
-      <td class="event-attachments events content chosen-dropup" colspan="2">
-        <select multiple="multiple"
-                title="<?php echo $toolTips['emailform:composer:attachments:event-select']; ?>"
-                name="emailComposer[attachedEvents][]"
-                class="event-attachments select"
-                id="event-attachments-selector">
-          <?php echo PageNavigation::selectOptions($eventAttachmentOptions); ?>
-        </select>
-        <div class="attachment-controls">
-          <input title="<?php p($toolTips['emailform:composer:attachments:toggle-visibility:event']); ?>"
-                 type="button"
-                 class="visibility-toggle tooltip-auto"
-                 name="emailComposer[attachmentVisibilityToggle]"
-                 value="<?php p($l->t('Toggle Visibility')); ?>"/>
-          <input title="<?php echo $toolTips['emailform:composer:attachments:delete-all-events']; ?>"
-                 type="submit"
-                 class="submit delete-all-attachments delete-all-event-attachments tooltip-top"
-                 name="emailComposer[deleteAllAttachments]"
-                 value="<?php echo $l->t('Delete Event Attachments'); ?>"/>
-        </div>
+      <td class="event-attachments events content chosen-dropup menu-dropup" colspan="2">
+        <span class="flex-container flex-begin flex-justify-full">
+          <select multiple="multiple"
+                  title="<?php echo $toolTips['emailform:composer:attachments:event-select']; ?>"
+                  name="emailComposer[attachedEvents][]"
+                  class="event-attachments email-attachments select"
+                  id="event-attachments-selector">
+            <?php echo PageNavigation::selectOptions($eventAttachmentOptions); ?>
+          </select>
+          <div class="attachment-controls flex-container flex-wrap flex-justify-end">
+            <input title="<?php p($toolTips['emailform:composer:attachments:toggle-visibility:event']); ?>"
+                   type="button"
+                   class="visibility-toggle tooltip-auto"
+                   name="emailComposer[attachmentVisibilityToggle]"
+                   value="<?php p($l->t('Toggle Visibility')); ?>"/>
+            <input title="<?php echo $toolTips['emailform:composer:attachments:delete-all-events']; ?>"
+                   type="submit"
+                   class="submit delete-all-attachments delete-all-event-attachments tooltip-top"
+                   name="emailComposer[deleteAllAttachments]"
+                   value="<?php echo $l->t('Delete Event Attachments'); ?>"/>
+          </div>
+        </span>
       </td>
     </tr>
     <tr class="attachments file-attachments<?php (count($fileAttachmentOptions) == 0) && p(' no-attachments'); ?><?php $selectedFileAttachments == 0 && p(' empty-selection'); ?>">
       <td class="file-attachments caption">
         <?php echo $l->t('Attached Files'); ?>
       </td>
-      <td class="file-attachments files content chosen-dropup" colspan="2">
-        <select multiple="multiple"
-                title="<?php echo $toolTips['emailform:composer::attachments:file-select']; ?>"
-                name="emailComposer[attachedFiles][]"
-                class="file-attachments select "
-                id="file-attachments-selector">
-          <?php echo PageNavigation::selectOptions($fileAttachmentOptions); ?>
-        </select>
-        <div class="attachment-controls">
-          <input title="<?php p($toolTips['emailform:composer:attachments:toggle-visibility:file']); ?>"
-                 type="button"
-                 class="visibility-toggle tooltip-auto"
-                 name="emailComposer[attachmentVisibilityToggle]"
-                 value="<?php p($l->t('Toggle Visibility')); ?>"/>
-          <input title="<?php echo $toolTips['emailform:composer:attachments:delete-all-files']; ?>"
-                 type="submit"
-                 class="submit delete-all-attachments delete-all-file-attachments tooltip-top"
-                 name="emailComposer[deleteAllAttachments]"
-                 value="<?php echo $l->t('Delete All Attachments'); ?>"/>
-        </div>
+      <td class="file-attachments files content chosen-dropup menu-dropup" colspan="2">
+        <span class="flex-container flex-begin flex-justify-full">
+          <select multiple="multiple"
+                  title="<?php echo $toolTips['emailform:composer::attachments:file-select']; ?>"
+                  name="emailComposer[attachedFiles][]"
+                  class="file-attachments email-attachments select"
+                  id="file-attachments-selector">
+            <?php echo PageNavigation::selectOptions($fileAttachmentOptions); ?>
+          </select>
+          <div class="attachment-controls flex-container flex-wrap flex-justify-end">
+            <input title="<?php p($toolTips['emailform:composer:attachments:toggle-visibility:file']); ?>"
+                   type="button"
+                   class="visibility-toggle tooltip-auto"
+                   name="emailComposer[attachmentVisibilityToggle]"
+                   value="<?php p($l->t('Toggle Visibility')); ?>"/>
+            <input title="<?php echo $toolTips['emailform:composer:attachments:delete-all-files']; ?>"
+                   type="submit"
+                   class="submit delete-all-attachments delete-all-file-attachments tooltip-top"
+                   name="emailComposer[deleteAllAttachments]"
+                   value="<?php echo $l->t('Delete All Attachments'); ?>"/>
+          </div>
+        </span>
       </td>
     </tr>
     <tr><td colspan="3" class="rule"><hr /></td></tr>

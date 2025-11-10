@@ -723,33 +723,20 @@ $editorHeight: 20em;
                 display:table-row;
               }
               td.content {
-                .chosen-container {
-                  min-width:85%;
-                  max-width:85%;
-                  float:left;
-                  /* max-height:40px; */
-
-                  /* &.chosen-with-drop .chosen-drop {
-                     position:relative;
-                     top:100%;
-                     margin-bottom:1em;
-                     } */
-
-                  .chosen-drop {
-                    position:absolute;
-                    top:-99999px;
-                  }
+                .selectize-control {
+                  flex-grow: 1;
+                  // max-width: 85%;
                 }
                 .attachment-controls {
-                  float:right;
-                  display:inline-block;
+                  margin-left: 1em;
+                  height: 0%;
                   input[type=submit], input[type=button] {
                     float:left;
                     background-repeat:no-repeat;
                     background-size: 24px 24px;
                     background-position: center;
-                    width:27px;
-                    height:27px;
+                    width:34px;
+                    height:34px;
                     font-size:0pt;
                     vertical-align:middle;
                     &.visibility-toggle {
