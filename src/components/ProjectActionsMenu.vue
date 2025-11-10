@@ -250,9 +250,13 @@ const tooltips = tooltipsProvider.tooltipsData
 
 const actions = ref<null|typeof LegacyPageActionsMenu>(null)
 
-const isOpen = () => actions.value!.isOpen()
-const closeMenu = () => actions.value!.closeMenu()
-const openMenu = (x?: number, y?: number) => actions.value!.openMenu(x, y)
+const isOpen = () => !!actions.value?.isOpen()
+const closeMenu = () => {
+  actions.value && actions.value.closeMenu()
+}
+const openMenu = (x?: number, y?: number) => {
+  actions.value && actions.value.openMenu(x, y)
+}
 
 // we need to expose some methods in order to allow legacy code to
 // open, close and position the menu.
