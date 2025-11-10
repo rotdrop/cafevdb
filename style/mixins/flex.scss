@@ -30,7 +30,9 @@
   .flex-container {
     display: flex !important;
     &:not(.flex-column) {
-      flex-flow: row;
+      .flex-wrap {
+        flex-flow: row wrap;
+      }
       &:not(.flex-wrap) {
         flex-flow: row nowrap;
       }
@@ -43,13 +45,15 @@
       display:inline-flex;
     }
     &.flex-column {
-      flex-flow: column;
+      &.flex-wrap {
+        flex-flow: column wrap;
+      }
       &:not(.flex-wrap) {
         flex-flow: column nowrap;
       }
     }
     &.flex-wrap {
-      flex-wrap:wrap;
+      flex-wrap:wrap !important;
     }
     &.flex-center {
       align-items:center;
