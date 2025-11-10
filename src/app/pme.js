@@ -1579,7 +1579,7 @@ function installInputSelectize(containerSel, onlyClass) {
         delimiter: ',',
         persist: false,
         hideSelected: false,
-        openOnFocus: false,
+        openOnFocus: true, // false,
         items: $self.data('initialValues'),
         // closeAfterSelect: true,
         create: false,
