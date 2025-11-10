@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** TBD. */

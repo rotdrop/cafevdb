@@ -34,6 +34,7 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /** Table generator for Instruments table. */

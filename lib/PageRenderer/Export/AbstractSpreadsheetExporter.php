@@ -28,9 +28,9 @@ use DateTimeImmutable;
 
 use PhpOffice\PhpSpreadsheet;
 
-use OCA\CAFEVDB\Service\ConfigConstants;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\FontService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Abstract base class for spread-sheet export */
 abstract class AbstractSpreadsheetExporter
