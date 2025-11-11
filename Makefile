@@ -292,6 +292,15 @@ NPM_INIT_DEPS =\
 
 THIRD_PARTY_NPM_DEPS = $(SELECTIZE_DIST) $(BOOTSTRAP_DUALLISTBOX_DIST)
 
+DW_APP_CONFIG = node_modules/@rotdrop/nextcloud-app-dokuwiki/build/ts-types/app-config.ts
+DW_APP_CONFIG_PATCH = patches/
+
+$(DW_APP_CONFIG): node_modules
+	if ! [ -f $(DW_APP_CONFIG) ]; then\
+ cd $(ABSSRCDIR);\
+ patch -p1 < $(ABSSRCDIR)/patches/@rotdrop+nextcloud-app-dokuwiki+1.1.2.patch;\
+fi
+
 WEBPACK_DEPS =\
  $(NPM_INIT_DEPS)\
  tinymce\
@@ -300,7 +309,8 @@ WEBPACK_DEPS =\
  $(JS_FILES)\
  $(L10N_FILES)\
  $(TS_APP_CONFIG)\
- ts-type-files
+ ts-type-files\
+ $(DW_APP_CONFIG)
 
 include $(DEV_LIB_DIR)/makefile/npm.mk
 
