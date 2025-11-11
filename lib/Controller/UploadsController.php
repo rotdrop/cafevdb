@@ -273,7 +273,7 @@ class UploadsController extends Controller
           return self::grumble($this->l->t('File "%s" could not be found in cloud storage.', $path));
         }
         if ($cloudFile->getType() != FileInfo::TYPE_FILE) {
-          return self::grumble($this->l->t('File "%s" is not a plain file, this is not yet implemented.'));
+          return self::grumble($this->l->t('File "%s" is not a plain file, this is not yet implemented.', $path));
         }
 
         $fileName = $cloudFile->getName();
