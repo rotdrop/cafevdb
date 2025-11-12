@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,12 +26,19 @@ import { appName } from '../config.ts';
 import { toBackButton as dialogToBackButton } from './dialog-utils.js';
 import modalizer from './modalizer.js';
 import { DOKU_WIKI_WRAPPER } from '../mountable-component-names.ts';
-import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
+import { GET_VUE_COMPONENT, WIKI_POPUP } from '../event-bus-events.ts';
 import { emit as asyncEmit, getEmitResult } from '../services/async-event-bus.ts';
+import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 
 require('dokuwiki-jquery-popup.scss');
 
-let dokuWikiWrapper;
+let dokuWikiWrapper: undefined|Vue & {
+  _props: {
+    wikiPage: string,
+    fullScreen?: boolean,
+  },
+  wikiIFrame: HTMLIFrameElement,
+};
 
 let wikiContentHeight = -1;
 
@@ -47,17 +54,16 @@ const popupPosition = {
  * related, rather general. Page and page-title are assumed to be
  * attached to the "post"-object
  *
- * @param {object} post Arguments object:
- * { projectName: 'NAME', projectId: XX }
+ * @param post Arguments
  *
- * @param {boolean} reopen If true, close any already dialog and re-open it
+ * @param [reopen] If true, close any already dialog and re-open it
  * (the default). If false, only raise an existing dialog to top.
  */
-const wikiPopup = async (post, reopen = undefined) => {
+const wikiPopup = async (post: AsyncNextcloudEvents[typeof WIKI_POPUP], reopen?: boolean) => {
   if (typeof reopen === 'undefined') {
     reopen = false;
   }
-  let $dialogHolder = $('#dokuwiki_popup');
+  let $dialogHolder: undefined|JQuery = $('#dokuwiki_popup');
   if ($dialogHolder.dialog('isOpen') === true) {
     if (reopen === false) {
       $dialogHolder.dialog('moveToTop');
@@ -65,7 +71,7 @@ const wikiPopup = async (post, reopen = undefined) => {
     }
     $dialogHolder.dialog('close').remove();
     $dialogHolder = undefined;
-    dokuWikiWrapper.$destroy();
+    dokuWikiWrapper?.$destroy();
     dokuWikiWrapper = undefined;
   }
   if (!dokuWikiWrapper) {
@@ -78,15 +84,18 @@ const wikiPopup = async (post, reopen = undefined) => {
         },
       }),
     );
+    if (!dokuWikiWrapper) {
+      return;
+    }
   } else {
     // this is supposedly illegal and also skips the consistency
     // checks, but maybe it just works ... ;)
     dokuWikiWrapper._props.fullScreen = false;
     dokuWikiWrapper._props.wikiPage = post.wikiPage;
   }
-  if (($dialogHolder?.length || 0) === 0) {
+  if (!$dialogHolder || $dialogHolder.length === 0) {
     $dialogHolder = $('<div id="dokuwiki_popup" style="overflow:hidden;"><div></div></div>');
-    await dokuWikiWrapper.$mount($dialogHolder.find('div')[0]);
+    dokuWikiWrapper.$mount($dialogHolder.find('div')[0]);
   }
 
   $dialogHolder.cafevDialog({
@@ -105,13 +114,13 @@ const wikiPopup = async (post, reopen = undefined) => {
     open() {
       dialogToBackButton($dialogHolder);
       const $dialogWidget = $dialogHolder.dialog('widget');
-      const titleHeight = $dialogWidget.find('.ui-dialog-titlebar').outerHeight();
-      dokuWikiWrapper.$on('iframe-loaded', (...args) => {
-        console.debug('WIKI POPUP LOADED LISTENER', { ...args });
-        const newHeight = $dialogWidget.height() - titleHeight;
+      const titleHeight = $dialogWidget.find('.ui-dialog-titlebar').outerHeight()!;
+      dokuWikiWrapper!.$on('iframe-loaded', (/* event */) => {
+        // console.debug('WIKI POPUP LOADED LISTENER', { event });
+        const newHeight = $dialogWidget.height()! - titleHeight;
         $dialogHolder.height(newHeight);
       });
-      dokuWikiWrapper.$on('iframe-resize', (event) => {
+      dokuWikiWrapper!.$on('iframe-resize', (event: ResizeObserverEntry) => {
         console.debug('WIKI POPUP RESIZE LISTENER', { event });
         const height = event.contentRect.height;
         if (height === wikiContentHeight || height === 0) {
@@ -121,21 +130,21 @@ const wikiPopup = async (post, reopen = undefined) => {
         console.debug('new height', {
           height,
           contentHeight: wikiContentHeight,
-          frameHeight: dokuWikiWrapper.wikiIFrame.style.height,
+          frameHeight: dokuWikiWrapper!.wikiIFrame.style.height,
         });
         // $dialogHolder.contentHeight = height;
-        dokuWikiWrapper.wikiIFrame.style.height = height + 'px';
+        dokuWikiWrapper!.wikiIFrame.style.height = height + 'px';
         $dialogHolder.height(height);
         $dialogWidget.height(height + titleHeight);
-        const widgetHeight = $dialogWidget.outerHeight();
+        const widgetHeight = $dialogWidget.outerHeight()!;
         const maxHeight = widgetHeight - titleHeight;
-        dokuWikiWrapper.wikiIFrame.style['max-height'] = maxHeight + 'px';
+        dokuWikiWrapper!.wikiIFrame.style['max-height'] = maxHeight + 'px';
         $dialogHolder.height(maxHeight);
       });
     },
     close() {
       modalizer(false);
-      dokuWikiWrapper.$off(['iframe-loaded', 'iframe-resize']);
+      dokuWikiWrapper!.$off(['iframe-loaded', 'iframe-resize']);
     },
   });
 };

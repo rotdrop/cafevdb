@@ -28,6 +28,8 @@ import $ from './jquery.js';
 import './jquery-extensions.js';
 import { appName, appPrefix } from '../config.ts';
 
+/* global JQuery */
+
 function manageDialogToBackButtons() {
   // disable button if there are not enough dialogs
   const overlay = $('.ui-widget-overlay.ui-front').last();
@@ -51,7 +53,7 @@ function manageDialogToBackButtons() {
  * purpose is to be able to move the top-dialog to be bottom-most,
  * juse above a potential "modal" window layer.
  *
- * @param {jQuery} dialogHolder TBD.
+ * @param {JQuery} dialogHolder TBD.
  */
 function dialogToBackButton(dialogHolder) {
   const dialogWidget = dialogHolder.dialog('widget');
@@ -107,7 +109,7 @@ function dialogToBackButton(dialogHolder) {
 /**
  * Add a full-screen-button to the titlebar of a jQuery-UI dialog.
  *
- * @param {jQuery} dialogHolder TBD.
+ * @param {JQuery} dialogHolder TBD.
  *
  * @param {Function} onChangeCallback TBD.
  */
@@ -162,7 +164,7 @@ function dialogFullScreenButton(dialogHolder, onChangeCallback) {
  * If callback is undefined, then simply call the close
  * method. Otherwise it is called like callback(event, dialogHolder).
  *
- * @param {jQuery} dialogHolder TBD.
+ * @param {JQuery} dialogHolder TBD.
  *
  * @param {Function} callback TBD.
  *

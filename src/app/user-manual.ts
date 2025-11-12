@@ -24,10 +24,11 @@
 import $ from './jquery.js';
 import { appName, appPrefix } from '../config.ts';
 import * as ncRouter from '@nextcloud/router';
-import wikiPopup from './wiki-popup.js';
+import wikiPopup from './wiki-popup.ts';
 import { WIKI_POPUP } from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import { classSelector as pmeClassSelector } from './pme-selectors.js';
+import { translate as t } from '@nextcloud/l10n';
 
 // listen to requests from the Vue wrapper application, the idea is
 // not to have to load all the code twice, or not to have to change
@@ -36,55 +37,55 @@ asyncSubscribe(WIKI_POPUP, async (event) => {
   wikiPopup(event);
 });
 
-const userManualMenuHandler = function(event) {
+const userManualMenuHandler = function(this: HTMLElement, _event: JQuery.ClickEvent) {
   const $this = $(this);
   const $item = $this.parent();
   const menuId = $item.data('id');
   switch (menuId) {
-  case 'tooltips': {
-    const $checkbox = $('#tooltipbutton-checkbox');
-    $checkbox.trigger('click');
-    break;
-  }
-  case 'manual_window':
-  case 'manual_dialog': {
-    let manualPage = $item.data('manualPage');
-    const namespace = $item.data('namespace');
-    if (!manualPage) {
-      manualPage = $('#' + appPrefix('general') + ' input[name="template"]').val();
+    case 'tooltips': {
+      const $checkbox = $('#tooltipbutton-checkbox');
+      $checkbox.trigger('click');
+      break;
     }
-    if (!manualPage) {
-      manualPage = 'intro';
-    }
-    const wikiPage = [
-      namespace,
-      appName,
-      'documentation',
-      'user-manual',
-      manualPage,
-    ].join(':');
-    if (menuId === 'manual_dialog') {
-      let dialogTitle = $item.data('dialogTitle');
-      if (!dialogTitle) {
-        const $titleProvider = $(pmeClassSelector('span', 'short-title'));
-        dialogTitle = $titleProvider.length > 0 ? $titleProvider.html() : manualPage;
+    case 'manual_window':
+    case 'manual_dialog': {
+      let manualPage = $item.data('manualPage');
+      const namespace = $item.data('namespace');
+      if (!manualPage) {
+        manualPage = $('#' + appPrefix('general') + ' input[name="template"]').val();
       }
-      wikiPopup({ wikiPage, popupTitle: t(appName, 'User Manual: {section}', { section: dialogTitle }, 0, { escape: false }) });
-    } else {
-      const wikiUrl = ncRouter.generateUrl('/apps/dokuwiki/{wikiPage}', { wikiPage });
-      window.open(wikiUrl, appName + ':user-manual');
+      if (!manualPage) {
+        manualPage = 'intro';
+      }
+      const wikiPage = [
+        namespace,
+        appName,
+        'documentation',
+        'user-manual',
+        manualPage,
+      ].join(':');
+      if (menuId === 'manual_dialog') {
+        let dialogTitle = $item.data('dialogTitle');
+        if (!dialogTitle) {
+          const $titleProvider = $(pmeClassSelector('span', 'short-title'));
+          dialogTitle = $titleProvider.length > 0 ? $titleProvider.html() : manualPage;
+        }
+        wikiPopup({ wikiPage, popupTitle: t(appName, 'User Manual: {section}', { section: dialogTitle }, { escape: false }) });
+      } else {
+        const wikiUrl = ncRouter.generateUrl('/apps/dokuwiki/{wikiPage}', { wikiPage });
+        window.open(wikiUrl, appName + ':user-manual');
+      }
+      break;
     }
-    break;
-  }
-  default:
-    break;
+    default:
+      break;
   }
 
   return false;
 };
 
-const handleUserManualMenu = function(container) {
-  container.on('click', '.help-dropdown li a', userManualMenuHandler);
+const handleUserManualMenu = function($container: JQuery) {
+  $container.on('click', '.help-dropdown li a', userManualMenuHandler);
 };
 
 export {

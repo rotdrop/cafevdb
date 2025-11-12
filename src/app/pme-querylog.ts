@@ -34,21 +34,21 @@ import { emit as asyncEmit, getEmitResult } from '../services/async-event-bus.ts
 
 const vueQueryLogKey = 'vueQueryLog';
 
-const queryLogMenu = async function($queryLogProvider) {
+const queryLogMenu = async function($queryLogProvider: JQuery) {
   if ($queryLogProvider.data(vueQueryLogKey)) {
     return false;
   }
   const queryLog = $queryLogProvider.data('queryLog');
   console.info('QUERY LOG', { queryLog });
-  const queryLogComponent = await getEmitResult(
+  const queryLogComponent: Vue = await getEmitResult(
     asyncEmit(GET_VUE_COMPONENT, { name: LEGACY_QUERY_LOG, propsData: { queryLog } }),
   );
-  await queryLogComponent.$mount($queryLogProvider.find('.vue-mount-point')[0]);
+  queryLogComponent.$mount($queryLogProvider.find('.vue-mount-point')[0]);
   $queryLogProvider.data(vueQueryLogKey, queryLogComponent);
   return queryLogComponent;
 };
 
-const pmeQueryLogMenu = function(containerSel) {
+const pmeQueryLogMenu = (containerSel: string) => {
   if (typeof containerSel === 'undefined') {
     containerSel = '#' + appPrefix('page-body');
   }
@@ -61,7 +61,7 @@ const pmeQueryLogMenu = function(containerSel) {
   $queryLogProvider
     .find('.query-log-trigger')
     .off('click')
-    .on('click', function(event) {
+    .on('click', function(_event) {
       queryLogMenu($queryLogProvider).then((component) => {
         if (component) {
           vueComponents.push(component);

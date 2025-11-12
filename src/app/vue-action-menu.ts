@@ -35,6 +35,7 @@ import {
   GET_VUE_COMPONENT,
 } from '../event-bus-events.ts';
 import type { ComponentProps } from '../mountable-component-names.ts';
+import type { LegacyPageActionsMenu } from '../types/components.d.ts';
 
 const actionMenu = async function(
   $container: JQuery,
@@ -45,7 +46,7 @@ const actionMenu = async function(
   const generateVueMenu = async ($actionMenu: JQuery) => {
     const propsData = { template, ...$actionMenu.data('actionMenu') };
     propsData.enableOverviewItem = $container.find(pmeFormSelector).hasClass(pmeToken('list'));
-    const vueMenu = await getEmitResult(
+    const vueMenu: LegacyPageActionsMenu = await getEmitResult(
       asyncEmit(GET_VUE_COMPONENT, {
         name: vueMenuName,
         propsData,
@@ -58,7 +59,7 @@ const actionMenu = async function(
     vueComponents.push(vueMenu);
 
     $actionMenu.data('vueMenu', vueMenu);
-    await vueMenu.$mount($actionMenu.find('.vue-mount-point')[0]);
+    vueMenu.$mount($actionMenu.find('.vue-mount-point')[0]);
     return vueMenu;
   };
 

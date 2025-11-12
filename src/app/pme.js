@@ -41,7 +41,7 @@ import modalizer from './modalizer.js';
 import checkInvalidInputs from './check-invalid-inputs.js';
 import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
-import pmeQueryLogMenu from './pme-querylog.js';
+import pmeQueryLogMenu from './pme-querylog.ts';
 import { close as closeActionMenus } from './action-menu.js';
 import {
   deselectAll as selectDeselectAll,

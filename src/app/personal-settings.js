@@ -29,7 +29,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import { chosenActive, selected as selectedValues } from './select-utils.js';
-import { handleMenu as handleUserManualMenu } from './user-manual.js';
+import { handleMenu as handleUserManualMenu } from './user-manual.ts';
 import setFinanceMode from './settings/finance-mode.js';
 import setExpertMode from './settings/expert-mode.js';
 import setShowDisabled from './settings/show-disabled.js';

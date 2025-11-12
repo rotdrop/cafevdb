@@ -38,12 +38,10 @@ import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
 import { generateOcsUrl } from '@nextcloud/router';
 import { setPersonalUrl } from './settings-urls.js';
-import print_r from './print-r.js';
 import selectPopup from './select-popup.js';
 import debounce from './debounce.js';
-import queryData from './query-data.js';
 import modalizer from './modalizer.js';
-import { handleMenu as handleUserManualMenu } from './user-manual.js';
+import { handleMenu as handleUserManualMenu } from './user-manual.ts';
 import fileDownload from './file-download.js';
 import { showSuccess } from '@nextcloud/dialogs';
 import { token as pmeToken, data as pmeData } from './pme-selectors.js';
@@ -1024,10 +1022,10 @@ const emailFormCompositionHandlers = function($fieldset, form, dialogHolder, pan
           }
           if (debugText !== '') {
             let addOn;
-            addOn = print_r(queryData(post, true), true);
+            addOn = JSON.stringify(Object.fromEntries(new URLSearchParams(post)), null, 2);
             addOn = $('<div></div>').text(addOn).html();
             debugText += '<pre>post = ' + addOn + '</pre>';
-            addOn = print_r(requestData, true);
+            addOn = JSON.stringify(requestData, null, 2);
             addOn = $('<div></div>').text(addOn).html();
             debugText += '<pre>requestData = ' + addOn + '</pre>';
             debugOutput.html(debugText);
