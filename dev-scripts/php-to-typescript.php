@@ -70,6 +70,7 @@ $outputFiles = [
     'paths' => [
       'lib/Settings',
       'lib/Constants.php',
+      'lib/Controller',
     ],
   ],
   'database-entities' => [

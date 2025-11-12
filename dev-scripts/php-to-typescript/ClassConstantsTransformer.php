@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\DevScripts\PhpToTypeScript;
 
+use InvalidArgumentException;
+
 use ReflectionClass;
 use ReflectionClassConstant;
 use ReflectionProperty;
@@ -58,17 +60,7 @@ class ClassConstantsTransformer implements Transformer
       foreach ($constants as $constant) {
         $name = $constant->getName();
         $value = $constant->getValue();
-        // @todo: also support non-scalars
-        if (!is_scalar($value)) {
-          continue;
-        }
-        if (is_string($value)) {
-          if (str_contains($value, "\n")) {
-            $value = "`" . $value . "`";
-          } else {
-            $value = "'" . $value . "'";
-          }
-        }
+        $value = self::convertValueToTypeScript($value);
         $constantType = TransformedTypeOrConstant::create(
           $class,
           $constant->getName(),
@@ -92,6 +84,56 @@ class ClassConstantsTransformer implements Transformer
   }
 
   /**
+   * Convert multiline PHP strings to string templates for JS.
+   *
+   * @param mixed $value
+   *
+   * @param int $level
+   *
+   * @return string
+   */
+  private static function convertValueToTypeScript(mixed $value, int $level = 1): string
+  {
+    if (is_array($value)) {
+      if (array_is_list($value)) {
+        $result = '[' . PHP_EOL;
+        // array reduce does not give access to keys ...
+        foreach ($value as $key => $member) {
+          $member = self::convertValueToTypeScript($member, $level + 1);
+          $result .= str_pad('', ($level + 1) * 2) . "{$member}," . PHP_EOL;
+        }
+        $result .= str_pad('', $level * 2) . '] as const';
+      } else {
+        $result = '{' . PHP_EOL;
+        // array reduce does not give access to keys ...
+        foreach ($value as $key => $member) {
+          $member = self::convertValueToTypeScript($member, $level + 1);
+          $result .= str_pad('', ($level + 1) * 2) . "{$key}: {$member} as const," . PHP_EOL;
+        }
+        $result .= str_pad('', $level * 2) . '}';
+      }
+      return $result;
+    }
+    if (is_string($value)) {
+      if (str_contains($value, "\n")) {
+        return "`" . $value . "`";
+      } else {
+        return "'" . $value . "'";
+      }
+    } elseif ($value === null) {
+      $value = 'null';
+    } elseif ($value === true) {
+      $value = 'true';
+    } elseif ($value === false) {
+      $value = 'false';
+    }
+    if (!is_scalar($value)) {
+      throw new InvalidArgumentException('Value is not scalar: ' . print_r($value, true) . ' NULL ' . (int)($value === null));
+    }
+    return $value;
+  }
+
+  /**
    * Transform constants into literal type typed members.
    *
    * @param ReflectionClass $class
@@ -108,13 +150,7 @@ class ClassConstantsTransformer implements Transformer
         if (!is_scalar($value)) {
           return $carry;
         }
-        if (is_string($value)) {
-          if (str_contains($value, "\n")) {
-            $value = "`" . $value . "`";
-          } else {
-            $value = "'" . $value . "'";
-          }
-        }
+        $value = self::convertValueToTypeScript($value);
         $name = $constant->getName();
         return "{$carry}    {$name}: $value," . PHP_EOL;
       },
@@ -126,7 +162,7 @@ class ClassConstantsTransformer implements Transformer
   protected function canTransform(ReflectionClass $class): bool
   {
     // This is for const-only classes.
-    return count($this->resolveProperties($class)) == 0;
+    return true && count($this->resolveProperties($class)) == 0;
   }
 
   /** {@inheritdoc} */

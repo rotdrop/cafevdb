@@ -318,7 +318,7 @@ EOF;
               $currentData = $currentModule = null;
             }
           } else {
-            $currentData .= trim($line) . PHP_EOL;
+            $currentData .= substr($line, 2) . PHP_EOL;
           }
           $line = strtok(self::LINE_SEPARATOR);
         }
