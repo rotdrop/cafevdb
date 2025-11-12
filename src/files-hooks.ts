@@ -50,7 +50,7 @@ import logoSvg from '../img/cafevdb.svg?raw';
 import type { FilesInitialState } from './types/initial-state.d.ts';
 import Console from './util/console.ts';
 import { MailMergeCloud } from './types/ajax/mail-merge.ts';
-import { UploadModeMove, ConflictResolutionRename } from './types/ajax/upload.ts';
+import { UPLOAD_MODE_MOVE as UploadModeMove, ConflictResolutionRename } from './types/ajax/upload.ts';
 import type {
   MailMergePayload,
   MailMergeResponse,

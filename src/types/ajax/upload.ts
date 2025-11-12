@@ -21,10 +21,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const UploadModeMove = 'move';
-export const UploadModeCopy = 'copy';
-export const UploadModeLink = 'link';
-export type UploadMode = typeof UploadModeCopy | typeof UploadModeMove | typeof UploadModeLink;
+import { UPLOAD_MODES } from '../../../build/ts-types/php-modules/Controller/UploadsController.ts';
+
+export * from '../../../build/ts-types/php-modules/Controller/UploadsController.ts';
+export type UploadMode = typeof UPLOAD_MODES[number];
 
 export const ConflictResolutionFail = 'fail';
 export const ConflictResolutionReplace = 'replace';

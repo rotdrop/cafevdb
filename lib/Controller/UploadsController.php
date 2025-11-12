@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\Controller;
 
 use Throwable;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
@@ -47,6 +49,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  * Simple upload end-point which moved uploaded file to a temporary
  * location in the app-storage area.
  */
+#[TSAttributes\TypeScript]
 class UploadsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -57,10 +60,22 @@ class UploadsController extends Controller
   public const MOVE_DEST_CLOUD = 'cloud';
   public const MOVE_DEST_DB = 'db';
 
+  public const MOVE_DESTINATIONS = [
+    self::MOVE_DEST_CLOUD,
+    self::MOVE_DEST_DB,
+  ];
+
   public const UPLOAD_MODE_TEST = 'test';
   public const UPLOAD_MODE_MOVE = 'move';
   public const UPLOAD_MODE_LINK = 'link';
   public const UPLOAD_MODE_COPY = 'copy';
+
+  public const UPLOAD_MODES = [
+    self::UPLOAD_MODE_COPY,
+    self::UPLOAD_MODE_LINK,
+    self::UPLOAD_MODE_MOVE,
+    self::UPLOAD_MODE_TEST,
+  ];
 
   /** {@inheritdoc} */
   public function __construct(
