@@ -238,11 +238,13 @@ TS_TYPE_FILES = $(addprefix $(TS_TYPES_DIR)/, $(shell $(TYPESCRIPT_CONVERTER) --
 TS_TYPE_FILES_DEPS = $(shell for i in $(addprefix $(ABSSRCDIR)/, $(shell $(TYPESCRIPT_CONVERTER) --sources)); do { [ -d $$i ] && find $$i -name "*.php"; } || echo $$i ; done)
 
 #@private
-$(TS_TYPE_FILES): $(TS_TYPE_FILES_DEPS)
+$(TS_TYPE_FILES): $(TS_TYPE_FILES_DEPS) $(TYPESCRIPT_CONVERTER) $(wildcard $(ABSSRCDIR)/dev-scripts/php-to-typescript/*.php) Makefile
 	$(TYPESCRIPT_CONVERTER) --output-prefix=$(TS_TYPES_DIR) --source-prefix=$(ABSSRCDIR) --as-modules --ns-prefix='OCA\$(APP_NAMESPACE)'
 
 #@private
 ts-type-files: $(TS_TYPE_FILES)
+# @echo $(TS_TYPE_FILES)
+# @echo $(TS_TYPE_FILES_DEPS)
 .PHONY: ts-type-files
 
 .PHONY: selectize
