@@ -29,7 +29,7 @@ import * as Ajax from './ajax.js';
 import * as Page from './page.js';
 import { templateRenderer } from './template-renderer.js';
 import pageBusyIcon from './busy-icon.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import * as Notification from './notification.js';
 import * as Email from './email.js';
 import {

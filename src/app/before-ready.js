@@ -22,7 +22,7 @@
 
 import { globalState, $, appName, appPrefix, appContainerSelector } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
-// import * as Dialogs from './dialogs.js';
+// import * as Dialogs from './dialogs.ts';
 import * as Page from './page.js';
 import * as ProjectExtra from './project-participant-fields.js';
 import * as SepaBulkTransactions from './sepa-bulk-transactions.js';
@@ -32,7 +32,7 @@ import * as Projects from './projects.js';
 import * as ProjectPayments from './project-payments.js';
 import * as Invoices from './invoices.js';
 import * as PHPMyEdit from './pme.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import { tweaks as pmeTweaks /* , unTweak as pmeUnTweak */ } from './pme-tweaks.js';
 import pmeExportMenu from './pme-export.js';
 import stopEnterSubmit from './stop-enter-submit.js';

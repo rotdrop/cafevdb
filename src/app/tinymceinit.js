@@ -82,7 +82,7 @@ const myConfig = {
   // convert_urls: false,
   relative_urls: true,
   base_url: getAppRootUrl(appName) + '/3rdparty/tinymce',
-  // document_base_url: OC.appswebroots[appName] + '/3rdparty/tinymce',
+  // document_base_url: getAppRootUrl(appName) + '/3rdparty/tinymce',
   suffix: '.min',
   promotion: false,
   branding: false,
@@ -199,7 +199,7 @@ const myConfig = {
     }
   },
 
-  // spellchecker_rpc_url: OC.filePath(appName, '3rdparty/js/tinymce/plugins/spellchecker', 'rpc.php'),
+  // spellchecker_rpc_url: generateFilePath(appName, '3rdparty/js/tinymce/plugins/spellchecker', 'rpc.php'),
   plugins: [
     'advlist',
     'anchor',

@@ -25,7 +25,7 @@ import { globalState, $, appName } from './globals.js';
 import generateAppUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
 import '../legacy/nextcloud/jquery/avatar.js';

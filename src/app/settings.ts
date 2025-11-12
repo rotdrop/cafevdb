@@ -25,7 +25,7 @@ import $ from './jquery.js';
 import { appName, appPrefix } from '../config.ts';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import * as FileUpload from './file-upload.js';
 import * as SelectUtils from './select-utils.js';
 import generateAppUrl from './generate-url.js';
@@ -1383,9 +1383,9 @@ const afterLoad = function(container?: JQuery) {
       const $this = $(this);
       const $container = $this.closest('.template-upload');
 
-      Dialogs.filePicker(
-        $this.data('placeholder'),
-        function(path: string) {
+      Dialogs.filePicker({
+        title: $this.data('placeholder'),
+        callback(path: string|string[]) {
 
           $this.addClass('busy');
 
@@ -1412,10 +1412,7 @@ const afterLoad = function(container?: JQuery) {
               moveIntoPlace(files[0], $container, $this);
             });
         },
-        false, // multi-select
-        '', // sub-directory
-        [], // options
-      );
+      });
     });
   }
 

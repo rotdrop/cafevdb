@@ -25,7 +25,7 @@ import { appName, $, appPrefix } from './globals.js';
 import { toolTipsInit, globalState } from './cafevdb.js';
 import { handleError as ajaxHandleError, validateResponse as ajaxValidateResponse } from './ajax.js';
 import pageBusyIcon from './busy-icon.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import { personalRecordDialog as participantRecordDialog } from './project-participants.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import fileUploadInit from './file-upload.js';
@@ -1211,39 +1211,6 @@ const emailFormCompositionHandlers = function($fieldset, form, dialogHolder, pan
       return false;
     });
 
-  // $fieldset.find('input.submit.message-blah-export').
-  //   off('click').
-  //   on('click', function(event) {
-
-  //   pageBusyIcon(true);
-
-  //   var action = OC.filePath(appName, 'ajax/email', 'exporter.php');
-  //   var formPost = form.serialize();
-  //   var post = {};
-  //   post[$(this).attr('name')] = "whatever";
-  //   post['DownloadCookie'] = generateId();
-  //   formPost += '&'+$.param(post);
-  //   $.fileDownload(action, {
-  //     httpMethod: 'POST',
-  //     data: formPost,
-  //     cookieName: 'email_preview_download',
-  //     cookieValue: post['DownloadCookie'],
-  //     cookiePath: oc_webroot,
-  //     successCallback: function() {
-  //       pageBusyIcon(false);
-  //     },
-  //     failCallback: function(responseHtml, url, error) {
-  //       Dialogs.alert(t(appName, 'Unable to export message(s):')+
-  //                        ' '+
-  //                        responseHtml,
-  //                        t(appName, 'Error'),
-  //                        function() { pageBusyIcon(false); },
-  //                        true, true);
-  //     }
-  //   });
-  //   return false;
-  // });
-
   /*************************************************************************
    *
    * Close the dialog
@@ -1947,13 +1914,16 @@ const emailFormCompositionHandlers = function($fieldset, form, dialogHolder, pan
           ajaxHandleError(xhr, status, errorThrown);
         })
         .done(function(data) {
-          Dialogs.filePicker(
-            t(appName, 'Select Attachment'),
-            function(paths) {
+          Dialogs.filePicker({
+            title: t(appName, 'Select Attachment'),
+            callback(paths) {
               cloudAttachment(paths, updateFileAttachments);
               return false;
             },
-            true, '', true, undefined, data.folder);
+            modal: true,
+            multiple: true,
+            startPath: data.folder,
+          });
         });
     });
 

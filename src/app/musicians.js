@@ -27,7 +27,7 @@ import generateAppUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Page from './page.js';
 import * as Ajax from './ajax.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import * as ProjectParticipants from './project-participants.js';
 import * as PHPMyEdit from './pme.js';
 import * as Notification from './notification.js';

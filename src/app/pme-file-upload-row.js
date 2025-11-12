@@ -23,8 +23,9 @@
 
 import $ from './jquery.js';
 import { appName } from '../config.ts';
+import { getRequestToken } from '@nextcloud/auth';
 import * as Ajax from './ajax.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import * as FileUpload from './file-upload.js';
 import * as Notification from './notification.js';
 import { formSelector as pmeFormSelector } from './pme-selectors.js';
@@ -33,7 +34,7 @@ import md5 from 'blueimp-md5';
 // or: const md5 = require('blueimp-md5');
 // but NOT: import { md5 } from 'blueimp-md5';
 import setAppBusyIndicators from './busy-indicators.js';
-import cloudFilePickerDialog from './cloud-file-picker-dialog.js';
+import cloudFilePickerDialog from './cloud-file-picker-dialog.ts';
 
 const defaultUploadUrls = {
   upload: 'projects/participants/files/upload',
@@ -67,7 +68,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
     projectId,
     musicianId,
     uploadData,
-    requestToken: OC.requestToken,
+    requestToken: getRequestToken(),
   });
   const $oldUploadForm = $('#' + widgetId);
   if ($oldUploadForm.length === 0) {

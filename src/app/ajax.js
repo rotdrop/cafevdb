@@ -24,7 +24,7 @@
 import $ from './jquery.js';
 import { appName } from '../config.ts';
 import globalState from './globalstate.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import { isPlainObject } from 'is-plain-object';
 import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
 import { getLanguage } from '@nextcloud/l10n';

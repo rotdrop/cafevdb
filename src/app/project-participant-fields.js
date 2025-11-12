@@ -27,7 +27,7 @@ import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme.js';
 import * as Notification from './notification.js';
 import * as SelectUtils from './select-utils.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import * as DialogUtils from './dialog-utils.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import generateAppUrl from './generate-url.js';

@@ -29,7 +29,7 @@ import * as Page from './page.js';
 import { templateRenderer } from './template-renderer.js';
 import * as Musicians from './musicians.js';
 import * as Notification from './notification.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import participantFieldsHandlers from './project-participant-fields-display.js';

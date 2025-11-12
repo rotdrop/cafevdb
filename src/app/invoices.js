@@ -27,7 +27,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
 import { templateRenderer } from './template-renderer.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import initFileUploadRow from './pme-file-upload-row.js';
 import ajaxDownload from './file-download.js';
 import { pageRenderer } from './pme-state.js';

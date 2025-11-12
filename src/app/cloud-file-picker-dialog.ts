@@ -24,83 +24,98 @@
 import $ from './jquery.js';
 import { appName } from '../config.ts';
 import * as Ajax from './ajax.js';
-import * as Dialogs from './dialogs.js';
+import {
+  YES_NO_BUTTONS,
+  alert as alertDialog,
+  confirm as confirmDialog,
+  filePicker as filePickerDialog,
+} from './dialogs.ts';
 import * as Notification from './notification.js';
 import generateAppUrl from './generate-url.js';
 import { parse as pathParse } from './path.js';
+import { translate as t } from '@nextcloud/l10n';
 import escapeHtml from 'escape-html';
-import { UploadModeMove, UploadModeCopy, UploadModeLink } from '../types/ajax/upload.ts';
+import { UPLOAD_MODES } from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
 
-const defaultOptions = {
+type UploadMode = typeof UPLOAD_MODES[number];
+
+export interface CloudFilePickerParameters {
+  setup?: () => void,
+  cleanup?: () => void,
+  handlePickedFiles?: (files: Record<string, unknown>[], paths: string[], cleanup: () => void) => void,
+  filePickerCaption?: string,
+  stashUrl?: string,
+  multiple?: boolean,
+  modal?: boolean,
+  initialCloudFolder?: string,
+  allowDirectories?: boolean,
+}
+
+const defaultOptions: Required<CloudFilePickerParameters> = {
   setup() {},
   cleanup() {},
-  handlePickedFiles(files, paths, cleanup) {
+  handlePickedFiles(_files, _paths, cleanup) {
     cleanup();
   },
   filePickerCaption: t(appName, 'Select a file from the cloud'),
   stashUrl: 'upload/stash',
   multiple: false,
-  mimeTypeFilter: undefined,
-  modal: undefined,
+  modal: false,
   initialCloudFolder: '',
+  allowDirectories: false,
 };
 
-const cloudFilePickerDialog = function(options) {
+const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
 
-  options = {
+  const parameters: typeof defaultOptions = {
     ...defaultOptions,
     ...options,
   };
 
-  Dialogs.filePicker(
-    options.filePickerCaption,
-    function(paths) {
-      options.setup();
+  filePickerDialog({
+    title: parameters.filePickerCaption,
+    callback(paths) {
+      parameters.setup();
       if (!paths) {
-        Dialogs.alert(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
-        options.cleanup();
+        alertDialog(t(appName, 'Empty response from file selection!'), t(appName, 'Error'));
+        parameters.cleanup();
         return;
       }
       if (!Array.isArray(paths)) {
         paths = [paths];
       }
-      $.post(generateAppUrl(options.stashUrl), {
+      $.post(generateAppUrl(parameters.stashUrl), {
         cloudPaths: paths,
         uploadMode: 'test',
       })
         .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown, options.cleanup);
+          Ajax.handleError(xhr, status, errorThrown, parameters.cleanup);
         })
         .done(function(data) {
 
-          const performUpload = function(uploadMode) {
-            $.post(generateAppUrl(options.stashUrl), {
+          const performUpload = function(uploadMode: UploadMode) {
+            $.post(generateAppUrl(parameters.stashUrl), {
               cloudPaths: paths,
               uploadMode,
             })
               .fail(function(xhr, status, errorThrown) {
-                Ajax.handleError(xhr, status, errorThrown, options.cleanup);
+                Ajax.handleError(xhr, status, errorThrown, parameters.cleanup);
               })
               .done(function(files) {
-                if (!Array.isArray(files) || (!options.multiple && files.length !== 1)) {
-                  Dialogs.alert(
+                if (!Array.isArray(files) || (!parameters.multiple && files.length !== 1)) {
+                  alertDialog(
                     t(appName, 'Unable to copy selected file(s) {file}.', { file: paths.join(', ') }),
                     t(appName, 'Error'),
-                    options.cleanup,
+                    parameters.cleanup,
                   );
                   return;
                 }
-                options.handlePickedFiles(files, paths, options.cleanup);
+                parameters.handlePickedFiles(files, paths, parameters.cleanup);
               });
           };
 
           const uploadFiles = [];
-          const allUploadModes = [
-            UploadModeCopy,
-            UploadModeMove,
-            UploadModeLink,
-          ];
-          let uploadModes = allUploadModes;
+          let uploadModes: string[] = UPLOAD_MODES;
           for (const uploadInfo of data) {
             uploadModes = uploadModes.filter(value => uploadInfo.upload_mode.includes(value));
             uploadFiles.push(pathParse(uploadInfo.original_name));
@@ -123,7 +138,7 @@ const cloudFilePickerDialog = function(options) {
             widgetCssClass: 'cloud-file-system-operations',
             widgetRadioName: 'cloudFileSystemOperations',
           };
-          for (const mode of allUploadModes) {
+          for (const mode of UPLOAD_MODES) {
             templateParameters[mode + 'Selected'] = '';
             templateParameters[mode + 'CssClass'] = mode + '-control';
             if (uploadModes.includes(mode)) {
@@ -144,7 +159,7 @@ const cloudFilePickerDialog = function(options) {
           let uploadMode = 'copy';
           $('body')
             .off('change', 'input.cloud-file-system-operations-input')
-            .on('change', 'input.cloud-file-system-operations-input', function(event) {
+            .on('change', 'input.cloud-file-system-operations-input', function(_event) {
               uploadMode = $(this).val();
               console.info('UPLOAD MODE', uploadMode);
             });
@@ -153,7 +168,7 @@ const cloudFilePickerDialog = function(options) {
               console.info('DIALOG OPENED', event);
             });
 
-          Dialogs.confirm(
+          confirmDialog(
             $fileSystemOps.html(),
             t(appName, 'Select File System Operation'), {
               callback(answer) {
@@ -161,12 +176,12 @@ const cloudFilePickerDialog = function(options) {
                 if (answer) {
                   performUpload(uploadMode);
                 } else {
-                  options.cleanup();
+                  parameters.cleanup();
                   Notification.messages(t(appName, 'Operation has been cancelled.'));
                 }
               },
               buttons: {
-                type: OC.dialogs.YES_NO_BUTTONS,
+                type: YES_NO_BUTTONS,
                 confirm: t(appName, 'Apply'),
                 cancel: t(appName, 'Cancel'),
               },
@@ -181,12 +196,11 @@ const cloudFilePickerDialog = function(options) {
 
         });
     },
-    options.multiple, // multiselect
-    options.mimeTypeFilter, // mimetypeFilter
-    options.modal, // modal
-    undefined, // type
-    options.initialCloudFolder,
-  );
+    multiple: parameters.multiple, // multiselect
+    modal: parameters.modal, // modal
+    startPath: parameters.initialCloudFolder,
+    allowDirectories: parameters.allowDirectories,
+  });
 
 };
 

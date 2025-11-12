@@ -64,7 +64,7 @@ let nonce = globalState.nonce;
 onRequestTokenUpdate(function(token) {
   globalState.nonce = token;
   nonce = globalState.nonce;
-  console.debug('NEW REQUEST TOKEN', token, OC.requestToken);
+  console.debug('NEW REQUEST TOKEN', token);
 });
 
 const appContainerSelector = [

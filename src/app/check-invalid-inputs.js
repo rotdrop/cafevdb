@@ -24,7 +24,7 @@
 import $ from './jquery.js';
 import { appName } from '../config.ts';
 import * as CAFEVDB from './cafevdb.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import { widget as selectWidget } from './select-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
 

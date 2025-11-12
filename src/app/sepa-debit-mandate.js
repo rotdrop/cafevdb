@@ -23,8 +23,9 @@
 
 import { globalState, appName, $, appPrefix } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
+import { getRequestToken } from '@nextcloud/auth';
 import * as Ajax from './ajax.js';
-import * as Dialogs from './dialogs.js';
+import * as Dialogs from './dialogs.ts';
 import * as DialogUtils from './dialog-utils.js';
 import pageBusyIcon from './busy-icon.js';
 // import * as Email from './email.js';
@@ -48,8 +49,8 @@ import {
   receivablesStatisticsKeys,
 } from './project-participant-fields.js';
 import initFileUploadRow from './pme-file-upload-row.js';
-import cloudFilePickerDialog from './cloud-file-picker-dialog.js';
-import { UploadModeLink } from '../types/ajax/upload.ts';
+import cloudFilePickerDialog from './cloud-file-picker-dialog.ts';
+import { UPLOAD_MODE_LINK as UploadModeLink } from '../types/ajax/upload.ts';
 import './lock-input.js';
 import {
   data as pmeData,
@@ -260,7 +261,7 @@ const mandatesInit = function(data, onChangeCallback) {
     formClass: 'file-upload-form',
     accept: '*',
     uploadName: 'files',
-    requestToken: OC.requestToken,
+    requestToken: getRequestToken(),
   });
   if ($('#' + uploadWrapperId).length === 0) {
     $('body').append($uploadUi);
@@ -476,7 +477,7 @@ const mandatesInit = function(data, onChangeCallback) {
     //     notice = expiredDiv.attr('data-original-title');
     //   }
     //   if (notice) {
-    //     OC.dialogs.alert(
+    //     Dialogs.alert(
     //       '<div class="sepa-mandate-expire-notice">'
     //         + notice
     //         + '</div>',
@@ -595,10 +596,14 @@ const mandatesInit = function(data, onChangeCallback) {
           const $form = $dlg.find(mandateFormSelector);
 
           disableButtons();
+          $form.addClass('busy');
 
           mandateStore({
             form: $form,
-            always: enableButtons,
+            always: () => {
+              enableButtons();
+              $form.removeClass('busy');
+            },
             done(data) {
               $dlg.dialog('close');
               onChangeCallback();
@@ -615,11 +620,15 @@ const mandatesInit = function(data, onChangeCallback) {
           const $dlg = $(this);
           const $form = $dlg.find(mandateFormSelector);
 
+          $form.addClass('busy');
           disableButtons();
 
           mandateStore({
             form: $form,
-            always: enableButtons,
+            always: () => {
+              enableButtons();
+              $form.removeClass('busy');
+            },
             done(data) {
               // the simplest thing is just to reload the form instead
               // of updating all form elements from JS.
