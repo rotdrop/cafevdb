@@ -21,11 +21,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './../pme-state.js';
+import globalState from './../globalstate.js';
 import $ from './../jquery.ts';
 import { setPersonalUrl } from './../settings-urls.js';
 import * as Ajax from './../ajax.js';
-import * as Notification from './../notification.js';
+import * as Notification from './../notification.ts';
 import { selected as selectedValues } from './../select-utils.js';
 import { subscribe } from '../../services/async-event-bus.ts';
 import { SET_PAGE_ROWS } from '../../event-bus-events.ts';
@@ -33,51 +33,35 @@ import { SET_PAGE_ROWS } from '../../event-bus-events.ts';
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
 subscribe(SET_PAGE_ROWS, (event) => {
-  setter(event?.value, event?.showMessage, event?.$control, event?.callbacks);
+  setter(event?.value, event?.showMessage, event?.$control);
 });
 
 /**
- * @param {object} value Value to store and propagate to all selects.
+ * @param value Value to store and propagate to all selects.
  *
- * @param {Function} showMessage Custom function for displaying
+ * @param showMessage Custom function for displaying
  * feedback from the controller, defaults to a standard toast popup.
  *
- * @param {jQuery} $control Originating select, may be undefined.
- *
- * @param {object} callbacks Object with done(), fail(), always() properties.
- *
- * @returns {Promise}
+ * @param $control Originating select, may be undefined.
  */
-const setter = (value, showMessage, $control, callbacks) => {
-  showMessage = showMessage || ((messages) => Notification.messages(messages));
-  $('.personal-settings select.pagerows').each(function(index) {
+const setter = (value: number, showMessage?: typeof Notification.messages, $control?: JQuery) => {
+  showMessage = showMessage || Notification.messages;
+  $('.personal-settings select.pagerows').each(function() {
     if (this !== $control?.[0]) {
-      selectedValues($(this), value);
+      selectedValues($(this), '' + value);
     }
   });
   globalState.PHPMyEdit.pageRowsDefault = value;
   return new Promise((resolve, reject) =>
     $.post(setPersonalUrl('pagerows'), { value })
-      .done(async function(data, ...rest) {
+      .done(async function(data) {
         showMessage(data.message);
         console.log(data);
-        if (typeof callbacks?.done === 'function') {
-          await callbacks.done(data, ...rest);
-        }
-        if (typeof callbacks?.always === 'function') {
-          await callbacks.always(data, ...rest);
-        }
         resolve(data);
       })
-      .fail(async function(xhr, status, errorThrown, ...rest) {
+      .fail(async function(xhr, status, errorThrown) {
         showMessage(Ajax.failMessage(xhr, status, errorThrown));
         // console.error(data);
-        if (typeof callbacks?.fail === 'function') {
-          await callbacks.fail(xhr, status, errorThrown, ...rest);
-        }
-        if (typeof callbacks?.always === 'function') {
-          await callbacks.always(xhr, status, errorThrown, ...rest);
-        }
         reject(errorThrown);
       }),
   );

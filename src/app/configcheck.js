@@ -27,7 +27,7 @@ import * as Page from './page.js';
 import * as ProgressStatus from './progress-status.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.ts';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import { addReadyCallback } from './cafevdb.js';
 import generateAppUrl from './generate-url.js';
 import setBusyIndicators from './busy-indicators.js';

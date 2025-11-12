@@ -23,7 +23,7 @@
 
 import { globalState, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
 import { templateRenderer } from './template-renderer.js';

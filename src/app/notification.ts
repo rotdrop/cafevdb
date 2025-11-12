@@ -27,28 +27,30 @@ import {
   TOAST_PERMANENT_TIMEOUT,
   TOAST_DEFAULT_TIMEOUT,
   TOAST_UNDO_TIMEOUT,
+  type ToastOptions,
 } from '@nextcloud/dialogs';
 
-const Notification = globalState.Notification;
-if (Notification === undefined) {
+type Toastify = ReturnType<typeof showMessage>;
+
+if (globalState.Notification === undefined) {
   globalState.Notification = {
-    toasts: [],
+    toasts: [] as Toastify[],
   };
 }
 
 const toasts = globalState.Notification.toasts;
 
-const hide = function(callback) {
+const hide = function(callback: () => void) {
   for (const toast of toasts) {
     toast.hideToast();
   }
   toasts.length = 0;
   if (callback) {
-    callback.call();
+    callback();
   }
 };
 
-const escapeHTML = function(text) {
+const escapeHTML = function(text: object) {
   return text.toString()
     .split('&').join('&amp;')
     .split('<').join('&lt;')
@@ -57,13 +59,13 @@ const escapeHTML = function(text) {
     .split('\'').join('&#039;');
 };
 
-const tweakTimeout = function(options) {
+const tweakTimeout = function(options: ToastOptions) {
   if (options !== undefined && options.timeout !== undefined && options.timeout < 1000) {
     options.timeout *= 1000;
   }
 };
 
-const show = function(text, options = {}) {
+const show = function(text: object, options: ToastOptions = {}) {
   console.info(text);
   tweakTimeout(options);
   options.timeout = options.timeout || TOAST_PERMANENT_TIMEOUT;
@@ -73,7 +75,7 @@ const show = function(text, options = {}) {
   return toast;
 };
 
-const showHtml = function(text, options = {}) {
+const showHtml = function(text: string, options: ToastOptions = {}) {
   console.info(text);
   options.isHTML = true;
   tweakTimeout(options);
@@ -83,26 +85,24 @@ const showHtml = function(text, options = {}) {
   return toast;
 };
 
-const showTemporary = function(text, options = {}) {
+const showTemporary = function(text: object|string, options: ToastOptions = {}) {
   console.info(text);
   tweakTimeout(options);
   options.timeout = options.timeout || TOAST_DEFAULT_TIMEOUT;
-  const toast = showMessage(text, options);
-  toasts.push(toast);
-  return toast;
+  return options.isHTML
+    ? showMessage(text as string, options)
+    : show(text as object, options);
 };
 
 /**
  * Display the given messages as "toasts".
  *
- * @param {Array|string|undefined} messages TBD.
+ * @param messages TBD.
  *
- * @param {object} options In particular the "timeout" property is
+ * @param options In particular the "timeout" property is
  * interesting.
- *
- * @returns {Array} The message array for chaining.
  */
-function messages(messages, options = {}) {
+function messages(messages: undefined|string|string[], options: ToastOptions = {}) {
   const defaultOptions = {
     timeout: TOAST_UNDO_TIMEOUT,
   };

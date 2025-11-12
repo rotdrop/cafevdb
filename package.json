@@ -62,6 +62,7 @@
     "@rotdrop/nextcloud-app-dokuwiki": "github:rotdrop/nextcloud-app-dokuwiki",
     "@rotdrop/nextcloud-vue-components": "file:3rdparty/rotdrop/nextcloud-vue-components",
     "@tinymce/tinymce-jquery": "^2.1.0",
+    "@types/bootstrap": "^5.2.10",
     "@types/capitalize": "^2.0.2",
     "@types/content-disposition": "^0.5.8",
     "@types/jqueryui": "^1.12.24",

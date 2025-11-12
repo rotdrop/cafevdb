@@ -24,7 +24,7 @@
 import $ from './jquery.js';
 import { appName, appPrefix } from '../config.ts';
 import * as Ajax from './ajax.js';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import * as Dialogs from './dialogs.ts';
 import * as FileUpload from './file-upload.js';
 import * as SelectUtils from './select-utils.js';

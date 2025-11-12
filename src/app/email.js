@@ -31,7 +31,7 @@ import * as WysiwygEditor from './wysiwyg-editor.js';
 import fileUploadInit from './file-upload.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
-import { show as notificationShow } from './notification.js';
+import { show as notificationShow } from './notification.ts';
 import * as SelectUtils from './select-utils.js';
 import * as Ajax from './ajax.js';
 import { urlDecode } from './url-decode.js';

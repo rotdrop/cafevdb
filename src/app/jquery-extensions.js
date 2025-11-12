@@ -30,7 +30,7 @@
 import { appNameTag, appPrefix } from './config.js';
 import $ from './jquery.ts';
 import * as CAFEVDB from './cafevdb.js';
-import './jquery-cafevdb-tooltips.js';
+import './jquery-cafevdb-tooltips.ts';
 
 require('jquery-ui/ui/widgets/dialog');
 require('jquery-ui/ui/widgets/resizable');

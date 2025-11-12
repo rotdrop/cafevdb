@@ -25,7 +25,7 @@ import { globalState, appName, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme.js';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import * as SelectUtils from './select-utils.js';
 import * as Dialogs from './dialogs.ts';
 import * as DialogUtils from './dialog-utils.js';

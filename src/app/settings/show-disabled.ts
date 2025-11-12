@@ -21,45 +21,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './../pme-state.js';
+import globalState from './../globalstate.js';
 import $ from './../jquery.ts';
 import { setPersonalUrl } from './../settings-urls.js';
 import * as Ajax from './../ajax.js';
 import * as PHPMyEdit from './../pme-selectors.js';
-import * as Notification from './../notification.js';
+import * as Notification from './../notification.ts';
 import { subscribe } from '../../services/async-event-bus.ts';
 import { SET_SHOW_DISABLED } from '../../event-bus-events.ts';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
 subscribe(SET_SHOW_DISABLED, (event) => {
-  setter(event?.value, event?.showMessage, event?.$control, event?.callbacks);
+  setter(event?.value, event?.showMessage, event?.$control);
 });
 
 /**
- * @param {boolean} value Value to set.
+ * @param value Value to set.
  *
- * @param {Function} showMessage Custom function for displaying
+ * @param showMessage Custom function for displaying
  * feedback from the controller, defaults to a standard toast popup.
  *
- * @param {jQuery} $control Originating select, may be undefined.
- *
- * @param {object} callbacks Object with done(), fail(), always() properties.
- *
- * @returns {Promise}
+ * @param _$control Originating select, may be undefined.
  */
-const setter = (value, showMessage, $control, callbacks) => {
-  showMessage = showMessage || ((messages) => Notification.messages(messages));
+const setter = (value: boolean, showMessage?: typeof Notification.messages, _$control?: JQuery) => {
+  showMessage = showMessage || Notification.messages;
   globalState.PHPMyEdit.showDisabled = value;
   $('.personal-settings input[type="checkbox"].showdisabled').prop('checked', value);
   return new Promise((resolve, reject) =>
     $.post(setPersonalUrl('showdisabled'), { value })
-      .done(async function(data, ...rest) {
+      .done(async function(data) {
         showMessage(data.message);
         const $content = $('#content, #content-vue');
         const $pmeForm = $content.find(PHPMyEdit.formSelector + '.show-hide-disabled');
         console.log('form', $pmeForm);
-        $pmeForm.each(function(index) {
+        $pmeForm.each(function() {
           const $form = $(this);
           const $reload = $form.find(PHPMyEdit.classSelector('input', 'reload')).first();
           if ($reload.length > 0) {
@@ -74,22 +70,10 @@ const setter = (value, showMessage, $control, callbacks) => {
             $form.removeClass('show-disabled').addClass('hide-disabled');
           }
         });
-        if (typeof callbacks?.done === 'function') {
-          await callbacks.done(data, ...rest);
-        }
-        if (typeof callbacks?.always === 'function') {
-          await callbacks.always(data, ...rest);
-        }
         resolve(data);
       })
-      .fail(async function(xhr, status, errorThrown, ...rest) {
+      .fail(async function(xhr, status, errorThrown) {
         showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        if (typeof callbacks?.fail === 'function') {
-          await callbacks.fail(xhr, status, errorThrown, ...rest);
-        }
-        if (typeof callbacks?.always === 'function') {
-          await callbacks.always(xhr, status, errorThrown, ...rest);
-        }
         reject(errorThrown);
       }),
   );

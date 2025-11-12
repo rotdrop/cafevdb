@@ -30,7 +30,7 @@ import * as Page from './page.js';
 import { templateRenderer } from './template-renderer.js';
 import pageBusyIcon from './busy-icon.js';
 import * as Dialogs from './dialogs.ts';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import * as Email from './email.js';
 import {
   data as pmeData,

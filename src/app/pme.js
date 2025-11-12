@@ -33,7 +33,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import { templateFromRenderer } from './template-renderer.js';
 import pageBusyIcon from './busy-icon.js';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
 import generateAppUrl from './generate-url.js';

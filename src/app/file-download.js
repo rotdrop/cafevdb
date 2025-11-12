@@ -25,7 +25,7 @@ import $ from './jquery.ts';
 import { appName } from '../config.ts';
 import generateAppUrl from './generate-url.js';
 import * as Ajax from './ajax.js';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import * as ncRouter from '@nextcloud/router';
 import { parse as parseContentDisposition } from 'content-disposition';
 import setBusyIndicators from './busy-indicators.js';

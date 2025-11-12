@@ -169,7 +169,7 @@ import {
   TOGGLE_TOOLTIPS,
   WIKI_POPUP,
 } from '../event-bus-events.ts'
-import * as LegacyNotification from '../app/notification.js'
+import * as LegacyNotification from '../app/notification.ts'
 import {
   FRONTEND_URL_PATH_KEY,
   HASH_KEY,

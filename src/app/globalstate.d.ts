@@ -48,6 +48,12 @@ export interface GlobalState {
   serverRoot: string,
 
   initialized?: boolean,
+
+  wysiwygEditor?: string,
+
+  creditsTimer?: NodeJS.Timeout,
+
+  Notification?: { toasts: Toastify[] },
 }
 
 declare global {

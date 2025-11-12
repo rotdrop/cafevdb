@@ -26,30 +26,26 @@ import $ from './../jquery.ts';
 import { toolTipsOnOff } from './../cafevdb.js';
 import { setPersonalUrl } from './../settings-urls.js';
 import * as Ajax from './../ajax.js';
-import * as Notification from './../notification.js';
+import * as Notification from './../notification.ts';
 import { subscribe } from '../../services/async-event-bus.ts';
 import { SET_TOOLTIPS_MODE } from '../../event-bus-events.ts';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
 subscribe(SET_TOOLTIPS_MODE, (event) => {
-  setter(event?.value, event?.showMessage, event?.$control, event?.callbacks);
+  setter(event?.value, event?.showMessage, event?.$control);
 });
 
 /**
- * @param {boolean} value Value to set.
+ * @param value Value to set.
  *
- * @param {Function} showMessage Custom function for displaying
+ * @param showMessage Custom function for displaying
  * feedback from the controller, defaults to a standard toast popup.
  *
- * @param {jQuery} $control Originating select, may be undefined.
- *
- * @param {object} callbacks Object with done(), fail(), always() properties.
- *
- * @returns {Promise}
+ * @param $control Originating select, may be undefined.
  */
-const setter = (value, showMessage, $control, callbacks) => {
-  showMessage = showMessage || ((messages) => Notification.messages(messages));
+const setter = (value: boolean, showMessage?: typeof Notification.messages, $control?: JQuery) => {
+  showMessage = showMessage || Notification.messages;
   toolTipsOnOff(value);
   $('.personal-settings input[type="checkbox"].tooltips').prop('checked', globalState.toolTipsEnabled);
   if (globalState.toolTipsEnabled) {
@@ -59,26 +55,14 @@ const setter = (value, showMessage, $control, callbacks) => {
   }
   return new Promise((resolve, reject) =>
     $.post(setPersonalUrl('tooltips'), { value: globalState.toolTipsEnabled })
-      .done(async function(data, ...rest) {
+      .done(async function(data) {
         if (!$control?.is('#tooltipbutton-checkbox')) { // don't annoy with feedback
           showMessage(data.message);
         }
-        if (typeof callbacks?.done === 'function') {
-          await callbacks.done(data, ...rest);
-        }
-        if (typeof callbacks?.always === 'function') {
-          await callbacks.always(data, ...rest);
-        }
         resolve(data);
       })
-      .fail(async function(xhr, status, errorThrown, ...rest) {
+      .fail(async function(xhr, status, errorThrown) {
         showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        if (typeof callbacks?.fail === 'function') {
-          await callbacks.fail(xhr, status, errorThrown, ...rest);
-        }
-        if (typeof callbacks?.always === 'function') {
-          await callbacks.always(xhr, status, errorThrown, ...rest);
-        }
         reject(errorThrown);
       }),
   );

@@ -23,6 +23,7 @@
 
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import { jqXHR } from '@types/jquery/misc.d.ts';
+import { messages } from '../app/notification.ts';
 
 import {
   ADD_CONTACTS_TO_PROJECT,
@@ -77,7 +78,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
   type SetterArgs<T = any> = {
     value: T,
     callbacks: Callbacks,
-    showMessage?: (messages: string|string[]) => void,
+    showMessage?: typeof messages,
     $control?: jQuery,
   };
   type BoolSetterArgs = SetterArgs<boolean>
@@ -107,7 +108,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [SET_BUSY_FLAG]: { value: boolean },
     [WIKI_POPUP]: { wikiPage: string, popupTitle: string },
 
-    [SET_DEBUG_MODES]: SetterArgs<{ value: number }[]>,
+    [SET_DEBUG_MODES]: SetterArgs<JQuery.NameValuePair[]>,
     [SET_DESELECT_INVISIBLE]: BoolSetterArgs,
     [SET_DIRECT_CHANGE]: BoolSetterArgs,
     [SET_EXPERT_MODE]: BoolSetterArgs,

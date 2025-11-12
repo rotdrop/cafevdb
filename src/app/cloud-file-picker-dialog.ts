@@ -30,7 +30,7 @@ import {
   confirm as confirmDialog,
   filePicker as filePickerDialog,
 } from './dialogs.ts';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import generateAppUrl from './generate-url.js';
 import { parse as pathParse } from './path.js';
 import { translate as t } from '@nextcloud/l10n';

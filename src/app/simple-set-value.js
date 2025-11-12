@@ -23,7 +23,7 @@
 import $ from './jquery.ts';
 import { setAppUrl } from './settings-urls.js';
 import * as Ajax from './ajax.js';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 
 /* global JQuery */
 // eslint-disable-next-line no-unused-vars

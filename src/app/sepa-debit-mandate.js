@@ -30,7 +30,7 @@ import * as DialogUtils from './dialog-utils.js';
 import pageBusyIcon from './busy-icon.js';
 // import * as Email from './email.js';
 import { showError } from '@nextcloud/dialogs';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import checkInvalidInputs from './check-invalid-inputs.js';
 import * as PHPMyEdit from './pme.js';
 import participantFieldsHandlers from './project-participant-fields-display.js';

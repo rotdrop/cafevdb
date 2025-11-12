@@ -214,14 +214,14 @@ const deselectAll = function($select) {
  *
  * @param {JQuery} $select collection with a single select.
  *
- * @param {(string|string[])} [values] If given then set the given
+ * @param {(null|string|string[])} [values] If given then set the given
  * values into the select. If the select is not multiple and value is
  * an array then use values[0] as selected value.
  *
  * @param {boolean} [trigger] If trigger === true then trigger a
  * change-event on the select after installing the new values.
  *
- * @returns {(Array|string|null)} Always return an array for multiple
+ * @returns {(null|string|string[])} Always return an array for multiple
  * selects and a string or null for single selects. When setting new
  * values return the previously set values.
  */

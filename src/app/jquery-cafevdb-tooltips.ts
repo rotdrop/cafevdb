@@ -29,31 +29,33 @@
 
 import jQuery from './jquery.ts';
 import { appName } from '../config.ts';
-import 'bootstrap/js/dist/tooltip.js';
+import toolTipProvider from 'bootstrap/js/dist/tooltip.js';
+import { translate as t } from '@nextcloud/l10n';
+import { joinLiterals } from '../toolkit/util/string-literals.ts';
 
 require('tooltips.scss');
 
 const $ = jQuery;
 
-const vendorOriginalTitleKey = 'bsOriginalTitle';
-const vendorOriginalTitleAttribute = 'data-bs-original-title';
-const appTitleKey = appName + 'Title';
-const appTitleAttribute = 'data-' + appName + '-title';
+const vendorOriginalTitleKey = 'bsOriginalTitle' as const;
+const vendorOriginalTitleAttribute = 'data-bs-original-title' as const;
+const appTitleKey = joinLiterals('')(appName, 'Title');
+const appTitleAttribute = joinLiterals('')('data-', appName, '-title');
 
 const toolTipJobInitialTimeOut = 100; // ms
 const toolTipJobRunnerTimeOut = 0; // ms
 
 const allowList = {
-  ...$.fn.tooltip.Constructor.Default.allowList,
-  table: [],
-  thead: [],
-  tbody: [],
-  tr: [],
-  td: [],
-  th: [],
-  dl: [],
-  dt: [],
-  dd: [],
+  ...toolTipProvider.Default.allowList,
+  table: [] as string[],
+  thead: [] as string[],
+  tbody: [] as string[],
+  tr: [] as string[],
+  td: [] as string[],
+  th: [] as string[],
+  dl: [] as string[],
+  dt: [] as string[],
+  dd: [] as string[],
 };
 
 const defaultOptions = {
@@ -62,11 +64,16 @@ const defaultOptions = {
   sanitize: true, // @todo just tweak whitelist
   allowList,
   placement: 'auto',
-  cssclass: [],
+  cssclass: [] as string[],
   fallbackPlacement: 'flip',
   boundary: 'viewport',
   timestamp: false,
   // delay: { show: 500, hide: 100000 },
+};
+
+type DefaultOptions = typeof defaultOptions & {
+  title?: string|(() => string),
+  template?: string;
 };
 
 let backGroundCount = 0;
@@ -91,7 +98,7 @@ const unregisterBackgroundJob = function() {
   }
 };
 
-const markElement = function($element, timestamp) {
+const markElement = function($element: JQuery, timestamp: boolean) {
   if (timestamp !== false) {
     if ($element.data(appName + '-tooltip-timestamp') === timestamp) {
       return false;
@@ -101,7 +108,7 @@ const markElement = function($element, timestamp) {
   return true;
 };
 
-const lockElement = function($element) {
+const lockElement = function($element: JQuery) {
   if ($element.data(appName + '-tooltip-lock') === true) {
     return false;
   }
@@ -112,45 +119,49 @@ const lockElement = function($element) {
   return true;
 };
 
-const unlockElement = function($element) {
+const unlockElement = function($element: JQuery) {
   unregisterBackgroundJob();
   $element.data(appName + '-tooltip-lock', false);
 };
 
-const toolTipsWorkQueue = [];
+const toolTipsWorkQueue: {
+  element: JQuery,
+  options: DefaultOptions,
+}[] = [];
 
 // const spaceRe = /\s+/;
 
-function singleToolTipWorker($this, optionsForAll, jobChunkSize) {
+function singleToolTipWorker($this: JQuery, optionsForAll: DefaultOptions, jobChunkSize?: number) {
   // const $this = this;
   const selfOptions = $.extend(true, {}, optionsForAll);
   const attrClass = $this.attr('class') || '';
   for (const cssClass of attrClass.split(/\s+/)) {
     switch (cssClass) {
-    case 'tooltip-off':
-      $this.cafevTooltip('disable');
-      unlockElement($this);
-      return;
-    case 'tooltip-bottom':
-      selfOptions.placement = 'bottom';
-      break;
-    case 'tooltip-top':
-      selfOptions.placement = 'top';
-      break;
-    case 'tooltip-right':
-      selfOptions.placement = 'right';
-      break;
-    case 'tooltip-left':
-      selfOptions.placement = 'left';
-      break;
-    default:
-      if (cssClass.startsWith('tooltip-')) {
-        selfOptions.cssclass.push(cssClass);
-      }
-      break;
+      case 'tooltip-off':
+        $this.cafevTooltip('disable');
+        unlockElement($this);
+        return;
+      case 'tooltip-bottom':
+        selfOptions.placement = 'bottom';
+        break;
+      case 'tooltip-top':
+        selfOptions.placement = 'top';
+        break;
+      case 'tooltip-right':
+        selfOptions.placement = 'right';
+        break;
+      case 'tooltip-left':
+        selfOptions.placement = 'left';
+        break;
+      default:
+        if (cssClass.startsWith('tooltip-')) {
+          selfOptions.cssclass.push(cssClass);
+        }
+        break;
     }
   }
-  $.fn.tooltip.call($this, 'dispose');
+  $this.tooltip('dispose');
+  // $.fn.tooltip.call($this, 'dispose');
   const appTitle = $this.data(appTitleKey);
   if (appTitle && !$this.attr('title')) {
     $this.attr('title', appTitle);
@@ -165,8 +176,8 @@ function singleToolTipWorker($this, optionsForAll, jobChunkSize) {
   $this.removeAttr(vendorOriginalTitleAttribute);
   $this.removeData(vendorOriginalTitleKey);
   if (!selfOptions.title) {
-    $this.data(appTitleKey, $this.attr('title'));
-    $this.attr(appTitleAttribute, $this.attr('title'));
+    $this.data(appTitleKey, $this.attr('title') ?? null);
+    $this.attr(appTitleAttribute, $this.attr('title') ?? null);
     $this.removeAttr('title');
     selfOptions.title = function() {
       const $this = $(this);
@@ -191,7 +202,7 @@ function singleToolTipWorker($this, optionsForAll, jobChunkSize) {
   <div class="tooltip-inner"></div>
 </div>`;
   }
-  $.fn.tooltip.call($this, selfOptions);
+  $this.tooltip(selfOptions);
   unlockElement($this);
   jobChunkSize = jobChunkSize || 0;
   for (let i = 0; i < jobChunkSize - 1; i++) {
@@ -207,23 +218,13 @@ function singleToolTipWorker($this, optionsForAll, jobChunkSize) {
   }
 }
 
-/**
- * Extend the tooltips to honour some special class elements, and
- * attach user specified tooltip-... classes to the actual tooltip
- * popups.
- *
- * @param {object} argument TBD.
- *
- * @returns {object}
- *
- */
-$.fn.cafevTooltip = function(argument) {
-  const $this = this;
-  if (typeof argument === 'undefined') {
-    argument = {};
+$.fn.cafevTooltip = function(first?: null|string|DefaultOptions|Record<string, unknown>, second?: string, third?: string) {
+  const $this = $(this);
+  if (typeof first === 'undefined') {
+    first = {};
   }
-  if (typeof argument === 'object' && argument != null) {
-    const optionsForAll = $.extend(true, {}, defaultOptions, argument);
+  if (typeof first === 'object' && !!first) {
+    const optionsForAll = $.extend(true, {}, defaultOptions, first);
     if (typeof optionsForAll.placement === 'string') {
       const words = optionsForAll.placement.split(' ');
       if (words.length > 1) {
@@ -244,7 +245,7 @@ $.fn.cafevTooltip = function(argument) {
     // fake background jobs and keep the UI somewhat responsive.
     //
     // @todo This has to be reworked, tooltips just take too much time.
-    $this.each(function(index) {
+    $this.each(function() {
       const $element = $(this);
       if (!markElement($element, optionsForAll.timestamp)) {
         return;
@@ -262,15 +263,17 @@ $.fn.cafevTooltip = function(argument) {
       }
     });
   } else {
-    if (argument === 'destroy') {
-      arguments[0] = 'dispose';
+    if (first === 'destroy') {
+      first = 'dispose';
     }
     try {
-      $.fn.tooltip.apply(this, arguments);
+      // @ ts-expect-error 2322
+      // $.fn.tooltip.apply(this, [first, second, third]);
+      $this.tooltip(first ?? '', second, third);
     } catch (e) {
-      console.error('EXCEPTION DURING TOOLTIP HANDLING', { self: this, arguments });
+      console.error('EXCEPTION DURING TOOLTIP HANDLING', { self: this, first, second, third });
     }
-    if (argument === 'dispose') {
+    if (first === 'dispose') {
       const appTitle = $this.data(appTitleKey);
       if (appTitle && !$this.attr('title')) {
         $this.attr('title', appTitle);
@@ -299,7 +302,7 @@ $.fn.cafevTooltip.disable = function() {
 
 // remove left-over tooltips
 $.fn.cafevTooltip.remove = function() {
-  $('div.tooltip[role=tooltip]').each(function(index) {
+  $('div.tooltip[role=tooltip]').each(function() {
     const $tip = $(this);
     const id = $tip.attr('id');
     $('[aria-describedby=' + id + ']').removeAttr('aria-describedby');

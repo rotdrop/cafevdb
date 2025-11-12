@@ -27,19 +27,19 @@ import { appName, appNameTag } from '../config.ts';
 import { setPersonalUrl } from './settings-urls.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import { chosenActive, selected as selectedValues } from './select-utils.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.ts';
-import setFinanceMode from './settings/finance-mode.js';
-import setExpertMode from './settings/expert-mode.js';
-import setShowDisabled from './settings/show-disabled.js';
-import setDebugModes from './settings/debug-modes.js';
-import setTooltipsMode from './settings/tooltips.js';
-import setPageRows from './settings/pagerows.js';
-import setDeselectInvisible from './settings/deselect-invisible.js';
-import setDirectChange from './settings/direct-change.js';
-import setInitialFilterVisibility from './settings/initial-filter-visibility.js';
-import setRestoreHistory from './settings/restore-history.js';
+import setDebugModes from './settings/debug-modes.ts';
+import setDeselectInvisible from './settings/deselect-invisible.ts';
+import setDirectChange from './settings/direct-change.ts';
+import setExpertMode from './settings/expert-mode.ts';
+import setFinanceMode from './settings/finance-mode.ts';
+import setInitialFilterVisibility from './settings/initial-filter-visibility.ts';
+import setPageRows from './settings/pagerows.ts';
+import setRestoreHistory from './settings/restore-history.ts';
+import setShowDisabled from './settings/show-disabled.ts';
+import setTooltipsMode from './settings/tooltips.ts';
 
 require('nav-area-settings.scss');
 
@@ -48,13 +48,19 @@ const documentReady = function() {
   const container = $('.personal-settings');
   let msgElement = $('form.personal-settings .statusmessage');
 
-  const showMessage = function(message) {
-    msgElement.html(message).show();
-    Notification.messages(message);
+  const showMessage = function(message: undefined|string|string[]) {
+    if (message === undefined) {
+      return [];
+    }
+    if (!Array.isArray(message)) {
+      message = [message];
+    }
+    msgElement.html(message.join(' ')).show();
+    return Notification.messages(message);
   };
 
-  const chosenInit = function(container) {
-    container.find('select.pagerows').each(function(index) {
+  const chosenInit = function($container: JQuery) {
+    $container.find('select.pagerows').each(function() {
       const self = $(this);
       // console.log("chosen pagerows", self);
       if (chosenActive(self)) {
@@ -68,7 +74,7 @@ const documentReady = function() {
       });
     });
 
-    container.find('select.wysiwyg-editor').each(function(index) {
+    $container.find('select.wysiwyg-editor').each(function() {
       const self = $(this);
       if (chosenActive(self)) {
         console.debug('destroy chosen', self);
@@ -85,7 +91,7 @@ const documentReady = function() {
       });
     });
 
-    container.find('select.debugmode').each(function(index) {
+    $container.find('select.debugmode').each(function() {
       const self = $(this);
       // console.log("chosen debugmode", self);
       if (chosenActive(self)) {
@@ -99,7 +105,7 @@ const documentReady = function() {
       });
     });
 
-    container.find('.chosen-container').cafevTooltip();
+    $container.find('.chosen-container').cafevTooltip();
   };
 
   container.on(appName + ':content-update', function(event) {
@@ -125,79 +131,79 @@ const documentReady = function() {
   handleUserManualMenu(container);
 
   // tool-tips toggle
-  container.on('change', '.tooltips', function(event) {
+  container.on('change', '.tooltips', function(_event) {
     const $this = $(this);
     const checked = $this.prop('checked');
     setTooltipsMode(checked, showMessage, $this);
     return false;
   });
 
-  container.on('change', '.restorehistory', function(event) {
+  container.on('change', '.restorehistory', function() {
     const $this = $(this);
     const checked = $this.prop('checked');
     setRestoreHistory(checked, showMessage, $this);
     return false;
   });
 
-  container.on('change', '.filtervisibility', function(event) {
+  container.on('change', '.filtervisibility', function() {
     const $this = $(this);
     const checked = $this.prop('checked');
     setInitialFilterVisibility(checked, showMessage, $this);
     return false;
   });
 
-  container.on('change', '.directchange', function(event) {
+  container.on('change', '.directchange', function(_event) {
     const $this = $(this);
     const checked = $this.prop('checked');
     setDirectChange(checked, showMessage, $this);
     return false;
   });
 
-  container.on('change', '.deselect-invisible-misc-recs', function(event) {
+  container.on('change', '.deselect-invisible-misc-recs', function() {
     const $this = $(this);
     const checked = $this.prop('checked');
     setDeselectInvisible(checked, showMessage, $this);
     return false;
   });
 
-  container.on('change', '.showdisabled', function(event) {
+  container.on('change', '.showdisabled', function() {
     const $this = $(this);
     const checked = $this.prop('checked');
     setShowDisabled(checked, showMessage, $this);
     return false;
   });
 
-  container.on('change', '.expert-mode', function(event) {
+  container.on('change', '.expert-mode', function() {
     const $this = $(this);
     const checked = $this.prop('checked');
     setExpertMode(checked, showMessage, $this);
     return false;
   });
 
-  container.on('change', '.finance-mode', function(event) {
+  container.on('change', '.finance-mode', function() {
     const $this = $(this);
     const checked = $this.prop('checked');
     setFinanceMode(checked, showMessage, $this);
     return false;
   });
 
-  container.on('change', '.pagerows', function(event) {
+  container.on('change', '.pagerows', function() {
     const $this = $(this);
     const value = $this.val();
     setPageRows(value, showMessage, $this);
     return false;
   });
 
-  container.on('change', '.debugmode', function(event) {
+  container.on('change', '.debugmode', function() {
     const $this = $(this);
     const post = $this.serializeArray();
     setDebugModes(post, showMessage, $this);
     return false;
   });
 
-  container.on('change', '.wysiwyg-editor', function(event) {
+  container.on('change', '.wysiwyg-editor', function() {
     const $this = $(this);
-    const value = $this.val();
+    const value = $this.val() as string;
     $.post(setPersonalUrl('wysiwygEditor'), { value })
       .done(function(data) {
         showMessage(data.message);
@@ -208,7 +214,7 @@ const documentReady = function() {
         showMessage(Ajax.failMessage(xhr, status, errorThrown));
         // console.error(data);
       });
-    $('.personal-settings select.wysiwyg-editor').each(function(index) {
+    $('.personal-settings select.wysiwyg-editor').each(function() {
       if (this !== $this[0]) {
         selectedValues($(this), selectedValues($this));
       }
@@ -233,7 +239,7 @@ const documentReady = function() {
 
 const updateCredits = function() {
   const numItems = 5;
-  const items = [];
+  const items: number[] = [];
   const numTotal = $(`div.${appNameTag}.about div.product.credits.list ul li`).length;
   for (let i = 0; i < numItems; ++i) {
     items.push(Math.round(Math.random() * (numTotal - 1)));

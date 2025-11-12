@@ -32,7 +32,7 @@ import {
 import {
   backGroundPromise as toolTipsBackgroundPromise,
   rejectBackgroundPromise as rejectToolTipsBackgroundPromise,
-} from './jquery-cafevdb-tooltips.js';
+} from './jquery-cafevdb-tooltips.ts';
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import * as BusEvents from '../event-bus-events.ts';
 

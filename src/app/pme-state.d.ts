@@ -23,7 +23,7 @@
 
 import type { GlobalState } from './globalstate.d.ts';
 
-declare global {
+#declare global {
   const globalState: GlobalState;
 }
 
@@ -70,4 +70,6 @@ export interface PHPMyEditState {
   initialized?: boolean,
 
   emit: boolean,
+
+  restoreHistory?: boolean,
 };

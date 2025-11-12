@@ -27,7 +27,7 @@ import { getRequestToken } from '@nextcloud/auth';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.ts';
 import * as FileUpload from './file-upload.js';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import { formSelector as pmeFormSelector } from './pme-selectors.js';
 import generateAppUrl from './generate-url.js';
 import md5 from 'blueimp-md5';

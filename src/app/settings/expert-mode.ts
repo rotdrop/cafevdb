@@ -23,68 +23,52 @@
 
 import globalState from './../globalstate.js';
 import $ from './../jquery.ts';
-import './../jquery-cafevdb-tooltips.js';
+import './../jquery-cafevdb-tooltips.ts';
 import { appPrefix } from '../../config.ts';
 import { setPersonalUrl } from './../settings-urls.js';
 import * as Ajax from './../ajax.js';
 import * as PHPMyEdit from './../pme-selectors.js';
-import * as Notification from './../notification.js';
+import * as Notification from './../notification.ts';
 import { subscribe } from '../../services/async-event-bus.ts';
-import { SET_FINANCE_MODE } from '../../event-bus-events.ts';
+import { SET_EXPERT_MODE } from '../../event-bus-events.ts';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
-subscribe(SET_FINANCE_MODE, (event) => {
-  setter(event?.value, event?.showMessage, event?.$control, event?.callbacks);
+subscribe(SET_EXPERT_MODE, (event) => {
+  setter(event?.value, event?.showMessage, event?.$control);
 });
 
 /**
- * @param {boolean} value Value to set.
+ * @param value Value to set.
  *
- * @param {Function} showMessage Custom function for displaying
+ * @param showMessage Custom function for displaying
  * feedback from the controller, defaults to a standard toast popup.
  *
- * @param {jQuery} $control Originating select, may be undefined.
- *
- * @param {object} callbacks Object with done(), fail(), always() properties.
- *
- * @returns {Promise}
+ * @param _$control Originating select, may be undefined.
  */
-const setter = (value, showMessage, $control, callbacks) => {
-  showMessage = showMessage || ((messages) => Notification.messages(messages));
-  $('.finance-mode-container').toggleClass('hidden', !value);
-  $('body').toggleClass(appPrefix('finance-mode'), value);
-  $('.personal-settings input[type="checkbox"].finance-mode').prop('checked', value);
+const setter = (value: boolean, showMessage?: typeof Notification.messages, _$control?: JQuery) => {
+  showMessage = showMessage || Notification.messages;
+  $('.expert-mode-container').toggleClass('hidden', !value);
+  $('body').toggleClass(appPrefix('expert-mode'), value);
+  $('.personal-settings input[type="checkbox"].expert-mode').prop('checked', value);
   $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');
   $.fn.cafevTooltip.remove(); // remove any left-over items.
-  globalState.financeMode = value;
+  globalState.expertMode = value;
   return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('finance-mode'), { value })
-      .done(async function(data, ...rest) {
+    $.post(setPersonalUrl('expert-mode'), { value })
+      .done(async function(data) {
         showMessage(data.message);
         if (globalState.PHPMyEdit !== undefined) {
           const pmeForm = $('#content ' + PHPMyEdit.formSelector);
-          pmeForm.each(function(index) {
+          pmeForm.each(function() {
             const reload = $(this).find(PHPMyEdit.classSelector('input', 'reload')).first();
             reload.trigger('click');
           });
         }
-        if (typeof callbacks?.done === 'function') {
-          await callbacks.done(data, ...rest);
-        }
-        if (typeof callbacks?.always === 'function') {
-          await callbacks.always(data, ...rest);
-        }
         resolve(data);
       })
-      .fail(async function(xhr, status, errorThrown, ...rest) {
+      .fail(async function(xhr, status, errorThrown) {
         showMessage(Ajax.failMessage(xhr, status, errorThrown));
-        if (typeof callbacks?.fail === 'function') {
-          await callbacks.fail(xhr, status, errorThrown, ...rest);
-        }
-        if (typeof callbacks?.always === 'function') {
-          await callbacks.always(xhr, status, errorThrown, ...rest);
-        }
         reject(errorThrown);
       }),
   );

@@ -22,7 +22,7 @@
  */
 
 import { globalState, $ } from './globals.js';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import * as Ajax from './ajax.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as PHPMyEdit from './pme.js';

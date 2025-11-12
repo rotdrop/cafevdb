@@ -22,8 +22,8 @@
  */
 
 import $ from './jquery.ts';
-import './jquery-cafevdb-tooltips.js';
-import * as Notification from './notification.js';
+import './jquery-cafevdb-tooltips.ts';
+import * as Notification from './notification.ts';
 import modalizer from './modalizer.js';
 import * as qs from 'qs';
 import pageBusyIcon from './busy-icon.js';

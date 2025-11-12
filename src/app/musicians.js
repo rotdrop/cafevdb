@@ -30,7 +30,7 @@ import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.ts';
 import * as ProjectParticipants from './project-participants.js';
 import * as PHPMyEdit from './pme.js';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import { selected as selectedValues } from './select-utils.js';
 import {
   token as pmeToken,

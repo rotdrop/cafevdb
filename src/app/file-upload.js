@@ -24,7 +24,7 @@
 // @todo remove this file.
 
 import { globalState, appName, $ } from './globals.js';
-import * as Notification from './notification.js';
+import * as Notification from './notification.ts';
 import * as Ajax from './ajax.js';
 import { formatFileSize } from '@nextcloud/files';
 
