@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
 
 /**
@@ -69,6 +71,7 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  * database. The total encoded size is limited by the used database
  * backend and its associated data-type.
  */
+#[TSAttributes\TypeScript]
 class EnumParticipantFieldDataType extends EnumType
 {
   public const BOOLEAN = 'boolean';
