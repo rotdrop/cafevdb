@@ -5,6 +5,8 @@
     "./build/ts-types/**.ts",
     "./node_modules/@nextcloud/**.ts",
     "./node_modules/@types/**.ts",
+    "./node_modules/@files/**.ts",
+    "./node_modules/@dialogs/**.ts",
     "./node_modules/axios/**.ts",
     "./node_modules/moment/**.ts",
     "./node_modules/pinia/**.ts",
