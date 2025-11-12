@@ -26,7 +26,7 @@
  * PME table epxort.
  */
 
-import $ from './jquery.js';
+import $ from './jquery.ts';
 import { appName, appPrefix } from '../config.ts';
 import fileDownload from './file-download.js';
 import * as SelectUtils from './select-utils.js';

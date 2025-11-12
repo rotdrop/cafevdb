@@ -22,7 +22,7 @@
  */
 
 import { appName } from '../config.ts';
-import $ from './jquery.js';
+import $ from './jquery.ts';
 import { loadState } from '@nextcloud/initial-state';
 import generateAppUrl from './generate-url.js';
 import '@iframe-resizer/jquery';

@@ -27,7 +27,7 @@
  */
 
 import * as PHPMyEdit from './pme-state.js';
-import jQuery from './jquery.js';
+import jQuery from './jquery.ts';
 
 const $ = jQuery;
 

@@ -23,7 +23,7 @@
 
 import { onRequestTokenUpdate, getRequestToken } from '@nextcloud/auth';
 import { initialState, appName, cloudWebRoot, webRoot, cloudUser, appPrefix, appNameTag } from './config.js';
-import jQuery from './jquery.js';
+import jQuery from './jquery.ts';
 import globalState from './globalstate.js';
 
 require('jquery-ui');

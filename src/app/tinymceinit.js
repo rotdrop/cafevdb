@@ -26,7 +26,7 @@
 import { appName } from '../config.ts';
 import { getLanguage } from '@nextcloud/l10n';
 import { getAppRootUrl } from '@nextcloud/router';
-import $ from './jquery.js';
+import $ from './jquery.ts';
 import 'tinymce';
 import '@tinymce/tinymce-jquery';
 

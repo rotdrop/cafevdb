@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import jQuery from './jquery.js';
+import jQuery from './jquery.ts';
 require('select-utils.scss');
 
 const $ = jQuery;

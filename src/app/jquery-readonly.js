@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.js';
+import $ from './jquery.ts';
 import { refreshWidgetProperties, widget as selectWidget, isVanilla as isSelectVanilla } from './select-utils.js';
 import generateId from './generate-id.js';
 

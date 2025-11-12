@@ -20,7 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.js';
+import $ from './jquery.ts';
 import { setAppUrl } from './settings-urls.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';

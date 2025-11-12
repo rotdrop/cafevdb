@@ -27,7 +27,7 @@
  *
  */
 
-import jQuery from './jquery.js';
+import jQuery from './jquery.ts';
 import { appName } from '../config.ts';
 import 'bootstrap/js/dist/tooltip.js';
 

@@ -24,7 +24,7 @@
  * @file Some support functions for jQuery dialogs.
  */
 
-import $ from './jquery.js';
+import $ from './jquery.ts';
 import './jquery-extensions.js';
 import { appName, appPrefix } from '../config.ts';
 

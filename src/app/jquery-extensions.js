@@ -28,7 +28,7 @@
  */
 
 import { appNameTag, appPrefix } from './config.js';
-import $ from './jquery.js';
+import $ from './jquery.ts';
 import * as CAFEVDB from './cafevdb.js';
 import './jquery-cafevdb-tooltips.js';
 

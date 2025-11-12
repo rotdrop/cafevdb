@@ -22,7 +22,7 @@
  */
 
 import { appName } from '../config.ts';
-import $ from './jquery.js';
+import $ from './jquery.ts';
 
 const delay = 50; // ms
 const events = ['mouseup', 'mousemove'].map(eventName => eventName + '.' + appName + 'TextAreaResize').join(' ');

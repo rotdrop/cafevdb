@@ -22,7 +22,7 @@
  */
 
 import globalState from './../globalstate.js';
-import $ from './../jquery.js';
+import $ from './../jquery.ts';
 import './../jquery-cafevdb-tooltips.js';
 import { appPrefix } from '../../config.ts';
 import { setPersonalUrl } from './../settings-urls.js';

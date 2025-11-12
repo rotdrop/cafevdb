@@ -23,7 +23,7 @@
 
 import { appName } from '../config.ts';
 import globalState from './globalstate.js';
-import $ from './jquery.js';
+import $ from './jquery.ts';
 
 const delay = 50;
 

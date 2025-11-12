@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.js';
+import $ from './jquery.ts';
 import { appName } from '../config.ts';
 import * as CAFEVDB from './cafevdb.js';
 import * as Dialogs from './dialogs.ts';

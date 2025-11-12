@@ -26,7 +26,7 @@
  * Collect some jQuery tweaks in this file.
  *
  */
-import $ from './jquery.js';
+import $ from './jquery.ts';
 import { appName } from '../config.ts';
 import generateId from './generate-id.js';
 

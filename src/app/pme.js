@@ -26,7 +26,7 @@
  * General PME table stuff, popup-handling.
  */
 
-import jQuery from './jquery.js';
+import jQuery from './jquery.ts';
 import globalState from './globalstate.js';
 import * as PMEState from './pme-state.js';
 import * as CAFEVDB from './cafevdb.js';

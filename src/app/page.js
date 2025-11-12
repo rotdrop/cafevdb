@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.js';
+import $ from './jquery.ts';
 import './jquery-cafevdb-tooltips.js';
 import * as Notification from './notification.js';
 import modalizer from './modalizer.js';

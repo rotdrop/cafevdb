@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.js';
+import $ from './jquery.ts';
 import * as CAFEVDB from './cafevdb.js';
 import { templateRenderer } from './template-renderer.js';
 import * as PHPMyEdit from './pme.js';

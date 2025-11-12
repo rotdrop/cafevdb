@@ -31,7 +31,7 @@ import {
   queryInfoSelector as pmeQueryInfoSelector,
 } from './pme-selectors.js';
 import generateAppUrl from './generate-url.js';
-import jQuery from './jquery.js';
+import jQuery from './jquery.ts';
 import { isPlainObject } from 'is-plain-object';
 
 const $ = jQuery;

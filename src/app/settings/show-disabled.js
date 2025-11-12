@@ -22,7 +22,7 @@
  */
 
 import { globalState } from './../pme-state.js';
-import $ from './../jquery.js';
+import $ from './../jquery.ts';
 import { setPersonalUrl } from './../settings-urls.js';
 import * as Ajax from './../ajax.js';
 import * as PHPMyEdit from './../pme-selectors.js';
