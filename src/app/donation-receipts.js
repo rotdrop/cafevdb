@@ -27,7 +27,7 @@ import { templateRenderer } from './template-renderer.js';
 import * as PHPMyEdit from './pme.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import fileDownload from './file-download.js';
-import { filename } from './path.js';
+import { filename } from './path.ts';
 import {
   inputSelector as pmeInputSelector,
   formSelector as pmeFormSelector,

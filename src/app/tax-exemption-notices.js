@@ -28,7 +28,7 @@ import * as PHPMyEdit from './pme.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import fileDownload from './file-download.js';
 import { formSelector as pmeFormSelector } from './pme-selectors.js';
-import { filename } from './path.js';
+import { filename } from './path.ts';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');

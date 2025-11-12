@@ -32,7 +32,7 @@ import initFileUploadRow from './pme-file-upload-row.js';
 import ajaxDownload from './file-download.js';
 import { pageRenderer } from './pme-state.js';
 import setBusyIndicators from './busy-indicators.js';
-import { filename } from './path.js';
+import { filename } from './path.ts';
 import {
   valueSelector as pmeValueSelector,
   sys as pmeSys,

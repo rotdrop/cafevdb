@@ -32,7 +32,7 @@ import {
 } from './dialogs.ts';
 import * as Notification from './notification.ts';
 import generateAppUrl from './generate-url.js';
-import { parse as pathParse } from './path.js';
+import { parse as pathParse } from './path.ts';
 import { translate as t } from '@nextcloud/l10n';
 import escapeHtml from 'escape-html';
 import { UPLOAD_MODES } from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
