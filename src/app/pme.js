@@ -36,7 +36,7 @@ import pageBusyIcon from './busy-icon.js';
 import * as Notification from './notification.ts';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import modalizer from './modalizer.js';
 import checkInvalidInputs from './check-invalid-inputs.js';
 import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.js';

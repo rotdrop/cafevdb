@@ -30,7 +30,7 @@ import { templateRenderer } from './template-renderer.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
 import {

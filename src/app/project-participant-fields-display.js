@@ -34,7 +34,7 @@ import {
   balancingAccountsAutocompleteData,
 } from './project-participant-fields.js';
 import pageBusyIcon from './busy-icon.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import fileDownload from './file-download.js';
 import { selected as selectedValues } from './select-utils.js';
 import {

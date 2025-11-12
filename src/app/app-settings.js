@@ -24,7 +24,7 @@
 import $ from './jquery.ts';
 import { appName } from '../config.ts';
 import { unfocus } from './cafevdb.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import { subscribe, emit } from '../services/async-event-bus.ts';
 import { APP_SETTINGS_POPUP, PUSH_BUSY_STATE, POP_BUSY_STATE } from '../event-bus-events.ts';
 

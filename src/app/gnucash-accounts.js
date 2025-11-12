@@ -23,7 +23,7 @@
 
 import $ from './jquery.ts';
 import * as Ajax from './ajax.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 
 const accountsAutocomplete = {
 };

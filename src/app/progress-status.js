@@ -23,7 +23,7 @@
 
 import { globalState, $ } from './globals.js';
 import * as Ajax from './ajax.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 
 require('progressbar.scss');
 

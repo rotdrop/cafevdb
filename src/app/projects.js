@@ -22,7 +22,7 @@
  */
 
 import { globalState, appName, $ } from './globals.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import textareaResize from './textarea-resize.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';

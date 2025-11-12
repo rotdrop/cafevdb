@@ -31,7 +31,7 @@ import {
   filePicker as filePickerDialog,
 } from './dialogs.ts';
 import * as Notification from './notification.ts';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import { parse as pathParse } from './path.ts';
 import { translate as t } from '@nextcloud/l10n';
 import escapeHtml from 'escape-html';

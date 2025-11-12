@@ -34,7 +34,7 @@ import * as Notification from './notification.ts';
 import checkInvalidInputs from './check-invalid-inputs.js';
 import * as PHPMyEdit from './pme.js';
 import participantFieldsHandlers from './project-participant-fields-display.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import * as FileUpload from './file-upload.js';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';

@@ -30,7 +30,7 @@ import * as SelectUtils from './select-utils.js';
 import * as Dialogs from './dialogs.ts';
 import * as DialogUtils from './dialog-utils.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import textareaResize from './textarea-resize.js';
 import { rec as pmeRec } from './pme-record-id.js';
 import './lock-input.js';

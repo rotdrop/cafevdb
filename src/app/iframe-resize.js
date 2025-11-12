@@ -24,7 +24,7 @@
 import { appName } from '../config.ts';
 import $ from './jquery.ts';
 import { loadState } from '@nextcloud/initial-state';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import '@iframe-resizer/jquery';
 
 let scriptUrl;

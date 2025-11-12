@@ -22,7 +22,7 @@
  */
 
 import { getCurrentUser } from '@nextcloud/auth';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import globalState from './globalstate.js';
 import axios from '@nextcloud/axios';
 

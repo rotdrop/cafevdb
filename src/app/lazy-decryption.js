@@ -30,7 +30,7 @@ import {
   inputSelector as pmeInputSelector,
   queryInfoSelector as pmeQueryInfoSelector,
 } from './pme-selectors.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import jQuery from './jquery.ts';
 import { isPlainObject } from 'is-plain-object';
 

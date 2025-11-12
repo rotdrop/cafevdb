@@ -29,7 +29,7 @@ import * as Dialogs from './dialogs.ts';
 import * as FileUpload from './file-upload.js';
 import * as Notification from './notification.ts';
 import { formSelector as pmeFormSelector } from './pme-selectors.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import md5 from 'blueimp-md5';
 // or: const md5 = require('blueimp-md5');
 // but NOT: import { md5 } from 'blueimp-md5';

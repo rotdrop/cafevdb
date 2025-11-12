@@ -26,7 +26,7 @@ import * as Notification from './notification.ts';
 import * as Ajax from './ajax.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as PHPMyEdit from './pme.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 
 require('project-instrumentation-numbers.scss');
 

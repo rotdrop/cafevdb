@@ -35,7 +35,7 @@ import { show as notificationShow } from './notification.ts';
 import * as SelectUtils from './select-utils.js';
 import * as Ajax from './ajax.js';
 import { urlDecode } from './url-decode.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import { generateOcsUrl } from '@nextcloud/router';
 import { setPersonalUrl } from './settings-urls.js';
 import selectPopup from './select-popup.js';

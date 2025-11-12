@@ -37,7 +37,7 @@ import { instrumentationNumbersPopup } from './projects.js';
 import { rec as pmeRec, recordValue as pmeRecordValue } from './pme-record-id.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import pmeExportMenu from './pme-export.js';
 import { pageRenderer } from './pme-state.js';
 import {

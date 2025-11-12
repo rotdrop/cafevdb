@@ -28,7 +28,7 @@ import * as Notification from './notification.ts';
 import * as Dialogs from './dialogs.ts';
 import * as FileUpload from './file-upload.js';
 import * as SelectUtils from './select-utils.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import { simpleSetHandler, simpleSetValueHandler, type GetValueResult } from './simple-set-value.js';
 import { toolTipsInit } from './cafevdb.js';
 import { setPersonalUrl, setAppUrl, getUrl } from './settings-urls.js';

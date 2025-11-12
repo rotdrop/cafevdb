@@ -29,7 +29,7 @@ import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.ts';
 import * as Notification from './notification.ts';
 import { addReadyCallback } from './cafevdb.js';
-import generateAppUrl from './generate-url.js';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 import setBusyIndicators from './busy-indicators.js';
 import { HISTORY_GO_REQUEST } from '../event-bus-events.ts';
 import { emit as asyncEmit } from '../services/async-event-bus.ts';
