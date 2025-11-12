@@ -21,12 +21,13 @@
   ],
   "compilerOptions": {
     "types": [
+      "bootstrap",
+      "jquery",
+      "jqueryui",
+      "moment",
       "node",
       "vue",
       "vue-router",
-      "moment",
-      "jquery",
-      "jqueryui"
     ],
     "lib": [ "ES2024", "DOM", "DOM.Iterable" ],
     "outDir": "./dist/",
