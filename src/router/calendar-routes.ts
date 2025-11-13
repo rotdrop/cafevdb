@@ -123,7 +123,7 @@ const calendarAppRoutes: RouteConfig[] = [
     beforeEnter: beforeCalendarRouteEnter,
   },
   {
-    path: 'edit/sidebar/:object/:recurrenceId/:context?',
+    path: 'edit/full/:object/:recurrenceId/:context?',
     name: 'EditFullView',
     component: FullEventEditor,
     beforeEnter: beforeCalendarRouteEnter,
@@ -135,7 +135,7 @@ const calendarAppRoutes: RouteConfig[] = [
     beforeEnter: beforeCalendarRouteEnter,
   },
   {
-    path: 'new/sidebar/:allDay/:dtstart/:dtend/:context?',
+    path: 'new/full/:allDay/:dtstart/:dtend/:context?',
     name: 'NewFullView',
     component: FullEventEditor,
     beforeEnter: beforeCalendarRouteEnter,

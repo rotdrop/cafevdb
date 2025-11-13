@@ -22,7 +22,7 @@
  -->
 <template>
   <div class="container flex-container">
-    <NcAppSidebar v-show="!calendarAppSideBarActive"
+    <NcAppSidebar v-show="!calendarAppFullActive"
                   :name="project ? t(appName, '{name} - Appointments', { name: project.name }) : t(appName, 'Appointments')"
                   :force-menu="false"
                   @close="handleClose()"
@@ -532,7 +532,7 @@ const eventMatrix = computed<EventMatrixEntry[]>(
 )
 
 // const popOverActive = computed(() => currentRoute.path.includes('/popover/'))
-const calendarAppSideBarActive = computed(() => currentRoute.path.includes('/sidebar/'))
+const calendarAppFullActive = computed(() => currentRoute.path.includes('/full/'))
 
 const actionButtonType = ref('secondary')
 
