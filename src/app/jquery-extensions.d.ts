@@ -27,4 +27,5 @@ interface JQuery<TElement = HTMLElement> {
   tooltip(options: Record<string, unknown>): JQuery<TElement>,
   tooltip(method: string): JQuery<TElement>,
   cafevTooltip: typeof JQuery<TElement>['tooltip'];
+  hasVerticalScrollbar(): boolean,
 }

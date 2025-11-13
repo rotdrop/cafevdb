@@ -24,7 +24,7 @@
 import $ from './jquery.ts';
 import { appName } from '../config.ts';
 import { toolTipsInit } from './cafevdb.js';
-import './jquery-extensions.js';
+import './jquery-extensions.ts';
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
 require('cafevdb-selectize.scss');

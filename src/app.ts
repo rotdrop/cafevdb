@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import './app/jquery-extensions.js';
+import './app/jquery-extensions.ts';
 import appSettings from './app/app-settings.js';
 import attachWindowResizeHandler from './app/window-resize.js';
 import beforeReady from './app/before-ready.js';

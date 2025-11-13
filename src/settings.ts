@@ -25,7 +25,7 @@ import { nonce, webRoot } from './app/globals.js';
 import { runReadyCallbacks } from './app/cafevdb.js';
 import appSettings from './app/settings.js';
 import personalSettings from './app/personal-settings.js';
-import './app/jquery-extensions.js';
+import './app/jquery-extensions.ts';
 import { attachDialogHandlers } from './app/dialogs.js';
 import onDocumentLoaded from './toolkit/util/on-document-loaded.ts';
 

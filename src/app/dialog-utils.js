@@ -25,7 +25,7 @@
  */
 
 import $ from './jquery.ts';
-import './jquery-extensions.js';
+import './jquery-extensions.ts';
 import { appName, appPrefix } from '../config.ts';
 
 /* global JQuery */
