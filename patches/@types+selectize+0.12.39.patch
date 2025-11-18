@@ -1,0 +1,37 @@
+diff --git a/node_modules/@types/selectize/index.d.ts b/node_modules/@types/selectize/index.d.ts
+index cf1c2ae..54a7222 100644
+--- a/node_modules/@types/selectize/index.d.ts
++++ b/node_modules/@types/selectize/index.d.ts
+@@ -475,6 +475,12 @@ declare namespace Selectize {
+          */
+         addItem(value: T, silent?: boolean): void;
+ 
++        /**
++         * "Selects" multiple items at once. Adds them to the list
++         * at the current caret position.
++         */
++        addItems(values: T[], silent?: boolean): void;
++
+         /**
+          * Removes the selected item matching the provided value.
+          */
+@@ -489,7 +495,7 @@ declare namespace Selectize {
+         /**
+          * Re-renders the selected item lists.
+          */
+-        refreshItems(): void;
++        refreshItems(silent?: boolean): void;
+ 
+         // Optgroups
+         // ------------------------------------------------------------------------------------------------------------
+@@ -658,9 +664,5 @@ declare namespace Selectize {
+ }
+ 
+ interface JQuery {
+-    selectize(options?: Selectize.IOptions<any, any>): JQuery;
+-}
+-
+-interface HTMLElement {
+-    selectize: Selectize.IApi<any, any>;
++  selectize<T extends string, U extends string>(options?: Selectize.IOptions<T, U>): JQuery;
+ }
