@@ -30,322 +30,322 @@ $alloff = $_['orchestra'] == '' ? $alloff = 'disabled' : '';
 $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
 
 ?>
-<div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin sharing">
+<div id="tabs-<?= $_['tabNr']; ?>" class="personalblock admin sharing">
 <!-- SHARED CALENDARS and stuff -->
   <div id="sharing-settings">
     <!-- VIRTUAL USER -->
-    <h4><?php echo $l->t('Share owner') ; ?></h4>
+    <h4><?= $l->t('Share owner') ; ?></h4>
     <form id="shareownerform">
-      <fieldset id="shareowner" <?php echo $alloff; ?> >
-        <input type="hidden" id="user-saved" name="shareowner-saved" value="<?php echo $_['shareowner']; ?>" />
+      <fieldset id="shareowner" <?= $alloff; ?> >
+        <input type="hidden" id="user-saved" name="shareowner-saved" value="<?= $_['shareowner']; ?>" />
         <input type="text"
                id="user"
                name="shareowner"
-               placeholder="<?php echo $l->t('shareowner');?>"
-               value="<?php echo $_['shareowner']; ?>"
-               title="<?php echo $_['shareowner']; ?>"
-               <?php echo $_['shareowner'] != '' ? 'disabled' : '';?>
+               placeholder="<?= $l->t('shareowner');?>"
+               value="<?= $_['shareowner']; ?>"
+               title="<?= $_['shareowner']; ?>"
+               <?= $_['shareowner'] != '' ? 'disabled' : '';?>
                autocomplete="username"
         />
         <input type="checkbox" id="shareowner-force" name="shareowner-force" class="checkbox"/>
-           <label for="shareowner-force" title="<?php echo $toolTips['shareowner-force']; ?>"  class="tooltip-auto">
-             <?php echo $l->t('force');?>
+           <label for="shareowner-force" title="<?= $toolTips['shareowner-force']; ?>"  class="tooltip-auto">
+             <?= $l->t('force');?>
            </label>
-        <input name="shareownercheck" id="check" type="button" value="<?php echo $l->t('Check');?>" <?php echo $off; ?> />
+        <input name="shareownercheck" id="check" type="button" value="<?= $l->t('Check');?>" <?= $off; ?> />
       </fieldset>
 <!-- CHANGE ITS PASSWORD -->
-      <fieldset class="shareownerpassword flex-container" <?php echo $off; ?> >
+      <fieldset class="shareownerpassword flex-container" <?= $off; ?> >
         <div class="password-container">
           <input type="password"
                  id="shareownerpassword"
                  class="randompassword"
                  name="shareownerpassword"
-                 placeholder="<?php echo $l->t('Share-Password');?>"
+                 placeholder="<?= $l->t('Share-Password');?>"
                  data-typetoggle="#shareownerpassword-show"
                  autocomplete="current-password"
           />
           <input class="cafevdb-password-show" type="checkbox" id="shareownerpassword-show" name="shareownerpassword-show" />
-          <label class="cafevdb-password-show" for="shareownerpassword-show"><?php echo $l->t('show');?></label>
+          <label class="cafevdb-password-show" for="shareownerpassword-show"><?= $l->t('show');?></label>
         </div>
-        <input name="passwordgenerate" id="generate" type="button" value="<?php echo $l->t('Generate');?>" />
-        <input name="passwordchange" id="change" type="button" value="<?php echo $l->t('Change');?>" />
+        <input name="passwordgenerate" id="generate" type="button" value="<?= $l->t('Generate');?>" />
+        <input name="passwordchange" id="change" type="button" value="<?= $l->t('Change');?>" />
       </fieldset>
       <div>
         <span class="statusmessage"></span><span>&nbsp;</span>
       </div>
     </form>
     <!-- CALENDARS -->
-    <h4><?php echo $l->t('Calendars'); ?></h4>
+    <h4><?= $l->t('Calendars'); ?></h4>
     <form id="calendars">
-      <fieldset  <?php echo $off; ?> >
-        <input type="text" id="concerts" name="concertscalendar" placeholder="<?php echo $l->t('calendarname');?>" value="<?php echo $_['concertscalendar']; ?>" />
-        <label for="concerts"><?php echo $l->t('Calendar for Concerts');?></label>
+      <fieldset  <?= $off; ?> >
+        <input type="text" id="concerts" name="concertscalendar" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['concertscalendar']; ?>" />
+        <label for="concerts"><?= $l->t('Calendar for Concerts');?></label>
         <br/>
-        <input type="text" id="rehearsals" name="rehearsalscalendar" placeholder="<?php echo $l->t('calendarname');?>" value="<?php echo $_['rehearsalscalendar']; ?>" />
-        <label for="rehearsals"><?php echo $l->t('Calendar for Rehearsals');?></label>
+        <input type="text" id="rehearsals" name="rehearsalscalendar" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['rehearsalscalendar']; ?>" />
+        <label for="rehearsals"><?= $l->t('Calendar for Rehearsals');?></label>
         <br/>
-        <input type="text" id="other" name="othercalendar" placeholder="<?php echo $l->t('calendarname');?>" value="<?php echo $_['othercalendar']; ?>" />
-        <label for="other"><?php echo $l->t('Calendar for other Events');?></label>
+        <input type="text" id="other" name="othercalendar" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['othercalendar']; ?>" />
+        <label for="other"><?= $l->t('Calendar for other Events');?></label>
         <br/>
-        <input type="text" id="management" name="managementcalendar" placeholder="<?php echo $l->t('calendarname');?>" value="<?php echo $_['managementcalendar']; ?>" />
-        <label for="management"><?php echo $l->t('Management-Calendar');?></label>
+        <input type="text" id="management" name="managementcalendar" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['managementcalendar']; ?>" />
+        <label for="management"><?= $l->t('Management-Calendar');?></label>
         <br/>
-        <input type="text" id="finance" name="financecalendar" placeholder="<?php echo $l->t('calendarname');?>" value="<?php echo $_['financecalendar']; ?>" />
-        <label for="finance"><?php echo $l->t('Finance-Calendar');?></label>
+        <input type="text" id="finance" name="financecalendar" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['financecalendar']; ?>" />
+        <label for="finance"><?= $l->t('Finance-Calendar');?></label>
         <br/>
 <!-- DEFAULT DURATION FOR EVENTS -->
-        <input type="number" min="0" id="duration" name="eventduration" placeholder="<?php echo $l->t('#Minutes');?>" value="<?php echo $_['eventduration']; ?>" />
-        <label for="duration"><?php echo $l->t('Default Duration for Events');?></label>
+        <input type="number" min="0" id="duration" name="eventduration" placeholder="<?= $l->t('#Minutes');?>" value="<?= $_['eventduration']; ?>" />
+        <label for="duration"><?= $l->t('Default Duration for Events');?></label>
       </fieldset>
     </form>
     <!-- Contacts, adressbooks -->
-    <h4><?php echo $l->t('Contacts'); ?></h4>
+    <h4><?= $l->t('Contacts'); ?></h4>
     <form id="contacts">
-      <fieldset  <?php echo $off; ?> >
-        <input type="text" id="generaladdressbook" name="generaladdressbook" placeholder="<?php echo $l->t('addressbook');?>" value="<?php echo $_['generaladdressbook']; ?>" />
-        <label for="generaladdressbook"><?php echo $l->t('General Addresbook');?></label>
+      <fieldset  <?= $off; ?> >
+        <input type="text" id="generaladdressbook" name="generaladdressbook" placeholder="<?= $l->t('addressbook');?>" value="<?= $_['generaladdressbook']; ?>" />
+        <label for="generaladdressbook"><?= $l->t('General Addresbook');?></label>
         <br/>
-        <input type="text" id="musiciansaddressbook" name="musiciansaddressbook" placeholder="<?php echo $l->t('addressbook');?>" value="<?php echo $_['musiciansaddressbook']; ?>" />
-        <label for="musiciansaddressbook"><?php echo $l->t('Addresbook for Musicians');?></label>
+        <input type="text" id="musiciansaddressbook" name="musiciansaddressbook" placeholder="<?= $l->t('addressbook');?>" value="<?= $_['musiciansaddressbook']; ?>" />
+        <label for="musiciansaddressbook"><?= $l->t('Addresbook for Musicians');?></label>
       </fieldset>
     </form>
     <!-- Shared folders -->
-    <h4><?php echo $l->t('Shared folder'); ?></h4>
-    <form id="sharedfolder-form" class="sharedfolders">
-      <fieldset id="sharedfolder-fieldset" <?php echo $off; ?> >
-        <input type="hidden" id="sharedfolder-saved" name="sharedfolder-saved" value="<?php echo $_['sharedfolder']; ?>" />
-        <input <?php echo $_['sharedfolder'] != '' ? 'disabled' : ''; ?>
+    <h4><?= $l->t('Shared folder'); ?></h4>
+    <form id="<?= ConfigConstants::SHARED_FOLDER ?>-form" class="<?= ConfigConstants::SHARED_FOLDER ?>s">
+      <fieldset id="<?= ConfigConstants::SHARED_FOLDER ?>-fieldset" <?= $off; ?> >
+        <input type="hidden" id="<?= ConfigConstants::SHARED_FOLDER ?>-saved" name="<?= ConfigConstants::SHARED_FOLDER ?>-saved" value="<?= $_[ConfigConstants::SHARED_FOLDER]; ?>" />
+        <input <?= $_[ConfigConstants::SHARED_FOLDER] != '' ? 'disabled' : ''; ?>
           type="text"
-          id="sharedfolder"
-          name="sharedfolder"
-          placeholder="<?php echo $l->t('shared folder'); ?>"
-          value="<?php echo $_['sharedfolder']; ?>"
-          title="<?php echo $toolTips['sharedfolder']; ?>"
+          id="<?= ConfigConstants::SHARED_FOLDER ?>"
+          name="<?= ConfigConstants::SHARED_FOLDER ?>"
+          placeholder="<?= $l->t('shared folder'); ?>"
+          value="<?= $_[ConfigConstants::SHARED_FOLDER]; ?>"
+          title="<?= $toolTips[ConfigConstants::SHARED_FOLDER]; ?>"
         />
-        <input type="checkbox" id="sharedfolder-force" name="sharedfolder-force" class="checkbox"/>
-        <label for="sharedfolder-force" title="<?php echo $toolTips['sharedfolder-force']; ?>" >
-          <?php echo $l->t('force');?>
+        <input type="checkbox" id="<?= ConfigConstants::SHARED_FOLDER ?>-force" name="<?= ConfigConstants::SHARED_FOLDER ?>-force" class="checkbox"/>
+        <label for="<?= ConfigConstants::SHARED_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::SHARED_FOLDER . '-force']; ?>" >
+          <?= $l->t('force');?>
         </label>
-        <input name="sharedfolder-check" id="sharedfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
-        <a name="sharedfolder-view"
+        <input name="<?= ConfigConstants::SHARED_FOLDER ?>-check" id="<?= ConfigConstants::SHARED_FOLDER ?>-check" type="button" value="<?= $l->t('Check');?>" />
+        <a name="<?= ConfigConstants::SHARED_FOLDER ?>-view"
            href="<?php p($sharedFolderLink); ?>"
            target="<?php p($appName . '-sharedfolder-view'); ?>"
-           class="sharedfolder-view button<?php empty($_['sharedfolder']) && p(' really hidden'); ?>"></a>
+           class="<?= ConfigConstants::SHARED_FOLDER ?>-view button<?php empty($_[ConfigConstants::SHARED_FOLDER]) && p(' really hidden'); ?>"></a>
       </fieldset>
-      <fieldset id="postboxfolder-fieldset"
-                class="needs-sharedfolder"
-                <?php echo $_['sharedfolder'] != '' ? $off : 'disabled'; ?> >
-        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
-        <input type="hidden" id="postboxfolder-saved" name="postboxfolder-saved" value="<?php echo $_['postboxfolder']; ?>" />
-        <input <?php echo $_['postboxfolder'] != '' ? 'disabled' : ''; ?>
+      <fieldset id="<?= ConfigConstants::POSTBOX_FOLDER ?>-fieldset"
+                class="needs-<?= ConfigConstants::SHARED_FOLDER ?>"
+                <?= $_[ConfigConstants::SHARED_FOLDER] != '' ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span><span><b>/</b></span>
+        <input type="hidden" id="<?= ConfigConstants::POSTBOX_FOLDER ?>-saved" name="<?= ConfigConstants::POSTBOX_FOLDER ?>-saved" value="<?= $_['postboxfolder']; ?>" />
+        <input <?= $_['postboxfolder'] != '' ? 'disabled' : ''; ?>
           type="text"
-          id="postboxfolder"
-          name="postboxfolder"
-          placeholder="<?php echo $l->t('Postbox-Folder'); ?>"
-          value="<?php echo $_['postboxfolder']; ?>"
-          title="<?php echo $toolTips['postboxfolder']; ?>"
+          id="<?= ConfigConstants::POSTBOX_FOLDER ?>"
+          name="<?= ConfigConstants::POSTBOX_FOLDER ?>"
+          placeholder="<?= $l->t('Postbox-Folder'); ?>"
+          value="<?= $_['postboxfolder']; ?>"
+          title="<?= $toolTips['postboxfolder']; ?>"
         />
-        <input type="checkbox" id="postboxfolder-force" name="postboxfolder-force" class="checkbox"/>
-        <label for="postboxfolder-force" title="<?php echo $toolTips['postboxfolder-force']; ?>" >
-          <?php echo $l->t('force');?>
+        <input type="checkbox" id="<?= ConfigConstants::POSTBOX_FOLDER ?>-force" name="<?= ConfigConstants::POSTBOX_FOLDER ?>-force" class="checkbox"/>
+        <label for="<?= ConfigConstants::POSTBOX_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::POSTBOX_FOLDER . '-force']; ?>" >
+          <?= $l->t('force');?>
         </label>
-        <input name="postboxfolder-check" id="postboxfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
-        <div class="postboxfolder-sharelink<?php empty($postboxFolderShareLink) && p(' hidden'); ?>"><?php p($postboxFolderShareLink); ?></div>
+        <input name="<?= ConfigConstants::POSTBOX_FOLDER ?>-check" id="<?= ConfigConstants::POSTBOX_FOLDER ?>-check" type="button" value="<?= $l->t('Check');?>" />
+        <div class="<?= ConfigConstants::POSTBOX_FOLDER ?>-sharelink<?php empty($postboxFolderShareLink) && p(' hidden'); ?>"><?php p($postboxFolderShareLink); ?></div>
       </fieldset>
-      <fieldset id="outboxfolder-fieldset"
-                class="needs-sharedfolder"
-                <?php echo $_['sharedfolder'] != '' ? $off : 'disabled'; ?> >
-        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
-        <input type="hidden" id="outboxfolder-saved" name="outboxfolder-saved" value="<?php echo $_['outboxfolder']; ?>" />
-        <input <?php echo $_['outboxfolder'] != '' ? 'disabled' : ''; ?>
+      <fieldset id="<?= ConfigConstants::OUTBOX_FOLDER ?>-fieldset"
+                class="needs-<?= ConfigConstants::SHARED_FOLDER ?>"
+                <?= $_[ConfigConstants::SHARED_FOLDER] != '' ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span><span><b>/</b></span>
+        <input type="hidden" id="<?= ConfigConstants::OUTBOX_FOLDER ?>-saved" name="<?= ConfigConstants::OUTBOX_FOLDER ?>-saved" value="<?= $_['outboxfolder']; ?>" />
+        <input <?= $_['outboxfolder'] != '' ? 'disabled' : ''; ?>
           type="text"
-          id="outboxfolder"
-          name="outboxfolder"
-          placeholder="<?php echo $l->t('Outbox-Folder'); ?>"
-          value="<?php echo $_['outboxfolder']; ?>"
-          title="<?php echo $toolTips['outboxfolder']; ?>"
+          id="<?= ConfigConstants::OUTBOX_FOLDER ?>"
+          name="<?= ConfigConstants::OUTBOX_FOLDER ?>"
+          placeholder="<?= $l->t('Outbox-Folder'); ?>"
+          value="<?= $_['outboxfolder']; ?>"
+          title="<?= $toolTips['outboxfolder']; ?>"
         />
-        <input type="checkbox" id="outboxfolder-force" name="outboxfolder-force" class="checkbox"/>
-        <label for="outboxfolder-force" title="<?php echo $toolTips['outboxfolder-force']; ?>" >
-          <?php echo $l->t('force');?>
+        <input type="checkbox" id="<?= ConfigConstants::OUTBOX_FOLDER ?>-force" name="<?= ConfigConstants::OUTBOX_FOLDER ?>-force" class="checkbox"/>
+        <label for="<?= ConfigConstants::OUTBOX_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::OUTBOX_FOLDER . '-force']; ?>" >
+          <?= $l->t('force');?>
         </label>
-        <input name="outboxfolder-check" id="outboxfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+        <input name="<?= ConfigConstants::OUTBOX_FOLDER ?>-check" id="<?= ConfigConstants::OUTBOX_FOLDER ?>-check" type="button" value="<?= $l->t('Check');?>" />
       </fieldset>
-      <fieldset id="documenttemplatesfolder-fieldset"
-                class="needs-sharedfolder"
-                <?php echo $_['sharedfolder'] != '' ? $off : 'disabled'; ?> >
-        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
-        <input type="hidden" id="documenttemplatesfolder-saved" name="documenttemplatesfolder-saved" value="<?php echo $_['documenttemplatesfolder']; ?>" />
-        <input <?php echo $_['documenttemplatesfolder'] != '' ? 'disabled' : ''; ?>
+      <fieldset id="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-fieldset"
+                class="needs-<?= ConfigConstants::SHARED_FOLDER ?>"
+                <?= $_[ConfigConstants::SHARED_FOLDER] != '' ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span><span><b>/</b></span>
+        <input type="hidden" id="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-saved" name="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-saved" value="<?= $_['documenttemplatesfolder']; ?>" />
+        <input <?= $_['documenttemplatesfolder'] != '' ? 'disabled' : ''; ?>
           type="text"
-          id="documenttemplatesfolder"
-          name="documenttemplatesfolder"
-          placeholder="<?php echo $l->t('Document templates folder'); ?>"
-          value="<?php echo $_['documenttemplatesfolder']; ?>"
-          title="<?php echo $toolTips['documenttemplatesfolder']; ?>"
+          id="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>"
+          name="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>"
+          placeholder="<?= $l->t('Document templates folder'); ?>"
+          value="<?= $_['documenttemplatesfolder']; ?>"
+          title="<?= $toolTips['documenttemplatesfolder']; ?>"
         />
-        <input type="checkbox" id="documenttemplatesfolder-force" name="documenttemplatesfolder-force" class="checkbox"/>
-        <label for="documenttemplatesfolder-force" title="<?php echo $toolTips['documenttemplatesfolder-force']; ?>" >
-          <?php echo $l->t('force');?>
+        <input type="checkbox" id="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-force" name="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-force" class="checkbox"/>
+        <label for="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::DOCUMENT_TEMPLATES_FOLDER . '-force']; ?>" >
+          <?= $l->t('force');?>
         </label>
-        <input name="documenttemplatesfolder-check" id="documenttemplatesfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+        <input name="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-check" id="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-check" type="button" value="<?= $l->t('Check');?>" />
       </fieldset>
-      <fieldset id="projectsfolder-fieldset"
-                class="needs-sharedfolder"
-                <?php echo $_['sharedfolder'] != '' ? $off : 'disabled'; ?> >
-        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
+      <fieldset id="<?= ConfigConstants::PROJECTS_FOLDER ?>-fieldset"
+                class="needs-<?= ConfigConstants::SHARED_FOLDER ?>"
+                <?= $_[ConfigConstants::SHARED_FOLDER] != '' ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span>
         <span><b>/</b></span>
-        <input type="hidden" id="projectsfolder-saved" name="projectsfolder-saved" value="<?php echo $_['projectsfolder']; ?>" />
-        <input <?php echo $_['projectsfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::PROJECTS_FOLDER ?>-saved" name="<?= ConfigConstants::PROJECTS_FOLDER ?>-saved" value="<?= $_[ConfigConstants::PROJECTS_FOLDER]; ?>" />
+        <input <?= $_[ConfigConstants::PROJECTS_FOLDER] != '' ? 'disabled' : ''; ?>
           type="text"
-          id="projectsfolder"
-          name="projectsfolder"
-          placeholder="<?php echo $l->t('Project folder'); ?>"
-          value="<?php echo $_['projectsfolder']; ?>"
-          title="<?php echo $toolTips['projectsfolder']; ?>"
+          id="<?= ConfigConstants::PROJECTS_FOLDER ?>"
+          name="<?= ConfigConstants::PROJECTS_FOLDER ?>"
+          placeholder="<?= $l->t('Project folder'); ?>"
+          value="<?= $_[ConfigConstants::PROJECTS_FOLDER]; ?>"
+          title="<?= $toolTips[ConfigConstants::PROJECTS_FOLDER]; ?>"
         />
-        <span><b>/</b></span><span><?php echo $l->t('YEAR'); ?></span>
-        <span><b>/</b></span><span><?php echo $l->t('PROJECT'); ?></span><span><b>/</b></span>
-        <input type="checkbox" id="projectsfolder-force" name="projectsfolder-force" class="checkbox"/>
-        <label for="projectsfolder-force" title="<?php echo $toolTips['projectsfolder-force']; ?>" >
-          <?php echo $l->t('force');?>
+        <span><b>/</b></span><span><?= $l->t('YEAR'); ?></span>
+        <span><b>/</b></span><span><?= $l->t('PROJECT'); ?></span><span><b>/</b></span>
+        <input type="checkbox" id="<?= ConfigConstants::PROJECTS_FOLDER ?>-force" name="<?= ConfigConstants::PROJECTS_FOLDER ?>-force" class="checkbox"/>
+        <label for="<?= ConfigConstants::PROJECTS_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::PROJECTS_FOLDER . '-force']; ?>" >
+          <?= $l->t('force');?>
         </label>
-        <input name="projectsfolder-check" id="projectsfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+        <input name="<?= ConfigConstants::PROJECTS_FOLDER ?>-check" id="<?= ConfigConstants::PROJECTS_FOLDER ?>-check" type="button" value="<?= $l->t('Check');?>" />
       </fieldset>
-      <fieldset id="projectparticipantsfolder-fieldset"
-                class="needs-sharedfolder needs-projectsfolder"
-                class="projectparticipantsfolder" <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
-        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
-        <span><b>/</b></span><span class="projectsfolder"><?php echo $_['projectsfolder']; ?></span>
-        <span><b>/</b></span><span><?php echo $l->t('YEAR'); ?></span>
-        <span><b>/</b></span><span><?php echo $l->t('PROJECT'); ?></span>
+      <fieldset id="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-fieldset"
+                class="needs-<?= ConfigConstants::SHARED_FOLDER ?> needs-<?= ConfigConstants::PROJECTS_FOLDER ?>"
+                class="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>" <?= $_[ConfigConstants::PROJECTS_FOLDER] != '' ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span>
+        <span><b>/</b></span><span class="<?= ConfigConstants::PROJECTS_FOLDER ?>"><?= $_[ConfigConstants::PROJECTS_FOLDER]; ?></span>
+        <span><b>/</b></span><span><?= $l->t('YEAR'); ?></span>
+        <span><b>/</b></span><span><?= $l->t('PROJECT'); ?></span>
         <span><b>/</b></span>
-        <input type="hidden" id="projectparticipantsfolder-saved" name="projectparticipantsfolder-saved" value="<?php echo $_['projectparticipantsfolder']; ?>" />
-        <input <?php echo $_['projectparticipantsfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-saved" name="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-saved" value="<?= $_['projectparticipantsfolder']; ?>" />
+        <input <?= $_['projectparticipantsfolder'] != '' ? 'disabled' : ''; ?>
           type="text"
-          id="projectparticipantsfolder"
-          name="projectparticipantsfolder"
-          placeholder="<?php echo $l->t('Participants Folder'); ?>"
-          value="<?php echo $_['projectparticipantsfolder']; ?>"
-          title="<?php echo $toolTips['projectparticipantsfolder']; ?>"
+          id="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>"
+          name="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>"
+          placeholder="<?= $l->t('Participants Folder'); ?>"
+          value="<?= $_['projectparticipantsfolder']; ?>"
+          title="<?= $toolTips['projectparticipantsfolder']; ?>"
         />
-        <span><b>/</b></span><span><?php echo $l->t('john.doe'); ?></span><span><b>/</b></span>
-        <input type="checkbox" id="projectparticipantsfolder-force" name="projectparticipantsfolder-force" class="checkbox"/>
-        <label for="projectparticipantsfolder-force" title="<?php echo $toolTips['projectparticipantsfolder-force']; ?>" >
-          <?php echo $l->t('force');?>
+        <span><b>/</b></span><span><?= $l->t('john.doe'); ?></span><span><b>/</b></span>
+        <input type="checkbox" id="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-force" name="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-force" class="checkbox"/>
+        <label for="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::PROJECT_PARTICIPANTS_FOLDER . '-force']; ?>" >
+          <?= $l->t('force');?>
         </label>
-        <input name="projectparticipantsfolder-check" id="projectparticipantsfolder-check" type="button" value="<?php echo $l->t('Save');?>" />
+        <input name="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-check" id="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-check" type="button" value="<?= $l->t('Save');?>" />
       </fieldset>
-      <fieldset id="projectpostersfolder-fieldset"
-                class="projectpostersfolder needs-sharedfolder needs-projectsfolder"
-                <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
-        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
-        <span><b>/</b></span><span class="projectsfolder"><?php echo $_['projectsfolder']; ?></span>
-        <span><b>/</b></span><span><?php echo $l->t('YEAR'); ?></span>
-        <span><b>/</b></span><span><?php echo $l->t('PROJECT'); ?></span>
+      <fieldset id="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-fieldset"
+                class="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?> needs-<?= ConfigConstants::SHARED_FOLDER ?> needs-<?= ConfigConstants::PROJECTS_FOLDER ?>"
+                <?= $_[ConfigConstants::PROJECTS_FOLDER] != '' ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span>
+        <span><b>/</b></span><span class="<?= ConfigConstants::PROJECTS_FOLDER ?>"><?= $_[ConfigConstants::PROJECTS_FOLDER]; ?></span>
+        <span><b>/</b></span><span><?= $l->t('YEAR'); ?></span>
+        <span><b>/</b></span><span><?= $l->t('PROJECT'); ?></span>
         <span><b>/</b></span>
-        <input type="hidden" id="projectpostersfolder-saved" name="projectpostersfolder-saved" value="<?php echo $_['projectpostersfolder']; ?>" />
-        <input <?php echo $_['projectpostersfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-saved" name="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-saved" value="<?= $_['projectpostersfolder']; ?>" />
+        <input <?= $_['projectpostersfolder'] != '' ? 'disabled' : ''; ?>
           type="text"
-          id="projectpostersfolder"
-          name="projectpostersfolder"
-          placeholder="<?php echo $l->t('Posters Folder'); ?>"
-          value="<?php echo $_['projectpostersfolder']; ?>"
-          title="<?php echo $toolTips['projectpostersfolder']; ?>"
+          id="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>"
+          name="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>"
+          placeholder="<?= $l->t('Posters Folder'); ?>"
+          value="<?= $_['projectpostersfolder']; ?>"
+          title="<?= $toolTips['projectpostersfolder']; ?>"
         />
-        <input type="checkbox" id="projectpostersfolder-force" name="projectpostersfolder-force" class="checkbox"/>
-        <label for="projectpostersfolder-force" title="<?php echo $toolTips['projectpostersfolder-force']; ?>" >
-          <?php echo $l->t('force');?>
+        <input type="checkbox" id="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-force" name="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-force" class="checkbox"/>
+        <label for="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::PROJECT_POSTERS_FOLDER . '-force']; ?>" >
+          <?= $l->t('force');?>
         </label>
-        <input name="projectpostersfolder-check" id="projectpostersfolder-check" type="button" value="<?php echo $l->t('Save');?>" />
+        <input name="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-check" id="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-check" type="button" value="<?= $l->t('Save');?>" />
       </fieldset>
-      <fieldset id="projectpublicdownloadsfolder-fieldset"
-                class="projectpublicdownloadsfolder needs-sharedfolder needs-projectsfolder"
-                <?php echo $_['projectsfolder'] != '' ? $off : 'disabled'; ?> >
-        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
-        <span><b>/</b></span><span class="projectsfolder"><?php echo $_['projectsfolder']; ?></span>
-        <span><b>/</b></span><span><?php echo $l->t('YEAR'); ?></span>
-        <span><b>/</b></span><span><?php echo $l->t('PROJECT'); ?></span>
+      <fieldset id="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-fieldset"
+                class="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?> needs-<?= ConfigConstants::SHARED_FOLDER ?> needs-<?= ConfigConstants::PROJECTS_FOLDER ?>"
+                <?= $_[ConfigConstants::PROJECTS_FOLDER] != '' ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span>
+        <span><b>/</b></span><span class="<?= ConfigConstants::PROJECTS_FOLDER ?>"><?= $_[ConfigConstants::PROJECTS_FOLDER]; ?></span>
+        <span><b>/</b></span><span><?= $l->t('YEAR'); ?></span>
+        <span><b>/</b></span><span><?= $l->t('PROJECT'); ?></span>
         <span><b>/</b></span>
-        <input type="hidden" id="projectpublicdownloadsfolder-saved" name="projectpublicdownloadsfolder-saved" value="<?php echo $_['projectpublicdownloadsfolder']; ?>" />
-        <input <?php echo $_['projectpublicdownloadsfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-saved" name="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-saved" value="<?= $_['projectpublicdownloadsfolder']; ?>" />
+        <input <?= $_['projectpublicdownloadsfolder'] != '' ? 'disabled' : ''; ?>
           type="text"
-          id="projectpublicdownloadsfolder"
-          name="projectpublicdownloadsfolder"
-          placeholder="<?php echo $l->t('Participants Downloads'); ?>"
-          value="<?php echo $_['projectpublicdownloadsfolder']; ?>"
-          title="<?php echo $toolTips['projectpublicdownloadsfolder']; ?>"
+          id="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>"
+          name="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>"
+          placeholder="<?= $l->t('Participants Downloads'); ?>"
+          value="<?= $_['projectpublicdownloadsfolder']; ?>"
+          title="<?= $toolTips['projectpublicdownloadsfolder']; ?>"
         />
-        <input type="checkbox" id="projectpublicdownloadsfolder-force" name="projectpublicdownloadsfolder-force" class="checkbox"/>
-        <label for="projectpublicdownloadsfolder-force" title="<?php echo $toolTips['projectpublicdownloadsfolder-force']; ?>" >
-          <?php echo $l->t('force');?>
+        <input type="checkbox" id="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-force" name="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-force" class="checkbox"/>
+        <label for="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER . '-force']; ?>" >
+          <?= $l->t('force');?>
         </label>
-        <input name="projectpublicdownloadsfolder-check" id="projectpublicdownloadsfolder-check" type="button" value="<?php echo $l->t('Save');?>" />
+        <input name="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-check" id="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-check" type="button" value="<?= $l->t('Save');?>" />
       </fieldset>
-      <fieldset id="financefolder-fieldset"
-                class="needs-sharedfolder"
-                <?php echo $_['sharedfolder'] != '' ? $off : 'disabled'; ?> >
-        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span><span><b>/</b></span>
-        <input type="hidden" id="financefolder-saved" name="financefolder-saved" value="<?php echo $_['financefolder']; ?>" />
-        <input <?php echo $_['financefolder'] != '' ? 'disabled' : ''; ?>
+      <fieldset id="<?= ConfigConstants::FINANCE_FOLDER ?>-fieldset"
+                class="needs-<?= ConfigConstants::SHARED_FOLDER ?>"
+                <?= $_[ConfigConstants::SHARED_FOLDER] != '' ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span><span><b>/</b></span>
+        <input type="hidden" id="<?= ConfigConstants::FINANCE_FOLDER ?>-saved" name="<?= ConfigConstants::FINANCE_FOLDER ?>-saved" value="<?= $_[ConfigConstants::FINANCE_FOLDER]; ?>" />
+        <input <?= $_[ConfigConstants::FINANCE_FOLDER] != '' ? 'disabled' : ''; ?>
           type="text"
-          id="financefolder"
-          name="financefolder"
-          placeholder="<?php echo $l->t('finance folder'); ?>"
-          value="<?php echo $_['financefolder']; ?>"
-          title="<?php echo $toolTips['financefolder']; ?>"
+          id="<?= ConfigConstants::FINANCE_FOLDER ?>"
+          name="<?= ConfigConstants::FINANCE_FOLDER ?>"
+          placeholder="<?= $l->t('finance folder'); ?>"
+          value="<?= $_[ConfigConstants::FINANCE_FOLDER]; ?>"
+          title="<?= $toolTips[ConfigConstants::FINANCE_FOLDER]; ?>"
         />
-        <input type="checkbox" id="financefolder-force" name="financefolder-force" class="checkbox"/>
-        <label for="financefolder-force" title="<?php echo $toolTips['financefolder-force']; ?>" >
-          <?php echo $l->t('force');?>
+        <input type="checkbox" id="<?= ConfigConstants::FINANCE_FOLDER ?>-force" name="<?= ConfigConstants::FINANCE_FOLDER ?>-force" class="checkbox"/>
+        <label for="<?= ConfigConstants::FINANCE_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::FINANCE_FOLDER . '-force']; ?>" >
+          <?= $l->t('force');?>
         </label>
-        <input name="financefolder-check" id="financefolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+        <input name="<?= ConfigConstants::FINANCE_FOLDER ?>-check" id="<?= ConfigConstants::FINANCE_FOLDER ?>-check" type="button" value="<?= $l->t('Check');?>" />
       </fieldset>
-      <fieldset id="transactionsfolder-fieldset"
-                class="needs-sharedfolder needs-projectsfolder needs-financefolder"
-                <?php echo !empty($_['projectsfolder']) && !empty($_['financefolder']) ? $off : 'disabled'; ?> >
-        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
-        <span><b>/</b></span><span class="financefolder"><?php echo $_['financefolder'];?></span>
+      <fieldset id="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-fieldset"
+                class="needs-<?= ConfigConstants::SHARED_FOLDER ?> needs-<?= ConfigConstants::PROJECTS_FOLDER ?> needs-<?= ConfigConstants::FINANCE_FOLDER ?>"
+                <?= !empty($_[ConfigConstants::PROJECTS_FOLDER]) && !empty($_[ConfigConstants::FINANCE_FOLDER]) ? $off : 'disabled'; ?> >
+        <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span>
+        <span><b>/</b></span><span class="<?= ConfigConstants::FINANCE_FOLDER ?>"><?= $_[ConfigConstants::FINANCE_FOLDER];?></span>
         <span><b>/</b></span>
-        <input type="hidden" id="transactionsfolder-saved" name="transactionsfolder-saved" value="<?php echo $_['transactionsfolder']; ?>" />
-        <input <?php echo $_['transactionsfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-saved" name="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-saved" value="<?= $_['transactionsfolder']; ?>" />
+        <input <?= $_['transactionsfolder'] != '' ? 'disabled' : ''; ?>
           type="text"
-          id="transactionsfolder"
-          name="transactionsfolder"
-          placeholder="<?php echo $l->t('transactions'); ?>"
-          value="<?php echo $_['transactionsfolder']; ?>"
-          title="<?php echo $toolTips['transactionsfolder']; ?>"
+          id="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>"
+          name="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>"
+          placeholder="<?= $l->t('transactions'); ?>"
+          value="<?= $_['transactionsfolder']; ?>"
+          title="<?= $toolTips['transactionsfolder']; ?>"
         />
-        <input type="checkbox" id="transactionsfolder-force" name="transactionsfolder-force" class="checkbox"/>
-        <label for="transactionsfolder-force" title="<?php echo $toolTips['transactionsfolder-force']; ?>" >
-          <?php echo $l->t('force');?>
+        <input type="checkbox" id="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-force" name="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-force" class="checkbox"/>
+        <label for="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::TRANSACTIONS_FOLDER . '-force']; ?>" >
+          <?= $l->t('force');?>
         </label>
-        <input name="transactionsfolder-check" id="transactionsfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+        <input name="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-check" id="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-check" type="button" value="<?= $l->t('Check');?>" />
       </fieldset>
-      <fieldset id="balancesfolder-fieldset"
-                class="needs-sharedfolder needs-projectsfolder needs-financefolder"
-                <?php echo !empty($_['projectsfolder']) && !empty($_['financefolder']) ? $off : 'disabled'; ?>
+      <fieldset id="<?= ConfigConstants::BALANCES_FOLDER ?>-fieldset"
+                class="needs-<?= ConfigConstants::SHARED_FOLDER ?> needs-<?= ConfigConstants::PROJECTS_FOLDER ?> needs-<?= ConfigConstants::FINANCE_FOLDER ?>"
+                <?= !empty($_[ConfigConstants::PROJECTS_FOLDER]) && !empty($_[ConfigConstants::FINANCE_FOLDER]) ? $off : 'disabled'; ?>
       >
-        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
-        <span><b>/</b></span><span class="financefolder"><?php echo $_['financefolder'];?></span>
+        <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span>
+        <span><b>/</b></span><span class="<?= ConfigConstants::FINANCE_FOLDER ?>"><?= $_[ConfigConstants::FINANCE_FOLDER];?></span>
         <span><b>/</b></span>
-        <input type="hidden" id="balancesfolder-saved" name="balancesfolder-saved" value="<?php echo $_['balancesfolder']; ?>" />
-        <input <?php echo $_['balancesfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::BALANCES_FOLDER ?>-saved" name="<?= ConfigConstants::BALANCES_FOLDER ?>-saved" value="<?= $_[ConfigConstants::BALANCES_FOLDER]; ?>" />
+        <input <?= $_[ConfigConstants::BALANCES_FOLDER] != '' ? 'disabled' : ''; ?>
           type="text"
-          id="balancesfolder"
-          name="balancesfolder"
-          placeholder="<?php echo $l->t('balances'); ?>"
-          value="<?php echo $_['balancesfolder']; ?>"
-          title="<?php echo $toolTips['balancesfolder']; ?>"
+          id="<?= ConfigConstants::BALANCES_FOLDER ?>"
+          name="<?= ConfigConstants::BALANCES_FOLDER ?>"
+          placeholder="<?= $l->t('balances'); ?>"
+          value="<?= $_[ConfigConstants::BALANCES_FOLDER]; ?>"
+          title="<?= $toolTips[ConfigConstants::BALANCES_FOLDER]; ?>"
         />
-        <span><b>/</b></span><span class="projectsfolder"><?php echo $_['projectsfolder'];?></span>
-        <span><b>/</b></span><span><?php echo $l->t('YEAR'); ?></span>
-        <span><b>/</b></span><span><?php echo $l->t('PROJECT'); ?></span><span><b>/</b></span>
-        <input type="checkbox" id="balancesfolder-force" name="balancesfolder-force" class="checkbox" />
-        <label for="balancesfolder-force" title="<?php echo $toolTips['balancesfolder-force']; ?>">
-          <?php echo $l->t('force');?>
+        <span><b>/</b></span><span class="<?= ConfigConstants::PROJECTS_FOLDER ?>"><?= $_[ConfigConstants::PROJECTS_FOLDER];?></span>
+        <span><b>/</b></span><span><?= $l->t('YEAR'); ?></span>
+        <span><b>/</b></span><span><?= $l->t('PROJECT'); ?></span><span><b>/</b></span>
+        <input type="checkbox" id="<?= ConfigConstants::BALANCES_FOLDER ?>-force" name="<?= ConfigConstants::BALANCES_FOLDER ?>-force" class="checkbox" />
+        <label for="<?= ConfigConstants::BALANCES_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::BALANCES_FOLDER . '-force']; ?>">
+          <?= $l->t('force');?>
         </label>
-        <input name="balancesfolder-check" id="balancesfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+        <input name="<?= ConfigConstants::BALANCES_FOLDER ?>-check" id="<?= ConfigConstants::BALANCES_FOLDER ?>-check" type="button" value="<?= $l->t('Check');?>" />
       </fieldset>
     </form>
     <!-- Cloud-User Connector -->
